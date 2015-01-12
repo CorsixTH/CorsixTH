@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_sound.h"
 #include "th_lua.h"
 #include "lua_sdl.h"
+#include <cstring>
 #include <map>
 
 static int m_a_iPlayedSoundCallbackIDs[1000];

@@ -172,6 +172,9 @@ public:
     */
     FT_Error initialise();
 
+    //! Remove all cached strings, as our graphics context has changed
+    void clearCache();
+
     //! Set the font face to be used.
     /*!
         @param pData Pointer to the start of a font file loaded into memory.
@@ -263,12 +266,14 @@ protected:
 
     //! Convert a cache canvas containing rendered text into a texture.
     /*!
+        @param pEventualCanvas A pointer to the rendertarget we'll be using to
+            draw this.
         @param pCacheEntry A cache entry whose pData field points to a pixmap
             of size iWidth by iHeight. This method will convert said pixmap to
             an object which can be used by the rendering engine, and store the
             result in the pTexture or iTexture field.
     */
-    void _makeTexture(cached_text_t* pCacheEntry) const;
+    void _makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const;
 
     //! Free a previously-made texture of a cache entry.
     /*!

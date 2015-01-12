@@ -129,8 +129,9 @@ size_t THSoundArchive::getSoundDuration(size_t iIndex)
         {
             iWaveDataLength = iChunkLength;
         }
-        if(SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), SEEK_CUR) == -1)
+        if(SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), RW_SEEK_CUR) == -1) {
             break;
+        }
     }
     SDL_RWclose(pFile);
     if(iWaveAudioFormat != 1 || iWaveChannelCount == 0 || iWaveSampleRate == 0

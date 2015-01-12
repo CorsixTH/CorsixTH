@@ -44,10 +44,12 @@ extern "C"
 #include <libswscale/swscale.h>
 }
 
-class SDL_Overlay;
-class SDL_Surface;
+struct SDL_Renderer;
+struct SDL_Texture;
+struct SDL_Window;
 struct SDL_mutex;
 struct SDL_cond;
+typedef void* SDL_GLContext;
 
 class THMoviePicture
 {
@@ -55,13 +57,12 @@ public:
     THMoviePicture();
     ~THMoviePicture();
 
-    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
     void deallocate();
-    void draw();
+    void draw(SDL_Renderer *pRenderer);
 
-    SDL_Overlay *m_pOverlay;
+    SDL_Texture *m_pTexture;
     PixelFormat m_pixelFormat;
-    SDL_Surface *m_pSurface;
     int m_iX, m_iY, m_iWidth, m_iHeight;
     double m_dPts;
     SDL_mutex *m_pMutex;
@@ -77,11 +78,10 @@ public:
     //NB: The following functions are called by the main program thread
     void abort();
     void reset();
-    void allocate(int iX, int iY, int iWidth, int iHeight);
+    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
     void deallocate();
     bool advance();
-    void draw();
-    double getCurrentPts();
+    void draw(SDL_Renderer *pRenderer);
     double getNextPts();
     bool empty();
 
@@ -123,6 +123,8 @@ public:
     THMovie();
     ~THMovie();
 
+    void setRenderer(struct SDL_Renderer *pRenderer);
+
     bool moviesEnabled();
 
     bool load(const char* szFilepath);
@@ -134,7 +136,6 @@ public:
     int getNativeHeight();
     int getNativeWidth();
     bool hasAudioTrack();
-    bool requiresVideoReset();
 
     const char* getLastError();
     void clearLastError();
@@ -150,6 +151,11 @@ protected:
 #ifdef CORSIX_TH_USE_FFMPEG
     int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
+
+    SDL_Renderer *m_pRenderer;
+    SDL_GLContext m_shareContext;
+    // Sadly we have to keep this around, since SDL_GL_MakeCurrent requires a window.
+    SDL_Window *m_pShareWindow;
 
     //last error
     std::string m_sLastError;

@@ -124,6 +124,8 @@ local config_defaults = {
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
+  new_graphics_folder = nil,
+  use_new_graphics = false,
   check_for_updates = true
 }
 local fi = io.open(config_filename, "r")
@@ -354,13 +356,27 @@ if needs_rewrite then
 --
 unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 
- -------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
 --
 savegames = nil -- [[X:\ThemeHospital\Saves]]
+
+ ------------------------------------------------------------------------------------------------------------------------
+-- Use new graphics. Whether to use the original graphics from Theme Hospital
+-- or use new graphics created by the CorsixTH project.
+use_new_graphics = false
+
+-------------------------------------------------------------------------------------------------------------------------
+-- Graphics folder. All graphics are initially taken from the original Theme Hospital,
+-- but the game can also try to find new graphics in the specified folder below.
+-- Some graphics are shipped with CorsixTH, and they will be used if you just switch
+-- on new graphics. If you however have acquired graphics from somewhere else, then
+-- uncomment the following line and point it to the directory which contains the new
+-- graphics.
+new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config

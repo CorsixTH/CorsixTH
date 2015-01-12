@@ -65,9 +65,9 @@ end
 
 function UIQueue:decreaseMaxSize()
   local amount = 1
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 10
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   self.queue:decreaseMaxSize(amount)
@@ -75,9 +75,9 @@ end
 
 function UIQueue:increaseMaxSize()
   local amount = 1
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 10
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   self.queue:increaseMaxSize(amount)

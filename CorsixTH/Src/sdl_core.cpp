@@ -54,7 +54,7 @@ static int l_init(lua_State *L)
         lua_pushboolean(L, 0);
         return 1;
     }
-    SDL_EnableUNICODE(1);
+
     luaT_addcleanup(L, SDL_Quit);
     lua_pushboolean(L, 1);
     return 1;
@@ -108,34 +108,31 @@ struct fps_ctrl
     }
 };
 
-static void l_push_utf8(lua_State *L, uint32_t iCodePoint)
+static void l_push_modifiers_table(lua_State *L, Uint16 mod)
 {
-    uint8_t aBytes[4];
-    size_t iNBytes = 1;
-    if(iCodePoint <= 0x7F)
-        aBytes[0] = static_cast<uint8_t>(iCodePoint);
-    else if(iCodePoint <= 0x7FF)
+    lua_newtable(L);
+    if ((mod & KMOD_SHIFT) != 0)
     {
-        aBytes[0] = 0xC0 | static_cast<uint8_t>(iCodePoint >> 6);
-        aBytes[1] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 2;
+        luaT_pushtablebool(L, "shift", true);
     }
-    else if(iCodePoint <= 0xFFFF)
+    if ((mod & KMOD_ALT) != 0)
     {
-        aBytes[0] = 0xE0 | static_cast<uint8_t>(iCodePoint >> 12);
-        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
-        aBytes[2] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 3;
+        luaT_pushtablebool(L, "alt", true);
     }
-    else
+    if ((mod & KMOD_CTRL) != 0)
     {
-        aBytes[0] = 0xF0 | static_cast<uint8_t>(iCodePoint >> 18);
-        aBytes[1] = 0x80 | static_cast<uint8_t>((iCodePoint >> 12) & 0x3F);
-        aBytes[2] = 0x80 | static_cast<uint8_t>((iCodePoint >> 6) & 0x3F);
-        aBytes[3] = 0x80 | static_cast<uint8_t>(iCodePoint & 0x3F);
-        iNBytes = 4;
+        luaT_pushtablebool(L, "ctrl", true);
     }
-    lua_pushlstring(L, reinterpret_cast<char*>(aBytes), iNBytes);
+    if ((mod & KMOD_GUI) != 0)
+    {
+        luaT_pushtablebool(L, "gui", true);
+    }
+}
+
+static int l_get_key_modifiers(lua_State *L)
+{
+    l_push_modifiers_table(L, SDL_GetModState());
+    return 1;
 }
 
 static int l_mainloop(lua_State *L)
@@ -160,15 +157,27 @@ static int l_mainloop(lua_State *L)
                 goto leave_loop;
             case SDL_KEYDOWN:
                 lua_pushliteral(dispatcher, "keydown");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                l_push_utf8(dispatcher, e.key.keysym.unicode);
-                nargs = 3;
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
+                l_push_modifiers_table(dispatcher, e.key.keysym.mod);
+                lua_pushboolean(dispatcher, e.key.repeat != 0);
+                nargs = 4;
                 break;
             case SDL_KEYUP:
                 lua_pushliteral(dispatcher, "keyup");
-                lua_pushinteger(dispatcher, e.key.keysym.sym);
-                // NB: No unicode translation done by SDL for keyup
+                lua_pushstring(dispatcher, SDL_GetKeyName(e.key.keysym.sym));
                 nargs = 2;
+                break;
+            case SDL_TEXTINPUT:
+                lua_pushliteral(dispatcher, "textinput");
+                lua_pushstring(dispatcher, e.text.text);
+                nargs = 2;
+                break;
+            case SDL_TEXTEDITING:
+                lua_pushliteral(dispatcher, "textediting");
+                lua_pushstring(dispatcher, e.edit.text);
+                lua_pushinteger(dispatcher, e.edit.start);
+                lua_pushinteger(dispatcher, e.edit.length);
+                nargs = 4;
                 break;
             case SDL_MOUSEBUTTONDOWN:
                 lua_pushliteral(dispatcher, "buttondown");
@@ -184,6 +193,12 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.button.y);
                 nargs = 4;
                 break;
+            case SDL_MOUSEWHEEL:
+                lua_pushliteral(dispatcher, "mousewheel");
+                lua_pushinteger(dispatcher, e.wheel.x);
+                lua_pushinteger(dispatcher, e.wheel.y);
+                nargs = 3;
+                break;
             case SDL_MOUSEMOTION:
                 lua_pushliteral(dispatcher, "motion");
                 lua_pushinteger(dispatcher, e.motion.x);
@@ -192,10 +207,22 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.motion.yrel);
                 nargs = 5;
                 break;
-            case SDL_ACTIVEEVENT:
-                lua_pushliteral(dispatcher, "active");
-                lua_pushinteger(dispatcher, e.active.gain);
-                nargs = 2;
+            case SDL_WINDOWEVENT:
+                switch (e.window.event) {
+                    case SDL_WINDOWEVENT_FOCUS_GAINED:
+                        lua_pushliteral(dispatcher, "active");
+                        lua_pushinteger(dispatcher, 1);
+                        nargs = 2;
+                        break;
+                    case SDL_WINDOWEVENT_FOCUS_LOST:
+                        lua_pushliteral(dispatcher, "active");
+                        lua_pushinteger(dispatcher, 0);
+                        nargs = 2;
+                        break;
+                    default:
+                        nargs = 0;
+                        break;
+                }
                 break;
             case SDL_USEREVENT_MUSIC_OVER:
                 lua_pushliteral(dispatcher, "music_over");
@@ -314,25 +341,10 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
-/*
-    Enable or disable the keyboard modifier.
-
-    Takes two parameters: delay and interval. Both are integers in miliseconds
-    where nil gives default values, and delay of 0 disables the repeat.
-*/
-static int l_modify_keyboardrepeat(lua_State *L)
-{
-    int delay = luaL_optint(L, 1, SDL_DEFAULT_REPEAT_DELAY);
-    int interval = luaL_optint(L, 2, SDL_DEFAULT_REPEAT_INTERVAL);
-
-    lua_pushboolean(L, SDL_EnableKeyRepeat(delay, interval) == 0 ? 1 : 0);
-    return 1;
-}
-
 static const struct luaL_reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
-    {"modifyKeyboardRepeat", l_modify_keyboardrepeat},
+    {"getKeyModifiers", l_get_key_modifiers},
     {NULL, NULL}
 };
 static const struct luaL_reg sdllib_with_upvalue[] = {

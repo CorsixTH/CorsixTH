@@ -64,7 +64,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
   self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
-  self:addKeyHandler("esc", self.cancel)
+  self:addKeyHandler("escape", self.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
     :setDisabledSprite(127):enable(false) -- Disabled purchase items button
@@ -83,7 +83,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.num_slots = 0
 
   self:addObjects(object_list, pay_for)
-  self:addKeyHandler(" ", self.tryNextOrientation)
+  self:addKeyHandler("space", self.tryNextOrientation)
 
   ui:setWorldHitTest(false)
 end

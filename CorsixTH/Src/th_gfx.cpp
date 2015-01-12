@@ -29,41 +29,145 @@ SOFTWARE.
 #include <algorithm>
 #include <memory.h>
 #include <limits.h>
+#include <cassert>
+#include <string>
+
+/** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
+class Input
+{
+public:
+    Input(const unsigned char *pData, int iLength)
+    {
+        m_pData = pData;
+        m_iLength = iLength;
+    }
+
+    const unsigned char *m_pData; /// Pointer to the remaining data.
+    int m_iLength;                ///< Remaining number of bytes.
+
+    //! Can \a iSize bytes be read from the file?
+    /*!
+        @param iSize Number of bytes that are queried.
+        @return Whether the requested number of bytes is still available.
+     */
+    inline bool Available(int iSize)
+    {
+        return iSize <= m_iLength;
+    }
+
+    //! Is EOF reached?
+    /*!
+        @return Whether EOF has been reached.
+     */
+    inline bool AtEOF()
+    {
+        return m_iLength == 0;
+    }
+
+    //! Get an 8 bit value from the file.
+    /*!
+        @return Read 8 bit value.
+        @pre There should be at least a byte available for reading.
+     */
+    inline int Uint8()
+    {
+        assert(m_iLength > 0);
+
+        int iVal = *m_pData;
+        m_pData++;
+        m_iLength--;
+        return iVal;
+    }
+
+    //! Get a 16 bit value from the file.
+    /*!
+        @return Read 16 bit value.
+        @pre There should be at least 2 bytes available for reading.
+     */
+    inline int Uint16()
+    {
+        int iVal = Uint8();
+        int iVal2 = Uint8();
+        return iVal | (iVal2 << 8);
+    }
+
+    //! Get a signed 16 bit value from the file.
+    /*!
+        @return The read signed 16 bit value.
+        @pre There should be at least 2 bytes available for reading.
+     */
+    inline int Int16()
+    {
+        int val = Uint16();
+        if (val < 0x7FFF)
+            return val;
+
+        int ret = -1;
+        return (ret & ~0xFFFF) | val;
+    }
+
+    //! Get a 32 bit value from the file.
+    /*!
+        @return Read 32 bit value.
+        @pre There should be at least 4 bytes available for reading.
+     */
+    inline unsigned int Uint32()
+    {
+        unsigned int iVal = Uint16();
+        unsigned int iVal2 = Uint16();
+        return iVal | (iVal2 << 16);
+    }
+
+    //! Load string from the input.
+    /*!
+        @param [out] pStr String to load.
+        @return Whether the string could be loaded.
+     */
+    inline bool String(std::string *pStr)
+    {
+        char buff[256];
+
+        if (AtEOF())
+            return false;
+
+        int iLength = Uint8();
+        if (!Available(iLength))
+            return false;
+
+        int idx;
+        for (idx = 0; idx < iLength; idx++)
+            buff[idx] = Uint8();
+        buff[idx] = '\0';
+        *pStr = std::string(buff);
+        return true;
+    }
+};
 
 THAnimationManager::THAnimationManager()
 {
-    m_pFirstFrames = NULL;
-    m_pFrames = NULL;
-    m_pElementList = NULL;
-    m_pElements = NULL;
+    m_vFirstFrames.clear();
+    m_vFrames.clear();
+    m_vElementList.clear();
+    m_vElements.clear();
+    m_vCustomSheets.clear();
+
     m_pSpriteSheet = NULL;
+
     m_iAnimationCount = 0;
     m_iFrameCount = 0;
+    m_iElementListCount = 0;
+    m_iElementCount = 0;
 }
 
 THAnimationManager::~THAnimationManager()
 {
-    delete[] m_pFirstFrames;
-    delete[] m_pFrames;
-    delete[] m_pElementList;
-    delete[] m_pElements;
+    for (int i = 0; i < m_vCustomSheets.size(); i++)
+        delete m_vCustomSheets[i];
 }
 
 void THAnimationManager::setSpriteSheet(THSpriteSheet* pSpriteSheet)
 {
     m_pSpriteSheet = pSpriteSheet;
-}
-
-inline static void _setmin(int& iLeft, int iRight)
-{
-    if(iRight < iLeft)
-        iLeft = iRight;
-}
-
-inline static void _setmax(int& iLeft, int iRight)
-{
-    if(iRight > iLeft)
-        iLeft = iRight;
 }
 
 bool THAnimationManager::loadFromTHFile(
@@ -72,110 +176,519 @@ bool THAnimationManager::loadFromTHFile(
                         const unsigned char* pListData, size_t iListDataLength,
                         const unsigned char* pElementData, size_t iElementDataLength)
 {
-    m_iAnimationCount = (unsigned int)(iStartDataLength / sizeof(th_anim_t));
-    m_iFrameCount = (unsigned int)(iFrameDataLength / sizeof(th_frame_t));
+    unsigned int iAnimationCount = (unsigned int)(iStartDataLength / sizeof(th_anim_t));
+    unsigned int iFrameCount = (unsigned int)(iFrameDataLength / sizeof(th_frame_t));
     unsigned int iListCount = (unsigned int)(iListDataLength / 2);
-    m_iElementCount = (unsigned int)(iElementDataLength / sizeof(th_element_t));
+    unsigned int iElementCount = (unsigned int)(iElementDataLength / sizeof(th_element_t));
 
-    if(m_iAnimationCount == 0 || m_iFrameCount == 0 || iListCount == 0 || m_iElementCount == 0)
-    {
-        m_iAnimationCount = 0;
-        m_iFrameCount = 0;
+    if(iAnimationCount == 0 || iFrameCount == 0 || iListCount == 0 || iElementCount == 0)
         return false;
-    }
 
-    delete[] m_pFirstFrames;
-    delete[] m_pFrames;
-    delete[] m_pElementList;
-    delete[] m_pElements;
+    // Start offset of the file data into the vectors.
+    unsigned int iAnimationStart = m_iAnimationCount;
+    unsigned int iFrameStart = m_iFrameCount;
+    unsigned int iListStart = m_iElementListCount;
+    unsigned int iElementStart = m_iElementCount;
 
-    m_pFirstFrames = NULL;
-    m_pFrames = NULL;
-    m_pElementList = NULL;
-    m_pElements = NULL;
-
-    m_pFirstFrames = new (std::nothrow) unsigned int[m_iAnimationCount];
-    m_pFrames = new (std::nothrow) frame_t[m_iFrameCount];
-    m_pElementList = new (std::nothrow) uint16_t[iListCount + 1];
-    m_pElements = new (std::nothrow) element_t[m_iElementCount];
-
-    if(m_pFirstFrames == NULL || m_pFrames == NULL || m_pElementList == NULL || m_pElements == NULL)
-    {
-        m_iAnimationCount = 0;
-        m_iFrameCount = 0;
+    // Original data file cannot must start at offset 0 due to the hard-coded animation numbers in the Lua code.
+    if (iAnimationStart > 0 || iFrameStart > 0 || iListStart > 0 || iElementStart > 0)
         return false;
-    }
 
-    for(unsigned int i = 0; i < m_iAnimationCount; ++i)
+    if (iElementStart + iElementCount >= 0xFFFF) // Overflow of list elements.
+        return false;
+
+    // Create new space for the data.
+    m_vFirstFrames.reserve(iAnimationStart + iAnimationCount);
+    m_vFrames.reserve(iFrameStart + iFrameCount);
+    m_vElementList.reserve(iListStart + iListCount + 1);
+    m_vElements.reserve(iElementStart + iElementCount);
+
+    // Read animations.
+    for(unsigned int i = 0; i < iAnimationCount; ++i)
     {
         unsigned int iFirstFrame = reinterpret_cast<const th_anim_t*>(pStartData)[i].frame;
-        if(iFirstFrame > m_iFrameCount)
+        if(iFirstFrame > iFrameCount)
             iFirstFrame = 0;
-        m_pFirstFrames[i] = iFirstFrame;
+
+        iFirstFrame += iFrameStart;
+        m_vFirstFrames.push_back(iFirstFrame);
     }
 
-    for(unsigned int i = 0; i < m_iFrameCount; ++i)
+    // Read frames.
+    for(unsigned int i = 0; i < iFrameCount; ++i)
     {
         const th_frame_t* pFrame = reinterpret_cast<const th_frame_t*>(pFrameData) + i;
-        m_pFrames[i].iListIndex = pFrame->list_index < iListCount ? pFrame->list_index : 0;
-        m_pFrames[i].iNextFrame = pFrame->next < m_iFrameCount ? pFrame->next : 0;
-        m_pFrames[i].iSound = pFrame->sound;
-        m_pFrames[i].iFlags = pFrame->flags;
+
+        frame_t oFrame;
+        oFrame.iListIndex = iListStart + (pFrame->list_index < iListCount ? pFrame->list_index : 0);
+        oFrame.iNextFrame = iFrameStart + (pFrame->next < iFrameCount ? pFrame->next : 0);
+        oFrame.iSound = pFrame->sound;
+        oFrame.iFlags = pFrame->flags;
         // Bounding box fields initialised later
-        m_pFrames[i].iMarkerX = 0;
-        m_pFrames[i].iMarkerY = 0;
-        m_pFrames[i].iSecondaryMarkerX = 0;
-        m_pFrames[i].iSecondaryMarkerY = 0;
+        oFrame.iMarkerX = 0;
+        oFrame.iMarkerY = 0;
+        oFrame.iSecondaryMarkerX = 0;
+        oFrame.iSecondaryMarkerY = 0;
+
+        m_vFrames.push_back(oFrame);
     }
 
-    memcpy(m_pElementList, pListData, iListCount * 2);
-    m_pElementList[iListCount] = 0xFFFF;
+    // Read element list.
+    for(unsigned int i = 0; i < iListCount; ++i)
+    {
+        uint16_t iElmNumber = *(reinterpret_cast<const uint16_t*>(pListData) + i);
+        if (iElmNumber >= iElementCount)
+        {
+            iElmNumber = 0xFFFF;
+        }
+        else
+        {
+            iElmNumber += iElementStart;
+        }
 
-    for(unsigned int i = 0; i < m_iElementCount; ++i)
+        m_vElementList.push_back(iElmNumber);
+    }
+    m_vElementList.push_back(0xFFFF);
+
+    // Read elements.
+    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
+    for(unsigned int i = 0; i < iElementCount; ++i)
     {
         const th_element_t* pTHElement = reinterpret_cast<const th_element_t*>(pElementData) + i;
-        element_t *pElement = m_pElements + i;
-        pElement->iSprite = pTHElement->table_position / 6;
-        pElement->iFlags = pTHElement->flags & 0xF;
-        pElement->iX = static_cast<int>(pTHElement->offx) - 141;
-        pElement->iY = static_cast<int>(pTHElement->offy) - 186;
-        pElement->iLayer = pTHElement->flags >> 4;
-        if(pElement->iLayer > 12)
-            pElement->iLayer = 6; // Nothing lives on layer 6
-        pElement->iLayerId = pTHElement->layerid;
+
+        element_t oElement;
+        oElement.iSprite = pTHElement->table_position / 6;
+        oElement.iFlags = pTHElement->flags & 0xF;
+        oElement.iX = static_cast<int>(pTHElement->offx) - 141;
+        oElement.iY = static_cast<int>(pTHElement->offy) - 186;
+        oElement.iLayer = pTHElement->flags >> 4;
+        if(oElement.iLayer > 12)
+            oElement.iLayer = 6; // Nothing lives on layer 6
+        oElement.iLayerId = pTHElement->layerid;
+        if (oElement.iSprite < iSpriteCount) {
+            oElement.pSpriteSheet = m_pSpriteSheet;
+        } else {
+            oElement.pSpriteSheet = NULL;
+        }
+
+        m_vElements.push_back(oElement);
     }
 
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
-    for(unsigned int i = 0; i < m_iFrameCount; ++i)
+    // Compute bounding box of the animations using the sprite sheet.
+    for(unsigned int i = 0; i < iFrameCount; ++i)
     {
-        frame_t* pFrame = m_pFrames + i;
-        pFrame->iBoundingLeft   = INT_MAX;
-        pFrame->iBoundingRight  = INT_MIN;
-        pFrame->iBoundingTop    = INT_MAX;
-        pFrame->iBoundingBottom = INT_MIN;
-        unsigned int iListIndex = pFrame->iListIndex;
-        for(; ; ++iListIndex)
-        {
-            uint16_t iElement = m_pElementList[iListIndex];
-            if(iElement >= m_iElementCount)
-                break;
+        setBoundingBox(m_vFrames[iFrameStart + i]);
+    }
 
-            element_t* pElement = m_pElements + iElement;
-            if(pElement->iSprite >= iSpriteCount)
+    m_iAnimationCount += iAnimationCount;
+    m_iFrameCount += iFrameCount;
+    m_iElementListCount += iListCount + 1;
+    m_iElementCount += iElementCount;
+
+    assert(m_vFirstFrames.size() == m_iAnimationCount);
+    assert(m_vFrames.size() == m_iFrameCount);
+    assert(m_vElementList.size() == m_iElementListCount);
+    assert(m_vElements.size() == m_iElementCount);
+
+    return true;
+}
+
+//! Update \a iLeft with the smallest of both values.
+/*!
+    @param [inout] iLeft Left value to check and update.
+    @param iRight Second value to check.
+ */
+inline static void _setmin(int& iLeft, int iRight)
+{
+    if(iRight < iLeft)
+        iLeft = iRight;
+}
+
+//! Update \a iLeft with the biggest of both values.
+/*!
+    @param [inout] iLeft Left value to check and update.
+    @param iRight Second value to check.
+ */
+inline static void _setmax(int& iLeft, int iRight)
+{
+    if(iRight > iLeft)
+        iLeft = iRight;
+}
+
+void THAnimationManager::setBoundingBox(frame_t &oFrame)
+{
+    oFrame.iBoundingLeft   = INT_MAX;
+    oFrame.iBoundingRight  = INT_MIN;
+    oFrame.iBoundingTop    = INT_MAX;
+    oFrame.iBoundingBottom = INT_MIN;
+    unsigned int iListIndex = oFrame.iListIndex;
+    for(; ; ++iListIndex)
+    {
+        uint16_t iElement = m_vElementList[iListIndex];
+        if(iElement >= m_vElements.size())
+            break;
+
+        element_t& oElement = m_vElements[iElement];
+        if(oElement.pSpriteSheet == NULL)
+            continue;
+
+        unsigned int iWidth, iHeight;
+        oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+        _setmin(oFrame.iBoundingLeft  , oElement.iX);
+        _setmin(oFrame.iBoundingTop   , oElement.iY);
+        _setmax(oFrame.iBoundingRight , oElement.iX - 1 + (int)iWidth);
+        _setmax(oFrame.iBoundingBottom, oElement.iY - 1 + (int)iHeight);
+    }
+}
+
+void THAnimationManager::setCanvas(THRenderTarget *pCanvas)
+{
+    m_pCanvas = pCanvas;
+}
+
+//! Load the header.
+/*!
+    @param [inout] input Data to read.
+    @return Number of consumed bytes, a negative number indicates an error.
+ */
+static int loadHeader(Input &input)
+{
+    static const unsigned char aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
+
+    if (!input.Available(6))
+        return false;
+    for (int i = 0; i < 6; i++)
+    {
+        if (input.Uint8() != aHdr[i])
+            return false;
+    }
+    return true;
+}
+
+int THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
+                                     int iNumElements, unsigned int &iLoadedElements,
+                                     unsigned int iElementStart, unsigned int iElementCount)
+{
+    int iFirst = iLoadedElements + iElementStart;
+
+    unsigned int iSpriteCount = pSpriteSheet->getSpriteCount();
+    while (iNumElements > 0)
+    {
+        if (iLoadedElements >= iElementCount || !input.Available(12))
+            return -1;
+
+        unsigned int iSprite = input.Uint32();
+        int iX = input.Int16();
+        int iY = input.Int16();
+        int iLayerClass = input.Uint8();
+        int iLayerId = input.Uint8();
+        int iFlags = input.Uint16();
+
+        if (iLayerClass > 12)
+            iLayerClass = 6; // Nothing lives on layer 6
+
+        element_t oElement;
+        oElement.iSprite = iSprite;
+        oElement.iFlags = iFlags;
+        oElement.iX = iX;
+        oElement.iY = iY;
+        oElement.iLayer = iLayerClass;
+        oElement.iLayerId = iLayerId;
+        if (oElement.iSprite >= iSpriteCount)
+            oElement.pSpriteSheet = NULL;
+        else
+            oElement.pSpriteSheet = pSpriteSheet;
+
+        m_vElements.push_back(oElement);
+        iLoadedElements++;
+        iNumElements--;
+    }
+    return iFirst;
+}
+
+int THAnimationManager::makeListElements(int iFirstElement, int iNumElements,
+                                         unsigned int &iLoadedListElements,
+                                         unsigned int iListStart,
+                                         unsigned int iListCount)
+{
+    int iFirst = iLoadedListElements + iListStart;
+
+    // Verify there is enough room for all list elements + 0xFFFF
+    if (iLoadedListElements + iNumElements + 1 > iListCount)
+        return -1;
+    assert(iFirstElement + iNumElements < 0xFFFF); // Overflow for list elements.
+
+    while (iNumElements > 0)
+    {
+        m_vElementList.push_back(iFirstElement);
+        iLoadedListElements++;
+        iFirstElement++;
+        iNumElements--;
+    }
+    // Add 0xFFFF.
+    m_vElementList.push_back(0xFFFF);
+    iLoadedListElements++;
+
+    return iFirst;
+}
+
+//! Shift the first frame if all frames are available.
+/*!
+    @param iFirst First frame number, or 0xFFFFFFFFu if no animation.
+    @param iLength Number of frames in the animation.
+    @param iStart Start of the frames for this file.
+    @param iLoaded Number of loaded frames.
+    @return The shifted first frame, or 0xFFFFFFFFu.
+ */
+static unsigned int shiftFirst(unsigned int iFirst, unsigned int iLength,
+                               unsigned int iStart, unsigned int iLoaded)
+{
+    if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded)
+        return 0xFFFFFFFFu;
+    return iFirst + iStart;
+}
+
+void THAnimationManager::fixNextFrame(unsigned int iFirst, unsigned int iLength)
+{
+    if (iFirst == 0xFFFFFFFFu)
+        return;
+
+    frame_t &oFirst = m_vFrames[iFirst];
+    oFirst.iFlags |= 0x1; // Start of animation flag.
+
+    frame_t &oLast = m_vFrames[iFirst + iLength - 1];
+    oLast.iNextFrame = iFirst; // Loop last frame back to the first.
+}
+
+bool THAnimationManager::loadCustomAnimations(const unsigned char* pData, size_t iDataLength)
+{
+    Input input(pData, iDataLength);
+
+    if (!loadHeader(input))
+        return false;
+
+    if (!input.Available(5*4))
+        return false;
+
+    unsigned int iAnimationCount = input.Uint32();
+    unsigned int iFrameCount = input.Uint32();
+    unsigned int iElementCount = input.Uint32();
+    unsigned int iSpriteCount = input.Uint32();
+    input.Uint32(); // Total number of bytes sprite data is not used.
+
+    // Every element is referenced once, and one 0xFFFF for every frame.
+    unsigned int iListCount = iElementCount + iFrameCount;
+
+    unsigned int iFrameStart = m_iFrameCount;
+    unsigned int iListStart = m_iElementListCount;
+    unsigned int iElementStart = m_iElementCount;
+
+    if (iAnimationCount == 0 || iFrameCount == 0 || iElementCount == 0 || iSpriteCount == 0)
+        return false;
+
+    if (iElementStart + iElementCount >= 0xFFFF) // Overflow of list elements.
+        return false;
+
+    // Create new space for the elements.
+    m_vFirstFrames.reserve(m_vFirstFrames.size() + iAnimationCount * 4); // Be optimistic in reservation.
+    m_vFrames.reserve(iFrameStart + iFrameCount);
+    m_vElementList.reserve(iListStart + iListCount);
+    m_vElements.reserve(iElementStart + iElementCount);
+
+    // Construct a sprite sheet for the sprites to be loaded.
+    THSpriteSheet *pSheet = new THSpriteSheet;
+    pSheet->setSpriteCount(iSpriteCount, m_pCanvas);
+    m_vCustomSheets.push_back(pSheet);
+
+    unsigned int iLoadedFrames = 0;
+    unsigned int iLoadedListElements = 0;
+    unsigned int iLoadedElements = 0;
+    unsigned int iLoadedSprites = 0;
+
+    // Read the blocks of the file, until hitting EOF.
+    for (;;)
+    {
+        if (input.AtEOF())
+            break;
+
+        // Read identification bytes at the start of each block, and dispatch loading.
+        if (!input.Available(2))
+            return false;
+        int first = input.Uint8();
+        int second = input.Uint8();
+
+        // Recognized a grouped animation block, load it.
+        if (first == 'C' && second == 'A')
+        {
+            AnimationKey oKey;
+
+            if (!input.Available(2+4))
+                return false;
+            oKey.iTilesize = input.Uint16();
+            unsigned int iNumFrames = input.Uint32();
+            if (iNumFrames == 0)
+                return false;
+
+            if (!input.String(&oKey.sName))
+                return false;
+
+            if (!input.Available(4*4))
+                return false;
+            unsigned int iNorthFirst = input.Uint32();
+            unsigned int iEastFirst  = input.Uint32();
+            unsigned int iSouthFirst = input.Uint32();
+            unsigned int iWestFirst  = input.Uint32();
+
+            iNorthFirst = shiftFirst(iNorthFirst, iNumFrames, iFrameStart, iLoadedFrames);
+            iEastFirst  = shiftFirst(iEastFirst,  iNumFrames, iFrameStart, iLoadedFrames);
+            iSouthFirst = shiftFirst(iSouthFirst, iNumFrames, iFrameStart, iLoadedFrames);
+            iWestFirst  = shiftFirst(iWestFirst,  iNumFrames, iFrameStart, iLoadedFrames);
+
+            AnimationStartFrames oFrames;
+            oFrames.iNorth = -1;
+            oFrames.iEast  = -1;
+            oFrames.iSouth = -1;
+            oFrames.iWest  = -1;
+
+            if (iNorthFirst != 0xFFFFFFFFu)
             {
-                continue;
+                fixNextFrame(iNorthFirst, iNumFrames);
+                oFrames.iNorth = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iNorthFirst);
+            }
+            if (iEastFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iEastFirst, iNumFrames);
+                oFrames.iEast = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iEastFirst);
+            }
+            if (iSouthFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iSouthFirst, iNumFrames);
+                oFrames.iSouth = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iSouthFirst);
+            }
+            if (iWestFirst != 0xFFFFFFFFu)
+            {
+                fixNextFrame(iWestFirst, iNumFrames);
+                oFrames.iWest = m_vFirstFrames.size();
+                m_vFirstFrames.push_back(iWestFirst);
             }
 
-            unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth, &iHeight);
-            _setmin(pFrame->iBoundingLeft  , pElement->iX);
-            _setmin(pFrame->iBoundingTop   , pElement->iY);
-            _setmax(pFrame->iBoundingRight , pElement->iX - 1 + (int)iWidth);
-            _setmax(pFrame->iBoundingBottom, pElement->iY - 1 + (int)iHeight);
+            NamedAnimationPair p(oKey, oFrames);
+            m_oNamedAnimations.insert(p);
+            continue;
+        }
+
+        // Recognized a frame block, load it.
+        else if (first == 'F' && second == 'R')
+        {
+            if (iLoadedFrames >= iFrameCount)
+                return false;
+
+            if (!input.Available(2+2))
+                return false;
+            int iSound = input.Uint16();
+            int iNumElements = input.Uint16();
+
+            int iElm = loadElements(input, pSheet, iNumElements,
+                                    iLoadedElements, iElementStart, iElementCount);
+            if (iElm < 0)
+                return false;
+
+            int iListElm = makeListElements(iElm, iNumElements,
+                                            iLoadedListElements, iListStart, iListCount);
+            if (iListElm < 0)
+                return false;
+
+            frame_t oFrame;
+            oFrame.iListIndex = iListElm;
+            oFrame.iNextFrame = iFrameStart + iLoadedFrames + 1; // Point to next frame (changed later).
+            oFrame.iSound = iSound;
+            oFrame.iFlags = 0; // Set later.
+            oFrame.iMarkerX = 0;
+            oFrame.iMarkerY = 0;
+            oFrame.iSecondaryMarkerX = 0;
+            oFrame.iSecondaryMarkerY = 0;
+
+            setBoundingBox(oFrame);
+
+            m_vFrames.push_back(oFrame);
+            iLoadedFrames++;
+            continue;
+        }
+
+        // Recognized a Sprite block, load it.
+        else if (first == 'S' && second == 'P')
+        {
+            if (iLoadedSprites >= iSpriteCount)
+                return false;
+
+            if (!input.Available(2+2+4))
+                return false;
+            int iWidth = input.Uint16();
+            int iHeight = input.Uint16();
+            unsigned int iSize = input.Uint32();
+            if (iSize > INT_MAX) // Check it is safe to use as 'int'
+                return false;
+
+            // Load data.
+            unsigned char *pData = new (std::nothrow) unsigned char[iSize];
+            if (pData == NULL)
+                return false;
+            if (!input.Available(iSize))
+                return false;
+            for (int i = 0; i < iSize; i++)
+                pData[i] = input.Uint8();
+
+            if (!pSheet->setSpriteData(iLoadedSprites, pData, true, iSize,
+                                       iWidth, iHeight))
+                return false;
+
+            iLoadedSprites++;
+            continue;
+        }
+
+        // Unrecognized block, fail.
+        else
+        {
+            return false;
         }
     }
 
+    assert(iLoadedFrames == iFrameCount);
+    assert(iLoadedListElements == iListCount);
+    assert(iLoadedElements = iElementCount);
+    assert(iLoadedSprites = iSpriteCount);
+
+    // Fix the next pointer of the last frame in case it points to non-existing frames.
+    frame_t &oFrame = m_vFrames[iFrameStart + iFrameCount - 1];
+    if (iFrameCount > 0 && oFrame.iNextFrame >= iFrameStart + iFrameCount)
+        oFrame.iNextFrame = iFrameStart; // Useless, but maybe less crashy.
+
+    m_iAnimationCount = m_vFirstFrames.size();
+    m_iFrameCount += iFrameCount;
+    m_iElementListCount += iListCount;
+    m_iElementCount += iElementCount;
+    assert(m_vFrames.size() == m_iFrameCount);
+    assert(m_vElementList.size() == m_iElementListCount);
+    assert(m_vElements.size() == m_iElementCount);
+
     return true;
+}
+
+const AnimationStartFrames &THAnimationManager::getNamedAnimations(const std::string &sName, int iTilesize) const
+{
+    static const AnimationStartFrames oNoneAnimations = {-1, -1, -1, -1};
+
+    AnimationKey oKey;
+    oKey.sName = sName;
+    oKey.iTilesize = iTilesize;
+
+    NamedAnimationsMap::const_iterator iter = m_oNamedAnimations.find(oKey);
+    if (iter == m_oNamedAnimations.end())
+        return oNoneAnimations;
+    return (*iter).second;
 }
 
 unsigned int THAnimationManager::getAnimationCount() const
@@ -191,7 +704,7 @@ unsigned int THAnimationManager::getFrameCount() const
 unsigned int THAnimationManager::getFirstFrame(unsigned int iAnimation) const
 {
     if(iAnimation < m_iAnimationCount)
-        return m_pFirstFrames[iAnimation];
+        return m_vFirstFrames[iAnimation];
     else
         return 0;
 }
@@ -199,31 +712,32 @@ unsigned int THAnimationManager::getFirstFrame(unsigned int iAnimation) const
 unsigned int THAnimationManager::getNextFrame(unsigned int iFrame) const
 {
     if(iFrame < m_iFrameCount)
-        return m_pFrames[iFrame].iNextFrame;
+        return m_vFrames[iFrame].iNextFrame;
     else
         return iFrame;
 }
 
 void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap)
 {
-    if(iAnimation >= m_iAnimationCount || m_pSpriteSheet == NULL)
+    if(iAnimation >= m_iAnimationCount)
         return;
 
-    unsigned int iFrame = m_pFirstFrames[iAnimation];
+    unsigned int iFrame = m_vFirstFrames[iAnimation];
     unsigned int iFirstFrame = iFrame;
     do
     {
-        unsigned int iListIndex = m_pFrames[iFrame].iListIndex;
+        unsigned int iListIndex = m_vFrames[iFrame].iListIndex;
         for(; ; ++iListIndex)
         {
-            uint16_t iElement = m_pElementList[iListIndex];
+            uint16_t iElement = m_vElementList[iListIndex];
             if(iElement >= m_iElementCount)
                 break;
 
-            element_t* pElement = m_pElements + iElement;
-            m_pSpriteSheet->setSpriteAltPaletteMap(pElement->iSprite, pMap);
+            element_t& oElement = m_vElements[iElement];
+            if (oElement.pSpriteSheet != NULL)
+                oElement.pSpriteSheet->setSpriteAltPaletteMap(oElement.iSprite, pMap);
         }
-        iFrame = m_pFrames[iFrame].iNextFrame;
+        iFrame = m_vFrames[iFrame].iNextFrame;
     } while(iFrame != iFirstFrame);
 }
 
@@ -231,8 +745,8 @@ bool THAnimationManager::setFrameMarker(unsigned int iFrame, int iX, int iY)
 {
     if(iFrame >= m_iFrameCount)
         return false;
-    m_pFrames[iFrame].iMarkerX = iX;
-    m_pFrames[iFrame].iMarkerY = iY;
+    m_vFrames[iFrame].iMarkerX = iX;
+    m_vFrames[iFrame].iMarkerY = iY;
     return true;
 }
 
@@ -240,8 +754,8 @@ bool THAnimationManager::setFrameSecondaryMarker(unsigned int iFrame, int iX, in
 {
     if(iFrame >= m_iFrameCount)
         return false;
-    m_pFrames[iFrame].iSecondaryMarkerX = iX;
-    m_pFrames[iFrame].iSecondaryMarkerY = iY;
+    m_vFrames[iFrame].iSecondaryMarkerX = iX;
+    m_vFrames[iFrame].iSecondaryMarkerY = iY;
     return true;
 }
 
@@ -249,8 +763,8 @@ bool THAnimationManager::getFrameMarker(unsigned int iFrame, int* pX, int* pY)
 {
     if(iFrame >= m_iFrameCount)
         return false;
-    *pX = m_pFrames[iFrame].iMarkerX;
-    *pY = m_pFrames[iFrame].iMarkerY;
+    *pX = m_vFrames[iFrame].iMarkerX;
+    *pY = m_vFrames[iFrame].iMarkerY;
     return true;
 }
 
@@ -258,8 +772,8 @@ bool THAnimationManager::getFrameSecondaryMarker(unsigned int iFrame, int* pX, i
 {
     if(iFrame >= m_iFrameCount)
         return false;
-    *pX = m_pFrames[iFrame].iSecondaryMarkerX;
-    *pY = m_pFrames[iFrame].iSecondaryMarkerY;
+    *pX = m_vFrames[iFrame].iSecondaryMarkerX;
+    *pY = m_vFrames[iFrame].iSecondaryMarkerY;
     return true;
 }
 
@@ -268,40 +782,39 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
     if(iFrame >= m_iFrameCount)
         return false;
 
-    const frame_t* pFrame = m_pFrames + iFrame;
+    const frame_t& oFrame = m_vFrames[iFrame];
     iTestX -= iX;
     iTestY -= iY;
 
     if(iFlags & THDF_FlipHorizontal)
         iTestX = -iTestX;
-    if(iTestX < pFrame->iBoundingLeft || iTestX > pFrame->iBoundingRight)
+    if(iTestX < oFrame.iBoundingLeft || iTestX > oFrame.iBoundingRight)
         return false;
 
     if(iFlags & THDF_FlipVertical)
     {
-        if(-iTestY < pFrame->iBoundingTop || -iTestY > pFrame->iBoundingBottom)
+        if(-iTestY < oFrame.iBoundingTop || -iTestY > oFrame.iBoundingBottom)
             return false;
     }
     else
     {
-        if(iTestY < pFrame->iBoundingTop || iTestY > pFrame->iBoundingBottom)
+        if(iTestY < oFrame.iBoundingTop || iTestY > oFrame.iBoundingBottom)
             return false;
     }
 
     if(iFlags & THDF_BoundBoxHitTest)
         return true;
 
-    unsigned int iListIndex = pFrame->iListIndex;
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
+    unsigned int iListIndex = oFrame.iListIndex;
     for(; ; ++iListIndex)
     {
-        uint16_t iElement = m_pElementList[iListIndex];
+        uint16_t iElement = m_vElementList[iListIndex];
         if(iElement >= m_iElementCount)
             break;
 
-        element_t* pElement = m_pElements + iElement;
-        if((pElement->iLayerId != 0 && oLayers.iLayerContents[pElement->iLayer] != pElement->iLayerId)
-         || pElement->iSprite >= iSpriteCount)
+        const element_t &oElement = m_vElements[iElement];
+        if((oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
+         || oElement.pSpriteSheet == NULL)
         {
             continue;
         }
@@ -309,17 +822,17 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
         if(iFlags & THDF_FlipHorizontal)
         {
             unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth, &iHeight);
-            if(m_pSpriteSheet->hitTestSprite(pElement->iSprite, pElement->iX + iWidth - iTestX,
-                iTestY - pElement->iY, pElement->iFlags ^ THDF_FlipHorizontal))
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
+            if(oElement.pSpriteSheet->hitTestSprite(oElement.iSprite, oElement.iX + iWidth - iTestX,
+                iTestY - oElement.iY, oElement.iFlags ^ THDF_FlipHorizontal))
             {
                 return true;
             }
         }
         else
         {
-            if(m_pSpriteSheet->hitTestSprite(pElement->iSprite, iTestX - pElement->iX,
-                iTestY - pElement->iY, pElement->iFlags))
+            if(oElement.pSpriteSheet->hitTestSprite(oElement.iSprite, iTestX - oElement.iX,
+                iTestY - oElement.iY, oElement.iFlags))
             {
                 return true;
             }
@@ -331,22 +844,23 @@ bool THAnimationManager::hitTest(unsigned int iFrame, const THLayers_t& oLayers,
 
 void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const
 {
-    if(iFrame >= m_iFrameCount || m_pSpriteSheet == NULL)
+    if(iFrame >= m_iFrameCount)
         return;
 
-    unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
     unsigned int iPassOnFlags = iFlags & THDF_AltPalette;
 
-    unsigned int iListIndex = m_pFrames[iFrame].iListIndex;
+    unsigned int iListIndex = m_vFrames[iFrame].iListIndex;
     for(; ; ++iListIndex)
     {
-        uint16_t iElement = m_pElementList[iListIndex];
+        uint16_t iElement = m_vElementList[iListIndex];
         if(iElement >= m_iElementCount)
             break;
 
-        element_t* pElement = m_pElements + iElement;
-        if((pElement->iLayerId != 0 && oLayers.iLayerContents[pElement->iLayer] != pElement->iLayerId)
-         || pElement->iSprite >= iSpriteCount)
+        const element_t &oElement = m_vElements[iElement];
+        if (oElement.pSpriteSheet == NULL)
+            continue;
+
+        if(oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
         {
             // Some animations involving doctors (i.e. #72, #74, maybe others)
             // only provide versions for heads W1 and B1, not W2 and B2. The
@@ -354,7 +868,7 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
             // the W1 layer as well as W2 if W2 is being used, and similarly
             // for B1 / B2. A better fix would be to go into each animation
             // which needs it, and duplicate the W1 / B1 layers to W2 / B2.
-            if(pElement->iLayer == 5 && oLayers.iLayerContents[5] - 4 == pElement->iLayerId)
+            if(oElement.iLayer == 5 && oLayers.iLayerContents[5] - 4 == oElement.iLayerId)
                 /* don't skip */;
             else
                 continue;
@@ -363,15 +877,15 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
         if(iFlags & THDF_FlipHorizontal)
         {
             unsigned int iWidth, iHeight;
-            m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth, &iHeight);
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth, &iHeight);
 
-            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite, iX - pElement->iX - iWidth,
-                iY + pElement->iY, iPassOnFlags | (pElement->iFlags ^ THDF_FlipHorizontal));
+            oElement.pSpriteSheet->drawSprite(pCanvas, oElement.iSprite, iX - oElement.iX - iWidth,
+                iY + oElement.iY, iPassOnFlags | (oElement.iFlags ^ THDF_FlipHorizontal));
         }
         else
         {
-            m_pSpriteSheet->drawSprite(pCanvas, pElement->iSprite,
-                iX + pElement->iX, iY + pElement->iY, iPassOnFlags | pElement->iFlags);
+            oElement.pSpriteSheet->drawSprite(pCanvas, oElement.iSprite,
+                iX + oElement.iX, iY + oElement.iY, iPassOnFlags | oElement.iFlags);
         }
     }
 }
@@ -379,7 +893,7 @@ void THAnimationManager::drawFrame(THRenderTarget* pCanvas, unsigned int iFrame,
 unsigned int THAnimationManager::getFrameSound(unsigned int iFrame)
 {
     if(iFrame < m_iFrameCount)
-        return m_pFrames[iFrame].iSound;
+        return m_vFrames[iFrame].iSound;
     else
         return 0;
 }
@@ -390,28 +904,27 @@ void THAnimationManager::getFrameExtent(unsigned int iFrame, const THLayers_t& o
     int iMaxX = INT_MIN;
     int iMinY = INT_MAX;
     int iMaxY = INT_MIN;
-    if(iFrame < m_iFrameCount && m_pSpriteSheet != NULL)
+    if(iFrame < m_iFrameCount)
     {
-        unsigned int iSpriteCount = m_pSpriteSheet->getSpriteCount();
-        unsigned int iListIndex = m_pFrames[iFrame].iListIndex;
+        unsigned int iListIndex = m_vFrames[iFrame].iListIndex;
 
         for(; ; ++iListIndex)
         {
-            uint16_t iElement = m_pElementList[iListIndex];
+            uint16_t iElement = m_vElementList[iListIndex];
             if(iElement >= m_iElementCount)
                 break;
 
-            element_t* pElement = m_pElements + iElement;
-            if((pElement->iLayerId != 0 && oLayers.iLayerContents[pElement->iLayer] != pElement->iLayerId)
-                || pElement->iSprite >= iSpriteCount)
+            const element_t &oElement = m_vElements[iElement];
+            if((oElement.iLayerId != 0 && oLayers.iLayerContents[oElement.iLayer] != oElement.iLayerId)
+                || oElement.pSpriteSheet == NULL)
             {
                 continue;
             }
 
-            int iX = pElement->iX;
-            int iY = pElement->iY;
+            int iX = oElement.iX;
+            int iY = oElement.iY;
             unsigned int iWidth_, iHeight_;
-            m_pSpriteSheet->getSpriteSizeUnchecked(pElement->iSprite, &iWidth_, &iHeight_);
+            oElement.pSpriteSheet->getSpriteSizeUnchecked(oElement.iSprite, &iWidth_, &iHeight_);
             int iWidth = static_cast<int>(iWidth_);
             int iHeight = static_cast<int>(iHeight_);
             if(iFlags & THDF_FlipHorizontal)

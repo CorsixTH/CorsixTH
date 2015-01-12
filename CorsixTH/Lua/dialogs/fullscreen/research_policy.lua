@@ -133,9 +133,9 @@ end
 function UIResearch:adjustResearch(area, mode)
   local res = self.research
   local amount = 1
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 20
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   if mode == "less" then

@@ -36,7 +36,6 @@ ENDIF(UNIX)
 # Modify the config.h based upon our selection of options
 CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/agg/include/)
 
 # Generate source files list
 # Note: Done after generating config.h
@@ -55,7 +54,6 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
   ${CMAKE_SOURCE_DIR}/LFS/*.c
   ${CMAKE_SOURCE_DIR}/LPEG/*.c
-  ${CMAKE_SOURCE_DIR}/agg/src/agg_image_filters.cpp
 )
 
 # Declaration of the executable
@@ -80,7 +78,7 @@ IF(APPLE)
   					 POST_BUILD
   					 COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources)
 
-  target_link_libraries(CorsixTH SDLmain)
+  target_link_libraries(CorsixTH SDL2main)
   INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 ELSE()
   add_executable(CorsixTH ${corsixth_source_files})
@@ -89,7 +87,7 @@ ENDIF()
 # Finding libraries
 
 # Find SDL
-FIND_PACKAGE(SDL REQUIRED)
+FIND_PACKAGE(SDL2 REQUIRED)
 IF(SDL_FOUND)
   INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
   IF(SDLMAIN_LIBRARY STREQUAL "")
@@ -125,7 +123,7 @@ ENDIF(Lua_FOUND)
 
 # Find SDL_mixer
 IF(CORSIX_TH_USE_SDL_MIXER)
-  FIND_PACKAGE(SDL_mixer REQUIRED)
+  FIND_PACKAGE(SDL2_mixer REQUIRED)
   IF(SDLMIXER_FOUND)
     TARGET_LINK_LIBRARIES(CorsixTH ${SDLMIXER_LIBRARY})
     INCLUDE_DIRECTORIES(${SDLMIXER_INCLUDE_DIR})
@@ -167,18 +165,6 @@ IF(CORSIX_TH_USE_FREETYPE2)
     message("Error: FreeType2 library not found, even though it was selected to be used")
   ENDIF(FREETYPE_FOUND)
 ENDIF(CORSIX_TH_USE_FREETYPE2)
-
-# Find OpenGL
-IF(CORSIX_TH_USE_OGL_RENDERER)
-  FIND_PACKAGE(OpenGL REQUIRED)
-  IF(OPENGL_FOUND)
-    TARGET_LINK_LIBRARIES(CorsixTH ${OPENGL_gl_LIBRARY})
-    INCLUDE_DIRECTORIES(${OPENGL_INCLUDE_DIR})
-    message("  OpenGL found")
-  ELSE(OPENGL_FOUND)
-    message(FATAL_ERROR "Error: OpenGL library not found, it is required to build (consider changing choice of renderer)")
-  ENDIF(OPENGL_FOUND)
-ENDIF(CORSIX_TH_USE_OGL_RENDERER)
 
 # Find DirectX
 IF(CORSIX_TH_USE_DX9_RENDERER)

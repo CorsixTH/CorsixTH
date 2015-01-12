@@ -325,4 +325,6 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
     lua_call(L, 4, LUA_MULTRET);
 }
 
+void luaT_pushtablebool(lua_State *L, const char *k, bool v);
+
 #endif // CORSIX_TH_TH_LUA_H_

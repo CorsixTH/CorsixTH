@@ -29,7 +29,7 @@ local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 91
+local SAVEGAME_VERSION = 100
 
 class "App"
 
@@ -38,6 +38,7 @@ function App:App()
   self.config = {}
   self.runtime_config = {}
   self.running = false
+  self.key_modifiers = {}
   self.gfx = {}
   self.last_dispatch_type = ""
   self.eventHandlers = {
@@ -45,8 +46,11 @@ function App:App()
     timer = self.onTick,
     keydown = self.onKeyDown,
     keyup = self.onKeyUp,
+    textediting = self.onEditingText,
+    textinput = self.onTextInput,
     buttonup = self.onMouseUp,
     buttondown = self.onMouseDown,
+    mousewheel = self.onMouseWheel,
     motion = self.onMouseMove,
     active = self.onWindowActive,
     music_over = self.onMusicOver,
@@ -121,16 +125,8 @@ function App:init()
       " fail to run until you recompile the binary.")
     end
   end
-  local caption_descs = {compile_opts.renderer}
-  if compile_opts.jit then
-    caption_descs[#caption_descs + 1] = compile_opts.jit
-  end
-  if compile_opts.arch_64 then
-    caption_descs[#caption_descs + 1] = "64 bit"
-  end
-  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
-  SDL.wm.setCaption(self.caption)
-  local modes = {"hardware", "doublebuf"}
+
+  local modes = {}
   if compile_opts.renderer == "OpenGL" then
     modes[#modes + 1] = "opengl"
   end
@@ -152,6 +148,15 @@ function App:init()
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
+  local caption_descs = {self.video:getRendererDetails()}
+  if compile_opts.jit then
+    caption_descs[#caption_descs + 1] = compile_opts.jit
+  end
+  if compile_opts.arch_64 then
+    caption_descs[#caption_descs + 1] = "64 bit"
+  end
+  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
+  self.video:setCaption(self.caption)
 
   -- Prereq 2: Load and initialise the graphics subsystem
   dofile "persistance"
@@ -204,7 +209,7 @@ function App:init()
 
   -- Load movie player
   dofile "movie_player"
-  self.moviePlayer = MoviePlayer(self, self.audio)
+  self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
     self.moviePlayer:init()
   end
@@ -862,13 +867,15 @@ local fps_sum = 0 -- Sum of fps_history array
 local fps_next = 1 -- Used to loop through fps_history when [over]writing
 
 function App:drawFrame()
+  self.video:startFrame()
   if(self.moviePlayer.playing) then
+    self.key_modifiers = {}
     self.moviePlayer:refresh()
   else
-    self.video:startFrame()
+    self.key_modifiers = SDL.getKeyModifiers()
     self.ui:draw(self.video)
-    self.video:endFrame()
   end
+  self.video:endFrame()
 
   if self.config.track_fps then
     fps_sum = fps_sum - fps_history[fps_next]
@@ -892,6 +899,14 @@ function App:onKeyUp(...)
   return self.ui:onKeyUp(...)
 end
 
+function App:onEditingText(...)
+  return self.ui:onEditingText(...)
+end
+
+function App:onTextInput(...)
+  return self.ui:onTextInput(...)
+end
+
 function App:onMouseUp(...)
   return self.ui:onMouseUp(...)
 end
@@ -902,6 +917,10 @@ end
 
 function App:onMouseMove(...)
   return self.ui:onMouseMove(...)
+end
+
+function App:onMouseWheel(...)
+  return self.ui:onMouseWheel(...)
 end
 
 function App:onWindowActive(...)
@@ -1350,6 +1369,20 @@ function App:checkForUpdates()
   print ("New version found: " .. new_version)
   -- Display the update window
   self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))
+end
+
+-- Free up / stop any resources relying on the current video object
+function App:prepareVideoUpdate()
+  self.video:endFrame()
+  self.moviePlayer:deallocatePictureBuffer()
+end
+
+-- Update / start any resources relying on a video object
+function App:finishVideoUpdate()
+  self.gfx:updateTarget(self.video)
+  self.moviePlayer:updateRenderer()
+  self.moviePlayer:allocatePictureBuffer()
+  self.video:startFrame()
 end
 
 -- Do not remove, for savegame compatibility < r1891

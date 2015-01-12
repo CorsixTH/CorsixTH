@@ -56,7 +56,6 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addKeyHandler("down", self.scrollDown)
   self:addKeyHandler("right", self.increasePay)
   self:addKeyHandler("left", self.decreasePay)
-  self.ui:enableKeyboardRepeat() -- To quickly change values
 
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
@@ -96,7 +95,6 @@ function UICasebook:UICasebook(ui, disease_selection)
 end
 
 function UICasebook:close()
-  self.ui:disableKeyboardRepeat()
   UIFullscreen.close(self)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
@@ -268,7 +266,7 @@ end
 
 function UICasebook:scrollUp()
   if self.selected_index > 1 then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = 1
     else
       self.selected_index = self.selected_index - 1
@@ -284,7 +282,7 @@ end
 
 function UICasebook:scrollDown()
   if self.selected_index < #self.names_sorted then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = #self.names_sorted
     else
       self.selected_index = self.selected_index + 1
@@ -301,9 +299,9 @@ end
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price + amount
@@ -320,9 +318,9 @@ end
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price - amount
@@ -367,14 +365,13 @@ function UICasebook:onMouseDown(button, x, y)
   end
 end
 
-function UICasebook:onMouseUp(code, x, y)
-  if not UIFullscreen.onMouseUp(self, code, x, y) then
-    if self:hitTest(x, y) then
-      if code == 4 then
-        -- Mouse wheel, scroll.
+function UICasebook:onMouseWheel(x, y)
+  if not UIFullscreen.onMouseWheel(self, x, y) then
+    if self:hitTest(self.cursor_x, self.cursor_y) then
+      if y > 0 then
         self:scrollUp()
         return true
-      elseif code == 5 then
+      else
         self:scrollDown()
         return true
       end

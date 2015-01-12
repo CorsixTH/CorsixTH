@@ -26,6 +26,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include <SDL.h>
 #include <new>
+#include <algorithm>
 #include "run_length_encoder.h"
 
 THMapNode::THMapNode()
@@ -701,47 +702,22 @@ void THMap::setAllWallDrawFlags(unsigned char iFlags)
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
 {
-    if(rcClip.x < rcIntersect.x)
+    // The intersection of the rectangles is the higher of the lower bounds and the lower of the higher bounds, clamped to a zero size.
+    THClipRect::xy_t maxX = std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w);
+    THClipRect::xy_t maxY = std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h);
+    rcClip.x = std::max(rcClip.x, rcIntersect.x);
+    rcClip.y = std::max(rcClip.y, rcIntersect.y);
+    rcClip.w = maxX - rcClip.x;
+    rcClip.h = maxY - rcClip.y;
+
+    // Make sure that we clamp the values to 0.
+    if (rcClip.w <= 0)
     {
-        if(rcClip.x + static_cast<THClipRect::xy_t>(rcClip.w) <= rcIntersect.x)
-        {
-            rcClip.w = 0;
-            rcClip.h = 0;
-            return;
-        }
-        rcClip.w = rcClip.x - rcIntersect.x + rcClip.w;
-        rcClip.x = rcIntersect.x;
+        rcClip.w = rcClip.h = 0;
     }
-    if(rcClip.y < rcIntersect.y)
+    else if (rcClip.h <= 0)
     {
-        if(rcClip.y + static_cast<THClipRect::xy_t>(rcClip.h) <= rcIntersect.y)
-        {
-            rcClip.w = 0;
-            rcClip.h = 0;
-            return;
-        }
-        rcClip.h = rcClip.y - rcIntersect.y + rcClip.h;
-        rcClip.y = rcIntersect.y;
-    }
-    if(rcClip.x + rcClip.w > rcIntersect.x + rcIntersect.w)
-    {
-        if(rcIntersect.x + static_cast<THClipRect::xy_t>(rcIntersect.w) <= rcClip.x)
-        {
-            rcClip.w = 0;
-            rcClip.h = 0;
-            return;
-        }
-        rcClip.w = rcIntersect.x + rcIntersect.w - rcClip.x;
-    }
-    if(rcClip.y + rcClip.h > rcIntersect.y + rcIntersect.h)
-    {
-        if(rcIntersect.y + static_cast<THClipRect::xy_t>(rcIntersect.h) <= rcClip.y)
-        {
-            rcClip.w = 0;
-            rcClip.h = 0;
-            return;
-        }
-        rcClip.h = rcIntersect.y + rcIntersect.h - rcClip.y;
+        rcClip.w = rcClip.h = 0;
     }
 }
 

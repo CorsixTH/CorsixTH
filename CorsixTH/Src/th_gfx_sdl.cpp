@@ -21,84 +21,314 @@ SOFTWARE.
 */
 
 #include "config.h"
-#ifdef CORSIX_TH_USE_SDL_RENDERER
+
 #include "th_gfx.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
 #include "th_map.h"
-#include "agg_rendering_buffer.h"
-#include "agg_pixfmt_rgb.h"
-#include "agg_pixfmt_rgba.h"
-#include "agg_renderer_base.h"
-#include "agg_span_interpolator_linear.h"
-#include "agg_span_image_filter_rgb.h"
-#include "agg_scanline_p.h"
-#include "agg_renderer_scanline.h"
-#include "agg_span_allocator.h"
-#include "agg_rasterizer_scanline_aa.h"
-#include "agg_conv_stroke.h"
-#include "agg_vcgen_stroke.cpp"
 #include <new>
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
 
+FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidth), m_iHeight(iHeight)
+{
+    m_iX = 0;
+    m_iY = 0;
+}
+
+FullColourRenderer::~FullColourRenderer()
+{
+}
+
+bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette *pPalette)
+{
+    if (m_iWidth <= 0 || m_iHeight <= 0)
+        return false;
+
+    const uint32_t* pColours = pPalette->getARGBData();
+    for (;;) {
+        unsigned char iType = *pImg++;
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                while (iLength > 0)
+                {
+                    uint32_t iColour = THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
+                    _pushPixel(iColour);
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+
+            case 1: // Fixed partially transparent 32bpp pixels
+            {
+                unsigned char iOpacity = *pImg++;
+                while (iLength > 0)
+                {
+                    uint32_t iColour = THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
+                    _pushPixel(iColour);
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+            }
+
+            case 2: // Fixed fully transparent pixels
+            {
+                static const uint32_t iTransparent = THPalette::packARGB(0, 0, 0, 0);
+                while (iLength > 0)
+                {
+                    _pushPixel(iTransparent);
+                    iLength--;
+                }
+                break;
+            }
+
+            case 3: // Recolour layer
+            {
+                unsigned char iTable = *pImg++;
+                pImg++; // Skip reading the opacity for now.
+                if (iTable == 0xFF)
+                {
+                    // Legacy sprite data. Use the palette to recolour the layer.
+                    // Note that the iOpacity is ignored here.
+                    while (iLength > 0)
+                    {
+                        _pushPixel(pColours[*pImg++]);
+                        iLength--;
+                    }
+                }
+                else
+                {
+                    // TODO: Add proper recolour layers, where RGB comes from
+                    // table 'iTable' at index *pImg (iLength times), and
+                    // opacity comes from the byte after the iTable byte.
+                    //
+                    // For now just draw black pixels, so it won't go unnoticed.
+                    while (iLength > 0)
+                    {
+                        uint32_t iColour = THPalette::packARGB(0xFF, 0, 0, 0);
+                        _pushPixel(iColour);
+                        iLength--;
+                    }
+                }
+                break;
+            }
+        }
+
+        if (m_iY >= m_iHeight)
+            break;
+    }
+    return m_iX == 0;
+}
+
+FullColourStoring::FullColourStoring(uint32_t *pDest, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
+{
+    m_pDest = pDest;
+}
+
+void FullColourStoring::storeARGB(uint32_t pixel)
+{
+    *m_pDest++ = pixel;
+}
+
+WxStoring::WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
+{
+    m_pRGBData = pRGBData;
+    m_pAData = pAData;
+}
+
+void WxStoring::storeARGB(uint32_t pixel)
+{
+    m_pRGBData[0] = THPalette::getR(pixel);
+    m_pRGBData[1] = THPalette::getG(pixel);
+    m_pRGBData[2] = THPalette::getB(pixel);
+    m_pRGBData += 3;
+
+    *m_pAData++ = THPalette::getA(pixel);
+}
+
 THRenderTarget::THRenderTarget()
 {
-    m_pSurface = NULL;
-    m_pDummySurface = NULL;
+    m_pWindow = NULL;
+    m_pRenderer = NULL;
+    m_pFormat = NULL;
     m_pCursor = NULL;
+    m_pZoomTexture = NULL;
     m_bShouldScaleBitmaps = false;
+    m_bBlueFilterActive = false;
+    m_iWidth = -1;
+    m_iHeight = -1;
 }
 
 THRenderTarget::~THRenderTarget()
 {
+    destroy();
 }
 
 bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
 {
-    if(m_pSurface != NULL)
+    if (m_pRenderer != NULL)
         return false;
-    m_pSurface = SDL_SetVideoMode(pParams->iWidth, pParams->iHeight,
-        pParams->iBPP, pParams->iSDLFlags);
 
-    // Create another surface that's simply blue. This is used as an overlay
-    // when the game is paused to create a blue filter.
-    m_bBlueFilterActive = false;
-    const SDL_PixelFormat& fmt = *(m_pSurface->format);
-    m_pDummySurface = SDL_CreateRGBSurface(SDL_HWSURFACE, pParams->iWidth, pParams->iHeight,
-        fmt.BitsPerPixel, fmt.Rmask,fmt.Gmask,fmt.Bmask,fmt.Amask );
-    SDL_FillRect(m_pDummySurface, NULL, mapColour(50, 50, 200));
-    SDL_SetAlpha(m_pDummySurface, SDL_SRCALPHA, 128);
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+    m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
+    m_pWindow = SDL_CreateWindow("CorsixTH",
+                                 SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                 pParams->iWidth, pParams->iHeight, SDL_WINDOW_OPENGL);
+    if (!m_pWindow)
+    {
+        return false;
+    }
 
-    return m_pSurface != NULL;
+    return update(pParams);
+}
+
+bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
+{
+    if (m_pWindow == NULL)
+    {
+        return false;
+    }
+
+    bool bUpdateSize = (m_iWidth != pParams->iWidth) || (m_iHeight != pParams->iHeight);
+    m_iWidth = pParams->iWidth;
+    m_iHeight = pParams->iHeight;
+
+    bool bIsFullscreen = ((SDL_GetWindowFlags(m_pWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP);
+    if (bIsFullscreen != pParams->bFullscreen)
+    {
+        SDL_SetWindowFullscreen(m_pWindow, (pParams->bFullscreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0));
+    }
+
+    if (bUpdateSize || bIsFullscreen != pParams->bFullscreen)
+    {
+        SDL_SetWindowSize(m_pWindow, m_iWidth, m_iHeight);
+    }
+
+    Uint32 iRendererFlags = (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+
+    bool bCreateRenderer = false;
+    SDL_RendererInfo info;
+    if (!m_pRenderer)
+    {
+        bCreateRenderer = true;
+    }
+    else
+    {
+        SDL_GetRendererInfo(m_pRenderer, &info);
+        if (info.flags != iRendererFlags)
+        {
+            SDL_DestroyRenderer(m_pRenderer);
+            bCreateRenderer = true;
+        }
+    }
+
+    if (bCreateRenderer)
+    {
+        m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, iRendererFlags);
+        SDL_GetRendererInfo(m_pRenderer, &info);
+    }
+
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
+
+    if (bCreateRenderer || bUpdateSize)
+    {
+        SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
+    }
+
+    return true;
+}
+
+void THRenderTarget::destroy()
+{
+    if (m_pFormat)
+    {
+        SDL_FreeFormat(m_pFormat);
+        m_pFormat = NULL;
+    }
+
+    if (m_pZoomTexture)
+    {
+        SDL_DestroyTexture(m_pZoomTexture);
+        m_pZoomTexture = NULL;
+    }
+
+    if (m_pRenderer)
+    {
+        SDL_DestroyRenderer(m_pRenderer);
+        m_pRenderer = NULL;
+    }
+
+    if (m_pWindow)
+    {
+        SDL_DestroyWindow(m_pWindow);
+        m_pWindow = NULL;
+    }
 }
 
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
+    _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
     if(0.999 <= fScale && fScale <= 1.001)
+    {
         return true;
-
-    if(eWhatToScale & ~THSI_Bitmaps)
+    }
+    else if(fScale <= 0.000)
+    {
         return false;
-
-    if(((eWhatToScale & THSI_Bitmaps) != 0) && (fScale != 1.0))
+    }
+    else if(eWhatToScale == THSI_Bitmaps)
     {
         m_bShouldScaleBitmaps = true;
         m_fBitmapScaleFactor = fScale;
+
+        return true;
     }
-    return true;
+    else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
+    {
+        //Draw everything from now until the next scale to m_pZoomTexture
+        //with the appropriate virtual size, which will be copied scaled to
+        //fit the window.
+        float virtWidth = static_cast<float>(m_iWidth) / fScale;
+        float virtHeight = static_cast<float>(m_iHeight) / fScale;
+
+        m_pZoomTexture = SDL_CreateTexture(m_pRenderer,
+                                           SDL_PIXELFORMAT_ABGR8888,
+                                           SDL_TEXTUREACCESS_TARGET,
+                                           virtWidth,
+                                           virtHeight
+                                          );
+        SDL_RenderSetLogicalSize(m_pRenderer, virtWidth, virtHeight);
+        if(SDL_SetRenderTarget(m_pRenderer, m_pZoomTexture) != 0)
+        {
+            SDL_DestroyTexture(m_pZoomTexture);
+            m_pZoomTexture = NULL;
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
-bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
+void THRenderTarget::setCaption(const char* sCaption)
 {
-    if(!m_bShouldScaleBitmaps)
-        return false;
-    if(pFactor)
-        *pFactor = m_fBitmapScaleFactor;
-    return true;
+    SDL_SetWindowTitle(m_pWindow, sCaption);
+}
+
+const char *THRenderTarget::getRendererDetails() const
+{
+    SDL_RendererInfo info = {};
+    SDL_GetRendererInfo(m_pRenderer, &info);
+    return info.name;
 }
 
 const char* THRenderTarget::getLastError()
@@ -108,11 +338,14 @@ const char* THRenderTarget::getLastError()
 
 bool THRenderTarget::startFrame()
 {
+    fillBlack();
     return true;
 }
 
 bool THRenderTarget::endFrame()
 {
+    _flushZoomBuffer();
+
     // End the frame by adding the cursor and possibly a filter.
     if(m_pCursor)
     {
@@ -120,14 +353,21 @@ bool THRenderTarget::endFrame()
     }
     if(m_bBlueFilterActive)
     {
-        SDL_BlitSurface(m_pDummySurface, NULL, this->getRawSurface(), NULL);
+        SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
+        SDL_SetRenderDrawColor(m_pRenderer, 255*0.2f, 255*0.2f, 255*1.0f, 255*0.5f);
+        SDL_RenderFillRect(m_pRenderer, NULL);
     }
-    return SDL_Flip(m_pSurface) == 0;
+
+    SDL_RenderPresent(m_pRenderer);
+    return true;
 }
 
 bool THRenderTarget::fillBlack()
 {
-    return SDL_FillRect(m_pSurface, NULL, mapColour(0, 0, 0)) == 0;
+    SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(m_pRenderer);
+
+    return true;
 }
 
 void THRenderTarget::setBlueFilterActive(bool bActivate)
@@ -137,37 +377,55 @@ void THRenderTarget::setBlueFilterActive(bool bActivate)
 
 uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
 {
-    return SDL_MapRGB(m_pSurface->format, iR, iG, iB);
+    return THPalette::packARGB(0xFF, iR, iG, iB);
 }
 
 bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
-    SDL_Rect rcDest;
-    rcDest.x = iX;
-    rcDest.y = iY;
-    rcDest.w = iW;
-    rcDest.h = iH;
-    return SDL_FillRect(m_pSurface, &rcDest, iColour) == 0;
+    SDL_Rect rcDest = { iX, iY, iW, iH };
+
+    Uint8 r, g, b, a;
+    SDL_GetRGBA(iColour, m_pFormat, &r, &g, &b, &a);
+
+    SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(m_pRenderer, r, g, b, a);
+    SDL_RenderFillRect(m_pRenderer, &rcDest);
+
+    return true;
 }
 
 void THRenderTarget::getClipRect(THClipRect* pRect) const
 {
-    SDL_GetClipRect(m_pSurface, reinterpret_cast<SDL_Rect*>(pRect));
-}
-
-int THRenderTarget::getWidth() const
-{
-    return static_cast<int>(m_pSurface->w);
-}
-
-int THRenderTarget::getHeight() const
-{
-    return static_cast<int>(m_pSurface->h);
+    SDL_RenderGetClipRect(m_pRenderer, reinterpret_cast<SDL_Rect*>(pRect));
 }
 
 void THRenderTarget::setClipRect(const THClipRect* pRect)
 {
-    SDL_SetClipRect(m_pSurface, reinterpret_cast<const SDL_Rect*>(pRect));
+    const SDL_Rect *pSDLRect = reinterpret_cast<const SDL_Rect*>(pRect);
+
+    // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
+    // off clipping, so we replace it with a rect that's outside our viewport.
+    const SDL_Rect rcBogus = { -2, -2, 1, 1 };
+    if (pSDLRect && SDL_RectEmpty(pSDLRect))
+    {
+        pSDLRect = &rcBogus;
+    }
+
+    SDL_RenderSetClipRect(m_pRenderer, pSDLRect);
+}
+
+int THRenderTarget::getWidth() const
+{
+    int w;
+    SDL_RenderGetLogicalSize(m_pRenderer, &w, NULL);
+    return w;
+}
+
+int THRenderTarget::getHeight() const
+{
+    int h;
+    SDL_RenderGetLogicalSize(m_pRenderer, NULL, &h);
+    return h;
 }
 
 void THRenderTarget::startNonOverlapping()
@@ -193,13 +451,170 @@ void THRenderTarget::setCursorPosition(int iX, int iY)
 
 bool THRenderTarget::takeScreenshot(const char* sFile)
 {
-    return SDL_SaveBMP(m_pSurface, sFile) == 0;
+    //The window surface is all black.  We need it for the appropriate
+    //parameters but all the pixel data is in the the renderer where we
+    //cannot directly save it.  Instead we have to create a new surface based
+    //on the pixel data in the renderer and save that.
+    SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
+    SDL_Surface* pRgbSurface = NULL;
+    int iPitch = pWindowSurface->w * pWindowSurface->format->BitsPerPixel;
+    unsigned char* pPixels = new unsigned char[pWindowSurface->h * iPitch];
+    SDL_RenderReadPixels(m_pRenderer,
+                         &pWindowSurface->clip_rect,
+                         pWindowSurface->format->format,
+                         pPixels,
+                         iPitch);
+    pRgbSurface = SDL_CreateRGBSurfaceFrom(pPixels,
+                                           pWindowSurface->w,
+                                           pWindowSurface->h,
+                                           pWindowSurface->format->BitsPerPixel,
+                                           iPitch,
+                                           pWindowSurface->format->Rmask,
+                                           pWindowSurface->format->Gmask,
+                                           pWindowSurface->format->Bmask,
+                                           pWindowSurface->format->Amask);
+    SDL_SaveBMP(pRgbSurface, sFile);
+    SDL_FreeSurface(pRgbSurface);
+    delete[] pPixels;
+    SDL_FreeSurface(pWindowSurface);
+    return true;
+}
+
+
+bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
+{
+    if(!m_bShouldScaleBitmaps)
+        return false;
+    if(pFactor)
+        *pFactor = m_fBitmapScaleFactor;
+    return true;
+}
+
+void THRenderTarget::_flushZoomBuffer()
+{
+    if(m_pZoomTexture == NULL) { return; }
+
+    SDL_SetRenderTarget(m_pRenderer, NULL);
+    SDL_RenderSetScale(m_pRenderer, 1, 1);
+    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_NONE);
+    SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
+    SDL_DestroyTexture(m_pZoomTexture);
+    m_pZoomTexture = NULL;
+}
+
+//! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
+/*!
+    @param pPixelData Legacy 8bpp pixels.
+    @param iPixelDataLength Number of pixels in the \a pPixelData.
+    @return Converted 32bpp pixel data, if succeeded else NULL is returned. Caller should free the returned memory.
+ */
+static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_t iPixelDataLength)
+{
+    // Recolour blocks are 63 pixels long.
+    // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
+    size_t iNumFilled = iPixelDataLength / 63;
+    size_t iRemaining = iPixelDataLength - iNumFilled * 63;
+    size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
+
+    unsigned char *pData = new (std::nothrow) unsigned char[iNewSize];
+    if (pData == NULL)
+        return NULL;
+
+    unsigned char *pDest = pData;
+    while (iPixelDataLength > 0)
+    {
+        size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
+        *pDest++ = iLength + 0xC0; // Recolour layer type of block.
+        *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
+        *pDest++ = 0xFF; // Non-transparent.
+        memcpy(pDest, pPixelData, iLength);
+        pDest += iLength;
+        pPixelData += iLength;
+        iPixelDataLength -= iLength;
+    }
+    return pData;
+}
+
+SDL_Texture* THRenderTarget::createPalettizedTexture(int iWidth, int iHeight,
+                                                     const unsigned char* pPixels,
+                                                     const THPalette* pPalette) const
+{
+    uint32_t *pARGBPixels = new (std::nothrow) uint32_t[iWidth * iHeight];
+    if(pARGBPixels == NULL)
+        return 0;
+
+    FullColourStoring oRenderer(pARGBPixels, iWidth, iHeight);
+    bool bOk = oRenderer.decodeImage(pPixels, pPalette);
+    if (!bOk)
+        return 0;
+
+    SDL_Texture *pTexture = createTexture(iWidth, iHeight, pARGBPixels);
+    delete [] pARGBPixels;
+    return pTexture;
+}
+
+SDL_Texture* THRenderTarget::createTexture(int iWidth, int iHeight,
+                                           const uint32_t* pPixels) const
+{
+    SDL_Texture *pTexture = SDL_CreateTexture(m_pRenderer, m_pFormat->format, SDL_TEXTUREACCESS_STATIC, iWidth, iHeight);
+    SDL_UpdateTexture(pTexture, NULL, pPixels, sizeof(*pPixels) * iWidth);
+    SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
+    SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    SDL_SetTextureAlphaMod(pTexture, 0xFF);
+
+    return pTexture;
+}
+
+void THRenderTarget::draw(SDL_Texture *pTexture, const SDL_Rect *prcSrcRect, const SDL_Rect *prcDstRect, int iFlags)
+{
+    SDL_SetTextureAlphaMod(pTexture, 0xFF);
+    if (iFlags & THDF_Alpha50)
+    {
+        SDL_SetTextureAlphaMod(pTexture, 0x80);
+    }
+    else if (iFlags & THDF_Alpha75)
+    {
+        SDL_SetTextureAlphaMod(pTexture, 0x40);
+    }
+
+    int iSDLFlip = SDL_FLIP_NONE;
+    if(iFlags & THDF_FlipHorizontal)
+        iSDLFlip |= SDL_FLIP_HORIZONTAL;
+    if (iFlags & THDF_FlipVertical)
+        iSDLFlip |= SDL_FLIP_VERTICAL;
+
+    if (iSDLFlip != 0) {
+        SDL_RenderCopyEx(m_pRenderer, pTexture, prcSrcRect, prcDstRect, 0, NULL, (SDL_RendererFlip)iSDLFlip);
+    } else {
+        SDL_RenderCopy(m_pRenderer, pTexture, prcSrcRect, prcDstRect);
+    }
+}
+
+
+void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
+{
+    SDL_SetRenderDrawColor(m_pRenderer, pLine->m_iR, pLine->m_iG, pLine->m_iB, pLine->m_iA);
+
+    double lastX, lastY;
+    lastX = pLine->m_pFirstOp->m_fX;
+    lastY = pLine->m_pFirstOp->m_fY;
+
+    THLine::THLineOperation* op = (THLine::THLineOperation*)(pLine->m_pFirstOp->m_pNext);
+    while (op) {
+        if (op->type == THLine::THLOP_LINE) {
+            SDL_RenderDrawLine(m_pRenderer, lastX + iX, lastY + iY, op->m_fX + iX, op->m_fY + iY);
+        }
+
+        lastX = op->m_fX;
+        lastY = op->m_fY;
+
+        op = (THLine::THLineOperation*)(op->m_pNext);
+    }
 }
 
 THPalette::THPalette()
 {
     m_iNumColours = 0;
-    m_iTransparentIndex = -1;
 }
 
 static const unsigned char gs_iTHColourLUT[0x40] = {
@@ -219,17 +634,17 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     if(iDataLength != 256 * 3)
         return false;
 
-    m_iNumColours = static_cast<int>(iDataLength) / 3;
-    m_iTransparentIndex = -1;
-    colour_t* pColour = m_aColours;
-    for(int i = 0; i < m_iNumColours; ++i, pData += 3, ++pColour)
+    m_iNumColours = static_cast<int>(iDataLength / 3);
+    for(int i = 0; i < m_iNumColours; ++i, pData += 3)
     {
-        pColour->r = gs_iTHColourLUT[pData[0] & 0x3F];
-        pColour->g = gs_iTHColourLUT[pData[1] & 0x3F];
-        pColour->b = gs_iTHColourLUT[pData[2] & 0x3F];
-        if(pColour->r == 0xFF && pColour->g == 0 && pColour->b == 0xFF)
-            m_iTransparentIndex = i;
-        pColour->unused = 0;
+        unsigned char iR = gs_iTHColourLUT[pData[0] & 0x3F];
+        unsigned char iG = gs_iTHColourLUT[pData[1] & 0x3F];
+        unsigned char iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        uint32_t iColour = packARGB(0xFF, iR, iG, iB);
+        // Remap magenta to transparent
+        if(iColour == packARGB(0xFF, 0xFF, 0x00, 0xFF))
+            iColour = packARGB(0x00, 0x00, 0x00, 0x00);
+        m_aColoursARGB[i] = iColour;
     }
 
     return true;
@@ -239,46 +654,39 @@ bool THPalette::setEntry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
 {
     if(iEntry < 0 || iEntry >= m_iNumColours)
         return false;
-    colour_t* pColour = m_aColours + iEntry;
-    pColour->r = iR;
-    pColour->g = iG;
-    pColour->b = iB;
-    if(iR == 0xFF && iG == 0 && iB == 0xFF)
-        m_iTransparentIndex = iEntry;
+    uint32_t iColour = packARGB(0xFF, iR, iG, iB);
+    // Remap magenta to transparent
+    if(iColour == packARGB(0xFF, 0xFF, 0x00, 0xFF))
+        iColour = packARGB(0x00, 0x00, 0x00, 0x00);
+    m_aColoursARGB[iEntry] = iColour;
     return true;
 }
 
-void THPalette::_assign(THRenderTarget* pTarget) const
+int THPalette::getColourCount() const
 {
-    _assign(pTarget->getRawSurface());
+    return m_iNumColours;
 }
 
-void THPalette::_assign(SDL_Surface *pSurface) const
+const uint32_t* THPalette::getARGBData() const
 {
-    SDL_SetPalette(pSurface, SDL_PHYSPAL | SDL_LOGPAL,
-        const_cast<SDL_Colour*>(m_aColours), 0, m_iNumColours);
-    if(m_iTransparentIndex != -1)
-    {
-        SDL_SetColorKey(pSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL,
-            static_cast<Uint32>(m_iTransparentIndex));
-    }
-    else
-        SDL_SetColorKey(pSurface, 0, 0);
+    return m_aColoursARGB;
 }
 
 THRawBitmap::THRawBitmap()
 {
-    m_pBitmap = NULL;
-    m_pCachedScaledBitmap = NULL;
+    m_pTexture = NULL;
     m_pPalette = NULL;
-    m_pData = NULL;
+    m_pTarget = NULL;
+    m_iWidth = 0;
+    m_iHeight = 0;
 }
 
 THRawBitmap::~THRawBitmap()
 {
-    SDL_FreeSurface(m_pBitmap);
-    SDL_FreeSurface(m_pCachedScaledBitmap);
-    delete[] m_pData;
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+    }
 }
 
 void THRawBitmap::setPalette(const THPalette* pPalette)
@@ -286,240 +694,125 @@ void THRawBitmap::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-template <class PixFmt>
-class image_accessor_clip_rgb24_pal8
-{
-public:
-    typedef PixFmt   pixfmt_type;
-    typedef typename pixfmt_type::color_type color_type;
-    typedef typename pixfmt_type::order_type order_type;
-    typedef typename pixfmt_type::value_type value_type;
-    enum pix_width_e { pix_width = pixfmt_type::pix_width };
-
-    typedef agg::rendering_buffer palbuf_type;
-    typedef THPalette pal_type;
-    typedef pal_type::colour_t palcol_type;
-
-    image_accessor_clip_rgb24_pal8() {}
-    explicit image_accessor_clip_rgb24_pal8(const palbuf_type& buf,
-                                            const pal_type& pal,
-                                            const color_type& bk) :
-        m_pixf(&buf), m_pal(&pal)
-    {
-        pixfmt_type::make_pix(m_bk_buf, bk);
-    }
-
-    void background_color(const color_type& bk)
-    {
-        pixfmt_type::make_pix(m_bk_buf, bk);
-    }
-
-private:
-    AGG_INLINE const agg::int8u* pixel()
-    {
-        if(m_y >= 0 && m_y < (int)m_pixf->height() &&
-        m_x >= 0 && m_x < (int)m_pixf->width())
-        {
-            palcol_type c = (*m_pal)[m_pixf->row_ptr(m_y)[m_x]];
-            m_fg_buf[order_type::R] = c.r;
-            m_fg_buf[order_type::G] = c.g;
-            m_fg_buf[order_type::B] = c.b;
-            return m_fg_buf;
-        }
-        return m_bk_buf;
-    }
-
-public:
-    AGG_INLINE const agg::int8u* span(int x, int y, unsigned len)
-    {
-        m_x = m_x0 = x;
-        m_y = y;
-        return pixel();
-    }
-
-    AGG_INLINE const agg::int8u* next_x()
-    {
-        ++m_x;
-        return pixel();
-    }
-
-    AGG_INLINE const agg::int8u* next_y()
-    {
-        ++m_y;
-        m_x = m_x0;
-        return pixel();
-    }
-
-private:
-    const palbuf_type* m_pixf;
-    const pal_type*    m_pal;
-    agg::int8u         m_bk_buf[4];
-    agg::int8u         m_fg_buf[4];
-    int                m_x, m_x0, m_y;
-};
-
-class rasterizer_scanline_rect
-{
-public:
-    rasterizer_scanline_rect(int x, int y, unsigned int width, unsigned int height)
-    {
-        m_x = x;
-        m_y = y;
-        m_width = width;
-        m_height = height;
-    }
-
-    bool rewind_scanlines()
-    {
-        if(m_width > 0 && m_height > 0)
-        {
-            m_ycurr = m_y - 1;
-            return true;
-        }
-        return false;
-    }
-
-    int min_x()
-    {
-        return m_x;
-    }
-
-    int max_x()
-    {
-        return m_x + m_width - 1;
-    }
-
-    template<class Scanline> bool sweep_scanline(Scanline& sl)
-    {
-        if(static_cast<unsigned int>(++m_ycurr) >= static_cast<unsigned int>(m_y + m_height))
-            return false;
-        sl.reset_spans();
-        sl.add_span(m_x, m_width, agg::cover_full);
-        sl.finalize(m_ycurr);
-        return true;
-    }
-
-protected:
-    int m_x, m_y;
-    unsigned int m_width, m_height;
-    int m_ycurr;
-};
-
 bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
-                                 size_t iPixelDataLength,
-                                 int iWidth, THRenderTarget *pUnused)
+                                 size_t iPixelDataLength, int iWidth,
+                                 THRenderTarget *pEventualCanvas)
 {
-    if(m_pPalette == NULL)
+    if(pEventualCanvas == NULL)
         return false;
 
-    SDL_FreeSurface(m_pBitmap);
-    m_pBitmap = NULL;
-    delete[] m_pData;
-    m_pData = NULL;
-
-    m_pData = new (std::nothrow) unsigned char[iPixelDataLength];
-    if(m_pData == NULL)
+    pPixelData = convertLegacySprite(pPixelData, iPixelDataLength);
+    if (pPixelData == NULL)
         return false;
-    memcpy(m_pData, pPixelData, iPixelDataLength);
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
-
-    m_pBitmap = SDL_CreateRGBSurfaceFrom(m_pData, iWidth, iHeight, 8, iWidth, 0, 0, 0, 0);
-    if(m_pBitmap == NULL)
+    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pPixelData, m_pPalette);
+    if(!m_pTexture)
         return false;
-    m_pPalette->_assign(m_pBitmap);
 
+    m_iWidth = iWidth;
+    m_iHeight = iHeight;
+    m_pTarget = pEventualCanvas;
     return true;
 }
 
-bool THRawBitmap::_checkScaled(THRenderTarget* pCanvas, SDL_Rect& rcDest)
+/**
+ * Test whether the loaded full colour sprite loads correctly.
+ * @param pData Data of the sprite.
+ * @param iDataLength Length of the sprite data.
+ * @param iWidth Width of the sprite.
+ * @param iHeight Height of the sprite.
+ * @return Whether the sprite loads correctly (at the end of the sprite, all data is used).
+ */
+static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidth, int iHeight)
 {
-    float fFactor;
-    if(!pCanvas->shouldScaleBitmaps(&fFactor))
-        return false;
-    int iScaledWidth = (int)((float)m_pBitmap->w * fFactor);
-    if(!m_pCachedScaledBitmap || m_pCachedScaledBitmap->w != iScaledWidth)
+    if (iWidth <= 0 || iHeight <= 0)
+        return true;
+
+    size_t iCount = iWidth * iHeight;
+    while (iCount > 0)
     {
-        SDL_FreeSurface(m_pCachedScaledBitmap);
-        Uint32 iRMask, iGMask, iBMask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-        iRMask = 0xff000000;
-        iGMask = 0x00ff0000;
-        iBMask = 0x0000ff00;
-#else
-        iRMask = 0x000000ff;
-        iGMask = 0x0000ff00;
-        iBMask = 0x00ff0000;
-#endif
+        if (iDataLength < 1)
+            return false;
+        iDataLength--;
+        unsigned char iType = *pData++;
 
-        m_pCachedScaledBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, iScaledWidth, (int)((float)m_pBitmap->h * fFactor), 24, iRMask, iGMask, iBMask, 0);
-        SDL_LockSurface(m_pCachedScaledBitmap);
-        SDL_LockSurface(m_pBitmap);
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                if (iCount < iLength || iDataLength < iLength * 3)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength * 3;
+                pData += iLength * 3;
+                break;
 
-        typedef agg::pixfmt_rgb24_pre pixfmt_pre_t;
-        typedef agg::renderer_base<pixfmt_pre_t> renbase_pre_t;
-        typedef image_accessor_clip_rgb24_pal8<pixfmt_pre_t> imgsrc_t;
-        typedef agg::span_interpolator_linear<> interpolator_t;
-        typedef agg::span_image_filter_rgb_2x2<imgsrc_t, interpolator_t> span_gen_type;
-        agg::scanline_p8 sl;
-        agg::span_allocator<pixfmt_pre_t::color_type> sa;
-        agg::image_filter<agg::image_filter_bilinear> filter;
-        agg::trans_affine_scaling img_mtx(1.0 / fFactor);
-        agg::rendering_buffer rbuf_src(m_pData, m_pBitmap->w, m_pBitmap->h, m_pBitmap->pitch);
-        imgsrc_t img_src(rbuf_src, *m_pPalette, agg::rgba(0.0, 0.0, 0.0));
-        interpolator_t interpolator(img_mtx);
-        span_gen_type sg(img_src, interpolator, filter);
-        agg::rendering_buffer rbuf(reinterpret_cast<unsigned char*>(m_pCachedScaledBitmap->pixels), m_pCachedScaledBitmap->w, m_pCachedScaledBitmap->h, m_pCachedScaledBitmap->pitch);
-        pixfmt_pre_t pixf_pre(rbuf);
-        renbase_pre_t rbase_pre(pixf_pre);
-        rasterizer_scanline_rect ras(0, 0, rbuf.width(), rbuf.height());
-        rbase_pre.clear(agg::rgba(1.0,0,0,0));
-        agg::render_scanlines_aa(ras, sl, rbase_pre, sa, sg);
+            case 1: // Fixed partially transparent 32bpp pixels
+                if (iDataLength < 1)
+                    return false;
+                iDataLength--;
+                pData++; // Opacity byte.
 
-        SDL_UnlockSurface(m_pBitmap);
-        SDL_UnlockSurface(m_pCachedScaledBitmap);
+                if (iCount < iLength || iDataLength < iLength * 3)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength * 3;
+                pData += iLength * 3;
+                break;
+
+            case 2: // Fixed fully transparent pixels
+                if (iCount < iLength)
+                    return false;
+                iCount -= iLength;
+                break;
+
+            case 3: // Recolour layer
+                if (iDataLength < 2)
+                    return false;
+                iDataLength -= 2;
+                pData += 2; // Table number, opacity byte.
+
+                if (iCount < iLength || iDataLength < iLength)
+                    return false;
+                iCount -= iLength;
+                iDataLength -= iLength;
+                pData += iLength;
+                break;
+        }
     }
-    rcDest.x = (Sint16)((float)rcDest.x * fFactor);
-    rcDest.y = (Sint16)((float)rcDest.y * fFactor);
-    return true;
+    return iDataLength == 0;
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
-    if(m_pBitmap == NULL)
-        return;
-
-    SDL_Rect rcDest;
-    rcDest.x = iX;
-    rcDest.y = iY;
-    SDL_BlitSurface(_checkScaled(pCanvas, rcDest) ? m_pCachedScaledBitmap :
-        m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+    draw(pCanvas, iX, iY, 0, 0, m_iWidth, m_iHeight);
 }
 
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
                        int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
-    if(m_pBitmap == NULL)
+    float fScaleFactor;
+    if (m_pTexture == NULL)
         return;
 
-    SDL_Rect rcSrc;
-    rcSrc.x = iSrcX;
-    rcSrc.y = iSrcY;
-    rcSrc.w = iWidth;
-    rcSrc.h = iHeight;
-    SDL_Rect rcDest;
-    rcDest.x = iX;
-    rcDest.y = iY;
-    SDL_BlitSurface(_checkScaled(pCanvas, rcDest) ? m_pCachedScaledBitmap :
-        m_pBitmap, &rcSrc, pCanvas->getRawSurface(), &rcDest);
+    if(!pCanvas->shouldScaleBitmaps(&fScaleFactor))
+    {
+        fScaleFactor = 1;
+    }
+
+    const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth, iHeight };
+    const SDL_Rect rcDest = { iX,    iY,    iWidth * fScaleFactor, iHeight * fScaleFactor };
+
+    pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);
 }
 
 THSpriteSheet::THSpriteSheet()
 {
     m_pSprites = NULL;
     m_pPalette = NULL;
+    m_pTarget = NULL;
     m_iSpriteCount = 0;
-    m_bHasAnyFlaggedBitmaps = false;
 }
 
 THSpriteSheet::~THSpriteSheet()
@@ -527,29 +820,36 @@ THSpriteSheet::~THSpriteSheet()
     _freeSprites();
 }
 
+void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
+{
+    if (iNumber >= m_iSpriteCount)
+        return;
+
+    if (m_pSprites[iNumber].pTexture != NULL)
+    {
+        SDL_DestroyTexture(m_pSprites[iNumber].pTexture);
+        m_pSprites[iNumber].pTexture = NULL;
+    }
+    if (m_pSprites[iNumber].pAltTexture != NULL)
+    {
+        SDL_DestroyTexture(m_pSprites[iNumber].pAltTexture);
+        m_pSprites[iNumber].pAltTexture = NULL;
+    }
+    if(m_pSprites[iNumber].pData != NULL)
+    {
+        delete[] m_pSprites[iNumber].pData;
+        m_pSprites[iNumber].pData = NULL;
+    }
+}
+
 void THSpriteSheet::_freeSprites()
 {
-    if(m_bHasAnyFlaggedBitmaps)
-    {
-        for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-        {
-            for(unsigned int j = 0; j < 32; ++j)
-                SDL_FreeSurface(m_pSprites[i].pBitmap[j]);
-            delete[] m_pSprites[i].pData;
-        }
-    }
-    else
-    {
-        for(unsigned int i = 0; i < m_iSpriteCount; ++i)
-        {
-            SDL_FreeSurface(m_pSprites[i].pBitmap[0]);
-            delete[] m_pSprites[i].pData;
-        }
-    }
+    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+        _freeSingleSprite(i);
+
     delete[] m_pSprites;
     m_pSprites = NULL;
     m_iSpriteCount = 0;
-    m_bHasAnyFlaggedBitmaps = false;
 }
 
 void THSpriteSheet::setPalette(const THPalette* pPalette)
@@ -557,13 +857,15 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-bool THSpriteSheet::loadFromTHFile(
-                        const unsigned char* pTableData, size_t iTableDataLength,
-                        const unsigned char* pChunkData, size_t iChunkDataLength,
-                        bool bComplexChunks, THRenderTarget*)
+bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
 {
     _freeSprites();
-    m_iSpriteCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+
+    if(pCanvas == NULL)
+        return false;
+    m_pTarget = pCanvas;
+
+    m_iSpriteCount = iCount;
     m_pSprites = new (std::nothrow) sprite_t[m_iSpriteCount];
     if(m_pSprites == NULL)
     {
@@ -571,12 +873,39 @@ bool THSpriteSheet::loadFromTHFile(
         return false;
     }
 
+    for (int i = 0; i < m_iSpriteCount; i++)
+    {
+        sprite_t &spr = m_pSprites[i];
+        spr.pTexture = NULL;
+        spr.pAltTexture = NULL;
+        spr.pData = NULL;
+        spr.pAltPaletteMap = NULL;
+        spr.iWidth = 0;
+        spr.iHeight = 0;
+    }
+
+    return true;
+}
+
+bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
+                                   const unsigned char* pChunkData, size_t iChunkDataLength,
+                                   bool bComplexChunks, THRenderTarget* pCanvas)
+{
+    _freeSprites();
+    if(pCanvas == NULL)
+        return false;
+
+    unsigned int iCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    if (!setSpriteCount(iCount, pCanvas))
+        return false;
+
     for(unsigned int i = 0; i < m_iSpriteCount; ++i)
     {
         sprite_t *pSprite = m_pSprites + i;
         const th_sprite_t *pTHSprite = reinterpret_cast<const th_sprite_t*>(pTableData) + i;
-        for(unsigned int j = 0; j < 32; ++j)
-            m_pSprites[i].pBitmap[j] = NULL;
+
+        pSprite->pTexture = NULL;
+        pSprite->pAltTexture = NULL;
         pSprite->pData = NULL;
         pSprite->pAltPaletteMap = NULL;
         pSprite->iWidth = pTHSprite->width;
@@ -586,22 +915,68 @@ bool THSpriteSheet::loadFromTHFile(
             continue;
 
         {
-            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, NULL);
+            unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight];
+            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
             if(iDataLen < 0)
                 iDataLen = 0;
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
-            pSprite->pData = oRenderer.takeData();
+            pData = oRenderer.takeData();
+            pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
+            delete pData;
         }
+    }
+    return true;
+}
 
-        pSprite->pBitmap[0] = SDL_CreateRGBSurfaceFrom(pSprite->pData,
-            pSprite->iWidth, pSprite->iHeight, 8, pSprite->iWidth, 0, 0, 0, 0);
+bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
+                                  int iDataLength, int iWidth, int iHeight)
+{
+    if (iSprite >= m_iSpriteCount)
+        return false;
 
-        if(pSprite->pBitmap[0] != NULL)
-            m_pPalette->_assign(pSprite->pBitmap[0]);
+    if (!testSprite(pData, iDataLength, iWidth, iHeight))
+    {
+        printf("Sprite number %d has a bad encoding, skipping", iSprite);
+        return false;
     }
 
+    _freeSingleSprite(iSprite);
+    sprite_t *pSprite = m_pSprites + iSprite;
+    if (bTakeData)
+    {
+        pSprite->pData = pData;
+    }
+    else
+    {
+        unsigned char *pNewData = new (std::nothrow) unsigned char[iDataLength];
+        if (pNewData == NULL)
+            return false;
+
+        memcpy(pNewData, pData, iDataLength);
+        pSprite->pData = pNewData;
+    }
+
+    pSprite->iWidth = iWidth;
+    pSprite->iHeight = iHeight;
     return true;
+}
+
+void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
+{
+    if(iSprite >= m_iSpriteCount)
+        return;
+
+    sprite_t *pSprite = m_pSprites + iSprite;
+    if(pSprite->pAltPaletteMap != pMap)
+    {
+        pSprite->pAltPaletteMap = pMap;
+        if(pSprite->pAltTexture)
+        {
+            SDL_DestroyTexture(pSprite->pAltTexture);
+            pSprite->pAltTexture = NULL;
+        }
+    }
 }
 
 unsigned int THSpriteSheet::getSpriteCount() const
@@ -609,15 +984,21 @@ unsigned int THSpriteSheet::getSpriteCount() const
     return m_iSpriteCount;
 }
 
-bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
+bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
-    if(pX != NULL)
-        *pX = m_pSprites[iSprite].iWidth;
-    if(pY != NULL)
-        *pY = m_pSprites[iSprite].iHeight;
+    if(pWidth != NULL)
+        *pWidth = m_pSprites[iSprite].iWidth;
+    if(pHeight != NULL)
+        *pHeight = m_pSprites[iSprite].iHeight;
     return true;
+}
+
+void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
+{
+    *pWidth = m_pSprites[iSprite].iWidth;
+    *pHeight = m_pSprites[iSprite].iHeight;
 }
 
 bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
@@ -630,11 +1011,14 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
     for(unsigned int i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
     {
         unsigned char cPalIndex = pSprite->pData[i];
-        if(cPalIndex == m_pPalette->m_iTransparentIndex)
+        uint32_t iColour = m_pPalette->getARGBData()[cPalIndex];
+        if((iColour >> 24) == 0)
             continue;
         // Grant higher score to pixels with high or low intensity (helps avoid grey fonts)
-        THColour col = ((*m_pPalette)[cPalIndex]);
-        unsigned char cIntensity = (unsigned char)(((int)col.r + (int)col.b + (int)col.g) / 3);
+        int iR = THPalette::getR(iColour);
+        int iG = THPalette::getG(iColour);
+        int iB = THPalette::getB(iColour);
+        unsigned char cIntensity = (unsigned char)((iR + iG + iB) / 3);
         int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
         iUsageCounts[cPalIndex] += iScore;
         iCountTotal += iScore;
@@ -647,182 +1031,199 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
         if(iUsageCounts[i] > iUsageCounts[iHighestCountIndex])
             iHighestCountIndex = i;
     }
-    *pColour = (*m_pPalette)[iHighestCountIndex];
+    *pColour = m_pPalette->getARGBData()[iHighestCountIndex];
     return true;
-}
-
-void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pX, unsigned int* pY) const
-{
-    *pX = m_pSprites[iSprite].iWidth;
-    *pY = m_pSprites[iSprite].iHeight;
 }
 
 void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
 {
-    if(iSprite >= m_iSpriteCount)
+    if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
         return;
+    sprite_t &sprite = m_pSprites[iSprite];
 
-    SDL_Surface *pSprite = _getSpriteBitmap(iSprite, iFlags & 0x1F);
-    if(pSprite == NULL)
+    // Find or create the texture
+    SDL_Texture *pTexture = sprite.pTexture;
+    if(!pTexture)
+    {
+        if(sprite.pData == NULL)
+            return;
+
+        pTexture = m_pTarget->createPalettizedTexture(sprite.iWidth, sprite.iHeight,
+                                                      sprite.pData, m_pPalette);
+        sprite.pTexture = pTexture;
+    }
+    if(iFlags & THDF_AltPalette)
+    {
+        pTexture = sprite.pAltTexture;
+        if(!pTexture)
+        {
+            pTexture = _makeAltBitmap(&sprite);
+            if(!pTexture)
+                return;
+        }
+    }
+
+    SDL_Rect rcSrc  = { 0,  0,  sprite.iWidth, sprite.iHeight };
+    SDL_Rect rcDest = { iX, iY, sprite.iWidth, sprite.iHeight };
+
+    pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+}
+
+void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData)
+{
+    if(iSprite >= m_iSpriteCount || pRGBData == NULL || pAData == NULL)
         return;
+    sprite_t *pSprite = m_pSprites + iSprite;
 
-    SDL_Rect rctDest;
-    rctDest.x = iX;
-    rctDest.y = iY;
-    SDL_BlitSurface(pSprite, NULL, pCanvas->getRawSurface(), &rctDest);
+    WxStoring oRenderer(pRGBData, pAData, pSprite->iWidth, pSprite->iHeight);
+    oRenderer.decodeImage(pSprite->pData, m_pPalette);
+}
+
+SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
+{
+    if (!pSprite->pAltPaletteMap)
+    {
+        pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
+                                                                  pSprite->pData, m_pPalette);
+    }
+    else
+    {
+        const uint32_t *pPalette = m_pPalette->getARGBData();
+
+        THPalette oPalette;
+        for (int iColour = 0; iColour < 255; iColour++)
+        {
+            oPalette.setARGB(iColour, pPalette[pSprite->pAltPaletteMap[iColour]]);
+        }
+        oPalette.setARGB(255, pPalette[255]); // Colour 0xFF doesn't get remapped.
+
+        pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
+                                                                  pSprite->pData, &oPalette);
+    }
+
+    return pSprite->pAltTexture;
+}
+
+/**
+ * Get the colour data of pixel \a iPixelNumber (\a iWidth * y + x)
+ * @param pImg 32bpp image data.
+ * @param iWidth Width of the image.
+ * @param iHeight Height of the image.
+ * @param pPalette Palette of the image, or \c NULL.
+ * @param iPixelNumber Numer of the pixel to retrieve.
+ */
+static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHeight,
+                                  const THPalette *pPalette, int iPixelNumber)
+{
+    if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 || iPixelNumber >= iWidth * iHeight)
+        return THPalette::packARGB(0, 0, 0,0);
+
+    for (;;) {
+        unsigned char iType = *pImg++;
+        int iLength = iType & 63;
+        switch (iType >> 6)
+        {
+            case 0: // Fixed fully opaque 32bpp pixels
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += 3 * iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                while (iLength > 0)
+                {
+                    if (iPixelNumber == 0)
+                        return THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
+
+                    iPixelNumber--;
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+
+            case 1: // Fixed partially transparent 32bpp pixels
+            {
+                unsigned char iOpacity = *pImg++;
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += 3 * iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                while (iLength > 0)
+                {
+                    if (iPixelNumber == 0)
+                        return THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
+
+                    iPixelNumber--;
+                    pImg += 3;
+                    iLength--;
+                }
+                break;
+            }
+
+            case 2: // Fixed fully transparent pixels
+            {
+                if (iPixelNumber >= iLength)
+                {
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                return THPalette::packARGB(0, 0, 0, 0);
+            }
+
+            case 3: // Recolour layer
+            {
+                unsigned char iTable = *pImg++;
+                pImg++; // Skip reading the opacity for now.
+                if (iPixelNumber >= iLength)
+                {
+                    pImg += iLength;
+                    iPixelNumber -= iLength;
+                    break;
+                }
+
+                if (iTable == 0xFF && pPalette != NULL)
+                {
+                    // Legacy sprite data. Use the palette to recolour the layer.
+                    // Note that the iOpacity is ignored here.
+                    const uint32_t* pColours = pPalette->getARGBData();
+                    return pColours[pImg[iPixelNumber]];
+                }
+                else
+                {
+                    // TODO: Add proper recolour layers, where RGB comes from
+                    // table 'iTable' at index *pImg (iLength times), and
+                    // opacity comes from the byte after the iTable byte.
+                    //
+                    // For now just draw black pixels, so it won't go unnoticed.
+                    return THPalette::packARGB(0xFF, 0, 0, 0);
+                }
+            }
+        }
+    }
 }
 
 bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
 {
     if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
-    int iWidth = (int)m_pSprites[iSprite].iWidth;
-    int iHeight = (int)m_pSprites[iSprite].iHeight;
+
+    sprite_t &sprite = m_pSprites[iSprite];
+    int iWidth = sprite.iWidth;
+    int iHeight = sprite.iHeight;
     if(iX >= iWidth || iY >= iHeight)
         return false;
     if(iFlags & THDF_FlipHorizontal)
         iX = iWidth - iX - 1;
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
-    return (int)m_pSprites[iSprite].pData[iY * iWidth + iX] != m_pPalette->m_iTransparentIndex;
-}
 
-void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
-{
-    if(iSprite >= m_iSpriteCount)
-        return;
-
-    sprite_t *pSprite = m_pSprites + iSprite;
-    if(pSprite->pAltPaletteMap != pMap)
-    {
-        pSprite->pAltPaletteMap = pMap;
-        for(int i = 16; i < 32; ++i)
-        {
-            SDL_FreeSurface(pSprite->pBitmap[i]);
-            pSprite->pBitmap[i] = NULL;
-        }
-    }
-}
-
-SDL_Surface* THSpriteSheet::_getSpriteBitmap(unsigned int iSprite, unsigned long iFlags)
-{
-    SDL_Surface* pBitmap = m_pSprites[iSprite].pBitmap[iFlags];
-    if(pBitmap != NULL)
-        return pBitmap;
-    if(m_pSprites[iSprite].pData == NULL)
-        return NULL;
-
-    m_bHasAnyFlaggedBitmaps = true;
-
-    THDrawFlags eTask;
-    SDL_Surface* pBaseBitmap;
-    if(iFlags & THDF_AltPalette)
-    {
-        pBaseBitmap = _getSpriteBitmap(iSprite, iFlags & ~THDF_AltPalette);
-        eTask = THDF_AltPalette;
-    }
-    else if(iFlags & (THDF_Alpha75 | THDF_Alpha50))
-    {
-        pBaseBitmap = _getSpriteBitmap(iSprite, iFlags & 0x3);
-        eTask = (iFlags & THDF_Alpha75) ? THDF_Alpha75 : THDF_Alpha50;
-    }
-    else if(iFlags == (THDF_FlipHorizontal | THDF_FlipVertical))
-    {
-        pBaseBitmap = _getSpriteBitmap(iSprite, THDF_FlipHorizontal);
-        eTask = THDF_FlipVertical;
-    }
-    else // iFlags == THDF_FlipHorizontal or THDF_FlipVertical
-    {
-        pBaseBitmap = _getSpriteBitmap(iSprite, 0);
-        eTask = (THDrawFlags)iFlags;
-    }
-    if(pBaseBitmap == NULL)
-        return NULL;
-
-    pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCCOLORKEY,
-        pBaseBitmap->w, pBaseBitmap->h, 8, 0, 0, 0, 0);
-    m_pPalette->_assign(pBitmap);
-
-    if(eTask == THDF_AltPalette)
-    {
-        SDL_LockSurface(pBitmap);
-        SDL_LockSurface(pBaseBitmap);
-        unsigned char *pDestPixels = (unsigned char*)pBitmap->pixels;
-        const unsigned char *pSrcPixels = (const unsigned char*)pBaseBitmap->pixels;
-        const unsigned char *pMap = m_pSprites[iSprite].pAltPaletteMap;
-        for(int iY = 0; iY < pBitmap->h; ++iY)
-        {
-            if(pMap)
-            {
-                for(int iX = 0; iX < pBitmap->w; ++iX)
-                {
-                    unsigned char iPixel = pSrcPixels[iX];
-                    if(iPixel != 0xFF)
-                        iPixel = pMap[iPixel];
-                    pDestPixels[iX] = iPixel;
-                }
-            }
-            else
-                memcpy(pDestPixels, pSrcPixels, pBitmap->w);
-            pDestPixels += pBitmap->pitch;
-            pSrcPixels += pBaseBitmap->pitch;
-        }
-        SDL_UnlockSurface(pBaseBitmap);
-        SDL_UnlockSurface(pBitmap);
-    }
-    else if(eTask == THDF_Alpha50 || eTask == THDF_Alpha75)
-    {
-        SDL_LockSurface(pBitmap);
-        SDL_LockSurface(pBaseBitmap);
-        unsigned char *pDestPixels = (unsigned char*)pBitmap->pixels;
-        const unsigned char *pSrcPixels = (const unsigned char*)pBaseBitmap->pixels;
-        for(int iY = 0; iY < pBitmap->h; ++iY)
-        {
-            memcpy(pDestPixels, pSrcPixels, pBitmap->w);
-            pDestPixels += pBitmap->pitch;
-            pSrcPixels += pBaseBitmap->pitch;
-        }
-        SDL_UnlockSurface(pBaseBitmap);
-        SDL_UnlockSurface(pBitmap);
-
-        SDL_SetAlpha(pBitmap, SDL_SRCALPHA | SDL_RLEACCEL, eTask == THDF_Alpha50 ? 128 : 64);
-    }
-    else
-    {
-        SDL_LockSurface(pBitmap);
-        SDL_LockSurface(pBaseBitmap);
-        unsigned char *pDestPixels = (unsigned char*)pBitmap->pixels;
-        const unsigned char *pSrcPixels = (const unsigned char*)pBaseBitmap->pixels;
-
-        if(eTask == THDF_FlipHorizontal)
-        {
-            for(int iY = 0; iY < pBitmap->h; ++iY)
-            {
-                for(int iX = 0; iX < pBitmap->w; ++iX)
-                {
-                    pDestPixels[iX] = pSrcPixels[pBitmap->w - iX - 1];
-                }
-                pDestPixels += pBitmap->pitch;
-                pSrcPixels += pBaseBitmap->pitch;
-            }
-        }
-        else
-        {
-            pSrcPixels += pBaseBitmap->pitch * (pBaseBitmap->h - 1);
-            for(int iY = 0; iY < pBitmap->h; ++iY)
-            {
-                memcpy(pDestPixels, pSrcPixels, pBitmap->w);
-                pDestPixels += pBitmap->pitch;
-                pSrcPixels -= pBaseBitmap->pitch;
-            }
-        }
-
-        SDL_UnlockSurface(pBaseBitmap);
-        SDL_UnlockSurface(pBitmap);
-    }
-
-    m_pSprites[iSprite].pBitmap[iFlags] = pBitmap;
-    return pBitmap;
+    unsigned int iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
+    return THPalette::getA(iCol) != 0;
 }
 
 THCursor::THCursor()
@@ -842,6 +1243,7 @@ THCursor::~THCursor()
 bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
                                 int iHotspotX, int iHotspotY)
 {
+#if 0
     SDL_FreeSurface(m_pBitmap);
     m_pBitmap = NULL;
 
@@ -853,35 +1255,56 @@ bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
     m_iHotspotX = iHotspotX;
     m_iHotspotY = iHotspotY;
     return true;
+#else
+    return false;
+#endif
 }
 
 void THCursor::use(THRenderTarget* pTarget)
 {
+#if 0
     //SDL_ShowCursor(0) is buggy in fullscreen until 1.3 (they say)
     //  use transparent cursor for same effect
     uint8_t uData = 0;
     m_pCursorHidden = SDL_CreateCursor(&uData, &uData, 8, 1, 0, 0);
     SDL_SetCursor(m_pCursorHidden);
     pTarget->setCursor(this);
+#endif
 }
 
 bool THCursor::setPosition(THRenderTarget* pTarget, int iX, int iY)
 {
+#if 0
     pTarget->setCursorPosition(iX, iY);
     return true;
+#else
+    return false;
+#endif
 }
 
 void THCursor::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
+#if 0
     SDL_Rect rcDest;
     rcDest.x = (Sint16)(iX - m_iHotspotX);
     rcDest.y = (Sint16)(iY - m_iHotspotY);
     SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+#endif
 }
 
 THLine::THLine()
 {
     initialize();
+}
+
+THLine::~THLine()
+{
+    THLineOperation* op = m_pFirstOp;
+    while (op) {
+        THLineOperation* next = (THLineOperation*)(op->m_pNext);
+        delete(op);
+        op = next;
+    }
 }
 
 void THLine::initialize()
@@ -891,46 +1314,29 @@ void THLine::initialize()
     m_iG = 0;
     m_iB = 0;
     m_iA = 255;
-    m_pBitmap = NULL;
-    m_fMaxX = 0;
-    m_fMaxY = 0;
-    m_oPath = new agg::path_storage();
-}
 
-THLine::~THLine()
-{
-    SDL_FreeSurface(m_pBitmap);
-    delete(m_oPath);
+    // We start at 0,0
+    m_pFirstOp = new THLineOperation(THLOP_MOVE, 0, 0);
+    m_pCurrentOp = m_pFirstOp;
 }
 
 void THLine::moveTo(double fX, double fY)
 {
-    m_oPath->move_to(fX, fY);
-
-    m_fMaxX = fX > m_fMaxX ? fX : m_fMaxX;
-    m_fMaxY = fY > m_fMaxY ? fY : m_fMaxY;
-
-    SDL_FreeSurface(m_pBitmap);
-    m_pBitmap = NULL;
+    THLineOperation* previous = m_pCurrentOp;
+    m_pCurrentOp = new THLineOperation(THLOP_MOVE, fX, fY);
+    previous->m_pNext = m_pCurrentOp;
 }
 
 void THLine::lineTo(double fX, double fY)
 {
-    m_oPath->line_to(fX, fY);
-
-    m_fMaxX = fX > m_fMaxX ? fX : m_fMaxX;
-    m_fMaxY = fY > m_fMaxY ? fY : m_fMaxY;
-
-    SDL_FreeSurface(m_pBitmap);
-    m_pBitmap = NULL;
+    THLineOperation* previous = m_pCurrentOp;
+    m_pCurrentOp = new THLineOperation(THLOP_LINE, fX, fY);
+    previous->m_pNext = m_pCurrentOp;
 }
 
 void THLine::setWidth(double pLineWidth)
 {
     m_fWidth = pLineWidth;
-
-    SDL_FreeSurface(m_pBitmap);
-    m_pBitmap = NULL;
 }
 
 void THLine::setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA)
@@ -939,52 +1345,11 @@ void THLine::setColour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA)
     m_iG = iG;
     m_iB = iB;
     m_iA = iA;
-
-    SDL_FreeSurface(m_pBitmap);
-    m_pBitmap = NULL;
 }
 
 void THLine::draw(THRenderTarget* pCanvas, int iX, int iY)
 {
-    // Strangely drawing at 0,0 would draw outside of the screen
-    // so we start at 1,0. This makes SDL behave like DirectX.
-    SDL_Rect rcDest;
-    rcDest.x = iX + 1;
-    rcDest.y = iY;
-
-    // Try to get a cached line surface
-    if (m_pBitmap) {
-        SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
-        return;
-    }
-
-    // No cache, let's build a new one
-    SDL_FreeSurface(m_pBitmap);
-
-    Uint32 amask;
-#if SDL_BYTEORDER == SDL_BIG_ENDIAN
-    amask = 0x000000ff;
-#else
-    amask = 0xff000000;
-#endif
-
-    const SDL_PixelFormat& fmt = *(pCanvas->getRawSurface()->format);
-    m_pBitmap = SDL_CreateRGBSurface(SDL_HWSURFACE | SDL_SRCALPHA, (int)ceil(m_fMaxX), (int)ceil(m_fMaxY), fmt.BitsPerPixel, fmt.Rmask, fmt.Gmask, fmt.Bmask, amask);
-
-    agg::rendering_buffer rbuf(reinterpret_cast<agg::int8u*>(m_pBitmap->pixels), m_pBitmap->w, m_pBitmap->h, m_pBitmap->pitch);
-    agg::pixfmt_rgba32 pixf(rbuf);
-    agg::renderer_base<agg::pixfmt_rgba32> renb(pixf);
-
-    agg::conv_stroke<agg::path_storage> stroke(*m_oPath);
-    stroke.width(m_fWidth);
-
-    agg::rasterizer_scanline_aa<> ras;
-    ras.add_path(stroke);
-
-    agg::scanline_p8 sl;
-    agg::render_scanlines_aa_solid(ras, sl, renb, agg::rgba8(m_iB, m_iG, m_iR, m_iA));
-
-    SDL_BlitSurface(m_pBitmap, NULL, pCanvas->getRawSurface(), &rcDest);
+    pCanvas->drawLine(this, iX, iY);
 }
 
 void THLine::persist(LuaPersistWriter *pWriter) const
@@ -995,24 +1360,21 @@ void THLine::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVUInt((uint32_t)m_iA);
     pWriter->writeVFloat(m_fWidth);
 
-    unsigned numOps = m_oPath->total_vertices();
+    THLineOperation* op = (THLineOperation*)(m_pFirstOp->m_pNext);
+    uint32_t numOps = 0;
+    for (; op; numOps++) {
+        op = (THLineOperation*)(op->m_pNext);
+    }
+
     pWriter->writeVUInt(numOps);
 
-    for (unsigned i = 0; i < numOps; i++) {
-        unsigned command = m_oPath->command(i);
+    op = (THLineOperation*)(m_pFirstOp->m_pNext);
+    while (op) {
+        pWriter->writeVUInt((uint32_t)op->type);
+        pWriter->writeVFloat<double>(op->m_fX);
+        pWriter->writeVFloat(op->m_fY);
 
-        double fX, fY;
-        m_oPath->vertex(i, &fX, &fY);
-
-        if (command == agg::path_cmd_move_to) {
-            command = (unsigned)THLOP_MOVE;
-        } else if (command == agg::path_cmd_line_to) {
-            command = (unsigned)THLOP_LINE;
-        }
-
-        pWriter->writeVUInt(command);
-        pWriter->writeVFloat(fX);
-        pWriter->writeVFloat(fY);
+        op = (THLineOperation*)(op->m_pNext);
     }
 }
 
@@ -1029,9 +1391,8 @@ void THLine::depersist(LuaPersistReader *pReader)
     uint32_t numOps = 0;
     pReader->readVUInt(numOps);
     for (uint32_t i = 0; i < numOps; i++) {
-        unsigned type;
+        THLineOpType type;
         double fX, fY;
-
         pReader->readVUInt((uint32_t&)type);
         pReader->readVFloat(fX);
         pReader->readVFloat(fY);
@@ -1059,26 +1420,38 @@ void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
 {
     if(pCacheEntry->pTexture != NULL)
     {
-        SDL_FreeSurface(reinterpret_cast<SDL_Surface*>(pCacheEntry->pTexture));
+        SDL_DestroyTexture(reinterpret_cast<SDL_Texture*>(pCacheEntry->pTexture));
     }
 }
 
-void THFreeTypeFont::_makeTexture(cached_text_t* pCacheEntry) const
+
+void THFreeTypeFont::_makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const
 {
-    SDL_Surface *pSurface = SDL_CreateRGBSurfaceFrom(pCacheEntry->pData,
-        pCacheEntry->iWidth, pCacheEntry->iHeight, 8, pCacheEntry->iWidth, 0,
-        0, 0, 0);
-    SDL_SetColors(pSurface, const_cast<SDL_Color*>(&m_oColour), 0xFF, 1);
-    SDL_SetColorKey(pSurface, SDL_SRCCOLORKEY | SDL_RLEACCEL, 0);
-    pCacheEntry->pTexture = reinterpret_cast<void*>(pSurface);
+    uint32_t* pPixels = new uint32_t[pCacheEntry->iWidth * pCacheEntry->iHeight];
+    memset(pPixels, 0, pCacheEntry->iWidth * pCacheEntry->iHeight * sizeof(uint32_t));
+    unsigned char* pInRow = pCacheEntry->pData;
+    uint32_t* pOutRow = pPixels;
+    uint32_t iColBase = m_oColour & 0xFFFFFF;
+    for(int iY = 0; iY < pCacheEntry->iHeight; ++iY, pOutRow += pCacheEntry->iWidth,
+        pInRow += pCacheEntry->iWidth)
+    {
+        for(int iX = 0; iX < pCacheEntry->iWidth; ++iX)
+        {
+            pOutRow[iX] = (static_cast<uint32_t>(pInRow[iX]) << 24) | iColBase;
+        }
+    }
+
+    pCacheEntry->pTexture = pEventualCanvas->createTexture(pCacheEntry->iWidth, pCacheEntry->iHeight, pPixels);
+    delete[] pPixels;
 }
 
 void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry, int iX, int iY) const
 {
-    SDL_Rect rcDest = {iX, iY, 0, 0};
-    SDL_BlitSurface(reinterpret_cast<SDL_Surface*>(pCacheEntry->pTexture),
-        NULL, pCanvas->getRawSurface(), &rcDest);
-}
-#endif // CORSIX_TH_USE_FREETYPE2
+    if(pCacheEntry->iTexture == 0)
+        return;
 
-#endif // CORSIX_TH_USE_SDL_RENDERER
+    SDL_Rect rcDest = { iX, iY, pCacheEntry->iWidth, pCacheEntry->iHeight };
+    pCanvas->draw(reinterpret_cast<SDL_Texture*>(pCacheEntry->pTexture), NULL, &rcDest, 0);
+}
+
+#endif // CORSIX_TH_USE_FREETYPE2

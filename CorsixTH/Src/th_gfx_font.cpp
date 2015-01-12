@@ -366,6 +366,17 @@ FT_Error THFreeTypeFont::initialise()
     return FT_Err_Ok;
 }
 
+void THFreeTypeFont::clearCache()
+{
+    for(cached_text_t* pEntry = m_aCache;
+        pEntry != m_aCache + (1 << ms_CacheSizeLog2); ++pEntry)
+    {
+        pEntry->bIsValid = false;
+        _freeTexture(pEntry);
+        _setNullTexture(pEntry);
+    }
+}
+
 FT_Error THFreeTypeFont::setFace(const unsigned char* pData, size_t iLength)
 {
     int iError;
@@ -716,7 +727,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         }
 
         // Convert the canvas to a texture
-        _makeTexture(pEntry);
+        _makeTexture(pCanvas, pEntry);
         pEntry->bIsValid = true;
     }
 

@@ -25,9 +25,10 @@ local pathsep = package.config:sub(1, 1)
 
 class "MoviePlayer"
 
-function MoviePlayer:MoviePlayer(app, audio)
+function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio
+  self.video = video
   self.playing = false
   self.holding_bg_music = false
   self.channel = -1
@@ -42,6 +43,7 @@ end
 
 function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
+  self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
   local num
@@ -175,9 +177,9 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
     w, h = screen_w, screen_h
   end
 
-  self.app.video:startFrame()
-  self.app.video:fillBlack()
-  self.app.video:endFrame()
+  self.video:startFrame()
+  self.video:fillBlack()
+  self.video:endFrame()
 
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
@@ -219,7 +221,6 @@ function MoviePlayer:deallocatePictureBuffer()
 end
 
 function MoviePlayer:onMovieOver()
-  self.moviePlayer:unload()
   self.wait_for_over = false
   if not self.wait_for_stop then
     self:_destroyMovie()
@@ -237,11 +238,9 @@ function MoviePlayer:stop()
 end
 
 function MoviePlayer:_destroyMovie()
+  self.moviePlayer:unload()
   if self.opengl_mode_index then
     self.app.modes[self.opengl_mode_index] = "opengl"
-  end
-  if(self.moviePlayer:requiresVideoReset()) then
-    self.app.ui:resetVideo()
   end
   if self.channel >= 0 then
     self.audio:releaseChannel(self.channel)
@@ -264,3 +263,6 @@ function MoviePlayer:refresh()
   self.moviePlayer:refresh()
 end
 
+function MoviePlayer:updateRenderer()
+  self.moviePlayer:setRenderer(self.video)
+end

@@ -1,0 +1,78 @@
+Copyright (c) 2013 Albert "Alberth" Hofkamp
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+
+Pixel format of 32bpp images.
+
+The pixel format supports image sizes of up to 65534x65534 pixels, allows
+transparency, and up to 256 recolour layers.
+
+The file starts with
+ - 4 bytes header "CTHG"
+ - 2 bytes version number (low endian), currently version 2
+ - zero or more sprites.
+
+A sprite has
+ - 4 bytes length of this sprite (low endian), length excludes these 4 bytes.
+ - 2 bytes sprite number (low endian).
+ - 2 bytes width of the sprite (low endian).
+ - 2 bytes height of the sprite (low endian).
+ - (width * height) pixel data as a continuous stream.
+
+The pixel data starts at the top-left pixel, and runs horizontally (and
+continues at the left of the next line when reaching the end). This continues
+until the last pixel at the bottom-right has been written.
+
+Sequences of pixels with the same characteristics are taken together in blocks
+of up to 64 pixels long, and encoded. There are four types of blocks:
+
+1. Fixed fully opaque 32bpp pixels (all the coloured pixels that are always the
+   same).
+2. Fixed partially transparent 32bpp pixels (glow effects, or 50% transparency).
+3. Fixed fully transparent pixels (empty space around the displayed shape to
+   make it a rectangular image).
+4. Recolour layer (pixels that are retrieved from an RGB table with 256 entries
+   that acts like a palette). The data stored in the sprite is just the index
+   to use for each pixel. Opacity is the same for the entire block.
+
+   Typically there are tables with ranges of colours, and the sprite contains
+   the intensity as the index.
+
+
+Below is the encoding for each type of pixel block:
+
+1. Fixed fully opaque 32bpp pixels (RGB).
+   - 1 byte length (values 0-63)
+   - N x 3 byte pixel colours (RGB).
+
+2. Fixed partially transparent 32bpp pixels (RGB).
+   - 1 byte length (values 0-63) + 64
+   - 1 byte amount of opacity (0-255).
+   - N x 3 byte pixel colours (RGB).
+
+3. Fixed fully transparent pixels.
+   - 1 byte length (values 0-63) + 128
+
+4. Recolour layer.
+   - 1 byte length (values 0-63) + 64 + 128
+   - 1 byte layer to apply (0-255).
+   - 1 byte amount of opacity (0-255).
+   - N bytes table index.

@@ -76,8 +76,8 @@ end
 function GameUI:setupGlobalKeyHandlers()
   UI.setupGlobalKeyHandlers(self)
 
-  self:addKeyHandler("esc", self, self.setEditRoom, false)
-  self:addKeyHandler("esc", self, self.showMenuBar)
+  self:addKeyHandler("escape", self, self.setEditRoom, false)
+  self:addKeyHandler("escape", self, self.showMenuBar)
   self:addKeyHandler("z", self, self.keySpeedUp)
   self:addKeyHandler("x", self, self.keyTransparent)
   self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
@@ -193,8 +193,6 @@ function GameUI:resync(ui)
 
   self.key_remaps = ui.key_remaps
   self.key_to_button_remaps = ui.key_to_button_remaps
-  self.key_codes = ui.key_codes
-  self.key_code_to_rawchar = ui.key_code_to_rawchar
 end
 
 local scroll_keys = {
@@ -222,37 +220,32 @@ function GameUI:updateKeyScroll()
 end
 
 function GameUI:keySpeedUp()
-  if self.key_codes[122] then
-    self.speed_up_key_pressed = true
-    self.app.world:speedUp()
-  end
+  self.speed_up_key_pressed = true
+  self.app.world:speedUp()
 end
 
 function GameUI:keyTransparent()
-  if self.key_codes[120] then
-    self:makeTransparentWalls()
-  end
+  self:makeTransparentWalls()
 end
 
-function GameUI:onKeyDown(code, rawchar)
-  if UI.onKeyDown(self, code, rawchar) then
+function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
+  if UI.onKeyDown(self, rawchar, modifiers, is_repeat) then
     -- Key has been handled already
     return true
   end
-  rawchar = self.key_code_to_rawchar[code] -- UI may have translated rawchar
-  local key = self:_translateKeyCode(code, rawchar)
+  local key = rawchar:lower()
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
   end
 end
 
-function GameUI:onKeyUp(code)
-  local rawchar = self.key_code_to_rawchar[code] or ""
-  if UI.onKeyUp(self, code) then
+function GameUI:onKeyUp(rawchar)
+  if UI.onKeyUp(self, rawchar) then
     return true
   end
-  local key = self:_translateKeyCode(code, rawchar)
+
+  local key = rawchar:lower()
   if scroll_keys[key] then
     self:updateKeyScroll()
     return
@@ -508,18 +501,6 @@ function GameUI:onMouseUp(code, x, y)
     return UI.onMouseUp(self, code, x, y)
   end
 
-  if code == 4 or code == 5 then
-    -- Mouse wheel
-    local window = self:getWindow(UIFullscreen)
-    if not window or not window:hitTest(x - window.x, y - window.y) then
-
-      -- Apply momentum to the zoom
-      if math.abs(self.current_momentum.z) < 12 then
-        self.current_momentum.z = self.current_momentum.z + (4.5 - code)*2
-      end
-    end
-  end
-
   local button = self.button_codes[code]
   if button == "right" and not _MAP_EDITOR and highlight_x then
     local window = self:getWindow(UIPatient)
@@ -571,6 +552,25 @@ function GameUI:onMouseUp(code, x, y)
   end
 
   return UI.onMouseUp(self, code, x, y)
+end
+
+function GameUI:onMouseWheel(x, y)
+  local inside_window = false
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if window:hitTest(self.cursor_x - window.x, self.cursor_y - window.y) then
+        inside_window = true
+        break
+      end
+    end
+  end
+  if not inside_window then
+    -- Apply momentum to the zoom
+    if math.abs(self.current_momentum.z) < 12 then
+      self.current_momentum.z = self.current_momentum.z + y
+    end
+  end
+  return UI.onMouseWheel(self, x, y)
 end
 
 function GameUI:setRandomAnnouncementTarget()
@@ -641,7 +641,7 @@ function GameUI:onTick()
 
     -- Faster scrolling with shift key
     local factor = self.app.config.scroll_speed
-    if self.buttons_down.shift then
+    if self.app.key_modifiers.shift then
       mult = mult * factor
     end
 

@@ -30,6 +30,10 @@ Window.buttons_down = permanent"Window.buttons_down" {}
 function Window:Window()
   self.x = 0
   self.y = 0
+
+  self.cursor_x = 0
+  self.cursor_y = 0
+
   self.panels = {
   }
   self.buttons = {
@@ -916,12 +920,8 @@ function Textbox:setActive(active)
     self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
     -- Update text
     self.panel:setLabel(self.text)
-    -- Enable Keyboard repeat
-    ui:enableKeyboardRepeat()
   else
     self.cursor_state = false
-    -- Disable Keyboard repeat
-    ui:disableKeyboardRepeat()
   end
 
   self.active = active
@@ -944,7 +944,9 @@ function Textbox:clicked()
   end
 end
 
-function Textbox:input(char, rawchar, code)
+--! Handles special characters such as Enter. Normal text input is processed in the textInput function.
+--! Note though that this function still returns true if it appears to be a characters being entered.
+function Textbox:keyInput(char, rawchar)
   if not self.active then
     return false
   end
@@ -963,23 +965,15 @@ function Textbox:input(char, rawchar, code)
     end
     -- Numbers
     if not handled and self.allowed_input.numbers then
-      if 256 <= code and code <= 265 then
-        -- Numeric keypad
-        rawchar = string.char(string.byte"0" + code - 256)
-      end
       if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
         handled = true
       end
     end
     -- Space and hyphen
     if not handled and self.allowed_input.misc then
-      if rawchar == " " or rawchar == "-" then
+      if rawchar == "space" or rawchar == "-" then
         handled = true
       end
-    end
-    if handled then
-      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
-      self.cursor_pos[2] = self.cursor_pos[2] + 1
     end
   end
   -- Backspace (delete last char, or last word if ctrl is pressed)
@@ -993,7 +987,7 @@ function Textbox:input(char, rawchar, code)
       end
     else
       local pos = self.cursor_pos[2] - 1
-      if ui.buttons_down.ctrl then
+      if ui.app.key_modifiers.ctrl then
         pos = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
       end
       new_line = line:sub(1, pos) .. line:sub(self.cursor_pos[2] + 1, -1)
@@ -1010,7 +1004,7 @@ function Textbox:input(char, rawchar, code)
       end
     else
       local pos = self.cursor_pos[2] + 2
-      if ui.buttons_down.ctrl then
+      if ui.app.key_modifiers.ctrl then
         pos = (string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)) + 1
       end
       new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(pos, -1)
@@ -1032,13 +1026,13 @@ function Textbox:input(char, rawchar, code)
     end
   end
   -- Escape (abort)
-  if not handled and char == "esc" then
+  if not handled and char == "escape" then
     self:abort()
     return true
   end
-  -- Arrow keys (code >= 273 and code <= 276)
-  if not handled and code >= 273 and code <= 276 then
-    if code == 273 then -- up
+  -- Arrow keys
+  if not handled then
+    if char == "up" then -- up
       if type(self.text) ~= "table" or self.cursor_pos[1] == 1 then
         -- to beginning of line
         self.cursor_pos[2] = 0
@@ -1047,7 +1041,8 @@ function Textbox:input(char, rawchar, code)
         self.cursor_pos[1] = self.cursor_pos[1] - 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
-    elseif code == 274 then -- down
+      handled = true
+    elseif char == "down" then -- down
       if type(self.text) ~= "table" or self.cursor_pos[1] == #self.text then
         -- to end of line
         self.cursor_pos[2] = string.len(line)
@@ -1056,7 +1051,8 @@ function Textbox:input(char, rawchar, code)
         self.cursor_pos[1] = self.cursor_pos[1] + 1
         self.cursor_pos[2] = math.min(self.cursor_pos[2], string.len(self.text[self.cursor_pos[1]]))
       end
-    elseif code == 275 then -- right
+      handled = true
+    elseif char == "right" then -- right
       if self.cursor_pos[2] == string.len(line) then
         -- next line
         if type(self.text) == "table" and self.cursor_pos[1] < #self.text then
@@ -1064,7 +1060,7 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = 0
         end
       else
-        if ui.buttons_down.ctrl then
+        if ui.app.key_modifiers.ctrl then
           -- to the right until next word or end of line
           self.cursor_pos[2] = string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)
         else
@@ -1072,7 +1068,8 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = self.cursor_pos[2] + 1
         end
       end
-    elseif code == 276 then -- left
+      handled = true
+    elseif char == "left" then -- left
       if self.cursor_pos[2] == 0 then
         -- previous line
         if type(self.text) == "table" and self.cursor_pos[1] > 1 then
@@ -1080,7 +1077,7 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = string.len(self.text[self.cursor_pos[1]])
         end
       else
-        if ui.buttons_down.ctrl then
+        if ui.app.key_modifiers.ctrl then
           -- to the left until beginning of word or beginning of line
           self.cursor_pos[2] = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
         else
@@ -1088,12 +1085,12 @@ function Textbox:input(char, rawchar, code)
           self.cursor_pos[2] = self.cursor_pos[2] - 1
         end
       end
+      handled = true
     end
-    handled = true
   end
   -- Tab (reserved)
-  if not handled and code == 9 then
-    return true
+  if not handled and char == "tab" then
+    handled = true
   end
   -- Home (beginning of line)
   if not handled and char == "home" then
@@ -1101,17 +1098,14 @@ function Textbox:input(char, rawchar, code)
     handled = true
   end
   -- End (end of line)
-  if not handled and char == "end_key" then
+  if not handled and char == "end" then
     self.cursor_pos[2] = string.len(line)
     handled = true
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Experimental "all" category
     if not handled and self.allowed_input.all
-       and not (char == "shift" or char == "ctrl" or char == "alt")
-       and not (282 <= code and code <= 293) then -- F-Keys
-      new_line = line:sub(1, self.cursor_pos[2]) .. rawchar .. line:sub(self.cursor_pos[2] + 1, -1)
-      self.cursor_pos[2] = self.cursor_pos[2] + 1
+       and not (char == "shift" or char == "ctrl" or char == "alt") then -- F-Keys
       handled = true
     end
   end
@@ -1125,9 +1119,27 @@ function Textbox:input(char, rawchar, code)
   -- make cursor visible
   self.cursor_counter = 0
   self.cursor_state = true
+  return handled
+end
+
+--! Handles actual text input.
+function Textbox:textInput(text)
+  if not self.active then
+    return false
+  end
+
+  local line = type(self.text) == "table" and self.text[self.cursor_pos[1]] or self.text
+  local new_line = line:sub(1, self.cursor_pos[2]) .. text .. line:sub(self.cursor_pos[2] + 1, -1)
+  self.cursor_pos[2] = self.cursor_pos[2] + 1
+
+  if type(self.text) == "table" then
+    self.text[self.cursor_pos[1]] = new_line
+  else
+    self.text = new_line
+  end
+
   -- update label
   self.panel:setLabel(self.text)
-  return handled
 end
 
 --[[ Limit input handled by textbox to specific classes of characters
@@ -1419,6 +1431,19 @@ function Window:onMouseUp(button, x, y)
   return repaint
 end
 
+function Window:onMouseWheel(x, y)
+  local repaint = false
+  if self.windows then
+    for _, window in ipairs(self.windows) do
+      if window:onMouseWheel(x, y) then
+        repaint = true
+        break -- Scroll has been handled. No need to look any further.
+      end
+    end
+  end
+  return repaint
+end
+
 local --[[persistable:window_drag_position_representation]] function getNicestPositionRepresentation(pos, size, dim_size)
   if size == dim_size then
     return 0.5
@@ -1461,7 +1486,7 @@ function Window:beginDrag(x, y)
     sy = sy - y
     -- Calculate best positioning
     local w, h = TheApp.config.width, TheApp.config.height
-    if self.buttons_down.ctrl then
+    if TheApp.key_modifiers.ctrl then
       local px = round(sx / (w - self.width), 0.1)
       local py = round(sy / (h - self.height), 0.1)
       if px >= 1 then
@@ -1494,6 +1519,10 @@ corner of the window.
 ]]
 function Window:onMouseMove(x, y, dx, dy)
   local repaint = false
+
+  self.cursor_x = x
+  self.cursor_y = y
+
   if self.windows then
     for _, window in ipairs(self.windows) do
       if window:onMouseMove(x - window.x, y - window.y, dx, dy) then
