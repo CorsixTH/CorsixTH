@@ -872,8 +872,8 @@ cheats_window = {
     end_year = "Fin de l'année",
     lose_level = "Perdre le niveau",
     win_level = "Gagner le niveau",
-	epidemic = "Reproduire des patients contagieux",
-	toggle_infected = "Faire apparaître des patients contagieux.",
+    epidemic = "Reproduire des patients contagieux",
+    toggle_infected = "Faire apparaître des patients contagieux.",
   },
   close = "Fermer",
 }
