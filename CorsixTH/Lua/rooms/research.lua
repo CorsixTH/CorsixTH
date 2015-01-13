@@ -49,6 +49,9 @@ room.call_sound = "reqd023.wav"
 
 class "ResearchRoom" (Room)
 
+---@type ResearchRoom
+local ResearchRoom = _G["ResearchRoom"]
+
 function ResearchRoom:ResearchRoom(...)
   self:Room(...)
   self.staff_member_set = {}

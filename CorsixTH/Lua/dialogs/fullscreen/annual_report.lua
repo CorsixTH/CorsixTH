@@ -23,6 +23,9 @@ local TH = require "TH"
 --! Annual Report fullscreen window shown at the start of each year.
 class "UIAnnualReport" (UIFullscreen)
 
+---@type UIAnnualReport
+local UIAnnualReport = _G["UIAnnualReport"]
+
 function UIAnnualReport:UIAnnualReport(ui, world)
 
   self:UIFullscreen(ui)

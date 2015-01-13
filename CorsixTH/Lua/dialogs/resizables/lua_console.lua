@@ -24,6 +24,9 @@ _ = nil
 --! Interactive Lua Console for ingame debugging.
 class "UILuaConsole" (UIResizable)
 
+---@type UILuaConsole
+local UILuaConsole = _G["UILuaConsole"]
+
 local col_bg = {
   red = 46,
   green = 186,

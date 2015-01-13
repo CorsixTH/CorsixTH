@@ -25,6 +25,9 @@ local TH = require "TH"
 --! Invisible window which handles placing a `Staff` member in the world.
 class "UIPlaceStaff" (Window)
 
+---@type UIPlaceStaff
+local UIPlaceStaff = _G["UIPlaceStaff"]
+
 function UIPlaceStaff:UIPlaceStaff(ui, profile, x, y)
   self.ui = ui
   self.world = ui.app.world

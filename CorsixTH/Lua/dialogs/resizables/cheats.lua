@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! A dialog for activating cheats
 class "UICheats" (UIResizable)
 
+---@type UICheats
+local UICheats = _G["UICheats"]
+
 local col_bg = {
   red = 154,
   green = 146,

@@ -38,6 +38,9 @@ dofile "entity_map"
 --! Manages entities, rooms, and the date.
 class "World"
 
+---@type World
+local World = _G["World"]
+
 local local_criteria_variable = {
   {name = "reputation",       icon = 10, formats = 2},
   {name = "balance",          icon = 11, formats = 2},

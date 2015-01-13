@@ -42,6 +42,9 @@ room.call_sound = "reqd008.wav"
 
 class "GPRoom" (Room)
 
+---@type GPRoom
+local GPRoom = _G["GPRoom"]
+
 function GPRoom:GPRoom(...)
   self:Room(...)
 end

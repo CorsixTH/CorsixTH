@@ -23,6 +23,9 @@ dofile "ui"
 --! Variant of UI for running games
 class "GameUI" (UI)
 
+---@type GameUI
+local GameUI = _G["GameUI"]
+
 local TH = require "TH"
 local WM = require "sdl".wm
 local SDL = require "sdl"

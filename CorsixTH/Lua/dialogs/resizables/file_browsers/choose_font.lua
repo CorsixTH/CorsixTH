@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Window where the user can choose a font file.
 class "UIChooseFont" (UIFileBrowser)
 
+---@type UIChooseFont
+local UIChooseFont = _G["UIChooseFont"]
+
 local pathsep = package.config:sub(1, 1)
 
 local col_textbox = {

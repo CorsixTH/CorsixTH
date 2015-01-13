@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! A `Humanoid` who is in the hospital for diagnosis and/or treatment.
 class "Patient" (Humanoid)
 
+---@type Patient
+local Patient = _G["Patient"]
+
 function Patient:Patient(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")

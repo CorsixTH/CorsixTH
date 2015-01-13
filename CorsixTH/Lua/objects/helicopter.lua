@@ -37,6 +37,9 @@ object.orientations = {
 --! An `Object` which drops of emergency patients.
 class "Helicopter" (Object)
 
+---@type Helicopter
+local Helicopter = _G["Helicopter"]
+
 function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
   local x, y = hospital:getHeliportPosition()
   self:Object(world, object_type, x, y, direction, etc)

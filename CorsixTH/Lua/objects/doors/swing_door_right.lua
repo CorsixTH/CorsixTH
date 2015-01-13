@@ -32,6 +32,9 @@ object.idle_animations = {
 
 class "SwingDoor" (Door)
 
+---@type SwingDoor
+local SwingDoor = _G["SwingDoor"]
+
 function SwingDoor:SwingDoor(world, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Door(world, object_type, x, y, direction, etc)

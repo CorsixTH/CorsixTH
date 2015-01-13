@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Load Game Window
 class "UILoadGame" (UIFileBrowser)
 
+---@type UILoadGame
+local UILoadGame = _G["UILoadGame"]
+
 function UILoadGame:UILoadGame(ui, mode)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"

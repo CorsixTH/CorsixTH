@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 
+---@type UIOptions
+local UIOptions = _G["UIOptions"]
+
 local col_bg = {
   red = 154,
   green = 146,
@@ -279,6 +282,9 @@ end
 
 --! A custom resolution selection window
 class "UIResolution" (UIResizable)
+
+---@type UIResolution
+local UIResolution = _G["UIResolution"]
 
 function UIResolution:UIResolution(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)

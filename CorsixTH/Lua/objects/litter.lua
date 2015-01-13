@@ -50,6 +50,9 @@ litter_types[4] = 1900
 
 class "Litter" (Entity)
 
+---@type Litter
+local Litter = _G["Litter"]
+
 function Litter:Litter(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)

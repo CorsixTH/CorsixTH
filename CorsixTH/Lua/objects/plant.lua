@@ -84,6 +84,9 @@ local days_unreachable = 10
 --! An `Object` which needs watering now and then.
 class "Plant" (Object)
 
+---@type Plant
+local Plant = _G["Plant"]
+
 function Plant:Plant(world, object_type, x, y, direction, etc)
   -- It doesn't matter which direction the plant is facing. It will be rotated so that an approaching
   -- handyman uses the correct usage animation when appropriate.
