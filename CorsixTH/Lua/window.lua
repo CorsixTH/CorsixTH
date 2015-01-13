@@ -23,6 +23,9 @@ dofile "persistance"
 --! Base class for user-interface dialogs.
 class "Window"
 
+---@type Window
+local Window = _G["Window"]
+
 -- NB: pressed mouse buttons are denoted with a "mouse_" prefix in buttons_down,
 -- i.e. mouse_left, mouse_middle, mouse_right
 Window.buttons_down = permanent"Window.buttons_down" {}
@@ -136,6 +139,9 @@ end
 -- them and hit-testing against them) are implemented in the `Window` class,
 -- thus reducing the amount of work that each individual dialog has to do.
 class "Panel"
+
+---@type Panel
+local Panel = _G["Panel"]
 
 -- !dummy
 function Panel:Panel()
@@ -516,6 +522,9 @@ end
 --! A region of a `Panel` which causes some action when clicked.
 class "Button"
 
+---@type Button
+local Button = _G["Button"]
+
 --!dummy
 function Button:Button()
   self.ui = nil
@@ -734,6 +743,9 @@ end
 --! A window element used to scroll in lists
 class "Scrollbar"
 
+---@type Scrollbar
+local Scrollbar = _G["Scrollbar"]
+
 --!dummy
 function Scrollbar:Scrollbar()
   self.base = nil
@@ -839,6 +851,9 @@ end
 
 --! A window element used to enter text
 class "Textbox"
+
+---@type Textbox
+local Textbox = _G["Textbox"]
 
 --!dummy
 function Textbox:Textbox()

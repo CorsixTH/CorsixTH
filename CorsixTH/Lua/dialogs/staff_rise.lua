@@ -24,6 +24,9 @@ local math_floor
 --! Dialog for staff member requesting a salaray raise.
 class "UIStaffRise" (Window)
 
+---@type UIStaffRise
+local UIStaffRise = _G["UIStaffRise"]
+
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:Window()
   local app = ui.app

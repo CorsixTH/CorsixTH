@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Customise window used in the main menu and ingame.
 class "UIFolder" (UIResizable)
 
+---@type UIFolder
+local UIFolder = _G["UIFolder"]
+
 local col_bg = {
   red = 154,
   green = 146,

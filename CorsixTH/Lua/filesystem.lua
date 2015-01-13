@@ -26,6 +26,9 @@ local ISO_FS = require "ISO_FS"
 --! Layer for abstracting away differences in file systems
 class "FileSystem"
 
+---@type FileSystem
+local FileSystem = _G["FileSystem"]
+
 function FileSystem:FileSystem()
 end
 

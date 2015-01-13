@@ -64,6 +64,8 @@ script:
   - ${TRAVIS_BUILD_DIR}/scripts/check_trailing_whitespaces.py $TRAVIS_BUILD_DIR
   # Check for incorrectly encoded language files.
   - python ${TRAVIS_BUILD_DIR}/scripts/check_language_files_not_BOM.py $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages
+  # Check if there are lua classes with invalid/improper declarations.
+  - python ${TRAVIS_BUILD_DIR}/scripts/check_lua_classes.py
   # Build CorsixTH
   - make
   # Validate lua files
