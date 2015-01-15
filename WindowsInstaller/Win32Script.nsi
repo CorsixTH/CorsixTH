@@ -180,6 +180,15 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR"
   SetOverwrite ifnewer
 
+  ; We no longer have three exes. Make sure to remove them in case this is a
+  ; previous CorsixTH installation directory.
+  Delete "$INSTDIR\CorsixTH_SDL.exe"
+  Delete "$INSTDIR\CorsixTH_DirectX.exe"
+  Delete "$INSTDIR\CorsixTH_OpenGL.exe"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk"
+  Delete "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk"
+
   ${If} ${FileExists} "$INSTDIR\Lua"
     RMDir /r "$INSTDIR\Lua"
     CreateDirectory "$INSTDIR\Lua"
@@ -258,9 +267,7 @@ SectionEnd
 Section -AdditionalIcons
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   CreateDirectory "$SMPROGRAMS\${PRODUCT_NAME}"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_SDL.lnk" "$INSTDIR\CorsixTH_SDL.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_DirectX.lnk" "$INSTDIR\CorsixTH_DirectX.exe"
-  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}_OpenGL.lnk" "$INSTDIR\CorsixTH_OpenGL.exe"
+  CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\${PRODUCT_NAME}.lnk" "$INSTDIR\CorsixTH.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Map Editor.lnk" "$INSTDIR\MapEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Level Editor.lnk" "$INSTDIR\LevelEdit.exe"
   CreateShortCut "$SMPROGRAMS\${PRODUCT_NAME}\Uninstall.lnk" "$INSTDIR\Uninstall.exe"
@@ -273,7 +280,7 @@ Section -Post
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName" "$(^Name)"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\Uninstall.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion" "${PRODUCT_VERSION}"
-  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\CorsixTH_SDL.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon" "$INSTDIR\CorsixTH.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher" "CorsixTH Team"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout" "http://th.corsix.org"
 
