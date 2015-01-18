@@ -23,8 +23,6 @@ SOFTWARE.
 #include "config.h"
 #include "lua.hpp"
 extern "C" {
-#include "../../LFS/lfs.h"
-int luaopen_lpeg(lua_State *L);
 int luaopen_random(lua_State *L);
 }
 #include "rnc.h"
@@ -106,8 +104,6 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     // will call the appropriate luaopen_X function in C.
 #define PRELOAD(name, fn) \
     luaT_execute(L, "package.preload." name " = ...", fn)
-    PRELOAD("lfs", luaopen_lfs_ext);
-    PRELOAD("lpeg", luaopen_lpeg);
     PRELOAD("rnc", luaopen_rnc);
     PRELOAD("TH", luaopen_th);
     PRELOAD("ISO_FS", luaopen_iso_fs);

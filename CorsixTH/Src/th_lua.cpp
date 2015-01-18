@@ -32,6 +32,7 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState);
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState);
 void THLuaRegisterStrings(const THLuaRegisterState_t *pState);
 void THLuaRegisterUI(const THLuaRegisterState_t *pState);
+void THLuaRegisterLfsExt(const THLuaRegisterState_t *pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -309,6 +310,7 @@ int luaopen_th(lua_State *L)
     THLuaRegisterMovie(pState);
     THLuaRegisterStrings(pState);
     THLuaRegisterUI(pState);
+    THLuaRegisterLfsExt(pState);
 
     lua_settop(L, oState.iMainTable);
     return 1;

@@ -1,5 +1,6 @@
 /*
 Copyright (c) 2010 Peter "Corsix" Cawley
+Copyright (c) 2014 Stephen E. Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,16 +21,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "th_lua_internal.h"
 #include "config.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
 #endif
-#include "lua.h"
-#include "lfs.h"
 
-/* Extensions to LFS:
-**  lfs.volumes() -- returns an array of root-level paths
-*/
+struct THLfsExt {};
+
+static int l_lfs_ext_new(lua_State *L)
+{
+    luaT_stdnew<THLfsExt>(L, luaT_environindex, true);
+    return 1;
+}
 
 #ifdef _WIN32
 #ifdef CORSIX_TH_USE_WIN32_SDK
@@ -41,12 +45,12 @@ static int l_volume_list(lua_State *L)
     char cDrive;
     lua_settop(L, 0);
     lua_newtable(L);
-    for(cDrive = 'A'; cDrive <= 'Z'; ++cDrive)
+    for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive)
     {
-        if(iDriveMask & (1 << (cDrive - 'A')))
+        if (iDriveMask & (1 << (cDrive - 'A')))
         {
-            char sName[4] = {cDrive, ':', '\\', 0};
-            if(GetDriveTypeA(sName) > DRIVE_NO_ROOT_DIR)
+            char sName[4] = { cDrive, ':', '\\', 0 };
+            if (GetDriveTypeA(sName) > DRIVE_NO_ROOT_DIR)
             {
                 lua_pushlstring(L, sName, 2);
                 lua_rawseti(L, 1, ++iNDrives);
@@ -64,13 +68,13 @@ static int l_volume_list(lua_State *L)
     lua_settop(L, 0);
     lua_newtable(L);
     lua_getfield(L, lua_upvalueindex(1), "attributes");
-    for(cDrive = 'A'; cDrive <= 'Z'; ++cDrive)
+    for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive)
     {
         lua_pushvalue(L, 2);
         lua_pushfstring(L, "%c:\\", cDrive);
         lua_pushliteral(L, "mode");
         lua_call(L, 2, 1);
-        if(lua_toboolean(L, 3) != 0)
+        if (lua_toboolean(L, 3) != 0)
         {
             lua_pushfstring(L, "%c:", cDrive);
             lua_rawseti(L, 1, ++iNDrives);
@@ -92,13 +96,9 @@ static int l_volume_list(lua_State *L)
 }
 #endif
 
-int luaopen_lfs_ext(lua_State *L)
+void THLuaRegisterLfsExt(const THLuaRegisterState_t *pState)
 {
-    lua_pushcfunction(L, luaopen_lfs);
-    lua_insert(L, 1);
-    lua_call(L, lua_gettop(L) - 1, 1);
-    lua_pushvalue(L, 1);
-    lua_pushcclosure(L, l_volume_list, 1);
-    lua_setfield(L, 1, "volumes");
-    return 1;
+    luaT_class(THLfsExt, l_lfs_ext_new, "lfsExt", MT_LfsExt);
+    luaT_setfunction(l_volume_list, "volumes");
+    luaT_endclass();
 }

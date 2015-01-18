@@ -19,6 +19,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local lfs = require "lfs"
+local TH = require "TH"
+local lfsext = TH.lfsExt()
 
 --! A tree node representing a directory in the physical file-system.
 class "DirTreeNode" (FileTreeNode)
@@ -153,7 +155,7 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
   local root
-  local roots = lfs.volumes()
+  local roots = lfsext.volumes()
   if #roots > 1 then
     for k, v in pairs(roots) do
       roots[k] = _G[treenode_class](v)

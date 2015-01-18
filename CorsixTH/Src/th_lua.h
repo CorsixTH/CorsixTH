@@ -217,6 +217,11 @@ template <> struct luaT_classinfo<THStringProxy_t> {
     static inline const char* name() {return "StringProxy";}
 };
 
+struct THLfsExt;
+template <> struct luaT_classinfo <THLfsExt> {
+    static inline const char* name() {return "LfsExt";}
+};
+
 class IsoFilesystem;
 template <> struct luaT_classinfo<IsoFilesystem> {
     static inline const char* name() {return "ISO Filesystem";}
