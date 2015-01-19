@@ -220,13 +220,13 @@ if needs_rewrite then
 ----------------------------------------------- OPTIONS MENU ---------------------------------------------------
 --These settings can also be changed from within the game from the options menu
 -------------------------------------------------------------------------------------------------------------------------
--- Sounds: By default enabled and set at level 0.5 
--- ]=] .. '\n' .. 
+-- Sounds: By default enabled and set at level 0.5
+-- ]=] .. '\n' ..
 'play_sounds = ' .. tostring(config_values.play_sounds) .. '\n' ..
 'sound_volume = ' .. tostring(config_values.sound_volume) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
--- Announcements: By default set at level 0.5 
+-- Announcements: By default set at level 0.5
 -- ]=] .. '\n' ..
 'play_announcements = ' .. tostring(config_values.play_announcements) .. '\n' ..
 'announcement_volume = ' .. tostring(config_values.announcement_volume) .. '\n' .. [=[
@@ -251,7 +251,7 @@ if needs_rewrite then
 -------------------------------------------------------------------------------------------------------------------------
 -- Scrolling Momentum.
 -- Determines the amount of momentum when scrolling the map with the mouse.
--- This should be a value between 0 and 1 where 0 is no momentum 
+-- This should be a value between 0 and 1 where 0 is no momentum
 -- ]=] .. '\n' ..
 'scrolling_momentum = ' .. tostring(config_values.scrolling_momentum) .. '\n' .. [=[
 

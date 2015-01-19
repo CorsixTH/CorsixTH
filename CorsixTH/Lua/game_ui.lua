@@ -254,7 +254,7 @@ function GameUI:onKeyUp(rawchar)
     return
   end
 
-  -- Guess that the "Speed Up" key was released because the 
+  -- Guess that the "Speed Up" key was released because the
   -- code parameter can't provide UTF-8 key codes:
   self.speed_up_key_pressed = false
   if self.app.world:isCurrentSpeed("Speed Up") then

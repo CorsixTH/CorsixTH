@@ -15,13 +15,16 @@ import sys
 
 def has_trailing_whitespaces(path):
   """ Returns whether |path| has trailing whitespaces. """
-  for line in open(path, 'r'):
+  handle = open(path, 'r')
+  for line in handle:
     for idx in range(-1, -len(line) - 1, -1):
-      if line[idx] == '\n' or line[idx] == '\r':
+      if line[idx] in ('\n', '\r'):
         continue
-      if line[idx] == ' ':
+      if line[idx] in (' ', '\t'):
+        handle.close()
         return True
       break
+  handle.close()
   return False
 
 if (len(sys.argv) > 2):

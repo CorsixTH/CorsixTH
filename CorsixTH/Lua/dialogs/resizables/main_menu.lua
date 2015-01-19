@@ -103,7 +103,7 @@ function UIMainMenu:buttonContinueGame()
   else
     local error = _S.errors.load_prefix .. _S.errors.no_games_to_contine
     print(error)
-    self.ui.app.ui:addWindow(UIInformation(self.ui, {error}))  
+    self.ui.app.ui:addWindow(UIInformation(self.ui, {error}))
   end
 end
 
