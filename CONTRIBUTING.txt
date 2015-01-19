@@ -1,8 +1,8 @@
 TELL OTHER DEVS WHAT YOUR WORKING ON
 
 When you start working on a fix/enhancement for an open issue please always
-post a comment in this issue's discussion to tell other devs that you have 
-started working on it so that they won't waste any of their free time by 
+post a comment in this issue's discussion to tell other devs that you have
+started working on it so that they won't waste any of their free time by
 working on their own fix/enhancement for it.
 
 If there isn't an open issue discussion for a bug fix/enhancement you want
@@ -85,35 +85,34 @@ First Time
 3. Ensure you have a git client.  (http://windows.github.com or
 http://mac.github.com)
 4. Clone your fork to your computer
-	- If using github client, run Git Shell
-	- git clone https://github.com/mygithubuser/CorsixTH.git
+        - If using github client, run Git Shell
+        - git clone https://github.com/mygithubuser/CorsixTH.git
 5. Add upstream remote
-	- git remote add upstream https://github.com/CorsixTH/CorsixTH.git
+        - git remote add upstream https://github.com/CorsixTH/CorsixTH.git
 
 Every Time
 6. Sync your master branch with the CorisxTH repository's master branch
         - git fetch upstream
         - git rebase upstream/master
-7. Makesure no one is already working on the issue you
-want to work on.
+7. Make sure no one is already working on the issue you want to work on.
 8. Tell other developers that you've started/will start working on this issue
 by posting a comment in its existing issue discussion or if there's no existing
 discussion for it then please open a new issue discussion for it and tell other
 devs here that your working on it.
 9. Create feature branch
-	- git branch myfeature upstream/master
+        - git branch myfeature upstream/master
 10. Checkout your feature branch
-	- git checkout myfeature
+        - git checkout myfeature
 11. Make your changes
 12. Review your changes
-	- git diff
-	(each file) - git add
-	- git diff --check
-	Check there's no white spaces.
-	- git commit
-	Write an informative commit message and save
+        - git diff
+        (each file) - git add
+        - git diff --check
+        Check there's no white spaces.
+        - git commit
+        Write an informative commit message and save
 13. Push your changes to your fork
-	- git push origin myfeature
+        - git push origin myfeature
 14. Create a pull request
 (https://github.com/mygithubuser/CorsixTH/compare/CorsixTH:master...myfeature)
 
@@ -130,8 +129,8 @@ If it takes a long time between when you start your feature and when you finish
 there might be other important changes other people are making to CorsixTH.  It
 is a good idea to make sure your code will still operate correctly with the
 latest changes.  To do this:
-	- git fetch upstream
-	- git rebase upstream/master
+        - git fetch upstream
+        - git rebase upstream/master
 What this does is downloads all the changes from CorsixTH\CorsixTH since you
 started, and pretends that all your changes were made after them.  If there are
 conflicts, for example if someone else changed the same line in the same file

@@ -655,7 +655,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           is_object_allowed = map:getCellFlags(x, y, flags)[flag]
         end
 
-        -- Having checked if the tile is good set its blueprint appearance flag: 
+        -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then
             map:setCell(x, y, 4, good_tile)

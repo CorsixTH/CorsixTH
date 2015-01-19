@@ -23,7 +23,7 @@ SOFTWARE. --]]
 --  class "Name"
 -- OR
 --  class "Name" (SuperclassName)
---  
+--
 --  ---@type Name
 --  local Name = _G["Name"]
 --

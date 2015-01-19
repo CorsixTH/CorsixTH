@@ -217,7 +217,7 @@ function UI:UI(app, minimal)
 end
 
 function UI:runDebugScript()
-  print("Executing Debug Script...") 
+  print("Executing Debug Script...")
   local path_sep = package.config:sub(1, 1)
   local lua_dir = debug.getinfo(1, "S").source:sub(2, -8)
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
@@ -798,7 +798,7 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler({"alt", "f4"}, self, self.quit)
     self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   end
-  
+
   if old < 100 then
     self:removeKeyHandler({"alt", "enter"}, self)
     self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)

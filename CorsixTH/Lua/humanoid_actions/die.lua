@@ -304,7 +304,7 @@ local function action_die_start(action, humanoid)
     --so this animation is ended early, action_die_tick will then use the standard male fall animation:
     fall_anim_duration = 21
   end
-  -- Bloaty head patients can't go to hell because they don't have a 
+  -- Bloaty head patients can't go to hell because they don't have a
   -- "transform to standard male"/"fall into lava hole" animation.
   if humanoid:isMalePatient() and humanoid.disease.id ~= "bloaty_head" then
     if math.random(1, 100) <= 65 then

@@ -981,7 +981,7 @@ function World:setSpeed(speed)
   local numerator, denominator = unpack(tick_rates[speed])
   self.hours_per_tick = numerator
   self.tick_rate = denominator
-  
+
   if was_paused then
     TheApp.audio:onEndPause()
   end
@@ -2010,7 +2010,7 @@ function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, require
   end
 end
 
---- 
+---
 -- Check that pathfinding still works, i.e. that placing the object
 -- wouldn't disconnect one part of the hospital from another. To do
 -- this, we provisionally mark the footprint as unpassable (as it will

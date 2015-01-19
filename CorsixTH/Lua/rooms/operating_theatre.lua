@@ -120,7 +120,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
 
   -- Resume operation if already ongoing
   if self:isOperating() then
-    local surgeon1 = next(self.staff_member_set) 
+    local surgeon1 = next(self.staff_member_set)
     local ongoing_action = surgeon1.action_queue[1]
     assert(ongoing_action.name == "multi_use_object")
 
@@ -208,8 +208,8 @@ function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_tab
   }
 end
 
---! Builds the second operation action (i.e. with the surgeon whose we 
---! see the back). Called either when the operation starts or when the 
+--! Builds the second operation action (i.e. with the surgeon whose we
+--! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
 --! the second surgeon.
 --!param multi_use (action): the first operation action (built with via buildTableAction1()).
@@ -234,8 +234,8 @@ function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
   }
 end
 
---! Sends the surgeon to the nearest operation sink ("op_sink1") 
---! and makes him wash his hands 
+--! Sends the surgeon to the nearest operation sink ("op_sink1")
+--! and makes him wash his hands
 --!param at_front (boolean): If true, add the actions at the front the action queue.
 --! Add the actions at the end of the queue otherwise.
 --! Default value is true.
@@ -363,7 +363,7 @@ function OperatingTheatreRoom:onHumanoidLeave(humanoid)
 
   if class.is(humanoid, Patient) then
     -- Turn off x-ray viewer
-    -- (FIXME: would be better when patient dress back?)     
+    -- (FIXME: would be better when patient dress back?)
     self:setXRayOn(false)
 
     local surgeon1 = next(self.staff_member_set)

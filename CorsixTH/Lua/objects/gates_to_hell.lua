@@ -24,7 +24,7 @@ object.id = "gates_to_hell"
 object.name = "Gates to Hell"
 object.thob = 48
 object.ticks = true
-object.walk_in_to_use = true 
+object.walk_in_to_use = true
 
 object.idle_animations = {
   south = 1602,

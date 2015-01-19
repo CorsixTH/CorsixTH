@@ -133,7 +133,7 @@ end
 function ScannerRoom:makeHumanoidLeave(humanoid)
   if humanoid.action_queue[1].name == "use_object" and humanoid.action_queue[1].object == self.world:findObjectNear(humanoid, "scanner") then
     humanoid.action_queue[1].after_use = nil
-  end 
+  end
 
   self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
 end

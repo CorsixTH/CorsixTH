@@ -9,7 +9,7 @@ import sys
 #Regex: ^class "(.+)".*\n\n(?!---@type \1\nlocal \1 = _G\["\1"])
 regex = r"^class \"(.+)\".*\n\n(?!---@type \1\nlocal \1 = _G\[\"\1\"])"
 
-print_root_regex = re.compile("Lua.*") 
+print_root_regex = re.compile("Lua.*")
 script_dir = os.getcwd() + "/../CorsixTH/Lua"
 ignored = os.listdir(script_dir + "/languages")
 problem_found = False
@@ -33,5 +33,5 @@ if problem_found:
   print("local Name = _G[\"Name\"]")
   print("-----------------------------------------\n")
   sys.exit(1)
-  
+
 sys.exit(0)
