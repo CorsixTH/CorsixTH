@@ -131,6 +131,12 @@ function Window:addKeyHandler(key, handler, ...)
   self.key_handlers[key] = true
 end
 
+--!param keys (string or table) The key or a list containing the key & its modifiers,
+-- previously passed to Window:addKeyHandler(keys).
+function Window:removeKeyHandler(keys)
+  self.ui:removeKeyHandler(keys, self)
+end
+
 --! The basic component which makes up most `Window`s.
 --! The visual parts of most ingame dialogs are sprites from a sprite sheet.
 -- A `Panel` is an instance of a particular sprite, consisting of a sprite
@@ -1027,7 +1033,7 @@ function Textbox:keyInput(char, rawchar)
     handled = true
   end
   -- Enter (newline or confirm)
-  if not handled and char == "enter" then
+  if not handled and char == "return" then
     if type(self.text) == "table" then
       local remainder = line:sub(self.cursor_pos[2] + 1, -1)
       self.text[self.cursor_pos[1]] = line:sub(1, self.cursor_pos[2])

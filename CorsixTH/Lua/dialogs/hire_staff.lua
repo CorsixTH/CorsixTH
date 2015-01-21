@@ -35,7 +35,7 @@ function UIHireStaff:UIHireStaff(ui)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
-  self:addKeyHandler("Enter", self.hire)
+  self:addKeyHandler("return", self.hire)
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -264,4 +264,11 @@ function UIHireStaff:close()
   self.ui:tutorialStep(2, {2, 3, 4, 5}, 1)
   self.ui:tutorialStep(4, {2, 3}, 1)
   return Window.close(self)
+end
+
+function UIHireStaff:afterLoad(old, new)
+  if old < 101 then
+    self:removeKeyHandler("enter")
+    self:addKeyHandler("return", self.hire)
+  end
 end

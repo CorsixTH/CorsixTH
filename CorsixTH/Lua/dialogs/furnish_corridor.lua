@@ -117,7 +117,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:makeTooltip(_S.tooltip.buy_objects_window.price,       20, 168, 127, 187)
   self:makeTooltip(_S.tooltip.buy_objects_window.total_value, 20, 196, 127, 215)
 
-  self:addKeyHandler("Enter", self.confirm)
+  self:addKeyHandler("return", self.confirm)
 end
 
 function UIFurnishCorridor:purchaseItem(index, quantity)
@@ -230,4 +230,11 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
   end
 
   return repaint
+end
+
+function UIFurnishCorridor:afterLoad(old, new)
+  if old < 101 then
+    self:removeKeyHandler("enter")
+    self:addKeyHandler("return", self.confirm)
+  end
 end

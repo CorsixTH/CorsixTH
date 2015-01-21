@@ -65,7 +65,7 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:onChangeLanguage()
 
   -- Enter closes the window
-  self:addKeyHandler("Enter", self.close)
+  self:addKeyHandler("return", self.close)
 end
 
 function UIInformation:onChangeLanguage()
@@ -125,5 +125,12 @@ function UIInformation:close()
   Window.close(self)
   if self.additional_text and #self.additional_text[1] > 0 then
     self.ui:addWindow(UIInformation(self.ui, self.additional_text))
+  end
+end
+
+function UIInformation:afterLoad(old, new)
+  if old < 101 then
+    self:removeKeyHandler("enter")
+    self:addKeyHandler("return", self.close)
   end
 end
