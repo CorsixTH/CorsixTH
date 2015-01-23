@@ -302,9 +302,9 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 }
 
 THAVPacketQueue::THAVPacketQueue():
-    iCount(0),
     m_pFirstPacket(NULL),
-    m_pLastPacket(NULL)
+    m_pLastPacket(NULL),
+    iCount(0)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -402,12 +402,12 @@ THMovie::THMovie():
     m_pSwrContext(NULL),
     m_iAudioBufferSize(0),
     m_iAudioBufferMaxSize(0),
+    m_pAudioPacket(NULL),
     m_frame(NULL),
     m_pChunk(NULL),
     m_iChannel(-1),
     m_pStreamThread(NULL),
-    m_pVideoThread(NULL),
-    m_pAudioPacket(NULL)
+    m_pVideoThread(NULL)
 {
     av_register_all();
 
