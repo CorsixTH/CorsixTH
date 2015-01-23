@@ -458,7 +458,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
     SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
     if (pWindowSurface == NULL)
     {
-        fprintf(stderr, "Unable to take screenshot (pWindowSurface == NULL)\n");
+        fprintf(stderr, "Unable to take screenshot (pWindowSurface == NULL): %s\n", SDL_GetError());
         return false;
     }
 
