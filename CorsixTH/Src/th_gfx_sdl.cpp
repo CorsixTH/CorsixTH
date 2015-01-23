@@ -923,7 +923,7 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
             pData = oRenderer.takeData();
             pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
-            delete pData;
+            delete [] pData;
         }
     }
     return true;
