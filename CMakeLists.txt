@@ -11,6 +11,7 @@
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
 #   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
+#   - WITH_LIBAV  : Whether to use LibAV (as opposed to FFMEPG) when building movies
 
 PROJECT(CorsixTH_Top_Level)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -36,6 +37,7 @@ OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
 OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
 OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" ON)
+OPTION(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
 
@@ -49,14 +51,23 @@ ENDIF(WITH_AUDIO)
 
 IF(WITH_MOVIES)
   IF(WITH_AUDIO)
-    SET(CORSIX_TH_USE_FFMPEG ON)
-    MESSAGE("Note: FFMPEG video is enabled (default)")
+    IF(WITH_LIBAV)
+      SET(CORSIX_TH_USE_FFMPEG OFF)
+      SET(CORSIX_TH_USE_LIBAV ON)
+      MESSAGE("Note: LibAV video is enabled")
+    ELSE()
+      SET(CORSIX_TH_USE_FFMPEG ON)
+      SET(CORSIX_TH_USE_LIBAV OFF)
+      MESSAGE("Note: FFMPEG video is enabled (default)")
+    ENDIF(WITH_LIBAV)
   ELSE()
     SET(CORSIX_TH_USE_FFMPEG OFF)
+    SET(CORSIX_TH_USE_LIBAV OFF)
     MESSAGE("Note: FFMPEG video disabled since it requires SDL audio.")
   ENDIF(WITH_AUDIO)
 ELSE()
   SET(CORSIX_TH_USE_FFMPEG OFF)
+  SET(CORSIX_TH_USE_LIBAV OFF)
   MESSAGE("Note: FFMPEG video is disabled")
 ENDIF(WITH_MOVIES)
 
