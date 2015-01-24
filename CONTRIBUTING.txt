@@ -1,4 +1,4 @@
-TELL OTHER DEVS WHAT YOUR WORKING ON
+TELL OTHER DEVS WHAT YOU ARE WORKING ON
 
 When you start working on a fix/enhancement for an open issue please always
 post a comment in this issue's discussion to tell other devs that you have 
