@@ -125,9 +125,11 @@ size_t THSoundArchive::getSoundDuration(size_t iIndex)
                 break;
             iChunkLength -= 16;
         }
+        //Finally:
         if(iFourCC == FOURCC('d','a','t','a'))
         {
             iWaveDataLength = iChunkLength;
+            break;
         }
         if(SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), RW_SEEK_CUR) == -1) {
             break;
