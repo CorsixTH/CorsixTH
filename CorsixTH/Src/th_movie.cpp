@@ -1005,7 +1005,6 @@ int THMovie::decodeAudioFrame(bool fFirst)
         }
     }
 
-#if LIBSWRESAMPLE_VERSION_INT < AV_VERSION_INT(0, 12, 100)
     //over-estimate output samples
     iOutSamples = (int)av_rescale_rnd(m_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
     iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
@@ -1019,27 +1018,6 @@ int THMovie::decodeAudioFrame(bool fFirst)
         m_pbAudioBuffer = (uint8_t*)av_malloc(iSampleSize);
         m_iAudioBufferMaxSize = iSampleSize;
     }
-#else
-    //output samples = (input samples + delay) * output rate / input rate
-    iOutSamples = (int)av_rescale_rnd(
-        swr_get_delay(
-            m_pAudioResampleContext,
-            m_pAudioCodecContext->sample_rate) + m_frame->nb_samples,
-            m_iMixerFrequency,
-            m_pAudioCodecContext->sample_rate,
-            AV_ROUND_UP);
-    iSampleSize = av_samples_get_buffer_size(NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
-
-    if(iSampleSize > m_iAudioBufferMaxSize)
-    {
-        if(m_iAudioBufferMaxSize > 0)
-        {
-            av_free(m_pbAudioBuffer);
-        }
-        av_samples_alloc(&m_pbAudioBuffer, NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
-        m_iAudioBufferMaxSize = iSampleSize;
-    }
-#endif
 
 #ifdef CORSIX_TH_USE_FFMPEG
     swr_convert(m_pAudioResampleContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_frame->data[0], m_frame->nb_samples);
