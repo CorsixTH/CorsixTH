@@ -98,4 +98,8 @@ typedef unsigned __int32 uint32_t;
 typedef unsigned __int64 uint64_t;
 #endif // CORSIX_TH_HAS_STDINT
 
+/** Visual Leak Detector **/
+// In Visual Studio, Visual Leak Detector can be used to find memory leaks.
+#cmakedefine CORSIX_TH_USE_VLD
+
 #endif // CORSIX_TH_CONFIG_H_

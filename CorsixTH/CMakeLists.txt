@@ -202,6 +202,17 @@ IF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
   SET(CORSIX_TH_HAS_INTTYPES_H 1)
 ENDIF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
 
+IF(MSVC AND CORSIX_TH_USE_VLD)
+  FIND_PACKAGE(VLD REQUIRED)
+  IF(VLD_FOUND)
+    TARGET_LINK_LIBRARIES(CorsixTH ${VLD_LIBRARY})
+    INCLUDE_DIRECTORIES(CorsixTH ${VLD_INCLUDE_DIR})
+    message("  VLD found")
+  ELSE(VLD_FOUND)
+    message(FATAL_ERROR "Error: VLD Library not found, it is required to build when USE_VLD is set")
+  ENDIF(VLD_FOUND)
+ENDIF(MSVC AND CORSIX_TH_USE_VLD)
+
 # Declaration of the install process
 IF(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
