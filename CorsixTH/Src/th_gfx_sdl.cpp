@@ -397,7 +397,10 @@ bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 void THRenderTarget::getClipRect(THClipRect* pRect) const
 {
     SDL_RenderGetClipRect(m_pRenderer, reinterpret_cast<SDL_Rect*>(pRect));
-    if (pRect->w == 0 || pRect->h == 0) {
+    
+    const SDL_Rect *pSDLRect = reinterpret_cast<const SDL_Rect*>(pRect);
+    
+    if (SDL_RectEmpty(pSDLRect)) {
         pRect->clip_enabled = false;
     } else {
         pRect->clip_enabled = true;
