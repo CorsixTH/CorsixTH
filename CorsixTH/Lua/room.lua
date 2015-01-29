@@ -66,6 +66,9 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.humanoids_enroute = {--[[a set rather than a list]]}
 end
 
+--! Get the tile next to the door.
+--!param inside (bool) If set, get the tile inside the room, else get the tile outside.
+--!return x,y (tile coordinates) of the tile next to the door.
 function Room:getEntranceXY(inside)
   local door = self.door
   local x, y = door.tile_x, door.tile_y
@@ -79,6 +82,8 @@ function Room:getEntranceXY(inside)
   return x, y
 end
 
+--! Construct an 'walk' action to the tile next to the door, just outside the room.
+--!return Action to move to the tile just outside the room.
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
   return {
@@ -116,6 +121,8 @@ function Room:createEnterAction(humanoid_entering, callback)
     is_entering = humanoid_entering and self or true}
 end
 
+--! Get a patient in the room.
+--!return A patient (humanoid) if there is a patient, nil otherwise.
 function Room:getPatient()
   for humanoid in pairs(self.humanoids) do
     if class.is(humanoid, Patient) then
@@ -124,6 +131,8 @@ function Room:getPatient()
   end
 end
 
+--! Count the number of patients in the room.
+--!return Number of patients in the room.
 function Room:getPatientCount()
   local count = 0
   for humanoid in pairs(self.humanoids) do
@@ -257,13 +266,18 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
   end
 end
 
-local no_staff = {}
+local no_staff = {} -- Constant denoting 'no staff at all' in a room.
+
+--! Get the type and number of maximum staff for the room.
+--!return (table) Type and number of maximum staff.
 function Room:getMaximumStaffCriteria()
   -- Some rooms have dynamic criteria (i.e. dependent upon the number of items
   -- in the room), so this method is provided for such rooms to override it.
   return self.room_info.maximum_staff or self.room_info.required_staff or no_staff
 end
 
+--! Get the type and number of required staff for the room.
+--!return (table) Type and number of required staff.
 function Room:getRequiredStaffCriteria()
   return self.room_info.required_staff or no_staff
 end
@@ -407,17 +421,23 @@ function Room:createDealtWithPatientCallback(humanoid)
   self.waiting_staff_member = humanoid
 end
 
--- Returns the current staff member. Can be overriden in rooms with multiples staff members to return the desired one.
+--! Get the current staff member.
+-- Can be overridden in rooms with multiple staff members to return the desired one.
+--!return (staff) The current staff member.
 function Room:getStaffMember()
   return self.staff_member
 end
 
+--! Set the current staff member.
+--!param staff (staff) Staff member to denote as current staff.
 function Room:setStaffMember(staff)
   self.staff_member = staff
 end
 
+--! Does the given staff member fit in the room?
 -- Returns false if the room is already full of staff or if the given member of staff cannot help out.
 -- Otherwise returns true.
+--!return (bool) True if the staff member can work in the room, else False.
 function Room:staffFitsInRoom(staff)
   local criteria = self:getMaximumStaffCriteria()
   if self:testStaffCriteria(criteria) or not self:testStaffCriteria(criteria, staff) then
@@ -595,6 +615,9 @@ end
 
 local tile_factor = 10     -- how many tiles further are we willing to walk for 1 person fewer in the queue
 local readiness_bonus = 50 -- how many tiles further are we willing to walk if the room has all the required staff
+
+--! Score function to decide how desirable a room is for a patient.
+--!return (int) The score, lower is better.
 function Room:getUsageScore()
   local queue = self.door.queue
   local score = queue:patientSize() + self:getPatientCount() - self.maximum_patients
@@ -716,6 +739,7 @@ function Room:tryToFindNearbyPatients()
   end
 end
 
+--! Explode the room.
 function Room:crashRoom()
   self.door:closeDoor()
   if self.door2 then
@@ -877,6 +901,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
   end
 end
 
+--! Deactivate the room from the world.
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
