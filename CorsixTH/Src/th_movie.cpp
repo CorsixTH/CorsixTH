@@ -40,6 +40,13 @@ extern "C"
 #define INBUF_SIZE 4096
 #define AUDIO_BUFFER_SIZE 1024
 
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
+#define av_frame_alloc avcodec_alloc_frame
+#define av_frame_unref avcodec_get_frame_defaults
+#define av_frame_free avcodec_free_frame
+#endif
+
 int th_movie_stream_reader_thread(void* pState)
 {
     THMovie *pMovie = (THMovie *)pState;
@@ -272,7 +279,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         }
 
         /* Allocate a new frame and buffer for the destination RGB24 data. */
-        AVFrame *pFrameRGB = avcodec_alloc_frame();
+        AVFrame *pFrameRGB = av_frame_alloc();
         int numBytes = avpicture_get_size(pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
         uint8_t *buffer = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
         avpicture_fill((AVPicture *)pFrameRGB, buffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
@@ -284,7 +291,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         SDL_UpdateTexture(pMoviePicture->m_pTexture, NULL, buffer, pMoviePicture->m_iWidth * 3);
 
         av_free(buffer);
-        av_free(pFrameRGB);
+        av_frame_free(&pFrameRGB);
 
         pMoviePicture->m_dPts = dPts;
 
@@ -568,11 +575,7 @@ void THMovie::unload()
         avformat_close_input(&m_pFormatContext);
     }
 
-    if(m_frame)
-    {
-        av_free(m_frame);
-        m_frame = NULL;
-    }
+    av_frame_free(&m_frame);
 
 #ifdef CORSIX_TH_USE_FFMPEG
     swr_free(&m_pAudioResampleContext);
@@ -787,7 +790,7 @@ void THMovie::readStreams()
 
 void THMovie::runVideo()
 {
-    AVFrame *pFrame = avcodec_alloc_frame();
+    AVFrame *pFrame = av_frame_alloc();
     int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
@@ -796,7 +799,7 @@ void THMovie::runVideo()
 
     while(!m_fAborting)
     {
-        avcodec_get_frame_defaults(pFrame);
+        av_frame_unref(pFrame);
 
         iError = getVideoFrame(pFrame, &iStreamPts);
         if(iError < 0)
@@ -818,7 +821,7 @@ void THMovie::runVideo()
     }
 
     avcodec_flush_buffers(m_pVideoCodecContext);
-    av_free(pFrame);
+    av_frame_free(&pFrame);
 }
 
 int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
@@ -971,11 +974,11 @@ int THMovie::decodeAudioFrame(bool fFirst)
         {
             if(!m_frame)
             {
-                m_frame = avcodec_alloc_frame();
+                m_frame = av_frame_alloc();
             }
             else
             {
-                avcodec_get_frame_defaults(m_frame);
+                av_frame_unref(m_frame);
             }
 
             if(fFlushComplete)
