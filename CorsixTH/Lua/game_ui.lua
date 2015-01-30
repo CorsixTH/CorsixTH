@@ -89,6 +89,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler({"alt", "a"}, self, self.togglePlayAnnouncements)
   self:addKeyHandler({"alt", "s"}, self, self.togglePlaySounds)
   self:addKeyHandler({"alt", "m"}, self, self.togglePlayMusic)
+  self:addKeyHandler("space", self, self.centerView)
 
   if self.app.config.debug then
     self:addKeyHandler("f11", self, self.showCheatsWindow)
@@ -585,9 +586,23 @@ function GameUI:setRandomAnnouncementTarget()
   self.random_announcement_ticks_target = math.random(8000, 12000)
 end
 
-function GameUI:playAnnouncement(name, played_callback, played_callback_delay)
+function GameUI:playAnnouncement(name, played_callback, played_callback_delay, room)
   self.ticks_since_last_announcement = 0
   if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
+    if room then
+      if self.center_view_xy then
+        local x,y
+        x,y = self.app.map:WorldToScreen(room.x+room.width/2, room.y+room.height/2)
+        table.insert(self.center_view_xy, 1, y)
+        table.insert(self.center_view_xy, 1, x)
+        if #self.center_view_xy > 10 then
+          table.remove(self.center_view_xy, 11)
+          table.remove(self.center_view_xy, 11)
+        end
+      else
+        self.center_view_xy = {self.app.map:WorldToScreen(room.x+room.width/2, room.y+room.height/2)}
+      end
+    end
     UI.playAnnouncement(self, name, played_callback, played_callback_delay)
   end
 end
@@ -670,6 +685,25 @@ function GameUI:scrollMapTo(x, y)
   local config = self.app.config
   return self:scrollMap(x - self.screen_offset_x - config.width / zoom,
                         y - self.screen_offset_y - config.height / zoom)
+end
+
+local function dump_q(s,q)
+  print(s)
+  for i=1,#q do
+    print(i,q[i])
+  end
+end
+
+function GameUI:centerView()
+  if self.center_view_xy then
+  dump_q("beforeScroll",self.center_view_xy)
+    self:scrollMapTo(self.center_view_xy[1], self.center_view_xy[2])
+    if #self.center_view_xy > 2 then
+      table.remove(self.center_view_xy,1)
+      table.remove(self.center_view_xy,1)
+    end
+    dump_q("afterScroll",self.center_view_xy)
+  end
 end
 
 function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
