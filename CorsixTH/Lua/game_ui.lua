@@ -409,13 +409,7 @@ local highlight_x, highlight_y
 --! Called when the mouse enters or leaves the game window.
 function GameUI:onWindowActive(gain)
   if gain == 0 then
-  -- since most real-time strategy games are played with edge-scrolling,
-  -- prevent_edge_scrolling now controls whether to scroll when mouse is outside the window
-    if self.app.config.prevent_edge_scrolling then
-      self.tick_scroll_amount_mouse = false
-    else
-      self.tick_scroll_amount_mouse = {x = self.cursor_dx, y = self.cursor_dy}
-    end
+    self.tick_scroll_amount_mouse = false
   end
 end
 
@@ -458,9 +452,9 @@ function GameUI:onMouseMove(x, y, dx, dy)
     -- In windowed mode, a reasonable size is needed, though not too large.
     scroll_region_size = 8
   end
-  if x < scroll_region_size
+  if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
-  or y >= self.app.config.height - scroll_region_size then
+  or y >= self.app.config.height - scroll_region_size) then
     local dx = 0
     local dy = 0
     if x < scroll_region_size then
