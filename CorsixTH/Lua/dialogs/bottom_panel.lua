@@ -204,9 +204,7 @@ function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
 end
 
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
-  if self.world:isCurrentSpeed("Pause") then
-    self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
-  elseif self.dynamic_info then
+  if self.dynamic_info then
     local info = self.dynamic_info
     local font = self.white_font
     for i, text in ipairs(info["text"]) do
@@ -225,6 +223,8 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
         end
       end
     end
+  elseif self.world:isCurrentSpeed("Pause") then
+    self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
   end
 end
 
