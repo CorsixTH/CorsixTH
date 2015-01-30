@@ -198,11 +198,13 @@ function GameUI:resync(ui)
   self.key_to_button_remaps = ui.key_to_button_remaps
 end
 
+-- TODO: should make scroll_power an option in configuration
+local scroll_power = 20
 local scroll_keys = {
-  up    = {x =   0, y = -10},
-  right = {x =  10, y =   0},
-  down  = {x =   0, y =  10},
-  left  = {x = -10, y =   0},
+  up    = {x =   0, y = -scroll_power},
+  right = {x =  scroll_power, y =   0},
+  down  = {x =   0, y =  scroll_power},
+  left  = {x = -scroll_power, y =   0},
 }
 
 function GameUI:updateKeyScroll()
@@ -407,7 +409,13 @@ local highlight_x, highlight_y
 --! Called when the mouse enters or leaves the game window.
 function GameUI:onWindowActive(gain)
   if gain == 0 then
-    self.tick_scroll_amount_mouse = false
+  -- since most real-time strategy games are played with edge-scrolling,
+  -- prevent_edge_scrolling now controls whether to scroll when mouse is outside the window
+    if self.app.config.prevent_edge_scrolling then
+      self.tick_scroll_amount_mouse = false
+    else
+      self.tick_scroll_amount_mouse = {x = self.cursor_dx, y = self.cursor_dy}
+    end
   end
 end
 
@@ -420,6 +428,9 @@ function GameUI:onMouseMove(x, y, dx, dy)
 
   self.cursor_x = x
   self.cursor_y = y
+  self.cursor_dx = dx
+  self.cursor_dy = dy
+  
   if self:onCursorWorldPositionChange() or self.simulated_cursor then
     repaint = true
   end
@@ -447,12 +458,11 @@ function GameUI:onMouseMove(x, y, dx, dy)
     -- In windowed mode, a reasonable size is needed, though not too large.
     scroll_region_size = 8
   end
-  if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
+  if x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
-  or y >= self.app.config.height - scroll_region_size) then
+  or y >= self.app.config.height - scroll_region_size then
     local dx = 0
     local dy = 0
-    local scroll_power = 7
     if x < scroll_region_size then
       dx = -scroll_power
     elseif x >= self.app.config.width - scroll_region_size then
