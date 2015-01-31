@@ -209,7 +209,7 @@ totd_window = {
     "O menu de opçoes ainda não está implementado, mas podes ajustar algumas preferencias tais como resoluçao e língua no ficheiro config.txt na pasta do jogo.",
     "Seleccionaste outra linguagem além do Ingles, mas ves Ingles em todo o lado? Ajuda-nos a traduzir esse texto!",
     "A equipa do CorsixTH está à procura de reforços! Estás interessado em programar, traduzir ou criar arte gráfica para o CorsixTH? Contacta-nos no fórum, IRC (corsix-th no freenode) ou via Mailing List.",
-    "Se encontrares um bug, diz-nos em: th-issues.corsix.org",
+    "Se encontrares um bug, diz-nos em: https://github.com/CorsixTH/CorsixTH/issues",
     "Tens que cumprir certos requisitos para poder avançar de nível. Consulta a tua janela de status para veres o progresso em relaçao aos objectivos do nível.", -- dicas juntas
     "Se quiseres alterar ou remover alguma sala existente,utiliza o botao editar na barra de ferramentas em baixo no teu ecra.",
     "Se tiveres muitos pacientes na fila de espera, podes saber rapidamente quais estao à espera de uma determinada sala passando com o cursor por cima desta.",

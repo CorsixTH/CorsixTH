@@ -147,7 +147,7 @@ totd_window = {
     "Você pode ajustar algumas configurações como a resolução de tela e linguagem na janela de opções que pode ser acessar no menu inicial e dentro do jogo.",
     "Você selecionou uma linguagem que não o inglês, mas existem textos em inglês por todos os lugares? Ajude-nos a traduzir os textos restantes para sua língua !",
     "A comunidade do Jogo CorsixTH está precisando de reforços em sua equipe ! Você está interessado em codificar, traduzir ou criar gráficos para o CorsixTH? Entre em contato conosco pelo nosso Fórum, Lista de Discussão ou canal de IRC (#corsix-th no freenode).",
-    "Se localizar um bug, por favor reporte-o em nosso bugtracker: th-issues.corsix.org",
+    "Se localizar um bug, por favor reporte-o em nosso bugtracker: https://github.com/CorsixTH/CorsixTH/issues",
     "Cada fase possui certas metas a serem atingidas antes de passar para a próxima fase. Cheque a janela de situação para acompanhar seu progresso a fim de atingir seus objetivos.",
     "Se você deseja editar ou remover um sala existente, pode fazê-lo com o botão de edição de sala na barra inferior.",
     "Caso haja uma multidão de pacientes esperando, você deve descobrir rapidamente quais deles estão aguardando por uma sala em particular passando o ponteiro do mouse por cima desta sala.",

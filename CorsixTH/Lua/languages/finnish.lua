@@ -526,7 +526,7 @@ totd_window = {
     "Asetukset-valikkoa ei ole vielä toteutettu, mutta voit muuttaa asetuksia kuten resoluutiota ja kieltä muokkaamalla config.txt-tiedostoa pelin asennushakemistossa.",
     "Olet vaihtanut kielen suomeksi. Jos kuitenkin näet pelissä englannin kielistä tekstiä, voit auttaa suomentamalla puuttuvia tekstejä!",
     "CorsixTH-tiimi etsii aina vahvistuksia! Oletko kiinnostunut ohjelmoimaan, kääntämään tai laatimaan grafiikkaa CorsixTH:ta varten? Saat meihin yhteyden Foorumimme, Sähköpostilistamme tai IRC-kanavamme (corsix-th at freenode) kautta.",
-    "Jos löydät pelistä bugin, ilmoitathan niistä buginseurantaamme: th-issues.corsix.org.",
+    "Jos löydät pelistä bugin, ilmoitathan niistä buginseurantaamme: https://github.com/CorsixTH/CorsixTH/issues.",
     "Jokaisella tasolla on joukko vaatimuksia, jotka sinun tulee täyttää ennen kuin pääset siirtymään seuraavalle tasolle. Voit tarkastella edistymistäsi tilanne-valikosta.",
     "Jos haluat muokata huonetta tai poistaa sen, voit tehdä niin ruudun alareunassa olevasta työkalupalkista löytyvän muokkaa huonetta -painikkeen avulla.",
     "Viemällä hiiren osoittimen huoneen päälle saat nopeasti tietää, ketkä ulkopuolella olevien potilaiden rykelmässä odottavat pääsyä kyseiseen huoneeseen.",

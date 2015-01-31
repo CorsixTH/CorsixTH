@@ -245,7 +245,7 @@ totd_window = {
     "Je kunt instellingen zoals de schermresolutie en de taal in het instellingen menu wijzigen. Het instellingen menu is in het spel en in het hoofdmenu te vinden.",
     "De Nederlandse vertaling is up to date. Zie je toch nog Engelse woorden, of heb je een schrijf- of taalfout ontdekt? Meldt het alsjeblieft op het forum (www.corsixth.com).",
     "Het CorsixTH team zoekt versterking! Zou je willen coden, vertalen of graphics willen maken? Neem dan contact met ons op via ons forum (www.corsixth.com) of ons IRC kanaal (corsix-th op Freenode).",
-    "Als je een bug vindt zouden we het op prijs stellen als je deze meldt via onze bugtracker: th-issues.corsix.org",
+    "Als je een bug vindt zouden we het op prijs stellen als je deze meldt via onze bugtracker: https://github.com/CorsixTH/CorsixTH/issues",
     "Bij elk level moet je aan bepaalde eisen voldoen voordat je door kunt gaan naar het volgende level. Controleer het statusscherm om te zien hoe ver of dicht je bij je doel bent.",
     "Als je een bestaande kamer wil aanpassen of verwijderen, kun je dat doen met de aanpassen-knop op de werkbalk.",
     "Je kunt eenvoudig uitvissen welke patiënten, van een grote groep, voor een bepaalde kamer staan te wachten door met je cursor in die kamer te gaan ''staan.''",

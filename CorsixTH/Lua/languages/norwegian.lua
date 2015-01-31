@@ -508,7 +508,7 @@ totd_window = {
     "Nödtilfeller kan gjöre deg rik, så sant du har kapasitet til å behandle pasientene i tide.",
     "Har du valgt norsk språk, men ser likevel engelsk tekst rundt omkring i spillet? Hjelp oss å oversette resten av spillet til norsk!",
     "CorsixTH-teamet er ute etter forsterkninger! Er du interessert i å programmere, oversette, eller kanskje lage grafikk til CorsixTH? Kontakt oss gjennom Forum, Nyhetsbrev eller IRC (corsix-th på freenode).",
-    "Om du finner feil eller mangler, vær snill å rapportere det gjennom vår feilmeldingstjeneste: th-issues.corsix.org",
+    "Om du finner feil eller mangler, vær snill å rapportere det gjennom vår feilmeldingstjeneste: https://github.com/CorsixTH/CorsixTH/issues",
   },
   previous = "Forrige tips",
   next = "Neste tips",
