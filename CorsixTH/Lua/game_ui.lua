@@ -581,9 +581,26 @@ function GameUI:setRandomAnnouncementTarget()
   self.random_announcement_ticks_target = math.random(8000, 12000)
 end
 
-function GameUI:playAnnouncement(name, played_callback, played_callback_delay)
+function GameUI:playAnnouncement(name, played_callback, played_callback_delay, room)
   self.ticks_since_last_announcement = 0
   if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
+    if room then
+      if self.center_view_xy then
+        local x,y
+        x,y = self.app.map:WorldToScreen(room.x+room.width/2, room.y+room.height/2)
+        table.insert(self.center_view_xy, 1, y)
+        table.insert(self.center_view_xy, 1, x)
+        if #self.center_view_xy > 10 then
+          table.remove(self.center_view_xy, 11)
+          table.remove(self.center_view_xy, 11)
+        end
+      else
+        self.center_view_xy = {self.app.map:WorldToScreen(room.x+room.width/2, room.y+room.height/2)}
+-- add handlers here so that loaded old-version game can centerView, should add in setupGlobalKeyHandlers in principle
+        self:addKeyHandler("space", self, self.scrollTowardsView)
+        self:addKeyHandler("tab", self, self.centerView)
+      end
+    end
     UI.playAnnouncement(self, name, played_callback, played_callback_delay)
   end
 end
@@ -653,6 +670,18 @@ function GameUI:onTick()
   else
     self.tick_scroll_mult = 1
   end
+  
+  --handle scroll towards view
+  if self.scroll_towards_xy then
+    self:scrollMapTo(self.scroll_towards_xy[1],self.scroll_towards_xy[2])
+    if #self.scroll_towards_xy > 2 then
+      table.remove(self.scroll_towards_xy,1)
+      table.remove(self.scroll_towards_xy,1)
+    else
+      self.scroll_towards_xy = nil
+    end
+  end
+  
   if self:onCursorWorldPositionChange() then
     repaint = true
   end
@@ -666,6 +695,48 @@ function GameUI:scrollMapTo(x, y)
   local config = self.app.config
   return self:scrollMap(x - self.screen_offset_x - config.width / zoom,
                         y - self.screen_offset_y - config.height / zoom)
+end
+
+function GameUI:scrollMapTowards(x, y)
+  local zoom = 2 * self.zoom_factor
+  local config = self.app.config
+  local dx=x-self.screen_offset_x-config.width/zoom
+  local dy=y-self.screen_offset_y-config.height/zoom
+  local dist=(dx^2+dy^2)^0.5
+  local scroll_speed=100
+  if dist<=scroll_speed then
+    return self:scrollMapTo(x,y)
+  end
+  local dist2=dist
+  self.scroll_towards_xy={}
+  while dist2>scroll_speed do
+    dist2=dist2-scroll_speed
+    local r=dist2/dist
+    table.insert(self.scroll_towards_xy, x-dx*r)
+    table.insert(self.scroll_towards_xy, y-dy*r)
+  end
+  table.insert(self.scroll_towards_xy, x)
+  table.insert(self.scroll_towards_xy, y)
+end
+
+function GameUI:centerView()
+  if self.center_view_xy then
+    self:scrollMapTo(self.center_view_xy[1], self.center_view_xy[2])
+    if #self.center_view_xy > 2 then
+      table.remove(self.center_view_xy,1)
+      table.remove(self.center_view_xy,1)
+    end
+  end
+end
+
+function GameUI:scrollTowardsView()
+  if self.center_view_xy and not self.scroll_towards_xy then
+    self:scrollMapTowards(self.center_view_xy[1], self.center_view_xy[2])
+    if #self.center_view_xy > 2 then
+      table.remove(self.center_view_xy,1)
+      table.remove(self.center_view_xy,1)
+    end
+  end
 end
 
 function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
