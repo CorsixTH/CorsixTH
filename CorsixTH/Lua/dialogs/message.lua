@@ -85,9 +85,9 @@ function UIMessage:draw(canvas, x, y)
     Window.draw(self, canvas, x, y)
   else
     local x_, y_, w, h = canvas:getClip()
-    canvas:setClip(x_, y + self.stop_y, w, self.height, true)
+    --canvas:setClip(x_, y + self.stop_y, w, self.height, true)
     Window.draw(self, canvas, x, y)
-    canvas:setClip(x_, y_, w, h)
+    --canvas:setClip(x_, y_, w, h)
   end
 end
 

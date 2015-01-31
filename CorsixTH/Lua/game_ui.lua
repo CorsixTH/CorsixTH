@@ -134,9 +134,6 @@ end
 function GameUI:draw(canvas)
   local app = self.app
   local config = app.config
-  if _MAP_EDITOR or not self.in_visible_diamond then
-    canvas:fillBlack()
-  end
   local zoom = self.zoom_factor
   if canvas:scale(zoom) then
     app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width / zoom, config.height / zoom, 0, 0)
