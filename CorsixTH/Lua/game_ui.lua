@@ -438,32 +438,21 @@ function GameUI:onMouseMove(x, y, dx, dy)
     return true
   end
 
-  local scroll_region_size
-  if self.app.config.fullscreen then
-    -- As the mouse is locked within the window, a 1px region feels a lot
-    -- larger than it actually is.
-    scroll_region_size = 1
-  else
-    -- In windowed mode, a reasonable size is needed, though not too large.
-    scroll_region_size = 8
-  end
+-- since the new window manager always set cursor to window edge if mouse leaves window,
+-- a larger scroll_region_size for windowed mode is no longer needed
+  local scroll_region_size = 2
+
   if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
   or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
   or y >= self.app.config.height - scroll_region_size) then
-    local dx = 0
-    local dy = 0
-    local scroll_power = 7
-    if x < scroll_region_size then
-      dx = -scroll_power
-    elseif x >= self.app.config.width - scroll_region_size then
-      dx = scroll_power
-    end
-    if y < scroll_region_size then
-      dy = -scroll_power
-    elseif y >= self.app.config.height - scroll_region_size then
-      dy = scroll_power
-    end
 
+-- scroll speed depends on how fast the mouse leaves the window, and
+-- can scroll in arbitrary direction according to which when the mouse leaves the window
+-- TODO: make scroll_sensitivity configurable, otherwise, the actual scroll speed
+-- will be slower on faster machines
+    local scroll_sensitivity = 0.5
+    local dx = self.last_dx*scroll_sensitivity
+    local dy = self.last_dy*scroll_sensitivity
     if not self.tick_scroll_amount_mouse then
       self.tick_scroll_amount_mouse = {x = dx, y = dy}
     else
@@ -472,6 +461,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     end
   else
     self.tick_scroll_amount_mouse = false
+    self.last_dx = dx
+    self.last_dy = dy
   end
 
   if Window.onMouseMove(self, x, y, dx, dy) then
