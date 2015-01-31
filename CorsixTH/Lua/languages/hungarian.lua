@@ -367,7 +367,7 @@ totd_window = {
     "A képernyőfelbontást, a nyelvet és más jellegzetességeket a beállítások alatt tudod meghatározni, mely elérhető a főmenüben és a játék közben is.",
     "Nem angol nyelvet választottál ki és angol szöveget látsz mindenfelé? Segíts nekünk lefordítani a hiányzó szövegeket a saját nyelvedre!",
     "A CorsixTH csapatnak erősítésre van szüksége! Szeretnél programozni, fordítani vagy grafikákat készíteni a CorsixTH-nak? Értesíts minket a Fórumban, a levelező listánkon vagy az IRC csatornánkon(corsix-th at freenode).",
-    "Ha találsz valamilyen hibát, kérünk téged, jelezd azt a hibanyomkövetőnknél, a: th-issues.corsix.org címen!",
+    "Ha találsz valamilyen hibát, kérünk téged, jelezd azt a hibanyomkövetőnknél, a: https://github.com/CorsixTH/CorsixTH/issues címen!",
     "Minden szint teljesítéséhez különböző követelményeknek kell megfelelned, hogy a következő szintre léphess. Ellenőrizd az állapotjelző ablakot, hogy hogy állsz.",
     "Ha szerkeszteni vagy törölni szeretnél egy szobát, azt az alsó eszközsoron található szerkesztő gombbal tudod megtenni.",
     "Ha nagyon sok várakozó beteggel futsz össze, úgy tudod gyorsan megállapítani, hogy ki mire vár, hogy a szobák fölé húzod az egered mutatóját, .",
