@@ -30,8 +30,12 @@ SOFTWARE.
 class THCursor;
 struct THClipRect : public SDL_Rect
 {
+    THClipRect() : clip_enabled(true) {
+
+    }
     typedef Sint16 xy_t;
     typedef Uint16 wh_t;
+    bool clip_enabled;
 };
 struct THRenderTargetCreationParams;
 
