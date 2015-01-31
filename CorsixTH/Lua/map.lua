@@ -435,6 +435,7 @@ end
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
+  canvas:fillBlack()
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
 
   -- Draw any debug overlays

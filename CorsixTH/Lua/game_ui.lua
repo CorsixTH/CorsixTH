@@ -52,13 +52,8 @@ function GameUI:GameUI(app, local_hospital)
   local scr_w = app.config.width
   local scr_h = app.config.height
   self.visible_diamond = self:makeVisibleDiamond(scr_w, scr_h)
-  if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
-    -- For a standard 128x128 map, screen size would have to be in the
-    -- region of 3276x2457 in order to be too large.
-    if not _MAP_EDITOR then
-      error "Screen size too large for the map"
-    end
-  end
+-- should NOT abort the game just because the screen is too big or map is too small
+
   self.screen_offset_x, self.screen_offset_y = app.map:WorldToScreen(
     app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
   self.zoom_factor = 1
@@ -730,62 +725,28 @@ function GameUI:scrollTowardsView()
   end
 end
 
-function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
-  -- If point outside visible diamond, then move point to the nearest position
-  -- on the edge of the diamond (NB: relies on diamond.w == 2 * diamond.h).
-  local rx = dx - visible_diamond.x
-  local ry = dy - visible_diamond.y
-  if abs(rx) + abs(ry) * 2 > visible_diamond.w then
-    if do_limit then
-      -- Determine the quadrant which the point lies in and accordingly set:
-      --  (vx, vy) : a unit vector perpendicular to the diamond edge in the quadrant
-      --  (p1x, p1y), (p2x, p2y) : the two diamond verticies in the quadrant
-      --  d : distance from the point to the line defined by the diamond edge (not the line segment itself)
-      local vx, vy, d
-      local p1x, p1y, p2x, p2y = 0, 0, 0, 0
-      if rx >= 0 and ry >= 0 then
-        p1x, p2y =  visible_diamond.w,  visible_diamond.h
-        vx, vy = sqrt_5, 2 * sqrt_5
-        d = (rx * vx + ry * vy) - (p1x * vx)
-      elseif rx >= 0 and ry < 0 then
-        p2x, p1y =  visible_diamond.w, -visible_diamond.h
-        vx, vy = sqrt_5, -2 * sqrt_5
-        d = (rx * vx + ry * vy) - (p2x * vx)
-      elseif rx < 0 and ry >= 0 then
-        p2x, p1y = -visible_diamond.w,  visible_diamond.h
-        vx, vy = -sqrt_5, 2 * sqrt_5
-        d = (rx * vx + ry * vy) - (p2x * vx)
-      else--if rx < 0 and ry < 0 then
-        p1x, p2y = -visible_diamond.w, -visible_diamond.h
-        vx, vy = -sqrt_5, -2 * sqrt_5
-        d = (rx * vx + ry * vy) - (p1x * vx)
-      end
-      -- In the unit vector parallel to the diamond edge, resolve the two verticies and
-      -- the point, and either move the point to the edge or to one of the two verticies.
-      -- NB: vx, vy, p1x, p1y, p2x, p2y are set such that p1 < p2.
-      local p1 = vx * p1y - vy * p1x
-      local p2 = vx * p2y - vy * p2x
-      local pd = vx * ry - vy * rx
-      if pd < p1 then
-        dx, dy = p1x + visible_diamond.x, p1y + visible_diamond.y
-      elseif pd > p2 then
-        dx, dy = p2x + visible_diamond.x, p2y + visible_diamond.y
-      else--if p1 <= pd and pd <= p2 then
-        dx, dy = dx - d * vx, dy - d * vy
-      end
-    else
-      return dx, dy, false
-    end
-  end
-  return dx, dy, true
-end
-
 function GameUI:scrollMap(dx, dy)
   dx = dx + self.screen_offset_x
   dy = dy + self.screen_offset_y
 
-  dx, dy, self.in_visible_diamond = self.limitPointToDiamond(dx, dy,
-    self.visible_diamond, self.limit_to_visible_diamond)
+--more freedom in scrolling, especially when zoomed out
+-- limit dx
+  local w = self.app.map.width*32
+  local hspan = self.app.config.width/self.zoom_factor
+  if dx < -w then
+    dx = -w
+  elseif dx+hspan > w then
+    dx = w-hspan
+  end
+  
+-- limit dy
+  local h = self.app.map.height*32
+  local vspan = self.app.config.height/self.zoom_factor
+  if dy < 0 then
+    dy = 0
+  elseif dy+vspan > h then
+    dy = h-vspan
+  end
 
   self.screen_offset_x = floor(dx + 0.5)
   self.screen_offset_y = floor(dy + 0.5)

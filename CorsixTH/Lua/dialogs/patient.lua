@@ -128,11 +128,6 @@ function UIPatient:draw(canvas, x_, y_)
   local dx, dy = patient.th:getMarker()
   px = px + dx - 37
   py = py + dy - 61
-  -- If the patient is spawning or despawning, or just on the map edge, then
-  -- the rendering point needs adjustment to keep the rendered region entirely
-  -- within the map (this situation doesn't occur very often, but we need to
-  -- handle it properly when it does occur).
-  px, py = self.ui.limitPointToDiamond(px, py, self.visible_diamond, true)
   self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
   Window.draw(self, canvas, x_, y_)
 
