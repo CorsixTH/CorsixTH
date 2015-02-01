@@ -204,7 +204,8 @@ function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
 end
 
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
-  if self.world:isCurrentSpeed("Pause") and not self.ui.cursor_entity then
+  if self.world:isCurrentSpeed("Pause") and 
+    (not self.ui.cursor_entity or not self.ui.app.config.allow_user_actions_while_paused) then
     self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
   elseif self.dynamic_info then
     local info = self.dynamic_info
