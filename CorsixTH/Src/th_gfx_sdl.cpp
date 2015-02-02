@@ -397,11 +397,24 @@ bool THRenderTarget::fillRect(uint32_t iColour, int iX, int iY, int iW, int iH)
 void THRenderTarget::getClipRect(THClipRect* pRect) const
 {
     SDL_RenderGetClipRect(m_pRenderer, reinterpret_cast<SDL_Rect*>(pRect));
+    // SDL returns empty rect when clipping is disabled -> return full rect for CTH
+    if (SDL_RectEmpty(pRect))
+    {
+        pRect->x = pRect->y = 0;
+        pRect->w = m_iWidth;
+        pRect->h = m_iHeight;
+    }
 }
 
 void THRenderTarget::setClipRect(const THClipRect* pRect)
 {
     const SDL_Rect *pSDLRect = reinterpret_cast<const SDL_Rect*>(pRect);
+
+    // Full clip rect for CTH means clipping disabled
+    if (pRect && pRect->w == m_iWidth && pRect->h == m_iHeight)
+    {
+        pSDLRect = NULL;
+    }
 
     // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
     // off clipping, so we replace it with a rect that's outside our viewport.
