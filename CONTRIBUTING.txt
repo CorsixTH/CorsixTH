@@ -104,16 +104,17 @@ devs here that your working on it.
 10. Checkout your feature branch
         - git checkout myfeature
 11. Make your changes
-12. Review your changes
-        - git diff
-        (each file) - git add
-        - git diff --check
-        Check there's no white spaces.
-        - git commit
-        Write an informative commit message and save
-13. Push your changes to your fork
-        - git push origin myfeature
-14. Create a pull request
+12. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
+13. Review your changes
+	- git diff
+	(each file) - git add
+	- git diff --check
+	Check there's no white spaces.
+	- git commit
+	Write an informative commit message and save
+14. Push your changes to your fork
+	- git push origin myfeature
+15. Create a pull request
 (https://github.com/mygithubuser/CorsixTH/compare/CorsixTH:master...myfeature)
 
 Now watch to see if your feature is accepted.

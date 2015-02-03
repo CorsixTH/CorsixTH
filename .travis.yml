@@ -3,9 +3,11 @@ before_install:
   # Get build dependencies
   - sudo apt-get -qq update
   - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks
-  # These are requred for LDocGen
+  # Required for LDocGen
   - sudo luarocks install lpeg
   - sudo luarocks install luafilesystem
+  # Required for lua unit tests
+  - sudo luarocks install busted
   # Install the mingw-w64 packages.
   - sudo apt-get -q install g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
   # The packages in ubuntu's repositories seem a little broken
@@ -70,6 +72,9 @@ script:
   - make
   # Validate lua files
   - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
+  # Run lua unit tests
+  - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
+  - busted --lpath=../Lua/?.lua
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
   # Build documentation
