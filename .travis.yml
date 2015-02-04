@@ -74,7 +74,8 @@ script:
   - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
   # Run lua unit tests
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
-  - busted --lpath=../Lua/?.lua
+  - eval `luarocks path`
+  - LUA_PATH="../Lua/?.lua;$LUA_PATH" busted
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
   # Build documentation
