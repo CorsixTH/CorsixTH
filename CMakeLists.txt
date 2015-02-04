@@ -11,6 +11,7 @@
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
 #   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
+#   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
 
 PROJECT(CorsixTH_Top_Level)
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
@@ -38,6 +39,9 @@ OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
 OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" ON)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
+IF(MSVC)
+  OPTION(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
+ENDIF(MSVC)
 
 IF(WITH_AUDIO)
   SET(CORSIX_TH_USE_SDL_MIXER ON)
@@ -67,6 +71,18 @@ ELSE()
   SET(CORSIX_TH_USE_FREETYPE2 OFF)
   MESSAGE("Note: FreeType2 is disabled")
 ENDIF(WITH_FREETYPE2)
+
+IF(MSVC)
+  IF(WITH_VLD)
+    SET(CORSIX_TH_USE_VLD ON)
+    MESSAGE("Note: Visual Leak Detector is enabled")
+  ELSE()
+    SET(CORSIX_TH_USE_VLD OFF)
+    MESSAGE("Note: Visual Leak Detector is disabled (default)")
+  ENDIF(WITH_VLD)
+ELSE()
+  SET(CORSIX_TH_USE_VLD OFF)
+ENDIF(MSVC)
 
 # Environment handling
 
