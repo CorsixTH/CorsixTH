@@ -46,11 +46,13 @@ SOFTWARE.
 #cmakedefine CORSIX_TH_USE_SDL_MIXER
 
 /** Movie options **/
-// FFMPEG is used for in game movies.  If this library is not present on your
-// system, then you can comment out the next line and the game will not have
-// movies.
+// FFMPEG or LibAV are used for in game movies.
+// If this library is not present on your system, then you can comment out the
+// next line and the game will not have movies.
 #cmakedefine CORSIX_TH_USE_FFMPEG
-
+#ifndef CORSIX_TH_USE_FFMPEG
+#cmakedefine CORSIX_TH_USE_LIBAV
+#endif
 /** Font options **/
 // FreeType2 can be used for font support beyond the CP437 bitmap fonts which
 // come with Theme Hospital. It must be used if translations like Russian or

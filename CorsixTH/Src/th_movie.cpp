@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_movie.h"
 #include "config.h"
 #include "lua_sdl.h"
-#ifdef CORSIX_TH_USE_FFMPEG
+#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
 
 #include "th_gfx.h"
 extern "C"
@@ -31,6 +31,7 @@ extern "C"
     #include <libavcodec/avcodec.h>
     #include <libswscale/swscale.h>
     #include <libavutil/avutil.h>
+    #include <libavutil/mathematics.h>
     #include <libavutil/opt.h>
 }
 #include <SDL_mixer.h>
@@ -38,6 +39,13 @@ extern "C"
 
 #define INBUF_SIZE 4096
 #define AUDIO_BUFFER_SIZE 1024
+
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
+#define av_frame_alloc avcodec_alloc_frame
+#define av_frame_unref avcodec_get_frame_defaults
+#define av_frame_free avcodec_free_frame
+#endif
 
 int th_movie_stream_reader_thread(void* pState)
 {
@@ -271,7 +279,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         }
 
         /* Allocate a new frame and buffer for the destination RGB24 data. */
-        AVFrame *pFrameRGB = avcodec_alloc_frame();
+        AVFrame *pFrameRGB = av_frame_alloc();
         int numBytes = avpicture_get_size(pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
         uint8_t *buffer = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
         avpicture_fill((AVPicture *)pFrameRGB, buffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
@@ -283,7 +291,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         SDL_UpdateTexture(pMoviePicture->m_pTexture, NULL, buffer, pMoviePicture->m_iWidth * 3);
 
         av_free(buffer);
-        av_free(pFrameRGB);
+        av_frame_free(&pFrameRGB);
 
         pMoviePicture->m_dPts = dPts;
 
@@ -399,7 +407,7 @@ THMovie::THMovie():
     m_pVideoQueue(NULL),
     m_pAudioQueue(NULL),
     m_pMoviePictureBuffer(new THMoviePictureBuffer()),
-    m_pSwrContext(NULL),
+    m_pAudioResampleContext(NULL),
     m_iAudioBufferSize(0),
     m_iAudioBufferMaxSize(0),
     m_pAudioPacket(NULL),
@@ -567,13 +575,18 @@ void THMovie::unload()
         avformat_close_input(&m_pFormatContext);
     }
 
-    if(m_frame)
-    {
-        av_free(m_frame);
-        m_frame = NULL;
-    }
+    av_frame_free(&m_frame);
 
-    swr_free(&m_pSwrContext);
+#ifdef CORSIX_TH_USE_FFMPEG
+    swr_free(&m_pAudioResampleContext);
+#elif defined(CORSIX_TH_USE_LIBAV)
+    // avresample_free doesn't skip NULL on it's own.
+    if (m_pAudioResampleContext != NULL)
+    {
+        avresample_free(&m_pAudioResampleContext);
+        m_pAudioResampleContext = NULL;
+    }
+#endif
 
     if(m_pAudioPacket)
     {
@@ -620,8 +633,9 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
     if(m_iAudioStream >= 0)
     {
         Mix_QuerySpec(&m_iMixerFrequency, NULL, &m_iMixerChannels);
-        m_pSwrContext = swr_alloc_set_opts(
-            m_pSwrContext,
+#ifdef CORSIX_TH_USE_FFMPEG
+        m_pAudioResampleContext = swr_alloc_set_opts(
+            m_pAudioResampleContext,
             m_iMixerChannels==1?AV_CH_LAYOUT_MONO:AV_CH_LAYOUT_STEREO,
             AV_SAMPLE_FMT_S16,
             m_iMixerFrequency,
@@ -630,8 +644,17 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
             m_pAudioCodecContext->sample_rate,
             0,
             NULL);
-        swr_init(m_pSwrContext);
-
+        swr_init(m_pAudioResampleContext);
+#elif defined(CORSIX_TH_USE_LIBAV)
+        m_pAudioResampleContext = avresample_alloc_context();
+        av_opt_set_int(m_pAudioResampleContext, "in_channel_layout", m_pAudioCodecContext->channel_layout, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_channel_layout", m_iMixerChannels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO, 0);
+        av_opt_set_int(m_pAudioResampleContext, "in_sample_rate", m_pAudioCodecContext->sample_rate, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_sample_rate", m_iMixerFrequency, 0);
+        av_opt_set_int(m_pAudioResampleContext, "in_sample_fmt", m_pAudioCodecContext->sample_fmt, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
+        avresample_open(m_pAudioResampleContext);
+#endif
         m_pChunk = Mix_QuickLoad_RAW(m_pbChunkBuffer, AUDIO_BUFFER_SIZE);
 
         m_iChannel = Mix_PlayChannel(iChannel, m_pChunk, -1);
@@ -767,7 +790,7 @@ void THMovie::readStreams()
 
 void THMovie::runVideo()
 {
-    AVFrame *pFrame = avcodec_alloc_frame();
+    AVFrame *pFrame = av_frame_alloc();
     int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
@@ -776,7 +799,7 @@ void THMovie::runVideo()
 
     while(!m_fAborting)
     {
-        avcodec_get_frame_defaults(pFrame);
+        av_frame_unref(pFrame);
 
         iError = getVideoFrame(pFrame, &iStreamPts);
         if(iError < 0)
@@ -788,7 +811,7 @@ void THMovie::runVideo()
             continue;
         }
 
-        dClockPts = iStreamPts * av_q2d(m_pVideoCodecContext->time_base);
+        dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iVideoStream]->time_base);
         iError = m_pMoviePictureBuffer->write(pFrame, dClockPts);
 
         if(iError < 0)
@@ -798,7 +821,7 @@ void THMovie::runVideo()
     }
 
     avcodec_flush_buffers(m_pVideoCodecContext);
-    av_free(pFrame);
+    av_frame_free(&pFrame);
 }
 
 int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
@@ -832,11 +855,19 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     {
         iError = 1;
 
+#ifdef CORSIX_TH_USE_LIBAV
+        *piPts = pFrame->pts;
+        if (*piPts == AV_NOPTS_VALUE)
+        {
+            *piPts = pFrame->pkt_dts;
+        }
+#else
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
         *piPts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), pFrame, "best_effort_timestamp");
 #else
         *piPts = av_frame_get_best_effort_timestamp(pFrame);
-#endif
+#endif //LIBAVCODEC_VERSION_INT
+#endif //CORSIX_T_USE_LIBAV
 
         if(*piPts == AV_NOPTS_VALUE)
         {
@@ -943,11 +974,11 @@ int THMovie::decodeAudioFrame(bool fFirst)
         {
             if(!m_frame)
             {
-                m_frame = avcodec_alloc_frame();
+                m_frame = av_frame_alloc();
             }
             else
             {
-                avcodec_get_frame_defaults(m_frame);
+                av_frame_unref(m_frame);
             }
 
             if(fFlushComplete)
@@ -977,7 +1008,6 @@ int THMovie::decodeAudioFrame(bool fFirst)
         }
     }
 
-#if LIBSWRESAMPLE_VERSION_INT < AV_VERSION_INT(0, 12, 100)
     //over-estimate output samples
     iOutSamples = (int)av_rescale_rnd(m_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
     iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
@@ -991,33 +1021,15 @@ int THMovie::decodeAudioFrame(bool fFirst)
         m_pbAudioBuffer = (uint8_t*)av_malloc(iSampleSize);
         m_iAudioBufferMaxSize = iSampleSize;
     }
-#else
-    //output samples = (input samples + delay) * output rate / input rate
-    iOutSamples = (int)av_rescale_rnd(
-        swr_get_delay(
-            m_pSwrContext,
-            m_pAudioCodecContext->sample_rate) + m_frame->nb_samples,
-            m_iMixerFrequency,
-            m_pAudioCodecContext->sample_rate,
-            AV_ROUND_UP);
-    iSampleSize = av_samples_get_buffer_size(NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
 
-    if(iSampleSize > m_iAudioBufferMaxSize)
-    {
-        if(m_iAudioBufferMaxSize > 0)
-        {
-            av_free(m_pbAudioBuffer);
-        }
-        av_samples_alloc(&m_pbAudioBuffer, NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
-        m_iAudioBufferMaxSize = iSampleSize;
-    }
+#ifdef CORSIX_TH_USE_FFMPEG
+    swr_convert(m_pAudioResampleContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_frame->data[0], m_frame->nb_samples);
+#elif defined(CORSIX_TH_USE_LIBAV)
+    avresample_convert(m_pAudioResampleContext, &m_pbAudioBuffer, 0, iOutSamples, (uint8_t**)&m_frame->data[0], 0, m_frame->nb_samples);
 #endif
-
-    swr_convert(m_pSwrContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_frame->data[0], m_frame->nb_samples);
-
     return iSampleSize;
 }
-#else //CORSIX_TH_USE_FFMPEG
+#else //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
 void THMovie::setRenderer(SDL_Renderer *pRenderer) {}
