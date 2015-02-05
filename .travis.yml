@@ -12,8 +12,8 @@ before_install:
   - sudo apt-get -q install g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
   # The packages in ubuntu's repositories seem a little broken
   # so use a bleeding edge version
-  - wget http://ftp.jp.debian.org/debian/pool/main/m/mingw-w64/mingw-w64_3.2.0-2_all.deb
-  - sudo dpkg -i mingw-w64_3.2.0-2_all.deb
+  - wget http://ftp.jp.debian.org/debian/pool/main/m/mingw-w64/mingw-w64_3.3.0-1_all.deb
+  - sudo dpkg -i mingw-w64_3.3.0-1_all.deb
   - mkdir libs
   - cd libs
   # Get FFmpeg
