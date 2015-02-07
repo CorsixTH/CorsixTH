@@ -473,10 +473,6 @@ function UI:toggleFullscreen()
     toggleMode(index)
   end
 
-  self.app.gfx:updateTarget(self.app.video)
-  self.app.moviePlayer:updateRenderer()
-  self.app.moviePlayer:allocatePictureBuffer()
-  self.app.video:startFrame()
   -- Redraw cursor
   local cursor = self.cursor
   self.cursor = nil
