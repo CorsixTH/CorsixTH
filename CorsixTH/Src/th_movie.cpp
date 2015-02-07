@@ -95,7 +95,7 @@ void THMoviePicture::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidt
     if(m_pTexture)
     {
         SDL_DestroyTexture(m_pTexture);
-        std::cerr << "THMovie overlay should be deallocated before being allocated!";
+        std::cerr << "THMovie overlay should be deallocated before being allocated!\n";
     }
     m_pTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, m_iWidth, m_iHeight);
     if(m_pTexture == NULL)
@@ -127,7 +127,7 @@ void THMoviePicture::draw(SDL_Renderer *pRenderer)
         int iError = SDL_RenderCopy(pRenderer, m_pTexture, NULL, &rcDest);
         if(iError < 0)
         {
-            std::cerr << "Error displaying movie frame: " << SDL_GetError();
+            std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
         }
     }
 }
@@ -274,7 +274,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         if(m_pSwsContext == NULL)
         {
             SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
-            std::cerr << "Failed to initialize SwsContext";
+            std::cerr << "Failed to initialize SwsContext\n";
             return 1;
         }
 
