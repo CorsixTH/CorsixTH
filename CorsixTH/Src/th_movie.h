@@ -29,7 +29,7 @@ SOFTWARE.
 #include <queue>
 #include "config.h"
 
-#ifdef CORSIX_TH_USE_FFMPEG
+#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
 #include "SDL_mixer.h"
 
 extern "C"
@@ -40,8 +40,12 @@ extern "C"
 #endif
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
-#include <libswresample/swresample.h>
 #include <libswscale/swscale.h>
+#ifdef CORSIX_TH_USE_FFMPEG
+#include <libswresample/swresample.h>
+#elif defined(CORSIX_TH_USE_LIBAV)
+#include <libavresample/avresample.h>
+#endif
 }
 
 struct SDL_Renderer;
@@ -115,7 +119,7 @@ private:
     SDL_mutex *m_pMutex;
     SDL_cond *m_pCond;
 };
-#endif //CORSIX_TH_USE_FFMPEG
+#endif //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 
 class THMovie
 {
@@ -148,7 +152,7 @@ public:
     void runVideo();
     void copyAudioToStream(uint8_t *pbStream, int iStreamSize);
 protected:
-#ifdef CORSIX_TH_USE_FFMPEG
+#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
     int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
 
@@ -184,7 +188,11 @@ protected:
     double m_iCurSyncPts;
 
     //audio resample context
-    SwrContext* m_pSwrContext;
+#ifdef CORSIX_TH_USE_FFMPEG
+    SwrContext* m_pAudioResampleContext;
+#elif defined(CORSIX_TH_USE_LIBAV)
+    AVAudioResampleContext* m_pAudioResampleContext;
+#endif
 
     //decoded audio buffer
     int m_iAudioBufferSize;
@@ -215,7 +223,7 @@ protected:
     //threads
     SDL_Thread* m_pStreamThread;
     SDL_Thread* m_pVideoThread;
-#endif //CORSIX_TH_USE_FFMPEG
+#endif //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 };
 
 #endif // TH_VIDEO_H

@@ -190,3 +190,9 @@ function UIStaffRise:increaseSalary()
     world:setSpeed(world.prev_speed)
   end
 end
+
+function UIStaffRise:afterLoad(old, new)
+  if not self.black_font then
+    self.black_font = self.ui.app.gfx:loadFont("QData", "Font00V")
+  end
+end

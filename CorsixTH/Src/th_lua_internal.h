@@ -47,6 +47,7 @@ enum eTHLuaMetatable
     MT_Surface,
     MT_Bitmap,
     MT_Cursor,
+    MT_LfsExt,
     MT_SoundArc,
     MT_SoundFx,
     MT_Movie,
