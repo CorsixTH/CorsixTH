@@ -17,12 +17,12 @@ before_install:
   - mkdir libs
   - cd libs
   # Get FFmpeg
-  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.1.4-win32-dev.7z
-  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.1.4-win32-shared.7z
-  - /usr/bin/7za x ffmpeg-2.1.4-win32-dev.7z
-  - /usr/bin/7za x ffmpeg-2.1.4-win32-shared.7z
-  - mv ffmpeg-2.1.4-win32-dev ffmpeg-dev
-  - mv ffmpeg-2.1.4-win32-shared ffmpeg-bin
+  - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.5.2-win32-dev.7z
+  - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.5.2-win32-shared.7z
+  - /usr/bin/7za x ffmpeg-2.5.2-win32-dev.7z
+  - /usr/bin/7za x ffmpeg-2.5.2-win32-shared.7z
+  - mv ffmpeg-2.5.2-win32-dev ffmpeg-dev
+  - mv ffmpeg-2.5.2-win32-shared ffmpeg-bin
   # Get freetype
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
   - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
