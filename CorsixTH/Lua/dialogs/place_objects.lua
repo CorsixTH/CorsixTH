@@ -527,10 +527,10 @@ function UIPlaceObjects:draw(canvas, x, y)
     if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
       local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
       local zoom = self.ui.zoom_factor
-      if canvas:scale(zoom) then
-        x = x / zoom
-        y = y / zoom
-      end
+      -- if canvas:scale(zoom) then
+      --   x = x / zoom
+      --   y = y / zoom
+      -- end
       self.object_anim:draw(canvas, x, y)
       if self.objects[self.active_index].object.slave_type then
         self.object_slave_anim:draw(canvas, x, y)
