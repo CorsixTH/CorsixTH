@@ -53,9 +53,10 @@ public:
     /*!
         @param pImg Encoded 32bpp image.
         @param pPalette Palette of a legacy sprite.
+        @param iSpriteFlags Flags how to render the sprite.
         @return Decoding was successful.
     */
-    bool decodeImage(const unsigned char* pImg, const THPalette *pPalette);
+    bool decodeImage(const unsigned char* pImg, const THPalette *pPalette, uint32_t iSpriteFlags);
 
 protected:
     //! Store a decoded pixel. Use m_iX and m_iY if necessary.
@@ -203,7 +204,7 @@ public: // Internal (this rendering engine only) API
     SDL_Renderer *getRenderer() const { return m_pRenderer; }
     bool shouldScaleBitmaps(float* pFactor);
     SDL_Texture* createPalettizedTexture(int iWidth, int iHeight, const unsigned char* pPixels,
-                                         const THPalette* pPalette) const;
+                                         const THPalette* pPalette, uint32_t iSpriteFlags) const;
     SDL_Texture* createTexture(int iWidth, int iHeight, const uint32_t* pPixels) const;
     void draw(SDL_Texture *pTexture, const SDL_Rect *prcSrcRect, const SDL_Rect *prcDstRect, int iFlags);
     void drawLine(THLine *pLine, int iX, int iY);
@@ -450,8 +451,9 @@ public: // External API
     /*!
         @param iSprite Sprite getting the mapped palette.
         @param pMap The palette map to apply.
+        @param iAlt32 What to do for a 32bpp sprite (#THDF_Alt32_Mask bits).
     */
-    void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap);
+    void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap, uint32_t iAlt32);
 
     //! Get the number of sprites at the sheet.
     /*!
@@ -557,6 +559,9 @@ protected:
 
         //! Alternative palette (if available).
         const unsigned char *pAltPaletteMap;
+
+        //! Flags how to render the sprite, contains #THDF_Alt32_Mask bits.
+        uint32_t iSpriteFlags;
 
         //! Width of the sprite.
         unsigned int iWidth;

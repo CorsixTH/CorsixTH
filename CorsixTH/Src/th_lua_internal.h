@@ -118,4 +118,13 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
     luaT_setclosure(pState, fn, ## __VA_ARGS__, MT_Count); \
     lua_setfield(pState->L, -2, name)
 
+/**
+ * Add a named constant to the lua interface.
+ * @param name (string literal) Name of the constant.
+ * @param value (tested with int) Value of the constant.
+ */
+#define luaT_setconstant(name, value) \
+    luaT_push(pState->L, value); \
+    lua_setfield(pState->L, -2, name)
+
 #endif

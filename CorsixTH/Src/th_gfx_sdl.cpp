@@ -28,6 +28,7 @@ SOFTWARE.
 #endif
 #include "th_map.h"
 #include <new>
+#include <iostream>
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
@@ -42,10 +43,54 @@ FullColourRenderer::~FullColourRenderer()
 {
 }
 
-bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette *pPalette)
+//! Convert a colour to an equivalent grey scale level.
+/*!
+    @param iOpacity Opacity of the pixel.
+    @param iR Red colour intensity.
+    @param iG Green colour intensity.
+    @param iB Blue colour intensity.
+    @return 32bpp colour pixel in grey scale.
+ */
+static inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+    // 0.2126*R + 0.7152*G + 0.0722*B
+    // 0.2126 * 65536 = 13932.9536 -> 1393
+    // 0.7152 * 65536 = 46871.3472
+    // 0.0722 * 65536 =  4731.6992 -> 4732
+    // 13933 + 46871 + 4732 = 65536 = 2**16
+    unsigned char iGrey = (13933 * iR + 46871 * iG + 4732 * iB) >> 16;
+    return THPalette::packARGB(iOpacity, iGrey, iGrey, iGrey);
+}
+
+//! Convert a colour by swapping red and blue channel.
+/*!
+    @param iOpacity Opacity of the pixel.
+    @param iR Red colour intensity.
+    @param iG Green colour intensity.
+    @param iB Blue colour intensity.
+    @return 32bpp colour pixel with red and blue swapped.
+ */
+static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
+    // The Y factor for red is 0.2126, and for blue 0.0722. This means red is about 3 times stronger than blue.
+    // Simple swapping channels will thus distort the balance. This code compensates for that by computing
+    // red  = blue * 0.0722 / 0.2126 = blue * 1083 / 3189
+    // blue = red  * 0.2126 / 0.0722 = red  * 1063 / 361 (clipped at max blue, 255)
+    uint8_t iNewRed = iB * 1083 / 3189;
+    int iNewBlue = iR * 1063 / 361;
+    if (iNewBlue > 255)
+        iNewBlue = 255;
+    return THPalette::packARGB(iOpacity, iNewRed, iG, iNewBlue);
+}
+
+bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette *pPalette, uint32_t iSpriteFlags)
 {
     if (m_iWidth <= 0 || m_iHeight <= 0)
         return false;
+
+    iSpriteFlags &= THDF_Alt32_Mask;
 
     const uint32_t* pColours = pPalette->getARGBData();
     for (;;) {
@@ -56,7 +101,13 @@ bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette 
             case 0: // Fixed fully opaque 32bpp pixels
                 while (iLength > 0)
                 {
-                    uint32_t iColour = THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
+                    uint32_t iColour;
+                    if (iSpriteFlags == THDF_Alt32_BlueRedSwap)
+                        iColour = makeSwapRedBlue(0xFF, pImg[0], pImg[1], pImg[2]);
+                    else if (iSpriteFlags == THDF_Alt32_GreyScale)
+                        iColour = makeGreyScale(0xFF, pImg[0], pImg[1], pImg[2]);
+                    else
+                        iColour = THPalette::packARGB(0xFF, pImg[0], pImg[1], pImg[2]);
                     _pushPixel(iColour);
                     pImg += 3;
                     iLength--;
@@ -68,7 +119,13 @@ bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette 
                 unsigned char iOpacity = *pImg++;
                 while (iLength > 0)
                 {
-                    uint32_t iColour = THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
+                    uint32_t iColour;
+                    if (iSpriteFlags == THDF_Alt32_BlueRedSwap)
+                        iColour = makeSwapRedBlue(0xFF, pImg[0], pImg[1], pImg[2]);
+                    else if (iSpriteFlags == THDF_Alt32_GreyScale)
+                        iColour = makeGreyScale(iOpacity, pImg[0], pImg[1], pImg[2]);
+                    else
+                        iColour = THPalette::packARGB(iOpacity, pImg[0], pImg[1], pImg[2]);
                     _pushPixel(iColour);
                     pImg += 3;
                     iLength--;
@@ -553,16 +610,16 @@ static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_
     return pData;
 }
 
-SDL_Texture* THRenderTarget::createPalettizedTexture(int iWidth, int iHeight,
-                                                     const unsigned char* pPixels,
-                                                     const THPalette* pPalette) const
+SDL_Texture* THRenderTarget::createPalettizedTexture(
+            int iWidth, int iHeight, const unsigned char* pPixels,
+            const THPalette* pPalette, uint32_t iSpriteFlags) const
 {
     uint32_t *pARGBPixels = new (std::nothrow) uint32_t[iWidth * iHeight];
     if(pARGBPixels == NULL)
         return 0;
 
     FullColourStoring oRenderer(pARGBPixels, iWidth, iHeight);
-    bool bOk = oRenderer.decodeImage(pPixels, pPalette);
+    bool bOk = oRenderer.decodeImage(pPixels, pPalette, iSpriteFlags);
     if (!bOk)
         return 0;
 
@@ -724,7 +781,7 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
         return false;
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
-    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pPixelData, m_pPalette);
+    m_pTexture = pEventualCanvas->createPalettizedTexture(iWidth, iHeight, pPixelData, m_pPalette, THDF_Alt32_Plain);
     if(!m_pTexture)
         return false;
 
@@ -898,6 +955,7 @@ bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
         spr.pAltTexture = NULL;
         spr.pData = NULL;
         spr.pAltPaletteMap = NULL;
+        spr.iSpriteFlags = THDF_Alt32_Plain;
         spr.iWidth = 0;
         spr.iHeight = 0;
     }
@@ -980,7 +1038,7 @@ bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool 
     return true;
 }
 
-void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap)
+void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap, uint32_t iAlt32)
 {
     if(iSprite >= m_iSpriteCount)
         return;
@@ -989,6 +1047,7 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
     if(pSprite->pAltPaletteMap != pMap)
     {
         pSprite->pAltPaletteMap = pMap;
+        pSprite->iSpriteFlags = iAlt32;
         if(pSprite->pAltTexture)
         {
             SDL_DestroyTexture(pSprite->pAltTexture);
@@ -1066,8 +1125,9 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
         if(sprite.pData == NULL)
             return;
 
+        uint32_t iSprFlags = (sprite.iSpriteFlags & ~THDF_Alt32_Mask) | THDF_Alt32_Plain;
         pTexture = m_pTarget->createPalettizedTexture(sprite.iWidth, sprite.iHeight,
-                                                      sprite.pData, m_pPalette);
+                                                      sprite.pData, m_pPalette, iSprFlags);
         sprite.pTexture = pTexture;
     }
     if(iFlags & THDF_AltPalette)
@@ -1094,20 +1154,26 @@ void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, 
     sprite_t *pSprite = m_pSprites + iSprite;
 
     WxStoring oRenderer(pRGBData, pAData, pSprite->iWidth, pSprite->iHeight);
-    oRenderer.decodeImage(pSprite->pData, m_pPalette);
+    oRenderer.decodeImage(pSprite->pData, m_pPalette, pSprite->iSpriteFlags);
 }
 
 SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
 {
-    if (!pSprite->pAltPaletteMap)
+    const uint32_t *pPalette = m_pPalette->getARGBData();
+
+    if (!pSprite->pAltPaletteMap) // Use normal palette.
+    {
+        uint32_t iSprFlags = (pSprite->iSpriteFlags & ~THDF_Alt32_Mask) | THDF_Alt32_Plain;
+        pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
+                                                                  pSprite->pData, m_pPalette, iSprFlags);
+    }
+    else if (!pPalette) // Draw alternative palette, but no palette set (ie 32bpp image).
     {
         pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
-                                                                  pSprite->pData, m_pPalette);
+                                                                  pSprite->pData, m_pPalette, pSprite->iSpriteFlags);
     }
-    else
+    else // Paletted image, build recolour palette.
     {
-        const uint32_t *pPalette = m_pPalette->getARGBData();
-
         THPalette oPalette;
         for (int iColour = 0; iColour < 255; iColour++)
         {
@@ -1116,7 +1182,7 @@ SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
         oPalette.setARGB(255, pPalette[255]); // Colour 0xFF doesn't get remapped.
 
         pSprite->pAltTexture = m_pTarget->createPalettizedTexture(pSprite->iWidth, pSprite->iHeight,
-                                                                  pSprite->pData, &oPalette);
+                                                                  pSprite->pData, &oPalette, pSprite->iSpriteFlags);
     }
 
     return pSprite->pAltTexture;

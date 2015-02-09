@@ -61,6 +61,21 @@ enum THDrawFlags
     //! Draw using a remapped palette
     THDF_AltPalette     = 1 <<  4,
 
+    /** How to draw alternative palette in 32bpp. */
+    /* A 3 bit field (bits 5,6,7), currently 2 bits used. */
+
+    //! Lowest bit of the field.
+    THDF_Alt32_Start = 5,
+    //! Mask for the 32bpp alternative drawing values.
+    THDF_Alt32_Mask = 0x7 << THDF_Alt32_Start,
+
+    //! Draw the sprite with the normal palette (fallback option).
+    THDF_Alt32_Plain       = 0 << THDF_Alt32_Start,
+    //! Draw the sprite in grey scale.
+    THDF_Alt32_GreyScale   = 1 << THDF_Alt32_Start,
+    //! Draw the sprite with red and blue colours swapped.
+    THDF_Alt32_BlueRedSwap = 2 << THDF_Alt32_Start,
+
     /** Object attached to tile flags **/
     /* (should be set prior to attaching to a tile) */
 
@@ -292,11 +307,11 @@ public:
     /*!
         This sets the palette remap data for every single sprite used by the
         given animation. If the animation (or any of its sprites) are drawn
-        using the THDF_AltPalette flag, then palette indicies will be mapped to
-        new palette indicies by the 256 byte array pMap. This is typically used
+        using the THDF_AltPalette flag, then palette indices will be mapped to
+        new palette indices by the 256 byte array pMap. This is typically used
         to draw things in different colours or in greyscale.
     */
-    void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap);
+    void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap, uint32_t iAlt32);
 
     //! Draw an animation frame
     /*!

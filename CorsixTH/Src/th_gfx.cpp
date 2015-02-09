@@ -717,7 +717,7 @@ unsigned int THAnimationManager::getNextFrame(unsigned int iFrame) const
         return iFrame;
 }
 
-void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap)
+void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap, uint32_t iAlt32)
 {
     if(iAnimation >= m_iAnimationCount)
         return;
@@ -735,7 +735,7 @@ void THAnimationManager::setAnimationAltPaletteMap(unsigned int iAnimation, cons
 
             element_t& oElement = m_vElements[iElement];
             if (oElement.pSpriteSheet != NULL)
-                oElement.pSpriteSheet->setSpriteAltPaletteMap(oElement.iSprite, pMap);
+                oElement.pSpriteSheet->setSpriteAltPaletteMap(oElement.iSprite, pMap, iAlt32);
         }
         iFrame = m_vFrames[iFrame].iNextFrame;
     } while(iFrame != iFirstFrame);
