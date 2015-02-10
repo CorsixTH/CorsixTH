@@ -828,6 +828,10 @@ end
 --! Closes one window (the topmost / active window, if possible)
 --!return true iff a window was closed
 function UI:closeWindow()
+  if not self.windows then
+    return false
+  end
+
   -- Close the topmost window first
   local first = self.windows[1]
   if first.on_top and first.esc_closes then
