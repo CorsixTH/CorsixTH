@@ -51,6 +51,24 @@ before_install:
   - tar xJf lua-5.1.4-4-mingw32-dll-51.tar.xz -C lua
   - wget http://netcologne.dl.sourceforge.net/project/mingw/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dev.tar.xz
   - tar xJf lua-5.1.4-4-mingw32-dev.tar.xz -C lua
+  # Get LuaFileSystem
+  - wget http://github.com/keplerproject/luafilesystem/archive/v_1_6_3.tar.gz
+  - tar xzf v_1_6_3.tar.gz
+  - pushd luafilesystem-v_1_6_3
+  - i686-w64-mingw32-gcc -O2 -c -o src/lfs.o src/lfs.c -I../lua/include
+  - i686-w64-mingw32-gcc -shared -o lfs.dll src/lfs.o ../lua/bin/lua51.dll
+  - popd
+  # Get LPeg
+  - wget http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-0.12.1.tar.gz
+  - tar xzf lpeg-0.12.1.tar.gz
+  - pushd lpeg-0.12.1
+  - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lpcap.o lpcap.c
+  - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lpcode.o lpcode.c
+  - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lpprint.o lpprint.c
+  - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lptree.o lptree.c
+  - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lpvm.o lpvm.c
+  - i686-w64-mingw32-gcc -shared -o lpeg.dll lpcap.o lpcode.o lpprint.o lptree.o lpvm.o ../lua/bin/lua51.dll
+  - popd
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
 install:
   - cd $TRAVIS_BUILD_DIR
@@ -91,6 +109,8 @@ after_success:
   - cp libs/ffmpeg-bin/bin/*.dll fresh/CorsixTH/
   - cp libs/freetype/bin/*.dll fresh/CorsixTH/
   - cp libs/lua/bin/*.dll fresh/CorsixTH/
+  - cp libs/luafilesystem-v_1_6_3/lfs.dll fresh/CorsixTH/
+  - cp libs/lpeg-0.12.1/lpeg.dll fresh/CorsixTH/
   # Copy CTH
   - cd CorsixTH/
   - cp -r * ../fresh/CorsixTH/
