@@ -69,6 +69,11 @@ before_install:
   - i686-w64-mingw32-gcc -std=c99 -O2 -I../lua/include -c -o lpvm.o lpvm.c
   - i686-w64-mingw32-gcc -shared -o lpeg.dll lpcap.o lpcode.o lpprint.o lptree.o lpvm.o ../lua/bin/lua51.dll
   - popd
+  - git clone https://github.com/diegonehab/luasocket.git luasocket
+  - pushd luasocket
+  - git checkout 5edf093
+  - make PLAT=mingw LUAINC_mingw=$TRAVIS_BUILD_DIR/libs/lua/include LUALIB_mingw=$TRAVIS_BUILD_DIR/libs/lua/bin/lua51.dll CC_mingw=i686-w64-mingw32-gcc LD_mingw=i686-w64-mingw32-gcc prefix=$TRAVIS_BUILD_DIR/libs/luasocket LUAV=5.1
+  - make PLAT=mingw LUAINC_mingw=$TRAVIS_BUILD_DIR/libs/lua/include LUALIB_mingw=$TRAVIS_BUILD_DIR/libs/lua/bin/lua51.dll CC_mingw=i686-w64-mingw32-gcc LD_mingw=i686-w64-mingw32-gcc prefix=$TRAVIS_BUILD_DIR/libs/luasocket LUAV=5.1 install
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
 install:
   - cd $TRAVIS_BUILD_DIR
@@ -111,6 +116,7 @@ after_success:
   - cp libs/lua/bin/*.dll fresh/CorsixTH/
   - cp libs/luafilesystem-v_1_6_3/lfs.dll fresh/CorsixTH/
   - cp libs/lpeg-0.12.1/lpeg.dll fresh/CorsixTH/
+  - cp -r libs/luasocket/lua/5.1/* fresh/CorsixTH/
   # Copy CTH
   - cd CorsixTH/
   - cp -r * ../fresh/CorsixTH/
