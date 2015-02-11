@@ -303,6 +303,7 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
                                            virtWidth,
                                            virtHeight
                                           );
+
         SDL_RenderSetLogicalSize(m_pRenderer, virtWidth, virtHeight);
         if(SDL_SetRenderTarget(m_pRenderer, m_pZoomTexture) != 0)
         {
@@ -310,6 +311,10 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
             m_pZoomTexture = NULL;
             return false;
         }
+
+        // Clear the new texture to transparent/black.
+        SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+        SDL_RenderClear(m_pRenderer);
 
         return true;
     }
@@ -509,7 +514,7 @@ void THRenderTarget::_flushZoomBuffer()
 
     SDL_SetRenderTarget(m_pRenderer, NULL);
     SDL_RenderSetScale(m_pRenderer, 1, 1);
-    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_NONE);
+    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_BLEND);
     SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
     SDL_DestroyTexture(m_pZoomTexture);
     m_pZoomTexture = NULL;
