@@ -263,4 +263,7 @@ function LoadGameFile(filename)
   local data = f:read"*a"
   f:close()
   LoadGame(data)
+  if filename:find("RestartSave.sav") then
+    os.remove(filename)
+  end
 end
