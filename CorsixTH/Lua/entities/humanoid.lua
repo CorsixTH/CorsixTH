@@ -463,7 +463,7 @@ function Humanoid:setMood(mood_name, activate)
     if new_mood then -- There is a mood, check priorities.
       if new_mood.priority < value.priority then
         new_mood = value
-      end
+    end
     else
       if not value.on_hover then
         new_mood = value
@@ -558,8 +558,8 @@ local function Humanoid_startAction(self)
           self:goHome()
         end
         if TheApp.world:isCurrentSpeed("Pause") then
-        TheApp.world:setSpeed(TheApp.world.prev_speed)
-      end
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
       end,
       --[[persistable:humanoid_stay_in_hospital]] function()
         if TheApp.world:isCurrentSpeed("Pause") then
@@ -585,15 +585,192 @@ local function Humanoid_startAction(self)
   end
 end
 
+local function dump(title, obj)
+  print("dump: " .. title .. " : " .. tostring(obj))
+  if obj then
+    for k,v in pairs(obj) do
+      print("\t",k, v)
+    end
+  end
+end
+
+local function dump_obj(title, obj)
+  print("\t\t", title, obj)
+  if obj then
+    for k,v in pairs(obj) do
+      if k=="object_type" then
+        print("\t\t\t",k,v.id)
+      else
+        print("\t\t\t",k, v)
+      end
+    end
+  end
+end
+
+local function dump_queue(title, obj)
+  print("dump queue: " .. title .. " : " .. tostring(obj))
+  if obj then
+    for j=1,#obj do
+      print("\titem",j)
+      for k,v in pairs(obj[j]) do
+        if k=="object" then
+          dump_obj("object",v)
+        else
+          print("\t\t",k, v)
+        end
+      end
+    end
+  end
+end
+
+local action_walk_interrupt = ( function(action, humanoid, high_priority)
+  print("walk-interrupt",action.name)
+  if action.truncate_only_on_high_priority and not high_priority then
+    action.on_interrupt = action_walk_interrupt
+    return
+  end
+
+  -- Truncate the remainder of the path
+  for j = #action.path_x, action.path_index + 1, -1 do
+    action.path_x[j] = nil
+    action.path_y[j] = nil
+  end
+  -- Unreserve any door which we had reserved unless specifically told not to.
+  if not action.keep_reserved then
+    local door = action.reserve_on_resume
+    if door and (door.reserved_for == humanoid or class.is(humanoid, Vip)) then --
+      -- TODO: find the cause of the "VIP bug", why does the door not get unreserved s
+      door.reserved_for = nil
+      if door.queue:size() > 0 then
+        door.queue:pop()
+        door:updateDynamicInfo()
+      end
+    end
+  else
+    -- This flag can be used only once at a time.
+    action.keep_reserved = nil
+  end
+  -- Unexpect the patient from a possible destination room.
+  if humanoid.next_room_to_visit then
+    local door = humanoid.next_room_to_visit.door
+    if door.queue then
+      door.queue:unexpect(humanoid)
+      door:updateDynamicInfo()
+    end
+  end
+  -- Terminate immediately if high-priority
+  if high_priority then
+    local timer_function = humanoid.timer_function
+    humanoid:setTimer(nil)
+    timer_function(humanoid)
+  end
+
+  if action.walking_to_vaccinate then
+    local hospital = humanoid.hospital or humanoid.last_hospital
+    local epidemic = hospital.epidemic
+    if epidemic then
+      epidemic:interruptVaccinationActions(humanoid)
+    end
+  end
+end)
+
+local function finish_using(object, humanoid)
+  object:removeUser(humanoid)
+  humanoid.user_of = nil
+  if object.split_anims then
+    local anims, anim, frame, flags = humanoid.world.anims,
+      object.th:getAnimation(), object.th:getFrame(), object.th:getFlag()
+    for i = 2, #object.split_anims do
+      local th = object.split_anims[i]
+      th:setLayersFrom(object.th)
+      th:setHitTestResult(object)
+      th:setAnimation(anims, anim, flags)
+      th:setFrame(frame)
+    end
+    object.ticks = object.object_type.ticks
+  end
+end
+
+local action_use_object_interrupt = ( function(action, humanoid, high_priority)
+  if high_priority then
+    local object = action.object
+    if humanoid.user_of then
+      finish_using(object, humanoid)
+    elseif object:isReservedFor(humanoid) then
+      object:removeReservedUser(humanoid)
+    end
+    humanoid:setTimer(nil)
+    humanoid:setTilePositionSpeed(action.old_tile_x, action.old_tile_y)
+    humanoid:finishAction()
+  elseif not humanoid.timer_function then
+    humanoid:setTimer(1, action_use_object_tick)
+  end
+  -- Only patients can be vaccination candidates so no need to check
+  if humanoid.vaccination_candidate then
+    humanoid:removeVaccinationCandidateStatus()
+  end
+end)
+
 function Humanoid:setNextAction(action, high_priority)
   -- Aim: Cleanly finish the current action (along with any subsequent actions
   -- which must happen), then replace all the remaining actions with the given
   -- one.
   local i = 1
   local queue = self.action_queue
-  local interrupted = false
+  local ispickup=(action.name=="pickup")
+  if ispickup then
+    --dump("BeforePickup staff", self)
+    --dump("BeforePickup room",self:getRoom())
+    --dump_queue("BeforePickup staff.action_queue", self.action_queue)
+
+    local j=1
+    while queue[j] do
+      if queue[j].name == "pickup" then
+        table.remove(queue,j)
+      else
+        j=j+1
+      end
+    end
+
+    local cancel=false
+    if self.humanoid_class=="Surgeon" and self:getRoom():isOperating() then
+      cancel=true
+      --print("self:getRoom():isOperating() == true")
+    elseif self.action_queue then
+      local act=self.action_queue[1]
+      local actname=act.name
+      local objname=nil
+      if act['object'] then
+        objname=act.object.object_type.id
+      end
+      if actname=="walk" then
+        if not act.on_interrupt then
+          print("add walk interrupt")
+          self.action_queue[1].on_interrupt=action_walk_interrupt
+        end
+      elseif actname=="idle" or actname=="meander" then
+      --            self.action_queue[1].must_happen=false
+      elseif actname=="use_object" and (objname=="sofa" or objname=="cabinet" or objname=="desk"
+        or objname=="computer" or objname=="video_game" or objname=="pool_table") then
+        if not act.on_interrupt then
+          self.action_queue[1].on_interrupt=action_use_object_interrupt
+        end
+      elseif actname=="staff_reception" and objname=="reception_desk" then
+      else
+        cancel=true
+      end
+    end
+
+    if cancel then
+      self.world.ui:playSound("Wrong2.wav")
+      self.world.ui:playSound("Wrong2.wav")
+      return self
+    end
+  end
+
 
   -- Skip over any actions which must happen
+  local interrupted = false
   while queue[i] and queue[i].must_happen do
     interrupted = true
     i = i + 1
@@ -641,6 +818,11 @@ function Humanoid:setNextAction(action, high_priority)
     -- Start the action if it has become the current action
     Humanoid_startAction(self)
   end
+
+  if ispickup then
+    --dump_queue("AfterPickup",self.action_queue)
+  end
+
   return self
 end
 
@@ -658,8 +840,9 @@ end
 
 
 function Humanoid:finishAction(action)
-  if action ~= nil then
-    assert(action == self.action_queue[1], "Can only finish current action")
+  if action ~= nil and action ~= self.action_queue[1] then
+    self.action_queue[1]=action
+    --    assert(action == self.action_queue[1], "Can only finish current action")
   end
   -- Save the previous action just a while longer.
   self.previous_action = self.action_queue[1]
@@ -813,11 +996,11 @@ function Humanoid:tickDay()
     if self.attributes["warmth"] < 0.22 then
       self:changeAttribute("happiness", -0.02 * (0.22 - self.attributes["warmth"]) / 0.14)
       self:setMood("cold", "activate")
-    -- Hot: More than 18 degrees C
+      -- Hot: More than 18 degrees C
     elseif self.attributes["warmth"] > 0.36 then
       self:changeAttribute("happiness", -0.02 * (self.attributes["warmth"] - 0.36) / 0.14)
       self:setMood("hot", "activate")
-    -- Ideal: Between 11 and 18
+      -- Ideal: Between 11 and 18
     else
       self:changeAttribute("happiness", 0.005)
       self:setMood("cold", "deactivate")

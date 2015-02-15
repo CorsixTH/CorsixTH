@@ -115,13 +115,16 @@ local function action_use_screen_start(action, humanoid)
     anim, when_done = 2844, normal_state
   elseif class == "Gowned Male Patient" then
     humanoid:setType "Standard Male Patient"
+    humanoid:getRoom().is_operating=nil
     anim, when_done = 4768, finish
   elseif class == "Gowned Female Patient" then
     humanoid:setType "Standard Female Patient"
+    humanoid:getRoom().is_operating=nil
     anim, when_done = 4770, finish
   elseif class == "Standard Male Patient" then
     if is_surgical then
       humanoid:setType "Gowned Male Patient"
+      humanoid:getRoom().is_operating=true
       anim, when_done = 4760, finish
     else
       if change_to == 1 then
@@ -138,6 +141,7 @@ local function action_use_screen_start(action, humanoid)
   elseif class == "Standard Female Patient" then
     if is_surgical then
       humanoid:setType "Gowned Female Patient"
+      humanoid:getRoom().is_operating=true
       anim, when_done = 4762, finish
     else
       if change_to == 1 then

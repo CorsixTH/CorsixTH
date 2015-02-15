@@ -86,7 +86,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.num_slots = 0
 
   self:addObjects(object_list, pay_for)
-  self:addKeyHandler("space", self.tryNextOrientation)
+  --self:addKeyHandler("space", self.tryNextOrientation)
 
   ui:setWorldHitTest(false)
 end

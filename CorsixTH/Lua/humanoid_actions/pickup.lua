@@ -38,6 +38,14 @@ local action_pickup_dont_interrupt = permanent"action_pickup_dont_interrupt"( fu
 end)
 
 local function action_pickup_start(action, humanoid)
+  if humanoid.humanoid_class=="Surgeon" then                                                                
+      humanoid:setType "Doctor"                                                                             
+      local screen, screen_x, screen_y = humanoid:getRoom().world:findObjectNear(humanoid, "surgeon_screen")
+      screen.num_green_outfits = screen.num_green_outfits + 1                                               
+      screen.num_white_outfits = screen.num_white_outfits - 1                                               
+      screen:setAnimation(({[0]=2774, [1]=2776, [2]=2772})[screen.num_green_outfits])                       
+  end                                                                                                       
+
   humanoid.dealing_with_patient = nil
   if action.todo_close then
     action.todo_close:close()

@@ -136,6 +136,7 @@ function GameUI:draw(canvas)
   local config = app.config
   local zoom = self.zoom_factor
   if canvas:scale(zoom) then
+    canvas:fillBlack()
     app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width / zoom, config.height / zoom, 0, 0)
     canvas:scale(1)
   else

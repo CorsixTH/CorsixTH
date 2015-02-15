@@ -21,7 +21,6 @@ SOFTWARE.
 */
 
 #include "config.h"
-#include <vector>
 
 #include "th_gfx.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
@@ -32,8 +31,6 @@ SOFTWARE.
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
-
-using namespace std;
 
 FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidth), m_iHeight(iHeight)
 {
@@ -288,11 +285,12 @@ void THRenderTarget::_flushZoomBuffer()
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
-	if(m_bTextureCreated){
+    m_bShouldScaleBitmaps = false;
+ 	if(m_bTextureCreated){
 		SDL_RenderSetScale(m_pRenderer, fScale, fScale);
 		return true;
 	}
-    m_bShouldScaleBitmaps = false;
+
     if(0.999 <= fScale && fScale <= 1.001)
     {
         return true;
@@ -315,7 +313,6 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
         //fit the window.
         float virtWidth = static_cast<float>(m_iWidth) / fScale;
         float virtHeight = static_cast<float>(m_iHeight) / fScale;
-
         m_pZoomTexture = SDL_CreateTexture(m_pRenderer,
                                            SDL_PIXELFORMAT_ABGR8888,
                                            SDL_TEXTUREACCESS_TARGET,
