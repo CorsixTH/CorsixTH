@@ -147,7 +147,8 @@ function App:init()
     modes[#modes + 1] = "present immediate"
   end
   self.modes = modes
-  self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
+  self.video = TH.surface(self.config.width, self.config.height, unpack(modes))
+  assert(self.video)
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 

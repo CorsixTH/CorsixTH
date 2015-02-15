@@ -1137,13 +1137,11 @@ void THAnimation::draw(THRenderTarget* pCanvas, int iDestX, int iDestY)
             rcNew.w = 64;
             IntersectTHClipRect(rcNew, rcOld);
             pCanvas->setClipRect(&rcNew);
-            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
-                                  m_iFlags);
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY, m_iFlags);
             pCanvas->setClipRect(&rcOld);
         }
         else
-            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
-                                  m_iFlags);
+            m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY, m_iFlags);
     }
 }
 

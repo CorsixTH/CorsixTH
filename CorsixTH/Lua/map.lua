@@ -435,7 +435,6 @@ end
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
-  canvas:fillBlack()
   self.th:draw(canvas, sx, sy, sw, sh, dx, dy)
 
   -- Draw any debug overlays
@@ -589,3 +588,8 @@ function Map:afterLoad(old, new)
     end
   end
 end
+
+function Map:checkOutOfBound(x,y)
+  return not (x>=1 and y>=1 and x<=self.width and y<=self.height)
+end
+

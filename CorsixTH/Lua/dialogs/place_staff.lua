@@ -77,7 +77,8 @@ end
 local flag_cache = {}
 local flag_altpal = 16
 function UIPlaceStaff:draw(canvas)
-  if self.world.user_actions_allowed then
+  if self.world.user_actions_allowed
+      and not self.world.map:checkOutOfBound(self.tile_x, self.tile_y) then
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
     local room = self.world:getRoom(self.tile_x, self.tile_y)
     local valid = flag_cache.hospital and flag_cache.passable and

@@ -214,6 +214,7 @@ protected:
     SDL_Texture *m_pZoomTexture;
     SDL_PixelFormat *m_pFormat;
     bool m_bBlueFilterActive;
+	bool m_bTextureCreated;
     THCursor* m_pCursor;
     float m_fBitmapScaleFactor;
     int m_iWidth;

@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include <vector>
 
 #include "th_gfx.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
@@ -31,6 +32,8 @@ SOFTWARE.
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
+
+using namespace std;
 
 FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidth), m_iHeight(iHeight)
 {
@@ -270,9 +273,25 @@ void THRenderTarget::destroy()
     }
 }
 
+void THRenderTarget::_flushZoomBuffer()
+{
+    if(m_pZoomTexture == NULL) { return; }
+
+    SDL_SetRenderTarget(m_pRenderer, NULL);
+    SDL_RenderSetScale(m_pRenderer, 1, 1);
+    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_NONE);
+    SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
+    SDL_DestroyTexture(m_pZoomTexture);
+    m_pZoomTexture = NULL;
+}
+
 bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
+	if(m_bTextureCreated){
+		SDL_RenderSetScale(m_pRenderer, fScale, fScale);
+		return true;
+	}
     m_bShouldScaleBitmaps = false;
     if(0.999 <= fScale && fScale <= 1.001)
     {
@@ -310,7 +329,7 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
             m_pZoomTexture = NULL;
             return false;
         }
-
+		m_bTextureCreated = true;
         return true;
     }
     else
@@ -339,6 +358,7 @@ const char* THRenderTarget::getLastError()
 bool THRenderTarget::startFrame()
 {
     fillBlack();
+	m_bTextureCreated = false;
     return true;
 }
 
@@ -501,18 +521,6 @@ bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
     if(pFactor)
         *pFactor = m_fBitmapScaleFactor;
     return true;
-}
-
-void THRenderTarget::_flushZoomBuffer()
-{
-    if(m_pZoomTexture == NULL) { return; }
-
-    SDL_SetRenderTarget(m_pRenderer, NULL);
-    SDL_RenderSetScale(m_pRenderer, 1, 1);
-    SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_NONE);
-    SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
-    SDL_DestroyTexture(m_pZoomTexture);
-    m_pZoomTexture = NULL;
 }
 
 //! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
