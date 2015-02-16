@@ -25,6 +25,7 @@ local TH = require "TH"
 local SDL = require "sdl"
 local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
     = assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
+local runDebugger = dofile "run_debugger"
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -63,6 +64,12 @@ function App:App()
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
   self.check_for_updates = true
+end
+
+--! Starts a Lua DBGp client & connects it to a DBGp server.
+--!return error_message (String) Returns an error message or nil.
+function App:connectDebugger()
+  return runDebugger()
 end
 
 function App:setCommandLine(...)
@@ -1324,6 +1331,8 @@ function App:checkForUpdates()
     -- LuaSocket is not available, just return
     print "Cannot check for updates since LuaSocket is not available."
     return
+  else
+    self.lua_socket_available = true
   end
   local http = require "socket.http"
   local url = require "socket.url"

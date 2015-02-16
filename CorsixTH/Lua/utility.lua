@@ -112,6 +112,24 @@ function table_length(table)
   return count
 end
 
+--! Checks if a file exists and is readable.
+--!param path (string)
+--!param root_path (boolean) Optional, default: false. If true the file's path
+-- will be appended to the CorsixTH root directory's path. 
+--!return (String) Returns an error message for the file read error or nil.
+function is_file_unreadable(path, root_path)
+  if root_path then
+    local root_dir = debug.getinfo(1, "S").source:sub(2, -26) .. package.config:sub(1, 1)
+    path = root_dir .. path
+  end
+  local file, error_message = io.open(path, "r")
+  if file then
+    io.close(file)
+  else
+    return error_message
+  end
+end
+
 -- Variation on loadfile() which allows for the loaded file to have global
 -- references resolved in supplied tables. On failure, returns nil and an
 -- error. On success, returns the file as a function just like loadfile() does

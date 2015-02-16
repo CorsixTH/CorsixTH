@@ -9,50 +9,13 @@ if (package and package.preload and package.preload.TH) == nil then
   error "This file must be invoked by the CorsixTH executable"
 end
 
--- Check Lua version
-if _VERSION ~= "Lua 5.1" then
-  if _VERSION == "Lua 5.2" then
-    print "Notice: Lua 5.2 is not officially supported at the moment"
-    -- Compatibility: Keep the global unpack function
-    unpack = table.unpack
-    -- Compatibility: Provide a replacement for deprecated ipairs()
-    -- NB: It might be wiser to migrate away from ipairs entirely, but the
-    -- following works as an immediate band-aid
-    local rawget, error, type = rawget, error, type
-    if not pcall(ipairs, {}) then
-      local function next_int(t, i)
-        i = i + 1
-        local v = rawget(t, i)
-        if v ~= nil then
-          return i, v
-        end
-      end
-      function ipairs(t)
-        if type(t) ~= "table" then
-          error("table expected, got " .. type(t))
-        end
-        return next_int, t, 0
-      end
-    end
-  else
-    error "Please recompile CorsixTH and link against Lua version 5.1"
+-- Parse script parameters:
+local run_debugger = false
+for _, arg in ipairs({...}) do
+  if arg:match("^%-%-connect%-lua%-dbgp") then
+    run_debugger = true
   end
 end
-
--- If being debugged in Decoda, turn off JIT compilation (as it cannot debug
--- machine code). Note that this file cannot be debugged, but all other files
--- can be. See http://www.unknownworlds.com/decoda/ for Decoda info.
-if decoda_output then
-  _DECODA = true
-  if jit then
-    jit.off()
-    decoda_output "JIT compilation disabled"
-  end
-else
-  _DECODA = false
-end
-
-_MAP_EDITOR = _MAP_EDITOR or false
 
 -- Redefine dofile such that it adds the direction name and file extension, and
 -- won't redo a file which it has previously done.
@@ -95,6 +58,60 @@ end
 
 -- Load standard library extensions
 dofile "utility"
+
+-- If requested run a Lua DBGp Debugger Client:
+if run_debugger then
+  dofile("run_debugger")()
+  done_files["run_debugger"] = nil
+end
+
+-- Check Lua version
+if _VERSION ~= "Lua 5.1" then
+  if _VERSION == "Lua 5.2" then
+    print "Notice: Lua 5.2 is not officially supported at the moment"
+    -- Compatibility: Keep the global unpack function
+    unpack = table.unpack
+    -- Compatibility: Provide a replacement for deprecated ipairs()
+    -- NB: It might be wiser to migrate away from ipairs entirely, but the
+    -- following works as an immediate band-aid
+    local rawget, error, type = rawget, error, type
+    if not pcall(ipairs, {}) then
+      local function next_int(t, i)
+        i = i + 1
+        local v = rawget(t, i)
+        if v ~= nil then
+          return i, v
+        end
+      end
+      function ipairs(t)
+        if type(t) ~= "table" then
+          error("table expected, got " .. type(t))
+        end
+        return next_int, t, 0
+      end
+    end
+  else
+    error "Please recompile CorsixTH and link against Lua version 5.1"
+  end
+end
+
+-- If being debugged in Decoda, turn off JIT compilation (as it cannot debug
+-- machine code). Note that Decoda can't debug this file but it can debug all
+-- other files. See http://www.unknownworlds.com/decoda/ for Decoda info.
+--
+-- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
+-- it to a running server, using this CorsixTH startup arg: -debugger
+if decoda_output then
+  _DECODA = true
+  if jit then
+    jit.off()
+    decoda_output "JIT compilation disabled"
+  end
+else
+  _DECODA = false
+end
+
+_MAP_EDITOR = _MAP_EDITOR or false
 
 -- Enable strict mode
 dofile "strict"

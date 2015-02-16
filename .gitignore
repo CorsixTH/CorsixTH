@@ -61,3 +61,4 @@ CorsixTH/*.suo
 LevelEdit/bin/
 
 CorsixTH/Lua/debug_script.lua
+CorsixTH/Lua/debugger.lua

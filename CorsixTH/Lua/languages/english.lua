@@ -129,6 +129,7 @@ menu_charts = {
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
+  connect_debugger            = "  (CTRL + C) CONNECT LUA DBGp SERVER  ",
   transparent_walls           = "  (X) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
