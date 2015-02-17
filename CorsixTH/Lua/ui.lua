@@ -233,11 +233,11 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
   self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
-  self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
 
   if self.app.config.debug then
     self:addKeyHandler("f12", self, self.showLuaConsole)
     self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
+    self:addKeyHandler({"ctrl", "r"}, self, self.saveAndRestart)
   end
 end
 
@@ -786,7 +786,6 @@ function UI:afterLoad(old, new)
 
   if old < 70 then
     self:removeKeyHandler("f10", self)
-    self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
     self:removeKeyHandler("a", self)
   end
   -- changing this so that it is quit application and Shift + Q is quit to main menu
@@ -799,6 +798,13 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler({"alt", "enter"}, self)
     self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)
   end
+  
+  if old < 102 then
+    self:removeKeyHandler({"shift", "f10"}, self)
+    if self.app.config.debug then
+      self:addKeyHandler({"ctrl", "r"}, self, self.saveAndRestart)
+    end
+  end
 
   Window.afterLoad(self, old, new)
 end
@@ -806,6 +812,16 @@ end
 -- Stub to allow the function to be called in e.g. the information
 -- dialog without having to worry about a GameUI being present
 function UI:tutorialStep(...)
+end
+
+--! This developer function saves the running hospital, if there's
+-- a running hospital and then restarts CorsixTH.
+function UI:saveAndRestart()
+  if self.app.world then
+    self.app:save("RestartSave.sav")
+    print("Game saved as: RestartSave.sav")
+  end
+  self:resetApp()
 end
 
 function UI:makeScreenshot()
