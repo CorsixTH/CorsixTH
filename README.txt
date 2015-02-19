@@ -37,7 +37,17 @@ Briefly:
     http://forums.corsixth.com/
     http://groups.google.com/group/corsix-th-dev
     #corsix-th on FreeNode (IRC)
-   
+
+------------------------------------------------------------------------------
+-- CorsixTH.exe Optional Startup Arguments
+------------------------------------------------------------------------------
+
+--connect-lua-dbgp : Before App.lua is executed connect a Lua DBGp client & to a Lua DBGp server.
+--interpreter=... : loadfile(...) instead of CorsixTH.lua.
+--config-file=... : Makes CorsixTH use the specified config file.
+--bitmap-dir=... : Makes CorsixTH use the specified bitmap directory.
+--lua-dir= : Makes CorsixTH use the specified Lua scripts directory.
+
 ------------------------------------------------------------------------------
 -- Contact Details
 ------------------------------------------------------------------------------

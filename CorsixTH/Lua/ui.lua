@@ -235,9 +235,13 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
 
-  if self.app.config.debug then
-    self:addKeyHandler("f12", self, self.showLuaConsole)
-    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
+  self:addOrRemoveDebugModeKeyHandlers()
+end
+
+function UI:connectDebugger()
+  local error_message = TheApp:connectDebugger()
+  if error_message then
+    self.ui:addWindow(UIInformation(self.ui, {error_message}))
   end
 end
 
@@ -759,9 +763,11 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
+  self:removeKeyHandler({"ctrl", "c"}, self)
   self:removeKeyHandler("f12", self)
   self:removeKeyHandler({"shift", "d"}, self)
   if self.app.config.debug then
+    self:addKeyHandler({"ctrl", "c"}, self, self.connectDebugger)
     self:addKeyHandler("f12", self, self.showLuaConsole)
     self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
   end
