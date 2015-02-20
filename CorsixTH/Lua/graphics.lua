@@ -95,23 +95,25 @@ function Graphics:Graphics(app)
 
   self:loadFontFile()
 
-  -- Check if the config specifies a place to look for graphics in.
-  -- Otherwise check in the default "Graphics" folder.
+  local graphics_folder = nil
+  if self.app.config.use_new_graphics then
+    -- Check if the config specifies a place to look for graphics in.
+    -- Otherwise check in the default "Graphics" folder.
+    graphics_folder = self.app.config.new_graphics_folder or ourpath .. "Graphics"
+    if graphics_folder:sub(-1) ~= pathsep then
+      graphics_folder = graphics_folder .. pathsep
+    end
 
-  local graphics_folder = self.app.config.new_graphics_folder or ourpath .. "Graphics"
-  if graphics_folder:sub(-1) ~= pathsep then
-    graphics_folder = graphics_folder .. pathsep
-  end
+    local graphics_config_file = graphics_folder .. "file_mapping.txt"
+    local result, err = loadfile_envcall(graphics_config_file)
 
-  local graphics_config_file = graphics_folder .. "file_mapping.txt"
-  local result, err = loadfile_envcall(graphics_config_file)
-
-  if not result then
-    print("Warning: Failed to read custom graphics configuration:\n" .. err)
-  else
-    result(self.custom_graphics)
-    if not self.custom_graphics.file_mapping then
-      print("Error: An invalid custom graphics mapping file was found")
+    if not result then
+      print("Warning: Failed to read custom graphics configuration:\n" .. err)
+    else
+      result(self.custom_graphics)
+      if not self.custom_graphics.file_mapping then
+        print("Error: An invalid custom graphics mapping file was found")
+      end
     end
   end
   self.custom_graphics_folder = graphics_folder
@@ -446,16 +448,14 @@ function Graphics:loadAnimations(dir, prefix)
     error("Cannot load original animations " .. prefix)
   end
 
-  if self.app.config.use_new_graphics then
-    if self.custom_graphics.file_mapping then
-      for _, fname in pairs(self.custom_graphics.file_mapping) do
-        anims:setCanvas(self.target)
-        local data, err = loadCustomAnims(self.custom_graphics_folder .. fname)
-        if not data then
-          print("Error when loading custom animations:\n" .. err)
-        elseif not anims:loadCustom(data) then
-          print("Warning: custom animations loading failed")
-        end
+  if self.custom_graphics_folder and self.custom_graphics.file_mapping then
+    for _, fname in pairs(self.custom_graphics.file_mapping) do
+      anims:setCanvas(self.target)
+      local data, err = loadCustomAnims(self.custom_graphics_folder .. fname)
+      if not data then
+        print("Error when loading custom animations:\n" .. err)
+      elseif not anims:loadCustom(data) then
+        print("Warning: custom animations loading failed")
       end
     end
   end
