@@ -241,7 +241,7 @@ end
 function UI:connectDebugger()
   local error_message = TheApp:connectDebugger()
   if error_message then
-    self.ui:addWindow(UIInformation(self.ui, {error_message}))
+    self:addWindow(UIInformation(self, {error_message}))
   end
 end
 
