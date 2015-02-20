@@ -187,7 +187,6 @@ Function OptionsPage
 FunctionEnd
  
 Function OptionsPageLeave
-
   ; Get install path and where to put configuration files and saved games.
   !insertmacro MUI_INSTALLOPTIONS_READ $ORIGINALPATH "OptionsPage.ini" "Field 2" "State"
   !insertmacro MUI_INSTALLOPTIONS_READ $CONFIGAPPDATA "OptionsPage.ini" "Field 1" "State"
@@ -222,7 +221,6 @@ Section "MainSection" SEC01
   File /r /x .svn x86\*.*
   
   continued:
-  
   ; Time to make the configuration file and Saves folder at the correct location
   ${If} $CONFIGAPPDATA == 1
     SetOutPath "$APPDATA\CorsixTH"
@@ -259,7 +257,6 @@ Section "MainSection" SEC01
   
   ; Continue here if the saves folder and config file was already present
   saves:
-  
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
   SetOutPath "$INSTDIR\Lua"
