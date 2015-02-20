@@ -229,7 +229,6 @@ Section "MainSection" SEC01
     ; Don't overwrite previous installations though!
     CreateDirectory "$APPDATA\CorsixTH\Saves"
   ${Else}
-  
     ; Tell the game that it should read the config file from the install dir
     ; Don't overwrite previous installations here either!
     IfFileExists "$INSTDIR\config.path.txt" saves
