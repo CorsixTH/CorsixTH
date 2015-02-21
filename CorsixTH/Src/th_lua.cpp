@@ -59,7 +59,7 @@ void luaT_getfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_getenv(L, iIndex);
+        lua_getuservalue(L, iIndex);
         break;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
@@ -94,7 +94,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_setenv(L, iIndex);
+        lua_setuservalue(L, iIndex);
         return 1;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
@@ -114,6 +114,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
             const char* sUpName = NULL;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
+                lua_pop(L, 1); // lua_getupvalue puts the value on the stack, but we just want to replace it
                 if(strcmp(sUpName, "_ENV") == 0)
                 {
                     luaL_loadstring(L, "local upv = ... return function() return upv end");
@@ -123,9 +124,8 @@ int luaT_setfenv52(lua_State *L, int iIndex)
                     lua_pop(L, 1);
                     return 1;
                 }
-                else
-                    lua_pop(L, 1);
             }
+            lua_pop(L, 1);
             return 0;
         }
     default:
@@ -140,7 +140,6 @@ void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
     lua_insert(L, -nups);
     lua_pushcclosure(L, f, nups);
 }
-
 #endif
 
 //! Push a C closure as a callable table
@@ -334,6 +333,15 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 lua_error(L);
         }
         lua_pop(L, 1);
+#if LUA_VERSION_NUM >= 502
+        luaL_loadstring(L, "local assert, load = assert, load\n"
+            "return setmetatable({}, {__mode = [[v]], \n"
+            "__index = function(t, k)\n"
+            "local v = assert(load(k))\n"
+            "t[k] = v\n"
+            "return v\n"
+            "end})");
+#else
         luaL_loadstring(L, "local assert, loadstring = assert, loadstring\n"
             "return setmetatable({}, {__mode = [[v]], \n"
             "__index = function(t, k)\n"
@@ -341,6 +349,7 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 "t[k] = v\n"
                 "return v\n"
             "end})");
+#endif
         lua_call(L, 0, 1);
         lua_pushvalue(L, -1);
         lua_rawseti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);

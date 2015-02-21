@@ -253,7 +253,7 @@ static int l_music_volume(lua_State *L)
 
 static int l_play_music(lua_State *L)
 {
-    music_t* pLMusic = luaT_testuserdata<music_t>(L);
+    music_t* pLMusic = luaT_testuserdata<music_t>(L, -1);
     if(Mix_PlayMusic(pLMusic->pMusic, luaL_optint(L, 2, 1)) != 0)
     {
         lua_pushnil(L);
@@ -302,13 +302,13 @@ static int l_transcode_xmi(lua_State *L)
     return 1;
 }
 
-static const struct luaL_reg sdl_audiolib[] = {
+static const struct luaL_Reg sdl_audiolib[] = {
     {"init", l_init},
     {"transcodeXmiToMid", l_transcode_xmi},
     {NULL, NULL}
 };
 
-static const struct luaL_reg sdl_musiclib[] = {
+static const struct luaL_Reg sdl_musiclib[] = {
     {"loadMusic", l_load_music},
     {"loadMusicAsync", l_load_music_async},
     {"playMusic", l_play_music},
@@ -322,7 +322,7 @@ static const struct luaL_reg sdl_musiclib[] = {
 int luaopen_sdl_audio(lua_State *L)
 {
     lua_newtable(L);
-    luaL_register(L, NULL, sdl_audiolib);
+    luaT_setfuncs(L, sdl_audiolib);
     lua_pushboolean(L, 1);
     lua_setfield(L, -2, "loaded");
 
@@ -330,12 +330,12 @@ int luaopen_sdl_audio(lua_State *L)
     lua_pushvalue(L, -1);
     lua_replace(L, luaT_environindex);
     lua_pushvalue(L, luaT_environindex);
-    lua_pushcclosure(L, luaT_stdgc<music_t, luaT_environindex>, 1);
+    luaT_pushcclosure(L, luaT_stdgc<music_t, luaT_environindex>, 1);
     lua_setfield(L, -2, "__gc");
     lua_pushvalue(L, 1);
     lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
-    luaT_register(L, NULL, sdl_musiclib);
+    luaT_setfuncs(L, sdl_musiclib);
 
     return 1;
 }

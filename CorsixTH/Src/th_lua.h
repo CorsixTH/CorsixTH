@@ -32,14 +32,21 @@ int luaopen_th(lua_State *L);
 #define luaT_environindex lua_upvalueindex(1)
 #define luaT_upvalueindex(i) lua_upvalueindex((i) + 1)
 void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
-#define luaT_register(L, n, p) (\
-    lua_pushvalue(L, luaT_enrivonindex), \
-    luaL_openlib(L, n, p, 1) )
+#define luaT_register(L, n, l) ( \
+    luaL_newlibtable(L, l), \
+    lua_pushvalue(L, luaT_environindex), \
+    luaL_setfuncs(L, l, 1), \
+    lua_pushvalue(L, -1), \
+    lua_setglobal(L, n) )
+#define luaT_setfuncs(L, R) ( \
+    lua_pushvalue(L, luaT_environindex), \
+    luaL_setfuncs(L, R, 1) )
 #else
 #define luaT_environindex LUA_ENVIRONINDEX
 #define luaT_upvalueindex lua_upvalueindex
 #define luaT_pushcclosure lua_pushcclosure
 #define luaT_register luaL_register
+#define luaT_setfuncs(L, R) luaL_register(L, NULL, R)
 #endif
 #define luaT_pushcfunction(L, f) luaT_pushcclosure(L, f, 0)
 
@@ -52,6 +59,20 @@ void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
     lua_pcall(L, 1, 0, 0) )
 #else
 #define luaT_cpcall lua_cpcall
+#endif
+
+// Compatibility for missing mode argument on lua_load in 5.1
+#if LUA_VERSION_NUM >= 502
+#define luaT_load lua_load
+#else
+#define luaT_load(L, r, d, s, m) ( lua_load(L, r, d, s) )
+#endif
+
+// Compatibility for missing from argument on lua_resume in 5.1
+#if LUA_VERSION_NUM >= 502
+#define luaT_resume lua_resume
+#else
+#define luaT_resume(L, f, n) ( lua_resume(L, n) )
 #endif
 
 //! Version of operator new which allocates into a Lua userdata
@@ -257,8 +278,11 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
         lua_pop(L, 1);
     }
 
-    if(required)
-        luaL_typerror(L, idx, luaT_classinfo<T>::name());
+    if (required)
+    {
+        const char *msg = lua_pushfstring(L, "%s expected, got %s", luaT_classinfo<T>::name(), luaL_typename(L, idx));
+        luaL_argerror(L, idx, msg);
+    }
     return NULL;
 }
 

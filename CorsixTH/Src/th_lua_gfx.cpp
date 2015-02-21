@@ -255,7 +255,7 @@ static void l_freetype_throw_error_code(lua_State *L, FT_Error e)
 
 static int l_freetype_font_new(lua_State *L)
 {
-    THFreeTypeFont *pFont = luaT_stdnew<THFreeTypeFont>(L, LUA_ENVIRONINDEX,
+    THFreeTypeFont *pFont = luaT_stdnew<THFreeTypeFont>(L, luaT_environindex,
         true);
     l_freetype_throw_error_code(L, pFont->initialise());
     return 1;

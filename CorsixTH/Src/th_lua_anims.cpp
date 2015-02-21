@@ -149,7 +149,9 @@ static int l_anims_set_alt_pal(lua_State *L)
     size_t iPalLen;
     const uint8_t *pPal = luaT_checkfile(L, 3, &iPalLen);
     if(iPalLen != 256)
-        return luaL_typerror(L, 3, "GhostPalette string");
+    {
+        return luaL_argerror(L, 3, "GhostPalette string is not a valid palette");
+    }
     uint32_t iAlt32 = static_cast<uint32_t>(luaL_checkinteger(L, 4));
 
     pAnims->setAnimationAltPaletteMap(iAnimation, pPal, iAlt32);

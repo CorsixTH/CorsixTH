@@ -543,7 +543,7 @@ int luaopen_iso_fs(lua_State *L)
     lua_pushvalue(L, -1);
     lua_replace(L, luaT_environindex);
 
-    lua_pushcclosure(L, luaT_stdgc<IsoFilesystem, luaT_environindex>, 0);
+    luaT_pushcclosure(L, luaT_stdgc<IsoFilesystem, luaT_environindex>, 0);
     lua_setfield(L, -2, "__gc");
 
     // Methods table
@@ -555,7 +555,7 @@ int luaopen_iso_fs(lua_State *L)
     lua_setfield(L, -2, "setPathSeparator");
 
     lua_getfield(L, LUA_REGISTRYINDEX, LUA_FILEHANDLE);
-    lua_pushcclosure(L, l_isofs_set_root, 1);
+    luaT_pushcclosure(L, l_isofs_set_root, 1);
     lua_setfield(L, -2, "setRoot");
 
     lua_pushcfunction(L, l_isofs_read_contents);

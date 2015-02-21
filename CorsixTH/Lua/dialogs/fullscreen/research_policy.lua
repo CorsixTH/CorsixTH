@@ -110,7 +110,7 @@ function UIResearch:updateCategories()
   ]]
   local function get_localized_string(string_name)
     local var_table = _G["_S"]
-    for token in string.gfind(string_name, "[%w_]+") do
+    for token in string.gmatch(string_name, "[%w_]+") do
         var_table = var_table[token]
     end
     return var_table

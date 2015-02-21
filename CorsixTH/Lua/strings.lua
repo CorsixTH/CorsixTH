@@ -20,8 +20,8 @@ SOFTWARE. --]]
 
 local lfs = require "lfs"
 local TH = require "TH"
-local type, loadfile, pcall, tostring, setfenv, setmetatable, math_random
-    = type, loadfile, pcall, tostring, setfenv, setmetatable, math.random
+local type, loadfile, pcall, tostring, setmetatable, math_random
+    = type, loadfile, pcall, tostring, setmetatable, math.random
 local rawset, rawget
     = rawset, rawget
 

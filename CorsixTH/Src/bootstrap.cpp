@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "lua.hpp"
+#include "th_lua.h"
 #include <string.h>
 #include "config.h"
 
@@ -299,7 +300,7 @@ int Bootstrap_lua_resources(lua_State *L)
 int Bootstrap_lua_error_report(lua_State *L)
 {
     int iLine = -g_iBootstrapCodeLineNumStart;
-    if(lua_load(L, read_bootstrap_line, &iLine, "@bootstrap.cpp") == 0)
+    if(luaT_load(L, read_bootstrap_line, &iLine, "@bootstrap.cpp", "t") == 0)
     {
         Bootstrap_lua_resources(L);
         lua_pushvalue(L, 1);
