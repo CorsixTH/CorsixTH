@@ -294,3 +294,14 @@ function list_to_set(list)
   end
   return set
 end
+
+function set_get_missing_from(set, set_b)
+  local found = {}
+  for element, _ in pairs(set) do
+    if not set_b[element] then
+      table.insert(found, element)
+    end
+  end
+  return found
+end
+

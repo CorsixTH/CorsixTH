@@ -1713,6 +1713,37 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
   return objects
 end
 
+function World:findObjects(objects_id)
+  local found = {}
+  for _, tiles_objects in pairs(self.objects) do
+    for _, object in ipairs(tiles_objects) do
+      if object.object_type.id == objects_id then
+        table.insert(found, object)
+      end
+    end
+  end
+  return found
+end
+
+---
+-- Finds objects which are within a rectangular area and have the specified ID.
+-- @param ne_x The X coardinate for the search area's north east tile.
+-- @param ne_y The Y coardinate for the search area's north east tile.
+-- @param sw_x The X coardinate for the search area's south west tile.
+-- @param sw_y The Y coardinate for the search area's south west tile.
+---
+function World:findObjectsInArea(objects_id, ne_x, ne_y, sw_x, sw_y)
+  local found = {}
+  for _, object in ipairs(self:findObjects(objects_id)) do
+    --if the litter is within the blueprint:
+    if    object.tile_x >= ne_x and object.tile_x <= sw_x
+      and object.tile_y >= ne_y and object.tile_y <= sw_y then
+      table.insert(found, object)
+    end
+  end
+  return found
+end
+
 --[[ Find all objects of the given type near the humanoid.
 Note that regardless of distance, only the room which the humanoid is in
 is searched (or the corridor if the humanoid is not in a room).
