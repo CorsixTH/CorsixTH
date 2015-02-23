@@ -136,13 +136,13 @@ Icon "..\CorsixTH\corsixTH.ico"
 Function .onInit
   ; Set default Theme Hospital vanilla install directory.
   StrCpy $OriginalPath "$PROGRAMFILES\Bullfrog\Hospital\"
-  
+
   ; Read Uninstall data from CorsixTH section of the registry.
   ReadRegStr $R0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString"
-  
+
   ; Check to see if game is already installed.
   ; Temporary $R0 NSIS register is used for storage while we pull the registry data, if CorsixTH data exists we parse the path and set it as the installer location, if not the installer defaults to stock location.
-  ${If} $R0 != '' 
+  ${If} $R0 != ''
    ${GetParent} $R0, $R0
    StrCpy $INSTDIR $R0
   ${Else}
@@ -168,7 +168,7 @@ FunctionEnd
 ; ----------------------------- Functions for the custom options page ----------------------------
 
 Function OptionsPage
-  ${If} ${FileExists} "$APPDATA\CorsixTH\config.txt" 
+  ${If} ${FileExists} "$APPDATA\CorsixTH\config.txt"
     IntOp $CONFIGAPPDATA 1 * 1
     Abort
   ${ElseIf} ${FileExists} "$INSTDIR\config.txt"
@@ -177,15 +177,15 @@ Function OptionsPage
   ReserveFile "OptionsPage.ini"
   !insertmacro MUI_HEADER_TEXT $(options_title) $(options_subtitle)
   !insertmacro MUI_INSTALLOPTIONS_EXTRACT "OptionsPage.ini"
-  
+
   ; The ini file is actually static. Set strings so that they are localized.
   WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 1" "Text" $(save_in_appdata)
   WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 3" "Text" $(original_folder)
   WriteINIStr "$PLUGINSDIR\OptionsPage.ini" "Field 4" "Text" $(original_text)
-  
+
   !insertmacro MUI_INSTALLOPTIONS_DISPLAY "OptionsPage.ini"
 FunctionEnd
- 
+
 Function OptionsPageLeave
   ; Get install path and where to put configuration files and saved games.
   !insertmacro MUI_INSTALLOPTIONS_READ $ORIGINALPATH "OptionsPage.ini" "Field 2" "State"
@@ -219,13 +219,13 @@ Section "MainSection" SEC01
     Goto continued
   ${EndIf}
   File /r /x .svn x86\*.*
-  
+
   continued:
   ; Time to make the configuration file and Saves folder at the correct location
   ${If} $CONFIGAPPDATA == 1
     SetOutPath "$APPDATA\CorsixTH"
     IfFileExists "$APPDATA\CorsixTH\Saves" saves
-	
+
     ; Don't overwrite previous installations though!
     CreateDirectory "$APPDATA\CorsixTH\Saves"
   ${Else}
@@ -235,12 +235,12 @@ Section "MainSection" SEC01
     FileOpen $9 config.path.txt w
     FileWrite $9 "$INSTDIR\$\r$\n"
     FileClose $9
-    
+
     IfFileExists "$INSTDIR\Saves" saves
     CreateDirectory "$INSTDIR\Saves"
   ${EndIf}
   File config_template.txt
-  
+
   ; Change settings in the config file.
   System::Call 'user32::GetSystemMetrics(i 0) i .r0'
   System::Call 'user32::GetSystemMetrics(i 1) i .r1'
@@ -249,24 +249,24 @@ Section "MainSection" SEC01
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_WIDTH "$0"
   !insertmacro ReplaceInFile config_template.txt SCREEN_SIZE_HEIGHT "$1"
   !insertmacro ReplaceInFile config_template.txt SCREEN_FULLSCREEN "true"
-  
+
   ; TODO: Let the user choose if new music files exist and where they are in that case.
   Rename config_template.txt config.txt
   Delete config_t*
-  
+
   ; Continue here if the saves folder and config file was already present
   saves:
   ; The three other needed folders
   ; The old Lua folder is deleted first, if any exists, so that the game can start properly.
   SetOutPath "$INSTDIR\Lua"
   File /r /x .svn ..\CorsixTH\Lua\*.*
-  
+
   SetOutPath "$INSTDIR\Bitmap"
   File /r /x .svn ..\CorsixTH\Bitmap\*.pal
   File /r /x .svn ..\CorsixTH\Bitmap\*.dat
   File /r /x .svn ..\CorsixTH\Bitmap\*.tab
   File /r /x .svn ..\CorsixTH\Bitmap\*.png
-  
+
   SetOutPath "$INSTDIR\Levels"
   File /r /x .svn ..\CorsixTH\Levels\*.*
 
@@ -276,10 +276,10 @@ Section "MainSection" SEC01
   File ..\CorsixTH\changelog.txt
   File ..\LICENSE.txt
   File ..\README.txt
-  
+
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
-  
+
 SectionEnd
 
 
@@ -334,7 +334,7 @@ Section Uninstall
   RMDir /r "$INSTDIR\mime"
   RMDir /r "$INSTDIR\socket"
   RMDir /r "$INSTDIR\Src"
-  
+
   Delete "$INSTDIR\*.*"
 
   Delete "$SMPROGRAMS\${PRODUCT_NAME}\*.*"
