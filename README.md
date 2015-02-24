@@ -1,5 +1,5 @@
 ![](http://i.imgur.com/fYp148T.jpg)
-### Latest Release [![Release 0.40](https://img.shields.io/badge/release-0.40-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases)
+### Latest Release [![Release 0.40](https://img.shields.io/badge/release-0.40-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases) [![Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH)
 
 A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original CorsixTH adds support for modern operating systems (Windows, Mac OSX and Linux), high resolutions and much more.
 
