@@ -26,6 +26,7 @@
 # Copyright (c) 2008, Alexander Neundorf, <neundorf@kde.org>
 # Copyright (c) 2011, Michael Jansen, <kde@michael-jansen.biz>
 # Copyright (c) 2013,2015 Stephen Baker <baker.stephen.e@gmail.com>
+# Copyright (c) 2015, Alexander Bessman
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
@@ -54,32 +55,27 @@ endmacro()
 #
 ### Macro: find_component
 #
-# Checks for the given component by invoking pkgconfig and then looking up the libraries and
-# include directories.
-#
-macro(find_component _component _pkgconfig _library _header)
+macro(find_component _component)
 
-  if (NOT WIN32)
-     # use pkg-config to get the directories and then use these values
-     # in the FIND_PATH() and FIND_LIBRARY() calls
-     find_package(PkgConfig)
-     if (PKG_CONFIG_FOUND)
-       pkg_check_modules(PC_${_component} ${_pkgconfig})
-     endif ()
-  endif (NOT WIN32)
-
-  find_path(${_component}_INCLUDE_DIRS ${_header}
+  string(TOLOWER ${_component} _library)
+  
+  find_path(${_component}_INCLUDE_DIRS ${_library}.h
     HINTS
       ${PC_LIB${_component}_INCLUDEDIR}
       ${PC_LIB${_component}_INCLUDE_DIRS}
     PATH_SUFFIXES
       libav
+      include
+      include/lib${_library}
   )
 
-  find_library(${_component}_LIBRARIES NAMES ${_library}
+  find_library(${_component}_LIBRARIES
+      NAMES ${_library}
       HINTS
-      ${PC_LIB${_component}_LIBDIR}
-      ${PC_LIB${_component}_LIBRARY_DIRS}
+        ${PC_LIB${_component}_LIBDIR}
+        ${PC_LIB${_component}_LIBRARY_DIRS}
+      PATH_SUFFIXES
+        lib
   )
 
   set(${_component}_DEFINITIONS  ${PC_${_component}_CFLAGS_OTHER} CACHE STRING "The ${_component} CFLAGS.")
@@ -109,6 +105,24 @@ if (NOT LIBAV_LIBRARIES)
       set(LIBAV_LIBRARIES   ${LIBAV_LIBRARIES}   ${${_component}_LIBRARIES})
       set(LIBAV_DEFINITIONS ${LIBAV_DEFINITIONS} ${${_component}_DEFINITIONS})
       list(APPEND LIBAV_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
+      if (${_component}_INCLUDE_DIRS AND EXISTS "${${_component}_INCLUDE_DIRS}/version.h")
+        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
+        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
+        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
+        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MAJOR "${${_component}_VERSION_MAJOR_LINE}")
+        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MINOR "${${_component}_VERSION_MINOR_LINE}")
+        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MICRO "${${_component}_VERSION_MICRO_LINE}")
+        set(${_component}_VERSION_STRING ${${_component}_VERSION_MAJOR}.${${_component}_VERSION_MINOR}.${${_component}_VERSION_MICRO})
+        unset(${_component}_VERSION_MAJOR_LINE)
+        unset(${_component}_VERSION_MINOR_LINE)
+        unset(${_component}_VERSION_MICRO_LINE)
+        unset(${_component}_VERSION_MAJOR)
+        unset(${_component}_VERSION_MINOR)
+        unset(${_component}_VERSION_MICRO)
+      endif ()
+      find_package_handle_standard_args(${_component}
+                                        REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS
+                                        VERSION_VAR ${_component}_VERSION_STRING)
     else ()
       # message(STATUS "Required component ${_component} missing.")
     endif ()
