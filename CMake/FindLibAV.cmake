@@ -55,18 +55,15 @@ endmacro()
 #
 ### Macro: find_component
 #
-macro(find_component _component)
+macro(find_component _component _library _header)
 
-  string(TOLOWER ${_component} _library)
-  
-  find_path(${_component}_INCLUDE_DIRS ${_library}.h
+  find_path(${_component}_INCLUDE_DIRS ${_header}
     HINTS
       ${PC_LIB${_component}_INCLUDEDIR}
       ${PC_LIB${_component}_INCLUDE_DIRS}
     PATH_SUFFIXES
       libav
       include
-      include/lib${_library}
   )
 
   find_library(${_component}_LIBRARIES
@@ -90,13 +87,13 @@ endmacro()
 if (NOT LIBAV_LIBRARIES)
 
   # Check for all possible component.
-  find_component(AVCODEC  libavcodec  avcodec  libavcodec/avcodec.h)
-  find_component(AVFORMAT libavformat avformat libavformat/avformat.h)
-  find_component(AVDEVICE libavdevice avdevice libavdevice/avdevice.h)
-  find_component(AVFILTER libavfilter avfilter libavfilter/avfilter.h)
-  find_component(AVRESAMPLE libavresample avresample libavresample/avresample.h)
-  find_component(AVUTIL   libavutil   avutil   libavutil/avutil.h)
-  find_component(SWSCALE  libswscale  swscale  libswscale/swscale.h)
+  find_component(AVCODEC  avcodec  libavcodec/avcodec.h)
+  find_component(AVFORMAT avformat libavformat/avformat.h)
+  find_component(AVDEVICE avdevice libavdevice/avdevice.h)
+  find_component(AVFILTER avfilter libavfilter/avfilter.h)
+  find_component(AVRESAMPLE avresample libavresample/avresample.h)
+  find_component(AVUTIL   avutil   libavutil/avutil.h)
+  find_component(SWSCALE  swscale  libswscale/swscale.h)
 
   # Check if the required components were found and add their stuff to the LIBAV_* vars.
   foreach (_component ${LibAV_FIND_COMPONENTS})
@@ -105,10 +102,11 @@ if (NOT LIBAV_LIBRARIES)
       set(LIBAV_LIBRARIES   ${LIBAV_LIBRARIES}   ${${_component}_LIBRARIES})
       set(LIBAV_DEFINITIONS ${LIBAV_DEFINITIONS} ${${_component}_DEFINITIONS})
       list(APPEND LIBAV_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
-      if (${_component}_INCLUDE_DIRS AND EXISTS "${${_component}_INCLUDE_DIRS}/version.h")
-        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
-        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
-        file(STRINGS "${${_component}_INCLUDE_DIRS}/version.h" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
+      string(TOLOWER ${${_component}_INCLUDE_DIRS}/lib${_component}/version.h VERSION_HEADER)
+      if (${_component}_INCLUDE_DIRS AND EXISTS "${VERSION_HEADER}")
+        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
+        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
+        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
         string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MAJOR "${${_component}_VERSION_MAJOR_LINE}")
         string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MINOR "${${_component}_VERSION_MINOR_LINE}")
         string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MICRO "${${_component}_VERSION_MICRO_LINE}")
