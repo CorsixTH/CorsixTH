@@ -55,7 +55,7 @@ endmacro()
 #
 ### Macro: find_component
 #
-macro(find_component _component _library _header)
+macro(find_component _component _library _header _version)
 
   find_path(${_component}_INCLUDE_DIRS ${_header}
     HINTS
@@ -75,6 +75,25 @@ macro(find_component _component _library _header)
         lib
   )
 
+  if (${_component}_INCLUDE_DIRS AND EXISTS "${${_component}_INCLUDE_DIRS}/${_version}")
+    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
+    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
+    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
+    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MAJOR "${${_component}_VERSION_MAJOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MINOR "${${_component}_VERSION_MINOR_LINE}")
+    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MICRO "${${_component}_VERSION_MICRO_LINE}")
+    set(${_component}_VERSION_STRING ${${_component}_VERSION_MAJOR}.${${_component}_VERSION_MINOR}.${${_component}_VERSION_MICRO})
+    unset(${_component}_VERSION_MAJOR_LINE)
+    unset(${_component}_VERSION_MINOR_LINE)
+    unset(${_component}_VERSION_MICRO_LINE)
+    unset(${_component}_VERSION_MAJOR)
+    unset(${_component}_VERSION_MINOR)
+    unset(${_component}_VERSION_MICRO)
+  endif ()
+  find_package_handle_standard_args(${_component}
+                                    REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS
+                                    VERSION_VAR ${_component}_VERSION_STRING)
+
   set(${_component}_DEFINITIONS  ${PC_${_component}_CFLAGS_OTHER} CACHE STRING "The ${_component} CFLAGS.")
   set(${_component}_VERSION      ${PC_${_component}_VERSION}      CACHE STRING "The ${_component} version number.")
 
@@ -87,13 +106,13 @@ endmacro()
 if (NOT LIBAV_LIBRARIES)
 
   # Check for all possible component.
-  find_component(AVCODEC  avcodec  libavcodec/avcodec.h)
-  find_component(AVFORMAT avformat libavformat/avformat.h)
-  find_component(AVDEVICE avdevice libavdevice/avdevice.h)
-  find_component(AVFILTER avfilter libavfilter/avfilter.h)
-  find_component(AVRESAMPLE avresample libavresample/avresample.h)
-  find_component(AVUTIL   avutil   libavutil/avutil.h)
-  find_component(SWSCALE  swscale  libswscale/swscale.h)
+  find_component(AVCODEC  avcodec  libavcodec/avcodec.h   libavcodec/version.h)
+  find_component(AVFORMAT avformat libavformat/avformat.h libavformat/version.h)
+  find_component(AVDEVICE avdevice libavdevice/avdevice.h libavdevice/version.h)
+  find_component(AVFILTER avfilter libavfilter/avfilter.h libavfilter/version.h)
+  find_component(AVRESAMPLE avresample libavresample/avresample.h libavresample/version.h)
+  find_component(AVUTIL   avutil   libavutil/avutil.h     libavutil/version.h)
+  find_component(SWSCALE  swscale  libswscale/swscale.h   libswscale/version.h)
 
   # Check if the required components were found and add their stuff to the LIBAV_* vars.
   foreach (_component ${LibAV_FIND_COMPONENTS})
@@ -102,25 +121,6 @@ if (NOT LIBAV_LIBRARIES)
       set(LIBAV_LIBRARIES   ${LIBAV_LIBRARIES}   ${${_component}_LIBRARIES})
       set(LIBAV_DEFINITIONS ${LIBAV_DEFINITIONS} ${${_component}_DEFINITIONS})
       list(APPEND LIBAV_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
-      string(TOLOWER ${${_component}_INCLUDE_DIRS}/lib${_component}/version.h VERSION_HEADER)
-      if (${_component}_INCLUDE_DIRS AND EXISTS "${VERSION_HEADER}")
-        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
-        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
-        file(STRINGS "${VERSION_HEADER}" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
-        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MAJOR "${${_component}_VERSION_MAJOR_LINE}")
-        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MINOR "${${_component}_VERSION_MINOR_LINE}")
-        string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MICRO "${${_component}_VERSION_MICRO_LINE}")
-        set(${_component}_VERSION_STRING ${${_component}_VERSION_MAJOR}.${${_component}_VERSION_MINOR}.${${_component}_VERSION_MICRO})
-        unset(${_component}_VERSION_MAJOR_LINE)
-        unset(${_component}_VERSION_MINOR_LINE)
-        unset(${_component}_VERSION_MICRO_LINE)
-        unset(${_component}_VERSION_MAJOR)
-        unset(${_component}_VERSION_MINOR)
-        unset(${_component}_VERSION_MICRO)
-      endif ()
-      find_package_handle_standard_args(${_component}
-                                        REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS
-                                        VERSION_VAR ${_component}_VERSION_STRING)
     else ()
       # message(STATUS "Required component ${_component} missing.")
     endif ()
