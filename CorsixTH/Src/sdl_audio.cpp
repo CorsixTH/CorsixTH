@@ -177,7 +177,7 @@ static int load_music_async_thread(void* arg)
 static int l_load_music_async(lua_State *L)
 {
     size_t iLength;
-    const unsigned char *pData = luaT_checkfile(L, 1, &iLength);
+    const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
     luaL_checktype(L, 2, LUA_TFUNCTION);
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
     lua_settop(L, 2);
@@ -222,7 +222,7 @@ static int l_load_music_async(lua_State *L)
 static int l_load_music(lua_State *L)
 {
     size_t iLength;
-    const unsigned char *pData = luaT_checkfile(L, 1, &iLength);
+    const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
     Mix_Music* pMusic = Mix_LoadMUS_RW(rwop, 1);
     if(pMusic == NULL)
@@ -287,9 +287,9 @@ static int l_stop_music(lua_State *L)
 static int l_transcode_xmi(lua_State *L)
 {
     size_t iLength, iMidLength;
-    const unsigned char *pData = luaT_checkfile(L, 1, &iLength);
+    const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
 
-    unsigned char *pMidData = TranscodeXmiToMid(pData, iLength, &iMidLength);
+    uint8_t *pMidData = TranscodeXmiToMid(pData, iLength, &iMidLength);
     if(pMidData == NULL)
     {
         lua_pushnil(L);

@@ -23,6 +23,8 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_OVERLAYS_H_
 #define CORSIX_TH_TH_MAP_OVERLAYS_H_
 
+#include <stddef.h>
+
 class THFont;
 class THMap;
 class THRenderTarget;
@@ -34,7 +36,7 @@ public:
     virtual ~THMapOverlay();
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY) = 0;
+                          const THMap* pMap, int iNodeX, int iNodeY) = 0;
 };
 
 class THMapOverlayPair : public THMapOverlay
@@ -47,7 +49,7 @@ public:
     void setSecond(THMapOverlay* pOverlay, bool bTakeOwnership);
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+                          const THMap* pMap, int iNodeX, int iNodeY);
 
 protected:
     THMapOverlay *m_pFirst, *m_pSecond;
@@ -65,7 +67,7 @@ public:
 
 protected:
     void _drawText(THRenderTarget* pCanvas, int iX, int iY,
-        const char* sFormat, ...);
+                   const char* sFormat, ...);
 
     THSpriteSheet* m_pSprites;
     THFont* m_pFont;
@@ -81,11 +83,11 @@ public:
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
         const THMap* pMap, int iNodeX, int iNodeY);
 
-    void setBackgroundSprite(unsigned int iSprite);
+    void setBackgroundSprite(size_t iSprite);
     virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
 
 protected:
-    unsigned int m_iBackgroundSprite;
+    size_t m_iBackgroundSprite;
 };
 
 class THMapPositionsOverlay : public THMapTextOverlay
@@ -101,14 +103,14 @@ class THMapFlagsOverlay : public THMapTypicalOverlay
 {
 public:
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+                          const THMap* pMap, int iNodeX, int iNodeY);
 };
 
 class THMapParcelsOverlay : public THMapTypicalOverlay
 {
 public:
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+                          const THMap* pMap, int iNodeX, int iNodeY);
 };
 
 #endif

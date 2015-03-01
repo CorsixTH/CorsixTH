@@ -206,11 +206,11 @@ public:
 
     bool setSize(int iWidth, int iHeight);
     bool loadBlank();
-    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength,
+    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength,
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
 
-    void save(void (*fnWriter)(void*, const unsigned char*, size_t),
+    void save(void (*fnWriter)(void*, const uint8_t*, size_t),
               void* pToken);
 
     //! Set the sprite sheet to be used for drawing the map
@@ -225,7 +225,7 @@ public:
         This is typically called with THDF_Alpha50 to draw walls transparently,
         or with 0 to draw them opaque again.
     */
-    void setAllWallDrawFlags(unsigned char iFlags);
+    void setAllWallDrawFlags(uint8_t iFlags);
 
     void updatePathfinding();
     void updateShadows();
@@ -350,8 +350,8 @@ public:
 protected:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
-    void _readTileIndex(const unsigned char* pData, int& iX, int &iY) const;
-    void _writeTileIndex(unsigned char* pData, int iX, int iY) const;
+    void _readTileIndex(const uint8_t* pData, int& iX, int &iY) const;
+    void _writeTileIndex(uint8_t* pData, int iX, int iY) const;
     int _getParcelTileCount(int iParcelId) const;
 
     //! Create the adjacency matrix if it doesn't already exist

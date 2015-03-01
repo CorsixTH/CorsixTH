@@ -182,7 +182,7 @@ public:
             of the THFreeTypeFont objcect.
         @param iLength The size, in bytes, of the font file at pData.
     */
-    FT_Error setFace(const unsigned char* pData, size_t iLength);
+    FT_Error setFace(const uint8_t* pData, size_t iLength);
 
     //! Set the font size and colour to match that of a bitmap font.
     /*!
@@ -217,7 +217,7 @@ protected:
     struct cached_text_t
     {
         char* sMessage;
-        unsigned char* pData;
+        uint8_t* pData;
         union {
             void* pTexture;
             int iTexture;

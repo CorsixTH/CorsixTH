@@ -36,7 +36,7 @@ THSoundArchive::~THSoundArchive()
     delete[] m_pData;
 }
 
-bool THSoundArchive::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
+bool THSoundArchive::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
 {
     if(iDataLength < sizeof(uint32_t) + sizeof(th_header_t))
         return false;
@@ -48,7 +48,7 @@ bool THSoundArchive::loadFromTHFile(const unsigned char* pData, size_t iDataLeng
     m_oHeader = *reinterpret_cast<const th_header_t*>(pData + iHeaderPosition);
 
     delete[] m_pData;
-    m_pData = new (std::nothrow) unsigned char[iDataLength];
+    m_pData = new (std::nothrow) uint8_t[iDataLength];
     if(m_pData == NULL)
         return false;
     memcpy(m_pData, pData, iDataLength);

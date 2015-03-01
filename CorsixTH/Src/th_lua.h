@@ -74,7 +74,7 @@ void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
     pointer to the start of it, and the length of it. Otherwise, throws a
     Lua error.
 */
-const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
+const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
 
 //! Check that a Lua argument is a string or a proxied string
 const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength);

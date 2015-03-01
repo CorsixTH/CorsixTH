@@ -86,7 +86,7 @@ static int l_map_load(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
     size_t iDataLen;
-    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLen);
+    const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
     lua_settop(L, 2);
     lua_newtable(L);
     if(pMap->loadFromTHFile(pData, iDataLen, l_map_load_obj_cb, (void*)L))
@@ -489,18 +489,18 @@ static int l_map_remove_cell_thob(lua_State *L)
     int thob = luaL_checkint(L, 4);
     if(pNode->pExtendedObjectList == NULL)
     {
-        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
-            {
+        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        {
             pNode->iFlags &= 0x00FFFFFF;
-            }
+        }
     }
     else
     {
-        int i, nr = *pNode->pExtendedObjectList & 7;
-        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        int nr = *pNode->pExtendedObjectList & 7;
+        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
         {
             pNode->iFlags &= 0x00FFFFFF;
-            pNode->iFlags |= (*pNode->pExtendedObjectList & (UINT32_C(0xFF) << 3)) << (24 - 3);
+            pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (*pNode->pExtendedObjectList & (UINT32_C(0xFF) << 3)) << (24 - 3));
             if(nr == 1)
             {
                 delete pNode->pExtendedObjectList;
@@ -509,7 +509,7 @@ static int l_map_remove_cell_thob(lua_State *L)
             else
             {
                 // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
-                for( i = 0; i < nr - 1; i++)
+                for(int i = 0; i < nr - 1; i++)
                 {
                     uint64_t mask = UINT64_C(0xFF) << (3 + i * 8);
                     *pNode->pExtendedObjectList &= ~mask;
@@ -524,7 +524,7 @@ static int l_map_remove_cell_thob(lua_State *L)
         else
         {
             bool found = false;
-            for(i = 0; i < nr; i++)
+            for(int i = 0; i < nr; i++)
             {
                 int shift_length = 3 + i * 8;
                 if(static_cast<int>((*pNode->pExtendedObjectList >> shift_length) & 255) == thob)
@@ -633,7 +633,7 @@ static int l_map_setcellflags(lua_State *L)
                  }
                 else
                 {
-                    pNode->iFlags |= (thob << 24);
+                    pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (thob << 24));
                 }
            }
             else if(strcmp(field, "parcelId") == 0)
@@ -658,7 +658,7 @@ static int l_map_setcellflags(lua_State *L)
 static int l_map_setwallflags(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    pMap->setAllWallDrawFlags((unsigned char)luaL_checkint(L, 2));
+    pMap->setAllWallDrawFlags((uint8_t)luaL_checkint(L, 2));
     lua_settop(L, 1);
     return 1;
 }
@@ -706,8 +706,9 @@ static int l_map_mark_room(lua_State *L)
     int iY_ = luaL_checkint(L, 3) - 1;
     int iW = luaL_checkint(L, 4);
     int iH = luaL_checkint(L, 5);
-    int iTile = luaL_checkint(L, 6);
-    int iRoomId = luaL_optint(L, 7, 0);
+    uint16_t iTile = static_cast<uint16_t>(luaL_checkint(L, 6));
+    uint16_t iRoomId = static_cast<uint16_t>(luaL_optint(L, 7, 0));
+
     if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->getWidth() || (iY_ + iH) > pMap->getHeight())
         luaL_argerror(L, 2, "Rectangle is out of bounds");
 

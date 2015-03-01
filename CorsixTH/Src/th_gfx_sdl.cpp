@@ -59,7 +59,7 @@ static inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, u
     // 0.7152 * 65536 = 46871.3472
     // 0.0722 * 65536 =  4731.6992 -> 4732
     // 13933 + 46871 + 4732 = 65536 = 2**16
-    unsigned char iGrey = (13933 * iR + 46871 * iG + 4732 * iB) >> 16;
+    uint8_t iGrey = static_cast<uint8_t>((13933 * iR + 46871 * iG + 4732 * iB) >> 16);
     return THPalette::packARGB(iOpacity, iGrey, iGrey, iGrey);
 }
 
@@ -78,14 +78,14 @@ static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     // Simple swapping channels will thus distort the balance. This code compensates for that by computing
     // red  = blue * 0.0722 / 0.2126 = blue * 1083 / 3189
     // blue = red  * 0.2126 / 0.0722 = red  * 1063 / 361 (clipped at max blue, 255)
-    uint8_t iNewRed = iB * 1083 / 3189;
+    uint8_t iNewRed = static_cast<uint8_t>(iB * 1083 / 3189);
     int iNewBlue = iR * 1063 / 361;
     if (iNewBlue > 255)
         iNewBlue = 255;
-    return THPalette::packARGB(iOpacity, iNewRed, iG, iNewBlue);
+    return THPalette::packARGB(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
 }
 
-bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette *pPalette, uint32_t iSpriteFlags)
+bool FullColourRenderer::decodeImage(const uint8_t* pImg, const THPalette *pPalette, uint32_t iSpriteFlags)
 {
     if (m_iWidth <= 0 || m_iHeight <= 0)
         return false;
@@ -94,8 +94,8 @@ bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette 
 
     const uint32_t* pColours = pPalette->getARGBData();
     for (;;) {
-        unsigned char iType = *pImg++;
-        int iLength = iType & 63;
+        uint8_t iType = *pImg++;
+        size_t iLength = iType & 63;
         switch (iType >> 6)
         {
             case 0: // Fixed fully opaque 32bpp pixels
@@ -116,7 +116,7 @@ bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette 
 
             case 1: // Fixed partially transparent 32bpp pixels
             {
-                unsigned char iOpacity = *pImg++;
+                uint8_t iOpacity = *pImg++;
                 while (iLength > 0)
                 {
                     uint32_t iColour;
@@ -146,7 +146,7 @@ bool FullColourRenderer::decodeImage(const unsigned char* pImg, const THPalette 
 
             case 3: // Recolour layer
             {
-                unsigned char iTable = *pImg++;
+                uint8_t iTable = *pImg++;
                 pImg++; // Skip reading the opacity for now.
                 if (iTable == 0xFF)
                 {
@@ -192,7 +192,7 @@ void FullColourStoring::storeARGB(uint32_t pixel)
     *m_pDest++ = pixel;
 }
 
-WxStoring::WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
+WxStoring::WxStoring(uint8_t* pRGBData, uint8_t* pAData, int iWidth, int iHeight) : FullColourRenderer(iWidth, iHeight)
 {
     m_pRGBData = pRGBData;
     m_pAData = pAData;
@@ -290,7 +290,7 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
         SDL_GetRendererInfo(m_pRenderer, &info);
     }
 
-    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
 
     if (bCreateRenderer || bUpdateSize)
     {
@@ -327,7 +327,7 @@ void THRenderTarget::destroy()
     }
 }
 
-bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
+bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
@@ -351,8 +351,8 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
         //Draw everything from now until the next scale to m_pZoomTexture
         //with the appropriate virtual size, which will be copied scaled to
         //fit the window.
-        float virtWidth = static_cast<float>(m_iWidth) / fScale;
-        float virtHeight = static_cast<float>(m_iHeight) / fScale;
+        int virtWidth = static_cast<int>(m_iWidth / fScale);
+        int virtHeight = static_cast<int>(m_iHeight / fScale);
 
         m_pZoomTexture = SDL_CreateTexture(m_pRenderer,
                                            SDL_PIXELFORMAT_ABGR8888,
@@ -416,7 +416,7 @@ bool THRenderTarget::endFrame()
     if(m_bBlueFilterActive)
     {
         SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(m_pRenderer, 255*0.2f, 255*0.2f, 255*1.0f, 255*0.5f);
+        SDL_SetRenderDrawColor(m_pRenderer, 51, 51, 255, 128); // r=0.2, g=0.2, b=1, a=0.5 .
         SDL_RenderFillRect(m_pRenderer, NULL);
     }
 
@@ -533,7 +533,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
     SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
     SDL_Surface* pRgbSurface = NULL;
     int iPitch = pWindowSurface->w * pWindowSurface->format->BitsPerPixel;
-    unsigned char* pPixels = new unsigned char[pWindowSurface->h * iPitch];
+    uint8_t* pPixels = new uint8_t[pWindowSurface->h * iPitch];
     SDL_RenderReadPixels(m_pRenderer,
                          &pWindowSurface->clip_rect,
                          pWindowSurface->format->format,
@@ -556,7 +556,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
 }
 
 
-bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
+bool THRenderTarget::shouldScaleBitmaps(double* pFactor)
 {
     if(!m_bShouldScaleBitmaps)
         return false;
@@ -583,7 +583,7 @@ void THRenderTarget::_flushZoomBuffer()
     @param iPixelDataLength Number of pixels in the \a pPixelData.
     @return Converted 32bpp pixel data, if succeeded else NULL is returned. Caller should free the returned memory.
  */
-static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_t iPixelDataLength)
+static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
 {
     // Recolour blocks are 63 pixels long.
     // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
@@ -591,15 +591,15 @@ static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_
     size_t iRemaining = iPixelDataLength - iNumFilled * 63;
     size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
 
-    unsigned char *pData = new (std::nothrow) unsigned char[iNewSize];
+    uint8_t *pData = new (std::nothrow) uint8_t[iNewSize];
     if (pData == NULL)
         return NULL;
 
-    unsigned char *pDest = pData;
+    uint8_t *pDest = pData;
     while (iPixelDataLength > 0)
     {
         size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
-        *pDest++ = iLength + 0xC0; // Recolour layer type of block.
+        *pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
         *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
         *pDest++ = 0xFF; // Non-transparent.
         memcpy(pDest, pPixelData, iLength);
@@ -611,7 +611,7 @@ static unsigned char *convertLegacySprite(const unsigned char* pPixelData, size_
 }
 
 SDL_Texture* THRenderTarget::createPalettizedTexture(
-            int iWidth, int iHeight, const unsigned char* pPixels,
+            int iWidth, int iHeight, const uint8_t* pPixels,
             const THPalette* pPalette, uint32_t iSpriteFlags) const
 {
     uint32_t *pARGBPixels = new (std::nothrow) uint32_t[iWidth * iHeight];
@@ -632,7 +632,7 @@ SDL_Texture* THRenderTarget::createTexture(int iWidth, int iHeight,
                                            const uint32_t* pPixels) const
 {
     SDL_Texture *pTexture = SDL_CreateTexture(m_pRenderer, m_pFormat->format, SDL_TEXTUREACCESS_STATIC, iWidth, iHeight);
-    SDL_UpdateTexture(pTexture, NULL, pPixels, sizeof(*pPixels) * iWidth);
+    SDL_UpdateTexture(pTexture, NULL, pPixels, static_cast<int>(sizeof(*pPixels) * iWidth));
     SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
     SDL_SetTextureAlphaMod(pTexture, 0xFF);
@@ -677,7 +677,10 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
     THLine::THLineOperation* op = (THLine::THLineOperation*)(pLine->m_pFirstOp->m_pNext);
     while (op) {
         if (op->type == THLine::THLOP_LINE) {
-            SDL_RenderDrawLine(m_pRenderer, lastX + iX, lastY + iY, op->m_fX + iX, op->m_fY + iY);
+            SDL_RenderDrawLine(m_pRenderer, static_cast<int>(lastX + iX),
+                                            static_cast<int>(lastY + iY),
+                                            static_cast<int>(op->m_fX + iX),
+                                            static_cast<int>(op->m_fY + iY));
         }
 
         lastX = op->m_fX;
@@ -692,7 +695,7 @@ THPalette::THPalette()
     m_iNumColours = 0;
 }
 
-static const unsigned char gs_iTHColourLUT[0x40] = {
+static const uint8_t gs_iTHColourLUT[0x40] = {
     // Maps 0-63 to 0-255
     0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
     0x20, 0x24, 0x28, 0x2D, 0x31, 0x35, 0x39, 0x3D,
@@ -704,7 +707,7 @@ static const unsigned char gs_iTHColourLUT[0x40] = {
     0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF,
 };
 
-bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
+bool THPalette::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
 {
     if(iDataLength != 256 * 3)
         return false;
@@ -712,9 +715,9 @@ bool THPalette::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
     m_iNumColours = static_cast<int>(iDataLength / 3);
     for(int i = 0; i < m_iNumColours; ++i, pData += 3)
     {
-        unsigned char iR = gs_iTHColourLUT[pData[0] & 0x3F];
-        unsigned char iG = gs_iTHColourLUT[pData[1] & 0x3F];
-        unsigned char iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        uint8_t iR = gs_iTHColourLUT[pData[0] & 0x3F];
+        uint8_t iG = gs_iTHColourLUT[pData[1] & 0x3F];
+        uint8_t iB = gs_iTHColourLUT[pData[2] & 0x3F];
         uint32_t iColour = packARGB(0xFF, iR, iG, iB);
         // Remap magenta to transparent
         if(iColour == packARGB(0xFF, 0xFF, 0x00, 0xFF))
@@ -769,7 +772,7 @@ void THRawBitmap::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
+bool THRawBitmap::loadFromTHFile(const uint8_t* pPixelData,
                                  size_t iPixelDataLength, int iWidth,
                                  THRenderTarget *pEventualCanvas)
 {
@@ -799,7 +802,7 @@ bool THRawBitmap::loadFromTHFile(const unsigned char* pPixelData,
  * @param iHeight Height of the sprite.
  * @return Whether the sprite loads correctly (at the end of the sprite, all data is used).
  */
-static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidth, int iHeight)
+static bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth, int iHeight)
 {
     if (iWidth <= 0 || iHeight <= 0)
         return true;
@@ -810,9 +813,9 @@ static bool testSprite(const unsigned char* pData, size_t iDataLength, int iWidt
         if (iDataLength < 1)
             return false;
         iDataLength--;
-        unsigned char iType = *pData++;
+        uint8_t iType = *pData++;
 
-        int iLength = iType & 63;
+        size_t iLength = iType & 63;
         switch (iType >> 6)
         {
             case 0: // Fixed fully opaque 32bpp pixels
@@ -867,7 +870,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
                        int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
-    float fScaleFactor;
+    double fScaleFactor;
     if (m_pTexture == NULL)
         return;
 
@@ -877,7 +880,10 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     }
 
     const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth, iHeight };
-    const SDL_Rect rcDest = { iX,    iY,    iWidth * fScaleFactor, iHeight * fScaleFactor };
+    const SDL_Rect rcDest = { iX,
+                              iY,
+                              static_cast<int>(iWidth  * fScaleFactor),
+                              static_cast<int>(iHeight * fScaleFactor) };
 
     pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);
 }
@@ -895,7 +901,7 @@ THSpriteSheet::~THSpriteSheet()
     _freeSprites();
 }
 
-void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
+void THSpriteSheet::_freeSingleSprite(size_t iNumber)
 {
     if (iNumber >= m_iSpriteCount)
         return;
@@ -919,7 +925,7 @@ void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
 
 void THSpriteSheet::_freeSprites()
 {
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    for(size_t i = 0; i < m_iSpriteCount; ++i)
         _freeSingleSprite(i);
 
     delete[] m_pSprites;
@@ -932,7 +938,7 @@ void THSpriteSheet::setPalette(const THPalette* pPalette)
     m_pPalette = pPalette;
 }
 
-bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
+bool THSpriteSheet::setSpriteCount(size_t iCount, THRenderTarget* pCanvas)
 {
     _freeSprites();
 
@@ -948,7 +954,7 @@ bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
         return false;
     }
 
-    for (int i = 0; i < m_iSpriteCount; i++)
+    for (size_t i = 0; i < m_iSpriteCount; i++)
     {
         sprite_t &spr = m_pSprites[i];
         spr.pTexture = NULL;
@@ -963,19 +969,19 @@ bool THSpriteSheet::setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas)
     return true;
 }
 
-bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
-                                   const unsigned char* pChunkData, size_t iChunkDataLength,
+bool THSpriteSheet::loadFromTHFile(const uint8_t* pTableData, size_t iTableDataLength,
+                                   const uint8_t* pChunkData, size_t iChunkDataLength,
                                    bool bComplexChunks, THRenderTarget* pCanvas)
 {
     _freeSprites();
     if(pCanvas == NULL)
         return false;
 
-    unsigned int iCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    size_t iCount = iTableDataLength / sizeof(th_sprite_t);
     if (!setSpriteCount(iCount, pCanvas))
         return false;
 
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    for(size_t i = 0; i < m_iSpriteCount; ++i)
     {
         sprite_t *pSprite = m_pSprites + i;
         const th_sprite_t *pTHSprite = reinterpret_cast<const th_sprite_t*>(pTableData) + i;
@@ -991,7 +997,7 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
             continue;
 
         {
-            unsigned char *pData = new unsigned char[pSprite->iWidth * pSprite->iHeight];
+            uint8_t *pData = new uint8_t[pSprite->iWidth * pSprite->iHeight];
             THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
             if(iDataLen < 0)
@@ -1005,15 +1011,15 @@ bool THSpriteSheet::loadFromTHFile(const unsigned char* pTableData, size_t iTabl
     return true;
 }
 
-bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
-                                  int iDataLength, int iWidth, int iHeight)
+bool THSpriteSheet::setSpriteData(size_t iSprite, const uint8_t *pData, bool bTakeData,
+                                  size_t iDataLength, int iWidth, int iHeight)
 {
     if (iSprite >= m_iSpriteCount)
         return false;
 
     if (!testSprite(pData, iDataLength, iWidth, iHeight))
     {
-        printf("Sprite number %d has a bad encoding, skipping", iSprite);
+        printf("Sprite number %zu has a bad encoding, skipping", iSprite);
         return false;
     }
 
@@ -1025,7 +1031,7 @@ bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool 
     }
     else
     {
-        unsigned char *pNewData = new (std::nothrow) unsigned char[iDataLength];
+        uint8_t *pNewData = new (std::nothrow) uint8_t[iDataLength];
         if (pNewData == NULL)
             return false;
 
@@ -1038,7 +1044,7 @@ bool THSpriteSheet::setSpriteData(int iSprite, const unsigned char *pData, bool 
     return true;
 }
 
-void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap, uint32_t iAlt32)
+void THSpriteSheet::setSpriteAltPaletteMap(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32)
 {
     if(iSprite >= m_iSpriteCount)
         return;
@@ -1056,12 +1062,12 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const unsigned 
     }
 }
 
-unsigned int THSpriteSheet::getSpriteCount() const
+size_t THSpriteSheet::getSpriteCount() const
 {
     return m_iSpriteCount;
 }
 
-bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
+bool THSpriteSheet::getSpriteSize(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
@@ -1072,22 +1078,22 @@ bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, un
     return true;
 }
 
-void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
+void THSpriteSheet::getSpriteSizeUnchecked(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     *pWidth = m_pSprites[iSprite].iWidth;
     *pHeight = m_pSprites[iSprite].iHeight;
 }
 
-bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
+bool THSpriteSheet::getSpriteAverageColour(size_t iSprite, THColour* pColour) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
     const sprite_t *pSprite = m_pSprites + iSprite;
     int iCountTotal = 0;
     int iUsageCounts[256] = {0};
-    for(unsigned int i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
+    for(long i = 0; i < pSprite->iWidth * pSprite->iHeight; ++i)
     {
-        unsigned char cPalIndex = pSprite->pData[i];
+        uint8_t cPalIndex = pSprite->pData[i];
         uint32_t iColour = m_pPalette->getARGBData()[cPalIndex];
         if((iColour >> 24) == 0)
             continue;
@@ -1095,7 +1101,7 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
         int iR = THPalette::getR(iColour);
         int iG = THPalette::getG(iColour);
         int iB = THPalette::getB(iColour);
-        unsigned char cIntensity = (unsigned char)((iR + iG + iB) / 3);
+        uint8_t cIntensity = static_cast<uint8_t>((iR + iG + iB) / 3);
         int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
         iUsageCounts[cPalIndex] += iScore;
         iCountTotal += iScore;
@@ -1112,7 +1118,7 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
     return true;
 }
 
-void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
+void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, size_t iSprite, int iX, int iY, uint32_t iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
         return;
@@ -1147,7 +1153,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 }
 
-void THSpriteSheet::wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData)
+void THSpriteSheet::wxDrawSprite(size_t iSprite, uint8_t* pRGBData, uint8_t* pAData)
 {
     if(iSprite >= m_iSpriteCount || pRGBData == NULL || pAData == NULL)
         return;
@@ -1194,17 +1200,20 @@ SDL_Texture* THSpriteSheet::_makeAltBitmap(sprite_t *pSprite)
  * @param iWidth Width of the image.
  * @param iHeight Height of the image.
  * @param pPalette Palette of the image, or \c NULL.
- * @param iPixelNumber Numer of the pixel to retrieve.
+ * @param iPixelNumber Number of the pixel to retrieve.
  */
-static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHeight,
-                                  const THPalette *pPalette, int iPixelNumber)
+static uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
+                              const THPalette *pPalette, size_t iPixelNumber)
 {
-    if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 || iPixelNumber >= iWidth * iHeight)
+    if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 ||
+        iPixelNumber >= static_cast<size_t>(iWidth) * iHeight)
+    {
         return THPalette::packARGB(0, 0, 0,0);
+    }
 
     for (;;) {
-        unsigned char iType = *pImg++;
-        int iLength = iType & 63;
+        uint8_t iType = *pImg++;
+        size_t iLength = iType & 63;
         switch (iType >> 6)
         {
             case 0: // Fixed fully opaque 32bpp pixels
@@ -1228,7 +1237,7 @@ static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHe
 
             case 1: // Fixed partially transparent 32bpp pixels
             {
-                unsigned char iOpacity = *pImg++;
+                uint8_t iOpacity = *pImg++;
                 if (iPixelNumber >= iLength)
                 {
                     pImg += 3 * iLength;
@@ -1261,7 +1270,7 @@ static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHe
 
             case 3: // Recolour layer
             {
-                unsigned char iTable = *pImg++;
+                uint8_t iTable = *pImg++;
                 pImg++; // Skip reading the opacity for now.
                 if (iPixelNumber >= iLength)
                 {
@@ -1291,7 +1300,7 @@ static unsigned int get32BppPixel(const unsigned char* pImg, int iWidth, int iHe
     }
 }
 
-bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
+bool THSpriteSheet::hitTestSprite(size_t iSprite, int iX, int iY, uint32_t iFlags) const
 {
     if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
@@ -1306,7 +1315,7 @@ bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
 
-    unsigned int iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
+    uint32_t iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
     return THPalette::getA(iCol) != 0;
 }
 
@@ -1324,7 +1333,7 @@ THCursor::~THCursor()
     SDL_FreeCursor(m_pCursorHidden);
 }
 
-bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+bool THCursor::createFromSprite(THSpriteSheet* pSheet, size_t iSprite,
                                 int iHotspotX, int iHotspotY)
 {
 #if 0
@@ -1513,7 +1522,7 @@ void THFreeTypeFont::_makeTexture(THRenderTarget *pEventualCanvas, cached_text_t
 {
     uint32_t* pPixels = new uint32_t[pCacheEntry->iWidth * pCacheEntry->iHeight];
     memset(pPixels, 0, pCacheEntry->iWidth * pCacheEntry->iHeight * sizeof(uint32_t));
-    unsigned char* pInRow = pCacheEntry->pData;
+    uint8_t* pInRow = pCacheEntry->pData;
     uint32_t* pOutRow = pPixels;
     uint32_t iColBase = m_oColour & 0xFFFFFF;
     for(int iY = 0; iY < pCacheEntry->iHeight; ++iY, pOutRow += pCacheEntry->iWidth,

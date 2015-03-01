@@ -79,12 +79,12 @@ static int l_town_map_draw(lua_State *L)
                     else if(iTemp > 32767) // More than 25 degrees
                         iTemp = 255;
                     else // NB: 108 == (32767 - 5200) / 255
-                        iTemp = (iTemp - 5200) / 108;
+                        iTemp = static_cast<uint16_t>((iTemp - 5200) / 108);
 
 #define MIN_OK_TEMP 140
 #define MAX_OK_TEMP 180
 #define RangeScale(low, high, val, start, end) \
-    Clamp8(start + (end - start) * (val - low) / (high - low))
+    Clamp8(static_cast<uint16_t>(start + (end - start) * (val - low) / (high - low)))
                     switch(pMap->getTemperatureDisplay())
                     {
                     case THMT_MultiColour:

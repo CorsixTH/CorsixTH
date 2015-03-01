@@ -86,7 +86,7 @@ enum IsoDirEntFlag
     DEF_MULTI_EXTENT = 0x80,
 };
 
-template <class T> static inline T ReadNativeInt(const unsigned char *p)
+template <class T> static inline T ReadNativeInt(const uint8_t *p)
 {
     // ISO 9660 commonly encodes multi-byte integers as little endian followed
     // by big endian. Note that the first byte of iEndianness will be a zero on
@@ -107,7 +107,7 @@ bool IsoFilesystem::initialise(FILE* fRawFile)
     // Volume descriptor records follow this, with one record per sector.
     for(uint32_t iSector = 16; _seekToSector(iSector); ++iSector)
     {
-        unsigned char aBuffer[190];
+        uint8_t aBuffer[190];
         if(!_readData(sizeof(aBuffer), aBuffer))
             break;
         // CD001 is a standard identifier, \x01 is a version number
@@ -147,12 +147,12 @@ char IsoFilesystem::_normalise(char c)
     if(c == '_') // underscore to hyphen
         return '-';
     else if('a' <= c && c <= 'z') // ASCII lowercase to ASCII uppercase
-        return c - 'a' + 'A';
+        return static_cast<char>(c - 'a' + 'A');
     else
         return c;
 }
 
-void IsoFilesystem::_trimIdentifierVersion(const unsigned char* sIdent, uint8_t& iLength)
+void IsoFilesystem::_trimIdentifierVersion(const uint8_t* sIdent, uint8_t& iLength)
 {
     for(uint8_t i = 0; i < iLength; ++i)
     {
@@ -164,7 +164,7 @@ void IsoFilesystem::_trimIdentifierVersion(const unsigned char* sIdent, uint8_t&
     }
 }
 
-int IsoFilesystem::_findHospDirectory(const unsigned char *pDirEnt, int iDirEntsSize, int iLevel)
+int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel)
 {
     // Sanity check
     // Apart from at the root level, directory record arrays must take up whole
@@ -173,7 +173,7 @@ int IsoFilesystem::_findHospDirectory(const unsigned char *pDirEnt, int iDirEnts
     if((iLevel != 0 && (iDirEntsSize & 0x7FF)) || iLevel > 16)
         return 0;
 
-    unsigned char *pBuffer = NULL;
+    uint8_t *pBuffer = NULL;
     uint32_t iBufferSize = 0;
     for(; iDirEntsSize > 0; iDirEntsSize -= *pDirEnt, pDirEnt += *pDirEnt)
     {
@@ -200,7 +200,7 @@ int IsoFilesystem::_findHospDirectory(const unsigned char *pDirEnt, int iDirEnts
                 {
                     delete[] pBuffer;
                     iBufferSize = iDataLength;
-                    pBuffer = new unsigned char[iBufferSize];
+                    pBuffer = new uint8_t[iBufferSize];
                 }
                 if(_seekToSector(iDataSector) && _readData(iDataLength, pBuffer))
                 {
@@ -251,13 +251,13 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
     if((iLen != 0 && (iDirEntsSize & 0x7FF)) || (iLen > 256))
         return;
 
-    unsigned char *pBuffer = new unsigned char[iDirEntsSize];
+    uint8_t *pBuffer = new uint8_t[iDirEntsSize];
     if(!_seekToSector(iSector) || !_readData(iDirEntsSize, pBuffer))
     {
         delete[] pBuffer;
         return;
     }
-    unsigned char *pDirEnt = pBuffer;
+    uint8_t *pDirEnt = pBuffer;
     for(; iDirEntsSize > 0; iDirEntsSize -= *pDirEnt, pDirEnt += *pDirEnt)
     {
         // There is zero padding so that no record spans multiple sectors.
@@ -386,7 +386,7 @@ uint32_t IsoFilesystem::getFileSize(file_handle_t iFile) const
         return m_pFiles[iFile - 1].iSize;
 }
 
-bool IsoFilesystem::getFileData(file_handle_t iFile, unsigned char *pBuffer)
+bool IsoFilesystem::getFileData(file_handle_t iFile, uint8_t *pBuffer)
 {
     if(iFile <= 0 || static_cast<size_t>(iFile) > m_iNumFiles)
     {
@@ -421,7 +421,7 @@ bool IsoFilesystem::_seekToSector(uint32_t iSector)
     }
 }
 
-bool IsoFilesystem::_readData(uint32_t iByteCount, unsigned char *pBuffer)
+bool IsoFilesystem::_readData(uint32_t iByteCount, uint8_t *pBuffer)
 {
     if(!m_fRawFile)
     {
@@ -501,7 +501,7 @@ static int l_isofs_read_contents(lua_State *L)
         return 2;
     }
     void* pBuffer = lua_newuserdata(L, pSelf->getFileSize(iFile));
-    if(!pSelf->getFileData(iFile, reinterpret_cast<unsigned char*>(pBuffer)))
+    if(!pSelf->getFileData(iFile, reinterpret_cast<uint8_t*>(pBuffer)))
     {
         lua_pushnil(L);
         lua_pushstring(L, pSelf->getError());

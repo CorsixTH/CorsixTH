@@ -34,7 +34,7 @@ public:
     THSoundArchive();
     ~THSoundArchive();
 
-    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength);
 
     //! Returns the number of sounds present in the archive
     size_t getSoundCount() const;
@@ -83,7 +83,7 @@ protected:
 
     th_header_t m_oHeader;
     th_fileinfo_t* m_pFiles;
-    unsigned char* m_pData;
+    uint8_t* m_pData;
     size_t m_iFileCount;
 };
 

@@ -73,7 +73,7 @@ THMapTextOverlay::THMapTextOverlay()
     m_iBackgroundSprite = 0;
 }
 
-void THMapTextOverlay::setBackgroundSprite(unsigned int iSprite)
+void THMapTextOverlay::setBackgroundSprite(size_t iSprite)
 {
     m_iBackgroundSprite = iSprite;
 }

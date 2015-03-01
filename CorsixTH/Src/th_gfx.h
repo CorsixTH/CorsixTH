@@ -126,8 +126,8 @@ struct THDrawable : public THLinkList
     */
     bool (*m_fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
 
-    //! Drawing flags (zero or more list flags from THDrawFlags)
-    unsigned long m_iFlags;
+    //! Drawing flags (zero or more list flags from #THDrawFlags).
+    uint32_t m_iFlags;
 
     /** Returns true if instance is a multiple frame animation.
         Should be overloaded in derived class.
@@ -151,7 +151,7 @@ public:
           Ownership of this pointer is assumed by the class - call takeData()
           to take ownership back again.
     */
-    THChunkRenderer(int width, int height, unsigned char *buffer = NULL);
+    THChunkRenderer(int width, int height, uint8_t *buffer = NULL);
 
     ~THChunkRenderer();
 
@@ -163,7 +163,7 @@ public:
 
         Use getData() or takeData() to obtain the resulting bitmap.
     */
-    void decodeChunks(const unsigned char* pData, int iDataLen, bool bComplex);
+    void decodeChunks(const uint8_t* pData, int iDataLen, bool bComplex);
 
     //! Get the result buffer, and take ownership of it
     /*!
@@ -171,29 +171,29 @@ public:
         the class will not have any buffer, and thus cannot be used for
         anything.
     */
-    unsigned char* takeData();
+    uint8_t* takeData();
 
     //! Get the result buffer
-    inline const unsigned char* getData() const {return m_data;}
+    inline const uint8_t* getData() const {return m_data;}
 
     //! Perform a "copy" chunk (normally called by decodeChunks)
-    void chunkCopy(int npixels, const unsigned char* data);
+    void chunkCopy(int npixels, const uint8_t* data);
 
     //! Perform a "fill" chunk (normally called by decodeChunks)
-    void chunkFill(int npixels, unsigned char value);
+    void chunkFill(int npixels, uint8_t value);
 
     //! Perform a "fill to end of line" chunk (normally called by decodeChunks)
-    void chunkFillToEndOfLine(unsigned char value);
+    void chunkFillToEndOfLine(uint8_t value);
 
     //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
-    void chunkFinish(unsigned char value);
+    void chunkFinish(uint8_t value);
 
 protected:
     inline bool _isDone() {return m_ptr == m_end;}
     inline void _fixNpixels(int& npixels) const;
     inline void _incrementPosition(int npixels);
 
-    unsigned char *m_data, *m_ptr, *m_end;
+    uint8_t *m_data, *m_ptr, *m_end;
     int m_x, m_y, m_width, m_height;
     bool m_skip_eol;
 };
@@ -201,7 +201,7 @@ protected:
 //! Layer information (see THAnimationManager::drawFrame)
 struct THLayers_t
 {
-    unsigned char iLayerContents[13];
+    uint8_t iLayerContents[13];
 };
 
 class Input;
@@ -231,10 +231,10 @@ inline bool operator<(const AnimationKey &oK, const AnimationKey &oL)
  */
 struct AnimationStartFrames
 {
-    int iNorth; ///< Animation start frame for the 'north' view.
-    int iEast;  ///< Animation start frame for the 'east' view.
-    int iSouth; ///< Animation start frame for the 'south' view.
-    int iWest;  ///< Animation start frame for the 'west' view.
+    long iNorth; ///< Animation start frame for the 'north' view.
+    long iEast;  ///< Animation start frame for the 'east' view.
+    long iSouth; ///< Animation start frame for the 'south' view.
+    long iWest;  ///< Animation start frame for the 'west' view.
 };
 
 /** Map holding the custom animations. */
@@ -266,10 +266,10 @@ public:
         @param pElementData Element details (e.g. VELE-1.ANI)
         @return Loading was successful.
     */
-    bool loadFromTHFile(const unsigned char* pStartData, size_t iStartDataLength,
-                        const unsigned char* pFrameData, size_t iFrameDataLength,
-                        const unsigned char* pListData, size_t iListDataLength,
-                        const unsigned char* pElementData, size_t iElementDataLength);
+    bool loadFromTHFile(const uint8_t* pStartData, size_t iStartDataLength,
+                        const uint8_t* pFrameData, size_t iFrameDataLength,
+                        const uint8_t* pListData, size_t iListDataLength,
+                        const uint8_t* pElementData, size_t iElementDataLength);
 
     //! Set the video target.
     /*!
@@ -284,16 +284,16 @@ public:
         @param pCanvas The render target to draw onto.
         @return Loading was successful.
     */
-    bool loadCustomAnimations(const unsigned char* pData, size_t iDataLength);
+    bool loadCustomAnimations(const uint8_t* pData, size_t iDataLength);
 
     //! Get the total numer of animations
-    unsigned int getAnimationCount() const;
+    size_t getAnimationCount() const;
 
     //! Get the total number of animation frames
-    unsigned int getFrameCount() const;
+    size_t getFrameCount() const;
 
     //! Get the index of the first frame of an animation
-    unsigned int getFirstFrame(unsigned int iAnimation) const;
+    size_t getFirstFrame(size_t iAnimation) const;
 
     //! Get the index of the frame after a given frame
     /*!
@@ -301,7 +301,7 @@ public:
         index of the first frame, and then keep on calling getNextFrame() using
         the most recent return value from getNextFrame() or getFirstFrame().
     */
-    unsigned int getNextFrame(unsigned int iFrame) const;
+    size_t getNextFrame(size_t iFrame) const;
 
     //! Set the palette remap data for an animation
     /*!
@@ -311,7 +311,7 @@ public:
         new palette indices by the 256 byte array pMap. This is typically used
         to draw things in different colours or in greyscale.
     */
-    void setAnimationAltPaletteMap(unsigned int iAnimation, const unsigned char* pMap, uint32_t iAlt32);
+    void setAnimationAltPaletteMap(size_t iAnimation, const uint8_t* pMap, uint32_t iAlt32);
 
     //! Draw an animation frame
     /*!
@@ -331,17 +331,22 @@ public:
         @param iY The screen position to use as the animation Y origin.
         @param iFlags Zero or more THDrawFlags flags.
     */
-    void drawFrame(THRenderTarget* pCanvas, unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags) const;
+    void drawFrame(THRenderTarget* pCanvas, size_t iFrame,
+                   const THLayers_t& oLayers,
+                   int iX, int iY, uint32_t iFlags) const;
 
-    void getFrameExtent(unsigned int iFrame, const THLayers_t& oLayers, int* pMinX, int* pMaxX, int* pMinY, int* pMaxY, unsigned long iFlags) const;
-    unsigned int getFrameSound(unsigned int iFrame);
+    void getFrameExtent(size_t iFrame, const THLayers_t& oLayers,
+                        int* pMinX, int* pMaxX, int* pMinY, int* pMaxY,
+                        uint32_t iFlags) const;
+    size_t getFrameSound(size_t iFrame);
 
-    bool hitTest(unsigned int iFrame, const THLayers_t& oLayers, int iX, int iY, unsigned long iFlags, int iTestX, int iTestY) const;
+    bool hitTest(size_t iFrame, const THLayers_t& oLayers,
+                 int iX, int iY, uint32_t iFlags, int iTestX, int iTestY) const;
 
-    bool setFrameMarker(unsigned int iFrame, int iX, int iY);
-    bool setFrameSecondaryMarker(unsigned int iFrame, int iX, int iY);
-    bool getFrameMarker(unsigned int iFrame, int* pX, int* pY);
-    bool getFrameSecondaryMarker(unsigned int iFrame, int* pX, int* pY);
+    bool setFrameMarker(size_t iFrame, int iX, int iY);
+    bool setFrameSecondaryMarker(size_t iFrame, int iX, int iY);
+    bool getFrameMarker(size_t iFrame, int* pX, int* pY);
+    bool getFrameSecondaryMarker(size_t iFrame, int* pX, int* pY);
 
     //! Retrieve a custom animation by name and tile size.
     /*!
@@ -395,8 +400,8 @@ protected:
 
     struct frame_t
     {
-        unsigned int iListIndex; ///< First entry in #m_vElementList (pointing to an element) for this frame.
-        unsigned int iNextFrame; ///< Number of the next frame.
+        size_t iListIndex;       ///< First entry in #m_vElementList (pointing to an element) for this frame.
+        size_t iNextFrame;       ///< Number of the next frame.
         unsigned int iSound;     ///< Sound to play, if non-zero.
         unsigned int iFlags;     ///< Flags of the frame. Bit 0=start of animation.
 
@@ -418,19 +423,19 @@ protected:
 
     struct element_t
     {
-        unsigned int iSprite;   ///< Sprite number of the sprite sheet to display.
-        unsigned int iFlags;    ///< Flags of the sprite.
-                                ///< bit 0=flip vertically, bit 1=flip horizontally,
-                                ///< bit 2=draw 50% alpha, bit 3=draw 75% alpha.
-        int iX;                 ///< X offset of the sprite.
-        int iY;                 ///< Y offset of the sprite.
-        unsigned char iLayer;   ///< Layer class (0..12).
-        unsigned char iLayerId; ///< Value of the layer class to match.
+        size_t iSprite;   ///< Sprite number of the sprite sheet to display.
+        uint32_t iFlags;  ///< Flags of the sprite.
+                          ///< bit 0=flip vertically, bit 1=flip horizontally,
+                          ///< bit 2=draw 50% alpha, bit 3=draw 75% alpha.
+        int iX;           ///< X offset of the sprite.
+        int iY;           ///< Y offset of the sprite.
+        uint8_t iLayer;   ///< Layer class (0..12).
+        uint8_t iLayerId; ///< Value of the layer class to match.
 
         THSpriteSheet *pSpriteSheet; ///< Sprite sheet to use for this element.
     };
 
-    std::vector<unsigned int> m_vFirstFrames; ///< First frame number of an animation.
+    std::vector<size_t> m_vFirstFrames;       ///< First frame number of an animation.
     std::vector<frame_t> m_vFrames;           ///< The loaded frames.
     std::vector<uint16_t> m_vElementList;     ///< List of elements for a frame.
     std::vector<element_t> m_vElements;       ///< Sprite Elements.
@@ -440,10 +445,10 @@ protected:
     THSpriteSheet* m_pSpriteSheet; ///< Sprite sheet to use.
     THRenderTarget *m_pCanvas;     ///< Video surface to use.
 
-    unsigned int m_iAnimationCount;   ///< Number of animations.
-    unsigned int m_iFrameCount;       ///< Number of frames.
-    unsigned int m_iElementListCount; ///< Number of list elements.
-    unsigned int m_iElementCount;     ///< Number of sprite elements.
+    size_t m_iAnimationCount;   ///< Number of animations.
+    size_t m_iFrameCount;       ///< Number of frames.
+    size_t m_iElementListCount; ///< Number of list elements.
+    size_t m_iElementCount;     ///< Number of sprite elements.
 
     //! Compute the bounding box of the frame.
     /*!
@@ -461,9 +466,9 @@ protected:
         @param iElementCount Number of elements to load.
         @return Index of the first loaded element in #m_vElements. Negative value means failure.
      */
-    int loadElements(Input &input, THSpriteSheet *pSpriteheet,
-                    int iNumElements, unsigned int &iLoadedElements,
-                    unsigned int iElementStart, unsigned int iElementCount);
+    size_t loadElements(Input &input, THSpriteSheet *pSpriteheet,
+                        size_t iNumElements, size_t &iLoadedElements,
+                        size_t iElementStart, size_t iElementCount);
 
     //! Construct a list element for every element, and a 0xFFFF at the end.
     /*!
@@ -474,16 +479,16 @@ protected:
         @param iListCount Expected number of list elements to create.
         @return Index of the list elements, or a negative value to indicate failure.
      */
-    int makeListElements(int iFirstElement, int iNumElements,
-                         unsigned int &iLoadedListElements,
-                         unsigned int iListStart, unsigned int iListCount);
+    size_t makeListElements(size_t iFirstElement, size_t iNumElements,
+                            size_t &iLoadedListElements,
+                            size_t iListStart, size_t iListCount);
 
     //! Fix the flags of the first frame, and set the next frame of the last frame back to the first frame.
     /*!
         @param iFirst First frame of the animation, or 0xFFFFFFFFu.
         @param iLength Number of frames in the animation.
      */
-    void fixNextFrame(unsigned int iFirst, unsigned int iLength);
+    void fixNextFrame(uint32_t iFirst, size_t iLength);
 };
 
 struct THMapNode;
@@ -495,11 +500,11 @@ public:
     void removeFromTile();
     void attachToTile(THMapNode *pMapNode, int layer);
 
-    unsigned long getFlags() const {return m_iFlags;}
+    uint32_t getFlags() const {return m_iFlags;}
     int getX() const {return m_iX;}
     int getY() const {return m_iY;}
 
-    void setFlags(unsigned long iFlags) {m_iFlags = iFlags;}
+    void setFlags(uint32_t iFlags) {m_iFlags = iFlags;}
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setLayer(int iLayer, int iId);
     void setLayersFrom(const THAnimationBase *pSrc) {m_oLayers = pSrc->m_oLayers;}
@@ -533,15 +538,15 @@ public:
     bool hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return m_pPrev;}
-    unsigned int getAnimation() const {return m_iAnimation;}
+    size_t getAnimation() const {return m_iAnimation;}
     bool getMarker(int* pX, int* pY);
     bool getSecondaryMarker(int* pX, int* pY);
-    unsigned int getFrame() const {return m_iFrame;}
+    size_t getFrame() const {return m_iFrame;}
     int getCropColumn() const {return m_iCropColumn;}
 
-    void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
+    void setAnimation(THAnimationManager* pManager, size_t iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor = 1);
-    void setFrame(unsigned int iFrame);
+    void setFrame(size_t iFrame);
 
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
@@ -553,8 +558,8 @@ public:
 protected:
     THAnimationManager *m_pManager;
     THAnimation* m_pMorphTarget;
-    unsigned int m_iAnimation;
-    unsigned int m_iFrame;
+    size_t m_iAnimation; ///< Animation number.
+    size_t m_iFrame;     ///< Frame number.
     union { struct {
         //! Amount to change m_iX per tick
         int m_iSpeedX;
@@ -566,7 +571,7 @@ protected:
         THAnimation* m_pParent;
     };
 
-    unsigned int m_iSoundToPlay;
+    size_t m_iSoundToPlay;
     int m_iCropColumn;
 };
 
@@ -583,7 +588,7 @@ public:
     void setSheet(THSpriteSheet* pSheet) {m_pSpriteSheet = pSheet;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setLifetime(int iLifetime);
-    void appendSprite(unsigned int iSprite, int iX, int iY);
+    void appendSprite(size_t iSprite, int iX, int iY);
     bool isDead() const {return m_iLifetime == 0;}
 
     void persist(LuaPersistWriter *pWriter) const;
@@ -592,7 +597,7 @@ public:
 protected:
     struct _sprite_t
     {
-        unsigned int iSprite;
+        size_t iSprite;
         int iX;
         int iY;
     };

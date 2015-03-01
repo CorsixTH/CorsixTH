@@ -167,18 +167,18 @@ void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void))
 }
 
 //! Check for a string or userdata
-const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
+const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 {
-    const unsigned char *pData;
+    const uint8_t *pData;
     size_t iLength;
     if(lua_type(L, idx) == LUA_TUSERDATA)
     {
-        pData = (const unsigned char*)lua_touserdata(L, idx);
+        pData = reinterpret_cast<const uint8_t*>(lua_touserdata(L, idx));
         iLength = lua_objlen(L, idx);
     }
     else
     {
-        pData = (const unsigned char*)luaL_checklstring(L, idx, &iLength);
+        pData = reinterpret_cast<const uint8_t*>(luaL_checklstring(L, idx, &iLength));
     }
     if(pDataLen != 0)
         *pDataLen = iLength;
@@ -188,7 +188,7 @@ const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
-    const unsigned char* pData = luaT_checkfile(L, 1, &iDataLength);
+    const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
 
     THStringList oStrings;
     if(!oStrings.loadFromTHFile(pData, iDataLength))
@@ -198,17 +198,17 @@ static int l_load_strings(lua_State *L)
     }
 
     lua_settop(L, 0);
-    lua_createtable(L, (int)oStrings.getSectionCount(), 0);
-    for(unsigned int iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
+    lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
+    for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
     {
-        unsigned int iCount = oStrings.getSectionSize(iSec);
-        lua_createtable(L, (int)iCount, 0);
-        for(unsigned int iStr = 0; iStr < iCount; ++iStr)
+        size_t iCount = oStrings.getSectionSize(iSec);
+        lua_createtable(L, static_cast<int>(iCount), 0);
+        for(size_t iStr = 0; iStr < iCount; ++iStr)
         {
             lua_pushstring(L, oStrings.getString(iSec, iStr));
-            lua_rawseti(L, 2, (int)(iStr + 1));
+            lua_rawseti(L, 2, static_cast<int>(iStr + 1));
         }
-        lua_rawseti(L, 1, (int)(iSec + 1));
+        lua_rawseti(L, 1, static_cast<int>(iSec + 1));
     }
     return 1;
 }
