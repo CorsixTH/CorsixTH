@@ -150,8 +150,9 @@ static int l_anims_set_alt_pal(lua_State *L)
     const unsigned char *pPal = luaT_checkfile(L, 3, &iPalLen);
     if(iPalLen != 256)
         return luaL_typerror(L, 3, "GhostPalette string");
+    uint32_t iAlt32 = luaL_checkinteger(L, 4);
 
-    pAnims->setAnimationAltPaletteMap(iAnimation, pPal);
+    pAnims->setAnimationAltPaletteMap(iAnimation, pPal, iAlt32);
 
     lua_getfenv(L, 1);
     lua_insert(L, 2);
@@ -657,6 +658,8 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anims_set_marker, "setFrameMarker");
     luaT_setfunction(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     luaT_setfunction(l_anims_draw, "draw", MT_Surface, MT_Layers);
+    luaT_setconstant("Alt32_GreyScale",   THDF_Alt32_GreyScale);
+    luaT_setconstant("Alt32_BlueRedSwap", THDF_Alt32_BlueRedSwap);
     luaT_endclass();
 
     // Weak table at AnimMetatable[1] for light UD -> object lookup

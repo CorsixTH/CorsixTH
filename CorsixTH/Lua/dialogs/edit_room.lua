@@ -37,11 +37,12 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self:addKeyHandler("return", self.confirm) -- UIPlaceObjects does not need this
 
   local app = ui.app
+  local blue_red_swap = self.anims.Alt32_BlueRedSwap
   -- Set alt palette on wall blueprint to make it red
-  self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
+  self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   -- Set on door and window blueprints too
-  self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
-  self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
+  self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
+  self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   if not room_type.room_info then
     self.blueprint_rect = {

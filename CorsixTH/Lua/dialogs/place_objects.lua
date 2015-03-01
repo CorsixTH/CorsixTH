@@ -333,13 +333,14 @@ function UIPlaceObjects:setActiveIndex(index)
     self.ui:tutorialStep(1, {4, 5}, 6)
   end
   local anims = self.anims
+  local grey_scale = anims.Alt32_GreyScale
   local _, ghost = self.ui.app.gfx:loadPalette()
   for _, anim in pairs(object.idle_animations) do
-    anims:setAnimationGhostPalette(anim, ghost)
+    anims:setAnimationGhostPalette(anim, ghost, grey_scale)
   end
   if object.slave_type then
     for _, anim in pairs(object.slave_type.idle_animations) do
-      anims:setAnimationGhostPalette(anim, ghost)
+      anims:setAnimationGhostPalette(anim, ghost, grey_scale)
     end
   end
 
