@@ -567,11 +567,15 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             if(oGlyph.pGlyph == NULL)
             {
                 oGlyph.iGlyphIndex = FT_Get_Char_Index(m_pFace, iCode);
-                FT_Error iError = FT_Load_Glyph(m_pFace, oGlyph.iGlyphIndex,
-                    FT_LOAD_DEFAULT);
+
+                /* FT_Error iError = */
+                FT_Load_Glyph(m_pFace, oGlyph.iGlyphIndex, FT_LOAD_DEFAULT);
                 // TODO: iError != FT_Err_Ok
-                iError = FT_Get_Glyph(m_pFace->glyph, &oGlyph.pGlyph);
+
+                /* iError = */
+                FT_Get_Glyph(m_pFace->glyph, &oGlyph.pGlyph);
                 // TODO: iError != FT_Err_Ok
+
                 oGlyph.oMetrics = m_pFace->glyph->metrics;
             }
 

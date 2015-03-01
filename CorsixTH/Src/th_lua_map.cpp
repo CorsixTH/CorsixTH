@@ -489,15 +489,15 @@ static int l_map_remove_cell_thob(lua_State *L)
     int thob = luaL_checkint(L, 4);
     if(pNode->pExtendedObjectList == NULL)
     {
-        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
-            {
+        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        {
             pNode->iFlags &= 0x00FFFFFF;
-            }
+        }
     }
     else
     {
-        int i, nr = *pNode->pExtendedObjectList & 7;
-        if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        int nr = *pNode->pExtendedObjectList & 7;
+        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
         {
             pNode->iFlags &= 0x00FFFFFF;
             pNode->iFlags |= (*pNode->pExtendedObjectList & (255 << 3)) << 21;
@@ -509,7 +509,7 @@ static int l_map_remove_cell_thob(lua_State *L)
             else
             {
                 // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
-             for( i = 0; i < nr - 1; i++)
+                for(int i = 0; i < nr - 1; i++)
                 {
                     *pNode->pExtendedObjectList &= ~(255 << (3 + (i << 3)));
                     *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (255 << (3 + ((i + 1) << 3)))) >> 8;
@@ -523,10 +523,10 @@ static int l_map_remove_cell_thob(lua_State *L)
         else
         {
             bool found = false;
-            for(i = 0; i < nr; i++)
+            for(int i = 0; i < nr; i++)
             {
-
-                if(((*pNode->pExtendedObjectList & (255 << (3 + (i << 3)))) >> (3 + (i << 3))) == thob)
+                int shift_length = 3 + (i << 3);
+                if(static_cast<int>((*pNode->pExtendedObjectList >> shift_length) & 255) == thob)
                 {
                     found = true;
                     //shift all thobs to the left of the found one by 8 bits to the right

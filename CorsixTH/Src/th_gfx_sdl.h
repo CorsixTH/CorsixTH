@@ -56,7 +56,7 @@ public:
         @param iSpriteFlags Flags how to render the sprite.
         @return Decoding was successful.
     */
-    bool decodeImage(const unsigned char* pImg, const THPalette *pPalette, uint32_t iSpriteFlags);
+    bool decodeImage(const uint8_t* pImg, const THPalette *pPalette, uint32_t iSpriteFlags);
 
 protected:
     //! Store a decoded pixel. Use m_iX and m_iY if necessary.
@@ -110,17 +110,17 @@ protected:
 class WxStoring : public FullColourRenderer
 {
 public:
-    WxStoring(unsigned char* pRGBData, unsigned char* pAData, int iWidth, int iHeight);
+    WxStoring(uint8_t* pRGBData, uint8_t* pAData, int iWidth, int iHeight);
 
 protected:
     virtual void storeARGB(uint32_t pixel);
 
 protected:
     //! Pointer to the RGB storage (not owned by this class).
-    unsigned char *m_pRGBData;
+    uint8_t *m_pRGBData;
 
     //! Pointer to the Alpha channel storage (not owned by this class).
-    unsigned char *m_pAData;
+    uint8_t *m_pAData;
 };
 
 class THRenderTarget
@@ -203,7 +203,7 @@ public: // External API
 public: // Internal (this rendering engine only) API
     SDL_Renderer *getRenderer() const { return m_pRenderer; }
     bool shouldScaleBitmaps(float* pFactor);
-    SDL_Texture* createPalettizedTexture(int iWidth, int iHeight, const unsigned char* pPixels,
+    SDL_Texture* createPalettizedTexture(int iWidth, int iHeight, const uint8_t* pPixels,
                                          const THPalette* pPalette, uint32_t iSpriteFlags) const;
     SDL_Texture* createTexture(int iWidth, int iHeight, const uint32_t* pPixels) const;
     void draw(SDL_Texture *pTexture, const SDL_Rect *prcSrcRect, const SDL_Rect *prcDstRect, int iFlags);
@@ -243,7 +243,7 @@ public: // External API
         @param iDataLength Size of the data.
         @return Whether loading of the palette succeeded.
     */
-    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength);
 
     //! Set an entry of the palette.
     /*!
@@ -279,7 +279,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The red component intensity of the colour.
     */
-    inline static unsigned char getR(THColour iColour)
+    inline static uint8_t getR(THColour iColour)
     {
         return static_cast<uint8_t>((iColour >> 0) & 0xFF);
     }
@@ -289,7 +289,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The green component intensity of the colour.
     */
-    inline static unsigned char getG(THColour iColour)
+    inline static uint8_t getG(THColour iColour)
     {
         return static_cast<uint8_t>((iColour >> 8) & 0xFF);
     }
@@ -299,7 +299,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The blue component intensity of the colour.
     */
-    inline static unsigned char getB(THColour iColour)
+    inline static uint8_t getB(THColour iColour)
     {
         return static_cast<uint8_t>((iColour >> 16) & 0xFF);
     }
@@ -309,7 +309,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The opacity of the colour.
     */
-    inline static unsigned char getA(THColour iColour)
+    inline static uint8_t getA(THColour iColour)
     {
         return static_cast<uint8_t>((iColour >> 24) & 0xFF);
     }
@@ -366,7 +366,7 @@ public:
         @param pEventualCanvas Canvas to render the image to (eventually).
         @return Loading was a success.
     */
-    bool loadFromTHFile(const unsigned char* pPixelData, size_t iPixelDataLength,
+    bool loadFromTHFile(const uint8_t* pPixelData, size_t iPixelDataLength,
                         int iWidth, THRenderTarget *pEventualCanvas);
 
     //! Draw the image at a given position at the given canvas.
@@ -430,8 +430,8 @@ public: // External API
         @param pEventualCanvas Canvas to draw at.
         @return Loading succeeded.
     */
-    bool loadFromTHFile(const unsigned char* pTableData, size_t iTableDataLength,
-                        const unsigned char* pChunkData, size_t iChunkDataLength,
+    bool loadFromTHFile(const uint8_t* pTableData, size_t iTableDataLength,
+                        const uint8_t* pChunkData, size_t iChunkDataLength,
                         bool bComplexChunks, THRenderTarget* pEventualCanvas);
 
     //! Set the data of a sprite.
@@ -444,8 +444,8 @@ public: // External API
         @param iHeight Height of the sprite.
         @return Setting the sprite succeeded.
     */
-    bool setSpriteData(int iSprite, const unsigned char *pData, bool bTakeData,
-                       int iDataLength, int iWidth, int iHeight);
+    bool setSpriteData(size_t iSprite, const uint8_t *pData, bool bTakeData,
+                       size_t iDataLength, int iWidth, int iHeight);
 
     //! Supply a new mapped palette to a sprite.
     /*!
@@ -453,7 +453,7 @@ public: // External API
         @param pMap The palette map to apply.
         @param iAlt32 What to do for a 32bpp sprite (#THDF_Alt32_Mask bits).
     */
-    void setSpriteAltPaletteMap(unsigned int iSprite, const unsigned char* pMap, uint32_t iAlt32);
+    void setSpriteAltPaletteMap(unsigned int iSprite, const uint8_t* pMap, uint32_t iAlt32);
 
     //! Get the number of sprites at the sheet.
     /*!
@@ -467,7 +467,7 @@ public: // External API
         @param pCanvas Canvas to draw at.
         @return Whether the number of sprites could be allocated.
     */
-    bool setSpriteCount(unsigned int iCount, THRenderTarget* pCanvas);
+    bool setSpriteCount(size_t iCount, THRenderTarget* pCanvas);
 
     //! Get size of a sprite.
     /*!
@@ -521,7 +521,7 @@ public: // Internal (this rendering engine only) API
         @param pRGBData Output RGB data array.
         @param pAData Output Alpha channel array.
     */
-    void wxDrawSprite(unsigned int iSprite, unsigned char* pRGBData, unsigned char* pAData);
+    void wxDrawSprite(unsigned int iSprite, uint8_t* pRGBData, uint8_t* pAData);
 
 protected:
     friend class THCursor;
@@ -536,10 +536,10 @@ protected:
         uint32_t position;
 
         //! Width of the sprite.
-        unsigned char width;
+        uint8_t width;
 
         //! Height of the sprite.
-        unsigned char height;
+        uint8_t height;
     } CORSIX_TH_PACKED_FLAGS;
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(pop)
@@ -555,19 +555,19 @@ protected:
         SDL_Texture *pAltTexture;
 
         //! Data of the sprite.
-        const unsigned char *pData;
+        const uint8_t *pData;
 
         //! Alternative palette (if available).
-        const unsigned char *pAltPaletteMap;
+        const uint8_t *pAltPaletteMap;
 
         //! Flags how to render the sprite, contains #THDF_Alt32_Mask bits.
         uint32_t iSpriteFlags;
 
         //! Width of the sprite.
-        unsigned int iWidth;
+        int iWidth;
 
         //! Height of the sprite.
-        unsigned int iHeight;
+        int iHeight;
     } *m_pSprites;
 
     //! Original palette.
@@ -577,7 +577,7 @@ protected:
     THRenderTarget* m_pTarget;
 
     //! Number of sprites in the sprite sheet.
-    unsigned int m_iSpriteCount;
+    size_t m_iSpriteCount;
 
     //! Free memory of a single sprite.
     /*!

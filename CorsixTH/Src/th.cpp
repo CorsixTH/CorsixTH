@@ -112,14 +112,6 @@ static void utf8encode(unsigned char*& sOut, uint32_t iCodepoint)
     }
 }
 
-static void CopyStringId(const unsigned char*& sIn, unsigned char*& sOut)
-{
-    size_t iLength = strlen(reinterpret_cast<const char*>(sIn)) + 1;
-    memcpy(sOut, sIn, iLength);
-    sIn += iLength;
-    sOut += iLength;
-}
-
 static void CopyStringCP437(const unsigned char*& sIn, unsigned char*& sOut)
 {
     unsigned char cChar;
