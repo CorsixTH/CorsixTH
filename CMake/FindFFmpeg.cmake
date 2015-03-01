@@ -5,7 +5,6 @@
 #  FFMPEG_FOUND         - System has the all required components.
 #  FFMPEG_INCLUDE_DIRS  - Include directory necessary for using the required components headers.
 #  FFMPEG_LIBRARIES     - Link these to use the required ffmpeg components.
-#  FFMPEG_DEFINITIONS   - Compiler switches required for using the required ffmpeg components.
 #
 # For each of the components it will additionally set.
 #   - AVCODEC
@@ -16,11 +15,10 @@
 #   - SWSCALE
 #   - SWRESAMPLE
 # the following variables will be defined
-#  <component>_FOUND        - System has <component>
-#  <component>_INCLUDE_DIRS - Include directory necessary for using the <component> headers
-#  <component>_LIBRARIES    - Link these to use <component>
-#  <component>_DEFINITIONS  - Compiler switches required for using <component>
-#  <component>_VERSION      - The components version
+#  <component>_FOUND          - System has <component>
+#  <component>_INCLUDE_DIRS   - Include directory necessary for using the <component> headers
+#  <component>_LIBRARIES      - Link these to use <component>
+#  <component>_VERSION_STRING - The component's version
 #
 # Copyright (c) 2006, Matthias Kretz, <kretz@kde.org>
 # Copyright (c) 2008, Alexander Neundorf, <neundorf@kde.org>
@@ -32,75 +30,12 @@
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
 
 include(FindPackageHandleStandardArgs)
+include(${CMAKE_CURRENT_LIST_DIR}/CMakeFFmpegLibavMacros.cmake)
 
 # The default components were taken from a survey over other FindFFMPEG.cmake files
 if (NOT FFmpeg_FIND_COMPONENTS)
   set(FFmpeg_FIND_COMPONENTS AVCODEC AVFORMAT AVUTIL)
 endif ()
-
-#
-### Macro: set_component_found
-#
-# Marks the given component as found if both *_LIBRARIES AND *_INCLUDE_DIRS is present.
-#
-macro(set_component_found _component )
-  if (${_component}_LIBRARIES AND ${_component}_INCLUDE_DIRS)
-    # message(STATUS "  - ${_component} found.")
-    set(${_component}_FOUND TRUE)
-  else ()
-    # message(STATUS "  - ${_component} not found.")
-  endif ()
-endmacro()
-
-#
-### Macro: find_component
-#
-macro(find_component _component _library _header _version)
-  
-  find_path(${_component}_INCLUDE_DIRS ${_header}
-    HINTS
-      ${PC_LIB${_component}_INCLUDEDIR}
-      ${PC_LIB${_component}_INCLUDE_DIRS}
-    PATH_SUFFIXES
-      ffmpeg
-      include
-  )
-
-  find_library(${_component}_LIBRARIES
-      NAMES ${_library}
-      HINTS
-        ${PC_LIB${_component}_LIBDIR}
-        ${PC_LIB${_component}_LIBRARY_DIRS}
-      PATH_SUFFIXES
-        lib
-  )
-
-  if (${_component}_INCLUDE_DIRS AND EXISTS "${${_component}_INCLUDE_DIRS}/${_version}")
-    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MAJOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+[0-9]+$")
-    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MINOR_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+[0-9]+$")
-    file(STRINGS "${${_component}_INCLUDE_DIRS}/${_version}" ${_component}_VERSION_MICRO_LINE REGEX "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+[0-9]+$")
-    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MAJOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MAJOR "${${_component}_VERSION_MAJOR_LINE}")
-    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MINOR[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MINOR "${${_component}_VERSION_MINOR_LINE}")
-    string(REGEX REPLACE "^#define[ \t]+LIB${_component}_VERSION_MICRO[ \t]+([0-9]+)$" "\\1" ${_component}_VERSION_MICRO "${${_component}_VERSION_MICRO_LINE}")
-    set(${_component}_VERSION_STRING ${${_component}_VERSION_MAJOR}.${${_component}_VERSION_MINOR}.${${_component}_VERSION_MICRO})
-    unset(${_component}_VERSION_MAJOR_LINE)
-    unset(${_component}_VERSION_MINOR_LINE)
-    unset(${_component}_VERSION_MICRO_LINE)
-    unset(${_component}_VERSION_MAJOR)
-    unset(${_component}_VERSION_MINOR)
-    unset(${_component}_VERSION_MICRO)
-  endif ()
-  find_package_handle_standard_args(${_component}
-                                    REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS
-                                    VERSION_VAR ${_component}_VERSION_STRING)
-
-  set(${_component}_DEFINITIONS  ${PC_${_component}_CFLAGS_OTHER} CACHE STRING "The ${_component} CFLAGS.")
-  set(${_component}_VERSION      ${PC_${_component}_VERSION}      CACHE STRING "The ${_component} version number.")
-
-  set_component_found(${_component})
-
-endmacro()
-
 
 # Check for cached results. If there are skip the costly part.
 if (NOT FFMPEG_LIBRARIES)
@@ -119,7 +54,6 @@ if (NOT FFMPEG_LIBRARIES)
     if (${_component}_FOUND)
       # message(STATUS "Required component ${_component} present.")
       set(FFMPEG_LIBRARIES   ${FFMPEG_LIBRARIES}   ${${_component}_LIBRARIES})
-      set(FFMPEG_DEFINITIONS ${FFMPEG_DEFINITIONS} ${${_component}_DEFINITIONS})
       list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
     else ()
       # message(STATUS "Required component ${_component} missing.")
@@ -134,11 +68,9 @@ if (NOT FFMPEG_LIBRARIES)
   # cache the vars.
   set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS} CACHE STRING "The FFmpeg include directories." FORCE)
   set(FFMPEG_LIBRARIES    ${FFMPEG_LIBRARIES}    CACHE STRING "The FFmpeg libraries." FORCE)
-  set(FFMPEG_DEFINITIONS  ${FFMPEG_DEFINITIONS}  CACHE STRING "The FFmpeg cflags." FORCE)
 
   mark_as_advanced(FFMPEG_INCLUDE_DIRS
-                   FFMPEG_LIBRARIES
-                   FFMPEG_DEFINITIONS)
+                   FFMPEG_LIBRARIES)
 
 endif ()
 
