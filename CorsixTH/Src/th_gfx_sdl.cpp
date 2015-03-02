@@ -898,7 +898,7 @@ THSpriteSheet::~THSpriteSheet()
     _freeSprites();
 }
 
-void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
+void THSpriteSheet::_freeSingleSprite(size_t iNumber)
 {
     if (iNumber >= m_iSpriteCount)
         return;
@@ -922,7 +922,7 @@ void THSpriteSheet::_freeSingleSprite(unsigned int iNumber)
 
 void THSpriteSheet::_freeSprites()
 {
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    for(size_t i = 0; i < m_iSpriteCount; ++i)
         _freeSingleSprite(i);
 
     delete[] m_pSprites;
@@ -974,11 +974,11 @@ bool THSpriteSheet::loadFromTHFile(const uint8_t* pTableData, size_t iTableDataL
     if(pCanvas == NULL)
         return false;
 
-    unsigned int iCount = (unsigned int)(iTableDataLength / sizeof(th_sprite_t));
+    size_t iCount = iTableDataLength / sizeof(th_sprite_t);
     if (!setSpriteCount(iCount, pCanvas))
         return false;
 
-    for(unsigned int i = 0; i < m_iSpriteCount; ++i)
+    for(size_t i = 0; i < m_iSpriteCount; ++i)
     {
         sprite_t *pSprite = m_pSprites + i;
         const th_sprite_t *pTHSprite = reinterpret_cast<const th_sprite_t*>(pTableData) + i;
@@ -1041,7 +1041,7 @@ bool THSpriteSheet::setSpriteData(size_t iSprite, const uint8_t *pData, bool bTa
     return true;
 }
 
-void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const uint8_t* pMap, uint32_t iAlt32)
+void THSpriteSheet::setSpriteAltPaletteMap(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32)
 {
     if(iSprite >= m_iSpriteCount)
         return;
@@ -1059,12 +1059,12 @@ void THSpriteSheet::setSpriteAltPaletteMap(unsigned int iSprite, const uint8_t* 
     }
 }
 
-unsigned int THSpriteSheet::getSpriteCount() const
+size_t THSpriteSheet::getSpriteCount() const
 {
     return m_iSpriteCount;
 }
 
-bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
+bool THSpriteSheet::getSpriteSize(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
@@ -1075,13 +1075,13 @@ bool THSpriteSheet::getSpriteSize(unsigned int iSprite, unsigned int* pWidth, un
     return true;
 }
 
-void THSpriteSheet::getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const
+void THSpriteSheet::getSpriteSizeUnchecked(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const
 {
     *pWidth = m_pSprites[iSprite].iWidth;
     *pHeight = m_pSprites[iSprite].iHeight;
 }
 
-bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const
+bool THSpriteSheet::getSpriteAverageColour(size_t iSprite, THColour* pColour) const
 {
     if(iSprite >= m_iSpriteCount)
         return false;
@@ -1115,7 +1115,7 @@ bool THSpriteSheet::getSpriteAverageColour(unsigned int iSprite, THColour* pColo
     return true;
 }
 
-void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags)
+void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, size_t iSprite, int iX, int iY, uint32_t iFlags)
 {
     if(iSprite >= m_iSpriteCount || pCanvas == NULL || pCanvas != m_pTarget)
         return;
@@ -1150,7 +1150,7 @@ void THSpriteSheet::drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, in
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 }
 
-void THSpriteSheet::wxDrawSprite(unsigned int iSprite, uint8_t* pRGBData, uint8_t* pAData)
+void THSpriteSheet::wxDrawSprite(size_t iSprite, uint8_t* pRGBData, uint8_t* pAData)
 {
     if(iSprite >= m_iSpriteCount || pRGBData == NULL || pAData == NULL)
         return;
@@ -1297,7 +1297,7 @@ static uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
     }
 }
 
-bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const
+bool THSpriteSheet::hitTestSprite(size_t iSprite, int iX, int iY, uint32_t iFlags) const
 {
     if(iX < 0 || iY < 0 || iSprite >= m_iSpriteCount)
         return false;
@@ -1312,7 +1312,7 @@ bool THSpriteSheet::hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned
     if(iFlags & THDF_FlipVertical)
         iY = iHeight - iY - 1;
 
-    unsigned int iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
+    uint32_t iCol = get32BppPixel(sprite.pData, iWidth, iHeight, m_pPalette, iY * iWidth + iX);
     return THPalette::getA(iCol) != 0;
 }
 
@@ -1330,7 +1330,7 @@ THCursor::~THCursor()
     SDL_FreeCursor(m_pCursorHidden);
 }
 
-bool THCursor::createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+bool THCursor::createFromSprite(THSpriteSheet* pSheet, size_t iSprite,
                                 int iHotspotX, int iHotspotY)
 {
 #if 0

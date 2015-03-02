@@ -64,10 +64,10 @@ static int l_anims_load(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     size_t iStartDataLength, iFrameDataLength, iListDataLength, iElementDataLength;
-    const unsigned char* pStartData = luaT_checkfile(L, 2, &iStartDataLength);
-    const unsigned char* pFrameData = luaT_checkfile(L, 3, &iFrameDataLength);
-    const unsigned char* pListData = luaT_checkfile(L, 4, &iListDataLength);
-    const unsigned char* pElementData = luaT_checkfile(L, 5, &iElementDataLength);
+    const uint8_t* pStartData = luaT_checkfile(L, 2, &iStartDataLength);
+    const uint8_t* pFrameData = luaT_checkfile(L, 3, &iFrameDataLength);
+    const uint8_t* pListData = luaT_checkfile(L, 4, &iListDataLength);
+    const uint8_t* pElementData = luaT_checkfile(L, 5, &iElementDataLength);
 
     if(pAnims->loadFromTHFile(pStartData, iStartDataLength, pFrameData, iFrameDataLength,
         pListData, iListDataLength, pElementData, iElementDataLength))
@@ -90,7 +90,7 @@ static int l_anims_loadcustom(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     size_t iDataLength;
-    const unsigned char* pData = luaT_checkfile(L, 2, &iDataLength);
+    const uint8_t* pData = luaT_checkfile(L, 2, &iDataLength);
 
     if (pAnims->loadCustomAnimations(pData, iDataLength))
     {
@@ -129,7 +129,7 @@ static int l_anims_getfirst(lua_State *L)
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     int iAnim = luaL_checkint(L, 2);
 
-    lua_pushinteger(L, pAnims->getFirstFrame((unsigned int)iAnim));
+    lua_pushinteger(L, pAnims->getFirstFrame(iAnim));
     return 1;
 }
 
@@ -138,16 +138,16 @@ static int l_anims_getnext(lua_State *L)
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     int iFrame = luaL_checkint(L, 2);
 
-    lua_pushinteger(L, pAnims->getNextFrame((unsigned int)iFrame));
+    lua_pushinteger(L, pAnims->getNextFrame(iFrame));
     return 1;
 }
 
 static int l_anims_set_alt_pal(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    unsigned int iAnimation = luaL_checkint(L, 2);
+    size_t iAnimation = luaL_checkint(L, 2);
     size_t iPalLen;
-    const unsigned char *pPal = luaT_checkfile(L, 3, &iPalLen);
+    const uint8_t *pPal = luaT_checkfile(L, 3, &iPalLen);
     if(iPalLen != 256)
         return luaL_typerror(L, 3, "GhostPalette string");
     uint32_t iAlt32 = luaL_checkinteger(L, 4);
@@ -165,7 +165,7 @@ static int l_anims_set_alt_pal(lua_State *L)
 static int l_anims_set_marker(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    lua_pushboolean(L, pAnims->setFrameMarker((unsigned int)luaL_checkinteger(L, 2),
+    lua_pushboolean(L, pAnims->setFrameMarker(luaL_checkinteger(L, 2),
         luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
     return 1;
 }
@@ -173,7 +173,7 @@ static int l_anims_set_marker(lua_State *L)
 static int l_anims_set_secondary_marker(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    lua_pushboolean(L, pAnims->setFrameSecondaryMarker((unsigned int)luaL_checkinteger(L, 2),
+    lua_pushboolean(L, pAnims->setFrameSecondaryMarker(luaL_checkinteger(L, 2),
         luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
     return 1;
 }
@@ -182,13 +182,13 @@ static int l_anims_draw(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
-    int iFrame = luaL_checkint(L, 3);
+    size_t iFrame = luaL_checkint(L, 3);
     THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L, 4, luaT_upvalueindex(2));
     int iX = luaL_checkint(L, 5);
     int iY = luaL_checkint(L, 6);
     int iFlags = luaL_optint(L, 7, 0);
 
-    pAnims->drawFrame(pCanvas, (unsigned int)iFrame, *pLayers, iX, iY, iFlags);
+    pAnims->drawFrame(pCanvas, iFrame, *pLayers, iX, iY, iFlags);
 
     lua_settop(L, 1);
     return 1;
@@ -316,8 +316,8 @@ static int l_anim_set_anim(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     THAnimationManager* pManager = luaT_testuserdata<THAnimationManager>(L, 2);
-    int iAnim = luaL_checkint(L, 3);
-    if(iAnim < 0 || (unsigned int)iAnim >= pManager->getAnimationCount())
+    size_t iAnim = luaL_checkint(L, 3);
+    if(iAnim < 0 || iAnim >= pManager->getAnimationCount())
         luaL_argerror(L, 3, "Animation index out of bounds");
 
     if(lua_isnoneornil(L, 4))
@@ -622,7 +622,7 @@ static int l_srl_set_sheet(lua_State *L)
 static int l_srl_append(lua_State *L)
 {
     THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
-    pSrl->appendSprite((unsigned int)luaL_checkint(L, 2),
+    pSrl->appendSprite(luaL_checkint(L, 2),
                        luaL_checkint(L, 3), luaL_checkint(L, 4));
     lua_settop(L, 1);
     return 1;

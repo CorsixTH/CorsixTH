@@ -467,8 +467,8 @@ protected:
         @return Index of the first loaded element in #m_vElements. Negative value means failure.
      */
     int loadElements(Input &input, THSpriteSheet *pSpriteheet,
-                    int iNumElements, unsigned int &iLoadedElements,
-                    unsigned int iElementStart, unsigned int iElementCount);
+                     int iNumElements, size_t &iLoadedElements,
+                     size_t iElementStart, size_t iElementCount);
 
     //! Construct a list element for every element, and a 0xFFFF at the end.
     /*!
@@ -480,15 +480,15 @@ protected:
         @return Index of the list elements, or a negative value to indicate failure.
      */
     int makeListElements(int iFirstElement, int iNumElements,
-                         unsigned int &iLoadedListElements,
-                         unsigned int iListStart, unsigned int iListCount);
+                         size_t &iLoadedListElements,
+                         size_t iListStart, size_t iListCount);
 
     //! Fix the flags of the first frame, and set the next frame of the last frame back to the first frame.
     /*!
         @param iFirst First frame of the animation, or 0xFFFFFFFFu.
         @param iLength Number of frames in the animation.
      */
-    void fixNextFrame(unsigned int iFirst, unsigned int iLength);
+    void fixNextFrame(uint32_t iFirst, size_t iLength);
 };
 
 struct THMapNode;
@@ -544,9 +544,9 @@ public:
     unsigned int getFrame() const {return m_iFrame;}
     int getCropColumn() const {return m_iCropColumn;}
 
-    void setAnimation(THAnimationManager* pManager, unsigned int iAnimation);
+    void setAnimation(THAnimationManager* pManager, size_t iAnimation);
     void setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor = 1);
-    void setFrame(unsigned int iFrame);
+    void setFrame(size_t iFrame);
 
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
@@ -588,7 +588,7 @@ public:
     void setSheet(THSpriteSheet* pSheet) {m_pSpriteSheet = pSheet;}
     void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
     void setLifetime(int iLifetime);
-    void appendSprite(unsigned int iSprite, int iX, int iY);
+    void appendSprite(size_t iSprite, int iX, int iY);
     bool isDead() const {return m_iLifetime == 0;}
 
     void persist(LuaPersistWriter *pWriter) const;

@@ -453,13 +453,13 @@ public: // External API
         @param pMap The palette map to apply.
         @param iAlt32 What to do for a 32bpp sprite (#THDF_Alt32_Mask bits).
     */
-    void setSpriteAltPaletteMap(unsigned int iSprite, const uint8_t* pMap, uint32_t iAlt32);
+    void setSpriteAltPaletteMap(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32);
 
     //! Get the number of sprites at the sheet.
     /*!
         @return The number of sprites available at the sheet.
     */
-    unsigned int getSpriteCount() const;
+    size_t getSpriteCount() const;
 
     //! Set the number of sprites in the sheet.
     /*!
@@ -476,7 +476,7 @@ public: // External API
         @param pHeight [out] If not NULL, the sprite height is stored in the destination.
         @return Size could be provided for the sprite.
     */
-    bool getSpriteSize(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+    bool getSpriteSize(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
 
     //! Get size of a sprite, assuming all input is correctly supplied.
     /*!
@@ -484,7 +484,7 @@ public: // External API
         @param pWidth [out] The sprite width is stored in the destination.
         @param pHeight [out] The sprite height is stored in the destination.
     */
-    void getSpriteSizeUnchecked(unsigned int iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+    void getSpriteSizeUnchecked(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
 
     //! Get the best colour to represent the sprite.
     /*!
@@ -492,7 +492,7 @@ public: // External API
         @param pColour [out] Resulting colour.
         @return Best colour could be established.
     */
-    bool getSpriteAverageColour(unsigned int iSprite, THColour* pColour) const;
+    bool getSpriteAverageColour(size_t iSprite, THColour* pColour) const;
 
     //! Draw a sprite onto the canvas.
     /*!
@@ -502,7 +502,7 @@ public: // External API
         @param iY Y position to draw the sprite.
         @param iFlags Flags to apply for drawing.
     */
-    void drawSprite(THRenderTarget* pCanvas, unsigned int iSprite, int iX, int iY, unsigned long iFlags);
+    void drawSprite(THRenderTarget* pCanvas, size_t iSprite, int iX, int iY, uint32_t iFlags);
 
     //! Test whether a sprite was hit.
     /*!
@@ -512,7 +512,7 @@ public: // External API
         @param iFlags Draw flags to apply to the sprite before testing.
         @return Whether the sprite covers the give point.
     */
-    bool hitTestSprite(unsigned int iSprite, int iX, int iY, unsigned long iFlags) const;
+    bool hitTestSprite(size_t iSprite, int iX, int iY, uint32_t iFlags) const;
 
 public: // Internal (this rendering engine only) API
     //! Draw a sprite into wxImage data arrays (for the Map Editor)
@@ -521,7 +521,7 @@ public: // Internal (this rendering engine only) API
         @param pRGBData Output RGB data array.
         @param pAData Output Alpha channel array.
     */
-    void wxDrawSprite(unsigned int iSprite, uint8_t* pRGBData, uint8_t* pAData);
+    void wxDrawSprite(size_t iSprite, uint8_t* pRGBData, uint8_t* pAData);
 
 protected:
     friend class THCursor;
@@ -583,7 +583,7 @@ protected:
     /*!
         @param iNumber Number of the sprite to clear.
     */
-    void _freeSingleSprite(unsigned int iNumber);
+    void _freeSingleSprite(size_t iNumber);
 
     //! Free the memory used by the sprites. Also releases the SDL bitmaps.
     void _freeSprites();
@@ -602,7 +602,7 @@ public:
     THCursor();
     ~THCursor();
 
-    bool createFromSprite(THSpriteSheet* pSheet, unsigned int iSprite,
+    bool createFromSprite(THSpriteSheet* pSheet, size_t iSprite,
                           int iHotspotX = 0, int iHotspotY = 0);
 
     void use(THRenderTarget* pTarget);
