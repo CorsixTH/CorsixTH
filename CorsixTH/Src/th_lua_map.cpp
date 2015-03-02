@@ -500,7 +500,7 @@ static int l_map_remove_cell_thob(lua_State *L)
         if(((pNode->iFlags & 0xFF000000) >> 24) == thob)
         {
             pNode->iFlags &= 0x00FFFFFF;
-            pNode->iFlags |= (*pNode->pExtendedObjectList & (255 << 3)) << 21;
+            pNode->iFlags |= (*pNode->pExtendedObjectList & (UINT32_C(0xFF) << 3)) << (24 - 3);
             if(nr == 1)
             {
                 delete pNode->pExtendedObjectList;
@@ -509,12 +509,13 @@ static int l_map_remove_cell_thob(lua_State *L)
             else
             {
                 // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
-             for( i = 0; i < nr - 1; i++)
+                for( i = 0; i < nr - 1; i++)
                 {
-                    *pNode->pExtendedObjectList &= ~(255 << (3 + (i << 3)));
-                    *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (255 << (3 + ((i + 1) << 3)))) >> 8;
+                    uint64_t mask = UINT64_C(0xFF) << (3 + i * 8);
+                    *pNode->pExtendedObjectList &= ~mask;
+                    *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
                 }
-                *pNode->pExtendedObjectList &= ~(255 << (3 + (nr << 3)));
+                *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
                 *pNode->pExtendedObjectList &= ~7;
                 *pNode->pExtendedObjectList |= (nr - 1);
             }
@@ -525,15 +526,16 @@ static int l_map_remove_cell_thob(lua_State *L)
             bool found = false;
             for(i = 0; i < nr; i++)
             {
-
-                if(((*pNode->pExtendedObjectList & (255 << (3 + (i << 3)))) >> (3 + (i << 3))) == thob)
+                int shift_length = 3 + i * 8;
+                if(static_cast<int>((*pNode->pExtendedObjectList >> shift_length) & 255) == thob)
                 {
                     found = true;
                     //shift all thobs to the left of the found one by 8 bits to the right
                     for(int j = i; i < nr - 1; i++)
                     {
-                        *pNode->pExtendedObjectList &= ~(255 << (3 + (j << 3)));
-                        *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (255 << (3 + ((j + 1) << 3)))) >> 8;
+                        uint64_t mask = UINT64_C(0xFF) << (3 + j * 8);
+                        *pNode->pExtendedObjectList &= ~mask;
+                        *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
                     }
                     break;
                 }
@@ -544,7 +546,7 @@ static int l_map_remove_cell_thob(lua_State *L)
                 if(nr > 0)
                 {
                     //delete the last thob in the list and update the count
-                    *pNode->pExtendedObjectList &= ~(255 << (3 + (nr << 3)));
+                    *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
                     *pNode->pExtendedObjectList &= ~7;
                     *pNode->pExtendedObjectList |= nr;
                 }
@@ -615,7 +617,7 @@ static int l_map_setcellflags(lua_State *L)
                     {
                         pNode->pExtendedObjectList = new uint64_t;
                         x = 1;
-                        x |=  thob << 3;
+                        x |=  thob * 8;
                         *pNode->pExtendedObjectList = x;
                     }
                     else
@@ -624,7 +626,7 @@ static int l_map_setcellflags(lua_State *L)
                         int nr = x & 7;
                         nr++;
                         x = (x & (~7)) | nr;
-                        uint64_t orAmount = thob << (3 + ((nr - 1) << 3));
+                        uint64_t orAmount = thob << (3 + (nr - 1) * 8);
                         x |= orAmount;
                        *pNode->pExtendedObjectList = x;
                      }
