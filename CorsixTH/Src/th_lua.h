@@ -356,4 +356,8 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
 
 void luaT_pushtablebool(lua_State *L, const char *k, bool v);
 
+void luaT_printstack(lua_State *L);
+
+void luaT_printrawtable(lua_State *L, int idx);
+
 #endif // CORSIX_TH_TH_LUA_H_

@@ -385,3 +385,64 @@ void luaT_pushtablebool(lua_State *L, const char *k, bool v)
     lua_pushboolean(L, v);
     lua_settable(L, -3);
 }
+
+void luaT_printstack(lua_State* L)
+{
+    int i;
+    int top = lua_gettop(L);
+
+    printf("total items in stack %d\n", top);
+
+    for (i = 1; i <= top; i++)
+    { /* repeat for each level */
+        int t = lua_type(L, i);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            printf("string: '%s'\n", lua_tostring(L, i));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            printf("boolean %s\n", lua_toboolean(L, i) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            printf("number: %g\n", lua_tonumber(L, i));
+            break;
+        default: /* other values */
+            printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        printf(" "); /* put a separator */
+
+    }
+    printf("\n"); /* end the listing */
+}
+
+void luaT_printrawtable(lua_State* L, int idx)
+{
+    int i;
+    int len = static_cast<int>(lua_objlen(L, idx));
+
+    printf("total items in table %d\n", len);
+
+    for (i = 1; i <= len; i++)
+    {
+        lua_rawgeti(L, idx, i);
+        int t = lua_type(L, -1);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            printf("string: '%s'\n", lua_tostring(L, -1));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            printf("boolean %s\n", lua_toboolean(L, -1) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            printf("number: %g\n", lua_tonumber(L, -1));
+            break;
+        default: /* other values */
+            printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        printf(" "); /* put a separator */
+        lua_pop(L, 1);
+    }
+    printf("\n"); /* end the listing */
+}
