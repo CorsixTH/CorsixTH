@@ -13,7 +13,7 @@ You will need the following:
 - Grab the latest release for your system [here](https://github.com/CorsixTH/CorsixTH/releases).
 - We use graphics, sound and other data from the original game so one of the following is required:
  - Original game CD from ebay etc. or your dusty bookshelf:smile:
- - A download from [Good Old Games](http://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
+ - A download from [GOG.com](http://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
 
  Head over to our [getting started](https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started) page for more detail.
  
