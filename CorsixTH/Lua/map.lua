@@ -43,11 +43,11 @@ end
 
 local flag_cache = {}
 function Map:getCellFlag(x, y, flag)
-  return self.th:getCellFlags(x, y, flag_cache)[flag]
+  return self.th:getCellFlags(math.floor(x), math.floor(y), flag_cache)[flag]
 end
 
 function Map:getRoomId(x, y)
-  return self.th:getCellFlags(x, y).roomId
+  return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
 end
 
 function Map:setTemperatureDisplayMethod(method)
@@ -88,7 +88,7 @@ function Map:ScreenToWorld(x, y)
   --  1/64 1/32
   -- -1/64 1/32
   -- And then adjust origin from (0, 0) to (1, 1)
-  y = (y / 32) + 1
+  y = y / 32 + 1
   x = x / 64
   return y + x, y - x
 end

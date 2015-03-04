@@ -565,7 +565,8 @@ local function TableToPixels(t)
   if t[3] == "px" then
     return t[1], t[2]
   else
-    return Map:WorldToScreen(t[1] + 1, t[2] + 1)
+    local x, y = Map:WorldToScreen(t[1] + 1, t[2] + 1)
+    return math.floor(x), math.floor(y)
   end
 end
 
@@ -586,7 +587,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       local x1, y1 = TableToPixels(arg1)
       local x2, y2 = TableToPixels(arg2)
       for i = 0, anim_length - 1 do
-        local n = i / (anim_length - 1)
+        local n = math.floor(i / (anim_length - 1))
         anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
         frame = anims:getNextFrame(frame)
       end
@@ -623,7 +624,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
         end
       end
       if f2 then
-        local n = (f - f1) / (f2 - f1)
+        local n = math.floor((f - f1) / (f2 - f1))
         anims[fn](anims, frame, (x2 - x1) * n + x1, (y2 - y1) * n + y1)
       else
         anims[fn](anims, frame, x1, y1)

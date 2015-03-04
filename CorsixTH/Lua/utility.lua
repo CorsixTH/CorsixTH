@@ -161,9 +161,9 @@ function loadfile_envcall(filename)
   return loadstring_envcall(result, "@".. filename)
 end
 
-if _G._VERSION == "Lua 5.2" then
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
   function loadstring_envcall(contents, chunkname)
-    -- Lua 5.2 lacks setfenv()
+    -- Lua 5.2+ lacks setfenv()
     -- load() still only allows a chunk to have an environment set once, so
     -- we give it an empty environment and use __[new]index metamethods on it
     -- to allow the same effect as changing the actual environment.

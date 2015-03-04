@@ -149,7 +149,7 @@ function UIGraphs:updateLines()
     local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
     local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
     -- Save the starting point for text drawing purposes.
-    local start = top_y + (bottom_y - top_y) - normalized_value + zero_point
+    local start = math.floor(top_y + (bottom_y - top_y) - normalized_value + zero_point)
     text[#text + 1] = {stat = stat, start_y = start, value = value}
     lines[stat].line:moveTo(first_x, start)
   end

@@ -199,7 +199,7 @@ end
 -- y is the y-coordinate of the reputation meter
 function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
   local width = 65 -- Reputation meter width
-  local step = width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min)
+  local step = math.floor(width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min))
   self.panel_sprites:draw(canvas, 36, x_left + step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min), y)
 end
 
@@ -217,10 +217,10 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
         local orange = canvas:mapRGB(221, 83, 0)
         canvas:drawRect(white, x + 165, y + 10*i, 100, 10)
         canvas:drawRect(black, x + 166, y + 1 + 10*i, 98, 8)
-        canvas:drawRect(orange, x + 166, y + 1 + 10*i, 98*info["progress"], 8)
+        canvas:drawRect(orange, x + 166, y + 1 + 10*i, math.floor(98*info["progress"]), 8)
         if info["dividers"] then
           for k, value in ipairs(info["dividers"]) do
-            canvas:drawRect(white, x + 165 + value*100, y + 10*i, 1, 10)
+            canvas:drawRect(white, x + 165 + math.floor(value*100), y + 10*i, 1, 10)
           end
         end
       end
