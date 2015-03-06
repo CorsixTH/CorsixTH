@@ -116,10 +116,10 @@ static int l_anims_getanims(lua_State *L)
     const char *pName = luaL_checkstring(L, 3);
 
     const AnimationStartFrames &oFrames = pAnims->getNamedAnimations(pName, iTileSize);
-    if (oFrames.iNorth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iNorth); }
-    if (oFrames.iEast  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iEast);  }
-    if (oFrames.iSouth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iSouth); }
-    if (oFrames.iWest  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, oFrames.iWest);  }
+    if (oFrames.iNorth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iNorth)); }
+    if (oFrames.iEast  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iEast));  }
+    if (oFrames.iSouth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iSouth)); }
+    if (oFrames.iWest  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iWest));  }
     return 4;
 }
 
@@ -150,7 +150,7 @@ static int l_anims_set_alt_pal(lua_State *L)
     const uint8_t *pPal = luaT_checkfile(L, 3, &iPalLen);
     if(iPalLen != 256)
         return luaL_typerror(L, 3, "GhostPalette string");
-    uint32_t iAlt32 = luaL_checkinteger(L, 4);
+    uint32_t iAlt32 = static_cast<uint32_t>(luaL_checkinteger(L, 4));
 
     pAnims->setAnimationAltPaletteMap(iAnimation, pPal, iAlt32);
 
@@ -454,7 +454,7 @@ template <typename T>
 static int l_anim_set_flag_partial(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    int iFlags = luaL_checkint(L, 2);
+    uint32_t iFlags = luaL_checkint(L, 2);
     if(lua_isnone(L, 3) || lua_toboolean(L, 3))
     {
         pAnimation->setFlags(pAnimation->getFlags() | iFlags);
@@ -471,7 +471,7 @@ template <typename T>
 static int l_anim_make_visible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    pAnimation->setFlags(pAnimation->getFlags() & ~(THDF_Alpha50 | THDF_Alpha75));
+    pAnimation->setFlags(pAnimation->getFlags() & ~static_cast<uint32_t>(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
     return 1;
@@ -481,7 +481,7 @@ template <typename T>
 static int l_anim_make_invisible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    pAnimation->setFlags(pAnimation->getFlags() | THDF_Alpha50 | THDF_Alpha75);
+    pAnimation->setFlags(pAnimation->getFlags() | static_cast<uint32_t>(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
     return 1;

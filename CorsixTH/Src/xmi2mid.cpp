@@ -39,7 +39,7 @@ public:
     {
     }
 
-    MemoryBuffer(const unsigned char* pData, size_t iLength)
+    MemoryBuffer(const uint8_t* pData, size_t iLength)
     {
         m_pData = m_pPointer = (char*)pData;
         m_pEnd = m_pData + iLength;
@@ -52,11 +52,11 @@ public:
             delete[] m_pData;
     }
 
-    unsigned char* takeData(size_t *pLength)
+    uint8_t* takeData(size_t *pLength)
     {
         if(pLength)
             *pLength = m_pEnd - m_pData;
-        unsigned char* pResult = (unsigned char*)m_pData;
+        uint8_t* pResult = (unsigned char*)m_pData;
         m_pData = m_pPointer = m_pEnd = m_pBufferEnd = NULL;
         return pResult;
     }
@@ -197,7 +197,7 @@ protected:
         T swapped = 0;
         for(int i = 0; i < static_cast<int>(sizeof(T)) * 8; i += 8)
         {
-            swapped |= ((value >> i) & 0xFF) << (sizeof(T) * 8 - 8 - i);
+            swapped = static_cast<T>(swapped | ((value >> i) & 0xFF) << (sizeof(T) * 8 - 8 - i));
         }
         return swapped;
     }
@@ -253,7 +253,7 @@ struct midi_token_list_t : std::vector<midi_token_t>
     }
 };
 
-unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
+uint8_t* TranscodeXmiToMid(const unsigned char* pXmiData,
                                  size_t iXmiLength, size_t* pMidLength)
 {
     MemoryBuffer bufInput(pXmiData, iXmiLength);
@@ -352,7 +352,7 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
         return NULL;
     if(!bufOutput.write("MThd\0\0\0\x06\0\0\0\x01", 12))
         return NULL;
-    if(!bufOutput.writeBigEndianUInt16((iTempo * 3) / 25000))
+    if(!bufOutput.writeBigEndianUInt16(static_cast<uint16_t>((iTempo * 3) / 25000)))
         return NULL;
     if(!bufOutput.write("MTrk\xBA\xAD\xF0\x0D", 8))
         return NULL;

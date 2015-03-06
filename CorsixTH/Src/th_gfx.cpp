@@ -88,7 +88,7 @@ public:
     {
         uint16_t iVal = Uint8();
         uint16_t iVal2 = Uint8();
-        return iVal | (iVal2 << 8);
+        return static_cast<uint16_t>(iVal | (iVal2 << 8));
     }
 
     //! Get a signed 16 bit value from the file.
@@ -243,7 +243,7 @@ bool THAnimationManager::loadFromTHFile(
         }
         else
         {
-            iElmNumber += iElementStart;
+            iElmNumber = static_cast<uint16_t>(iElmNumber + iElementStart);
         }
 
         m_vElementList.push_back(iElmNumber);
@@ -261,7 +261,7 @@ bool THAnimationManager::loadFromTHFile(
         oElement.iFlags = pTHElement->flags & 0xF;
         oElement.iX = static_cast<int>(pTHElement->offx) - 141;
         oElement.iY = static_cast<int>(pTHElement->offy) - 186;
-        oElement.iLayer = pTHElement->flags >> 4;
+        oElement.iLayer = static_cast<uint8_t>(pTHElement->flags >> 4); // High nibble, layer of the element.
         if(oElement.iLayer > 12)
             oElement.iLayer = 6; // Nothing lives on layer 6
         oElement.iLayerId = pTHElement->layerid;
@@ -365,11 +365,11 @@ static int loadHeader(Input &input)
     return true;
 }
 
-int THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
-                                     int iNumElements, size_t &iLoadedElements,
-                                     size_t iElementStart, size_t iElementCount)
+size_t THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
+                                        size_t iNumElements, size_t &iLoadedElements,
+                                        size_t iElementStart, size_t iElementCount)
 {
-    int iFirst = iLoadedElements + iElementStart;
+    size_t iFirst = iLoadedElements + iElementStart;
 
     size_t iSpriteCount = pSpriteSheet->getSpriteCount();
     while (iNumElements > 0)
@@ -380,9 +380,9 @@ int THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
         size_t iSprite = input.Uint32();
         int iX = input.Int16();
         int iY = input.Int16();
-        int iLayerClass = input.Uint8();
-        int iLayerId = input.Uint8();
-        int iFlags = input.Uint16();
+        uint8_t iLayerClass = input.Uint8();
+        uint8_t iLayerId = input.Uint8();
+        uint32_t iFlags = input.Uint16();
 
         if (iLayerClass > 12)
             iLayerClass = 6; // Nothing lives on layer 6
@@ -406,12 +406,11 @@ int THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteSheet,
     return iFirst;
 }
 
-int THAnimationManager::makeListElements(int iFirstElement, int iNumElements,
-                                         size_t &iLoadedListElements,
-                                         size_t iListStart,
-                                         size_t iListCount)
+size_t THAnimationManager::makeListElements(size_t iFirstElement, size_t iNumElements,
+                                            size_t &iLoadedListElements,
+                                            size_t iListStart, size_t iListCount)
 {
-    int iFirst = iLoadedListElements + iListStart;
+    size_t iFirst = iLoadedListElements + iListStart;
 
     // Verify there is enough room for all list elements + 0xFFFF
     if (iLoadedListElements + iNumElements + 1 > iListCount)
@@ -420,7 +419,7 @@ int THAnimationManager::makeListElements(int iFirstElement, int iNumElements,
 
     while (iNumElements > 0)
     {
-        m_vElementList.push_back(iFirstElement);
+        m_vElementList.push_back(static_cast<uint16_t>(iFirstElement));
         iLoadedListElements++;
         iFirstElement++;
         iNumElements--;
@@ -445,7 +444,7 @@ static uint32_t shiftFirst(uint32_t iFirst, size_t iLength,
 {
     if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded)
         return 0xFFFFFFFFu;
-    return iFirst + iStart;
+    return iFirst + static_cast<uint32_t>(iStart);
 }
 
 void THAnimationManager::fixNextFrame(uint32_t iFirst, size_t iLength)
@@ -553,25 +552,25 @@ bool THAnimationManager::loadCustomAnimations(const uint8_t* pData, size_t iData
             if (iNorthFirst != 0xFFFFFFFFu)
             {
                 fixNextFrame(iNorthFirst, iNumFrames);
-                oFrames.iNorth = m_vFirstFrames.size();
+                oFrames.iNorth = static_cast<long>(m_vFirstFrames.size());
                 m_vFirstFrames.push_back(iNorthFirst);
             }
             if (iEastFirst != 0xFFFFFFFFu)
             {
                 fixNextFrame(iEastFirst, iNumFrames);
-                oFrames.iEast = m_vFirstFrames.size();
+                oFrames.iEast = static_cast<long>(m_vFirstFrames.size());
                 m_vFirstFrames.push_back(iEastFirst);
             }
             if (iSouthFirst != 0xFFFFFFFFu)
             {
                 fixNextFrame(iSouthFirst, iNumFrames);
-                oFrames.iSouth = m_vFirstFrames.size();
+                oFrames.iSouth = static_cast<long>(m_vFirstFrames.size());
                 m_vFirstFrames.push_back(iSouthFirst);
             }
             if (iWestFirst != 0xFFFFFFFFu)
             {
                 fixNextFrame(iWestFirst, iNumFrames);
-                oFrames.iWest = m_vFirstFrames.size();
+                oFrames.iWest = static_cast<long>(m_vFirstFrames.size());
                 m_vFirstFrames.push_back(iWestFirst);
             }
 
@@ -589,14 +588,14 @@ bool THAnimationManager::loadCustomAnimations(const uint8_t* pData, size_t iData
             if (!input.Available(2+2))
                 return false;
             int iSound = input.Uint16();
-            int iNumElements = input.Uint16();
+            size_t iNumElements = input.Uint16();
 
-            int iElm = loadElements(input, pSheet, iNumElements,
+            size_t iElm = loadElements(input, pSheet, iNumElements,
                                     iLoadedElements, iElementStart, iElementCount);
             if (iElm < 0)
                 return false;
 
-            int iListElm = makeListElements(iElm, iNumElements,
+            size_t iListElm = makeListElements(iElm, iNumElements,
                                             iLoadedListElements, iListStart, iListCount);
             if (iListElm < 0)
                 return false;
@@ -1289,8 +1288,8 @@ static bool THAnimation_isMultipleFrameAnimation(THDrawable* pSelf)
     THAnimation *pAnimation = reinterpret_cast<THAnimation *>(pSelf);
     if(pAnimation)
     {
-        int firstFrame = pAnimation->getAnimationManager()->getFirstFrame(pAnimation->getAnimation());
-        int nextFrame = pAnimation->getAnimationManager()->getNextFrame(firstFrame);
+        size_t firstFrame = pAnimation->getAnimationManager()->getFirstFrame(pAnimation->getAnimation());
+        size_t nextFrame = pAnimation->getAnimationManager()->getNextFrame(firstFrame);
         return nextFrame != firstFrame;
     }
     else

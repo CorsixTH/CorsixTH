@@ -123,7 +123,7 @@ bool THMap::setSize(int iWidth, int iHeight)
 
 // NB: http://connection-endpoint.de/wiki/doku.php?id=format_specification#map
 // gives a (slightly) incorrect array, which is why it differs from this one.
-static const unsigned char gs_iTHMapBlockLUT[256] = {
+static const uint8_t gs_iTHMapBlockLUT[256] = {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
     0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
     0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24,
@@ -148,7 +148,7 @@ static const unsigned char gs_iTHMapBlockLUT[256] = {
     0x00, 0x00, 0x00, 0x00
 };
 
-void THMap::_readTileIndex(const unsigned char* pData, int& iX, int &iY) const
+void THMap::_readTileIndex(const uint8_t* pData, int& iX, int &iY) const
 {
     unsigned int iIndex = static_cast<unsigned int>(pData[1]);
     iIndex = iIndex * 0x100 + static_cast<unsigned int>(pData[0]);
@@ -156,11 +156,11 @@ void THMap::_readTileIndex(const unsigned char* pData, int& iX, int &iY) const
     iY = iIndex / m_iWidth;
 }
 
-void THMap::_writeTileIndex(unsigned char* pData, int iX, int iY) const
+void THMap::_writeTileIndex(uint8_t* pData, int iX, int iY) const
 {
-    unsigned int iIndex = iY * m_iWidth + iX;
-    pData[0] = iIndex & 0xFF;
-    pData[1] = iIndex >> 8;
+    uint16_t iIndex = static_cast<uint16_t>(iY * m_iWidth + iX);
+    pData[0] = static_cast<uint8_t>(iIndex & 0xFF);
+    pData[1] = static_cast<uint8_t>(iIndex >> 8);
 }
 
 bool THMap::loadBlank()
@@ -182,7 +182,7 @@ bool THMap::loadBlank()
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
         {
-            pNode->iBlock[0] = 2 + (iX % 2);
+            pNode->iBlock[0] = static_cast<uint16_t>(2 + (iX % 2));
         }
     }
     m_pPlotOwner = new int[1];
@@ -193,7 +193,7 @@ bool THMap::loadBlank()
     return true;
 }
 
-bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
+bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
                            THMapLoadObjectCallback_t fnObjectCallback,
                            void* pCallbackToken)
 {
@@ -224,7 +224,7 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
         {
-            unsigned char iBaseTile = gs_iTHMapBlockLUT[pData[2]];
+            uint8_t iBaseTile = gs_iTHMapBlockLUT[pData[2]];
             pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS
                 | THMN_CanTravelW;
             if(iX == 0)
@@ -330,21 +330,21 @@ bool THMap::loadFromTHFile(const unsigned char* pData, size_t iDataLength,
     return true;
 }
 
-void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
+void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
               void* pToken)
 {
-    unsigned char aBuffer[256] = {0};
+    uint8_t aBuffer[256] = {0};
     int iBufferNext = 0;
 
     // Header
-    aBuffer[0] = (unsigned char)m_iPlayerCount;
+    aBuffer[0] = static_cast<uint8_t>(m_iPlayerCount);
     // TODO: Determine correct contents for the next 33 bytes
     fnWriter(pToken, aBuffer, 34);
 
-    unsigned char aReverseBlockLUT[256] = {0};
+    uint8_t aReverseBlockLUT[256] = {0};
     for(int i = 0; i < 256; ++i)
     {
-        aReverseBlockLUT[gs_iTHMapBlockLUT[i]] = i;
+        aReverseBlockLUT[gs_iTHMapBlockLUT[i]] = static_cast<uint8_t>(i);
     }
     aReverseBlockLUT[0] = 0;
 
@@ -353,7 +353,7 @@ void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
     {
         // TODO: Nicer system for saving object data
         aBuffer[iBufferNext++] = (pNode->iFlags & THMN_TallWest) != 0 ? 1 : 0;
-        aBuffer[iBufferNext++] = pNode->iFlags >> 24;
+        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iFlags >> 24);
 
         // Blocks
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
@@ -361,7 +361,7 @@ void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[2] & 0xFF];
 
         // Flags (TODO: Set a few more flag bits?)
-        unsigned char iFlags = 63;
+        uint8_t iFlags = 63;
         if(pNode->iFlags & THMN_Passable)
             iFlags ^= 1;
         if(pNode->iFlags & THMN_Buildable)
@@ -392,8 +392,8 @@ void THMap::save(void (*fnWriter)(void*, const unsigned char*, size_t),
     for(THMapNode *pNode = m_pCells, *pLastNode = pNode + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        aBuffer[iBufferNext++] = pNode->iParcelId & 0xFF;
-        aBuffer[iBufferNext++] = pNode->iParcelId >> 8;
+        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId & 0xFF);
+        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
         if(iBufferNext == sizeof(aBuffer))
         {
             fnWriter(pToken, aBuffer, sizeof(aBuffer));
@@ -446,7 +446,7 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
                 else
                 {
                     // Nicely mown grass pattern
-                    pNode->iBlock[0] = ((iX & 1) << 1) + 1;
+                    pNode->iBlock[0] = static_cast<uint16_t>(((iX & 1) << 1) + 1);
 
                     pNode->iBlock[1] = 0;
                     pNode->iBlock[2] = 0;
@@ -456,7 +456,7 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
                     if(((iX | iY) & 0x7) == 0)
                     {
                         int iWhich = (iX ^ iY) % 9;
-                        pNode->iBlock[1] = 192 + iWhich;
+                        pNode->iBlock[1] = static_cast<uint16_t>(192 + iWhich);
                     }
                 }
             }
@@ -689,22 +689,22 @@ void THMap::setBlockSheet(THSpriteSheet* pSheet)
     m_pBlocks = pSheet;
 }
 
-void THMap::setAllWallDrawFlags(unsigned char iFlags)
+void THMap::setAllWallDrawFlags(uint8_t iFlags)
 {
-    uint16_t iBlockOr = static_cast<uint16_t>(iFlags) << 8;
+    uint16_t iBlockOr = static_cast<uint16_t>(iFlags << 8);
     THMapNode *pNode = m_pCells;
     for(int i = 0; i < m_iWidth * m_iHeight; ++i, ++pNode)
     {
-        pNode->iBlock[1] = (pNode->iBlock[1] & 0xFF) | iBlockOr;
-        pNode->iBlock[2] = (pNode->iBlock[2] & 0xFF) | iBlockOr;
+        pNode->iBlock[1] = static_cast<uint16_t>((pNode->iBlock[1] & 0xFF) | iBlockOr);
+        pNode->iBlock[2] = static_cast<uint16_t>((pNode->iBlock[2] & 0xFF) | iBlockOr);
     }
 }
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
 {
     // The intersection of the rectangles is the higher of the lower bounds and the lower of the higher bounds, clamped to a zero size.
-    THClipRect::xy_t maxX = std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w);
-    THClipRect::xy_t maxY = std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h);
+    THClipRect::xy_t maxX = static_cast<uint16_t>(std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w));
+    THClipRect::xy_t maxY = static_cast<uint16_t>(std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h));
     rcClip.x = std::max(rcClip.x, rcIntersect.x);
     rcClip.y = std::max(rcClip.y, rcIntersect.y);
     rcClip.w = maxX - rcClip.x;
@@ -1106,7 +1106,8 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
 
                for(int i = 0; i < nr; i++)
                {
-                   int thob = (*pNode->pExtendedObjectList & (255 << (3  + (i << 3)))) >> (3 + (i << 3));
+                   int shift_len = 3 + i * 8;
+                   int thob = (*pNode->pExtendedObjectList >> shift_len) & 255;
                    if(thob == THOB_Radiator)
                        iRadiatorNumber++;
                }
@@ -1380,22 +1381,22 @@ void THMap::depersist(LuaPersistReader *pReader)
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        pNode->iBlock[0] = oDecoder.read();
-        pNode->iBlock[1] = oDecoder.read();
-        pNode->iBlock[2] = oDecoder.read();
-        pNode->iBlock[3] = oDecoder.read();
-        pNode->iParcelId = oDecoder.read();
-        pNode->iRoomId = oDecoder.read();
+        pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iBlock[3] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
+        pNode->iRoomId   = static_cast<uint16_t>(oDecoder.read());
     }
     oDecoder.initialise(5, pReader);
     for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        pNode->iBlock[0] = oDecoder.read();
-        pNode->iBlock[1] = oDecoder.read();
-        pNode->iBlock[2] = oDecoder.read();
-        pNode->iParcelId = oDecoder.read();
-        pNode->iFlags = oDecoder.read();
+        pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
+        pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
+        pNode->iFlags    = oDecoder.read();
     }
 
     if(iVersion < 3)

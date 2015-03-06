@@ -30,7 +30,7 @@ SOFTWARE.
 
 static unsigned int utf8next(const char*& sString)
 {
-    unsigned int iCode = *reinterpret_cast<const unsigned char*>(sString++);
+    unsigned int iCode = *reinterpret_cast<const uint8_t*>(sString++);
     unsigned int iContinuation;
     if(iCode & 0x80)
     {
@@ -43,7 +43,7 @@ static unsigned int utf8next(const char*& sString)
         else
         {
 #define CONTINUATION_CHAR \
-    iContinuation = *reinterpret_cast<const unsigned char*>(sString); \
+    iContinuation = *reinterpret_cast<const uint8_t*>(sString); \
     if((iContinuation & 0xC0) != 0x80) \
         /* Invalid encoding: not enough continuation characters. */ \
         return 0xFFFD; \
@@ -180,7 +180,7 @@ void THBitmapFont::getTextSize(const char* sMessage, size_t iMessageLength, int*
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = m_pSpriteSheet->getSpriteCount() + iFirstASCII;
+        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
         iX = -m_iCharSep;
 
@@ -210,7 +210,7 @@ void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = m_pSpriteSheet->getSpriteCount() + iFirstASCII;
+        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
 
         while(sMessage != sMessageEnd)
@@ -238,7 +238,7 @@ int THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
     if(iMessageLength != 0 && m_pSpriteSheet != NULL)
     {
         const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = m_pSpriteSheet->getSpriteCount() + iFirstASCII;
+        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
 
         while(sMessage != sMessageEnd)
@@ -377,7 +377,7 @@ void THFreeTypeFont::clearCache()
     }
 }
 
-FT_Error THFreeTypeFont::setFace(const unsigned char* pData, size_t iLength)
+FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
 {
     int iError;
     if(ms_pFreeType == NULL)
@@ -678,8 +678,8 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         }
         if(iPriorLinesHeight > 0)
             iPriorLinesHeight -= iLineSpacing;
-        pEntry->iHeight = 1 + (iPriorLinesHeight >> 6);
-        pEntry->iWidestLine = 1 + (iWidestLine >> 6);
+        pEntry->iHeight = static_cast<int>(1 + (iPriorLinesHeight >> 6));
+        pEntry->iWidestLine = static_cast<int>(1 + (iWidestLine >> 6));
         if(iWidth == INT_MAX)
             pEntry->iWidth = pEntry->iWidestLine;
         pEntry->iLastX = 1 + (static_cast<int>(iLineWidth + iAlignDelta) >> 6);
@@ -695,7 +695,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         }
 
         // Prepare a canvas for rendering.
-        pEntry->pData = new unsigned char[pEntry->iWidth * pEntry->iHeight];
+        pEntry->pData = new uint8_t[pEntry->iWidth * pEntry->iHeight];
         memset(pEntry->pData, 0, pEntry->iWidth * pEntry->iHeight);
 
         // Render each character to the canvas.
@@ -751,8 +751,8 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
 
 void THFreeTypeFont::_renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const
 {
-    unsigned char* pOutRow = pCacheEntry->pData + y * pCacheEntry->iWidth + x;
-    unsigned char* pInRow = pBitmap->buffer;
+    uint8_t* pOutRow = pCacheEntry->pData + y * pCacheEntry->iWidth + x;
+    uint8_t* pInRow = pBitmap->buffer;
     for(int iY = 0; iY < pBitmap->rows; ++iY, pOutRow += pCacheEntry->iWidth,
         pInRow += pBitmap->pitch)
     {
@@ -762,8 +762,8 @@ void THFreeTypeFont::_renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap,
         if(y + iY >= pCacheEntry->iHeight)
             break;
 #endif
-        unsigned char *pIn = pInRow, *pOut = pOutRow;
-        unsigned char iMask = 0x80;
+        uint8_t *pIn = pInRow, *pOut = pOutRow;
+        uint8_t iMask = 0x80;
         for(int iX = 0; iX < pBitmap->width; ++iX, ++pOut)
         {
 #ifndef TRUST_RENDER_COORDS
@@ -774,7 +774,7 @@ void THFreeTypeFont::_renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap,
 #endif
             if(*pIn & iMask)
                 *pOut = 0xFF;
-            iMask >>= 1;
+            iMask  = static_cast<uint8_t>(iMask / 2);
             if(iMask == 0)
             {
                 iMask = 0x80;
@@ -786,8 +786,8 @@ void THFreeTypeFont::_renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap,
 
 void THFreeTypeFont::_renderGray(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const
 {
-    unsigned char* pOutRow = pCacheEntry->pData + y * pCacheEntry->iWidth + x;
-    unsigned char* pInRow = pBitmap->buffer;
+    uint8_t* pOutRow = pCacheEntry->pData + y * pCacheEntry->iWidth + x;
+    uint8_t* pInRow = pBitmap->buffer;
     for(int iY = 0; iY < pBitmap->rows; ++iY, pOutRow += pCacheEntry->iWidth,
         pInRow += pBitmap->pitch)
     {
@@ -797,7 +797,7 @@ void THFreeTypeFont::_renderGray(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap,
         if(y + iY >= pCacheEntry->iHeight)
             break;
 #endif
-        unsigned char *pIn = pInRow, *pOut = pOutRow;
+        uint8_t *pIn = pInRow, *pOut = pOutRow;
         for(int iX = 0; iX < pBitmap->width; ++iX, ++pIn, ++pOut)
         {
 #ifndef TRUST_RENDER_COORDS
@@ -808,8 +808,7 @@ void THFreeTypeFont::_renderGray(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap,
 #endif
             unsigned int iIn = *pIn;
             unsigned int iOut = *pOut;
-            unsigned char cMerged = static_cast<unsigned char>(
-                iIn + iOut - (iIn * iOut) / 255);
+            uint8_t cMerged = static_cast<uint8_t>(iIn + iOut - (iIn * iOut) / 255);
             *pOut = cMerged;
         }
     }

@@ -59,7 +59,7 @@ static inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, u
     // 0.7152 * 65536 = 46871.3472
     // 0.0722 * 65536 =  4731.6992 -> 4732
     // 13933 + 46871 + 4732 = 65536 = 2**16
-    uint8_t iGrey = (13933 * iR + 46871 * iG + 4732 * iB) >> 16;
+    uint8_t iGrey = static_cast<uint8_t>((13933 * iR + 46871 * iG + 4732 * iB) >> 16);
     return THPalette::packARGB(iOpacity, iGrey, iGrey, iGrey);
 }
 
@@ -78,11 +78,11 @@ static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     // Simple swapping channels will thus distort the balance. This code compensates for that by computing
     // red  = blue * 0.0722 / 0.2126 = blue * 1083 / 3189
     // blue = red  * 0.2126 / 0.0722 = red  * 1063 / 361 (clipped at max blue, 255)
-    uint8_t iNewRed = iB * 1083 / 3189;
+    uint8_t iNewRed = static_cast<uint8_t>(iB * 1083 / 3189);
     int iNewBlue = iR * 1063 / 361;
     if (iNewBlue > 255)
         iNewBlue = 255;
-    return THPalette::packARGB(iOpacity, iNewRed, iG, iNewBlue);
+    return THPalette::packARGB(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
 }
 
 bool FullColourRenderer::decodeImage(const uint8_t* pImg, const THPalette *pPalette, uint32_t iSpriteFlags)
@@ -327,7 +327,7 @@ void THRenderTarget::destroy()
     }
 }
 
-bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
+bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
@@ -351,8 +351,8 @@ bool THRenderTarget::setScaleFactor(float fScale, THScaledItems eWhatToScale)
         //Draw everything from now until the next scale to m_pZoomTexture
         //with the appropriate virtual size, which will be copied scaled to
         //fit the window.
-        float virtWidth = static_cast<float>(m_iWidth) / fScale;
-        float virtHeight = static_cast<float>(m_iHeight) / fScale;
+        int virtWidth = static_cast<int>(m_iWidth / fScale);
+        int virtHeight = static_cast<int>(m_iHeight / fScale);
 
         m_pZoomTexture = SDL_CreateTexture(m_pRenderer,
                                            SDL_PIXELFORMAT_ABGR8888,
@@ -416,7 +416,7 @@ bool THRenderTarget::endFrame()
     if(m_bBlueFilterActive)
     {
         SDL_SetRenderDrawBlendMode(m_pRenderer, SDL_BLENDMODE_BLEND);
-        SDL_SetRenderDrawColor(m_pRenderer, 255*0.2f, 255*0.2f, 255*1.0f, 255*0.5f);
+        SDL_SetRenderDrawColor(m_pRenderer, 51, 51, 255, 128); // r=0.2, g=0.2, b=1, a=0.5 .
         SDL_RenderFillRect(m_pRenderer, NULL);
     }
 
@@ -556,7 +556,7 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
 }
 
 
-bool THRenderTarget::shouldScaleBitmaps(float* pFactor)
+bool THRenderTarget::shouldScaleBitmaps(double* pFactor)
 {
     if(!m_bShouldScaleBitmaps)
         return false;
@@ -599,7 +599,7 @@ static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelData
     while (iPixelDataLength > 0)
     {
         size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
-        *pDest++ = iLength + 0xC0; // Recolour layer type of block.
+        *pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
         *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
         *pDest++ = 0xFF; // Non-transparent.
         memcpy(pDest, pPixelData, iLength);
@@ -632,7 +632,7 @@ SDL_Texture* THRenderTarget::createTexture(int iWidth, int iHeight,
                                            const uint32_t* pPixels) const
 {
     SDL_Texture *pTexture = SDL_CreateTexture(m_pRenderer, m_pFormat->format, SDL_TEXTUREACCESS_STATIC, iWidth, iHeight);
-    SDL_UpdateTexture(pTexture, NULL, pPixels, sizeof(*pPixels) * iWidth);
+    SDL_UpdateTexture(pTexture, NULL, pPixels, static_cast<int>(sizeof(*pPixels) * iWidth));
     SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
     SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
     SDL_SetTextureAlphaMod(pTexture, 0xFF);
@@ -677,7 +677,10 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
     THLine::THLineOperation* op = (THLine::THLineOperation*)(pLine->m_pFirstOp->m_pNext);
     while (op) {
         if (op->type == THLine::THLOP_LINE) {
-            SDL_RenderDrawLine(m_pRenderer, lastX + iX, lastY + iY, op->m_fX + iX, op->m_fY + iY);
+            SDL_RenderDrawLine(m_pRenderer, static_cast<int>(lastX + iX),
+                                            static_cast<int>(lastY + iY),
+                                            static_cast<int>(op->m_fX + iX),
+                                            static_cast<int>(op->m_fY + iY));
         }
 
         lastX = op->m_fX;
@@ -867,7 +870,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY)
 void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
                        int iSrcX, int iSrcY, int iWidth, int iHeight)
 {
-    float fScaleFactor;
+    double fScaleFactor;
     if (m_pTexture == NULL)
         return;
 
@@ -879,7 +882,7 @@ void THRawBitmap::draw(THRenderTarget* pCanvas, int iX, int iY,
     const SDL_Rect rcSrc  = { iSrcX, iSrcY, iWidth, iHeight };
     const SDL_Rect rcDest = { iX,
                               iY,
-                              static_cast<int>(iWidth * fScaleFactor),
+                              static_cast<int>(iWidth  * fScaleFactor),
                               static_cast<int>(iHeight * fScaleFactor) };
 
     pCanvas->draw(m_pTexture, &rcSrc, &rcDest, 0);

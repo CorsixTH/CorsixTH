@@ -1233,7 +1233,7 @@ static int l_dump_toplevel(lua_State *L)
 static int l_load_toplevel(lua_State *L)
 {
     size_t iDataLength;
-    const unsigned char *pData = luaT_checkfile(L, 1, &iDataLength);
+    const uint8_t *pData = luaT_checkfile(L, 1, &iDataLength);
     luaL_checktype(L, 2, LUA_TTABLE);
     lua_settop(L, 2);
     lua_pushvalue(L, 1);

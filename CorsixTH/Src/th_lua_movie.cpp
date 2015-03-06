@@ -71,7 +71,11 @@ static int l_movie_play(lua_State *L)
     const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->clearLastError();
-    pMovie->play(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6));
+    pMovie->play(static_cast<int>(luaL_checkinteger(L, 2)),
+                 static_cast<int>(luaL_checkinteger(L, 3)),
+                 static_cast<int>(luaL_checkinteger(L, 4)),
+                 static_cast<int>(luaL_checkinteger(L, 5)),
+                 static_cast<int>(luaL_checkinteger(L, 6)));
     warning = pMovie->getLastError();
     lua_pushstring(L, warning);
     return 1;

@@ -126,8 +126,8 @@ struct THDrawable : public THLinkList
     */
     bool (*m_fnHitTest)(THDrawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY);
 
-    //! Drawing flags (zero or more list flags from THDrawFlags)
-    unsigned long m_iFlags;
+    //! Drawing flags (zero or more list flags from #THDrawFlags).
+    uint32_t m_iFlags;
 
     /** Returns true if instance is a multiple frame animation.
         Should be overloaded in derived class.
@@ -231,10 +231,10 @@ inline bool operator<(const AnimationKey &oK, const AnimationKey &oL)
  */
 struct AnimationStartFrames
 {
-    int iNorth; ///< Animation start frame for the 'north' view.
-    int iEast;  ///< Animation start frame for the 'east' view.
-    int iSouth; ///< Animation start frame for the 'south' view.
-    int iWest;  ///< Animation start frame for the 'west' view.
+    long iNorth; ///< Animation start frame for the 'north' view.
+    long iEast;  ///< Animation start frame for the 'east' view.
+    long iSouth; ///< Animation start frame for the 'south' view.
+    long iWest;  ///< Animation start frame for the 'west' view.
 };
 
 /** Map holding the custom animations. */
@@ -466,9 +466,9 @@ protected:
         @param iElementCount Number of elements to load.
         @return Index of the first loaded element in #m_vElements. Negative value means failure.
      */
-    int loadElements(Input &input, THSpriteSheet *pSpriteheet,
-                     int iNumElements, size_t &iLoadedElements,
-                     size_t iElementStart, size_t iElementCount);
+    size_t loadElements(Input &input, THSpriteSheet *pSpriteheet,
+                        size_t iNumElements, size_t &iLoadedElements,
+                        size_t iElementStart, size_t iElementCount);
 
     //! Construct a list element for every element, and a 0xFFFF at the end.
     /*!
@@ -479,9 +479,9 @@ protected:
         @param iListCount Expected number of list elements to create.
         @return Index of the list elements, or a negative value to indicate failure.
      */
-    int makeListElements(int iFirstElement, int iNumElements,
-                         size_t &iLoadedListElements,
-                         size_t iListStart, size_t iListCount);
+    size_t makeListElements(size_t iFirstElement, size_t iNumElements,
+                            size_t &iLoadedListElements,
+                            size_t iListStart, size_t iListCount);
 
     //! Fix the flags of the first frame, and set the next frame of the last frame back to the first frame.
     /*!
@@ -500,11 +500,11 @@ public:
     void removeFromTile();
     void attachToTile(THMapNode *pMapNode, int layer);
 
-    unsigned long getFlags() const {return m_iFlags;}
+    uint32_t getFlags() const {return m_iFlags;}
     int getX() const {return m_iX;}
     int getY() const {return m_iY;}
 
-    void setFlags(unsigned long iFlags) {m_iFlags = iFlags;}
+    void setFlags(uint32_t iFlags) {m_iFlags = iFlags;}
     void setPosition(int iX, int iY) {m_iX = iX, m_iY = iY;}
     void setLayer(int iLayer, int iId);
     void setLayersFrom(const THAnimationBase *pSrc) {m_oLayers = pSrc->m_oLayers;}
@@ -538,10 +538,10 @@ public:
     bool hitTestChild(int iDestX, int iDestY, int iTestX, int iTestY);
 
     THLinkList* getPrevious() {return m_pPrev;}
-    unsigned int getAnimation() const {return m_iAnimation;}
+    size_t getAnimation() const {return m_iAnimation;}
     bool getMarker(int* pX, int* pY);
     bool getSecondaryMarker(int* pX, int* pY);
-    unsigned int getFrame() const {return m_iFrame;}
+    size_t getFrame() const {return m_iFrame;}
     int getCropColumn() const {return m_iCropColumn;}
 
     void setAnimation(THAnimationManager* pManager, size_t iAnimation);
@@ -558,8 +558,8 @@ public:
 protected:
     THAnimationManager *m_pManager;
     THAnimation* m_pMorphTarget;
-    unsigned int m_iAnimation;
-    unsigned int m_iFrame;
+    size_t m_iAnimation; ///< Animation number.
+    size_t m_iFrame;     ///< Frame number.
     union { struct {
         //! Amount to change m_iX per tick
         int m_iSpeedX;
@@ -571,7 +571,7 @@ protected:
         THAnimation* m_pParent;
     };
 
-    unsigned int m_iSoundToPlay;
+    size_t m_iSoundToPlay;
     int m_iCropColumn;
 };
 
@@ -597,7 +597,7 @@ public:
 protected:
     struct _sprite_t
     {
-        unsigned int iSprite;
+        size_t iSprite;
         int iX;
         int iY;
     };

@@ -187,8 +187,13 @@ public: // External API
     //! Take a screenshot and save it as a bitmap
     bool takeScreenshot(const char* sFile);
 
-    //! Set the amount by which future draw operations are scaled
-    bool setScaleFactor(float fScale, THScaledItems eWhatToScale);
+    //! Set the amount by which future draw operations are scaled.
+    /*!
+        @param fScale New scale to use.
+        @param eWhatToScale Th kind of items to scale.
+        @return Whether the scale could be set.
+     */
+    bool setScaleFactor(double fScale, THScaledItems eWhatToScale);
 
     //! Set the window caption
     void setCaption(const char* sCaption);
@@ -202,7 +207,15 @@ public: // External API
 
 public: // Internal (this rendering engine only) API
     SDL_Renderer *getRenderer() const { return m_pRenderer; }
-    bool shouldScaleBitmaps(float* pFactor);
+
+    //! Should bitmaps be scaled?
+    /*!
+        @param [out] pFactor If the function returns \c true, the factor to use
+            for scaling (can be \c NULL if not interested in the value).
+        @return Whether bitmaps should be scaled.
+     */
+    bool shouldScaleBitmaps(double* pFactor);
+
     SDL_Texture* createPalettizedTexture(int iWidth, int iHeight, const uint8_t* pPixels,
                                          const THPalette* pPalette, uint32_t iSpriteFlags) const;
     SDL_Texture* createTexture(int iWidth, int iHeight, const uint32_t* pPixels) const;
@@ -216,12 +229,12 @@ protected:
     SDL_PixelFormat *m_pFormat;
     bool m_bBlueFilterActive;
     THCursor* m_pCursor;
-    float m_fBitmapScaleFactor;
+    double m_fBitmapScaleFactor; ///< Bitmap scale factor.
     int m_iWidth;
     int m_iHeight;
     int m_iCursorX;
     int m_iCursorY;
-    bool m_bShouldScaleBitmaps;
+    bool m_bShouldScaleBitmaps; ///< Whether bitmaps should be scaled.
     bool m_bSupportsTargetTextures;
 
     void _flushZoomBuffer();

@@ -22,8 +22,8 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_PERSIST_LUA_H_
 #define CORSIX_TH_PERSIST_LUA_H_
-#include "th_lua.h"
 #include "config.h"
+#include "th_lua.h"
 #include <stdlib.h>
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
@@ -136,12 +136,12 @@ public:
                 return false;
             if(iByte & 0x80)
             {
-                tTemp |= (iByte & 0x7F);
-                tTemp <<= 7;
+                tTemp = static_cast<T>(tTemp | (iByte & 0x7F));
+                tTemp = static_cast<T>(tTemp << 7);
             }
             else
             {
-                tTemp |= iByte;
+                tTemp = static_cast<T>(tTemp | iByte);
                 break;
             }
         }
@@ -159,7 +159,7 @@ public:
         if(tWrittenValue & 1)
             tValue = (-(T)(tWrittenValue >> 1)) - 1;
         else
-            tValue = (T)(tWrittenValue >> 1);
+            tValue = static_cast<T>(tWrittenValue >> 1);
         return true;
     }
 

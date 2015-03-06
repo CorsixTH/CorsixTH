@@ -22,6 +22,7 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_H_
 #define CORSIX_TH_TH_H_
+#include "config.h"
 #include <stddef.h>
 
 //! Generic linked list class (for inheriting from)
@@ -47,13 +48,13 @@ public:
     THStringList();
     ~THStringList();
 
-    bool loadFromTHFile(const unsigned char* pData, size_t iDataLength);
+    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength);
 
     //! Get the number of sections in the string list
-    unsigned int getSectionCount();
+    size_t getSectionCount();
 
     //! Get the number of strings in a section of the string list
-    unsigned int getSectionSize(unsigned int iSection);
+    size_t getSectionSize(size_t iSection);
 
     //! Get a string from the string list
     /*!
@@ -61,23 +62,23 @@ public:
         @param iIndex String index in range [0, getSectionSize(iSection) - 1]
         @return NULL if the index is invalid, otherwise a UTF-8 encoded string.
     */
-    const char* getString(unsigned int iSection, unsigned int iIndex);
+    const char* getString(size_t iSection, size_t iIndex);
 
 protected:
     struct section_t
     {
         //! Size of pStrings array
-        unsigned int iSize;
+        size_t iSize;
         //! Array of string pointers (into THStringList::m_sData)
         const char** pStrings;
     };
 
     //! Size of m_pSections array
-    unsigned int m_iSectionCount;
+    size_t m_iSectionCount;
     //! Section information
     section_t* m_pSections;
     //! Memory block containing all the actual strings
-    unsigned char* m_sData;
+    uint8_t* m_sData;
 };
 
 #endif // CORSIX_TH_TH_H_

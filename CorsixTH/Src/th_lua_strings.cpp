@@ -55,7 +55,7 @@ struct THStringProxy_t {};
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
-unsigned char g_aStringDummyGlobals[2] = {0};
+uint8_t g_aStringDummyGlobals[2] = {0};
 
 static inline void aux_push_weak_table(lua_State *L, int iIndex)
 {
