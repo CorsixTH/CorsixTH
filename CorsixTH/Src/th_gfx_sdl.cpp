@@ -290,7 +290,7 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
         SDL_GetRendererInfo(m_pRenderer, &info);
     }
 
-    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE);
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
 
     if (bCreateRenderer || bUpdateSize)
     {

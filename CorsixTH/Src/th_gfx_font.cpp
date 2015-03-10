@@ -393,7 +393,7 @@ FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
             return iError;
         m_pFace = NULL;
     }
-    iError = FT_New_Memory_Face(ms_pFreeType, pData, iLength, 0, &m_pFace);
+    iError = FT_New_Memory_Face(ms_pFreeType, pData, static_cast<FT_Long>(iLength), 0, &m_pFace);
     return iError;
 }
 

@@ -237,7 +237,8 @@ static int l_soundfx_play(lua_State *L)
             m_iPlayedSoundCallbackIDsPointer = 0;
 
         m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer] = luaL_checkint(L, 6);
-        SDL_TimerID timersID = SDL_AddTimer(pArchive->getSoundDuration(iIndex) + iPlayedCallbackDelay,
+        size_t interval = pArchive->getSoundDuration(iIndex) + iPlayedCallbackDelay;
+        SDL_TimerID timersID = SDL_AddTimer(static_cast<Uint32>(interval),
                                             played_sound_callback,
                                             &(m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer]));
         m_mapSoundTimers.insert(std::pair<int, SDL_TimerID>(m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer], timersID));
