@@ -17,7 +17,7 @@ You will need the following:
 
  Head over to our [getting started](https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started) page for more detail.
  
-## Developers 
+## Developers
 ### Coders and non-coders we want you!
 
 We are always looking for help with improving CorsixTH. The code base is made up of LUA and C++ (with a little C added in for fun) however most of the game logic is written in LUA, we love LUA and the nature that its approachable and easy to pickup so hit fork and get started!. But don't worry if you don't code as we can always use in other areas and if you have ideas for the project please contact us!
@@ -42,4 +42,4 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 - CorsixTH forums located [here](http://forums.corsixth.com/)
 - Follow us on twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)) and on [Facebook](https://facebook.com/CorsixTH)
 - IRC #Corsix-TH on irc.freenode.net
-- Subscribe to our [Goggle Developer group](http://groups.google.com/group/corsix-th-dev)
+- Subscribe to our [Google Developer group](http://groups.google.com/group/corsix-th-dev)
