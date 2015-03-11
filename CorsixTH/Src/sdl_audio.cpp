@@ -60,10 +60,10 @@ static void audio_music_over_callback()
 
 static int l_init(lua_State *L)
 {
-    if(Mix_OpenAudio(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY),
+    if(Mix_OpenAudio(static_cast<int>(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY)),
         MIX_DEFAULT_FORMAT,
-        luaL_optinteger(L, 2, MIX_DEFAULT_CHANNELS),
-        luaL_optinteger(L, 3, 2048) /* chunk size */) != 0)
+        static_cast<int>(luaL_optinteger(L, 2, MIX_DEFAULT_CHANNELS)),
+        static_cast<int>(luaL_optinteger(L, 3, 2048)) /* chunk size */) != 0)
     {
         lua_pushboolean(L, 0);
         lua_pushstring(L, Mix_GetError());
@@ -254,7 +254,7 @@ static int l_music_volume(lua_State *L)
 static int l_play_music(lua_State *L)
 {
     music_t* pLMusic = luaT_testuserdata<music_t>(L, -1);
-    if(Mix_PlayMusic(pLMusic->pMusic, luaL_optinteger(L, 2, 1)) != 0)
+    if(Mix_PlayMusic(pLMusic->pMusic, static_cast<int>(luaL_optinteger(L, 2, 1))) != 0)
     {
         lua_pushnil(L);
         lua_pushstring(L, Mix_GetError());

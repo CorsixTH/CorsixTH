@@ -47,7 +47,7 @@ static int l_palette_load(lua_State *L)
 static int l_palette_set_entry(lua_State *L)
 {
     THPalette* pPalette = luaT_testuserdata<THPalette>(L);
-    lua_pushboolean(L, pPalette->setEntry(luaL_checkinteger(L, 2),
+    lua_pushboolean(L, pPalette->setEntry(static_cast<int>(luaL_checkinteger(L, 2)),
         static_cast<uint8_t>(luaL_checkinteger(L, 3)),
         static_cast<uint8_t>(luaL_checkinteger(L, 4)),
         static_cast<uint8_t>(luaL_checkinteger(L, 5)))
@@ -77,7 +77,7 @@ static int l_rawbitmap_load(lua_State *L)
     THRawBitmap* pBitmap = luaT_testuserdata<THRawBitmap>(L);
     size_t iDataLen;
     const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
-    int iWidth = luaL_checkinteger(L, 3);
+    int iWidth = static_cast<int>(luaL_checkinteger(L, 3));
     THRenderTarget* pSurface = luaT_testuserdata<THRenderTarget>(L, 4, luaT_upvalueindex(1), false);
 
     if(pBitmap->loadFromTHFile(pData, iDataLen, iWidth, pSurface))
@@ -95,12 +95,12 @@ static int l_rawbitmap_draw(lua_State *L)
 
     if(lua_gettop(L) >= 8)
     {
-        pBitmap->draw(pCanvas, luaL_checkinteger(L, 3), luaL_checkinteger(L, 4),
-            luaL_checkinteger(L, 5), luaL_checkinteger(L, 6), luaL_checkinteger(L, 7),
-            luaL_checkinteger(L, 8));
+        pBitmap->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)),
+            static_cast<int>(luaL_checkinteger(L, 5)), static_cast<int>(luaL_checkinteger(L, 6)), static_cast<int>(luaL_checkinteger(L, 7)),
+            static_cast<int>(luaL_checkinteger(L, 8)));
     }
     else
-        pBitmap->draw(pCanvas, luaL_optinteger(L, 3, 0), luaL_optinteger(L, 4, 0));
+        pBitmap->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)), static_cast<int>(luaL_optinteger(L, 4, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -167,9 +167,9 @@ static int l_spritesheet_draw(lua_State *L)
 {
     THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
-    int iSprite = luaL_checkinteger(L, 3); // No array adjustment
+    int iSprite = static_cast<int>(luaL_checkinteger(L, 3)); // No array adjustment
 
-    pSheet->drawSprite(pCanvas, iSprite, luaL_optinteger(L, 4, 0), luaL_optinteger(L, 5, 0), luaL_optinteger(L, 6, 0));
+    pSheet->drawSprite(pCanvas, iSprite, static_cast<int>(luaL_optinteger(L, 4, 0)), static_cast<int>(luaL_optinteger(L, 5, 0)), static_cast<int>(luaL_optinteger(L, 6, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -179,9 +179,9 @@ static int l_spritesheet_hittest(lua_State *L)
 {
     THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L);
     size_t iSprite = luaL_checkinteger(L, 2);
-    int iX = luaL_checkinteger(L, 3);
-    int iY = luaL_checkinteger(L, 4);
-    uint32_t iFlags = luaL_optinteger(L, 5, 0);
+    int iX = static_cast<int>(luaL_checkinteger(L, 3));
+    int iY = static_cast<int>(luaL_checkinteger(L, 4));
+    uint32_t iFlags = static_cast<uint32_t>(luaL_optinteger(L, 5, 0));
     return pSheet->hitTestSprite(iSprite, iX, iY, iFlags);
 }
 
@@ -227,7 +227,7 @@ static int l_bitmap_font_set_sep(lua_State *L)
 {
     THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
 
-    pFont->setSeparation(luaL_checkinteger(L, 2), luaL_optinteger(L, 3, 0));
+    pFont->setSeparation(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_optinteger(L, 3, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -323,8 +323,8 @@ static int l_font_draw(lua_State *L)
     }
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-    int iX = luaL_checkinteger(L, 4);
-    int iY = luaL_checkinteger(L, 5);
+    int iX = static_cast<int>(luaL_checkinteger(L, 4));
+    int iY = static_cast<int>(luaL_checkinteger(L, 5));
     eTHAlign eAlign = Align_Center;
     if(!lua_isnoneornil(L, 8))
     {
@@ -346,8 +346,8 @@ static int l_font_draw(lua_State *L)
     pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
     if(!lua_isnoneornil(L, 7))
     {
-        int iW = luaL_checkinteger(L, 6);
-        int iH = luaL_checkinteger(L, 7);
+        int iW = static_cast<int>(luaL_checkinteger(L, 6));
+        int iH = static_cast<int>(luaL_checkinteger(L, 7));
         if(iW > iWidth && eAlign != Align_Left)
             iX += (iW - iWidth) / ((eAlign == Align_Center) ? 2 : 1);
         if(iH > iHeight)
@@ -373,9 +373,9 @@ static int l_font_draw_wrapped(lua_State *L)
     }
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-    int iX = luaL_checkinteger(L, 4);
-    int iY = luaL_checkinteger(L, 5);
-    int iW = luaL_checkinteger(L, 6);
+    int iX = static_cast<int>(luaL_checkinteger(L, 4));
+    int iY = static_cast<int>(luaL_checkinteger(L, 5));
+    int iW = static_cast<int>(luaL_checkinteger(L, 6));
     eTHAlign eAlign = Align_Left;
     if(!lua_isnoneornil(L, 7))
     {
@@ -409,8 +409,8 @@ static int l_font_draw_tooltip(lua_State *L)
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
-    int iX = luaL_checkinteger(L, 4);
-    int iY = luaL_checkinteger(L, 5);
+    int iX = static_cast<int>(luaL_checkinteger(L, 4));
+    int iY = static_cast<int>(luaL_checkinteger(L, 5));
     int iScreenWidth = pCanvas->getWidth();
 
     int iW = 200; // (for now) hardcoded width of tooltips
@@ -445,7 +445,7 @@ static int l_layers_new(lua_State *L)
 static int l_layers_get(lua_State *L)
 {
     THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
-    int iLayer = luaL_checkinteger(L, 2);
+    lua_Integer iLayer = luaL_checkinteger(L, 2);
     if(0 <= iLayer && iLayer < 13)
         lua_pushinteger(L, pLayers->iLayerContents[iLayer]);
     else
@@ -456,7 +456,7 @@ static int l_layers_get(lua_State *L)
 static int l_layers_set(lua_State *L)
 {
     THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L);
-    int iLayer = luaL_checkinteger(L, 2);
+    lua_Integer iLayer = luaL_checkinteger(L, 2);
     uint8_t iValue = static_cast<uint8_t>(luaL_checkinteger(L, 3));
     if(0 <= iLayer && iLayer < 13)
         pLayers->iLayerContents[iLayer] = iValue;
@@ -517,8 +517,8 @@ static int l_cursor_load(lua_State *L)
 {
     THCursor* pCursor = luaT_testuserdata<THCursor>(L);
     THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
-    if(pCursor->createFromSprite(pSheet, luaL_checkinteger(L, 3),
-        luaL_optinteger(L, 4, 0), luaL_optinteger(L, 5, 0)))
+    if(pCursor->createFromSprite(pSheet, static_cast<int>(luaL_checkinteger(L, 3)),
+        static_cast<int>(luaL_optinteger(L, 4, 0)), static_cast<int>(luaL_optinteger(L, 5, 0))))
     {
         lua_settop(L, 1);
         return 1;
@@ -541,15 +541,15 @@ static int l_cursor_use(lua_State *L)
 static int l_cursor_position(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 1, luaT_upvalueindex(1));
-    lua_pushboolean(L, THCursor::setPosition(pCanvas, luaL_checkinteger(L, 2), luaL_checkinteger(L, 3)) ? 1 : 0);
+    lua_pushboolean(L, THCursor::setPosition(pCanvas, static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3))) ? 1 : 0);
     return 1;
 }
 
 static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int iArgStart)
 {
     THRenderTargetCreationParams oParams;
-    oParams.iWidth = luaL_checkinteger(L, iArgStart);
-    oParams.iHeight = luaL_checkinteger(L, iArgStart + 1);
+    oParams.iWidth = static_cast<int>(luaL_checkinteger(L, iArgStart));
+    oParams.iHeight = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
 
     oParams.bFullscreen = false;
     oParams.bPresentImmediate = false;
@@ -673,9 +673,9 @@ static int l_surface_map(lua_State *L)
 static int l_surface_rect(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
-    if(pCanvas->fillRect((uint32_t)luaL_checknumber(L, 2),
-        luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5),
-        luaL_checkinteger(L, 6)))
+    if(pCanvas->fillRect(static_cast<uint32_t>(luaL_checkinteger(L, 2)),
+        static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)), static_cast<int>(luaL_checkinteger(L, 5)),
+        static_cast<int>(luaL_checkinteger(L, 6))))
     {
         lua_settop(L, 1);
         return 1;
@@ -819,7 +819,7 @@ static int l_line_draw(lua_State *L)
 {
     THLine* pLine = luaT_testuserdata<THLine>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
-    pLine->draw(pCanvas, luaL_optinteger(L, 3, 0), luaL_optinteger(L, 4, 0));
+    pLine->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)), static_cast<int>(luaL_optinteger(L, 4, 0)));
 
     lua_settop(L, 1);
     return 1;

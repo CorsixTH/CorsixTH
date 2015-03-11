@@ -22,6 +22,7 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_LUA_H_
 #define CORSIX_TH_TH_LUA_H_
+#include "config.h"
 #include "lua.hpp"
 #include <new>
 

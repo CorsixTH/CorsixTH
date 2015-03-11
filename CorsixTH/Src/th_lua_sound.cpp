@@ -222,7 +222,7 @@ static int l_soundfx_play(lua_State *L)
     }
     else
     {
-        pEffects->playSoundAt(iIndex, luaL_checknumber(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5));
+        pEffects->playSoundAt(iIndex, luaL_checknumber(L, 3), static_cast<int>(luaL_checkinteger(L, 4)), static_cast<int>(luaL_checkinteger(L, 5)));
     }
     //SDL SOUND_OVER Callback Timer:
     //6: unusedPlayedCallbackID
@@ -236,7 +236,7 @@ static int l_soundfx_play(lua_State *L)
         if(m_iPlayedSoundCallbackIDsPointer == sizeof(m_a_iPlayedSoundCallbackIDs))
             m_iPlayedSoundCallbackIDsPointer = 0;
 
-        m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer] = luaL_checkinteger(L, 6);
+        m_a_iPlayedSoundCallbackIDs[m_iPlayedSoundCallbackIDsPointer] = static_cast<int>(luaL_checkinteger(L, 6));
         size_t interval = pArchive->getSoundDuration(iIndex) + iPlayedCallbackDelay;
         SDL_TimerID timersID = SDL_AddTimer(static_cast<Uint32>(interval),
                                             played_sound_callback,
@@ -252,7 +252,7 @@ static int l_soundfx_play(lua_State *L)
 static int l_soundfx_set_camera(lua_State *L)
 {
     THSoundEffects *pEffects = luaT_testuserdata<THSoundEffects>(L);
-    pEffects->setCamera(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4));
+    pEffects->setCamera(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)));
     return 0;
 }
 
