@@ -657,8 +657,8 @@ bool THAnimationManager::loadCustomAnimations(const uint8_t* pData, size_t iData
 
     assert(iLoadedFrames == iFrameCount);
     assert(iLoadedListElements == iListCount);
-    assert(iLoadedElements = iElementCount);
-    assert(iLoadedSprites = iSpriteCount);
+    assert(iLoadedElements == iElementCount);
+    assert(iLoadedSprites == iSpriteCount);
 
     // Fix the next pointer of the last frame in case it points to non-existing frames.
     frame_t &oFrame = m_vFrames[iFrameStart + iFrameCount - 1];
