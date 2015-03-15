@@ -30,7 +30,7 @@ SOFTWARE.
 #include <memory.h>
 #include <limits.h>
 #include <cassert>
-#include <string>
+#include <cstdint>
 
 /** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
 class Input
@@ -375,7 +375,7 @@ size_t THAnimationManager::loadElements(Input &input, THSpriteSheet *pSpriteShee
     while (iNumElements > 0)
     {
         if (iLoadedElements >= iElementCount || !input.Available(12))
-            return -1;
+            return SIZE_MAX;
 
         size_t iSprite = input.Uint32();
         int iX = input.Int16();
@@ -414,7 +414,7 @@ size_t THAnimationManager::makeListElements(size_t iFirstElement, size_t iNumEle
 
     // Verify there is enough room for all list elements + 0xFFFF
     if (iLoadedListElements + iNumElements + 1 > iListCount)
-        return -1;
+        return SIZE_MAX;
     assert(iFirstElement + iNumElements < 0xFFFF); // Overflow for list elements.
 
     while (iNumElements > 0)
@@ -592,12 +592,12 @@ bool THAnimationManager::loadCustomAnimations(const uint8_t* pData, size_t iData
 
             size_t iElm = loadElements(input, pSheet, iNumElements,
                                     iLoadedElements, iElementStart, iElementCount);
-            if (iElm < 0)
+            if (iElm == SIZE_MAX)
                 return false;
 
             size_t iListElm = makeListElements(iElm, iNumElements,
                                             iLoadedListElements, iListStart, iListCount);
-            if (iListElm < 0)
+            if (iListElm == SIZE_MAX)
                 return false;
 
             frame_t oFrame;
