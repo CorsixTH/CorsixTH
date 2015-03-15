@@ -524,6 +524,10 @@ end
 --[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
 function Epidemic:evacuateHospital()
   for _, patient in ipairs(self.hospital.patients) do
+    local patient_room = patient:getRoom()
+    if patient_room then
+      patient_room:makeHumanoidDressIfNecessaryAndThenLeave(patient)
+    end
     if patient.has_passed_reception then
       patient:clearDynamicInfo()
       patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
