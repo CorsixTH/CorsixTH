@@ -123,13 +123,26 @@ WriteHTML("file_globals", template "page" {
 })
 
 -- copy class_list.html to index.html
-local infile = io.open(output_dir .. "class_list.html", "r")
-local content = infile:read("*a")
-infile:close()
+local infile, outfile, result, err
+infile, err = io.open(output_dir .. "class_list.html", "r")
+if infile == nil then
+  print("Cannot open " .. output_dir .. "class_list.html for read: " .. err)
+else
+  local content = infile:read("*a")
+  infile:close()
 
-local outfile = io.open(output_dir .. "index.html", "w")
-outfile = outfile:write(content)
-outfile:close()
+  outfile, err = io.open(output_dir .. "index.html", "w")
+  if outfile == nil then
+    print("Cannot open " .. output_dir .. "index.html for write: " .. err)
+  else
+    result, err = outfile:write(content)
+    if result == nil then
+      print("Writing index.html failed: " .. err)
+    else
+      outfile:close()
+    end
+  end
+end
 
 do return end
 -- Old code, to be integrated into new code at later date:

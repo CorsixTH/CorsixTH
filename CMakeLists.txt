@@ -166,5 +166,6 @@ if(DOXYGEN_FOUND)
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
     COMMENT "Generating API documentation for corsixth_lua" VERBATIM
   )
-
+else(DOXYGEN_FOUND)
+  message("Cannot locate Doxygen, 'doc' target is not available")
 endif(DOXYGEN_FOUND)
