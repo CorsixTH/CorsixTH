@@ -25,6 +25,9 @@ Release/
 MinSizeRel/
 RelWithDebInfo/
 
+# Build folders
+/build*/
+
 # OSX metadata
 .DS_Store
 !LevelEdit/src/com/corsixth/leveledit/*.xcodeproj
