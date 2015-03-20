@@ -130,6 +130,7 @@ local config_defaults = {
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
+  shift_scroll_speed = 4,
   new_graphics_folder = nil,
   use_new_graphics = false,
   check_for_updates = true
@@ -453,11 +454,11 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 'zoom_speed = ' .. tostring(config_values.zoom_speed) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
--- Scroll Speed: By default this is set at level 2
+-- Scroll Speeds: The speed of scrolling with and without shift being held.
 -- Any number value between 1 and 10, 1 is very slow and 10 is fast!
--- Press shift when you are scrolling and it will be a lot quicker
 -- ]=] .. '\n' ..
-'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' .. [=[
+'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
+'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the

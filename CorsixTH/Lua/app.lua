@@ -688,6 +688,15 @@ function App:fixConfig()
     if key == "height" and type(value) == "number" and value < 480 then
       self.config[key] = 480
     end
+
+    if (key == "scroll_speed" or key == "shift_scroll_speed") and
+        type(value) == "number" then
+      if value > 10 then
+        self.config[key] = 10
+      elseif value < 1 then
+        self.config[key] = 1
+      end
+    end
   end
 end
 

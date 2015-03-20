@@ -642,10 +642,18 @@ function GameUI:onTick()
       dy = dy + self.tick_scroll_amount.y
     end
 
-    -- Faster scrolling with shift key
-    local factor = self.app.config.scroll_speed
+    -- Adjust scroll speed based on config value:
+    -- there is a separate config value for whether or not shift is held.
+    -- the speed is multiplied by 0.5 for consistency between the old and
+    -- new configuration. In the past scroll_speed applied only to shift
+    -- and defaulted to 2, where 1 was regular scroll speed. By
+    -- By multiplying by 0.5, we allow for setting slower than normal
+    -- scroll speeds, and ensure there is no behaviour change for players
+    -- who do not modify their config file.
     if self.app.key_modifiers.shift then
-      mult = mult * factor
+      mult = mult * self.app.config.shift_scroll_speed * 0.5
+    else
+      mult = mult * self.app.config.scroll_speed * 0.5
     end
 
     self:scrollMap(dx * mult, dy * mult)
