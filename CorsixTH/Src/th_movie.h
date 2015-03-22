@@ -167,6 +167,7 @@ protected:
 
     //abort playing movie
     bool m_fAborting;
+    SDL_mutex *m_pDecodingAudioMutex;
 
     //current movie dimensions and placement
     int m_iX, m_iY, m_iWidth, m_iHeight;

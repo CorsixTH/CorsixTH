@@ -426,6 +426,8 @@ THMovie::THMovie():
 
     m_pbChunkBuffer = (uint8_t*)malloc(AUDIO_BUFFER_SIZE);
     memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
+
+    m_pDecodingAudioMutex = SDL_CreateMutex();
 }
 
 THMovie::~THMovie()
@@ -435,6 +437,8 @@ THMovie::~THMovie()
     av_free_packet(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
+
+    SDL_DestroyMutex(m_pDecodingAudioMutex);
 }
 
 void THMovie::setRenderer(SDL_Renderer *pRenderer)
@@ -546,6 +550,12 @@ void THMovie::unload()
     }
     m_pMoviePictureBuffer->deallocate();
 
+    if(m_pVideoCodecContext)
+    {
+        avcodec_close(m_pVideoCodecContext);
+        m_pVideoCodecContext = NULL;
+    }
+
     if(m_iChannel >= 0)
     {
         Mix_UnregisterAllEffects(m_iChannel);
@@ -554,27 +564,17 @@ void THMovie::unload()
         m_iChannel = -1;
     }
 
+    SDL_LockMutex(m_pDecodingAudioMutex);
     if(m_iAudioBufferMaxSize > 0)
     {
         av_free(m_pbAudioBuffer);
         m_iAudioBufferMaxSize = 0;
-    }
-
-    if(m_pVideoCodecContext)
-    {
-        avcodec_close(m_pVideoCodecContext);
-        m_pVideoCodecContext = NULL;
     }
     if(m_pAudioCodecContext)
     {
         avcodec_close(m_pAudioCodecContext);
         m_pAudioCodecContext = NULL;
     }
-    if(m_pFormatContext)
-    {
-        avformat_close_input(&m_pFormatContext);
-    }
-
     av_frame_free(&m_frame);
 
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -597,6 +597,12 @@ void THMovie::unload()
         m_pAudioPacket = NULL;
         m_pbAudioPacketData = NULL;
         m_iAudioPacketSize = 0;
+    }
+    SDL_UnlockMutex(m_pDecodingAudioMutex);
+
+    if(m_pFormatContext)
+    {
+        avformat_close_input(&m_pFormatContext);
     }
 }
 
@@ -883,8 +889,9 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
     int iAudioSize;
     int iCopyLength;
     bool fFirst = true;
+    SDL_LockMutex(m_pDecodingAudioMutex);
 
-    while(iStreamSize > 0)
+    while(iStreamSize > 0  && !m_fAborting)
     {
         if(m_iAudioBufferIndex >= m_iAudioBufferSize)
         {
@@ -909,6 +916,8 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
         pbStream += iCopyLength;
         m_iAudioBufferIndex += iCopyLength;
     }
+
+    SDL_UnlockMutex(m_pDecodingAudioMutex);
 }
 
 int THMovie::decodeAudioFrame(bool fFirst)
