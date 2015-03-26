@@ -121,7 +121,7 @@ bool THMap::setSize(int iWidth, int iHeight)
     return true;
 }
 
-// NB: http://connection-endpoint.de/wiki/doku.php?id=format_specification#map
+// NB: http://connection-endpoint.de/th-format-specification/
 // gives a (slightly) incorrect array, which is why it differs from this one.
 static const uint8_t gs_iTHMapBlockLUT[256] = {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
