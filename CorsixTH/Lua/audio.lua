@@ -166,9 +166,6 @@ function Audio:init()
     print "Notice: Audio system loaded, but found no background tracks"
     self.has_bg_music = false
   else
-    table.sort(self.background_playlist, function(left, right)
-      return left.title:upper() < right.title:upper()
-    end)
     self.has_bg_music = true
   end
 
