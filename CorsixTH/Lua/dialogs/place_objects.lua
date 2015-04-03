@@ -529,8 +529,8 @@ function UIPlaceObjects:draw(canvas, x, y)
       local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
       local zoom = self.ui.zoom_factor
       if canvas:scale(zoom) then
-        x = x / zoom
-        y = y / zoom
+        x = math.floor(x / zoom)
+        y = math.floor(y / zoom)
       end
       self.object_anim:draw(canvas, x, y)
       if self.objects[self.active_index].object.slave_type then

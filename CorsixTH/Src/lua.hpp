@@ -34,22 +34,8 @@ extern "C" {
 // These definitions will already have been made if Lua 5.2 was compiled
 // with LUA_COMPAT_ALL defined, but we have no control over this.
 
-#ifdef LUA_RIDX_CPCALL
-// NB: Lua 5.2 isn't officially released yet, and only "work" versions are
-// available. Until 5.2 is officially released, this makes 5.2 a moving target
-// and it only makes sense to target the most recent version.
-// LUA_RIDX_CPCALL was defined in 5.2-work1 and 5.2-work2, but is not present
-// in 5.2-work3 (there were many other changes, but this is the easiest to
-// detect at compile-time)
-#error Please update to the latest version of Lua 5.2
-#endif
-
 #ifndef lua_objlen
 #define lua_objlen(L, i) lua_rawlen(L, (i))
-#endif
-
-#ifndef luaL_typerror
-#define luaL_typerror luaL_typeerror
 #endif
 
 #ifndef lua_equal

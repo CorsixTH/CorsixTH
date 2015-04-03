@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include "th_lua.h"
 #include "lua_sdl.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
@@ -58,7 +59,7 @@ static int l_show_cursor(lua_State *L)
     return 0;
 }
 
-static const struct luaL_reg sdl_wmlib[] = {
+static const struct luaL_Reg sdl_wmlib[] = {
     {"setIconWin32", l_set_icon_win32},
     {"showCursor", l_show_cursor},
     {NULL, NULL}
@@ -67,7 +68,7 @@ static const struct luaL_reg sdl_wmlib[] = {
 int luaopen_sdl_wm(lua_State *L)
 {
     lua_newtable(L);
-    luaL_register(L, NULL, sdl_wmlib);
+    luaT_setfuncs(L, sdl_wmlib);
 
     return 1;
 }

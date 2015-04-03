@@ -24,6 +24,29 @@ local saved_permanents = {}
 strict_declare_global "permanent"
 strict_declare_global "unpermanent"
 
+local th_getfenv
+local th_getupvalue
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
+  th_getfenv = function(f)
+    local val = nil
+    if type(f) == "function" then
+      _, val = debug.getupvalue(f, 1)
+    elseif type(f) == "userdata" then
+      val = debug.getuservalue(f)
+    else
+      print 'Unhandled argument to th_getfenv'
+    end
+    return val
+  end
+
+  th_getupvalue = function(f, n)
+    return debug.getupvalue(f, n + 1)
+  end
+else
+  th_getfenv = debug.getfenv;
+  th_getupvalue = debug.getupvalue;
+end
+
 function permanent(name, ...)
   if select('#', ...) == 0 then
     return function (...) return permanent(name, ...) end
@@ -89,12 +112,13 @@ local function MakePermanentObjectsTable(inverted)
     end
     if type(lib) == "table" then
       for k, v in pairs(lib) do
-        local type = type(v)
-        if type == "function" or type == "table" or type == "userdata" then
+        local type_of_lib = type(v)
+        if type_of_lib == "function" or type_of_lib == "table" or type_of_lib == "userdata" then
           permanent[v] = name ..".".. k
-          if name == "TH" and type == "table" then
+          if name == "TH" and type_of_lib == "table" then
             -- C class metatables
-            permanent[debug.getfenv(getmetatable(v).__call)] = name ..".".. k ..".<mt>"
+            local callenv = th_getfenv(getmetatable(v).__call)
+            permanent[callenv] = name ..".".. k ..".<mt>"
           end
         end
       end
@@ -187,7 +211,7 @@ local function NameOf(obj) -- Debug aid
       to_explore[mt] = name ..".<metatable>"
       explored[mt] = true
     end
-    mt = debug.getfenv(exploring)
+    mt = th_getfenv(exploring)
     if mt and not explored[mt] then
       to_explore[mt] = name ..".<env>"
       explored[mt] = true
@@ -231,7 +255,8 @@ end
 
 function LoadGame(data)
   --local status, res = xpcall(function()
-  local state = assert(persist.load(data, MakePermanentObjectsTable(true)))
+  local objtable = MakePermanentObjectsTable(true)
+  local state = assert(persist.load(data, objtable))
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world

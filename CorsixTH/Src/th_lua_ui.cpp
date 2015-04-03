@@ -42,8 +42,8 @@ static int l_town_map_draw(lua_State *L)
     luaL_checktype(L, 1, LUA_TTABLE);
     THMap *pMap = luaT_testuserdata<THMap>(L, 2);
     THRenderTarget *pCanvas = luaT_testuserdata<THRenderTarget>(L, 3);
-    int iCanvasXBase = luaL_checkint(L, 4);
-    int iCanvasYBase = luaL_checkint(L, 5);
+    int iCanvasXBase = static_cast<int>(luaL_checkinteger(L, 4));
+    int iCanvasYBase = static_cast<int>(luaL_checkinteger(L, 5));
     bool bShowHeat = lua_toboolean(L, 6) != 0;
 
     uint32_t iColourMyHosp = pCanvas->mapColour(0, 0, 70);

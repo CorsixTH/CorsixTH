@@ -141,7 +141,7 @@ static int l_mainloop(lua_State *L)
     luaL_checktype(L, 1, LUA_TTHREAD);
     lua_State *dispatcher = lua_tothread(L, 1);
 
-    fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
+    fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, NULL);
     SDL_Event e;
 
@@ -257,7 +257,7 @@ static int l_mainloop(lua_State *L)
             }
             if(nargs != 0)
             {
-                if(lua_resume(dispatcher, nargs) != LUA_YIELD)
+                if(luaT_resume(dispatcher, dispatcher, nargs) != LUA_YIELD)
                 {
                     goto leave_loop;
                 }
@@ -268,7 +268,7 @@ static int l_mainloop(lua_State *L)
         if(do_timer)
         {
             lua_pushliteral(dispatcher, "timer");
-            if(lua_resume(dispatcher, 1) != LUA_YIELD)
+            if(luaT_resume(dispatcher, dispatcher, 1) != LUA_YIELD)
             {
                 break;
             }
@@ -284,7 +284,7 @@ static int l_mainloop(lua_State *L)
                     fps_control->count_frame();
                 }
                 lua_pushliteral(dispatcher, "frame");
-                if(lua_resume(dispatcher, 1) != LUA_YIELD)
+                if(luaT_resume(dispatcher, dispatcher, 1) != LUA_YIELD)
                 {
                     goto leave_loop;
                 }
@@ -310,21 +310,21 @@ leave_loop:
 
 static int l_track_fps(lua_State *L)
 {
-    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
+    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     ctrl->track_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
     return 0;
 }
 
 static int l_limit_fps(lua_State *L)
 {
-    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
+    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     ctrl->limit_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
     return 0;
 }
 
 static int l_get_fps(lua_State *L)
 {
-    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, lua_upvalueindex(1));
+    fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     if(ctrl->track_fps)
     {
         lua_pushinteger(L, ctrl->frame_count);
@@ -342,13 +342,13 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
-static const struct luaL_reg sdllib[] = {
+static const struct luaL_Reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
     {NULL, NULL}
 };
-static const struct luaL_reg sdllib_with_upvalue[] = {
+static const struct luaL_Reg sdllib_with_upvalue[] = {
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
@@ -363,12 +363,12 @@ int luaopen_sdl(lua_State *L)
 {
     fps_ctrl* ctrl = (fps_ctrl*)lua_newuserdata(L, sizeof(fps_ctrl));
     ctrl->init();
-    luaL_register(L, "sdl", sdllib);
+    luaT_register(L, "sdl", sdllib);
     const luaL_Reg *pUpvaluedFunctions = sdllib_with_upvalue;
     for(; pUpvaluedFunctions->name; ++pUpvaluedFunctions)
     {
         lua_pushvalue(L, -2);
-        lua_pushcclosure(L, pUpvaluedFunctions->func, 1);
+        luaT_pushcclosure(L, pUpvaluedFunctions->func, 1);
         lua_setfield(L, -2, pUpvaluedFunctions->name);
     }
 

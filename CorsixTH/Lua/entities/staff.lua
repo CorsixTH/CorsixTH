@@ -924,7 +924,7 @@ function Staff:searchForHandymanTask()
   else
     if self.attributes[task] < 1 then
       local sum = self.attributes[task2] + self.attributes[task3]
-      if math.random(0, sum * 100) > self.attributes[task2] * 100 then
+      if math.random(0, math.floor(sum * 100)) > math.floor(self.attributes[task2] * 100) then
         task2, task3 =  task3, task2
       end
       index = self.hospital:searchForHandymanTask(self, task2)

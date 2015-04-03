@@ -36,6 +36,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "rnc.h"
+#include "th_lua.h"
 
 #define RNC_OK                  0
 #define RNC_FILE_IS_NOT_RNC    -1
@@ -542,13 +543,13 @@ static int l_decompress(lua_State *L)
     return 2;
 }
 
-static const struct luaL_reg rnclib[] = {
+static const struct luaL_Reg rnclib[] = {
     {"decompress", l_decompress},
     {NULL, NULL}
 };
 
 int luaopen_rnc(lua_State *L)
 {
-    luaL_register(L, "rnc", rnclib);
+    luaT_register(L, "rnc", rnclib);
     return 1;
 }

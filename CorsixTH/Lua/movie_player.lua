@@ -54,19 +54,19 @@ function MoviePlayer:init()
   local movies = self.app.fs:listFiles("Anims");
   if movies then
     for _,movie in pairs(movies) do
-        --lose level movies
-        if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .."]+$") then
+      --lose level movies
+      if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .."]+$") then
         table.insert(self.lose_movies, movie)
-        end
-        --advance level movies
-        num = tonumber(movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .."]+$"), 10)
-        if(num ~= nil) then
-        self.advance_movies[num] = movie
-        end
-        --win game movie
-        if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
+      end
+      --advance level movies
+      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .."]+$")
+      if num ~= nil and tonumber(num, 10) ~= nil then
+        self.advance_movies[tonumber(num, 10)] = movie
+      end
+      --win game movie
+      if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
         self.win_movie = movie
-        end
+      end
     end
   end
 

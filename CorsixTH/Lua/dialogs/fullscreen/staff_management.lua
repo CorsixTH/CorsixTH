@@ -497,7 +497,7 @@ function UIStaffManagement:scrollUp()
   if self.scroll_dot.visible and self.page > 1 then
     self.selected_staff = nil
     self.page = self.page - 1
-    self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
+    self.scroll_dot.y = 168 + math_floor(83*((self.page - 1)/(#self.staff_members[self.category]-1)/10))
   end
   self:updateTooltips()
 end
@@ -506,7 +506,7 @@ function UIStaffManagement:scrollDown()
   if self.scroll_dot.visible and self.page*10 < #self.staff_members[self.category] then
     self.selected_staff = nil
     self.page = self.page + 1
-    self.scroll_dot.y = 168 + 83*((self.page - 1)/math.floor((#self.staff_members[self.category]-1)/10))
+    self.scroll_dot.y = 168 + math_floor(83*((self.page - 1)/(#self.staff_members[self.category]-1)/10))
   end
   self:updateTooltips()
 end

@@ -151,12 +151,12 @@ public:
         lua_createtable(L, 1, 0); // Environment metatable
         lua_pushvalue(L, 2); // Permanent objects
         lua_pushvalue(L, 1); // self
-        lua_pushcclosure(L, l_writer_mt_index, 2);
+        luaT_pushcclosure(L, l_writer_mt_index, 2);
         lua_setfield(L, -2, "__index");
         lua_setmetatable(L, -2);
         lua_setfenv(L, 1);
         lua_createtable(L, 1, 4); // Metatable
-        lua_pushcclosure(L, l_crude_gc<LuaPersistBasicWriter>, 0);
+        luaT_pushcclosure(L, l_crude_gc<LuaPersistBasicWriter>, 0);
         lua_setfield(L, -2, "__gc");
         lua_pushvalue(L, luaT_upvalueindex(1)); // Prototype persistance names
         lua_rawseti(L, -2, 1);
@@ -781,7 +781,7 @@ public:
         lua_rawseti(L, -2, -3);
         lua_setfenv(L, 1);
         lua_createtable(L, 0, 1); // Metatable
-        lua_pushcclosure(L, l_crude_gc<LuaPersistBasicReader>, 0);
+        luaT_pushcclosure(L, l_crude_gc<LuaPersistBasicReader>, 0);
         lua_setfield(L, -2, "__gc");
         lua_setmetatable(L, 1);
     }
@@ -923,6 +923,7 @@ public:
             case PERSIST_TPROTOTYPE: {
                 if(!lua_checkstack(L, 8))
                     return false;
+
                 uint64_t iOldIndex = m_iNextIndex;
                 ++m_iNextIndex; // Temporary marker
                 int iNups;
@@ -956,10 +957,12 @@ public:
                 if(!readStackObject())
                     return false;
                 lua_pushliteral(L, "@");
+
                 lua_rawgeti(L, 1, -1);
                 lua_pushvalue(L, -3);
                 lua_gettable(L, -2);
                 lua_replace(L, -2);
+
                 if(lua_isnil(L, -1))
                 {
                     setError(lua_pushfstring(L, "Unable to depersist prototype"
@@ -969,6 +972,7 @@ public:
                 lua_concat(L, 2); // Prepend the @ to the filename
                 lua_rawgeti(L, 1, -2);
                 lua_pushvalue(L, -3);
+
                 lua_gettable(L, -2);
                 lua_replace(L, -2);
                 lua_remove(L, -3);
@@ -976,7 +980,7 @@ public:
                 LoadMultiBuffer_t ls;
                 ls.s[0] = lua_tolstring(L, -3, &ls.i[0]);
                 ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
-                if(lua_load(L, LoadMultiBuffer_t::load_fn, &ls, lua_tostring(L, -2)) != 0)
+                if(luaT_load(L, LoadMultiBuffer_t::load_fn, &ls, lua_tostring(L, -2), "bt") != 0)
                 {
                     // Should never happen
                     lua_error(L);
@@ -1294,7 +1298,7 @@ const char* FindFunctionEnd(lua_State *L, const char* sStart)
             ls.i[0] = sizeof("return function") - 1;
             ls.s[1] = sStart;
             ls.i[1] = sEnd - sStart;
-            if(lua_load(L, LoadMultiBuffer_t::load_fn, &ls, "") == 0)
+            if(luaT_load(L, LoadMultiBuffer_t::load_fn, &ls, "", "bt") == 0)
             {
                 lua_pop(L, 1);
                 return sEnd;
@@ -1317,17 +1321,17 @@ static int l_persist_dofile(lua_State *L)
         const char *sError = strerror(errno);
         return luaL_error(L, "cannot open %s: %s", sFilename, sError);
     }
-    size_t iBufferSize = lua_objlen(L, lua_upvalueindex(1));
+    size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
     size_t iBufferUsed = 0;
     while(!feof(fFile))
     {
         iBufferUsed += fread(reinterpret_cast<char*>(lua_touserdata(L,
-            lua_upvalueindex(1))) + iBufferUsed, 1, iBufferSize - iBufferUsed, fFile);
+            luaT_upvalueindex(1))) + iBufferUsed, 1, iBufferSize - iBufferUsed, fFile);
         if(iBufferUsed == iBufferSize)
         {
             iBufferSize *= 2;
-            memcpy(lua_newuserdata(L, iBufferSize), lua_touserdata(L, lua_upvalueindex(1)), iBufferUsed);
-            lua_replace(L, lua_upvalueindex(1));
+            memcpy(lua_newuserdata(L, iBufferSize), lua_touserdata(L, luaT_upvalueindex(1)), iBufferUsed);
+            lua_replace(L, luaT_upvalueindex(1));
         }
         else
             break;
@@ -1341,7 +1345,7 @@ static int l_persist_dofile(lua_State *L)
     }
 
     // Check file
-    char *sFile = reinterpret_cast<char*>(lua_touserdata(L, lua_upvalueindex(1)));
+    char *sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
     sFile[iBufferUsed] = 0;
     if(sFile[0] == '#')
     {
@@ -1367,7 +1371,7 @@ static int l_persist_dofile(lua_State *L)
     memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
     lua_insert(L, -2);
     lua_call(L, 0, LUA_MULTRET);
-    sFile = reinterpret_cast<char*>(lua_touserdata(L, lua_upvalueindex(1)));
+    sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
     memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
     lua_remove(L, iBufferCopyIndex);
 
@@ -1399,12 +1403,12 @@ static int l_persist_dofile(lua_State *L)
                 // Save <filename>:<line> => <name>
                 lua_pushfstring(L, "%s:%d", sFilename, iLineNumber);
                 lua_pushvalue(L, -1);
-                lua_gettable(L, lua_upvalueindex(2));
+                lua_gettable(L, luaT_upvalueindex(2));
                 if(lua_isnil(L, -1))
                 {
                     lua_pop(L, 1);
                     lua_pushlstring(L, sPosition, sNameEnd - sPosition);
-                    lua_settable(L, lua_upvalueindex(2));
+                    lua_settable(L, luaT_upvalueindex(2));
                 }
                 else
                 {
@@ -1415,12 +1419,12 @@ static int l_persist_dofile(lua_State *L)
                 // Save <name> => <filename>
                 lua_pushlstring(L, sPosition, sNameEnd - sPosition);
                 lua_pushvalue(L, -1);
-                lua_gettable(L, lua_upvalueindex(3));
+                lua_gettable(L, luaT_upvalueindex(3));
                 if(lua_isnil(L, -1))
                 {
                     lua_pop(L, 1);
                     lua_pushvalue(L, 1);
-                    lua_settable(L, lua_upvalueindex(3));
+                    lua_settable(L, luaT_upvalueindex(3));
                 }
                 else
                 {
@@ -1439,7 +1443,7 @@ static int l_persist_dofile(lua_State *L)
                 lua_pushliteral(L, "function");
                 lua_pushlstring(L, sFunctionArgs, sFunctionEnd - sFunctionArgs);
                 lua_concat(L, 3);
-                lua_settable(L, lua_upvalueindex(4));
+                lua_settable(L, luaT_upvalueindex(4));
             }
         }
     }
@@ -1456,7 +1460,7 @@ static int l_errcatch(lua_State *L)
     return 1;
 }
 
-static const struct luaL_reg persist_lib[] = {
+static const struct luaL_Reg persist_lib[] = {
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
@@ -1465,19 +1469,19 @@ static const struct luaL_reg persist_lib[] = {
 
 int luaopen_persist(lua_State *L)
 {
-    luaL_register(L, "persist", persist_lib);
+    luaT_register(L, "persist", persist_lib);
     lua_newuserdata(L, 512); // buffer for dofile
     lua_newtable(L);
     lua_newtable(L);
     lua_newtable(L);
     lua_pushvalue(L, -3);
-    lua_pushcclosure(L, l_dump_toplevel, 1);
+    luaT_pushcclosure(L, l_dump_toplevel, 1);
     lua_setfield(L, -6, "dump");
     lua_pushvalue(L, -2);
     lua_pushvalue(L, -2);
-    lua_pushcclosure(L, l_load_toplevel, 2);
+    luaT_pushcclosure(L, l_load_toplevel, 2);
     lua_setfield(L, -6, "load");
-    lua_pushcclosure(L, l_persist_dofile, 4);
+    luaT_pushcclosure(L, l_persist_dofile, 4);
     lua_setfield(L, -2, "dofile");
     return 1;
 }

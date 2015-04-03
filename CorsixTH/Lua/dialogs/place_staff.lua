@@ -88,7 +88,7 @@ function UIPlaceStaff:draw(canvas)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
       local x, y = self.ui:WorldToScreen(self.tile_x, self.tile_y)
-      self.anim:draw(canvas, x / zoom, y / zoom)
+      self.anim:draw(canvas, math.floor(x / zoom), math.floor(y / zoom))
       canvas:scale(1)
     else
       self.anim:draw(canvas, self.ui:WorldToScreen(self.tile_x, self.tile_y))

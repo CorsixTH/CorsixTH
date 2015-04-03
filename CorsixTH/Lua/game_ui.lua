@@ -144,7 +144,7 @@ function GameUI:draw(canvas)
   end
   local zoom = self.zoom_factor
   if canvas:scale(zoom) then
-    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width / zoom, config.height / zoom, 0, 0)
+    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
     canvas:scale(1)
   else
     self:setZoom(1)
@@ -302,8 +302,8 @@ end
 
 function GameUI:onCursorWorldPositionChange()
   local zoom = self.zoom_factor
-  local x = self.screen_offset_x + self.cursor_x / zoom
-  local y = self.screen_offset_y + self.cursor_y / zoom
+  local x = math.floor(self.screen_offset_x + self.cursor_x / zoom)
+  local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
   if self.do_world_hit_test and not self:hitTest(self.cursor_x, self.cursor_y) then
     entity = self.app.map.th:hitTestObjects(x, y)

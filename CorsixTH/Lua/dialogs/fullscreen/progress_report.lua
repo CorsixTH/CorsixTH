@@ -147,9 +147,9 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local world = self.ui.app.world
 
   warmth = UIPatient.normaliseWarmth(warmth)
-  self.panel_sprites:draw(canvas, 5, x + x_min + width * happiness, y + 193)
-  self.panel_sprites:draw(canvas, 5, x + x_min + width * thirst, y + 223)
-  self.panel_sprites:draw(canvas, 5, x + x_min + width * warmth, y + 254)
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193)
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223)
+  self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254)
 
   if world.free_build_mode then
     self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")

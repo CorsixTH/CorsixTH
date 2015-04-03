@@ -935,8 +935,8 @@ function UIEditRoom:draw(canvas, ...)
     local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
-      x = x / zoom
-      y = y / zoom
+      x = math.floor(x / zoom)
+      y = math.floor(y / zoom)
     end
     self.cell_outline:draw(canvas, 2, x - 32, y)
     canvas:scale(1)

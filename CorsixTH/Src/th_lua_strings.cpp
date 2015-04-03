@@ -687,7 +687,7 @@ static int l_str_reload(lua_State *L)
 static int l_mk_cache(lua_State *L)
 {
     lua_newtable(L);
-    lua_pushvalue(L, lua_upvalueindex(1));
+    lua_pushvalue(L, luaT_upvalueindex(1));
     lua_setmetatable(L, -2);
     lua_pushvalue(L, 2);
     lua_pushvalue(L, 3);
@@ -716,7 +716,7 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
             lua_pushliteral(L, "__mode");
             lua_pushliteral(L, "kv");
             lua_rawset(L, -3);
-            lua_pushcclosure(L, l_mk_cache, 1);
+            luaT_pushcclosure(L, l_mk_cache, 1);
             lua_rawset(L, -3);
         }
         lua_setmetatable(L, -2);

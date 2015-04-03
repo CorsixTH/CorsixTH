@@ -67,7 +67,7 @@ static int l_volume_list(lua_State *L)
     char cDrive;
     lua_settop(L, 0);
     lua_newtable(L);
-    lua_getfield(L, lua_upvalueindex(1), "attributes");
+    lua_getfield(L, luaT_upvalueindex(1), "attributes");
     for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive)
     {
         lua_pushvalue(L, 2);

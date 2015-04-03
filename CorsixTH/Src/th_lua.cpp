@@ -59,7 +59,7 @@ void luaT_getfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_getenv(L, iIndex);
+        lua_getuservalue(L, iIndex);
         break;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
@@ -94,7 +94,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_setenv(L, iIndex);
+        lua_setuservalue(L, iIndex);
         return 1;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
@@ -114,6 +114,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
             const char* sUpName = NULL;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
+                lua_pop(L, 1); // lua_getupvalue puts the value on the stack, but we just want to replace it
                 if(strcmp(sUpName, "_ENV") == 0)
                 {
                     luaL_loadstring(L, "local upv = ... return function() return upv end");
@@ -123,9 +124,8 @@ int luaT_setfenv52(lua_State *L, int iIndex)
                     lua_pop(L, 1);
                     return 1;
                 }
-                else
-                    lua_pop(L, 1);
             }
+            lua_pop(L, 1);
             return 0;
         }
     default:
@@ -140,7 +140,6 @@ void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
     lua_insert(L, -nups);
     lua_pushcclosure(L, f, nups);
 }
-
 #endif
 
 //! Push a C closure as a callable table
@@ -334,6 +333,15 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 lua_error(L);
         }
         lua_pop(L, 1);
+#if LUA_VERSION_NUM >= 502
+        luaL_loadstring(L, "local assert, load = assert, load\n"
+            "return setmetatable({}, {__mode = [[v]], \n"
+            "__index = function(t, k)\n"
+            "local v = assert(load(k))\n"
+            "t[k] = v\n"
+            "return v\n"
+            "end})");
+#else
         luaL_loadstring(L, "local assert, loadstring = assert, loadstring\n"
             "return setmetatable({}, {__mode = [[v]], \n"
             "__index = function(t, k)\n"
@@ -341,6 +349,7 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 "t[k] = v\n"
                 "return v\n"
             "end})");
+#endif
         lua_call(L, 0, 1);
         lua_pushvalue(L, -1);
         lua_rawseti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);
@@ -375,4 +384,65 @@ void luaT_pushtablebool(lua_State *L, const char *k, bool v)
     lua_pushstring(L, k);
     lua_pushboolean(L, v);
     lua_settable(L, -3);
+}
+
+void luaT_printstack(lua_State* L)
+{
+    int i;
+    int top = lua_gettop(L);
+
+    printf("total items in stack %d\n", top);
+
+    for (i = 1; i <= top; i++)
+    { /* repeat for each level */
+        int t = lua_type(L, i);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            printf("string: '%s'\n", lua_tostring(L, i));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            printf("boolean %s\n", lua_toboolean(L, i) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            printf("number: %g\n", lua_tonumber(L, i));
+            break;
+        default: /* other values */
+            printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        printf(" "); /* put a separator */
+
+    }
+    printf("\n"); /* end the listing */
+}
+
+void luaT_printrawtable(lua_State* L, int idx)
+{
+    int i;
+    int len = static_cast<int>(lua_objlen(L, idx));
+
+    printf("total items in table %d\n", len);
+
+    for (i = 1; i <= len; i++)
+    {
+        lua_rawgeti(L, idx, i);
+        int t = lua_type(L, -1);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            printf("string: '%s'\n", lua_tostring(L, -1));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            printf("boolean %s\n", lua_toboolean(L, -1) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            printf("number: %g\n", lua_tonumber(L, -1));
+            break;
+        default: /* other values */
+            printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        printf(" "); /* put a separator */
+        lua_pop(L, 1);
+    }
+    printf("\n"); /* end the listing */
 }

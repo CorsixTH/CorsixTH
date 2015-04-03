@@ -67,8 +67,7 @@ end
 
 -- Check Lua version
 if _VERSION ~= "Lua 5.1" then
-  if _VERSION == "Lua 5.2" then
-    print "Notice: Lua 5.2 is not officially supported at the moment"
+  if _VERSION == "Lua 5.2" or _VERSION == "Lua 5.3" then
     -- Compatibility: Keep the global unpack function
     unpack = table.unpack
     -- Compatibility: Provide a replacement for deprecated ipairs()
@@ -91,7 +90,7 @@ if _VERSION ~= "Lua 5.1" then
       end
     end
   else
-    error "Please recompile CorsixTH and link against Lua version 5.1"
+    error "Please recompile CorsixTH and link against Lua version 5.1, 5.2 or 5.3"
   end
 end
 

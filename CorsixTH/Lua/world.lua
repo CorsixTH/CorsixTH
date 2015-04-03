@@ -1649,6 +1649,7 @@ local face_dir = {
 function World:getFreeBench(x, y, distance)
   local bench, rx, ry, bench_distance
   local object_type = self.object_types.bench
+  x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
   self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d, dist)
     local b = self:getObject(x, y, "bench")
     if b and not b.user and not b.reserved_for then
