@@ -44,11 +44,7 @@ THMapNode::THMapNode()
 
 THMapNode::~THMapNode()
 {
-    if(pExtendedObjectList)
-    {
-        delete pExtendedObjectList;
-        pExtendedObjectList = NULL;
-    }
+    delete pExtendedObjectList;
 }
 
 THMap::THMap()
