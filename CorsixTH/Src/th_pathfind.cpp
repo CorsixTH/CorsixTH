@@ -44,21 +44,9 @@ THPathfinder::THPathfinder()
 
 THPathfinder::~THPathfinder()
 {
-    if(m_ppOpenHeap)
-    {
-        free(m_ppOpenHeap);
-        m_ppOpenHeap = NULL;
-    }
-    if(m_pNodes)
-    {
-        delete[] m_pNodes;
-        m_pNodes = NULL;
-    }
-    if(m_ppDirtyList)
-    {
-        delete[] m_ppDirtyList;
-        m_ppDirtyList = NULL;
-    }
+    free(m_ppOpenHeap);
+    delete[] m_pNodes;
+    delete[] m_ppDirtyList;
 }
 
 void THPathfinder::setDefaultMap(const THMap *pMap)

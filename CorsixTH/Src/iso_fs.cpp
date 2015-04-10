@@ -50,11 +50,9 @@ IsoFilesystem::~IsoFilesystem()
 
 void IsoFilesystem::_clear()
 {
-    if(m_sError)
-    {
-        delete[] m_sError;
-        m_sError = NULL;
-    }
+    delete[] m_sError;
+    m_sError = NULL;
+
     if(m_pFiles)
     {
         for(size_t i = 0; i < m_iNumFiles; ++i)
