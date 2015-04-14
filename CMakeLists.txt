@@ -172,7 +172,7 @@ ENDIF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)
 IF (DOXYGEN_FOUND)
   add_custom_target(doc_animview
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/animview.doxygen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for AnimView" VERBATIM
   )
   add_dependencies(doc doc_animview)
@@ -180,7 +180,7 @@ IF (DOXYGEN_FOUND)
 
   add_custom_target(doc_leveledit
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/leveledit.doxygen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for LevelEdit" VERBATIM
   )
   add_dependencies(doc doc_leveledit)
@@ -188,7 +188,7 @@ IF (DOXYGEN_FOUND)
 
   add_custom_target(doc_mapedit
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/mapedit.doxygen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for MapEdit" VERBATIM
   )
   add_dependencies(doc doc_mapedit)
@@ -196,7 +196,7 @@ IF (DOXYGEN_FOUND)
 
   add_custom_target(doc_corsixth_engine
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/corsixth_engine.doxygen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for corsixth_engine" VERBATIM
   )
   add_dependencies(doc doc_corsixth_engine)
@@ -205,7 +205,7 @@ ENDIF (DOXYGEN_FOUND)
 IF (LUA_PROGRAM_FOUND)
   add_custom_target(doc_corsixth_lua
     ${LUA_PROGRAM_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/main.lua
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for corsixth_lua" VERBATIM
   )
   add_dependencies(doc doc_corsixth_lua)
@@ -213,32 +213,32 @@ ENDIF (LUA_PROGRAM_FOUND)
 
 # Generate doc/index.html file.
 IF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)
-  file(WRITE  doc/index.html "<html>\n")
-  file(APPEND doc/index.html "<head><title>CorsixTH source code documentation</title></head>\n")
-  file(APPEND doc/index.html "<body>\n")
-  file(APPEND doc/index.html "<h1>CorsixTH main program source code documentation</h1>\n")
-  file(APPEND doc/index.html "<ul>\n")
+  file(WRITE  ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<html>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<head><title>CorsixTH source code documentation</title></head>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<body>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<h1>CorsixTH main program source code documentation</h1>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<ul>\n")
 ENDIF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)
 
 IF (DOXYGEN_FOUND)
-  file(APPEND doc/index.html "  <li><a href=\"corsixth_engine/html/index.html\">CorsixTH engine documentation</a>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"corsixth_engine/html/index.html\">CorsixTH engine documentation</a>\n")
 ENDIF (DOXYGEN_FOUND)
 
 IF (LUA_PROGRAM_FOUND)
-  file(APPEND doc/index.html "  <li><a href=\"corsixth_lua/index.html\">CorsixTH Lua documentation</a>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"corsixth_lua/index.html\">CorsixTH Lua documentation</a>\n")
 ENDIF (LUA_PROGRAM_FOUND)
 
 IF (DOXYGEN_FOUND)
-  file(APPEND doc/index.html "</ul>\n")
-  file(APPEND doc/index.html "<h1>CorsixTH helper programs source code documentation</h1>\n")
-  file(APPEND doc/index.html "<ul>\n")
-  file(APPEND doc/index.html "  <li><a href=\"animview/html/index.html\">Animation viewer documentation</a>\n")
-  file(APPEND doc/index.html "  <li><a href=\"leveledit/html/index.html\">Level editor documentation</a>\n")
-  file(APPEND doc/index.html "  <li><a href=\"mapedit/html/index.html\">Map editor documentation</a>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "</ul>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<h1>CorsixTH helper programs source code documentation</h1>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<ul>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"animview/html/index.html\">Animation viewer documentation</a>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"leveledit/html/index.html\">Level editor documentation</a>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"mapedit/html/index.html\">Map editor documentation</a>\n")
 ENDIF (DOXYGEN_FOUND)
 
 IF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)
-  file(APPEND doc/index.html "</ul>\n")
-  file(APPEND doc/index.html "</body>\n")
-  file(APPEND doc/index.html "</html>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "</ul>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "</body>\n")
+  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "</html>\n")
 ENDIF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)

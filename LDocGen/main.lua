@@ -35,7 +35,7 @@ local output_dir = lfs.currentdir() .. "/corsixth_lua/"
 lfs.mkdir(output_dir)
 
 local our_dir = debug.getinfo(1).source
-our_dir = our_dir:match("@(.*)"..package.config:sub(1, 1)) or "."
+our_dir = our_dir:match("@(.*)[/"..package.config:sub(1,1).."]") or "."
 lfs.chdir(our_dir)
 
 
