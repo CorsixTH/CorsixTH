@@ -205,6 +205,9 @@ ENDIF (DOXYGEN_FOUND)
 IF (LUA_PROGRAM_FOUND)
   add_custom_target(doc_corsixth_lua
     ${LUA_PROGRAM_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/main.lua
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/output/corner_right.gif ${CMAKE_CURRENT_BINARY_DIR}/doc/corsixth_lua
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/output/logo.png         ${CMAKE_CURRENT_BINARY_DIR}/doc/corsixth_lua
+    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/LDocGen/output/main.css         ${CMAKE_CURRENT_BINARY_DIR}/doc/corsixth_lua
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
     COMMENT "Generating API documentation for corsixth_lua" VERBATIM
   )
