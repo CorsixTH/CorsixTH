@@ -129,6 +129,7 @@ after_success:
   # Upload to server
   - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" ]; then sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/; fi;
   # Upload new docs
+  - ls -f $TRAVIS_BUILD_DIR/fresh/doc/*
   - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" -a $TRAVIS_BRANCH == "master" ]; then sshpass -p "$SCP_PASS" scp -r -v -P12349 $TRAVIS_BUILD_DIR/fresh/doc/* cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/docs/; fi;
 env:
   global:
