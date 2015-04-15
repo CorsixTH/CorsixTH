@@ -2,7 +2,7 @@ language: cpp
 before_install:
   # Get build dependencies
   - sudo apt-get -qq update
-  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks
+  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks doxygen
   # Required for LDocGen
   - sudo luarocks install lpeg
   - sudo luarocks install luafilesystem
@@ -78,7 +78,7 @@ before_install:
 install:
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
-  - cmake -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2.dll.a -DSDL_INCLUDE_DIR=libs/SDL2-2.0.3/i686-w64-mingw32/include/SDL2 -DSDLMAIN_LIBRARY=libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a -DSDLMIXER_INCLUDE_DIR=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2 -DSDLMIXER_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/libSDL2_mixer.dll.a -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
+  - cmake -DLUA_PROGRAM_PATH=`which lua` -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2.dll.a -DSDL_INCLUDE_DIR=libs/SDL2-2.0.3/i686-w64-mingw32/include/SDL2 -DSDLMAIN_LIBRARY=libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a -DSDLMIXER_INCLUDE_DIR=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2 -DSDLMIXER_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/libSDL2_mixer.dll.a -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
 before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
@@ -102,7 +102,7 @@ script:
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
   # Build documentation
-  - cd $TRAVIS_BUILD_DIR/LDocGen && lua main.lua
+  - cd ${TRAVIS_BUILD_DIR}/fresh && make doc
 after_success:
   - mkdir -p $TRAVIS_BUILD_DIR/fresh/CorsixTH
   - cd $TRAVIS_BUILD_DIR
@@ -129,7 +129,8 @@ after_success:
   # Upload to server
   - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" ]; then sshpass -p "$SCP_PASS" scp -v -P12349 $ZIPNAME cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/builds/; fi;
   # Upload new docs
-  - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" -a $TRAVIS_BRANCH == "master" ]; then sshpass -p "$SCP_PASS" scp -v -P12349 $TRAVIS_BUILD_DIR/LDocGen/output/* cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/docs/; fi;
+  - ls -f $TRAVIS_BUILD_DIR/fresh/doc/*
+  - if [ $TRAVIS_REPO_SLUG == "CorsixTH/CorsixTH" -a $TRAVIS_BRANCH == "master" ]; then sshpass -p "$SCP_PASS" scp -r -v -P12349 $TRAVIS_BUILD_DIR/fresh/doc/* cthbuilder@server2.armedpineapple.co.uk:/home/cthbuilder/docs/; fi;
 env:
   global:
     secure: "mPtzSeDJKVeUu6KHJEbmHa91O+QK2XM0advYdr+13yr83w3C7cGFFjWgqzirsFUHVqPgdtSJIkom0DIxX7JtRoBZmt/xon+zfLq+Q4aSkJoYezWBqp2gavS8o1kSjtW7XuIuq995yjWvn7nehyoTYkKNtz/EzX5ZIVZ/iX73iyo="
