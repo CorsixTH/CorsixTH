@@ -11,6 +11,7 @@ CorsixTH/config.txt
 /Makefile
 /SDL
 /SDL_mixer-1.2.8
+/doc
 
 # For CorsixTH directory and Windows
 *.dll
