@@ -239,7 +239,7 @@ function Audio:initSpeech(speech_file)
 end
 
 function Audio:dumpSoundArchive(out_dir)
-  local info,warning = io.open(out_dir .. "info.csv", "wt")
+  local info,warning = io.open(out_dir .. "info.csv", "w")
 
   if info == nil then
     print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
