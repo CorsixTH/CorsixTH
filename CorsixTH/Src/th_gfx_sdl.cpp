@@ -531,6 +531,12 @@ bool THRenderTarget::takeScreenshot(const char* sFile)
     //cannot directly save it.  Instead we have to create a new surface based
     //on the pixel data in the renderer and save that.
     SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
+    if (pWindowSurface == NULL)
+    {
+        fprintf(stderr, "Unable to take screenshot (pWindowSurface == NULL): %s\n", SDL_GetError());
+        return false;
+    }
+
     SDL_Surface* pRgbSurface = NULL;
     int iPitch = pWindowSurface->w * pWindowSurface->format->BitsPerPixel;
     uint8_t* pPixels = new uint8_t[pWindowSurface->h * iPitch];
