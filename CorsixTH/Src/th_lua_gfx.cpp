@@ -545,6 +545,7 @@ static int l_cursor_position(lua_State *L)
     return 1;
 }
 
+/** Construct the helper structure for making a #THRenderTarget. */
 static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int iArgStart)
 {
     THRenderTargetCreationParams oParams;
@@ -553,23 +554,18 @@ static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int 
 
     oParams.bFullscreen = false;
     oParams.bPresentImmediate = false;
-    oParams.bReuseContext = false;
 
-#define FLAG(name, field) \
-    else if(stricmp(sOption, name) == 0) \
-        oParams.field = true
-
+    // Parse string arguments, looking for matching parameter names.
     for(int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount; ++iArg)
     {
         const char* sOption = luaL_checkstring(L, iArg);
         if(sOption[0] == 0)
             continue;
-        FLAG("fullscreen",          bFullscreen       );
-        FLAG("present immediate",   bPresentImmediate );
-        FLAG("reuse context",       bReuseContext     );
+
+        if (stricmp(sOption, "fullscreen") == 0)        oParams.bFullscreen       = true;
+        if (stricmp(sOption, "present immediate") == 0) oParams.bPresentImmediate = true;
     }
 
-#undef FLAG
     return oParams;
 }
 
