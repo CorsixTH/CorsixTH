@@ -43,8 +43,8 @@ class FullColourRenderer
 public:
     //! Initialize the renderer for a specific render.
     /*!
-        @param width Pixel width of the resulting image
-        @param height Pixel height of the resulting image
+        @param iWidth Pixel width of the resulting image
+        @param iHeight Pixel height of the resulting image
     */
     FullColourRenderer(int iWidth, int iHeight);
     virtual ~FullColourRenderer();
