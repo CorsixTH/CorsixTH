@@ -526,33 +526,34 @@ void THRenderTarget::setCursorPosition(int iX, int iY)
 
 bool THRenderTarget::takeScreenshot(const char* sFile)
 {
-    //The window surface is all black.  We need it for the appropriate
-    //parameters but all the pixel data is in the the renderer where we
-    //cannot directly save it.  Instead we have to create a new surface based
-    //on the pixel data in the renderer and save that.
-    SDL_Surface* pWindowSurface = SDL_GetWindowSurface(m_pWindow);
-    SDL_Surface* pRgbSurface = NULL;
-    int iPitch = pWindowSurface->w * pWindowSurface->format->BitsPerPixel;
-    uint8_t* pPixels = new uint8_t[pWindowSurface->h * iPitch];
-    SDL_RenderReadPixels(m_pRenderer,
-                         &pWindowSurface->clip_rect,
-                         pWindowSurface->format->format,
-                         pPixels,
-                         iPitch);
-    pRgbSurface = SDL_CreateRGBSurfaceFrom(pPixels,
-                                           pWindowSurface->w,
-                                           pWindowSurface->h,
-                                           pWindowSurface->format->BitsPerPixel,
-                                           iPitch,
-                                           pWindowSurface->format->Rmask,
-                                           pWindowSurface->format->Gmask,
-                                           pWindowSurface->format->Bmask,
-                                           pWindowSurface->format->Amask);
-    SDL_SaveBMP(pRgbSurface, sFile);
+    int width = 0, height = 0;
+    if (SDL_GetRendererOutputSize(m_pRenderer, &width, &height) == -1)
+        return false;
+
+    // Create a window-sized surface, RGB format (0 Rmask means RGB.)
+    SDL_Surface* pRgbSurface = SDL_CreateRGBSurface(0, width, height, 24, 0, 0, 0, 0);
+    if (pRgbSurface == NULL)
+        return false;
+
+    int readStatus = -1;
+    if (SDL_LockSurface(pRgbSurface) != -1)
+    {
+        // Ask the renderer to (slowly) fill the surface with renderer
+        // output data.
+        readStatus = SDL_RenderReadPixels(m_pRenderer,
+                                          NULL,
+                                          pRgbSurface->format->format,
+                                          pRgbSurface->pixels,
+                                          pRgbSurface->pitch);
+        SDL_UnlockSurface(pRgbSurface);
+
+        if (readStatus != -1)
+            SDL_SaveBMP(pRgbSurface, sFile);
+    }
+
     SDL_FreeSurface(pRgbSurface);
-    delete[] pPixels;
-    SDL_FreeSurface(pWindowSurface);
-    return true;
+
+    return (readStatus != -1);
 }
 
 
