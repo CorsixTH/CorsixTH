@@ -199,8 +199,8 @@ end
 -- y is the y-coordinate of the reputation meter
 function UIBottomPanel:drawReputationMeter(canvas, x_left, y)
   local width = 65 -- Reputation meter width
-  local step = math.floor(width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min))
-  self.panel_sprites:draw(canvas, 36, x_left + step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min), y)
+  local step = width / (self.ui.hospital.reputation_max - self.ui.hospital.reputation_min)
+  self.panel_sprites:draw(canvas, 36, x_left + math.floor(step * (self.ui.hospital.reputation - self.ui.hospital.reputation_min)), y)
 end
 
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
