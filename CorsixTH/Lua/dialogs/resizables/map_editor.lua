@@ -25,7 +25,7 @@ dofile "commands/set_map_cell"
 dofile "commands/set_map_cell_flags"
 dofile "commands/compound"
 
-class "UIMapEditor" (Window)
+class "UIMapEditor" (UIResizable)
 
 ---@type UIMapEditor
 local UIMapEditor = _G["UIMapEditor"]
@@ -49,8 +49,9 @@ local num_blocks = 8
 local num_visible_blocks = 2
 
 function UIMapEditor:UIMapEditor(ui)
-  -- Put ourselves in an easily findable global for the UI code to find.
-  self:Window()
+  self:UIResizable(ui, 235, 155, col_bg)
+  self.resizable = false
+
   self.ui = ui
   self.panel_sprites = self.ui.app.map.blocks
 
@@ -74,8 +75,8 @@ function UIMapEditor:UIMapEditor(ui)
   self.mouse_cell_x = 0
   self.mouse_cell_y = 0
 
-  self.block_panel = self:addBevelPanel(25, 25, 190, 130, col_bg)
-  self.scroll_base = self:addBevelPanel(215, 25, 20, 130, col_bg)
+  self.block_panel = self:addBevelPanel(0, 0, 190, 130, col_bg)
+  self.scroll_base = self:addBevelPanel(190, 0, 20, 130, col_bg)
   self.scroll_base.lowered = true
   self.block_scroll = self.scroll_base:makeScrollbar(col_scrollbar, --[[persistable:map_editor_scrollbar_callback]] function()
     self:updateBlocks()
@@ -91,6 +92,7 @@ function UIMapEditor:UIMapEditor(ui)
     self.block_panels[i] = self:addPanel(i, 30, 33 + 78 * (i - 1), 64, 32)
   end
 
+  self:setPosition(0.1, 0.1)
   self:updateBlocks()
 end
 
@@ -191,7 +193,7 @@ function UIMapEditor:draw(canvas, ...)
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
 
-  Window.draw(self, canvas, ...)
+  UIResizable.draw(self, canvas, ...)
 end
 
 function UIMapEditor:updateBlocks()
