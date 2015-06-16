@@ -96,14 +96,14 @@ enum THFrameFlags
     THFF_AnimationStart = 1 << 0,
 };
 
+/** Helper structure with parameters to create a #THRenderTarget. */
 struct THRenderTargetCreationParams
 {
-    int iWidth;
-    int iHeight;
-    int iBPP;
-    bool bFullscreen;
-    bool bPresentImmediate;
-    bool bReuseContext;
+    int iWidth;             ///< Expected width of the render target.
+    int iHeight;            ///< Expected height of the render target.
+    int iBPP;               ///< Expected colour depth of the render target.
+    bool bFullscreen;       ///< Run full-screen.
+    bool bPresentImmediate; ///< Whether to present immediately to the user (else wait for Vsync).
 };
 
 /*!
