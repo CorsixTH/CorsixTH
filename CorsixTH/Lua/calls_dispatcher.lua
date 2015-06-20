@@ -306,12 +306,12 @@ function CallsDispatcher:findSuitableStaff(call)
   for _, e in ipairs(self.world.entities) do
     if class.is(e, Staff) then
       if e.humanoid_class ~= "Handyman" then
-    local score = call.verification(e) and call.priority(e) or nil
-    if score ~= nil and score < min_score then
-      min_score = score
-      min_staff = e
-    end
-    end
+        local score = call.verification(e) and call.priority(e) or nil
+        if score ~= nil and score < min_score then
+          min_score = score
+          min_staff = e
+        end
+      end
     end
   end
 
