@@ -1769,7 +1769,6 @@ function AIHospital:logTransaction()
 end
 
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
-
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
   table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
@@ -1778,7 +1777,7 @@ end
 function Hospital:modifyHandymanTaskPriority(taskIndex, newPriority, taskType)
   if taskIndex ~= -1 then
     local subTable = self:findHandymanTaskSubtable(taskType)
-    self:findHandymanTaskSubtable(taskType)[taskIndex].priority = newPriority;
+    subTable[taskIndex].priority = newPriority;
   end
 end
 
@@ -1813,10 +1812,10 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
   if taskIndex ~= -1 then
     local subTable = self:findHandymanTaskSubtable(taskType)
     if not subTable[taskIndex].assignedHandyman then
-      subTable[taskIndex].assignedHandyman  = handyman
+      subTable[taskIndex].assignedHandyman = handyman
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
-      subTable[taskIndex].assignedHandyman  = handyman
+      subTable[taskIndex].assignedHandyman = handyman
       formerHandyman:interruptHandymanTask()
     end
   end

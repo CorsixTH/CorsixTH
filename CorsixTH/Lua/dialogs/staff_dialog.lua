@@ -342,10 +342,10 @@ function UIStaff:changeHandymanAttributes(increased)
   end
   if extra_decrease ~= 0 then
     for no, attr in ipairs(attributes) do
-    if attr ~= increased then
-      self.staff:changeAttribute(attr, -extra_decrease)
+      if attr ~= increased then
+        self.staff:changeAttribute(attr, -extra_decrease)
+      end
     end
-  end
   end
 end
 
