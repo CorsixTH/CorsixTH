@@ -1,4 +1,52 @@
 -------------------------------------------------------------------------------
+Version 0.50 - released July 2015
+-------------------------------------------------------------------------------
+
+The majority of changes in this update have been done under the hood.
+Most of our third-party libraries have been updated, and especially Windows
+users will notice that there is now only one executable after installation.
+No more "which one should I use if I want zoom?"!
+
+
+--- Gameplay ---
+
+* Fix: Crash when trying to play certain sounds from e.g. the French version.
+* Fix: Potential crash from Esc-press before main menu.
+* Fix: Patients could in some circumstances get really confused and try to exit
+  a room without putting any clothes on.
+
+* Added: Configuration of scroll speed.
+* Change: Midi tracks will be played in the order they appear in MIDI.txt
+
+* Most languages have been updated.
+
+
+--- Movies ---
+
+* Fix: Audio stutter in certain movies.
+* Fix: The game could sometimes crash when a movie had finished.
+* Support for LibAV as an alternative to FFMpeg.
+
+
+--- Animation Viewer ---
+
+* Added: A vertical scroll bar to the sprite display.
+
+
+--- CorsixTH development ---
+
+* We have moved to newer versions of a lot of libraries, most notably
+  SDL 1.2 -> SDL 2 and added support for Lua 5.2 and Lua 5.3.
+* New ready-to-use Eclipse Workspace.
+* Debugging Lua code using DBGp has been added. See
+  the Wiki for more information.
+* The Windows Installer now uses NSIS 3.0 and only produces one executable
+  since SDL 2 handles renderer itself.
+* Framework for Busted Unit Tests in Lua.
+* Support for custom graphics has been improved.
+
+
+-------------------------------------------------------------------------------
 Version 0.40 - released December 2014
 -------------------------------------------------------------------------------
 
@@ -12,7 +60,7 @@ Also, don't forget to try out the new map St. Peter's near Cawley!
 Happy gaming!
 
 
---- Gameplay
+--- Gameplay ---
 
 * Added: Epidemics. You can either choose to pay a fine to the authorities or
   try to cover up the epidemic by vaccinating and curing the contagious patients.
