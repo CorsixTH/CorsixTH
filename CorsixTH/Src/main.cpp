@@ -84,10 +84,6 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     if(lua_type(L, -1) == LUA_TNIL)
     {
         lua_pop(L, 2);
-        lua_getglobal(L, "print");
-        lua_pushliteral(L, "Notice: LuaJIT not being used.\nConsider replacing"
-            " Lua with LuaJIT to improve performance.");
-        lua_call(L, 1, 0);
     }
     else
     {
