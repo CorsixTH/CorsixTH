@@ -157,6 +157,8 @@ public:
 
     //! Convert a stream of chunks into a raw bitmap
     /*!
+        @param pData Stream data.
+        @param iDataLen Length of \a pData.
         @param bComplex true if pData is a stream of "complex" chunks, false if
           pData is a stream of "simple" chunks. Passing the wrong value will
           usually result in a very visible wrong result.
@@ -261,9 +263,13 @@ public:
     /*!
         setSpriteSheet() must be called before calling this.
         @param pStartData Animation first frame indicies (e.g. VSTART-1.ANI)
+        @param iStartDataLength Length of \a pStartData.
         @param pFrameData Frame details (e.g. VFRA-1.ANI)
+        @param iFrameDataLength Length of \a pFrameData
         @param pListData Element indicies list (e.g. VLIST-1.ANI)
+        @param iListDataLength Length of \a pListData
         @param pElementData Element details (e.g. VELE-1.ANI)
+        @param iElementDataLength Length of \a pElementData
         @return Loading was successful.
     */
     bool loadFromTHFile(const uint8_t* pStartData, size_t iStartDataLength,
@@ -281,7 +287,6 @@ public:
     /*!
         @param pData Start of the loaded data.
         @param iDataLength Length of the loaded data.
-        @param pCanvas The render target to draw onto.
         @return Loading was successful.
     */
     bool loadCustomAnimations(const uint8_t* pData, size_t iDataLength);
@@ -466,7 +471,7 @@ protected:
         @param iElementCount Number of elements to load.
         @return Index of the first loaded element in #m_vElements. Negative value means failure.
      */
-    size_t loadElements(Input &input, THSpriteSheet *pSpriteheet,
+    size_t loadElements(Input &input, THSpriteSheet *pSpriteSheet,
                         size_t iNumElements, size_t &iLoadedElements,
                         size_t iElementStart, size_t iElementCount);
 
