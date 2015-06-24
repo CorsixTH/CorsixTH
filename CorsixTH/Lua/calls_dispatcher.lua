@@ -200,11 +200,15 @@ function CallsDispatcher.verifyStaffForVaccination(patient, staff)
 
     local px,py = patient.tile_x, patient.tile_y
     local nx,ny = staff.tile_x, staff.tile_y
+
+    -- If any of the nurse or the patient tiles are nil
+    if not px or not py or not nx or not ny then return false end
+
     local x_diff = math.abs(px-nx)
     local y_diff = math.abs(py-ny)
     local test_radius = 5
 
-    -- Test if the patient's room is still empty incase they are just entering
+    -- Test if the patient's room is still empty in case they are just entering
     -- a room when they call for a staff to vaccinate them
     return x_diff and y_diff and x_diff <= test_radius
     and y_diff <= test_radius and not patient:getRoom()

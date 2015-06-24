@@ -537,6 +537,11 @@ function Patient:goHome(cured)
   self.going_home = true
   self.waiting = nil
 
+  -- Remove any vaccination calls from patient
+  if not self.vaccinated then
+    self.world.dispatcher:dropFromQueue(self)
+  end
+
   local room = self:getRoom()
   if room then
     room:makeHumanoidLeave(self)

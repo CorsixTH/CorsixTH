@@ -379,6 +379,9 @@ end
  any epidemic-specific icons from their heads.]]
 function Epidemic:clearAllInfectedPatients()
   for _, infected_patient in ipairs(self.infected_patients) do
+    -- Remove any vaccination calls still open
+    infected_patient:removeVaccinationCandidateStatus()
+    self.world.dispatcher:dropFromQueue(infected_patient)
     infected_patient.vaccinated = true
     infected_patient:setMood("epidemy1","deactivate")
     infected_patient:setMood("epidemy2","deactivate")
