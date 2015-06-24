@@ -1255,7 +1255,7 @@ function Hospital:resolveEmergency()
   self.world:nextEmergency()
 end
 
--- Creates VIP
+-- Creates VIP and sends a FAX to query the user.
 function Hospital:createVip()
   local vipName =  _S.vip_names[math.random(1,10)]
   local message = {

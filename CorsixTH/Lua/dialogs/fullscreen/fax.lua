@@ -45,11 +45,10 @@ function UIFax:UIFax(ui, icon)
     for i = 1, #choices do
       local y = orig_y + ((i-1) + (3-#choices)) * 48
       local choice = choices[i].choice
-      local additionalInfo = choices[i].additionalInfo
       -- NB: both nil and true result in enabled; also handle old "disabled" choice
       local enabled = (choices[i].enabled ~= false) and (choice ~= "disabled")
       local --[[persistable:fax_choice_button]] function callback()
-        self:choice(choice,additionalInfo)
+        self:choice(i)
       end
       self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
         :setDisabledSprite(19):enable(enabled)
@@ -118,7 +117,19 @@ function UIFax:draw(canvas, x, y)
   end
 end
 
-function UIFax:choice(choice,additionalInfo)
+--A choice was made for the fax.
+--!param choice_number (integer) Number of the choice
+function UIFax:choice(choice_number)
+  local choices = self.message.choices
+  local choice, additionalInfo
+  if choices and choice_number >= 1 and choice_number <= #choices then
+    choice = choices[choice_number].choice
+    additionalInfo = choices[choice_number].additionalInfo
+  else
+    choice = "disabled"
+    additionalInfo = nil
+  end
+
   local owner = self.owner
   if owner then
     -- A choice was made, the patient is no longer waiting for a decision

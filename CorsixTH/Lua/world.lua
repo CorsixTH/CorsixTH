@@ -544,12 +544,14 @@ function World:spawnPatient(hospital)
   end
 end
 
+--A VIP is invited (or he invited himself) to the player hospital.
+--!param name Name of the VIP
 function World:spawnVIP(name)
   local hospital = self:getLocalPlayerHospital()
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local vip = self:newEntity("Vip", 2)
-  vip:setType "VIP"
+  vip:setType("VIP")
   vip.name = name
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
