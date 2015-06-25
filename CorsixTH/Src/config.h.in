@@ -80,23 +80,9 @@ SOFTWARE.
 #  define __STDC_CONSTANT_MACROS
 #endif
 #include <cstddef>
-#cmakedefine CORSIX_TH_HAS_STDINT_H
 #cmakedefine CORSIX_TH_HAS_MALLOC_H
 #cmakedefine CORSIX_TH_HAS_ALLOCA_H
-#ifdef CORSIX_TH_HAS_STDINT_H
 #include <cstdint>
-#else
-// Some compilers (e.g. MSVC) don't have stdint.h, so define the bits we use
-// from stdint.h
-typedef   signed __int8   int8_t;
-typedef   signed __int16  int16_t;
-typedef   signed __int32  int32_t;
-typedef   signed __int64  int64_t;
-typedef unsigned __int8  uint8_t;
-typedef unsigned __int16 uint16_t;
-typedef unsigned __int32 uint32_t;
-typedef unsigned __int64 uint64_t;
-#endif // CORSIX_TH_HAS_STDINT
 
 /** Visual Leak Detector **/
 // In Visual Studio, Visual Leak Detector can be used to find memory leaks.
