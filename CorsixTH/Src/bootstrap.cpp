@@ -21,7 +21,7 @@ SOFTWARE.
 */
 #include "lua.hpp"
 #include "th_lua.h"
-#include <string.h>
+#include <cstring>
 #include "config.h"
 
 /* Often, an error occurs during the CorsixTH startup process. Examples of

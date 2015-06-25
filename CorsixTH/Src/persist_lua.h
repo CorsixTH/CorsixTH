@@ -24,7 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
 #include "th_lua.h"
-#include <stdlib.h>
+#include <cstdlib>
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif

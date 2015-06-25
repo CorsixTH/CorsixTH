@@ -22,9 +22,9 @@ SOFTWARE.
 
 #include "iso_fs.h"
 #include <memory.h>
-#include <string.h>
-#include <stdarg.h>
-#include <stdlib.h>
+#include <cstring>
+#include <cstdarg>
+#include <cstdlib>
 #ifdef CORSIX_TH_HAS_MALLOC_H
 #include <malloc.h> // for alloca
 #endif

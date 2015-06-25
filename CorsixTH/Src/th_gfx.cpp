@@ -28,9 +28,8 @@ SOFTWARE.
 #include <new>
 #include <algorithm>
 #include <memory.h>
-#include <limits.h>
+#include <climits>
 #include <cassert>
-#include <cstdint>
 
 /** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
 class Input

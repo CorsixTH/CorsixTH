@@ -79,12 +79,12 @@ SOFTWARE.
 #ifndef __STDC_CONSTANT_MACROS
 #  define __STDC_CONSTANT_MACROS
 #endif
-#include <stddef.h>
+#include <cstddef>
 #cmakedefine CORSIX_TH_HAS_STDINT_H
 #cmakedefine CORSIX_TH_HAS_MALLOC_H
 #cmakedefine CORSIX_TH_HAS_ALLOCA_H
 #ifdef CORSIX_TH_HAS_STDINT_H
-#include <stdint.h>
+#include <cstdint>
 #else
 // Some compilers (e.g. MSVC) don't have stdint.h, so define the bits we use
 // from stdint.h

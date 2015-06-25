@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_lua_internal.h"
 #include "th_gfx.h"
 #include <SDL.h>
-#include <assert.h>
+#include <cassert>
 
 static int l_palette_new(lua_State *L)
 {

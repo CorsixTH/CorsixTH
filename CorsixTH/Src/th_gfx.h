@@ -37,7 +37,6 @@ enum THScaledItems
 
 #include "th_gfx_sdl.h"
 #include "th_gfx_font.h"
-#include <stddef.h>
 #include <vector>
 #include <map>
 #include <string>

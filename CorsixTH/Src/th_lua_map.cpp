@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_lua_internal.h"
 #include "th_map.h"
 #include "th_pathfind.h"
-#include <string.h>
+#include <cstring>
 
 static int l_map_new(lua_State *L)
 {

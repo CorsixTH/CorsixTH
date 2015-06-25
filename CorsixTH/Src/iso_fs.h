@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_lua.h"
-#include <stdio.h>
+#include <cstdio>
 
 //! Layer for reading Theme Hospital files out of an .iso disk image
 /*!
