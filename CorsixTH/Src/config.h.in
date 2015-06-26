@@ -31,14 +31,6 @@ SOFTWARE.
 #define CORSIX_TH_USE_WIN32_SDK
 #endif
 
-/** SDL options **/
-// On Windows, the default is to use the copy of SDLmain which is included with
-// CorsixTH (SDL_main_win32.c), but a prebuilt SDLmain library can be used
-// instead.
-#ifdef CORSIX_TH_USE_WIN32_SDK
-#define CORSIX_TH_USE_INCLUDED_SDL_MAIN
-#endif
-
 /** Audio options **/
 // SDL_mixer is used for ingame audio. If this library is not present on your
 // system, then you can comment out the next line and the game will not have
