@@ -32,9 +32,9 @@ before_install:
   - unzip -n freetype-2.3.5-1-dep.zip -d freetype
   # Get SDL
   - wget http://libsdl.org/release/SDL2-devel-2.0.3-mingw.tar.gz
-  - wget https://hg.libsdl.org/SDL/raw-diff/e217ed463f25/include/SDL_platform.h
+  - wget https://raw.githubusercontent.com/CorsixTH/deps/master/travisci-mingw/patches/SDL_mingw_build_fix.patch
   - tar xfz SDL2-devel-2.0.3-mingw.tar.gz
-  - patch -p2 -d SDL2-2.0.3/i686-w64-mingw32/include/SDL2 < SDL_platform.h
+  - patch -p2 -d SDL2-2.0.3/i686-w64-mingw32/include/SDL2 < SDL_mingw_build_fix.patch
   - sudo mkdir /usr/i686-w64-mingw32/bin/
   - sudo cp SDL2-2.0.3/i686-w64-mingw32/bin/* /usr/i686-w64-mingw32/bin/
   - sudo cp -r SDL2-2.0.3/i686-w64-mingw32/include/SDL2/* /usr/i686-w64-mingw32/include/
