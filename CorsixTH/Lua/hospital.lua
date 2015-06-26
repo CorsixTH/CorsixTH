@@ -23,7 +23,7 @@ class "Hospital"
 ---@type Hospital
 local Hospital = _G["Hospital"]
 
-function Hospital:Hospital(world, name)
+function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
@@ -145,8 +145,17 @@ function Hospital:Hospital(world, name)
   self.disease_casebook = {}
   self.policies = {}
   self.discovered_diseases = {} -- a list
+
   self.discovered_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are true or nil
   self.undiscovered_rooms = {} -- NB: These two together must form the list world.available_rooms
+  for _, avail_room in ipairs(avail_rooms) do
+    if avail_room.is_discovered then
+      self.discovered_rooms[avail_room.room] = true
+    else
+      self.undiscovered_rooms[avail_room.room] = true
+    end
+  end
+
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
@@ -216,6 +225,14 @@ function Hospital:Hospital(world, name)
     end
   end
   self.research = ResearchDepartment(self)
+
+  -- Initialize build cost for all available rooms.
+  for _, avail_room in ipairs(avail_rooms) do
+    self.research.research_progress[avail_room.room] = {
+        -- In free build mode, everything is freely available.
+        build_cost = not self.free_build_mode and avail_room.build_cost or 0,
+      }
+  end
 end
 
 -- Seasoned players will know these things, but it does not harm to be reminded if there is no staff room or toilet!
