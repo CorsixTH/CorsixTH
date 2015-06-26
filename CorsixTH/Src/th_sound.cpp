@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_sound.h"
-#include <math.h>
+#include <cmath>
 #include <new>
 
 THSoundArchive::THSoundArchive()

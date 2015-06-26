@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th.h"
 #include "th_lua_internal.h"
 #include "bootstrap.h"
-#include <string.h>
+#include <cstring>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);

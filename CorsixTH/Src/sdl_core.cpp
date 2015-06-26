@@ -23,7 +23,7 @@ SOFTWARE.
 #include "config.h"
 #include "lua_sdl.h"
 #include "th_lua.h"
-#include <string.h>
+#include <cstring>
 #ifndef _MSC_VER
 #define stricmp strcasecmp
 #else

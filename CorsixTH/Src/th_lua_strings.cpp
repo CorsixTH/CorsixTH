@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "persist_lua.h"
-#include <string.h>
+#include <cstring>
 
 /*
     This file implements a string proxy system. A string proxy is a userdata

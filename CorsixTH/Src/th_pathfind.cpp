@@ -24,9 +24,9 @@ SOFTWARE.
 #include "th_pathfind.h"
 #include "persist_lua.h"
 #include "lua.hpp"
-#include <stdlib.h>
+#include <cstdlib>
 #include <queue>
-#include <math.h>
+#include <cmath>
 
 BasePathing::BasePathing(THPathfinder *pf) : m_pPf(pf)
 {

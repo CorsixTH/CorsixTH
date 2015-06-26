@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th.h"
-#include <string.h>
+#include <cstring>
 #include <memory.h>
 #include <new>
 

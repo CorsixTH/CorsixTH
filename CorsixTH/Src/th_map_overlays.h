@@ -23,7 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_OVERLAYS_H_
 #define CORSIX_TH_TH_MAP_OVERLAYS_H_
 
-#include <stddef.h>
+#include <cstddef>
 
 class THFont;
 class THMap;
