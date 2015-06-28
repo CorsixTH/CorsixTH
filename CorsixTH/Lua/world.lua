@@ -247,11 +247,13 @@ function World:initLevel(app, avail_rooms)
         vis = disease.visuals_id and visual[disease.visuals_id].Value
         or non_visual[disease.non_visuals_id].Value
       end
-      for _, room_id in ipairs(disease.treatment_rooms) do
-        if existing_rooms[room_id] == nil then
-          print("Warning: Removing disease \"" .. disease.id .. "\" due to missing treatment room \"" .. room_id .. "\".")
-          vis = 0 -- Missing treatment room, disease cannot be treated. Remove it.
-          break
+      if vis ~= 0 then
+        for _, room_id in ipairs(disease.treatment_rooms) do
+          if existing_rooms[room_id] == nil then
+            print("Warning: Removing disease \"" .. disease.id .. "\" due to missing treatment room \"" .. room_id .. "\".")
+            vis = 0 -- Missing treatment room, disease cannot be treated. Remove it.
+            break
+          end
         end
       end
       -- TODO: Where the value is greater that 0 should determine the frequency of the patients
