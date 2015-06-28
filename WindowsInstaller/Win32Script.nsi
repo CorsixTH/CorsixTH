@@ -91,7 +91,7 @@ var ICONS_GROUP
 !insertmacro MUI_PAGE_INSTFILES
 
 ; Finish page
-!define MUI_FINISHPAGE_RUN "$INSTDIR\CorsixTH_SDL.exe"
+!define MUI_FINISHPAGE_RUN "$INSTDIR\CorsixTH.exe"
 !define MUI_FINISHPAGE_RUN_NOTCHECKED
 !insertmacro MUI_PAGE_FINISH
 
