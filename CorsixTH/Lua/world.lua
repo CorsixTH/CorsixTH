@@ -110,12 +110,21 @@ function World:World(app)
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
-  self:initLevel(app)
-  self.hospitals[1] = Hospital(self, app.config.player_name) -- Player's hospital
-  self:initCompetitors()
-  self:initRooms()
-  -- Now the hospitals can concentrate their research.
-  for i, hospital in ipairs(self.hospitals) do
+  -- Initialize available rooms.
+  local avail_rooms = self:getAvailableRooms()
+  self.available_rooms = {} -- Both a list and a set, use ipairs to iterate through the available rooms.
+  for _, avail_room in ipairs(avail_rooms) do
+    local room = avail_room.room
+    self.available_rooms[#self.available_rooms + 1] = room
+    self.available_rooms[room.id] = room
+  end
+
+  -- Initialize available diseases and winning conditions.
+  self:initLevel(app, avail_rooms)
+
+  self.hospitals[1] = Hospital(self, avail_rooms, app.config.player_name) -- Player's hospital
+  self:initCompetitors(avail_rooms)
+  for _, hospital in ipairs(self.hospitals) do
     hospital.research:setResearchConcentration()
   end
 
@@ -219,18 +228,30 @@ end
 
 --! Initialize the game level (available diseases, winning conditions).
 --!param app Game application.
-function World:initLevel(app)
-  local level_config = self.map.level_config
+--!param avail_rooms (list) Available rooms in the level.
+function World:initLevel(app, avail_rooms)
+  local existing_rooms = {}
+  for _, avail_room in ipairs(avail_rooms) do
+    existing_rooms[avail_room.room.id] = true
+  end
+
   -- Determine available diseases
   self.available_diseases = {}
+  local level_config = self.map.level_config
   local visual = level_config.visuals
   local non_visual = level_config.non_visuals
-  for i, disease in ipairs(app.diseases) do
+  for _, disease in ipairs(app.diseases) do
     if not disease.pseudo then
       local vis = 1
       if visual and (visual[disease.visuals_id] or non_visual[disease.non_visuals_id]) then
         vis = disease.visuals_id and visual[disease.visuals_id].Value
         or non_visual[disease.non_visuals_id].Value
+      end
+      for _, room_id in ipairs(disease.treatment_rooms) do
+        if existing_rooms[room_id] == nil then
+          vis = 0 -- Missing treatment room, disease cannot be treated. Remove it.
+          break
+        end
       end
       -- TODO: Where the value is greater that 0 should determine the frequency of the patients
       if vis ~= 0 then
@@ -370,13 +391,14 @@ function World:determineWinningConditions()
   self.winning_goal_count = winning_goal_count
 end
 
-function World:initRooms()
-  -- Combination of set and list. Use ipairs to iterate through all available rooms.
-  self.available_rooms = {}
+--! Find the rooms available at the level.
+--!return (list) Available rooms, with discovery state at start, and build_cost.
+function World:getAvailableRooms()
+  local avail_rooms = {}
 
   local obj = self.map.level_config.objects
   local rooms = self.map.level_config.rooms
-  for i, room in ipairs(TheApp.rooms) do
+  for _, room in ipairs(TheApp.rooms) do
     -- Add build cost based on level files for all rooms.
     -- For now, sum it up so that the result is the same as before.
     -- TODO: Change the whole build process so that this value is
@@ -391,43 +413,29 @@ function World:initRooms()
         -- It won't be possible to build this room at all on the level.
         available = false
       elseif spec.StartAvail == 0 then
-        -- Ok, it will be availabe at some point just not from the beginning.
+        -- Ok, it will be available at some point just not from the beginning.
         is_discovered = false
       end
       -- Add cost for this object.
       build_cost = build_cost + obj[TheApp.objects[name].thob].StartCost * no
     end
-    -- Now define the total build cost for the room. In free build mode nothing
-    -- costs anything.
-    for _, hospital in ipairs(self.hospitals) do
-      hospital.research.research_progress[room] = {
-        build_cost = not self.free_build_mode and build_cost or 0,
-      }
-    end
-    if available then
-      self.available_rooms[#self.available_rooms + 1] = room
-      self.available_rooms[room.id] = room
 
-      if is_discovered then
-        for _, hospital in ipairs(self.hospitals) do
-          hospital.discovered_rooms[room] = true
-        end
-      else
-        for _, hospital in ipairs(self.hospitals) do
-          hospital.undiscovered_rooms[room] = true
-        end
-      end
+    if available then
+      avail_rooms[#avail_rooms + 1] = {room = room, is_discovered = is_discovered, build_cost = build_cost}
     end
   end
+  return avail_rooms
 end
 
-function World:initCompetitors()
+--! Initialize competing hospitals
+--!param avail_rooms (list) Available rooms in the level.
+function World:initCompetitors(avail_rooms)
   -- Add computer players
   -- TODO: Right now they're only names
   local level_config = self.map.level_config
   for key, value in pairs(level_config.computer) do
     if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self)
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
     end
   end
 end
