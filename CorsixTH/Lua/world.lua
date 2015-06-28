@@ -249,6 +249,7 @@ function World:initLevel(app, avail_rooms)
       end
       for _, room_id in ipairs(disease.treatment_rooms) do
         if existing_rooms[room_id] == nil then
+          print("Warning: Removing disease \"" .. disease.id .. "\" due to missing treatment room \"" .. room_id .. "\".")
           vis = 0 -- Missing treatment room, disease cannot be treated. Remove it.
           break
         end
