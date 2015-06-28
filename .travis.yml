@@ -24,9 +24,9 @@ before_install:
   - mv ffmpeg-2.5.2-win32-dev ffmpeg-dev
   - mv ffmpeg-2.5.2-win32-shared ffmpeg-bin
   # Get freetype
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-lib.zip
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-bin.zip
-  - wget http://mirror.ufs.ac.za/gnuwin32/freetype/2.3.5-1/freetype-2.3.5-1-dep.zip
+  - wget https://github.com/CorsixTH/deps/raw/master/travisci-mingw/freetype-2.3.5-1-lib.zip
+  - wget https://github.com/CorsixTH/deps/raw/master/travisci-mingw/freetype-2.3.5-1-bin.zip
+  - wget https://github.com/CorsixTH/deps/raw/master/travisci-mingw/freetype-2.3.5-1-dep.zip
   - unzip -n freetype-2.3.5-1-lib.zip -d freetype
   - unzip -n freetype-2.3.5-1-bin.zip -d freetype
   - unzip -n freetype-2.3.5-1-dep.zip -d freetype
