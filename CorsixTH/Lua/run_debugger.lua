@@ -5,12 +5,6 @@
 -- It does this in the function it returns.
 ---
 local function run()
-  local error_message = is_file_unreadable("CorsixTH/Lua/debugger.lua", true)
-  if error_message  then
-    print(error_message)
-    return "../Lua/debugger.lua is missing or can't be read. Devs are required to download this file: the wiki debugger tutorial has instructions."
-  end
-  
   print "NOTE: While CorsixTH is connected to an IDE's debugger server,"
   print "text will be printed in its output console instead of here."
   
