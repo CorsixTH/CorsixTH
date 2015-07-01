@@ -239,7 +239,7 @@ end
 --!param label (string) The text to be drawn on top of the label.
 --!param font (font) [optional] The font to use. Default is Font01V in QData.
 --!param align (string) [optional] Alignment for non-multiline labels (multiline is always left)
---!  can be either of "left", "center"/"centre"/"middle", "right"
+--!  can be either of "left", "center", "right"
 function Panel:setLabel(label, font, align)
   self.label = label or ""
   self.label_font = font or self.label_font or TheApp.gfx:loadFont("QData", "Font01V")
@@ -897,6 +897,10 @@ function Textbox:drawCursor(canvas, x, y)
     local col = TheApp.video:mapRGB(255, 255, 255)
     local cursor_y, cursor_x = self.panel:drawLabel(nil, x, y, self.cursor_pos)
     local w, h = self.panel.label_font:sizeOf("0")
+    if self.panel.align == nil or self.panel.align == "center" then
+      local _, text_x = self.panel:drawLabel(nil, x, y, {self.cursor_pos[1], #self.text})
+      cursor_x = text_x - (text_x - cursor_x) * 2
+    end
     cursor_y = cursor_y - 3
     -- Add x separation, but only if there was actually some text in this line.
     if self.text[self.cursor_pos[1]] ~= "" then
