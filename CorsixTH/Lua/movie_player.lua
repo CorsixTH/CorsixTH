@@ -164,15 +164,15 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
       w, h = screen_w, screen_h
     else
       if(screen_w > screen_h / native_h * native_w) then
-        w = screen_h / native_h * native_w
+        w = math.floor(screen_h / native_h * native_w)
         h = screen_h
-        x = (screen_w - w) / 2
+        x = math.floor((screen_w - w) / 2)
         y = 0
       else
         w = screen_w
-        h = screen_w / native_w * native_h
+        h = math.floor(screen_w / native_w * native_h)
         x = 0
-        y = (screen_h - h) / 2
+        y = math.floor((screen_h - h) / 2)
       end
     end
   else

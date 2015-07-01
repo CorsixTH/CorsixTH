@@ -314,11 +314,11 @@ function UI:draw(canvas)
     local screen_w, screen_h = app.config.width, app.config.height
     local factor = math.max(screen_w / bg_w, screen_h / bg_h)
     if canvas:scale(factor, "bitmap") or canvas:scale(factor) then
-      self.background:draw(canvas, (screen_w / factor - bg_w) / 2, (screen_h / factor - bg_h) / 2)
+      self.background:draw(canvas, math.floor((screen_w / factor - bg_w) / 2), math.floor((screen_h / factor - bg_h) / 2))
       canvas:scale(1)
     else
       canvas:fillBlack()
-      self.background:draw(canvas, (screen_w - bg_w) / 2, (screen_h - bg_h) / 2)
+      self.background:draw(canvas, math.floor((screen_w - bg_w) / 2), math.floor((screen_h - bg_h) / 2))
     end
   end
   Window.draw(self, canvas, 0, 0)

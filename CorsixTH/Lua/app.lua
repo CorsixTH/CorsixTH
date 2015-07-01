@@ -177,7 +177,7 @@ function App:init()
   if good_install_folder then
     self.video:startFrame()
     self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
-      (self.config.width - 640) / 2, (self.config.height - 480) / 2)
+      math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
     self.video:endFrame()
     -- Add some notices to the loading screen
     local notices = {}
