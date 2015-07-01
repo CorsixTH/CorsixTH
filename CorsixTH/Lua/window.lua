@@ -1136,6 +1136,8 @@ function Textbox:keyInput(char, rawchar)
     else
       self.text = new_line
     end
+    -- update label
+    self.panel:setLabel(self.text)
   end
   -- make cursor visible
   self.cursor_counter = 0
