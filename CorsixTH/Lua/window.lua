@@ -317,14 +317,26 @@ function Panel:drawLabel(canvas, x, y, limit)
   return next_y, last_x
 end
 
+--! Set the position of a panel.
+--!param x (int) New horizontal position of the panel.
+--!param y (int) New vertical position of the panel.
 function Panel:setPosition(x, y)
   self.x = x
   self.y = y
 end
 
+--! Set the size of a panel.
+--!param width (int) New width of the panel.
+--!param height (int) New height of the panel.
 function Panel:setSize(width, height)
   self.w = width
   self.h = height
+end
+
+--! Set the visibility of the panel.
+--!param visibility (bool) New visibility of the panel.
+function Panel:setVisible(visibility)
+  self.visible = visibility
 end
 
 --[[ Add a `Panel` to the window.
@@ -670,6 +682,9 @@ function Button:handleClick(mouse_button)
   end
 end
 
+--! Set the position of a button.
+--!param x (int) New horizontal position of the button.
+--!param y (int) New vertical position of the button.
 function Button:setPosition(x, y)
   self.panel_for_sprite:setPosition(x, y)
   self.r = self.r - self.x + x
@@ -682,6 +697,9 @@ function Button:setPosition(x, y)
   end
 end
 
+--! Set the size of a button.
+--!param width (int) New width of the button.
+--!param height (int) New height of the button.
 function Button:setSize(width, height)
   self.panel_for_sprite:setSize(width, height)
   self.r = self.x + width
@@ -690,6 +708,12 @@ function Button:setSize(width, height)
     self.tooltip.tooltip_x = math.round((self.x + self.r) / 2, 1)
     self.tooltip.tooltip_y = self.y
   end
+end
+
+--! Set the visibility of the button.
+--!param visibility (bool) New visibility of the button.
+function Button:setVisible(visibility)
+  self.panel_for_sprite:setVisible(visibility)
 end
 
 --! Convenience function to allow setLabel to be called on a button, not only its panel.
