@@ -635,6 +635,12 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
+  if old < 102 then
+    -- Added these two hospital variables, related to price distortion
+    self.under_priced_threshold = -0.3
+    self.over_priced_threshold = 0.3
+  end
+
   if old < 107 then
     self.reception_desks = nil
   end
