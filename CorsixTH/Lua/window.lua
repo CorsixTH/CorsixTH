@@ -571,14 +571,17 @@ function Button:setDisabledSprite(index)
   return self
 end
 
+--! Enable or disable a button.
+--!param enable (boolean) Whether to enable (true) or disable (false) the button.
 function Button:enable(enable)
-  if enable then
+  if enable and not self.enabled then
     self.enabled = true
     self.panel_for_sprite.sprite_index = self.sprite_index_normal
     if self.panel_for_sprite.colour_backup then
       self.panel_for_sprite.colour = self.panel_for_sprite.colour_backup
     end
-  else
+  end
+  if not enable and self.enabled then
     self.enabled = false
     self.panel_for_sprite.sprite_index = self.sprite_index_disabled
     if self.panel_for_sprite.disabled_colour then
