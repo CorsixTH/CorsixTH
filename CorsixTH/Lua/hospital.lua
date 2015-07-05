@@ -1573,7 +1573,7 @@ function Hospital:receiveMoneyForTreatment(patient)
         local is_over_priced = price_distortion > self.over_priced_threshold
 
         if is_over_priced and math.random(1, 5) == 1 then
-          -- patient thinks it's too expansive, so he/she's not paying and he/she leaves
+          -- patient thinks it's too expensive, so he/she's not paying and he/she leaves
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
           patient:changeAttribute("happiness", -0.5)
           patient:goHome(patient.go_home_reasons.OVER_PRICED)
