@@ -275,13 +275,14 @@ function UIPatient:viewQueue()
 end
 
 function UIPatient:goHome()
-  if self.patient.going_home then
+  local patient = self.patient
+  if patient.going_home then
     return
   end
   self:close()
-  self.patient:playSound "sack.wav"
-  self.patient:goHome("kicked")
-  self.patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
+  patient:playSound "sack.wav"
+  patient:goHome(patient.go_home_reasons.KICKED)
+  patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
 end
 
 function UIPatient:viewDiseases()

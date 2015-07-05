@@ -1570,7 +1570,7 @@ function Hospital:receiveMoneyForTreatment(patient)
           -- patient thinks it's too expansive, so he/she's not paying and he/she leaves
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
           patient:changeAttribute("happiness", -0.5)
-          patient:goHome("over_priced")
+          patient:goHome(patient.go_home_reasons.OVER_PRICED)
         else
           -- patient is paying normally (but still, he could feel like it's
           -- under- or over-priced and it could impact happiness and reputation)

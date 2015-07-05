@@ -136,7 +136,7 @@ function UIFax:choice(choice_number)
     owner:setMood("patient_wait", "deactivate")
     owner.message_callback = nil
     if choice == "send_home" then
-      owner:goHome("kicked")
+      owner:goHome(owner.go_home_reasons.KICKED)
       if owner.diagnosed then
         -- No treatment rooms
         owner:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)

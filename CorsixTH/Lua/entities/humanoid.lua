@@ -555,7 +555,7 @@ local function Humanoid_startAction(self)
           -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
           self.going_home = false
           self.hospital = self.world:getLocalPlayerHospital()
-          self:goHome("kicked")
+          self:goHome(self.go_home_reasons.KICKED)
         end
         if TheApp.world:isCurrentSpeed("Pause") then
         TheApp.world:setSpeed(TheApp.world.prev_speed)
