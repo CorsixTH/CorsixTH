@@ -1547,7 +1547,7 @@ function Hospital:receiveMoneyForTreatment(patient)
         local room_info = patient:getRoom()
         if not room_info then
           print("Warning: Trying to receieve money for treated patient who is "..
-          "not in a room")
+              "not in a room")
           return
         end
         room_info = room_info.room_info

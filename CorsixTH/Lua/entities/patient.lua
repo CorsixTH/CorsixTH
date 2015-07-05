@@ -276,7 +276,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   end
 end
 
-function Patient:die(hospital)
+function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up
   -- or that he/she refused to pay the bill (Hospital not set when going home)
   local hospital = self.hospital or self.world:getLocalPlayerHospital()
@@ -490,11 +490,12 @@ end
 --! Make the patient leave the hospital. This function also handles some
 --! statistics (number of cured/kicked out patients, etc.)
 --! The mood icon is updated accordingly. Reputation is impacted accordingly.
---!param reason (string): the reason why the patient is sent home, which could be:
---! -"cured": When the patient is cured.
---! -"kicked": When the patient is kicked anyway, either manually,
+--!param reason taken from the self.go_home_reasons table,
+--   the reason why the patient is sent home, which could be:
+--! -CURED: When the patient is cured.
+--! -KICKED: When the patient is kicked anyway, either manually,
 --! either when no treatment can be found for her/him, etc.
---! -"over_priced": When the patient decided to leave because he/she believes
+--! -OVER_PRICED: When the patient decided to leave because he/she believes
 --! the last treatment is over-priced.
 function Patient:goHome(reason)
   local hosp = self.hospital
@@ -540,7 +541,7 @@ function Patient:goHome(reason)
         hosp.not_cured = hosp.not_cured + 1
         hosp.not_cured_ty = hosp.not_cured_ty + 1
       end
-    end    
+    end
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end
