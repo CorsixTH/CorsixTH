@@ -185,7 +185,7 @@ function UIQueue:onMouseUp(button, x, y)
     elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
       local dx = 1
       if num_patients ~= 1 then
-        dx = width / (num_patients - 1)
+        dx = math.floor(width / (num_patients - 1))
       end
       queue:move(index, math.floor((x - 220) / dx) + 1) -- move to dropped position
       self:onMouseMove(x, y, 0, 0)
@@ -258,7 +258,7 @@ function UIQueue:getHoveredPatient(x, y)
 
   local dx = 0
   if num_patients ~= 1 then
-    dx = width / (num_patients - 1)
+    dx = math.floor(width / (num_patients - 1))
   end
 
   local offset = 0
@@ -298,7 +298,7 @@ function UIQueue:drawPatients(canvas, x, y)
 
   if not self.hovered then
     if num_patients ~= 1 then
-      dx = width / (num_patients - 1)
+      dx = math.floor(width / (num_patients - 1))
     end
 
     for index = 1, num_patients do
@@ -307,7 +307,7 @@ function UIQueue:drawPatients(canvas, x, y)
     end
   else
     if num_patients ~= 1 then
-      dx = (width - 2 * gap) / (num_patients - 1)
+      dx = math.floor((width - 2 * gap) / (num_patients - 1))
     end
 
     x = x + 239
