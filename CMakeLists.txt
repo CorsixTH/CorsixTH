@@ -45,7 +45,7 @@ OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
 OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
-OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" ON)
+OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 OPTION(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
