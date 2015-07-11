@@ -216,19 +216,37 @@ public:
 protected:
     struct cached_text_t
     {
+        //! The text being converted to pixels
         char* sMessage;
+
+        //! Raw pixel data in row major 8-bit greyscale
         uint8_t* pData;
-        union {
-            void* pTexture;
-            int iTexture;
-        };
+
+        //! Generated texture ready to be rendered
+        void* pTexture;
+
+        //! The length of sMessage
         size_t iMessageLength;
+
+        //! The size of the buffer allocated to store sMessage
         size_t iMessageBufferLength;
+
+        //! Width of the image to draw
         int iWidth;
+
+        //! Height of the image to draw
         int iHeight;
+
+        //! The width of the longest line of text in in the textbox in pixels
         int iWidestLine;
+
+        //! X Coordinate trailing the last character in canvas coordinates
         int iLastX;
+
+        //! Alignment of the message in the box
         eTHAlign eAlign;
+
+        //! True when the pData reflects the sMessage given the size constraints
         bool bIsValid;
     };
 
@@ -256,14 +274,6 @@ protected:
     */
     bool _isMonochrome() const;
 
-    //! Set the texture field of a cache entry to indicate no texture.
-    /*!
-        @param pCacheEntry A cache entry whose pTexture or iTexture field
-            should be set to a null value, whatever that means for the
-            rendering engine.
-    */
-    void _setNullTexture(cached_text_t* pCacheEntry) const;
-
     //! Convert a cache canvas containing rendered text into a texture.
     /*!
         @param pEventualCanvas A pointer to the rendertarget we'll be using to
@@ -278,7 +288,7 @@ protected:
     //! Free a previously-made texture of a cache entry.
     /*!
         This call should free all the resources previously allocated by a call
-        to _makeTexture().
+        to _makeTexture() and set the texture field to indicate no texture.
 
         @param pCacheEntry A cache entry previously passed to _makeTexture().
     */

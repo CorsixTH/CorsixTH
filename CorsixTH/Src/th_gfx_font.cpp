@@ -322,7 +322,7 @@ THFreeTypeFont::THFreeTypeFont()
         pEntry->iLastX = 0;
         pEntry->pData = NULL;
         pEntry->bIsValid = false;
-        _setNullTexture(pEntry);
+        pEntry->pTexture = NULL;
     }
 }
 
@@ -373,7 +373,6 @@ void THFreeTypeFont::clearCache()
     {
         pEntry->bIsValid = false;
         _freeTexture(pEntry);
-        _setNullTexture(pEntry);
     }
 }
 
@@ -526,7 +525,6 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         // Cache entry does not match the message being drawn, so discard the
         // cache entry.
         _freeTexture(pEntry);
-        _setNullTexture(pEntry);
         delete[] pEntry->pData;
         pEntry->pData = NULL;
         pEntry->bIsValid = false;
@@ -730,13 +728,15 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             FT_Done_Glyph(itr->second.pGlyph);
         }
 
-        // Convert the canvas to a texture
-        _makeTexture(pCanvas, pEntry);
         pEntry->bIsValid = true;
     }
 
     if(pCanvas != NULL)
+    {
+        if(pEntry->pTexture == NULL)
+            _makeTexture(pCanvas, pEntry);
         _drawTexture(pCanvas, pEntry, iX, iY);
+    }
     if(pResultingWidth != NULL)
         *pResultingWidth = pEntry->iWidestLine;
     if(pLastX != NULL)
