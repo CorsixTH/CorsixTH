@@ -370,7 +370,7 @@ function Staff:fire()
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.hospital:changeReputation("kicked")
-  self:setHospital(nil)
+  self:despawn()
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
   self:leaveAnnounce()
@@ -384,7 +384,7 @@ function Staff:fire()
 end
 
 function Staff:die()
-  self:setHospital(nil)
+  self:despawn()
   if self.task then
     -- If the staff member had a task outstanding, unassigning them from that task.
     -- Tasks with no handyman assigned will be eligable for reassignment by the hospital.

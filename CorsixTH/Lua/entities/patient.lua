@@ -162,11 +162,9 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-  if self.hospital ~= nil then
     self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
       self.diagnosis_progress + incrementValue)
     self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
-  end
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -503,7 +501,7 @@ function Patient:goHome(reason)
     -- The patient should be going home already! Anything related to the hospital
     -- will not be updated correctly, but we still want to try to get the patient to go home.
     TheApp.world:gameLog("Warning: goHome called when the patient is already going home")
-    self:setHospital(nil)
+    self:despawn()
     return
   end
   if reason == self.go_home_reasons.CURED then
@@ -566,7 +564,7 @@ function Patient:goHome(reason)
   if room then
     room:makeHumanoidLeave(self)
   end
-  self:setHospital(nil)
+  self:despawn()
 end
 
 -- This function handles changing of the different attributes of the patient.

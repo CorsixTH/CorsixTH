@@ -426,19 +426,24 @@ end
 -- Set the `Hospital` which is responsible for treating or employing the
 -- `Humanoid`. In single player games, this has little effect, but it is very
 -- important in multiplayer games.
---!param hospital (Hospital, nil) The `Hospital` which should be responsible
--- for the `Humanoid`. If nil, then the `Humanoid` is despawned.
+--!param hospital (Hospital) The `Hospital` which should be responsible
+-- for the `Humanoid`.
 function Humanoid:setHospital(hospital)
   self.hospital = hospital
-  if not hospital or not hospital.is_in_world then
-    local spawn_points = self.world.spawn_points
-    self:setNextAction{
-      name = "spawn",
-      mode = "despawn",
-      point = spawn_points[math.random(1, #spawn_points)],
-      must_happen = true,
-    }
+  if not hospital.is_in_world then
+    self:despawn()
   end
+end
+
+-- Despawn the humanoid
+function Humanoid:despawn()
+  local spawn_points = self.world.spawn_points
+  self:setNextAction{
+    name = "spawn",
+    mode = "despawn",
+    point = spawn_points[math.random(1, #spawn_points)],
+    must_happen = true,
+  }
 end
 
 -- Function to activate/deactivate moods of a humanoid.
