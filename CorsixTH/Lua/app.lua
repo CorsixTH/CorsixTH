@@ -161,6 +161,8 @@ function App:init()
   local caption_descs = {self.video:getRendererDetails()}
   if compile_opts.jit then
     caption_descs[#caption_descs + 1] = compile_opts.jit
+  else
+    caption_descs[#caption_descs + 1] = _VERSION
   end
   if compile_opts.arch_64 then
     caption_descs[#caption_descs + 1] = "64 bit"
