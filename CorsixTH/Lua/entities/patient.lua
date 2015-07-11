@@ -487,11 +487,11 @@ end
 
 function Patient:goHome(cured)
   local hosp = self.hospital
-  if not hosp and self.going_home then
+  if self.going_home then
     -- The patient should be going home already! Anything related to the hospital
     -- will not be updated correctly, but we still want to try to get the patient to go home.
     TheApp.world:gameLog("Warning: goHome called when the patient is already going home")
-    self:setHospital(nil)
+    self:despawn()
     return
   end
   if not cured then
@@ -525,7 +525,7 @@ function Patient:goHome(cured)
   if room then
     room:makeHumanoidLeave(self)
   end
-  self:setHospital(nil)
+  self:despawn()
 end
 
 -- This function handles changing of the different attributes of the patient.

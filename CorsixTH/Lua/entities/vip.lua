@@ -119,7 +119,7 @@ function Vip:goHome()
   self.going_home = true
   -- save self.hospital so we can reference it in self:onDestroy
   self.last_hospital = self.hospital
-  self:setHospital(nil)
+  self:despawn()
 end
 
 -- called when the vip is out of the hospital grounds

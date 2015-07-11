@@ -319,7 +319,7 @@ action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
       end
 
       if action.destroy_user_after_use then
-        humanoid:setHospital(nil)
+        humanoid:despawn()
         humanoid.world:destroyEntity(humanoid)
       else
         humanoid:finishAction(action)

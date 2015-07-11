@@ -45,7 +45,7 @@ function Inspector:goHome()
 
   self:unregisterCallbacks()
   self.going_home = true
-  self:setHospital(nil)
+  self:despawn()
 end
 
 --[[ Called when the inspector has left the map ]]
