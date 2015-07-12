@@ -602,6 +602,10 @@ function UIEditRoom:returnToDoorPhase()
         if not obj or obj == room.door or class.is(obj, SwingDoor) then
           break
         end
+        if obj.object_type.id == "litter" then -- Silently remove litter from the world.
+          self.world:removeLitter(obj, x, y)
+          break
+        end
         self.world:destroyEntity(obj)
         if not obj.master then
           self:addObjects({{
