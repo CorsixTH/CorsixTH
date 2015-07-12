@@ -102,6 +102,7 @@ function UICasebook:close()
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
+--! The diseases list has been changed, update the list.
 function UICasebook:updateDiseaseList()
   -- A sorted list of known diseases and pseudo diseases.
   -- Used to be able to list the diseases in, believe it or not,
@@ -119,11 +120,14 @@ function UICasebook:updateDiseaseList()
     end
     return c1.disease.name:upper() < c2.disease.name:upper()
   end)
-  if self.selected_index then
-    self.selected_disease = self.names_sorted[self.selected_index]
+
+  if self.selected_disease then -- Re-select the current disease.
+    self:selectDisease(self.selected_disease)
   end
 end
 
+--! Select a disease by name.
+--!param disease (string) Name of the disease
 function UICasebook:selectDisease(disease)
   for i = 1, #self.names_sorted do
     if disease == self.names_sorted[i] then
