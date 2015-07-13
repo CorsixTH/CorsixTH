@@ -53,6 +53,8 @@ function Patient:Patient(...)
 end
 
 function Patient:onClick(ui, button)
+  self.over_priced = true
+  self.insurance_company = nil
   if button == "left" then
     if self.message_callback then
       self:message_callback()
@@ -247,16 +249,17 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       if self.is_emergency then
         self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
       end
+
       self.cured = true
       self.infected = false
-      self:setMood("cured", "activate")
-      self.world.ui:playSound "cheer.wav" -- This sound is always heard
       self.attributes["health"] = 1
-      self:changeAttribute("happiness", 0.8)
-      hospital:changeReputation("cured", self.disease)
-      self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(self.go_home_reasons.CURED)
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+      self.hospital:msgCured()
+
+      -- If the patient refused to pay they are on the way home already
+      if not self.going_home then
+        self:goHome(self.go_home_reasons.CURED)
+      end
     end
   end
 
@@ -506,15 +509,13 @@ function Patient:goHome(reason)
   end
   if reason == self.go_home_reasons.CURED then
     self:setMood("cured", "activate")
+    self:changeAttribute("happiness", 0.8)
+    self.world.ui:playSound "cheer.wav"
     if not self.is_debug then
       hosp:changeReputation("cured", self.disease)
-      hosp.num_cured = hosp.num_cured + 1
-      hosp.num_cured_ty = hosp.num_cured_ty + 1
-      local casebook = hosp.disease_casebook[self.disease.id]
-      casebook.recoveries = casebook.recoveries + 1
-      if self.is_emergency then
-        hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
-      end
+    end
+    if self.over_priced then
+      print("Cured")
     end
   elseif reason == self.go_home_reasons.KICKED then
     self:setMood("exit", "activate")
@@ -527,17 +528,22 @@ function Patient:goHome(reason)
     end
   elseif self.go_home_reasons.OVER_PRICED then
     self:setMood("sad_money", "activate")
+    self:changeAttribute("happiness", -0.5)
     if not self.is_debug then
       hosp:changeReputation("over_priced", self.disease)
-      if self.attributes["health"] == 1 then
-        -- He/She refused to pay for the final cure, but he/she must be counted
-        -- as cured nevertheless
-        hosp.num_cured = hosp.num_cured + 1
-        hosp.num_cured_ty = hosp.num_cured_ty + 1
-      else
-        -- He/She refused to pay for diagnostic or an "intermediate" treatment
+      -- The patient refused to pay for diagnostic or an "intermediate" treatment
+      if not self.cured then
         hosp.not_cured = hosp.not_cured + 1
         hosp.not_cured_ty = hosp.not_cured_ty + 1
+        self:clearDynamicInfo()
+        self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
+        if self.over_priced then
+          print("Sad - NOT cured")
+        end
+      else
+        if self.over_priced then
+          print("Sad - cured")
+        end
       end
     end
   else

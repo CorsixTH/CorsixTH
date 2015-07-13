@@ -1563,6 +1563,10 @@ function Hospital:receiveMoneyForTreatment(patient)
       local casebook = self.disease_casebook[disease_id]
       local amount = self:getTreatmentPrice(disease_id)
 
+      if(patient.over_priced) then
+        print(patient.insurance_company)
+      end
+
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
         patient.world:newFloatingDollarSign(patient, amount)
@@ -1572,10 +1576,9 @@ function Hospital:receiveMoneyForTreatment(patient)
         local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
         local is_over_priced = price_distortion > self.over_priced_threshold
 
-        if is_over_priced and math.random(1, 5) == 1 then
+        if patient.over_priced or is_over_priced and math.random(1, 5) == 1 then
           -- patient thinks it's too expensive, so he/she's not paying and he/she leaves
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
-          patient:changeAttribute("happiness", -0.5)
           patient:goHome(patient.go_home_reasons.OVER_PRICED)
         else
           -- patient is paying normally (but still, he could feel like it's
