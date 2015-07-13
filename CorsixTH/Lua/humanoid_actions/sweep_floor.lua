@@ -30,9 +30,7 @@ local finish = permanent"action_sweep_floor_finish"( function(humanoid)
 end)
 
 local remove_litter = permanent"action_sweep_floor_remove_litter"( function(humanoid)
-  humanoid.world:removeObjectFromTile(humanoid.user_of, humanoid.tile_x, humanoid.tile_y)
-  humanoid.world:destroyEntity(humanoid.user_of)
-  humanoid.world.map.th:setCellFlags(humanoid.tile_x, humanoid.tile_y, {buildable = true})
+  humanoid.world:removeLitter(humanoid.user_of, humanoid.tile_x, humanoid.tile_y)
   humanoid.user_of:setTile(nil)
   humanoid.user_of = nil
   humanoid:setTimer(humanoid.world:getAnimLength(animation_numbers[2]) * 2, finish)

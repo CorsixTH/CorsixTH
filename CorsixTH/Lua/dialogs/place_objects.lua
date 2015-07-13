@@ -187,7 +187,8 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
         object.qty = object.qty + new_object.qty
         if pay_for then
           local build_cost = self.ui.hospital:getObjectBuildCost(new_object.object.id)
-          self.ui.hospital:spendMoney(new_object.qty * build_cost, _S.transactions.buy_object .. ": " .. object.object.name, new_object.qty * build_cost)
+          local msg = _S.transactions.buy_object .. ": " .. object.object.name
+          self.ui.hospital:spendMoney(new_object.qty * build_cost, msg, new_object.qty * build_cost)
         end
         -- If this is an object that has been created in the world already, add it to the
         -- associated list of objects to re-place.
