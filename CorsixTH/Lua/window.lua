@@ -782,11 +782,11 @@ function Scrollbar:setRange(min_value, max_value, page_size, value)
   if self.direction == "y" then
     slider.h = math.ceil((page_size / (max_value - min_value + 1)) * slider.max_h)
     slider.max_y = slider.min_y + slider.max_h - slider.h
-    slider.y = (value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_y - slider.min_y) + slider.min_y
+    slider.y = math.floor((value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_y - slider.min_y) + slider.min_y)
   else
     slider.w = math.ceil((page_size / (max_value - min_value + 1)) * slider.max_w)
     slider.max_x = slider.min_x + slider.max_w - slider.w
-    slider.x = (value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_x - slider.min_x) + slider.min_x
+    slider.x = math.floor((value - min_value) / (max_value - min_value - page_size + 2) * (slider.max_x - slider.min_x) + slider.min_x)
   end
 
   return self
