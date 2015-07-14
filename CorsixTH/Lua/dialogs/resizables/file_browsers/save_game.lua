@@ -68,11 +68,12 @@ end
 --! Function called when textbox is confirmed (e.g. by pressing enter)
 function UISaveGame:confirmName()
   local filename = self.new_savegame_textbox.text
+  local app = self.ui.app
   if filename == "" then
     self:abortName()
     return
   end
-  self:trySave(filename .. ".sav")
+  self:trySave(app.savegame_dir .. filename .. ".sav")
 end
 
 --! Function called by clicking button of existing save #num
@@ -82,7 +83,7 @@ end
 
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
-  if lfs.attributes(self.ui.app.savegame_dir .. filename, "size") ~= nil then
+  if lfs.attributes(filename, "size") ~= nil then
     self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
     self:doSave(filename)
