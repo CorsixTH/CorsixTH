@@ -90,9 +90,7 @@ end
 function UIMainMenu:buttonContinueGame()
   local most_recent_saved_game = FileTreeNode(self.ui.app.savegame_dir):getMostRecentlyModifiedChildFile(".sav")
   if most_recent_saved_game then
-    local _, prefix_end_i = string.find(most_recent_saved_game.path, self.ui.app.savegame_dir)
-    local path = string.sub(most_recent_saved_game.path, prefix_end_i + 1, string.len(most_recent_saved_game.path))
-
+    local path = most_recent_saved_game.path
     local app = self.ui.app
     local status, err = pcall(app.load, app, path)
     if not status then

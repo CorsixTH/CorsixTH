@@ -308,7 +308,7 @@ function App:init()
 
       -- If a savegame was specified, load it
       if self.command_line.load then
-        local status, err = pcall(self.load, self, self.command_line.load)
+        local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
         if not status then
           err = _S.errors.load_prefix .. err
           print(err)
@@ -1209,19 +1209,20 @@ function App:getVersion(version)
 end
 
 function App:save(filename)
-  return SaveGameFile(self.savegame_dir .. filename)
+  return SaveGameFile(filename)
 end
+
 -- Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten
 function App:quickSave()
   local filename = "quicksave"
   return SaveGameFile(self.savegame_dir .. filename)
 end
 
-function App:load(filename)
+function App:load(filepath)
   if self.world then
     self:worldExited()
   end
-  return LoadGameFile(self.savegame_dir .. filename)
+  return LoadGameFile(filepath)
 end
 
 function App:quickLoad()
