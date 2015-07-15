@@ -50,7 +50,6 @@ end
 
 --[[ Called when the inspector has left the map ]]
 function Inspector:onDestroy()
-  print("Destroying Inspector")
   return Humanoid.onDestroy(self)
 end
 

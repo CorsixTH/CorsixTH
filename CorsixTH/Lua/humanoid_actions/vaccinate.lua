@@ -68,7 +68,6 @@ local function vaccinate(action, nurse)
   assert(nurse.humanoid_class == "Nurse")
 
   local patient = action.patient
-  local epidemic = nurse.hospital.epidemic
 
   local perform_vaccination = --[[persistable:action_perform_vaccination]](function(humanoid)
     -- Check if they STILL are in an adjacent square
