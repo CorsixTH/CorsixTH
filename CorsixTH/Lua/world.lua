@@ -1048,7 +1048,7 @@ function World:onTick()
       if not lfs.attributes(dir .. "Autosaves", "modification") then
         lfs.mkdir(dir .. "Autosaves")
       end
-      local status, err = pcall(TheApp.save, TheApp, "Autosaves" .. pathsep .. "Autosave" .. self.month .. ".sav")
+      local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.month .. ".sav")
       if not status then
         print("Error while autosaving game: " .. err)
       end
