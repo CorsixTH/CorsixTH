@@ -246,6 +246,8 @@ function SaveGame()
   --end, persist.errcatch)
 end
 
+--! Save a game to disk.
+--!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
   local f = assert(io.open(filename, "wb"))
