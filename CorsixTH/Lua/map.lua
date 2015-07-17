@@ -90,7 +90,14 @@ function Map:ScreenToWorld(x, y)
   -- And then adjust origin from (0, 0) to (1, 1)
   y = y / 32 + 1
   x = x / 64
-  return y + x, y - x
+  local tile_x, tile_y = y + x, y - x
+  if self.width ~= nil and self.height ~= nil then
+    if tile_x < 1 then tile_x = 1 end
+    if tile_x > self.width then tile_x = self.width end
+    if tile_y < 1 then tile_y = 1 end
+    if tile_y > self.height then tile_y = self.height end
+  end
+  return tile_x, tile_y
 end
 
 local function bits(n)
