@@ -1005,6 +1005,8 @@ end
 function UIEditRoom:setBlueprintRect(x, y, w, h)
   local rect = self.blueprint_rect
   local map = self.ui.app.map
+  if x < 1 then x = 1 end
+  if y < 1 then y = 1 end
   if x + w > map.width  then w = map.width  - x end
   if y + h > map.height then h = map.height - y end
 
