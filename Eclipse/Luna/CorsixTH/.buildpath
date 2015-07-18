@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<buildpath>
-	<buildpathentry kind="src" path="Lua"/>
-	<buildpathentry kind="src" path="AnimView"/>
-	<buildpathentry kind="src" path="MapEdit"/>
-	<buildpathentry kind="src" path="Src"/>
-	<buildpathentry kind="src" path="CorsixTH"/>
-	<buildpathentry kind="con" path="org.eclipse.koneki.ldt.ExecutionEnvironmentContainer/lua/5.1"/>
-</buildpath>

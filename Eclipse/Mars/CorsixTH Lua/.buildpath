@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<buildpath>
+	<buildpathentry kind="src" path="Lua"/>
+	<buildpathentry kind="src" path="CorsixTH"/>
+	<buildpathentry kind="con" path="org.eclipse.ldt.ExecutionEnvironmentContainer/lua/5.2"/>
+</buildpath>
