@@ -24,7 +24,7 @@ We are always looking for help with improving CorsixTH. The code base is made up
 
 
 ###### Features & Bugfixes ######
-We still have features to add and bugs to fix, check out our [TODO](https://github.com/CorsixTH/CorsixTH/wiki/Programming-Ideas) list and the bugtracker [here](https://github.com/CorsixTH/CorsixTH/issues). Want to talk about adding a feature? post on our goggle group or [contact us](#Contact).
+We still have features to add and bugs to fix, check out our [TODO](https://github.com/CorsixTH/CorsixTH/wiki/Programming-Ideas) list and the bugtracker [here](https://github.com/CorsixTH/CorsixTH/issues). Want to talk about adding a feature? post on our Google group or [contact us](#Contact).
 
 ###### Translation ######
 CorsixTH has translations for 18 languages, some need updates. Head over to our [dedicated forum section](http://forums.corsixth.com/index.php/board,11.0.html) for more information.
