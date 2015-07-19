@@ -192,9 +192,9 @@ function App:init()
     if notices ~= "" then
       self.video:startFrame()
       self.gfx:loadRaw("Load01V", 640, 480):draw(self.video,
-        (self.config.width - 640) / 2, (self.config.height - 480) / 2)
+        math.floor((self.config.width - 640) / 2), math.floor((self.config.height - 480) / 2))
       font:drawWrapped(self.video, notices, 32,
-        (self.config.height + 400) / 2, self.config.width - 64, "center")
+        math.floor((self.config.height + 400) / 2), math.floor(self.config.width - 64), "center")
       self.video:endFrame()
     end
   end
