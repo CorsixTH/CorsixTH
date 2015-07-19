@@ -706,8 +706,8 @@ function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
         vx, vy = -sqrt_5, -2 * sqrt_5
         d = (rx * vx + ry * vy) - (p1x * vx)
       end
-      -- In the unit vector parallel to the diamond edge, resolve the two verticies and
-      -- the point, and either move the point to the edge or to one of the two verticies.
+      -- In the unit vector parallel to the diamond edge, resolve the two vertices and
+      -- the point, and either move the point to the edge or to one of the two vertices.
       -- NB: vx, vy, p1x, p1y, p2x, p2y are set such that p1 < p2.
       local p1 = vx * p1y - vy * p1x
       local p2 = vx * p2y - vy * p2x
@@ -719,6 +719,7 @@ function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
       else--if p1 <= pd and pd <= p2 then
         dx, dy = dx - d * vx, dy - d * vy
       end
+      return math.floor(dx), math.floor(dy), true
     else
       return dx, dy, false
     end
