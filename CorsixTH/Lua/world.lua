@@ -2580,6 +2580,19 @@ function World:afterLoad(old, new)
     self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom,  5)
     self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)
   end
+
+  if old < 103 then
+    -- If a room has patients who no longer exist in its
+    -- humanoids_enroute table because of #133 remove them:
+    for _, room in pairs(self.rooms) do
+      for patient, _ in pairs(room.humanoids_enroute) do
+        if patient.tile_x == nil then
+          room.humanoids_enroute[patient] = nil
+        end
+      end
+    end
+  end
+
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
     for _, obj in pairs(cat) do

@@ -257,7 +257,12 @@ local function action_seek_room_start(action, humanoid)
           end
         end
         if found then
-          action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+          -- Don't add a "go to room" action to the patient's queue if the
+          -- autopsy machine is about to kill them:
+          local current_room = humanoid:getRoom()
+          if not current_room or not (current_room.room_info.id == "research" and current_room:getStaffMember() and current_room:getStaffMember().action_queue[1].name == "multi_use_object") then
+            action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+          end
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
