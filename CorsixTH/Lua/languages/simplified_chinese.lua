@@ -32,7 +32,7 @@ date_format = {
   daymonth = "%2%月 %1%日",
 }
 misc = {
-  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.",
+  no_heliport = "还没有疾病被发现或者地图上需要一个直升机场",
   not_yet_implemented = "(尚未实现)",
 }
 debug_patient_window = {
@@ -41,25 +41,25 @@ debug_patient_window = {
 totd_window = {
   previous = "上一个提示",
   tips = {
-    [1] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
+    [1] = "Corsix-TH，主题医院复刻版，项目主页：https://github.com/CorsixTH/CorsixTH",
     [2] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
-    [3] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
-    [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
+    [3] = "找到bug可以提交到这里：https://github.com/CorsixTH/CorsixTH/issues",
+    [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：https://github.com/CorsixTH/CorsixTH/wiki/Programming-Ideas",
     [5] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
     [6] = "项目论坛地址1：http://forums.corsix-th.com",
     [7] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
-    [8] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
-    [9] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
+    [8] = "如果你对这个项目有兴趣，最新版源码在这里：https://github.com/CorsixTH/CorsixTH/releases",
+    [9] = "编译源码的方法：https://github.com/CorsixTH/CorsixTH/wiki/How-To-Compile",
     [10] = "自定义游戏里面有一幅地图Avatar，里面有特殊的任务",
-    [11] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
+    [11] = "Corsix-TH，主题医院复刻版，项目主页：https://github.com/CorsixTH/CorsixTH",
     [12] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
-    [13] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
-    [14] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
+    [13] = "找到bug可以提交到这里：https://github.com/CorsixTH/CorsixTH/issues",
+    [14] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：https://github.com/CorsixTH/CorsixTH/wiki/Programming-Ideas",
     [15] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
     [16] = "项目论坛地址1：http://forums.corsix-th.com",
     [17] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
-    [18] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
-    [19] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
+    [18] = "如果你对这个项目有兴趣，最新版源码在这里：https://github.com/CorsixTH/CorsixTH/releases",
+    [19] = "编译源码的方法：https://github.com/CorsixTH/CorsixTH/wiki/How-To-Compile",
   },
   next = "下一个提示",
 }
@@ -76,16 +76,16 @@ tooltip = {
     start_game_with_name = "%s",
   },
   cheats_window = {
-    close = "Close the cheats dialog",
+    close = "关闭作弊窗口",
     cheats = {
-      end_month = "Jumps to the end of the month.",
-      emergency = "Creates an emergency.",
-      win_level = "Win the current level.",
-      create_patient = "Creates a Patient at the map border.",
-      money = "Adds 10.000 to your bank balance.",
-      lose_level = "Lose the current level.",
-      all_research = "Completes all research.",
-      end_year = "Jumps to the end of the year.",
+      end_month = "跳到月末.",
+      emergency = "建一个急诊室.",
+      win_level = "赢得当前关卡.",
+      create_patient = "在地图的边缘生成一个病人.",
+      money = "往银行里存 10.000.",
+      lose_level = "在当前关卡败北.",
+      all_research = "完成所有的研究.",
+      end_year = "跳到年末.",
     },
   },
   casebook = {
@@ -116,21 +116,21 @@ tooltip = {
     save_game = "%s",
   },
   calls_dispatcher = {
-    assigned = "This box is marked if someone is assigned to the corresponding task.",
-    task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
-    close = "Close the calls dispatcher dialog",
+    assigned = "这个框代表是否有人被分配给此任务.",
+    task = "任务列表 - 点击任务打开人员分配窗口然后滚动到任务的位置",
+    close = "关闭接线员窗口",
   },
   research_policy = {
-    research_progress = "Progress towards the next discovery in this category: %1%/%2%",
-    no_research = "No research is being carried out in this category at the moment",
+    research_progress = "此类研究下次发现的进度: %1%/%2%",
+    no_research = "当前没有任何此类研究在进行中",
   },
   information = {
     close = "关闭",
   },
   lua_console = {
-    textbox = "Enter Lua code to run here",
-    execute_code = "Run the code you have entered",
-    close = "Close the console",
+    textbox = "输入Lua代码可直接运行",
+    execute_code = "运行输入的代码",
+    close = "关闭控制台",
   },
   load_game_window = {
     load_game = "%s",
@@ -141,7 +141,7 @@ tooltip = {
     close = "关闭此窗口，但不删除消息",
   },
   objects = {
-    litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in.",
+    litter = "废弃物: 病人找不到垃圾桶,所以随意丢在了地上.",
   },
   options_window = {
     fullscreen_button = "全屏幕",
@@ -157,26 +157,26 @@ custom_game_window = {
 }
 cheats_window = {
   cheats = {
-    end_month = "End of Month",
-    emergency = "Create Emergency",
-    win_level = "Win Level",
-    create_patient = "Create Patient",
-    money = "Money Cheat",
-    lose_level = "Lose Level",
-    all_research = "All Research Cheat",
-    end_year = "End of Year",
+    end_month = "月末",
+    emergency = "修建急诊室",
+    win_level = "获胜",
+    create_patient = "生成病人",
+    money = "给我钱!!",
+    lose_level = "失败",
+    all_research = "所有研究",
+    end_year = "年末",
   },
-  close = "Close",
-  caption = "Cheats",
+  close = "关闭",
+  caption = "作弊",
   cheated = {
-    no = "Cheats used: No",
-    yes = "Cheats used: Yes",
+    no = "作弊了吗: 否",
+    yes = "作弊了吗: 是",
   },
-  warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
+  warning = "警告: 如果作弊关卡结束时你将得不到任何奖励!",
 }
 errors = {
   unavailable_screen_size = "你设置的屏幕大小无法应用于全屏模式。",
-  dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
+  dialog_missing_graphics = "哎呀, Demo 数据文件不包含这个对话框.",
   load_prefix = "载入游戏失败：",
   save_prefix = "保存游戏失败：",
   map_file_missing = "找不到该关卡的地图文件 %s！",
@@ -192,19 +192,19 @@ main_menu = {
   exit = "退出"
 }
 menu_debug = {
-  lua_console = "  (F12) LUA CONSOLE  ",
-  disable_salary_raise = "  DISABLE SALARY RAISE  ",
-  make_debug_fax = "  MAKE DEBUG FAX  ",
-  make_debug_patient = "  MAKE DEBUG PATIENT  ",
-  sprite_viewer = "  SPRITE VIEWER  ",
-  dump_strings = "  DUMP STRINGS  ",
-  map_overlay = "  MAP OVERLAY  ",
-  calls_dispatcher = "  CALLS DISPATCHER  ",
-  cheats = "  (F11) CHEATS  ",
-  dump_gamelog = "  (CTRL+D) DUMP GAME LOG  ",
-  limit_camera = "  LIMIT CAMERA  ",
-  transparent_walls = "  (X) TRANSPARENT WALLS  ",
-  jump_to_level = "  JUMP TO LEVEL  ",
+  lua_console = "  (F12) LUA 控制台  ",
+  disable_salary_raise = "  关闭涨工资  ",
+  make_debug_fax = "  建一个传真DEBUG  ",
+  make_debug_patient = "  建一个病人DEBUG   ",
+  sprite_viewer = "  图像浏览器  ",
+  dump_strings = "  输出字符串  ",
+  map_overlay = "  地图层次  ",
+  calls_dispatcher = "  接线员窗口  ",
+  cheats = "  (F11) 作弊  ",
+  dump_gamelog = "  (CTRL+D) 输出游戏记录文本  ",
+  limit_camera = "   限制镜头   ",
+  transparent_walls = "  (X) 把墙变透明 ",
+  jump_to_level = "  跳关  ",
 }
 menu_options = {
   edge_scrolling = "    开启鼠标滚动",
@@ -229,23 +229,23 @@ load_game_window = {
 }
 adviser = {
   cheats = {
-    th_cheat = "Congratulations, you have unlocked cheats!",
-    hairyitis_cheat = "Hairyitis cheat activated!",
-    roujin_on_cheat = "Roujin's challenge activated! Good luck...",
-    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    crazy_off_cheat = "Phew... the doctors regained their sanity.",
-    roujin_off_cheat = "Roujin's challenge deactivated.",
-    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
+    th_cheat = "恭喜, 你解锁了作弊选项!",
+    hairyitis_cheat = "Hairyitis 作弊模式已经开启!",
+    roujin_on_cheat = "Roujin's challenge已经开启!祝你好运...",
+    crazy_on_cheat = "不会吧!所有的医生都疯了!",
+    bloaty_off_cheat = "大头病作弊被关闭.",
+    bloaty_cheat = "大头兵作弊开启!",
+    crazy_off_cheat = "还好... 所有的一生都恢复理智了.",
+    roujin_off_cheat = "Roujin's challenge关闭.",
+    hairyitis_off_cheat = "Hairyitis 作弊模式关闭.",
   },
-  room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
+  room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达.",
 }
 calls_dispatcher = {
-  repair = "Repair %s",
-  summary = "%d calls; %d assigned",
-  close = "Close",
-  watering = "Watering @ %d,%d",
+  repair = "修理 %s",
+  summary = "%d 次电话; %d 被分配",
+  close = "关闭",
+  watering = "浇水 @ %d,%d",
   staff = "%s - %s",
 }
 information = {
@@ -256,11 +256,11 @@ information = {
     balance = "银行账户资金低于%d。",
     percentage_killed = "杀死了%d的病人。",
   },
-  cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  cannot_restart = "不幸的是这个自定义地图是在 重新开始 功能开发之前创建的.",
   custom_game = "欢迎来到 CorsixTH。尽情享受自定义地图吧！",
 }
 new_game_window = {
-  caption = "Campaign",
+  caption = "竞争上岗",
   player_name = "玩家名称",
   option_on = "开",
   option_off = "关",
@@ -299,7 +299,7 @@ menu_list_window = {
 
 save_game_window = {
   caption = "保存游戏",
-  new_save_game = "",
+  new_save_game = "给新游戏存档起个名",
 }
 fax = {
   choices = {
@@ -323,8 +323,8 @@ menu_debug_overlay = {
   none = "  NONE  ",
 }
 confirmation = {
-  abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
+  abort_edit_room = "你正在修建或者就该一个房间.如果所有必需的物品都被放置了就没有问题,否则所做的修改将被删除. 继续吗?",
+  needs_restart = "这项设置的改动需要重新启动 CorsixTH. 尚未保存的进度将会丢失. 确定要这么做吗?",
 }
 dynamic_info = {
   patient = {
@@ -341,16 +341,16 @@ dynamic_info = {
 }
 introduction_texts = {
   demo = {
-    [1] = "Welcome to the demo hospital!",
-    [2] = "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!",
-    [3] = "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room.",
-    [4] = "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.",
-    [5] = "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",
-    [6] = "Good luck!",
+    [1] = "欢迎来到演示版医院!",
+    [2] = "演示版本只有当前这一个关卡. 但有一堆事情足够你忙一阵了!",
+    [3] = "你将会遇到各种疾病需要各种医疗室来救治. 紧急情况也会经常性地发生. 你需要通过研究室来研发更多的医疗室.",
+    [4] = "你的目标是挣够 $100,000, 使医院的价值达到 $70,000 以及得到 700 声望值, 同时你还需要救治超过 75% 的病人.",
+    [5] = "确保你的声望值不会掉到 300 以下, 你的病人死亡率不超过 40% , 否则你就完了.",
+    [6] = "祝你好运!",
   },
 }
 object = {
-  litter = "Litter",
+  litter = "废弃物",
 }
 letter = {
   custom_level_completed = "做的好！你已完成自定义游戏的所有目标！",
@@ -366,37 +366,37 @@ update_window = {
   ignore = "回到主菜单"
 }
 
-tooltip.custom_game_window.free_build = "Tick this box if you want to play without money or winning and losing conditions"
-tooltip.cheats_window.cheats.vip = "Creates a VIP."
-tooltip.menu_list_window.save_date = "Click here to sort the list by last modification date"
-tooltip.menu_list_window.name = "Click here to sort the list by name"
-custom_game_window.free_build = "Free Build"
-cheats_window.cheats.vip = "Create VIP"
-main_menu.version = "Version: "
-main_menu.savegame_version = "Savegame version: "
-progress_report.free_build = "FREE BUILD"
+tooltip.custom_game_window.free_build = "勾选此框你将不需要为钱以及胜利失败而操心"
+tooltip.cheats_window.cheats.vip = "创建一个 VIP."
+tooltip.menu_list_window.save_date = "点击整理一个按照最后修改日期排序的列表"
+tooltip.menu_list_window.name = "点击按照名字整理"
+custom_game_window.free_build = "自由模式"
+cheats_window.cheats.vip = "创建 VIP"
+main_menu.version = "版本: "
+main_menu.savegame_version = "存档版本: "
+progress_report.free_build = "自由模式"
 menu_options.adviser_disabled = "    显示助手"
-install.exit = "Exit"
-adviser.warnings.falling_2 = "Stop messing about, how would you like it?"
-adviser.warnings.no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!"
-adviser.warnings.falling_5 = "This is not the place for knocking people over, they're ill you know!"
-adviser.warnings.falling_4 = "This is an Hospital, not a Theme Park!"
-adviser.warnings.falling_6 = "This is not a bowling alley, sick people should not be treated like that!"
-adviser.warnings.falling_3 = "Ouch, that had to hurt, someone call a Doctor!"
-adviser.warnings.no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!"
-adviser.warnings.cannot_afford = "You don't have enough money in the bank to hire that person!"
-adviser.warnings.no_desk = "You should build a reception desk and hire a receptionist at some point!"
-adviser.warnings.no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!"
-adviser.warnings.falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!"
-information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
+install.exit = "退出"
+adviser.warnings.falling_2 = "不胡搞你能死?"
+adviser.warnings.no_desk_2 = "干的不错, 基本上也是个世界纪录了吧:快一年了,一个病人都没有! 如果你想继续当这个经理的话,你需要去雇一个前台,然后给她一张桌子工作!"
+adviser.warnings.falling_5 = "这里不适合逗人玩,他们是病人好吗?"
+adviser.warnings.falling_4 = "这里是医院,不是主题公园!"
+adviser.warnings.falling_6 = "这里不是保龄球馆, 应该对待病人如春天般温暖!"
+adviser.warnings.falling_3 = "啊~有人受伤了,赶紧叫医生!"
+adviser.warnings.no_desk_3 = "你真是个天才,一年了连个前台都没有! 你怎么可能有任何的病人来? 赶紧给我搞定,别在那里不务正业了!"
+adviser.warnings.cannot_afford = "你已经没有足够的钱来雇这个人!"
+adviser.warnings.no_desk = "你总得有个前台吧!"
+adviser.warnings.no_desk_1 = "你得有个前台,这样才会有病人来!"
+adviser.warnings.falling_1 = "嘿!别开玩笑了, 看看你都是怎么点鼠标的, 你可能会伤到人!"
+information.very_old_save = "你上次存档之后,这个游戏有很多更新. 为了保证你能玩到最新最酷的游戏,请考虑重新来过"
 options_window.cancel = "取消"
 menu_list_window.save_date = "修改日期"
 menu_list_window.name = "名称"
-fax.vip_visit_result.remarks.free_build[1] = "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?"
-fax.vip_visit_result.remarks.free_build[2] = "I'm no economist, but I think I could run this hospital too if you know what I mean..."
-fax.vip_visit_result.remarks.free_build[3] = "A very well run hospital. Watch out for the recession though! Right... you didn't have to worry about that."
-fax.emergency.free_build = "If you are successful your reputation will increase but if you fail your reputation will be seriously dented."
-fax.emergency.num_disease_singular = "There is 1 person with %s and they require immediate attention."
+fax.vip_visit_result.remarks.free_build[1] = "你的医院相当不错! 没有预算的限制,搞定很容易吧?"
+fax.vip_visit_result.remarks.free_build[2] = "我不是一个经济学家, 但我要是你我也行. 你懂我啥意思..."
+fax.vip_visit_result.remarks.free_build[3] = "医院经营的不错. 但要小心经济不景气. 哦对了,你才不操那个心."
+fax.emergency.free_build = "成功的话,你的声望就会上升,但你要是失败了, 就会一落千丈."
+fax.emergency.num_disease_singular = "那里有一个人患了 %s ,他们需要马上救治."
 
 ------------------------------------
 --OLD STRINGS IN LANGUAGE "简体中文":
@@ -3210,50 +3210,50 @@ build_room_window = {
   cost = "花费：",
 }
 menu = {
-  debug = "DEBUG",
+  debug = "除错",
   display = "显示",
   file = "文件",
   options = "选项",
   charts = "图表",
 }
 menu_display.shadows = "  影子  "
-menu_display.mcga_lo_res = "  MCGA低解像度  "
-cheats_window.cheats.earthquake = "製作地震"
-confirmation.maximum_screen_size = "你輸入的屏幕解像度比 3000 x 2000 大。大的解像度是可行的，但是要維持一個可以接受的幀率你需要好點的硬體。是否繼續？"
+menu_display.mcga_lo_res = "  MCGA低分辨率  "
+cheats_window.cheats.earthquake = "制造地震"
+confirmation.maximum_screen_size = "你使用的分辨率比 3000 x 2000 大。大的分辨率是可行的，但是要维持一个可以接受的帧率你需要好点的硬件。是否继续？"
 confirmation.music_warning = "選擇MP3檔為你的音樂之前，你需要有 smpeg.dll 或者你的作業系統的版本，否則你在遊戲裡不會有任何音樂。現在沒有64bit系統的版本。是否繼續?"
-menu_options_wage_increase.deny = "    拒絕 "
-menu_options_wage_increase.grant = "    容許 "
-tooltip.options_window.select_language = "選擇語言"
-tooltip.options_window.select_resolution = "選擇解像度"
-tooltip.options_window.language_dropdown_item = "選擇 %s 為語言"
-tooltip.options_window.audio_button = "開關所有聲音"
-tooltip.options_window.resolution = "運行遊戲應該在的解像度"
-tooltip.options_window.audio_toggle = "開關"
+menu_options_wage_increase.deny = "    拒绝 "
+menu_options_wage_increase.grant = "    允许 "
+tooltip.options_window.select_language = "选择语言"
+tooltip.options_window.select_resolution = "选择分辨率"
+tooltip.options_window.language_dropdown_item = "选择 %s 为语言"
+tooltip.options_window.audio_button = "开关所有的声音"
+tooltip.options_window.resolution = "在此分辨率下运行游戏"
+tooltip.options_window.audio_toggle = "开关"
 tooltip.options_window.fullscreen = "應該在全屏還是窗口模式運行"
-tooltip.options_window.apply = "套用輸入的解像度"
+tooltip.options_window.apply = "应用此分辨率"
 tooltip.options_window.cancel = "取消"
-tooltip.options_window.folder_button = "文件夾選項"
-tooltip.options_window.customise_button = "更多可以改變遊戲體驗的設定"
-tooltip.cheats_window.cheats.earthquake = "創造地震"
-tooltip.new_game_window.difficulty = "選擇遊戲難度"
-tooltip.new_game_window.player_name = "輸入你遊戲中的名字"
-tooltip.new_game_window.start = "用所選的設定開始遊戲"
-tooltip.update_window.download = "前往下載頁下載最新版CorsixTH"
-tooltip.update_window.ignore = "現在忽略這更新。你會在下一次開啟CorsixTH是再次被通知"
-tooltip.folders_window.browse_font = "尋找另一個字型 ( 現在的位置: %1% )"
-tooltip.folders_window.screenshots_location = "屏幕截圖預設跟配置文件放在一起。如果這不適合你，瀏覽至你想儲存屏幕截圖的位置。"
-tooltip.folders_window.reset_to_default = "把目錄重置到預設的位置"
-tooltip.folders_window.back = "關閉和返回設定選單"
-tooltip.folders_window.music_location = "選擇儲存MP3檔案的位置。你必須已經創建了目錄，然後瀏覽至你創建了的目錄。"
-tooltip.folders_window.font_location = "可以顯示你的語言所需的Unicode字元的字型的位置。如果這沒有填寫，你不可以選擇需要比原本遊戲提供的字元的語言，例如中文和俄語。（你一定已經填寫了，要不怎麼可以看到這句話呢？）"
-tooltip.folders_window.savegames_location = "遊戲存檔預設跟配置文件放在一起。如果這不適合你，瀏覽至你想儲存遊戲存檔的位置。"
-tooltip.folders_window.browse_data = "尋找杏林也瘋狂的安裝位置 ( 現在的位置: %1% )"
-tooltip.folders_window.browse = "尋找文件夾的位置"
-tooltip.folders_window.browse_screenshots = "尋找另一個儲存屏幕截圖的位置 ( 現在的位置: %1% )"
-tooltip.folders_window.browse_music = "尋找另一個儲存音樂的位置 ( 現在的位置: %1% )"
-tooltip.folders_window.no_font_specified = "沒有填寫字型位置！"
-tooltip.folders_window.not_specified = "沒有填寫文件夾位置！"
-tooltip.folders_window.browse_saves = "尋找另一個儲存遊戲存檔的位置  ( 現在的位置: %1% ) "
-tooltip.folders_window.default = "預設位置"
-tooltip.folders_window.data_location = "需要用來運行CorsixTH的杏林也瘋狂的位置"
-tooltip.customise_window.aliens = "因為缺少正常動畫，我們預設有外星人DNA的病人只可以從緊急事件中來。要在緊急事件以外容許有外星人DNA的病人來你的醫院，關閉這選項。"
+tooltip.options_window.folder_button = "文件夹选项"
+tooltip.options_window.customise_button = "更多可以改变游戏体验的选项"
+tooltip.cheats_window.cheats.earthquake = "制造地震"
+tooltip.new_game_window.difficulty = "选择游戏难度"
+tooltip.new_game_window.player_name = "输入你游戏中的名字"
+tooltip.new_game_window.start = "使用当前设置开始游戏"
+tooltip.update_window.download = "前往下载页面下载CorsixTH"
+tooltip.update_window.ignore = "忽略这次更新。你将在下次启动CorsixTH时再次被通知"
+tooltip.folders_window.browse_font = "寻找另一个字体 ( 现在的位置: %1% )"
+tooltip.folders_window.screenshots_location = "屏幕截图默认和设置文件在一起。如果不想这样，选择你想存储屏幕截图的位置。"
+tooltip.folders_window.reset_to_default = "重置到默认选项"
+tooltip.folders_window.back = "关闭及返回选项菜单"
+tooltip.folders_window.music_location = "选择存储MP3文件的位置. 此目录必须已经存在."
+tooltip.folders_window.font_location = "选择可以显示你的语言所需Unicode字体的位置,如果没有指定，你将不能使用原游戏提供字体之外的语言,例如中文和俄语.（你一定已经选了,要不怎么可以看到这句话呢?）"
+tooltip.folders_window.savegames_location = "游戏存档默认和设置文件在一起。如果不想这样，选择你想存储游戏存档的位置。"
+tooltip.folders_window.browse_data = "寻找主题医院安装位置 ( 現在的位置: %1% )"
+tooltip.folders_window.browse = "寻找文件夹的位置"
+tooltip.folders_window.browse_screenshots = "寻找另一个储存屏幕截图的位置 ( 现在的位置: %1% )"
+tooltip.folders_window.browse_music = "寻找另一个存储音乐的位置 ( 现在的位置: %1% )"
+tooltip.folders_window.no_font_specified = "没有指定字体的位置！"
+tooltip.folders_window.not_specified = "没有指定文件夹位置！"
+tooltip.folders_window.browse_saves = "寻找另一个储存游戏存档的位置  ( 现在的位置: %1% ) "
+tooltip.folders_window.default = "默认位置"
+tooltip.folders_window.data_location = "需要用来运行CorsixTH的主题医院的位置"
+tooltip.customise_window.aliens = "因为缺少动画,默认设置下外星人DNA病人只会从紧急事件中来. 要在紧急事件以外允许有外星人DNA的病人来你的意愿,请关闭此选项。"
