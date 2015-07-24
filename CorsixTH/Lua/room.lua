@@ -695,44 +695,49 @@ function Room:tryToFindNearbyPatients()
         local patient = queue:back()
         local px, py = patient.tile_x, patient.tile_y
         -- Don't reroute the patient if he just decided to go to the toilet
-        if not patient.going_to_toilet and
-          world:getPathDistance(px, py, our_x, our_y) + our_score <
-          world:getPathDistance(px, py, other_x, other_y) + other_score then
-          -- Update the queues
-          queue:removeValue(patient)
-          patient.next_room_to_visit = self
-          self.door.queue:expect(patient)
-          self.door:updateDynamicInfo()
+        if not patient.going_to_toilet then
+          local distance_to_us = world:getPathDistance(px, py, our_x, our_y)
+          local distance_to_current_room = world:getPathDistance(px, py, other_x, other_y)
 
-          -- Update our cached values
-          our_score = self:getUsageScore()
-          other_score = room:getUsageScore()
+          if distance_to_us and (
+            not distance_to_current_room
+            or distance_to_us + our_score < distance_to_current_room + other_score ) then
+            -- Update the queues
+            queue:removeValue(patient)
+            patient.next_room_to_visit = self
+            self.door.queue:expect(patient)
+            self.door:updateDynamicInfo()
 
-          -- Rewrite the action queue
-          for i, action in ipairs(patient.action_queue) do
-            if i ~= 1 then
-              action.todo_interrupt = true
+            -- Update our cached values
+            our_score = self:getUsageScore()
+            other_score = room:getUsageScore()
+
+            -- Rewrite the action queue
+            for i, action in ipairs(patient.action_queue) do
+              if i ~= 1 then
+                action.todo_interrupt = true
+              end
+              -- The patient will most likely have a queue action for the other
+              -- room that must be cancelled. To prevent the after_use callback
+              -- of the drinks machine to enqueue the patient in the other queue
+              -- again, is_in_queue is set to false so the callback won't run
+              if action.name == 'queue' then
+                action.is_in_queue = false
+              elseif action.name == "walk" and action.x == other_x and action.y == other_y then
+                local action = self:createEnterAction(patient)
+                patient:queueAction(action, i)
+                break
+              end
             end
-            -- The patient will most likely have a queue action for the other
-            -- room that must be cancelled. To prevent the after_use callback
-            -- of the drinks machine to enqueue the patient in the other queue
-            -- again, is_in_queue is set to false so the callback won't run
-            if action.name == 'queue' then
-              action.is_in_queue = false
-            elseif action.name == "walk" and action.x == other_x and action.y == other_y then
-              local action = self:createEnterAction(patient)
-              patient:queueAction(action, i)
-              break
+            local interrupted = patient.action_queue[1]
+            local on_interrupt = interrupted.on_interrupt
+            if on_interrupt then
+              interrupted.on_interrupt = nil
+              on_interrupt(interrupted, patient, false)
             end
+          else
+            break
           end
-          local interrupted = patient.action_queue[1]
-          local on_interrupt = interrupted.on_interrupt
-          if on_interrupt then
-            interrupted.on_interrupt = nil
-            on_interrupt(interrupted, patient, false)
-          end
-        else
-          break
         end
       end
     end
