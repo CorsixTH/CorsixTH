@@ -272,4 +272,7 @@ function UIHireStaff:afterLoad(old, new)
     self:removeKeyHandler("enter")
     self:addKeyHandler("return", self.hire)
   end
+  if old < 104 then
+    self:addKeyHandler("keypad enter", self.hire)
+  end
 end

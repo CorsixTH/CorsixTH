@@ -806,6 +806,9 @@ function UI:afterLoad(old, new)
     self:removeKeyHandler({"alt", "enter"}, self)
     self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
   end
+  if old < 104 then
+    self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
+  end
 
   Window.afterLoad(self, old, new)
 end

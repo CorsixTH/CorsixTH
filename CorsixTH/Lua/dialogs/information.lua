@@ -134,4 +134,7 @@ function UIInformation:afterLoad(old, new)
     self:removeKeyHandler("enter")
     self:addKeyHandler("return", self.close)
   end
+  if old < 104 then
+    self:addKeyHandler("keypad enter", self.close)
+  end
 end
