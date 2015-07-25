@@ -1037,7 +1037,7 @@ function Textbox:keyInput(char, rawchar)
     handled = true
   end
   -- Enter (newline or confirm)
-  if not handled and char == "return" then
+  if not handled and (char == "return" or char == "keypad enter") then
     if type(self.text) == "table" then
       local remainder = line:sub(self.cursor_pos[2] + 1, -1)
       self.text[self.cursor_pos[1]] = line:sub(1, self.cursor_pos[2])

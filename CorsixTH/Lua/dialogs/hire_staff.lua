@@ -36,6 +36,7 @@ function UIHireStaff:UIHireStaff(ui)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
   self:addKeyHandler("return", self.hire)
+  self:addKeyHandler("keypad enter", self.hire)
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)

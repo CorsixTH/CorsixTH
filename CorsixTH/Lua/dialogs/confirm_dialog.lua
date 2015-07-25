@@ -60,6 +60,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:addKeyHandler("return", self.ok)
+  self:addKeyHandler("keypad enter", self.ok)
 end
 
 function UIConfirmDialog:cancel()
