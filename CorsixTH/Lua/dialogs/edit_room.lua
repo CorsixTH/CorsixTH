@@ -1429,4 +1429,7 @@ function UIEditRoom:afterLoad(old, new)
     self:removeKeyHandler("enter")
     self:addKeyHandler("return", self.confirm)
   end
+  if old < 104 then
+    self:addKeyHandler("keypad enter", self.confirm)
+  end
 end

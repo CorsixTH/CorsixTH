@@ -99,4 +99,7 @@ function UIConfirmDialog:afterLoad(old, new)
     self:removeKeyHandler("enter")
     self:addKeyHandler("return", self.ok)
   end
+  if old < 104 then
+    self:addKeyHandler("keypad enter", self.ok)
+  end
 end
