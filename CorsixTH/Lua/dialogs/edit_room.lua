@@ -35,6 +35,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   -- constructor, hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
   self:addKeyHandler("return", self.confirm) -- UIPlaceObjects does not need this
+  self:addKeyHandler("keypad enter", self.confirm)
 
   local app = ui.app
   local blue_red_swap = self.anims.Alt32_BlueRedSwap

@@ -231,7 +231,8 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("escape", self, self.stopMovie)
   self:addKeyHandler("space", self, self.stopMovie)
   self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
-  self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)
+  self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
+  self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
 
@@ -803,7 +804,7 @@ function UI:afterLoad(old, new)
 
   if old < 100 then
     self:removeKeyHandler({"alt", "enter"}, self)
-    self:addKeyHandler({"alt", "Return"}, self, self.toggleFullscreen)
+    self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
   end
 
   Window.afterLoad(self, old, new)
