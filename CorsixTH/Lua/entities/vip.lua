@@ -150,13 +150,9 @@ function Vip:onDestroy()
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 3 then
-    self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation + (math.round(self.cash_reward / 100))
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1, 3)]},
-      {text = _S.fax.vip_visit_result.rep_boost},
-      {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 4 then
