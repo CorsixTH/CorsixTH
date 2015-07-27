@@ -331,20 +331,10 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
-    if(0.999 <= fScale && fScale <= 1.001)
-    {
-        return true;
-    }
-    else if(fScale <= 0.000)
+
+    if(fScale <= 0.000)
     {
         return false;
-    }
-    else if(eWhatToScale == THSI_Bitmaps)
-    {
-        m_bShouldScaleBitmaps = true;
-        m_fBitmapScaleFactor = fScale;
-
-        return true;
     }
     else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
     {
@@ -366,7 +356,7 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
         {
             std::cout << "Warning: Could not render to zoom texture - " << SDL_GetError() << std::endl;
 
-            SDL_RenderSetScale(m_pRenderer, 1, 1);
+            SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
             SDL_DestroyTexture(m_pZoomTexture);
             m_pZoomTexture = NULL;
             return false;
@@ -375,6 +365,17 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
         // Clear the new texture to transparent/black.
         SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
         SDL_RenderClear(m_pRenderer);
+
+        return true;
+    }
+    else if(0.999 <= fScale && fScale <= 1.001)
+    {
+        return true;
+    }
+    else if(eWhatToScale == THSI_Bitmaps)
+    {
+        m_bShouldScaleBitmaps = true;
+        m_fBitmapScaleFactor = fScale;
 
         return true;
     }
@@ -574,7 +575,7 @@ void THRenderTarget::_flushZoomBuffer()
     if(m_pZoomTexture == NULL) { return; }
 
     SDL_SetRenderTarget(m_pRenderer, NULL);
-    SDL_RenderSetScale(m_pRenderer, 1, 1);
+    SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
     SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_BLEND);
     SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
     SDL_DestroyTexture(m_pZoomTexture);
