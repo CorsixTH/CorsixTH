@@ -30,7 +30,7 @@ local runDebugger = dofile "run_debugger"
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 104
+local SAVEGAME_VERSION = 105
 
 class "App"
 
@@ -1187,8 +1187,10 @@ end
 -- a specific savegame verion is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 91 then
+  if ver > 105 then
     return "Trunk"
+  elseif ver > 91 then
+    return "0.50 rc1"
   elseif ver > 78 then
     return "0.40"
   elseif ver > 72 then
