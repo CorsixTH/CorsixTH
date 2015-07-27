@@ -366,7 +366,7 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
         {
             std::cout << "Warning: Could not render to zoom texture - " << SDL_GetError() << std::endl;
 
-            SDL_RenderSetScale(m_pRenderer, 1, 1);
+            SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
             SDL_DestroyTexture(m_pZoomTexture);
             m_pZoomTexture = NULL;
             return false;
@@ -574,7 +574,7 @@ void THRenderTarget::_flushZoomBuffer()
     if(m_pZoomTexture == NULL) { return; }
 
     SDL_SetRenderTarget(m_pRenderer, NULL);
-    SDL_RenderSetScale(m_pRenderer, 1, 1);
+    SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
     SDL_SetTextureBlendMode(m_pZoomTexture, SDL_BLENDMODE_BLEND);
     SDL_RenderCopy(m_pRenderer, m_pZoomTexture, NULL, NULL);
     SDL_DestroyTexture(m_pZoomTexture);
