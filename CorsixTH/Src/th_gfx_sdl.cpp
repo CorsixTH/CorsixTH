@@ -331,20 +331,10 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
 {
     _flushZoomBuffer();
     m_bShouldScaleBitmaps = false;
-    if(0.999 <= fScale && fScale <= 1.001)
-    {
-        return true;
-    }
-    else if(fScale <= 0.000)
+
+    if(fScale <= 0.000)
     {
         return false;
-    }
-    else if(eWhatToScale == THSI_Bitmaps)
-    {
-        m_bShouldScaleBitmaps = true;
-        m_fBitmapScaleFactor = fScale;
-
-        return true;
     }
     else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
     {
@@ -375,6 +365,17 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
         // Clear the new texture to transparent/black.
         SDL_SetRenderDrawColor(m_pRenderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
         SDL_RenderClear(m_pRenderer);
+
+        return true;
+    }
+    else if(0.999 <= fScale && fScale <= 1.001)
+    {
+        return true;
+    }
+    else if(eWhatToScale == THSI_Bitmaps)
+    {
+        m_bShouldScaleBitmaps = true;
+        m_fBitmapScaleFactor = fScale;
 
         return true;
     }
