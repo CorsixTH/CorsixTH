@@ -84,7 +84,7 @@ fax.diagnosis_failed.partial_diagnosis_percentage_name = "Unser Ärzteteam ist s
 fax.epidemic.choices.declare = "Wir melden die Epidemie und zahlen die Geldstrafe!"
 fax.epidemic.choices.cover_up = "Wir versuchen die Epidemie einzudämmen bevor sie das Krankenhaus verlässt!"
 fax.epidemic.declare_explanation_fine = "Wenn wir die Epidemie melden, zahlen wir eine Strafe von %d und unser Ruf leidet. Dafür werden die Patienten automatisch geimpft." -- extend to mention reputation hit and automatic vaccination
-fax.epidemic.cover_up_explanation_1 = "Wenn wir versuchen, die Epidemie zu vertuschen, müssen wir die Infizierten heilen, bevor das Gesudheitsministerium davon Wind bekommt."
+fax.epidemic.cover_up_explanation_1 = "Wenn wir versuchen, die Epidemie zu vertuschen, müssen wir die Infizierten heilen, bevor das Gesundheitsministerium davon Wind bekommt."
 fax.epidemic.cover_up_explanation_2 = "Wenn der Gesundheitsinspektor die Vertuschungsaktion bemerkt, wird das Konsequenzen haben."
 fax.epidemic.disease_name = "Unser Ärzteteam hat eine hochgradig ansteckende Form von %s entdeckt!"
 fax.epidemic_result.close_text = "Hurra!"
@@ -103,6 +103,7 @@ adviser.research.drug_fully_researched = "Sie haben die Effektivität Ihres %s-M
 tooltip.graphs.reputation = "Ruf ein- und ausschalten" -- original mentioned hospital value, while it's actually reputation.
 staff_title.researcher = "Forscher" -- one of the most annoying (since prominent) wrong strings in original
 bank_manager.insurance_owed = "Zahlungen von Vers." -- original was too long
+graphs.deaths = "Todesfälle" -- origin was too long
 insurance_companies[7] = "Leben-und-Tod KG" -- %% in original string (maybe this was rendered as &)
 object.skeleton = "Skelett" -- second most annoying mistake in german translation
 tooltip.staff_list.detail = "Aufmerksamkeit" -- was translated as an imperative
@@ -195,8 +196,8 @@ customise_window = {
 }
 
 tooltip.customise_window = {
-  aliens = "Aufgrund das Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNE gemacht, damit sie nur von einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
-  average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalen Sie diese Option ein.",
+  aliens = "Aufgrund des Fehlens einer anständigen Animation haben wir standardmäßig Patienten mit außerirdischer DNA deaktiviert, damit sie nur zu einem Notfall kommen. Um Patienten mit außerirdischer DNA es zu erlauben, Ihr Krankenhaus nicht nur bei Notfällen zu besuchen, schalten Sie dies ab.",
+  average_contents = "Wenn Sie möchten, dass sich das Spiel merkt, welche zusätzlichen Objekte Sie üblicherweise beim Gebäudebau hinzufügen, dann schalten Sie diese Option ein.",
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
   movies = "Globale Filmsteuerung: Hiermit können Sie sämtliche Filme abschalten",
   fractured_bones = "Aufgrund einer armseligen Animation haben wir uns entschieden, dass es standardmäßig keine weiblichen Patienten mit gebrochenen Knochen gibt. Wenn weibliche Patienten mit gebrochenen Knochen ihr Krankenhaus besuchen sollen, dann schalten Sie dies ab.",
@@ -265,10 +266,11 @@ adviser = {
     researcher_needs_desk_2 = "Ihr Forscher ist froh darüber, dass Sie ihm eine Pause gegönnt haben. Falls Sie vorhatten, dass noch mehr Personal forscht, dann müssen Sie jedem Forscher einen eigenen Schreibtisch zur Verfügung stellen.",
     researcher_needs_desk_3 = "Jeder Forscher braucht einen eigenen Schreibtisch, an dem er arbeiten kann.",
     nurse_needs_desk_1 = "Jede Krankenschwester braucht ihren eignen Schreibtisch, an dem sie arbeiten kann.",
-    nurse_needs_desk_2 = "Ihre Krankenschweser ist froh darüber, dass Sie ihr eine Pause gegönnt haben. Falls Sie vorhatten, dass mehr als nur eine Krankenschwester in der Station arbeitet, dann müssen Sie jeder Krankenschwester einen eigenen Schreibtisch zur Verfügung stellen.",
+    nurse_needs_desk_2 = "Ihre Krankenschwester ist froh darüber, dass Sie ihr eine Pause gegönnt haben. Falls Sie vorhatten, dass mehr als nur eine Krankenschwester in der Station arbeitet, dann müssen Sie jeder Krankenschwester einen eigenen Schreibtisch zur Verfügung stellen.",
   },
   research = {
-    drug_improved_1 = "Das Medikament %1 wurde von Ihrer Forschungsabteilung verbessert.",
+    drug_improved = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",
+    drug_improved_1 = "Das Medikament %s wurde von Ihrer Forschungsabteilung verbessert.",
   },
   cheats = {
     th_cheat = "Gratulation, Sie haben die Cheats aktiviert!",
@@ -510,7 +512,7 @@ totd_window = {
     "Haben Sie schon versucht, die europäische Notruf-Nummer (112) in das Faxgerät einzugeben? Schalten Sie vorher den Sound an!",
     "Im Options-Menü hier im Hauptmenü oder im laufenden Spiel können Einstellungen wie die Auflösung oder die Sprache geändert werden.",
     "Haben Sie eine andere Sprache als Englisch ausgewählt, aber es erscheinen englische Texte? Helfen Sie uns, die Übersetzung zu vervollständigen, indem Sie fehlende Texte in Ihre Sprache übersetzten!",
-    "Das CorsixTH-Team sucht Verstärkung! Haben Sie Interesse, beim Programmieren, Übersetzen oder der Grafikerstellung zu helfen? Kontaktieren Sie uns in unserem Forum, der Mailing-Liste oder unserem IRC-Channel (corsix-th auf Freenode).",
+    "Das CorsixTH-Team sucht Verstärkung! Haben Sie Interesse, beim Programmieren, Übersetzen oder der Grafikerstellung zu helfen? Kontaktieren Sie uns in unserem Forum, der Mailing-Liste oder unserem IRC-Channel (#Corsix-TH auf Freenode).",
     "Wenn Sie einen Bug finden, bitte melden Sie ihn in unserem Bug-Tracker: th-issues.corsix.org",
     "In jedem Level müssen bestimmte Voraussetzungen erfüllt werden, bevor man zum Nächsten wechseln kann. Im Status-Fenster können Sie Ihren Fortschritt bezüglich der Levelziele sehen.",
     "Um existierende Räume zu bearbeiten oder gar zu löschen, kann man den Raum-Bearbeiten-Knopf in der unteren Werkzeugleiste verwenden.",
@@ -539,7 +541,7 @@ update_window = {
   new_version = "Neue Version:",
   current_version = "Aktuelle Version:",
   download = "Zur Downloadseite gehen",
-  ignore = "Überspringen und zum Hauptmenp gehen",
+  ignore = "Überspringen und zum Hauptmenü gehen",
 }
 
 tooltip.update_window = {
@@ -584,8 +586,8 @@ tooltip.cheats_window = {
     end_year = "Zum Jahresende springen.",
     lose_level = "Das aktuelle Level verlieren.",
     win_level = "Das aktuelle Level gewinnen.",
-    epidemic = "Einen infizierten Patienten, der eine Epedemie auslösen kann, erzeugen.",
-    toggle_infected = "Die Infektions-Symbole für die aktive, entdeckte Epedemie umschalten.",
+    epidemic = "Einen infizierten Patienten, der eine Epidemie auslösen kann, erzeugen.",
+    toggle_infected = "Die Infektions-Symbole für die aktive, entdeckte Epidemie umschalten.",
   }
 }
 
@@ -610,14 +612,14 @@ tooltip.folders_window = {
   back = "Dieses Menü schließen und zum Einstellungsmenü zurückkehren",
   music_location = "Wählen Sie einen Ort für ihre MP3-Musikddateien aus. Sie müssen dieses Verzeichnis bereits erstellt haben, dann wählen Sie ebendieses Verzeichnis aus.",
   font_location = "Pfad einer Schrift-Datei, die Unicode-Zeichen Ihrer Sprache unterstützt. Wenn diese Einstellung nicht vorgenommen wird, können Sie keine Sprachen auswählen, die mehr Zeichen benötigen, als das Originalspiel unterstützt. Beispiel: Russisch und Chinesisch.",
-  savegames_location = "Standardmäßig wird das Spielstandsverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert und es wird benutzt, um die Spielsände darin abzuspeichern. Sollte das nicht brauchbar sein, können Sie sich ihr eigenes Verzeichnis aussuchen, durchsuchen Sie einfach nach dem Verzeichnis, das Sie verwenden möchten",
-  screenshots_location = "Standardmäßig wird das Screenshotverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert. Sollte das nicht brauchbar sein, können Sie sich ihr eigenes Verzeichnis aussuchen, durchsuchen Sie einfach nach dem Verzeichnis, das Sie verwenden möchten",
+  savegames_location = "Standardmäßig wird das Spielstandsverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert und es wird benutzt, um die Spielstände darin abzuspeichern. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
+  screenshots_location = "Standardmäßig wird das Screenshotverzeichnis im selben Verzeichnis wie die Konfigurationsdatei gespeichert. Sollte das nicht erwünscht sein, können Sie sich ihr eigenes Verzeichnis aussuchen, wählen Sie einfach das Verzeichnis, das Sie verwenden möchten",
   browse_data = "Nach einem anderem Ort einer Theme-Hospital-Installation durchsuchen (aktueller Ort: %1%)",
   browse = "Nach einem Verzeichnis durchsuchen",
   browse_music = "Nach einem anderem Ort für Ihr Musikverzeichnis durchsuchen (aktueller Ort: %1%)",
   no_font_specified = "Es wurde kein Schriftverzeichnis festgelegt!",
   not_specified = "Es wurde kein Verzeichnis festgelegt!",
-  browse_saves = "Nach einem anderem Ort für Ihr Spiellstandsverzeichnis durchsuchen (aktueller Ort: %1%)",
+  browse_saves = "Nach einem anderem Ort für Ihr Spielstandsverzeichnis durchsuchen (aktueller Ort: %1%)",
   default = "Standardort",
   data_location = "Das Verzeichnis der Original-Theme-Hospital-Installation, welche benötigt wird, um CorsixTH zu spielen",
 }
