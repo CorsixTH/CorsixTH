@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2011 Nicolas "MeV" Elie
+--[[ Copyright (c) 2010-2015 Nicolas "MeV" Elie
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -615,6 +615,7 @@ menu_charts = {
 -- Debug menu
 menu_debug = {
   jump_to_level               = "  ALLER AU NIVEAU  ",
+  connect_debugger            = " (CTRL + C) CONNECTER AU SERVEUR DE DÉBOGUAGE ",
   transparent_walls           = "  (X) MURS TRANSPARENTS  ",
   limit_camera                = "  LIMITER LA CAMERA  ",
   disable_salary_raise        = "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
