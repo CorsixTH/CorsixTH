@@ -815,6 +815,8 @@ tooltip = {
       all_research = "Voltooi al het onderzoek",
       end_year = "Spring naar het einde van het jaar.",
       earthquake = "Creëer een aardbeving",
+      epidemic = "Maakt een besmette patient aan die mogelijk een epidemie veroorzaakt",
+      toggle_infected = "Aan/uit zetten van weergave van geïnfecteerden van de ontdekte epidemie",
     },
   },
   new_game_window = {
@@ -1372,6 +1374,7 @@ dynamic_info = {                                      --[['' - '' is hier versch
       no_treatment_available = "Geen behandeling beschikbaar; ik ga naar huis",
       on_my_way_to = "Onderweg naar %s",
       queueing_for = "In de rij voor %s",
+      epidemic_vaccinated = "Ik ben niet langer besmettelijk",
     },
     diagnosed = "Diagnose: %s ",
   },
@@ -2202,6 +2205,7 @@ errors = {
   unavailable_screen_size = "De resolutie die je hebt ingevoerd is niet beschikbaar in fullscreen",
   alien_dna = "LET OP: Er zijn geen animaties voor alien patiënten die zitten, op deuren kloppenen, deuren openen, enz. Daarom veranderen ze naar een normaal mens als ze dit doen en veranderen dan weer terug, net als in Them Hospital.  Patiënten met alien-DNA verschijnen alleen wanneer dit in het level is toegestaan.",
   fractured_bones = "LET OP: De animatie voor vrouwelijke patiënten met gebrokken botten is niet goed.",
+  no_games_to_contine = "Er zijn geen opgeslagen spellen.",
 }
 diseases = {
   diag_ward = {
@@ -2487,6 +2491,7 @@ main_menu = {
   options = "Instellingen",
   version = "Versie: ",
   savegame_version = "Savegame versie: ",
+  continue = "Zet spel voort",
 }
 confirmation = {  --spaces on the end make the text fit properly in text windows
   quit = "Weet je zeker dat je het spel wilt verlaten?                ",
@@ -2607,6 +2612,8 @@ menu_debug = {
   calls_dispatcher = "  CALLS DISPATCHER  ",
   cheats = "  (F11) CHEATS  ",
   jump_to_level = "  SPRING NAAR LEVEL  ",
+  debug_script = "  (SHIFT + D) LAAT FOUTSCRIPT LOPEN  ",
+  connect_debugger = "  (CTRL + C) MAAK VERBINDING MET LUA DBGp SERVER  ",
 }
 
 drug_companies = {
@@ -2889,6 +2896,8 @@ cheats_window = {
     all_research = "All research cheat",
     end_year = "Einde van het jaar",
     earthquake = "Creëer aardbeving",
+    epidemic = "Besmettelijke patient laten verschijnen",
+    toggle_infected = "Aan/uit zetten besmet iconen",
   },
   cheated = {
     no = "Cheats gebruikt: Nee",
