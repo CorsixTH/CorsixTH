@@ -29,6 +29,7 @@ SOFTWARE.
 #include "th_map.h"
 #include <new>
 #include <iostream>
+#include <cstring>
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
@@ -217,6 +218,7 @@ THRenderTarget::THRenderTarget()
     m_pZoomTexture = NULL;
     m_bShouldScaleBitmaps = false;
     m_bBlueFilterActive = false;
+    m_bApplyOpenGlClipFix = false;
     m_iWidth = -1;
     m_iHeight = -1;
 }
@@ -291,6 +293,10 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
     }
 
     m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
+
+    SDL_version sdlVersion;
+    SDL_GetVersion(&sdlVersion);
+    m_bApplyOpenGlClipFix = std::strncmp(info.name, "opengl", 6) == 0 && sdlVersion.major == 2 && sdlVersion.minor == 0 && sdlVersion.patch < 4;
 
     if (bCreateRenderer || bUpdateSize)
     {
@@ -470,27 +476,47 @@ void THRenderTarget::getClipRect(THClipRect* pRect) const
         pRect->w = m_iWidth;
         pRect->h = m_iHeight;
     }
+
+    if(m_bApplyOpenGlClipFix)
+    {
+        int renderWidth, renderHeight;
+        SDL_RenderGetLogicalSize(m_pRenderer, &renderWidth, &renderHeight);
+        pRect->y = renderHeight - pRect->y - pRect->h;
+    }
 }
 
 void THRenderTarget::setClipRect(const THClipRect* pRect)
 {
-    const SDL_Rect *pSDLRect = reinterpret_cast<const SDL_Rect*>(pRect);
-
     // Full clip rect for CTH means clipping disabled
-    if (pRect && pRect->w == m_iWidth && pRect->h == m_iHeight)
+    if (pRect == nullptr || (pRect->w == m_iWidth && pRect->h == m_iHeight))
     {
-        pSDLRect = NULL;
+        SDL_RenderSetClipRect(m_pRenderer, nullptr);
+        return;
     }
+
+    SDL_Rect SDLRect = {
+        pRect->x,
+        pRect->y,
+        pRect->w,
+        pRect->h
+    };
 
     // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
     // off clipping, so we replace it with a rect that's outside our viewport.
     const SDL_Rect rcBogus = { -2, -2, 1, 1 };
-    if (pSDLRect && SDL_RectEmpty(pSDLRect))
+    if (SDL_RectEmpty(&SDLRect))
     {
-        pSDLRect = &rcBogus;
+        SDLRect = rcBogus;
     }
 
-    SDL_RenderSetClipRect(m_pRenderer, pSDLRect);
+    if(m_bApplyOpenGlClipFix)
+    {
+        int renderWidth, renderHeight;
+        SDL_RenderGetLogicalSize(m_pRenderer, &renderWidth, &renderHeight);
+        SDLRect.y = renderHeight - SDLRect.y - SDLRect.h;
+    }
+
+    SDL_RenderSetClipRect(m_pRenderer, &SDLRect);
 }
 
 int THRenderTarget::getWidth() const
