@@ -1,4 +1,4 @@
---[[ Copyright (c) 2014 Erlend Mongstad, Ola Skogrand
+--[[ Copyright (c) 2015 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -1265,6 +1265,7 @@ menu_debug = {
   win_game_anim       = "  VINN SPILL ANIM       ",
   win_level_anim      = "  VINN BANE ANIM      ",
   debug_script = "  (SHIFT + D) KJÖR DEBUG SCRIPT  ",
+  connect_debugger = "  (CTRL + C) KOBLE TIL LUA DEBUG SERVER  ",
   lose_game_anim = {
     [1]  = "  TAPT SPILL 1 ANIM  ",
     [2]  = "  TAPT SPILL 2 ANIM  ",
