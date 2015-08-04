@@ -237,6 +237,11 @@ protected:
     bool m_bShouldScaleBitmaps; ///< Whether bitmaps should be scaled.
     bool m_bSupportsTargetTextures;
 
+    // In SDL2 < 2.0.4 there is an issue with the y coordinates used for
+    // ClipRects in opengl and opengles.
+    // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
+    bool m_bApplyOpenGlClipFix;
+
     void _flushZoomBuffer();
 };
 
