@@ -157,7 +157,7 @@ adviser.multiplayer.poaching = {
 }
 adviser.vomit_wave.ended = "Ouf ! On dirait que le virus qui provoquait des nausées est enfin enrayé. Gardez l'hôpital propre, à l'avenir."
 adviser.research.new_available = "Nouveau : un(e) %s est disponible."
-adviser.research.drug_improved_1 = "Le médicament %s a été amélioré par votre département de recherche."
+adviser.research.drug_improved_1 = "Le traitement contre la %s a été amélioré par votre département de recherche."
 adviser.goals.lose.kill = "Tuez encore %d patients pour perdre !"
 adviser.warnings = {
   money_low = "Les fonds sont en baisse !",
