@@ -89,9 +89,9 @@ function UIProgressReport:UIProgressReport(ui)
     if res_value then
       local tooltip
       if world.level_criteria[tab.criterion].formats == 2 then
-        tooltip = _S.tooltip.status[crit_name]:format(res_value, cur_value)
+        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value), math.floor(cur_value))
       else
-        tooltip = _S.tooltip.status[crit_name]:format(res_value)
+        tooltip = _S.tooltip.status[crit_name]:format(math.floor(res_value))
       end
       self:addPanel(world.level_criteria[tab.criterion].icon, x, 240)
       self:makeTooltip(tooltip, x, 180, x + 30, 180 + 90)
