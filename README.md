@@ -20,7 +20,7 @@ You will need the following:
 ## Developers
 ### Coders and non-coders we want you!
 
-We are always looking for help with improving CorsixTH. The code base is made up of LUA and C++ (with a little C added in for fun) however most of the game logic is written in LUA, we love LUA and the nature that its approachable and easy to pickup so hit fork and get started!. But don't worry if you don't code as we can always use in other areas and if you have ideas for the project please contact us!
+We are always looking for help with improving CorsixTH. The code base is made up of Lua and C++ (with a little C added in for fun) however most of the game logic is written in Lua, we love Lua and its approachable and easy to pickup nature, so hit fork and get started! But don't worry if you don't code as we can always use your help in other areas and if you have ideas for the project please contact us or open a new issue!
 
 
 ###### Features & Bugfixes ######
