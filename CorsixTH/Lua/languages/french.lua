@@ -167,7 +167,7 @@ adviser.warnings = {
   too_many_plants = "Il y a bien trop de plantes. C'est la jungle, ici !",
   many_killed = "Vous avez laissé mourir %d personnes. Idiot ! Vous êtes censé les soigner.",
   falling_1 = "Hé ! Ce n'est pas drôle, regardez ou vous cliquez, quelqu'un pourrait être blessé !",
-  falling_2 = "Arrêtez de faire n'importe quoi, vous en pensez quoi ?",
+  falling_2 = "Arrêtez de faire n'importe quoi, qu'en penseriez-vous à leur place ?",
   falling_3 = "Aïe, ça doit faire mal,  qu'on appelle un médecin !",
   falling_4 = "C'est un hôpital, pas un parc d'attraction !",
   falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
@@ -658,7 +658,7 @@ main_menu = {
 }
 
 tooltip.main_menu = {
-  new_game = "Commencer une partie totalement nouvelle",
+  new_game = "Commencer une nouvelle partie",
   custom_level = "Construire votre hôpital dans un niveau personnalisé",
   continue = "Continuer la partie",
   load_game = "Charger une partie sauvegardée",
@@ -689,7 +689,7 @@ tooltip.new_game_window = {
   cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
   difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu",
   start = "Démarrer le jeu avec les paramètres sélectionnés",
-  player_name = "Entrez le nom avec lequel vous voulez être appelé dans le jeu",
+  player_name = "Entrez le nom par lequel vous voulez être appelé dans le jeu",
 }
 
 -- Load game window
@@ -783,8 +783,8 @@ customise_window = {
   option_on = "Activer",
   option_off = "Désactiver",
   back = "Retour",
-  movies = "Contrôle des films",
-  intro = "Jouer le film d'intro",
+  movies = "Contrôle des cinématiques",
+  intro = "Jouer la cinématique d'intro",
   paused = "Construction en pause",
   volume = "Touche de raccourci pour diminuer le volume",
   aliens = "Extraterrestres",
@@ -793,8 +793,8 @@ customise_window = {
 }
 
 tooltip.customise_window = {
-  movies = "Sélectionnez si les films doivent être joués.",
-  intro = "Passer le film d'introduction lorsque vous démarrez le jeu. Le contrôle des films doit être activé si vous jouez le film d'introduction à chaque fois que vous chargez CorsixTH",
+  movies = "Sélectionnez si les cinématiques doivent être joués.",
+  intro = "Passer la cinématique d'introduction lorsque vous démarrez le jeu. Le contrôle des cinématiques doit être activé si vous jouez la cinématique d'introduction à chaque fois que vous chargez CorsixTH",
   paused = "Dans Theme Hospital le joueur ne sera autorisé à utiliser le menu principal que si le jeu est en pause. C'est le paramètre par défaut dans CorsixTH aussi, mais en l'activant tout est permis pendant que le jeu est en pause",
   volume = "Si la touche de réduction du volume ouvre également le journal de médecine, activer cette option pour modifier le raccourci des dossiers médicaux à Maj + C",
   aliens = "Comme il y a des animations appropriées, nous avons fait de sorte que les patients avec l'ADN extraterrestre montrent seulement comme des situations d'urgence. Désactivez cette option pour obtenir cas de l'ADN extraterrestre visites régulières",
