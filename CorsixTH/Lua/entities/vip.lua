@@ -513,5 +513,3 @@ function Vip:afterLoad(old, new)
   end
   Humanoid.afterLoad(self, old, new)
 end
-
-

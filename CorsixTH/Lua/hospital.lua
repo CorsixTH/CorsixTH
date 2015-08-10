@@ -649,6 +649,11 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
+  if old < 89 then
+    for _, room in pairs(self.world.rooms) do
+      room.rat_holes = {}
+    end
+  end
 end
 
 --! Update the Hospital.patientcount variable.
@@ -1026,6 +1031,11 @@ function Hospital:onEndDay()
   local radiators = self.world.object_counts.radiator
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
   self.acc_heating = self.acc_heating + heating_costs
+  
+  -- rats
+  if self:isPlayerHospital() then
+    self:spawnRats()
+  end
 end
 
 -- Called at the end of each month.
@@ -1132,6 +1142,12 @@ function Hospital:onEndMonth()
         self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
       end
     end
+  end
+
+  -- rats
+  if self:isPlayerHospital() then
+    self:tickRatHoles()
+    self:spawnRatHoles()
   end
 end
 
@@ -1987,4 +2003,132 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+-- Decrease life span of rat holes of the hospital. Rat holes with life span
+-- getting at 0 are removed.
+function Hospital:tickRatHoles()
+  for _, room in pairs(self.world.rooms) do
+    room:tickRatHoles()
+  end
+end
+
+-- Return the litter rate (i.e. the dirt rate) in the hospital,
+-- i.e. the percentage of littered tiles, as a float [0-100].
+function Hospital:getLitterRate()
+  local function isOwned(plot)
+    for _, i in ipairs(self.ownedPlots) do
+      if i == plot then
+        return true
+      end
+    end
+
+    return false
+  end
+
+  local surface = 0
+  for plot = 1, self.world.map.th:getPlotCount() do
+    if isOwned(plot) then
+      surface = surface + self.world.map.th:getParcelTileCount(plot)
+    end
+  end
+
+  return (#self.world:getObjectsById("litter") / surface) * 100
+end
+
+-- Spawn a few rat holes here and there if the litter level is high.
+function Hospital:spawnRatHoles()
+  local litter_rate = self:getLitterRate()
+  print("litter rate: " .. tostring(litter_rate) .. " %")
+  if litter_rate > 0.1 then
+    local rat_hole_spawn_rate = math.floor(litter_rate * 3)
+    local available_walls = self:getAvailableRatWalls()
+
+    print("rat_hole_spawn_rate: " .. tostring(rat_hole_spawn_rate))
+    local nbr = math.random(math.floor(rat_hole_spawn_rate / 4), rat_hole_spawn_rate)
+    print("rat holes to make: " .. tostring(nbr))
+
+    if #available_walls >= nbr then
+      for i = 1, nbr do
+        local point = available_walls[math.random(#available_walls)]
+        if point then
+          point.room:addRatHole(point)
+        end
+      end
+    end
+  end
+end
+
+function Hospital:spawnRats()
+  if math.random(4) == 1 then
+    local holes = self:getRatHoles()
+    if #holes >= 10 then
+      local found = false
+      while not found do
+        local hole1 = holes[math.random(1, #holes)]
+        local hole2 = holes[math.random(1, #holes)]
+
+        local x1, y1 = hole1.tile_x, hole1.tile_y
+        local x2, y2 = hole2.tile_x, hole2.tile_y
+
+        if x1 == x2 and y1 == y2 then
+          break
+        end
+
+        local distance = self.world:getPathDistance(x1, y1, x2, y2)
+
+        if distance and distance >= 6 then
+          found = true
+          print("hole1: " .. tostring(x1) .. ", " .. tostring(y1))
+          print("hole2: " .. tostring(x2) .. ", " .. tostring(y2))
+          print("distance: " .. tostring(distance))
+          print("---")
+          -- self.world:getPath(x1, y1, x2, y2)
+          local rat = self.world:newEntity("Rat", 2)
+        end
+      end
+    end
+  end
+end
+
+function Hospital:getRatHoles()
+  local holes = {}
+
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self then
+      for _, hole in pairs(room.rat_holes) do
+        table.insert(holes, hole)
+      end
+    end
+  end
+
+  return holes
+end
+
+-- Returns all available wall tiles where a rat hole can be placed.
+-- TODO: returns corridors walls as well
+function Hospital:getAvailableRatWalls()
+  local results = {}
+
+  for _, room in pairs(self.world.rooms) do
+    if room.hospital == self and room.is_active then
+      for _, point in pairs(room:getAvailableRatWalls()) do
+        local isAvailable = true
+        for _, otherRoom in pairs(self.world.rooms) do
+          if otherRoom.id ~= room.id then
+            if otherRoom:isOnOppositeEdge(point) then
+              isAvailable = false
+              break
+            end
+          end
+        end
+
+        if isAvailable then
+          table.insert(results, point)
+        end
+      end
+    end
+  end
+
+  return results
 end

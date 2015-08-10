@@ -247,6 +247,7 @@ function App:init()
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder"walls"
     dofile "entity"
+    dofile "entities/creature"
     dofile "entities/humanoid"
     dofile "entities/object"
     dofile "entities/machine"
@@ -1313,6 +1314,13 @@ function App:afterLoad()
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
+  end
+
+  if old < 91 then
+    local rat_hole_type = dofile "objects/rat_hole"
+    Object.processTypeDefinition(rat_hole_type)
+    self.objects[rat_hole_type.id] = rat_hole_type
+    self.world:newObjectType(rat_hole_type)
   end
 
   self.map:afterLoad(old, new)
