@@ -1,0 +1,14 @@
+#!/bin/bash
+set -ev
+cd $TRAVIS_BUILD_DIR
+# Package LevelEdit
+cp LevelEdit/dist/LevelEdit.jar fresh/CorsixTH/
+# Copy required DLLs
+cp libs/SDL2-2.0.3/i686-w64-mingw32/bin/*.dll fresh/CorsixTH/
+cp libs/SDL2_mixer-2.0.0/i686-w64-mingw32/bin/*.dll fresh/CorsixTH/
+cp libs/ffmpeg-bin/bin/*.dll fresh/CorsixTH/
+cp libs/freetype/bin/*.dll fresh/CorsixTH/
+cp libs/lua/bin/*.dll fresh/CorsixTH/
+cp libs/luafilesystem-v_1_6_3/lfs.dll fresh/CorsixTH/
+cp libs/lpeg-0.12.1/lpeg.dll fresh/CorsixTH/
+cp -r libs/luasocket/lua/5.1/* fresh/CorsixTH/

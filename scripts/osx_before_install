@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ev
+# Get build dependencies
+brew update
+brew install lua51 luajit ffmpeg freetype sdl2 sdl2_mixer
+brew install https://raw.githubusercontent.com/kadwanev/bigboybrew/master/Library/Formula/sshpass.rb
+sudo ln -vf /usr/local/bin/luarocks-5.1 /usr/local/bin/luarocks
+sudo ln -vf /usr/local/bin/luac-5.1 /usr/local/bin/luac
+# Required for LDocGen
+sudo luarocks install lpeg
+sudo luarocks install luafilesystem
+# Required for lua unit tests
+sudo luarocks install busted

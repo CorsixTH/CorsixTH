@@ -1,0 +1,13 @@
+#!/bin/bash
+set -ev
+# Create unix makefiles
+cd $TRAVIS_BUILD_DIR
+mkdir cmake && cd cmake
+cmake ../ -G Xcode -DWITH_AUDIO=ON -DWITH_MOVIES=ON  -Bfresh -H. --debug-output \
+-DFREETYPE_INCLUDE_DIR_freetype2=/usr/local/include/freetype2/ -DFREETYPE_INCLUDE_DIR_ft2build=/usr/local/include/freetype2/ -DFREETYPE_LIBRARY=/usr/local/lib/libfreetype.dylib \
+-DFFMPEG_INCLUDE_DIRS=/usr/local/include/ffmpeg -DAVFORMAT_INCLUDE_DIRS=/usr/local/include/ffmpeg -DAVUTIL_INCLUDE_DIRS=/usr/local/include/ffmpeg -DSWSCALE_INCLUDE_DIRS=/usr/local/include/ffmpeg \
+-DWITH_LUAJIT=ON -DLUA_PROGRAM_PATH=`which lua` -DLUA_INCLUDE_DIR=/usr/local/include/lua5.1/ -DLUA_LIBRARY=/usr/local/lib/liblua.5.1.dylib
+# Build said Xcode project. Forcing c11 could only possibly work when travis is making cpp on osx, not objc. Note about variable name (tldr maybe use other_cxxflags) http://stackoverflow.com/questions/5541946/cflags-ccflags-cxxflags-what-exactly-do-these-variables-control
+cd $TRAVIS_BUILD_DIR/fresh/CorsixTH
+# OTHER_CFLAGS="-std=c++11 -g3 -Wall -O0"
+xcodebuild -configuration Release -sdk macosx10.9 # Travis can't build for older OSX
