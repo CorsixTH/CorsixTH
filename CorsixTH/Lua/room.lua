@@ -678,67 +678,87 @@ function Room:roomFinished()
   self:tryAdvanceQueue()
 end
 
+--! Try to move a patient from the old room to the new room.
+--!param old_room (Room) Room that currently has the patient in the queue.
+--!param new_room (Room) Room that wants the patient in the queue.
+--!param patient (Humanoid) Patient to move.
+--!return (boolean) Whether we are done with the old room (no more patients will come from it).
+local function tryMovePatient(old_room, new_room, patient)
+  local world = new_room.world
+
+  local px, py = patient.tile_x, patient.tile_y
+  -- Don't reroute the patient if he just decided to go to the toilet
+  if patient.going_to_toilet then
+    return false
+  end
+
+  local new_x, new_y = new_room:getEntranceXY(true)
+  local old_x, old_y = old_room:getEntranceXY(true)
+  local new_distance = world:getPathDistance(px, py, new_x, new_y)
+  if not new_distance then return true end -- Patient cannot reach us, quit trying
+
+  local new_score = new_room:getUsageScore() + new_distance
+  local old_score
+  local old_distance = world:getPathDistance(px, py, old_x, old_y)
+  if old_distance then
+    old_score = old_room:getUsageScore() + old_distance
+  else
+    old_score = new_score + 1 -- Make condition below fail.
+  end
+  if new_score >= old_score then return true end
+
+  -- Update the queues
+  local old_queue = old_room.door.queue
+  old_queue:removeValue(patient)
+  patient.next_room_to_visit = new_room
+  new_room.door.queue:expect(patient)
+  new_room.door:updateDynamicInfo()
+
+  -- Rewrite the action queue
+  for i, action in ipairs(patient.action_queue) do
+    if i ~= 1 then
+      action.todo_interrupt = true
+    end
+    -- The patient will most likely have a queue action for the other
+    -- room that must be cancelled. To prevent the after_use callback
+    -- of the drinks machine to enqueue the patient in the other queue
+    -- again, is_in_queue is set to false so the callback won't run
+    if action.name == 'queue' then
+      action.is_in_queue = false
+    elseif action.name == "walk" and action.x == old_x and action.y == old_y then
+      local action = new_room:createEnterAction(patient)
+      patient:queueAction(action, i)
+      break
+    end
+  end
+
+  local interrupted = patient.action_queue[1]
+  local on_interrupt = interrupted.on_interrupt
+  if on_interrupt then
+    interrupted.on_interrupt = nil
+    on_interrupt(interrupted, patient, false)
+  end
+  return false
+end
+
+--! Try to find new patients for this room by 'stealing' them from other rooms nearby.
 function Room:tryToFindNearbyPatients()
   if not self.door.queue then
     return
   end
-  local world = self.world
-  local our_score = self:getUsageScore()
-  local our_x, our_y = self:getEntranceXY(true)
-  for _, room in pairs(self.world.rooms) do
-    if room.hospital == self.hospital and room.room_info == self.room_info
-    and room.door.queue and room.door.queue:reportedSize() >= 2 then
-      local other_score = room:getUsageScore()
-      local other_x, other_y = room:getEntranceXY(true)
-      local queue = room.door.queue
-      while queue:reportedSize() > 1 do
-        local patient = queue:back()
-        local px, py = patient.tile_x, patient.tile_y
-        -- Don't reroute the patient if he just decided to go to the toilet
-        if not patient.going_to_toilet then
-          local distance_to_us = world:getPathDistance(px, py, our_x, our_y)
-          local distance_to_current_room = world:getPathDistance(px, py, other_x, other_y)
 
-          if distance_to_us and (
-            not distance_to_current_room
-            or distance_to_us + our_score < distance_to_current_room + other_score ) then
-            -- Update the queues
-            queue:removeValue(patient)
-            patient.next_room_to_visit = self
-            self.door.queue:expect(patient)
-            self.door:updateDynamicInfo()
-
-            -- Update our cached values
-            our_score = self:getUsageScore()
-            other_score = room:getUsageScore()
-
-            -- Rewrite the action queue
-            for i, action in ipairs(patient.action_queue) do
-              if i ~= 1 then
-                action.todo_interrupt = true
-              end
-              -- The patient will most likely have a queue action for the other
-              -- room that must be cancelled. To prevent the after_use callback
-              -- of the drinks machine to enqueue the patient in the other queue
-              -- again, is_in_queue is set to false so the callback won't run
-              if action.name == 'queue' then
-                action.is_in_queue = false
-              elseif action.name == "walk" and action.x == other_x and action.y == other_y then
-                local action = self:createEnterAction(patient)
-                patient:queueAction(action, i)
-                break
-              end
-            end
-            local interrupted = patient.action_queue[1]
-            local on_interrupt = interrupted.on_interrupt
-            if on_interrupt then
-              interrupted.on_interrupt = nil
-              on_interrupt(interrupted, patient, false)
-            end
-          else
-            break
-          end
-        end
+  for _, old_room in pairs(self.world.rooms) do
+    if old_room.hospital == self.hospital and old_room ~= self and
+        old_room.room_info == self.room_info and old_room.door.queue and
+        old_room.door.queue:reportedSize() >= 2 then
+      local old_queue = old_room.door.queue
+      local pat_number = old_queue:reportedSize()
+      while pat_number > 1 do
+        local patient = old_queue:reportedHumanoid(pat_number)
+        if tryMovePatient(old_room, self, patient) then break end
+        -- tryMovePatient may have just removed patient 'pat_number', but it does
+        -- not change the queue in front of it. 'pat_number - 1' thus still exists.
+        pat_number = pat_number - 1
       end
     end
   end
