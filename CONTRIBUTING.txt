@@ -82,8 +82,7 @@ CONTRIBUTING CODE:
 First Time
 1. Ensure you have a GitHub account (https://github.com/signup/free)
 2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
-3. Ensure you have a git client.  (http://windows.github.com or
-http://mac.github.com)
+3. Ensure you have a git client.  (http://desktop.github.com)
 4. Clone your fork to your computer
         - If using github client, run Git Shell
         - git clone https://github.com/mygithubuser/CorsixTH.git
