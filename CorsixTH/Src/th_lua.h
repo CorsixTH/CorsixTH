@@ -47,7 +47,7 @@ void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
 #define luaT_upvalueindex lua_upvalueindex
 #define luaT_pushcclosure lua_pushcclosure
 #define luaT_register luaL_register
-#define luaT_setfuncs(L, R) luaL_register(L, NULL, R)
+#define luaT_setfuncs(L, R) luaL_register(L, nullptr, R)
 #endif
 #define luaT_pushcfunction(L, f) luaT_pushcclosure(L, f, 0)
 
@@ -261,7 +261,7 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
         mt_idx = lua_gettop(L) + mt_idx + 1;
 
     void *ud = lua_touserdata(L, idx);
-    if(ud != NULL && lua_getmetatable(L, idx) != 0)
+    if(ud != nullptr && lua_getmetatable(L, idx) != 0)
     {
         while(true)
         {
@@ -284,7 +284,7 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
         const char *msg = lua_pushfstring(L, "%s expected, got %s", luaT_classinfo<T>::name(), luaL_typename(L, idx));
         luaL_argerror(L, idx, msg);
     }
-    return NULL;
+    return nullptr;
 }
 
 template <class T>
@@ -300,7 +300,7 @@ template <class T, int mt>
 static int luaT_stdgc(lua_State *L)
 {
     T* p = luaT_testuserdata<T>(L, 1, mt, false);
-    if(p != NULL)
+    if(p != nullptr)
     {
         p->~T();
     }

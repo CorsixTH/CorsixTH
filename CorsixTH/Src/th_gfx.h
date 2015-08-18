@@ -145,12 +145,12 @@ public:
     /*!
         @param width Pixel width of the resulting image
         @param height Pixel height of the resulting image
-        @param buffer If NULL, then a new buffer is created to render the image
+        @param buffer If nullptr, then a new buffer is created to render the image
           onto. Otherwise, should be an array at least width*height in size.
           Ownership of this pointer is assumed by the class - call takeData()
           to take ownership back again.
     */
-    THChunkRenderer(int width, int height, uint8_t *buffer = NULL);
+    THChunkRenderer(int width, int height, uint8_t *buffer = nullptr);
 
     ~THChunkRenderer();
 

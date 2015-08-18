@@ -38,7 +38,7 @@ struct music_t
 
     music_t()
     {
-        pMusic = NULL;
+        pMusic = nullptr;
     }
 
     ~music_t()
@@ -46,7 +46,7 @@ struct music_t
         if(pMusic)
         {
             Mix_FreeMusic(pMusic);
-            pMusic = NULL;
+            pMusic = nullptr;
         }
     }
 };
@@ -110,7 +110,7 @@ static int l_load_music_async_callback(lua_State *L)
 
     // Push CB arg
     int nargs = 1;
-    if(async->music == NULL)
+    if(async->music == nullptr)
     {
         lua_pushnil(cbL);
         if(async->err)
@@ -130,7 +130,7 @@ static int l_load_music_async_callback(lua_State *L)
             lua_xmove(L, cbL, 1);
         music_t* pLMusic = (music_t*)lua_touserdata(cbL, -1);
         pLMusic->pMusic = async->music;
-        async->music = NULL;
+        async->music = nullptr;
     }
 
     // Finish cleanup
@@ -159,8 +159,8 @@ static int load_music_async_thread(void* arg)
 {
     load_music_async_t *async = (load_music_async_t*)arg;
     async->music = Mix_LoadMUS_RW(async->rwop, 1);
-    async->rwop = NULL;
-    if(async->music == NULL)
+    async->rwop = nullptr;
+    if(async->music == nullptr)
     {
         size_t iLen = std::strlen(Mix_GetError()) + 1;
         async->err = (char*)malloc(iLen);
@@ -187,9 +187,9 @@ static int l_load_music_async(lua_State *L)
     lua_pushvalue(L, -2);
     lua_settable(L, LUA_REGISTRYINDEX);
     async->L = L;
-    async->music = NULL;
+    async->music = nullptr;
     async->rwop = rwop;
-    async->err = NULL;
+    async->err = nullptr;
     lua_createtable(L, 2, 0);
     lua_pushthread(L);
     lua_rawseti(L, -2, 1);
@@ -225,7 +225,7 @@ static int l_load_music(lua_State *L)
     const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
     Mix_Music* pMusic = Mix_LoadMUS_RW(rwop, 1);
-    if(pMusic == NULL)
+    if(pMusic == nullptr)
     {
         lua_pushnil(L);
         lua_pushstring(L, Mix_GetError());
@@ -290,7 +290,7 @@ static int l_transcode_xmi(lua_State *L)
     const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
 
     uint8_t *pMidData = TranscodeXmiToMid(pData, iLength, &iMidLength);
-    if(pMidData == NULL)
+    if(pMidData == nullptr)
     {
         lua_pushnil(L);
         lua_pushliteral(L, "Unable to transcode XMI to MIDI");
@@ -305,7 +305,7 @@ static int l_transcode_xmi(lua_State *L)
 static const struct luaL_Reg sdl_audiolib[] = {
     {"init", l_init},
     {"transcodeXmiToMid", l_transcode_xmi},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 static const struct luaL_Reg sdl_musiclib[] = {
@@ -316,7 +316,7 @@ static const struct luaL_Reg sdl_musiclib[] = {
     {"pauseMusic", l_pause_music},
     {"resumeMusic", l_resume_music},
     {"setMusicVolume", l_music_volume},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_sdl_audio(lua_State *L)

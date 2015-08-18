@@ -59,7 +59,7 @@ public:
     /*!
         @param iSection Section index in range [0, getSectionCount() - 1]
         @param iIndex String index in range [0, getSectionSize(iSection) - 1]
-        @return NULL if the index is invalid, otherwise a UTF-8 encoded string.
+        @return nullptr if the index is invalid, otherwise a UTF-8 encoded string.
     */
     const char* getString(size_t iSection, size_t iIndex);
 

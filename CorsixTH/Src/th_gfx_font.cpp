@@ -106,7 +106,7 @@ THFont::~THFont()
 
 THBitmapFont::THBitmapFont()
 {
-    m_pSpriteSheet = NULL;
+    m_pSpriteSheet = nullptr;
     m_iCharSep = 0;
     m_iLineSep = 0;
 }
@@ -179,7 +179,7 @@ void THBitmapFont::getTextSize(const char* sMessage, size_t iMessageLength, int*
 {
     int iX = 0;
     unsigned int iTallest = 0;
-    if(iMessageLength != 0 && m_pSpriteSheet != NULL)
+    if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
     {
         const unsigned int iFirstASCII = 31;
         unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
@@ -209,7 +209,7 @@ void THBitmapFont::getTextSize(const char* sMessage, size_t iMessageLength, int*
 void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const
 {
     pCanvas->startNonOverlapping();
-    if(iMessageLength != 0 && m_pSpriteSheet != NULL)
+    if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
     {
         const unsigned int iFirstASCII = 31;
         unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
@@ -237,7 +237,7 @@ int THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
 {
     int iResultingWidth = 0;
     int iLastX = 0;
-    if(iMessageLength != 0 && m_pSpriteSheet != NULL)
+    if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
     {
         const unsigned int iFirstASCII = 31;
         unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
@@ -296,25 +296,25 @@ int THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
             iLastX = iMsgWidth;
         }
     }
-    if(pResultingWidth != NULL)
+    if(pResultingWidth != nullptr)
         *pResultingWidth = iResultingWidth;
-    if(pLastX != NULL)
+    if(pLastX != nullptr)
         *pLastX = iX + iLastX;
     return iY;
 }
 
 #ifdef CORSIX_TH_USE_FREETYPE2
-FT_Library THFreeTypeFont::ms_pFreeType = NULL;
+FT_Library THFreeTypeFont::ms_pFreeType = nullptr;
 int THFreeTypeFont::ms_iFreeTypeInitCount = 0;
 
 THFreeTypeFont::THFreeTypeFont()
 {
-    m_pFace = NULL;
+    m_pFace = nullptr;
     m_bDoneFreeTypeInit = false;
     for(cached_text_t* pEntry = m_aCache;
         pEntry != m_aCache + (1 << ms_CacheSizeLog2); ++pEntry)
     {
-        pEntry->sMessage = NULL;
+        pEntry->sMessage = nullptr;
         pEntry->iMessageLength = 0;
         pEntry->iMessageBufferLength = 0;
         pEntry->eAlign = Align_Left;
@@ -322,9 +322,9 @@ THFreeTypeFont::THFreeTypeFont()
         pEntry->iHeight = 0;
         pEntry->iWidestLine = 0;
         pEntry->iLastX = 0;
-        pEntry->pData = NULL;
+        pEntry->pData = nullptr;
         pEntry->bIsValid = false;
-        pEntry->pTexture = NULL;
+        pEntry->pTexture = nullptr;
     }
 }
 
@@ -335,14 +335,14 @@ THFreeTypeFont::~THFreeTypeFont()
     {
         _freeTexture(pEntry);
     }
-    if(m_pFace != NULL)
+    if(m_pFace != nullptr)
         FT_Done_Face(m_pFace);
     if(m_bDoneFreeTypeInit)
     {
         if(--ms_iFreeTypeInitCount == 0)
         {
             FT_Done_FreeType(ms_pFreeType);
-            ms_pFreeType = NULL;
+            ms_pFreeType = nullptr;
         }
     }
 }
@@ -381,7 +381,7 @@ void THFreeTypeFont::clearCache()
 FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
 {
     int iError;
-    if(ms_pFreeType == NULL)
+    if(ms_pFreeType == nullptr)
     {
         iError = initialise();
         if(iError != FT_Err_Ok)
@@ -392,7 +392,7 @@ FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
         iError = FT_Done_Face(m_pFace);
         if(iError != FT_Err_Ok)
             return iError;
-        m_pFace = NULL;
+        m_pFace = nullptr;
     }
     iError = FT_New_Memory_Face(ms_pFreeType, pData, static_cast<FT_Long>(iLength), 0, &m_pFace);
     return iError;
@@ -400,7 +400,7 @@ FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
 
 FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
 {
-    if(pBitmapFontSpriteSheet == NULL)
+    if(pBitmapFontSpriteSheet == nullptr)
         return FT_Err_Invalid_Argument;
 
     // Try to take the size and colour of a standard character (em is generally
@@ -441,7 +441,7 @@ FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
 
 FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
 {
-    if(m_pFace == NULL)
+    if(m_pFace == nullptr)
         return FT_Err_Invalid_Face_Handle;
 
     if(_isMonochrome() || iHeight <= 14 || iWidth <= 9)
@@ -487,7 +487,7 @@ FT_Error THFreeTypeFont::setPixelSize(int iWidth, int iHeight)
 void THFreeTypeFont::getTextSize(const char* sMessage, size_t iMessageLength,
                              int* pX, int* pY) const
 {
-    int iY = drawTextWrapped(NULL, sMessage, iMessageLength, 0, 0, INT_MAX, pX);
+    int iY = drawTextWrapped(nullptr, sMessage, iMessageLength, 0, 0, INT_MAX, pX);
     if(pY)
         *pY = iY;
 }
@@ -528,7 +528,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         // cache entry.
         _freeTexture(pEntry);
         delete[] pEntry->pData;
-        pEntry->pData = NULL;
+        pEntry->pData = nullptr;
         pEntry->bIsValid = false;
 
         // Set the entry metadata to that of the new message.
@@ -564,7 +564,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             const char* sOldMessage = sMessage;
             unsigned int iCode = utf8next(sMessage);
             codepoint_glyph_t& oGlyph = mapGlyphs[iCode];
-            if(oGlyph.pGlyph == NULL)
+            if(oGlyph.pGlyph == nullptr)
             {
                 oGlyph.iGlyphIndex = FT_Get_Char_Index(m_pFace, iCode);
 
@@ -691,7 +691,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         for(std::map<unsigned int, codepoint_glyph_t>::iterator itr =
             mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd; ++itr)
         {
-            FT_Glyph_To_Bitmap(&itr->second.pGlyph, eRenderMode, NULL, 1);
+            FT_Glyph_To_Bitmap(&itr->second.pGlyph, eRenderMode, nullptr, 1);
         }
 
         // Prepare a canvas for rendering.
@@ -733,15 +733,15 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
         pEntry->bIsValid = true;
     }
 
-    if(pCanvas != NULL)
+    if(pCanvas != nullptr)
     {
-        if(pEntry->pTexture == NULL)
+        if(pEntry->pTexture == nullptr)
             _makeTexture(pCanvas, pEntry);
         _drawTexture(pCanvas, pEntry, iX, iY);
     }
-    if(pResultingWidth != NULL)
+    if(pResultingWidth != nullptr)
         *pResultingWidth = pEntry->iWidestLine;
-    if(pLastX != NULL)
+    if(pLastX != nullptr)
         *pLastX = iX + pEntry->iLastX;
     return iY + pEntry->iHeight;
 }

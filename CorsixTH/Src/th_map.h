@@ -142,7 +142,7 @@ struct THMapNode : public THLinkList
     ~THMapNode();
 
     // Linked list for entities rendered at this node
-    // THLinkList::pPrev (will always be NULL)
+    // THLinkList::pPrev (will always be nullptr)
     // THLinkList::pNext
 
     // Linked list for entities rendered in an early (right-to-left) pass
@@ -305,7 +305,7 @@ public:
     //! Perform a hit-test against the animations attached to the map
     /*!
         If there is an animation at world pixel co-ordinates (iTestX, iTestY),
-        then it is returned. Otherwise NULL is returned.
+        then it is returned. Otherwise nullptr is returned.
         To perform a hit-test using world (tile) co-ordinates, get the node
         itself and query the top 8 bits of THMapNode::iFlags, or traverse the
         node's animation lists.
@@ -313,7 +313,7 @@ public:
     THDrawable* hitTest(int iTestX, int iTestY) const;
 
     // When using the unchecked versions, the map co-ordinates MUST be valid.
-    // When using the normal versions, NULL is returned for invalid co-ords.
+    // When using the normal versions, nullptr is returned for invalid co-ords.
           THMapNode* getNode(int iX, int iY);
     const THMapNode* getNode(int iX, int iY) const;
     const THMapNode* getOriginalNode(int iX, int iY) const;
@@ -427,7 +427,7 @@ public:
                       eTHMapScanlineIteratorDirection eScanlineDirection = ScanlineForward);
 
     //! Returns false iff the iterator has exhausted its nodes
-    inline operator bool () const {return m_pNode != NULL;}
+    inline operator bool () const {return m_pNode != nullptr;}
 
     //! Advances the iterator to the next node
     inline THMapNodeIterator& operator ++ ();

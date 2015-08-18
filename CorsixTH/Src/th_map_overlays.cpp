@@ -31,16 +31,16 @@ THMapOverlay::~THMapOverlay()
 
 THMapOverlayPair::THMapOverlayPair()
 {
-    m_pFirst = NULL;
-    m_pSecond = NULL;
+    m_pFirst = nullptr;
+    m_pSecond = nullptr;
     m_bOwnFirst = false;
     m_bOwnSecond = false;
 }
 
 THMapOverlayPair::~THMapOverlayPair()
 {
-    setFirst(NULL, false);
-    setSecond(NULL, false);
+    setFirst(nullptr, false);
+    setSecond(nullptr, false);
 }
 
 void THMapOverlayPair::setFirst(THMapOverlay* pOverlay, bool bTakeOwnership)
@@ -103,16 +103,16 @@ const char* THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iN
 
 THMapTypicalOverlay::THMapTypicalOverlay()
 {
-    m_pSprites = NULL;
-    m_pFont = NULL;
+    m_pSprites = nullptr;
+    m_pFont = nullptr;
     m_bOwnsSprites = false;
     m_bOwnsFont = false;
 }
 
 THMapTypicalOverlay::~THMapTypicalOverlay()
 {
-    setSprites(NULL, false);
-    setFont(NULL, false);
+    setSprites(nullptr, false);
+    setFont(nullptr, false);
 }
 
 void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,

@@ -34,9 +34,9 @@ SOFTWARE.
 
 IsoFilesystem::IsoFilesystem()
 {
-    m_fRawFile = NULL;
-    m_sError = NULL;
-    m_pFiles = NULL;
+    m_fRawFile = nullptr;
+    m_sError = nullptr;
+    m_pFiles = nullptr;
     m_iNumFiles = 0;
     m_iFileTableSize = 0;
     m_cPathSeparator = '\\';
@@ -50,14 +50,14 @@ IsoFilesystem::~IsoFilesystem()
 void IsoFilesystem::_clear()
 {
     delete[] m_sError;
-    m_sError = NULL;
+    m_sError = nullptr;
 
     if(m_pFiles)
     {
         for(size_t i = 0; i < m_iNumFiles; ++i)
             delete[] m_pFiles[i].sPath;
         delete[] m_pFiles;
-        m_pFiles = NULL;
+        m_pFiles = nullptr;
         m_iNumFiles = 0;
         m_iFileTableSize = 0;
     }
@@ -170,7 +170,7 @@ int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, 
     if((iLevel != 0 && (iDirEntsSize & 0x7FF)) || iLevel > 16)
         return 0;
 
-    uint8_t *pBuffer = NULL;
+    uint8_t *pBuffer = nullptr;
     uint32_t iBufferSize = 0;
     for(; iDirEntsSize > 0; iDirEntsSize -= *pDirEnt, pDirEnt += *pDirEnt)
     {
@@ -299,7 +299,7 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
             pFile->sPath = sPath;
             pFile->iSector = iDataSector;
             pFile->iSize = iDataLength;
-            sPath = NULL;
+            sPath = nullptr;
         }
         delete[] sPath;
     }
@@ -346,7 +346,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
             sName += iLen - 1;
             if(*sName == m_cPathSeparator)
                 ++sName;
-            if(std::strchr(sName, m_cPathSeparator) == NULL)
+            if(std::strchr(sName, m_cPathSeparator) == nullptr)
                 fnCallback(pCallbackData, sName);
         }
     }
@@ -436,7 +436,7 @@ bool IsoFilesystem::_readData(uint32_t iByteCount, uint8_t *pBuffer)
 
 void IsoFilesystem::_setError(const char* sFormat, ...)
 {
-    if(m_sError == NULL)
+    if(m_sError == nullptr)
     {
         // None of the errors which we generate will be longer than 1024.
         m_sError = new char[1024];

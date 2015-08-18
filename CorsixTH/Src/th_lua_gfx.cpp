@@ -316,7 +316,7 @@ static int l_font_get_size(lua_State *L)
 static int l_font_draw(lua_State *L)
 {
     THFont* pFont = luaT_testuserdata<THFont>(L);
-    THRenderTarget* pCanvas = NULL;
+    THRenderTarget* pCanvas = nullptr;
     if(!lua_isnoneornil(L, 2))
     {
         pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
@@ -353,7 +353,7 @@ static int l_font_draw(lua_State *L)
         if(iH > iHeight)
             iY += (iH - iHeight) / 2;
     }
-    if(pCanvas != NULL)
+    if(pCanvas != nullptr)
     {
         pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
     }
@@ -366,7 +366,7 @@ static int l_font_draw(lua_State *L)
 static int l_font_draw_wrapped(lua_State *L)
 {
     THFont* pFont = luaT_testuserdata<THFont>(L);
-    THRenderTarget* pCanvas = NULL;
+    THRenderTarget* pCanvas = nullptr;
     if(!lua_isnoneornil(L, 2))
     {
         pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
@@ -396,7 +396,7 @@ static int l_font_draw_wrapped(lua_State *L)
 
     int iLastX;
     int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
-                                              iW, NULL, &iLastX, eAlign);
+                                              iW, nullptr, &iLastX, eAlign);
     lua_pushinteger(L, iLastY);
     lua_pushinteger(L, iLastX);
 
@@ -417,7 +417,7 @@ static int l_font_draw_tooltip(lua_State *L)
     int iRealW;
     uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
-    int iLastY = pFont->drawTextWrapped(NULL, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
+    int iLastY = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
     int iLastX = iX + iRealW + 3;
     int iFirstY = iY - (iLastY - iY) - 1;
 
@@ -496,7 +496,7 @@ static int l_layers_depersist(lua_State *L)
     {
         if(!pReader->readByteStream(pLayers->iLayerContents, 13))
             return 0;
-        if(!pReader->readByteStream(NULL, iNumLayers - 13))
+        if(!pReader->readByteStream(nullptr, iNumLayers - 13))
             return 0;
     }
     else

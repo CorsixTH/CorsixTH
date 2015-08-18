@@ -47,9 +47,9 @@ public:
             to measure the width and height of.
         @param iMessageLength The length, in bytes (not characters), of the
             string at sMessage.
-        @param pX If not NULL, the width (in pixels) of the drawn message will
+        @param pX If not nullptr, the width (in pixels) of the drawn message will
             be stored at this pointer.
-        @param pY If not NULL, the height (in pixels) of the drawn message will
+        @param pY If not nullptr, the height (in pixels) of the drawn message will
             be stored at this pointer.
     */
     virtual void getTextSize(const char* sMessage, size_t iMessageLength,
@@ -75,17 +75,17 @@ public:
         This function still only draws a single line of text (i.e. any line
         breaks like \r and \n in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
-        @param pCanvas The canvas on which to draw. Can be NULL, in which case
+        @param pCanvas The canvas on which to draw. Can be nullptr, in which case
           nothing is drawn, but other calculations are still made.
         @param sMessage The line of text to draw, encoded in CP437.
         @param iMessageLength The length (in bytes) of sMessage.
         @param iX The X position to start drawing on the canvas.
         @param iY The Y position to start drawing on the canvas.
         @param iWidth The maximum width of each line of text.
-        @param pResultingWidth If not NULL, the maximum width of a line will
+        @param pResultingWidth If not nullptr, the maximum width of a line will
           be stored here (the resulting value should be similar to iWidth,
           but a bit smaller).
-        @param pLastX If not NULL, iX plus the the width of the last printed
+        @param pLastX If not nullptr, iX plus the the width of the last printed
           line will be stored here.
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
@@ -93,8 +93,8 @@ public:
     */
     virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
+                                int iWidth, int *pResultingWidth = nullptr,
+                                int *pLastX = nullptr,
                                 eTHAlign eAlign = Align_Left) const = 0;
 };
 
@@ -128,8 +128,8 @@ public:
 
     virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
+                                int iWidth, int *pResultingWidth = nullptr,
+                                int *pLastX = nullptr,
                                 eTHAlign eAlign = Align_Left) const;
 
 protected:
@@ -209,8 +209,8 @@ public:
 
     virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
+                                int iWidth, int *pResultingWidth = nullptr,
+                                int *pLastX = nullptr,
                                 eTHAlign eAlign = Align_Left) const;
 
 protected:

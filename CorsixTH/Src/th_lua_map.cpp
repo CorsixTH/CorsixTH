@@ -368,7 +368,7 @@ static int l_map_getcell(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
     {
         return luaL_argerror(L, 2, lua_pushfstring(L, "Map co-ordinates out "
         "of bounds (%d, %d)", iX + 1, iY + 1));
@@ -397,7 +397,7 @@ static int l_map_getcellflags(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     if(lua_type(L, 4) != LUA_TTABLE)
     {
@@ -462,7 +462,7 @@ static int l_map_erase_thobs(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     if(pNode->iFlags & THMN_ObjectsAlreadyErased)
     {
@@ -472,7 +472,7 @@ static int l_map_erase_thobs(lua_State *L)
     }
     if(pNode->pExtendedObjectList)
         delete pNode->pExtendedObjectList;
-    pNode->pExtendedObjectList = NULL;
+    pNode->pExtendedObjectList = nullptr;
     pNode->iFlags &= 0x00FFFFFF; //erase thob
     pNode->iFlags |= THMN_ObjectsAlreadyErased;
     return 1;
@@ -484,10 +484,10 @@ static int l_map_remove_cell_thob(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     int thob = static_cast<int>(luaL_checkinteger(L, 4));
-    if(pNode->pExtendedObjectList == NULL)
+    if(pNode->pExtendedObjectList == nullptr)
     {
         if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
         {
@@ -504,7 +504,7 @@ static int l_map_remove_cell_thob(lua_State *L)
             if(nr == 1)
             {
                 delete pNode->pExtendedObjectList;
-                pNode->pExtendedObjectList = NULL;
+                pNode->pExtendedObjectList = nullptr;
             }
             else
             {
@@ -553,7 +553,7 @@ static int l_map_remove_cell_thob(lua_State *L)
                 else
                 {
                     delete pNode->pExtendedObjectList;
-                    pNode->pExtendedObjectList = NULL;
+                    pNode->pExtendedObjectList = nullptr;
                 }
             }
         }
@@ -567,7 +567,7 @@ static int l_map_setcellflags(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     luaL_checktype(L, 4, LUA_TTABLE);
     lua_settop(L, 4);
@@ -613,7 +613,7 @@ static int l_map_setcellflags(lua_State *L)
                 uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
                 if((pNode->iFlags >> 24) != 0)
                 {
-                    if(pNode->pExtendedObjectList == NULL)
+                    if(pNode->pExtendedObjectList == nullptr)
                     {
                         pNode->pExtendedObjectList = new uint64_t;
                         x = 1;
@@ -669,7 +669,7 @@ static int l_map_setcell(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     THMapNode* pNode = pMap->getNode(iX, iY);
-    if(pNode == NULL)
+    if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     if(lua_gettop(L) >= 7)
     {
@@ -779,7 +779,7 @@ static int l_map_hittest(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
     THDrawable* pObject = pMap->hitTest(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
-    if(pObject == NULL)
+    if(pObject == nullptr)
         return 0;
     lua_rawgeti(L, luaT_upvalueindex(1), 1);
     lua_pushlightuserdata(L, pObject);
@@ -868,7 +868,7 @@ static int l_path_depersist(lua_State *L)
 static int l_path_is_reachable_from_hospital(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(pPathfinder->findPathToHospital(NULL, static_cast<int>(luaL_checkinteger(L, 2) - 1),
+    if(pPathfinder->findPathToHospital(nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
         static_cast<int>(luaL_checkinteger(L, 3) - 1)))
     {
         lua_pushboolean(L, 1);
@@ -888,7 +888,7 @@ static int l_path_is_reachable_from_hospital(lua_State *L)
 static int l_path_distance(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(pPathfinder->findPath(NULL, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+    if(pPathfinder->findPath(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
         static_cast<int>(luaL_checkinteger(L, 4)) - 1, static_cast<int>(luaL_checkinteger(L, 5)) - 1))
     {
         lua_pushinteger(L, pPathfinder->getPathLength());
@@ -903,7 +903,7 @@ static int l_path_distance(lua_State *L)
 static int l_path_path(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    pPathfinder->findPath(NULL, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+    pPathfinder->findPath(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
         static_cast<int>(luaL_checkinteger(L, 4)) - 1, static_cast<int>(luaL_checkinteger(L, 5)) - 1);
     pPathfinder->pushResult(L);
     return 2;
@@ -912,7 +912,7 @@ static int l_path_path(lua_State *L)
 static int l_path_idle(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(!pPathfinder->findIdleTile(NULL, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+    if(!pPathfinder->findIdleTile(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
         static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<int>(luaL_optinteger(L, 4, 0))))
     {
         return 0;
@@ -928,7 +928,7 @@ static int l_path_visit(lua_State *L)
 {
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     luaL_checktype(L, 6, LUA_TFUNCTION);
-    lua_pushboolean(L, pPathfinder->visitObjects(NULL, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+    lua_pushboolean(L, pPathfinder->visitObjects(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
         static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<THObjectType>(luaL_checkinteger(L, 4)),
         static_cast<int>(luaL_checkinteger(L, 5)), L, 6, luaL_checkinteger(L, 4) == 0 ? true : false) ? 1 : 0);
     return 1;

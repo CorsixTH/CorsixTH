@@ -60,7 +60,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     lua_setfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
 
     // math.random* = Mersenne twister variant
-    luaT_cpcall(L, luaopen_random, NULL);
+    luaT_cpcall(L, luaopen_random, nullptr);
 
     // package.preload["jit.opt"] = load(jit_opt_lua)
     // package.preload["jit.opt_inline"] = load(jit_opt_inline_lua)

@@ -83,7 +83,7 @@ struct LoadMultiBuffer_t
 
     LoadMultiBuffer_t()
     {
-        s[0] = s[1] = s[2] = NULL;
+        s[0] = s[1] = s[2] = nullptr;
         i[0] = i[1] = i[2] = 0;
         n = 0;
     }
@@ -102,7 +102,7 @@ struct LoadMultiBuffer_t
         }
 
         *size = 0;
-        return NULL;
+        return nullptr;
     }
 };
 
@@ -170,7 +170,7 @@ public:
 
     int finish()
     {
-        if(getError() != NULL)
+        if(getError() != nullptr)
         {
             lua_pushnil(m_L);
             lua_pushstring(m_L, getError());
@@ -699,7 +699,7 @@ public:
         if(m_bHadError)
             return reinterpret_cast<char*>(m_pData);
         else
-            return NULL;
+            return nullptr;
     }
 
 protected:
@@ -912,7 +912,7 @@ public:
                         return false;
                     // For now, just skip over the upvalue IDs. In the future,
                     // the ID may be used to rejoin shared upvalues.
-                    if(!readByteStream(NULL, iIDSize))
+                    if(!readByteStream(nullptr, iIDSize))
                         return false;
                 }
                 lua_call(L, iNups, 0);
@@ -1195,7 +1195,7 @@ public:
             lua_pop(m_L, 1);
             return false;
         }
-        if(pBytes != NULL)
+        if(pBytes != nullptr)
             std::memcpy(pBytes, m_pData, iCount);
         m_pData += iCount;
         m_iDataBufferLength -= iCount;
@@ -1210,7 +1210,7 @@ public:
         if(m_bHadError)
             return m_sStringBuffer;
         else
-            return NULL;
+            return nullptr;
     }
 
 protected:
@@ -1307,7 +1307,7 @@ const char* FindFunctionEnd(lua_State *L, const char* sStart)
             lua_pop(L, 1);
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 static int l_persist_dofile(lua_State *L)
@@ -1317,7 +1317,7 @@ static int l_persist_dofile(lua_State *L)
 
     // Read entire file into memory
     FILE *fFile = std::fopen(sFilename, "r");
-    if(fFile == NULL)
+    if(fFile == nullptr)
     {
         const char *sError =std::strerror(errno);
         return luaL_error(L, "cannot open %s: %s", sFilename, sError);
@@ -1465,7 +1465,7 @@ static const struct luaL_Reg persist_lib[] = {
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_persist(lua_State *L)

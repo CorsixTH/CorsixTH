@@ -50,7 +50,7 @@ static int l_movie_load(lua_State *L)
     bool loaded;
     const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    const char* filepath = lua_tolstring(L, 2, NULL);
+    const char* filepath = lua_tolstring(L, 2, nullptr);
     pMovie->clearLastError();
     loaded = pMovie->load(filepath);
     warning = pMovie->getLastError();

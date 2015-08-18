@@ -66,13 +66,13 @@ void luaT_getfenv52(lua_State *L, int iIndex)
         if(lua_iscfunction(L, iIndex))
         {
             // Our convention: upvalue at #1 is environment
-            if(lua_getupvalue(L, iIndex, 1) == NULL)
+            if(lua_getupvalue(L, iIndex, 1) == nullptr)
                 lua_pushglobaltable(L);
         }
         else
         {
             // Language convention: upvalue called _ENV is environment
-            const char* sUpName = NULL;
+            const char* sUpName = nullptr;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
                 if(std::strcmp(sUpName, "_ENV") == 0)
@@ -101,7 +101,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
         if(lua_iscfunction(L, iIndex))
         {
             // Our convention: upvalue at #1 is environment
-            if(lua_setupvalue(L, iIndex, 1) == NULL)
+            if(lua_setupvalue(L, iIndex, 1) == nullptr)
             {
                 lua_pop(L, 1);
                 return 0;
@@ -112,7 +112,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
         {
             // Language convention: upvalue called _ENV is environment, which
             // might be shared with other functions.
-            const char* sUpName = NULL;
+            const char* sUpName = nullptr;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
                 lua_pop(L, 1); // lua_getupvalue puts the value on the stack, but we just want to replace it
