@@ -573,7 +573,7 @@ static int l_map_setcellflags(lua_State *L)
     lua_settop(L, 4);
 
 #define Flag(CName, LName) \
-    if(strcmp(field, LName) == 0) \
+    if(std::strcmp(field, LName) == 0) \
     { \
         if(lua_toboolean(L, 6) == 0) \
             pNode->iFlags &= ~CName; \
@@ -607,7 +607,7 @@ static int l_map_setcellflags(lua_State *L)
             Flag(THMN_BuildableE, "buildableEast")
             Flag(THMN_BuildableS, "buildableSouth")
             Flag(THMN_BuildableW, "buildableWest")
-            /* else */ if(strcmp(field, "thob") == 0)
+            /* else */ if(std::strcmp(field, "thob") == 0)
             {
                 uint64_t x;
                 uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
@@ -636,11 +636,11 @@ static int l_map_setcellflags(lua_State *L)
                     pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (thob << 24));
                 }
            }
-            else if(strcmp(field, "parcelId") == 0)
+            else if(std::strcmp(field, "parcelId") == 0)
             {
                 pNode->iParcelId = static_cast<uint16_t>(lua_tointeger(L, 6));
             }
-            else if(strcmp(field, "roomId") == 0) {
+            else if(std::strcmp(field, "roomId") == 0) {
                 pNode->iRoomId = static_cast<uint16_t>(lua_tointeger(L,6));
             }
             else

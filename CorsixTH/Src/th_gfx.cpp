@@ -27,7 +27,7 @@ SOFTWARE.
 #include "th_sound.h"
 #include <new>
 #include <algorithm>
-#include <memory.h>
+#include <cstring>
 #include <climits>
 #include <cassert>
 
@@ -997,7 +997,7 @@ void THChunkRenderer::chunkFill(int npixels, uint8_t value)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        memset(m_ptr, value, npixels);
+        std::memset(m_ptr, value, npixels);
         _incrementPosition(npixels);
     }
 }
@@ -1007,7 +1007,7 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        memcpy(m_ptr, data, npixels);
+        std::memcpy(m_ptr, data, npixels);
         _incrementPosition(npixels);
     }
 }
@@ -1479,7 +1479,7 @@ void THAnimation::depersist(LuaPersistReader *pReader)
         }
 
         // Read the layers
-        memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
+        std::memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
         int iNumLayers;
         if(!pReader->readVUInt(iNumLayers))
             break;
@@ -1887,7 +1887,7 @@ void THSpriteRenderList::depersist(LuaPersistReader *pReader)
     }
 
     // Read the layers
-    memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
+    std::memset(m_oLayers.iLayerContents, 0, sizeof(m_oLayers.iLayerContents));
     int iNumLayers;
     if(!pReader->readVUInt(iNumLayers))
         return;

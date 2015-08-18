@@ -23,6 +23,7 @@ SOFTWARE.
 #include "th_map_overlays.h"
 #include "th_gfx.h"
 #include "th_map.h"
+#include <cstdio>
 
 THMapOverlay::~THMapOverlay()
 {
@@ -96,7 +97,7 @@ void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 
 const char* THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
 {
-    sprintf(m_sBuffer, "%i,%i", iNodeX + 1, iNodeY + 1);
+    std::sprintf(m_sBuffer, "%i,%i", iNodeX + 1, iNodeY + 1);
     return m_sBuffer;
 }
 
@@ -181,7 +182,7 @@ void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
     char sBuffer[64];
     va_list args;
     va_start(args, sFormat);
-    size_t iLen = (int)vsprintf(sBuffer, sFormat, args);
+    size_t iLen = (int)std::vsprintf(sBuffer, sFormat, args);
     va_end(args);
     int iW, iH;
     m_pFont->getTextSize(sBuffer, iLen, &iW, &iH);

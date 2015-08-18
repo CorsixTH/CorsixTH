@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_sound.h"
 #include <cmath>
 #include <new>
+#include <cstring>
 
 THSoundArchive::THSoundArchive()
 {
@@ -51,7 +52,7 @@ bool THSoundArchive::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
     m_pData = new (std::nothrow) uint8_t[iDataLength];
     if(m_pData == NULL)
         return false;
-    memcpy(m_pData, pData, iDataLength);
+    std::memcpy(m_pData, pData, iDataLength);
 
     m_pFiles = reinterpret_cast<th_fileinfo_t*>(m_pData + m_oHeader.table_position);
     m_iFileCount = m_oHeader.table_length / sizeof(th_fileinfo_t);

@@ -31,6 +31,8 @@ int luaopen_random(lua_State *L);
 #include "jit_opt.h"
 #include "persist_lua.h"
 #include "iso_fs.h"
+#include <cstring>
+#include <cstdio>
 
 // Config file checking
 #ifndef CORSIX_TH_USE_PACK_PRAGMAS
@@ -44,7 +46,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     size_t iLength;
     lua_getglobal(L, "_VERSION");
     const char* sVersion = lua_tolstring(L, -1, &iLength);
-    if(iLength != strlen(LUA_VERSION) || strcmp(sVersion, LUA_VERSION) != 0)
+    if(iLength != std::strlen(LUA_VERSION) || std::strcmp(sVersion, LUA_VERSION) != 0)
     {
         lua_pushliteral(L, "Linked against a version of Lua different to the "
             "one used when compiling.\nPlease recompile CorsixTH against the "
@@ -119,7 +121,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
         {
             size_t iLen;
             const char* sCmd = lua_tolstring(L, i, &iLen);
-            if(iLen > 14 && memcmp(sCmd, "--interpreter=", 14) == 0)
+            if(iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0)
             {
                 lua_getglobal(L, "assert");
                 lua_getglobal(L, "loadfile");
@@ -166,7 +168,7 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     if(!bGotScriptFile)
     {
         lua_getglobal(L, "assert");
-        luaL_loadbuffer(L, sLuaCorsixTHLua, strlen(sLuaCorsixTHLua),
+        luaL_loadbuffer(L, sLuaCorsixTHLua, std::strlen(sLuaCorsixTHLua),
             "@main.cpp (l_main bootstrap)");
         if(lua_gettop(L) == 2)
             lua_pushnil(L);
@@ -210,15 +212,15 @@ int CorsixTH_lua_stacktrace(lua_State *L)
 
 int CorsixTH_lua_panic(lua_State *L)
 {
-    fprintf(stderr, "A Lua error has occured in CorsixTH outside of protected "
+    std::fprintf(stderr, "A Lua error has occured in CorsixTH outside of protected "
         "mode!!\n");
-    fflush(stderr);
+    std::fflush(stderr);
 
     if(lua_type(L, -1) == LUA_TSTRING)
-        fprintf(stderr, "%s\n", lua_tostring(L, -1));
+        std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
     else
-        fprintf(stderr, "%p\n", lua_topointer(L, -1));
-    fflush(stderr);
+        std::fprintf(stderr, "%p\n", lua_topointer(L, -1));
+    std::fflush(stderr);
 
     // A stack trace would be nice, but they cannot be done in a panic.
 

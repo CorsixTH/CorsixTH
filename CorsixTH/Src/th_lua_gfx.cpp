@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_lua_internal.h"
 #include "th_gfx.h"
 #include <SDL.h>
-#include <cassert>
+#include <cstring>
 
 static int l_palette_new(lua_State *L)
 {
@@ -329,13 +329,13 @@ static int l_font_draw(lua_State *L)
     if(!lua_isnoneornil(L, 8))
     {
         const char* sAlign = luaL_checkstring(L, 8);
-        if(strcmp(sAlign, "right") == 0)
+        if(std::strcmp(sAlign, "right") == 0)
             eAlign = Align_Right;
-        else if(strcmp(sAlign, "left") == 0)
+        else if(std::strcmp(sAlign, "left") == 0)
             eAlign = Align_Left;
-        else if(strcmp(sAlign, "center") == 0
-             || strcmp(sAlign, "centre") == 0
-             || strcmp(sAlign, "middle") == 0)
+        else if(std::strcmp(sAlign, "center") == 0
+             || std::strcmp(sAlign, "centre") == 0
+             || std::strcmp(sAlign, "middle") == 0)
         {
             eAlign = Align_Center;
         }
@@ -380,13 +380,13 @@ static int l_font_draw_wrapped(lua_State *L)
     if(!lua_isnoneornil(L, 7))
     {
         const char* sAlign = luaL_checkstring(L, 7);
-        if(strcmp(sAlign, "right") == 0)
+        if(std::strcmp(sAlign, "right") == 0)
             eAlign = Align_Right;
-        else if(strcmp(sAlign, "left") == 0)
+        else if(std::strcmp(sAlign, "left") == 0)
             eAlign = Align_Left;
-        else if(strcmp(sAlign, "center") == 0
-             || strcmp(sAlign, "centre") == 0
-             || strcmp(sAlign, "middle") == 0)
+        else if(std::strcmp(sAlign, "center") == 0
+             || std::strcmp(sAlign, "centre") == 0
+             || std::strcmp(sAlign, "middle") == 0)
         {
             eAlign = Align_Center;
         }
@@ -488,7 +488,7 @@ static int l_layers_depersist(lua_State *L)
     lua_insert(L, 1);
     LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
 
-    memset(pLayers->iLayerContents, 0, sizeof(pLayers->iLayerContents));
+    std::memset(pLayers->iLayerContents, 0, sizeof(pLayers->iLayerContents));
     int iNumLayers;
     if(!pReader->readVUInt(iNumLayers))
         return 0;
@@ -738,7 +738,7 @@ static int l_surface_scale(lua_State *L)
     {
         size_t iLength;
         const char* sOption = lua_tolstring(L, 3, &iLength);
-        if(sOption && iLength >= 6 && memcmp(sOption, "bitmap", 6) == 0)
+        if(sOption && iLength >= 6 && std::memcmp(sOption, "bitmap", 6) == 0)
         {
             eToScale = THSI_Bitmaps;
         }

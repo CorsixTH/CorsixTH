@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
-#include <memory.h>
+#include <cstring>
 #include <algorithm>
 #include <iterator>
 #include <new>
@@ -91,7 +91,7 @@ public:
     {
         for(; m_pPointer + iLength <= m_pEnd; ++m_pPointer)
         {
-            if(memcmp(m_pPointer, pData, iLength) == 0)
+            if(std::memcmp(m_pPointer, pData, iLength) == 0)
                 return true;
         }
         return false;
@@ -113,7 +113,7 @@ public:
     {
         if(m_pPointer + sizeof(T) * count > m_pEnd)
             return false;
-        memcpy(values, m_pPointer, sizeof(T) * count);
+        std::memcpy(values, m_pPointer, sizeof(T) * count);
         m_pPointer += sizeof(T) * count;
         return true;
     }
@@ -153,7 +153,7 @@ public:
     {
         if(!skip(static_cast<int>(sizeof(T) * count)))
             return false;
-        memcpy(m_pPointer - sizeof(T) * count, values, sizeof(T) * count);
+        std::memcpy(m_pPointer - sizeof(T) * count, values, sizeof(T) * count);
         return true;
     }
 
@@ -214,7 +214,7 @@ protected:
         if(pNewData == NULL)
             return false;
         size_t iOldLength = m_pEnd - m_pData;
-        memcpy(pNewData, m_pData, size > iOldLength ? iOldLength : size);
+        std::memcpy(pNewData, m_pData, size > iOldLength ? iOldLength : size);
         m_pPointer = m_pPointer - m_pData + pNewData;
         if(m_pBufferEnd != NULL)
             delete[] m_pData;

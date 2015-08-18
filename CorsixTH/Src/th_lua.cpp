@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_lua_internal.h"
 #include "bootstrap.h"
 #include <cstring>
+#include <cstdio>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
@@ -74,7 +75,7 @@ void luaT_getfenv52(lua_State *L, int iIndex)
             const char* sUpName = NULL;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
-                if(strcmp(sUpName, "_ENV") == 0)
+                if(std::strcmp(sUpName, "_ENV") == 0)
                     return;
                 else
                     lua_pop(L, 1);
@@ -115,7 +116,7 @@ int luaT_setfenv52(lua_State *L, int iIndex)
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
                 lua_pop(L, 1); // lua_getupvalue puts the value on the stack, but we just want to replace it
-                if(strcmp(sUpName, "_ENV") == 0)
+                if(std::strcmp(sUpName, "_ENV") == 0)
                 {
                     luaL_loadstring(L, "local upv = ... return function() return upv end");
                     lua_insert(L, -2);
@@ -391,29 +392,29 @@ void luaT_printstack(lua_State* L)
     int i;
     int top = lua_gettop(L);
 
-    printf("total items in stack %d\n", top);
+    std::printf("total items in stack %d\n", top);
 
     for (i = 1; i <= top; i++)
     { /* repeat for each level */
         int t = lua_type(L, i);
         switch (t) {
         case LUA_TSTRING: /* strings */
-            printf("string: '%s'\n", lua_tostring(L, i));
+            std::printf("string: '%s'\n", lua_tostring(L, i));
             break;
         case LUA_TBOOLEAN: /* booleans */
-            printf("boolean %s\n", lua_toboolean(L, i) ? "true" : "false");
+            std::printf("boolean %s\n", lua_toboolean(L, i) ? "true" : "false");
             break;
         case LUA_TNUMBER: /* numbers */
-            printf("number: %g\n", lua_tonumber(L, i));
+            std::printf("number: %g\n", lua_tonumber(L, i));
             break;
         default: /* other values */
-            printf("%s\n", lua_typename(L, t));
+            std::printf("%s\n", lua_typename(L, t));
             break;
         }
-        printf(" "); /* put a separator */
+        std::printf(" "); /* put a separator */
 
     }
-    printf("\n"); /* end the listing */
+    std::printf("\n"); /* end the listing */
 }
 
 void luaT_printrawtable(lua_State* L, int idx)
@@ -421,7 +422,7 @@ void luaT_printrawtable(lua_State* L, int idx)
     int i;
     int len = static_cast<int>(lua_objlen(L, idx));
 
-    printf("total items in table %d\n", len);
+    std::printf("total items in table %d\n", len);
 
     for (i = 1; i <= len; i++)
     {
@@ -429,20 +430,20 @@ void luaT_printrawtable(lua_State* L, int idx)
         int t = lua_type(L, -1);
         switch (t) {
         case LUA_TSTRING: /* strings */
-            printf("string: '%s'\n", lua_tostring(L, -1));
+            std::printf("string: '%s'\n", lua_tostring(L, -1));
             break;
         case LUA_TBOOLEAN: /* booleans */
-            printf("boolean %s\n", lua_toboolean(L, -1) ? "true" : "false");
+            std::printf("boolean %s\n", lua_toboolean(L, -1) ? "true" : "false");
             break;
         case LUA_TNUMBER: /* numbers */
-            printf("number: %g\n", lua_tonumber(L, -1));
+            std::printf("number: %g\n", lua_tonumber(L, -1));
             break;
         default: /* other values */
-            printf("%s\n", lua_typename(L, t));
+            std::printf("%s\n", lua_typename(L, t));
             break;
         }
-        printf(" "); /* put a separator */
+        std::printf(" "); /* put a separator */
         lua_pop(L, 1);
     }
-    printf("\n"); /* end the listing */
+    std::printf("\n"); /* end the listing */
 }

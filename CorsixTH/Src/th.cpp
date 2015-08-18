@@ -23,7 +23,6 @@ SOFTWARE.
 #include "config.h"
 #include "th.h"
 #include <cstring>
-#include <memory.h>
 #include <new>
 
 THLinkList::THLinkList()

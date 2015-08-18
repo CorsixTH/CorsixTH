@@ -24,10 +24,12 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_map_overlays.h"
 #include "th_gfx.h"
+#include "run_length_encoder.h"
 #include <SDL.h>
 #include <new>
 #include <algorithm>
-#include "run_length_encoder.h"
+#include <cstring>
+#include <cstdio>
 
 THMapNode::THMapNode()
 {
@@ -403,7 +405,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
     fnWriter(pToken, aBuffer, iBufferNext);
     iBufferNext = 0;
 
-    memset(aBuffer, 0, 56);
+    std::memset(aBuffer, 0, 56);
     for(int i = 0; i < m_iPlayerCount; ++i)
     {
         _writeTileIndex(aBuffer + iBufferNext,
@@ -413,7 +415,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
         iBufferNext += 2;
     }
     fnWriter(pToken, aBuffer, 16);
-    memset(aBuffer, 0, 16);
+    std::memset(aBuffer, 0, 16);
     // TODO: What are these 56 bytes?
     fnWriter(pToken, aBuffer, 56);
 }
@@ -1357,7 +1359,7 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(pNode->m_pNext)
         {
             if(pNode->m_pNext->m_pPrev != NULL)
-                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+                std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->m_pNext->m_pPrev = pNode;
         }
         lua_pop(L, 1);
@@ -1367,7 +1369,7 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(pNode->oEarlyEntities.m_pNext)
         {
             if(pNode->oEarlyEntities.m_pNext->m_pPrev != NULL)
-                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+                std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
         pNode->iFlags &= ~THMN_ObjectsAlreadyErased;

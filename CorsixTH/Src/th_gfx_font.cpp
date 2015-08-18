@@ -27,6 +27,8 @@ SOFTWARE.
 #include <vector>
 #include <map>
 #endif
+#include <cstdio>
+#include <cstring>
 
 static unsigned int utf8next(const char*& sString)
 {
@@ -520,7 +522,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
     if(pEntry->iMessageLength != iMessageLength || pEntry->iWidth > iWidth
         || (iWidth != INT_MAX && pEntry->iWidth < iWidth)
         || pEntry->eAlign != eAlign || !pEntry->bIsValid
-        || memcmp(pEntry->sMessage, sMessage, iMessageLength) != 0)
+        || std::memcmp(pEntry->sMessage, sMessage, iMessageLength) != 0)
     {
         // Cache entry does not match the message being drawn, so discard the
         // cache entry.
@@ -536,7 +538,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
             pEntry->sMessage = new char[iMessageLength];
             pEntry->iMessageBufferLength = iMessageLength;
         }
-        memcpy(pEntry->sMessage, sMessage, iMessageLength);
+        std::memcpy(pEntry->sMessage, sMessage, iMessageLength);
         pEntry->iMessageLength = iMessageLength;
         pEntry->iWidth = iWidth;
         pEntry->eAlign = eAlign;
@@ -694,7 +696,7 @@ int THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessag
 
         // Prepare a canvas for rendering.
         pEntry->pData = new uint8_t[pEntry->iWidth * pEntry->iHeight];
-        memset(pEntry->pData, 0, pEntry->iWidth * pEntry->iHeight);
+        std::memset(pEntry->pData, 0, pEntry->iWidth * pEntry->iHeight);
 
         // Render each character to the canvas.
         for(std::vector<std::pair<const char*, const char*> >::const_iterator

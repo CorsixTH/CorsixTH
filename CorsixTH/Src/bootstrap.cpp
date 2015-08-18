@@ -281,7 +281,7 @@ static const char* read_bootstrap_line(lua_State *L, void *data, size_t *size)
         }
         else
         {
-            *size = strlen(s);
+            *size = std::strlen(s);
             return s;
         }
     }

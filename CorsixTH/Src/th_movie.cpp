@@ -36,6 +36,7 @@ extern "C"
 }
 #include <SDL_mixer.h>
 #include <iostream>
+#include <cstring>
 
 #define INBUF_SIZE 4096
 #define AUDIO_BUFFER_SIZE 1024
@@ -425,7 +426,7 @@ THMovie::THMovie():
     m_flushPacket->size = 5;
 
     m_pbChunkBuffer = (uint8_t*)malloc(AUDIO_BUFFER_SIZE);
-    memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
+    std::memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
 
     m_pDecodingAudioMutex = SDL_CreateMutex();
 }
@@ -900,7 +901,7 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 
             if(iAudioSize <= 0)
             {
-                memset(m_pbAudioBuffer, 0, m_iAudioBufferSize);
+                std::memset(m_pbAudioBuffer, 0, m_iAudioBufferSize);
             }
             else
             {
@@ -911,7 +912,7 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 
         iCopyLength = m_iAudioBufferSize - m_iAudioBufferIndex;
         if(iCopyLength > iStreamSize) { iCopyLength = iStreamSize; }
-        memcpy(pbStream, (uint8_t *)m_pbAudioBuffer + m_iAudioBufferIndex, iCopyLength);
+        std::memcpy(pbStream, (uint8_t *)m_pbAudioBuffer + m_iAudioBufferIndex, iCopyLength);
         iStreamSize -= iCopyLength;
         pbStream += iCopyLength;
         m_iAudioBufferIndex += iCopyLength;

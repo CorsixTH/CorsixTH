@@ -162,9 +162,9 @@ static int load_music_async_thread(void* arg)
     async->rwop = NULL;
     if(async->music == NULL)
     {
-        size_t iLen = strlen(Mix_GetError()) + 1;
+        size_t iLen = std::strlen(Mix_GetError()) + 1;
         async->err = (char*)malloc(iLen);
-        memcpy(async->err, Mix_GetError(), iLen);
+        std::memcpy(async->err, Mix_GetError(), iLen);
     }
     SDL_Event e;
     e.type = SDL_USEREVENT_CPCALL;

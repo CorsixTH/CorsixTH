@@ -30,6 +30,7 @@ SOFTWARE.
 #include <new>
 #include <iostream>
 #include <cstring>
+#include <cstdio>
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
 #endif
@@ -633,7 +634,7 @@ static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelData
         *pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
         *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
         *pDest++ = 0xFF; // Non-transparent.
-        memcpy(pDest, pPixelData, iLength);
+        std::memcpy(pDest, pPixelData, iLength);
         pDest += iLength;
         pPixelData += iLength;
         iPixelDataLength -= iLength;
@@ -1050,7 +1051,7 @@ bool THSpriteSheet::setSpriteData(size_t iSprite, const uint8_t *pData, bool bTa
 
     if (!testSprite(pData, iDataLength, iWidth, iHeight))
     {
-        printf("Sprite number %zu has a bad encoding, skipping", iSprite);
+        std::printf("Sprite number %zu has a bad encoding, skipping", iSprite);
         return false;
     }
 
@@ -1066,7 +1067,7 @@ bool THSpriteSheet::setSpriteData(size_t iSprite, const uint8_t *pData, bool bTa
         if (pNewData == NULL)
             return false;
 
-        memcpy(pNewData, pData, iDataLength);
+        std::memcpy(pNewData, pData, iDataLength);
         pSprite->pData = pNewData;
     }
 
@@ -1548,7 +1549,7 @@ void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
 void THFreeTypeFont::_makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const
 {
     uint32_t* pPixels = new uint32_t[pCacheEntry->iWidth * pCacheEntry->iHeight];
-    memset(pPixels, 0, pCacheEntry->iWidth * pCacheEntry->iHeight * sizeof(uint32_t));
+    std::memset(pPixels, 0, pCacheEntry->iWidth * pCacheEntry->iHeight * sizeof(uint32_t));
     uint8_t* pInRow = pCacheEntry->pData;
     uint32_t* pOutRow = pPixels;
     uint32_t iColBase = m_oColour & 0xFFFFFF;

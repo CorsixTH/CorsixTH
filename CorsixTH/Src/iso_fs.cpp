@@ -21,7 +21,6 @@ SOFTWARE.
 */
 
 #include "iso_fs.h"
-#include <memory.h>
 #include <cstring>
 #include <cstdarg>
 #include <cstdlib>
@@ -109,7 +108,7 @@ bool IsoFilesystem::initialise(FILE* fRawFile)
         if(!_readData(sizeof(aBuffer), aBuffer))
             break;
         // CD001 is a standard identifier, \x01 is a version number
-        if(memcmp(aBuffer + 1, "CD001\x01", 6) == 0)
+        if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0)
         {
             if(aBuffer[0] == VDT_PRIVARY_VOLUME)
             {
@@ -135,7 +134,7 @@ bool IsoFilesystem::initialise(FILE* fRawFile)
 
 int IsoFilesystem::_fileNameComp(const void* lhs, const void* rhs)
 {
-    return strcmp(
+    return std::strcmp(
         reinterpret_cast<const _file_t*>(lhs)->sPath,
         reinterpret_cast<const _file_t*>(rhs)->sPath);
 }
@@ -245,7 +244,7 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
     // sectors, whose sizes are powers of two and at least 2048.
     // Path lengths shouldn't exceed 256 either (or at least not for the files
     // which we're interested in).
-    size_t iLen = strlen(sPrefix);
+    size_t iLen = std::strlen(sPrefix);
     if((iLen != 0 && (iDirEntsSize & 0x7FF)) || (iLen > 256))
         return;
 
@@ -273,7 +272,7 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
 
         // Build new path
         char *sPath = new char[iLen + iIdentLength + 2];
-        memcpy(sPath, sPrefix, iLen);
+        std::memcpy(sPath, sPrefix, iLen);
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
 #endif
@@ -320,7 +319,7 @@ IsoFilesystem::_file_t* IsoFilesystem::_allocFileRecord()
     {
         size_t iNewTableSize = m_iFileTableSize * 2 + 1;
         _file_t* pNewFiles = new _file_t[iNewTableSize];
-        memcpy(pNewFiles, m_pFiles, sizeof(_file_t) * m_iNumFiles);
+        std::memcpy(pNewFiles, m_pFiles, sizeof(_file_t) * m_iNumFiles);
         delete[] m_pFiles;
         m_pFiles = pNewFiles;
         m_iFileTableSize = iNewTableSize;
@@ -332,7 +331,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
                              void (*fnCallback)(void*, const char*),
                              void* pCallbackData) const
 {
-    size_t iLen = strlen(sPath) + 1;
+    size_t iLen = std::strlen(sPath) + 1;
     char *sNormedPath = (char*)alloca(iLen);
     for(size_t i = 0; i < iLen; ++i)
         sNormedPath[i] = _normalise(sPath[i]);
@@ -342,12 +341,12 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
     for(size_t i = 0; i < m_iNumFiles; ++i)
     {
         const char *sName = m_pFiles[i].sPath;
-        if(strlen(sName) >= iLen && memcmp(sNormedPath, sName, iLen - 1) == 0)
+        if(std::strlen(sName) >= iLen && std::memcmp(sNormedPath, sName, iLen - 1) == 0)
         {
             sName += iLen - 1;
             if(*sName == m_cPathSeparator)
                 ++sName;
-            if(strchr(sName, m_cPathSeparator) == NULL)
+            if(std::strchr(sName, m_cPathSeparator) == NULL)
                 fnCallback(pCallbackData, sName);
         }
     }
@@ -355,7 +354,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
 
 IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
 {
-    size_t iLen = strlen(sPath) + 1;
+    size_t iLen = std::strlen(sPath) + 1;
     char *sNormedPath = (char*)alloca(iLen);
     for(size_t i = 0; i < iLen; ++i)
         sNormedPath[i] = _normalise(sPath[i]);
@@ -365,7 +364,7 @@ IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
     while(iLower != iUpper)
     {
         int iMid = (iLower + iUpper) / 2;
-        int iComp = strcmp(sNormedPath, m_pFiles[iMid].sPath);
+        int iComp = std::strcmp(sNormedPath, m_pFiles[iMid].sPath);
         if(iComp == 0)
             return iMid + 1;
         else if(iComp < 0)
@@ -410,7 +409,7 @@ bool IsoFilesystem::_seekToSector(uint32_t iSector)
         _setError("No raw file.");
         return false;
     }
-    if(fseek(m_fRawFile, m_iSectorSize * static_cast<long>(iSector), SEEK_SET) == 0)
+    if(std::fseek(m_fRawFile, m_iSectorSize * static_cast<long>(iSector), SEEK_SET) == 0)
         return true;
     else
     {
@@ -426,7 +425,7 @@ bool IsoFilesystem::_readData(uint32_t iByteCount, uint8_t *pBuffer)
         _setError("No raw file.");
         return false;
     }
-    if(fread(pBuffer, 1, iByteCount, m_fRawFile) == iByteCount)
+    if(std::fread(pBuffer, 1, iByteCount, m_fRawFile) == iByteCount)
         return true;
     else
     {
@@ -447,7 +446,7 @@ void IsoFilesystem::_setError(const char* sFormat, ...)
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
 #endif
-    vsprintf(m_sError, sFormat, a);
+    std::vsprintf(m_sError, sFormat, a);
 #ifdef _MSC_VER
 #pragma warning(default: 4996)
 #endif
