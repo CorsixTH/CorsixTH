@@ -604,6 +604,19 @@ tooltip.update_window = {
   ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
 }
 
+map_editor_window = {
+  pages = {
+    inside = "Inside",
+    outside = "Outside",
+    foliage = "Foliage",
+    hedgerow = "Hedgerow",
+    pond = "Pond",
+    road = "Road",
+    north_wall = "North wall",
+    west_wall = "West wall",
+    helipad = "Helipad",
+  }
+}
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 

@@ -39,17 +39,371 @@ local col_scrollbar = {
   blue = 208,
 }
 
-local col_bg = {
-  red = 154,
-  green = 146,
-  blue = 198,
+local col_bg = {red = 154, green = 146, blue = 198}
+
+-- {{{ Editor sprites.
+-- High byte sprite constants.
+local FLIP_H = DrawFlags.FlipHorizontal << 8
+
+-- Each variable below is an array of multi-tile sprites, which is translated
+-- to a list of buttons at a page.
+-- The generic form of a multi-tile sprite (see the helipad for an example) is
+-- a table {sprites = .., height = ..}. The 'height' defines the height of the
+-- displayed button (between 1 and MAX_HEIGHT).
+-- The 'sprites' is an array of single sprites, a table of {sprite = ...,
+-- xpos = ..., ypos = ..., type = ...}. It defines which sprite to display at
+-- which relative position. Positions run from 1 upward, sprites are numbers
+-- 0..255 (the low byte) while the high byte is used for DrawFlags flags, eg
+-- FLIP_H. Last but not least 'floor', 'north', and 'west' types defne where
+-- to put the sprite (as floor sprites, north wall sprite or west wall
+-- sprite).
+--
+-- As there are a lot of single tile sprite buttons, there is a simplified
+-- form to specify those (and they get expanded to the generic multi-tile
+-- sprite form automagically). The short form for a single sprite button is a
+-- table {sprite = ..., height = ..., type = ...}, where all the fields have
+-- the same meaning as described above for the generic form.
+--
+-- {{{ Foliage sprites.
+local foliage = {
+  {sprite=192, height=3, type="floor"}, -- Regular European shrub 1
+  {sprite=193, height=2, type="floor"}, -- Ground plant, green 1
+  {sprite=194, height=2, type="floor"}, -- Bush
+  {sprite=195, height=3, type="floor"}, -- Ground plant, red flowers
+  {sprite=196, height=3, type="floor"}, -- Shrub
+  {sprite=197, height=4, type="floor"}, -- Dead tree (very high)
+  {sprite=198, height=2, type="floor"}, -- Low ground plant
+  {sprite=199, height=3, type="floor"}, -- Regular European shrub 2
+  {sprite=200, height=2, type="floor"}, -- Ground plant, flowers
+  {sprite=201, height=1, type="floor"}, -- Flowerbed East/South
+  {sprite=202, height=1, type="floor"}, -- Flowerbed West/South
+  {sprite=203, height=1, type="floor"}, -- Flowerbed West/North
+  {sprite=204, height=1, type="floor"}, -- Flowerbed North/South
 }
+-- }}}
+-- {{{ Hedge row sprites.
+local hedgerow={
+  {sprite=176, height=2, type="floor"}, -- Hedge West-North
+  {sprite=177, height=2, type="floor"}, -- Hedge West-South
+  {sprite=178, height=2, type="floor"}, -- Hedge East-South
+  {sprite=179, height=2, type="floor"}, -- Hedge East-North
+  {sprite=180, height=2, type="floor"}, -- Hedge West-East
+  {sprite=181, height=2, type="floor"}, -- Hedge North-South
+  {sprite=182, height=2, type="floor"}, -- Hedge East-West-South
+  {sprite=183, height=2, type="floor"}, -- Hedge East-West-North
+  {sprite=184, height=2, type="floor"}, -- Hedge West-North-South
+  {sprite=185, height=2, type="floor"}, -- Hedge East-North-South
+  {sprite=186, height=2, type="floor"}, -- Hedge East-West-North-South
+  {sprite=187, height=2, type="floor"}, -- Hedge North-South with shrub
+  {sprite=188, height=2, type="floor"}, -- Hedge North-South with holes
+  {sprite=189, height=2, type="floor"}, -- Hedge East-West with shrub 1
+  {sprite=190, height=2, type="floor"}, -- Hedge East-West with holes
+  {sprite=191, height=2, type="floor"}, -- Hedge East-West with shrub 2
+}
+-- }}}
+-- {{{ Pond sprites.
+local pond={
+  {sprite= 60, height=1, type="floor"}, -- South edge of a pond
+  {sprite= 65, height=1, type="floor"}, -- West edge of a pond
+  {sprite= 68, height=1, type="floor"}, -- North edge of a pond
+  {sprite= 78, height=1, type="floor"}, -- East edge of a pond
+  {sprite= 59, height=1, type="floor"}, -- South-West corner of a pond
+  {sprite= 77, height=1, type="floor"}, -- North-East corner of a pond
+  {sprite= 79, height=1, type="floor"}, -- South-East corner of a pond
+  {sprite= 80, height=1, type="floor"}, -- North-West corner of a pond
+  {sprite= 69, height=1, type="floor"}, -- Water tile of a pond
+  {sprite= 71, height=1, type="floor"}, -- Water tile of a pond with water lilies
+  {sprite= 72, height=2, type="floor"}, -- Water tile of a pond with water plant 1
+  {sprite= 73, height=2, type="floor"}  -- Water tile of a pond with water plant 2
+}
+-- }}}
+-- {{{ Inside floor sprites.
+local inside={
+  {sprite= 17, height=1, type="floor"}, -- Dark blue/purple carpet tile
+  {sprite= 70, height=1, type="floor"}, -- Duplicate of 017
+  {sprite= 18, height=1, type="floor"}, -- Red-Blue floor tile 1
+  {sprite= 19, height=1, type="floor"}, -- Red-Blue floor tile 2
+  {sprite= 23, height=1, type="floor"}, -- Red-Blue floor tile 3
+  {sprite= 16, height=1, type="floor"}, -- Dark big checker pattern tile
+  {sprite= 21, height=1, type="floor"}, -- Small checker pattern tile
+  {sprite= 22, height=1, type="floor"}, -- Big checker pattern tile
+  {sprite= 66, height=1, type="floor"}, -- Floor tile with light center
+  {sprite= 76, height=1, type="floor"}, -- Floor tile with light center and corners
+  {sprite= 20, height=1, type="floor"}  -- Wooden floor tile
+}
+-- }}}
+-- {{{ Outside floor sprites.
+local outside={
+  {sprite=  1, height=1, type="floor"}, -- Grass tile 1
+  {sprite=  2, height=1, type="floor"}, -- Grass tile 2
+  {sprite=  3, height=1, type="floor"}, -- Grass tile 3
+  {sprite=  4, height=1, type="floor"}, -- Light concrete tile
+  {sprite= 15, height=1, type="floor"}, -- Concrete tile
+  {sprite=  5, height=1, type="floor"}, -- Dark concrete tile
+  {sprite=  6, height=1, type="floor"}, -- Grass tile with South-East concrete corner
+  {sprite=  8, height=1, type="floor"}, -- Grass tile with South-West concrete corner
+  {sprite= 10, height=1, type="floor"}, -- Grass tile with North-West concrete corner
+  {sprite= 12, height=1, type="floor"}, -- Grass tile with North-East concrete corner
+  {sprite=  7, height=1, type="floor"}, -- Grass tile with South concrete edge
+  {sprite=  9, height=1, type="floor"}, -- Grass tile with West concrete edge
+  {sprite= 11, height=1, type="floor"}, -- Grass tile with North concrete edge
+  {sprite= 13, height=1, type="floor"}, -- Grass tile with East concrete edge
+  {sprite= 14, height=1, type="floor"}, -- Concrete tile with North-East grass corner
+  {sprite= 61, height=1, type="floor"}, -- Concrete tile with South-West grass corner
+  {sprite= 62, height=1, type="floor"}, -- Concrete tile with South-East grass corner
+  {sprite= 63, height=1, type="floor"}, -- Concrete tile with North-West grass corner
+  {sprite= 64, height=1, type="floor"}, -- Grass tile with rocks
+  {sprite=205, height=1, type="floor"}, -- Fully cracked garden marble tile
+  {sprite=206, height=1, type="floor"}, -- Broken garden marble tile
+  {sprite=207, height=1, type="floor"}, -- Partially cracked garden marble tile
+  {sprite=208, height=1, type="floor"}, -- Garden marble tile
+}
+-- }}}
+-- {{{ Road floor sprites.
+local road_spr = {
+  {sprite= 41, height=1, type="floor"}, -- Road with white discontinuous line North-South
+  {sprite= 45, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at South
+--{sprite= 46, height=1, type="floor"}, -- Duplicate of 45
+  {sprite= 42, height=1, type="floor"}, -- Road with double yellow lines at West with black orthogonal lines
+  {sprite= 43, height=1, type="floor"}, -- Road with double yellow lines at West edge
+  {sprite= 44, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at North
+  {sprite= 47, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at South
+  {sprite= 49, height=1, type="floor"}, -- Road with red braking line at the East pointing to the West
+  {sprite= 48, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at North
+  {sprite= 53, height=1, type="floor"}, -- Road with double yellow lines at East edge merging at the south
+  {sprite= 52, height=1, type="floor"}, -- Road with double yellow lines at East with black orthogonal lines
+--{sprite= 54, height=1, type="floor"}, -- Duplicate of 52
+  {sprite= 51, height=1, type="floor"}, -- Road with double yellow lines at East edge
+  {sprite= 57, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at South
+  {sprite= 55, height=1, type="floor"}, -- Road with red braking line at the West pointing to the East
+  {sprite= 56, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at North
+  {sprite= 50, height=1, type="floor"}, -- Road with grey edge at the East
+  {sprite= 58, height=1, type="floor"}, -- Road with grey edge at the West
+}
+local road = {} -- All sprites get horizontally flipped as well, for roads running north-south.
+for _, spr in ipairs(road_spr) do
+  road[#road + 1] = spr
+  road[#road + 1] = {sprite = spr.sprite + FLIP_H, height = spr.height, type = spr.type}
+end
+-- }}}
+-- {{{ North wall layout and floor sprites.
+local north_wall = {
+  {sprites = {
+    {sprite=159, xpos=1, ypos=1, type="north"}, -- External doorway North outside left part
+    {sprite=157, xpos=3, ypos=1, type="north"}, -- External doorway North outside right part
+    },
+   height = 3},
+
+  {sprites = {
+    {sprite=163, xpos=1, ypos=1, type="north"}, -- External doorway North inside left part
+    {sprite=161, xpos=3, ypos=1, type="north"}, -- External doorway North inside right part
+    },
+   height = 3},
+
+  {sprite=114, height=3, type="north"}, -- External North wall outside
+  {sprite=116, height=3, type="north"}, -- External North wall outside left part of window
+  {sprite=120, height=3, type="north"}, -- External North wall with window
+  {sprite=118, height=3, type="north"}, -- External North wall outside right part of window
+  {sprite=122, height=3, type="north"}, -- External North wall inside
+  {sprite=124, height=3, type="north"}, -- External North wall inside left part of window
+  {sprite=126, height=3, type="north"}, -- External North wall inside right part of window
+  {sprite=209 + FLIP_H, height=3, type="north"}, -- Lamp post pointing East
+  {sprite=210 + FLIP_H, height=3, type="north"}, -- Lamp post pointing West
+}
+-- }}}
+-- {{{ West wall layout and floor sprites.
+local west_wall = {
+  {sprites = {
+    {sprite=158, xpos=1, ypos=3, type="west"}, -- External doorway West outside left part
+    {sprite=160, xpos=1, ypos=1, type="west"}, -- External doorway West outside right part
+    },
+   height = 3},
+
+  {sprites = {
+    {sprite=162, xpos=1, ypos=3, type="west"}, -- External doorway West inside left part
+    {sprite=164, xpos=1, ypos=1, type="west"}, -- External doorway West inside right part
+    },
+   height = 3},
+
+  {sprite=115, height=3, type="west"}, -- External West wall outside
+  {sprite=119, height=3, type="west"}, -- External West wall outside left part of window
+-- No external west-wall with just glass. 121 (below) isn't finished, 120 (north above) has different lighting
+-- {sprite=121, height=3, type="west"}, -- External West wall with window glass (UNFINISHED?)
+  {sprite=117, height=3, type="west"}, -- External West wall outside right part of window
+  {sprite=123, height=3, type="west"}, -- External West wall inside
+  {sprite=127, height=3, type="west"}, -- External West wall inside left part of window
+  {sprite=125, height=3, type="west"}, -- External West wall inside right part of window
+  {sprite=210, height=3, type="west"}, -- Lamp post pointing South
+  {sprite=209, height=3, type="west"}, -- Lamp post pointing North
+}
+-- }}}
+-- {{{ Helipad layout.
+local helipad = {
+  {sprites = {
+    -- Dark tiles around the edges.
+    {sprite=5, xpos=1, ypos=1, type="floor"},
+    {sprite=5, xpos=2, ypos=1, type="floor"},
+    {sprite=5, xpos=3, ypos=1, type="floor"},
+    {sprite=5, xpos=4, ypos=1, type="floor"},
+    {sprite=5, xpos=5, ypos=1, type="floor"},
+
+    {sprite=5, xpos=1, ypos=2, type="floor"},
+    {sprite=5, xpos=1, ypos=3, type="floor"},
+    {sprite=5, xpos=1, ypos=4, type="floor"},
+    {sprite=5, xpos=1, ypos=5, type="floor"},
+
+    {sprite=5, xpos=2, ypos=5, type="floor"},
+    {sprite=5, xpos=3, ypos=5, type="floor"},
+    {sprite=5, xpos=4, ypos=5, type="floor"},
+
+    {sprite=5, xpos=5, ypos=5, type="floor"},
+    {sprite=5, xpos=5, ypos=2, type="floor"},
+    {sprite=5, xpos=5, ypos=3, type="floor"},
+    {sprite=5, xpos=5, ypos=4, type="floor"},
+    -- Dark tiles in the 'H'
+    {sprite=5, xpos=3, ypos=2, type="floor"},
+    {sprite=5, xpos=3, ypos=4, type="floor"},
+    -- Light tiles in the 'H'
+    {sprite=4, xpos=2, ypos=2, type="floor"},
+    {sprite=4, xpos=2, ypos=3, type="floor"},
+    {sprite=4, xpos=2, ypos=4, type="floor"},
+    {sprite=4, xpos=4, ypos=2, type="floor"},
+    {sprite=4, xpos=4, ypos=3, type="floor"},
+    {sprite=4, xpos=4, ypos=4, type="floor"},
+    {sprite=4, xpos=3, ypos=3, type="floor"}
+   },
+   height=5
+  }
+}
+-- }}}
+
+local MAX_HEIGHT = 5 -- Biggest height in above sprites
+local PAGES = {
+  {name = _S.map_editor_window.pages.inside,     spr_data = inside},
+  {name = _S.map_editor_window.pages.outside,    spr_data = outside},
+  {name = _S.map_editor_window.pages.foliage,    spr_data = foliage},
+  {name = _S.map_editor_window.pages.hedgerow,   spr_data = hedgerow},
+  {name = _S.map_editor_window.pages.pond,       spr_data = pond},
+  {name = _S.map_editor_window.pages.road,       spr_data = road},
+  {name = _S.map_editor_window.pages.north_wall, spr_data = north_wall},
+  {name = _S.map_editor_window.pages.west_wall,  spr_data = west_wall},
+  {name = _S.map_editor_window.pages.helipad,    spr_data = helipad}
+}
+-- {{{ Functions
+--! Normalize the editor sprite in the table to always have a 'sprites' field, as well as have sizes and a column width (for the display).
+--!param (table) Sprite from the 'PAGES[#].spr_data' table.
+--!return (table 'sprites', 'xsize', 'ysize', 'width', and 'height')
+local function normalizeEditSprite(spr)
+  assert(MAX_HEIGHT >= spr.height) -- Verify that sprite fits in the maximum height.
+
+  if spr.sprites == nil then -- {spritex=xxx, height=y} case
+    return {sprites = {{sprite = spr.sprite, xpos = 1, ypos = 1, type=spr.type}},
+            xsize = 1,
+            ysize = 1,
+            type = spr.type,
+            xorigin = 0,
+            yorigin = 0,
+            width = 2,
+            height = spr.height}
+  else
+    -- {sprites={...}, height=y} case, compute sizes, and width
+    local xsize = 1
+    local ysize = 1
+    local spr_type = nil
+    for _, sp in ipairs(spr.sprites) do
+      if sp.xpos > xsize then xsize = sp.xpos end
+      if sp.ypos > ysize then ysize = sp.ypos end
+
+      assert(not spr_type or spr_type == sp.type) -- Ensure all sprites have the same type.
+      spr_type = sp.type
+    end
+    -- Position to draw (1,1) sprite, by default (0,0)
+    -- Since sprites are drawn top to bottom, yorigin never changes.
+    local xorigin = (ysize - 1) * 32
+    local yorigin = 0
+
+    local width = ysize - 1 + xsize - 1 + 2
+    if width < ysize then width = ysize end
+
+    return {sprites = spr.sprites,
+            xsize = xsize,
+            ysize = ysize,
+            type = spr_type,
+            xorigin = xorigin,
+            yorigin = yorigin,
+            width = width,
+            height = spr.height}
+  end
+end
+
+--!Decide the highest possible placement for 'width' columns.
+--!param cols (list int) First available position in each column, higher number is lower.
+--!param width (int) Required width as number of columns.
+--!return (int, int) Starting column and placement height.
+local function getHighestRowcol(cols, width)
+  local best = cols[1] + 100000
+  local best_col = 0
+
+  for left = 1, #cols - width + 1 do -- Try starting in each column.
+    if cols[left] < best then -- First column is potentially better.
+      local top = cols[left]
+      for i = 1, width - 1 do
+        if top < cols[left + i] then
+          top = cols[left + i]
+          if top >= best then break end -- i-th column breaks improvement.
+        end
+      end
+      if top < best then
+        best = top
+        best_col = left
+      end
+    end
+  end
+  return best_col, best
+end
+
+--! Layout buttons from a tab of editor sprites.
+--!param esprs (list) Editor sprite tab to layout.
+--!param num_cols (int) Number of columns available in the layout.
+--!return (list) Sprites with button positions in ('column', 'row').
+local function layoutButtons(esprs, num_cols)
+  local buttons = {}
+
+  local cols = {}
+  for i = 1, num_cols do
+    cols[i] = 1
+  end
+
+  for hgt = MAX_HEIGHT, 1, -1 do -- Fit highest sprites first.
+    for _, espr in ipairs(esprs) do
+      espr = normalizeEditSprite(espr)
+      if espr.height == hgt then
+        local spr_col, spr_height = getHighestRowcol(cols, espr.width)
+        buttons[#buttons + 1] = espr
+        buttons[#buttons].column = spr_col
+        buttons[#buttons].row = spr_height
+
+        for i = spr_col, spr_col + espr.width - 1 do -- Update height in the affected columns
+          assert(cols[i] <= spr_height)
+          cols[i] = spr_height + hgt
+        end
+
+      end
+    end
+  end
+  return buttons
+end
+-- }}}
+-- }}}
 
 local num_blocks = 8
 local num_visible_blocks = 2
 
+local EDITOR_WINDOW_XSIZE = 368
+local EDITOR_WINDOW_YSIZE = 516
+
 function UIMapEditor:UIMapEditor(ui)
-  self:UIResizable(ui, 235, 155, col_bg)
+  self:UIResizable(ui, EDITOR_WINDOW_XSIZE, EDITOR_WINDOW_YSIZE, col_bg)
   self.resizable = false
 
   self.ui = ui
