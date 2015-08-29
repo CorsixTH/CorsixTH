@@ -44,6 +44,10 @@ function UIWatch:UIWatch(ui, count_type)
   self.panel_sprites = app.gfx:loadSpriteTable("Data", "Watch01V", true)
   self.epidemic = false
   self.count_type = count_type
+  -- For cycling the list of epidemic/emergency patients which index to use
+  self.current_index = nil
+  -- The last patient whose dialog was opened by clicking the timer
+  self.lastCycledPatient = nil
 
   local end_sprite = (count_type == "epidemic") and 14 or 16
 
@@ -62,7 +66,16 @@ function UIWatch:UIWatch(ui, count_type)
       :makeButton(4, 0, 27, 28, end_sprite + 1, self.onCountdownEnd)
       :setTooltip(tooltips[count_type])
   end
-  self:addPanel(13, 0, 28):setTooltip(tooltips[count_type])
+
+  local timer_sprite = 13
+  if count_type == "epidemic" or count_type == "emergency" then
+    self:addPanel(timer_sprite, 0, 28)
+      :setTooltip(tooltips[count_type])
+      :makeButton(timer_sprite, 0, 25, 50, timer_sprite,
+        self.scrollToTimerEventPatient, nil, self.cycleTimerEventPatient)
+  else
+    self:addPanel(timer_sprite, 0, 28):setTooltip(tooltips[count_type])
+  end
   self:addPanel(1, 2, 47)
 end
 
@@ -106,10 +119,58 @@ function UIWatch:onWorldTick()
   end
 end
 
---[[ Toggles vaccination mode by toggling the button then
+--[[! Toggles vaccination mode by toggling the button then
 toggling the mode in the current epidemic.]]
 function UIWatch:toggleVaccinationMode()
   local epidemic = self.hospital.epidemic
   self.end_button:toggle()
   epidemic:toggleVaccinationMode()
+end
+
+--[[! During an emergency - Cycles through the patient dialogs of all the emergency patients
+    ! During an epidemic - Cycles to the first patient who is infected but not vaccinated]]
+function UIWatch:cycleTimerEventPatient()
+  self.ui:playSound("camclick.wav")
+  local hospital = self.ui.hospital
+
+  if self.count_type == "emergency" then
+    local patients = hospital.emergency_patients
+
+    if #patients > 0 then
+      if not self.current_index or self.current_index == #patients then
+        self.current_index = 1
+      else
+        self.current_index = self.current_index + 1
+      end
+      self.lastCycledPatient = patients[self.current_index]
+      self.ui:addWindow(UIPatient(self.ui, self.lastCycledPatient))
+    end
+  else
+    for _, infected_patient in ipairs(hospital.epidemic.infected_patients) do
+      if not infected_patient.vaccinated and not infected_patient.cured then
+        self.lastCycledPatient = infected_patient
+        self.ui:addWindow(UIPatient(self.ui, self.lastCycledPatient))
+        break
+      end
+    end
+  end
+end
+
+--[[! While cycling through timer event patients (@see
+  UIWatch:cycleTimerEventPatient) scrolls the screen to centre on the selected patient
+  If a patient dialog is open that does not belong to the timer event, does nothing]]
+function UIWatch:scrollToTimerEventPatient()
+  self.ui:playSound("camclick.wav")
+  local patient = self.lastCycledPatient
+  if patient then
+    -- Current open dialog
+    local current_patient_dialog = self.ui:getWindow(UIPatient)
+    if not current_patient_dialog then
+      -- Create the dialog but don't add it to the window
+      local patient_dialog = UIPatient(self.ui, patient)
+      patient_dialog:scrollToPatient()
+    elseif patient == current_patient_dialog.patient then
+      current_patient_dialog:scrollToPatient()
+    end
+  end
 end

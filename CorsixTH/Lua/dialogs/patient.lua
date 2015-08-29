@@ -216,13 +216,18 @@ function UIPatient:onMouseMove(x, y, dx, dy)
   return Window.onMouseMove(self, x, y, dx, dy)
 end
 
+--[[! Scrolls the map to the position of the patient which this dialog belongs to ]]
+function UIPatient:scrollToPatient()
+  local ui = self.ui
+  local patient = self.patient
+  local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
+  local dx, dy = patient.th:getPosition()
+  ui:scrollMapTo(px + dx, py + dy)
+end
+
 function UIPatient:onTick()
   if self.do_scroll then
-    local ui = self.ui
-    local patient = self.patient
-    local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
-    local dx, dy = patient.th:getPosition()
-    ui:scrollMapTo(px + dx, py + dy)
+    self:scrollToPatient()
   end
   return Window.onTick(self)
 end
