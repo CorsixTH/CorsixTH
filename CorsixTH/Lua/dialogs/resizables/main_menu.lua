@@ -30,8 +30,9 @@ local col_bg = {
   blue = 198,
 }
 
+--! Menu in the intro screen.
 function UIMainMenu:UIMainMenu(ui)
-  self:UIResizable(ui, 200, 341, col_bg)
+  self:UIResizable(ui, 200, 381, col_bg)
 
   local app = ui.app
   self.esc_closes = false
@@ -65,7 +66,7 @@ function UIMainMenu:draw(canvas, x, y)
   x, y = self.x + x, self.y + y
 
   -- Move the version string up a bit if also showing the savegame version.
-  local ly = y + 325
+  local ly = y + 365
   if TheApp.config.debug then
     self.label_font:draw(canvas, _S.main_menu.savegame_version .. TheApp.savegame_version, x + 5, ly, 190, 0, "right")
     ly = ly - 15
