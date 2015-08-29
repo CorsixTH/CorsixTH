@@ -1,6 +1,8 @@
 ![](http://i.imgur.com/fYp148T.jpg)
 ### Latest Release [![Release 0.40](https://img.shields.io/badge/release-0.40-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases) [![Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH)
 
+##### [Forum](http://forums.corsixth.com) | [IRC Chat](http://webchat.freenode.net/?channels=corsix-th) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new)
+
 A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original CorsixTH adds support for modern operating systems (Windows, Mac OSX and Linux), high resolutions and much more.
 
 ![](http://i.imgur.com/qHV60Ui.png)
