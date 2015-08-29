@@ -19,11 +19,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-dofile "command_stack"
-dofile "command"
-dofile "commands/set_map_cell"
-dofile "commands/set_map_cell_flags"
-dofile "commands/compound"
+-- Stuff to do:
+-- [ ] Show parcels by number menu
+-- [ ] load / save menu
+-- [ ] transparent walls toggle menu (probably useful to have)
+-- [ ] show all parcels toggle menu
+-- [ ] make the program map-editor aware
+--     [ ] No timer for building
+--     [ ] No crash for announcer at timeout
+--     [ ] (Probably?) no patient spawning, economy running, bills paying, etc.
+-- [ ] Maybe add 'undo' stack? Code below loads the data structures, and is not elsewhere used afaik
+--     dofile "command_stack"
+--     dofile "command"
+--     dofile "commands/set_map_cell"
+--     dofile "commands/set_map_cell_flags"
+--     dofile "commands/compound"
+-- [ ] Use 'sample_i' (or delete it).
 
 class "UIMapEditor" (UIResizable)
 
