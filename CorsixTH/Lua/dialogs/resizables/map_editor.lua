@@ -420,6 +420,42 @@ function UIMapEditor:UIMapEditor(ui)
   -- by the current drawing operation.
   self.block_brush_preview = 0
 
+  -- Cursor data in the main world view.
+  -- States:
+  --  - disabled: just show the cursor
+  --  - grid: show an area with red rectangles (requires 'sprite' to exist).
+  --  - left: Dragging with left mouse button is down, (leftx, lefty) defines the tile.
+  --  - right: Moving with right mouse button down (can't drag with right alone).
+  --  - both: Dragging with both left and right mouse buttons down
+  --          (rightx, righty) defines the tile.
+  --  - delete: Like grid, with a 1x1 cursor for selecting tiles to remove walls from.
+  --  - delete-left: Left mouse button drag of 'delete' mode.
+  --  - parcel: Like grid, with a 1x1 cursor for selecting tiles to set the parcel.
+  --  - parcel-left: Left mouse button drag of 'parcel' mode.
+  --
+  -- Notes:
+  --  - The code switches back to 'grid' or 'disabled' without waiting for all
+  --    buttons getting released.
+  --  - Nothing gets added in the world until you let go of a mouse button.
+  --  - Drag detection ('is_drag') is used to allow cancel if user moves back
+  --    to the (leftx, lefty) position.
+  --  - The sprite decides how you can drag (none, north-south, east-west, area)
+  --
+  self.cursor = {
+    state = "disabled", -- State of the cursor.
+    sprite = nil,       -- Selected sprite from the menu.
+    is_drag = false,    -- Whether a true drag (at least 2 cells covered) has been detected.
+    parcel = nil,       -- Parcel number to set in 'parcel' / 'parcel-left' mode.
+
+    xpos = 0,   -- Horizontal tile position of the mouse cursor.
+    ypos = 0,   -- Vertical tile position of the mouse cursor.
+
+    leftx = 0,  -- Horizontal tile position where the left-click was first detected.
+    lefty = 0,  -- Vertical   tile position where the left-click was first detected.
+    rightx = 0, -- Horizontal tile position where the right-click was first detected.
+    righty = 0, -- Vertical   tile position where the right-click was first detected.
+  }
+
   self:classifyBlocks()
 
   -- A sprite table containing a "cell outline" sprite
@@ -542,12 +578,176 @@ function UIMapEditor:classifyBlocks()
   self.block_info = block_info
 end
 
+--! Get the tile area covered by two points.
+--!param x1 (jnt) Horizontal coordinate of the first point.
+--!param y1 (int) Vertical   coordinate of the first point.
+--!param x2 (jnt) Horizontal coordinate of the second point.
+--!param y2 (int) Vertical   coordinate of the second point.
+--!return (4 int) Smallest horizontal, smallest vertical, largest horizontal,
+--  and largest vertical coordinate.
+local function getCoveredArea(x1, y1, x2, y2)
+  local minx, maxx, miny, maxy
+  if x1 < x2 then minx, maxx = x1, x2 else minx, maxx = x2, x1 end
+  if y1 < y2 then miny, maxy = y1, y2 else miny, maxy = y2, y1 end
+  return minx, miny, maxx, maxy
+end
+
+--! Get the size of an area covered by two points.
+--!param x1 (jnt) Horizontal coordinate of the first point.
+--!param y1 (int) Vertical   coordinate of the first point.
+--!param x2 (jnt) Horizontal coordinate of the second point.
+--!param y2 (int) Vertical   coordinate of the second point.
+--!return (2 int) Horizontal and vertical size of the area.
+local function getAreaSize(x1, y1, x2, y2)
+  local minx, miny, maxx, maxy = getCoveredArea(x1, y1, x2, y2)
+  return maxx - minx + 1, maxy - miny + 1
+end
+
+--! Test whether (px, py) is inside the given area.
+--!param px (int) Horizontal coordinate of the point to test.
+--!param py (int) Vertical   coordinate of the point to test.
+--!param minx (jnt) Smallest horizontal coordinate of the area.
+--!param miny (int) Smallest vertical   coordinate of the area.
+--!param maxx (jnt) Largest horizontal coordinate of the area.
+--!param maxy (int) Largest vertical   coordinate of the area.
+--!return (bool) Whether the point is inside the given area.
+local function isPointInside(px, py, minx, miny, maxx, maxy)
+  return px >= minx and px <= maxx and py >= miny and py <= maxy
+end
+
+
+--! Compute x/y pairs to draw the cursor sprite over the area.
+--!param minx (int) First horizontal position to draw the sprite.
+--!param miny (int) First vertical   position to draw the sprite.
+--!param maxx (int) Last horizontal position to draw the sprite.
+--!param maxy (int) Last vertical   position to draw the sprite.
+--!param dx (nil or int) Horizontal step size of drawing, usually same size as
+--  the width of the sprite being drawn, default is 1.
+--!param dy (nil or int) Vertical step size of drawing, usually same size as
+--  the height of the sprite being drawn, default is 1.
+--!return (array of (xpos, ypos) pairs) Points to draw the sprite cursor.
+local function computeCursorSpriteAtArea(minx, miny, maxx, maxy, dx, dy)
+  local coords = {}
+
+  if not dx or not dy then dx, dy = 1, 1 end
+
+  assert(dx > 0 and dy > 0)
+  local xbase, ybase
+  xbase = minx
+  while xbase <= maxx do
+    ybase = miny
+    while ybase <= maxy do
+      coords[#coords + 1] = {xpos = xbase, ypos = ybase}
+
+      ybase = ybase + dy
+    end
+    xbase = xbase + dx
+  end
+
+  return coords
+end
+
+--! Compute the positions to draw the selected sprite in the world.
+--!return (array of {xpos, ypos} tables) Coordinates to draw the selected sprite.
+function UIMapEditor:getDrawPoints()
+  if self.cursor.state == "disabled" then
+    -- Nothing to compute, drop to bottom {} return.
+
+  elseif self.cursor.state == "grid" then
+    local bx, by = self:areaOnWorld(self.cursor.xpos, self.cursor.ypos,
+                                    self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+    return {{xpos = bx, ypos = by}}
+
+  elseif self.cursor.state == "delete" or self.cursor.state == "parcel" then
+    return {{xpos = self.cursor.xpos, ypos = self.cursor.ypos}}
+
+  elseif self.cursor.state == "left" then
+      -- Simple drag (left button only).
+      local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
+                                                    self.cursor.xpos, self.cursor.ypos)
+      if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
+        -- Just 1 tile without starting a drag, or an area of at least two tiles.
+        return computeCursorSpriteAtArea(minx, miny, maxx, maxy, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+      end
+
+  elseif self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+      local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
+                                                    self.cursor.xpos, self.cursor.ypos)
+      if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
+        -- Just 1 tile without starting a drag, or an area of at least two tiles.
+        return computeCursorSpriteAtArea(minx, miny, maxx, maxy, 1, 1)
+      end
+
+  elseif self.cursor.state == "right" then
+    local bx, by = self:areaOnWorld(self.cursor.xpos, self.cursor.ypos,
+                                    self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+    return {{xpos = bx, ypos = by}}
+
+  elseif self.cursor.state == "both" then
+    -- left+right drag.
+    -- Area is defined from first to last point, 'right' point must be inside the area.
+    local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
+                                                  self.cursor.xpos, self.cursor.ypos)
+    if minx ~= maxx or miny ~= maxy then -- Otherwise area is 1x1, either due to 'cancel', or never enlarged.
+      if isPointInside(self.cursor.rightx, self.cursor.righty, minx, miny, maxx, maxy) then
+        -- Get block size between left and right click.
+        local dx, dy = getAreaSize(self.cursor.leftx, self.cursor.lefty,
+                                   self.cursor.rightx, self.cursor.righty)
+        if dx > 1 or dy > 1 then -- Otherwise, left and right click is in the same tile.
+          return computeCursorSpriteAtArea(minx, miny, maxx, maxy, dx, dy)
+        end
+      end
+    end
+  end
+
+  return {}
+end
+
+--! Fill an area of tiles with red cursor rectangles. Caller must make sure that
+--   the area is completely inside the world boundaries.
+--!param canvas Canvas to draw at.
+--!param xpos (int) Horizontal base tile position (of the top corner).
+--!param ypos (int) Vertical   base tile position (of the top corner).
+--!param xsize (int) Horizontal size in tiles.
+--!param ysize (int) Vertical size in tiles.
+function UIMapEditor:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
+  local ui = self.ui
+
+  for x = 0, xsize - 1 do
+    for y = 0, ysize - 1 do
+      local xcoord, ycoord = ui:WorldToScreen(xpos + x, ypos + y)
+      self.cell_outline:draw(canvas, 2, math.floor(xcoord) - 32, math.floor(ycoord))
+    end
+  end
+end
+
 function UIMapEditor:draw(canvas, ...)
   local ui = self.ui
   local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
   self.cell_outline:draw(canvas, 2, x - 32, y)
 
   UIResizable.draw(self, canvas, ...)
+end
+
+-- {{{ several useful functions
+function UIMapEditor:updateToggleButton(button, action)
+  if action == "raised" then
+    button:enable(true)
+    button:setVisible(true)
+    button:setToggleState(false)
+
+  elseif action == "lowered" then
+    button:enable(true)
+    button:setVisible(true)
+    button:setToggleState(true)
+
+  elseif action == "invisible" then
+    button:enable(false)
+    button:setVisible(false)
+
+  else
+    assert(false) -- Should never arrive here
+  end
 end
 
 function UIMapEditor:updateBlocks()
@@ -579,6 +779,74 @@ function UIMapEditor:blockClicked(num)
   self:updateBlocks()
 end
 
+--! Convert two values on the same axis into a base and a length relative to the base.
+--!param v (int) First number
+--!param w (int) Second number
+--!return (int ,int) Smallest value, and offset relative to the smallest value.
+local function makeBaseLength(v, w)
+  if v < w then
+    return v, w - v + 1
+  else
+    return w, v - w + 1
+  end
+end
+
+--! Convert mouse coordinates to tile coordinates in the world.
+--!param mx (int) Mouse X screen coordinate.
+--!param my (int) Mouse y screen coordinate.
+--!return (int, int) Tile x,y coordinates, limited to the map.
+function UIMapEditor:mouseToWorld(mx, my)
+  local ui = self.ui
+  local map = self.ui.app.map
+
+  local wxr, wyr = ui:ScreenToWorld(self.x + mx, self.y + my)
+  local wx = math.floor(wxr)
+  local wy = math.floor(wyr)
+  return self:areaOnWorld(wx, wy, 1, 1)
+end
+
+--! Stay on world with the entire area, by moving the base position (if needed).
+--!param xpos (int) Horizontal base position.
+--!param ypos (int) Vertical base position.
+--!param xsize (int) Horizontal size.
+--!param ysize (int) Vertical size.
+--!return (int, int) Allowed base position
+function UIMapEditor:areaOnWorld(xpos, ypos, xsize, ysize)
+  local map = self.ui.app.map
+
+  xpos = math.min(math.max(xpos, 1), map.width - xsize + 1)
+  ypos = math.min(math.max(ypos, 1), map.height - ysize + 1)
+  return xpos, ypos
+end
+-- }}}
+
+--! Retrieve what drag capabilities are allowed by the currently selected world cursor sprite.
+--!return (string) "none"=not draggable, "east-west"=dragging only in east-west direction,
+--  "north-south"=dragging only in north-south direction, "area"=dragging in both directions.
+function UIMapEditor:getCursorDragCapabilities()
+  -- Parcel and delete modes have unrestricted movement.
+  if self.cursor.state == "delete" or self.cursor.state == "parcel" or
+      self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+    return "area"
+  end
+
+  -- No sprite, or not a 1x1 size -> not draggable.
+  if not self.cursor.sprite then return "none" end
+  if self.cursor.sprite.xsize ~= 1 or self.cursor.sprite.ysize ~= 1 then
+    return "none"
+  end
+
+  if self.cursor.sprite.type == "floor" then return "area" end
+  if self.cursor.sprite.type == "north" then return "east-west" end
+  if self.cursor.sprite.type == "west" then return "north-south" end
+  assert(false) -- Should never get here
+end
+
+--! The user moved the mouse!
+--!param x (int) New horizontal position of the mouse at the screen.
+--!param y (int) New vertical   position of the mouse at the screen.
+--!param dx (int) Horizontal shift in position of the mouse at the screen.
+--!param dy (int) Vertical   shift in position of the mouse at the screen.
 function UIMapEditor:onMouseMove(x, y, dx, dy)
   local repaint = Window.onMouseMove(self, x, y, dx, dy)
 
@@ -682,6 +950,62 @@ function UIMapEditor:onMouseDown(button, x, y)
   return Window.onMouseDown(self, button, x, y) or repaint
 end
 
+--! Draw the selected sprite at the given coordinates.
+--!param coords (array or {xpos, ypos} tables) Coordinates to draw the selected sprite.
+function UIMapEditor:drawCursorSpriteAtArea(coords)
+  local map = self.ui.app.map.th
+
+  if self.cursor.sprite then
+    for _, coord in ipairs(coords) do
+      local xbase, ybase = coord.xpos, coord.ypos
+
+      -- Draw the selected sprite.
+      xbase, ybase = self:areaOnWorld(xbase, ybase, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+      for _, spr in ipairs(self.cursor.sprite.sprites) do
+        local tx, ty = xbase + spr.xpos - 1, ybase + spr.ypos - 1
+        local f, nw, ww = map:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
+        if spr.type == "floor" then
+          f = spr.sprite
+        elseif spr.type == "north" then
+          nw = spr.sprite
+        elseif spr.type == "west" then
+          ww = spr.sprite
+        end
+        map:setCell(tx, ty, f, nw, ww, 0)
+      end
+    end
+  end
+end
+
+--! Delete the walls at the given coordinates.
+--!param coords (array or {xpos, ypos} tables) Coordinates to remove the walls.
+function UIMapEditor:deleteWallsAtArea(coords)
+  local map = self.ui.app.map.th
+
+  for _, coord in ipairs(coords) do
+    local tx, ty = coord.xpos, coord.ypos
+    local f = map:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
+    map:setCell(tx, ty, f, 0, 0, 0)
+  end
+end
+
+--! Set parcel number at the given coordinates.
+--!param coords (array or {xpos, ypos} tables) Coordinates to set parcel.
+--!param parcel_num (int) Parcel number to set.
+function UIMapEditor:setParcelAtArea(coords, parcel_num)
+  local map = self.ui.app.map.th
+
+  for _, coord in ipairs(coords) do
+    local tx, ty = coord.xpos, coord.ypos
+    map:setCellFlags(tx, ty, {parcelId = parcel_num})
+  end
+end
+
+--! Mouse button was released.
+--!param button (string) Mouse button being released.
+--!param xpos (int) Horizontal position of the mouse at the time of the mouse button release.
+--!param ypos (int) Vertical   position of the mouse at the time of the mouse button release.
+--!return (bool) Whether to repaint the display.
 function UIMapEditor:onMouseUp(button, x, y)
   local repaint = false
   if button == "left" and self.paint_rect then
