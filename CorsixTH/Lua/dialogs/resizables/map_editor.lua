@@ -30,15 +30,6 @@ class "UIMapEditor" (UIResizable)
 ---@type UIMapEditor
 local UIMapEditor = _G["UIMapEditor"]
 
-local math_floor
-    = math.floor
-
-local col_scrollbar = {
-  red = 164,
-  green = 156,
-  blue = 208,
-}
-
 local col_bg = {red = 154, green = 146, blue = 198}
 
 -- {{{ Editor sprites.
@@ -396,11 +387,11 @@ end
 -- }}}
 -- }}}
 
-local num_blocks = 8
-local num_visible_blocks = 2
-
 local EDITOR_WINDOW_XSIZE = 368
 local EDITOR_WINDOW_YSIZE = 516
+local EDITOR_COLUMNS = 10 -- Number of columns for the sprite buttons
+local EDITOR_COLUMN_SIZE = 32 + 3 -- Width of a sprite button in pixels
+local EDITOR_ROW_SIZE = 32 + 4 -- Height of a sprite button in pixels
 
 function UIMapEditor:UIMapEditor(ui)
   self:UIResizable(ui, EDITOR_WINDOW_XSIZE, EDITOR_WINDOW_YSIZE, col_bg)
@@ -409,16 +400,10 @@ function UIMapEditor:UIMapEditor(ui)
   self.ui = ui
   self.panel_sprites = self.ui.app.map.blocks
 
-  self.command_stack = CommandStack()
-
   -- For when there are multiple things which could be sampled from a tile,
   -- keep track of the index of which one was most recently sampled, so that
   -- next time a different one is sampled.
   self.sample_i = 1
-
-  -- The block to put on the UI layer as a preview for what will be placed
-  -- by the current drawing operation.
-  self.block_brush_preview = 0
 
   -- Cursor data in the main world view.
   -- States:
@@ -456,127 +441,176 @@ function UIMapEditor:UIMapEditor(ui)
     righty = 0, -- Vertical   tile position where the right-click was first detected.
   }
 
-  self:classifyBlocks()
-
+  -- {{{ Creation of buttons.
   -- A sprite table containing a "cell outline" sprite
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
 
-  -- Coordinates in Lua tile space of the mouse cursor.
-  self.mouse_cell_x = 0
-  self.mouse_cell_y = 0
+  self:addBevelPanel(0, 0, EDITOR_WINDOW_XSIZE, EDITOR_WINDOW_YSIZE, col_bg) -- Background of the window.
 
-  self.block_panel = self:addBevelPanel(0, 0, 190, 130, col_bg)
-  self.scroll_base = self:addBevelPanel(190, 0, 20, 130, col_bg)
-  self.scroll_base.lowered = true
-  self.block_scroll = self.scroll_base:makeScrollbar(col_scrollbar, --[[persistable:map_editor_scrollbar_callback]] function()
-    self:updateBlocks()
-  end, 1, num_blocks, 1, 1)
-  self.block_buttons = {}
-  self.block_panels = {}
+  self.block_buttons = {} -- List of table {button = .., panel = ..}
+  self.selected_block = nil -- Page of of block buttons currently displayed/selected.
 
-  for i = 1, num_visible_blocks do
-    self.block_buttons[i] = self:addBevelPanel(30, 30 + 78 * (i - 1), 64, 40, col_bg):makeToggleButton(0, 0, 64, 64, nil, --[[persistable:map_editor_block_clicked]] function()
-      self:blockClicked(i)
-    end)
-    self.block_buttons[i].lowered = true
-    self.block_panels[i] = self:addPanel(i, 30, 33 + 78 * (i - 1), 64, 32)
+  -- Make the page selection buttons
+  local XSTART = 10
+  local XSIZE = 109
+  local YSIZE = 20
+
+  local ypos = 10
+  local xpos = XSTART
+  self.page_selectbuttons = {}
+  for _, page in ipairs(PAGES) do
+    local name = page.name
+    if xpos + XSIZE >= EDITOR_WINDOW_XSIZE then -- Update ypos (and xpos) if necessary.
+      xpos = XSTART
+      ypos = ypos + YSIZE + 2
+    end
+
+    local p = self:addBevelPanel(xpos, ypos, XSIZE, YSIZE, col_bg)
+                  :setLabel(name):makeToggleButton(0, 0, XSIZE, YSIZE, nil,
+                    --[[persistable:map_editor_spritepage_clicked]] function() self:pageClicked(name) end)
+    local spr_buttons = layoutButtons(page.spr_data, EDITOR_COLUMNS)
+    local page_data = {button = p, name = name, sprite_buttons = spr_buttons}
+
+    self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
+    self:updateToggleButton(p, "raised")
+    xpos = xpos + XSIZE + 10
   end
+  -- Make the bottom text buttons
+  xpos = XSTART
+  ypos = 420
+
+  local text_pages = {
+    {name = "delete_wall", text = _S.map_editor_window.pages.delete_wall},
+    {name = "parcel_0", text = _S.map_editor_window.pages.parcel_0, parcel = 0},
+    {name = "parcel_1", text = _S.map_editor_window.pages.parcel_1, parcel = 1},
+    {name = "parcel_2", text = _S.map_editor_window.pages.parcel_2, parcel = 2},
+    {name = "parcel_3", text = _S.map_editor_window.pages.parcel_3, parcel = 3},
+    {name = "parcel_4", text = _S.map_editor_window.pages.parcel_4, parcel = 4},
+    {name = "parcel_5", text = _S.map_editor_window.pages.parcel_5, parcel = 5},
+    {name = "parcel_6", text = _S.map_editor_window.pages.parcel_6, parcel = 6},
+    {name = "parcel_7", text = _S.map_editor_window.pages.parcel_7, parcel = 7},
+    {name = "parcel_8", text = _S.map_editor_window.pages.parcel_8, parcel = 8},
+    {name = "parcel_9", text = _S.map_editor_window.pages.parcel_9, parcel = 9}}
+
+  for _, page in ipairs(text_pages) do
+    if xpos + XSIZE >= EDITOR_WINDOW_XSIZE then -- Update ypos (and xpos) if necessary.
+      xpos = XSTART
+      ypos = ypos + YSIZE + 2
+    end
+
+    local name = page.name
+    local p = self:addBevelPanel(xpos, ypos, XSIZE, YSIZE, col_bg)
+                  :setLabel(page.text):makeToggleButton(0, 0, XSIZE, YSIZE, nil,
+                    --[[persistable:map_editor_textpage_clicked]] function() self:pageClicked(name) end)
+    local page_data = {button = p, name = name, data = page}
+    self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
+    self:updateToggleButton(p, "raised")
+    xpos = xpos + XSIZE + 10
+  end
+
+  -- }}}
 
   self:setPosition(0.1, 0.1)
-  self:updateBlocks()
 end
 
-function UIMapEditor:classifyBlocks()
-  -- Classify each block / tile with a type, subtype, and category.
-  -- Type and subtype are used by this file, and by the UI code to determine
-  -- which gallery to put the block in. Category is used purely by the UI to
-  -- allow subsets of a gallery to be hidden.
-  local block_info = {}
-  for i = 1, 15 do
-    block_info[i] = {"floor", "simple", "Outside"}
-  end
-  for i = 16, 23 do
-    block_info[i] = {"floor", "simple", "Inside"}
-  end
-  for i = 24, 40 do
-    block_info[i] = {"object"}
-  end
-  for i = 41, 58 do
-    block_info[i] = {"floor", "simple", "Road"}
-  end
-  block_info[59] = {"floor", "decorated", "Pond"}
-  block_info[60] = {"floor", "decorated", "Pond"}
-  for i = 61, 64 do
-    block_info[i] = {"floor", "simple", "Outside"}
-  end
-  block_info[65] = {"floor", "decorated", "Pond"}
-  block_info[66] = {"floor", "simple", "Inside"} -- 67 is UI.
-  block_info[68] = {"floor", "decorated", "Pond"}
-  block_info[69] = {"floor", "decorated", "Pond"}
-  block_info[70] = {"floor", "simple", "Inside"}
-  for i = 71, 73 do
-    block_info[i] = {"floor", "decorated", "Pond", base = 69}
-  end
-  block_info[76] = {"floor", "simple", "Inside"}
-  for i = 77, 80 do
-    block_info[i] = {"floor", "decorated", "Pond"}
-  end
-  for i = 114, 164 do -- 82-113 are internal walls
-    local pair
-    local category = "External"
-    local dir = i % 2 == 0 and "north" or "west"
-    if 114 <= i and i <= 127 then
-      if 114 <= i and i <= 119 then
-        pair = i + 8
-      elseif 122 <= i and i < 127 then
-        pair = i - 8
+-- {{{ function UIMapEditor:pageClicked(name)
+--! Callback function of the page select buttons.
+--!param name (string) Name of the clicked page.
+function UIMapEditor:pageClicked(name)
+  for _, pb in ipairs(self.page_selectbuttons) do
+    if pb.name == name then
+      self.cursor.state = "disabled"
+      self:updateToggleButton(pb.button, "lowered")
+      if pb.sprite_buttons then
+        -- 'sprite' button, display sprites to select from, by the user.
+        self:buildSpriteButtons(pb.sprite_buttons)
+      else
+        -- 'text' button, switch cursor to the right mode directly.
+        self:buildSpriteButtons({})
+        if pb.name == "delete_wall" then
+          self.cursor.state = "delete"
+          self.cursor.sprite = nil
+          self.cursor.is_drag = false
+        else -- Should be a parcel button.
+          assert(pb.data.parcel)
+
+          self.cursor.state = "parcel"
+          self.cursor.sprite = nil
+          self.cursor.is_drag = false
+          self.cursor.parcel = pb.data.parcel
+        end
       end
-    elseif 157 <= i and i <= 164 then
-      category = "Doorway"
-      if 157 <= i and i <= 160 then
-        pair = i + 4
-      elseif 161 <= i and i < 164 then
-        pair = i - 4
+
+    else
+      self:updateToggleButton(pb.button, "raised")
+    end
+  end
+end
+
+--! Do layout of the sprite buttons of the page.
+function UIMapEditor:buildSpriteButtons(buttons)
+  self.selected_block = buttons
+
+  local XBASE = 10
+  local YBASE = 83
+  local number = 1
+  for _, button in ipairs(buttons) do
+    local xpos = XBASE + (button.column - 1) * EDITOR_COLUMN_SIZE
+    local ypos = YBASE + (button.row - 1) * EDITOR_ROW_SIZE
+    local width = EDITOR_COLUMN_SIZE * button.width - 2
+    local height = EDITOR_ROW_SIZE * button.height - 2
+
+    local pb = self.block_buttons[number]
+    if pb == nil then -- New sprite button needed
+      local bbutton_number = number
+      local bbutton = self:addBevelPanel(xpos, ypos, width, height, col_bg)
+      bbutton = bbutton:makeToggleButton(0, 0, width, height, nil,
+          --[[persistable:map_editor_block_clicked]] function() self:blockClicked(bbutton_number) end)
+      self:updateToggleButton(bbutton, "raised")
+
+      local bpanel = self:addPanel(number, xpos+1, ypos+1, width-2, height-2)
+      bpanel.visible = true
+      bpanel.editor_button = button
+
+      bpanel.custom_draw = --[[persistable:map_editor_draw_block_sprite]] function(panel, canvas, x, y)
+        x = x + panel.x + panel.editor_button.xorigin
+        y = y + panel.y + panel.editor_button.yorigin
+        for _, spr in ipairs(panel.editor_button.sprites) do
+          local xspr = x + (spr.xpos - spr.ypos) * 32
+          local yspr = y + (spr.xpos + spr.ypos) * 16 - 32
+          panel.window.panel_sprites:draw(canvas, spr.sprite % 256, xspr, yspr, math.floor(spr.sprite / 256))
+        end
       end
-      dir = dir == "north" and "west" or "north"
+
+      self.block_buttons[#self.block_buttons + 1] = {button=bbutton, panel=bpanel}
+
+    else -- Reposition & resize existing sprite button
+      local bbutton = pb.button
+      bbutton:setPosition(xpos, ypos)
+      bbutton:setSize(width, height)
+      self:updateToggleButton(bbutton, "raised")
+
+      local bpanel = pb.panel
+      bpanel.editor_button = button
+      bpanel:setPosition(xpos+1, ypos+1)
+      bpanel:setSize(width-2, height-2)
+      bpanel:setVisible(true)
     end
-    for i = 128, 156 do
-    block_info[i] = {"object"}
-    end
-    for i = 120, 121 do  -- removes the complete windows as they disappear in the game
-    block_info[i] = {"object"}
-    end
-    if i ~= 144 and i ~= 145 and i ~= 156 then
-      block_info[i] = {"wall", dir, category, pair = pair}
-    end
-  end
-  for i = 176, 191 do
-    block_info[i] = {"floor", "decorated", "Hegderow", base = 2}
-  end
-  for i = 192, 196 do
-    block_info[i] = {"floor", "decorated", "Foliage", base = 2}
-  end
-  for i = 197, 204 do
-    block_info[i] = {"floor", "decorated", "Foliage", base = 2}
-  end
-  for i = 205, 208 do
-    block_info[i] = {"floor", "simple", "Outside"}
-  end
-  block_info[208].base = 3
-  -- adds street lights, could do with mirrors of these to have lamps facing different directions
-  for i = 209, 210 do
-  local pair
-  local category = "External"
-  local dir = i % 2 == 0 and "north" or "west"
-  if i ~= 209 then
-    pair = i - 1
-  end
-  block_info[i] = {"wall", dir, category, pair = pair}
+
+    number = number + 1
   end
 
-  --XXX: MapEditorSetBlocks(self.ui.app.map.blocks, block_info) -- pass data to UI
-  self.block_info = block_info
+  -- Make remaining buttons and panels invisible.
+  while true do
+    local pb = self.block_buttons[number]
+    if pb == nil then break end
+
+    self:updateToggleButton(pb.button, "invisible")
+    pb.panel.visible = false
+    number = number + 1
+  end
 end
+-- }}}
 
 --! Get the tile area covered by two points.
 --!param x1 (jnt) Horizontal coordinate of the first point.
@@ -721,10 +755,29 @@ function UIMapEditor:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
   end
 end
 
+--! Draw the display (map editor window, and main world display)
+--!param canvas (draw object) Canvas to draw on.
 function UIMapEditor:draw(canvas, ...)
   local ui = self.ui
-  local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
-  self.cell_outline:draw(canvas, 2, x - 32, y)
+  local map = self.ui.app.map
+
+  -- Draw the red grid for the selected tile.
+  local coords = self:getDrawPoints()
+  if #coords ~= 0 then
+    -- Get size of the cursor.
+    local xsize, ysize
+    if self.cursor.state == "delete" or self.cursor.state == "parcel" or
+        self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+      xsize, ysize = 1, 1
+    else
+      xsize, ysize = self.cursor.sprite.xsize, self.cursor.sprite.ysize
+    end
+    -- Draw cursors.
+    for _, coord in ipairs(coords) do
+      local xpos, ypos = coord.xpos, coord.ypos
+      self:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
+    end
+  end
 
   UIResizable.draw(self, canvas, ...)
 end
@@ -750,33 +803,25 @@ function UIMapEditor:updateToggleButton(button, action)
   end
 end
 
-function UIMapEditor:updateBlocks()
-  for i = 1, num_visible_blocks do
-    local block_num = self.block_scroll.value + i - 1
-    if block_num < num_blocks then
-      self.block_buttons[i]:enable(true)
-      self.block_buttons[i].visable = true
-      self.block_panels[i].visible = true
-      self.block_panels[i].sprite_index = block_num
-      self.block_buttons[i]:setToggleState(self.block_brush_preview == block_num)
-    else
-      self.block_buttons[i]:enable(false)
-      self.block_buttons[i].visable = false
-      self.block_panels[i].visible = false
-    end
-  end
-end
-
+--! User clicked at a block (a button with a sprite).
+--!@param num Index block number.
 function UIMapEditor:blockClicked(num)
-  local block_clicked = self.block_scroll.value + num - 1
-  if self.block_buttons[num].toggled then
-    -- TODO: What are w1 and w2?
-    self:setBlockBrush(block_clicked, 0, 0)
-  else
-    self:setBlockBrush(0, 0, 0)
+  -- Reset toggle of other block buttons.
+  for bnum = 1, #self.block_buttons do
+    if bnum ~= num then self.block_buttons[bnum].button:setToggleState(false) end
   end
 
-  self:updateBlocks()
+  if self.block_buttons[num].button.toggled then
+    local sprite = self.selected_block[num]
+    self.cursor.state = "grid"
+    self.cursor.sprite = {xsize = sprite.xsize,
+                          ysize = sprite.ysize,
+                          sprites = sprite.sprites,
+                          type = sprite.type}
+  else
+    self.cursor.state = "disabled"
+    self.cursor.sprite = nil
+  end
 end
 
 --! Convert two values on the same axis into a base and a length relative to the base.
@@ -848,106 +893,111 @@ end
 --!param dx (int) Horizontal shift in position of the mouse at the screen.
 --!param dy (int) Vertical   shift in position of the mouse at the screen.
 function UIMapEditor:onMouseMove(x, y, dx, dy)
-  local repaint = Window.onMouseMove(self, x, y, dx, dy)
-
-  local ui = self.ui
-  local wxr, wyr = ui:ScreenToWorld(self.x + x, self.y + y)
-  local wx = math_floor(wxr)
-  local wy = math_floor(wyr)
-  local map = self.ui.app.map
+  local repaint = UIResizable.onMouseMove(self, x, y, dx, dy)
 
   -- Update the stored state of cursor position, and trigger a repaint as the
   -- cell outline sprite should track the cursor position.
-  if wx ~= self.mouse_cell_x or wy ~= self.mouse_cell_y then
-    repaint = true
-    self.mouse_cell_x = wx
-    self.mouse_cell_y = wy
-    -- Right button down: sample the block under the cursor (unless left is
-    -- held, as that indicates a paint in progress).
-    if self.buttons_down.mouse_right and not self.buttons_down.mouse_left then
-      self:sampleBlock(x, y)
+  local wx, wy = self:mouseToWorld(x, y)
+  if wx ~= self.cursor.xpos or wy ~= self.cursor.ypos then
+
+    if self.cursor.state == "disabled" then
+      self.cursor.xpos = wx -- Nothing is displayed, just keep track of the position.
+      self.cursor.ypos = wy
+      return repaint
+
+    elseif self.cursor.state == "grid" or self.cursor.state == "delete" or self.cursor.state == "parcel" then
+      self.cursor.xpos = wx -- Allow arbitrary movement.
+      self.cursor.ypos = wy
+      return true
+
+    elseif self.cursor.state == "right" then
+      self.cursor.xpos = wx -- Allow arbitrary movement.
+      self.cursor.ypos = wy
+      -- XXX Select the new floor tile as the current selection?
+      return true
+
+    else -- Dragging in some mode.
+        self.cursor.is_drag = true -- Crossing a tile boundary implies 'real' dragging.
+
+        -- Update wx and wy according to drag capabilities.
+        local cap = self:getCursorDragCapabilities()
+        if cap == "north-south" then wx = self.cursor.leftx
+        elseif cap == "east-west" then wy = self.cursor.lefty
+        elseif cap == "none" then wx, wy = self.cursor.leftx, self.cursor.lefty -- Block all movement.
+        end
+
+        repaint = repaint or self.cursor.xpos ~= wx or self.cursor.ypos ~= wy
+        self.cursor.xpos = wx
+        self.cursor.ypos = wy
+        return repaint
     end
   end
-
-  -- Left button down: Expand / contract the rectangle which will be painted to
-  -- include the original mouse down cell and the current cell, or clear the
-  -- rectangle if the cursor is returned to where the mouse down position.
-  if self.buttons_down.mouse_left and self.paint_rect and 1 <= wx and 1 <= wy
-  and wx <= map.width and wy <= map.height then
-    local p1x = math_floor(self.paint_start_wx)
-    local p1y = math_floor(self.paint_start_wy)
-    local p2x = wx
-    local p2y = wy
-    local x, y, w, h
-    if p1x < p2x then
-      x = p1x
-      w = p2x - p1x + 1
-    else
-      x = p2x
-      w = p1x - p2x + 1
-    end
-    if p1y < p2y then
-      y = p1y
-      h = p2y - p1y + 1
-    else
-      y = p2y
-      h = p1y - p2y + 1
-    end
-    if w*h > 1 then
-      -- The paint rectangle extends beyond the original mouse down cell, so
-      -- make the area in the middle of said cell into a "null area" so that
-      -- the paint operation can be cancelled by returning the cursor to this
-      -- area and ending the drag.
-      self.has_paint_null_area = true
-    elseif w == 1 and h == 1 and self.has_paint_null_area then
-      if ((wxr % 1) - 0.5)^2 + ((wyr % 1) - 0.5)^2 < 0.25^2 then
-        w = 0
-        h = 0
-      end
-    end
-    local rect = self.paint_rect
-    if x ~= rect.x or y ~= rect.y or w ~= rect.w or h ~= rect.h then
-      self:setPaintRect(x, y, w, h)
-      repaint = true
-    end
-  end
-
-  return repaint
 end
 
-function UIMapEditor:onMouseDown(button, x, y)
-  local repaint = false
-  local map = self.ui.app.map.th
-  if button == "right" then
-    if self.buttons_down.mouse_left then
-      -- Right click while left is down: set paint step size
-      local wx, wy = self.ui:ScreenToWorld(x, y)
-      local xstep = math.max(1, math.abs(math.floor(wx) - math.floor(self.paint_start_wx)))
-      local ystep = math.max(1, math.abs(math.floor(wy) - math.floor(self.paint_start_wy)))
-      local rect = self.paint_rect
-      self:setPaintRect(rect.x, rect.y, rect.w, rect.h, xstep, ystep)
-      repaint = true
-    else
-      -- Normal right click: sample the block under the cursor
-      self:sampleBlock(x, y)
-    end
-  elseif button == "left" then
-    self.current_command = CompoundCommand()
-    self.current_command_cell = SetMapCellCommand(map)
-    self.current_command_cell_flags = SetMapCellFlagsCommand(map)
-    self:startPaint(x, y)
-    repaint = true
-  elseif button == "left_double" then
-    self.current_command = CompoundCommand()
-    self.current_command_cell = SetMapCellCommand(map)
-    self.current_command_cell_flags = SetMapCellFlagsCommand(map)
-    self:doLargePaint(x, y)
-    -- Set a dummy paint rect for the mouse up event.
-    self:setPaintRect(0, 0, 0, 0)
-    repaint = true
+--! Mouse button got pressed.
+--!param button (string) Mouse button being pressed.
+--!param xpos (int) Horizontal position of the mouse at the time of the mouse button press.
+--!param ypos (int) Vertical   position of the mouse at the time of the mouse button press.
+--!return (bool) Whether to repaint the display.
+function UIMapEditor:onMouseDown(button, xpos, ypos)
+  if UIResizable.onMouseDown(self, button, xpos, ypos) then -- Button in this window.
+    return true
   end
 
-  return Window.onMouseDown(self, button, x, y) or repaint
+  if self:hitTest(xpos, ypos) then -- Clicked elsewhere in the window.
+    return true
+  end
+
+  local repaint = false
+  if self.cursor.state == "disabled" then
+    -- Nothing to do, first needs a selected sprite.
+
+  elseif self.cursor.state == "grid" then
+    -- LMB down switches to 'left'
+    if button == "left" then
+      self.cursor.state = "left"
+      self.cursor.leftx = self.cursor.xpos
+      self.cursor.lefty = self.cursor.ypos
+    -- RMB down switches to 'right'
+    elseif button == "right" then
+      self.cursor.state = "right"
+      -- Cannot start a right-drag, no need to save current tile position.
+    end
+    -- Since 'grid' already shows the red rectangles, nothing changes visually.
+
+  elseif self.cursor.state == "delete" then
+    if button == "left" then
+      self.cursor.state = "delete-left"
+      self.cursor.leftx = self.cursor.xpos
+      self.cursor.lefty = self.cursor.ypos
+    end
+
+  elseif self.cursor.state == "parcel" then
+    if button == "left" then
+      self.cursor.state = "parcel-left"
+      self.cursor.leftx = self.cursor.xpos
+      self.cursor.lefty = self.cursor.ypos
+    end
+
+  elseif self.cursor.state == "left" then
+    -- If RMB is down, switch to 'both'.
+    if button == "right" then
+      self.cursor.state = "both"
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
+      repaint = true
+    end
+
+  elseif self.cursor.state == "right" then
+    -- Ignore all down buttons, until RMB is released.
+
+  elseif self.cursor.state == "both" then
+    -- How many buttons can you use at the same time? Ignore this.
+  end
+
+  -- "delete-left" and "parcel-left" do not handle buttons.
+
+  return repaint
 end
 
 --! Draw the selected sprite at the given coordinates.
@@ -1007,394 +1057,78 @@ end
 --!param ypos (int) Vertical   position of the mouse at the time of the mouse button release.
 --!return (bool) Whether to repaint the display.
 function UIMapEditor:onMouseUp(button, x, y)
+  if UIResizable.onMouseUp(self, button, x, y) then
+    return true
+  end
+
+  if self:hitTest(x, y) then
+    return true
+  end
+
+  --! Get the cursor mode to jump to after ending the drag mode.
+  --!return (string) New cursor mode.
+  local function newState()
+    if self.cursor.sprite then
+      return "grid"
+    else
+      return "disabled"
+    end
+  end
+
+
   local repaint = false
-  if button == "left" and self.paint_rect then
-    self:finishPaint(true)
-    if #self.current_command_cell.paint_list ~=0 then
-      self.current_command:addCommand(self.current_command_cell)
+  if self.cursor.state == "disabled" then
+    -- Don't care about buttons.
+
+  elseif self.cursor.state == "grid" or self.cursor.state == "delete" or self.cursor.state == "parcel" then
+    -- Already assumed no buttons pushed, ignore event.
+
+  elseif self.cursor.state == "left" then
+    if button == "left" then
+      -- Simple drag (left button only).
+      self:drawCursorSpriteAtArea(self:getDrawPoints())
+
+      self.cursor.state = newState()
+      self.cursor.is_drag = false
+      repaint = true
     end
-    if #self.current_command_cell_flags.paint_list ~= 0 then
-      self.current_command:addCommand(self.current_command_cell_flags)
+
+  elseif self.cursor.state == "delete-left" then
+    if button == "left" then
+      self:deleteWallsAtArea(self:getDrawPoints())
+
+      self.cursor.state = "delete"
+      self.cursor.is_drag = false
+      repaint = true
     end
-    self.command_stack:add(self.current_command)
-    repaint = true
-  end
 
-  return Window.onMouseUp(self, button, x, y) or repaint
-end
+  elseif self.cursor.state == "parcel-left" then
+    if button == "left" then
+      self:setParcelAtArea(self:getDrawPoints(), self.cursor.parcel)
 
-function UIMapEditor:startPaint(x, y)
-  -- Save the Lua world coordinates of where the painting started.
-  self.paint_start_wx, self.paint_start_wy = self.ui:ScreenToWorld(x, y)
-  -- Initialise an empty paint rectangle.
-  self.paint_rect = {
-    x = math_floor(self.paint_start_wx),
-    y = math_floor(self.paint_start_wy),
-    w = 0, h = 0,
-  }
-  self.has_paint_null_area = false
-  -- Check that starting point isn't out of bounds
-  local map = self.ui.app.map
-  if self.paint_rect.x < 1 or self.paint_rect.y < 1
-  or self.paint_rect.x > map.width or self.paint_rect.y > map.height then
-    self.paint_rect = nil
-    return
-  end
-  -- Reset the paint step.
-  self.paint_step_x = 1
-  self.paint_step_y = 1
-  -- Extend the paint rectangle to the single cell.
-  self:setPaintRect(self.paint_rect.x, self.paint_rect.y, 1, 1)
-end
-
--- Injective function from NxN to N which allows for a pair of positive
--- integers to be combined into a single value suitable for use as a key in a
--- table.
-local function combine_ints(x, y)
-  local sum = x + y
-  return y + sum * (sum + 1) / 2
-end
-
-function UIMapEditor:doLargePaint(x, y)
-  -- Perform a "large" paint. At the moment, this is triggered by a double
-  -- left click, and results in a floor tile "flood fill" operation.
-
-  -- Get the Lua tile coordinate of the tile to start filling from.
-  x, y = self.ui:ScreenToWorld(x, y)
-  x = math_floor(x)
-  y = math_floor(y)
-  if x <= 0 or y <= 0 then
-    return
-  end
-
-  -- The click which preceeded the double click should have set "old_floors"
-  -- with the contents of the tile prior to the single click.
-  if not self.old_floors then
-    return
-  end
-  -- brush_f is the tile which is to be painted
-  local brush_f = self.block_brush_f
-  if not brush_f or brush_f == 0 then
-    return
-  end
-  local map = self.ui.app.map.th
-  local key = combine_ints(x, y)
-  -- match_f is the tile which is to be replaced by brush_f
-  local match_f = self.old_floors[key]
-  if not match_f then
-    return
-  end
-  match_f = match_f % 256 -- discard shadow flags, etc.
-  -- If the operation wouldn't change anything, don't do it.
-  if match_f == brush_f then
-    return
-  end
-
-  -- Reset the starting tile as to simplify the upcoming loop.
-  self.current_command_cell:addTile(x, y, 1, match_f)
-  map:setCell(x, y, 1, match_f)
-
-
-  local to_visit = {[key] = {x, y}}
-  local visited = {[key] = true}
-  -- Mark the tiles beyond the edge of the map as visited, as to prevent the
-  -- pathfinding from exceeding the bounds of the map.
-  local size = map:size()
-  for i = 1, size do
-    visited[combine_ints(0, i)] = true
-    visited[combine_ints(i, 0)] = true
-    visited[combine_ints(size + 1, i)] = true
-    visited[combine_ints(i, size + 1)] = true
-  end
-  -- When a tile is added to "visited" to the first time, also add it to
-  -- "to_visit". This ensures each tile is visited no more than once.
-  setmetatable(visited, {__newindex = function(t, k, v)
-    rawset(t, k, v)
-    to_visit[k] = v
-  end})
-  -- Iterate over the tiles to visit, and if they are suitable for replacement,
-  -- do the replacement and add their neighbours to the list of things to do.
-  repeat
-    x = to_visit[key][1]
-    y = to_visit[key][2]
-    to_visit[key] = nil
-    local f = map:getCell(x, y)
-    if f % 256 == match_f then
-      self.current_command_cell:addTile(x, y, 1, f - match_f + brush_f)
-      map:setCell(x, y, 1, f - match_f + brush_f)
-      visited[combine_ints(x, y + 1)] = {x, y + 1}
-      visited[combine_ints(x, y - 1)] = {x, y - 1}
-      visited[combine_ints(x + 1, y)] = {x + 1, y}
-      visited[combine_ints(x - 1, y)] = {x - 1, y}
+      self.cursor.state = "parcel"
+      self.cursor.is_drag = false
+      repaint = true
     end
-    to_visit[key] = nil
-    key = next(to_visit)
-  until not key
-end
 
--- Remove the paint preview from the UI layer, and optionally apply the paint
--- to the actual layers.
-function UIMapEditor:finishPaint(apply)
-  -- Grab local copies of all the fields which we need
-  local map = self.ui.app.map.th
-  local brush_f = self.block_brush_f
-  local brush_parcel = self.block_brush_parcel
-  if brush_parcel then
-    brush_parcel = {parcelId = brush_parcel}
-  end
-  local brush_w1 = self.block_brush_w1
-  local brush_w1p = (self.block_info[brush_w1] or '').pair
-  local brush_w2 = self.block_brush_w2
-  local brush_w2p = (self.block_info[brush_w2] or '').pair
-  local x_first, x_last = self.paint_rect.x, self.paint_rect.x + self.paint_rect.w - 1
-  local y_first, y_last = self.paint_rect.y, self.paint_rect.y + self.paint_rect.h - 1
-  local step_base_x = math.floor(self.paint_start_wx)
-  local step_base_y = math.floor(self.paint_start_wy)
-  local xstep = self.paint_step_x
-  local ystep = self.paint_step_y
-
-  -- Determine what kind of thing is being painted.
-  local is_wall = self.block_info[self.block_brush_preview]
-  is_wall = is_wall and is_wall[1] == "wall" and is_wall[2]
-  local is_simple_floor = self.block_info[self.block_brush_preview]
-  is_simple_floor = is_simple_floor and is_simple_floor[1] == "floor" and is_simple_floor[2] == "simple"
-
-  -- To allow the double click handler to know what was present before the
-  -- single click which preceeds it, the prior contents of the floor layer is
-  -- saved.
-  local old_floors = {}
-  self.old_floors = old_floors
-  for tx = x_first, x_last do
-    for ty = y_first, y_last do
-      -- Grab and save the contents of the tile
-      local f, w1, w2 = map:getCell(tx, ty)
-      old_floors[combine_ints(tx, ty)] = f
-      local flags
-      -- Change the contents according to what is being painted
-      repeat
-        -- If not painting, do not change anything (apart from UI layer).
-        if not apply then
-          break
-        end
-        -- If the paint is happening at an interval, do not change things
-        -- apart from at the occurances of the interval.
-        if ((tx - step_base_x) % xstep) ~= 0 then
-          break
-        end
-        if ((ty - step_base_y) % ystep) ~= 0 then
-          break
-        end
-        flags = brush_parcel
-        -- If painting walls, only apply to the two edges which get painted.
-        if is_wall == "north" and ty ~= y_first and ty ~= y_last then
-          break
-        end
-        if is_wall == "west"  and tx ~= x_first and tx ~= x_last then
-          break
-        end
-        -- If painting a floor component, apply it.
-        if not brush_parcel and brush_f and brush_f ~= 0 then
-          f = f - (f % 256) + brush_f
-          -- If painting just a floor component, then remove any decoration
-          -- and/or walls which get painted over.
-          if is_simple_floor then
-            local w1b = self.block_info[w1 % 256]
-            if not w1b or w1b[1] ~= "wall" or ty ~= y_first then
-              w1 = w1 - (w1 % 256)
-            end
-            local w2b = self.block_info[w2 % 256]
-            if not w2b or w2b[1] ~= "wall" or tx ~= x_first then
-              w2 = w2 - (w2 % 256)
-            end
-          end
-        end
-        -- If painting wall components, apply them.
-        if brush_w1 and brush_w1 ~= 0 then
-          w1 = w1 - (w1 % 256) + (ty ~= step_base_y and brush_w1p or brush_w1)
-        end
-        if brush_w2 and brush_w2 ~= 0 then
-          w2 = w2 - (w2 % 256) + (tx ~= step_base_x and brush_w2p or brush_w2)
-        end
-      until true
-      -- Remove the UI layer and perform the adjustment of the other layers.
-      self.current_command_cell:addTile(tx,ty,f,w1,w2,0)
-      map:setCell(tx, ty, f, w1, w2, 0)
-      if flags then
-        self.current_command_cell_flags:addTile(tx, ty, flags)
-        map:setCellFlags(tx, ty, flags)
-      end
+  elseif self.cursor.state == "right" then
+    if button == "right" then
+      self.cursor.state = newState()
+      self.cursor.is_drag = false
+      repaint = true
     end
-  end
-  map:updateShadows()
 
+  elseif self.cursor.state == "both" then
+    if button == "left" then -- Only care about left button.
+      -- left+right drag ends.
+      self:drawCursorSpriteAtArea(self:getDrawPoints())
+
+      self.cursor.state = newState()
+      self.cursor.is_drag = false
+      repaint = true
+   end
+  end
+
+  return repaint
 end
 
--- Move/resize the rectangle to be painted, and update the UI preview layer
--- to reflect the new rectangle.
-function UIMapEditor:setPaintRect(x, y, w, h, xstep, ystep)
-  local map = self.ui.app.map.th
-  local rect = self.paint_rect
-  local old_xstep = self.paint_step_x or 1
-  local old_ystep = self.paint_step_y or 1
-  local step_base_x = math.floor(self.paint_start_wx)
-  local step_base_y = math.floor(self.paint_start_wy)
-  xstep = xstep or old_xstep
-  ystep = ystep or old_ystep
-
-  -- Create a rectangle which contains both the old and new rectangles, as
-  -- this contains all tiles which may need to change.
-  local left, right, top, bottom = x, x + w - 1, y, y + h - 1
-  if rect then
-    if rect.x < left then
-      left = rect.x
-    end
-    if rect.x + rect.w - 1 > right then
-      right = rect.x + rect.w - 1
-    end
-    if rect.y < top then
-      top = rect.y
-    end
-    if rect.y + rect.h - 1 > bottom then
-      bottom = rect.y + rect.h - 1
-    end
-  end
-
-  -- Determine what kind of thing is being painted
-  local is_wall = self.block_info[self.block_brush_preview]
-  local block_brush_preview_pair = is_wall and is_wall.pair
-  is_wall = is_wall and is_wall[1] == "wall" and is_wall[2]
-
-  for tx = left, right do
-    for ty = top, bottom do
-      local now_in, was_in
-      -- Non-walls: paint at every tile within the rectangle
-      if not is_wall then
-        now_in = (x <= tx and tx < x + w and y <= ty and ty < y + h)
-        was_in = (rect.x <= tx and tx < rect.x + rect.w and rect.y <= ty and ty < rect.y + rect.h)
-      -- Walls: paint at two edges of the rectangle
-      elseif is_wall == "north" then
-        now_in = (x <= tx and tx < x + w and (y == ty or ty == y + h - 1))
-        was_in = (rect.x <= tx and tx < rect.x + rect.w and (rect.y == ty or ty == rect.y + rect.h - 1))
-      elseif is_wall == "west" then
-        now_in = ((x == tx or tx == x + w - 1) and y <= ty and ty < y + h)
-        was_in = ((rect.x == tx or tx == rect.x + rect.w - 1) and rect.y <= ty and ty < rect.y + rect.h)
-      end
-      -- Restrict the paint to tiles which fall on the appropriate intervals
-      now_in = now_in and ((tx - step_base_x) % xstep) == 0
-      now_in = now_in and ((ty - step_base_y) % ystep) == 0
-      was_in = was_in and ((tx - step_base_x) % old_xstep) == 0
-      was_in = was_in and ((ty - step_base_y) % old_ystep) == 0
-      -- Update the tile, but only if it needs changing
-      if now_in ~= was_in then
-        local ui_layer = 0
-        if now_in then
-          local brush = self.block_brush_preview
-          if is_wall == "north" and ty ~= step_base_y then
-            brush = block_brush_preview_pair or brush
-          end
-          if is_wall == "west" and tx ~= step_base_x then
-            brush = block_brush_preview_pair or brush
-          end
-          ui_layer = brush + 256 * DrawFlags.Alpha50
-        end
-        self.current_command_cell:addTile(tx, ty, 4, ui_layer)
-        map:setCell(tx, ty, 4, ui_layer)
-      end
-    end
-  end
-
-  -- Save the details of the new rectangle
-  if not rect then
-    rect = {}
-    self.paint_rect = rect
-  end
-  rect.x = x
-  rect.y = y
-  rect.w = w
-  rect.h = h
-  self.paint_step_x = xstep
-  self.paint_step_y = ystep
-end
-
-function UIMapEditor:sampleBlock(x, y)
-  local ui = self.ui
-  local wx, wy = self.ui:ScreenToWorld(x, y)
-  wx = math_floor(wx)
-  wy = math_floor(wy)
-  local map = self.ui.app.map
-  if wx < 1 or wy < 1 or wx > map.width or wy > map.height then
-    return
-  end
-  local floor, wall1, wall2 = map.th:getCell(wx, wy)
-  local set = {}
-  set[floor % 256] = true
-  set[wall1 % 256] = true
-  set[wall2 % 256] = true
-  if wx < map.width then
-    floor, wall1, wall2 = map.th:getCell(wx + 1, wy)
-    set[wall2 % 256] = true
-  end
-  if wy < map.height then
-    floor, wall1, wall2 = map.th:getCell(wx, wy + 1)
-    set[wall1 % 256] = true
-  end
-  set[0] = nil
-  local floor_list = {}
-  local wall_list = {}
-  for i in pairs(set) do
-    if self.block_info[i] then
-      if self.block_info[i][1] == "floor" then
-        floor_list[#floor_list + 1] = i
-      elseif self.block_info[i][1] == "wall" then
-        wall_list[#wall_list + 1] = i
-      end
-    end
-  end
-
-  if wx == self.recent_sample_x and wy == self.recent_sample_y then
-    self.sample_i = self.sample_i + 1
-  else
-    self.sample_i = 1
-    self.recent_sample_x = wx
-    self.recent_sample_y = wy
-  end
-  -- XXX: MapEditorSetBlockBrush(
-  --  floor_list[1 + (self.sample_i - 1) % #floor_list] or 0,
-  --  wall_list [1 + (self.sample_i - 1) % #wall_list ] or 0
-  -- )
-end
-
--- Called by the UI to set what should be painted.
-function UIMapEditor:setBlockBrush(f, w1, w2)
-  local preview = f
-  if w2 ~= 0 then
-    preview = w2
-  elseif w1 ~= 0 then
-    preview = w1
-  end
-  self.block_brush_preview = preview
-  self.block_brush_parcel = nil
-  self.block_brush_f = f
-  self.block_brush_w1 = w1
-  self.block_brush_w2 = w2
-end
-
-function UIMapEditor:setBlockBrushParcel(parcel)
-  self.block_brush_preview = 24
-  self.block_brush_parcel = parcel
-  self.block_brush_f = self.block_brush_preview
-  self.block_brush_w1 = 0
-  self.block_brush_w2 = 0
-end
-
-function UIMapEditor:undo()
-  local last = self.command_stack:undo()
-  self.ui.app.map.th:updateShadows()
-  return last
-end
-
-function UIMapEditor:redo()
-  local last = self.command_stack:redo()
-  self.ui.app.map.th:updateShadows()
-  return last
-end

@@ -615,8 +615,20 @@ map_editor_window = {
     north_wall = "North wall",
     west_wall = "West wall",
     helipad = "Helipad",
+    delete_wall = "Delete walls",
+    parcel_0 = "Parcel 0",
+    parcel_1 = "Parcel 1",
+    parcel_2 = "Parcel 2",
+    parcel_3 = "Parcel 3",
+    parcel_4 = "Parcel 4",
+    parcel_5 = "Parcel 5",
+    parcel_6 = "Parcel 6",
+    parcel_7 = "Parcel 7",
+    parcel_8 = "Parcel 8",
+    parcel_9 = "Parcel 9",
   }
 }
+
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
