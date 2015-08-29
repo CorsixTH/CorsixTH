@@ -123,6 +123,9 @@ local function assign_menu_levels(menu, level)
   end
 end
 
+--! Add a menu to the menu bar.
+--!param title Title of the menu (at the bar).
+--!param menu Menu to add.
 function UIMenuBar:addMenu(title, menu)
   assign_menu_levels(menu, 1)
   local menu = {

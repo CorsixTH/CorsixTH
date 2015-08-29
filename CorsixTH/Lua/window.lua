@@ -606,6 +606,7 @@ function Button:makeRepeat()
   return self
 end
 
+--! Flip the toggle state of the button (on -> off, or off -> on).
 function Button:toggle()
   self.sprite_index_normal, self.sprite_index_active =
     self.sprite_index_active, self.sprite_index_normal
@@ -617,6 +618,8 @@ function Button:toggle()
   return self.toggled
 end
 
+--! Set the toggle state of the button to the provided state.
+--!param state (boolean) Desired state of the toggle button.
 function Button:setToggleState(state)
   if self.toggled ~= state then
     self:toggle()

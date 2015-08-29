@@ -797,6 +797,9 @@ function World:createMapObjects(objects)
   until true end
 end
 
+--! Change owner of a plot.
+--!param parcel (int) Plot to change.
+--!param owner (int) New owner (may be 0).
 function World:setPlotOwner(parcel, owner)
   self.map.th:setPlotOwner(parcel, owner)
   if owner ~= 0 and self.delayed_map_objects then
