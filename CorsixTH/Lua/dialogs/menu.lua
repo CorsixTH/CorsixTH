@@ -51,7 +51,11 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
 
-  self:makeMenu(app, map_editor)
+  if map_editor then
+    self:makeMapeditorMenu(app)
+  else
+    self:makeGameMenu(app)
+  end
 end
 
 function UIMenuBar:onTick()
@@ -521,16 +525,19 @@ function UIMenu:appendMenu(text, menu)
   }
 end
 
-function UIMenuBar:makeMenu(app, map_editor)
-  if map_editor then
-    local menu = UIMenu()
-    menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
-      :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
-      :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
-    self:addMenu(_S.menu.file, menu)
-    return
-  end
+--! Make a menu for the map editor.
+--!param app Application.
+function UIMenuBar:makeMapeditorMenu(app)
+  local menu = UIMenu()
+  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
+    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
+    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
+  self:addMenu(_S.menu.file, menu)
+end
 
+--! Make a menu for the game.
+--!param app Application.
+function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
