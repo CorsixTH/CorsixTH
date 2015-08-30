@@ -36,7 +36,7 @@ misc = {
   not_yet_implemented = "(尚未实现)",
 }
 debug_patient_window = {
-  caption = "Debug Patient",
+  caption = "病人除错",
 }
 totd_window = {
   tips = {
@@ -207,15 +207,23 @@ menu_debug = {
   jump_to_level = "  跳关  ",
 }
 menu_options = {
-  edge_scrolling = "    开启鼠标滚动",
+  edge_scrolling = "    边缘滚动",
   lock_windows = "    锁定窗口",
+  sound = "  (ALT+S) 音效   ",
+  announcements = "  (ALT+A) 公告   ",
+  music = "  (ALT+M) 音乐   ",
+  jukebox = "  (J) 音乐盒  ",
+  adviser_disabled = "  (SHIFT+A) 建议  ",
+  warmth_colors = "  暖气区域显示  ",
+  wage_increase = "  涨工资要求",
+  twentyfour_hour_clock = "  24小时时钟  "
 }
 menu_options_game_speed = {
   pause = "    暂停",
 }
 lua_console = {
-  execute_code = "Execute",
-  close = "Close",
+  execute_code = "运行",
+  close = "关闭",
 }
 install = {
   title = "-------------------------------- CorsixTH  游戏设置 -------------------------------",
@@ -234,10 +242,35 @@ adviser = {
     roujin_on_cheat = "Roujin's challenge已经开启!祝你好运...",
     crazy_on_cheat = "不会吧!所有的医生都疯了!",
     bloaty_off_cheat = "大头病作弊被关闭.",
-    bloaty_cheat = "大头兵作弊开启!",
+    bloaty_cheat = "大头病作弊开启!",
     crazy_off_cheat = "还好... 所有的一生都恢复理智了.",
     roujin_off_cheat = "Roujin's challenge关闭.",
     hairyitis_off_cheat = "Hairyitis 作弊模式关闭.",
+  },
+  warnings = {
+    no_desk = "你总得有个前台吧!",
+    no_desk_1 = "你得有个前台,这样才会有病人来!",
+    no_desk_2 = "干的不错, 基本上也是个世界纪录了吧:快一年了,一个病人都没有! 如果你想继续当这个经理的话,你需要去雇一个前台,然后给她一张桌子工作!",
+    no_desk_3 = "你真是个天才,一年了连个前台都没有! 你怎么可能有任何的病人来? 赶紧给我搞定,别在那里不务正业了!",
+    no_desk_4 = "前台需要一个桌子来接待来访的病人",
+    no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
+    no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
+    no_desk_7 = "You've built the reception desk, so how about hiring a receptionist?  You won't see any patients until you get this sorted out you know!",
+    falling_1 = "嘿!别开玩笑了, 看看你都是怎么点鼠标的, 你可能会伤到人!",
+    falling_2 = "不要再胡搞了, 跟有病似的?",
+    falling_3 = "啊~有人受伤了,赶紧叫医生!",
+    falling_4 = "这里是医院,不是主题公园!",
+    falling_5 = "这里不适合逗人玩,他们是病人好吗?",
+    falling_6 = "这里不是保龄球馆, 应该对待病人如春天般温暖!",
+    cannot_afford = "你已经没有足够的钱来雇这个人!",-- I can't see anything like this in the original strings
+    cannot_afford_2 = "你没有足够的存款来做这件事!",
+    research_screen_open_1 = "你需要建设一个研究科室才能访问研究页面.",
+    research_screen_open_2 = "这一关不能开展研究.",
+    researcher_needs_desk_1 = "研究员需要一张桌子展开工作.",
+    researcher_needs_desk_2 = "你的研究员对你允许他休息片刻表示感谢,但如果你想让每个人都工作,你需要给每个人一张桌子.",
+    researcher_needs_desk_3 = "每个研究院需要自己的桌子.",
+    nurse_needs_desk_1 = "每个护士都需要自己的桌子.",
+    nurse_needs_desk_2 = "你的护士对你允许他休息片刻表示感谢,但如果你想让每个人都工作,你需要给每个人一张桌子.",
   },
   room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达.",
 }
@@ -309,7 +342,7 @@ fax = {
   },
 }
 menu_debug_overlay = {
-  heat = "  TEMPERATURE  ",
+  heat = "  温度  ",
   byte_0_1 = "  BYTE 0 & 1  ",
   byte_6 = "  BYTE 6  ",
   flags = "  FLAGS  ",
@@ -375,19 +408,8 @@ cheats_window.cheats.vip = "创建 VIP"
 main_menu.version = "版本: "
 main_menu.savegame_version = "存档版本: "
 progress_report.free_build = "自由模式"
-menu_options.adviser_disabled = "    显示助手"
+menu_options.adviser_disabled = "    显示建议"
 install.exit = "退出"
-adviser.warnings.falling_2 = "不胡搞你能死?"
-adviser.warnings.no_desk_2 = "干的不错, 基本上也是个世界纪录了吧:快一年了,一个病人都没有! 如果你想继续当这个经理的话,你需要去雇一个前台,然后给她一张桌子工作!"
-adviser.warnings.falling_5 = "这里不适合逗人玩,他们是病人好吗?"
-adviser.warnings.falling_4 = "这里是医院,不是主题公园!"
-adviser.warnings.falling_6 = "这里不是保龄球馆, 应该对待病人如春天般温暖!"
-adviser.warnings.falling_3 = "啊~有人受伤了,赶紧叫医生!"
-adviser.warnings.no_desk_3 = "你真是个天才,一年了连个前台都没有! 你怎么可能有任何的病人来? 赶紧给我搞定,别在那里不务正业了!"
-adviser.warnings.cannot_afford = "你已经没有足够的钱来雇这个人!"
-adviser.warnings.no_desk = "你总得有个前台吧!"
-adviser.warnings.no_desk_1 = "你得有个前台,这样才会有病人来!"
-adviser.warnings.falling_1 = "嘿!别开玩笑了, 看看你都是怎么点鼠标的, 你可能会伤到人!"
 information.very_old_save = "你上次存档之后,这个游戏有很多更新. 为了保证你能玩到最新最酷的游戏,请考虑重新来过"
 options_window.cancel = "取消"
 menu_list_window.save_date = "修改日期"
@@ -610,7 +632,7 @@ tooltip = {
     research = "研究",
     hire = "雇佣员工",
     status = "状态",
-    town_map = "城镇地图",
+    town_map = "城市地图",
     rooms = "建造房屋",
     bank_button = "左击进入银行经理画面，右击进入银行帐户",
   },
@@ -847,15 +869,16 @@ tooltip = {
   },
 }
 menu_charts = {
-  briefing = "    任务简报",
-  casebook = "    治疗手册",
-  graphs = "    图表",
-  policy = "    制度",
-  bank_manager = "    银行经理",
-  statement = "    银行账户",
-  staff_listing = "    员工列表",
-  research = "    研究",
-  status = "    状态",
+  briefing     = "   任务简报",
+  casebook     = " (F5) 治疗手册",
+  graphs       = " (F8) 图表",
+  policy       = " (F9) 制度",
+  bank_manager = " (F1) 银行经理",
+  statement    = " (F2) 银行账户",
+  town_map     = " (F4) 城市地图  ",
+  staff_listing= " (F3) 员工列表",
+  research     = " (F6) 研究",
+  status       = " (F7) 状态",
 }
 town_map = {
   number = "地区编号",
