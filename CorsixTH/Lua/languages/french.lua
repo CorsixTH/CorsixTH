@@ -527,48 +527,20 @@ date_format = {
 object.litter = "Déchet"
 tooltip.objects.litter = "Déchet : laissé sur le sol par un patient car il n'a pas trouvé de poubelle où le jeter."
 
--- Adviser
-adviser = {
-  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital",
+tooltip.fax.close = "Fermer cette fenêtre sans supprimer le message"
+tooltip.message.button = "clic gauche pour ouvrir le message"
+tooltip.message.button_dismiss = "clic gauche pour ouvrir le message, clic droit pour le rejeter"
+tooltip.casebook.cure_requirement.hire_staff = "Vous devez embaucher du personnel pour gérer ce traitement"
+tooltip.casebook.cure_type.unknown = "Vous ne savez pas encore comment traiter cette maladie"
+tooltip.research_policy.no_research = "Aucune recherche n'est actuellement effectuée dans cette catégorie"
+tooltip.research_policy.research_progress = "Progrès vers la prochaine découverte dans cette catégorie : %1%/%2%"
 
-  warnings = {
-    no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
-    no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
-    no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
-    no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
-    no_desk_4 = "Une réceptionniste aura besoin d'un bureau pour accueillir des patients",
-    no_desk_5 = "Il était temps, maintenant les patients devraient commencer à arriver bientôt !",
-    no_desk_6 = "Vous avez une réceptionniste, peut-être il est temps de construire un bureau où elle peut travailler ?",
-    no_desk_7 = "Maintenant, que vous avez une réception, que diriez-vous d'embaucher une réceptionniste également ? Vous n'aurez pas de patients avant de l'avoir fait !",
-    cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
-    cannot_afford_2 = "Vous n'avez pas assez d'argent à la banque pour effectuer l'achat !",
-    research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches.",
-    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours.",
-    researcher_needs_desk_1 = "Chaque chercheur a besoin d'un bureau pour travailler.",
-    researcher_needs_desk_2 = "Vos chercheurs sont heureux d'obtenir une pause bien méritée. Si vous voulez que plusieurs chercheurs puissent travailler en même temps.",
-    researcher_needs_desk_3 = "Un chercheur a toujours besoin d'un bureau.",
-    nurse_needs_desk_1 = "Chaque infirmière a besoin de son propre bureau.",
-    nurse_needs_desk_2 = "Votre infirmière est heureuse d'avoir une pause. Si vous comptez y faire travailler plusieurs personnes en même temps, vous devez leur construire un bureau à chacune.",
-  },
-  cheats = {
-    th_cheat = "Félicitations, vous avez débloqué les triches !",
-    roujin_on_cheat = "Défi de Roujin activé ! Bonne chance...",
-    roujin_off_cheat = "Défi de Roujin désactivé.",
-  },
+menu_file = {
+  load =    " (SHIFT+L) CHARGER   ",
+  save =    " (SHIFT+S) ENREGISTRER   ",
+  restart = " (SHIFT+R) RELANCER",
+  quit =    " (SHIFT+Q) QUITTER   ",
 }
-
--- Dynamic information
-dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
-dynamic_info.staff.actions.heading_for = "Va vers %s"
-dynamic_info.staff.actions.fired = "Renvoyé"
-dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis plus contagieux"
-
--- Progress report
-progress_report.free_build = "CONSTRUCTION LIBRE"
-
--- Misc
-misc.not_yet_implemented = "(pas encore implémenté)"
-misc.no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte."
 
 -- Options menu
 menu_options = {
@@ -580,6 +552,15 @@ menu_options = {
   twentyfour_hour_clock = " HORLOGE 24 HEURES ",
 }
 
+menu_options_game_speed = {
+  pause               = "  (P) PAUSE  ",
+  slowest             = "  (1) AU PLUS LENT  ",
+  slower              = "  (2) PLUS LENT  ",
+  normal              = "  (3) NORMAL  ",
+  max_speed           = "  (4) VITESSE MAXI  ",
+  and_then_some_more  = "  (5) ET ENCORE PLUS  ",
+}
+
 menu_options_warmth_colors = {
   choice_1 = "  ROUGE  ",
   choice_2 = "  BLEU VERT ROUGE  ",
@@ -589,15 +570,6 @@ menu_options_warmth_colors = {
 menu_options_wage_increase = {
   grant = " ACCORDER ",
   deny = " REFUSER ",
-}
-
-menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) AU PLUS LENT  ",
-  slower              = "  (2) PLUS LENT  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) VITESSE MAXI  ",
-  and_then_some_more  = "  (5) ET ENCORE PLUS  ",
 }
 
 -- Charts Menu ' Temporary; must see in-game for correct translation
@@ -647,6 +619,87 @@ menu_debug_overlay = {
   parcel                      = "  PARCELLE  ",
 }
 
+-- Adviser
+adviser = {
+  room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital",
+
+  warnings = {
+    no_desk = "Vous devriez construire un bureau de réception et engager une réceptionniste un de ces jours !",
+    no_desk_1 = "Si vous voulez que des patients viennent dans votre hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
+    no_desk_2 = "Bien joué, ça doit être un record : presque un an et pas de patient ! Si vous voulez continuer comme directeur de cet hôpital, vous devez embaucher une réceptionniste et lui construire un bureau pour travailler !",
+    no_desk_3 = "C'est tout simplement génial, presque un an et vous n'avez pas embauché de réceptionniste ! Comment espérez obtenir le moindre patient ? Arrangez-ça et arrêtez de perdre votre temps !",
+    no_desk_4 = "Une réceptionniste aura besoin d'un bureau pour accueillir des patients",
+    no_desk_5 = "Il était temps, maintenant les patients devraient commencer à arriver bientôt !",
+    no_desk_6 = "Vous avez une réceptionniste, peut-être il est temps de construire un bureau où elle peut travailler ?",
+    no_desk_7 = "Maintenant, que vous avez une réception, que diriez-vous d'embaucher une réceptionniste également ? Vous n'aurez pas de patients avant de l'avoir fait !",
+    cannot_afford = "Vous n'avez pas assez d'argent à la banque pour embaucher cette personne !",-- I can't see anything like this in the original strings
+    cannot_afford_2 = "Vous n'avez pas assez d'argent à la banque pour effectuer l'achat !",
+    research_screen_open_1 = "Vous devez construire une salle de recherche avant de pouvoir accéder à l'écran des recherches.",
+    research_screen_open_2 = "La recherche est désactivée pour le niveau en cours.",
+    researcher_needs_desk_1 = "Chaque chercheur a besoin d'un bureau pour travailler.",
+    researcher_needs_desk_2 = "Vos chercheurs sont heureux d'obtenir une pause bien méritée. Si vous voulez que plusieurs chercheurs puissent travailler en même temps.",
+    researcher_needs_desk_3 = "Un chercheur a toujours besoin d'un bureau.",
+    nurse_needs_desk_1 = "Chaque infirmière a besoin de son propre bureau.",
+    nurse_needs_desk_2 = "Votre infirmière est heureuse d'avoir une pause. Si vous comptez y faire travailler plusieurs personnes en même temps, vous devez leur construire un bureau à chacune.",
+  },
+  cheats = {
+    th_cheat = "Félicitations, vous avez débloqué les triches !",
+    roujin_on_cheat = "Défi de Roujin activé ! Bonne chance...",
+    roujin_off_cheat = "Défi de Roujin désactivé.",
+  },
+}
+
+-- Dynamic information
+dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
+dynamic_info.staff.actions.heading_for = "Va vers %s"
+dynamic_info.staff.actions.fired = "Renvoyé"
+dynamic_info.patient.actions.epidemic_vaccinated = "Je ne suis plus contagieux"
+
+-- Progress report
+progress_report.free_build = "CONSTRUCTION LIBRE"
+
+-- Fax messages
+fax = {
+  choices = {
+    return_to_main_menu = "Retourner au menu principal",
+    accept_new_level = "Aller au niveau suivant",
+    decline_new_level = "Continuer la partie encore un peu",
+  },
+  emergency = {
+    num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.",
+    free_build = "Si vous réussissez votre réputation augmentera mais si vous échouez votre réputation sera sérieusement entachée.",
+  },
+  vip_visit_result = {
+    remarks = {
+        free_build = {
+        "C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?",
+        "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...",
+        "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela.",
+      },
+    },
+  },
+}
+
+-- Winning texts
+letter = {
+  dear_player = "Cher %s",
+  custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
+  return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
+}
+
+-- Installation
+install = {
+  title = "----------------------------- Installation de CorsixTH -----------------------------",
+  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
+  ok = "OK",
+  exit = "Quitter",
+  cancel = "Annuler",
+}
+
+-- Misc
+misc.not_yet_implemented = "(pas encore implémenté)"
+misc.no_heliport = "Aucune maladie n'a été découverte pour l'instant, ou il n'y a pas d'héliport sur cette carte."
+
 -- Main menu
 main_menu = {
   new_game = "Nouvelle partie",
@@ -666,39 +719,6 @@ tooltip.main_menu = {
   load_game = "Charger une partie sauvegardée",
   options = "Modifier quelques paramètres",
   exit = "Non, non, SVP, ne quittez pas !",
-}
-
-menu_file = {
-  load =    " (SHIFT+L) CHARGER   ",
-  save =    " (SHIFT+S) ENREGISTRER   ",
-  restart = " (SHIFT+R) RELANCER",
-  quit =    " (SHIFT+Q) QUITTER   "
-}
-
---- New game window
-new_game_window = {
-  easy = "Interne (Facile)",
-  medium = "Médecin (Moyen)",
-  hard = "Consultant (Difficile)",
-  tutorial = "Tutoriel",
-  cancel = "Annuler",
-  option_on = "Activer",
-  option_off = "Désactiver",
-  difficulty = "Difficulté",
-  caption = "Campagne",
-  player_name = "Nom du joueur",
-  start = "Démarrer",
-}
-
-tooltip.new_game_window = {
-  easy = "Si vous jouez pour la première fois à un jeu de simulation, cette option est pour vous",
-  medium = "C'est la voie du milieu à prendre si vous ne savez pas quoi choisir",
-  hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
-  tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
-  cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
-  difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu",
-  start = "Démarrer le jeu avec les paramètres sélectionnés",
-  player_name = "Entrez le nom par lequel vous voulez être appelé dans le jeu",
 }
 
 -- Load game window
@@ -860,6 +880,119 @@ tooltip.handyman_window = {
   parcel_select = "Les parcelles où les agents de maintenance peuvent travailler : cliquez pour changer le paramètre.",
 }
 
+--- New game window
+new_game_window = {
+  easy = "Interne (Facile)",
+  medium = "Médecin (Moyen)",
+  hard = "Consultant (Difficile)",
+  tutorial = "Tutoriel",
+  cancel = "Annuler",
+  option_on = "Activer",
+  option_off = "Désactiver",
+  difficulty = "Difficulté",
+  caption = "Campagne",
+  player_name = "Nom du joueur",
+  start = "Démarrer",
+}
+
+tooltip.new_game_window = {
+  easy = "Si vous jouez pour la première fois à un jeu de simulation, cette option est pour vous",
+  medium = "C'est la voie du milieu à prendre si vous ne savez pas quoi choisir",
+  hard = "Si vous êtes habitué à ce genre de jeu et que vous souhaitez plus d'un défi, choisissez cette option",
+  tutorial = "Si vous voulez un peu d'aide pour démarrer une fois dans le jeu, cochez cette case",
+  cancel = "Oh, je n'avais pas vraiment l'intention de commencer une nouvelle partie !",
+  difficulty = "Sélectionnez le niveau de difficulté que vous voulez dans le jeu",
+  start = "Démarrer le jeu avec les paramètres sélectionnés",
+  player_name = "Entrez le nom par lequel vous voulez être appelé dans le jeu",
+}
+
+-- Lua Console
+lua_console = {
+  execute_code = "Exécuter",
+  close = "Fermer",
+}
+
+tooltip.lua_console = {
+  textbox = "Entrez du code Lua à exécuter ici",
+  execute_code = "Exécuter le code que vous avez entré",
+  close = "Fermer la console",
+}
+
+-- Errors
+errors = {
+  dialog_missing_graphics = "Désolé, les données de démo ne contiennent pas cette boîte de dialogue.",
+  save_prefix = "Erreur lors de la sauvegarde de la partie : ",
+  load_prefix = "Erreur lors du chargement de la partie : ",
+  no_games_to_contine = "Pas de parties sauvegardées.",
+  map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
+  minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
+  unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
+  alien_dna = "NOTE: Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
+  fractured_bones = "NOTE: L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
+  load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
+}
+
+-- Confirmation dialog
+confirmation = {
+  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
+  abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
+  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
+  music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Actuellement, il n'y a pas de fichier équivalent pour les systèmes 64 bits. Voulez-vous continuer?",
+}
+
+-- Information dialog
+information = {
+  custom_game = "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
+  no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
+  cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
+  very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
+  cheat_not_possible = "Vous ne pouvez pas utiliser ce code de triche dans ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
+  level_lost = {
+    "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
+    "Voilà pourquoi vous avez perdu : ",
+    reputation = "Votre réputation est tombée en dessous de %d.",
+    balance = "Votre solde bancaire est tombé en dessous %d.",
+    percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
+    cheat = "Étais-ce votre choix, ou bien avez-vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
+  },
+}
+
+tooltip.information = {
+  close = "Fermer cette boîte de dialogue.",
+}
+
+-- "Tip of the day" window
+totd_window = {
+  tips = {
+    "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
+    "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
+    "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
+    "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
+    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostiques. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostiques.",
+    "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
+    "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
+    "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
+    "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
+    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (#corsix-th sur freenode).",
+    "Si vous avez trouvé un bug, SVP, reportez-le sur notre gestionnaire de bugs : th-issues.corsix.org.",
+    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
+    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
+    "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
+    "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
+    "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
+    "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
+    "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
+    "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
+  },
+  previous = "Astuce précédente",
+  next = "Astuce suivante",
+}
+
+tooltip.totd_window = {
+  previous = "Afficher l'astuce précédente",
+  next = "Afficher l'astuce suivante",
+}
+
 -- Debug patient window
 debug_patient_window = {
   caption = "Patient de test",
@@ -908,79 +1041,6 @@ tooltip.cheats_window = {
   }
 }
 
--- "Tip of the day" window
-totd_window = {
-  tips = {
-    "Chaque hôpital a besoin d'un bureau de réception et d'un cabinet de médecine générale. Après, tout dépend du type de patients qui visitent votre hôpital. Une pharmacie est toujours un bon choix malgré tout.",
-    "Les machines telles que le Gonflage ont besoin de maintenance. Embauchez un ou deux agents de maintenance pour réparer vos machines, ou vous risquerez d'avoir des blessés parmi le personnel ou les patients.",
-    "Après un certain temps, vos employés seront fatigués. Pensez à construire une salle de repos où ils pourront se détendre.",
-    "Placez suffisamment de radiateurs pour garder vos employés et patients au chaud, ou ils deviendront mécontents. Utilisez la carte de la ville pour localiser les endroits de votre hôpital qui nécessitent plus de chauffage.",
-    "Le niveau de compétence d'un docteur influence beaucoup la qualité et la rapidité de ses diagnostiques. Utilisez un médecin expérimenté comme généraliste et vous n'aurez plus besoin d'autant de salles de diagnostiques.",
-    "Les internes et les médecins peuvent augmenter leurs compétences auprès d'un consultant dans la salle de formation. Si le consultant a des qualifications particulières (chirurgien, psychiatre ou chercheur), il transférera ses connaissances à ses élèves.",
-    "Avez-vous essayé d'entrer le numéro d'urgence Européen (112) dans le fax ? Vérifiez que vous avez du son !",
-    "Vous pouvez ajuster certains paramètres tels que la résolution et la langue dans la fenêtre d'options accessible à la fois depuis le menu principal et pendant le jeu.",
-    "Vous avez choisi une autre langue que l'anglais, mais il y du texte en anglais partout ? Aidez-nous à traduire les textes manquants dans votre langue !",
-    "L'équipe de CorsixTH cherche du renfort ! Vous êtes intéressé à coder, traduire ou faire des graphismes pour CorsixTH ? Contactez-nous sur notre Forum, Liste de Diffusion ou Canal IRC (#corsix-th sur freenode).",
-    "Si vous avez trouvé un bug, SVP, reportez-le sur notre gestionnaire de bugs : th-issues.corsix.org.",
-    "Chaque niveau possède des objectifs qu'il vous faudra remplir pour pouvoir passer au suivant. Vérifiez la fenêtre de statuts pour voir votre progression dans les objectifs du niveau.",
-    "Si vous voulez éditer ou détruire une pièce, vous pouvez le faire avec le bouton d'édition situé sur la barre d'outils en bas.",
-    "Dans un groupe de patients en attente, vous pouvez rapidement découvrir lesquels attendent une pièce particulière en survolant cette pièce avec votre curseur de souris.",
-    "Cliquez sur la porte d'une pièce pour visualiser sa file d'attente. Vous pouvez faire des réglages très utiles ici, comme réorganiser la file d'attente ou envoyer un patient vers une autre pièce.",
-    "Le personnel mécontent vous demandera des augmentations de salaires fréquemment. Assurez-vous de leur offrir un environnement de travail confortable pour éviter cela.",
-    "Les patients auront soif en attendant dans votre hôpital, encore plus si vous augmentez le chauffage ! Placez des distributeurs automatiques dans les points stratégiques pour un revenu d'appoint.",
-    "Vous pouvez interrompre le processus de diagnostic d'un patient et proposer un traitement, si vous avez déjà rencontré la maladie. Notez que cela peut accroître le risque d'erreur de traitement, et provoquer la mort du patient.",
-    "Les urgences peuvent être une bonne source de revenus additionnels, à condition que vous ayez les capacités suffisantes pour traiter les patients à temps.",
-  },
-  previous = "Astuce précédente",
-  next = "Astuce suivante",
-}
-
-tooltip.totd_window = {
-  previous = "Afficher l'astuce précédente",
-  next = "Afficher l'astuce suivante",
-}
-
--- Lua Console
-lua_console = {
-  execute_code = "Exécuter",
-  close = "Fermer",
-}
-
-tooltip.lua_console = {
-  textbox = "Entrez du code Lua à exécuter ici",
-  execute_code = "Exécuter le code que vous avez entré",
-  close = "Fermer la console",
-}
-
--- Confirmation dialog
-confirmation = {
-  needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
-  abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
-  maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
-  music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Actuellement, il n'y a pas de fichier équivalent pour les systèmes 64 bits. Voulez-vous continuer?",
-}
-
--- Information dialog
-information = {
-  custom_game = "Bienvenue dans CorsixTH. Amusez-vous bien avec cette carte personnalisée !",
-  no_custom_game_in_demo = "Désolé, mais dans la version démo vous ne pouvez jouer avec aucune des cartes personnalisées.",
-  cannot_restart = "Malheureusement cette partie personnalisée a été sauvegardée avant que la fonctionnalité de redémarrage soit implémentée.",
-  very_old_save = "Il y a eu beaucoup de mises à jour du jeu depuis que vous avez commencé ce niveau. Pour être sûr que tout fonctionne comme prévu, pensez à recommencer le niveau.",
-  cheat_not_possible = "Vous ne pouvez pas utiliser ce code de triche dans ce niveau. Vous n'arrivez même pas à tricher, pas marrant hein ?",
-  level_lost = {
-    "Quelle poisse ! Vous avez raté le niveau. Vous ferez mieux la prochaine fois !",
-    "Voilà pourquoi vous avez perdu : ",
-    reputation = "Votre réputation est tombée en dessous de %d.",
-    balance = "Votre solde bancaire est tombé en dessous %d.",
-    percentage_killed = "Vous avez tué plus de %d pourcents de vos patients.",
-    cheat = "Étais-ce votre choix, ou bien avez-vous appuyé sur le mauvais bouton ? Vous n'arrivez même pas à tricher correctement, n'est-ce pas désolant ?"
-  },
-}
-
-tooltip.information = {
-  close = "Fermer cette boîte de dialogue.",
-}
-
 -- Introduction Texts
 introduction_texts = {
   demo = {
@@ -1007,66 +1067,6 @@ tooltip.calls_dispatcher = {
   task = "Liste des tâches - cliquez sur une tâche pour ouvrir la fenêtre du membre du personnel à qui elle est assignée et aller jusqu'à l'endroit où a lieu la tâche.",
   assigned = "Cette case est cochée si la tâche est assignée à quelqu'un.",
   close = "Ferme la boîte de dialogue de répartitions des tâches",
-}
-
--- Fax messages
-fax = {
-  choices = {
-    return_to_main_menu = "Retourner au menu principal",
-    accept_new_level = "Aller au niveau suivant",
-    decline_new_level = "Continuer la partie encore un peu",
-  },
-  emergency = {
-    num_disease_singular = "Il y a 1 personne atteinte de %s qui a besoin de soins immédiats.",
-    free_build = "Si vous réussissez votre réputation augmentera mais si vous échouez votre réputation sera sérieusement entachée.",
-  },
-  vip_visit_result = {
-    remarks = {
-        free_build = {
-        "C'est vraiment un bel hôpital que vous avez là ! Pas trop difficile d'y arriver sans limite d'argent, hein ?",
-        "Je ne suis pas économiste, mais je pense que je pourrais faire tourner cet hôpital aussi si vous voyez ce que je veux dire...",
-        "Un hôpital très bien tenu. Cependant, attention à la récession ! Ah oui... vous n'avez pas à vous soucier de cela.",
-      },
-    },
-  },
-}
-
-tooltip.fax.close = "Fermer cette fenêtre sans supprimer le message"
-tooltip.message.button = "clic gauche pour ouvrir le message"
-tooltip.message.button_dismiss = "clic gauche pour ouvrir le message, clic droit pour le rejeter"
-tooltip.casebook.cure_requirement.hire_staff = "Vous devez embaucher du personnel pour gérer ce traitement"
-tooltip.casebook.cure_type.unknown = "Vous ne savez pas encore comment traiter cette maladie"
-tooltip.research_policy.no_research = "Aucune recherche n'est actuellement effectuée dans cette catégorie"
-tooltip.research_policy.research_progress = "Progrès vers la prochaine découverte dans cette catégorie : %1%/%2%"
-
--- Winning texts
-letter = {
-  dear_player = "Cher %s",
-  custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
-  return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
-}
-
--- Installation
-install = {
-  title = "----------------------------- Installation de CorsixTH -----------------------------",
-  th_directory = "CorsixTH nécessite une copie des données du jeu Theme Hospital originel (ou la démo) pour fonctionner. Veuillez utiliser le sélecteur ci-dessous pour indiquer le dossier d'installation de Theme Hospital.",
-  ok = "OK",
-  exit = "Quitter",
-  cancel = "Annuler",
-}
-
--- Errors
-errors = {
-  dialog_missing_graphics = "Désolé, les données de démo ne contiennent pas cette boîte de dialogue.",
-  save_prefix = "Erreur lors de la sauvegarde de la partie : ",
-  load_prefix = "Erreur lors du chargement de la partie : ",
-  no_games_to_contine = "Pas de parties sauvegardées.",
-  map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
-  minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
-  unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
-  alien_dna = "NOTE: Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
-  fractured_bones = "NOTE: L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
-  load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
 }
 
 -- Updates
