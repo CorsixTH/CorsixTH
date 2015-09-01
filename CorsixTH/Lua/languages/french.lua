@@ -23,15 +23,15 @@ Inherit("english")
 Inherit("original_strings", 1)
 
 ----------------------------------------------------------- Override -----------------------------------------------------------
-adviser.information.promotion_to_specialist = "L'un de vos INTERNES est devenu MÉDECIN." -- Fix the famous "Level 5 bug"
 misc.save_failed = "ERREUR : partie non sauvegardée." -- Much more french
 tooltip.policy.diag_termination = "L'auscultation d'un patient continuera jusqu'à ce que les médecins soient sûrs à hauteur du pourcentage FIN PROCEDURE ou jusqu'à ce que toutes les machines de diagnostic aient été essayées. " -- Remove a superfluous word
-room_descriptions.staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois."
-adviser.goals.win = { -- Why are this strings upcase?
-  reputation = "Portez votre réputation à %d pour pouvoir gagner.",
-  value = "Portez la valeur de votre hôpital à %d.",
+adviser.goals = {
+  win = { -- Why are these strings uppercase?
+    reputation = "Portez votre réputation à %d pour pouvoir gagner.",
+    value = "Portez la valeur de votre hôpital à %d.",
+  },
+  lose.kill = "Tuez encore %d patients pour perdre !"
 }
-adviser.warnings.handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer." -- Add a missing letter
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Voir la page suivante"
@@ -105,7 +105,7 @@ letter = {
   },
 }
 
--- The originals of these string lacks space before punctuation marks and or between words
+-- The originals of some of these string lack a space before punctuation marks and or between words
 misc.balance = "Ajustage :"
 tooltip.pay_rise_window.decline = "Ne payez pas, licenciez !"
 tooltip.watch = {
@@ -142,10 +142,16 @@ tooltip.objects = {
   toilet_sink = "Lavabo : s'il n'y en a pas assez, les patients qui apprécient l'hygiène seront mécontents.",
   cabinet = "Placard : dossiers des patients, notes de recherche.",
 }
-room_descriptions.fracture_clinic[2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur."
-room_descriptions.inflation[2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille."
-room_descriptions.hair_restoration[2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure."
-room_descriptions.electrolysis[2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation."
+room_descriptions = {
+  gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle, soit pour un autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait.",
+  pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard.",
+  general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. ",
+  fracture_clinic[2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur.",
+  inflation[2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille.",
+  hair_restoration[2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure.",
+  electrolysis[2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation.",
+  staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois.",
+}
 progress_report.too_hot = "Réglez le chauffage : on étouffe."
 adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infermière."
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
@@ -158,7 +164,6 @@ adviser.multiplayer.poaching = {
 adviser.vomit_wave.ended = "Ouf ! On dirait que le virus qui provoquait des nausées est enfin enrayé. Gardez l'hôpital propre, à l'avenir."
 adviser.research.new_available = "Nouveau : un(e) %s est disponible."
 adviser.research.drug_improved_1 = "Le traitement contre la %s a été amélioré par votre département de recherche."
-adviser.goals.lose.kill = "Tuez encore %d patients pour perdre !"
 adviser.warnings = {
   money_low = "Les fonds sont en baisse !",
   no_patients_last_month = "Pas de nouveaux patients le mois dernier. Honteux !",
@@ -172,6 +177,7 @@ adviser.warnings = {
   falling_4 = "C'est un hôpital, pas un parc d'attraction !",
   falling_5 = "Ce n'est pas un endroit pour bousculer les gens, ils sont malades vous savez ?",
   falling_6 = "Ce n'est pas un bowling, les gens malades ne devraient pas être traités comme ça !",
+  handymen_tired = "Les agents de maintenance sont très fatigués. Laissez-les se reposer.", -- Add a missing letter
 }
 adviser.placement_info.object_cannot_place = "Hé ! Vous ne pouvez pas placer cet objet ici."
 adviser.information = {
@@ -183,16 +189,19 @@ adviser.information = {
   patient_leaving_too_expensive = "Un patient part sans payer la facture pour %s. Sacrée perte !",
   vip_arrived = "Attention ! %s arrive pour visiter votre hôpital ! Faites en sorte de lui faire bonne impression.",
   first_death = "Vous venez de tuer votre premier patient. Alors, heureux ?",
+  promotion_to_specialist = "L'un de vos INTERNES est devenu MÉDECIN.", -- Fix the famous "Level 5 bug"
 }
 buy_objects_window = {
   price = "Prix : ",
   total = "Total : ",
 }
 fax = {
+  epidemic.declare_explanation_fine = "Si vous déclarez l'épidémie, vous aurez une amende de %d, un changement de réputation et tous les patients seront vaccinés automatiquement.",
   epidemic_result = {
     close_text = "Hourrah !",
     rep_loss_fine_amount = "Les journaux vont s'en donner à cœur joie avec cette affaire. Votre réputation va en prendre un coup ! Sans oublier l'amende de %d.",
-    },
+  },
+  emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats.",
   vip_visit_result = {
     telegram = "Télégramme !",
     vip_remarked_name = "Après avoir visité votre hôpital, %s a dit : ",
@@ -216,6 +225,7 @@ fax = {
   },
   diagnosis_failed = {
     what_to_do_question = "Que faire du patient ?",
+    partial_diagnosis_percentage_name = "Il y a %d pour cent de chances que la maladie soit %s."
   },
 }
 dynamic_info = {
@@ -498,22 +508,14 @@ confirmation = {
 
 -- The originals of these strings contain one space too much
 trophy_room.sold_drinks.trophies[2] = "Vous recevez le prix Bubulles du Syndicat des Vendeurs de Limonade pour récompenser la quantité de sodas vendus dans votre hôpital au cours de l'année écoulée. "
-fax.epidemic.declare_explanation_fine = "Si vous déclarez l'épidémie, vous aurez une amende de %d, un changement de réputation et tous les patients seront vaccinés automatiquement."
-fax.diagnosis_failed.partial_diagnosis_percentage_name = "Il y a %d pour cent de chances que la maladie soit %s."
+
 tooltip.status.percentage_cured = "Vous devez soigner %d%% des visiteurs de l'hôpital. Actuellement, vous en avez soigné %d%%"
 tooltip.status.num_cured = "L'objectif est de soigner %d personnes. Pour le moment, vous en avez soigné %d"
 dynamic_info.staff.actions.going_to_repair = "Pour réparer %s"
 adviser.staff_place_advice.only_doctors_in_room = "Seuls les médecins peuvent travailler en %s"
 adviser.staff_place_advice.nurses_cannot_work_in_room = "Les infirmières ne peuvent travailler en %s"
-room_descriptions.gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle, soit pour un autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait."
-room_descriptions.pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard."
-room_descriptions.general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. "
 pay_rise.definite_quit = "Rien ne me fera rester ici. J'en ai assez."
 place_objects_window.confirm_or_buy_objects = "Vous pouvez valider ainsi ou bien soit acheter soit déplacer des objets."
-fax.emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats."
-
--- The demo does not contain this string
-menu_file.restart = "  RELANCER  "
 
 ----------------------------------------------------------- New strings -----------------------------------------------------------
 
@@ -555,7 +557,6 @@ adviser = {
   },
 }
 
-
 -- Dynamic information
 dynamic_info.patient.actions.no_gp_available = "Attente d'un cabinet de médecine générale"
 dynamic_info.staff.actions.heading_for = "Va vers %s"
@@ -579,7 +580,7 @@ menu_options = {
   twentyfour_hour_clock = " HORLOGE 24 HEURES ",
 }
 
- menu_options_warmth_colors = {
+menu_options_warmth_colors = {
   choice_1 = "  ROUGE  ",
   choice_2 = "  BLEU VERT ROUGE  ",
   choice_3 = "  JAUNE ORANGE ROUGE  ",
@@ -589,6 +590,7 @@ menu_options_wage_increase = {
   grant = " ACCORDER ",
   deny = " REFUSER ",
 }
+
 menu_options_game_speed = {
   pause               = "  (P) PAUSE  ",
   slowest             = "  (1) AU PLUS LENT  ",
@@ -597,7 +599,6 @@ menu_options_game_speed = {
   max_speed           = "  (4) VITESSE MAXI  ",
   and_then_some_more  = "  (5) ET ENCORE PLUS  ",
 }
-menu_options_game_speed.pause = "  PAUSE  "
 
 -- Charts Menu ' Temporary; must see in-game for correct translation
 menu_charts = {
@@ -618,9 +619,9 @@ menu_debug = {
   connect_debugger            = " (CTRL + C) CONNECTER AU SERVEUR DE DÉBOGUAGE ",
   transparent_walls           = "  (X) MURS TRANSPARENTS  ",
   limit_camera                = "  LIMITER LA CAMERA  ",
-  disable_salary_raise        = "  DESACTIVER LES AUGMENTATIONS DE SALAIRE  ",
-  make_debug_fax              = "  CREER UN FAX DE TEST  ",
-  make_debug_patient          = "  CREER UN PATIENT DE TEST  ",
+  disable_salary_raise        = "  DÉSACTIVER LES AUGMENTATIONS DE SALAIRE  ",
+  make_debug_fax              = "  CRÉER UN FAX DE TEST  ",
+  make_debug_patient          = "  CRÉER UN PATIENT DE TEST  ",
   cheats                      = "  (F11) TRICHES  ",
   lua_console                 = "  (F12) CONSOLE LUA  ",
   debug_script                = "  (MAJ + DS) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
@@ -630,6 +631,7 @@ menu_debug = {
   map_overlay                 = "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = "  VISIONNEUSE DE SPRITES  ",
 }
+
 menu_debug_overlay = {
   none                        = "  AUCUN  ",
   flags                       = "  DRAPEAUX  ",
@@ -664,6 +666,13 @@ tooltip.main_menu = {
   load_game = "Charger une partie sauvegardée",
   options = "Modifier quelques paramètres",
   exit = "Non, non, SVP, ne quittez pas !",
+}
+
+menu_file = {
+  load =    " (SHIFT+L) CHARGER   ",
+  save =    " (SHIFT+S) ENREGISTRER   ",
+  restart = " (SHIFT+R) RELANCER",
+  quit =    " (SHIFT+Q) QUITTER   "
 }
 
 --- New game window
@@ -837,7 +846,9 @@ tooltip.folders_window = {
   back  = "Fermer ce menu et revenir au menu Paramètres",
 }
 
-font_location_window.caption = "Choisir une police (%1%)"
+font_location_window = {
+  caption = "Choisir une police (%1%)",
+}
 
 -- Handyman window
 handyman_window = {
