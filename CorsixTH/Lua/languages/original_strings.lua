@@ -44,6 +44,16 @@ local function fixGermanStrings(lang_num)
     S[44][168] = S[44][168]:sub(1, 45)
   end
 
+  -- Strings [28][32] and [28][33] are equal in the German translation of the full
+  -- version, this causes a mismatch with the English strings
+  -- eng-strings [28][33] to [28][63] are equal to ger-strings [28][34] to [28][64]
+  -- NB: ONLY in full version, demo version is not affected (thus do checks)
+  if S[28][32] == S[28][33] and #S[28] == 64 then
+    for str = 33, 63 do
+      S[28][str] = S[28][str+1]
+    end
+  end
+
   -- German spelling reform: eszett changed to double s in a number of words.
   -- Mass-apply this change here, so we don't have to override all those strings.
   local repl = {
