@@ -493,6 +493,9 @@ function App:loadLevel(level, ...)
   self.world = World(self)
   self.world:createMapObjects(map_objects)
 
+  -- Enable / disable SoundEffects
+  self.audio:playSoundEffects(self.config.play_sounds)
+
   -- Load UI
   self.ui = GameUI(self, self.world:getLocalPlayerHospital())
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
