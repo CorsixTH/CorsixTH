@@ -33,16 +33,19 @@ class "Queue"
 ---@type Queue
 local Queue = _G["Queue"]
 
+--! Constructor of a queue.
 function Queue:Queue()
-  self.reported_size = 0
-  self.expected = {}
+  self.reported_size = 0   -- Number of real patients
+  self.expected = {}       -- Expected patients
   self.callbacks = {}
-  self.expected_count = 0
+  self.expected_count = 0  -- Number of expected patients
   self.visitor_count = 0
-  self.max_size = 6
+  self.max_size = 6        -- Maximum queue length (default value)
   self.bench_threshold = 0
 end
 
+--! A humanoid is expected in a queue.
+--!param humanoid New patient that is expected.
 function Queue:expect(humanoid)
   if not self.expected[humanoid] and not class.is(humanoid, Vip) then
     self.expected[humanoid] = true
@@ -50,6 +53,8 @@ function Queue:expect(humanoid)
   end
 end
 
+--! A humanoid is canceled as expected in a queue.
+--!param humanoid Patient that is not coming to this queue.
 function Queue:unexpect(humanoid)
   if self.expected[humanoid] then
     self.expected[humanoid] = nil
@@ -57,10 +62,14 @@ function Queue:unexpect(humanoid)
   end
 end
 
+--! Lower the max queue length.
+--!param amount (int) Decrement length value of the queue.
 function Queue:decreaseMaxSize(amount)
   self.max_size = math.max(0, self.max_size - amount)
 end
 
+--! Increase max queue length.
+--!param amount (int) Increment length value of the queue.
 function Queue:increaseMaxSize(amount)
   self.max_size = math.min(30, self.max_size + amount)
 end
@@ -69,10 +78,15 @@ function Queue:setBenchThreshold(standing_count)
   self.bench_threshold = standing_count
 end
 
+--! Set max queue length.
+--!param queue_count (int) New max queue length to set.
 function Queue:setMaxQueue(queue_count)
   self.max_size = queue_count
 end
 
+--! Total size of the queue, which are various people wanting in or out of the room.
+--! For a true patient queue count, use Queue:reportedSize.
+--!return (int) Number of various people in the queue.
 function Queue:size()
   -- Rememeber, the size includes people waiting to leave and staff waiting to enter
   -- For just the patients waiting to enter, use Queue:reportedSize()
@@ -82,20 +96,27 @@ function Queue:size()
   return #self
 end
 
+--! Retrieve whether the queue is full.
+--!return (boolean) Whether the queue is full.
 function Queue:isFull()
   return #self >= self.max_size
 end
 
+--! Get the number of real patients in the queue.
+--!return (int) Number of real patients in the queue.
 function Queue:reportedSize()
   return self.reported_size
 end
 
+--! Get the number of expected patients.
+--!return (int) Number of expected patients (in the near future).
 function Queue:expectedSize()
   return self.expected_count
 end
 
+--! Check if the queue has an emergency patient.
+--!return (boolean) Whether an emergency patient was found in the queue.
 function Queue:hasEmergencyPatient()
-  local index = #self
   for i, humanoid in ipairs(self) do
     if humanoid.is_emergency then
       return true
@@ -104,12 +125,15 @@ function Queue:hasEmergencyPatient()
   return false
 end
 
--- Returns how many patients are queued or expected
+--! Retrieve the total number of queued and expected patients.
+--return (int) Number of patients.
 function Queue:patientSize()
   return self.reported_size + self.expected_count
 end
 
-
+--! Get the 'index' real patient.
+--!param index (int) Index of the patient to retrieve (runs up to Queue:reportedSize).
+--!return Patient at the queried point in the queue.
 function Queue:reportedHumanoid(index)
   return self[#self - self.reported_size + index]
 end
@@ -172,14 +196,22 @@ function Queue:push(humanoid, callbacks_on)
   end
 end
 
+--! Get the first person in the queue (queue is not changed).
+--! Note that first person may not be a patient, use Queue:reportedHumanoid to get patients
+--!return First person in the queue.
 function Queue:front()
   return self[1]
 end
 
+--! Get the last person in the queue (queue is not changed).
+--!return Last person in the queue.
 function Queue:back()
   return self[#self]
 end
 
+--! Pop first person from the queue.
+--! Note that first person may not be a patient, use Queue:reportedHumanoid to get patients
+--!return First person in the queue.
 function Queue:pop()
   if self.reported_size == #self then
     self.reported_size = self.reported_size - 1
@@ -201,6 +233,10 @@ function Queue:pop()
   return oldfront
 end
 
+--! Remove person from the queue by index number.
+--! Note that the person may not be a patient.
+--!param index (jnt) Index in the queue of the person to remove.
+--!return The removed person.
 function Queue:remove(index)
   if self[index] == nil then
     return
@@ -221,6 +257,9 @@ function Queue:remove(index)
   return value
 end
 
+--! Remove a person by value from the queue.
+--!param value Person to remove.
+--!return Whether the person could be found (and was removed).
 function Queue:removeValue(value)
   for i = 1, #self do
     if self[i] == value then
@@ -231,6 +270,10 @@ function Queue:removeValue(value)
   return false
 end
 
+--! Move the person at position 'index' to position 'new_index'.
+--! Persons between 'index' and 'new_index' move one place to 'index'.
+--!param index (int) Index number of the person to move.
+--!param new_index (int) Destination of the person being moved.
 function Queue:move(index, new_index)
   if self[index] == nil or self[new_index] == nil or index == new_index then
     return
@@ -251,8 +294,7 @@ function Queue:move(index, new_index)
   end
 end
 
--- Called when reception desk is destroyed. May be extended later to handle removed rooms, too.
--- Update: Now also used when a room is destroyed from a crashed machine.
+--! Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
   for i, humanoid in ipairs(self) do
     -- slight delay so the desk is really destroyed before rerouting
