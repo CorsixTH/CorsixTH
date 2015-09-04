@@ -102,7 +102,7 @@ function GameUI:makeVisibleDiamond(scr_w, scr_h)
 
   -- The visible diamond is the region which the top-left corner of the screen
   -- is limited to, and ensures that the map always covers all of the screen.
-  -- Its verticies are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
+  -- Its vertices are at (x + w, y), (x - w, y), (x, y + h), (x, y - h).
   return {
     x = - scr_w / 2,
     y = 16 * map_h - scr_h / 2,
@@ -113,27 +113,29 @@ end
 
 function GameUI:setZoom(factor)
   if factor <= 0 then
-    return
+    return false
   end
-  local old_factor = self.zoom_factor
   if not factor or math.abs(factor - 1) < 0.001 then
     factor = 1
   end
+
   local scr_w = self.app.config.width
   local scr_h = self.app.config.height
+  local new_diamond = self:makeVisibleDiamond(scr_w / factor, scr_h / factor)
+  if new_diamond.w < 0 or new_diamond.h < 0 then
+    return false
+  end
+
+  self.visible_diamond = new_diamond
   local refx, refy = self.cursor_x or scr_w / 2, self.cursor_y or scr_h / 2
   local cx, cy = self:ScreenToWorld(refx, refy)
   self.zoom_factor = factor
-  self.visible_diamond = self:makeVisibleDiamond(scr_w / factor, scr_h / factor)
-  if self.visible_diamond.w < 0 or self.visible_diamond.h < 0 then
-    self:setZoom(old_factor)
-    return false
-  else
-    cx, cy = self.app.map:WorldToScreen(cx, cy)
-    self:scrollMap(cx - self.screen_offset_x - refx / factor,
-                   cy - self.screen_offset_y - refy / factor)
-    return true
-  end
+
+  cx, cy = self.app.map:WorldToScreen(cx, cy)
+  cx = cx - self.screen_offset_x - refx / factor
+  cy = cy - self.screen_offset_y - refy / factor
+  self:scrollMap(cx, cy)
+  return true
 end
 
 function GameUI:draw(canvas)

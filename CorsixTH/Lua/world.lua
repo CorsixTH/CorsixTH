@@ -188,7 +188,7 @@ function World:World(app)
   self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
---! Register key shortcuts for controling the world (game speed, etc.)
+--! Register key shortcuts for controlling the world (game speed, etc.)
 function World:setUI(ui)
   self.ui = ui
   self.ui:addKeyHandler("P", self, self.pauseOrUnpause, "Pause")
@@ -212,7 +212,7 @@ function World:adjustZoom(delta)
   local virtual_width = scr_w / (self.ui.zoom_factor or 1)
 
   -- The modifier is a normal distribution to make it more difficult to zoom at the extremes
-  local modifier = math.exp(1)^(-((self.ui.zoom_factor-1)^2)/(2 * 1))/(math.sqrt(2*math.pi)*1)
+  local modifier = math.exp(-((self.ui.zoom_factor - 1) ^ 2) / 2) / math.sqrt(2 * math.pi)
 
   if modifier < 0.05 or modifier > 1 then
     modifier = 0.05
@@ -223,7 +223,7 @@ function World:adjustZoom(delta)
     return false
   end
 
-  return self.ui:setZoom(scr_w/virtual_width)
+  return self.ui:setZoom(scr_w / virtual_width)
 end
 
 --! Initialize the game level (available diseases, winning conditions).
