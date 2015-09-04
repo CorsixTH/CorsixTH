@@ -187,6 +187,7 @@ function UIEditRoom:cancel()
     else
       self:close()
     end
+    self.ui:setCursor(self.ui.default_cursor)
   elseif self.phase == "objects" then
     self:stopPickupItems()
     self:returnToDoorPhase()
@@ -214,7 +215,6 @@ function UIEditRoom:confirm(force)
     self.mouse_down_y = false
     self.move_rect_x = false
     self.move_rect_y = false
-    self.ui:setCursor(self.ui.default_cursor)
     self.phase = "door"
     self:enterDoorPhase()
   elseif self.phase == "door" then
@@ -869,6 +869,7 @@ function UIEditRoom:enterWindowsPhase()
 end
 
 function UIEditRoom:enterObjectsPhase()
+  self.ui:setCursor(self.ui.default_cursor)
   self.ui:tutorialStep(3, {11, 12}, 13)
   self.ui:setWorldHitTest(self.room)
   local confirm = self:checkEnableConfirm()
@@ -1311,7 +1312,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
         self.resize_rect = false
       elseif wx < rect.x or wx >= rect.x + rect.w or wy < rect.y or wy >= rect.y + rect.h then
         -- outside blueprint
-        ui:setCursor(ui.default_cursor)
+        ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
         self.move_rect = false
         self.resize_rect = false
       else
@@ -1334,6 +1335,9 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
       end
     end
   else
+    if self.phase ~= "objects" then
+      ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
+    end
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
     if self.phase == "door" then
       self:setDoorBlueprint(cell_x, cell_y, wall)
