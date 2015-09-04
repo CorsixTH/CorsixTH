@@ -1,26 +1,38 @@
 language: cpp
+compiler: gcc
+sudo: false
+addons:
+  apt:
+    packages:
+      - cmake
+      - p7zip-full
+      - build-essential
+      - sshpass
+      - lua5.1
+      - luarocks
+      - doxygen
+      - g++-mingw-w64
+      - gcc-mingw-w64
+      - g++-mingw-w64-i686
+      - gcc-mingw-w64-i686
+      - binutils-mingw-w64-i686
+      - g++-mingw-w64-x86-64
+      - gcc-mingw-w64-x86-64
+      - binutils-mingw-w64-x86-64
+
 before_install:
-  # Get build dependencies
-  - sudo apt-get -qq update
-  - sudo apt-get -q install cmake p7zip-full build-essential sshpass lua5.1 luarocks doxygen
   # Required for LDocGen
-  - sudo luarocks install lpeg
-  - sudo luarocks install luafilesystem
+  - luarocks --local install lpeg
+  - luarocks --local install luafilesystem
   # Required for lua unit tests
-  - sudo luarocks install busted
-  # Install the mingw-w64 packages.
-  - sudo apt-get -q install g++-mingw-w64 gcc-mingw-w64 g++-mingw-w64-i686 gcc-mingw-w64-i686 gcc-mingw-w64-i686 g++-mingw-w64-i686 binutils-mingw-w64-i686 g++-mingw-w64-x86-64 gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
-  # The packages in ubuntu's repositories seem a little broken
-  # so use a bleeding edge version
-  - wget http://ftp.jp.debian.org/debian/pool/main/m/mingw-w64/mingw-w64_3.2.0-2_all.deb
-  - sudo dpkg -i mingw-w64_3.2.0-2_all.deb
+  - luarocks --local install busted
   - mkdir libs
-  - cd libs
+  - pushd libs
   # Get FFmpeg
   - wget http://ffmpeg.zeranoe.com/builds/win32/dev/ffmpeg-2.5.2-win32-dev.7z
   - wget http://ffmpeg.zeranoe.com/builds/win32/shared/ffmpeg-2.5.2-win32-shared.7z
-  - /usr/bin/7za x ffmpeg-2.5.2-win32-dev.7z
-  - /usr/bin/7za x ffmpeg-2.5.2-win32-shared.7z
+  - 7za x ffmpeg-2.5.2-win32-dev.7z
+  - 7za x ffmpeg-2.5.2-win32-shared.7z
   - mv ffmpeg-2.5.2-win32-dev ffmpeg-dev
   - mv ffmpeg-2.5.2-win32-shared ffmpeg-bin
   # Get freetype
@@ -35,16 +47,9 @@ before_install:
   - wget https://raw.githubusercontent.com/CorsixTH/deps/master/travisci-mingw/patches/SDL_mingw_build_fix.patch
   - tar xfz SDL2-devel-2.0.3-mingw.tar.gz
   - patch -p2 -d SDL2-2.0.3/i686-w64-mingw32/include/SDL2 < SDL_mingw_build_fix.patch
-  - sudo mkdir /usr/i686-w64-mingw32/bin/
-  - sudo cp SDL2-2.0.3/i686-w64-mingw32/bin/* /usr/i686-w64-mingw32/bin/
-  - sudo cp -r SDL2-2.0.3/i686-w64-mingw32/include/SDL2/* /usr/i686-w64-mingw32/include/
-  - sudo cp -r SDL2-2.0.3/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
-  - sudo chmod +x /usr/i686-w64-mingw32/bin/sdl2-config
   # Get SDL Mixer
   - wget http://www.libsdl.org/projects/SDL_mixer/release/SDL2_mixer-devel-2.0.0-mingw.tar.gz
   - tar xfz SDL2_mixer-devel-2.0.0-mingw.tar.gz
-  - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2/* /usr/i686-w64-mingw32/include/
-  - sudo cp -r SDL2_mixer-2.0.0/i686-w64-mingw32/lib/* /usr/i686-w64-mingw32/lib/
   - mkdir lua
   # Get LUA
   - wget http://sourceforge.net/projects/mingw/files/MinGW/Extension/lua/lua-5.1.4-4/lua-5.1.4-4-mingw32-dll-51.tar.xz
@@ -75,10 +80,11 @@ before_install:
   - make PLAT=mingw LUAINC_mingw=$TRAVIS_BUILD_DIR/libs/lua/include LUALIB_mingw=$TRAVIS_BUILD_DIR/libs/lua/bin/lua51.dll CC_mingw=i686-w64-mingw32-gcc LD_mingw=i686-w64-mingw32-gcc prefix=$TRAVIS_BUILD_DIR/libs/luasocket LUAV=5.1
   - make PLAT=mingw LUAINC_mingw=$TRAVIS_BUILD_DIR/libs/lua/include LUALIB_mingw=$TRAVIS_BUILD_DIR/libs/lua/bin/lua51.dll CC_mingw=i686-w64-mingw32-gcc LD_mingw=i686-w64-mingw32-gcc prefix=$TRAVIS_BUILD_DIR/libs/luasocket LUAV=5.1 install
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
+  - popd
 install:
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
-  - cmake -DLUA_PROGRAM_PATH=`which lua` -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY="$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a;$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2.dll.a;-lmingw32;-lSDL2main;-lSDL2" -DSDL_INCLUDE_DIR=libs/SDL2-2.0.3/i686-w64-mingw32/include/SDL2 -DSDLMAIN_LIBRARY=libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a -DSDLMIXER_INCLUDE_DIR=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2 -DSDLMIXER_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/libSDL2_mixer.dll.a -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
+  - cmake -DLUA_PROGRAM_PATH=`which lua` -DCMAKE_TOOLCHAIN_FILE=build_files/toolchain-mingw.cmake -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DSDL_LIBRARY="-lmingw32;$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a;$TRAVIS_BUILD_DIR/libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2.dll.a" -DSDL_INCLUDE_DIR=libs/SDL2-2.0.3/i686-w64-mingw32/include/SDL2 -DSDLMAIN_LIBRARY=libs/SDL2-2.0.3/i686-w64-mingw32/lib/libSDL2main.a -DSDLMIXER_INCLUDE_DIR=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/include/SDL2 -DSDLMIXER_LIBRARY=$TRAVIS_BUILD_DIR/libs/SDL2_mixer-2.0.0/i686-w64-mingw32/lib/libSDL2_mixer.dll.a -DLUA_LIBRARY=libs/lua/lib/liblua.dll.a -DLUA_INCLUDE_DIR=libs/lua/include -DFREETYPE_INCLUDE_DIR_freetype2=libs/freetype/include/freetype2 -DFREETYPE_INCLUDE_DIR_ft2build=libs/freetype/include -DFREETYPE_LIBRARY=libs/freetype/lib/libfreetype.dll.a -DFFMPEG_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVUTIL_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWSCALE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVCODEC_INCLUDE_DIRS=libs/ffmpeg-dev/include -DSWRESAMPLE_INCLUDE_DIRS=libs/ffmpeg-dev/include -DAVFORMAT_LIBRARIES=libs/ffmpeg-dev/lib/avformat.lib -DAVCODEC_LIBRARIES=libs/ffmpeg-dev/lib/avcodec.lib -DAVUTIL_LIBRARIES=libs/ffmpeg-dev/lib/avutil.lib -DSWSCALE_LIBRARIES=libs/ffmpeg-dev/lib/swscale.lib -DSWRESAMPLE_LIBRARIES=libs/ffmpeg-dev/lib/swresample.lib -Bfresh -H. --debug-output
 before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
@@ -97,8 +103,8 @@ script:
   - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
   # Run lua unit tests
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
-  - eval `luarocks path`
-  - LUA_PATH="../Lua/?.lua;$LUA_PATH" busted
+  - eval `luarocks --local path`
+  - LUA_PATH="../Lua/?.lua;$LUA_PATH" /home/travis/.luarocks/bin/busted
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
   # Build documentation
