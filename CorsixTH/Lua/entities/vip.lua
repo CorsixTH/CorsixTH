@@ -76,11 +76,12 @@ function Vip:tickDay()
 
   self.world:findObjectNear(self, "litter", 8, function(x, y)
     local litter = self.world:getObject(x, y, "litter")
+    if not litter then
+      return
+    end
+
     local alreadyFound = false
-  if not litter then
-    return
-  end
-    for i=1,(self.num_vomit_noninducing + self.num_vomit_inducing) do
+    for i=1, (self.num_vomit_noninducing + self.num_vomit_inducing) do
       if self.found_vomit[i] == litter then
         alreadyFound = true
         break
@@ -126,63 +127,59 @@ function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
   if self.world.free_build_mode then
-    self.last_hospital.reputation = self.last_hospital.reputation+20
+    self.last_hospital.reputation = self.last_hospital.reputation + 20
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1,3)]},
+      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 1 then
-    self.last_hospital.reputation = self.last_hospital.reputation-10
+    self.last_hospital.reputation = self.last_hospital.reputation - 10
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.very_bad[math.random(1,3)]},
+      {text = _S.fax.vip_visit_result.remarks.very_bad[math.random(1, 3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 2 then
-    self.last_hospital.reputation = self.last_hospital.reputation-5
+    self.last_hospital.reputation = self.last_hospital.reputation - 5
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.bad[math.random(1,3)]},
+      {text = _S.fax.vip_visit_result.remarks.bad[math.random(1, 3)]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 3 then
-    self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1,3)]},
-      {text = _S.fax.vip_visit_result.rep_boost},
-      {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
+      {text = _S.fax.vip_visit_result.remarks.mediocre[math.random(1, 3)]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating == 4 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
+    self.last_hospital.reputation = self.last_hospital.reputation + (math.round(self.cash_reward / 100))
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.good[math.random(1,3)]},
+      {text = _S.fax.vip_visit_result.remarks.good[math.random(1, 3)]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   else
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation+(math.round(self.cash_reward/100))
-    self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty +1
+    self.last_hospital.reputation = self.last_hospital.reputation + (math.round(self.cash_reward / 100))
+    self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
     if self.vip_rating == 5 then
       message = {
         {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.remarks.super[math.random(1,3)]},
+        {text = _S.fax.vip_visit_result.remarks.super[math.random(1, 3)]},
         {text = _S.fax.vip_visit_result.rep_boost},
         {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
         choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
       }
     end
   end
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*20, 1)
+  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24 * 20, 1)
 
   self.world:nextVip()
 
@@ -472,10 +469,10 @@ function Vip:setVIPRating()
 
   -- set the cash reward value
   if tonumber(self.world.map.level_number) then
-    self.cash_reward = math.round(self.world.map.level_number * self.vip_rating)*10
+    self.cash_reward = math.round(self.world.map.level_number * self.vip_rating) * 10
   else
     -- custom level, it has no level number. Default back to one.
-    self.cash_reward = math.round(1 * self.vip_rating)*10
+    self.cash_reward = math.round(1 * self.vip_rating) * 10
   end
   if self.cash_reward > 2000 then
     self.cash_reward = 2000
