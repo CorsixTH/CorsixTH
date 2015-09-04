@@ -207,7 +207,7 @@ static int l_soundfx_play(lua_State *L)
     lua_pushliteral(L, "archive");
     lua_rawget(L,8);
     THSoundArchive *pArchive = (THSoundArchive*)lua_touserdata(L, 9);
-    if(pArchive == NULL)
+    if(pArchive == nullptr)
     {
         return 0;
     }

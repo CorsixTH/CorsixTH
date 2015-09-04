@@ -24,6 +24,7 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "th_lua.h"
 #include <cstring>
+#include <cstdio>
 #ifndef _MSC_VER
 #define stricmp strcasecmp
 #else
@@ -51,7 +52,7 @@ static int l_init(lua_State *L)
     }
     if(SDL_Init(flags) != 0)
     {
-        fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
+        std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         lua_pushboolean(L, 0);
         return 1;
     }
@@ -142,7 +143,7 @@ static int l_mainloop(lua_State *L)
     lua_State *dispatcher = lua_tothread(L, 1);
 
     fps_ctrl *fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
-    SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, NULL);
+    SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, nullptr);
     SDL_Event e;
 
     while(SDL_WaitEvent(&e) != 0)
@@ -289,7 +290,7 @@ static int l_mainloop(lua_State *L)
                     goto leave_loop;
                 }
                 lua_settop(dispatcher, 0);
-            } while(fps_control->limit_fps == false && SDL_PollEvent(NULL) == 0);
+            } while(fps_control->limit_fps == false && SDL_PollEvent(nullptr) == 0);
         }
 
         // No events pending - a good time to do a bit of garbage collection
@@ -346,14 +347,14 @@ static const struct luaL_Reg sdllib[] = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 static const struct luaL_Reg sdllib_with_upvalue[] = {
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
     {"limitFPS", l_limit_fps},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_sdl_audio(lua_State *L);

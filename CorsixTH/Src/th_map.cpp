@@ -24,10 +24,12 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_map_overlays.h"
 #include "th_gfx.h"
+#include "run_length_encoder.h"
 #include <SDL.h>
 #include <new>
 #include <algorithm>
-#include "run_length_encoder.h"
+#include <cstring>
+#include <cstdio>
 
 THMapNode::THMapNode()
 {
@@ -39,7 +41,7 @@ THMapNode::THMapNode()
     iRoomId = 0;
     aiTemperature[0] = aiTemperature[1] = 8192;
     iFlags = 0;
-    pExtendedObjectList = NULL;
+    pExtendedObjectList = nullptr;
 }
 
 THMapNode::~THMapNode()
@@ -55,20 +57,20 @@ THMap::THMap()
     m_iCurrentTemperatureIndex = 0;
     m_eTempDisplay = THMT_Red;
     m_iParcelCount = 0;
-    m_pCells = NULL;
-    m_pOriginalCells = NULL;
-    m_pBlocks = NULL;
-    m_pOverlay = NULL;
+    m_pCells = nullptr;
+    m_pOriginalCells = nullptr;
+    m_pBlocks = nullptr;
+    m_pOverlay = nullptr;
     m_bOwnOverlay = false;
-    m_pPlotOwner = NULL;
-    m_pParcelTileCounts = NULL;
-    m_pParcelAdjacencyMatrix = NULL;
-    m_pPurchasableMatrix = NULL;
+    m_pPlotOwner = nullptr;
+    m_pParcelTileCounts = nullptr;
+    m_pParcelAdjacencyMatrix = nullptr;
+    m_pPurchasableMatrix = nullptr;
 }
 
 THMap::~THMap()
 {
-    setOverlay(NULL, false);
+    setOverlay(nullptr, false);
     delete[] m_pCells;
     delete[] m_pOriginalCells;
     delete[] m_pPlotOwner;
@@ -96,19 +98,19 @@ bool THMap::setSize(int iWidth, int iHeight)
     delete[] m_pPurchasableMatrix;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
-    m_pCells = NULL;
+    m_pCells = nullptr;
     m_pCells = new (std::nothrow) THMapNode[iWidth * iHeight];
-    m_pOriginalCells = NULL;
+    m_pOriginalCells = nullptr;
     m_pOriginalCells = new (std::nothrow) THMapNode[iWidth * iHeight];
-    m_pParcelAdjacencyMatrix = NULL;
-    m_pPurchasableMatrix = NULL;
+    m_pParcelAdjacencyMatrix = nullptr;
+    m_pPurchasableMatrix = nullptr;
 
-    if(m_pCells == NULL || m_pOriginalCells == NULL)
+    if(m_pCells == nullptr || m_pOriginalCells == nullptr)
     {
         delete[] m_pCells;
         delete[] m_pOriginalCells;
-        m_pOriginalCells = NULL;
-        m_pCells = NULL;
+        m_pOriginalCells = nullptr;
+        m_pCells = nullptr;
         m_iWidth = 0;
         m_iHeight = 0;
         return false;
@@ -170,8 +172,8 @@ bool THMap::loadBlank()
     m_iParcelCount = 1;
     delete[] m_pPlotOwner;
     delete[] m_pParcelTileCounts;
-    m_pPlotOwner = NULL;
-    m_pParcelTileCounts = NULL;
+    m_pPlotOwner = nullptr;
+    m_pParcelTileCounts = nullptr;
     THMapNode *pNode = m_pCells;
     THMapNode *pOriginalNode = m_pOriginalCells;
     for(int iY = 0; iY < 128; ++iY)
@@ -207,15 +209,15 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
     m_iParcelCount = 0;
     delete[] m_pPlotOwner;
     delete[] m_pParcelTileCounts;
-    m_pPlotOwner = NULL;
-    m_pParcelTileCounts = NULL;
+    m_pPlotOwner = nullptr;
+    m_pParcelTileCounts = nullptr;
 
     THMapNode *pNode = m_pCells;
     THMapNode *pOriginalNode = m_pOriginalCells;
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
 
-    pNode->pExtendedObjectList = NULL;
+    pNode->pExtendedObjectList = nullptr;
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
@@ -304,7 +306,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
 
 #undef IsDividerWall
 
-            if(pData[1] != 0 && fnObjectCallback != NULL)
+            if(pData[1] != 0 && fnObjectCallback != nullptr)
             {
                 fnObjectCallback(pCallbackToken, iX, iY, (THObjectType)pData[1], pData[0]);
             }
@@ -403,7 +405,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
     fnWriter(pToken, aBuffer, iBufferNext);
     iBufferNext = 0;
 
-    memset(aBuffer, 0, 56);
+    std::memset(aBuffer, 0, 56);
     for(int i = 0; i < m_iPlayerCount; ++i)
     {
         _writeTileIndex(aBuffer + iBufferNext,
@@ -413,7 +415,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
         iBufferNext += 2;
     }
     fnWriter(pToken, aBuffer, 16);
-    memset(aBuffer, 0, 16);
+    std::memset(aBuffer, 0, 16);
     // TODO: What are these 56 bytes?
     fnWriter(pToken, aBuffer, 56);
 }
@@ -483,7 +485,7 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
 
 void THMap::_makeAdjacencyMatrix()
 {
-    if(m_pParcelAdjacencyMatrix != NULL)
+    if(m_pParcelAdjacencyMatrix != nullptr)
         return;
 
     m_pParcelAdjacencyMatrix = new bool[m_iParcelCount * m_iParcelCount];
@@ -518,7 +520,7 @@ void THMap::_makeAdjacencyMatrix()
 
 void THMap::_makePurchaseMatrix()
 {
-    if(m_pPurchasableMatrix != NULL)
+    if(m_pPurchasableMatrix != nullptr)
         return; // Already made
     m_pPurchasableMatrix = new bool[4 * m_iParcelCount];
     _updatePurchaseMatrix();
@@ -526,7 +528,7 @@ void THMap::_makePurchaseMatrix()
 
 void THMap::_updatePurchaseMatrix()
 {
-    if(m_pPurchasableMatrix == NULL)
+    if(m_pPurchasableMatrix == nullptr)
         return; // Nothing to update
     for(int iPlayer = 1; iPlayer <= 4; ++iPlayer)
     {
@@ -646,7 +648,7 @@ THMapNode* THMap::getNode(int iX, int iY)
     if(0 <= iX && iX < m_iWidth && 0 <= iY && iY < m_iHeight)
         return getNodeUnchecked(iX, iY);
     else
-        return NULL;
+        return nullptr;
 }
 
 const THMapNode* THMap::getNode(int iX, int iY) const
@@ -654,7 +656,7 @@ const THMapNode* THMap::getNode(int iX, int iY) const
     if(0 <= iX && iX < m_iWidth && 0 <= iY && iY < m_iHeight)
         return getNodeUnchecked(iX, iY);
     else
-        return NULL;
+        return nullptr;
 }
 
 const THMapNode* THMap::getOriginalNode(int iX, int iY) const
@@ -662,7 +664,7 @@ const THMapNode* THMap::getOriginalNode(int iX, int iY) const
     if(0 <= iX && iX < m_iWidth && 0 <= iY && iY < m_iHeight)
         return getOriginalNodeUnchecked(iX, iY);
     else
-        return NULL;
+        return nullptr;
 }
 
 THMapNode* THMap::getNodeUnchecked(int iX, int iY)
@@ -737,7 +739,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         2) For each node, left to right, the west wall, then the late entities
     */
 
-    if(m_pBlocks == NULL || m_pCells == NULL)
+    if(m_pBlocks == nullptr || m_pCells == nullptr)
         return;
 
     THClipRect rcClip;
@@ -753,7 +755,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     {
         unsigned int iH = 32;
         unsigned int iBlock = itrNode1->iBlock[0];
-        m_pBlocks->getSpriteSize(iBlock & 0xFF, NULL, &iH);
+        m_pBlocks->getSpriteSize(iBlock & 0xFF, nullptr, &iH);
         m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
             itrNode1.x() + iCanvasX - 32,
             itrNode1.y() + iCanvasY - iH + 32, iBlock >> 8);
@@ -784,7 +786,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[1];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                NULL, &iH) && iH > 0)
+                nullptr, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
@@ -827,21 +829,21 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[2];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                NULL, &iH) && iH > 0)
+                nullptr, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[3];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                NULL, &iH) && iH > 0)
+                nullptr, &iH) && iH > 0)
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[1];
             if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                NULL, &iH) && iH > 0)
+                nullptr, &iH) && iH > 0)
                 bNeedsRedraw = true;
             if(itrNode->oEarlyEntities.m_pNext)
                 bNeedsRedraw = true;
@@ -899,7 +901,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     //redraw the north wall
                     unsigned int iBlock = itrNode.getPreviousNode()->iBlock[1];
                     if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
-                        NULL, &iH) && iH > 0)
+                        nullptr, &iH) && iH > 0)
                     {
                         m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
                             itrNode.y() - iH + 32, iBlock >> 8);
@@ -947,7 +949,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         }
     }
 
-    pCanvas->setClipRect(NULL);
+    pCanvas->setClipRect(nullptr);
 }
 
 THDrawable* THMap::hitTest(int iTestX, int iTestY) const
@@ -955,8 +957,8 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
     // This function needs to hitTest each drawable object, in the reverse
     // order to that in which they would be drawn.
 
-    if(m_pBlocks == NULL || m_pCells == NULL)
-        return NULL;
+    if(m_pBlocks == nullptr || m_pCells == nullptr)
+        return nullptr;
 
     for(THMapNodeIterator itrNode2(this, iTestX, iTestY, 1, 1, ScanlineBackward); itrNode2; ++itrNode2)
     {
@@ -965,7 +967,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
 
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward); itrNode; ++itrNode)
         {
-            if(itrNode->m_pNext != NULL)
+            if(itrNode->m_pNext != nullptr)
             {
                 THDrawable* pResult = _hitTestDrawables(itrNode->m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
@@ -975,7 +977,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         }
         for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward); itrNode; ++itrNode)
         {
-            if(itrNode->oEarlyEntities.m_pNext != NULL)
+            if(itrNode->oEarlyEntities.m_pNext != nullptr)
             {
                 THDrawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
@@ -985,7 +987,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         }
     }
 
-    return NULL;
+    return nullptr;
 }
 
 THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
@@ -1002,7 +1004,7 @@ THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
             return pList;
 
         if(pList == pListStart)
-            return NULL;
+            return nullptr;
         else
             pList = (THDrawable*)pList->m_pPrev;
     }
@@ -1096,7 +1098,7 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         {
            if((pNode->iFlags >> 24) == THOB_Radiator)
                 iRadiatorNumber = 1;
-            if(pNode->pExtendedObjectList != NULL)
+            if(pNode->pExtendedObjectList != nullptr)
             {
                int nr = *pNode->pExtendedObjectList & 7;
 
@@ -1356,8 +1358,8 @@ void THMap::depersist(LuaPersistReader *pReader)
         pNode->m_pNext = (THLinkList*)lua_touserdata(L, -1);
         if(pNode->m_pNext)
         {
-            if(pNode->m_pNext->m_pPrev != NULL)
-                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+            if(pNode->m_pNext->m_pPrev != nullptr)
+                std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->m_pNext->m_pPrev = pNode;
         }
         lua_pop(L, 1);
@@ -1366,8 +1368,8 @@ void THMap::depersist(LuaPersistReader *pReader)
         pNode->oEarlyEntities.m_pNext = (THLinkList*)lua_touserdata(L, -1);
         if(pNode->oEarlyEntities.m_pNext)
         {
-            if(pNode->oEarlyEntities.m_pNext->m_pPrev != NULL)
-                fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+            if(pNode->oEarlyEntities.m_pNext->m_pPrev != nullptr)
+                std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
         pNode->iFlags &= ~THMN_ObjectsAlreadyErased;
@@ -1403,8 +1405,8 @@ void THMap::depersist(LuaPersistReader *pReader)
 }
 
 THMapNodeIterator::THMapNodeIterator()
-    : m_pNode(NULL)
-    , m_pMap(NULL)
+    : m_pNode(nullptr)
+    , m_pMap(nullptr)
     , m_iScreenX(0)
     , m_iScreenY(0)
     , m_iScreenWidth(0)
@@ -1457,7 +1459,7 @@ THMapNodeIterator& THMapNodeIterator::operator ++ ()
 
 void THMapNodeIterator::_advanceUntilVisible()
 {
-    m_pNode = NULL;
+    m_pNode = nullptr;
 
     while(true)
     {

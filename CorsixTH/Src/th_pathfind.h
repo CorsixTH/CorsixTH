@@ -42,7 +42,7 @@ struct node_t
 {
     //! Pointer to the previous node in the path to this cell.
     /*!
-        Points to NULL if this is the first cell in the path, or points to
+        Points to nullptr if this is the first cell in the path, or points to
         itself if it is not part of a path.
     */
     const node_t* prev;
@@ -55,7 +55,7 @@ struct node_t
 
     //! Current shortest distance to this cell
     /*!
-        Defined as prev->distance + 1 (or 0 if prev == NULL).
+        Defined as prev->distance + 1 (or 0 if prev == nullptr).
         Value is undefined if not part of a path.
     */
     int distance;

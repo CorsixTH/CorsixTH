@@ -24,11 +24,12 @@ SOFTWARE.
 #include "th_sound.h"
 #include <cmath>
 #include <new>
+#include <cstring>
 
 THSoundArchive::THSoundArchive()
 {
-    m_pFiles = NULL;
-    m_pData = NULL;
+    m_pFiles = nullptr;
+    m_pData = nullptr;
 }
 
 THSoundArchive::~THSoundArchive()
@@ -49,9 +50,9 @@ bool THSoundArchive::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
 
     delete[] m_pData;
     m_pData = new (std::nothrow) uint8_t[iDataLength];
-    if(m_pData == NULL)
+    if(m_pData == nullptr)
         return false;
-    memcpy(m_pData, pData, iDataLength);
+    std::memcpy(m_pData, pData, iDataLength);
 
     m_pFiles = reinterpret_cast<th_fileinfo_t*>(m_pData + m_oHeader.table_position);
     m_iFileCount = m_oHeader.table_length / sizeof(th_fileinfo_t);
@@ -66,7 +67,7 @@ size_t THSoundArchive::getSoundCount() const
 const char* THSoundArchive::getSoundFilename(size_t iIndex) const
 {
     if(iIndex >= m_iFileCount)
-        return NULL;
+        return nullptr;
     return m_pFiles[iIndex].filename;
 }
 
@@ -152,7 +153,7 @@ size_t THSoundArchive::getSoundDuration(size_t iIndex)
 SDL_RWops* THSoundArchive::loadSound(size_t iIndex)
 {
     if(iIndex >= m_iFileCount)
-        return NULL;
+        return nullptr;
 
     th_fileinfo_t *pFile = m_pFiles + iIndex;
     return SDL_RWFromConstMem(m_pData + pFile->position, pFile->length);
@@ -160,11 +161,11 @@ SDL_RWops* THSoundArchive::loadSound(size_t iIndex)
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
 
-THSoundEffects* THSoundEffects::ms_pSingleton = NULL;
+THSoundEffects* THSoundEffects::ms_pSingleton = nullptr;
 
 THSoundEffects::THSoundEffects()
 {
-    m_ppSounds = NULL;
+    m_ppSounds = nullptr;
     m_iSoundCount = 0;
     ms_pSingleton = this;
     m_iCameraX = 0;
@@ -190,15 +191,15 @@ THSoundEffects::THSoundEffects()
 
 THSoundEffects::~THSoundEffects()
 {
-    setSoundArchive(NULL);
+    setSoundArchive(nullptr);
     if(ms_pSingleton == this)
-        ms_pSingleton = NULL;
+        ms_pSingleton = nullptr;
 }
 
 void THSoundEffects::_onChannelFinish(int iChannel)
 {
     THSoundEffects *pThis = getSingleton();
-    if(pThis == NULL)
+    if(pThis == nullptr)
         return;
 
     pThis->releaseChannel(iChannel);
@@ -216,16 +217,16 @@ void THSoundEffects::setSoundArchive(THSoundArchive *pArchive)
         Mix_FreeChunk(m_ppSounds[i]);
     }
     delete[] m_ppSounds;
-    m_ppSounds = NULL;
+    m_ppSounds = nullptr;
     m_iSoundCount = 0;
 
-    if(pArchive == NULL)
+    if(pArchive == nullptr)
         return;
 
     m_ppSounds = new Mix_Chunk*[pArchive->getSoundCount()];
     for(; m_iSoundCount < pArchive->getSoundCount(); ++m_iSoundCount)
     {
-        m_ppSounds[m_iSoundCount] = NULL;
+        m_ppSounds[m_iSoundCount] = nullptr;
         SDL_RWops *pRwop = pArchive->loadSound(m_iSoundCount);
         if(pRwop)
         {
@@ -313,7 +314,7 @@ void THSoundEffects::setCamera(int iX, int iY, int iRadius)
 
 THSoundEffects::THSoundEffects() {}
 THSoundEffects::~THSoundEffects() {}
-THSoundEffects* THSoundEffects::getSingleton() {return NULL;}
+THSoundEffects* THSoundEffects::getSingleton() {return nullptr;}
 void THSoundEffects::setSoundArchive(THSoundArchive *pArchive) {}
 void THSoundEffects::playSound(size_t iIndex, double dVolume) {}
 void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY) {}

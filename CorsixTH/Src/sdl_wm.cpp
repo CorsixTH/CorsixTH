@@ -44,7 +44,7 @@ static int l_set_icon_win32(lua_State *L)
     if(SDL_GetWindowWMInfo(window,&oWindowInfo) == 1)
     {
         HWND hWindow = oWindowInfo.info.win.window;
-        HICON hIcon = LoadIcon((HINSTANCE)GetModuleHandle(NULL), (LPCTSTR)IDI_CORSIXTH);
+        HICON hIcon = LoadIcon((HINSTANCE)GetModuleHandle(nullptr), (LPCTSTR)IDI_CORSIXTH);
         SetClassLongPtr(hWindow, GCLP_HICON, (LONG_PTR)hIcon);
         SetClassLongPtr(hWindow, GCLP_HICONSM, (LONG_PTR)hIcon);
         lua_pushboolean(L, 1);
@@ -62,7 +62,7 @@ static int l_show_cursor(lua_State *L)
 static const struct luaL_Reg sdl_wmlib[] = {
     {"setIconWin32", l_set_icon_win32},
     {"showCursor", l_show_cursor},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_sdl_wm(lua_State *L)

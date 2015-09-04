@@ -545,7 +545,7 @@ static int l_decompress(lua_State *L)
 
 static const struct luaL_Reg rnclib[] = {
     {"decompress", l_decompress},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_rnc(lua_State *L)

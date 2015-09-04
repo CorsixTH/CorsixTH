@@ -211,7 +211,7 @@ public: // Internal (this rendering engine only) API
     //! Should bitmaps be scaled?
     /*!
         @param [out] pFactor If the function returns \c true, the factor to use
-            for scaling (can be \c NULL if not interested in the value).
+            for scaling (can be \c nullptr if not interested in the value).
         @return Whether bitmaps should be scaled.
      */
     bool shouldScaleBitmaps(double* pFactor);
@@ -490,8 +490,8 @@ public: // External API
     //! Get size of a sprite.
     /*!
         @param iSprite Sprite to get info from.
-        @param pWidth [out] If not NULL, the sprite width is stored in the destination.
-        @param pHeight [out] If not NULL, the sprite height is stored in the destination.
+        @param pWidth [out] If not nullptr, the sprite width is stored in the destination.
+        @param pHeight [out] If not nullptr, the sprite height is stored in the destination.
         @return Size could be provided for the sprite.
     */
     bool getSpriteSize(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
@@ -669,7 +669,7 @@ protected:
         THLineOpType type;
         double m_fX, m_fY;
         THLineOperation(THLineOpType type, double m_fX, double m_fY) : type(type), m_fX(m_fX), m_fY(m_fY) {
-            m_pNext = NULL;
+            m_pNext = nullptr;
         }
     };
 

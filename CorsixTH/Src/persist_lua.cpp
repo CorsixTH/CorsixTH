@@ -24,8 +24,9 @@ SOFTWARE.
 #include <cstring>
 #include <errno.h>
 #include <cmath>
+#include <cstdio>
 #ifdef _MSC_VER
-#pragma warning(disable: 4996) // Disable "strcpy unsafe" warnings under MSVC
+#pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
 
 enum PersistTypes
@@ -82,7 +83,7 @@ struct LoadMultiBuffer_t
 
     LoadMultiBuffer_t()
     {
-        s[0] = s[1] = s[2] = NULL;
+        s[0] = s[1] = s[2] = nullptr;
         i[0] = i[1] = i[2] = 0;
         n = 0;
     }
@@ -101,7 +102,7 @@ struct LoadMultiBuffer_t
         }
 
         *size = 0;
-        return NULL;
+        return nullptr;
     }
 };
 
@@ -169,7 +170,7 @@ public:
 
     int finish()
     {
-        if(getError() != NULL)
+        if(getError() != nullptr)
         {
             lua_pushnil(m_L);
             lua_pushstring(m_L, getError());
@@ -590,7 +591,7 @@ public:
             setError("Can only persist Lua functions defined in source files");
             return;
         }
-        if(strcmp(pProtoInfo->what, "Lua") != 0)
+        if(std::strcmp(pProtoInfo->what, "Lua") != 0)
         {
             // what == "C" should have been caught by writeObjectRaw().
             // what == "tail" should be impossible.
@@ -662,7 +663,7 @@ public:
             m_iDataBufferLength *= 2;
             m_pData = (uint8_t*)realloc(m_pData, m_iDataBufferLength);
         }
-        memcpy(m_pData + m_iDataLength, pBytes, iCount);
+        std::memcpy(m_pData + m_iDataLength, pBytes, iCount);
         m_iDataLength += iCount;
     }
 
@@ -674,10 +675,10 @@ public:
         m_bHadError = true;
 
         // Use the written data buffer to store the error message
-        m_iDataLength = strlen(sError) + 1;
+        m_iDataLength = std::strlen(sError) + 1;
         if(m_iDataBufferLength < m_iDataLength)
             m_pData = (uint8_t*)realloc(m_pData, m_iDataBufferLength);
-        strcpy((char*)m_pData, sError);
+        std::strcpy((char*)m_pData, sError);
     }
 
     void setErrorObject(int iStackObject)
@@ -698,7 +699,7 @@ public:
         if(m_bHadError)
             return reinterpret_cast<char*>(m_pData);
         else
-            return NULL;
+            return nullptr;
     }
 
 protected:
@@ -754,13 +755,13 @@ public:
     virtual void setError(const char *sError)
     {
         m_bHadError = true;
-        size_t iErrLength = strlen(sError) + 1;
+        size_t iErrLength = std::strlen(sError) + 1;
         if(iErrLength > m_iStringBufferLength)
         {
             m_sStringBuffer = (char*)realloc(m_sStringBuffer, iErrLength);
             m_iStringBufferLength = iErrLength;
         }
-        strcpy(m_sStringBuffer, sError);
+        std::strcpy(m_sStringBuffer, sError);
     }
 
     void init(const uint8_t *pData, size_t iLength)
@@ -911,7 +912,7 @@ public:
                         return false;
                     // For now, just skip over the upvalue IDs. In the future,
                     // the ID may be used to rejoin shared upvalues.
-                    if(!readByteStream(NULL, iIDSize))
+                    if(!readByteStream(nullptr, iIDSize))
                         return false;
                 }
                 lua_call(L, iNups, 0);
@@ -1194,8 +1195,8 @@ public:
             lua_pop(m_L, 1);
             return false;
         }
-        if(pBytes != NULL)
-            memcpy(pBytes, m_pData, iCount);
+        if(pBytes != nullptr)
+            std::memcpy(pBytes, m_pData, iCount);
         m_pData += iCount;
         m_iDataBufferLength -= iCount;
         return true;
@@ -1209,7 +1210,7 @@ public:
         if(m_bHadError)
             return m_sStringBuffer;
         else
-            return NULL;
+            return nullptr;
     }
 
 protected:
@@ -1289,7 +1290,7 @@ const char* FindFunctionEnd(lua_State *L, const char* sStart)
     const char* sEnd = sStart;
     while(sEnd)
     {
-        sEnd = strstr(sEnd, "end");
+        sEnd = std::strstr(sEnd, "end");
         if(sEnd)
         {
             sEnd += 3;
@@ -1306,7 +1307,7 @@ const char* FindFunctionEnd(lua_State *L, const char* sStart)
             lua_pop(L, 1);
         }
     }
-    return NULL;
+    return nullptr;
 }
 
 static int l_persist_dofile(lua_State *L)
@@ -1315,32 +1316,32 @@ static int l_persist_dofile(lua_State *L)
     lua_settop(L, 1);
 
     // Read entire file into memory
-    FILE *fFile = fopen(sFilename, "r");
-    if(fFile == NULL)
+    FILE *fFile = std::fopen(sFilename, "r");
+    if(fFile == nullptr)
     {
-        const char *sError = strerror(errno);
+        const char *sError =std::strerror(errno);
         return luaL_error(L, "cannot open %s: %s", sFilename, sError);
     }
     size_t iBufferSize = lua_objlen(L, luaT_upvalueindex(1));
     size_t iBufferUsed = 0;
-    while(!feof(fFile))
+    while(!std::feof(fFile))
     {
-        iBufferUsed += fread(reinterpret_cast<char*>(lua_touserdata(L,
+        iBufferUsed += std::fread(reinterpret_cast<char*>(lua_touserdata(L,
             luaT_upvalueindex(1))) + iBufferUsed, 1, iBufferSize - iBufferUsed, fFile);
         if(iBufferUsed == iBufferSize)
         {
             iBufferSize *= 2;
-            memcpy(lua_newuserdata(L, iBufferSize), lua_touserdata(L, luaT_upvalueindex(1)), iBufferUsed);
+            std::memcpy(lua_newuserdata(L, iBufferSize), lua_touserdata(L, luaT_upvalueindex(1)), iBufferUsed);
             lua_replace(L, luaT_upvalueindex(1));
         }
         else
             break;
     }
-    int iStatus = ferror(fFile);
-    fclose(fFile);
+    int iStatus = std::ferror(fFile);
+    std::fclose(fFile);
     if(iStatus)
     {
-        const char *sError = strerror(errno);
+        const char *sError =std::strerror(errno);
         return luaL_error(L, "cannot read %s: %s", sFilename, sError);
     }
 
@@ -1368,32 +1369,32 @@ static int l_persist_dofile(lua_State *L)
         return lua_error(L);
     lua_remove(L, -2);
     int iBufferCopyIndex = lua_gettop(L);
-    memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
+    std::memcpy(lua_newuserdata(L, iBufferUsed + 1), sFile, iBufferUsed + 1);
     lua_insert(L, -2);
     lua_call(L, 0, LUA_MULTRET);
     sFile = reinterpret_cast<char*>(lua_touserdata(L, luaT_upvalueindex(1)));
-    memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
+    std::memcpy(sFile, lua_touserdata(L, iBufferCopyIndex), iBufferUsed + 1);
     lua_remove(L, iBufferCopyIndex);
 
     // Extract persistable functions
     const char *sPosition = sFile;
     while(true)
     {
-        sPosition = strstr(sPosition, "--[[persistable:");
+        sPosition = std::strstr(sPosition, "--[[persistable:");
         if(!sPosition)
             break;
         sPosition += 16;
-        const char *sNameEnd = strstr(sPosition, "]]");
+        const char *sNameEnd = std::strstr(sPosition, "]]");
         if(sNameEnd)
         {
             int iLineNumber = CalculateLineNumber(sFile, sNameEnd);
-            const char *sFunctionArgs = strchr(sNameEnd + 2, '(');
+            const char *sFunctionArgs = std::strchr(sNameEnd + 2, '(');
             const char *sFunctionEnd = FindFunctionEnd(L, sFunctionArgs);
             if((sNameEnd - sPosition) == 1 && *sPosition == ':')
             {
                 // --[[persistable::]] means take the existing name of the function
-                sPosition = strstr(sNameEnd, "function") + 8;
-                sPosition += strspn(sPosition, " \t");
+                sPosition = std::strstr(sNameEnd, "function") + 8;
+                sPosition += std::strspn(sPosition, " \t");
                 sNameEnd = sFunctionArgs;
                 while(sNameEnd[-1] == ' ')
                     --sNameEnd;
@@ -1464,7 +1465,7 @@ static const struct luaL_Reg persist_lib[] = {
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_persist(lua_State *L)

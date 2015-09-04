@@ -23,14 +23,13 @@ SOFTWARE.
 #include "config.h"
 #include "th.h"
 #include <cstring>
-#include <memory.h>
 #include <new>
 
 THLinkList::THLinkList()
 {
     m_drawingLayer = 0;
-    m_pPrev = NULL;
-    m_pNext = NULL;
+    m_pPrev = nullptr;
+    m_pNext = nullptr;
 }
 
 THLinkList::~THLinkList()
@@ -40,23 +39,23 @@ THLinkList::~THLinkList()
 
 void THLinkList::removeFromList()
 {
-    if(m_pPrev != NULL)
+    if(m_pPrev != nullptr)
     {
         m_pPrev->m_pNext = m_pNext;
     }
-    if(m_pNext != NULL)
+    if(m_pNext != nullptr)
     {
         m_pNext->m_pPrev = m_pPrev;
-        m_pNext = NULL;
+        m_pNext = nullptr;
     }
-    m_pPrev = NULL;
+    m_pPrev = nullptr;
 }
 
 THStringList::THStringList()
 {
     m_iSectionCount = 0;
-    m_pSections = NULL;
-    m_sData = NULL;
+    m_pSections = nullptr;
+    m_sData = nullptr;
 }
 
 THStringList::~THStringList()
@@ -173,8 +172,8 @@ bool THStringList::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
         delete[] m_pSections[i].pStrings;
     delete[] m_pSections;
     delete[] m_sData;
-    m_pSections = NULL;
-    m_sData = NULL;
+    m_pSections = nullptr;
+    m_sData = nullptr;
     m_iSectionCount = 0;
 
     if(iDataLength < 2)
@@ -205,7 +204,7 @@ bool THStringList::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
         fnCopyString = CopyStringCP437;
 
     m_sData = new (std::nothrow) uint8_t[iStringDataLength * 2 + 2];
-    if(m_sData == NULL)
+    if(m_sData == nullptr)
         return false;
 
     uint8_t *sDataOut = m_sData;
@@ -251,5 +250,5 @@ const char* THStringList::getString(size_t iSection, size_t iIndex)
             return m_pSections[iSection].pStrings[iIndex];
         }
     }
-    return NULL;
+    return nullptr;
 }

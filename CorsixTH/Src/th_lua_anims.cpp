@@ -242,7 +242,7 @@ static int l_anim_pre_depersist(lua_State *L)
     // soon as possible, thus preventing issues like an anim -> map -> anim
     // reference chain whereby l_anim_depersist is called after l_map_depersist
     // (as anim references map in its environment table) causing the pPrev
-    // field to be set during map depersistence, then cleared to NULL by the
+    // field to be set during map depersistence, then cleared to nullptr by the
     // constructor during l_anim_depersist.
     T* pAnimation = luaT_testuserdata<T>(L);
     new (pAnimation) T; // Call constructor

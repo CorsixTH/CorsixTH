@@ -188,7 +188,7 @@ static int l_str_index(lua_State *L)
     {
         size_t iLen;
         const char* sKey = lua_tolstring(L, 2, &iLen);
-        if(iLen == 8 && strcmp(sKey, "__random") == 0)
+        if(iLen == 8 && std::strcmp(sKey, "__random") == 0)
         {
             aux_push_random_key(L);
             lua_replace(L, 2);
