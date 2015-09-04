@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_map_overlays.h"
 #include "th_gfx.h"
 #include "th_map.h"
-#include <cstdio>
+#include <sstream>
 
 THMapOverlay::~THMapOverlay()
 {
@@ -90,15 +90,15 @@ void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     }
     if(m_pFont)
     {
-        _drawText(pCanvas, iCanvasX, iCanvasY, "%s",
-            getText(pMap, iNodeX, iNodeY));
+        _drawText(pCanvas, iCanvasX, iCanvasY, getText(pMap, iNodeX, iNodeY));
     }
 }
 
-const char* THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
+const std::string THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
 {
-    std::sprintf(m_sBuffer, "%i,%i", iNodeX + 1, iNodeY + 1);
-    return m_sBuffer;
+    std::ostringstream str;
+    str << iNodeX + 1 << ',' << iNodeY + 1;
+    return str.str();
 }
 
 THMapTypicalOverlay::THMapTypicalOverlay()
@@ -145,9 +145,17 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(m_pFont)
     {
         if(pNode->iFlags >> 24)
-            _drawText(pCanvas, iCanvasX, iCanvasY - 8, "T%i", (int)(pNode->iFlags >> 24));
+        {
+            std::ostringstream str;
+            str << 'T' << (int)(pNode->iFlags >> 24);
+            _drawText(pCanvas, iCanvasX, iCanvasY - 8, str.str());
+        }
         if(pNode->iRoomId)
-            _drawText(pCanvas, iCanvasX, iCanvasY + 8, "R%i", (int)pNode->iRoomId);
+        {
+            std::ostringstream str;
+            str << 'R' << (int)pNode->iRoomId;
+            _drawText(pCanvas, iCanvasX, iCanvasY + 8, str.str());
+        }
     }
 }
 
@@ -159,7 +167,7 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(!pNode)
         return;
     if(m_pFont)
-        _drawText(pCanvas, iCanvasX, iCanvasY, "%i", (int)pNode->iParcelId);
+        _drawText(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
     if(m_pSprites)
     {
         uint16_t iParcel = pNode->iParcelId;
@@ -177,16 +185,10 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 
 
 void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
-        const char* sFormat, ...)
+        std::string str)
 {
-    char sBuffer[64];
-    va_list args;
-    va_start(args, sFormat);
-    size_t iLen = (int)std::vsprintf(sBuffer, sFormat, args);
-    va_end(args);
-
-    THFontDrawArea oArea = m_pFont->getTextSize(sBuffer, iLen);
-    m_pFont->drawText(pCanvas, sBuffer, iLen, iX + (64 - oArea.iEndX) / 2,
+    THFontDrawArea oArea = m_pFont->getTextSize(str.c_str(), str.length());
+    m_pFont->drawText(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.iEndX) / 2,
         iY + (32 - oArea.iEndY) / 2);
 }
 
