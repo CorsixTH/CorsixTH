@@ -1,0 +1,26 @@
+version: '{build}'
+pull_requests:
+  do_not_increment_build_number: true
+init:
+- git clone --depth=1 https://github.com/CorsixTH/deps.git c:/deps
+environment:
+  matrix:
+  - GENERATOR: Visual Studio 12 2013 Win64
+    CMAKE_LIBRARY_PATH: c:/deps/win_x64_msvc12/lib
+    CMAKE_INCLUDE_PATH: c:/deps/win_x64_msvc12/include
+before_build:
+- cmake -G "%GENERATOR%" -DCMAKE_LIBRARY_PATH="%CMAKE_LIBRARY_PATH%" -DCMAKE_INCLUDE_PATH="%CMAKE_INCLUDE_PATH%"
+build:
+  project: CorsixTH_Top_Level.sln
+  verbosity: minimal
+after_build:
+- cp %CMAKE_LIBRARY_PATH%/*.dll %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/
+- cp -R %CMAKE_LIBRARY_PATH%/mime %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/mime
+- cp -R %CMAKE_LIBRARY_PATH%/socket %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/socket
+- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Lua
+- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Bitmap
+- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Levels
+- cp %APPVEYOR_BUILD_FOLDER%/CorsixTH/CorsixTH.lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/
+artifacts:
+- path: CorsixTH/Debug/
+  name: CorsixTH
