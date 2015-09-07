@@ -27,8 +27,8 @@ class "GameUI" (UI)
 local GameUI = _G["GameUI"]
 
 local TH = require "TH"
-local WM = require "sdl".wm
 local SDL = require "sdl"
+local WM = SDL.wm
 local lfs = require "lfs"
 local pathsep = package.config:sub(1, 1)
 
@@ -230,7 +230,7 @@ function GameUI:keySpeedUp()
 end
 
 function GameUI:keyTransparent()
-  self:makeTransparentWalls()
+  self:setWallsTransparent(true)
 end
 
 function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
@@ -263,9 +263,7 @@ function GameUI:onKeyUp(rawchar)
     self.app.world:previousSpeed()
   end
 
-  if self.transparent_walls then
-    self:removeTransparentWalls()
-  end
+  self:setWallsTransparent(false)
 end
 
 function GameUI:makeDebugFax()
@@ -753,17 +751,10 @@ end
 --! Sets wall transparency to the specified parameter
 --!param mode (boolean) whether to enable or disable wall transparency
 function GameUI:setWallsTransparent(mode)
-  self.transparent_walls = mode
-  self:applyTransparency()
-end
-
---! Toggles transparency of walls, i.e. enables if currently disabled, and vice versa
-function GameUI:makeTransparentWalls()
-  self:setWallsTransparent(true)
-end
-
-function GameUI:removeTransparentWalls()
-  self:setWallsTransparent(not self.transparent_walls)
+  if mode ~= self.transparent_walls then
+    self.transparent_walls = mode
+    self:applyTransparency()
+  end
 end
 
 function UI:toggleAdviser()

@@ -27,8 +27,8 @@ class "UI" (Window)
 local UI = _G["UI"]
 
 local TH = require "TH"
-local WM = require "sdl".wm
 local SDL = require "sdl"
+local WM = SDL.wm
 local lfs = require "lfs"
 local pathsep = package.config:sub(1, 1)
 

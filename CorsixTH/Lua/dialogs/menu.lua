@@ -123,6 +123,9 @@ local function assign_menu_levels(menu, level)
   end
 end
 
+--! Add a menu to the menu bar.
+--!param title Title of the menu (at the bar).
+--!param menu Menu to add.
 function UIMenuBar:addMenu(title, menu)
   assign_menu_levels(menu, 1)
   local menu = {
@@ -741,9 +744,9 @@ function UIMenuBar:makeMenu(app)
       :appendItem(_S.menu_debug.dump_gamelog,       function() self.ui.app.world:dumpGameLog() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
         :appendCheckItem(_S.menu_debug_overlay.none,         true, overlay(), "")
-        :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay"flags", "")
-        :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay"positions", "")
-        :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay"heat", "")
+        :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")
+        :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay("positions"), "")
+        :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay("heat"), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(35, 8, 0, 1, false), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(35, 8, 2, 2, false), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(35, 8, 3, 3, false), "")
