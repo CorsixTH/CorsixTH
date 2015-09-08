@@ -29,9 +29,9 @@ adviser.goals = {
   win = { -- Why are these strings uppercase?
     reputation = "Portez votre réputation à %d pour pouvoir gagner.",
     value = "Portez la valeur de votre hôpital à %d.",
-  },
-  lose.kill = "Tuez encore %d patients pour perdre !"
+  }
 }
+adviser.goals.lose.kill = "Tuez encore %d patients pour perdre !"
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Voir la page suivante"
@@ -142,16 +142,34 @@ tooltip.objects = {
   toilet_sink = "Lavabo : s'il n'y en a pas assez, les patients qui apprécient l'hygiène seront mécontents.",
   cabinet = "Placard : dossiers des patients, notes de recherche.",
 }
+
 room_descriptions = {
-  gp[2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle, soit pour un autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait.",
-  pharmacy[2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard.",
-  general_diag[3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. ",
-  fracture_clinic[2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur.",
-  inflation[2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille.",
-  hair_restoration[2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure.",
-  electrolysis[2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation.",
-  staff_room[2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois.",
+  gp = {
+    [2] = "C'est une salle de diagnostic fondamentale pour votre hôpital. Elle accueille les nouveaux patients pour les ausculter. Ils sont ensuite orientés vers une autre salle, soit pour un autre diagnostic soit pour être soignés. Vous devriez construire un autre cabinet de médecine générale au cas où celui-ci serait débordé. Plus l'endroit est grand et plus vous pouvez y placer des équipements, sans compter que c'est bon pour le prestige du médecin. C'est valable pour toutes les salles, en fait.",
+  },
+  pharmacy = {
+    [2] = "Les patients dont le mal a été diagnostiqué et dont le traitement est un médicament peuvent se rendre à la pharmacie. Comme la recherche découvre toujours de nouveaux traitements, l'activité de cette salle est en constante évolution. Vous aurez à construire une autre pharmacie plus tard.",
+  },
+  general_diag = {
+    [3] = "La salle de diagnostic nécessite un médecin. Il faut également un agent de maintenance pour un entretien périodique. ",
+  },
+  fracture_clinic = {
+    [2] = "Les patients dont les os étaient en morceaux se rendront dans cette salle. Le déplâtreur dégagera les membres en ne causant qu'une faible douleur.",
+  },
+  inflation = {
+    [2] = "Les patients souffrant de l'affreuse-mais-si-drôle encéphalantiasis sont soignés à la salle de gonflage, où leur tête démesurée sera dégonflée puis regonflée à la bonne taille.",
+  },
+  hair_restoration = {
+    [2] = "Les patients souffrant de sévère calvitie se rendront dans cette salle équipée d'un moumouteur. Un médecin utilisera la machine pour donner aux patients une nouvelle chevelure.",
+  },
+  electrolysis = {
+    [2] = "Les patients souffrant de pilose viennent dans cette salle où une machine arrache les poils et scelle les pores selon un procédé qui n'est pas sans rappeler la cimentation.",
+  },
+  staff_room = {
+    [2] = "Votre équipe finit par se fatiguer et a besoin de cette salle pour se remettre. Une équipe fatiguée est lente, revendicatrice et peut même envisager de démissionner. De plus, elle risque de commettre des erreurs. Il est avisé de construire une salle de repos bien aménagée et de prévoir assez de place pour plusieurs membres à la fois.",
+  }
 }
+
 progress_report.too_hot = "Réglez le chauffage : on étouffe."
 adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infermière."
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
@@ -196,12 +214,10 @@ buy_objects_window = {
   total = "Total : ",
 }
 fax = {
-  epidemic.declare_explanation_fine = "Si vous déclarez l'épidémie, vous aurez une amende de %d, un changement de réputation et tous les patients seront vaccinés automatiquement.",
   epidemic_result = {
     close_text = "Hourrah !",
     rep_loss_fine_amount = "Les journaux vont s'en donner à cœur joie avec cette affaire. Votre réputation va en prendre un coup ! Sans oublier l'amende de %d.",
   },
-  emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats.",
   vip_visit_result = {
     telegram = "Télégramme !",
     vip_remarked_name = "Après avoir visité votre hôpital, %s a dit : ",
@@ -228,6 +244,9 @@ fax = {
     partial_diagnosis_percentage_name = "Il y a %d pour cent de chances que la maladie soit %s."
   },
 }
+fax.epidemic.declare_explanation_fine = "Si vous déclarez l'épidémie, vous aurez une amende de %d, un changement de réputation et tous les patients seront vaccinés automatiquement."
+fax.emergency.num_disease = "Il y a %d personnes atteintes de %s qui ont besoin de soins immédiats."
+
 dynamic_info = {
   patient = {
     actions = {
