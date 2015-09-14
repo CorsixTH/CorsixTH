@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Víctor González a.k.a. "mccunyao"
+--[[ Copyright (c) 2015 Víctor González a.k.a. "mccunyao"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -626,7 +626,6 @@ menu_debug = {
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
   make_debug_fax              = "  CREAR FAX DE DEPURACIóN  ",
   make_debug_patient          = "  CREAR PACIENTE DE DEPURACIóN  ",
-  debug_script                = "  (MAYúS + D) EJECUTAR SCRIPT DE DEPURACIÓN  ",
   cheats                      = "  (F11) TRUCOS  ",
   lua_console                 = "  (F12) CONSOLA LUA  ",
   debug_script                = "  (MAYúS + D) EJECUTAR SCRIPT DE DEPURACIóN  ",
