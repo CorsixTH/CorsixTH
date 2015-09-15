@@ -10,7 +10,6 @@
 #   - WITH_MOVIES  : Activate movies (requires Sound)
 #   - BUILD_ANIMVIEWER
 #   - BUILD_MAPEDITOR
-#   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
 #   - WITH_LIBAV   : Whether to use LibAV (as opposed to FFMEPG) when building movies
 #   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
 
@@ -45,7 +44,6 @@ OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
 OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
-OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 OPTION(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
 OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
@@ -132,11 +130,7 @@ ENDIF(BUILD_MAPEDITOR)
 # Documentation generation, construct 'doc' target (or a message it is disabled).
 
 # Try to find 'lua'
-IF (WITH_LUAJIT)
-    SET (LUA_PROGRAM_NAMES luajit-2.0.3 luajit)
-ELSE (WITH_LUAJIT)
-    SET (LUA_PROGRAM_NAMES lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua)
-ENDIF(WITH_LUAJIT)
+SET (LUA_PROGRAM_NAMES lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua luajit-2.0.3 luajit)
 
 find_program (LUA_PROGRAM_PATH ${LUA_PROGRAM_NAMES}
   PATHS
