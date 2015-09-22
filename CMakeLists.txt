@@ -41,6 +41,8 @@ IF(APPLE)
 ENDIF()
 
 # Define our options
+SET(CMAKE_INCLUDE_PATH "" CACHE PATH "(Optional) If you store your libraries in your own \"Libraries\" dir your could make them share one \"include\" directory so that CMAKE will only need to be given its PATH.")
+SET(CMAKE_LIBRARY_PATH "" CACHE PATH "(Optional) If you store your libraries in your own \"Libraries\" dir your could make them share one \"lib\" directory so that CMAKE will only need to be given its PATH. This directory could contain a sub directory for 32bit libs & another for 64bit libs.")
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
