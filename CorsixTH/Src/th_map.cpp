@@ -884,7 +884,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
                 //check if an object in the adjacent tile above the current tile needs to be redrawn
                 //and if necessary draw it
-                pItem = (THDrawable*)(formerIterator->m_pNext);
+                pItem = formerIterator ? (THDrawable*)(formerIterator->m_pNext) : nullptr;
                 while(pItem)
                 {
                     if(pItem->getDrawingLayer() == 8)
