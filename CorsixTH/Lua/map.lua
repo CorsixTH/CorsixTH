@@ -132,26 +132,28 @@ local function bits(n)
 end
 
 --[[! Loads the specified level. If a string is passed it looks for the file with the same name
- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
- the original game.
+ in the "Levels" and/or "Campaigns" folder of CorsixTH, if it is a number it tries to load
+ that level from the original game.
 !param level (string or int) The name (or number) of the level to load. If this is a number the game assumes
 the original game levels are considered.
 !param level_name (string) The name of the actual map/area/hospital as written in the config file.
-!param level_file (string) The path to the map file as supplied by the config file.
+!param map_file (string) The path to the map file as supplied by the config file.
+!param level_intro (string) If loading a custom level this message will be shown as soon as the level
+has been loaded.
 ]]
-function Map:load(level, difficulty, level_name, level_file, level_intro)
+function Map:load(level, difficulty, level_name, map_file, level_intro)
   local objects, i
   if not difficulty then
     difficulty = "full"
   end
   -- Load CorsixTH base configuration for all levels.
-  -- We want to load the file a new each time.
+  -- We want to load the file again each time.
   local function file (filename)
       local f = assert(loadfile(filename))
       return f()
     end
-  local path = debug.getinfo(1, "S").source:sub(2, -8)
-  local result = file(path .. "base_config.lua")
+  local path = debug.getinfo(1, "S").source:sub(2, -12)
+  local result = file(path .. "Lua" .. pathsep .. "base_config.lua")
 
   local base_config = result
   local errors
@@ -167,7 +169,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     self.difficulty = difficulty
     self.level_number = level
     local data
-    data, errors = self:getRawData(level_file)
+    data, errors = self:getRawData(map_file)
     if data then
       i, objects = self.th:load(data)
     else
@@ -190,7 +192,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
       end
       -- Override with the specific configuration for this level
       errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
-      -- Finally load additional CorsixTH config per level (currently only for level 5)
+      -- Finally load additional CorsixTH config per level
       local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
       errors, result = self:loadMapConfig(p, result, true)
       self.level_config = result
@@ -212,15 +214,18 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     self.level_name = level_name
     self.level_intro = level_intro
     self.level_number = level
-    self.level_file = level_file
-    local data, errors = self:getRawData(level_file)
+    self.map_file = map_file
+    local data, errors = self:getRawData(map_file)
     if data then
       i, objects = self.th:load(data)
     else
       return nil, errors
     end
     assert(base_config, "No base config has been loaded!")
-    errors, result = self:loadMapConfig(level, base_config, true)
+    errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)
+    if errors then
+      print(errors)
+    end
     self.level_config = result
   end
 
@@ -240,7 +245,7 @@ end
 
 --[[! Loads map configurations from files. Returns nil as first result
 if no configuration could be loaded and config as second result no matter what.
-!param filename (string) Name of the config file to load.
+!param filename (string) The absolute path to the config file to load
 !param config (string) If a base config already exists and only some values should be overridden
 this is the base config
 !param custom If true The configuration file is searched for where filename points, otherwise
@@ -291,7 +296,7 @@ function Map:loadMapConfig(filename, config, custom)
     end
     return nil, config
   else
-    return "Error: Could not find the configuration file", config
+    return "Error: Could not find the configuration file, only 'Base Config' will be loaded for this level.", config
   end
 end
 
@@ -330,13 +335,13 @@ function Map:clearDebugText()
   self.updateDebugOverlay = nil
 end
 
-function Map:getRawData(level_file)
+function Map:getRawData(map_file)
   if not self.thData then
     local data, errors
-    if not level_file then
+    if not map_file then
       data, errors = self.app:readDataFile("Levels", "Level.L".. self.level_number)
     else
-      data, errors = self.app:readDataFile("Levels", level_file)
+      data, errors = self.app:readDataFile("Levels", map_file)
     end
     if data then
       self.thData = data

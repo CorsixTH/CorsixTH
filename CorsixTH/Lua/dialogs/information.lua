@@ -45,9 +45,10 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
     self.black_font = app.gfx:loadBuiltinFont()
     self.black_background = true
   end
+
   if type(text[1]) == "table" then
-    self.text = text[1][1]
-    table.remove(text[1], 1)
+    self.text = text[1]
+    table.remove(text, 1)
     self.additional_text = text
   else
     self.text = text
@@ -70,15 +71,14 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
 end
 
 function UIInformation:onChangeLanguage()
-  local rows = 0
+  local total_req_height = 0
   for i, text in ipairs(self.text) do
-    local old_rows = rows
-    rows = rows + math.floor(self.black_font:sizeOf(text) / 300 + 1)
-    rows = rows + 1
+    local req_width, req_height = self.black_font:sizeOf(text, self.text_width)
+    total_req_height = total_req_height + req_height
   end
 
   self.width = self.spacing.l + self.text_width + self.spacing.r
-  self.height = self.spacing.t + rows*12 + self.spacing.b
+  self.height = self.spacing.t + total_req_height + self.spacing.b
   self:setDefaultPosition(0.5, 0.5)
 
   self:removeAllPanels()
@@ -106,8 +106,7 @@ function UIInformation:draw(canvas, x, y)
   canvas:drawRect(background, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + self.spacing.t
   for i, text in ipairs(self.text) do
-    last_y = self.black_font:drawWrapped(canvas, text:gsub("//", ""), dx + self.spacing.l, last_y, self.text_width)
-    last_y = self.black_font:drawWrapped(canvas, " ",                 dx + self.spacing.l, last_y, self.text_width)
+    last_y = self.black_font:drawWrapped(canvas, text, dx + self.spacing.l, last_y, self.text_width)
   end
 
   Window.draw(self, canvas, x, y)
@@ -124,7 +123,7 @@ end
 function UIInformation:close()
   self.ui:tutorialStep(3, 16, "next")
   Window.close(self)
-  if self.additional_text and #self.additional_text[1] > 0 then
+  if self.additional_text and #self.additional_text > 0 then
     self.ui:addWindow(UIInformation(self.ui, self.additional_text))
   end
 end

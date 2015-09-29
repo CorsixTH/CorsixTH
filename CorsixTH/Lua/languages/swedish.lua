@@ -37,7 +37,10 @@ room_descriptions.psych = {
   "Patienter som får diagnosen psykisk sjukdom måste uppsöka den psykiatriska avdelningen för att få behandling. Psykiatriker kan också ställa diagnoser, ta reda på vilken typ av sjukdom patienterna har och, i det fall det är mentalt behandla dem på den pålitliga gamla britsen.//",
   "Här behövs en läkare utbildad i psykiatri. "
 }
-introduction_texts.level1[4] = "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
+introduction_texts.level1 = "Välkommen till ditt första sjukhus!//Sätt igång genom att placera ut en reception och bygga en allmänpraktik, anställ en receptionist och en läkare. " ..
+                            "Vänta därefter på att jobben ska trilla in. En bra idé vore att bygga en psykmottagning och anställa en läkare med psykiatrisk kompetens. " ..
+                            "Ett apotek och en syster behövs också för att du ska kunna bota dina patienter. Se upp för svåra fall av pöshuvud - ett pumprum behövs för att greja dessa. " ..
+                            "Försök bota 10 personer och se till att ditt anseende inte sjunker under 200."
 
 tooltip.staff_list.next_person = "Visa nästa sida"
 tooltip.staff_list.prev_person = "Visa föregående sida"
@@ -537,14 +540,14 @@ tooltip.cheats_window = {
 }
 
 introduction_texts = {
-  demo = {
-    "Välkommen till demosjukhuset!",
-    "Tyvärr innehåller demon bara denna nivå. Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
-    "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
-    "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
-    "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",
+  demo =
+    "Välkommen till demosjukhuset!" ..
+    "Tyvärr innehåller demon bara denna nivå. Ändå finns det garanterat tillräckligt att göra ett tag framöver!" ..
+    "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. " ..
+    "Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum." ..
+    "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna." ..
+    "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du." ..
     "Lycka till!",
-  },
 }
 
 calls_dispatcher = {

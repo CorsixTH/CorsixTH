@@ -1496,6 +1496,8 @@ function World:checkWinningConditions(player_no)
   return result
 end
 
+--! Process that the given player number won the game.
+--!param player_no (integer) Number of the player who just won.
 function World:winGame(player_no)
   if player_no == 1 then -- Player won. TODO: Needs to be changed for multiplayer
     local text = {}
@@ -1503,41 +1505,22 @@ function World:winGame(player_no)
     local bonus_rate = math.random(4,9)
     local with_bonus = self.ui.hospital.cheated and 0 or (self.ui.hospital.player_salary * bonus_rate) / 100
     self.ui.hospital.salary_offer = math.floor(self.ui.hospital.player_salary + with_bonus)
-    if tonumber(self.map.level_number) then
-      local no = tonumber(self.map.level_number)
-      local repeated_offer = false -- TODO whether player was asked previously to advance and declined
-      local has_next = no < 12 and not TheApp.using_demo_files
-      -- Letters 1-4  normal
-      -- Letters 5-8  repeated offer
-      -- Letters 9-12 last level
-      local letter_idx = math.random(1, 4) + (not has_next and 8 or repeated_offer and 4 or 0)
-      for key, value in ipairs(_S.letter[letter_idx]) do
-        text[key] = value
-      end
-      text[1] = text[1]:format(self.hospitals[player_no].name)
-      text[2] = text[2]:format(self.hospitals[player_no].salary_offer)
-      text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
-      if has_next then
-        choice_text = _S.fax.choices.accept_new_level
-        choice = 1
-      else
-        choice_text = _S.fax.choices.return_to_main_menu
-        choice = 2
-      end
+    if type(self.map.level_number) == "number" or self.campaign_info then
+      text, choice_text, choice = self:getCampaignWinningText(player_no)
     else
-      -- TODO: When custom levels can contain sentences this should be changed to something better.
+      local level_info = TheApp:readLevelFile(self.map.level_number)
       text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
-      text[2] = _S.letter.custom_level_completed
+      text[2] = level_info.end_praise and level_info.end_praise or _S.letter.custom_level_completed
       text[3] = _S.letter.return_to_main_menu
       choice_text = _S.fax.choices.return_to_main_menu
-      choice = 2
+      choice = "return_to_main_menu"
     end
     local message = {
       {text = text[1]},
       {text = text[2]},
       {text = text[3]},
       choices = {
-        {text = choice_text,  choice = choice == 1 and "accept_new_level" or "return_to_main_menu"},
+        {text = choice_text, choice = choice},
         {text = _S.fax.choices.decline_new_level, choice = "stay_on_level"},
       },
     }
@@ -1559,6 +1542,69 @@ function World:winGame(player_no)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
     self.ui.bottom_panel:openLastMessage()
   end
+end
+
+--! Finds what text the winning fax should contain, and which choices the player has.
+--!param player_no (integer) Which player that will see the message.
+--!return (string, string, string) Text to show in the fax, text that accompanies
+--!       the "continue"-choice the player has, and whether it is the "return_to_main_menu"
+--!       choice or the "accept_new_level" choice.
+function World:getCampaignWinningText(player_no)
+  local text = {}
+  local choice_text, choice
+  local repeated_offer = false -- TODO whether player was asked previously to advance and declined
+  local has_next = false
+  if type(self.map.level_number) == "number" then
+    local no = tonumber(self.map.level_number)
+    has_next = no < 12 and not TheApp.using_demo_files
+    -- Standard letters 1-4:  normal
+    -- Standard letters 5-8:  repeated offer
+    -- Standard letters 9-12: last level
+    local letter_idx = math.random(1, 4) + (not has_next and 8 or repeated_offer and 4 or 0)
+    for key, value in ipairs(_S.letter[letter_idx]) do
+      text[key] = value
+    end
+    text[1] = text[1]:format(self.hospitals[player_no].name)
+    text[2] = text[2]:format(self.hospitals[player_no].salary_offer)
+    text[3] = text[3]:format(_S.level_names[self.map.level_number + 1])
+  else
+    local campaign_info = self.campaign_info
+    local next_level_name
+    if campaign_info then
+      for i, level in ipairs(campaign_info.levels) do
+        if self.map.level_number == level then
+          has_next = i < #campaign_info.levels
+          if has_next then
+            local next_level_info = TheApp:readLevelFile(campaign_info.levels[i + 1])
+            if not next_level_info then
+              return {_S.letter.campaign_level_missing:format(campaign_info.levels[i + 1]), "", ""},
+                     _S.fax.choices.return_to_main_menu,
+                     "return_to_main_menu"
+            end
+            next_level_name = next_level_info.name
+          end
+          break
+        end
+      end
+    end
+    local level_info = TheApp:readLevelFile(self.map.level_number)
+    text[1] = _S.letter.dear_player:format(self.hospitals[player_no].name)
+    if has_next then
+      text[2] = level_info.end_praise and level_info.end_praise:format(next_level_name) or _S.letter.campaign_level_completed:format(next_level_name)
+      text[3] = ""
+    else
+      text[2] = campaign_info.winning_text and campaign_info.winning_text or _S.letter.campaign_completed
+      text[3] = ""
+    end
+  end
+  if has_next then
+    choice_text = _S.fax.choices.accept_new_level
+    choice = "accept_new_level"
+  else
+    choice_text = _S.fax.choices.return_to_main_menu
+    choice = "return_to_main_menu"
+  end
+  return text, choice_text, choice
 end
 
 --! Cause the player with the player number player_no to lose.

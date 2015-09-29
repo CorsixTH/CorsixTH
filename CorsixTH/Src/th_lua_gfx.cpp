@@ -305,12 +305,17 @@ static int l_font_get_size(lua_State *L)
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
-    int iWidth, iHeight;
-    pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
+    int iMaxWidth = INT_MAX;
+    if(!lua_isnoneornil(L, 3))
+        iMaxWidth = static_cast<int>(luaL_checkinteger(L, 3));
 
-    lua_pushinteger(L, iWidth);
-    lua_pushinteger(L, iHeight);
-    return 2;
+    THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen, iMaxWidth);
+
+    lua_pushinteger(L, oDrawArea.iEndX);
+    lua_pushinteger(L, oDrawArea.iEndY);
+    lua_pushinteger(L, oDrawArea.iNumRows);
+
+    return 3;
 }
 
 static int l_font_draw(lua_State *L)
@@ -342,23 +347,23 @@ static int l_font_draw(lua_State *L)
         else
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
     }
-    int iWidth, iHeight;
-    pFont->getTextSize(sMsg, iMsgLen, &iWidth, &iHeight);
+
+    THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen);
     if(!lua_isnoneornil(L, 7))
     {
         int iW = static_cast<int>(luaL_checkinteger(L, 6));
         int iH = static_cast<int>(luaL_checkinteger(L, 7));
-        if(iW > iWidth && eAlign != Align_Left)
-            iX += (iW - iWidth) / ((eAlign == Align_Center) ? 2 : 1);
-        if(iH > iHeight)
-            iY += (iH - iHeight) / 2;
+        if(iW > oDrawArea.iEndX && eAlign != Align_Left)
+            iX += (iW - oDrawArea.iEndX) / ((eAlign == Align_Center) ? 2 : 1);
+        if(iH > oDrawArea.iEndY)
+            iY += (iH - oDrawArea.iEndY) / 2;
     }
     if(pCanvas != nullptr)
     {
         pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
     }
-    lua_pushinteger(L, iY + iHeight);
-    lua_pushinteger(L, iX + iWidth);
+    lua_pushinteger(L, iY + oDrawArea.iEndY);
+    lua_pushinteger(L, iX + oDrawArea.iEndX);
 
     return 2;
 }
@@ -393,14 +398,25 @@ static int l_font_draw_wrapped(lua_State *L)
         else
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
     }
+    int iMaxRows = INT_MAX;
+    if(!lua_isnoneornil(L, 8))
+    {
+      iMaxRows = static_cast<int>(luaL_checkinteger(L, 8));
+    }
 
-    int iLastX;
-    int iLastY = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
-                                              iW, nullptr, &iLastX, eAlign);
-    lua_pushinteger(L, iLastY);
-    lua_pushinteger(L, iLastX);
+    int iSkipRows = 0;
+    if(!lua_isnoneornil(L, 9))
+    {
+        iSkipRows = static_cast<int>(luaL_checkinteger(L, 9));
+    }
 
-    return 2;
+    THFontDrawArea oDrawArea = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
+                                              iW, iMaxRows, iSkipRows, eAlign);
+    lua_pushinteger(L, oDrawArea.iEndY);
+    lua_pushinteger(L, oDrawArea.iEndX);
+    lua_pushinteger(L, oDrawArea.iNumRows);
+
+    return 3;
 }
 
 static int l_font_draw_tooltip(lua_State *L)
@@ -414,22 +430,21 @@ static int l_font_draw_tooltip(lua_State *L)
     int iScreenWidth = pCanvas->getWidth();
 
     int iW = 200; // (for now) hardcoded width of tooltips
-    int iRealW;
     uint32_t iBlack = pCanvas->mapColour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->mapColour(0xFF, 0xFF, 0xFF);
-    int iLastY = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, &iRealW);
-    int iLastX = iX + iRealW + 3;
-    int iFirstY = iY - (iLastY - iY) - 1;
+    THFontDrawArea oArea = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, INT_MAX, 0);
+    int iLastX = iX + oArea.iWidth + 3;
+    int iFirstY = iY - (oArea.iEndY - iY) - 1;
 
     int iXOffset = iLastX > iScreenWidth ? iScreenWidth - iLastX : 0;
     int iYOffset = iFirstY < 0 ? -iFirstY : 0;
 
-    pCanvas->fillRect(iBlack, iX + iXOffset, iFirstY + iYOffset, iRealW + 3, iLastY - iY + 2);
-    pCanvas->fillRect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, iRealW + 1, iLastY - iY);
+    pCanvas->fillRect(iBlack, iX + iXOffset, iFirstY + iYOffset, oArea.iWidth + 3, oArea.iEndY - iY + 2);
+    pCanvas->fillRect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, oArea.iWidth + 1, oArea.iEndY - iY);
 
     pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset, iFirstY + 1 + iYOffset, iW - 4);
 
-    lua_pushinteger(L, iLastY);
+    lua_pushinteger(L, oArea.iEndY);
 
     return 1;
 }

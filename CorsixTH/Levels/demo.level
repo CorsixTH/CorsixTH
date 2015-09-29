@@ -1,4 +1,4 @@
-Copyright (c) 2010 Edvin "Lego3" Linge
+Copyright (c) 2010-2014 Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,14 +20,19 @@ SOFTWARE.
 
 ---------------------- General Information -------------------------
 %Name = "Demo Town"
-%LevelFile = "LEVEL.L1"
+%MapFile = "LEVEL.L1"
+
+%LevelBriefing = "This is the only map available as long as you use
+ the Theme Hospital Demo files."
+
+%LevelDebriefing = "That was not too hard right? Time to get the real deal?"
 
 #town.StartCash 60000
 
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
-#gbv.StartRating 100 
+#gbv.StartRating 100
 
 #expertise[2].Known.RschReqd 1 40000 BLOATY_HEAD
 #expertise[4].Known.RschReqd 1 60000 ELVIS

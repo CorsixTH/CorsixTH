@@ -35,25 +35,47 @@ enum eTHAlign
     Align_Right = 2,
 };
 
+/** Structure for the bounds of a text string that is rendered to the screen. */
+struct THFontDrawArea
+{
+    //! Number of rows the rendered text spans
+    int iNumRows;
+
+    //! Left X-coordinate for the start of the text
+    int iStartX;
+
+    //! Right X-coordinate for the right part of the last letter rendered
+    int iEndX;
+
+    //! Top Y-coordinate for the start of the text
+    int iStartY;
+
+    //! Bottom Y-coordinate for the end of the text
+    int iEndY;
+
+    //! Width of the widest line in the text
+    int iWidth;
+};
+
 class THFont
 {
 public:
     THFont();
     virtual ~THFont();
 
-    //! Get the size of a single line of drawn text
+    //! Get the size of drawn text.
     /*!
+        If iMaxWidth is specified the text will wrap, so that the height can
+        span multiple rows. Otherwise gets the size of a single line of text.
         @param sMessage A UTF-8 encoded string containing a single line of text
             to measure the width and height of.
         @param iMessageLength The length, in bytes (not characters), of the
             string at sMessage.
-        @param pX If not nullptr, the width (in pixels) of the drawn message will
-            be stored at this pointer.
-        @param pY If not nullptr, the height (in pixels) of the drawn message will
-            be stored at this pointer.
+        @param iMaxWidth The maximum length, in pixels, that the text may
+            occupy. Default is INT_MAX.
     */
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const = 0;
+    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                                        int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
     /*!
@@ -75,6 +97,7 @@ public:
         This function still only draws a single line of text (i.e. any line
         breaks like \r and \n in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
+        If iMaxRows is specified it will simply cut after that many rows.
         @param pCanvas The canvas on which to draw. Can be nullptr, in which case
           nothing is drawn, but other calculations are still made.
         @param sMessage The line of text to draw, encoded in CP437.
@@ -82,20 +105,15 @@ public:
         @param iX The X position to start drawing on the canvas.
         @param iY The Y position to start drawing on the canvas.
         @param iWidth The maximum width of each line of text.
-        @param pResultingWidth If not nullptr, the maximum width of a line will
-          be stored here (the resulting value should be similar to iWidth,
-          but a bit smaller).
-        @param pLastX If not nullptr, iX plus the the width of the last printed
-          line will be stored here.
+        @param iMaxRows The maximum number of rows to draw. Default is INT_MAX.
+        @param iSkipRows Start rendering text after skipping this many rows.
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
-        @return iY plus the height (in pixels) of the resulting text.
     */
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = nullptr,
-                                int *pLastX = nullptr,
-                                eTHAlign eAlign = Align_Left) const = 0;
+    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                            size_t iMessageLength, int iX, int iY,
+                                            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                            eTHAlign eAlign = Align_Left) const = 0;
 };
 
 class THBitmapFont : public THFont
@@ -113,23 +131,22 @@ public:
 
     THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
 
-    //! Set the seperation between characters and between lines
+    //! Set the separation between characters and between lines
     /*!
         Generally, the sprite sheet glyphs will already include separation, and
         thus no extra separation is required (set iCharSep and iLineSep to 0).
     */
     void setSeparation(int iCharSep, int iLineSep);
 
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const;
+    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                             int iMaxWidth = INT_MAX) const;
 
     virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
                           size_t iMessageLength, int iX, int iY) const;
 
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = nullptr,
-                                int *pLastX = nullptr,
+                                int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
                                 eTHAlign eAlign = Align_Left) const;
 
 protected:
@@ -201,16 +218,15 @@ public:
     */
     FT_Error setPixelSize(int iWidth, int iHeight);
 
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const;
+    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                                        int iMaxWidth = INT_MAX) const;
 
     virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
                           size_t iMessageLength, int iX, int iY) const;
 
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = nullptr,
-                                int *pLastX = nullptr,
+                                int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
                                 eTHAlign eAlign = Align_Left) const;
 
 protected:
@@ -242,6 +258,9 @@ protected:
 
         //! X Coordinate trailing the last character in canvas coordinates
         int iLastX;
+
+        //! Number of rows required
+        int iNumRows;
 
         //! Alignment of the message in the box
         eTHAlign eAlign;

@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010-2014 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -55,7 +55,13 @@ vip_names = {
 }
 
 -- A small error in the introduction text of level 2
-introduction_texts.level2[6] = "Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+introduction_texts.level2 = "There is a greater variety of ailments in this area. Set up your hospital to deal with more patients, " ..
+                            "and plan to build a Research Department. Remember to keep your establishment clean, and try to get your " ..
+                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
+                            "Tongue Clinic. You can also build a Cardiogram to help you diagnose new illnesses. Both these rooms will " ..
+                            "need to be researched before you can build them. Now you can also buy extra plots of land to expand your " ..
+                            "hospital - use the Town map for this. Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+
 -- An override for the squits becoming the the squits see issue 1646
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 -------------------------------  NEW STRINGS  -------------------------------
@@ -221,9 +227,12 @@ fax = {
 }
 
 letter = {
-  dear_player = "Dear %s",
+  dear_player = "Dear %s\n",
   custom_level_completed = "Well done! You've completed all goals on this custom level!",
   return_to_main_menu = "Would you like to return to the main menu or continue playing?",
+  campaign_level_completed = "Good job! You beat the level. But it's not over yet!\n Would you like a position at %s Hospital?",
+  campaign_completed = "Incredible! You managed to finish all the levels. You can now relax and enjoy filling forums across the Internet of your achievements. Good luck!",
+  campaign_level_missing = "Sorry, but the next level of this campaign seems to be missing. (Name: %s)",
 }
 
 install = {
@@ -239,6 +248,7 @@ misc.no_heliport = "Either no diseases have been discovered yet, or there is no 
 
 main_menu = {
   new_game = "Campaign",
+  custom_campaign = "Custom Campaign",
   custom_level = "Single Scenario",
   continue = "Continue Game",
   load_game = "Load Game",
@@ -250,6 +260,7 @@ main_menu = {
 
 tooltip.main_menu = {
   new_game = "Start the first level on the campaign",
+  custom_campaign = "Play a campaign created by the community",
   custom_level = "Build your hospital in a single scenario",
   continue = "Continue your latest saved game",
   load_game = "Load a saved game",
@@ -271,11 +282,23 @@ tooltip.load_game_window = {
 custom_game_window = {
   caption = "Custom Game",
   free_build = "Free Build",
+  load_selected_level = "Start",
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Information about this scenario which is using: %s           Briefing: %s",
+  choose_game = "Click a level to read more about it",
   free_build = "Tick this box if you want to play without money or winning and losing conditions",
+  load_selected_level = "Load and play the selected level",
+}
+
+custom_campaign_window = {
+  caption = "Custom Campaign",
+  start_selected_campaign = "Start campaign",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Choose a campaign to read more about it",
+  start_selected_campaign = "Load the first level of this campaign",
 }
 
 save_game_window = {
@@ -457,6 +480,13 @@ errors = {
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
   alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file",
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
+  could_not_load_campaign = "Failed to load the campaign: %s",
+  could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
+}
+
+warnings = {
+  levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
+                                     "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
 }
 
 confirmation = {
@@ -564,14 +594,13 @@ tooltip.cheats_window = {
 }
 
 introduction_texts = {
-  demo = {
-    "Welcome to the demo hospital!",
-    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!",
-    "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room.",
-    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.",
-    "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",
+  demo =
+    "Welcome to the demo hospital!" ..
+    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!" ..
+    "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room." ..
+    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients." ..
+    "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose." ..
     "Good luck!",
-  },
 }
 
 calls_dispatcher = {

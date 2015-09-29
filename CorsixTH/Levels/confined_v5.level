@@ -18,24 +18,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Only lines beginning with % or # as explained below will be considered by the game.
-
-Each line beginning with a %-sign are directives to use when loading the game, such as what
-the level is called and where to find the map file. Available commands:
-- Name: What the level should be called (within quotes)
-- LevelFile: The name of the binary map file to load. First the Levels directory of the 
-  original game will be searched, and then the Levels directory of CorsixTH.
-  
-Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available.
-
-
 ---------------------- General Information -------------------------
 %Name = "Confined"
-%LevelFile = "confined_v5.map"
+%MapFile = "confined_v5.map"
 
-Note that the below introduction text at the moment must reside on a single line within this file!
-%LevelBriefing = "You have been tasked to build a hospital in an area where only a few apartments are for sale. Land prices around here are astronomical, so you will have to live with a very confined space until you have earned enough money to expand."
+%LevelBriefing = "You have been tasked to build a hospital in an area where only a few apartments are for sale.
+Land prices around here are astronomical, so you will have to live with a very confined space until you have earned enough money to expand."
+
+%LevelDebriefing = "Great job! You never really noticed the space issue, right?"
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
@@ -45,7 +35,7 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
-#gbv.StartRating 100 
+#gbv.StartRating 100
 
 The following table contains all diagnoses and treatments that shows up in the drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
@@ -187,7 +177,7 @@ How much the skill of the doctor adds to the salary. skill * 1000 / divisor
 --------------------- Research Configuration -----------------------
 
 Divides research input to get the amount of research points. must be > 0
-#gbv.ResearchPointsDivisor 5 
+#gbv.ResearchPointsDivisor 5
 
 ---------------------- Awards and Trophies -------------------------
 

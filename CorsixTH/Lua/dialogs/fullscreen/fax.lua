@@ -204,7 +204,17 @@ function UIFax:choice(choice_number)
     if tonumber(self.ui.app.world.map.level_number) then
       self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
     else
-      -- TODO: Allow some kind of custom campaign with custom levels
+      for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
+        if self.ui.app.world.map.level_number == level then
+          local next_level = self.ui.app.world.campaign_info.levels[i + 1]
+          local level_info, err = self.ui.app:readLevelFile(next_level)
+          if level_info then
+            self.ui.app:loadLevel(next_level, nil, level_info.name,
+                     level_info.map_file, level_info.briefing)
+            break
+          end
+        end
+      end
     end
   elseif choice == "return_to_main_menu" then
     self.ui.app.moviePlayer:playWinMovie()

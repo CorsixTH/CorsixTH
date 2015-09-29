@@ -382,135 +382,116 @@ install = {
 
 -- 9. Level introductions
 introduction_texts = {
-  demo = {
-    [1] = "Tervetuloa demosairaalaan!",
-    [2] = "Valitettavasti demoversio sisältää ainoastaan tämän tason. Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä!",
-    [3] = "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla.",
-    [4] = "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70 000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi.",
-    [5] = "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason.",
-    [6] = "Onnea!",
-  },
-  level1 = {
-    [1] = "Tervetuloa ensimmäiseen sairaalaasi!//",
-    [2] = "Pääset alkuun rakentamalla vastaanottopöydän ja yleislääkärin toimiston sekä palkkaamalla vastaanottoapulaisen ja lääkärin. ",
-    [3] = "Sitten vain odotat asiakkaiden saapumista.",
-    [4] = "Olisi hyvä ajatus rakentaa psykiatrin vastaanotto ja palkata lääkäri, joka on erikoistunut psykiatriaan. ",
-    [5] = "Apteekki ja sairaanhoitaja ovat myös tärkeä yhdistelmä potilaidesi parantamiseksi. ",
-    [6] = "Tarkkaile pallopäisyydestä kärsiviä potilaitasi - pumppaushuone hoitaa heidät alta aikayksikön. ",
-    [7] = "Tavoitteenasi on parantaa kaikkiaan 10 potilasta ja varmistaa, ettei maineesi putoa alle 200:n.",
-  },
-  level2 = {
-    [1] = "Tällä alueella on enemmän erilaisia sairauksia kuin edellisellä. ",
-    [2] = "Sairaalasi pitää selvitä suuremmasta potilasmäärästä, ja sinun kannattaa varautua tutkimusosaston rakentamiseen. ",
-    [3] = "Muista pitää laitoksesi puhtaana, ja yritä nostaa maineesi niin korkeaksi kuin mahdollista - alueella on liikkeellä velttokielisyyttä, joten tarvitset kieliklinikan. ",
-    [4] = "Voit myös rakentaa kardiogrammihuoneen auttamaan uusien sairauksien diagnosoinnissa. ",
-    [5] = "Molemmat näistä huoneista täytyy kehittää ennen kuin voit rakentaa niitä. Nyt voit myös ostaa lisää maata sairaalasi laajentamiseksi - Tämä tapahtuu kartta-ikkunassa. ",
-    [6] = "Tavoitteesi ovat 300:n maine, 10 000$ pankissa and 40 parannettua potilasta.",
-  },
-  level3 = {
-    [1] = "Tällä kertaa sairaalasi sijaitsee varakkaalla alueella. ",
-    [2] = "Terveysministeriö odottaa sinun saavan täältä muhkeat voitot. ",
-    [3] = "Alussa sinun täytyy hankkia sairaalallesi hyvä maine. Kun saat sairaalan pyörimään kunnolla, keskity ansaitsemaan niin paljon rahaa kuin pystyt. ",
-    [4] = "Alueella saattaa myös sattua hätätapauksia. ",
-    [5] = "Näissä tilanteissa suuri joukko samalla tavoin loukkaantuneita potilaita saapuu sairaalaasi yhtä aikaa. ",
-    [6] = "Jos onnistut parantamaan heidät annetun aikarajan puitteissa saat lisää mainetta ja ison bonuksen. ",
-    [7] = "Kuningas-kompleksin kaltaisia sairauksia saattaa esiintyä, joten kannattaa budjetoida rahaa leikkaussalin ja vuodeosaston rakentamiseen lähelle toisiaan. ",
-    [8] = "Ansaitse 20 000$ päästäksesi seuraavalle tasolle.",
-  },
-  level4 = {
-    [1] = "Pidä kaikki potilaasi tyytyväisinä, hoida heitä niin tehokkaasti kuin pystyt ja pidä kuolemantapaukset minimissään. ",
-    [2] = "Maineesi on kyseessä, joten pidä huolta, että se pysyy niin korkealla kuin mahdollista. ",
-    [3] = "Älä huolehdi rahasta liikaa - sitä alkaa kyllä tulla lisää maineesi kasvaessa. ",
-    [4] = "Voit myös kouluttaa lääkäreitäsi parantaaksesi heidän osaamistaan. ",
-    [5] = "He saattavat hyvinkin joutua hoitamaan tavallista läpinäkyvämpiä potilaita. ",
-    [6] = "Nosta maineesi yli 500:n.",
-  },
-  level5 = {
-    [1] = "Tästä tulee kiireinen sairaala, joka joutuu hoitamaan laajaa kirjoa sairauksia. ",
-    [2] = "Kaikki lääkärisi ovat vastavalmistuneita, joten on ensiarvoisen tärkeää, että rakennat koulutushuoneen ja nostat lääkäreidesi osaamisen hyväksyttävälle tasolle. ",
-    [3] = "Sinulla on vain kolme konsulttia opettamassa kokematonta henkilökuntaasi, joten pidä heidät tyytyväisinä. ",
-    [4] = "Huomaa myös, että sairaalasi on rakennettu geologisen siirroksen läheisyyteen. ",
-    [5] = "Maanjäristysten riski on siis koko ajan olemassa. ",
-    [6] = "Ne aiheuttavat sattuessaan mittavia vahinkoja laitteillesi ja häiritsevät sairaalasi sujuvaa toimintaa. ",
-    [7] = "Hanki sairaalallesi 400 mainetta ja kasvata 50 000$:n pankkitili onnistuaksesi. Paranna samalla 200 potilasta.",
-  },
-  level6 = {
-    [1] = "Käytä kaikkea oppimaasi ja rakenna sujuvasti toimiva sairaala, joka on taloudellisesti terveellä pohjalla ja pystyy selviytymään kaikista eteen tulevista tilanteista. ",
-    [2] = "Sinun on hyvä tietää, että ilmasto täällä levittää erityisen tehokkaasti bakteereja ja viruksia. ",
-    [3] = "Ellet onnistu pitämään sairaalaasi putipuhtaana, potilaasi voivat joutua epidemioiden kierteeseen. ",
-    [4] = "Pidä huolta, että ansaitset 150 000$ ja sairaalasi arvo ylittää 140 000$.",
-  },
-  level7 = {
-    [1] = "Täällä joudut terveysministeriön tiukan valvonnan kohteeksi, joten pidä huolta, että tilikirjoissasi näkyy suuria voittoja ja maineesi pysyy korkealla. ",
-    [2] = "Meillä ei ole varaa ylimääräisiin kuolemantapauksiin - ne ovat huonoja liiketoiminnan kannalta. ",
-    [3] = "Varmista, että henkilökuntasi on parasta mahdollista ja heillä on kaikki tarvittavat toimitilat ja tarvikkeet. ",
-    [4] = "Tavoitteesi ovat 600 mainetta ja 200 000$ pankkitilillä.",
-  },
-  level8 = {
-    [1] = "Sinun tehtäväsi on rakentaa tehokkain ja tuottavin mahdollinen sairaala. ",
-    [2] = "Ihmiset täällä ovat melko varakkaita, joten heiltä kannattaa kerätä niin paljon rahaa kuin mahdollista. ",
-    [3] = "Muista, että niin kivaa kuin ihmisten parantaminen onkin, tarvitset kipeästi rahaa, jota se tuottaa. ",
-    [4] = "Putsaa näiltä ihmisiltä tuhkatkin pesästä. ",
-    [5] = "Sinun tulee kerätä vaikuttavat 300 000$ läpäistäksesi tason.",
-  },
-  level9 = {
-    [1] = "Täytettyäsi ministeriön pankkitilin ja kustannettuasi uuden limusiinin ministerille itselleen pääset taas luomaan huolehtivan ja hyvin hoidetun sairaalan sairaiden avuksi. ",
-    [2] = "Voit odottaa monia erilaisia ongelmia tällä alueella.",
-    [3] = "Jos sinulla on riittävästi hyvin koulutettua henkilökuntaa ja huoneita, sinulla pitäisi olla kaikki hallinnassa. ",
-    [4] = "Sairaalasi arvon tulee olla 200 000$ ja sinulla pitää olla 400 000$ pankissa. ",
-    [5] = "Pienemmillä summilla et pääse tätä tasoa läpi.",
-  },
-  level10 = {
-    [1] = "Sen lisäksi, että huolehdit kaikista sairauksista, joita täällä päin ilmenee, ministeriö pyytää, että käytät aikaa lääkkeidesi tehon parantamiseen. ",
-    [2] = "Terveysjärjestöt ovat esittäneet joitakin valituksia, joten näyttääkseen hyvältä sairaalasi täytyy varmistaa, että kaikki käyttettävät lääkkeet ovat erittäin tehokkaita. ",
-    [3] = "Varmista myös, että sairaalasi on arvostelun yläpuolella. Pidä kuolemantapausten määrä kurissa. ",
-    [4] = "Ihan vihjeenä: saattaa olla hyvä idea säästää tilaa hyytelömuovainhuoneelle. ",
-    [5] = "Kehitä kaikki lääkkeesi vähintään 80%%:n tehokkuuteen, nosta maineesi vähintään 650:n ja kokoa 500 000$ pankkitilillesi voittaaksesi. ",
-  },
-  level11 = {
-    [1] = "Sinulle tarjoutuu nyt mahdollisuus rakentaa yksi maailman parhaista sairaaloista. ",
-    [2] = "Tämä on erittäin arvostettu asuinalue ja ministeriö haluaa tänne parhaan mahdollisen sairaalan. ",
-    [3] = "Odotamme sinun ansaitsevan runsaasti rahaa, hankkivan erinomaisen maineen sairaalallesi ja pystyvän hoitamaan vaikeimmatkin tapaukset. ",
-    [4] = "Tämä on hyvin tärkeä työ. ",
-    [5] = "Sinun täytyy käyttää kaikkea osaamistasi selvitäksesi tästä kunnialla. ",
-    [6] = "Huomaa, että alueella on havaittu UFOja. Pidä huolta, että henkilökuntasi on valmiina odottamattomien vierailijoiden varalta. ",
-    [7] = "Sairaalasi arvon pitää olla 240 000$, pankkitililläsi pitää olla 500 000$ ja maineesi pitää olla 700.",
-  },
-  level12 = {
-    [1] = "Tämä on kaikkien haasteiden äiti. ",
-    [2] = "Vaikuttuneena saavutuksistasi ministeriö on päättänyt antaa sinulle huipputyön; he haluavat toisen maailmanluokan sairaalan, joka tuottaa mainiosti ja jolla on erinomainen maine. ",
-    [3] = "Sinun odotetaan myös ostavan kaikki saatavilla olevat maa-alueet, parantavan kaikki sairaudet (ja me tosiaan tarkoitamme kaikki) ja voittavan kaikki palkinnot. ",
-    [4] = "Luuletko onnistuvasi?",
-    [5] = "Ansaitse 650 000$, paranna 750 ihmistä ja hanki 800 mainetta voittaaksesi tämän.",
-  },
-  level13 = {
-    [1] = "Uskomattomat kykysi sairaalanjohtajana ovat tulleet Salaisen erityispalvelun erityisen salaosaston tietoon. ",
-    [2] = "Heillä on sinulle erityinen bonus: täynnä rottia oleva sairaala, joka kaipaa kipeästi tehokasta tuholaistorjuntaa. ",
-    [3] = "Sinun pitää ampua mahdollisimman monta rottaa ennen kuin huoltomiehet siivoavat kaikki roskat pois. ",
-    [4] = "Uskotko olevasi tehtävän tasalla?",
-  },
-  level14 = {
-    [1] = "Vielä yksi haaste on tarjolla - täysin odottamaton yllätyssairaala. ",
-    [2] = "Jos onnistut saamaan tämän paikan toimimaan, olet todellinen mestareiden mestari. ",
-    [3] = "Älä kuvittelekkaan, että tästä tulee helppoa kuin puistossa kävely, sillä tämä on pahin haaste, jonka saat vastaasi. ",
-    [4] = "Paljon onnea!",
-  },
-  level15 = {
-    [1] = "Nyt olemme käsitelleet perusteet sairaalan saamiseksi toimintaan.//",
-    [2] = "Lääkärisi tarvitsevat kaiken mahdollisen avun diagnosoidessaan osan näistä potilaista. ",
-    [3] = "Voit auttaa heitä rakentamalla toisen diagnoosihuoneen kuten yleislääkärin vastaanoton.",
-  },
-  level16 = {
-    [1] = "Diagnosoituasi potilaita tarvitset hoitohuoneita ja klinikoita heidän parantamisekseen ",
-    [2] = "Apteekista on hyvä aloittaa. Toimiakseen se tarvitsee sairaanhoitajan annostelemaan lääkkeitä.",
-  },
-  level17 = {
-    [1] = "Viimeinen varoituksen sana: pidä tarkasti silmällä mainettasi, sillä se houkuttelee sairaalaasi potilaita niin läheltä kuin kaukaa. ",
-    [2] = "Jos potilaita ei kuole liikaa ja he pysyvät kohtuullisen tyytyväisinä, sinulla ei ole mitään hätää tällä tasolla!//",
-    [3] = "Olet nyt omillasi. Onnea ja menestystä!.",
-  },
-  level18 = {
-  },
+  demo =
+    "Tervetuloa demosairaalaan!" ..
+    "Valitettavasti demoversio sisältää ainoastaan tämän tason. Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä!" ..
+    "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla." ..
+    "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70 000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi." ..
+    "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason." ..
+    "Onnea!",
+  level1 =
+    "Tervetuloa ensimmäiseen sairaalaasi!//" ..
+    "Pääset alkuun rakentamalla vastaanottopöydän ja yleislääkärin toimiston sekä palkkaamalla vastaanottoapulaisen ja lääkärin. " ..
+    "Sitten vain odotat asiakkaiden saapumista." ..
+    "Olisi hyvä ajatus rakentaa psykiatrin vastaanotto ja palkata lääkäri, joka on erikoistunut psykiatriaan. " ..
+    "Apteekki ja sairaanhoitaja ovat myös tärkeä yhdistelmä potilaidesi parantamiseksi. " ..
+    "Tarkkaile pallopäisyydestä kärsiviä potilaitasi - pumppaushuone hoitaa heidät alta aikayksikön. " ..
+    "Tavoitteenasi on parantaa kaikkiaan 10 potilasta ja varmistaa, ettei maineesi putoa alle 200:n.",
+  level2 =
+    "Tällä alueella on enemmän erilaisia sairauksia kuin edellisellä. " ..
+    "Sairaalasi pitää selvitä suuremmasta potilasmäärästä, ja sinun kannattaa varautua tutkimusosaston rakentamiseen. " ..
+    "Muista pitää laitoksesi puhtaana, ja yritä nostaa maineesi niin korkeaksi kuin mahdollista - alueella on liikkeellä velttokielisyyttä, joten tarvitset kieliklinikan. " ..
+    "Voit myös rakentaa kardiogrammihuoneen auttamaan uusien sairauksien diagnosoinnissa. " ..
+    "Molemmat näistä huoneista täytyy kehittää ennen kuin voit rakentaa niitä. Nyt voit myös ostaa lisää maata sairaalasi laajentamiseksi - Tämä tapahtuu kartta-ikkunassa. " ..
+    "Tavoitteesi ovat 300:n maine, 10 000$ pankissa and 40 parannettua potilasta.",
+  level3 =
+    "Tällä kertaa sairaalasi sijaitsee varakkaalla alueella. " ..
+    "Terveysministeriö odottaa sinun saavan täältä muhkeat voitot. " ..
+    "Alussa sinun täytyy hankkia sairaalallesi hyvä maine. Kun saat sairaalan pyörimään kunnolla, keskity ansaitsemaan niin paljon rahaa kuin pystyt. " ..
+    "Alueella saattaa myös sattua hätätapauksia. " ..
+    "Näissä tilanteissa suuri joukko samalla tavoin loukkaantuneita potilaita saapuu sairaalaasi yhtä aikaa. " ..
+    "Jos onnistut parantamaan heidät annetun aikarajan puitteissa saat lisää mainetta ja ison bonuksen. " ..
+    "Kuningas-kompleksin kaltaisia sairauksia saattaa esiintyä, joten kannattaa budjetoida rahaa leikkaussalin ja vuodeosaston rakentamiseen lähelle toisiaan. " ..
+    "Ansaitse 20 000$ päästäksesi seuraavalle tasolle.",
+  level4 =
+    "Pidä kaikki potilaasi tyytyväisinä, hoida heitä niin tehokkaasti kuin pystyt ja pidä kuolemantapaukset minimissään. " ..
+    "Maineesi on kyseessä, joten pidä huolta, että se pysyy niin korkealla kuin mahdollista. " ..
+    "Älä huolehdi rahasta liikaa - sitä alkaa kyllä tulla lisää maineesi kasvaessa. " ..
+    "Voit myös kouluttaa lääkäreitäsi parantaaksesi heidän osaamistaan. " ..
+    "He saattavat hyvinkin joutua hoitamaan tavallista läpinäkyvämpiä potilaita. " ..
+    "Nosta maineesi yli 500:n.",
+  level5 =
+    "Tästä tulee kiireinen sairaala, joka joutuu hoitamaan laajaa kirjoa sairauksia. " ..
+    "Kaikki lääkärisi ovat vastavalmistuneita, joten on ensiarvoisen tärkeää, että rakennat koulutushuoneen ja nostat lääkäreidesi osaamisen hyväksyttävälle tasolle. " ..
+    "Sinulla on vain kolme konsulttia opettamassa kokematonta henkilökuntaasi, joten pidä heidät tyytyväisinä. " ..
+    "Huomaa myös, että sairaalasi on rakennettu geologisen siirroksen läheisyyteen. " ..
+    "Maanjäristysten riski on siis koko ajan olemassa. " ..
+    "Ne aiheuttavat sattuessaan mittavia vahinkoja laitteillesi ja häiritsevät sairaalasi sujuvaa toimintaa. " ..
+    "Hanki sairaalallesi 400 mainetta ja kasvata 50 000$:n pankkitili onnistuaksesi. Paranna samalla 200 potilasta.",
+  level6 =
+    "Käytä kaikkea oppimaasi ja rakenna sujuvasti toimiva sairaala, joka on taloudellisesti terveellä pohjalla ja pystyy selviytymään kaikista eteen tulevista tilanteista. " ..
+    "Sinun on hyvä tietää, että ilmasto täällä levittää erityisen tehokkaasti bakteereja ja viruksia. " ..
+    "Ellet onnistu pitämään sairaalaasi putipuhtaana, potilaasi voivat joutua epidemioiden kierteeseen. " ..
+    "Pidä huolta, että ansaitset 150 000$ ja sairaalasi arvo ylittää 140 000$.",
+  level7 =
+    "Täällä joudut terveysministeriön tiukan valvonnan kohteeksi, joten pidä huolta, että tilikirjoissasi näkyy suuria voittoja ja maineesi pysyy korkealla. " ..
+    "Meillä ei ole varaa ylimääräisiin kuolemantapauksiin - ne ovat huonoja liiketoiminnan kannalta. " ..
+    "Varmista, että henkilökuntasi on parasta mahdollista ja heillä on kaikki tarvittavat toimitilat ja tarvikkeet. " ..
+    "Tavoitteesi ovat 600 mainetta ja 200 000$ pankkitilillä.",
+  level8 =
+    "Sinun tehtäväsi on rakentaa tehokkain ja tuottavin mahdollinen sairaala. " ..
+    "Ihmiset täällä ovat melko varakkaita, joten heiltä kannattaa kerätä niin paljon rahaa kuin mahdollista. " ..
+    "Muista, että niin kivaa kuin ihmisten parantaminen onkin, tarvitset kipeästi rahaa, jota se tuottaa. " ..
+    "Putsaa näiltä ihmisiltä tuhkatkin pesästä. " ..
+    "Sinun tulee kerätä vaikuttavat 300 000$ läpäistäksesi tason.",
+  level9 =
+    "Täytettyäsi ministeriön pankkitilin ja kustannettuasi uuden limusiinin ministerille itselleen pääset taas luomaan huolehtivan ja hyvin hoidetun sairaalan sairaiden avuksi. " ..
+    "Voit odottaa monia erilaisia ongelmia tällä alueella." ..
+    "Jos sinulla on riittävästi hyvin koulutettua henkilökuntaa ja huoneita, sinulla pitäisi olla kaikki hallinnassa. " ..
+    "Sairaalasi arvon tulee olla 200 000$ ja sinulla pitää olla 400 000$ pankissa. " ..
+    "Pienemmillä summilla et pääse tätä tasoa läpi.",
+  level10 =
+    "Sen lisäksi, että huolehdit kaikista sairauksista, joita täällä päin ilmenee, ministeriö pyytää, että käytät aikaa lääkkeidesi tehon parantamiseen. " ..
+    "Terveysjärjestöt ovat esittäneet joitakin valituksia, joten näyttääkseen hyvältä sairaalasi täytyy varmistaa, että kaikki käyttettävät lääkkeet ovat erittäin tehokkaita. " ..
+    "Varmista myös, että sairaalasi on arvostelun yläpuolella. Pidä kuolemantapausten määrä kurissa. " ..
+    "Ihan vihjeenä: saattaa olla hyvä idea säästää tilaa hyytelömuovainhuoneelle. " ..
+    "Kehitä kaikki lääkkeesi vähintään 80%%:n tehokkuuteen, nosta maineesi vähintään 650:n ja kokoa 500 000$ pankkitilillesi voittaaksesi. ",
+  level11 =
+    "Sinulle tarjoutuu nyt mahdollisuus rakentaa yksi maailman parhaista sairaaloista. " ..
+    "Tämä on erittäin arvostettu asuinalue ja ministeriö haluaa tänne parhaan mahdollisen sairaalan. " ..
+    "Odotamme sinun ansaitsevan runsaasti rahaa, hankkivan erinomaisen maineen sairaalallesi ja pystyvän hoitamaan vaikeimmatkin tapaukset. " ..
+    "Tämä on hyvin tärkeä työ. " ..
+    "Sinun täytyy käyttää kaikkea osaamistasi selvitäksesi tästä kunnialla. " ..
+    "Huomaa, että alueella on havaittu UFOja. Pidä huolta, että henkilökuntasi on valmiina odottamattomien vierailijoiden varalta. " ..
+    "Sairaalasi arvon pitää olla 240 000$, pankkitililläsi pitää olla 500 000$ ja maineesi pitää olla 700.",
+  level12 =
+    "Tämä on kaikkien haasteiden äiti. " ..
+    "Vaikuttuneena saavutuksistasi ministeriö on päättänyt antaa sinulle huipputyön; he haluavat toisen maailmanluokan sairaalan, joka tuottaa mainiosti ja jolla on erinomainen maine. " ..
+    "Sinun odotetaan myös ostavan kaikki saatavilla olevat maa-alueet, parantavan kaikki sairaudet (ja me tosiaan tarkoitamme kaikki) ja voittavan kaikki palkinnot. " ..
+    "Luuletko onnistuvasi?" ..
+    "Ansaitse 650 000$, paranna 750 ihmistä ja hanki 800 mainetta voittaaksesi tämän.",
+  level13 =
+    "Uskomattomat kykysi sairaalanjohtajana ovat tulleet Salaisen erityispalvelun erityisen salaosaston tietoon. " ..
+    "Heillä on sinulle erityinen bonus: täynnä rottia oleva sairaala, joka kaipaa kipeästi tehokasta tuholaistorjuntaa. " ..
+    "Sinun pitää ampua mahdollisimman monta rottaa ennen kuin huoltomiehet siivoavat kaikki roskat pois. " ..
+    "Uskotko olevasi tehtävän tasalla?",
+  level14 =
+    "Vielä yksi haaste on tarjolla - täysin odottamaton yllätyssairaala. " ..
+    "Jos onnistut saamaan tämän paikan toimimaan, olet todellinen mestareiden mestari. " ..
+    "Älä kuvittelekkaan, että tästä tulee helppoa kuin puistossa kävely, sillä tämä on pahin haaste, jonka saat vastaasi. " ..
+    "Paljon onnea!",
+  level15 =
+    "Nyt olemme käsitelleet perusteet sairaalan saamiseksi toimintaan.//" ..
+    "Lääkärisi tarvitsevat kaiken mahdollisen avun diagnosoidessaan osan näistä potilaista. " ..
+    "Voit auttaa heitä rakentamalla toisen diagnoosihuoneen kuten yleislääkärin vastaanoton.",
+  level16 =
+    "Diagnosoituasi potilaita tarvitset hoitohuoneita ja klinikoita heidän parantamisekseen " ..
+    "Apteekista on hyvä aloittaa. Toimiakseen se tarvitsee sairaanhoitajan annostelemaan lääkkeitä.",
+  level17 =
+    "Viimeinen varoituksen sana: pidä tarkasti silmällä mainettasi, sillä se houkuttelee sairaalaasi potilaita niin läheltä kuin kaukaa. " ..
+    "Jos potilaita ei kuole liikaa ja he pysyvät kohtuullisen tyytyväisinä, sinulla ei ole mitään hätää tällä tasolla!//" ..
+    "Olet nyt omillasi. Onnea ja menestystä!.",
+  level18 = "",
 }
 
 -- 10. Tips
