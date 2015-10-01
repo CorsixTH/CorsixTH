@@ -133,14 +133,6 @@ int luaT_setfenv52(lua_State *L, int iIndex)
         return 0;
     }
 }
-
-void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
-{
-    ++nups;
-    lua_pushvalue(L, luaT_environindex);
-    lua_insert(L, -nups);
-    lua_pushcclosure(L, f, nups);
-}
 #endif
 
 //! Push a C closure as a callable table

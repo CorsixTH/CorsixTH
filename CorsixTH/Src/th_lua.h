@@ -30,51 +30,91 @@ int luaopen_th(lua_State *L);
 
 // Compatibility layer for removal of environments in 5.2
 #if LUA_VERSION_NUM >= 502
-#define luaT_environindex lua_upvalueindex(1)
-#define luaT_upvalueindex(i) lua_upvalueindex((i) + 1)
-void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
-#define luaT_register(L, n, l) ( \
-    luaL_newlibtable(L, l), \
-    lua_pushvalue(L, luaT_environindex), \
-    luaL_setfuncs(L, l, 1), \
-    lua_pushvalue(L, -1), \
-    lua_setglobal(L, n) )
-#define luaT_setfuncs(L, R) ( \
-    lua_pushvalue(L, luaT_environindex), \
-    luaL_setfuncs(L, R, 1) )
+const int luaT_environindex = lua_upvalueindex(1);
 #else
-#define luaT_environindex LUA_ENVIRONINDEX
-#define luaT_upvalueindex lua_upvalueindex
-#define luaT_pushcclosure lua_pushcclosure
-#define luaT_register luaL_register
-#define luaT_setfuncs(L, R) luaL_register(L, nullptr, R)
+const int luaT_environindex = LUA_ENVIRONINDEX;
 #endif
-#define luaT_pushcfunction(L, f) luaT_pushcclosure(L, f, 0)
 
-// Compatibility layer for removal of cpcall in 5.2
+inline int luaT_upvalueindex(int i)
+{
 #if LUA_VERSION_NUM >= 502
-#define luaT_cpcall(L, f, u) (\
-    lua_checkstack(L, 2), \
-    lua_pushcfunction(L, f), \
-    lua_pushlightuserdata(L, u), \
-    lua_pcall(L, 1, 0, 0) )
+    return lua_upvalueindex(i + 1);
 #else
-#define luaT_cpcall lua_cpcall
+    return lua_upvalueindex(i);
 #endif
+}
+
+inline void luaT_register(lua_State *L, const char *n, const luaL_Reg *l)
+{
+#if LUA_VERSION_NUM >= 502
+    luaL_newlibtable(L, l);
+    lua_pushvalue(L, luaT_environindex);
+    luaL_setfuncs(L, l, 1);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, n);
+#else
+    luaL_register(L, n, l);
+#endif
+}
+
+inline void luaT_setfuncs(lua_State *L, const luaL_Reg *R)
+{
+#if LUA_VERSION_NUM >= 502
+    lua_pushvalue(L, luaT_environindex);
+    luaL_setfuncs(L, R, 1);
+#else
+    luaL_register(L, nullptr, R);
+#endif
+}
+
+inline void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
+{
+#if LUA_VERSION_NUM >= 502
+    ++nups;
+    lua_pushvalue(L, luaT_environindex);
+    lua_insert(L, -nups);
+    lua_pushcclosure(L, f, nups);
+#else
+    lua_pushcclosure(L, f, nups);
+#endif
+}
+
+inline void luaT_pushcfunction(lua_State *L, lua_CFunction f)
+{
+    luaT_pushcclosure(L, f, 0);
+}
+
+inline int luaT_cpcall(lua_State *L, lua_CFunction f, void *u)
+{
+#if LUA_VERSION_NUM >= 502
+    lua_checkstack(L, 2);
+    lua_pushcfunction(L, f);
+    lua_pushlightuserdata(L, u);
+    return lua_pcall(L, 1, 0, 0);
+#else
+    return lua_cpcall(L, f, u);
+#endif
+}
 
 // Compatibility for missing mode argument on lua_load in 5.1
+inline int luaT_load(lua_State *L, lua_Reader r, void *d, const char *s, const char *m)
+{
 #if LUA_VERSION_NUM >= 502
-#define luaT_load lua_load
+    return lua_load(L, r, d, s, m);
 #else
-#define luaT_load(L, r, d, s, m) ( lua_load(L, r, d, s) )
+    return lua_load(L, r, d, s);
 #endif
+}
 
 // Compatibility for missing from argument on lua_resume in 5.1
+inline int luaT_resume(lua_State *L, lua_State *f, int n)
+{
 #if LUA_VERSION_NUM >= 502
-#define luaT_resume lua_resume
+    return lua_resume(L, f, n);
 #else
-#define luaT_resume(L, f, n) ( lua_resume(L, n) )
+    return lua_resume(L, n);
 #endif
+}
 
 //! Version of operator new which allocates into a Lua userdata
 /*!

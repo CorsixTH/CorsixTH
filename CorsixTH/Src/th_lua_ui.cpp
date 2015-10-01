@@ -23,6 +23,7 @@ SOFTWARE.
 #include "th_lua_internal.h"
 #include "th_gfx.h"
 #include "th_map.h"
+#include <algorithm>
 
 struct THWindowBase_t {};
 
@@ -32,9 +33,9 @@ static int l_window_base_new(lua_State *L)
         " do not create a windowBase directly.");
 }
 
-static uint8_t Clamp8(uint16_t iVal)
+static uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start, uint16_t end)
 {
-    return (iVal > 255) ? 255 : static_cast<uint8_t>(iVal);
+    return static_cast<uint8_t>(std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
 }
 
 static int l_town_map_draw(lua_State *L)
@@ -81,10 +82,9 @@ static int l_town_map_draw(lua_State *L)
                     else // NB: 108 == (32767 - 5200) / 255
                         iTemp = static_cast<uint16_t>((iTemp - 5200) / 108);
 
-#define MIN_OK_TEMP 140
-#define MAX_OK_TEMP 180
-#define RangeScale(low, high, val, start, end) \
-    Clamp8(static_cast<uint16_t>(start + (end - start) * (val - low) / (high - low)))
+                    const uint16_t minOkTemp = 140;
+                    const uint16_t maxOkTemp = 180;
+
                     switch(pMap->getTemperatureDisplay())
                     {
                     case THMT_MultiColour:
@@ -92,27 +92,27 @@ static int l_town_map_draw(lua_State *L)
                         uint8_t iR = 0;
                         uint8_t iG = 0;
                         uint8_t iB = 70;
-                        if(iTemp < MIN_OK_TEMP)
-                            iB = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 200, 60);
-                        else if(iTemp < MAX_OK_TEMP)
-                            iG = RangeScale(MIN_OK_TEMP, MAX_OK_TEMP - 1, iTemp, 140, 224);
+                        if(iTemp < minOkTemp)
+                            iB = range_scale(0, minOkTemp - 1, iTemp, 200, 60);
+                        else if(iTemp < maxOkTemp)
+                            iG = range_scale(minOkTemp, maxOkTemp - 1, iTemp, 140, 224);
                         else
-                            iR = RangeScale(MAX_OK_TEMP, 255, iTemp, 224, 255);
+                            iR = range_scale(maxOkTemp, 255, iTemp, 224, 255);
                         iColour = pCanvas->mapColour(iR, iG, iB);
                         break;
                     }
                     case THMT_YellowRed:
-                        if(iTemp < MIN_OK_TEMP) // Below 11 degrees
+                        if(iTemp < minOkTemp) // Below 11 degrees
                         {
-                            uint8_t iR = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 100, 213);
-                            uint8_t iG = RangeScale(0, MIN_OK_TEMP - 1, iTemp, 80, 180);
+                            uint8_t iR = range_scale(0, minOkTemp - 1, iTemp, 100, 213);
+                            uint8_t iG = range_scale(0, minOkTemp - 1, iTemp, 80, 180);
                             iColour = pCanvas->mapColour(iR, iG, 0);
                         }
                         else
                         {
-                            uint8_t iR = RangeScale(MIN_OK_TEMP, 255, iTemp, 223, 235);
-                            uint8_t iG = RangeScale(MIN_OK_TEMP, 255, iTemp, 184, 104);
-                            uint8_t iB = RangeScale(MIN_OK_TEMP, 255, iTemp, 0, 53);
+                            uint8_t iR = range_scale(minOkTemp, 255, iTemp, 223, 235);
+                            uint8_t iG = range_scale(minOkTemp, 255, iTemp, 184, 104);
+                            uint8_t iB = range_scale(minOkTemp, 255, iTemp, 0, 53);
                             iColour = pCanvas->mapColour(iR, iG, iB);
                         }
                         break;
@@ -121,7 +121,6 @@ static int l_town_map_draw(lua_State *L)
                         iColour = pCanvas->mapColour(static_cast<uint8_t>(iTemp), 0, 70);
                         break;
                     }
-#undef RangeScale
                 }
                 pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
             }

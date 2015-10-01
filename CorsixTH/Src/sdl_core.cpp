@@ -357,6 +357,13 @@ static const struct luaL_Reg sdllib_with_upvalue[] = {
     {nullptr, nullptr}
 };
 
+inline void load_extra(lua_State *L, const char *name, lua_CFunction fn)
+{
+    luaT_pushcfunction(L, fn);
+    lua_call(L, 0, 1);
+    lua_setfield(L, -2, name);
+}
+
 int luaopen_sdl_audio(lua_State *L);
 int luaopen_sdl_wm(lua_State *L);
 
@@ -373,15 +380,8 @@ int luaopen_sdl(lua_State *L)
         lua_setfield(L, -2, pUpvaluedFunctions->name);
     }
 
-#define LOAD_EXTRA(name, fn) \
-    luaT_pushcfunction(L, fn); \
-    lua_call(L, 0, 1); \
-    lua_setfield(L, -2, name)
-
-    LOAD_EXTRA("audio", luaopen_sdl_audio);
-    LOAD_EXTRA("wm", luaopen_sdl_wm);
-
-#undef LOAD_EXTRA
+    load_extra(L, "audio", luaopen_sdl_audio);
+    load_extra(L, "wm", luaopen_sdl_wm);
 
     return 1;
 }
