@@ -290,6 +290,16 @@ tooltip.save_game_window = {
   new_save_game = "Enter name for a new savegame",
 }
 
+save_map_window = {
+  caption = "Save Map (%1%)",
+  new_map = "New Map",
+}
+
+tooltip.save_map_window = {
+  map = "Overwrite map %s",
+  new_map = "Enter name for a map savegame",
+}
+
 menu_list_window = {
   name = "Name",
   save_date = "Modified",

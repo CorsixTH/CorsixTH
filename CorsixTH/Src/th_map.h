@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_H_
 #define CORSIX_TH_TH_MAP_H_
 #include "th_gfx.h"
+#include <string>
 
 /*
     Object type enumeration uses same values as original TH does.
@@ -210,8 +211,7 @@ public:
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
 
-    void save(void (*fnWriter)(void*, const uint8_t*, size_t),
-              void* pToken);
+    void save(std::string filename);
 
     //! Set the sprite sheet to be used for drawing the map
     /*!

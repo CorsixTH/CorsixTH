@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_pathfind.h"
 #include <cstring>
+#include <string>
 
 static int l_map_new(lua_State *L)
 {
@@ -106,6 +107,14 @@ static int l_map_loadblank(lua_State *L)
         lua_pushboolean(L, 0);
     lua_newtable(L);
     return 2;
+}
+
+static int l_map_save(lua_State *L)
+{
+    THMap *pMap = luaT_testuserdata<THMap>(L);
+    std::string filename(luaL_checkstring(L, 2));
+    pMap->save(filename);
+    return 0;
 }
 
 THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
@@ -942,6 +951,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_map_depersist, "depersist", MT_Anim);
     luaT_setfunction(l_map_load, "load");
     luaT_setfunction(l_map_loadblank, "loadBlank");
+    luaT_setfunction(l_map_save, "save");
     luaT_setfunction(l_map_getsize, "size");
     luaT_setfunction(l_map_get_player_count, "getPlayerCount");
     luaT_setfunction(l_map_get_player_camera, "getCameraTile");

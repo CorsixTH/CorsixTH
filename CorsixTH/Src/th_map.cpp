@@ -30,6 +30,8 @@ SOFTWARE.
 #include <algorithm>
 #include <cstring>
 #include <cstdio>
+#include <fstream>
+#include <string>
 
 THMapNode::THMapNode()
 {
@@ -328,16 +330,16 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
     return true;
 }
 
-void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
-              void* pToken)
+void THMap::save(std::string filename)
 {
     uint8_t aBuffer[256] = {0};
     int iBufferNext = 0;
+    std::basic_ofstream<uint8_t, std::char_traits<uint8_t>> os(filename, std::ios_base::trunc | std::ios_base::binary);
 
     // Header
     aBuffer[0] = static_cast<uint8_t>(m_iPlayerCount);
     // TODO: Determine correct contents for the next 33 bytes
-    fnWriter(pToken, aBuffer, 34);
+    os.write(aBuffer, 34);
 
     uint8_t aReverseBlockLUT[256] = {0};
     for(int i = 0; i < 256; ++i)
@@ -383,7 +385,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
 
         if(iBufferNext == sizeof(aBuffer))
         {
-            fnWriter(pToken, aBuffer, sizeof(aBuffer));
+            os.write(aBuffer, sizeof(aBuffer));
             iBufferNext = 0;
         }
     }
@@ -394,7 +396,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
         if(iBufferNext == sizeof(aBuffer))
         {
-            fnWriter(pToken, aBuffer, sizeof(aBuffer));
+            os.write(aBuffer, sizeof(aBuffer));
             iBufferNext = 0;
         }
     }
@@ -402,7 +404,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
     // TODO: What are these two bytes?
     aBuffer[iBufferNext++] = 3;
     aBuffer[iBufferNext++] = 0;
-    fnWriter(pToken, aBuffer, iBufferNext);
+    os.write(aBuffer, iBufferNext);
     iBufferNext = 0;
 
     std::memset(aBuffer, 0, 56);
@@ -414,10 +416,11 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
             m_aiHeliportX[i], m_aiHeliportY[i]);
         iBufferNext += 2;
     }
-    fnWriter(pToken, aBuffer, 16);
+    os.write(aBuffer, 16);
     std::memset(aBuffer, 0, 16);
     // TODO: What are these 56 bytes?
-    fnWriter(pToken, aBuffer, 56);
+    os.write(aBuffer, 56);
+    os.close();
 }
 
 void THMap::setParcelOwner(int iParcelId, int iOwner)

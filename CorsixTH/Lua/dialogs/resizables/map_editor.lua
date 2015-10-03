@@ -21,7 +21,7 @@ SOFTWARE. --]]
 
 -- Stuff to do:
 -- [ ] Show parcels by number menu
--- [ ] load / save menu
+-- [X] load / save menu
 -- [ ] transparent walls toggle menu (probably useful to have)
 -- [ ] show all parcels toggle menu
 -- [ ] make the program map-editor aware
@@ -35,6 +35,8 @@ SOFTWARE. --]]
 --     dofile "commands/set_map_cell_flags"
 --     dofile "commands/compound"
 -- [ ] Use 'sample_i' (or delete it).
+-- [ ] Allow setting initial camera location
+-- [ ] Set heliport location
 
 class "UIMapEditor" (UIResizable)
 

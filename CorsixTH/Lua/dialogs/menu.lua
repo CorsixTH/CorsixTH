@@ -529,8 +529,8 @@ end
 --!param app Application.
 function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
-  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
-    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
+  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
+    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
     :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
 end

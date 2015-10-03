@@ -114,6 +114,7 @@ function App:init()
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
+  self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
 
   self:initSavegameDir()
 

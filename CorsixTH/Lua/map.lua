@@ -202,7 +202,12 @@ function Map:load(level, difficulty, level_name, level_file, level_intro, map_ed
     if level == "" then
       i, objects = self.th:loadBlank()
     else
-      i, objects = self.th:load(level)
+      local data, errors = self:getRawData(level)
+      if data then
+        i, objects = self.th:load(data)
+      else
+        return nil, errors
+      end
     end
     assert(base_config, "No base config has been loaded!")
 
@@ -236,6 +241,13 @@ function Map:load(level, difficulty, level_name, level_file, level_intro, map_ed
   end
 
   return objects
+end
+
+--[[! Saves the map to a .map file
+!param filename (string) Name of the file to save the map in
+]]
+function Map:save(filename)
+  self.th:save(filename)
 end
 
 --[[! Loads map configurations from files. Returns nil as first result
