@@ -38,9 +38,6 @@ extern "C"
 #include <iostream>
 #include <cstring>
 
-#define INBUF_SIZE 4096
-#define AUDIO_BUFFER_SIZE 1024
-
 #if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
     (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
 #define av_frame_alloc avcodec_alloc_frame
@@ -167,7 +164,7 @@ void THMoviePictureBuffer::reset()
 
 void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight)
 {
-    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    for(int i = 0; i < ms_pictureBufferSize; i++)
     {
         m_aPictureQueue[i].allocate(pRenderer, iX, iY, iWidth, iHeight);
     }
@@ -186,7 +183,7 @@ void THMoviePictureBuffer::deallocate()
     SDL_LockMutex(m_pMutex);
     m_fAllocated = false;
     SDL_UnlockMutex(m_pMutex);
-    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    for(int i = 0; i < ms_pictureBufferSize; i++)
     {
         SDL_LockMutex(m_aPictureQueue[i].m_pMutex);
         m_aPictureQueue[i].deallocate();
@@ -199,7 +196,7 @@ bool THMoviePictureBuffer::advance()
     if(empty()) { return false; }
 
     m_iReadIndex++;
-    if(m_iReadIndex == PICTURE_BUFFER_SIZE)
+    if(m_iReadIndex == ms_pictureBufferSize)
     {
         m_iReadIndex = 0;
     }
@@ -231,7 +228,7 @@ double THMoviePictureBuffer::getNextPts()
     }
     else
     {
-        nextPts = m_aPictureQueue[(m_iReadIndex+1)%PICTURE_BUFFER_SIZE].m_dPts;
+        nextPts = m_aPictureQueue[(m_iReadIndex + 1) % ms_pictureBufferSize].m_dPts;
     }
     SDL_UnlockMutex(m_pMutex);
     return nextPts;
@@ -250,7 +247,7 @@ bool THMoviePictureBuffer::full()
 {
     bool full;
     SDL_LockMutex(m_pMutex);
-    full = (!m_fAllocated || m_iCount == PICTURE_BUFFER_SIZE);
+    full = (!m_fAllocated || m_iCount == ms_pictureBufferSize);
     SDL_UnlockMutex(m_pMutex);
     return full;
 }
@@ -298,7 +295,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
         SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
         m_iWriteIndex++;
-        if(m_iWriteIndex == PICTURE_BUFFER_SIZE)
+        if(m_iWriteIndex == ms_pictureBufferSize)
         {
             m_iWriteIndex = 0;
         }
@@ -425,8 +422,7 @@ THMovie::THMovie():
     m_flushPacket->data = (uint8_t *)"FLUSH";
     m_flushPacket->size = 5;
 
-    m_pbChunkBuffer = (uint8_t*)malloc(AUDIO_BUFFER_SIZE);
-    std::memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
+    m_pbChunkBuffer = (uint8_t*)std::calloc(ms_audioBufferSize, sizeof(uint8_t));
 
     m_pDecodingAudioMutex = SDL_CreateMutex();
 }
@@ -475,7 +471,7 @@ bool THMovie::load(const char* szFilepath)
     iError = avformat_open_input(&m_pFormatContext, szFilepath, nullptr, nullptr);
     if(iError < 0)
     {
-        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        av_strerror(iError, m_szErrorBuffer, ms_movieErrorBufferSize);
         m_sLastError = std::string(m_szErrorBuffer);
         return false;
     }
@@ -483,7 +479,7 @@ bool THMovie::load(const char* szFilepath)
     iError = avformat_find_stream_info(m_pFormatContext, nullptr);
     if(iError < 0)
     {
-        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        av_strerror(iError, m_szErrorBuffer, ms_movieErrorBufferSize);
         m_sLastError = std::string(m_szErrorBuffer);
         return false;
     }
@@ -662,7 +658,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
         av_opt_set_int(m_pAudioResampleContext, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
         avresample_open(m_pAudioResampleContext);
 #endif
-        m_pChunk = Mix_QuickLoad_RAW(m_pbChunkBuffer, AUDIO_BUFFER_SIZE);
+        m_pChunk = Mix_QuickLoad_RAW(m_pbChunkBuffer, ms_audioBufferSize);
 
         m_iChannel = Mix_PlayChannel(iChannel, m_pChunk, -1);
         if(m_iChannel < 0)

@@ -38,13 +38,18 @@ SOFTWARE.
 #include "rnc.h"
 #include "th_lua.h"
 
-#define RNC_OK                  0
-#define RNC_FILE_IS_NOT_RNC    -1
-#define RNC_HUF_DECODE_ERROR   -2
-#define RNC_FILE_SIZE_MISMATCH -3
-#define RNC_PACKED_CRC_ERROR   -4
-#define RNC_UNPACKED_CRC_ERROR -5
-#define RNC_SIGNATURE 0x524E4301       /* "RNC\001" */
+/*! Result status values from #rnc_inpack. */
+enum class rnc_status
+{
+    ok, ///< Everything is fine
+    file_is_not_rnc, ///< The file does not begin with an RNC signature
+    huf_decode_error, ///< Error decoding the file
+    file_size_mismatch, ///< The file size does not match the header
+    packed_crc_error, ///< The compressed file does not match its checksum
+    unpacked_crc_error ///< The uncompressed file does not match its checksum
+};
+
+static const uint32_t rnc_signature = 0x524E4301; /*!< "RNC\001" */
 
 static const uint16_t rnc_crc_table[256] = {
     0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
@@ -378,7 +383,7 @@ static uint32_t huf_read(huf_table *h, bit_stream *bs, const uint8_t **p)
         4 byte segment of the input header starting at the 4th byte
         in Big-endian.
 */
-static int rnc_unpack(const uint8_t* input, uint8_t* output)
+static rnc_status rnc_unpack(const uint8_t* input, uint8_t* output)
 {
     const uint8_t *inputend;
     uint8_t *outputend;
@@ -387,9 +392,9 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
     uint32_t ch_count;
     uint32_t ret_len;
     uint32_t out_crc;
-    if(blong(input) != RNC_SIGNATURE)
+    if(blong(input) != rnc_signature)
     {
-        return RNC_FILE_IS_NOT_RNC;
+        return rnc_status::file_is_not_rnc;
     }
     ret_len = blong(input + 4);
     outputend = output + ret_len;
@@ -402,7 +407,7 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
     // for later.
     if(rnc_crc(input, inputend-input) != bword(input - 4))
     {
-        return RNC_PACKED_CRC_ERROR;
+        return rnc_status::packed_crc_error;
     }
     out_crc = bword(input - 6);
 
@@ -428,7 +433,7 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
             length = huf_read(&raw, &input_bs, &input);
             if(length == -1)
             {
-                return RNC_HUF_DECODE_ERROR;
+                return rnc_status::huf_decode_error;
             }
             if(length)
             {
@@ -447,7 +452,7 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
             posn = huf_read(&dist, &input_bs, &input);
             if(posn == -1)
             {
-                return RNC_HUF_DECODE_ERROR;
+                return rnc_status::huf_decode_error;
             }
             posn += 1;
 
@@ -455,7 +460,7 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
             length = huf_read(&len, &input_bs, &input);
             if(length == -1)
             {
-                return RNC_HUF_DECODE_ERROR;
+                return rnc_status::huf_decode_error;
             }
             length += 2;
 
@@ -470,16 +475,16 @@ static int rnc_unpack(const uint8_t* input, uint8_t* output)
 
     if(outputend != output)
     {
-        return RNC_FILE_SIZE_MISMATCH;
+        return rnc_status::file_size_mismatch;
     }
 
     // Check the unpacked-data CRC.
     if(rnc_crc(outputend - ret_len, ret_len) != out_crc)
     {
-        return RNC_UNPACKED_CRC_ERROR;
+        return rnc_status::unpacked_crc_error;
     }
 
-    return RNC_OK;
+    return rnc_status::ok;
 }
 
 //! Provides lua function to decompress RNC data
@@ -495,7 +500,7 @@ static int l_decompress(lua_State *L)
 
     // Verify that the data contains an RNC signature, and that the input
     // size matches the size specified in the data header.
-    if(inlen < 18 || blong(in) != RNC_SIGNATURE || blong(in + 8) != (inlen - 18))
+    if(inlen < 18 || blong(in) != rnc_signature || blong(in + 8) != (inlen - 18))
     {
         lua_pushnil(L);
         lua_pushliteral(L, "Input is not RNC compressed data");
@@ -512,27 +517,27 @@ static int l_decompress(lua_State *L)
     lua_pushnil(L);
     switch(rnc_unpack(in, (uint8_t*)outbuf))
     {
-    case RNC_OK:
+    case rnc_status::ok:
         lua_pushlstring(L, (const char*)outbuf, outlen);
         return 1;
 
-    case RNC_FILE_IS_NOT_RNC:
+    case rnc_status::file_is_not_rnc:
         lua_pushliteral(L, "Input is not RNC compressed data");
         break;
 
-    case RNC_HUF_DECODE_ERROR:
+    case rnc_status::huf_decode_error:
         lua_pushliteral(L, "Invalid Huffman coding");
         break;
 
-    case RNC_FILE_SIZE_MISMATCH:
+    case rnc_status::file_size_mismatch:
         lua_pushliteral(L, "Size mismatch");
         break;
 
-    case RNC_PACKED_CRC_ERROR:
+    case rnc_status::packed_crc_error:
         lua_pushliteral(L, "Incorrect packed CRC");
         break;
 
-    case RNC_UNPACKED_CRC_ERROR:
+    case rnc_status::unpacked_crc_error:
         lua_pushliteral(L, "Incorrect unpacked CRC");
         break;
 

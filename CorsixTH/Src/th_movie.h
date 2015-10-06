@@ -22,8 +22,6 @@ SOFTWARE.
 
 #ifndef TH_VIDEO_H
 #define TH_VIDEO_H
-#define PICTURE_BUFFER_SIZE 4
-#define MOVIE_ERROR_BUFFER_SIZE 128
 
 #include <string>
 #include <queue>
@@ -93,6 +91,7 @@ public:
     bool full();
     int write(AVFrame* pFrame, double dPts);
 protected:
+    static const size_t ms_pictureBufferSize = 4;
     bool m_fAborting;
     bool m_fAllocated;
     int m_iCount;
@@ -101,7 +100,7 @@ protected:
     SwsContext* m_pSwsContext;
     SDL_mutex *m_pMutex;
     SDL_cond *m_pCond;
-    THMoviePicture m_aPictureQueue[PICTURE_BUFFER_SIZE];
+    THMoviePicture m_aPictureQueue[ms_pictureBufferSize];
 };
 
 class THAVPacketQueue
@@ -153,6 +152,9 @@ public:
     void copyAudioToStream(uint8_t *pbStream, int iStreamSize);
 protected:
 #if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
+    static const size_t ms_movieErrorBufferSize = 128;
+    static const size_t ms_audioBufferSize = 1024;
+
     int decodeAudioFrame(bool fFirst);
     int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
 
@@ -163,7 +165,7 @@ protected:
 
     //last error
     std::string m_sLastError;
-    char m_szErrorBuffer[MOVIE_ERROR_BUFFER_SIZE];
+    char m_szErrorBuffer[ms_movieErrorBufferSize];
 
     //abort playing movie
     bool m_fAborting;

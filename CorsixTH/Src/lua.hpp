@@ -35,26 +35,41 @@ extern "C" {
 // with LUA_COMPAT_ALL defined, but we have no control over this.
 
 #ifndef lua_objlen
-#define lua_objlen(L, i) lua_rawlen(L, (i))
+inline size_t lua_objlen(lua_State *L, int idx)
+{
+    return lua_rawlen(L, idx);
+}
 #endif
 
 #ifndef lua_equal
-#define lua_equal(L, idx1, idx2) lua_compare(L, (idx1), (idx2), LUA_OPEQ)
+inline int lua_equal(lua_State *L, int idx1, int idx2)
+{
+    return lua_compare(L, idx1, idx2, LUA_OPEQ);
+}
 #endif
 
 #ifndef lua_lessthan
-#define lua_lessthan(L, idx1, idx2) lua_compare(L, (idx1), (idx1), LUA_OPLT)
+inline int lua_lessthan(lua_State *L, int idx1, int idx2)
+{
+    return lua_compare(L, idx1, idx1, LUA_OPLT);
+}
 #endif
 
 // Use our own replacements for lua_[sg]etfenv
 #ifndef lua_setfenv
-#define lua_setfenv luaT_setfenv52
 int luaT_setfenv52(lua_State*, int);
+inline int lua_setfenv(lua_State *L, int n)
+{
+    return luaT_setfenv52(L, n);
+}
 #endif
 
 #ifndef lua_getfenv
-#define lua_getfenv luaT_getfenv52
 void luaT_getfenv52(lua_State*, int);
+inline void lua_getfenv(lua_State *L, int n)
+{
+    luaT_getfenv52(L, n);
+}
 #endif
 
 #endif // LUA_VERSION_NUM >= 502

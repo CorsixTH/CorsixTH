@@ -31,9 +31,7 @@ SOFTWARE.
 #include <iostream>
 #include <cstring>
 #include <cstdio>
-#ifndef max
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#endif
+#include <algorithm>
 
 FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidth), m_iHeight(iHeight)
 {
@@ -1134,7 +1132,7 @@ bool THSpriteSheet::getSpriteAverageColour(size_t iSprite, THColour* pColour) co
         int iG = THPalette::getG(iColour);
         int iB = THPalette::getB(iColour);
         uint8_t cIntensity = static_cast<uint8_t>((iR + iG + iB) / 3);
-        int iScore = 1 + max(0, 3 - ((255 - cIntensity) / 32)) + max(0, 3 - (cIntensity / 32));
+        int iScore = 1 + std::max(0, 3 - ((255 - cIntensity) / 32)) + std::max(0, 3 - (cIntensity / 32));
         iUsageCounts[cPalIndex] += iScore;
         iCountTotal += iScore;
     }
