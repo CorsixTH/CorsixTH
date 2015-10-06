@@ -163,7 +163,7 @@ function UIJukebox:draw(canvas, x, y)
       font = self.blue_font
     end
     local str = info.title
-    while font:sizeOf(str, font) > 185 do
+    while font:sizeOf(str) > 185 do
       str = string.sub(str, 1, string.len(str) - 5) .. "..."
     end
     font:draw(canvas, str, x + 24, y + 11)
