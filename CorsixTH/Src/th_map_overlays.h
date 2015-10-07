@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_MAP_OVERLAYS_H_
 
 #include <cstddef>
+#include <string>
 
 class THFont;
 class THMap;
@@ -66,8 +67,7 @@ public:
     void setFont(THFont* pFont, bool bTakeOwnership);
 
 protected:
-    void _drawText(THRenderTarget* pCanvas, int iX, int iY,
-                   const char* sFormat, ...);
+    void _drawText(THRenderTarget* pCanvas, int iX, int iY, std::string str);
 
     THSpriteSheet* m_pSprites;
     THFont* m_pFont;
@@ -84,7 +84,7 @@ public:
         const THMap* pMap, int iNodeX, int iNodeY);
 
     void setBackgroundSprite(size_t iSprite);
-    virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
+    virtual const std::string getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
 
 protected:
     size_t m_iBackgroundSprite;
@@ -93,10 +93,7 @@ protected:
 class THMapPositionsOverlay : public THMapTextOverlay
 {
 public:
-    virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY);
-
-protected:
-    char m_sBuffer[16];
+    virtual const std::string getText(const THMap* pMap, int iNodeX, int iNodeY);
 };
 
 class THMapFlagsOverlay : public THMapTypicalOverlay
