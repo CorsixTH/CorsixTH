@@ -330,19 +330,19 @@ static int l_font_draw(lua_State *L)
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
-    eTHAlign eAlign = Align_Center;
+    text_align text_align = text_align::center;
     if(!lua_isnoneornil(L, 8))
     {
         const char* sAlign = luaL_checkstring(L, 8);
         if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
+            text_align = text_align::right;
         else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
+            text_align = text_align::left;
         else if(std::strcmp(sAlign, "center") == 0
              || std::strcmp(sAlign, "centre") == 0
              || std::strcmp(sAlign, "middle") == 0)
         {
-            eAlign = Align_Center;
+            text_align = text_align::center;
         }
         else
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
@@ -353,8 +353,8 @@ static int l_font_draw(lua_State *L)
     {
         int iW = static_cast<int>(luaL_checkinteger(L, 6));
         int iH = static_cast<int>(luaL_checkinteger(L, 7));
-        if(iW > oDrawArea.iEndX && eAlign != Align_Left)
-            iX += (iW - oDrawArea.iEndX) / ((eAlign == Align_Center) ? 2 : 1);
+        if(iW > oDrawArea.iEndX && text_align != text_align::left)
+            iX += (iW - oDrawArea.iEndX) / ((text_align == text_align::center) ? 2 : 1);
         if(iH > oDrawArea.iEndY)
             iY += (iH - oDrawArea.iEndY) / 2;
     }
@@ -381,19 +381,19 @@ static int l_font_draw_wrapped(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
     int iW = static_cast<int>(luaL_checkinteger(L, 6));
-    eTHAlign eAlign = Align_Left;
+    text_align text_align = text_align::left;
     if(!lua_isnoneornil(L, 7))
     {
         const char* sAlign = luaL_checkstring(L, 7);
         if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
+            text_align = text_align::right;
         else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
+            text_align = text_align::left;
         else if(std::strcmp(sAlign, "center") == 0
              || std::strcmp(sAlign, "centre") == 0
              || std::strcmp(sAlign, "middle") == 0)
         {
-            eAlign = Align_Center;
+            text_align = text_align::center;
         }
         else
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
@@ -411,7 +411,7 @@ static int l_font_draw_wrapped(lua_State *L)
     }
 
     THFontDrawArea oDrawArea = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
-                                              iW, iMaxRows, iSkipRows, eAlign);
+                                              iW, iMaxRows, iSkipRows, text_align);
     lua_pushinteger(L, oDrawArea.iEndY);
     lua_pushinteger(L, oDrawArea.iEndX);
     lua_pushinteger(L, oDrawArea.iNumRows);

@@ -209,7 +209,7 @@ void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_
 
 THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                         size_t iMessageLength, int iX, int iY, int iWidth,
-                        int iMaxRows, int iSkipRows, eTHAlign eAlign) const
+                        int iMaxRows, int iSkipRows, text_align text_align) const
 {
     THFontDrawArea oDrawArea = {};
     int iSkippedRows = 0;
@@ -274,7 +274,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                 {
                     int iXOffset = 0;
                     if(iMsgBreakWidth < iWidth)
-                        iXOffset = (iWidth - iMsgBreakWidth) * static_cast<int>(eAlign) / 2;
+                        iXOffset = (iWidth - iMsgBreakWidth) * static_cast<int>(text_align) / 2;
                     drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset, iY);
                 }
                 iY += static_cast<int>(iTallest) + m_iLineSep;
@@ -329,7 +329,7 @@ THFreeTypeFont::THFreeTypeFont()
         pEntry->sMessage = nullptr;
         pEntry->iMessageLength = 0;
         pEntry->iMessageBufferLength = 0;
-        pEntry->eAlign = Align_Left;
+        pEntry->text_align = text_align::left;
         pEntry->iWidth = 0;
         pEntry->iHeight = 0;
         pEntry->iWidestLine = 0;
@@ -516,7 +516,7 @@ struct codepoint_glyph_t
 
 THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
-                                int iWidth, int iMaxRows, int iSkipRows, eTHAlign eAlign) const
+                                int iWidth, int iMaxRows, int iSkipRows, text_align text_align) const
 {
     THFontDrawArea oDrawArea = {};
     int iNumRows = 0;
@@ -527,7 +527,7 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
         + (static_cast<size_t>(iMaxRows) << (ms_CacheSizeLog2 / 8))
         + (static_cast<size_t>(iSkipRows) << (ms_CacheSizeLog2 / 4))
         + (static_cast<size_t>(iWidth) << (ms_CacheSizeLog2 / 2))
-        + (static_cast<size_t>(eAlign) << ms_CacheSizeLog2);
+        + (static_cast<size_t>(text_align) << ms_CacheSizeLog2);
     for(size_t i = 0; i < iMessageLength; ++i)
         iHash ^= (iHash << 5) + (iHash >> 2) + static_cast<size_t>(sMessage[i]);
     iHash &= (1 << ms_CacheSizeLog2) - 1;
@@ -535,7 +535,7 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
     cached_text_t* pEntry = m_aCache + iHash;
     if(pEntry->iMessageLength != iMessageLength || pEntry->iWidth > iWidth
         || (iWidth != INT_MAX && pEntry->iWidth < iWidth)
-        || pEntry->eAlign != eAlign || !pEntry->bIsValid
+        || pEntry->text_align != text_align || !pEntry->bIsValid
         || std::memcmp(pEntry->sMessage, sMessage, iMessageLength) != 0)
     {
         // Cache entry does not match the message being drawn, so discard the
@@ -555,7 +555,7 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
         std::memcpy(pEntry->sMessage, sMessage, iMessageLength);
         pEntry->iMessageLength = iMessageLength;
         pEntry->iWidth = iWidth;
-        pEntry->eAlign = eAlign;
+        pEntry->text_align = text_align;
 
         // Split the message into lines, and determine the position within the
         // line for each character.
@@ -702,7 +702,7 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
             if((iLineWidth >> 6) < iWidth)
             {
                 iAlignDelta = ((iWidth * 64 - iLineWidth) *
-                    static_cast<int>(eAlign)) / 2;
+                    static_cast<int>(text_align)) / 2;
             }
             if(iLineWidth > iWidestLine)
                 iWidestLine = iLineWidth;
