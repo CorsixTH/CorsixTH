@@ -139,6 +139,7 @@ level_names = {
 custom_game_window = {
   free_build = "Volné stavění",
   caption = "Vlastní Hra",
+  load_selected_level = "Spustit",
 }
 menu_debug_overlay = {
   positions = "    POZICE  ",
@@ -1153,8 +1154,9 @@ tooltip = {
     increase = "Koupit o jednu položku více",
   },
   custom_game_window = {
-    start_game_with_name = "Načíst úroveň %s",
     free_build = "Toto políčko zaškrtněte, pokud chcete hrát bez peněz a podmínek pro vítězství a prohru",
+    load_selected_level = "Načíst a hrát zvolenou úroveň",
+    choose_game = "Klikněte na úroveň pro zobrazení informací o ní.",
   },
   new_game_window = {
     easy = "Pokud jste začátečníci v simulačních hrách, tak toto je volba pro Vás",
@@ -1290,6 +1292,7 @@ tooltip = {
     network = "Spustit hru po síti",
     exit = "Ne, ne, prosím neodcházejte!",
     quit = "Odejít",
+    custom_campaign = "Hrát komunitou vytvořenou kampaň",
   },
   queue_window = {
     num_expected = "Počet pacientů, u kterých Recepční očekává, že se brzy připojí do fronty",
@@ -1590,6 +1593,10 @@ tooltip = {
     crash_trolley = "20 OB_CRASH",
     swing_door1 = "52 OB_DOUBLE_DOOR1",
     skeleton = "Kostlivec: používán ke cvičebním účelům a na Halloween.",
+  },
+  custom_campaign_window = {
+    choose_campaign = "Zvolte kampaň pro zobrazení informací o ní.",
+    start_selected_campaign = "Načte první úroveň kampaně",
   },
 }
 humanoid_name_ends = {
@@ -2599,6 +2606,8 @@ errors = {
   fractured_bones = "POZNÁMKA: Animace ženských pacientů se Zlomenými kostmi není dokonalá",
   load_quick_save = "Chyba! Rychle uloženou pozici nelze načíst, protože neexistuje. Není třeba se obávat, hned jsme jednu pro Vás vytvořili!",
   no_games_to_contine = "Žádné uložené hry.",
+  could_not_load_campaign = "Nelze načíst kampaň: %s",
+  could_not_find_first_campaign_level = "Nelze načíst první úroveň této kampaně: %s",
 }
 menu = {
   charts = "  GRAFY  ",
@@ -2683,14 +2692,15 @@ save_game_window = {
   new_save_game = "Nová Uložená Hra",
 }
 main_menu = {
-  custom_level = "Vlastní Úroveň",
-  load_game = "Načíst Hru",
+  custom_level = "Vlastní úroveň",
+  load_game = "Načíst hru",
   options = "Nastavení",
   savegame_version = "Verze ukládaných her: ",
   version = "Verze: ",
   exit = "Ukončit",
-  new_game = "Nová Hra",
+  new_game = "Nová hra",
   continue = "Pokračovat ve hře",
+  custom_campaign = "Vlastní kampaň",
 }
 letter = {
   [1] = {
@@ -2753,13 +2763,16 @@ letter = {
   },
   [12] = {
     [1] = "Vážený/á %s//",
-    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýli ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d€ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!//",
+    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýlí ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d€ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!//",
     [3] = "Prosím přijměte tuto pozici. Nebude to těžká práce a poskytneme Vám auto a policejní doprovod kamkoliv se hnete.//",
     [4] = "",
   },
   custom_level_completed = "Výborně! Dokončili jste všechny úkoly v této vlastní úrovni!",
   dear_player = "Vážený/á %s",
   return_to_main_menu = "Chtěli byste se vrátit do hlavního menu, nebo pokračovat v hraní?",
+  campaign_level_completed = "Dobrá práce! Splnili jste úroveň. Ale ještě není konec! Chtěli byste přijmout pozici v nemocnici %s?",
+  campaign_level_missing = "Je nám líto, ale zdá se, že následující úroveň této kampaně chybí. (Název: %s)",
+  campaign_completed = "Neuvěřitelné! Zvládli jste splnit všechny úrovně. Nyní si můžete oddychnout a začít sepisovat sebechválu na všech fórech na Internetu. Hodně štěstí!",
 }
 rooms_short = {
   dna_fixer = "Spravovač DNA",
@@ -3221,5 +3234,10 @@ customise_window = {
   aliens = "PAcienti s mimozemskou DNA",
   fractured_bones = "Zlomené kosti",
 }
-
-
+custom_campaign_window = {
+  caption = "Vlastní kampaň",
+  start_selected_campaign = "Spustit kampaň",
+}
+warnings = {
+  levelfile_variable_is_deprecated = "Upozornění: ˇUroveň '%s' ve svém souboru obsahuje zastaralé určení proměnné.'%LevelFile' bylo přejmenováno na '%MapFile'. Pro aktualizaci úrovně prosím použijte editor map."
+}
