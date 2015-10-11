@@ -30,72 +30,8 @@ SOFTWARE.
 #include <cstdio>
 #include <cstring>
 #include <algorithm>
-
-static unsigned int utf8next(const char*& sString)
-{
-    unsigned int iCode = *reinterpret_cast<const uint8_t*>(sString++);
-    unsigned int iContinuation;
-    if(iCode & 0x80)
-    {
-        if((iCode & 0x40) == 0)
-        {
-            // Invalid encoding: character should not start with a continuation
-            // byte. Hence return the Unicode replacement character.
-            return 0xFFFD;
-        }
-        else
-        {
-#define CONTINUATION_CHAR \
-    iContinuation = *reinterpret_cast<const uint8_t*>(sString); \
-    if((iContinuation & 0xC0) != 0x80) \
-        /* Invalid encoding: not enough continuation characters. */ \
-        return 0xFFFD; \
-    iCode = (iCode << 6) | (iContinuation & 0x3F); \
-    ++sString
-
-            iCode &= 0x3F;
-            if(iCode & 0x20)
-            {
-                iCode &= 0x1F;
-                if(iCode & 0x10)
-                {
-                    iCode &= 0x0F;
-                    if(iCode & 0x08)
-                    {
-                        // Invalid encoding: too-long byte sequence. Hence
-                        // return the Unicode replacement character.
-                        return 0xFFFD;
-                    }
-                    CONTINUATION_CHAR;
-                }
-                CONTINUATION_CHAR;
-            }
-            CONTINUATION_CHAR;
-        }
-
-#undef CONTINUATION_CHAR
-    }
-    return iCode;
-}
-
-#ifdef CORSIX_TH_USE_FREETYPE2
-// Since these functions are only used when we use freetype2, this silences
-// warnings about defined and not used.
-
-static unsigned int utf8decode(const char* sString)
-{
-    return utf8next(sString);
-}
-
-static const char* utf8prev(const char* sString)
-{
-    do
-    {
-        --sString;
-    } while(((*sString) & 0xC0) == 0x80);
-    return sString;
-}
-#endif
+#include <codecvt>
+#include <string>
 
 THFont::THFont()
 {
@@ -134,14 +70,14 @@ static const uint16_t g_aUnicodeToCP437[0x60] = {
     0x93, 0x3F, 0x94, 0xF6, 0x3F, 0x97, 0xA3, 0x96, 0x81, 0x3F, 0x3F, 0x98
 };
 
-static unsigned int unicodeToCodepage437(unsigned int iCodePoint)
+static unsigned char unicodeToCodepage437(char32_t iCodePoint)
 {
     if(iCodePoint < 0x80)
         return iCodePoint;
     if(iCodePoint < 0xA0)
         return '?';
     if(iCodePoint < 0x100)
-        return g_aUnicodeToCP437[iCodePoint - 0xA0];
+        return static_cast<unsigned char>(g_aUnicodeToCP437[iCodePoint - 0xA0]);
     switch(iCodePoint)
     {
         case 0x0192: return 0x9F;
@@ -184,16 +120,28 @@ THFontDrawArea THBitmapFont::getTextSize(const char* sMessage, size_t iMessageLe
 
 void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const
 {
-    pCanvas->startNonOverlapping();
-    if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
+    if(iMessageLength != 0)
     {
-        const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
+        std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8_to_ucs4;
+        std::u32string ucs4_message = utf8_to_ucs4.from_bytes(sMessage, sMessageEnd);
 
-        while(sMessage != sMessageEnd)
+        drawUcs4Substring(pCanvas, ucs4_message.begin(), ucs4_message.end(), iX, iY);
+    }
+}
+
+void THBitmapFont::drawUcs4Substring(THRenderTarget *pCanvas, std::u32string::iterator start, std::u32string::iterator end, int iX, int iY) const
+{
+    pCanvas->startNonOverlapping();
+    
+    const unsigned char iFirstASCII = 31;
+    unsigned char iLastASCII = static_cast<unsigned char>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
+
+    if(m_pSpriteSheet != nullptr)
+    {
+        for(auto ucs4_char_iter = start; ucs4_char_iter != end; ucs4_char_iter++)
         {
-            unsigned int iChar = unicodeToCodepage437(utf8next(sMessage));
+            unsigned char iChar = unicodeToCodepage437(*ucs4_char_iter);
             if(iFirstASCII <= iChar && iChar <= iLastASCII)
             {
                 iChar -= iFirstASCII;
@@ -204,6 +152,7 @@ void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_
             }
         }
     }
+
     pCanvas->finishNonOverlapping();
 }
 
@@ -219,28 +168,35 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
         unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
 
-        while(sMessage != sMessageEnd && oDrawArea.iNumRows < iMaxRows)
+        std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8_to_ucs4;
+        std::u32string ucs4_message = utf8_to_ucs4.from_bytes(sMessage, sMessageEnd);
+        auto ucs4_message_iter = ucs4_message.begin();
+
+        while(ucs4_message_iter != ucs4_message.end() && oDrawArea.iNumRows < iMaxRows)
         {
-            const char* sBreakPosition = sMessageEnd;
-            const char* sLastGoodBreakPosition = sBreakPosition;
+            auto sBreakPosition = ucs4_message.end();
+            auto sLastGoodBreakPosition = sBreakPosition;
             int iMsgWidth = -m_iCharSep;
             int iMsgBreakWidth = iMsgWidth;
             unsigned int iTallest = 0;
-            const char* s;
             bool foundNewLine = false;
-            unsigned int iNextChar = 0;
+            unsigned char iNextChar = 0;
+            auto ucs4_line_iter = ucs4_message_iter;
 
-            for(s = sMessage; s != sMessageEnd; )
+            while(ucs4_line_iter != ucs4_message.end())
             {
-                const char* sOld = s;
-                unsigned int iChar = unicodeToCodepage437(utf8next(s));
-                iNextChar = unicodeToCodepage437(static_cast<unsigned char>(*s));
-                if((iChar == '\n' && iNextChar == '\n') || (iChar == '/' && iNextChar == '/'))
+                unsigned char iChar = unicodeToCodepage437(*ucs4_line_iter);
+                ucs4_line_iter++;
+                if(ucs4_line_iter != ucs4_message.end())
                 {
-                    foundNewLine = true;
-                    iMsgBreakWidth = iMsgWidth;
-                    sBreakPosition = sOld;
-                    break;
+                    iNextChar = unicodeToCodepage437(*ucs4_line_iter);
+                    if((iChar == '\n' && iNextChar == '\n') || (iChar == '/' && iNextChar == '/'))
+                    {
+                        foundNewLine = true;
+                        iMsgBreakWidth = iMsgWidth;
+                        sBreakPosition = ucs4_line_iter - 1;
+                        break;
+                    }
                 }
                 unsigned int iCharWidth = 0, iCharHeight = 0;
                 if(iFirstASCII <= iChar && iChar <= iLastASCII)
@@ -250,7 +206,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                 iMsgWidth += m_iCharSep + iCharWidth;
                 if(iChar == ' ')
                 {
-                    sLastGoodBreakPosition = sOld;
+                    sLastGoodBreakPosition = ucs4_line_iter - 1;
                     iMsgBreakWidth = iMsgWidth - iCharWidth;
                 }
 
@@ -263,7 +219,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                     iTallest = iCharHeight;
             }
 
-            if(s == sMessageEnd)
+            if(ucs4_line_iter == ucs4_message.end())
                 iMsgBreakWidth = iMsgWidth;
             if(iMsgBreakWidth > oDrawArea.iWidth)
                 oDrawArea.iWidth = iMsgBreakWidth;
@@ -275,7 +231,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                     int iXOffset = 0;
                     if(iMsgBreakWidth < iWidth)
                         iXOffset = (iWidth - iMsgBreakWidth) * static_cast<int>(text_align) / 2;
-                    drawText(pCanvas, sMessage, sBreakPosition - sMessage, iX + iXOffset, iY);
+                    drawUcs4Substring(pCanvas, ucs4_message_iter, sBreakPosition, iX + iXOffset, iY);
                 }
                 iY += static_cast<int>(iTallest) + m_iLineSep;
                 oDrawArea.iEndX = iMsgWidth;
@@ -298,16 +254,16 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                   iSkippedRows++;
               }
             }
-            sMessage = sBreakPosition;
-            if(sMessage != sMessageEnd)
+            ucs4_message_iter = sBreakPosition;
+            if(ucs4_message_iter != ucs4_message.end())
             {
-                utf8next(sMessage);
+                ucs4_message_iter++;
                 if(foundNewLine)
                 {
-                    utf8next(sMessage);
+                    ucs4_message_iter++;
                 }
             }
-            foundNewLine = 0;
+            foundNewLine = false;
         }
     }
     oDrawArea.iEndX = iX + oDrawArea.iEndX;
@@ -559,7 +515,7 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
 
         // Split the message into lines, and determine the position within the
         // line for each character.
-        std::vector<std::pair<const char*, const char*> > vLines;
+        std::vector< std::pair<std::u32string::iterator, std::u32string::iterator> > vLines;
         std::vector<FT_Vector> vCharPositions(iMessageLength);
         std::map<unsigned int, codepoint_glyph_t> mapGlyphs;
         vLines.reserve(2);
@@ -568,21 +524,28 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
         FT_Bool bUseKerning = FT_HAS_KERNING(m_pFace);
         FT_UInt iPreviousGlyphIndex = 0;
 
-        const char* sMessageStart = sMessage;
-        const char* sMessageEnd = sMessage + iMessageLength;
-        const char* sLineStart = sMessageStart;
-        const char* sLineBreakPosition = sLineStart;
+        std::wstring_convert<std::codecvt_utf8<char32_t>, char32_t> utf8_to_ucs4;
+        std::u32string ucs4_message = utf8_to_ucs4.from_bytes(sMessage, sMessage + iMessageLength);
+        auto ucs4_message_iter = ucs4_message.begin();
+        auto sLineStart = ucs4_message_iter;
+        auto sLineBreakPosition = ucs4_message_iter;
 
-        while(sMessage != sMessageEnd)
+        while(ucs4_message_iter != ucs4_message.end())
         {
-            const char* sOldMessage = sMessage;
-            unsigned int iCode = utf8next(sMessage);
-            unsigned int iNextCode = *reinterpret_cast<const unsigned char*>(sMessage);
-            bool bIsNewLine = (iCode == '\n' && iNextCode == '\n') || (iCode == '/' && iNextCode == '/');
-            // Just replace single line breaks with space.
-            if(!bIsNewLine && iCode == '\n')
+            auto old_ucs4_message_iter = ucs4_message_iter;
+            char32_t iCode = *ucs4_message_iter;
+            ucs4_message_iter++;
+            bool is_new_line = false;
+            if(ucs4_message_iter != ucs4_message.end())
             {
-                iCode = ' ';
+                char32_t iNextCode = *ucs4_message_iter;
+                is_new_line = (iCode == '\n' && iNextCode == '\n') || (iCode == '/' && iNextCode == '/');
+
+                // Just replace single line breaks with space.
+                if(!is_new_line && iCode == '\n')
+                {
+                    iCode = ' ';
+                }
             }
 
             codepoint_glyph_t& oGlyph = mapGlyphs[iCode];
@@ -613,11 +576,11 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
 
             // Make an automatic line break if one is needed.
             if((ftvPen.x + oGlyph.oMetrics.horiBearingX +
-                oGlyph.oMetrics.width + 63) / 64 >= iWidth || bIsNewLine)
+                oGlyph.oMetrics.width + 63) / 64 >= iWidth || is_new_line)
             {
-                if(bIsNewLine)
+                if(is_new_line)
                 {
-                    sLineBreakPosition = sOldMessage;
+                    sLineBreakPosition = old_ucs4_message_iter;
                 }
                 ftvPen.x = ftvPen.y = 0;
                 iPreviousGlyphIndex = 0;
@@ -628,32 +591,32 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
                     {
                         vLines.push_back(std::make_pair(sLineStart, sLineBreakPosition));
                     }
-                    if(bIsNewLine)
+                    if(is_new_line)
                     {
                         if(iHandledRows + 1 >= iSkipRows)
                         {
                             vLines.push_back(std::make_pair(sLineBreakPosition, sLineBreakPosition));
                         }
-                        utf8next(sLineBreakPosition);
+                        sLineBreakPosition++;
                         iHandledRows++;
                     }
-                    sMessage = sLineBreakPosition;
-                    utf8next(sMessage);
-                    sLineStart = sMessage;
+                    ucs4_message_iter = sLineBreakPosition;
+                    ucs4_message_iter++;
+                    sLineStart = ucs4_message_iter;
                 }
                 else
                 {
                     if(iHandledRows >= iSkipRows) {
-                        vLines.push_back(std::make_pair(sLineStart, sOldMessage));
+                        vLines.push_back(std::make_pair(sLineStart, old_ucs4_message_iter));
                     }
-                    if(bIsNewLine)
+                    if(is_new_line)
                     {
-                        utf8next(sMessage);
-                        sLineStart = sLineBreakPosition = sMessage;
+                        ucs4_message_iter++;
+                        sLineStart = sLineBreakPosition = ucs4_message_iter;
                     }
                     else
                     {
-                        sMessage = sLineStart = sLineBreakPosition = sOldMessage;
+                        ucs4_message_iter = sLineStart = sLineBreakPosition = old_ucs4_message_iter;
                     }
                 }
                 iHandledRows++;
@@ -662,20 +625,20 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
 
             // Determine if a line can be broken at the current position.
             if(iCode == ' ')
-                sLineBreakPosition = sOldMessage;
+                sLineBreakPosition = old_ucs4_message_iter;
 
             // Save (unless we are skipping lines) and advance the pen.
             if(iHandledRows >= iSkipRows)
             {
-                vCharPositions[sOldMessage - sMessageStart] = ftvPen;
+                vCharPositions[old_ucs4_message_iter - ucs4_message.begin()] = ftvPen;
             }
 
             iPreviousGlyphIndex = oGlyph.iGlyphIndex;
             ftvPen.x += oGlyph.oMetrics.horiAdvance;
         }
-        if(sLineStart != sMessageEnd)
-            vLines.push_back(std::make_pair(sLineStart, sMessageEnd));
-        sMessage = sMessageStart;
+        if(sLineStart != ucs4_message.end())
+            vLines.push_back(std::make_pair(sLineStart, ucs4_message.end()));
+        ucs4_message_iter = ucs4_message.begin();
 
         // Finalise the position of each character (alignment might change X,
         // and baseline / lines will change Y), and calculate overall height
@@ -690,13 +653,12 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
         iNormalLineHeight += iBearingY;
         iNormalLineHeight += iLineSpacing;
         iNormalLineHeight = ((iNormalLineHeight + 63) >> 6) << 6; // Pixel-align
-        for(std::vector<std::pair<const char*, const char*> >::const_iterator
-            itr = vLines.begin(), itrEnd = vLines.end(); itr != itrEnd && iNumRows < iMaxRows; ++itr)
+        for(auto itr = vLines.begin(), itrEnd = vLines.end(); itr != itrEnd && iNumRows < iMaxRows; ++itr)
         {
             // Calculate the X change resulting from alignment.
-            const char* sLastChar = utf8prev(itr->second);
-            codepoint_glyph_t& oLastGlyph = mapGlyphs[utf8decode(sLastChar)];
-            iLineWidth = vCharPositions[sLastChar - sMessage].x
+            auto sLastChar = itr->second - 1;
+            codepoint_glyph_t& oLastGlyph = mapGlyphs[*sLastChar];
+            iLineWidth = vCharPositions[sLastChar - ucs4_message_iter].x
                 + oLastGlyph.oMetrics.horiBearingX
                 + oLastGlyph.oMetrics.width;
             if((iLineWidth >> 6) < iWidth)
@@ -710,9 +672,10 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
             // Calculate the line height and baseline position.
             FT_Pos iLineHeight = 0;
             FT_Pos iBaselinePos = 0;
-            for(const char* s = itr->first; s != itr->second; )
+            for(auto s = itr->first; s != itr->second; )
             {
-                codepoint_glyph_t& oGlyph = mapGlyphs[utf8next(s)];
+                codepoint_glyph_t& oGlyph = mapGlyphs[*s];
+                s++;
                 FT_Pos iBearingY = oGlyph.oMetrics.horiBearingY;
                 FT_Pos iCoBearingY = oGlyph.oMetrics.height - iBearingY;
                 if(iBearingY > iBaselinePos)
@@ -728,9 +691,9 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
             iNormalLineHeight = std::max(iNormalLineHeight, iLineHeight);
 
             // Apply the character position changes.
-            for(const char* s = itr->first; s != itr->second; utf8next(s))
+            for(auto s = itr->first; s != itr->second; s++)
             {
-                FT_Vector& ftvPos = vCharPositions[s - sMessage];
+                FT_Vector& ftvPos = vCharPositions[s - ucs4_message_iter];
                 ftvPos.x += iAlignDelta;
                 ftvPos.y += iBaselinePos + iPriorLinesHeight;
             }
@@ -770,15 +733,15 @@ THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const ch
 
         int iDrawnLines = 0;
         // Render each character to the canvas.
-        for(std::vector<std::pair<const char*, const char*> >::const_iterator
-            itr = vLines.begin(), itrEnd = vLines.end();
+        for(auto itr = vLines.begin(), itrEnd = vLines.end();
             itr != itrEnd && iDrawnLines < iMaxRows + iSkipRows; ++itr)
         {
             iDrawnLines++;
-            for(const char* s = itr->first; s != itr->second; )
+            for(auto s = itr->first; s != itr->second; )
             {
-                FT_Vector& ftvPos = vCharPositions[s - sMessage];
-                unsigned int iCode = utf8next(s);
+                FT_Vector& ftvPos = vCharPositions[s - ucs4_message_iter];
+                char32_t iCode = *s;
+                s++;
                 if(iCode == '\n')
                 {
                     iCode = ' ';

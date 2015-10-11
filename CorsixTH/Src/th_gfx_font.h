@@ -27,6 +27,7 @@ SOFTWARE.
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #endif
+#include <string>
 
 enum class text_align
 {
@@ -153,6 +154,21 @@ protected:
     THSpriteSheet* m_pSpriteSheet;
     int m_iCharSep;
     int m_iLineSep;
+
+    //! Draw a single line of text between two u32string iterators
+    /*!
+    @param pCanvas The render target to draw onto.
+    @param start The beginning of the text to write.
+    @param end The end of the text to write.
+    @param iX The X coordinate of the top-left corner of the bounding
+    rectangle for the drawn text.
+    @param iY The Y coordinate of the top-left corner of the bounding
+    rectangle for the drawn text.
+    */
+    void drawUcs4Substring(THRenderTarget *pCanvas,
+        std::u32string::iterator start,
+        std::u32string::iterator end,
+        int iX, int iY) const;
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
