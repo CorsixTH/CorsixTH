@@ -492,7 +492,6 @@ function UIMapEditor:UIMapEditor(ui)
     local page_data = {button = p, name = name, sprite_buttons = spr_buttons}
 
     self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
-    self:updateToggleButton(p, "raised")
     xpos = xpos + XSIZE + 10
   end
   -- Make the bottom text buttons
@@ -525,9 +524,9 @@ function UIMapEditor:UIMapEditor(ui)
                     --[[persistable:map_editor_textpage_clicked]] function() self:pageClicked(name) end)
     local page_data = {button = p, name = name, data = page}
     self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
-    self:updateToggleButton(p, name == "paste" and "disabled" or "raised")
     xpos = xpos + XSIZE + 10
   end
+  self:pageClicked("") -- Initialize all above 'page_selectbuttons'.
 
   -- }}}
 
