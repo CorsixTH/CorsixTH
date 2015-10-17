@@ -709,21 +709,21 @@ function UIMapEditor:getDrawPoints()
     return {{xpos = self.cursor.xpos, ypos = self.cursor.ypos}}
 
   elseif self.cursor.state == "left" then
-      -- Simple drag (left button only).
-      local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
-                                                    self.cursor.xpos, self.cursor.ypos)
-      if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
-        -- Just 1 tile without starting a drag, or an area of at least two tiles.
-        return computeCursorSpriteAtArea(minx, miny, maxx, maxy, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
-      end
+    -- Simple drag (left button only).
+    local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
+                                                  self.cursor.xpos, self.cursor.ypos)
+    if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
+      -- Just 1 tile without starting a drag, or an area of at least two tiles.
+      return computeCursorSpriteAtArea(minx, miny, maxx, maxy, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+    end
 
   elseif self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
-      local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
-                                                    self.cursor.xpos, self.cursor.ypos)
-      if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
-        -- Just 1 tile without starting a drag, or an area of at least two tiles.
-        return computeCursorSpriteAtArea(minx, miny, maxx, maxy, 1, 1)
-      end
+    local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
+                                                  self.cursor.xpos, self.cursor.ypos)
+    if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
+      -- Just 1 tile without starting a drag, or an area of at least two tiles.
+      return computeCursorSpriteAtArea(minx, miny, maxx, maxy, 1, 1)
+    end
 
   elseif self.cursor.state == "right" then
     local bx, by = self:areaOnWorld(self.cursor.xpos, self.cursor.ypos,
@@ -731,7 +731,7 @@ function UIMapEditor:getDrawPoints()
     return {{xpos = bx, ypos = by}}
 
   elseif self.cursor.state == "both" then
-    -- left+right drag.
+    -- left+right drag (left initiated).
     -- Area is defined from first to last point, 'right' point must be inside the area.
     local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
                                                   self.cursor.xpos, self.cursor.ypos)
