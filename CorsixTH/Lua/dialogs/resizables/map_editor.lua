@@ -822,7 +822,7 @@ function UIMapEditor:updateToggleButton(button, action)
 end
 
 --! User clicked at a block (a button with a sprite).
---!@param num Index block number.
+--!param num Index block number.
 function UIMapEditor:blockClicked(num)
   -- Reset toggle of other block buttons.
   for bnum = 1, #self.block_buttons do
@@ -1071,8 +1071,8 @@ end
 
 --! Mouse button was released.
 --!param button (string) Mouse button being released.
---!param xpos (int) Horizontal position of the mouse at the time of the mouse button release.
---!param ypos (int) Vertical   position of the mouse at the time of the mouse button release.
+--!param x (int) Horizontal position of the mouse at the time of the mouse button release.
+--!param y (int) Vertical   position of the mouse at the time of the mouse button release.
 --!return (bool) Whether to repaint the display.
 function UIMapEditor:onMouseUp(button, x, y)
   if UIResizable.onMouseUp(self, button, x, y) then
