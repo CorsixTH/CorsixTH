@@ -636,6 +636,7 @@ map_editor_window = {
     parcel_7 = "Parcel 7",
     parcel_8 = "Parcel 8",
     parcel_9 = "Parcel 9",
+    paste = "Paste area",
   }
 }
 

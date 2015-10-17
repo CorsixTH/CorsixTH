@@ -510,7 +510,8 @@ function UIMapEditor:UIMapEditor(ui)
     {name = "parcel_6", text = _S.map_editor_window.pages.parcel_6, parcel = 6},
     {name = "parcel_7", text = _S.map_editor_window.pages.parcel_7, parcel = 7},
     {name = "parcel_8", text = _S.map_editor_window.pages.parcel_8, parcel = 8},
-    {name = "parcel_9", text = _S.map_editor_window.pages.parcel_9, parcel = 9}}
+    {name = "parcel_9", text = _S.map_editor_window.pages.parcel_9, parcel = 9},
+    {name = "paste",    text = _S.map_editor_window.pages.paste}}
 
   for _, page in ipairs(text_pages) do
     if xpos + XSIZE >= EDITOR_WINDOW_XSIZE then -- Update ypos (and xpos) if necessary.
@@ -524,7 +525,7 @@ function UIMapEditor:UIMapEditor(ui)
                     --[[persistable:map_editor_textpage_clicked]] function() self:pageClicked(name) end)
     local page_data = {button = p, name = name, data = page}
     self.page_selectbuttons[#self.page_selectbuttons + 1] = page_data
-    self:updateToggleButton(p, "raised")
+    self:updateToggleButton(p, name == "paste" and "disabled" or "raised")
     xpos = xpos + XSIZE + 10
   end
 
@@ -537,9 +538,13 @@ end
 --! Callback function of the page select buttons.
 --!param name (string) Name of the clicked page.
 function UIMapEditor:pageClicked(name)
+  if name == "paste" and not self.cursor.copy_data then
+    name = "" -- Make 'paste' button non-selectable if there is no data to paste.
+  end
+
   for _, pb in ipairs(self.page_selectbuttons) do
     if pb.name == name then
-      self.cursor.state = "disabled"
+      self.cursor.state = name == "paste" and "paste" or "disabled"
       self:updateToggleButton(pb.button, "lowered")
       if pb.sprite_buttons then
         -- 'sprite' button, display sprites to select from, by the user.
@@ -551,6 +556,12 @@ function UIMapEditor:pageClicked(name)
           self.cursor.state = "delete"
           self.cursor.sprite = nil
           self.cursor.is_drag = false
+
+        elseif pb.name == "paste" then
+          self.cursor.state = "paste"
+          self.cursor.sprite = nil
+          self.cursor.is_drag = false
+
         else -- Should be a parcel button.
           assert(pb.data.parcel)
 
@@ -561,6 +572,8 @@ function UIMapEditor:pageClicked(name)
         end
       end
 
+    elseif pb.name == "paste" and not self.cursor.copy_data then
+      self:updateToggleButton(pb.button, "disabled")
     else
       self:updateToggleButton(pb.button, "raised")
     end
@@ -822,6 +835,11 @@ function UIMapEditor:updateToggleButton(button, action)
   elseif action == "invisible" then
     button:enable(false)
     button:setVisible(false)
+
+  elseif action == "disabled" then
+    button:enable(false)
+    button:setVisible(true)
+    button:setToggleState(false)
 
   else
     assert(false) -- Should never arrive here
