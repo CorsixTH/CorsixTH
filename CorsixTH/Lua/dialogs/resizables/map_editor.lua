@@ -420,16 +420,19 @@ function UIMapEditor:UIMapEditor(ui)
 
   -- Cursor data in the main world view.
   -- States:
-  --  - disabled: just show the cursor
-  --  - grid: show an area with red rectangles (requires 'sprite' to exist).
+  --  - disabled: Just show the cursor.
+  --  - grid: Show an area with red rectangles (requires 'sprite' to exist).
   --  - left: Dragging with left mouse button is down, (leftx, lefty) defines the tile.
-  --  - right: Moving with right mouse button down (can't drag with right alone).
-  --  - both: Dragging with both left and right mouse buttons down
-  --          (rightx, righty) defines the tile.
+  --  - right: Dragging with right mouse button down, (rightx, righty) defines the tile.
+  --  - both: Dragging with both left and right mouse buttons down (initiated with left
+  --          button), (rightx, righty) defines the tile where right button got pressed.
   --  - delete: Like grid, with a 1x1 cursor for selecting tiles to remove walls from.
   --  - delete-left: Left mouse button drag of 'delete' mode.
   --  - parcel: Like grid, with a 1x1 cursor for selecting tiles to set the parcel.
   --  - parcel-left: Left mouse button drag of 'parcel' mode.
+  --  - paste: Like grid, with a copy_xsize, copy_ysize cursor to show where to paste.
+  --  - paste-left: Left mouse button drag of 'paste' mode. Pasting is limited to dragged
+  --                area (which can be smaller than (copy_xsize, copy_ysize) area).
   --
   -- Notes:
   --  - The code switches back to 'grid' or 'disabled' without waiting for all
@@ -452,6 +455,10 @@ function UIMapEditor:UIMapEditor(ui)
     lefty = 0,  -- Vertical   tile position where the left-click was first detected.
     rightx = 0, -- Horizontal tile position where the right-click was first detected.
     righty = 0, -- Vertical   tile position where the right-click was first detected.
+
+    copy_data = nil, -- Data of the copied area, 'nil' if no data available.
+    copy_xsize = 0,  -- Horizontal size of the copy area.
+    copy_ysize = 0,  -- Vertical size of the copy area.
   }
 
   -- {{{ Creation of buttons.
