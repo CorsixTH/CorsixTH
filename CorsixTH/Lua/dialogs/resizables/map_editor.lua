@@ -537,8 +537,11 @@ end
 --! Callback function of the page select buttons.
 --!param name (string) Name of the clicked page.
 function UIMapEditor:pageClicked(name)
-  if name == "paste" and not self.cursor.copy_data then
-    name = "" -- Make 'paste' button non-selectable if there is no data to paste.
+  if name == "paste" then
+    -- Make 'paste' button non-selectable if there is no data to paste.
+    name = self.cursor.copy_data and name or ""
+  else
+    self.cursor.copy_data = nil -- Delete copied area when selecting another item.
   end
 
   for _, pb in ipairs(self.page_selectbuttons) do
@@ -724,7 +727,8 @@ function UIMapEditor:getDrawPoints()
                                     self.cursor.sprite.xsize, self.cursor.sprite.ysize)
     return {{xpos = bx, ypos = by}}
 
-  elseif self.cursor.state == "delete" or self.cursor.state == "parcel" then
+  elseif self.cursor.state == "delete" or self.cursor.state == "parcel" or
+      self.cursor.state == "paste" then
     return {{xpos = self.cursor.xpos, ypos = self.cursor.ypos}}
 
   elseif self.cursor.state == "left" then
@@ -733,10 +737,12 @@ function UIMapEditor:getDrawPoints()
                                                   self.cursor.xpos, self.cursor.ypos)
     if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
       -- Just 1 tile without starting a drag, or an area of at least two tiles.
-      return computeCursorSpriteAtArea(minx, miny, maxx, maxy, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
+      return computeCursorSpriteAtArea(minx, miny, maxx, maxy,
+                                       self.cursor.sprite.xsize, self.cursor.sprite.ysize)
     end
 
-  elseif self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+  elseif self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" or
+      self.cursor.state == "paste-left" then
     local minx, miny, maxx, maxy = getCoveredArea(self.cursor.leftx, self.cursor.lefty,
                                                   self.cursor.xpos, self.cursor.ypos)
     if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
@@ -745,9 +751,12 @@ function UIMapEditor:getDrawPoints()
     end
 
   elseif self.cursor.state == "right" then
-    local bx, by = self:areaOnWorld(self.cursor.xpos, self.cursor.ypos,
-                                    self.cursor.sprite.xsize, self.cursor.sprite.ysize)
-    return {{xpos = bx, ypos = by}}
+    local minx, miny, maxx, maxy = getCoveredArea(self.cursor.rightx, self.cursor.righty,
+                                                  self.cursor.xpos, self.cursor.ypos)
+    if minx ~= maxx or miny ~= maxy or not self.cursor.is_drag then
+      -- Just 1 tile without starting a drag, or an area of at least two tiles.
+      return computeCursorSpriteAtArea(minx, miny, maxx, maxy, 1, 1)
+    end
 
   elseif self.cursor.state == "both" then
     -- left+right drag (left initiated).
@@ -803,8 +812,10 @@ function UIMapEditor:draw(canvas, ...)
   if #coords ~= 0 then
     -- Get size of the cursor.
     local xsize, ysize
-    if self.cursor.state == "delete" or self.cursor.state == "parcel" or
-        self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+    if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
+        self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
+        self.cursor.state == "paste" or self.cursor.state == "paste-left" or
+        self.cursor.state == "right" then
       xsize, ysize = 1, 1
     else
       xsize, ysize = self.cursor.sprite.xsize, self.cursor.sprite.ysize
@@ -912,8 +923,10 @@ end
 --  "north-south"=dragging only in north-south direction, "area"=dragging in both directions.
 function UIMapEditor:getCursorDragCapabilities()
   -- Parcel and delete modes have unrestricted movement.
-  if self.cursor.state == "delete" or self.cursor.state == "parcel" or
-      self.cursor.state == "delete-left" or self.cursor.state == "parcel-left" then
+  if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
+      self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
+      self.cursor.state == "paste" or self.cursor.state == "paste-left" or
+      self.cursor.state == "right" then
     return "area"
   end
 
@@ -947,15 +960,11 @@ function UIMapEditor:onMouseMove(x, y, dx, dy)
       self.cursor.ypos = wy
       return repaint
 
-    elseif self.cursor.state == "grid" or self.cursor.state == "delete" or self.cursor.state == "parcel" then
+    elseif self.cursor.state == "grid" or self.cursor.state == "delete" or
+        self.cursor.state == "parcel" or self.cursor.state == "paste" or
+        self.cursor.state == "right" then
       self.cursor.xpos = wx -- Allow arbitrary movement.
       self.cursor.ypos = wy
-      return true
-
-    elseif self.cursor.state == "right" then
-      self.cursor.xpos = wx -- Allow arbitrary movement.
-      self.cursor.ypos = wy
-      -- XXX Select the new floor tile as the current selection?
       return true
 
     else -- Dragging in some mode.
@@ -992,7 +1001,11 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
 
   local repaint = false
   if self.cursor.state == "disabled" then
-    -- Nothing to do, first needs a selected sprite.
+    if button == "right" then
+      self.cursor.state = "right"
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
+    end
 
   elseif self.cursor.state == "grid" then
     -- LMB down switches to 'left'
@@ -1003,7 +1016,8 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
     -- RMB down switches to 'right'
     elseif button == "right" then
       self.cursor.state = "right"
-      -- Cannot start a right-drag, no need to save current tile position.
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
     end
     -- Since 'grid' already shows the red rectangles, nothing changes visually.
 
@@ -1012,6 +1026,10 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
       self.cursor.state = "delete-left"
       self.cursor.leftx = self.cursor.xpos
       self.cursor.lefty = self.cursor.ypos
+    elseif button == "right" then
+      self.cursor.state = "right"
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
     end
 
   elseif self.cursor.state == "parcel" then
@@ -1019,6 +1037,10 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
       self.cursor.state = "parcel-left"
       self.cursor.leftx = self.cursor.xpos
       self.cursor.lefty = self.cursor.ypos
+    elseif button == "right" then
+      self.cursor.state = "right"
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
     end
 
   elseif self.cursor.state == "left" then
@@ -1033,11 +1055,21 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
   elseif self.cursor.state == "right" then
     -- Ignore all down buttons, until RMB is released.
 
-  elseif self.cursor.state == "both" then
-    -- How many buttons can you use at the same time? Ignore this.
+  elseif self.cursor.state == "paste" then
+    if button == "left" then
+      self.cursor.state = "paste-left"
+      self.cursor.leftx = self.cursor.xpos
+      self.cursor.lefty = self.cursor.ypos
+    elseif button == "right" then
+      self.cursor.state = "right"
+      self.cursor.rightx = self.cursor.xpos
+      self.cursor.righty = self.cursor.ypos
+    end
+
+  -- "both", "delete-left", "parcel-left", "paste-left" do not handle buttons.
+
   end
 
-  -- "delete-left" and "parcel-left" do not handle buttons.
 
   return repaint
 end
@@ -1122,9 +1154,6 @@ function UIMapEditor:onMouseUp(button, x, y)
   if self.cursor.state == "disabled" then
     -- Don't care about buttons.
 
-  elseif self.cursor.state == "grid" or self.cursor.state == "delete" or self.cursor.state == "parcel" then
-    -- Already assumed no buttons pushed, ignore event.
-
   elseif self.cursor.state == "left" then
     if button == "left" then
       -- Simple drag (left button only).
@@ -1155,9 +1184,20 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   elseif self.cursor.state == "right" then
     if button == "right" then
-      self.cursor.state = newState()
+      self.cursor.state = "paste"
       self.cursor.is_drag = false
       repaint = true
+      print("copy!")
+      self.cursor.copy_data = 1
+      self:pageClicked("paste")
+    end
+
+  elseif self.cursor.state == "paste-left" then
+    if button == "left" then
+      self.cursor.state = "paste"
+      self.cursor.is_drag = false
+      repaint = true
+      print("paste!")
     end
 
   elseif self.cursor.state == "both" then
@@ -1168,7 +1208,10 @@ function UIMapEditor:onMouseUp(button, x, y)
       self.cursor.state = newState()
       self.cursor.is_drag = false
       repaint = true
-   end
+    end
+    -- "grid", "delete", "parcel", and "paste" already assumed no buttons pushed,
+    -- ignore event.
+
   end
 
   return repaint
