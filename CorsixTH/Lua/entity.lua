@@ -275,6 +275,8 @@ end
 -- Function which is called when the entity is to be permanently removed from
 -- the world.
 function Entity:onDestroy()
+  -- Clear any mood
+  self:setMoodInfo()
   self:setTile(nil)
   self.world.dispatcher:dropFromQueue(self)
   -- Debug aid to check that there are no hanging references after the entity
