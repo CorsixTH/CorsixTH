@@ -183,6 +183,11 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
   self.staff_members = staff_members
   if staff_member_removed then
     self:updateTooltips()
+    -- If we're viewing a page that no longer exists, go back a page
+    if self.page > math.ceil(#self.staff_members[self.category] / 10) then
+      self:scrollUp()
+    end
+    self:updateScrollDotVisibility()
   end
 end
 
@@ -199,12 +204,7 @@ function UIStaffManagement:setCategory(name)
   end
   self.selected_staff = nil
   self.page = 1
-  if #self.staff_members[self.category] > 10 then
-    self.scroll_dot.visible = true
-    self.scroll_dot.y = 168
-  else
-    self.scroll_dot.visible = false
-  end
+  self:updateScrollDotVisibility()
 
   self:updateTooltips()
 end
@@ -511,10 +511,21 @@ function UIStaffManagement:scrollDown()
   self:updateTooltips()
 end
 
+--! Updates the position of the paging scroll indicator
 function UIStaffManagement:updateScrollDot()
   local numPages = math.ceil(#self.staff_members[self.category] / 10)
   local yOffset = math_floor(83 * ((self.page - 1) / (numPages - 1)))
   self.scroll_dot.y = 168 + yOffset
+end
+
+--! Updates whether the paging scroll indicator is visible and its position if visible
+function UIStaffManagement:updateScrollDotVisibility()
+  if #self.staff_members[self.category] > 10 then
+    self.scroll_dot.visible = true
+    self:updateScrollDot()
+  else
+    self.scroll_dot.visible = false
+  end
 end
 
 function UIStaffManagement:payBonus()
