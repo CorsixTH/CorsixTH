@@ -1101,6 +1101,79 @@ function UIMapEditor:drawCursorSpriteAtArea(coords)
   end
 end
 
+--! Copy area from the game.
+--!return (bool) Whether copying succeeded.
+function UIMapEditor:copyArea()
+  local map = self.ui.app.map.th
+
+  local minx, miny, maxx, maxy = getCoveredArea(self.cursor.rightx, self.cursor.righty,
+                                                self.cursor.xpos, self.cursor.ypos)
+  if minx == maxx and miny == maxy and self.is_drag then
+    return false -- Canceled drag
+  end
+
+  -- Copy data.
+  self.cursor.copy_data = {}
+  self.cursor.copy_xsize = maxx - minx + 1
+  self.cursor.copy_ysize = maxy - miny + 1
+
+  local tx, ty
+  tx = minx
+  while tx <= maxx do
+    ty = miny
+    while ty <= maxy do
+      local f, nw, ww = map:getCell(tx, ty)
+      self.cursor.copy_data[#self.cursor.copy_data + 1] = {
+          xpos = tx - minx, ypos = ty - miny,
+          floor = f, north_wall = nw, west_wall = ww}
+
+      ty = ty + 1
+    end
+    tx = tx + 1
+  end
+  return true
+end
+
+--! Paste copied area into the destination area (one or more times).
+function UIMapEditor:pasteArea()
+  local map = self.ui.app.map.th
+
+  local minx, miny, maxx, maxy
+  -- Fill 'minx', 'miny' with the non-cursor corner.
+  if self.cursor.leftx == self.cursor.xpos and self.cursor.lefty == self.cursor.ypos then
+    if self.is_drag then
+      return -- Canceled paste area.
+    end
+
+    minx = self.cursor.xpos + self.cursor.copy_xsize - 1
+    miny = self.cursor.ypos + self.cursor.copy_ysize - 1
+    minx, miny = self:areaOnWorld(minx, miny, 1, 1)
+  else
+    minx = self.cursor.leftx
+    miny = self.cursor.lefty
+  end
+
+  minx, miny, maxx, maxy = getCoveredArea(minx, miny, self.cursor.xpos, self.cursor.ypos)
+  -- Copy area in 'sub-areas' of (self.cursor.copy_xsize, self.cursor.copy_ysize).
+  local tx, ty
+  tx = minx
+  while tx <= maxx do
+    ty = miny
+    while ty <= maxy do
+      for _, elm in ipairs(self.cursor.copy_data) do
+        local x = tx + elm.xpos
+        local y = ty + elm.ypos
+        if x <= maxx and y <= maxy then
+          map:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
+        end
+      end
+
+      ty = ty + self.cursor.copy_ysize
+    end
+    tx = tx + self.cursor.copy_xsize
+  end
+end
+
 --! Delete the walls at the given coordinates.
 --!param coords (array or {xpos, ypos} tables) Coordinates to remove the walls.
 function UIMapEditor:deleteWallsAtArea(coords)
@@ -1184,12 +1257,16 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   elseif self.cursor.state == "right" then
     if button == "right" then
-      self.cursor.state = "paste"
-      self.cursor.is_drag = false
-      repaint = true
-      print("copy!")
-      self.cursor.copy_data = 1
-      self:pageClicked("paste")
+      if self:copyArea() then
+        self.cursor.state = "paste"
+        self:pageClicked("paste")
+        self.cursor.is_drag = false
+        repaint = true
+      else
+        self.cursor.state = "disabled" -- Copy area was canceled.
+        self.cursor.is_drag = false
+        repaint = true
+      end
     end
 
   elseif self.cursor.state == "paste-left" then
@@ -1197,7 +1274,7 @@ function UIMapEditor:onMouseUp(button, x, y)
       self.cursor.state = "paste"
       self.cursor.is_drag = false
       repaint = true
-      print("paste!")
+      self:pasteArea()
     end
 
   elseif self.cursor.state == "both" then
