@@ -814,9 +814,10 @@ function UIMapEditor:draw(canvas, ...)
     local xsize, ysize
     if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
         self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
-        self.cursor.state == "paste" or self.cursor.state == "paste-left" or
-        self.cursor.state == "right" then
+        self.cursor.state == "paste-left" or self.cursor.state == "right" then
       xsize, ysize = 1, 1
+    elseif self.cursor.state == "paste" then
+      xsize, ysize = self.cursor.copy_xsize, self.cursor.copy_ysize
     else
       xsize, ysize = self.cursor.sprite.xsize, self.cursor.sprite.ysize
     end
