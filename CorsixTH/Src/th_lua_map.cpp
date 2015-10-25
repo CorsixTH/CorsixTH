@@ -561,6 +561,27 @@ static int l_map_remove_cell_thob(lua_State *L)
      return 1;
 }
 
+/** Recognized node flags by Lua. */
+static const std::map<std::string, THMapNodeFlags> lua_node_flag_map = {
+    {"passable",       THMN_Passable},
+    {"hospital",       THMN_Hospital},
+    {"buildable",      THMN_Buildable},
+    {"room",           THMN_Room},
+    {"doorWest",       THMN_DoorWest},
+    {"doorNorth",      THMN_DoorNorth},
+    {"tallWest",       THMN_TallWest},
+    {"tallNorth",      THMN_TallNorth},
+    {"travelNorth",    THMN_CanTravelN},
+    {"travelEast",     THMN_CanTravelE},
+    {"travelSouth",    THMN_CanTravelS},
+    {"travelWest",     THMN_CanTravelW},
+    {"doNotIdle",      THMN_DoNotIdle},
+    {"buildableNorth", THMN_BuildableN},
+    {"buildableEast",  THMN_BuildableE},
+    {"buildableSouth", THMN_BuildableS},
+    {"buildableWest",  THMN_BuildableW},
+};
+
 static int l_map_setcellflags(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -572,15 +593,6 @@ static int l_map_setcellflags(lua_State *L)
     luaL_checktype(L, 4, LUA_TTABLE);
     lua_settop(L, 4);
 
-#define Flag(CName, LName) \
-    if(std::strcmp(field, LName) == 0) \
-    { \
-        if(lua_toboolean(L, 6) == 0) \
-            pNode->iFlags &= ~CName; \
-        else \
-            pNode->iFlags |= CName; \
-    } else
-
     lua_pushnil(L);
 
     while(lua_next(L, 4))
@@ -589,25 +601,15 @@ static int l_map_setcellflags(lua_State *L)
         {
             const char *field = lua_tostring(L, 5);
 
-
-            Flag(THMN_Passable, "passable")
-            Flag(THMN_Hospital, "hospital")
-            Flag(THMN_Buildable, "buildable")
-            Flag(THMN_Room, "room")
-            Flag(THMN_DoorWest, "doorWest")
-            Flag(THMN_DoorNorth, "doorNorth")
-            Flag(THMN_TallWest, "tallWest")
-            Flag(THMN_TallNorth, "tallNorth")
-            Flag(THMN_CanTravelN, "travelNorth")
-            Flag(THMN_CanTravelE, "travelEast")
-            Flag(THMN_CanTravelS, "travelSouth")
-            Flag(THMN_CanTravelW, "travelWest")
-            Flag(THMN_DoNotIdle, "doNotIdle")
-            Flag(THMN_BuildableN, "buildableNorth")
-            Flag(THMN_BuildableE, "buildableEast")
-            Flag(THMN_BuildableS, "buildableSouth")
-            Flag(THMN_BuildableW, "buildableWest")
-            /* else */ if(std::strcmp(field, "thob") == 0)
+            auto iter = lua_node_flag_map.find(field);
+            if(iter != lua_node_flag_map.end())
+            {
+                if (lua_toboolean(L, 6) == 0)
+                    pNode->iFlags &= ~(*iter).second;
+                else
+                    pNode->iFlags |= (*iter).second;
+            }
+            else if (std::strcmp(field, "thob") == 0)
             {
                 uint64_t x;
                 uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
@@ -635,23 +637,22 @@ static int l_map_setcellflags(lua_State *L)
                 {
                     pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (thob << 24));
                 }
-           }
+            }
             else if(std::strcmp(field, "parcelId") == 0)
             {
                 pNode->iParcelId = static_cast<uint16_t>(lua_tointeger(L, 6));
             }
-            else if(std::strcmp(field, "roomId") == 0) {
+            else if(std::strcmp(field, "roomId") == 0)
+            {
                 pNode->iRoomId = static_cast<uint16_t>(lua_tointeger(L,6));
             }
             else
             {
                 luaL_error(L, "Invalid flag \'%s\'", field);
             }
-         }
+        }
         lua_settop(L, 5);
     }
-#undef Flag
-
     return 0;
 }
 
