@@ -391,6 +391,60 @@ static int l_map_getcell(lua_State *L)
     }
 }
 
+/** Recognized node flags by Lua. */
+static const std::map<std::string, THMapNodeFlags> lua_node_flag_map = {
+    {"passable",       THMN_Passable},
+    {"hospital",       THMN_Hospital},
+    {"buildable",      THMN_Buildable},
+    {"room",           THMN_Room},
+    {"doorWest",       THMN_DoorWest},
+    {"doorNorth",      THMN_DoorNorth},
+    {"tallWest",       THMN_TallWest},
+    {"tallNorth",      THMN_TallNorth},
+    {"travelNorth",    THMN_CanTravelN},
+    {"travelEast",     THMN_CanTravelE},
+    {"travelSouth",    THMN_CanTravelS},
+    {"travelWest",     THMN_CanTravelW},
+    {"doNotIdle",      THMN_DoNotIdle},
+    {"buildableNorth", THMN_BuildableN},
+    {"buildableEast",  THMN_BuildableE},
+    {"buildableSouth", THMN_BuildableS},
+    {"buildableWest",  THMN_BuildableW},
+};
+
+/**
+ * Add the current value of the \a flag in the \a node to the output.
+ * @param L Lua context.
+ * @param node Node to inspect.
+ * @param flag Flag of the node to check (and report).
+ * @param name Name of the flag in Lua code.
+ */
+static inline void add_cellflag(lua_State *L, const THMapNode *node,
+                                THMapNodeFlags flag, const std::string &name)
+{
+    lua_pushlstring(L, name.c_str(), name.size());
+    lua_pushboolean(L, ((node->iFlags & flag) != 0) ? 1 : 0);
+    lua_settable(L, 4);
+}
+
+/**
+ * Add the current value of a node field to the output.
+ * @param L Lua context.
+ * @param value Value of the node field to add.
+ * @param name Name of the field in Lua code.
+ */
+static inline void add_cellint(lua_State *L, int value, const std::string &name)
+{
+    lua_pushlstring(L, name.c_str(), name.size());
+    lua_pushinteger(L, value);
+    lua_settable(L, 4);
+}
+
+/**
+ * Get the value of all cell flags at a position.
+ * @param L Lua context.
+ * @return Number of results of the call.
+ */
 static int l_map_getcellflags(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -409,45 +463,14 @@ static int l_map_getcellflags(lua_State *L)
         lua_settop(L, 4);
     }
 
-#define Flag(CName, LName) \
-    { \
-        lua_pushliteral(L, LName); \
-        lua_pushboolean(L, (pNode->iFlags & CName) ? 1 : 0); \
-        lua_settable(L, 4); \
+    // Fill Lua table with the flags and numbers of the node.
+    for (auto val : lua_node_flag_map)
+    {
+        add_cellflag(L, pNode, val.second, val.first);
     }
-
-#define FlagInt(CField, LName) \
-    { \
-        lua_pushliteral(L, LName); \
-        lua_pushinteger(L, pNode->CField); \
-        lua_settable(L, 4); \
-    }
-
-
-    Flag(THMN_Passable, "passable")
-    Flag(THMN_Hospital, "hospital")
-    Flag(THMN_Buildable, "buildable")
-    Flag(THMN_Room, "room")
-    Flag(THMN_DoorWest, "doorWest")
-    Flag(THMN_DoorNorth, "doorNorth")
-    Flag(THMN_TallWest, "tallWest")
-    Flag(THMN_TallNorth, "tallNorth")
-    Flag(THMN_CanTravelN, "travelNorth")
-    Flag(THMN_CanTravelE, "travelEast")
-    Flag(THMN_CanTravelS, "travelSouth")
-    Flag(THMN_CanTravelW, "travelWest")
-    Flag(THMN_DoNotIdle, "doNotIdle")
-    Flag(THMN_BuildableN, "buildableNorth")
-    Flag(THMN_BuildableE, "buildableEast")
-    Flag(THMN_BuildableS, "buildableSouth")
-    Flag(THMN_BuildableW, "buildableWest")
-    FlagInt(iRoomId, "roomId")
-    FlagInt(iParcelId, "parcelId");
-    FlagInt(iFlags >> 24, "thob")
-
-#undef FlagInt
-#undef Flag
-
+    add_cellint(L, pNode->iRoomId, "roomId");
+    add_cellint(L, pNode->iParcelId, "parcelId");
+    add_cellint(L, pNode->iFlags >> 24, "thob");
     return 1;
 }
 
@@ -560,27 +583,6 @@ static int l_map_remove_cell_thob(lua_State *L)
     }
      return 1;
 }
-
-/** Recognized node flags by Lua. */
-static const std::map<std::string, THMapNodeFlags> lua_node_flag_map = {
-    {"passable",       THMN_Passable},
-    {"hospital",       THMN_Hospital},
-    {"buildable",      THMN_Buildable},
-    {"room",           THMN_Room},
-    {"doorWest",       THMN_DoorWest},
-    {"doorNorth",      THMN_DoorNorth},
-    {"tallWest",       THMN_TallWest},
-    {"tallNorth",      THMN_TallNorth},
-    {"travelNorth",    THMN_CanTravelN},
-    {"travelEast",     THMN_CanTravelE},
-    {"travelSouth",    THMN_CanTravelS},
-    {"travelWest",     THMN_CanTravelW},
-    {"doNotIdle",      THMN_DoNotIdle},
-    {"buildableNorth", THMN_BuildableN},
-    {"buildableEast",  THMN_BuildableE},
-    {"buildableSouth", THMN_BuildableS},
-    {"buildableWest",  THMN_BuildableW},
-};
 
 static int l_map_setcellflags(lua_State *L)
 {
