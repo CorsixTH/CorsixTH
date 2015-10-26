@@ -89,7 +89,7 @@ end
 
 function UIMachine:callHandyman()
   if self.machine.times_used ~= 0 then
-    local taskIndex = self.machine.hospital:getIndexOfTask(self.machine.tile_x, self.machine_tile_y, "repairing")
+    local taskIndex = self.machine.hospital:getIndexOfTask(self.machine.tile_x, self.machine.tile_y, "repairing")
     if taskIndex == -1 then
       local call = self.ui.app.world.dispatcher:callForRepair(self.machine, false, true)
       self.machine.hospital:addHandymanTask(self.machine, "repairing", 2, self.machine.tile_x, self.machine.tile_y, call)
