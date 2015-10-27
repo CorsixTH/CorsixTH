@@ -47,7 +47,7 @@ local col_bg = {red = 154, green = 146, blue = 198}
 
 -- {{{ Editor sprites.
 -- High byte sprite constants.
-local FLIP_H = DrawFlags.FlipHorizontal << 8
+local FLIP_H = DrawFlags.FlipHorizontal * 256
 
 -- Each variable below is an array of multi-tile sprites, which is translated
 -- to a list of buttons at a page.
