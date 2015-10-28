@@ -108,7 +108,6 @@ enum THMapNodeFlags
     THMN_Buildable  = 1 <<  6, //!< Player: Can build on this tile
     //! Pathfinding: Normally can walk on this tile, but can't due to blueprint
     THMN_PassableIfNotForBlueprint = 1 << 7,
-    THMN_PassableIfNotForBlueprint_ShiftDelta = 7,
     THMN_Room       = 1 <<  8, //!< World: Tile is inside a room
     THMN_ShadowHalf = 1 <<  9, //!< Rendering: Put block 75 over floor
     THMN_ShadowFull = 1 << 10, //!< Rendering: Put block 74 over floor

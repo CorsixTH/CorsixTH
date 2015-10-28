@@ -173,6 +173,17 @@ static int l_map_gettemperature(lua_State *L)
     return 1;
 }
 
+/**
+ * Is the node position valid for a new room?
+ * @param entire_invalid Entire blueprint is invalid (eg wrong position or too small).
+ * @param pNode Node to examine.
+ * @return Whether the node position is valid for a new room.
+ */
+inline bool is_valid(bool entire_invalid, const THMapNode *pNode)
+{
+    return !entire_invalid && (pNode->iFlags & (THMN_Buildable | THMN_Room)) == THMN_Buildable;
+}
+
 static int l_map_updateblueprint(lua_State *L)
 {
     // NB: This function can be implemented in Lua, but is implemented in C for
@@ -202,35 +213,34 @@ static int l_map_updateblueprint(lua_State *L)
     if(iNewX < 0 || iNewY < 0 || (iNewX + iNewW) >= pMap->getWidth() || (iNewY + iNewH) >= pMap->getHeight())
         luaL_argerror(L, 6, "New rectangle is out of bounds");
 
-    // Clear old floor tiles
+    // Clear blueprint flag from previous selected floor tiles (copying it to the passable flag).
     for(int iY = iOldY; iY < iOldY + iOldH; ++iY)
     {
         for(int iX = iOldX; iX < iOldX + iOldW; ++iX)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[3] = 0;
-            pNode->iFlags |= (pNode->iFlags & THMN_PassableIfNotForBlueprint) >> THMN_PassableIfNotForBlueprint_ShiftDelta;
-            pNode->iFlags &= ~THMN_PassableIfNotForBlueprint;
+            uint32_t iFlags = pNode->iFlags;
+            iFlags |= ((iFlags & THMN_PassableIfNotForBlueprint) != 0) ? THMN_Passable : 0;
+            iFlags &= ~THMN_PassableIfNotForBlueprint;
+            pNode->iFlags = iFlags;
         }
     }
 
-#define IsValid(node) \
-    (!entire_invalid && (((node)->iFlags & (THMN_Buildable | THMN_Room)) == THMN_Buildable))
-
-    // Set new floor tiles
+    // Add blueprint flag to new floor tiles.
     for(int iY = iNewY; iY < iNewY + iNewH; ++iY)
     {
         for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
-            if(IsValid(pNode))
+            if(is_valid(entire_invalid, pNode))
                 pNode->iBlock[3] = iFloorTileGood;
             else
             {
                 pNode->iBlock[3] = iFloorTileBad;
                 valid = false;
             }
-            pNode->iFlags |= (pNode->iFlags & THMN_Passable) << THMN_PassableIfNotForBlueprint_ShiftDelta;
+            pNode->iFlags |= ((pNode->iFlags & THMN_Passable) != 0) ? THMN_PassableIfNotForBlueprint : 0;
         }
     }
 
@@ -243,12 +253,15 @@ static int l_map_updateblueprint(lua_State *L)
         THMapNode *pNode = pMap->getNodeUnchecked(iCenterX, iCenterY);
         if(pNode->iBlock[3] == iFloorTileGood)
             pNode->iBlock[3] = iFloorTileGoodCenter + 2;
+
         pNode = pMap->getNodeUnchecked(iCenterX + 1, iCenterY);
         if(pNode->iBlock[3] == iFloorTileGood)
             pNode->iBlock[3] = iFloorTileGoodCenter + 1;
+
         pNode = pMap->getNodeUnchecked(iCenterX, iCenterY + 1);
         if(pNode->iBlock[3] == iFloorTileGood)
             pNode->iBlock[3] = iFloorTileGoodCenter + 0;
+
         pNode = pMap->getNodeUnchecked(iCenterX + 1, iCenterY + 1);
         if(pNode->iBlock[3] == iFloorTileGood)
             pNode->iBlock[3] = iFloorTileGoodCenter + 3;
@@ -259,7 +272,7 @@ static int l_map_updateblueprint(lua_State *L)
     THAnimation *pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     THMapNode *pNode = pMap->getNodeUnchecked(iNewX, iNewY);
     pAnim->setAnimation(pAnims, iWallAnimTopCorner);
-    pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
+    pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
     pAnim->attachToTile(pNode, 0);
 
     for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
@@ -269,14 +282,14 @@ static int l_map_updateblueprint(lua_State *L)
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iX, iNewY);
             pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
+            pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
             pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(0, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH - 1);
         pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | (IsValid(pNode) ? 0 : THDF_AltPalette));
+        pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH);
         pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(0, -1);
@@ -288,20 +301,18 @@ static int l_map_updateblueprint(lua_State *L)
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iNewX, iY);
             pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (IsValid(pNode) ? 0 : THDF_AltPalette));
+            pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
             pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(2, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iNewX + iNewW - 1, iY);
         pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (IsValid(pNode) ? 0 : THDF_AltPalette));
+        pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iNewX + iNewW, iY);
         pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(2, -1);
     }
-
-#undef IsValid
 
     // Clear away extra animations
     int iAnimCount = (int)lua_objlen(L, 10);
@@ -720,8 +731,8 @@ static int l_map_mark_room(lua_State *L)
             pNode->iBlock[0] = iTile;
             pNode->iBlock[3] = 0;
             uint32_t iFlags = pNode->iFlags;
-            iFlags |= THMN_Room;
-            iFlags |= (iFlags & THMN_PassableIfNotForBlueprint) >> THMN_PassableIfNotForBlueprint_ShiftDelta;
+            uint32_t passable = ((iFlags & THMN_PassableIfNotForBlueprint) != 0) ? THMN_Passable : 0;
+            iFlags |= THMN_Room | passable;
             iFlags &= ~THMN_PassableIfNotForBlueprint;
             pNode->iFlags = iFlags;
             pNode->iRoomId = iRoomId;
