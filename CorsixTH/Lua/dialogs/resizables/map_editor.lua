@@ -20,10 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 -- Stuff to do:
--- [ ] Show parcels by number menu
 -- [X] load / save menu
 -- [ ] transparent walls toggle menu (probably useful to have)
--- [ ] show all parcels toggle menu
 -- [ ] make the program map-editor aware
 --     [ ] No timer for building
 --     [ ] No crash for announcer at timeout
@@ -537,6 +535,7 @@ end
 --! Callback function of the page select buttons.
 --!param name (string) Name of the clicked page.
 function UIMapEditor:pageClicked(name)
+  local map = self.ui.app.map
   if name == "paste" then
     -- Make 'paste' button non-selectable if there is no data to paste.
     name = self.cursor.copy_data and name or ""
@@ -546,6 +545,7 @@ function UIMapEditor:pageClicked(name)
 
   for _, pb in ipairs(self.page_selectbuttons) do
     if pb.name == name then
+      map:clearDebugText()
       self.cursor.state = name == "paste" and "paste" or "disabled"
       self:updateToggleButton(pb.button, "lowered")
       if pb.sprite_buttons then
@@ -571,6 +571,7 @@ function UIMapEditor:pageClicked(name)
           self.cursor.sprite = nil
           self.cursor.is_drag = false
           self.cursor.parcel = pb.data.parcel
+	  map:loadDebugText("parcel")
         end
       end
 

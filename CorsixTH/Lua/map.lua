@@ -377,6 +377,18 @@ function Map:updateDebugOverlayHeat()
   end
 end
 
+function Map:updateDebugOverlayParcels()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = self.th:getCellFlags(x, y).parcelId
+      if self.debug_text[xy] == 0 then
+        self.debug_text[xy] = ''
+      end
+    end
+  end
+end
+
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
@@ -402,6 +414,10 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   elseif base_offset == "heat" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeat
+    self:updateDebugOverlay()
+  elseif base_offset == "parcel" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayParcels
     self:updateDebugOverlay()
   else
     local thData = self:getRawData()
