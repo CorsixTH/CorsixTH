@@ -96,35 +96,81 @@ enum THObjectType
     // 62 through 255 are unused
 };
 
-enum THMapNodeFlags
+//! Map flags and object type
+//! The point of storing the object type here is to allow pathfinding code
+//! to use object types as pathfinding goals.
+struct th_map_node_flags
 {
-    THMN_Passable   = 1 <<  0, //!< Pathfinding: Can walk on this tile
-    THMN_CanTravelN = 1 <<  1, //!< Pathfinding: Can walk to the north
-    THMN_CanTravelE = 1 <<  2, //!< Pathfinding: Can walk to the east
-    THMN_CanTravelS = 1 <<  3, //!< Pathfinding: Can walk to the south
-    THMN_CanTravelW = 1 <<  4, //!< Pathfinding: Can walk to the west
-    THMN_Hospital   = 1 <<  5, //!< World: Tile is inside a hospital building
-    THMN_Hospital_Shift = 5,
-    THMN_Buildable  = 1 <<  6, //!< Player: Can build on this tile
-    //! Pathfinding: Normally can walk on this tile, but can't due to blueprint
-    THMN_PassableIfNotForBlueprint = 1 << 7,
-    THMN_Room       = 1 <<  8, //!< World: Tile is inside a room
-    THMN_ShadowHalf = 1 <<  9, //!< Rendering: Put block 75 over floor
-    THMN_ShadowFull = 1 << 10, //!< Rendering: Put block 74 over floor
-    THMN_ShadowWall = 1 << 11, //!< Rendering: Put block 156 over east wall
-    THMN_DoorNorth  = 1 << 12, //!< World: Door on north wall of tile
-    THMN_DoorWest   = 1 << 13, //!< World: Door on west wall of tile
-    THMN_DoNotIdle  = 1 << 14, //!< World: Humanoids should not idle on tile
-    THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
-    THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
-    THMN_BuildableN = 1 << 17, //!< Can build on the north side of the tile
-    THMN_BuildableE = 1 << 18, //!< Can build on the east side of the tile
-    THMN_BuildableS = 1 << 19, //!< Can build on the south side of the tile
-    THMN_BuildableW = 1 << 20, //!< Can build on the west side of the tile
-    THMN_ObjectsAlreadyErased = 1 << 23, //!< Specifies if after a load the object types in this tile were already erased
-    // NB: Bits 24 through 31 reserved for object type (that being one of the
-    // THObjectType values)
+    enum {
+         passable_mask = 1 << 0,
+         can_travel_n_mask = 1 << 1,
+         can_travel_e_mask = 1 << 2,
+         can_travel_s_mask = 1 << 3,
+         can_travel_w_mask = 1 << 4,
+         hospital_mask = 1 << 5,
+         buildable_mask = 1 << 6,
+         passable_if_not_for_blueprint_mask = 1 << 7,
+         room_mask = 1 << 8,
+         shadow_half_mask = 1 << 9,
+         shadow_full_mask = 1 << 10,
+         shadow_wall_mask = 1 << 11,
+         door_north_mask = 1 << 12,
+         door_west_mask = 1 << 13,
+         do_not_idle_mask = 1 << 14,
+         tall_north_mask = 1 << 15,
+         tall_west_mask = 1 << 16,
+         buildable_n_mask = 1 << 17,
+         buildable_e_mask = 1 << 18,
+         buildable_s_mask = 1 << 19,
+         buildable_w_mask = 1 << 20,
+         objects_already_erased_mask = 1 << 23,
+         object_type_offest = 24
+    };
+
+    bool passable;  //!< Pathfinding: Can walk on this tile
+    bool can_travel_n; //!< Pathfinding: Can walk to the north
+    bool can_travel_e; //!< Pathfinding: Can walk to the east
+    bool can_travel_s; //!< Pathfinding: Can walk to the south
+    bool can_travel_w; //!< Pathfinding: Can walk to the west
+    bool hospital; //!< World: Tile is inside a hospital building
+    bool buildable; //!< Player: Can build on this tile
+    bool passable_if_not_for_blueprint;
+    bool room; //!< World: Tile is inside a room
+    bool shadow_half; //!< Rendering: Put block 75 over floor
+    bool shadow_full; //!< Rendering: Put block 74 over floor
+    bool shadow_wall; //!< Rendering: Put block 156 over east wall
+    bool door_north; //!< World: Door on north wall of tile
+    bool door_west; //!< World: Door on west wall of tile
+    bool do_not_idle; //!< World: Humanoids should not idle on tile
+    bool tall_north; //!< Shadows: Wall-like object on north wall
+    bool tall_west; //!< Shadows: Wall-like object on west wall
+    bool buildable_n; //!< Can build on the north side of the tile
+    bool buildable_e; //!< Can build on the east side of the tile
+    bool buildable_s; //!< Can build on the south side of the tile
+    bool buildable_w; //!< Can build on the west side of the tile
+    bool objects_already_erased; //!< Specifies if after a load the object types in this tile were already erased
+    THObjectType object_type;
+
+    //! Convert the given uint32_t reprentation of the map node flags
+    //! to a th_map_node_flags instance.
+    th_map_node_flags& operator =(uint32_t raw);
+
+    //! Perform bitwise & of the map node flags against a given mask
+    //! updating the flags with the result.
+    th_map_node_flags& operator &=(uint32_t mask);
+
+    //! Perform bitwise | of the map node flags with a given mask,
+    //! updating the flags with the result.
+    th_map_node_flags& operator |=(uint32_t mask);
+
+    //! Convert th_map_node_flags into it's uint32_t representation
+    operator uint32_t() const;
 };
+
+//! Perform bit-wise & of a given uint32_t mask and the uint32_t
+//! representation of the map node flags.
+uint32_t operator &(const th_map_node_flags flags, const uint32_t mask);
+
 
 enum THMapTemperatureDisplay
 {
@@ -171,11 +217,8 @@ struct THMapNode : public THLinkList
     // every tick.
     uint16_t aiTemperature[2];
 
-    // Flags for information (lower 24 bits) and object type (top 8 bits)
-    // See THMapNodeFlags for lower 24 bits, and THObjectType for top 8.
-    // The point of storing the object type here is to allow pathfinding code
-    // to use object types as pathfinding goals.
-    uint32_t iFlags;
+    // Flags for information and object type
+    th_map_node_flags flags;
 
     // the first 3 bits of the object store the number of additional objects stored, while
     // the remaining bits store the object type of the additional objects
