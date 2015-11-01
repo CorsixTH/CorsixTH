@@ -130,7 +130,7 @@ function World:World(app)
 
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
-  self:initStaff()
+  self.hospitals[1]:initStaff(self.map.level_config)
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
@@ -273,60 +273,6 @@ end
 
 function World:toggleInformation()
   self.room_information_dialogs_off = not self.room_information_dialogs_off
-end
-
-function World:initStaff()
-  local level_config = self.map.level_config
-  local hosp = self.hospitals[1]
-  if level_config.start_staff then
-    local i = 0
-    for n, conf in ipairs(level_config.start_staff) do
-      local profile
-      local skill = 0
-      local added_staff = true
-      if conf.Skill then
-        skill = conf.Skill / 100
-      end
-
-      if conf.Nurse == 1 then
-        profile = StaffProfile(self, "Nurse", _S.staff_class["nurse"])
-        profile:init(skill)
-      elseif conf.Receptionist == 1 then
-        profile = StaffProfile(self, "Receptionist", _S.staff_class["receptionist"])
-        profile:init(skill)
-      elseif conf.Handyman == 1 then
-        profile = StaffProfile(self, "Handyman", _S.staff_class["handyman"])
-        profile:init(skill)
-      elseif conf.Doctor == 1 then
-        profile = StaffProfile(self, "Doctor", _S.staff_class["doctor"])
-
-        local shrink = 0
-        local rsch = 0
-        local surg = 0
-        local jr, cons
-
-        if conf.Shrink == 1 then shrink = 1 end
-        if conf.Surgeon == 1 then surg = 1 end
-        if conf.Researcher == 1 then rsch = 1 end
-
-        if conf.Junior == 1 then jr = 1
-        elseif conf.Consultant == 1 then cons = 1
-        end
-        profile:initDoctor(shrink,surg,rsch,jr,cons,skill)
-      else
-        added_staff = false
-      end
-      if added_staff then
-        local staff = self:newEntity("Staff", 2)
-        staff:setProfile(profile)
-        -- TODO: Make a somewhat "nicer" placing algorithm.
-        staff:setTile(self.map.th:getCameraTile(1))
-        staff:onPlaceInCorridor()
-        hosp.staff[#hosp.staff + 1] = staff
-        staff:setHospital(hosp)
-      end
-    end
-  end
 end
 
 --! Load goals to win and lose from the map, and store them in 'self.goals'.
