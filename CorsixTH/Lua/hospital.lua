@@ -1590,6 +1590,61 @@ function Hospital:logTransaction(transaction)
   table.insert(self.transactions, 1, transaction)
 end
 
+--! Initialize hospital staff from the level config.
+--!param level_config Configuration describing the initial staff.
+function Hospital:initStaff(level_config)
+  if level_config.start_staff then
+    local i = 0
+    for n, conf in ipairs(level_config.start_staff) do
+      local profile
+      local skill = 0
+      local added_staff = true
+      if conf.Skill then
+        skill = conf.Skill / 100
+      end
+
+      if conf.Nurse == 1 then
+        profile = StaffProfile(self.world, "Nurse", _S.staff_class["nurse"])
+        profile:init(skill)
+      elseif conf.Receptionist == 1 then
+        profile = StaffProfile(self.world, "Receptionist", _S.staff_class["receptionist"])
+        profile:init(skill)
+      elseif conf.Handyman == 1 then
+        profile = StaffProfile(self.world, "Handyman", _S.staff_class["handyman"])
+        profile:init(skill)
+      elseif conf.Doctor == 1 then
+        profile = StaffProfile(self.world, "Doctor", _S.staff_class["doctor"])
+
+        local shrink = 0
+        local rsch = 0
+        local surg = 0
+        local jr, cons
+
+        if conf.Shrink == 1 then shrink = 1 end
+        if conf.Surgeon == 1 then surg = 1 end
+        if conf.Researcher == 1 then rsch = 1 end
+
+        if conf.Junior == 1 then jr = 1
+        elseif conf.Consultant == 1 then cons = 1
+        end
+        profile:initDoctor(shrink,surg,rsch,jr,cons,skill)
+      else
+        added_staff = false
+      end
+      if added_staff then
+        local staff = self.world:newEntity("Staff", 2)
+        staff:setProfile(profile)
+        -- TODO: Make a somewhat "nicer" placing algorithm.
+        staff:setTile(self.world.map.th:getCameraTile(1))
+        staff:onPlaceInCorridor()
+        self.staff[#self.staff + 1] = staff
+        staff:setHospital(self)
+      end
+    end
+  end
+end
+
+
 function Hospital:addStaff(staff)
   self.staff[#self.staff + 1] = staff
   -- Cost of hiring staff:
