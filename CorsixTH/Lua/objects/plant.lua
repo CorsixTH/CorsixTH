@@ -28,12 +28,8 @@ object.ticks = false
 object.corridor_object = 6
 object.build_preview_animation = 934
 
-object.idle_animations = {
-  north = 1950,
-  south = 1950,
-  east = 1950,
-  west = 1950,
-}
+object.idle_animations = AnimationLoader.getIdleAnimations("plant", 1950)
+
 object.usage_animations = {
   north = {
     begin_use = { ["Handyman"] = {1972, object_visible = true} },

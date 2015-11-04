@@ -246,6 +246,7 @@ function App:init()
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder"walls"
+    dofile "animation_loader"
     dofile "entity"
     dofile "entities/humanoid"
     dofile "entities/object"
