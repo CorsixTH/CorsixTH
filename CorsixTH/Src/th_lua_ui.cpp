@@ -133,7 +133,7 @@ static int l_town_map_draw(lua_State *L)
 
                 // Draw entrance door
                 auto l = (pNode - 1)->objects;
-                if(!l.empty() && l.front() == THOB_EntranceRightDoor) {
+                if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
                     if (pNode->flags.hospital) {
                         pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY-2, 9, 3);
                     } else {
@@ -146,7 +146,7 @@ static int l_town_map_draw(lua_State *L)
 
                 // Draw entrance door
                 auto l = (pNode - iMapWidth)->objects;
-                if(!l.empty() && l.front() == THOB_EntranceRightDoor) {
+                if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
                     if (pNode->flags.hospital) {
                         pCanvas->fillRect(iColourDoor, iCanvasX-2, iCanvasY-6, 3, 9);
                     } else {

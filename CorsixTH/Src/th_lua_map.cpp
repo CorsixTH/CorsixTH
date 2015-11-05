@@ -479,7 +479,7 @@ static int l_map_getcellflags(lua_State *L)
     }
     add_cellint(L, pNode->iRoomId, "roomId");
     add_cellint(L, pNode->iParcelId, "parcelId");
-    add_cellint(L, pNode->objects.empty() ? THOB_NoObject : pNode->objects.front(), "thob");
+    add_cellint(L, static_cast<int>(pNode->objects.empty() ? THObjectType::no_object : pNode->objects.front()), "thob");
     return 1;
 }
 

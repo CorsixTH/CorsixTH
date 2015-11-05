@@ -466,7 +466,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
     {
         // TODO: Nicer system for saving object data
         aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
-        aBuffer[iBufferNext++] = pNode->objects.empty() ? THOB_NoObject : static_cast<uint8_t>(pNode->objects.front());
+        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->objects.empty() ? THObjectType::no_object : pNode->objects.front());
 
         // Blocks
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
@@ -1213,7 +1213,7 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         {
             for(auto thob : pNode->objects)
             {
-                if(thob == THOB_Radiator)
+                if(thob == THObjectType::radiator)
                     iRadiatorNumber++;
             }
             if(iRadiatorNumber > 0)
