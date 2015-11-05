@@ -502,9 +502,7 @@ static int l_map_erase_thobs(lua_State *L)
         // so the call must be ignored
         return 2;
     }
-    if(pNode->pExtendedObjectList)
-        delete pNode->pExtendedObjectList;
-    pNode->pExtendedObjectList = nullptr;
+    pNode->extendedObjectList.clear();
     pNode->flags.object_type = THObjectType::THOB_NoObject;
     pNode->flags.objects_already_erased = true;
     return 1;
@@ -519,7 +517,7 @@ static int l_map_remove_cell_thob(lua_State *L)
     if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
     int thob = static_cast<int>(luaL_checkinteger(L, 4));
-    if(pNode->pExtendedObjectList == nullptr)
+    if(pNode->extendedObjectList.empty())
     {
         if(pNode->flags.object_type == thob)
         {
@@ -528,63 +526,19 @@ static int l_map_remove_cell_thob(lua_State *L)
     }
     else
     {
-        int nr = *pNode->pExtendedObjectList & 7;
         if(pNode->flags.object_type == thob)
         {
-            pNode->flags.object_type = static_cast<THObjectType>(((*pNode->pExtendedObjectList) >> 3) & 0xFF);
-            if(nr == 1)
-            {
-                delete pNode->pExtendedObjectList;
-                pNode->pExtendedObjectList = nullptr;
-            }
-            else
-            {
-                // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
-                for(int i = 0; i < nr - 1; i++)
-                {
-                    uint64_t mask = UINT64_C(0xFF) << (3 + i * 8);
-                    *pNode->pExtendedObjectList &= ~mask;
-                    *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
-                }
-                *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
-                *pNode->pExtendedObjectList &= ~7;
-                *pNode->pExtendedObjectList |= (nr - 1);
-            }
-
+            pNode->flags.object_type = pNode->extendedObjectList.front();
+            pNode->extendedObjectList.pop_front();
         }
         else
         {
-            bool found = false;
-            for(int i = 0; i < nr; i++)
+            for(auto iter = pNode->extendedObjectList.begin(); iter != pNode->extendedObjectList.end(); iter++)
             {
-                int shift_length = 3 + i * 8;
-                if(static_cast<int>((*pNode->pExtendedObjectList >> shift_length) & 255) == thob)
+                if(*iter == thob)
                 {
-                    found = true;
-                    //shift all thobs to the left of the found one by 8 bits to the right
-                    for(int j = i; i < nr - 1; i++)
-                    {
-                        uint64_t mask = UINT64_C(0xFF) << (3 + j * 8);
-                        *pNode->pExtendedObjectList &= ~mask;
-                        *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
-                    }
+                    pNode->extendedObjectList.erase(iter);
                     break;
-                }
-            }
-            if(found)
-            {
-                nr--;
-                if(nr > 0)
-                {
-                    //delete the last thob in the list and update the count
-                    *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
-                    *pNode->pExtendedObjectList &= ~7;
-                    *pNode->pExtendedObjectList |= nr;
-                }
-                else
-                {
-                    delete pNode->pExtendedObjectList;
-                    pNode->pExtendedObjectList = nullptr;
                 }
             }
         }
@@ -621,27 +575,10 @@ static int l_map_setcellflags(lua_State *L)
             }
             else if (std::strcmp(field, "thob") == 0)
             {
-                uint64_t x;
-                uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
+                auto thob = static_cast<THObjectType>(lua_tointeger(L, 6));
                 if(pNode->flags.object_type != THObjectType::THOB_NoObject)
                 {
-                    if(pNode->pExtendedObjectList == nullptr)
-                    {
-                        pNode->pExtendedObjectList = new uint64_t;
-                        x = 1;
-                        x |=  thob * 8;
-                        *pNode->pExtendedObjectList = x;
-                    }
-                    else
-                    {
-                        x = *pNode->pExtendedObjectList;
-                        int nr = x & 7;
-                        nr++;
-                        x = (x & (~7)) | nr;
-                        uint64_t orAmount = thob << (3 + (nr - 1) * 8);
-                        x |= orAmount;
-                       *pNode->pExtendedObjectList = x;
-                     }
+                    pNode->extendedObjectList.push_back(thob);
                  }
                 else
                 {

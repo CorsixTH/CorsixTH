@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_H_
 #define CORSIX_TH_TH_MAP_H_
 #include "th_gfx.h"
+#include <list>
 
 /*
     Object type enumeration uses same values as original TH does.
@@ -190,39 +191,38 @@ struct THMapNode : public THLinkList
     // THLinkList::pPrev (will always be nullptr)
     // THLinkList::pNext
 
-    // Linked list for entities rendered in an early (right-to-left) pass
+    //! Linked list for entities rendered in an early (right-to-left) pass
     THLinkList oEarlyEntities;
 
-    // Block tiles for rendering
-    // For each tile, the lower byte is the index in the sprite sheet, and the
-    // upper byte is for the drawing flags.
-    // Layer 0 is for the floor
-    // Layer 1 is for the north wall
-    // Layer 2 is for the west wall
-    // Layer 3 is for the UI
-    // NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
+    //! Block tiles for rendering
+    //! For each tile, the lower byte is the index in the sprite sheet, and the
+    //! upper byte is for the drawing flags.
+    //! Layer 0 is for the floor
+    //! Layer 1 is for the north wall
+    //! Layer 2 is for the west wall
+    //! Layer 3 is for the UI
+    //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
     uint16_t iBlock[4];
 
-    // Parcels (plots) of land have an ID, with each tile in the plot having
-    // that ID. Parcel 0 is the outside.
+    //! Parcels (plots) of land have an ID, with each tile in the plot having
+    //! that ID. Parcel 0 is the outside.
     uint16_t iParcelId;
 
-    // Rooms have an ID, with room #0 being the corridor (and the outside).
+    //! Rooms have an ID, with room #0 being the corridor (and the outside).
     uint16_t iRoomId;
 
-    // A value between 0 (extreme cold) and 65535 (extreme heat) representing
-    // the temperature of the tile. To allow efficent calculation of a tile's
-    // heat based on the previous tick's heat of the surrounding tiles, the
-    // previous temperature is also stored, with the array indicies switching
-    // every tick.
+    //! A value between 0 (extreme cold) and 65535 (extreme heat) representing
+    //! the temperature of the tile. To allow efficent calculation of a tile's
+    //! heat based on the previous tick's heat of the surrounding tiles, the
+    //! previous temperature is also stored, with the array indicies switching
+    //! every tick.
     uint16_t aiTemperature[2];
 
-    // Flags for information and object type
+    //! Flags for information and object type
     th_map_node_flags flags;
 
-    // the first 3 bits of the object store the number of additional objects stored, while
-    // the remaining bits store the object type of the additional objects
-    uint64_t *pExtendedObjectList;
+    //! objects in this node
+    std::list<THObjectType> extendedObjectList;
 };
 
 class THSpriteSheet;

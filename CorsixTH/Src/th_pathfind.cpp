@@ -321,15 +321,10 @@ bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNe
     th_map_node_flags neighbour_flags = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->flags;
     if (neighbour_flags.object_type == m_eTHOB)
         iObjectNumber = 1;
-    if(pMapNode->pExtendedObjectList != nullptr)
+    for(auto thob : pMapNode->extendedObjectList)
     {
-        int count = *pMapNode->pExtendedObjectList & 7;
-        for(int i = 0; i < count; i++)
-        {
-            int thob = (*pMapNode->pExtendedObjectList >> (3 + i* 8)) & 255;
-            if(thob == m_eTHOB)
-                iObjectNumber++;
-        }
+        if(thob == m_eTHOB)
+            iObjectNumber++;
     }
     if(m_bAnyObjectType)
         iObjectNumber = 1;

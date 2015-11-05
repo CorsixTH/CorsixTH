@@ -157,7 +157,7 @@ th_map_node_flags::operator uint32_t() const
 THMapNode::THMapNode() :
     iParcelId(0),
     iRoomId(0),
-    pExtendedObjectList(nullptr)
+    extendedObjectList()
 {
     iBlock[0] = 0;
     iBlock[1] = 0;
@@ -169,7 +169,6 @@ THMapNode::THMapNode() :
 
 THMapNode::~THMapNode()
 {
-    delete pExtendedObjectList;
 }
 
 THMap::THMap()
@@ -340,7 +339,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
 
-    pNode->pExtendedObjectList = nullptr;
+    pNode->extendedObjectList.clear();
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
@@ -1220,19 +1219,12 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         double iMergeRatio = 100;
         if(pNode->flags.hospital)
         {
-           if(pNode->flags.object_type == THOB_Radiator)
+            if(pNode->flags.object_type == THOB_Radiator)
                 iRadiatorNumber = 1;
-            if(pNode->pExtendedObjectList != nullptr)
+            for(auto thob : pNode->extendedObjectList)
             {
-               int nr = *pNode->pExtendedObjectList & 7;
-
-               for(int i = 0; i < nr; i++)
-               {
-                   int shift_len = 3 + i * 8;
-                   int thob = (*pNode->pExtendedObjectList >> shift_len) & 255;
-                   if(thob == THOB_Radiator)
-                       iRadiatorNumber++;
-               }
+                if(thob == THOB_Radiator)
+                    iRadiatorNumber++;
             }
             if(iRadiatorNumber > 0)
             {
