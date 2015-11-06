@@ -201,7 +201,6 @@ function UIResearch:draw(canvas, x, y)
 
   local ytop = 28
   local spacing = 41
-  local config = self.hospital.world.map.level_config
   local research = self.research.research_policy
 
   for i, category in ipairs(research_categories) do

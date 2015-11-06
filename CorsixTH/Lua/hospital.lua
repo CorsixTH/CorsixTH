@@ -37,10 +37,6 @@ function Hospital:Hospital(world, avail_rooms, name)
       balance = level_config.town.StartCash
       interest_rate = level_config.town.InterestRate / 10000
     end
-    -- Check if awards are available
-    if level_config.awards_trophies then
-      self.win_awards = true
-    end
   end
   self.name = name or "PLAYER"
   -- TODO: Variate initial reputation etc based on level
@@ -77,7 +73,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- How many epidemics can exist simultaneously counting current and future
   -- epidemics. If epidemic_limit = 1 then only one epidemic can exist at a
   -- time either in the futures pool or as a current epidemic.
-  self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
+  self.concurrent_epidemic_limit = level_config.gbv.EpidemicConcurrentLimit or 1
 
   -- Initial values
   self.interest_rate = interest_rate
@@ -127,7 +123,7 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   -- Other statistics, back to zero each year
   self.sodas_sold = 0
-  self.reputation_above_threshold = self.win_awards and level_config.awards_trophies.Reputation < self.reputation or false
+  self:checkReputation() -- Reset self.reputation_above_threshold
   self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
   self.pleased_vips_ty  = 0
   self.num_cured_ty = 0
@@ -183,8 +179,8 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   -- Initialize diseases
   local diseases = TheApp.diseases
-  local expertise = self.world.map.level_config.expertise
-  local gbv = self.world.map.level_config.gbv
+  local expertise = level_config.expertise
+  local gbv = level_config.gbv
   for i, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95
@@ -393,9 +389,6 @@ function Hospital:afterLoad(old, new)
     self.num_visitors = 0
     self.player_salary = 10000
     self.sodas_sold = 0
-    if self.world.map.level_config and self.world.map.level_config.awards_trophies then
-      self.win_awards = true
-    end
   end
   if old < 20 then
     -- New variables
@@ -463,19 +456,17 @@ function Hospital:afterLoad(old, new)
     local research = ResearchDepartment(self)
     self.undiscovered_rooms = {}
     local cure, diagnosis
-    local config = self.world.map.level_config.objects
+    local cfg_objects = self.world.map.level_config.objects
     for _, room in ipairs(self.world.available_rooms) do
       -- If a room is discovered, make sure its objects are also
       -- discovered, otherwise add it to the undiscovered list.
       if self.discovered_rooms[room] then
         for name, _ in pairs(room.objects_needed) do
           local object = TheApp.objects[name]
-          if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
-          and object.research_category
-          and not research.research_progress[object].discovered then
+          if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
+              object.research_category and not research.research_progress[object].discovered then
             local progress = self.research_rooms[room]
-            if self.research.cure.current == room
-            or self.research.diagnosis.current == room then
+            if self.research.cure.current == room or self.research.diagnosis.current == room then
               progress = progress + self.research.diagnosis.points
             end
             research.research_progress[object].discovered = true
@@ -487,9 +478,8 @@ function Hospital:afterLoad(old, new)
         if not cure or not diagnosis then
           for name, _ in pairs(room.objects_needed) do
             local object = TheApp.objects[name]
-            if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
-            and object.research_category
-            and not research.research_progress[object].discovered then
+            if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
+                object.research_category and not research.research_progress[object].discovered then
               if object.research_category == "cure" then
                 cure = object
               elseif object.research_category == "diagnosis" then
@@ -564,14 +554,14 @@ function Hospital:afterLoad(old, new)
   end
   if old < 35 then
     -- Define build costs for rooms once again.
-    local config = self.world.map.level_config.objects
-    local rooms = self.world.map.level_config.rooms
+    local cfg_objects = self.world.map.level_config.objects
+    local cfg_rooms = self.world.map.level_config.rooms
     for i, room in ipairs(TheApp.rooms) do
       -- Sum up the build cost of the room
-      local build_cost = rooms[room.level_config_id].Cost
+      local build_cost = cfg_rooms[room.level_config_id].Cost
       for name, no in pairs(room.objects_needed) do
         -- Add cost for this object.
-        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+        build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
       end
       -- Now define the total build cost for the room.
       self.research.research_progress[room] = {
@@ -649,6 +639,12 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
+  -- Update other objects in the hospital (added in version 106).
+  if self.epidemic then self.epidemic.afterLoad(old, new) end
+  for _, future_epidemic in ipairs(self.future_epidemics_pool) do
+    future_epidemic.afterLoad(old, new)
+  end
+  self.research.afterLoad(old, new)
 end
 
 --! Update the Hospital.patientcount variable.
@@ -1149,8 +1145,8 @@ function Hospital:onEndYear()
   self.sodas_sold = 0
   self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
-  self.reputation_above_threshold = self.win_awards
-  and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
+  self:checkReputation()
+
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. I have still to check other levels above 5 to
   -- see if there are other large increases.
@@ -1369,17 +1365,16 @@ function Hospital:determineIfContagious(patient)
   end
   -- ContRate treated like a percentage with ContRate% of patients with
   -- a disease having the contagious strain
-  local config = self.world.map.level_config
-  local expertise = config.expertise
+  local level_config = self.world.map.level_config
   local disease = patient.disease
-  local contRate = expertise[disease.expertise_id].ContRate or 0
+  local contRate = level_config.expertise[disease.expertise_id].ContRate or 0
 
   -- The patient is potentially contagious as we do not yet know if there
   -- is a suitable epidemic which they can belong to
   local potentially_contagious = contRate > 0 and (math.random(1,contRate) == contRate)
   -- The patient isn't contagious if these conditions aren't passed
-  local reduce_months = config.ReduceContMonths or 14
-  local reduce_people = config.ReduceContPeepCount or 20
+  local reduce_months = level_config.ReduceContMonths or 14
+  local reduce_people = level_config.ReduceContPeepCount or 20
   local date_in_months = self.world.month + (self.world.year - 1)*12
 
   if potentially_contagious and date_in_months > reduce_months and
@@ -1468,10 +1463,10 @@ may be affected by research progress.
 function Hospital:getObjectBuildCost(name)
   -- Some helpers
   local progress = self.research.research_progress
-  local config = self.world.map.level_config.objects
+  local cfg_objects = self.world.map.level_config.objects
   local obj_def = TheApp.objects[name]
   -- Get how much this item costs at the start of the level.
-  local obj_cost = config[obj_def.thob].StartCost
+  local obj_cost = cfg_objects[obj_def.thob].StartCost
   -- Some objects might have got their cost reduced by research.
   if progress[obj_def] then
     obj_cost = progress[obj_def].cost
@@ -1591,8 +1586,8 @@ function Hospital:logTransaction(transaction)
 end
 
 --! Initialize hospital staff from the level config.
---!param level_config Configuration describing the initial staff.
-function Hospital:initStaff(level_config)
+function Hospital:initStaff()
+  local level_config = self.world.map.level_config
   if level_config.start_staff then
     local i = 0
     for n, conf in ipairs(level_config.start_staff) do
@@ -1741,8 +1736,8 @@ local reputation_changes = {
 function Hospital:changeReputation(reason, disease, valueChange)
   local amount
   if reason == "autopsy_discovered" then
-    local config = self.world.map.level_config.gbv.AutopsyRepHitPercent
-    amount = config and math.floor(-self.reputation*config/100) or -70
+    local rep_hit_perc = self.world.map.level_config.gbv.AutopsyRepHitPercent
+    amount = rep_hit_perc and math.floor(-self.reputation * rep_hit_perc / 100) or -70
   elseif valueChange then
     amount = valueChange
   else
@@ -1759,9 +1754,18 @@ function Hospital:changeReputation(reason, disease, valueChange)
     self.reputation = self.reputation_max
   end
   -- Check if criteria for trophy is still met
-  if self.reputation_above_threshold then
-    self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
+  if self.reputation_above_threshold then self:checkReputation() end
+end
+
+--! Check whether the reputation is still above the treshold.
+function Hospital:checkReputation()
+  local level_config = self.world.map.level_config
+  if level_config.awards_trophies then
+    local min_repuration = level_config.awards_trophies.Reputation
+    self.reputation_above_threshold = min_repuration < self.reputation
+    return
   end
+  self.reputation_above_threshold = false
 end
 
 function Hospital:updatePercentages()

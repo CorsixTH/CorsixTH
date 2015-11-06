@@ -167,10 +167,11 @@ end
 function UIAnnualReport:checkTrophiesAndAwards(world)
 
   local hosp = self.ui.hospital
-  local prices = world.map.level_config.awards_trophies
+  local level_config = world.map.level_config
+  local prices = level_config and level_config.awards_trophies or nil
 
   -- Check CuresAward so that we know the new config settings are available
-  if hosp.win_awards and prices.TrophyMayorBonus then
+  if prices and prices.TrophyMayorBonus then
     self.won_amount = 0
     self.rep_amount = 0
     self.award_won_amount = 0

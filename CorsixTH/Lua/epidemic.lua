@@ -34,9 +34,6 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- The contagious disease the epidemic is based around
   self.disease = contagious_patient.disease
 
-  -- Config to retrieve the custom fines (if they exist)
-  self.config = self.world.map.level_config
-
   -- Can the epidemic be revealed to the player
   self.ready_to_reveal = false
 
@@ -78,15 +75,16 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- Number of times any infected patient has tried to infected another - successful or not
   self.attempted_infections = 0
 
+  local level_config = self.world.map.level_config
   -- How often is the epidemic disease passed on? Represents a percentage
   -- spread_factor% of the time a disease is passed on to a suitable target
-  self.spread_factor = self.config.gbv.ContagiousSpreadFactor or 25
+  self.spread_factor = level_config.gbv.ContagiousSpreadFactor or 25
   -- How many people still infected and not cure causes the player to take a reputation hit as well as a fine
   -- has no effect if more than evacuation_minimum - hospital is evacuated anyway
-  self.reputation_loss_minimum = self.config.gbv.EpidemicRepLossMinimum or 5
+  self.reputation_loss_minimum = level_config.gbv.EpidemicRepLossMinimum or 5
   -- How many people need to still be infected and not cure to cause the
   -- inspector to evacuate the hospital
-  self.evacuation_minimum = self.config.gbv.EpidemicEvacMinimum or 10
+  self.evacuation_minimum = level_config.gbv.EpidemicEvacMinimum or 10
 
   -- The health inspector who reveals the result of the epidemic
   self.inspector = nil
@@ -346,7 +344,8 @@ end
 --@param infected_count (Integer) number of patients still infected
 --@return fine (Integer) the fine amount ]]
 function Epidemic:calculateInfectedFine(infected_count)
-  local fine_per_infected = self.config.gbv.EpidemicFine or 2000
+  local level_config = self.world.map.level_config
+  local fine_per_infected = level_config.gbv.EpidemicFine or 2000
   return math.max(2000, infected_count * fine_per_infected)
 end
 
@@ -440,8 +439,9 @@ function Epidemic:determineFaxAndFines(still_infected)
 
   if still_infected == 0 then
     -- Compensation fine (if epidemic is "won")
-    local compensation_low_value = self.config.gbv.EpidemicCompLo or 1000
-    local compensation_high_value = self.config.gbv.EpidemicCompHi or 5000
+    local level_config = self.world.map.level_config
+    local compensation_low_value = level_config.gbv.EpidemicCompLo or 1000
+    local compensation_high_value = level_config.gbv.EpidemicCompHi or 5000
     self.compensation = math.random(compensation_low_value,compensation_high_value)
 
     self.cover_up_result_fax = {
@@ -606,7 +606,8 @@ function Epidemic:createVaccinationActions(patient,nurse)
   -- Give selected patient the cursor with the arrow once they are next
   -- in line for vaccination i.e. call assigned
     patient:giveVaccinationCandidateStatus()
-    local vaccination_fee = self.config.gbv.VacCost or 50
+    local level_config = self.world.map.level_config
+    local vaccination_fee = level_config.gbv.VacCost or 50
     nurse:setNextAction({name = "walk", x = x, y = y,
                         must_happen = true,
                         walking_to_vaccinate = true})
@@ -721,5 +722,11 @@ function Epidemic:tryAnnounceInspector()
       self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
     inspector:announce()
     inspector.has_been_announced = true
+  end
+end
+
+function Epidemic:afterLoad(old, new)
+  if old < 106 then
+    self.level_config = nil
   end
 end
