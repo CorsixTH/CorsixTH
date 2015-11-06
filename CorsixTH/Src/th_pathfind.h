@@ -102,10 +102,10 @@ public:
         @param iWidth Width of the map.
         @return Whether the search is done.
      */
-    bool pathingNeighbours(node_t *pNode, uint32_t iFlags, int iWidth);
+    bool pathingNeighbours(node_t *pNode, th_map_node_flags flags, int iWidth);
 
-    void pathingTryNode(node_t *pNode, uint32_t iNFlags, uint32_t iPassable,
-                        node_t *pNeighbour);
+    void pathingTryNode(node_t *pNode, th_map_node_flags neighbour_flags,
+        bool passable, node_t *pNeighbour);
 
     //! Guess distance to the destination for \a pNode.
     /*!
@@ -121,7 +121,7 @@ public:
         @param direction Direction of travel.
         @return Whether the search is done.
      */
-    virtual bool tryNode(node_t *pNode, uint32_t iFlags,
+    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
                          node_t *pNeighbour, int direction) = 0;
 
 protected:
@@ -135,7 +135,7 @@ public:
     PathFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, uint32_t iFlags,
+    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
                          node_t *pNeighbour, int direction);
 
     bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
@@ -150,7 +150,7 @@ public:
     HospitalFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, uint32_t iFlags,
+    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
                          node_t *pNeighbour, int direction);
 
     bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
@@ -162,7 +162,7 @@ public:
     IdleTileFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, uint32_t iFlags,
+    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
                          node_t *pNeighbour, int direction);
 
     bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
@@ -179,14 +179,13 @@ public:
     Objectsvisitor(THPathfinder *pf) : BasePathing(pf) { }
 
     virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, uint32_t iFlags,
+    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
                          node_t *pNeighbour, int direction);
 
     bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
                       THObjectType eTHOB, int iMaxDistance,
                       lua_State *L, int iVisitFunction, bool anyObjectType);
 
-    uint32_t m_iTHOB;
     lua_State *m_pL;
     int m_iVisitFunction;
     int m_iMaxDistance;

@@ -23,107 +23,143 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_H_
 #define CORSIX_TH_TH_MAP_H_
 #include "th_gfx.h"
+#include <list>
 
 /*
     Object type enumeration uses same values as original TH does.
     See game string table section 39 for proof. Section 1 also has
     names in this order.
 */
-enum THObjectType
+enum class THObjectType : uint8_t
 {
-    THOB_NoObject = 0,
-    THOB_Desk = 1,
-    THOB_Cabinet = 2,
-    THOB_Door = 3,
-    THOB_Bench = 4,
-    THOB_Table = 5, // Not in game
-    THOB_Chair = 6,
-    THOB_DrinksMachine = 7,
-    THOB_Bed = 8,
-    THOB_Inflator = 9,
-    THOB_PoolTable = 10,
-    THOB_ReceptionDesk = 11,
-    THOB_BTable = 12, // Not in game?
-    THOB_Cardio = 13,
-    THOB_Scanner = 14,
-    THOB_ScannerConsole = 15,
-    THOB_Screen = 16,
-    THOB_LitterBomb = 17,
-    THOB_Couch = 18,
-    THOB_Sofa = 19,
-    THOB_Crash = 20, // The trolley in general diagnosis
-    THOB_TV = 21,
-    THOB_Ultrascan = 22,
-    THOB_DNAFixer = 23,
-    THOB_CastRemover = 24,
-    THOB_HairRestorer = 25,
-    THOB_Slicer = 26,
-    THOB_XRay = 27,
-    THOB_RadiationShield = 28,
-    THOB_XRayViewer = 29,
-    THOB_OpTable = 30,
-    THOB_Lamp = 31, // Not in game?
-    THOB_Sink = 32,
-    THOB_OpSink1 = 33,
-    THOB_OpSink2 = 34,
-    THOB_SurgeonScreen = 35,
-    THOB_LectureChair = 36,
-    THOB_Projector = 37,
+    no_object = 0,
+    desk = 1,
+    cabinet = 2,
+    door = 3,
+    bench = 4,
+    table = 5, // Not in game
+    chair = 6,
+    drinks_machine = 7,
+    bed = 8,
+    inflator = 9,
+    pool_table = 10,
+    reception_desk = 11,
+    b_table = 12, // Not in game?
+    cardio = 13,
+    scanner = 14,
+    scanner_console = 15,
+    screen = 16,
+    litter_bomb = 17,
+    couch = 18,
+    sofa = 19,
+    crash = 20, // The trolley in general diagnosis
+    tv = 21,
+    ultrascan = 22,
+    dna_fixer = 23,
+    cast_remover = 24,
+    hair_restorer = 25,
+    slicer = 26,
+    xray = 27,
+    radiation_shield = 28,
+    xray_viewer = 29,
+    op_table = 30,
+    lamp = 31, // Not in game?
+    sink = 32,
+    op_sink1 = 33,
+    op_sink2 = 34,
+    surgeon_screen = 35,
+    lecture_chair = 36,
+    projector = 37,
     // 38 is unused
-    THOB_Pharmacy = 39,
-    THOB_Computer = 40,
-    THOB_ChemicalMixer = 41,
-    THOB_BloodMachine = 42,
-    THOB_Extinguisher = 43,
-    THOB_Radiator = 44,
-    THOB_Plant = 45,
-    THOB_Electro = 46,
-    THOB_JellyVat = 47,
-    THOB_Hell = 48,
+    pharmacy = 39,
+    computer = 40,
+    chemical_mixer = 41,
+    blood_machine = 42,
+    extinguisher = 43,
+    radiator = 44,
+    plant = 45,
+    electro = 46,
+    jelly_vat = 47,
+    hell = 48,
     // 49 is unused
-    THOB_Bin = 50,
-    THOB_Loo = 51,
-    THOB_DoubleDoor1 = 52,
-    THOB_DoubleDoor2 = 53,
-    THOB_DeconShower = 54,
-    THOB_Autopsy = 55,
-    THOB_Bookcase = 56,
-    THOB_VideoGame = 57,
-    THOB_EntranceLeftDoor = 58,
-    THOB_EntranceRightDoor = 59,
-    THOB_Skeleton = 60,
-    THOB_ComfyChair = 61,
+    bin = 50,
+    loo = 51,
+    double_door1 = 52,
+    double_door2 = 53,
+    decon_shower = 54,
+    autopsy = 55,
+    bookcase = 56,
+    video_game = 57,
+    entrance_left_door = 58,
+    entrance_right_door = 59,
+    skeleton = 60,
+    comfy_chair = 61,
     // 62 through 255 are unused
 };
 
-enum THMapNodeFlags
+//! Map flags and object type
+//! The point of storing the object type here is to allow pathfinding code
+//! to use object types as pathfinding goals.
+struct th_map_node_flags
 {
-    THMN_Passable   = 1 <<  0, //!< Pathfinding: Can walk on this tile
-    THMN_CanTravelN = 1 <<  1, //!< Pathfinding: Can walk to the north
-    THMN_CanTravelE = 1 <<  2, //!< Pathfinding: Can walk to the east
-    THMN_CanTravelS = 1 <<  3, //!< Pathfinding: Can walk to the south
-    THMN_CanTravelW = 1 <<  4, //!< Pathfinding: Can walk to the west
-    THMN_Hospital   = 1 <<  5, //!< World: Tile is inside a hospital building
-    THMN_Hospital_Shift = 5,
-    THMN_Buildable  = 1 <<  6, //!< Player: Can build on this tile
-    //! Pathfinding: Normally can walk on this tile, but can't due to blueprint
-    THMN_PassableIfNotForBlueprint = 1 << 7,
-    THMN_Room       = 1 <<  8, //!< World: Tile is inside a room
-    THMN_ShadowHalf = 1 <<  9, //!< Rendering: Put block 75 over floor
-    THMN_ShadowFull = 1 << 10, //!< Rendering: Put block 74 over floor
-    THMN_ShadowWall = 1 << 11, //!< Rendering: Put block 156 over east wall
-    THMN_DoorNorth  = 1 << 12, //!< World: Door on north wall of tile
-    THMN_DoorWest   = 1 << 13, //!< World: Door on west wall of tile
-    THMN_DoNotIdle  = 1 << 14, //!< World: Humanoids should not idle on tile
-    THMN_TallNorth  = 1 << 15, //!< Shadows: Wall-like object on north wall
-    THMN_TallWest   = 1 << 16, //!< Shadows: Wall-like object on west wall
-    THMN_BuildableN = 1 << 17, //!< Can build on the north side of the tile
-    THMN_BuildableE = 1 << 18, //!< Can build on the east side of the tile
-    THMN_BuildableS = 1 << 19, //!< Can build on the south side of the tile
-    THMN_BuildableW = 1 << 20, //!< Can build on the west side of the tile
-    THMN_ObjectsAlreadyErased = 1 << 23, //!< Specifies if after a load the object types in this tile were already erased
-    // NB: Bits 24 through 31 reserved for object type (that being one of the
-    // THObjectType values)
+    enum class key : uint32_t {
+         passable_mask = 1 << 0,
+         can_travel_n_mask = 1 << 1,
+         can_travel_e_mask = 1 << 2,
+         can_travel_s_mask = 1 << 3,
+         can_travel_w_mask = 1 << 4,
+         hospital_mask = 1 << 5,
+         buildable_mask = 1 << 6,
+         passable_if_not_for_blueprint_mask = 1 << 7,
+         room_mask = 1 << 8,
+         shadow_half_mask = 1 << 9,
+         shadow_full_mask = 1 << 10,
+         shadow_wall_mask = 1 << 11,
+         door_north_mask = 1 << 12,
+         door_west_mask = 1 << 13,
+         do_not_idle_mask = 1 << 14,
+         tall_north_mask = 1 << 15,
+         tall_west_mask = 1 << 16,
+         buildable_n_mask = 1 << 17,
+         buildable_e_mask = 1 << 18,
+         buildable_s_mask = 1 << 19,
+         buildable_w_mask = 1 << 20,
+    };
+
+    bool passable;  //!< Pathfinding: Can walk on this tile
+    bool can_travel_n; //!< Pathfinding: Can walk to the north
+    bool can_travel_e; //!< Pathfinding: Can walk to the east
+    bool can_travel_s; //!< Pathfinding: Can walk to the south
+    bool can_travel_w; //!< Pathfinding: Can walk to the west
+    bool hospital; //!< World: Tile is inside a hospital building
+    bool buildable; //!< Player: Can build on this tile
+    bool passable_if_not_for_blueprint;
+    bool room; //!< World: Tile is inside a room
+    bool shadow_half; //!< Rendering: Put block 75 over floor
+    bool shadow_full; //!< Rendering: Put block 74 over floor
+    bool shadow_wall; //!< Rendering: Put block 156 over east wall
+    bool door_north; //!< World: Door on north wall of tile
+    bool door_west; //!< World: Door on west wall of tile
+    bool do_not_idle; //!< World: Humanoids should not idle on tile
+    bool tall_north; //!< Shadows: Wall-like object on north wall
+    bool tall_west; //!< Shadows: Wall-like object on west wall
+    bool buildable_n; //!< Can build on the north side of the tile
+    bool buildable_e; //!< Can build on the east side of the tile
+    bool buildable_s; //!< Can build on the south side of the tile
+    bool buildable_w; //!< Can build on the west side of the tile
+
+    //! Convert the given uint32_t reprentation of the map node flags
+    //! to a th_map_node_flags instance.
+    th_map_node_flags& operator =(uint32_t raw);
+
+    //! Get/set the flag with the given key
+    bool& operator[] (th_map_node_flags::key key);
+
+    //! Get the flag with the given key
+    const bool& operator[](th_map_node_flags::key key) const;
+
+    //! Convert th_map_node_flags into it's uint32_t representation
+    operator uint32_t() const;
 };
 
 enum THMapTemperatureDisplay
@@ -144,42 +180,38 @@ struct THMapNode : public THLinkList
     // THLinkList::pPrev (will always be nullptr)
     // THLinkList::pNext
 
-    // Linked list for entities rendered in an early (right-to-left) pass
+    //! Linked list for entities rendered in an early (right-to-left) pass
     THLinkList oEarlyEntities;
 
-    // Block tiles for rendering
-    // For each tile, the lower byte is the index in the sprite sheet, and the
-    // upper byte is for the drawing flags.
-    // Layer 0 is for the floor
-    // Layer 1 is for the north wall
-    // Layer 2 is for the west wall
-    // Layer 3 is for the UI
-    // NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
+    //! Block tiles for rendering
+    //! For each tile, the lower byte is the index in the sprite sheet, and the
+    //! upper byte is for the drawing flags.
+    //! Layer 0 is for the floor
+    //! Layer 1 is for the north wall
+    //! Layer 2 is for the west wall
+    //! Layer 3 is for the UI
+    //! NB: In Lua, layers are numbered 1 - 4 rather than 0 - 3
     uint16_t iBlock[4];
 
-    // Parcels (plots) of land have an ID, with each tile in the plot having
-    // that ID. Parcel 0 is the outside.
+    //! Parcels (plots) of land have an ID, with each tile in the plot having
+    //! that ID. Parcel 0 is the outside.
     uint16_t iParcelId;
 
-    // Rooms have an ID, with room #0 being the corridor (and the outside).
+    //! Rooms have an ID, with room #0 being the corridor (and the outside).
     uint16_t iRoomId;
 
-    // A value between 0 (extreme cold) and 65535 (extreme heat) representing
-    // the temperature of the tile. To allow efficent calculation of a tile's
-    // heat based on the previous tick's heat of the surrounding tiles, the
-    // previous temperature is also stored, with the array indicies switching
-    // every tick.
+    //! A value between 0 (extreme cold) and 65535 (extreme heat) representing
+    //! the temperature of the tile. To allow efficent calculation of a tile's
+    //! heat based on the previous tick's heat of the surrounding tiles, the
+    //! previous temperature is also stored, with the array indicies switching
+    //! every tick.
     uint16_t aiTemperature[2];
 
-    // Flags for information (lower 24 bits) and object type (top 8 bits)
-    // See THMapNodeFlags for lower 24 bits, and THObjectType for top 8.
-    // The point of storing the object type here is to allow pathfinding code
-    // to use object types as pathfinding goals.
-    uint32_t iFlags;
+    //! Flags for information and object type
+    th_map_node_flags flags;
 
-    // the first 3 bits of the object store the number of additional objects stored, while
-    // the remaining bits store the object type of the additional objects
-    uint64_t *pExtendedObjectList;
+    //! objects in this node
+    std::list<THObjectType> objects;
 };
 
 class THSpriteSheet;

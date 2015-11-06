@@ -61,10 +61,10 @@ static int l_town_map_draw(lua_State *L)
         int iCanvasX = iCanvasXBase;
         for(int iX = 0; iX < iMapWidth; ++iX, ++pNode, ++pOriginalNode, iCanvasX += 3)
         {
-            if(pOriginalNode->iFlags & THMN_Hospital)
+            if(pOriginalNode->flags.hospital)
             {
                 uint32_t iColour = iColourMyHosp;
-                if(!(pNode->iFlags & THMN_Hospital))
+                if(!(pNode->flags.hospital))
                 {
                     // TODO: Replace 1 with player number
                     if(pMap->isParcelPurchasable(pNode->iParcelId, 1))
@@ -132,8 +132,9 @@ static int l_town_map_draw(lua_State *L)
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 3, 1);
 
                 // Draw entrance door
-                if((pNode-1)->iFlags >> 24 == THOB_EntranceRightDoor) {
-                    if (pNode->iFlags & THMN_Hospital) {
+                auto l = (pNode - 1)->objects;
+                if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
+                    if (pNode->flags.hospital) {
                         pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY-2, 9, 3);
                     } else {
                         pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY, 9, 3);
@@ -144,8 +145,9 @@ static int l_town_map_draw(lua_State *L)
                 pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 1, 3);
 
                 // Draw entrance door
-                if((pNode-iMapWidth)->iFlags >> 24 == THOB_EntranceRightDoor) {
-                    if (pNode->iFlags & THMN_Hospital) {
+                auto l = (pNode - iMapWidth)->objects;
+                if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
+                    if (pNode->flags.hospital) {
                         pCanvas->fillRect(iColourDoor, iCanvasX-2, iCanvasY-6, 3, 9);
                     } else {
                         pCanvas->fillRect(iColourDoor, iCanvasX, iCanvasY-6, 3, 9);

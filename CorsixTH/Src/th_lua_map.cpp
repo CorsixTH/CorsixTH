@@ -181,7 +181,7 @@ static int l_map_gettemperature(lua_State *L)
  */
 inline bool is_valid(bool entire_invalid, const THMapNode *pNode)
 {
-    return !entire_invalid && (pNode->iFlags & (THMN_Buildable | THMN_Room)) == THMN_Buildable;
+    return !entire_invalid && !pNode->flags.room && pNode->flags.buildable;
 }
 
 static int l_map_updateblueprint(lua_State *L)
@@ -220,10 +220,8 @@ static int l_map_updateblueprint(lua_State *L)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[3] = 0;
-            uint32_t iFlags = pNode->iFlags;
-            iFlags |= ((iFlags & THMN_PassableIfNotForBlueprint) != 0) ? THMN_Passable : 0;
-            iFlags &= ~THMN_PassableIfNotForBlueprint;
-            pNode->iFlags = iFlags;
+            pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
+            pNode->flags.passable_if_not_for_blueprint = false;
         }
     }
 
@@ -240,7 +238,7 @@ static int l_map_updateblueprint(lua_State *L)
                 pNode->iBlock[3] = iFloorTileBad;
                 valid = false;
             }
-            pNode->iFlags |= ((pNode->iFlags & THMN_Passable) != 0) ? THMN_PassableIfNotForBlueprint : 0;
+            pNode->flags.passable_if_not_for_blueprint = pNode->flags.passable;
         }
     }
 
@@ -403,24 +401,24 @@ static int l_map_getcell(lua_State *L)
 }
 
 /** Recognized node flags by Lua. */
-static const std::map<std::string, THMapNodeFlags> lua_node_flag_map = {
-    {"passable",       THMN_Passable},
-    {"hospital",       THMN_Hospital},
-    {"buildable",      THMN_Buildable},
-    {"room",           THMN_Room},
-    {"doorWest",       THMN_DoorWest},
-    {"doorNorth",      THMN_DoorNorth},
-    {"tallWest",       THMN_TallWest},
-    {"tallNorth",      THMN_TallNorth},
-    {"travelNorth",    THMN_CanTravelN},
-    {"travelEast",     THMN_CanTravelE},
-    {"travelSouth",    THMN_CanTravelS},
-    {"travelWest",     THMN_CanTravelW},
-    {"doNotIdle",      THMN_DoNotIdle},
-    {"buildableNorth", THMN_BuildableN},
-    {"buildableEast",  THMN_BuildableE},
-    {"buildableSouth", THMN_BuildableS},
-    {"buildableWest",  THMN_BuildableW},
+static const std::map<std::string, th_map_node_flags::key> lua_node_flag_map = {
+    {"passable",       th_map_node_flags::key::passable_mask},
+    {"hospital",       th_map_node_flags::key::hospital_mask},
+    {"buildable",      th_map_node_flags::key::buildable_mask},
+    {"room",           th_map_node_flags::key::room_mask},
+    {"doorWest",       th_map_node_flags::key::door_west_mask},
+    {"doorNorth",      th_map_node_flags::key::door_north_mask},
+    {"tallWest",       th_map_node_flags::key::tall_west_mask},
+    {"tallNorth",      th_map_node_flags::key::tall_north_mask},
+    {"travelNorth",    th_map_node_flags::key::can_travel_n_mask},
+    {"travelEast",     th_map_node_flags::key::can_travel_e_mask},
+    {"travelSouth",    th_map_node_flags::key::can_travel_s_mask},
+    {"travelWest",     th_map_node_flags::key::can_travel_w_mask},
+    {"doNotIdle",      th_map_node_flags::key::do_not_idle_mask},
+    {"buildableNorth", th_map_node_flags::key::buildable_n_mask},
+    {"buildableEast",  th_map_node_flags::key::buildable_e_mask},
+    {"buildableSouth", th_map_node_flags::key::buildable_s_mask},
+    {"buildableWest",  th_map_node_flags::key::buildable_w_mask},
 };
 
 /**
@@ -431,10 +429,10 @@ static const std::map<std::string, THMapNodeFlags> lua_node_flag_map = {
  * @param name Name of the flag in Lua code.
  */
 static inline void add_cellflag(lua_State *L, const THMapNode *node,
-                                THMapNodeFlags flag, const std::string &name)
+                                th_map_node_flags::key flag, const std::string &name)
 {
     lua_pushlstring(L, name.c_str(), name.size());
-    lua_pushboolean(L, ((node->iFlags & flag) != 0) ? 1 : 0);
+    lua_pushboolean(L, node->flags[flag] ? 1 : 0);
     lua_settable(L, 4);
 }
 
@@ -481,7 +479,7 @@ static int l_map_getcellflags(lua_State *L)
     }
     add_cellint(L, pNode->iRoomId, "roomId");
     add_cellint(L, pNode->iParcelId, "parcelId");
-    add_cellint(L, pNode->iFlags >> 24, "thob");
+    add_cellint(L, static_cast<int>(pNode->objects.empty() ? THObjectType::no_object : pNode->objects.front()), "thob");
     return 1;
 }
 
@@ -498,17 +496,7 @@ static int l_map_erase_thobs(lua_State *L)
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
-    if(pNode->iFlags & THMN_ObjectsAlreadyErased)
-    {
-        // after the last load the map node already has had its object type list erased
-        // so the call must be ignored
-        return 2;
-    }
-    if(pNode->pExtendedObjectList)
-        delete pNode->pExtendedObjectList;
-    pNode->pExtendedObjectList = nullptr;
-    pNode->iFlags &= 0x00FFFFFF; //erase thob
-    pNode->iFlags |= THMN_ObjectsAlreadyErased;
+    pNode->objects.clear();
     return 1;
 }
 
@@ -520,79 +508,16 @@ static int l_map_remove_cell_thob(lua_State *L)
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
-    int thob = static_cast<int>(luaL_checkinteger(L, 4));
-    if(pNode->pExtendedObjectList == nullptr)
+    auto thob = static_cast<THObjectType>(luaL_checkinteger(L, 4));
+    for(auto iter = pNode->objects.begin(); iter != pNode->objects.end(); iter++)
     {
-        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
+        if(*iter == thob)
         {
-            pNode->iFlags &= 0x00FFFFFF;
+            pNode->objects.erase(iter);
+            break;
         }
     }
-    else
-    {
-        int nr = *pNode->pExtendedObjectList & 7;
-        if(static_cast<int>((pNode->iFlags & 0xFF000000) >> 24) == thob)
-        {
-            pNode->iFlags &= 0x00FFFFFF;
-            pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (*pNode->pExtendedObjectList & (UINT32_C(0xFF) << 3)) << (24 - 3));
-            if(nr == 1)
-            {
-                delete pNode->pExtendedObjectList;
-                pNode->pExtendedObjectList = nullptr;
-            }
-            else
-            {
-                // shift all thobs in pExtentedObjectList by 8 bits to the right and update the count
-                for(int i = 0; i < nr - 1; i++)
-                {
-                    uint64_t mask = UINT64_C(0xFF) << (3 + i * 8);
-                    *pNode->pExtendedObjectList &= ~mask;
-                    *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
-                }
-                *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
-                *pNode->pExtendedObjectList &= ~7;
-                *pNode->pExtendedObjectList |= (nr - 1);
-            }
-
-        }
-        else
-        {
-            bool found = false;
-            for(int i = 0; i < nr; i++)
-            {
-                int shift_length = 3 + i * 8;
-                if(static_cast<int>((*pNode->pExtendedObjectList >> shift_length) & 255) == thob)
-                {
-                    found = true;
-                    //shift all thobs to the left of the found one by 8 bits to the right
-                    for(int j = i; i < nr - 1; i++)
-                    {
-                        uint64_t mask = UINT64_C(0xFF) << (3 + j * 8);
-                        *pNode->pExtendedObjectList &= ~mask;
-                        *pNode->pExtendedObjectList |= (*pNode->pExtendedObjectList & (mask << 8)) >> 8;
-                    }
-                    break;
-                }
-            }
-            if(found)
-            {
-                nr--;
-                if(nr > 0)
-                {
-                    //delete the last thob in the list and update the count
-                    *pNode->pExtendedObjectList &= ~(UINT64_C(0xFF) << (3 + nr * 8));
-                    *pNode->pExtendedObjectList &= ~7;
-                    *pNode->pExtendedObjectList |= nr;
-                }
-                else
-                {
-                    delete pNode->pExtendedObjectList;
-                    pNode->pExtendedObjectList = nullptr;
-                }
-            }
-        }
-    }
-     return 1;
+    return 1;
 }
 
 static int l_map_setcellflags(lua_State *L)
@@ -618,38 +543,14 @@ static int l_map_setcellflags(lua_State *L)
             if(iter != lua_node_flag_map.end())
             {
                 if (lua_toboolean(L, 6) == 0)
-                    pNode->iFlags &= ~(*iter).second;
+                    pNode->flags[(*iter).second] = false;
                 else
-                    pNode->iFlags |= (*iter).second;
+                    pNode->flags[(*iter).second] = true;
             }
             else if (std::strcmp(field, "thob") == 0)
             {
-                uint64_t x;
-                uint64_t thob = static_cast<uint64_t>(lua_tointeger(L, 6));
-                if((pNode->iFlags >> 24) != 0)
-                {
-                    if(pNode->pExtendedObjectList == nullptr)
-                    {
-                        pNode->pExtendedObjectList = new uint64_t;
-                        x = 1;
-                        x |=  thob * 8;
-                        *pNode->pExtendedObjectList = x;
-                    }
-                    else
-                    {
-                        x = *pNode->pExtendedObjectList;
-                        int nr = x & 7;
-                        nr++;
-                        x = (x & (~7)) | nr;
-                        uint64_t orAmount = thob << (3 + (nr - 1) * 8);
-                        x |= orAmount;
-                       *pNode->pExtendedObjectList = x;
-                     }
-                 }
-                else
-                {
-                    pNode->iFlags = static_cast<uint32_t>(pNode->iFlags | (thob << 24));
-                }
+                auto thob = static_cast<THObjectType>(lua_tointeger(L, 6));
+                pNode->objects.push_back(thob);
             }
             else if(std::strcmp(field, "parcelId") == 0)
             {
@@ -733,11 +634,9 @@ static int l_map_mark_room(lua_State *L)
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[0] = iTile;
             pNode->iBlock[3] = 0;
-            uint32_t iFlags = pNode->iFlags;
-            uint32_t passable = ((iFlags & THMN_PassableIfNotForBlueprint) != 0) ? THMN_Passable : 0;
-            iFlags |= THMN_Room | passable;
-            iFlags &= ~THMN_PassableIfNotForBlueprint;
-            pNode->iFlags = iFlags;
+            pNode->flags.room = true;
+            pNode->flags.passable |= pNode->flags.passable_if_not_for_blueprint;
+            pNode->flags.passable_if_not_for_blueprint = false;
             pNode->iRoomId = iRoomId;
         }
     }
@@ -765,7 +664,7 @@ static int l_map_unmark_room(lua_State *L)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
             pNode->iBlock[0] = pMap->getOriginalNodeUnchecked(iX, iY)->iBlock[0];
-            pNode->iFlags &= ~THMN_Room;
+            pNode->flags.room = false;
             pNode->iRoomId = 0;
         }
     }

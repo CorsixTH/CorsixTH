@@ -31,22 +31,178 @@ SOFTWARE.
 #include <cstring>
 #include <cstdio>
 
-THMapNode::THMapNode()
+th_map_node_flags& th_map_node_flags::operator=(uint32_t raw)
+{
+    passable = (raw & static_cast<uint32_t>(th_map_node_flags::key::passable_mask)) != 0;
+    can_travel_n = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_n_mask)) != 0;
+    can_travel_e = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_e_mask)) != 0;
+    can_travel_s = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_s_mask)) != 0;
+    can_travel_w = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_w_mask)) != 0;
+    hospital = (raw & static_cast<uint32_t>(th_map_node_flags::key::hospital_mask)) != 0;
+    buildable = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_mask)) != 0;
+    passable_if_not_for_blueprint = (raw & static_cast<uint32_t>(th_map_node_flags::key::passable_if_not_for_blueprint_mask)) != 0;
+    room = (raw & static_cast<uint32_t>(th_map_node_flags::key::room_mask)) != 0;
+    shadow_half = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_half_mask)) != 0;
+    shadow_full = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_full_mask)) != 0;
+    shadow_wall = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_wall_mask)) != 0;
+    door_north = (raw & static_cast<uint32_t>(th_map_node_flags::key::door_north_mask)) != 0;
+    door_west = (raw & static_cast<uint32_t>(th_map_node_flags::key::door_west_mask)) != 0;
+    do_not_idle = (raw & static_cast<uint32_t>(th_map_node_flags::key::do_not_idle_mask)) != 0;
+    tall_north = (raw & static_cast<uint32_t>(th_map_node_flags::key::tall_north_mask)) != 0;
+    tall_west = (raw & static_cast<uint32_t>(th_map_node_flags::key::tall_west_mask)) != 0;
+    buildable_n = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_n_mask)) != 0;
+    buildable_e = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_e_mask)) != 0;
+    buildable_s = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_s_mask)) != 0;
+    buildable_w = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_w_mask)) != 0;
+
+    return *this;
+}
+
+bool& th_map_node_flags::operator[](th_map_node_flags::key key)
+{
+    switch(key)
+    {
+    case th_map_node_flags::key::passable_mask:
+        return passable;
+    case th_map_node_flags::key::can_travel_n_mask:
+        return can_travel_n;
+    case th_map_node_flags::key::can_travel_e_mask:
+        return can_travel_e;
+    case th_map_node_flags::key::can_travel_s_mask:
+        return can_travel_s;
+    case th_map_node_flags::key::can_travel_w_mask:
+        return can_travel_w;
+    case th_map_node_flags::key::hospital_mask:
+        return hospital;
+    case th_map_node_flags::key::buildable_mask:
+        return buildable;
+    case th_map_node_flags::key::passable_if_not_for_blueprint_mask:
+        return passable_if_not_for_blueprint;
+    case th_map_node_flags::key::room_mask:
+        return room;
+    case th_map_node_flags::key::shadow_half_mask:
+        return shadow_half;
+    case th_map_node_flags::key::shadow_full_mask:
+        return shadow_full;
+    case th_map_node_flags::key::shadow_wall_mask:
+        return shadow_wall;
+    case th_map_node_flags::key::door_north_mask:
+        return door_north;
+    case th_map_node_flags::key::door_west_mask:
+        return door_west;
+    case th_map_node_flags::key::do_not_idle_mask:
+        return do_not_idle;
+    case th_map_node_flags::key::tall_north_mask:
+        return tall_north;
+    case th_map_node_flags::key::tall_west_mask:
+        return tall_west;
+    case th_map_node_flags::key::buildable_n_mask:
+        return buildable_n;
+    case th_map_node_flags::key::buildable_e_mask:
+        return buildable_e;
+    case th_map_node_flags::key::buildable_s_mask:
+        return buildable_s;
+    case th_map_node_flags::key::buildable_w_mask:
+        return buildable_w;
+    default:
+        throw std::out_of_range("map node flag is invalid");
+    }
+}
+
+const bool& th_map_node_flags::operator[](th_map_node_flags::key key) const
+{
+    switch(key)
+    {
+    case th_map_node_flags::key::passable_mask:
+        return passable;
+    case th_map_node_flags::key::can_travel_n_mask:
+        return can_travel_n;
+    case th_map_node_flags::key::can_travel_e_mask:
+        return can_travel_e;
+    case th_map_node_flags::key::can_travel_s_mask:
+        return can_travel_s;
+    case th_map_node_flags::key::can_travel_w_mask:
+        return can_travel_w;
+    case th_map_node_flags::key::hospital_mask:
+        return hospital;
+    case th_map_node_flags::key::buildable_mask:
+        return buildable;
+    case th_map_node_flags::key::passable_if_not_for_blueprint_mask:
+        return passable_if_not_for_blueprint;
+    case th_map_node_flags::key::room_mask:
+        return room;
+    case th_map_node_flags::key::shadow_half_mask:
+        return shadow_half;
+    case th_map_node_flags::key::shadow_full_mask:
+        return shadow_full;
+    case th_map_node_flags::key::shadow_wall_mask:
+        return shadow_wall;
+    case th_map_node_flags::key::door_north_mask:
+        return door_north;
+    case th_map_node_flags::key::door_west_mask:
+        return door_west;
+    case th_map_node_flags::key::do_not_idle_mask:
+        return do_not_idle;
+    case th_map_node_flags::key::tall_north_mask:
+        return tall_north;
+    case th_map_node_flags::key::tall_west_mask:
+        return tall_west;
+    case th_map_node_flags::key::buildable_n_mask:
+        return buildable_n;
+    case th_map_node_flags::key::buildable_e_mask:
+        return buildable_e;
+    case th_map_node_flags::key::buildable_s_mask:
+        return buildable_s;
+    case th_map_node_flags::key::buildable_w_mask:
+        return buildable_w;
+    default:
+        throw std::out_of_range("map node flag is invalid");
+    }
+}
+
+th_map_node_flags::operator uint32_t() const
+{
+    uint32_t raw = 0;
+    if(passable) { raw |= static_cast<uint32_t>(th_map_node_flags::key::passable_mask); }
+    if(can_travel_n) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_n_mask); }
+    if(can_travel_e) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_e_mask); }
+    if(can_travel_s) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_s_mask); }
+    if(can_travel_w) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_w_mask); }
+    if(hospital) { raw |= static_cast<uint32_t>(th_map_node_flags::key::hospital_mask); }
+    if(buildable) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_mask); }
+    if(passable_if_not_for_blueprint) { raw |= static_cast<uint32_t>(th_map_node_flags::key::passable_if_not_for_blueprint_mask); }
+    if(room) { raw |= static_cast<uint32_t>(th_map_node_flags::key::room_mask); }
+    if(shadow_half) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_half_mask); }
+    if(shadow_full) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_full_mask); }
+    if(shadow_wall) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_wall_mask); }
+    if(door_north) { raw |= static_cast<uint32_t>(th_map_node_flags::key::door_north_mask); }
+    if(door_west) { raw |= static_cast<uint32_t>(th_map_node_flags::key::door_west_mask); }
+    if(do_not_idle) { raw |= static_cast<uint32_t>(th_map_node_flags::key::do_not_idle_mask); }
+    if(tall_north) { raw |= static_cast<uint32_t>(th_map_node_flags::key::tall_north_mask); }
+    if(tall_west) { raw |= static_cast<uint32_t>(th_map_node_flags::key::tall_west_mask); }
+    if(buildable_n) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_n_mask); }
+    if(buildable_e) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_e_mask); }
+    if(buildable_s) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_s_mask); }
+    if(buildable_w) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_w_mask); }
+
+    return raw;
+}
+
+THMapNode::THMapNode() :
+    iParcelId(0),
+    iRoomId(0),
+    objects()
 {
     iBlock[0] = 0;
     iBlock[1] = 0;
     iBlock[2] = 0;
     iBlock[3] = 0;
-    iParcelId = 0;
-    iRoomId = 0;
     aiTemperature[0] = aiTemperature[1] = 8192;
-    iFlags = 0;
-    pExtendedObjectList = nullptr;
+    flags = {};
 }
 
 THMapNode::~THMapNode()
 {
-    delete pExtendedObjectList;
 }
 
 THMap::THMap()
@@ -217,22 +373,24 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
 
-    pNode->pExtendedObjectList = nullptr;
+    pNode->objects.clear();
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
         {
             uint8_t iBaseTile = gs_iTHMapBlockLUT[pData[2]];
-            pNode->iFlags = THMN_CanTravelN | THMN_CanTravelE | THMN_CanTravelS
-                | THMN_CanTravelW;
+            pNode->flags.can_travel_n = true;
+            pNode->flags.can_travel_e = true;
+            pNode->flags.can_travel_s = true;
+            pNode->flags.can_travel_w = true;
             if(iX == 0)
-                pNode->iFlags &= ~THMN_CanTravelW;
+                pNode->flags.can_travel_w = false;
             else if(iX == 127)
-                pNode->iFlags &= ~THMN_CanTravelE;
+                pNode->flags.can_travel_e = false;
             if(iY == 0)
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->flags.can_travel_n = false;
             else if(iY == 127)
-                pNode->iFlags &= ~THMN_CanTravelS;
+                pNode->flags.can_travel_s = false;
             pNode->iBlock[0] = iBaseTile;
 #define IsDividerWall(x) (((x) >> 1) == 70)
             if(pData[3] == 0 || IsDividerWall(pData[3]))
@@ -251,10 +409,10 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             else
             {
                 pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->flags.can_travel_n = false;
                 if(iY != 0)
                 {
-                    pNode[-128].iFlags &= ~THMN_CanTravelS;
+                    pNode[-128].flags.can_travel_s = false;
                 }
             }
             if(pData[4] == 0 || IsDividerWall(pData[4]))
@@ -262,10 +420,10 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             else
             {
                 pNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
-                pNode->iFlags &= ~THMN_CanTravelW;
+                pNode->flags.can_travel_w = false;
                 if(iX != 0)
                 {
-                    pNode[-1].iFlags &= ~THMN_CanTravelE;
+                    pNode[-1].flags.can_travel_e = false;
                 }
             }
 
@@ -276,24 +434,24 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
 
             if(!(pData[5] & 1))
             {
-                pNode->iFlags |= THMN_Passable;
+                pNode->flags.passable = true;
                 if(*pParcel && !(pData[7] & 16))
                 {
-                    pNode->iFlags |= THMN_Hospital;
+                    pNode->flags.hospital = true;
                     if(!(pData[5] & 2)) {
-                        pNode->iFlags |= THMN_Buildable;
+                        pNode->flags.buildable = true;
                     }
                     if(!(pData[5] & 4) || pData[1] == 0) {
-                        pNode->iFlags |= THMN_BuildableN;
+                        pNode->flags.buildable_n = true;
                     }
                     if(!(pData[5] & 8) || pData[1] == 0) {
-                        pNode->iFlags |= THMN_BuildableE;
+                        pNode->flags.buildable_e = true;
                     }
                     if(!(pData[5] & 16) || pData[1] == 0) {
-                        pNode->iFlags |= THMN_BuildableS;
+                        pNode->flags.buildable_s = true;
                     }
                     if(!(pData[5] & 32) || pData[1] == 0) {
-                        pNode->iFlags |= THMN_BuildableW;
+                        pNode->flags.buildable_w = true;
                     }
                 }
             }
@@ -310,7 +468,6 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             {
                 fnObjectCallback(pCallbackToken, iX, iY, (THObjectType)pData[1], pData[0]);
             }
-
         }
     }
     m_pPlotOwner = new int[m_iParcelCount];
@@ -350,8 +507,8 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
         pNode != pLastNode; ++pNode)
     {
         // TODO: Nicer system for saving object data
-        aBuffer[iBufferNext++] = (pNode->iFlags & THMN_TallWest) != 0 ? 1 : 0;
-        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iFlags >> 24);
+        aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
+        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->objects.empty() ? THObjectType::no_object : pNode->objects.front());
 
         // Blocks
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
@@ -360,24 +517,24 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
 
         // Flags (TODO: Set a few more flag bits?)
         uint8_t iFlags = 63;
-        if(pNode->iFlags & THMN_Passable)
+        if(pNode->flags.passable)
             iFlags ^= 1;
-        if(pNode->iFlags & THMN_Buildable)
+        if(pNode->flags.buildable)
             iFlags ^= 2;
-        if(pNode->iFlags & THMN_BuildableN)
+        if(pNode->flags.buildable_n)
             iFlags ^= 4;
-        if(pNode->iFlags & THMN_BuildableE)
+        if(pNode->flags.buildable_e)
             iFlags ^= 8;
-        if(pNode->iFlags & THMN_BuildableS)
+        if(pNode->flags.buildable_s)
             iFlags ^= 16;
-        if(pNode->iFlags & THMN_BuildableW)
+        if(pNode->flags.buildable_w)
             iFlags ^= 32;
 
         aBuffer[iBufferNext++] = iFlags;
 
         aBuffer[iBufferNext++] = 0;
         iFlags = 16;
-        if(pNode->iFlags & THMN_Hospital)
+        if(pNode->flags.hospital)
             iFlags ^= 16;
         aBuffer[iBufferNext++] = iFlags;
 
@@ -439,7 +596,7 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
                     pNode->iBlock[0] = pOriginalNode->iBlock[0];
                     pNode->iBlock[1] = pOriginalNode->iBlock[1];
                     pNode->iBlock[2] = pOriginalNode->iBlock[2];
-                    pNode->iFlags = pOriginalNode->iFlags;
+                    pNode->flags = pOriginalNode->flags;
                 }
                 else
                 {
@@ -448,7 +605,7 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
 
                     pNode->iBlock[1] = 0;
                     pNode->iBlock[2] = 0;
-                    pNode->iFlags = 0;
+                    pNode->flags = {};
 
                     // Random decoration
                     if(((iX | iY) & 0x7) == 0)
@@ -461,8 +618,9 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
 
 #define IsDividerWall(x) (142 <= (x) && (x) <= 145)
 #define CheckDividers(xy, delta, block) \
-            if(xy > 0 && (pOriginalNode->iFlags & pOriginalNode[-delta].iFlags\
-            & THMN_Hospital) && pNode->iParcelId != pNode[-delta].iParcelId) \
+            if(xy > 0 && pOriginalNode->flags.hospital && \
+                pOriginalNode[-delta].flags.hospital && \
+                pNode->iParcelId != pNode[-delta].iParcelId) \
             { \
                 int iOwner = m_pPlotOwner[pNode->iParcelId]; \
                 int iOtherOwner = m_pPlotOwner[pNode[-delta].iParcelId]; \
@@ -504,7 +662,7 @@ void THMap::_makeAdjacencyMatrix()
         {
 #define TestAdj(xy, delta) if(xy > 0 && \
             pOriginalNode->iParcelId != pOriginalNode[-delta].iParcelId &&  \
-            (pOriginalNode->iFlags & pOriginalNode[-delta].iFlags & THMN_Passable))\
+            pOriginalNode->flags.passable && pOriginalNode[-delta].flags.passable)\
             m_pParcelAdjacencyMatrix[pOriginalNode->iParcelId * m_iParcelCount\
             + pOriginalNode[-delta].iParcelId] = true, \
             m_pParcelAdjacencyMatrix[pOriginalNode->iParcelId + \
@@ -512,7 +670,6 @@ void THMap::_makeAdjacencyMatrix()
 
             TestAdj(iX, 1);
             TestAdj(iY, 128);
-
 #undef TestAdj
         }
     }
@@ -767,12 +924,12 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     // 2nd pass
     for(THMapNodeIterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight); itrNode2; ++itrNode2)
     {
-        if(itrNode2->iFlags & THMN_ShadowFull)
+        if(itrNode2->flags.shadow_full)
         {
             m_pBlocks->drawSprite(pCanvas, 74, itrNode2.x() + iCanvasX - 32,
                 itrNode2.y() + iCanvasY, THDF_Alpha75);
         }
-        else if(itrNode2->iFlags & THMN_ShadowHalf)
+        else if(itrNode2->flags.shadow_half)
         {
             m_pBlocks->drawSprite(pCanvas, 75, itrNode2.x() + iCanvasX - 32,
                 itrNode2.y() + iCanvasY, THDF_Alpha75);
@@ -790,7 +947,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             {
                 m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
-                if(itrNode->iFlags & THMN_ShadowWall)
+                if(itrNode->flags.shadow_wall)
                 {
                     THClipRect rcOldClip, rcNewClip;
                     pCanvas->getClipRect(&rcOldClip);
@@ -905,7 +1062,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                     {
                         m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
                             itrNode.y() - iH + 32, iBlock >> 8);
-                        if(itrNode.getPreviousNode()->iFlags & THMN_ShadowWall)
+                        if(itrNode.getPreviousNode()->flags.shadow_wall)
                         {
                             THClipRect rcOldClip, rcNewClip;
                             pCanvas->getClipRect(&rcOldClip);
@@ -1050,7 +1207,7 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         uint32_t iNeighbourSum = 0;
         uint32_t iNeighbourCount = 0;
 #define NEIGHBOUR(flag, idx, pNeighbour) \
-        if(pNode->iFlags & flag) \
+        if(flag) \
         { \
             iNeighbourCount += 4; \
             iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
@@ -1060,10 +1217,10 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
             bool bObjectPresent = false; \
             if(pNeighbour && pNeighbour < pLastNode && pNeighbour > m_pCells) \
             { \
-                int iHospital1 = ((THMapNode * )pNeighbour)->iFlags & THMN_Hospital; \
-                int iHospital2 = pNode->iFlags & THMN_Hospital; \
+                int iHospital1 = ((THMapNode * )pNeighbour)->flags.hospital; \
+                int iHospital2 = pNode->flags.hospital; \
                 if (iHospital1 == iHospital2) \
-                    if ((((THMapNode * )pNeighbour)->iFlags & THMN_Room) == (pNode->iFlags & THMN_Room)) \
+                    if ((((THMapNode * )pNeighbour)->flags.room) == (pNode->flags.room)) \
                         bObjectPresent = true; \
             } \
             if (bObjectPresent) \
@@ -1072,16 +1229,16 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
                 iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
             } \
             else if(m_pCells <= pNode + (idx) && pNode + (idx) < pLastNode) \
-                { \
-                    iNeighbourCount += 1; \
-                    iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
-                } \
+            { \
+                iNeighbourCount += 1; \
+                iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
+            } \
         }
 
-        NEIGHBOUR(THMN_CanTravelN, -m_iWidth, pNode - m_iWidth);
-        NEIGHBOUR(THMN_CanTravelS,  m_iWidth, pNode + m_iWidth);
-        NEIGHBOUR(THMN_CanTravelE,  1, pNode + 1);
-        NEIGHBOUR(THMN_CanTravelW, -1, pNode - 1);
+        NEIGHBOUR(pNode->flags.can_travel_n, -m_iWidth, pNode - m_iWidth);
+        NEIGHBOUR(pNode->flags.can_travel_s,  m_iWidth, pNode + m_iWidth);
+        NEIGHBOUR(pNode->flags.can_travel_e,  1, pNode + 1);
+        NEIGHBOUR(pNode->flags.can_travel_w, -1, pNode - 1);
 
 #undef NEIGHBOUR
 #define MERGE2(src, other, ratio) (src) = static_cast<uint16_t>( \
@@ -1094,21 +1251,12 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         // or generally dissipate 0.1% of temperature.
         uint32_t iMergeTemp = 0;
         double iMergeRatio = 100;
-        if(pNode->iFlags & THMN_Hospital)
+        if(pNode->flags.hospital)
         {
-           if((pNode->iFlags >> 24) == THOB_Radiator)
-                iRadiatorNumber = 1;
-            if(pNode->pExtendedObjectList != nullptr)
+            for(auto thob : pNode->objects)
             {
-               int nr = *pNode->pExtendedObjectList & 7;
-
-               for(int i = 0; i < nr; i++)
-               {
-                   int shift_len = 3 + i * 8;
-                   int thob = (*pNode->pExtendedObjectList >> shift_len) & 255;
-                   if(thob == THOB_Radiator)
-                       iRadiatorNumber++;
-               }
+                if(thob == THObjectType::radiator)
+                    iRadiatorNumber++;
             }
             if(iRadiatorNumber > 0)
             {
@@ -1139,63 +1287,68 @@ void THMap::updatePathfinding()
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode)
         {
-            pNode->iFlags |= THMN_CanTravelN | THMN_CanTravelE |
-                THMN_CanTravelS | THMN_CanTravelW;
+            pNode->flags.can_travel_n = true;
+            pNode->flags.can_travel_e = true;
+            pNode->flags.can_travel_s = true;
+            pNode->flags.can_travel_w = true;
             if(iX == 0)
-                pNode->iFlags &= ~THMN_CanTravelW;
+                pNode->flags.can_travel_w = false;
             else if(iX == 127)
-                pNode->iFlags &= ~THMN_CanTravelE;
+                pNode->flags.can_travel_e = false;
             if(iY == 0)
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->flags.can_travel_n = false;
             else if(iY == 127)
-                pNode->iFlags &= ~THMN_CanTravelS;
+                pNode->flags.can_travel_s = false;
             if(pNode->iBlock[1] & 0xFF)
             {
-                pNode->iFlags &= ~THMN_CanTravelN;
+                pNode->flags.can_travel_n = false;
                 if(iY != 0)
                 {
-                    pNode[-128].iFlags &= ~THMN_CanTravelS;
+                    pNode[-128].flags.can_travel_s = false;
                 }
             }
             if(pNode->iBlock[2] & 0xFF)
             {
-                pNode->iFlags &= ~THMN_CanTravelW;
+                pNode->flags.can_travel_w = false;
                 if(iX != 0)
                 {
-                    pNode[-1].iFlags &= ~THMN_CanTravelE;
+                    pNode[-1].flags.can_travel_e = false;
                 }
             }
         }
     }
 }
 
-void THMap::updateShadows()
+//! For shadow casting, a tile is considered to have a wall on a direction
+//! if it has a door in that direction, or the block is from the hardcoded
+//! range of wall-like blocks.
+inline bool is_wall(THMapNode *node, size_t block, bool flag)
 {
-    // For shadow casting, a tile is considered to have a wall on a direction
-    // if it has a door in that direction, or the block is from the hardcoded
-    // range of wall-like blocks.
-#define IsWall(node, block, door) \
-    (((node)->iFlags & (door)) != 0 || \
-    (82 <= ((node)->iBlock[(block)] & 0xFF) && ((node)->iBlock[(block)] & 0xFF) <= 164))
+    return flag || (82 <= (node->iBlock[block] & 0xFF) && (node->iBlock[block] & 0xFF) <= 164);
+}
+
+void THMap::updateShadows()
+{   
     THMapNode *pNode = m_pCells;
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode)
         {
-            pNode->iFlags &= ~(THMN_ShadowHalf | THMN_ShadowFull |
-                THMN_ShadowWall);
-            if(IsWall(pNode, 2, THMN_TallWest))
+            pNode->flags.shadow_full = false;
+            pNode->flags.shadow_half = false;
+            pNode->flags.shadow_wall = false;
+            if(is_wall(pNode, 2, pNode->flags.tall_west))
             {
-                pNode->iFlags |= THMN_ShadowHalf;
-                if(IsWall(pNode, 1, THMN_TallNorth))
+                pNode->flags.shadow_half = true;
+                if(is_wall(pNode, 1, pNode->flags.tall_north))
                 {
-                    pNode->iFlags |= THMN_ShadowWall;
+                    pNode->flags.shadow_wall = true;
                 }
                 else if(iY != 0)
                 {
                     THMapNode *pNeighbour = pNode - 128;
-                    pNeighbour->iFlags |= THMN_ShadowFull;
-                    if(iX != 0 && !IsWall(pNeighbour, 2, THMN_TallWest))
+                    pNeighbour->flags.shadow_full = true;
+                    if(iX != 0 && !is_wall(pNeighbour, 2, pNode->flags.tall_west))
                     {
                         // Wrap the shadow around a corner (no need to continue
                         // all the way along the wall, as the shadow would be
@@ -1203,7 +1356,7 @@ void THMap::updateShadows()
                         // toggled on, then this optimisation becomes very
                         // visible, but it's a debug option, so it doesn't
                         // matter).
-                        pNeighbour[-1].iFlags |= THMN_ShadowFull;
+                        pNeighbour[-1].flags.shadow_full = true;
                     }
                 }
             }
@@ -1252,7 +1405,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         oEncoder.write(pNode->iRoomId);
         // Flags include THOB values, and other things which do not work
         // well with run-length encoding.
-        pWriter->writeVUInt(pNode->iFlags);
+        pWriter->writeVUInt(static_cast<uint32_t>(pNode->flags));
         pWriter->writeVUInt(pNode->aiTemperature[0]);
         pWriter->writeVUInt(pNode->aiTemperature[1]);
 
@@ -1277,7 +1430,7 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         oEncoder.write(pNode->iBlock[1]);
         oEncoder.write(pNode->iBlock[2]);
         oEncoder.write(pNode->iParcelId);
-        oEncoder.write(pNode->iFlags);
+        oEncoder.write(static_cast<uint32_t>(pNode->flags));
     }
     oEncoder.finish();
     oEncoder.pumpOutput(pWriter);
@@ -1347,7 +1500,9 @@ void THMap::depersist(LuaPersistReader *pReader)
     for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLastNode; ++pNode)
     {
-        if(!pReader->readVUInt(pNode->iFlags)) return;
+        uint32_t f;
+        if(!pReader->readVUInt(f)) return;
+        pNode->flags = f;
         if(iVersion >= 4)
         {
             if(!pReader->readVUInt(pNode->aiTemperature[0])
@@ -1372,7 +1527,6 @@ void THMap::depersist(LuaPersistReader *pReader)
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
-        pNode->iFlags &= ~THMN_ObjectsAlreadyErased;
         lua_pop(L, 1);
     }
     oDecoder.initialise(6, pReader);
@@ -1394,7 +1548,7 @@ void THMap::depersist(LuaPersistReader *pReader)
         pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
         pNode->iParcelId = static_cast<uint16_t>(oDecoder.read());
-        pNode->iFlags    = oDecoder.read();
+        pNode->flags = oDecoder.read();
     }
 
     if(iVersion < 3)
