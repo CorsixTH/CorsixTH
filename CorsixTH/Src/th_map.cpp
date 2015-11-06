@@ -31,117 +31,159 @@ SOFTWARE.
 #include <cstring>
 #include <cstdio>
 
-uint32_t operator&(const th_map_node_flags flags, const uint32_t mask)
-{
-    uint32_t f = static_cast<uint32_t>(flags);
-    return f & mask;
-}
-
 th_map_node_flags& th_map_node_flags::operator=(uint32_t raw)
 {
-    passable = ((raw & passable_mask) != 0);
-    can_travel_n = ((raw & can_travel_n_mask) != 0);
-    can_travel_e = ((raw & can_travel_e_mask) != 0);
-    can_travel_s = ((raw & can_travel_s_mask) != 0);
-    can_travel_w = ((raw & can_travel_w_mask) != 0);
-    hospital = ((raw & hospital_mask) != 0);
-    buildable = ((raw & buildable_mask) != 0);
-    passable_if_not_for_blueprint = ((raw & passable_if_not_for_blueprint_mask) != 0);
-    room = ((raw & room_mask) != 0);
-    shadow_half = ((raw & shadow_half_mask) != 0);
-    shadow_full = ((raw & shadow_full_mask) != 0);
-    shadow_wall = ((raw & shadow_wall_mask) != 0);
-    door_north = ((raw & door_north_mask) != 0);
-    door_west = ((raw & door_west_mask) != 0);
-    do_not_idle = ((raw & do_not_idle_mask) != 0);
-    tall_north = ((raw & tall_north_mask) != 0);
-    tall_west = ((raw & tall_west_mask) != 0);
-    buildable_n = ((raw & buildable_n_mask) != 0);
-    buildable_e = ((raw & buildable_e_mask) != 0);
-    buildable_s = ((raw & buildable_s_mask) != 0);
-    buildable_w = ((raw & buildable_w_mask) != 0);
+    passable = (raw & static_cast<uint32_t>(th_map_node_flags::key::passable_mask)) != 0;
+    can_travel_n = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_n_mask)) != 0;
+    can_travel_e = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_e_mask)) != 0;
+    can_travel_s = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_s_mask)) != 0;
+    can_travel_w = (raw & static_cast<uint32_t>(th_map_node_flags::key::can_travel_w_mask)) != 0;
+    hospital = (raw & static_cast<uint32_t>(th_map_node_flags::key::hospital_mask)) != 0;
+    buildable = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_mask)) != 0;
+    passable_if_not_for_blueprint = (raw & static_cast<uint32_t>(th_map_node_flags::key::passable_if_not_for_blueprint_mask)) != 0;
+    room = (raw & static_cast<uint32_t>(th_map_node_flags::key::room_mask)) != 0;
+    shadow_half = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_half_mask)) != 0;
+    shadow_full = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_full_mask)) != 0;
+    shadow_wall = (raw & static_cast<uint32_t>(th_map_node_flags::key::shadow_wall_mask)) != 0;
+    door_north = (raw & static_cast<uint32_t>(th_map_node_flags::key::door_north_mask)) != 0;
+    door_west = (raw & static_cast<uint32_t>(th_map_node_flags::key::door_west_mask)) != 0;
+    do_not_idle = (raw & static_cast<uint32_t>(th_map_node_flags::key::do_not_idle_mask)) != 0;
+    tall_north = (raw & static_cast<uint32_t>(th_map_node_flags::key::tall_north_mask)) != 0;
+    tall_west = (raw & static_cast<uint32_t>(th_map_node_flags::key::tall_west_mask)) != 0;
+    buildable_n = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_n_mask)) != 0;
+    buildable_e = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_e_mask)) != 0;
+    buildable_s = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_s_mask)) != 0;
+    buildable_w = (raw & static_cast<uint32_t>(th_map_node_flags::key::buildable_w_mask)) != 0;
 
     return *this;
 }
 
-th_map_node_flags& th_map_node_flags::operator&=(uint32_t mask)
+bool& th_map_node_flags::operator[](th_map_node_flags::key key)
 {
-    passable &= ((mask & passable_mask) != 0);
-    can_travel_n &= ((mask & can_travel_n_mask) != 0);
-    can_travel_e &= ((mask & can_travel_e_mask) != 0);
-    can_travel_s &= ((mask & can_travel_s_mask) != 0);
-    can_travel_w &= ((mask & can_travel_w_mask) != 0);
-    hospital &= ((mask & hospital_mask) != 0);
-    buildable &= ((mask & buildable_mask) != 0);
-    passable_if_not_for_blueprint &= ((mask & passable_if_not_for_blueprint_mask) != 0);
-    room &= ((mask & room_mask) != 0);
-    shadow_half &= ((mask & shadow_half_mask) != 0);
-    shadow_full &= ((mask & shadow_full_mask) != 0);
-    shadow_wall &= ((mask & shadow_wall_mask) != 0);
-    door_north &= ((mask & door_north_mask) != 0);
-    door_west &= ((mask & door_west_mask) != 0);
-    do_not_idle &= ((mask & do_not_idle_mask) != 0);
-    tall_north &= ((mask & tall_north_mask) != 0);
-    tall_west &= ((mask & tall_west_mask) != 0);
-    buildable_n &= ((mask & buildable_n_mask) != 0);
-    buildable_e &= ((mask & buildable_e_mask) != 0);
-    buildable_s &= ((mask & buildable_s_mask) != 0);
-    buildable_w &= ((mask & buildable_w_mask) != 0);
-
-    return *this;
+    switch(key)
+    {
+    case th_map_node_flags::key::passable_mask:
+        return passable;
+    case th_map_node_flags::key::can_travel_n_mask:
+        return can_travel_n;
+    case th_map_node_flags::key::can_travel_e_mask:
+        return can_travel_e;
+    case th_map_node_flags::key::can_travel_s_mask:
+        return can_travel_s;
+    case th_map_node_flags::key::can_travel_w_mask:
+        return can_travel_w;
+    case th_map_node_flags::key::hospital_mask:
+        return hospital;
+    case th_map_node_flags::key::buildable_mask:
+        return buildable;
+    case th_map_node_flags::key::passable_if_not_for_blueprint_mask:
+        return passable_if_not_for_blueprint;
+    case th_map_node_flags::key::room_mask:
+        return room;
+    case th_map_node_flags::key::shadow_half_mask:
+        return shadow_half;
+    case th_map_node_flags::key::shadow_full_mask:
+        return shadow_full;
+    case th_map_node_flags::key::shadow_wall_mask:
+        return shadow_wall;
+    case th_map_node_flags::key::door_north_mask:
+        return door_north;
+    case th_map_node_flags::key::door_west_mask:
+        return door_west;
+    case th_map_node_flags::key::do_not_idle_mask:
+        return do_not_idle;
+    case th_map_node_flags::key::tall_north_mask:
+        return tall_north;
+    case th_map_node_flags::key::tall_west_mask:
+        return tall_west;
+    case th_map_node_flags::key::buildable_n_mask:
+        return buildable_n;
+    case th_map_node_flags::key::buildable_e_mask:
+        return buildable_e;
+    case th_map_node_flags::key::buildable_s_mask:
+        return buildable_s;
+    case th_map_node_flags::key::buildable_w_mask:
+        return buildable_w;
+    default:
+        throw std::out_of_range("map node flag is invalid");
+    }
 }
 
-th_map_node_flags& th_map_node_flags::operator|=(uint32_t mask)
+const bool& th_map_node_flags::operator[](th_map_node_flags::key key) const
 {
-    passable |= ((mask & passable_mask) != 0);
-    can_travel_n |= ((mask & can_travel_n_mask) != 0);
-    can_travel_e |= ((mask & can_travel_e_mask) != 0);
-    can_travel_s |= ((mask & can_travel_s_mask) != 0);
-    can_travel_w |= ((mask & can_travel_w_mask) != 0);
-    hospital |= ((mask & hospital_mask) != 0);
-    buildable |= ((mask & buildable_mask) != 0);
-    passable_if_not_for_blueprint |= ((mask & passable_if_not_for_blueprint_mask) != 0);
-    room |= ((mask & room_mask) != 0);
-    shadow_half |= ((mask & shadow_half_mask) != 0);
-    shadow_full |= ((mask & shadow_full_mask) != 0);
-    shadow_wall |= ((mask & shadow_wall_mask) != 0);
-    door_north |= ((mask & door_north_mask) != 0);
-    door_west |= ((mask & door_west_mask) != 0);
-    do_not_idle |= ((mask & do_not_idle_mask) != 0);
-    tall_north |= ((mask & tall_north_mask) != 0);
-    tall_west |= ((mask & tall_west_mask) != 0);
-    buildable_n |= ((mask & buildable_n_mask) != 0);
-    buildable_e |= ((mask & buildable_e_mask) != 0);
-    buildable_s |= ((mask & buildable_s_mask) != 0);
-    buildable_w |= ((mask & buildable_w_mask) != 0);
-
-    return *this;
+    switch(key)
+    {
+    case th_map_node_flags::key::passable_mask:
+        return passable;
+    case th_map_node_flags::key::can_travel_n_mask:
+        return can_travel_n;
+    case th_map_node_flags::key::can_travel_e_mask:
+        return can_travel_e;
+    case th_map_node_flags::key::can_travel_s_mask:
+        return can_travel_s;
+    case th_map_node_flags::key::can_travel_w_mask:
+        return can_travel_w;
+    case th_map_node_flags::key::hospital_mask:
+        return hospital;
+    case th_map_node_flags::key::buildable_mask:
+        return buildable;
+    case th_map_node_flags::key::passable_if_not_for_blueprint_mask:
+        return passable_if_not_for_blueprint;
+    case th_map_node_flags::key::room_mask:
+        return room;
+    case th_map_node_flags::key::shadow_half_mask:
+        return shadow_half;
+    case th_map_node_flags::key::shadow_full_mask:
+        return shadow_full;
+    case th_map_node_flags::key::shadow_wall_mask:
+        return shadow_wall;
+    case th_map_node_flags::key::door_north_mask:
+        return door_north;
+    case th_map_node_flags::key::door_west_mask:
+        return door_west;
+    case th_map_node_flags::key::do_not_idle_mask:
+        return do_not_idle;
+    case th_map_node_flags::key::tall_north_mask:
+        return tall_north;
+    case th_map_node_flags::key::tall_west_mask:
+        return tall_west;
+    case th_map_node_flags::key::buildable_n_mask:
+        return buildable_n;
+    case th_map_node_flags::key::buildable_e_mask:
+        return buildable_e;
+    case th_map_node_flags::key::buildable_s_mask:
+        return buildable_s;
+    case th_map_node_flags::key::buildable_w_mask:
+        return buildable_w;
+    default:
+        throw std::out_of_range("map node flag is invalid");
+    }
 }
 
 th_map_node_flags::operator uint32_t() const
 {
     uint32_t raw = 0;
-    if(passable) { raw |= passable_mask; }
-    if(can_travel_n) { raw |= can_travel_n_mask; }
-    if(can_travel_e) { raw |= can_travel_e_mask; }
-    if(can_travel_s) { raw |= can_travel_s_mask; }
-    if(can_travel_w) { raw |= can_travel_w_mask; }
-    if(hospital) { raw |= hospital_mask; }
-    if(buildable) { raw |= buildable_mask; }
-    if(passable_if_not_for_blueprint) { raw |= passable_if_not_for_blueprint_mask; }
-    if(room) { raw |= room_mask; }
-    if(shadow_half) { raw |= shadow_half_mask; }
-    if(shadow_full) { raw |= shadow_full_mask; }
-    if(shadow_wall) { raw |= shadow_wall_mask; }
-    if(door_north) { raw |= door_north_mask; }
-    if(door_west) { raw |= door_west_mask; }
-    if(do_not_idle) { raw |= do_not_idle_mask; }
-    if(tall_north) { raw |= tall_north_mask; }
-    if(tall_west) { raw |= tall_west_mask; }
-    if(buildable_n) { raw |= buildable_n_mask; }
-    if(buildable_e) { raw |= buildable_e_mask; }
-    if(buildable_s) { raw |= buildable_s_mask; }
-    if(buildable_w) { raw |= buildable_w_mask; }
+    if(passable) { raw |= static_cast<uint32_t>(th_map_node_flags::key::passable_mask); }
+    if(can_travel_n) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_n_mask); }
+    if(can_travel_e) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_e_mask); }
+    if(can_travel_s) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_s_mask); }
+    if(can_travel_w) { raw |= static_cast<uint32_t>(th_map_node_flags::key::can_travel_w_mask); }
+    if(hospital) { raw |= static_cast<uint32_t>(th_map_node_flags::key::hospital_mask); }
+    if(buildable) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_mask); }
+    if(passable_if_not_for_blueprint) { raw |= static_cast<uint32_t>(th_map_node_flags::key::passable_if_not_for_blueprint_mask); }
+    if(room) { raw |= static_cast<uint32_t>(th_map_node_flags::key::room_mask); }
+    if(shadow_half) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_half_mask); }
+    if(shadow_full) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_full_mask); }
+    if(shadow_wall) { raw |= static_cast<uint32_t>(th_map_node_flags::key::shadow_wall_mask); }
+    if(door_north) { raw |= static_cast<uint32_t>(th_map_node_flags::key::door_north_mask); }
+    if(door_west) { raw |= static_cast<uint32_t>(th_map_node_flags::key::door_west_mask); }
+    if(do_not_idle) { raw |= static_cast<uint32_t>(th_map_node_flags::key::do_not_idle_mask); }
+    if(tall_north) { raw |= static_cast<uint32_t>(th_map_node_flags::key::tall_north_mask); }
+    if(tall_west) { raw |= static_cast<uint32_t>(th_map_node_flags::key::tall_west_mask); }
+    if(buildable_n) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_n_mask); }
+    if(buildable_e) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_e_mask); }
+    if(buildable_s) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_s_mask); }
+    if(buildable_w) { raw |= static_cast<uint32_t>(th_map_node_flags::key::buildable_w_mask); }
 
     return raw;
 }

@@ -102,7 +102,7 @@ enum class THObjectType : uint8_t
 //! to use object types as pathfinding goals.
 struct th_map_node_flags
 {
-    enum {
+    enum class key : uint32_t {
          passable_mask = 1 << 0,
          can_travel_n_mask = 1 << 1,
          can_travel_e_mask = 1 << 2,
@@ -152,22 +152,15 @@ struct th_map_node_flags
     //! to a th_map_node_flags instance.
     th_map_node_flags& operator =(uint32_t raw);
 
-    //! Perform bitwise & of the map node flags against a given mask
-    //! updating the flags with the result.
-    th_map_node_flags& operator &=(uint32_t mask);
+    //! Get/set the flag with the given key
+    bool& operator[] (th_map_node_flags::key key);
 
-    //! Perform bitwise | of the map node flags with a given mask,
-    //! updating the flags with the result.
-    th_map_node_flags& operator |=(uint32_t mask);
+    //! Get the flag with the given key
+    const bool& operator[](th_map_node_flags::key key) const;
 
     //! Convert th_map_node_flags into it's uint32_t representation
     operator uint32_t() const;
 };
-
-//! Perform bit-wise & of a given uint32_t mask and the uint32_t
-//! representation of the map node flags.
-uint32_t operator &(const th_map_node_flags flags, const uint32_t mask);
-
 
 enum THMapTemperatureDisplay
 {

@@ -401,24 +401,24 @@ static int l_map_getcell(lua_State *L)
 }
 
 /** Recognized node flags by Lua. */
-static const std::map<std::string, uint32_t> lua_node_flag_map = {
-    {"passable",       th_map_node_flags::passable_mask},
-    {"hospital",       th_map_node_flags::hospital_mask},
-    {"buildable",      th_map_node_flags::buildable_mask},
-    {"room",           th_map_node_flags::room_mask},
-    {"doorWest",       th_map_node_flags::door_west_mask},
-    {"doorNorth",      th_map_node_flags::door_north_mask},
-    {"tallWest",       th_map_node_flags::tall_west_mask},
-    {"tallNorth",      th_map_node_flags::tall_north_mask},
-    {"travelNorth",    th_map_node_flags::can_travel_n_mask},
-    {"travelEast",     th_map_node_flags::can_travel_e_mask},
-    {"travelSouth",    th_map_node_flags::can_travel_s_mask},
-    {"travelWest",     th_map_node_flags::can_travel_w_mask},
-    {"doNotIdle",      th_map_node_flags::do_not_idle_mask},
-    {"buildableNorth", th_map_node_flags::buildable_n_mask},
-    {"buildableEast",  th_map_node_flags::buildable_e_mask},
-    {"buildableSouth", th_map_node_flags::buildable_s_mask},
-    {"buildableWest",  th_map_node_flags::buildable_w_mask},
+static const std::map<std::string, th_map_node_flags::key> lua_node_flag_map = {
+    {"passable",       th_map_node_flags::key::passable_mask},
+    {"hospital",       th_map_node_flags::key::hospital_mask},
+    {"buildable",      th_map_node_flags::key::buildable_mask},
+    {"room",           th_map_node_flags::key::room_mask},
+    {"doorWest",       th_map_node_flags::key::door_west_mask},
+    {"doorNorth",      th_map_node_flags::key::door_north_mask},
+    {"tallWest",       th_map_node_flags::key::tall_west_mask},
+    {"tallNorth",      th_map_node_flags::key::tall_north_mask},
+    {"travelNorth",    th_map_node_flags::key::can_travel_n_mask},
+    {"travelEast",     th_map_node_flags::key::can_travel_e_mask},
+    {"travelSouth",    th_map_node_flags::key::can_travel_s_mask},
+    {"travelWest",     th_map_node_flags::key::can_travel_w_mask},
+    {"doNotIdle",      th_map_node_flags::key::do_not_idle_mask},
+    {"buildableNorth", th_map_node_flags::key::buildable_n_mask},
+    {"buildableEast",  th_map_node_flags::key::buildable_e_mask},
+    {"buildableSouth", th_map_node_flags::key::buildable_s_mask},
+    {"buildableWest",  th_map_node_flags::key::buildable_w_mask},
 };
 
 /**
@@ -429,10 +429,10 @@ static const std::map<std::string, uint32_t> lua_node_flag_map = {
  * @param name Name of the flag in Lua code.
  */
 static inline void add_cellflag(lua_State *L, const THMapNode *node,
-                                uint32_t flag_mask, const std::string &name)
+                                th_map_node_flags::key flag, const std::string &name)
 {
     lua_pushlstring(L, name.c_str(), name.size());
-    lua_pushboolean(L, ((node->flags & flag_mask) != 0) ? 1 : 0);
+    lua_pushboolean(L, node->flags[flag] ? 1 : 0);
     lua_settable(L, 4);
 }
 
@@ -543,9 +543,9 @@ static int l_map_setcellflags(lua_State *L)
             if(iter != lua_node_flag_map.end())
             {
                 if (lua_toboolean(L, 6) == 0)
-                    pNode->flags &= ~(*iter).second;
+                    pNode->flags[(*iter).second] = false;
                 else
-                    pNode->flags |= (*iter).second;
+                    pNode->flags[(*iter).second] = true;
             }
             else if (std::strcmp(field, "thob") == 0)
             {
