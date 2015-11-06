@@ -479,7 +479,7 @@ static int l_map_getcellflags(lua_State *L)
     }
     add_cellint(L, pNode->iRoomId, "roomId");
     add_cellint(L, pNode->iParcelId, "parcelId");
-    add_cellint(L, pNode->flags.object_type, "thob");
+    add_cellint(L, pNode->objects.empty() ? THOB_NoObject : pNode->objects.front(), "thob");
     return 1;
 }
 
@@ -496,15 +496,7 @@ static int l_map_erase_thobs(lua_State *L)
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
-    if(pNode->flags.objects_already_erased)
-    {
-        // after the last load the map node already has had its object type list erased
-        // so the call must be ignored
-        return 2;
-    }
-    pNode->extendedObjectList.clear();
-    pNode->flags.object_type = THObjectType::THOB_NoObject;
-    pNode->flags.objects_already_erased = true;
+    pNode->objects.clear();
     return 1;
 }
 
@@ -516,34 +508,16 @@ static int l_map_remove_cell_thob(lua_State *L)
     THMapNode* pNode = pMap->getNode(iX, iY);
     if(pNode == nullptr)
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
-    int thob = static_cast<int>(luaL_checkinteger(L, 4));
-    if(pNode->extendedObjectList.empty())
+    auto thob = static_cast<THObjectType>(luaL_checkinteger(L, 4));
+    for(auto iter = pNode->objects.begin(); iter != pNode->objects.end(); iter++)
     {
-        if(pNode->flags.object_type == thob)
+        if(*iter == thob)
         {
-            pNode->flags.object_type = THOB_NoObject;
+            pNode->objects.erase(iter);
+            break;
         }
     }
-    else
-    {
-        if(pNode->flags.object_type == thob)
-        {
-            pNode->flags.object_type = pNode->extendedObjectList.front();
-            pNode->extendedObjectList.pop_front();
-        }
-        else
-        {
-            for(auto iter = pNode->extendedObjectList.begin(); iter != pNode->extendedObjectList.end(); iter++)
-            {
-                if(*iter == thob)
-                {
-                    pNode->extendedObjectList.erase(iter);
-                    break;
-                }
-            }
-        }
-    }
-     return 1;
+    return 1;
 }
 
 static int l_map_setcellflags(lua_State *L)
@@ -576,14 +550,7 @@ static int l_map_setcellflags(lua_State *L)
             else if (std::strcmp(field, "thob") == 0)
             {
                 auto thob = static_cast<THObjectType>(lua_tointeger(L, 6));
-                if(pNode->flags.object_type != THObjectType::THOB_NoObject)
-                {
-                    pNode->extendedObjectList.push_back(thob);
-                 }
-                else
-                {
-                    pNode->flags.object_type = static_cast<THObjectType>(thob);
-                }
+                pNode->objects.push_back(thob);
             }
             else if(std::strcmp(field, "parcelId") == 0)
             {

@@ -124,8 +124,6 @@ struct th_map_node_flags
          buildable_e_mask = 1 << 18,
          buildable_s_mask = 1 << 19,
          buildable_w_mask = 1 << 20,
-         objects_already_erased_mask = 1 << 23,
-         object_type_offest = 24
     };
 
     bool passable;  //!< Pathfinding: Can walk on this tile
@@ -149,8 +147,6 @@ struct th_map_node_flags
     bool buildable_e; //!< Can build on the east side of the tile
     bool buildable_s; //!< Can build on the south side of the tile
     bool buildable_w; //!< Can build on the west side of the tile
-    bool objects_already_erased; //!< Specifies if after a load the object types in this tile were already erased
-    THObjectType object_type;
 
     //! Convert the given uint32_t reprentation of the map node flags
     //! to a th_map_node_flags instance.
@@ -222,7 +218,7 @@ struct THMapNode : public THLinkList
     th_map_node_flags flags;
 
     //! objects in this node
-    std::list<THObjectType> extendedObjectList;
+    std::list<THObjectType> objects;
 };
 
 class THSpriteSheet;

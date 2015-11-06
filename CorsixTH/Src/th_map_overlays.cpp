@@ -149,16 +149,16 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     }
     if(m_pFont)
     {
-        if(pNode->flags.object_type)
+        if(!pNode->objects.empty())
         {
             std::ostringstream str;
-            str << 'T' << (int)(pNode->flags.object_type);
+            str << 'T' << static_cast<int>(pNode->objects.front());
             _drawText(pCanvas, iCanvasX, iCanvasY - 8, str.str());
         }
         if(pNode->iRoomId)
         {
             std::ostringstream str;
-            str << 'R' << (int)pNode->iRoomId;
+            str << 'R' << static_cast<int>(pNode->iRoomId);
             _drawText(pCanvas, iCanvasX, iCanvasY + 8, str.str());
         }
     }

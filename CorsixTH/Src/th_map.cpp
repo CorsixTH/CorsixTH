@@ -60,8 +60,6 @@ th_map_node_flags& th_map_node_flags::operator=(uint32_t raw)
     buildable_e = ((raw & buildable_e_mask) != 0);
     buildable_s = ((raw & buildable_s_mask) != 0);
     buildable_w = ((raw & buildable_w_mask) != 0);
-    objects_already_erased = ((raw & objects_already_erased_mask) != 0);
-    object_type = static_cast<THObjectType>(raw >> object_type_offest);
 
     return *this;
 }
@@ -89,8 +87,6 @@ th_map_node_flags& th_map_node_flags::operator&=(uint32_t mask)
     buildable_e &= ((mask & buildable_e_mask) != 0);
     buildable_s &= ((mask & buildable_s_mask) != 0);
     buildable_w &= ((mask & buildable_w_mask) != 0);
-    objects_already_erased &= ((mask & objects_already_erased_mask) != 0);
-    if((mask << object_type_offest) == 0) { object_type = THOB_NoObject; }
 
     return *this;
 }
@@ -118,8 +114,6 @@ th_map_node_flags& th_map_node_flags::operator|=(uint32_t mask)
     buildable_e |= ((mask & buildable_e_mask) != 0);
     buildable_s |= ((mask & buildable_s_mask) != 0);
     buildable_w |= ((mask & buildable_w_mask) != 0);
-    objects_already_erased |= ((mask & objects_already_erased_mask) != 0);
-    if(object_type == THOB_NoObject) { object_type = static_cast<THObjectType>(mask >> object_type_offest); }
 
     return *this;
 }
@@ -148,8 +142,6 @@ th_map_node_flags::operator uint32_t() const
     if(buildable_e) { raw |= buildable_e_mask; }
     if(buildable_s) { raw |= buildable_s_mask; }
     if(buildable_w) { raw |= buildable_w_mask; }
-    if(objects_already_erased) { raw |= objects_already_erased_mask; }
-    raw |= object_type << object_type_offest;
 
     return raw;
 }
@@ -157,7 +149,7 @@ th_map_node_flags::operator uint32_t() const
 THMapNode::THMapNode() :
     iParcelId(0),
     iRoomId(0),
-    extendedObjectList()
+    objects()
 {
     iBlock[0] = 0;
     iBlock[1] = 0;
@@ -339,7 +331,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
     const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
     pData += 34;
 
-    pNode->extendedObjectList.clear();
+    pNode->objects.clear();
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
@@ -474,7 +466,7 @@ void THMap::save(void (*fnWriter)(void*, const uint8_t*, size_t),
     {
         // TODO: Nicer system for saving object data
         aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
-        aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->flags.object_type);
+        aBuffer[iBufferNext++] = pNode->objects.empty() ? THOB_NoObject : static_cast<uint8_t>(pNode->objects.front());
 
         // Blocks
         aBuffer[iBufferNext++] = aReverseBlockLUT[pNode->iBlock[0] & 0xFF];
@@ -1219,9 +1211,7 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         double iMergeRatio = 100;
         if(pNode->flags.hospital)
         {
-            if(pNode->flags.object_type == THOB_Radiator)
-                iRadiatorNumber = 1;
-            for(auto thob : pNode->extendedObjectList)
+            for(auto thob : pNode->objects)
             {
                 if(thob == THOB_Radiator)
                     iRadiatorNumber++;
@@ -1495,7 +1485,6 @@ void THMap::depersist(LuaPersistReader *pReader)
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
             pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
         }
-        pNode->flags.objects_already_erased = false;
         lua_pop(L, 1);
     }
     oDecoder.initialise(6, pReader);

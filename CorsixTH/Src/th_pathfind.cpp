@@ -319,9 +319,7 @@ bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNe
     int iObjectNumber = 0;
     const THMapNode *pMapNode = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y);
     th_map_node_flags neighbour_flags = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->flags;
-    if (neighbour_flags.object_type == m_eTHOB)
-        iObjectNumber = 1;
-    for(auto thob : pMapNode->extendedObjectList)
+    for(auto thob : pMapNode->objects)
     {
         if(thob == m_eTHOB)
             iObjectNumber++;
