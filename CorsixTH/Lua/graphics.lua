@@ -557,10 +557,6 @@ function AnimationManager:setMarker(anim, ...)
   return self:setMarkerRaw(anim, "setFrameMarker", ...)
 end
 
-function AnimationManager:setSecondaryMarker(anim, ...)
-  return self:setMarkerRaw(anim, "setFrameSecondaryMarker", ...)
-end
-
 local function TableToPixels(t)
   if t[3] == "px" then
     return t[1], t[2]

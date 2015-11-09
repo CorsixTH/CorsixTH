@@ -97,10 +97,6 @@ function Litter:getDrawingLayer()
   return 0
 end
 
-function Litter:randomiseLitter()
-  self:setAnimation(litter_types[math.random(1, 4)], math.random(0, 1))
-end
-
 function Litter:vomitInducing()
   local anim = self.animation_idx
   if anim == litter_types["puke"] or

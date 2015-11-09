@@ -175,12 +175,6 @@ function Patient:setDiagnosed(diagnosed)
   self:updateDynamicInfo()
 end
 
--- Sets the value of the diagnosis progress.
-function Patient:setDiagnosisProgress(progress)
-  self.diagnosis_progress = progress
-  self:updateDynamicInfo()
-end
-
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
@@ -1057,14 +1051,6 @@ function Patient:updateMessage(choice)
 
   end
 end
-
---[[ Does the patient have a visual disease
---  @return result (boolean) true if so, false otherwise]]
-function Patient:hasVisualDisease()
-  -- Only patients with visual diseases have this field
-  return (self.disease.visuals_id ~= nil)
-end
-
 
 --[[ If the patient is not a vaccination candidate then
   give them the arrow icon and candidate status ]]

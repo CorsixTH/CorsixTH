@@ -457,15 +457,6 @@ function Room:staffMeetsRoomRequirements(humanoid)
   return false
 end
 
--- Tests whether this room is awaiting more staff to be able to do business
-function Room:isWaitingToGetStaff(staff)
-  if not self.is_active or (self.door.queue:patientSize() == 0
-  and not (self.door.reserved_for and class.is(self.door.reserved_for, Patient) or false)) then
-    return false
-  end
-  return self:staffFitsInRoom(staff, true)
-end
-
 --! When a valid member of staff enters the room this function is called.
 -- Can be extended in derived classes.
 --!param humanoid The staff in question

@@ -166,37 +166,7 @@ function Plant:needsWatering()
   end
 end
 
-function Plant:getWateringTile()
-  local map = self.world.map.th
-  local lx, ly = self.tile_x, self.tile_y
-
-  if not lx or self.picked_up then
-      -- The plant might be picked up
-      return nil, nil
-  end
-
-  if self:getRoom() then
-    lx, ly = self:getRoom():getEntranceXY()
-  else
-    ly = ly + 1
-    if not map:getCellFlags(lx, ly).passable then
-      ly = ly - 2
-      if not map:getCellFlags(lx, ly).passable then
-        ly = ly + 1
-        lx = lx + 1
-        if not map:getCellFlags(lx, ly).passable then
-          lx = lx - 2
-          if not map:getCellFlags(lx, ly).passable then
-            lx, ly = nil, nil
-          end
-        end
-      end
-    end
-  end
-  return lx, ly
-end
-
---! When the plant needs water it preiodically calls for a nearby handyman.
+--! When the plant needs water it periodically calls for a nearby handyman.
 function Plant:callForWatering()
 
   if self.unreachable then
