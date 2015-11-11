@@ -503,14 +503,16 @@ function UIEditRoom:purchaseItems()
   self.place_objects = false
   self:stopPickupItems()
 
+  local cfg_objects = self.world.map.level_config.objects
+  local research = self.ui.hospital.research
+
   local object_list = {} -- transform set to list
   for i, o in ipairs(self.room.room_info.objects_additional) do
     -- Don't show the object if it hasn't been researched yet.
     local object = TheApp.objects[o]
-    local research = self.ui.hospital.research
-    local avail = research.level_config.objects[object.thob].AvailableForLevel
-    if avail == 1 and (not research.research_progress[object]
-    or research.research_progress[object].discovered) then
+    local avail = cfg_objects[object.thob].AvailableForLevel
+    if avail == 1 and (not research.research_progress[object] or
+        research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
       for j, p in ipairs(self.objects) do

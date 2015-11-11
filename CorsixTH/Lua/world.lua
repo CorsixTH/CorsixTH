@@ -130,7 +130,7 @@ function World:World(app)
 
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
-  self.hospitals[1]:initStaff(self.map.level_config)
+  self.hospitals[1]:initStaff()
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs{"inside_tiles", "outside_tiles", "window_tiles"} do
@@ -345,19 +345,19 @@ end
 function World:getAvailableRooms()
   local avail_rooms = {}
 
-  local obj = self.map.level_config.objects
-  local rooms = self.map.level_config.rooms
+  local cfg_objects = self.map.level_config.objects
+  local cfg_rooms = self.map.level_config.rooms
   for _, room in ipairs(TheApp.rooms) do
     -- Add build cost based on level files for all rooms.
     -- For now, sum it up so that the result is the same as before.
     -- TODO: Change the whole build process so that this value is
     -- the room cost only? (without objects)
-    local build_cost = rooms[room.level_config_id].Cost
+    local build_cost = cfg_rooms[room.level_config_id].Cost
     local available = true
     local is_discovered = true
     -- Make sure that all objects needed for this room are available
     for name, no in pairs(room.objects_needed) do
-      local spec = obj[TheApp.objects[name].thob]
+      local spec = cfg_objects[TheApp.objects[name].thob]
       if spec.AvailableForLevel == 0 then
         -- It won't be possible to build this room at all on the level.
         available = false
@@ -366,7 +366,7 @@ function World:getAvailableRooms()
         is_discovered = false
       end
       -- Add cost for this object.
-      build_cost = build_cost + obj[TheApp.objects[name].thob].StartCost * no
+      build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
     end
 
     if available then
@@ -676,8 +676,8 @@ local staff_to_make = {
 }
 function World:makeAvailableStaff(month)
   local conf_entry = 0
-  local conf = self.map.level_config.staff_levels
-  while conf[conf_entry + 1] and conf[conf_entry + 1].Month <= month do
+  local cfg_staff_levels = self.map.level_config.staff_levels
+  while cfg_staff_levels[conf_entry + 1] and cfg_staff_levels[conf_entry + 1].Month <= month do
     conf_entry = conf_entry + 1
   end
   self.available_staff = {}
@@ -686,7 +686,7 @@ function World:makeAvailableStaff(month)
     local ind = conf_entry
     while not num do
       assert(ind >= 0, "Staff amount " .. info.conf .. " not existent (should at least be given by base_config).")
-      num = conf[ind][info.conf]
+      num = cfg_staff_levels[ind][info.conf]
       ind = ind - 1
     end
     local group = {}
@@ -1347,12 +1347,12 @@ end
 
 -- Called when it is time to have another earthquake
 function World:nextEarthquake()
+  local level_config = self.map.level_config
   -- check carefully that no value that we are going to use is going to be nil
-  if self.map.level_config.quake_control and
-  self.map.level_config.quake_control[self.current_map_earthquake] and
-  self.map.level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
-      -- this map has rules to follow when making earthquakes, let's follow them
-    local control = self.map.level_config.quake_control[self.current_map_earthquake]
+  if level_config.quake_control and level_config.quake_control[self.current_map_earthquake] and
+      level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
+    -- this map has rules to follow when making earthquakes, let's follow them
+    local control = level_config.quake_control[self.current_map_earthquake]
     self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)
     self.next_earthquake_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
     self.earthquake_size = control.Severity
@@ -2510,7 +2510,7 @@ function World:afterLoad(old, new)
     if self.map.level_config.quake_control then
       while true do
         if self.map.level_config.quake_control[self.current_map_earthquake] and
-        self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
+            self.map.level_config.quake_control[self.current_map_earthquake] ~= 0 then
           -- Check to see if the start month has passed
           local control = self.map.level_config.quake_control[self.current_map_earthquake]
           if control.StartMonth <= self.month + 12 * (self.year - 1) then
