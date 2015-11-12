@@ -229,8 +229,8 @@ static int l_mainloop(lua_State *L)
                 lua_pushliteral(dispatcher, "music_over");
                 nargs = 1;
                 break;
-            case SDL_USEREVENT_CPCALL:
-                if(luaT_cpcall(L, (lua_CFunction)e.user.data1, e.user.data2))
+            case SDL_USEREVENT_MUSIC_LOADED:
+                if(luaT_cpcall(L, (lua_CFunction)l_load_music_async_callback, e.user.data1))
                 {
                     SDL_RemoveTimer(timer);
                     lua_pushliteral(L, "callback");
