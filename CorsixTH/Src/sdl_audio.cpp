@@ -72,7 +72,6 @@ static int l_init(lua_State *L)
     else
     {
         lua_pushboolean(L, 1);
-        luaT_addcleanup(L, Mix_CloseAudio);
         Mix_HookMusicFinished(audio_music_over_callback);
         return 1;
     }
@@ -86,7 +85,7 @@ struct load_music_async_t
     char* err;
 };
 
-static int l_load_music_async_callback(lua_State *L)
+int l_load_music_async_callback(lua_State *L)
 {
     load_music_async_t *async = (load_music_async_t*)lua_touserdata(L, 1);
 
@@ -167,9 +166,8 @@ static int load_music_async_thread(void* arg)
         std::memcpy(async->err, Mix_GetError(), iLen);
     }
     SDL_Event e;
-    e.type = SDL_USEREVENT_CPCALL;
-    e.user.data1 = (void*)l_load_music_async_callback;
-    e.user.data2 = arg;
+    e.type = SDL_USEREVENT_MUSIC_LOADED;
+    e.user.data1 = arg;
     SDL_PushEvent(&e);
     return 0;
 }

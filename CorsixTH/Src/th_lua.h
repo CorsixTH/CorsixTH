@@ -127,9 +127,6 @@ inline int luaT_resume(lua_State *L, lua_State *f, int n)
 */
 #define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
 
-//! Register a function to be called after a lua_State is destroyed
-void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
-
 //! Check that a Lua argument is a binary data blob
 /*!
     If the given argument is a string or (full) userdata, then returns a

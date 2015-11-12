@@ -1220,7 +1220,7 @@ void THAnimation::drawMorph(THRenderTarget* pCanvas, int iDestX, int iDestY)
     m_pManager->drawFrame(pCanvas, m_iFrame, m_oLayers, iDestX, iDestY,
                           m_iFlags);
     CalculateMorphRect(oClipRect, oMorphRect, iDestY + m_pMorphTarget->m_iY,
-                       iDestY + m_pMorphTarget->m_iSpeedX);
+                       iDestY + m_pMorphTarget->speed.x);
     pCanvas->setClipRect(&oMorphRect);
     m_pManager->drawFrame(pCanvas, m_pMorphTarget->m_iFrame,
                           m_pMorphTarget->m_oLayers, iDestX,
@@ -1305,19 +1305,18 @@ THAnimationBase::THAnimationBase()
     m_iFlags = 0;
 }
 
-THAnimation::THAnimation()
+THAnimation::THAnimation():
+m_iAnimation(0),
+m_iCropColumn(0),
+m_iFrame(0),
+m_iSoundToPlay(0),
+m_pManager(nullptr),
+m_pMorphTarget(nullptr),
+speed({0,0})
 {
     m_fnDraw = THAnimation_Draw;
     m_fnHitTest = THAnimation_HitTest;
     m_fnIsMultipleFrameAnimation = THAnimation_isMultipleFrameAnimation;
-    m_pManager = nullptr;
-    m_pMorphTarget = nullptr;
-    m_iAnimation = 0;
-    m_iFrame = 0;
-    m_iCropColumn = 0;
-    m_iSpeedX = 0;
-    m_iSpeedY = 0;
-    m_iSoundToPlay = 0;
 }
 
 void THAnimation::persist(LuaPersistWriter *pWriter) const
@@ -1369,8 +1368,8 @@ void THAnimation::persist(LuaPersistWriter *pWriter) const
     // Write the unioned fields
     if(m_fnDraw != THAnimation_DrawChild)
     {
-        pWriter->writeVInt(m_iSpeedX);
-        pWriter->writeVInt(m_iSpeedY);
+        pWriter->writeVInt(speed.x);
+        pWriter->writeVInt(speed.y);
     }
     else
     {
@@ -1465,9 +1464,9 @@ void THAnimation::depersist(LuaPersistReader *pReader)
         // Read the unioned fields
         if(m_fnDraw != THAnimation_DrawChild)
         {
-            if(!pReader->readVInt(m_iSpeedX))
+            if(!pReader->readVInt(speed.x))
                 break;
-            if(!pReader->readVInt(m_iSpeedY))
+            if(!pReader->readVInt(speed.y))
                 break;
         }
         else
@@ -1512,12 +1511,12 @@ void THAnimation::tick()
     m_iFrame = m_pManager->getNextFrame(m_iFrame);
     if(m_fnDraw != THAnimation_DrawChild)
     {
-        m_iX += m_iSpeedX;
-        m_iY += m_iSpeedY;
+        m_iX += speed.x;
+        m_iY += speed.y;
     }
     if(m_pMorphTarget)
     {
-        m_pMorphTarget->m_iY += m_pMorphTarget->m_iSpeedY;
+        m_pMorphTarget->m_iY += m_pMorphTarget->speed.y;
         if(m_pMorphTarget->m_iY < m_pMorphTarget->m_iX)
             m_pMorphTarget->m_iY = m_pMorphTarget->m_iX;
     }
@@ -1572,8 +1571,7 @@ void THAnimation::setParent(THAnimation *pParent)
     {
         m_fnDraw = THAnimation_Draw;
         m_fnHitTest = THAnimation_HitTest;
-        m_iSpeedX = 0;
-        m_iSpeedY = 0;
+        speed = { 0, 0 };
     }
     else
     {
@@ -1696,13 +1694,13 @@ void THAnimation::setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurati
         m_pMorphTarget->m_iX = iMorphMinY;
 
     if(iOrigMaxY > iMorphMaxY)
-        m_pMorphTarget->m_iSpeedX = iOrigMaxY;
+        m_pMorphTarget->speed.x = iOrigMaxY;
     else
-        m_pMorphTarget->m_iSpeedX = iMorphMaxY;
+        m_pMorphTarget->speed.x = iMorphMaxY;
 
-    int iDist = m_pMorphTarget->m_iX - m_pMorphTarget->m_iSpeedX;
-    m_pMorphTarget->m_iSpeedY = (iDist - iMorphDuration + 1) / iMorphDuration;
-    m_pMorphTarget->m_iY = m_pMorphTarget->m_iSpeedX;
+    int iDist = m_pMorphTarget->m_iX - m_pMorphTarget->speed.x;
+    m_pMorphTarget->speed.y = (iDist - iMorphDuration + 1) / iMorphDuration;
+    m_pMorphTarget->m_iY = m_pMorphTarget->speed.x;
 }
 
 void THAnimation::setFrame(size_t iFrame)

@@ -552,7 +552,7 @@ public:
     void setMorphTarget(THAnimation *pMorphTarget, unsigned int iDurationFactor = 1);
     void setFrame(size_t iFrame);
 
-    void setSpeed(int iX, int iY) {m_iSpeedX = iX, m_iSpeedY = iY;}
+    void setSpeed(int iX, int iY) {speed.x = iX, speed.y = iY;}
     void setCropColumn(int iColumn) {m_iCropColumn = iColumn;}
 
     void persist(LuaPersistWriter *pWriter) const;
@@ -564,12 +564,13 @@ protected:
     THAnimation* m_pMorphTarget;
     size_t m_iAnimation; ///< Animation number.
     size_t m_iFrame;     ///< Frame number.
-    union { struct {
-        //! Amount to change m_iX per tick
-        int m_iSpeedX;
-        //! Amount to change m_iY per tick
-        int m_iSpeedY;
-    };
+    union {
+        struct {
+            //! Amount to change m_iX per tick
+            int x;
+            //! Amount to change m_iY per tick
+            int y;
+        } speed;
         //! Some animations are tied to the marker of another animation and
         //! hence have a parent rather than a speed.
         THAnimation* m_pParent;
