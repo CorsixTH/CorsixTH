@@ -1306,13 +1306,13 @@ THAnimationBase::THAnimationBase()
 }
 
 THAnimation::THAnimation():
-m_iAnimation(0),
-m_iCropColumn(0),
-m_iFrame(0),
-m_iSoundToPlay(0),
-m_pManager(nullptr),
-m_pMorphTarget(nullptr),
-speed({0,0})
+    m_pManager(nullptr),
+    m_pMorphTarget(nullptr),
+    m_iAnimation(0),
+    m_iFrame(0),
+    speed({0,0}),
+    m_iSoundToPlay(0),
+    m_iCropColumn(0)
 {
     m_fnDraw = THAnimation_Draw;
     m_fnHitTest = THAnimation_HitTest;

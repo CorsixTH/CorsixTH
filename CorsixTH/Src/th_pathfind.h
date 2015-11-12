@@ -116,7 +116,7 @@ public:
     //! Try the \a pNeighbour node.
     /*!
         @param pNode Source node.
-        @param iFlags Flags of the node.
+        @param flags Flags of the node.
         @param pNeighbour Neighbour of \a pNode to try.
         @param direction Direction of travel.
         @return Whether the search is done.
