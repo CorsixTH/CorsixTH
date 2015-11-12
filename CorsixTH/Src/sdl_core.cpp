@@ -57,7 +57,6 @@ static int l_init(lua_State *L)
         return 1;
     }
 
-    luaT_addcleanup(L, SDL_Quit);
     lua_pushboolean(L, 1);
     return 1;
 }

@@ -72,7 +72,6 @@ static int l_init(lua_State *L)
     else
     {
         lua_pushboolean(L, 1);
-        luaT_addcleanup(L, Mix_CloseAudio);
         Mix_HookMusicFinished(audio_music_over_callback);
         return 1;
     }

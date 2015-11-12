@@ -55,10 +55,6 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     }
     lua_pop(L, 1);
 
-    // registry._CLEANUP = {}
-    lua_newtable(L);
-    lua_setfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
-
     // math.random* = Mersenne twister variant
     luaT_cpcall(L, luaopen_random, nullptr);
 

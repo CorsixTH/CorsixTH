@@ -148,16 +148,6 @@ void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
     lua_setmetatable(L, -2); // .. t <top
 }
 
-void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void))
-{
-    lua_checkstack(L, 2);
-    lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
-    int idx = 1 + (int)lua_objlen(L, -1);
-    lua_pushlightuserdata(L, (void*)fnCleanup);
-    lua_rawseti(L, -2, idx);
-    lua_pop(L, 1);
-}
-
 //! Check for a string or userdata
 const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 {
