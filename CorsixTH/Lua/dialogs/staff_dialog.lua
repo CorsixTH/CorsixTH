@@ -34,6 +34,7 @@ class "UIStaff" (Window)
 ---@type UIStaff
 local UIStaff = _G["UIStaff"]
 
+--! Callback function for handyman to change his parcel.
 function UIStaff:changeParcel()
   local index = 0
   for i, v in ipairs(self.staff.hospital.ownedPlots) do
@@ -329,6 +330,9 @@ end
 
 local attributes = {"cleaning", "watering", "repairing"}
 
+--! Function to balance 'cleaning','watering', and 'repairing', where
+--! one of them is increased, and the other two are decreased.
+--!param increased Attribute to increase.
 function UIStaff:changeHandymanAttributes(increased)
   self.staff:changeAttribute(increased, 0.1)
   local extra_decrease = 0
@@ -349,6 +353,7 @@ function UIStaff:changeHandymanAttributes(increased)
   end
 end
 
+--! UI callback function to increase 'cleaning' (wiping litter).
 function UIStaff:doMoreCleaning()
   if self.staff.attributes["cleaning"] then
     if self.staff.attributes["cleaning"] < 0.9 then
@@ -361,6 +366,7 @@ function UIStaff:doMoreCleaning()
   end
 end
 
+--! UI callback function to increase 'watering' (plants).
 function UIStaff:doMoreWatering()
   if self.staff.attributes["watering"] then
     if self.staff.attributes["watering"] < 0.9 then
@@ -373,6 +379,7 @@ function UIStaff:doMoreWatering()
   end
 end
 
+--! UI callback function to increase 'repairing' (machines).
 function UIStaff:doMoreRepairing()
   if self.staff.attributes["repairing"] then
     if self.staff.attributes["repairing"] < 0.9 then
