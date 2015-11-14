@@ -176,19 +176,6 @@ IF(CORSIX_TH_USE_FREETYPE2)
   ENDIF(FREETYPE_FOUND)
 ENDIF(CORSIX_TH_USE_FREETYPE2)
 
-# Find DirectX
-IF(CORSIX_TH_USE_DX9_RENDERER)
-  FIND_PACKAGE(DirectX REQUIRED)
-  IF(DirectX_FOUND)
-    TARGET_LINK_LIBRARIES(CorsixTH ${DirectX_LIBRARY})
-    TARGET_LINK_LIBRARIES(CorsixTH ${DirectX_D3DX9_LIBRARY})
-    INCLUDE_DIRECTORIES(${DirectX_INCLUDE_DIR})
-    message("  DirectX found")
-  ELSE(DirectX_FOUND)
-    message(FATAL_ERROR "Error: DirectX library not found, it is required to build (consider changing choice of renderer)")
-  ENDIF(DirectX_FOUND)
-ENDIF(CORSIX_TH_USE_DX9_RENDERER)
-
 # Find msinttypes for MSVC
 IF(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
   FIND_PATH(MSINTTYPES_INCLUDE_DIRS "inttypes.h" NO_DEFAULT_PATH)

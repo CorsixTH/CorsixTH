@@ -2,8 +2,6 @@
 # OPTIONS AVAILABLE:
 # At most, one of the following:
 #   - WITH_SDL     : Activate SDL Renderer (default)
-#   - WITH_OPENGL  : Activate OpenGL Renderer
-#   - WITH_DIRECTX : Activate DirectX Renderer (Windows only)
 # Any of the following:
 #   - WITH_AUDIO   : Activate Sound (enabled by default)
 #   - WITH_FREETYPE2
@@ -25,10 +23,6 @@ IF(COMPILER_SUPPORTS_CXX11)
 ELSEIF(COMPILER_SUPPORTS_CXX0X)
   SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 ENDIF(COMPILER_SUPPORTS_CXX11)
-IF(MSVC)
-  SET(CMAKE_EXE_LINKER_FLAGS_RELEASE "/INCREMENTAL" CACHE STRING "Linker flags for release" FORCE)
-  SET(CMAKE_EXE_LINKER_FLAGS_MINSIZEREL "/INCREMENTAL" CACHE STRING "Linker flags for minsizerel" FORCE)
-ENDIF(MSVC)
 IF (MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 ENDIF(MINGW)
