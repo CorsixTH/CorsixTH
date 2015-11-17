@@ -23,7 +23,7 @@ SOFTWARE.
 #include "config.h"
 #include "th.h"
 #include <cstring>
-#include <new>
+#include <stdexcept>
 
 THLinkList::THLinkList()
 {
@@ -49,21 +49,6 @@ void THLinkList::removeFromList()
         m_pNext = nullptr;
     }
     m_pPrev = nullptr;
-}
-
-THStringList::THStringList()
-{
-    m_iSectionCount = 0;
-    m_pSections = nullptr;
-    m_sData = nullptr;
-}
-
-THStringList::~THStringList()
-{
-    for(size_t i = 0; i < m_iSectionCount; ++i)
-        delete[] m_pSections[i].pStrings;
-    delete[] m_pSections;
-    delete[] m_sData;
 }
 
 #include "cp437_table.h"
@@ -166,31 +151,25 @@ static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
     } while(cChar1 != 0);
 }
 
-bool THStringList::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
+THStringList::THStringList(const uint8_t* data, size_t length)
 {
-    for(size_t i = 0; i < m_iSectionCount; ++i)
-        delete[] m_pSections[i].pStrings;
-    delete[] m_pSections;
-    delete[] m_sData;
-    m_pSections = nullptr;
-    m_sData = nullptr;
-    m_iSectionCount = 0;
+    if(length < 2)
+        throw std::invalid_argument("length must be 2 or larger");
 
-    if(iDataLength < 2)
-        return false;
-
-    size_t iSectionCount = *reinterpret_cast<const uint16_t*>(pData);
+    size_t iSectionCount = *reinterpret_cast<const uint16_t*>(data);
     size_t iHeaderLength = (iSectionCount + 1) * 2;
 
-    if(iDataLength < iHeaderLength)
-        return false;
+    if(length < iHeaderLength)
+        throw std::invalid_argument("iDataLength must be larger than the header");
+
+    size_t iStringDataLength = length - iHeaderLength;
+    const uint8_t *sStringData = data + iHeaderLength;
+    const uint8_t *sDataEnd = sStringData + iStringDataLength;
 
     // Determine whether the encoding is CP437 or GB2312 (CP936).
     // The range of bytes 0xB0 through 0xDF are box drawing characters in CP437
     // which shouldn't occur much (if ever) in TH strings, whereas they are
-    // commonly used in GB2312 encoding.
-    const uint8_t *sStringData = pData + iHeaderLength;
-    size_t iStringDataLength = iDataLength - iHeaderLength;
+    // commonly used in GB2312 encoding. We use 10% as a threshold.
     size_t iBCDCount = 0;
     for(size_t i = 0; i < iStringDataLength; ++i)
     {
@@ -203,52 +182,47 @@ bool THStringList::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
     else
         fnCopyString = CopyStringCP437;
 
-    m_sData = new (std::nothrow) uint8_t[iStringDataLength * 2 + 2];
-    if(m_sData == nullptr)
-        return false;
+    // String buffer sized to accept the largest possible reencoding of the
+    // characters interpreted as CP936 or CP437 (2 bytes per character).
+    string_buffer.resize(iStringDataLength * 2 + 2);
 
-    uint8_t *sDataOut = m_sData;
-    const uint8_t *sDataEnd = sStringData + iStringDataLength;
-
-    m_iSectionCount = iSectionCount;
-    m_pSections = new section_t[iSectionCount];
+    uint8_t *sDataOut = string_buffer.data();
+    sections.resize(iSectionCount);
     for(size_t i = 0; i < iSectionCount; ++i)
     {
-        m_pSections[i].iSize = reinterpret_cast<const uint16_t*>(pData)[i + 1];
-        m_pSections[i].pStrings = new const char*[m_pSections[i].iSize];
-
-        for(size_t j = 0; j < m_pSections[i].iSize; ++j)
+        size_t section_size = reinterpret_cast<const uint16_t*>(data)[i + 1];
+        sections[i].reserve(section_size);
+        for(size_t j = 0; j < section_size; ++j)
         {
-            m_pSections[i].pStrings[j] = reinterpret_cast<char*>(sDataOut);
+            sections[i].push_back(reinterpret_cast<char*>(sDataOut));
             if(sStringData != sDataEnd)
             {
                 fnCopyString(sStringData, sDataOut);
             }
         }
     }
+    // Terminate final string with nil character
     *sDataOut = 0;
-
-    return true;
 }
+
+THStringList::~THStringList()
+{}
 
 size_t THStringList::getSectionCount()
 {
-    return m_iSectionCount;
+    return sections.size();
 }
 
-size_t THStringList::getSectionSize(size_t iSection)
+size_t THStringList::getSectionSize(size_t section)
 {
-    return iSection < m_iSectionCount ? m_pSections[iSection].iSize : 0;
+    return section < sections.size() ? sections[section].size() : 0;
 }
 
-const char* THStringList::getString(size_t iSection, size_t iIndex)
+const char* THStringList::getString(size_t section, size_t index)
 {
-    if(iSection < m_iSectionCount)
+    if(index < getSectionSize(section))
     {
-        if(iIndex < m_pSections[iSection].iSize)
-        {
-            return m_pSections[iSection].pStrings[iIndex];
-        }
+        return sections[section][index];
     }
     return nullptr;
 }

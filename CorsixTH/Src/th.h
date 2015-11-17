@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_H_
 #define CORSIX_TH_TH_H_
 #include "config.h"
+#include <vector>
 
 //! Generic linked list class (for inheriting from)
 struct THLinkList
@@ -40,44 +41,51 @@ struct THLinkList
     int m_drawingLayer;
 };
 
-//! Theme Hospital localised string list
+//! \brief Theme Hospital localised string list
+//!
+//! Presents Theme Hospital strings by section and index.
 class THStringList
 {
 public:
-    THStringList();
-    ~THStringList();
+    //! Construct an instance of THStringList from the given data
+    //! from a Theme Hosptial string file. The format of the data is
+    //! described at:
+    //! https://github.com/alexandergitter/theme-hospital-spec/blob/master/format-specification.md#strings
+    //!
+    //! \param data A pointer to the raw data
+    //! \param length The size of the data
+    THStringList(const uint8_t* data, size_t length);
 
-    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength);
+    // Delete default constructors and assignment operators. They
+    // can be implemented properly later if they are needed but
+    // for now they are unneeded so it is safer to remove them.
+    THStringList() = delete;
+    THStringList(const THStringList &) = delete;
+    THStringList(THStringList &&) = delete;
+    THStringList& operator= (const THStringList &) = delete;
+    THStringList&& operator= (THStringList &&) = delete;
+    ~THStringList();
 
     //! Get the number of sections in the string list
     size_t getSectionCount();
 
     //! Get the number of strings in a section of the string list
-    size_t getSectionSize(size_t iSection);
+    size_t getSectionSize(size_t section);
 
     //! Get a string from the string list
     /*!
-        @param iSection Section index in range [0, getSectionCount() - 1]
-        @param iIndex String index in range [0, getSectionSize(iSection) - 1]
+        @param section Section index in range [0, getSectionCount() - 1]
+        @param index String index in range [0, getSectionSize(iSection) - 1]
         @return nullptr if the index is invalid, otherwise a UTF-8 encoded string.
     */
-    const char* getString(size_t iSection, size_t iIndex);
+    const char* getString(size_t section, size_t index);
 
 protected:
-    struct section_t
-    {
-        //! Size of pStrings array
-        size_t iSize;
-        //! Array of string pointers (into THStringList::m_sData)
-        const char** pStrings;
-    };
-
-    //! Size of m_pSections array
-    size_t m_iSectionCount;
     //! Section information
-    section_t* m_pSections;
-    //! Memory block containing all the actual strings
-    uint8_t* m_sData;
+    std::vector<std::vector<const char *>> sections;
+
+    //! Memory block containing all the actual strings utf-8 encoded
+    std::vector<uint8_t> string_buffer;
 };
 
 #endif // CORSIX_TH_TH_H_

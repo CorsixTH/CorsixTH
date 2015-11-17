@@ -25,6 +25,7 @@ SOFTWARE.
 #include "bootstrap.h"
 #include <cstring>
 #include <cstdio>
+#include <stdexcept>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
@@ -172,25 +173,26 @@ static int l_load_strings(lua_State *L)
     size_t iDataLength;
     const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
 
-    THStringList oStrings;
-    if(!oStrings.loadFromTHFile(pData, iDataLength))
+    try
+    {
+        THStringList oStrings(pData, iDataLength);
+        lua_settop(L, 0);
+        lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
+        for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
+        {
+            size_t iCount = oStrings.getSectionSize(iSec);
+            lua_createtable(L, static_cast<int>(iCount), 0);
+            for(size_t iStr = 0; iStr < iCount; ++iStr)
+            {
+                lua_pushstring(L, oStrings.getString(iSec, iStr));
+                lua_rawseti(L, 2, static_cast<int>(iStr + 1));
+            }
+            lua_rawseti(L, 1, static_cast<int>(iSec + 1));
+        }
+    }
+    catch(std::invalid_argument)
     {
         lua_pushboolean(L, 0);
-        return 1;
-    }
-
-    lua_settop(L, 0);
-    lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
-    for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
-    {
-        size_t iCount = oStrings.getSectionSize(iSec);
-        lua_createtable(L, static_cast<int>(iCount), 0);
-        for(size_t iStr = 0; iStr < iCount; ++iStr)
-        {
-            lua_pushstring(L, oStrings.getString(iSec, iStr));
-            lua_rawseti(L, 2, static_cast<int>(iStr + 1));
-        }
-        lua_rawseti(L, 1, static_cast<int>(iSec + 1));
     }
     return 1;
 }
