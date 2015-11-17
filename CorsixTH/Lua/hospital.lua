@@ -1130,10 +1130,13 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
---! Does the hospital have a reception and a receptionist?
---!return (bool) Whether there is a reception in the hospital.
+--! Does the hospital have a working reception?
+--!return (bool) Whether there is a working reception in the hospital.
 function Hospital:hasStaffedDesk()
-  return (self.world.object_counts["reception_desk"] ~= 0 and self:hasStaffOfCategory("Receptionist"))
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    if desk.receptionist or desk.reserved_for then return true end
+  end
+  return false
 end
 
 --! Collect the reception desks in the hospital.
