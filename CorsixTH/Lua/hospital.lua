@@ -1474,7 +1474,9 @@ may be affected by research progress.
 !param name (string) The name (id) of the object to investigate.
 ]]
 function Hospital:getObjectBuildCost(name)
-  -- Some helpers
+  -- Everything is free in free build mode.
+  if self.world.free_build_mode then return 0 end
+
   local progress = self.research.research_progress
   local cfg_objects = self.world.map.level_config.objects
   local obj_def = TheApp.objects[name]
@@ -1484,8 +1486,7 @@ function Hospital:getObjectBuildCost(name)
   if progress[obj_def] then
     obj_cost = progress[obj_def].cost
   end
-  -- Everything is free in free build mode.
-  return not self.world.free_build_mode and obj_cost or 0
+  return obj_cost
 end
 
 --[[ Lowers the player's money by the given amount and logs the transaction.
