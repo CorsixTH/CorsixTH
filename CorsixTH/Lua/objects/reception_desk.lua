@@ -202,7 +202,6 @@ function ReceptionDesk:onDestroy()
     end)
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
-  self.world:getLocalPlayerHospital().reception_desks[self] = nil
 
   self.being_destroyed = nil
   return Object.onDestroy(self)

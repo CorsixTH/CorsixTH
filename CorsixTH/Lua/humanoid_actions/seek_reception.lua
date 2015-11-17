@@ -31,7 +31,7 @@ local function action_seek_reception_start(action, humanoid)
   local score
 
   -- Go through all receptions desks.
-  for desk, _ in pairs(humanoid.hospital.reception_desks) do
+  for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
     if (not desk.receptionist and not desk.reserved_for) then
       -- Not an allowed reception desk to go to.
     else

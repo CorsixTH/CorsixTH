@@ -135,7 +135,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.opened = false
   self.transactions = {}
   self.staff = {}
-  self.reception_desks = {}
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
@@ -596,15 +595,6 @@ function Hospital:afterLoad(old, new)
     self.num_cured_ty = 0
     self.not_cured_ty = 0
     self.num_visitors_ty = 0
-
-    self.reception_desks = {}
-    for _, obj_list in pairs(self.world.objects) do
-      for _, obj in ipairs(obj_list) do
-        if obj.object_type.id == "reception_desk" then
-          self.reception_desks[obj] = true
-        end
-      end
-    end
   end
 
   if old < 52 then
@@ -637,6 +627,10 @@ function Hospital:afterLoad(old, new)
   if old < 88 then
     self.future_epidemics_pool = {}
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
+  end
+
+  if old < 107 then
+    self.reception_desks = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1136,8 +1130,24 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
+--! Does the hospital have a reception and a receptionist?
+--!return (bool) Whether there is a reception in the hospital.
 function Hospital:hasStaffedDesk()
   return (self.world.object_counts["reception_desk"] ~= 0 and self:hasStaffOfCategory("Receptionist"))
+end
+
+--! Collect the reception desks in the hospital.
+--!return (list) The reception desks in the hospital.
+function Hospital:findReceptionDesks()
+  local reception_desks = {}
+  for _, obj_list in pairs(self.world.objects) do
+    for _, obj in ipairs(obj_list) do
+      if obj.object_type.id == "reception_desk" then
+        reception_desks[#reception_desks + 1] = obj
+      end
+    end
+  end
+  return reception_desks
 end
 
 --! Called at the end of each year
