@@ -130,8 +130,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
 
-  self.ownedPlots = {1}
-  self.is_in_world = true
+  self.ownedPlots = {1} -- Plots owned by the hospital
+  self.is_in_world = true -- Whether the hospital is in this world (AI hospitals are not)
   self.opened = false
   self.transactions = {}
   self.staff = {}
@@ -1982,6 +1982,7 @@ function Hospital:getIndexOfTask(x, y, taskType)
   return -1
 end
 
+--! Afterload function to initialize the owned plots.
 function Hospital:initOwnedPlots()
   self.ownedPlots = {}
   for i, v in ipairs(self.world.entities) do

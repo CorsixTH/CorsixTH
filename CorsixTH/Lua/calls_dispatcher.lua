@@ -554,10 +554,16 @@ function CallsDispatcher.staffActionInterruptHandler(action, humanoid, high_prio
   end
 end
 
+--! 'execute' callback for repairing an object (eg a machine).
+--!param object Object to repair.
+--!param handyman Staff to use.
 function CallsDispatcher.sendStaffToRepair(object, handyman)
   object:createHandymanActions(handyman)
 end
 
+--! 'execute' callback for watering a plant.
+--!param plant Plant to give water.
+--!param handyman Staff to use.
 function CallsDispatcher.sendStaffToWatering(plant, handyman)
   plant:createHandymanActions(handyman)
 end
