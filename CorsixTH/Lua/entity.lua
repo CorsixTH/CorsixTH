@@ -204,6 +204,7 @@ function Entity:tick()
   else
     self:_tick()
   end
+  -- Tick any mood animation
   if self.mood_info then
     self.mood_info:tick()
   end

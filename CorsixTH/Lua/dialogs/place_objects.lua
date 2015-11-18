@@ -491,6 +491,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     real_obj = object.existing_objects[1]
     table.remove(object.existing_objects, 1)
   end
+  local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if real_obj then
     -- If there is such an object then we don't want to make a new one, but move this one instead.
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
@@ -503,11 +504,14 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     end
     -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
     real_obj.picked_up = false
+    -- Machines may have smoke, recalculate it to ensure the animation is in the correct state
+    if real_obj.strength then
+      real_obj:calculateSmoke(room)
+    end
   else
     real_obj = self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   end
-  local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if room then
     room.objects[real_obj] = true
   end
