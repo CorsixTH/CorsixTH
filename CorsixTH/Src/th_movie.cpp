@@ -283,7 +283,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         avpicture_fill((AVPicture *)pFrameRGB, buffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
 
         /* Rescale the frame data and convert it to RGB24. */
-        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, pFrameRGB->data, pFrameRGB->linesize);
+        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pFrame->height, pFrameRGB->data, pFrameRGB->linesize);
 
         /* Upload it to the texture we render from - note that this works because our OpenGL context shares texture namespace with the main threads' context. */
         SDL_UpdateTexture(pMoviePicture->m_pTexture, nullptr, buffer, pMoviePicture->m_iWidth * 3);
