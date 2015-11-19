@@ -67,7 +67,7 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
 
 THMoviePicture::THMoviePicture():
     m_pTexture(nullptr),
-    m_pixelFormat(PIX_FMT_RGB24)
+    m_pixelFormat(AV_PIX_FMT_RGB24)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -268,7 +268,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
     if(pMoviePicture->m_pTexture)
     {
-        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (AVPixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
         if(m_pSwsContext == nullptr)
         {
             SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);

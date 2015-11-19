@@ -46,6 +46,12 @@ extern "C"
 #endif
 }
 
+#if (defined(CORSIX_TH_USE_FFMEPG) && LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 74, 100)) || \
+    (defined(CORSIX_TH_USE_LIBAV) && LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 42, 0))
+#define AVPixelFormat PixelFormat
+#define AV_PIX_FMT_RBG24 PIX_FMT_RGB24
+#endif
+
 struct SDL_Renderer;
 struct SDL_Texture;
 struct SDL_Window;
@@ -64,7 +70,7 @@ public:
     void draw(SDL_Renderer *pRenderer);
 
     SDL_Texture *m_pTexture;
-    PixelFormat m_pixelFormat;
+    AVPixelFormat m_pixelFormat;
     int m_iX, m_iY, m_iWidth, m_iHeight;
     double m_dPts;
     SDL_mutex *m_pMutex;
