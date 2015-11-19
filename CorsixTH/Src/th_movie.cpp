@@ -67,7 +67,7 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
 
 THMoviePicture::THMoviePicture():
     m_pTexture(nullptr),
-    m_pixelFormat(PIX_FMT_RGB24)
+    m_pixelFormat(AV_PIX_FMT_RGB24)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -268,7 +268,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
     if(pMoviePicture->m_pTexture)
     {
-        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (AVPixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
         if(m_pSwsContext == nullptr)
         {
             SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
@@ -283,7 +283,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         avpicture_fill((AVPicture *)pFrameRGB, buffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
 
         /* Rescale the frame data and convert it to RGB24. */
-        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, pFrameRGB->data, pFrameRGB->linesize);
+        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pFrame->height, pFrameRGB->data, pFrameRGB->linesize);
 
         /* Upload it to the texture we render from - note that this works because our OpenGL context shares texture namespace with the main threads' context. */
         SDL_UpdateTexture(pMoviePicture->m_pTexture, nullptr, buffer, pMoviePicture->m_iWidth * 3);
