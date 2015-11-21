@@ -57,6 +57,7 @@ struct SDL_Texture;
 struct SDL_Window;
 struct SDL_mutex;
 struct SDL_cond;
+struct SDL_Rect;
 typedef void* SDL_GLContext;
 
 class THMoviePicture
@@ -65,13 +66,12 @@ public:
     THMoviePicture();
     ~THMoviePicture();
 
-    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
+    void allocate(int iWidth, int iHeight);
     void deallocate();
-    void draw(SDL_Renderer *pRenderer);
 
-    SDL_Texture *m_pTexture;
+    uint8_t* m_pBuffer;
     AVPixelFormat m_pixelFormat;
-    int m_iX, m_iY, m_iWidth, m_iHeight;
+    int m_iWidth, m_iHeight;
     double m_dPts;
     SDL_mutex *m_pMutex;
     SDL_cond *m_pCond;
@@ -86,10 +86,10 @@ public:
     //NB: The following functions are called by the main program thread
     void abort();
     void reset();
-    void allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight);
+    void allocate(SDL_Renderer *pRenderer, int iWidth, int iHeight);
     void deallocate();
     bool advance();
-    void draw(SDL_Renderer *pRenderer);
+    void draw(SDL_Renderer *pRenderer, const SDL_Rect &dstrect);
     double getNextPts();
     bool empty();
 
@@ -104,6 +104,7 @@ protected:
     int m_iReadIndex;
     int m_iWriteIndex;
     SwsContext* m_pSwsContext;
+    SDL_Texture *m_pTexture;
     SDL_mutex *m_pMutex;
     SDL_cond *m_pCond;
     THMoviePicture m_aPictureQueue[ms_pictureBufferSize];

@@ -66,7 +66,7 @@ void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void 
 }
 
 THMoviePicture::THMoviePicture():
-    m_pTexture(nullptr),
+    m_pBuffer(nullptr),
     m_pixelFormat(AV_PIX_FMT_RGB24)
 {
     m_pMutex = SDL_CreateMutex();
@@ -75,59 +75,23 @@ THMoviePicture::THMoviePicture():
 
 THMoviePicture::~THMoviePicture()
 {
-    if(m_pTexture)
-    {
-        SDL_DestroyTexture(m_pTexture);
-        m_pTexture = nullptr;
-    }
+    av_freep(&m_pBuffer);
     SDL_DestroyMutex(m_pMutex);
     SDL_DestroyCond(m_pCond);
 }
 
-void THMoviePicture::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight)
+void THMoviePicture::allocate(int iWidth, int iHeight)
 {
-    m_iX = iX;
-    m_iY = iY;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
-    if(m_pTexture)
-    {
-        SDL_DestroyTexture(m_pTexture);
-        std::cerr << "THMovie overlay should be deallocated before being allocated!\n";
-    }
-    m_pTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, m_iWidth, m_iHeight);
-    if(m_pTexture == nullptr)
-    {
-        std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
-        return;
-    }
+    av_freep(&m_pBuffer);
+    int numBytes = avpicture_get_size(m_pixelFormat, m_iWidth, m_iHeight);
+    m_pBuffer = static_cast<uint8_t*>(av_mallocz(numBytes));
 }
 
 void THMoviePicture::deallocate()
 {
-    if(m_pTexture)
-    {
-        SDL_DestroyTexture(m_pTexture);
-        m_pTexture = nullptr;
-    }
-}
-
-void THMoviePicture::draw(SDL_Renderer *pRenderer)
-{
-    if(m_pTexture)
-    {
-        SDL_Rect rcDest;
-        rcDest.x = m_iX;
-        rcDest.y = m_iY;
-        rcDest.w = m_iWidth;
-        rcDest.h = m_iHeight;
-
-        int iError = SDL_RenderCopy(pRenderer, m_pTexture, nullptr, &rcDest);
-        if(iError < 0)
-        {
-            std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
-        }
-    }
+    av_freep(&m_pBuffer);
 }
 
 THMoviePictureBuffer::THMoviePictureBuffer():
@@ -136,7 +100,8 @@ THMoviePictureBuffer::THMoviePictureBuffer():
     m_iCount(0),
     m_iReadIndex(0),
     m_iWriteIndex(0),
-    m_pSwsContext(nullptr)
+    m_pSwsContext(nullptr),
+    m_pTexture(nullptr)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -147,6 +112,11 @@ THMoviePictureBuffer::~THMoviePictureBuffer()
     SDL_DestroyCond(m_pCond);
     SDL_DestroyMutex(m_pMutex);
     sws_freeContext(m_pSwsContext);
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = nullptr;
+    }
 }
 
 void THMoviePictureBuffer::abort()
@@ -162,11 +132,22 @@ void THMoviePictureBuffer::reset()
     m_fAborting = false;
 }
 
-void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iX, int iY, int iWidth, int iHeight)
+void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iWidth, int iHeight)
 {
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        std::cerr << "THMovie overlay should be deallocated before being allocated!\n";
+    }
+    m_pTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, iWidth, iHeight);
+    if (m_pTexture == nullptr)
+    {
+        std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
+        return;
+    }
     for(int i = 0; i < ms_pictureBufferSize; i++)
     {
-        m_aPictureQueue[i].allocate(pRenderer, iX, iY, iWidth, iHeight);
+        m_aPictureQueue[i].allocate(iWidth, iHeight);
     }
     //Do not change m_iWriteIndex, it's used by the other thread.
     //m_iReadIndex is only used in this thread.
@@ -189,6 +170,11 @@ void THMoviePictureBuffer::deallocate()
         m_aPictureQueue[i].deallocate();
         SDL_UnlockMutex(m_aPictureQueue[i].m_pMutex);
     }
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = nullptr;
+    }
 }
 
 bool THMoviePictureBuffer::advance()
@@ -208,13 +194,24 @@ bool THMoviePictureBuffer::advance()
     return true;
 }
 
-void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer)
+void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer, const SDL_Rect &dstrect)
 {
     if(!empty())
     {
-        SDL_LockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
-        m_aPictureQueue[m_iReadIndex].draw(pRenderer);
-        SDL_UnlockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
+        auto cur_pic = &(m_aPictureQueue[m_iReadIndex]);
+        SDL_LockMutex(cur_pic->m_pMutex);
+
+        if (cur_pic->m_pBuffer)
+        {
+            SDL_UpdateTexture(m_pTexture, nullptr, cur_pic->m_pBuffer, cur_pic->m_iWidth * 3);
+            int iError = SDL_RenderCopy(pRenderer, m_pTexture, nullptr, &dstrect);
+            if (iError < 0)
+            {
+                std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
+            }
+        }
+
+        SDL_UnlockMutex(cur_pic->m_pMutex);
     }
 }
 
@@ -266,7 +263,7 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
     pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
     SDL_LockMutex(pMoviePicture->m_pMutex);
 
-    if(pMoviePicture->m_pTexture)
+    if(pMoviePicture->m_pBuffer)
     {
         m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (AVPixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
         if(m_pSwsContext == nullptr)
@@ -278,17 +275,11 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
         /* Allocate a new frame and buffer for the destination RGB24 data. */
         AVFrame *pFrameRGB = av_frame_alloc();
-        int numBytes = avpicture_get_size(pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
-        uint8_t *buffer = (uint8_t *)av_malloc(numBytes * sizeof(uint8_t));
-        avpicture_fill((AVPicture *)pFrameRGB, buffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
+        avpicture_fill((AVPicture *)pFrameRGB, pMoviePicture->m_pBuffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
 
         /* Rescale the frame data and convert it to RGB24. */
         sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pFrame->height, pFrameRGB->data, pFrameRGB->linesize);
 
-        /* Upload it to the texture we render from - note that this works because our OpenGL context shares texture namespace with the main threads' context. */
-        SDL_UpdateTexture(pMoviePicture->m_pTexture, nullptr, buffer, pMoviePicture->m_iWidth * 3);
-
-        av_free(buffer);
         av_frame_free(&pFrameRGB);
 
         pMoviePicture->m_dPts = dPts;
@@ -441,17 +432,6 @@ THMovie::~THMovie()
 void THMovie::setRenderer(SDL_Renderer *pRenderer)
 {
     m_pRenderer = pRenderer;
-
-    SDL_GLContext prevContext = SDL_GL_GetCurrentContext();
-    m_pShareWindow = SDL_GL_GetCurrentWindow();
-
-    /* We create a new context that we can use on our video thread, that shares
-     * a texture namespace with the main thread's context. */
-    SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-    m_shareContext = SDL_GL_CreateContext(m_pShareWindow);
-
-    /* Unfortunately, SDL_GL_CreateContext implicitly makes the new context current, so we revert it. */
-    SDL_GL_MakeCurrent(m_pShareWindow, prevContext);
 }
 
 bool THMovie::moviesEnabled()
@@ -619,7 +599,7 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
 
     m_pVideoQueue = new THAVPacketQueue();
     m_pMoviePictureBuffer->reset();
-    m_pMoviePictureBuffer->allocate(m_pRenderer, m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, m_pVideoCodecContext->width, m_pVideoCodecContext->height);
 
     m_pAudioPacket = nullptr;
     m_iAudioPacketSize = 0;
@@ -730,13 +710,15 @@ void THMovie::refresh()
             m_pMoviePictureBuffer->advance();
         }
 
-        m_pMoviePictureBuffer->draw(m_pRenderer);
+        SDL_Rect dstrect = { m_iX, m_iY, m_iWidth, m_iHeight };
+
+        m_pMoviePictureBuffer->draw(m_pRenderer, dstrect);
     }
 }
 
 void THMovie::allocatePictureBuffer()
 {
-    m_pMoviePictureBuffer->allocate(m_pRenderer, m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, getNativeWidth(), getNativeHeight());
 }
 
 void THMovie::deallocatePictureBuffer()
@@ -797,8 +779,6 @@ void THMovie::runVideo()
     int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
-
-    SDL_GL_MakeCurrent(m_pShareWindow, m_shareContext);
 
     while(!m_fAborting)
     {
