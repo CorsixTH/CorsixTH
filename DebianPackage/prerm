@@ -1,5 +1,0 @@
-#! /bin/bash -e
-
-rm "/usr/bin/CorsixTH"
-
-rm "/usr/bin/MapEdit"
