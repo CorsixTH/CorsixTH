@@ -2485,7 +2485,7 @@ confirmation = {  --spaces on the end make the text fit properly in text windows
   abort_edit_room = "Je bent een ruimte aan het bouwen of aanpassen. Wanneer alle benodigde objecten geplaatst zijn, is de ruimte af. Zo niet, dan wordt de ruimte vernietigd.                     ",
   restart_level = "Weet je zeker dat je het level opnieuw wilt beginnen?                      ",
   maximum_screen_size = "De resolutie die je hebt ingevoerd is groter dan 3000x2000. Een hoge resolutie is mogelijk, mits je hardware goed genoeg is om een speelbare framerate te behalen. Weet je zeker dat je wilt doorgaan?",
-  music_warning = "Voordat je MP3's gaat gebruiken als ingame muziek, heb je smpeg.dll (of gelijkwaardig voor je systeem) nodig, anders werkt de muziek niet. Op dit moment is een dergerlijk bestand niet beschikbaar voor 64bit systemen.  Wil je doorgaan?",
+  music_warning = "Voordat je MP3's gaat gebruiken als ingame muziek, heb je smpeg.dll (of gelijkwaardig voor je systeem) nodig, anders werkt de muziek niet. Wil je doorgaan?",
 }
 menu_display = {
   mcga_lo_res = "  LAGE RES  ",

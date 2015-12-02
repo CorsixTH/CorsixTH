@@ -42,7 +42,7 @@ confirmation.restart_level = "Tem a certeza que deseja reiniciar este nível?"
 
 -------------------------------  NEW STRINGS  -------------------------------
 confirmation.maximum_screen_size = "A resolução de ecrã que escolheu é maior que 3000 x 2000. Resoluções mais altas são possíveis, mas requerem melhor hardware de forma a manter uma taxa de fotogramas (FPS) jogável. De certeza que deseja continuar?"
-confirmation.music_warning = "Antes de escolher usar mp3 para a música dentro do jogo, necessita de ter o smpeg.dll ou equivalente para o seu sistema operativo, caso contrário, não terá música no jogo. Actualmente não existe equivalente para sistemas 64bit. Deseja continuar?"
+confirmation.music_warning = "Antes de escolher usar mp3 para a música dentro do jogo, necessita de ter o smpeg.dll ou equivalente para o seu sistema operativo, caso contrário, não terá música no jogo. Deseja continuar?"
 menu_options_wage_increase.deny = "    NEGAR "
 menu_options_wage_increase.grant = "    PERMITIR "
 tooltip.options_window.audio_button = "Ligar ou desligar todo o som do jogo"

@@ -1036,7 +1036,7 @@ confirmation = {
   needs_restart = "Para cambiar este ajuste, antes debes reiniciar CorsixTH. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
   abort_edit_room = "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
   maximum_screen_size = "El tamaño de pantalla que has introducido es mayor que 3000 x 2000.  Es posible utilizar una resolución más grande, pero necesitará de un ordenador mejor para que la velocidad de fotogramas sea aceptable. ¿Seguro que quieres continuar?",
-  music_warning = "Antes de seleccionar el uso de MP3s para tu música dentro del juego, necesitarás tener el archivo smpeg.dll, o el equivalente para tu sistema operativo, o de lo contrario no tendrás música en el juego.  Actualmente no existe un archivo equivalente para sistemas de 64 bits. ¿Quieres continuar?",
+  music_warning = "Antes de seleccionar el uso de MP3s para tu música dentro del juego, necesitarás tener el archivo smpeg.dll, o el equivalente para tu sistema operativo, o de lo contrario no tendrás música en el juego. ¿Quieres continuar?",
 }
 
 information = {
