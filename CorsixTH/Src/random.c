@@ -61,7 +61,7 @@ uint32_t mt[N]; /* the array for the state vector  */
 uint16_t mti=N+1; /* mti==N+1 means mt[N] is not initialized */
 
 /* initializes mt[N] with a seed */
-void init_genrand(uint32_t s)
+static void init_genrand(uint32_t s)
 {
     mt[0]= s;
     for (mti=1; mti<N; mti++) {
@@ -74,7 +74,7 @@ void init_genrand(uint32_t s)
 }
 
 /* generates a random number on [0,0xffffffff]-interval */
-uint32_t genrand_int32(void)
+static uint32_t genrand_int32(void)
 {
     uint32_t y;
     static uint32_t mag01[2]={0x0UL, MATRIX_A};
@@ -112,7 +112,7 @@ uint32_t genrand_int32(void)
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
-double genrand_res53(void)
+static double genrand_res53(void)
 {
     uint32_t a=genrand_int32()>>5, b=genrand_int32()>>6;
     return(a*67108864.0+b)*(1.0/9007199254740992.0);

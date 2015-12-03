@@ -1286,7 +1286,7 @@ static int CalculateLineNumber(const char *sStart, const char *sPosition)
     return iLine;
 }
 
-const char* FindFunctionEnd(lua_State *L, const char* sStart)
+static const char* FindFunctionEnd(lua_State *L, const char* sStart)
 {
     const char* sEnd = sStart;
     while(sEnd)

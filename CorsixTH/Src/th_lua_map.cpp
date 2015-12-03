@@ -108,7 +108,7 @@ static int l_map_loadblank(lua_State *L)
     return 2;
 }
 
-THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
+static THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 {
     THAnimation *pAnim;
     lua_rawgeti(L, 10, iIndex);
@@ -179,7 +179,7 @@ static int l_map_gettemperature(lua_State *L)
  * @param pNode Node to examine.
  * @return Whether the node position is valid for a new room.
  */
-inline bool is_valid(bool entire_invalid, const THMapNode *pNode)
+static inline bool is_valid(bool entire_invalid, const THMapNode *pNode)
 {
     return !entire_invalid && !pNode->flags.room && pNode->flags.buildable;
 }

@@ -1322,7 +1322,7 @@ void THMap::updatePathfinding()
 //! For shadow casting, a tile is considered to have a wall on a direction
 //! if it has a door in that direction, or the block is from the hardcoded
 //! range of wall-like blocks.
-inline bool is_wall(THMapNode *node, size_t block, bool flag)
+static inline bool is_wall(THMapNode *node, size_t block, bool flag)
 {
     return flag || (82 <= (node->iBlock[block] & 0xFF) && (node->iBlock[block] & 0xFF) <= 164);
 }

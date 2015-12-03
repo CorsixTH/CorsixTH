@@ -45,21 +45,21 @@ extern "C"
 #define av_frame_free avcodec_free_frame
 #endif
 
-int th_movie_stream_reader_thread(void* pState)
+static int th_movie_stream_reader_thread(void* pState)
 {
     THMovie *pMovie = (THMovie *)pState;
     pMovie->readStreams();
     return 0;
 }
 
-int th_movie_video_thread(void* pState)
+static int th_movie_video_thread(void* pState)
 {
     THMovie *pMovie = (THMovie *)pState;
     pMovie->runVideo();
     return 0;
 }
 
-void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
+static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
 {
     THMovie *pMovie = (THMovie *)pUserData;
     pMovie->copyAudioToStream((uint8_t*)pStream, iStreamSize);
