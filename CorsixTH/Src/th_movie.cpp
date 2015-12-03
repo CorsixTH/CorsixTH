@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_movie.h"
 #include "config.h"
 #include "lua_sdl.h"
-#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
+#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && defined(CORSIX_TH_USE_SDL_MIXER)
 
 #include "th_gfx.h"
 extern "C"
@@ -1011,20 +1011,20 @@ int THMovie::decodeAudioFrame(bool fFirst)
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
 void THMovie::setRenderer(SDL_Renderer *pRenderer) {}
-bool THMovie::moviesEnabled() { return false; }
+bool THMovie::moviesEnabled() const { return false; }
 bool THMovie::load(const char* filepath) { return true; }
 void THMovie::unload() {}
-void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
+void THMovie::play(const SDL_Rect &destination_rect, int iChannel)
 {
     SDL_Event endEvent;
     endEvent.type = SDL_USEREVENT_MOVIE_OVER;
     SDL_PushEvent(&endEvent);
 }
 void THMovie::stop() {}
-int THMovie::getNativeHeight() { return 0; }
-int THMovie::getNativeWidth() { return 0; }
-bool THMovie::hasAudioTrack() { return false; }
-const char* THMovie::getLastError() { return nullptr; }
+int THMovie::getNativeHeight() const { return 0; }
+int THMovie::getNativeWidth() const  { return 0; }
+bool THMovie::hasAudioTrack() const  { return false; }
+const char* THMovie::getLastError() const { return nullptr; }
 void THMovie::clearLastError() {}
 void THMovie::refresh() {}
 void THMovie::allocatePictureBuffer() {}

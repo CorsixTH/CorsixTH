@@ -349,4 +349,9 @@ int luaopen_sdl_audio(lua_State *L)
     return 1;
 }
 
+int l_load_music_async_callback(lua_State *L)
+{
+    return 0;
+}
+
 #endif // CORSIX_TH_USE_SDL_MIXER

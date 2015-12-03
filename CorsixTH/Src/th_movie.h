@@ -28,7 +28,7 @@ SOFTWARE.
 #include "SDL.h"
 #include "config.h"
 
-#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
+#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && defined(CORSIX_TH_USE_SDL_MIXER)
 #include "SDL_mixer.h"
 
 extern "C"
@@ -283,7 +283,7 @@ public:
     void copyAudioToStream(uint8_t *pbStream, int iStreamSize);
 
 private:
-#if defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)
+#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && defined(CORSIX_TH_USE_SDL_MIXER)
     static const size_t ms_movieErrorBufferSize = 128; ///< Buffer to hold last error description
     static const size_t ms_audioBufferSize = 1024; ///< Buffer for audio playback
 
