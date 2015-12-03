@@ -25,6 +25,7 @@ SOFTWARE.
 #include "th_lua.h"
 #include <cstring>
 #include <cstdio>
+#include <vector>
 #ifndef _MSC_VER
 #define stricmp strcasecmp
 #else
@@ -342,13 +343,13 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
-static const struct luaL_Reg sdllib[] = {
+static const std::vector<luaL_Reg> sdllib = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
     {nullptr, nullptr}
 };
-static const struct luaL_Reg sdllib_with_upvalue[] = {
+static const std::vector<luaL_Reg> sdllib_with_upvalue = {
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
@@ -371,12 +372,11 @@ int luaopen_sdl(lua_State *L)
     fps_ctrl* ctrl = (fps_ctrl*)lua_newuserdata(L, sizeof(fps_ctrl));
     ctrl->init();
     luaT_register(L, "sdl", sdllib);
-    const luaL_Reg *pUpvaluedFunctions = sdllib_with_upvalue;
-    for(; pUpvaluedFunctions->name; ++pUpvaluedFunctions)
+    for (auto reg = sdllib_with_upvalue.begin(); reg->name; ++reg)
     {
         lua_pushvalue(L, -2);
-        luaT_pushcclosure(L, pUpvaluedFunctions->func, 1);
-        lua_setfield(L, -2, pUpvaluedFunctions->name);
+        luaT_pushcclosure(L, reg->func, 1);
+        lua_setfield(L, -2, reg->name);
     }
 
     load_extra(L, "audio", luaopen_sdl_audio);
