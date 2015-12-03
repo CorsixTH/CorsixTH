@@ -25,6 +25,7 @@ SOFTWARE.
 #include "config.h"
 #include "lua.hpp"
 #include <new>
+#include <vector>
 
 int luaopen_th(lua_State *L);
 
@@ -44,12 +45,12 @@ inline int luaT_upvalueindex(int i)
 #endif
 }
 
-inline void luaT_register(lua_State *L, const char *n, const luaL_Reg *l)
+inline void luaT_register(lua_State *L, const char *n, const std::vector<luaL_Reg> &l)
 {
 #if LUA_VERSION_NUM >= 502
-    luaL_newlibtable(L, l);
+    lua_createtable(L, 0, static_cast<int>(l.size()));
     lua_pushvalue(L, luaT_environindex);
-    luaL_setfuncs(L, l, 1);
+    luaL_setfuncs(L, l.data(), 1);
     lua_pushvalue(L, -1);
     lua_setglobal(L, n);
 #else

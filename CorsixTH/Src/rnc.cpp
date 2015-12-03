@@ -37,6 +37,7 @@ SOFTWARE.
 #include "config.h"
 #include "rnc.h"
 #include "th_lua.h"
+#include <vector>
 
 /*! Result status values from #rnc_inpack. */
 enum class rnc_status
@@ -548,7 +549,7 @@ static int l_decompress(lua_State *L)
     return 2;
 }
 
-static const struct luaL_Reg rnclib[] = {
+static const std::vector<luaL_Reg> rnclib = {
     {"decompress", l_decompress},
     {nullptr, nullptr}
 };

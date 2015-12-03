@@ -25,6 +25,7 @@ SOFTWARE.
 #include <errno.h>
 #include <cmath>
 #include <cstdio>
+#include <vector>
 #ifdef _MSC_VER
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
@@ -1461,7 +1462,7 @@ static int l_errcatch(lua_State *L)
     return 1;
 }
 
-static const struct luaL_Reg persist_lib[] = {
+static const std::vector<luaL_Reg> persist_lib = {
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
