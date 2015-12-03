@@ -39,7 +39,7 @@ struct types_equal<T1, T1>{ enum{
     result = 1,
 }; };
 
-void cleanup()
+static void cleanup()
 {
 #ifdef CORSIX_TH_USE_SDL_MIXER
     while(Mix_QuerySpec(nullptr, nullptr, nullptr))
