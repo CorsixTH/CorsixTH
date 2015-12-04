@@ -2640,7 +2640,7 @@ adviser.room_requirements.training_room_need_consultant = "Du skal ansætte en k
 adviser.room_requirements.gps_office_need_doctor = "Du skal ansætte en læge til at arbejde i lægekonsultationen."
 
 confirmation.maximum_screen_size = "Skærmopløsningen du har valgt er større end 3000 x 2000. Større opløsninger kan bruges men vil kræve bedre hardware for at køre med en spilbar FPS. Er du sikker på du vil fortsætte?"
-confirmation.music_warning = "Før du  vælger at bruge mp3'er til musikken i spillet, har du brug for smpeg.dll eller lignende til dit styresystem, ellers vil du ikke have musik i spillet. Lige nu er der ikke tilsvarende til 64bit systemer. Vil du fortsætte?"
+confirmation.music_warning = "Før du  vælger at bruge mp3'er til musikken i spillet, har du brug for smpeg.dll eller lignende til dit styresystem, ellers vil du ikke have musik i spillet. Vil du fortsætte?"
 menu_options_wage_increase.deny = "    AFVIS "
 menu_options_wage_increase.grant = "    TILLAD "
 tooltip.options_window.audio_button = "Slå alle lyde til og fra i spillet "

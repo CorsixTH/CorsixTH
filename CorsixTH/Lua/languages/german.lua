@@ -476,7 +476,7 @@ confirmation = {
   needs_restart = "Um diese Änderung, vorzunehmen muss CorsixTH neu gestartet werden. Nicht gespeicherter Fortschritt geht verloren. Sicher, dass Sie fortfahren wollen?",
   abort_edit_room = "Sie bauen oder ändern gerade einen Raum. Wenn alle benötigten Objekte platziert sind, wird der Raum fertiggestellt, ansonsten wird er gelöscht. Fortfahren?",
   maximum_screen_size = "Die von Ihnen gewählte Bildschirmauflösung ist größer als 3000×2000. Größere Auflösungen sind möglich, aber erfordern eine bessere Hardware, um eine akzeptable Bildwiederholrate zu gewährleisten. Sind Sie sich sicher, dass Sie fortfahren möchten?",
-  music_warning = "Bevor Sie sich dafür entscheiden, MP3s für Ihre Spielmusik verwenden, müssen Sie smpeg.dll oder eine entsprechende Datei für Ihr Betriebssystem haben, ansonsten werden Sie keine Musik im Spiel haben. Momentan gibt es keine entsprechende Datei für 64-Bit-Systeme. Möchten Sie fortfahren?",
+  music_warning = "Bevor Sie sich dafür entscheiden, MP3s für Ihre Spielmusik verwenden, müssen Sie smpeg.dll oder eine entsprechende Datei für Ihr Betriebssystem haben, ansonsten werden Sie keine Musik im Spiel haben. Möchten Sie fortfahren?",
 }
 
 information = {

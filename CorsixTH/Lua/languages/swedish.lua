@@ -439,7 +439,7 @@ confirmation = {
   needs_restart = "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
   abort_edit_room = "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
   maximum_screen_size = "Upplösningen du valt är större än 3000 x 2000. Större upplösningar är möjliga, men kräver bättre hårdvara. Är du säker på att du vill fortsätta?",
-  music_warning = "Innan du väljer att använda mp3-filer som spelmusik behövs smpeg.dll eller motsvarande för ditt operativsystem, annars blir det ingen musik i spelet. Det finns i dagsläget ingen 64-bitarsversion. Vill du fortsätta?",
+  music_warning = "Notera: När du väljer att använda mp3-filer som spelmusik behövs smpeg.dll eller motsvarande för ditt operativsystem, annars blir det ingen musik i spelet. Vill du fortsätta?",
 }
 
 information = {

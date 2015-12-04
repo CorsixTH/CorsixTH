@@ -1820,7 +1820,7 @@ original_credits = {
   [361] = ".",
 }
 confirmation.maximum_screen_size = "Az általad beállított képernyőfelbontás magasabb mint 3000 X 2000. Van lehetőség ilyen felbontások beállítására, viszont ezekhez erősebb hardver szükségeltetik az akadozásmentes futtatáshoz. Biztosan folytatod?"
-confirmation.music_warning = "Mielőtt kiválaszthatnád az mp3-akat amelyek játék közben fognak szólni szükséged lesz az smpeg.dll nevű (vagy azzal egyenértékű) file-ra, különben nem lesz zene. Jelenleg 64 bites operációs rendszerekhez ez a file nem elérhető. Folytatod?"
+confirmation.music_warning = "Mielőtt kiválaszthatnád az mp3-akat amelyek játék közben fognak szólni szükséged lesz az smpeg.dll nevű (vagy azzal egyenértékű) file-ra, különben nem lesz zene. Folytatod?"
 menu_options_wage_increase.deny = " MEGTAGAD"
 menu_options_wage_increase.grant = " ENGEDÉLYEZ"
 tooltip.options_window.audio_button = "Minden hang ki/be kapcsolása"

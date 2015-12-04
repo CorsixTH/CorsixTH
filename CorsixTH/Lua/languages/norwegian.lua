@@ -2407,7 +2407,7 @@ confirmation = {
   sack_staff           = "Er du sikker på at du vil si opp denne personen?",
   restart_level        = "Er du sikker på at du vil starte dette nivået på nytt?",
   maximum_screen_size = "Opplösningen du har valgt er större enn 3000 x 2000.  Större opplösninger er mulig, men det krever bedre maskinvare om det ikke skal hakke.  Önsker du å fortsette?",
-  music_warning = "För du får brukt mp3-er som spillmusikk, så må du ha smpeg.dll eller tilsvarende for operativsystemet ditt. Eller vil du ikke få musikk i spillet.  Forelöpig fins det ikke noe tilsvarende for 64-bit systemer.  Önsker du å fortsette?",
+  music_warning = "För du får brukt mp3-er som spillmusikk, så må du ha smpeg.dll eller tilsvarende for operativsystemet ditt. Eller vil du ikke få musikk i spillet. Önsker du å fortsette?",
 
 }
 

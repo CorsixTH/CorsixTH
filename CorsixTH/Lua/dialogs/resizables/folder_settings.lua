@@ -80,6 +80,7 @@ function UIFolder:UIFolder(ui, mode)
 
   -- Location of original game
   local built_in = app.gfx:loadBuiltinFont()
+
   self:addBevelPanel(20, 50, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.data_label):setTooltip(_S.tooltip.folders_window.data_location)
     .lowered = true
@@ -121,9 +122,10 @@ function UIFolder:UIFolder(ui, mode)
     :setLabel(_S.folders_window.music_label):setTooltip(_S.tooltip.folders_window.music_location)
     .lowered = true
   local tooltip_audio = app.config.audio_mp3 and _S.tooltip.folders_window.browse_music:format(app.config.audio_mp3) or _S.tooltip.folders_window.not_specified
-  self:addBevelPanel(160, 150, 180, 20, col_bg)
-    :setLabel(app.config.audio_mp3 and app.config.audio_mp3 or tooltip_audio, built_in):setAutoClip(true)
-    :makeButton(0, 0, 180, 20, nil, self.buttonBrowseForAudio_mp3):setTooltip(tooltip_audio)
+  self.mp3_panel = self:addBevelPanel(160, 150, 180, 20, col_bg)
+  self.mp3_panel:setLabel(app.config.audio_mp3 and app.config.audio_mp3 or tooltip_audio, built_in):setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_mp3):setTooltip(tooltip_audio)
+  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetMp3Dir):setTooltip(_S.tooltip.folders_window.reset_to_default)
 
   -- "Back" button
   self:addBevelPanel(20, 180, 320, 40, col_bg):setLabel(_S.folders_window.back)
@@ -147,6 +149,14 @@ function UIFolder:resetScreenshotDir()
   self.screenshots_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
 end
 
+function UIFolder:resetMp3Dir()
+  local app = TheApp
+  app.config.audio_mp3 = nil
+  app:saveConfig()
+  app.audio:init()
+  self.mp3_panel:setLabel(_S.tooltip.folders_window.not_specified, self.built_in_font)
+end
+
 function UIFolder:buttonBrowseForFont()
   local browser = UIChooseFont(self.ui, self.mode)
   self.ui:addWindow(browser)
@@ -160,7 +170,7 @@ function UIFolder:buttonBrowseForSavegames()
       app.config.savegames = path
       app:saveConfig()
       app:initSavegameDir()
-      self.saves_panel:setLabel(app.config.savegames and app.config.savegames or tooltip_saves , self.built_in_font)
+      self.saves_panel:setLabel(app.config.savegames, self.built_in_font)
     end
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
@@ -187,7 +197,7 @@ function UIFolder:buttonBrowseForScreenshots()
       app.config.screenshots = path
       app:saveConfig()
       app:initScreenshotsDir()
-      self.screenshots_panel:setLabel(app.config.screenshots and app.config.screenshots or tooltip_screenshots, self.built_in_font)
+      self.screenshots_panel:setLabel(app.config.screenshots, self.built_in_font)
     end
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
@@ -199,8 +209,8 @@ function UIFolder:buttonBrowseForAudio_mp3()
   local app = TheApp
     app.config.audio_mp3 = path
     app:saveConfig()
-    debug.getregistry()._RESTART = true
-    app.running = false
+    app.audio:init()
+    self.mp3_panel:setLabel(app.config.audio_mp3, self.built_in_font)
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
   self.ui:addWindow(UIConfirmDialog(self.ui,

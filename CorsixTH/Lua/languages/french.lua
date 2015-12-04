@@ -935,7 +935,7 @@ confirmation = {
   needs_restart = "Changer ce paramètre va nécessiter un redémarrage de CorsixTH. Tout progrès non sauvegardé sera perdu. Êtes-vous sûr de vouloir faire cela ?",
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
   maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
-  music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Actuellement, il n'y a pas de fichier équivalent pour les systèmes 64 bits. Voulez-vous continuer?",
+  music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Voulez-vous continuer?",
 }
 
 -- Information dialog
