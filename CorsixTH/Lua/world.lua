@@ -2129,8 +2129,6 @@ function World:objectPlaced(entity, id)
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
-    -- A new reception desk? Then add it to the reception desk set.
-    self:getLocalPlayerHospital().reception_desks[entity] = true
   end
   -- If it is a plant it might be advisable to hire a handyman
   if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then

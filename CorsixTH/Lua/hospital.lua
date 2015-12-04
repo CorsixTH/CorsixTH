@@ -135,7 +135,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.opened = false
   self.transactions = {}
   self.staff = {}
-  self.reception_desks = {}
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
@@ -596,15 +595,6 @@ function Hospital:afterLoad(old, new)
     self.num_cured_ty = 0
     self.not_cured_ty = 0
     self.num_visitors_ty = 0
-
-    self.reception_desks = {}
-    for _, obj_list in pairs(self.world.objects) do
-      for _, obj in ipairs(obj_list) do
-        if obj.object_type.id == "reception_desk" then
-          self.reception_desks[obj] = true
-        end
-      end
-    end
   end
 
   if old < 52 then
@@ -637,6 +627,10 @@ function Hospital:afterLoad(old, new)
   if old < 88 then
     self.future_epidemics_pool = {}
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
+  end
+
+  if old < 107 then
+    self.reception_desks = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1136,8 +1130,27 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
+--! Does the hospital have a working reception?
+--!return (bool) Whether there is a working reception in the hospital.
 function Hospital:hasStaffedDesk()
-  return (self.world.object_counts["reception_desk"] ~= 0 and self:hasStaffOfCategory("Receptionist"))
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    if desk.receptionist or desk.reserved_for then return true end
+  end
+  return false
+end
+
+--! Collect the reception desks in the hospital.
+--!return (list) The reception desks in the hospital.
+function Hospital:findReceptionDesks()
+  local reception_desks = {}
+  for _, obj_list in pairs(self.world.objects) do
+    for _, obj in ipairs(obj_list) do
+      if obj.object_type.id == "reception_desk" then
+        reception_desks[#reception_desks + 1] = obj
+      end
+    end
+  end
+  return reception_desks
 end
 
 --! Called at the end of each year
@@ -1461,7 +1474,9 @@ may be affected by research progress.
 !param name (string) The name (id) of the object to investigate.
 ]]
 function Hospital:getObjectBuildCost(name)
-  -- Some helpers
+  -- Everything is free in free build mode.
+  if self.world.free_build_mode then return 0 end
+
   local progress = self.research.research_progress
   local cfg_objects = self.world.map.level_config.objects
   local obj_def = TheApp.objects[name]
@@ -1471,8 +1486,7 @@ function Hospital:getObjectBuildCost(name)
   if progress[obj_def] then
     obj_cost = progress[obj_def].cost
   end
-  -- Everything is free in free build mode.
-  return not self.world.free_build_mode and obj_cost or 0
+  return obj_cost
 end
 
 --[[ Lowers the player's money by the given amount and logs the transaction.

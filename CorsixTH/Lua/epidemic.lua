@@ -503,18 +503,14 @@ end
 --who is evacuated @see evacuateHospital. For new patients they are marked
 --as they leave the reception desks.]]
 function Epidemic:markPatientsAsPassedReception()
-  local function get_reception_queuing_patients()
-    local queuing_patients = {}
-    for desk, _ in pairs(self.hospital.reception_desks) do
-      for _, patient in ipairs(desk.queue) do
-        -- Use patient as map key to speed up lookup
-        queuing_patients[patient] = true
-      end
+  local queuing_patients = {}
+  for _, desk in ipairs(self.hospital:findReceptionDesks()) do
+    for _, patient in ipairs(desk.queue) do
+      -- Use patient as map key to speed up lookup
+      queuing_patients[patient] = true
     end
-    return queuing_patients
   end
 
-  local queuing_patients = get_reception_queuing_patients()
   for _, patient in ipairs(self.hospital.patients) do
     -- Patient is not queuing for reception
     local px, py = patient.tile_x, patient.tile_y
