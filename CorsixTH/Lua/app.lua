@@ -142,12 +142,7 @@ function App:init()
     modes[#modes + 1] = "opengl"
   end
   self.fullscreen = false
-  if _MAP_EDITOR then
-    MapEditorInitWithLuaApp(self)
-    modes[#modes + 1] = "reuse context"
-    self.config.width = 640
-    self.config.height = 480
-  elseif self.config.fullscreen then
+  if self.config.fullscreen then
     self.fullscreen = true
     modes[#modes + 1] = "fullscreen"
   end
@@ -293,40 +288,36 @@ function App:init()
   end
 
   -- Load main menu (which creates UI)
-  if _MAP_EDITOR then
-    self:loadLevel("")
-  else
-    local function callback_after_movie()
-      self:loadMainMenu()
-      -- If we couldn't properly load the language, show an information dialog
-      if not language_load_success then
-        -- At this point we know the language is english, so no use having
-        -- localized strings.
-        self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
-        " to English because the desired language could not be loaded. "..
-        "Please make sure you have specified a font file in the config file."}))
-      end
+  local function callback_after_movie()
+    self:loadMainMenu()
+    -- If we couldn't properly load the language, show an information dialog
+    if not language_load_success then
+      -- At this point we know the language is english, so no use having
+      -- localized strings.
+      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
+      " to English because the desired language could not be loaded. "..
+      "Please make sure you have specified a font file in the config file."}))
+    end
 
-      -- If a savegame was specified, load it
-      if self.command_line.load then
-        local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
-        if not status then
-          err = _S.errors.load_prefix .. err
-          print(err)
-          self.ui:addWindow(UIInformation(self.ui, {err}))
-        end
-      end
-      -- There might also be a message from the earlier initialization process that should be shown.
-      -- Show it using the built-in font in case the game's font is messed up.
-      if error_message then
-        self.ui:addWindow(UIInformation(self.ui, error_message, true))
+    -- If a savegame was specified, load it
+    if self.command_line.load then
+      local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
+      if not status then
+        err = _S.errors.load_prefix .. err
+        print(err)
+        self.ui:addWindow(UIInformation(self.ui, {err}))
       end
     end
-    if self.config.play_intro then
-      self.moviePlayer:playIntro(callback_after_movie)
-    else
-      callback_after_movie()
+    -- There might also be a message from the earlier initialization process that should be shown.
+    -- Show it using the built-in font in case the game's font is messed up.
+    if error_message then
+      self.ui:addWindow(UIInformation(self.ui, error_message, true))
     end
+  end
+  if self.config.play_intro then
+    self.moviePlayer:playIntro(callback_after_movie)
+  else
+    callback_after_movie()
   end
   return true
 end

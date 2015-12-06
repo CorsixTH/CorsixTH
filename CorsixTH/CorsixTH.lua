@@ -110,8 +110,6 @@ else
   _DECODA = false
 end
 
-_MAP_EDITOR = _MAP_EDITOR or false
-
 -- Enable strict mode
 dofile "strict"
 require = destrict(require)
