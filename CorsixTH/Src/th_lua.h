@@ -54,7 +54,7 @@ inline void luaT_register(lua_State *L, const char *n, const std::vector<luaL_Re
     lua_pushvalue(L, -1);
     lua_setglobal(L, n);
 #else
-    luaL_register(L, n, l);
+    luaL_register(L, n, l.data());
 #endif
 }
 
