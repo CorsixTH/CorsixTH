@@ -1040,6 +1040,8 @@ local outside_temperatures = {
 --! World ticks are translated to game ticks (or hours) depending on the
 -- current speed of the game. There are 50 hours in a TH day.
 function World:onTick()
+  if self.map.level_number == "MAP EDITOR" then return end
+
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
