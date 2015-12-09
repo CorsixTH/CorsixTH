@@ -24,7 +24,7 @@ local function seek_toilets_action_start(action, humanoid)
   -- interrupted.
 
   if action.todo_interrupt then
-    humanoid.going_to_toilet = nil
+    humanoid.going_to_toilet = "no"
     humanoid:finishAction()
     return
   end
@@ -54,7 +54,7 @@ local function seek_toilets_action_start(action, humanoid)
     else
       humanoid:queueAction{name = "seek_reception"}
     end
-    humanoid.going_to_toilet = nil
+    humanoid.going_to_toilet = "no"
     humanoid:finishAction()
   end
 end

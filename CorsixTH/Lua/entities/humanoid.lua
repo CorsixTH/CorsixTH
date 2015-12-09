@@ -841,7 +841,6 @@ end
 --!param callback (function) The callback to call when a room has been built.
 function Humanoid:registerRoomBuildCallback(callback)
   if not self.build_callbacks[callback] then
-    self.world:registerRoomBuildCallback(callback)
     self.build_callbacks[callback] = true
   else
     self.world:gameLog("Warning: Trying to re-add room build callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
@@ -852,10 +851,15 @@ end
 --!param callback (function) The callback to remove.
 function Humanoid:unregisterRoomBuildCallback(callback)
   if self.build_callbacks[callback] then
-    self.world:unregisterRoomBuildCallback(callback)
     self.build_callbacks[callback] = nil
   else
     self.world:gameLog("Warning: Trying to remove nonexistant room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+function Humanoid:notifyNewRoom(room)
+  for callback, _ in pairs(self.build_callbacks) do
+    callback(room)
   end
 end
 

@@ -296,7 +296,16 @@ end
 function Entity:tickDay()
 end
 
+--! Notify the entity of a new object.
+--!param id Name of the new object.
+-- TODO Currently only used for benches placed nearby.
+-- TODO Maybe also pass the object tile coordinates?
 function Entity:notifyNewObject(id)
+end
+
+--! Notify the entity that a new room was built.
+--!param room (Room) The new room.
+function Entity:notifyNewRoom(room)
 end
 
 function Entity:setMood(mood_name, activate)
