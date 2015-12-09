@@ -60,6 +60,22 @@ function Map:getRoomId(x, y)
   return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
 end
 
+--! Set the camera tile for the given player on the map
+--!param x (int) Horizontal position of tile to set camera on
+--!param y (int) Vertical position of the tile to set the camera on
+--!param player (int) Player number (1-4)
+function Map:setCameraTile(x, y, player)
+  self.th:setCameraTile(x, y, player);
+end
+
+--! Set the heliport tile for the given player on the map
+--!param x (int) Horizontal position of tile to set heliport on
+--!param y (int) Vertical position of the tile to set the heliport on
+--!param player (int) Player number (1-4)
+function Map:setHeliportTile(x, y, player)
+  self.th:setHeliportTile(x, y, player);
+end
+
 --! Set how to display the room temperature in the hospital map.
 --!param method (int) Way of displaying the temperature. See also THMapTemperatureDisplay enum.
 --! 1=red gradients, 2=blue/green/red colour shifts, 3=yellow/orange/red colour shifts
@@ -389,6 +405,38 @@ function Map:updateDebugOverlayParcels()
   end
 end
 
+function Map:updateDebugOverlayCamera()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getCameraTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'C'..p
+    end
+  end
+end
+
+function Map:updateDebugOverlayHeliport()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getHeliportTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'H'..p
+    end
+  end
+end
+
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
@@ -418,6 +466,14 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   elseif base_offset == "parcel" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayParcels
+    self:updateDebugOverlay()
+  elseif base_offset == "camera" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayCamera
+    self:updateDebugOverlay()
+  elseif base_offset == "heliport" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayHeliport
     self:updateDebugOverlay()
   else
     local thData = self:getRawData()

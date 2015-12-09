@@ -636,6 +636,14 @@ map_editor_window = {
     parcel_7 = "Parcel 7",
     parcel_8 = "Parcel 8",
     parcel_9 = "Parcel 9",
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    helipad_1 = "Helipad 1",
+    helipad_2 = "Helipad 2",
+    helipad_3 = "Helipad 3",
+    helipad_4 = "Helipad 4",
     paste = "Paste area",
   }
 }

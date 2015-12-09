@@ -25,6 +25,9 @@ SOFTWARE.
 #include "th_pathfind.h"
 #include <cstring>
 #include <string>
+#include <exception>
+
+static const int player_max = 4;
 
 static int l_map_new(lua_State *L)
 {
@@ -344,6 +347,22 @@ static int l_map_get_player_count(lua_State *L)
     return 1;
 }
 
+static int l_map_set_player_count(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int count = static_cast<int>(luaL_checkinteger(L, 2));
+
+    try
+    {
+        pMap->setPlayerCount(count);
+    }
+    catch (std::out_of_range)
+    {
+        return luaL_error(L, "Player count out of range %d", count);
+    }
+    return 0;
+}
+
 static int l_map_get_player_camera(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -357,6 +376,20 @@ static int l_map_get_player_camera(lua_State *L)
     return 2;
 }
 
+static int l_map_set_player_camera(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+    int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+    int iPlayer = static_cast<int>(luaL_optinteger(L, 4, 1));
+
+    if (iPlayer < 1 || iPlayer > player_max)
+        return luaL_error(L, "Player index out of range: %i", iPlayer);
+
+    pMap->setPlayerCameraTile(iPlayer - 1, iX, iY);
+    return 0;
+}
+
 static int l_map_get_player_heliport(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -365,10 +398,24 @@ static int l_map_get_player_heliport(lua_State *L)
     bool bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
     bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
     if(!bGood)
-        return luaL_error(L, "Player index out of range: %i", iPlayer);
+        return luaL_error(L, "Player index out of range: %d", iPlayer);
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 2);
     return 2;
+}
+
+static int l_map_set_player_heliport(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1);
+    int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);
+    int iPlayer = static_cast<int>(luaL_optinteger(L, 4, 1));
+
+    if (iPlayer < 1 || iPlayer > player_max)
+        return luaL_error(L, "Player index out of range: %i", iPlayer);
+
+    pMap->setPlayerHeliportTile(iPlayer - 1, iX, iY);
+    return 0;
 }
 
 static int l_map_getcell(lua_State *L)
@@ -954,8 +1001,11 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_save, "save");
     luaT_setfunction(l_map_getsize, "size");
     luaT_setfunction(l_map_get_player_count, "getPlayerCount");
+    luaT_setfunction(l_map_set_player_count, "setPlayerCount");
     luaT_setfunction(l_map_get_player_camera, "getCameraTile");
+    luaT_setfunction(l_map_set_player_camera, "setCameraTile");
     luaT_setfunction(l_map_get_player_heliport, "getHeliportTile");
+    luaT_setfunction(l_map_set_player_heliport, "setHeliportTile");
     luaT_setfunction(l_map_getcell, "getCell");
     luaT_setfunction(l_map_gettemperature, "getCellTemperature");
     luaT_setfunction(l_map_getcellflags, "getCellFlags");

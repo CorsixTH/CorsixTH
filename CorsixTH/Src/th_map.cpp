@@ -32,6 +32,7 @@ SOFTWARE.
 #include <cstdio>
 #include <fstream>
 #include <string>
+#include <exception>
 
 THMapNode::THMapNode()
 {
@@ -577,6 +578,14 @@ bool THMap::isParcelPurchasable(int iParcelId, int iPlayer)
         return m_pPurchasableMatrix[iParcelId * 4 + iPlayer - 1];
     }
     return false;
+}
+
+void THMap::setPlayerCount(int count)
+{
+    if (count < 1 || count > 4)
+        throw new std::out_of_range("Player count must be between 1 and 4");
+
+    m_iPlayerCount = count;
 }
 
 bool THMap::getPlayerCameraTile(int iPlayer, int* pX, int* pY) const
