@@ -255,6 +255,13 @@ function UIEditRoom:confirm(force)
   end
 end
 
+--! Return whether humanoid entity is sticking around or walking into an area.
+--!param entity (Humanoid) Humanoid to check.
+--!param x1 (int) Smallest x value of the room.
+--!param x2 (int) Biggest x value of the room.
+--!param y1 (int) Smallest y value of the room.
+--!param y2 (int) Biggest y value of the room.
+--!return (bool) Whether the entity is blocking or going to block the area.
 function UIEditRoom:isHumanoidObscuringArea(entity, x1, x2, y1, y2)
   if entity.tile_x then
     if x1 <= entity.tile_x and entity.tile_x <= x2
@@ -335,6 +342,12 @@ function UIEditRoom:clearArea()
   end
 
   if next(humanoids_to_watch) == nil then
+    -- There might be litter on the floor (most likely a humanoid vomiting after
+    -- establishing the room blueprint, but before confirming).
+    -- Clear it all (ie also 'normal' litter).
+    local rect = self.blueprint_rect
+    self.world:clearLitterFromArea(rect.x, rect.y, rect.x + rect.w - 1, rect.y + rect.h - 1)
+
     -- No humanoids within the area, so continue with the room placement
     self:confirm(true)
     return

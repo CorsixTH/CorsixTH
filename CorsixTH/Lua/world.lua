@@ -2201,6 +2201,11 @@ function World:getObjects(x, y)
   return self.objects[index]
 end
 
+--! Get an object from a node in the world.
+--!param x (int) X position of the node to retrieve from.
+--!param y (int) Y position of the node to retrieve from.
+--!param id (string) Optional ID name of the object to retrieve (else first object is retrieved).
+--!return (object) Retrieved object, if it exists.
 function World:getObject(x, y, id)
   local objects = self:getObjects(x, y)
   if objects then
@@ -2248,6 +2253,22 @@ function World:getObjectsById(id)
   end
 
   return ret
+end
+
+--! Remove all litter from an area of the world.
+--!param x1 (int) Low x of the area to clear.
+--!param y1 (int) Low y of the area to clear.
+--!param x2 (int) High x of the area to clear.
+--!param y2 (int) High y of the area to clear.
+function World:clearLitterFromArea(x1, y1, x2, y2)
+  for x = x1, x2 do
+    for y = y1, y2 do
+      local obj = self:getObject(x, y, "litter")
+      if obj then -- Silently remove litter from the world.
+        self:removeLitter(obj, x, y)
+      end
+    end
+  end
 end
 
 --! Remove litter from a tile.
