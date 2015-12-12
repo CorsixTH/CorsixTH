@@ -228,6 +228,21 @@ function UITownMap:draw(canvas, x, y)
     end
   end
 
+  --! Select entities of the world by their id.
+  --!param id Id of the objects to select.
+  --!return (list) The selected entities.
+  local function get_objects_by_id(id)
+    local ret = {}
+    for _, obj_list in pairs(world.objects) do
+      for _, obj in ipairs(obj_list) do
+        if obj.object_type.id == id then
+          table.insert(ret, obj)
+        end
+      end
+    end
+    return ret
+  end
+
   if config.people_enabled then
     local staff_color = canvas:mapRGB(97, 109, 235)
     local patient_color = canvas:mapRGB(255, 255, 255)
@@ -237,17 +252,17 @@ function UITownMap:draw(canvas, x, y)
 
   if config.radiators_enabled then
     local radiator_color = canvas:mapRGB(255, 0, 70)
-    draw_entities(world:getObjectsById("radiator"), radiator_color, 1)
+    draw_entities(get_objects_by_id("radiator"), radiator_color, 1)
   end
 
   if config.fire_ext_enabled then
     local fire_ext_color = canvas:mapRGB(216, 0, 0)
-    draw_entities(world:getObjectsById("extinguisher"), fire_ext_color, 2)
+    draw_entities(get_objects_by_id("extinguisher"), fire_ext_color, 2)
   end
 
   if config.plants_enabled then
     local plant_color = canvas:mapRGB(127, 180, 73)
-    draw_entities(world:getObjectsById("plant"), plant_color, 2)
+    draw_entities(get_objects_by_id("plant"), plant_color, 2)
   end
 
   if config.objects_enabled then

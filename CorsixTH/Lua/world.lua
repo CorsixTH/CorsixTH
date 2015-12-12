@@ -2223,33 +2223,6 @@ function World:getObject(x, y, id)
   return -- nil
 end
 
-function World:getObjectsById(id)
-  if not id then
-      return self.objects
-  end
-
-  local ret = {}
-  if type(id) == "table" then
-    for position, obj_list in pairs(self.objects) do
-      for _, obj in ipairs(obj_list) do
-        if id[obj.object_type.id] then
-          table.insert(ret, obj)
-        end
-      end
-    end
-  else
-    for position, obj_list in pairs(self.objects) do
-      for _, obj in ipairs(obj_list) do
-        if obj.object_type.id == id then
-          table.insert(ret, obj)
-        end
-      end
-    end
-  end
-
-  return ret
-end
-
 --! Remove litter from a tile.
 --!param obj (Litter) litter to remove.
 --!param x (int) X position of the tile.
