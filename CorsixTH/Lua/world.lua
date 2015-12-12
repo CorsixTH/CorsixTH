@@ -1636,10 +1636,9 @@ in a room.
 !return (boolean) whether all checks hold.
 --]]
 function World:isTileEmpty(x, y, not_in_room)
-  for _, entity in ipairs(self.entities) do
-    if entity.tile_x == x and entity.tile_y == y then
-      return false
-    end
+  if #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0 or
+      #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0 then
+    return false
   end
   if not_in_room then
     return self:getRoom(x, y) == nil
