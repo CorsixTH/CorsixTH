@@ -2109,11 +2109,15 @@ function World:objectPlaced(entity, id)
   self.entities[#self.entities + 1] = entity
   -- If it is a bench we're placing, notify queueing patients in the vicinity
   if id == "bench" and entity.tile_x and entity.tile_y then
-    for _, patient in ipairs(self.entities) do
-      if class.is(patient, Patient) then
-        if math.abs(patient.tile_x - entity.tile_x) < 7 and
-          math.abs(patient.tile_y - entity.tile_y) < 7 then
-          patient:notifyNewObject(id)
+    local notify_distance = 6
+    local w, h = self.map.th:size()
+    local tx, ty
+    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+          if class.is(patient, Patient) then
+            patient:notifyNewObject(id)
+          end
         end
       end
     end
