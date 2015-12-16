@@ -1625,10 +1625,9 @@ in a room.
 !return (boolean) whether all checks hold.
 --]]
 function World:isTileEmpty(x, y, not_in_room)
-  for _, entity in ipairs(self.entities) do
-    if entity.tile_x == x and entity.tile_y == y then
-      return false
-    end
+  if #self.entity_map:getHumanoidsAtCoordinate(x, y) ~= 0 or
+      #self.entity_map:getObjectsAtCoordinate(x, y) ~= 0 then
+    return false
   end
   if not_in_room then
     return self:getRoom(x, y) == nil
@@ -2099,11 +2098,15 @@ function World:objectPlaced(entity, id)
   self.entities[#self.entities + 1] = entity
   -- If it is a bench we're placing, notify queueing patients in the vicinity
   if id == "bench" and entity.tile_x and entity.tile_y then
-    for _, patient in ipairs(self.entities) do
-      if class.is(patient, Patient) then
-        if math.abs(patient.tile_x - entity.tile_x) < 7 and
-          math.abs(patient.tile_y - entity.tile_y) < 7 then
-          patient:notifyNewObject(id)
+    local notify_distance = 6
+    local w, h = self.map.th:size()
+    local tx, ty
+    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+          if class.is(patient, Patient) then
+            patient:notifyNewObject(id)
+          end
         end
       end
     end
@@ -2210,33 +2213,6 @@ function World:getObject(x, y, id)
     end
   end
   return -- nil
-end
-
-function World:getObjectsById(id)
-  if not id then
-      return self.objects
-  end
-
-  local ret = {}
-  if type(id) == "table" then
-    for position, obj_list in pairs(self.objects) do
-      for _, obj in ipairs(obj_list) do
-        if id[obj.object_type.id] then
-          table.insert(ret, obj)
-        end
-      end
-    end
-  else
-    for position, obj_list in pairs(self.objects) do
-      for _, obj in ipairs(obj_list) do
-        if obj.object_type.id == id then
-          table.insert(ret, obj)
-        end
-      end
-    end
-  end
-
-  return ret
 end
 
 --! Remove litter from a tile.

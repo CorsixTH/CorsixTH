@@ -25,7 +25,7 @@ local CallsDispatcher = _G["CallsDispatcher"]
 
 local debug = false -- Turn on for debug message
 
-function CallsDispatcher:CallsDispatcher(world, entities)
+function CallsDispatcher:CallsDispatcher(world)
   self.world = world
   self.call_queue = {}
   self.change_callback = {}
