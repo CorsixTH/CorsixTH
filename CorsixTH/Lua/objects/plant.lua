@@ -101,16 +101,14 @@ end
 --! Goes one step forward (or backward) in the states of the plant.
 --!param restoring (boolean) If true the plant improves its health instead of drooping.
 function Plant:setNextState(restoring)
-  local change = 0
   if restoring then
     if self.current_state > 0 then
-      change = -1
+      self.current_state = self.current_state - 1
     end
   elseif self.current_state < 5 then
-    change = 1
+    self.current_state = self.current_state + 1
   end
 
-  self.current_state = self.current_state + change
   self.th:setFrame(self.base_frame + self.current_state)
 end
 
