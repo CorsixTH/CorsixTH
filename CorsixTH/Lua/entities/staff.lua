@@ -460,6 +460,7 @@ function Staff:setProfile(profile)
   end
   self:setLayer(5, profile.layer5)
   self:updateStaffTitle()
+  self.waiting_for_staffroom = false -- Staff member has detected there is no staff room to rest.
 end
 
 function Staff:needsWorkStation()
@@ -583,15 +584,7 @@ function Staff:checkIfNeedRest()
       end
       -- If no staff room exists, prevent further checks until one is built
       if not self.world:findRoomNear(self, "staff_room") then
-        self.waiting_for_staffroom = true
-        local callback
-        callback = --[[persistable:staff_build_staff_room_callback]] function(room)
-          if room.room_info.id == "staff_room" then
-            self.waiting_for_staffroom = nil
-            self:unregisterRoomBuildCallback(callback)
-          end
-        end
-        self:registerRoomBuildCallback(callback)
+        self.waiting_for_staffroom = true -- notifyNewRoom resets it when a staff room gets built.
         return
       end
       local room = self:getRoom()
@@ -605,6 +598,12 @@ function Staff:checkIfNeedRest()
         self:goToStaffRoom()
       end
     end
+  end
+end
+
+function Staff:notifyNewRoom(room)
+  if room.room_info.id == "staff_room" then
+    self.waiting_for_staffroom = false
   end
 end
 
@@ -987,3 +986,6 @@ function Staff:getDrawingLayer()
     return 4
   end
 end
+
+-- Dummy callback for savegame compatibility
+local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function(room) end

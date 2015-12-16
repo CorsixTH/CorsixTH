@@ -40,13 +40,8 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   -- We actually don't want any dynamic info just yet
   self:clearDynamicInfo()
   -- Change hover cursor once the room has been finished.
-  local callback
-  callback = --[[persistable:machine_build_callback]] function(room)
-    if room.objects[self] then
-      self:finalize(room)
-      self.world:unregisterRoomBuildCallback(callback)
-    end
-  end
+  self.waiting_for_finalize = true -- Waiting until the room is completed (reset by new-room callback).
+
   local orientation = object_type.orientations[direction]
   local handyman_position = orientation.handyman_position
   if handyman_position then
@@ -70,7 +65,13 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   else
     self.handyman_position = {orientation.use_position[1], orientation.use_position[2]}
   end
-  self.world:registerRoomBuildCallback(callback)
+end
+
+function Machine:notifyNewRoom(room)
+  if self.waiting_for_finalize and room.objects[self] then
+    self:finalize(room)
+    self.waiting_for_finalize = false
+  end
 end
 
 function Machine:setCrashedAnimation()
@@ -383,6 +384,9 @@ function Machine:tick()
   if self.smokeInfo then
     self.smokeInfo:tick()
   end
-  
+
   return Object.tick(self)
 end
+
+-- Dummy callback for savegame compatibility
+local callbackNewRoom = --[[persistable:machine_build_callback]] function(room) end

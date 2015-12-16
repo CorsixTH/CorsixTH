@@ -104,7 +104,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
           if use_time <= 0 then
             humanoid:setMood("poo", "deactivate")
             humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
-            humanoid.going_to_toilet = nil
+            humanoid.going_to_toilet = "no"
           -- There are only animations for standard patients to use the sinks.
             if humanoid.humanoid_class == "Standard Female Patient" or
               humanoid.humanoid_class == "Standard Male Patient" then

@@ -46,6 +46,9 @@ function Patient:Patient(...)
   self.vaccination_candidate = false
   -- Has the patient passed reception?
   self.has_passed_reception = false
+
+  -- Is the patient trying to get to the toilet? ("yes", "no", or "no-toilets")
+  self.going_to_toilet = "no"
 end
 
 function Patient:onClick(ui, button)
@@ -723,30 +726,22 @@ function Patient:tickDay()
       if math.random(1, 10) < 5 then
         self:pee()
         self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
-        self.going_to_toilet = false
+        self.going_to_toilet = "no"
       else
         -- If waiting for user response, do not send to toilets, as this messes
         -- things up.
-        if not self.going_to_toilet and not self.waiting then
+        if self.going_to_toilet == "no" and not self.waiting then
           self:setMood("poo", "activate")
           -- Check if any room exists.
           if not self.world:findRoomNear(self, "toilets") then
-            self.going_to_toilet = true
-            local callback
-            callback = --[[persistable:patient_toilet_build_callback]] function(room)
-              if room.room_info.id == "toilets" then
-                self.going_to_toilet = false
-                self:unregisterRoomBuildCallback(callback)
-              end
-            end
-            self:registerRoomBuildCallback(callback)
+            self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
           -- Otherwise we can queue the action, but only if not in any rooms right now.
           elseif not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].pee then
             self:setNextAction{
               name = "seek_toilets",
               must_happen = true,
               }
-            self.going_to_toilet = true
+            self.going_to_toilet = "yes"
           end
         end
       end
@@ -762,7 +757,7 @@ function Patient:tickDay()
     self:setMood("thirsty", "activate")
     -- If there's already an action to buy a drink in the action queue, or
     -- if we're going to the loo, do nothing
-    if self:goingToUseObject("drinks_machine") or self.going_to_toilet then
+    if self:goingToUseObject("drinks_machine") or self.going_to_toilet ~= "no" then
       return
     end
     -- Don't check for a drinks machine too often
@@ -900,6 +895,12 @@ function Patient:tickDay()
     else
       self.noqueue_ticks = 0
     end
+  end
+end
+
+function Patient:notifyNewRoom(room)
+  if self.going_to_toilet == "no-toilets" and room.room_info.id == "toilets" then
+    self.going_to_toilet = "no" -- Patient can try again going to the loo.
   end
 end
 
@@ -1092,6 +1093,19 @@ function Patient:afterLoad(old, new)
       self.die_anims.rise_hell_east = 580
     end
   end
+  if old < 108 then
+    if self.going_to_toilet then
+      -- Not easily decidable what the patient is doing here,
+      -- removing a toilet while it's used is unlikely to happen.
+      if self.world:findRoomNear(self, "toilets") then
+        self.going_to_toilet = "yes"
+      else
+        self.going_to_toilet = "no-toilets"
+      end
+    else
+      self.going_to_toilet = "no"
+    end
+  end
   Humanoid.afterLoad(self, old, new)
 end
 
@@ -1103,3 +1117,6 @@ function Patient:isMalePatient()
     return male_patient_classes[self.humanoid_class] ~= nil
   end
 end
+
+-- Dummy callback for savegame compatibility
+local callbackNewRoom = --[[persistable:patient_toilet_build_callback]] function(room) end

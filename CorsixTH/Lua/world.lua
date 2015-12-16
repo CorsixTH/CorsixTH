@@ -59,7 +59,7 @@ function World:World(app)
   self.animation_manager = app.animation_manager
   self.pathfinder = TH.pathfinder()
   self.pathfinder:setMap(app.map.th)
-  self.entities = {}
+  self.entities = {} -- List of entities in the world.
   self.dispatcher = CallsDispatcher(self)
   self.objects = {}
   self.object_counts = {
@@ -100,7 +100,6 @@ function World:World(app)
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
-  self.room_build_callbacks = {--[[a set rather than a list]]}
   self.room_remove_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
@@ -763,19 +762,6 @@ function World:getAnimLength(anim)
   return self.animation_manager:getAnimLength(anim)
 end
 
--- Register a function to be called whenever a room is built.
---!param callback (function) A function taking one argument: a `Room`.
-function World:registerRoomBuildCallback(callback)
-  self.room_build_callbacks[callback] = true
-end
-
--- Unregister a function from being called whenever a room is built.
---!param callback (function) A function previously passed to
--- `registerRoomBuildCallback`.
-function World:unregisterRoomBuildCallback(callback)
-  self.room_build_callbacks[callback] = nil
-end
-
 -- Register a function to be called whenever a room has been deactivated (crashed or edited).
 --!param callback (function) A function taking one argument: a `Room`.
 function World:registerRoomRemoveCallback(callback)
@@ -803,15 +789,18 @@ function World:newRoom(x, y, w, h, room_info, ...)
   return room
 end
 
---! Called when a room has been completely built and is ready to use
+--! Called when a room has been completely built and is ready to use.
+--!param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
   local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.room_info.id]
   if diag_disease and not diag_disease.discovered then
     self.hospitals[1].disease_casebook["diag_" .. room.room_info.id].discovered = true
   end
-  for callback in pairs(self.room_build_callbacks) do
-    callback(room)
+  for _, entity in ipairs(self.entities) do
+    if entity.notifyNewRoom then
+      entity:notifyNewRoom(room)
+    end
   end
 end
 
@@ -2610,6 +2599,9 @@ function World:afterLoad(old, new)
         self.entity_map:addEntity(x,y,e)
       end
     end
+  end
+  if old < 108 then
+    self.room_build_callbacks = nil
   end
   self.savegame_version = new
 end

@@ -679,7 +679,7 @@ local function tryMovePatient(old_room, new_room, patient)
 
   local px, py = patient.tile_x, patient.tile_y
   -- Don't reroute the patient if he just decided to go to the toilet
-  if patient.going_to_toilet then
+  if patient.going_to_toilet ~= "no" then
     return false
   end
 
