@@ -161,8 +161,13 @@ end
 
 function UIBuildRoom:buildRoom(index)
   local hosp = self.ui.hospital
+  local world = self.ui.app.world
+
   if index == 1 then self.ui:tutorialStep(3, 3, 4) end
-  if hosp.balance >= hosp.research.research_progress[self.list[index]].build_cost then
+
+  local cost = world.free_build_mode and 0 or
+      hosp.research.research_progress[self.list[index]].build_cost
+  if world.free_build_mode or hosp.balance >= cost then
     -- Close any full screen window currently open.
     local fullscreen = self.ui:getWindow(UIFullscreen)
     if fullscreen then
@@ -170,11 +175,9 @@ function UIBuildRoom:buildRoom(index)
     end
     local edit_dlg = UIEditRoom(self.ui, self.list[index])
     self.ui:addWindow(edit_dlg)
-  elseif hosp.balance < hosp.research.research_progress[self.list[index]].build_cost then
+  else
     -- give visual warning that player doesn't have enough $ to build
     self.ui.adviser:say(_A.warnings.money_very_low_take_loan, false, true)
-    self.ui:playSound("Wrong2.wav")
-  else
     self.ui:playSound("Wrong2.wav")
   end
 end
@@ -199,7 +202,10 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
       self.cost_box = _S.build_room_window.cost .. "0"
       self.preview_anim = false
     else
-      local cost = self.ui.hospital.research.research_progress[self.list[hover_idx]].build_cost
+      local hosp = self.ui.hospital
+      local world = self.ui.app.world
+      local cost = world.free_build_mode and 0 or
+          hosp.research.research_progress[self.list[hover_idx]].build_cost
       self.cost_box = _S.build_room_window.cost .. cost
       self.preview_anim = TH.animation()
       self.preview_anim:setAnimation(self.ui.app.anims, self.list[hover_idx].build_preview_animation)
