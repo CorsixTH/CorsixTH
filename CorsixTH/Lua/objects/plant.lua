@@ -166,13 +166,6 @@ end
 
 --! When the plant needs water it periodically calls for a nearby handyman.
 function Plant:callForWatering()
-
-  if self.unreachable then
-    local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
-    if ux and uy then
-      self.unreachable = nil
-    end
-  end
   -- If self.ticks is true it means that a handyman is currently watering the plant.
   -- If there are no tiles to water from, just die.
   if not self.ticks then
