@@ -101,16 +101,14 @@ end
 --! Goes one step forward (or backward) in the states of the plant.
 --!param restoring (boolean) If true the plant improves its health instead of drooping.
 function Plant:setNextState(restoring)
-  local change = 0
   if restoring then
     if self.current_state > 0 then
-      change = -1
+      self.current_state = self.current_state - 1
     end
   elseif self.current_state < 5 then
-    change = 1
+    self.current_state = self.current_state + 1
   end
 
-  self.current_state = self.current_state + change
   self.th:setFrame(self.base_frame + self.current_state)
 end
 
@@ -168,30 +166,23 @@ end
 
 --! When the plant needs water it periodically calls for a nearby handyman.
 function Plant:callForWatering()
-
-  if self.unreachable then
-    local ux, uy = self:getBestUsageTileXY(handyman.tile_x, handyman.tile_y)
-    if ux and uy then
-      self.unreachable = nil
-    end
-  end
   -- If self.ticks is true it means that a handyman is currently watering the plant.
   -- If there are no tiles to water from, just die.
-  if not self.ticks and not self.unreachable then
-    local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
-    if index == -1 then
-      local call = self.world.dispatcher:callForWatering(self)
-      if self.current_state > 1 and not self.plant_announced then
-        self.world.ui.adviser:say(_A.warnings.plants_thirsty)
-        self.plant_announced = true
+  if not self.ticks then
+    if not self.unreachable then
+      local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
+      if index == -1 then
+        local call = self.world.dispatcher:callForWatering(self)
+        self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
+      else
+        self.hospital:modifyHandymanTaskPriority(index, self.current_state + 1, "watering")
       end
-      self.hospital:addHandymanTask(self, "watering", self.current_state + 1, self.tile_x, self.tile_y, call)
-    else
-      if self.current_state > 1 and not self.plant_announced then
-        self.world.ui.adviser:say(_A.warnings.plants_thirsty)
-        self.plant_announced = true
-      end
-      self.hospital:modifyHandymanTaskPriority(index, self.current_state + 1, "watering")
+    end
+
+    -- If very thirsty, make user aware of it.
+    if self.current_state > 1 and not self.plant_announced then
+      self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+      self.plant_announced = true
     end
   end
 end
@@ -245,38 +236,32 @@ end
 --!param from_x (integer) The x coordinate of tile to calculate from.
 --!param from_y (integer) The y coordinate of tile to calculate from.
 function Plant:getBestUsageTileXY(from_x, from_y)
-  local lx, ly = self.tile_x, self.tile_y + 1
-  local rx, ry
-  local shortest_path = 1000
-  local world = self.world
-  local direction = "north"
-  local res_dir = direction
-  local function shortest(distance)
-    if distance and distance < shortest_path then
-      -- Only take this route if there is no wall between the plant and the tile.
-      local room_here = self:getRoom()
-      local room_there = self.world:getRoom(lx, ly)
-      if room_here == room_there or (not room_here and not room_there) then
-        shortest_path = distance
-        rx = lx
-        ry = ly
-        res_dir = direction
+  local access_points = {{dx =  0, dy =  1, direction = "north"},
+                         {dx =  0, dy = -1, direction = "south"},
+                         {dx = -1, dy =  0, direction = "east"},
+                         {dx =  1, dy =  0, direction = "west"}}
+  local shortest
+  local best_point = nil
+  local room_here = self:getRoom()
+  for _, point in ipairs(access_points) do
+    local dest_x, dest_y = self.tile_x + point.dx, self.tile_y + point.dy
+    local room_there = self.world:getRoom(dest_x, dest_y)
+    if room_here == room_there then
+      local distance = self.world:getPathDistance(from_x, from_y, self.tile_x + point.dx, self.tile_y + point.dy)
+      if distance and (not best_point or shortest > distance) then
+        best_point = point
+        shortest = distance
       end
     end
   end
-  shortest(world:getPathDistance(from_x, from_y, lx, ly))
-  ly = ly - 2
-  direction = "south"
-  shortest(world:getPathDistance(from_x, from_y, lx, ly))
-  lx = lx - 1
-  ly = ly + 1
-  direction = "east"
-  shortest(world:getPathDistance(from_x, from_y, lx, ly))
-  lx = lx + 2
-  direction = "west"
-  shortest(world:getPathDistance(from_x, from_y, lx, ly))
-  self.direction = res_dir
-  return rx, ry
+
+  if best_point then
+    self.direction = best_point.direction
+    return self.tile_x + best_point.dx, self.tile_y + best_point.dy
+  else
+    self.direction = "north"
+    return
+  end
 end
 
 --! Counts down to eventually let the plant droop.
