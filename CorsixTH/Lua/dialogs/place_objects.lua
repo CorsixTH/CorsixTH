@@ -222,7 +222,8 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
     self.objects[#self.objects + 1] = object
     if pay_for then
       local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
-      self.ui.hospital:spendMoney(object.qty * build_cost, _S.transactions.buy_object .. ": " .. object.object.name, object.qty * build_cost)
+      local msg = _S.transactions.buy_object .. ": " .. object.object.name
+      self.ui.hospital:spendMoney(object.qty * build_cost, msg, object.qty * build_cost)
     end
   end
 
@@ -242,9 +243,10 @@ end
 
 -- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
-  local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
   if refund then
-    self.ui.hospital:receiveMoney(build_cost, _S.transactions.sell_object .. ": " .. object.object.name, build_cost)
+    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
+    local msg = _S.transactions.sell_object .. ": " .. object.object.name
+    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
   end
 
   object.qty = object.qty - 1
