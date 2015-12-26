@@ -203,7 +203,7 @@ bool EmbeddedGamePanel::_resume(lua_State *L, int iNArgs, int iNRes)
     bool bGood = true;
     if(lua_resume(L, iNArgs) != LUA_YIELD)
     {
-        // Error occured during event processing.
+        // Error occurred during event processing.
         bGood = false;
         // Transfer the error details to m_Lthread
         int iNTransfer = lua_gettop(L);

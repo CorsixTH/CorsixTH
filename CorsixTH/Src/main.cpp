@@ -192,7 +192,7 @@ int CorsixTH_lua_stacktrace(lua_State *L)
     lua_call(L, 1, 1);
 
     // err = <description> .. err
-    lua_pushliteral(L, "An error has occured in CorsixTH:\n");
+    lua_pushliteral(L, "An error has occurred in CorsixTH:\n");
     lua_insert(L, 1);
     lua_concat(L, 2);
 
@@ -208,7 +208,7 @@ int CorsixTH_lua_stacktrace(lua_State *L)
 
 int CorsixTH_lua_panic(lua_State *L)
 {
-    std::fprintf(stderr, "A Lua error has occured in CorsixTH outside of protected "
+    std::fprintf(stderr, "A Lua error has occurred in CorsixTH outside of protected "
         "mode!!\n");
     std::fflush(stderr);
 

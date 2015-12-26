@@ -104,7 +104,7 @@ int main(int argc, char** argv)
             }
             else
             {
-                fprintf(stderr, "An error has occured in CorsixTH:\n"
+                fprintf(stderr, "An error has occurred in CorsixTH:\n"
                     "Uncaught non-string Lua error\n");
             }
             lua_pushcfunction(L, Bootstrap_lua_error_report);
