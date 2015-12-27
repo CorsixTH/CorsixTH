@@ -912,7 +912,7 @@ function App:run()
       -- returned from mainloop(), meaning that where == "callback".
       self.last_dispatch_type = where
     end
-    print("An error has occured!")
+    print("An error has occurred!")
     print("Almost anything can be the cause, but the detailed information "..
     "below can help the developers find the source of the error.")
     print("Running: The " .. self.last_dispatch_type .. " handler.")
@@ -937,7 +937,7 @@ function App:run()
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
       self.ui:addWindow(UIConfirmDialog(self.ui,
-        "Sorry, but an error has occured. There can be many reasons - see the log "..
+        "Sorry, but an error has occurred. There can be many reasons - see the log "..
         "window for details. Would you like to attempt a recovery?",
         --[[persistable:app_attempt_recovery]] function()
           self.world:gameLog("Recovering from error in timer handler...")

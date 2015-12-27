@@ -654,7 +654,7 @@ public:
     {
         if(m_bHadError)
         {
-            // If an error occured, then silently fail to write any
+            // If an error occurred, then silently fail to write any
             // data.
             return;
         }
