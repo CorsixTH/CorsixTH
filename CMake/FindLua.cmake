@@ -26,8 +26,8 @@ IF (WITH_LUAJIT)
     SET (LUA_INCLUDE_DIRS include/luajit-2.0 include)
 ELSE (WITH_LUAJIT)
     SET (LUA_INTERPRETER_TYPE "Lua")
-    SET (LUA_LIBRARY_NAME lua53 lua52 lua5.1 lua51 lua lua-5.1 liblua)
-    SET (LUA_INCLUDE_DIRS include include/lua include/lua5.1 include/lua51 include/lua-5.1)
+    SET (LUA_LIBRARY_NAME lua53 lua52 lua5.1 lua51 lua lua-5.1 liblua liblua.5.3.dylib)
+    SET (LUA_INCLUDE_DIRS include include/lua include/lua5.1 include/lua51 include/lua-5.1 include/lua5.3 include/lua-5.3)
 ENDIF(WITH_LUAJIT)
 
 FIND_PATH (LUA_INCLUDE_DIR lua.h
@@ -50,12 +50,21 @@ FIND_LIBRARY (LUA_LIBRARY NAMES ${LUA_LIBRARY_NAME}
   PATHS
   /usr
   /usr/local
-  /opt/ocal
+  /opt/local
   /opt
   /sw
   ~/Library/Frameworks
   /Library/Frameworks
 )
+
+IF (NOT LUA_INCLUDE_DIR)
+    MESSAGE(FATAL_ERROR "Could Not Find LUA Include Dir")
+ENDIF (NOT LUA_INCLUDE_DIR)
+
+IF (NOT LUA_LIBRARY)
+    MESSAGE(FATAL_ERROR "Could Not Found LUA Library")
+ENDIF (NOT LUA_LIBRARY)
+
 
 IF (LUA_INCLUDE_DIR AND LUA_LIBRARY)
     SET (Lua_FOUND TRUE)
