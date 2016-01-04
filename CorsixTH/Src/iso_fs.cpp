@@ -24,12 +24,7 @@ SOFTWARE.
 #include <cstring>
 #include <cstdarg>
 #include <cstdlib>
-#ifdef CORSIX_TH_HAS_MALLOC_H
-#include <malloc.h> // for alloca
-#endif
-#ifdef CORSIX_TH_HAS_ALLOCA_H
-#include <alloca.h>
-#endif
+#include <vector>
 #include <algorithm>
 
 IsoFilesystem::IsoFilesystem()
@@ -332,7 +327,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
                              void* pCallbackData) const
 {
     size_t iLen = std::strlen(sPath) + 1;
-    char *sNormedPath = (char*)alloca(iLen);
+    std::vector<char> sNormedPath(iLen);
     for(size_t i = 0; i < iLen; ++i)
         sNormedPath[i] = _normalise(sPath[i]);
 
@@ -341,7 +336,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
     for(size_t i = 0; i < m_iNumFiles; ++i)
     {
         const char *sName = m_pFiles[i].sPath;
-        if(std::strlen(sName) >= iLen && std::memcmp(sNormedPath, sName, iLen - 1) == 0)
+        if(std::strlen(sName) >= iLen && std::memcmp(sNormedPath.data(), sName, iLen - 1) == 0)
         {
             sName += iLen - 1;
             if(*sName == m_cPathSeparator)
@@ -355,7 +350,7 @@ void IsoFilesystem::visitDirectoryFiles(const char* sPath,
 IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
 {
     size_t iLen = std::strlen(sPath) + 1;
-    char *sNormedPath = (char*)alloca(iLen);
+    std::vector<char> sNormedPath(iLen);
     for(size_t i = 0; i < iLen; ++i)
         sNormedPath[i] = _normalise(sPath[i]);
 
@@ -364,7 +359,7 @@ IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
     while(iLower != iUpper)
     {
         int iMid = (iLower + iUpper) / 2;
-        int iComp = std::strcmp(sNormedPath, m_pFiles[iMid].sPath);
+        int iComp = std::strcmp(sNormedPath.data(), m_pFiles[iMid].sPath);
         if(iComp == 0)
             return iMid + 1;
         else if(iComp < 0)
