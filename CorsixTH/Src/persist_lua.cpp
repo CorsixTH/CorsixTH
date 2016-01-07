@@ -26,6 +26,7 @@ SOFTWARE.
 #include <cmath>
 #include <cstdio>
 #include <vector>
+#include <cstdlib>
 #ifdef _MSC_VER
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
@@ -131,7 +132,7 @@ public:
         : m_L(L)
     {
         m_iDataBufferLength = 1024;
-        m_pData = (uint8_t*)malloc(m_iDataBufferLength);
+        m_pData = static_cast<uint8_t*>(std::malloc(m_iDataBufferLength));
     }
 
     ~LuaPersistBasicWriter()
@@ -740,7 +741,7 @@ public:
         : m_L(L)
     {
         m_iStringBufferLength = 32;
-        m_sStringBuffer = (char*)malloc(m_iStringBufferLength);
+        m_sStringBuffer = static_cast<char*>(std::malloc(m_iStringBufferLength));
     }
 
     ~LuaPersistBasicReader()
