@@ -10,6 +10,7 @@ addons:
       - luarocks
       - doxygen
       - g++-5
+      - sshpass
 
 before_install:
   # Required for LDocGen
