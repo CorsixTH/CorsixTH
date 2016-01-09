@@ -85,7 +85,8 @@ function Patient:setDisease(disease)
   self.diagnosed = false
   self.diagnosis_progress = 0
   self.cure_rooms_visited = 0
-  -- copy list of diagnosis rooms
+  -- Copy list of diagnosis rooms
+  -- (patient may visit these for diagnosis, if they exist in the hospital).
   self.available_diagnosis_rooms = {}
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
@@ -111,50 +112,29 @@ function Patient:changeDisease(new_disease)
   assert(self.disease.contagious, "Cannot change the disease of a patient who has a non-contagious disease")
   assert(new_disease.contagious, "Cannot change a disease to a non-contagious disease")
 
-  --[[ Go through the list of diagnosis rooms for the current disease
-  -- and check if they are in the list of available rooms for the patient
-  -- if they are not on there they must be visited already or unavailable
-  -- @return visited_or_unavailable_rooms (table of strings) names of visited
-  -- or unavailable rooms]]
-  local function get_visited_or_unavailable_rooms()
-    local visited = ""
-    local visited_or_unavailable_rooms = {}
-    for j, disease_room in ipairs(self.disease.diagnosis_rooms) do
-      local found = false
+  local visited_rooms = {}
 
-      for i, room in ipairs(self.available_diagnosis_rooms) do
-        if room == disease_room then
-          found = true
-        end
-      end
-      if not found then
-        visited_or_unavailable_rooms[#visited_or_unavailable_rooms + 1] = disease_room
-        visited = visited == "" and disease_room or visited .. "," .. disease_room
-      end
-    end
-    return visited_or_unavailable_rooms
+  -- Add all diagnosis room for the old disease.
+  for _, room in ipairs(self.disease.diagnosis_rooms) do
+    visited_rooms[room] = true
   end
 
-  -- Copy the diagnosis rooms from the new disease
-  local new_diagnosis_rooms = {}
-  for i, new_diag_room in ipairs(new_disease.diagnosis_rooms) do
-    new_diagnosis_rooms[#new_diagnosis_rooms+1] = new_diag_room
+  -- Disable the rooms not yet visited by the patient.
+  for _, room in ipairs(self.available_diagnosis_rooms) do
+    visited_rooms[room] = false
   end
 
-  -- The set of new diagnosis rooms is the diagnosis rooms
-  -- for the new disease MINUS the ones they have already visited or
-  -- are unavailable.
-  local visited_rooms = get_visited_or_unavailable_rooms()
-  for i, new_diag_room in ipairs(new_diagnosis_rooms) do
-    for _, visited_room in ipairs(visited_rooms) do
-      if(new_diag_room == visited_room) then
-        table.remove(new_diagnosis_rooms,i)
-      end
+  -- 'visited_rooms' is now diagnosis rooms that the patient has visited for the old disease.
+
+  -- Compute unvisited rooms for the new disease.
+  self.available_diagnosis_rooms = {}
+  for _, room in ipairs(new_disease.diagnosis_rooms) do
+    if not visited_rooms[room] then
+      self.available_diagnosis_rooms[#self.available_diagnosis_rooms + 1] = room
     end
   end
 
-  self.available_diagnosis_rooms = new_diagnosis_rooms
-  self.disease = new_disease
+  self.disease = new_disease -- Finally, make the patient carry the new disease.
 end
 
 function Patient:setdiagDiff()
