@@ -400,7 +400,7 @@ static int l_map_get_player_heliport(lua_State *L)
     if(!bGood)
         return luaL_error(L, "Player index out of range: %d", iPlayer);
     lua_pushinteger(L, iX + 1);
-    lua_pushinteger(L, iY + 2);
+    lua_pushinteger(L, iY + 1);
     return 2;
 }
 

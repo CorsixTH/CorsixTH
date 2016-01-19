@@ -42,6 +42,8 @@ local Helicopter = _G["Helicopter"]
 
 function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
   local x, y = hospital:getHeliportPosition()
+  -- Helicoptor needs to land below tile to be positioned correctly
+  y = y + 1
   self:Object(world, object_type, x, y, direction, etc)
   self.th:makeInvisible()
   self:setPosition(0, -600)
