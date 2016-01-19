@@ -543,6 +543,14 @@ function UIMapEditor:UIMapEditor(ui)
   self:setPosition(0.1, 0.1)
 end
 
+function UIMapEditor:setPlayerCount(count)
+  local map = self.ui.app.map
+  map:setPlayerCount(count)
+  if self.cursor.state == "camera" or self.cursor.state == "helipad" then
+    map:updateDebugOverlay()
+  end
+end
+
 -- {{{ function UIMapEditor:pageClicked(name)
 --! Callback function of the page select buttons.
 --!param name (string) Name of the clicked page.

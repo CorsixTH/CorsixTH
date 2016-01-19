@@ -41,19 +41,19 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.hospital = local_hospital
   self.tutorial = { chapter = 0, phase = 0 }
-  self.map_editor = map_editor
-
-  -- UI widgets
-  self.menu_bar = UIMenuBar(self, self.map_editor)
-  self:addWindow(self.menu_bar)
-  if self.map_editor then
-    self:addWindow(UIMapEditor(self))
+  if map_editor then
+    self.map_editor = UIMapEditor(self)
+    self:addWindow(self.map_editor)
   else
     self.adviser = UIAdviser(self)
     self.bottom_panel = UIBottomPanel(self)
     self.bottom_panel:addWindow(self.adviser)
     self:addWindow(self.bottom_panel)
   end
+
+  -- UI widgets
+  self.menu_bar = UIMenuBar(self, self.map_editor)
+  self:addWindow(self.menu_bar)
 
   local scr_w = app.config.width
   local scr_h = app.config.height

@@ -74,6 +74,8 @@ tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this dise
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
+menu["player_count"] = "PLAYER COUNT"
+
 menu_file = {
   load =    " (SHIFT+L) LOAD   ",
   save =    " (SHIFT+S) SAVE   ",
@@ -157,6 +159,12 @@ menu_debug_overlay = {
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCEL  ",
+}
+menu_player_count = {
+	players_1 = "  1 PLAYER  ",
+	players_2 = "  2 PLAYERS  ",
+	players_3 = "  3 PLAYERS  ",
+	players_4 = "  4 PLAYERS  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",

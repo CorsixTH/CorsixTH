@@ -533,6 +533,13 @@ function UIMenuBar:makeMapeditorMenu(app)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
     :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
+
+  menu = UIMenu()
+  menu:appendItem(_S.menu_player_count.players_1, function() self.ui.map_editor:setPlayerCount(1) end)
+    :appendItem(_S.menu_player_count.players_2, function() self.ui.map_editor:setPlayerCount(2) end)
+    :appendItem(_S.menu_player_count.players_3, function() self.ui.map_editor:setPlayerCount(3) end)
+    :appendItem(_S.menu_player_count.players_4, function() self.ui.map_editor:setPlayerCount(4) end)
+  self:addMenu(_S.menu.player_count, menu)
 end
 
 --! Make a menu for the game.

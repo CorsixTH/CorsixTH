@@ -60,6 +60,14 @@ function Map:getRoomId(x, y)
   return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
 end
 
+function Map:setPlayerCount(count)
+  self.th:setPlayerCount(count)
+end
+
+function Map:getPlayerCount(count)
+  self.th:getPlayerCount(count)
+end
+
 --! Set the camera tile for the given player on the map
 --!param x (int) Horizontal position of tile to set camera on
 --!param y (int) Vertical position of the tile to set the camera on
