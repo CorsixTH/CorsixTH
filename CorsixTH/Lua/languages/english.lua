@@ -648,10 +648,10 @@ map_editor_window = {
     camera_2 = "Camera 2",
     camera_3 = "Camera 3",
     camera_4 = "Camera 4",
-    helipad_1 = "Helipad 1",
-    helipad_2 = "Helipad 2",
-    helipad_3 = "Helipad 3",
-    helipad_4 = "Helipad 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
     paste = "Paste area",
   }
 }

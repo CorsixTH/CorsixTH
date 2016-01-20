@@ -432,7 +432,7 @@ function UIMapEditor:UIMapEditor(ui)
   --  - paste-left: Left mouse button drag of 'paste' mode. Pasting is limited to dragged
   --                area (which can be smaller than (copy_xsize, copy_ysize) area).
   --  - camera: Like grid, with a 1x1 cursor for selecting tile to set the camera
-  --  - helipad: Like grid, with a 1x1 cursor for selecting tile to set the helipad
+  --  - heliport: Like grid, with a 1x1 cursor for selecting tile to set the heliport
   --
   -- Notes:
   --  - The code switches back to 'grid' or 'disabled' without waiting for all
@@ -448,7 +448,7 @@ function UIMapEditor:UIMapEditor(ui)
     is_drag = false,    -- Whether a true drag (at least 2 cells covered) has been detected.
     parcel = nil,       -- Parcel number to set in 'parcel' / 'parcel-left' mode.
     camera = nil,	-- Camera player to set in 'camera' mode.
-    helipad = nil,	-- Helipad player to set in 'helipad' mode.
+    heliport = nil,	-- Heliport player to set in 'heliport' mode.
 
     xpos = 0,   -- Horizontal tile position of the mouse cursor.
     ypos = 0,   -- Vertical tile position of the mouse cursor.
@@ -517,10 +517,10 @@ function UIMapEditor:UIMapEditor(ui)
     {name = "camera_2", text = _S.map_editor_window.pages.camera_2, camera = 2},
     {name = "camera_3", text = _S.map_editor_window.pages.camera_3, camera = 3},
     {name = "camera_4", text = _S.map_editor_window.pages.camera_4, camera = 4},
-    {name = "helipad_1", text = _S.map_editor_window.pages.helipad_1, helipad = 1},
-    {name = "helipad_2", text = _S.map_editor_window.pages.helipad_2, helipad = 2},
-    {name = "helipad_3", text = _S.map_editor_window.pages.helipad_3, helipad = 3},
-    {name = "helipad_4", text = _S.map_editor_window.pages.helipad_4, helipad = 4}}
+    {name = "heliport_1", text = _S.map_editor_window.pages.heliport_1, heliport = 1},
+    {name = "heliport_2", text = _S.map_editor_window.pages.heliport_2, heliport = 2},
+    {name = "heliport_3", text = _S.map_editor_window.pages.heliport_3, heliport = 3},
+    {name = "heliport_4", text = _S.map_editor_window.pages.heliport_4, heliport = 4}}
 
   for _, page in ipairs(text_pages) do
     if xpos + XSIZE >= EDITOR_WINDOW_XSIZE then -- Update ypos (and xpos) if necessary.
@@ -546,7 +546,7 @@ end
 function UIMapEditor:setPlayerCount(count)
   local map = self.ui.app.map
   map:setPlayerCount(count)
-  if self.cursor.state == "camera" or self.cursor.state == "helipad" then
+  if self.cursor.state == "camera" or self.cursor.state == "heliport" then
     map:updateDebugOverlay()
   end
 end
@@ -591,11 +591,11 @@ function UIMapEditor:pageClicked(name)
           self.cursor.camera = pb.data.camera
           map:loadDebugText("camera")
 
-        elseif pb.data.helipad then
-          self.cursor.state = "helipad"
+        elseif pb.data.heliport then
+          self.cursor.state = "heliport"
           self.cursor.spirte = nil
           self.cursor.is_drag = false
-          self.cursor.helipad = pb.data.helipad
+          self.cursor.heliport = pb.data.heliport
           map:loadDebugText("heliport")
 
         else -- Should be a parcel button.
@@ -763,7 +763,7 @@ function UIMapEditor:getDrawPoints()
     return {{xpos = bx, ypos = by}}
 
   elseif self.cursor.state == "delete" or self.cursor.state == "parcel" or
-      self.cursor.state == "camera" or self.cursor.state == "helipad" or
+      self.cursor.state == "camera" or self.cursor.state == "heliport" or
       self.cursor.state == "paste" then
     return {{xpos = self.cursor.xpos, ypos = self.cursor.ypos}}
 
@@ -850,7 +850,7 @@ function UIMapEditor:draw(canvas, ...)
     local xsize, ysize
     if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
         self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
-        self.cursor.state == "helipad" or self.cursor.state == "camera" or
+        self.cursor.state == "heliport" or self.cursor.state == "camera" or
         self.cursor.state == "paste-left" or self.cursor.state == "right" then
       xsize, ysize = 1, 1
     elseif self.cursor.state == "paste" then
@@ -963,7 +963,7 @@ function UIMapEditor:getCursorDragCapabilities()
   -- Parcel and delete modes have unrestricted movement.
   if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
       self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
-      self.cursor.state == "camera" or self.cursor.state == "helipad" or
+      self.cursor.state == "camera" or self.cursor.state == "heliport" or
       self.cursor.state == "paste" or self.cursor.state == "paste-left" or
       self.cursor.state == "right" then
     return "area"
@@ -1001,7 +1001,7 @@ function UIMapEditor:onMouseMove(x, y, dx, dy)
 
     elseif self.cursor.state == "grid" or self.cursor.state == "delete" or
         self.cursor.state == "parcel" or self.cursor.state == "paste" or
-        self.cursor.state == "helipad" or self.cursor.state == "camera" or
+        self.cursor.state == "heliport" or self.cursor.state == "camera" or
         self.cursor.state == "right" then
       self.cursor.xpos = wx -- Allow arbitrary movement.
       self.cursor.ypos = wy
@@ -1306,10 +1306,10 @@ function UIMapEditor:onMouseUp(button, x, y)
       repaint = true
     end
 
-  elseif self.cursor.state == "helipad" then
+  elseif self.cursor.state == "heliport" then
     if button == "left" then
       local dp = self:getDrawPoints()
-      map:setHeliportTile(dp[1].xpos, dp[1].ypos, self.cursor.camera)
+      map:setHeliportTile(dp[1].xpos, dp[1].ypos, self.cursor.heliport)
       map:updateDebugOverlay()
       repaint = true
     end
