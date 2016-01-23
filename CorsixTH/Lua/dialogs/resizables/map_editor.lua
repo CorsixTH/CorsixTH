@@ -946,7 +946,6 @@ function UIMapEditor:getCursorDragCapabilities()
   -- Parcel and delete modes have unrestricted movement.
   if self.cursor.state == "delete" or self.cursor.state == "delete-left" or
       self.cursor.state == "parcel" or self.cursor.state == "parcel-left" or
-      self.cursor.state == "camera" or self.cursor.state == "heliport" or
       self.cursor.state == "paste" or self.cursor.state == "paste-left" or
       self.cursor.state == "right" then
     return "area"
