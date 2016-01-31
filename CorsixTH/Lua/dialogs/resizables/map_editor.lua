@@ -33,15 +33,18 @@ local FLIP_H = DrawFlags.FlipHorizontal * 256
 -- Each variable below is an array of multi-tile sprites, which is translated
 -- to a list of buttons at a page.
 -- The generic form of a multi-tile sprite (see the helipad for an example) is
--- a table {sprites = .., height = ..}. The 'height' defines the height of the
--- displayed button (between 1 and MAX_HEIGHT).
--- The 'sprites' is an array of single sprites, a table of {sprite = ...,
--- xpos = ..., ypos = ..., type = ...}. It defines which sprite to display at
--- which relative position. Positions run from 1 upward, sprites are numbers
--- 0..255 (the low byte) while the high byte is used for DrawFlags flags, eg
--- FLIP_H. Last but not least 'floor', 'north', and 'west' types defne where
--- to put the sprite (as floor sprites, north wall sprite or west wall
--- sprite).
+-- a table {sprites = .., height = ..}. The 'height' defines the
+-- height of the displayed button (between 1 and MAX_HEIGHT). The 'sprites' is
+-- an array of single sprites, a table of {sprite = ..., xpos = ..., ypos =
+-- ..., type = ...}. It defines which sprite to display at which relative
+-- position. Positions run from 1 upward, sprites are numbers 0..255 (the low
+-- byte) while the high byte is used for DrawFlags flags, eg FLIP_H. The type
+-- defines where the sprite is stored. 'north' and 'west' mean north
+-- respectively west wall. 'floor' means it is a floor sprite. 'hospital' is
+-- also a floor sprite but it also states that the tile is part of the
+-- hospital. Similarly, 'road' is a floor sprite outside the hospital that can
+-- be walked on. Finally, the 'objects' defines the position of objects in the
+-- shape. At this time, only an entrance door can be placed.
 --
 -- As there are a lot of single tile sprite buttons, there is a simplified
 -- form to specify those (and they get expanded to the generic multi-tile
@@ -104,17 +107,17 @@ local pond={
 -- }}}
 -- {{{ Inside floor sprites.
 local inside={
-  {sprite= 17, height=1, type="floor"}, -- Dark blue/purple carpet tile
-  {sprite= 70, height=1, type="floor"}, -- Duplicate of 017
-  {sprite= 18, height=1, type="floor"}, -- Red-Blue floor tile 1
-  {sprite= 19, height=1, type="floor"}, -- Red-Blue floor tile 2
-  {sprite= 23, height=1, type="floor"}, -- Red-Blue floor tile 3
-  {sprite= 16, height=1, type="floor"}, -- Dark big checker pattern tile
-  {sprite= 21, height=1, type="floor"}, -- Small checker pattern tile
-  {sprite= 22, height=1, type="floor"}, -- Big checker pattern tile
-  {sprite= 66, height=1, type="floor"}, -- Floor tile with light center
-  {sprite= 76, height=1, type="floor"}, -- Floor tile with light center and corners
-  {sprite= 20, height=1, type="floor"}  -- Wooden floor tile
+  {sprite= 17, height=1, type="hospital"}, -- Dark blue/purple carpet tile
+  {sprite= 70, height=1, type="hospital"}, -- Duplicate of 017
+  {sprite= 18, height=1, type="hospital"}, -- Red-Blue floor tile 1
+  {sprite= 19, height=1, type="hospital"}, -- Red-Blue floor tile 2
+  {sprite= 23, height=1, type="hospital"}, -- Red-Blue floor tile 3
+  {sprite= 16, height=1, type="hospital"}, -- Dark big checker pattern tile
+  {sprite= 21, height=1, type="hospital"}, -- Small checker pattern tile
+  {sprite= 22, height=1, type="hospital"}, -- Big checker pattern tile
+  {sprite= 66, height=1, type="hospital"}, -- Floor tile with light center
+  {sprite= 76, height=1, type="hospital"}, -- Floor tile with light center and corners
+  {sprite= 20, height=1, type="hospital"}  -- Wooden floor tile
 }
 -- }}}
 -- {{{ Outside floor sprites.
@@ -122,9 +125,9 @@ local outside={
   {sprite=  1, height=1, type="floor"}, -- Grass tile 1
   {sprite=  2, height=1, type="floor"}, -- Grass tile 2
   {sprite=  3, height=1, type="floor"}, -- Grass tile 3
-  {sprite=  4, height=1, type="floor"}, -- Light concrete tile
-  {sprite= 15, height=1, type="floor"}, -- Concrete tile
-  {sprite=  5, height=1, type="floor"}, -- Dark concrete tile
+  {sprite=  4, height=1, type="road" }, -- Light concrete tile
+  {sprite= 15, height=1, type="road" }, -- Concrete tile
+  {sprite=  5, height=1, type="road" }, -- Dark concrete tile
   {sprite=  6, height=1, type="floor"}, -- Grass tile with South-East concrete corner
   {sprite=  8, height=1, type="floor"}, -- Grass tile with South-West concrete corner
   {sprite= 10, height=1, type="floor"}, -- Grass tile with North-West concrete corner
@@ -146,24 +149,24 @@ local outside={
 -- }}}
 -- {{{ Road floor sprites.
 local road_spr = {
-  {sprite= 41, height=1, type="floor"}, -- Road with white discontinuous line North-South
-  {sprite= 45, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at South
---{sprite= 46, height=1, type="floor"}, -- Duplicate of 45
-  {sprite= 42, height=1, type="floor"}, -- Road with double yellow lines at West with black orthogonal lines
-  {sprite= 43, height=1, type="floor"}, -- Road with double yellow lines at West edge
-  {sprite= 44, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at North
-  {sprite= 47, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at South
-  {sprite= 49, height=1, type="floor"}, -- Road with red braking line at the East pointing to the West
-  {sprite= 48, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at North
-  {sprite= 53, height=1, type="floor"}, -- Road with double yellow lines at East edge merging at the south
-  {sprite= 52, height=1, type="floor"}, -- Road with double yellow lines at East with black orthogonal lines
---{sprite= 54, height=1, type="floor"}, -- Duplicate of 52
-  {sprite= 51, height=1, type="floor"}, -- Road with double yellow lines at East edge
-  {sprite= 57, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at South
-  {sprite= 55, height=1, type="floor"}, -- Road with red braking line at the West pointing to the East
-  {sprite= 56, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at North
-  {sprite= 50, height=1, type="floor"}, -- Road with grey edge at the East
-  {sprite= 58, height=1, type="floor"}, -- Road with grey edge at the West
+  {sprite= 41, height=1, type="road"}, -- Road with white discontinuous line North-South
+  {sprite= 45, height=1, type="road"}, -- Road with double yellow lines at West edge merging at South
+--{sprite= 46, height=1, type="road"}, -- Duplicate of 45
+  {sprite= 42, height=1, type="road"}, -- Road with double yellow lines at West with black orthogonal lines
+  {sprite= 43, height=1, type="road"}, -- Road with double yellow lines at West edge
+  {sprite= 44, height=1, type="road"}, -- Road with double yellow lines at West edge merging at North
+  {sprite= 47, height=1, type="road"}, -- Road with red line at East linked to yellow discontinuous line at South
+  {sprite= 49, height=1, type="road"}, -- Road with red braking line at the East pointing to the West
+  {sprite= 48, height=1, type="road"}, -- Road with red line at East linked to yellow discontinuous line at North
+  {sprite= 53, height=1, type="road"}, -- Road with double yellow lines at East edge merging at the south
+  {sprite= 52, height=1, type="road"}, -- Road with double yellow lines at East with black orthogonal lines
+--{sprite= 54, height=1, type="road"}, -- Duplicate of 52
+  {sprite= 51, height=1, type="road"}, -- Road with double yellow lines at East edge
+  {sprite= 57, height=1, type="road"}, -- Road with red line at West linked to yellow discontinuous line at South
+  {sprite= 55, height=1, type="road"}, -- Road with red braking line at the West pointing to the East
+  {sprite= 56, height=1, type="road"}, -- Road with red line at West linked to yellow discontinuous line at North
+  {sprite= 50, height=1, type="road"}, -- Road with grey edge at the East
+  {sprite= 58, height=1, type="road"}, -- Road with grey edge at the West
 }
 local road = {} -- All sprites get horizontally flipped as well, for roads running north-south.
 for _, spr in ipairs(road_spr) do
@@ -226,36 +229,36 @@ local west_wall = {
 local helipad = {
   {sprites = {
     -- Dark tiles around the edges.
-    {sprite=5, xpos=1, ypos=1, type="floor"},
-    {sprite=5, xpos=2, ypos=1, type="floor"},
-    {sprite=5, xpos=3, ypos=1, type="floor"},
-    {sprite=5, xpos=4, ypos=1, type="floor"},
-    {sprite=5, xpos=5, ypos=1, type="floor"},
+    {sprite=5, xpos=1, ypos=1, type="road"},
+    {sprite=5, xpos=2, ypos=1, type="road"},
+    {sprite=5, xpos=3, ypos=1, type="road"},
+    {sprite=5, xpos=4, ypos=1, type="road"},
+    {sprite=5, xpos=5, ypos=1, type="road"},
 
-    {sprite=5, xpos=1, ypos=2, type="floor"},
-    {sprite=5, xpos=1, ypos=3, type="floor"},
-    {sprite=5, xpos=1, ypos=4, type="floor"},
-    {sprite=5, xpos=1, ypos=5, type="floor"},
+    {sprite=5, xpos=1, ypos=2, type="road"},
+    {sprite=5, xpos=1, ypos=3, type="road"},
+    {sprite=5, xpos=1, ypos=4, type="road"},
+    {sprite=5, xpos=1, ypos=5, type="road"},
 
-    {sprite=5, xpos=2, ypos=5, type="floor"},
-    {sprite=5, xpos=3, ypos=5, type="floor"},
-    {sprite=5, xpos=4, ypos=5, type="floor"},
+    {sprite=5, xpos=2, ypos=5, type="road"},
+    {sprite=5, xpos=3, ypos=5, type="road"},
+    {sprite=5, xpos=4, ypos=5, type="road"},
 
-    {sprite=5, xpos=5, ypos=5, type="floor"},
-    {sprite=5, xpos=5, ypos=2, type="floor"},
-    {sprite=5, xpos=5, ypos=3, type="floor"},
-    {sprite=5, xpos=5, ypos=4, type="floor"},
+    {sprite=5, xpos=5, ypos=5, type="road"},
+    {sprite=5, xpos=5, ypos=2, type="road"},
+    {sprite=5, xpos=5, ypos=3, type="road"},
+    {sprite=5, xpos=5, ypos=4, type="road"},
     -- Dark tiles in the 'H'
-    {sprite=5, xpos=3, ypos=2, type="floor"},
-    {sprite=5, xpos=3, ypos=4, type="floor"},
+    {sprite=5, xpos=3, ypos=2, type="road"},
+    {sprite=5, xpos=3, ypos=4, type="road"},
     -- Light tiles in the 'H'
-    {sprite=4, xpos=2, ypos=2, type="floor"},
-    {sprite=4, xpos=2, ypos=3, type="floor"},
-    {sprite=4, xpos=2, ypos=4, type="floor"},
-    {sprite=4, xpos=4, ypos=2, type="floor"},
-    {sprite=4, xpos=4, ypos=3, type="floor"},
-    {sprite=4, xpos=4, ypos=4, type="floor"},
-    {sprite=4, xpos=3, ypos=3, type="floor"}
+    {sprite=4, xpos=2, ypos=2, type="road"},
+    {sprite=4, xpos=2, ypos=3, type="road"},
+    {sprite=4, xpos=2, ypos=4, type="road"},
+    {sprite=4, xpos=4, ypos=2, type="road"},
+    {sprite=4, xpos=4, ypos=3, type="road"},
+    {sprite=4, xpos=4, ypos=4, type="road"},
+    {sprite=4, xpos=3, ypos=3, type="road"}
    },
    height=5
   }
@@ -665,6 +668,28 @@ function UIMapEditor:buildSpriteButtons(buttons)
 end
 -- }}}
 
+--! Should the given type of sprite be considered a floor sprite?
+--!param sprite_type (string) Type of sprite.
+--!return The (boolean) type is a floor sprite type.
+local function isFloorSpriteType(sprite_type)
+  return sprite_type == "floor" or sprite_type == "hospital" or sprite_type == "road"
+end
+
+--! Construct cell flags for a given kind of floor sprite.
+--!param sprite_type (string) Type of sprite.
+local function makeCellFlags(sprite_type)
+  if sprite_type == "floor" then
+    return {buildable=false, passable=false, hospital=false}
+
+  elseif sprite_type == "road" then
+    return {buildable=false, passable=true,  hospital=false}
+
+  elseif sprite_type == "hospital" then
+    return {buildable=true,  passable=true,  hospital=true}
+  end
+  assert(false) -- Should never get here
+end
+
 --! Get the tile area covered by two points.
 --!param x1 (jnt) Horizontal coordinate of the first point.
 --!param y1 (int) Vertical   coordinate of the first point.
@@ -957,7 +982,7 @@ function UIMapEditor:getCursorDragCapabilities()
     return "none"
   end
 
-  if self.cursor.sprite.type == "floor" then return "area" end
+  if isFloorSpriteType(self.cursor.sprite.type) then return "area" end
   if self.cursor.sprite.type == "north" then return "east-west" end
   if self.cursor.sprite.type == "west" then return "north-south" end
   assert(false) -- Should never get here
@@ -1110,8 +1135,10 @@ function UIMapEditor:drawCursorSpriteAtArea(coords)
       for _, spr in ipairs(self.cursor.sprite.sprites) do
         local tx, ty = xbase + spr.xpos - 1, ybase + spr.ypos - 1
         local f, nw, ww = th:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
-        if spr.type == "floor" then
+        if isFloorSpriteType(spr.type) then
           f = spr.sprite
+          -- Floor sprite gets changed, also modify the cell flags.
+          th:setCellFlags(tx, ty, makeCellFlags(spr.type))
 
         elseif spr.type == "north" then
           nw = spr.sprite
@@ -1148,12 +1175,16 @@ function UIMapEditor:copyArea()
     ty = miny
     while ty <= maxy do
       local f, nw, ww = th:getCell(tx, ty)
+      local all_flags = th:getCellFlags(tx, ty)
       self.cursor.copy_data[#self.cursor.copy_data + 1] = {
           xpos = tx - minx,
           ypos = ty - miny,
           floor = f,
           north_wall = nw,
-          west_wall = ww
+          west_wall = ww,
+          flags  = {buildable = all_flags.buildable,
+                    passable  = all_flags.passable,
+                    hospital  = all_flags.hospital},
       }
 
       ty = ty + 1
@@ -1189,10 +1220,12 @@ function UIMapEditor:pasteArea()
   while tx <= maxx do
     ty = miny
     while ty <= maxy do
+      -- Copy floor and wall sprites, and set the passable/buildable/hospital flag.
       for _, elm in ipairs(self.cursor.copy_data) do
         local x, y = tx + elm.xpos, ty + elm.ypos
         if x <= maxx and y <= maxy then
           th:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
+          th:setCellFlags(x, y, elm.flags)
         end
       end
 
@@ -1212,6 +1245,7 @@ function UIMapEditor:deleteWallsAtArea(coords)
     -- Remove west and north wall.
     local f = th:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
     th:setCell(tx, ty, f, 0, 0, 0)
+    -- No need for map:setCellFlags, as 'passable', 'buildable', and 'hospital' are floor properties.
   end
 end
 
