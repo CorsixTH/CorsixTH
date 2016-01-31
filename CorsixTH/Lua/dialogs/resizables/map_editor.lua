@@ -281,7 +281,7 @@ local PAGES = {
 local function normalizeEditSprite(spr)
   assert(MAX_HEIGHT >= spr.height) -- Verify that sprite fits in the maximum height.
 
-  if spr.sprites == nil then -- {spritex=xxx, height=y} case
+  if spr.sprites == nil then -- {sprite = xxx, height = y} case
     return {sprites = {{sprite = spr.sprite, xpos = 1, ypos = 1, type=spr.type}},
             xsize = 1,
             ysize = 1,
@@ -430,8 +430,8 @@ function UIMapEditor:UIMapEditor(ui)
     sprite = nil,       -- Selected sprite from the menu.
     is_drag = false,    -- Whether a true drag (at least 2 cells covered) has been detected.
     parcel = nil,       -- Parcel number to set in 'parcel' / 'parcel-left' mode.
-    camera = nil,	-- Camera player to set in 'camera' mode.
-    heliport = nil,	-- Heliport player to set in 'heliport' mode.
+    camera = nil,       -- Camera player to set in 'camera' mode.
+    heliport = nil,     -- Heliport player to set in 'heliport' mode.
 
     xpos = 0,   -- Horizontal tile position of the mouse cursor.
     ypos = 0,   -- Vertical tile position of the mouse cursor.
@@ -1099,7 +1099,7 @@ end
 --! Draw the selected sprite at the given coordinates.
 --!param coords (array or {xpos, ypos} tables) Coordinates to draw the selected sprite.
 function UIMapEditor:drawCursorSpriteAtArea(coords)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   if self.cursor.sprite then
     for _, coord in ipairs(coords) do
@@ -1109,15 +1109,18 @@ function UIMapEditor:drawCursorSpriteAtArea(coords)
       xbase, ybase = self:areaOnWorld(xbase, ybase, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
       for _, spr in ipairs(self.cursor.sprite.sprites) do
         local tx, ty = xbase + spr.xpos - 1, ybase + spr.ypos - 1
-        local f, nw, ww = map:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
+        local f, nw, ww = th:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
         if spr.type == "floor" then
           f = spr.sprite
+
         elseif spr.type == "north" then
           nw = spr.sprite
+
         elseif spr.type == "west" then
           ww = spr.sprite
         end
-        map:setCell(tx, ty, f, nw, ww, 0)
+
+        th:setCell(tx, ty, f, nw, ww, 0)
       end
     end
   end
@@ -1126,7 +1129,7 @@ end
 --! Copy area from the game.
 --!return (bool) Whether copying succeeded.
 function UIMapEditor:copyArea()
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   local minx, miny, maxx, maxy = getCoveredArea(self.cursor.rightx, self.cursor.righty,
                                                 self.cursor.xpos, self.cursor.ypos)
@@ -1144,10 +1147,14 @@ function UIMapEditor:copyArea()
   while tx <= maxx do
     ty = miny
     while ty <= maxy do
-      local f, nw, ww = map:getCell(tx, ty)
+      local f, nw, ww = th:getCell(tx, ty)
       self.cursor.copy_data[#self.cursor.copy_data + 1] = {
-          xpos = tx - minx, ypos = ty - miny,
-          floor = f, north_wall = nw, west_wall = ww}
+          xpos = tx - minx,
+          ypos = ty - miny,
+          floor = f,
+          north_wall = nw,
+          west_wall = ww
+      }
 
       ty = ty + 1
     end
@@ -1158,7 +1165,7 @@ end
 
 --! Paste copied area into the destination area (one or more times).
 function UIMapEditor:pasteArea()
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   local minx, miny, maxx, maxy
   -- Fill 'minx', 'miny' with the non-cursor corner.
@@ -1183,10 +1190,9 @@ function UIMapEditor:pasteArea()
     ty = miny
     while ty <= maxy do
       for _, elm in ipairs(self.cursor.copy_data) do
-        local x = tx + elm.xpos
-        local y = ty + elm.ypos
+        local x, y = tx + elm.xpos, ty + elm.ypos
         if x <= maxx and y <= maxy then
-          map:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
+          th:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
         end
       end
 
@@ -1199,12 +1205,13 @@ end
 --! Delete the walls at the given coordinates.
 --!param coords (array or {xpos, ypos} tables) Coordinates to remove the walls.
 function UIMapEditor:deleteWallsAtArea(coords)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   for _, coord in ipairs(coords) do
     local tx, ty = coord.xpos, coord.ypos
-    local f = map:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
-    map:setCell(tx, ty, f, 0, 0, 0)
+    -- Remove west and north wall.
+    local f = th:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
+    th:setCell(tx, ty, f, 0, 0, 0)
   end
 end
 
@@ -1212,11 +1219,11 @@ end
 --!param coords (array or {xpos, ypos} tables) Coordinates to set parcel.
 --!param parcel_num (int) Parcel number to set.
 function UIMapEditor:setParcelAtArea(coords, parcel_num)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   for _, coord in ipairs(coords) do
     local tx, ty = coord.xpos, coord.ypos
-    map:setCellFlags(tx, ty, {parcelId = parcel_num})
+    th:setCellFlags(tx, ty, {parcelId = parcel_num})
   end
 end
 
