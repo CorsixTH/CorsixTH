@@ -635,14 +635,14 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
-  if old < 102 then
+  if old < 107 then
+    self.reception_desks = nil
+  end
+
+  if old < 109 then
     -- Added these two hospital variables, related to price distortion
     self.under_priced_threshold = -0.3
     self.over_priced_threshold = 0.3
-  end
-
-  if old < 107 then
-    self.reception_desks = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1579,7 +1579,7 @@ function Hospital:receiveMoneyForTreatment(patient)
         if patient.over_priced or is_over_priced and math.random(1, 5) == 1 then
           -- patient thinks it's too expensive, so he/she's not paying and he/she leaves
           self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
-          patient:goHome(patient.go_home_reasons.OVER_PRICED)
+          patient:goHome(Patient.go_home_reasons.OVER_PRICED)
         else
           -- patient is paying normally (but still, he could feel like it's
           -- under- or over-priced and it could impact happiness and reputation)
