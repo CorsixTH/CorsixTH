@@ -23,7 +23,6 @@ class "Patient" (Humanoid)
 
 ---@type Patient
 local Patient = _G["Patient"]
-local go_home_reasons = {CURED = "cured", KICKED = "kicked", OVER_PRICED = "overpriced"}
 
 function Patient:Patient(...)
   self:Humanoid(...)
@@ -163,9 +162,9 @@ end
 -- Modifies the diagnosis progress of a patient.
 -- incrementValue can be either positive or negative.
 function Patient:modifyDiagnosisProgress(incrementValue)
-    self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
-      self.diagnosis_progress + incrementValue)
-    self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
+  self.diagnosis_progress = math.min(self.hospital.policies["stop_procedure"],
+    self.diagnosis_progress + incrementValue)
+  self.diagnosis_progress = math.max(0.000, self.diagnosis_progress)
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
@@ -222,8 +221,8 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
   hospital:receiveMoneyForTreatment(self)
   if amount ~= 0 then
-  local str = _S.drug_companies[math.random(1 , 5)]
-  hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
+    local str = _S.drug_companies[math.random(1 , 5)]
+    hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
   end
 
   -- Either the patient is no longer sick, or he/she dies.
@@ -257,7 +256,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
 
       -- If the patient refused to pay they are on the way home already
       if not self.going_home then
-        self:goHome(go_home_reasons.CURED)
+        self:goHome("cured")
       end
     end
   end
@@ -490,12 +489,11 @@ end
 --! Make the patient leave the hospital. This function also handles some
 --! statistics (number of cured/kicked out patients, etc.)
 --! The mood icon is updated accordingly. Reputation is impacted accordingly.
---!param reason taken from the go_home_reasons enum table,
---   the reason why the patient is sent home, which could be:
---! -CURED: When the patient is cured.
---! -KICKED: When the patient is kicked anyway, either manually,
+--!param reason: the reason why the patient is sent home, which could be:
+--! -cured: When the patient is cured.
+--! -kicked: When the patient is kicked anyway, either manually,
 --! either when no treatment can be found for her/him, etc.
---! -OVER_PRICED: When the patient decided to leave because he/she believes
+--! -over_priced: When the patient decided to leave because he/she believes
 --! the last treatment is over-priced.
 function Patient:goHome(reason)
   local hosp = self.hospital
@@ -506,14 +504,14 @@ function Patient:goHome(reason)
     self:despawn()
     return
   end
-  if reason == go_home_reasons.CURED then
+  if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
     self.world.ui:playSound "cheer.wav"
     if not self.is_debug then
       hosp:changeReputation("cured", self.disease)
     end
-  elseif reason == go_home_reasons.KICKED then
+  elseif reason == "kicked" then
     self:setMood("exit", "activate")
     if not self.is_debug then
       hosp:changeReputation("kicked", self.disease)
@@ -522,7 +520,7 @@ function Patient:goHome(reason)
       local casebook = hosp.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end
-  elseif go_home_reasons.OVER_PRICED then
+  elseif reason == "over_priced" then
     self:setMood("sad_money", "activate")
     self:changeAttribute("happiness", -0.5)
     if not self.is_debug then
@@ -570,7 +568,7 @@ function Patient:tickDay()
   if self.waiting then
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
-      self:goHome(go_home_reasons.KICKED)
+      self:goHome("kicked")
       if self.diagnosed then
         -- No treatment rooms
         self:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)
@@ -617,7 +615,7 @@ function Patient:tickDay()
     if math.random(1,30) == 1 then
       self:updateDynamicInfo(_S.dynamic_info.patient.actions.fed_up)
       self:setMood("sad2", "deactivate")
-      self:goHome(go_home_reasons.KICKED)
+      self:goHome("kicked")
     end
   elseif self.attributes["health"] >= 0.14 and self.attributes["health"] < 0.18 then
     self:setMood("sad2", "deactivate")
@@ -1121,9 +1119,6 @@ function Patient:afterLoad(old, new)
     else
       self.going_to_toilet = "no"
     end
-  end
-  if old < 109 then
-    Patient.go_home_reasons = {CURED = "cured", KICKED = "kicked", OVER_PRICED = "overpriced"}
   end
   Humanoid.afterLoad(self, old, new)
 end

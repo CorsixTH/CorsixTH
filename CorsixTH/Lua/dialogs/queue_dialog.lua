@@ -364,7 +364,7 @@ function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
     return --[[persistable:queue_dialog_popup_hospital_button]] function()
       -- TODO: Actually send to another hospital (when they exist)
       local patient = self.patient
-      patient:goHome(Patient.go_home_reasons.KICKED)
+      patient:goHome("kicked")
       local str = _S.dynamic_info.patient.actions.sent_to_other_hospital
       patient:updateDynamicInfo(str)
       self:close()
@@ -403,6 +403,6 @@ end
 
 function UIQueuePopup:sendHome()
   local patient = self.patient
-  patient:goHome(Patient.go_home_reasons.KICKED)
+  patient:goHome("kicked")
   self:close()
 end
