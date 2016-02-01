@@ -33,15 +33,18 @@ local FLIP_H = DrawFlags.FlipHorizontal * 256
 -- Each variable below is an array of multi-tile sprites, which is translated
 -- to a list of buttons at a page.
 -- The generic form of a multi-tile sprite (see the helipad for an example) is
--- a table {sprites = .., height = ..}. The 'height' defines the height of the
--- displayed button (between 1 and MAX_HEIGHT).
--- The 'sprites' is an array of single sprites, a table of {sprite = ...,
--- xpos = ..., ypos = ..., type = ...}. It defines which sprite to display at
--- which relative position. Positions run from 1 upward, sprites are numbers
--- 0..255 (the low byte) while the high byte is used for DrawFlags flags, eg
--- FLIP_H. Last but not least 'floor', 'north', and 'west' types defne where
--- to put the sprite (as floor sprites, north wall sprite or west wall
--- sprite).
+-- a table {sprites = .., height = .., objects = ..}. The 'height' defines the
+-- height of the displayed button (between 1 and MAX_HEIGHT). The 'sprites' is
+-- an array of single sprites, a table of {sprite = ..., xpos = ..., ypos =
+-- ..., type = ...}. It defines which sprite to display at which relative
+-- position. Positions run from 1 upward, sprites are numbers 0..255 (the low
+-- byte) while the high byte is used for DrawFlags flags, eg FLIP_H. The type
+-- defines where the sprite is stored. 'north' and 'west' mean north
+-- respectively west wall. 'floor' means it is a floor sprite. 'hospital' is
+-- also a floor sprite but it also states that the tile is part of the
+-- hospital. Similarly, 'road' is a floor sprite outside the hospital that can
+-- be walked on. Finally, the 'objects' defines the position of objects in the
+-- shape. At this time, only an entrance door can be placed.
 --
 -- As there are a lot of single tile sprite buttons, there is a simplified
 -- form to specify those (and they get expanded to the generic multi-tile
@@ -104,17 +107,17 @@ local pond={
 -- }}}
 -- {{{ Inside floor sprites.
 local inside={
-  {sprite= 17, height=1, type="floor"}, -- Dark blue/purple carpet tile
-  {sprite= 70, height=1, type="floor"}, -- Duplicate of 017
-  {sprite= 18, height=1, type="floor"}, -- Red-Blue floor tile 1
-  {sprite= 19, height=1, type="floor"}, -- Red-Blue floor tile 2
-  {sprite= 23, height=1, type="floor"}, -- Red-Blue floor tile 3
-  {sprite= 16, height=1, type="floor"}, -- Dark big checker pattern tile
-  {sprite= 21, height=1, type="floor"}, -- Small checker pattern tile
-  {sprite= 22, height=1, type="floor"}, -- Big checker pattern tile
-  {sprite= 66, height=1, type="floor"}, -- Floor tile with light center
-  {sprite= 76, height=1, type="floor"}, -- Floor tile with light center and corners
-  {sprite= 20, height=1, type="floor"}  -- Wooden floor tile
+  {sprite= 17, height=1, type="hospital"}, -- Dark blue/purple carpet tile
+  {sprite= 70, height=1, type="hospital"}, -- Duplicate of 017
+  {sprite= 18, height=1, type="hospital"}, -- Red-Blue floor tile 1
+  {sprite= 19, height=1, type="hospital"}, -- Red-Blue floor tile 2
+  {sprite= 23, height=1, type="hospital"}, -- Red-Blue floor tile 3
+  {sprite= 16, height=1, type="hospital"}, -- Dark big checker pattern tile
+  {sprite= 21, height=1, type="hospital"}, -- Small checker pattern tile
+  {sprite= 22, height=1, type="hospital"}, -- Big checker pattern tile
+  {sprite= 66, height=1, type="hospital"}, -- Floor tile with light center
+  {sprite= 76, height=1, type="hospital"}, -- Floor tile with light center and corners
+  {sprite= 20, height=1, type="hospital"}  -- Wooden floor tile
 }
 -- }}}
 -- {{{ Outside floor sprites.
@@ -122,9 +125,9 @@ local outside={
   {sprite=  1, height=1, type="floor"}, -- Grass tile 1
   {sprite=  2, height=1, type="floor"}, -- Grass tile 2
   {sprite=  3, height=1, type="floor"}, -- Grass tile 3
-  {sprite=  4, height=1, type="floor"}, -- Light concrete tile
-  {sprite= 15, height=1, type="floor"}, -- Concrete tile
-  {sprite=  5, height=1, type="floor"}, -- Dark concrete tile
+  {sprite=  4, height=1, type="road" }, -- Light concrete tile
+  {sprite= 15, height=1, type="road" }, -- Concrete tile
+  {sprite=  5, height=1, type="road" }, -- Dark concrete tile
   {sprite=  6, height=1, type="floor"}, -- Grass tile with South-East concrete corner
   {sprite=  8, height=1, type="floor"}, -- Grass tile with South-West concrete corner
   {sprite= 10, height=1, type="floor"}, -- Grass tile with North-West concrete corner
@@ -146,24 +149,24 @@ local outside={
 -- }}}
 -- {{{ Road floor sprites.
 local road_spr = {
-  {sprite= 41, height=1, type="floor"}, -- Road with white discontinuous line North-South
-  {sprite= 45, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at South
---{sprite= 46, height=1, type="floor"}, -- Duplicate of 45
-  {sprite= 42, height=1, type="floor"}, -- Road with double yellow lines at West with black orthogonal lines
-  {sprite= 43, height=1, type="floor"}, -- Road with double yellow lines at West edge
-  {sprite= 44, height=1, type="floor"}, -- Road with double yellow lines at West edge merging at North
-  {sprite= 47, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at South
-  {sprite= 49, height=1, type="floor"}, -- Road with red braking line at the East pointing to the West
-  {sprite= 48, height=1, type="floor"}, -- Road with red line at East linked to yellow discontinuous line at North
-  {sprite= 53, height=1, type="floor"}, -- Road with double yellow lines at East edge merging at the south
-  {sprite= 52, height=1, type="floor"}, -- Road with double yellow lines at East with black orthogonal lines
---{sprite= 54, height=1, type="floor"}, -- Duplicate of 52
-  {sprite= 51, height=1, type="floor"}, -- Road with double yellow lines at East edge
-  {sprite= 57, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at South
-  {sprite= 55, height=1, type="floor"}, -- Road with red braking line at the West pointing to the East
-  {sprite= 56, height=1, type="floor"}, -- Road with red line at West linked to yellow discontinuous line at North
-  {sprite= 50, height=1, type="floor"}, -- Road with grey edge at the East
-  {sprite= 58, height=1, type="floor"}, -- Road with grey edge at the West
+  {sprite= 41, height=1, type="road"}, -- Road with white discontinuous line North-South
+  {sprite= 45, height=1, type="road"}, -- Road with double yellow lines at West edge merging at South
+--{sprite= 46, height=1, type="road"}, -- Duplicate of 45
+  {sprite= 42, height=1, type="road"}, -- Road with double yellow lines at West with black orthogonal lines
+  {sprite= 43, height=1, type="road"}, -- Road with double yellow lines at West edge
+  {sprite= 44, height=1, type="road"}, -- Road with double yellow lines at West edge merging at North
+  {sprite= 47, height=1, type="road"}, -- Road with red line at East linked to yellow discontinuous line at South
+  {sprite= 49, height=1, type="road"}, -- Road with red braking line at the East pointing to the West
+  {sprite= 48, height=1, type="road"}, -- Road with red line at East linked to yellow discontinuous line at North
+  {sprite= 53, height=1, type="road"}, -- Road with double yellow lines at East edge merging at the south
+  {sprite= 52, height=1, type="road"}, -- Road with double yellow lines at East with black orthogonal lines
+--{sprite= 54, height=1, type="road"}, -- Duplicate of 52
+  {sprite= 51, height=1, type="road"}, -- Road with double yellow lines at East edge
+  {sprite= 57, height=1, type="road"}, -- Road with red line at West linked to yellow discontinuous line at South
+  {sprite= 55, height=1, type="road"}, -- Road with red braking line at the West pointing to the East
+  {sprite= 56, height=1, type="road"}, -- Road with red line at West linked to yellow discontinuous line at North
+  {sprite= 50, height=1, type="road"}, -- Road with grey edge at the East
+  {sprite= 58, height=1, type="road"}, -- Road with grey edge at the West
 }
 local road = {} -- All sprites get horizontally flipped as well, for roads running north-south.
 for _, spr in ipairs(road_spr) do
@@ -177,13 +180,17 @@ local north_wall = {
     {sprite=159, xpos=1, ypos=1, type="north"}, -- External doorway North outside left part
     {sprite=157, xpos=3, ypos=1, type="north"}, -- External doorway North outside right part
     },
-   height = 3},
+   height = 3,
+   objects = {{type="entrance_door", xpos=2, ypos=1, direction="north"}},
+  },
 
   {sprites = {
     {sprite=163, xpos=1, ypos=1, type="north"}, -- External doorway North inside left part
     {sprite=161, xpos=3, ypos=1, type="north"}, -- External doorway North inside right part
     },
-   height = 3},
+   height = 3,
+   objects = {{type="entrance_door", xpos=2, ypos=1, direction="north"}},
+  },
 
   {sprite=114, height=3, type="north"}, -- External North wall outside
   {sprite=116, height=3, type="north"}, -- External North wall outside left part of window
@@ -202,13 +209,17 @@ local west_wall = {
     {sprite=158, xpos=1, ypos=3, type="west"}, -- External doorway West outside left part
     {sprite=160, xpos=1, ypos=1, type="west"}, -- External doorway West outside right part
     },
-   height = 3},
+   height = 3,
+   objects = {{type="entrance_door", xpos=1, ypos=2, direction="west"}},
+  },
 
   {sprites = {
     {sprite=162, xpos=1, ypos=3, type="west"}, -- External doorway West inside left part
     {sprite=164, xpos=1, ypos=1, type="west"}, -- External doorway West inside right part
     },
-   height = 3},
+   height = 3,
+   objects = {{type="entrance_door", xpos=1, ypos=2, direction="west"}},
+  },
 
   {sprite=115, height=3, type="west"}, -- External West wall outside
   {sprite=119, height=3, type="west"}, -- External West wall outside left part of window
@@ -226,36 +237,36 @@ local west_wall = {
 local helipad = {
   {sprites = {
     -- Dark tiles around the edges.
-    {sprite=5, xpos=1, ypos=1, type="floor"},
-    {sprite=5, xpos=2, ypos=1, type="floor"},
-    {sprite=5, xpos=3, ypos=1, type="floor"},
-    {sprite=5, xpos=4, ypos=1, type="floor"},
-    {sprite=5, xpos=5, ypos=1, type="floor"},
+    {sprite=5, xpos=1, ypos=1, type="road"},
+    {sprite=5, xpos=2, ypos=1, type="road"},
+    {sprite=5, xpos=3, ypos=1, type="road"},
+    {sprite=5, xpos=4, ypos=1, type="road"},
+    {sprite=5, xpos=5, ypos=1, type="road"},
 
-    {sprite=5, xpos=1, ypos=2, type="floor"},
-    {sprite=5, xpos=1, ypos=3, type="floor"},
-    {sprite=5, xpos=1, ypos=4, type="floor"},
-    {sprite=5, xpos=1, ypos=5, type="floor"},
+    {sprite=5, xpos=1, ypos=2, type="road"},
+    {sprite=5, xpos=1, ypos=3, type="road"},
+    {sprite=5, xpos=1, ypos=4, type="road"},
+    {sprite=5, xpos=1, ypos=5, type="road"},
 
-    {sprite=5, xpos=2, ypos=5, type="floor"},
-    {sprite=5, xpos=3, ypos=5, type="floor"},
-    {sprite=5, xpos=4, ypos=5, type="floor"},
+    {sprite=5, xpos=2, ypos=5, type="road"},
+    {sprite=5, xpos=3, ypos=5, type="road"},
+    {sprite=5, xpos=4, ypos=5, type="road"},
 
-    {sprite=5, xpos=5, ypos=5, type="floor"},
-    {sprite=5, xpos=5, ypos=2, type="floor"},
-    {sprite=5, xpos=5, ypos=3, type="floor"},
-    {sprite=5, xpos=5, ypos=4, type="floor"},
+    {sprite=5, xpos=5, ypos=5, type="road"},
+    {sprite=5, xpos=5, ypos=2, type="road"},
+    {sprite=5, xpos=5, ypos=3, type="road"},
+    {sprite=5, xpos=5, ypos=4, type="road"},
     -- Dark tiles in the 'H'
-    {sprite=5, xpos=3, ypos=2, type="floor"},
-    {sprite=5, xpos=3, ypos=4, type="floor"},
+    {sprite=5, xpos=3, ypos=2, type="road"},
+    {sprite=5, xpos=3, ypos=4, type="road"},
     -- Light tiles in the 'H'
-    {sprite=4, xpos=2, ypos=2, type="floor"},
-    {sprite=4, xpos=2, ypos=3, type="floor"},
-    {sprite=4, xpos=2, ypos=4, type="floor"},
-    {sprite=4, xpos=4, ypos=2, type="floor"},
-    {sprite=4, xpos=4, ypos=3, type="floor"},
-    {sprite=4, xpos=4, ypos=4, type="floor"},
-    {sprite=4, xpos=3, ypos=3, type="floor"}
+    {sprite=4, xpos=2, ypos=2, type="road"},
+    {sprite=4, xpos=2, ypos=3, type="road"},
+    {sprite=4, xpos=2, ypos=4, type="road"},
+    {sprite=4, xpos=4, ypos=2, type="road"},
+    {sprite=4, xpos=4, ypos=3, type="road"},
+    {sprite=4, xpos=4, ypos=4, type="road"},
+    {sprite=4, xpos=3, ypos=3, type="road"}
    },
    height=5
   }
@@ -281,7 +292,7 @@ local PAGES = {
 local function normalizeEditSprite(spr)
   assert(MAX_HEIGHT >= spr.height) -- Verify that sprite fits in the maximum height.
 
-  if spr.sprites == nil then -- {spritex=xxx, height=y} case
+  if spr.sprites == nil then -- {sprite = xxx, height = y} case
     return {sprites = {{sprite = spr.sprite, xpos = 1, ypos = 1, type=spr.type}},
             xsize = 1,
             ysize = 1,
@@ -317,7 +328,8 @@ local function normalizeEditSprite(spr)
             xorigin = xorigin,
             yorigin = yorigin,
             width = width,
-            height = spr.height}
+            height = spr.height,
+            objects = spr.objects}
   end
 end
 
@@ -430,8 +442,8 @@ function UIMapEditor:UIMapEditor(ui)
     sprite = nil,       -- Selected sprite from the menu.
     is_drag = false,    -- Whether a true drag (at least 2 cells covered) has been detected.
     parcel = nil,       -- Parcel number to set in 'parcel' / 'parcel-left' mode.
-    camera = nil,	-- Camera player to set in 'camera' mode.
-    heliport = nil,	-- Heliport player to set in 'heliport' mode.
+    camera = nil,       -- Camera player to set in 'camera' mode.
+    heliport = nil,     -- Heliport player to set in 'heliport' mode.
 
     xpos = 0,   -- Horizontal tile position of the mouse cursor.
     ypos = 0,   -- Vertical tile position of the mouse cursor.
@@ -665,6 +677,28 @@ function UIMapEditor:buildSpriteButtons(buttons)
 end
 -- }}}
 
+--! Should the given type of sprite be considered a floor sprite?
+--!param sprite_type (string) Type of sprite.
+--!return The (boolean) type is a floor sprite type.
+local function isFloorSpriteType(sprite_type)
+  return sprite_type == "floor" or sprite_type == "hospital" or sprite_type == "road"
+end
+
+--! Construct cell flags for a given kind of floor sprite.
+--!param sprite_type (string) Type of sprite.
+local function makeCellFlags(sprite_type)
+  if sprite_type == "floor" then
+    return {buildable=false, passable=false, hospital=false}
+
+  elseif sprite_type == "road" then
+    return {buildable=false, passable=true,  hospital=false}
+
+  elseif sprite_type == "hospital" then
+    return {buildable=true,  passable=true,  hospital=true}
+  end
+  assert(false) -- Should never get here
+end
+
 --! Get the tile area covered by two points.
 --!param x1 (jnt) Horizontal coordinate of the first point.
 --!param y1 (int) Vertical   coordinate of the first point.
@@ -891,6 +925,7 @@ function UIMapEditor:blockClicked(num)
     self.cursor.sprite = {xsize = sprite.xsize,
                           ysize = sprite.ysize,
                           sprites = sprite.sprites,
+                          objects = sprite.objects,
                           type = sprite.type}
   else
     self.cursor.state = "disabled"
@@ -957,7 +992,7 @@ function UIMapEditor:getCursorDragCapabilities()
     return "none"
   end
 
-  if self.cursor.sprite.type == "floor" then return "area" end
+  if isFloorSpriteType(self.cursor.sprite.type) then return "area" end
   if self.cursor.sprite.type == "north" then return "east-west" end
   if self.cursor.sprite.type == "west" then return "north-south" end
   assert(false) -- Should never get here
@@ -1092,14 +1127,140 @@ function UIMapEditor:onMouseDown(button, xpos, ypos)
 
   end
 
-
   return repaint
+end
+
+--! Add an object to the map. Currently, only "entrance_door" is supported.
+--!param obj_type (str) Type of object ("entrance_door")
+--!param xpos (int) Desired x position of the new object.
+--!param ypos (int) Desired y position of the new object.
+--!param direction (str) Direction of the new object ("north" or "west").
+function UIMapEditor:drawObject(obj_type, xpos, ypos, direction)
+  local world = self.ui.app.world
+
+  -- TheApp.objects[name].thob
+  -- name = world.object_id_by_thob[thob]
+  -- generic object = world.object_types[object_id]
+  -- instance: world:getObject(x, y, name)
+  if obj_type == "entrance_door" then
+    world:newObject("entrance_right_door", xpos, ypos, direction)
+    if direction == "north" then
+      world:newObject("entrance_left_door", xpos - 1, ypos, direction)
+    else
+      world:newObject("entrance_left_door", xpos, ypos - 1, direction)
+    end
+  end
+end
+
+--! Remove an entrance door from the world.
+--!param door Entrance door to remove.
+function UIMapEditor:removeDoor(door)
+  local world = self.ui.app.world
+
+  world:destroyEntity(door)
+  if door.slave then
+    world:destroyEntity(door.slave)
+  end
+end
+
+--! Collect other objects that use the space needed for the specified new object.
+--  If they exist, return them or delete them.
+--!param obj_type (str) Type of object ("entrance_door")
+--!param xpos (int) Desired x position of the new object.
+--!param ypos (int) Desired y position of the new object.
+--!param direction (str) Direction of the new object ("north" or "west").
+--!param remove (bool) If set, remove the found objects.
+--!return (list) The objects that use the space, if they are not removed.
+function UIMapEditor:checkObjectSpace(obj_type, xpos, ypos, direction, remove)
+  local world = self.ui.app.world
+  local right_door = world.object_types["entrance_right_door"]
+  local left_door  = world.object_types["entrance_left_door"]
+  local th = self.ui.app.map.th
+
+  --! Check single tile for conflicts with other doors.
+  --!param x X position of the tile to check.
+  --!param y Y position of the tile to check.
+  --!return (int, int) position of the conflicting door, or (nil, nil) if no conflict.
+  local function checkTile(x, y)
+    local all_flags = th:getCellFlags(x, y)
+    if not all_flags.thob then
+      return nil, nil
+    elseif all_flags.thob == right_door.thob then
+      return x, y
+    elseif all_flags.thob == left_door.thob then
+      if all_flags.tallWest then
+        return x, y + 1
+      else
+        return x + 1, y
+      end
+    end
+    return nil, nil
+  end
+
+  -- While the general intention is 'objects', the only object that can exist
+  -- and is handled here is the entrance door.
+  assert(obj_type == "entrance_door")
+  local doors = {}
+
+  local x, y = checkTile(xpos, ypos)
+  if x then
+    doors[#doors + 1] = world:getObject(x, y, "entrance_right_door")
+  end
+
+  local x2, y2
+  if direction == "north" then
+    x2, y2 = checkTile(xpos - 1, ypos)
+  else
+    x2, y2 = checkTile(xpos, ypos - 1)
+  end
+
+  if x2 and (x2 ~= x or y2 ~= y) then
+    doors[#doors + 1] = world:getObject(x2, y2, "entrance_right_door")
+  end
+
+  if remove then
+    for _, door in ipairs(doors) do self:removeDoor(door) end
+    return
+  end
+  return doors
+end
+
+--! Recognize objects in the collection of thob+tallWest entries
+--!param minx (int) Base horizontal position (objects should be put relative to it).
+--!param miny (int) Base vertical position (objects should be put relative to it).
+--!param thobdir_positions (table xy to {thob, tallWest}) Found thobs.
+--!return (array of {type, xpos, ypos, direction}) Found objects.
+function UIMapEditor:findObjects(minx, miny, thobdir_positions)
+  local world = self.ui.app.world
+  local right_door = world.object_types["entrance_right_door"]
+  local left_door  = world.object_types["entrance_left_door"]
+
+  local objects = {} -- Found objects ordered by position.
+
+  -- Look for right entrance door.
+  for xy_right, thobdir_right in pairs(thobdir_positions) do
+    if right_door.thob == thobdir_right.thob then
+      -- Found right door, is there a matching left door?
+      local xy_left = thobdir_right.tallWest and xy_right - 256 or xy_right - 1
+      local thobdir_left = thobdir_positions[xy_left]
+      if thobdir_left and thobdir_left.thob == left_door.thob and
+          thobdir_left.tallWest == thobdir_right.tallWest then
+        local obj = {type="entrance_door",
+                     xpos = xy_right % 256 - minx + 1,
+                     ypos = math.floor(xy_right / 256) - miny + 1,
+                     direction=thobdir_right.tallWest and "west" or "north"}
+        objects[#objects + 1] = obj
+      end
+    end
+  end
+
+  return objects
 end
 
 --! Draw the selected sprite at the given coordinates.
 --!param coords (array or {xpos, ypos} tables) Coordinates to draw the selected sprite.
 function UIMapEditor:drawCursorSpriteAtArea(coords)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   if self.cursor.sprite then
     for _, coord in ipairs(coords) do
@@ -1109,15 +1270,28 @@ function UIMapEditor:drawCursorSpriteAtArea(coords)
       xbase, ybase = self:areaOnWorld(xbase, ybase, self.cursor.sprite.xsize, self.cursor.sprite.ysize)
       for _, spr in ipairs(self.cursor.sprite.sprites) do
         local tx, ty = xbase + spr.xpos - 1, ybase + spr.ypos - 1
-        local f, nw, ww = map:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
-        if spr.type == "floor" then
+        local f, nw, ww = th:getCell(tx, ty) -- floor, north-wall, west-wall (, ui)
+        if isFloorSpriteType(spr.type) then
           f = spr.sprite
+          -- Floor sprite gets changed, also modify the cell flags.
+          th:setCellFlags(tx, ty, makeCellFlags(spr.type))
+
         elseif spr.type == "north" then
           nw = spr.sprite
+
         elseif spr.type == "west" then
           ww = spr.sprite
         end
-        map:setCell(tx, ty, f, nw, ww, 0)
+
+        th:setCell(tx, ty, f, nw, ww, 0)
+      end
+
+      -- Draw the objects
+      if self.cursor.sprite.objects then
+        for _, obj in ipairs(self.cursor.sprite.objects) do
+          local tx, ty = xbase + obj.xpos - 1, ybase + obj.ypos - 1
+          self:drawObject(obj.type, tx, ty, obj.direction)
+        end
       end
     end
   end
@@ -1126,13 +1300,15 @@ end
 --! Copy area from the game.
 --!return (bool) Whether copying succeeded.
 function UIMapEditor:copyArea()
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   local minx, miny, maxx, maxy = getCoveredArea(self.cursor.rightx, self.cursor.righty,
                                                 self.cursor.xpos, self.cursor.ypos)
   if minx == maxx and miny == maxy and self.is_drag then
     return false -- Canceled drag
   end
+
+  local thobdir_positions = {}
 
   -- Copy data.
   self.cursor.copy_data = {}
@@ -1144,21 +1320,35 @@ function UIMapEditor:copyArea()
   while tx <= maxx do
     ty = miny
     while ty <= maxy do
-      local f, nw, ww = map:getCell(tx, ty)
+      local f, nw, ww = th:getCell(tx, ty)
+      local all_flags = th:getCellFlags(tx, ty)
       self.cursor.copy_data[#self.cursor.copy_data + 1] = {
-          xpos = tx - minx, ypos = ty - miny,
-          floor = f, north_wall = nw, west_wall = ww}
+          xpos = tx - minx,
+          ypos = ty - miny,
+          floor = f,
+          north_wall = nw,
+          west_wall = ww,
+          flags  = {buildable = all_flags.buildable,
+                    passable  = all_flags.passable,
+                    hospital  = all_flags.hospital},
+      }
+      if all_flags.thob and all_flags.thob ~= 0 then
+        thobdir_positions[tx + 256 * ty] = {thob = all_flags.thob,
+                                            tallWest = all_flags.tallWest}
+      end
 
       ty = ty + 1
     end
     tx = tx + 1
   end
+  self.cursor.copy_objects = self:findObjects(minx, miny, thobdir_positions)
+
   return true
 end
 
 --! Paste copied area into the destination area (one or more times).
 function UIMapEditor:pasteArea()
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   local minx, miny, maxx, maxy
   -- Fill 'minx', 'miny' with the non-cursor corner.
@@ -1182,11 +1372,26 @@ function UIMapEditor:pasteArea()
   while tx <= maxx do
     ty = miny
     while ty <= maxy do
+      -- Copy floor and wall sprites, and set the passable/buildable/hospital flag.
       for _, elm in ipairs(self.cursor.copy_data) do
-        local x = tx + elm.xpos
-        local y = ty + elm.ypos
+        local x, y = tx + elm.xpos, ty + elm.ypos
         if x <= maxx and y <= maxy then
-          map:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
+          th:setCell(x, y, elm.floor, elm.north_wall, elm.west_wall, 0)
+          th:setCellFlags(x, y, elm.flags)
+        end
+      end
+      -- Make room for the new objects.
+      for _, obj in ipairs(self.cursor.copy_objects) do
+        local x, y = tx + obj.xpos - 1, ty + obj.ypos - 1
+        if x <= maxx and y <= maxy then
+          self:checkObjectSpace(obj.type, x, y, obj.direction, true)
+        end
+      end
+      -- Paste the objects of the copied area.
+      for _, obj in ipairs(self.cursor.copy_objects) do
+        local x, y = tx + obj.xpos - 1, ty + obj.ypos - 1
+        if x <= maxx and y <= maxy then
+          self:drawObject(obj.type, x, y, obj.direction)
         end
       end
 
@@ -1199,12 +1404,29 @@ end
 --! Delete the walls at the given coordinates.
 --!param coords (array or {xpos, ypos} tables) Coordinates to remove the walls.
 function UIMapEditor:deleteWallsAtArea(coords)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
+
+  local thobdir_positions = {} -- Storage for found objects.
 
   for _, coord in ipairs(coords) do
     local tx, ty = coord.xpos, coord.ypos
-    local f = map:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
-    map:setCell(tx, ty, f, 0, 0, 0)
+    -- Remove west and north wall.
+    local f = th:getCell(tx, ty) -- floor (, north-wall, west-wall , ui)
+    th:setCell(tx, ty, f, 0, 0, 0)
+    -- No need for map:setCellFlags, as 'passable', 'buildable', and 'hospital' are floor properties.
+
+    -- Collect thobs, to remove next.
+    local all_flags = th:getCellFlags(tx, ty)
+    if all_flags.thob ~= 0 then
+      thobdir_positions[tx + ty * 256] = {thob=all_flags.thob,
+                                          tallWest=all_flags.tallWest}
+    end
+  end
+
+  -- Remove objects from the area.
+  local objects = self:findObjects(1, 1, thobdir_positions) -- Uses absolute position for the objects
+  for _, obj in ipairs(objects) do
+    self:checkObjectSpace(obj.type, obj.xpos, obj.ypos, obj.direction, true)
   end
 end
 
@@ -1212,11 +1434,11 @@ end
 --!param coords (array or {xpos, ypos} tables) Coordinates to set parcel.
 --!param parcel_num (int) Parcel number to set.
 function UIMapEditor:setParcelAtArea(coords, parcel_num)
-  local map = self.ui.app.map.th
+  local th = self.ui.app.map.th
 
   for _, coord in ipairs(coords) do
     local tx, ty = coord.xpos, coord.ypos
-    map:setCellFlags(tx, ty, {parcelId = parcel_num})
+    th:setCellFlags(tx, ty, {parcelId = parcel_num})
   end
 end
 
