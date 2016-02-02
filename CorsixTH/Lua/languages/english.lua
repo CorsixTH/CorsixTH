@@ -595,6 +595,8 @@ cheats_window = {
     end_year = "End of Year",
     lose_level = "Lose Level",
     win_level = "Win Level",
+    increase_prices = "Increase prices",
+    decrease_prices = "Decrease prices",
   },
   close = "Close",
 }
@@ -614,6 +616,8 @@ tooltip.cheats_window = {
     end_year = "Jumps to the end of the year.",
     lose_level = "Lose the current level.",
     win_level = "Win the current level.",
+    increase_prices = "Increase all prices by 50% (max. 200%)",
+    decrease_prices = "Decrease all prices by 50% (min. 50%)",
   }
 }
 
