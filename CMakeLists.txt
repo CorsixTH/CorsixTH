@@ -29,11 +29,6 @@ ENDIF(MINGW)
 INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
-IF(APPLE)
-  SET(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
-  SET(CMAKE_OSX_ARCHITECTURES x86_64)
-ENDIF()
-
 # Define our options
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
