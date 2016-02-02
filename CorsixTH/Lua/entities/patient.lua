@@ -215,53 +215,25 @@ function Patient:setHospital(hospital)
   end
 end
 
-
-function Patient:treated() -- If a drug was used we also need to pay for this
+-- Returns: true if cured
+--          false if dead
+function Patient:treated()
   local hospital = self.hospital
-  local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
-  hospital:receiveMoneyForTreatment(self)
-  if amount ~= 0 then
-    local str = _S.drug_companies[math.random(1 , 5)]
-    hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
-  end
 
-  -- Either the patient is no longer sick, or he/she dies.
-
+  -- Either the patient is cured, or he/she dies.
   local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) > cure_chance then
+
+  local die = self.die_anims and math.random(1, 100) > cure_chance
+          and math.random(1, 100) > (self.diagnosis_progress * 100)
+
+  if die then
     self:die()
   else
-    -- to guess the cure is risky and the patient could die
-    if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
-      self:die()
-    else
-      if hospital.num_cured < 1 then
-        self.world.ui.adviser:say(_A.information.first_cure)
-      end
-      self.hospital.num_cured = hospital.num_cured + 1
-      self.hospital.num_cured_ty = hospital.num_cured_ty + 1
-      self.hospital:msgCured()
-      local casebook = hospital.disease_casebook[self.disease.id]
-      casebook.recoveries = casebook.recoveries + 1
-      if self.is_emergency then
-        self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
-      end
-
-      self.cured = true
-      self.infected = false
-      self.attributes["health"] = 1
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
-      self.hospital:msgCured()
-
-      -- If the patient refused to pay they are on the way home already
-      if not self.going_home then
-        self:goHome("cured")
-      end
-    end
+    self.cured = true
+    self.infected = false
+    self.attributes["health"] = 1
   end
-
-  hospital:updatePercentages()
 
   if self.is_emergency then
     local killed = hospital.emergency.killed_emergency_patients
@@ -273,6 +245,8 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       end
     end
   end
+
+  return not die
 end
 
 function Patient:die()
@@ -504,6 +478,9 @@ function Patient:goHome(reason)
     self:despawn()
     return
   end
+
+  local casebook = hosp.disease_casebook[self.disease.id]
+
   if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
@@ -511,16 +488,27 @@ function Patient:goHome(reason)
     if not self.is_debug then
       hosp:changeReputation("cured", self.disease)
     end
+    if hosp.num_cured < 1 then
+      self.world.ui.adviser:say(_A.information.first_cure)
+    end
+    self.hospital.num_cured = hosp.num_cured + 1
+    self.hospital.num_cured_ty = hosp.num_cured_ty + 1
+    casebook.recoveries = casebook.recoveries + 1
+    if self.is_emergency then
+      hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
+    end
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+    self.hospital:msgCured()
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
     if not self.is_debug then
       hosp:changeReputation("kicked", self.disease)
       hosp.not_cured = hosp.not_cured + 1
       hosp.not_cured_ty = hosp.not_cured_ty + 1
-      local casebook = hosp.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end
   elseif reason == "over_priced" then
+    self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
     self:setMood("sad_money", "activate")
     self:changeAttribute("happiness", -0.5)
     if not self.is_debug then

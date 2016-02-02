@@ -129,20 +129,23 @@ function GPRoom:dealtWithPatient(patient)
     self:sendPatientToNextDiagnosisRoom(patient)
     patient.needs_redirecting = false
   elseif patient.disease and not patient.diagnosed then
-    self.hospital:receiveMoneyForTreatment(patient)
-
-    patient:completeDiagnosticStep(self)
-    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
-      patient:setDiagnosed(true)
-      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
-
-      self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
-      -- Check if this disease has just been discovered
-      if not self.hospital.disease_casebook[patient.disease.id].discovered then
-        self.hospital.research:discoverDisease(patient.disease)
-      end
+    local has_paid = self.hospital:receiveMoneyForTreatment(patient)
+    if not has_paid then
+      patient:goHome("over_priced")
     else
-      self:sendPatientToNextDiagnosisRoom(patient)
+      patient:completeDiagnosticStep(self)
+      if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
+        patient:setDiagnosed(true)
+        patient:queueAction { name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true }
+
+        self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
+        -- Check if this disease has just been discovered
+        if not self.hospital.disease_casebook[patient.disease.id].discovered then
+          self.hospital.research:discoverDisease(patient.disease)
+        end
+      else
+        self:sendPatientToNextDiagnosisRoom(patient)
+      end
     end
   else
     patient:queueAction{name = "meander", count = 2}

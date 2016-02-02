@@ -167,28 +167,54 @@ function Room:dealtWithPatient(patient)
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
 
-  if patient.disease and not patient.diagnosed then
-    -- Patient not yet diagnosed, hence just been in a diagnosis room.
-    -- Increment diagnosis_progress, and send patient back to GP.
+  local patient_treated = false
+  local patient_alive = true
+  local next_cure_room
 
-    patient:completeDiagnosticStep(self)
-    patient:queueAction{name = "seek_room", room_type = "gp"}
-    self.hospital:receiveMoneyForTreatment(patient)
-  elseif patient.disease and patient.diagnosed then
-    -- Patient just been in a cure room, so either patient now cured, or needs
-    -- to move onto next cure room.
-    patient.cure_rooms_visited = patient.cure_rooms_visited + 1
-    local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
-    if next_room then
-      -- Do not say that it is a treatment room here, since that check should already have been made.
-      patient:queueAction{name = "seek_room", room_type = next_room}
+  if patient.disease then
+    if not patient.diagnosed then
+      -- Patient not yet diagnosed, hence just been in a diagnosis room.
+      -- Increment diagnosis_progress, and send patient back to GP.
+
+      patient:completeDiagnosticStep(self)
+      patient:queueAction { name = "seek_room", room_type = "gp" }
     else
-      -- Patient is "done" at the hospital
-      patient:treated()
+      -- Patient just been in a cure room, so either patient now cured, or needs
+      -- to move onto next cure room.
+      patient.cure_rooms_visited = patient.cure_rooms_visited + 1
+      next_cure_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
+      if next_cure_room then
+        -- Do not say that it is a treatment room here, since that check should already have been made.
+        patient:queueAction { name = "seek_room", room_type = next_cure_room }
+      else
+        -- Patient is "done" at the hospital
+        patient_alive = patient:treated()
+        patient_treated = true;
+      end
+    end
+
+    if not next_cure_room then
+      local has_paid = self.hospital:receiveMoneyForTreatment(patient)
+
+      -- We need to pay the price of the drug we used to treat the patient,
+      -- regardless of whether the patient survived of not
+      if patient_treated then
+        self:payDrug(patient)
+      end
+
+      if patient_alive then
+        if has_paid then
+          if patient_treated then
+            patient:goHome("cured")
+          end
+        else
+          patient:goHome("over_priced")
+        end
+      end
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction { name = "meander", count = 2 }
+    patient:queueAction { name = "idle" }
   end
 
   if self.dealt_patient_callback then
@@ -196,6 +222,15 @@ function Room:dealtWithPatient(patient)
   end
   -- The staff member(s) might be needed somewhere else.
   self:findWorkForStaff()
+end
+
+-- Pay drug if needed
+function Room:payDrug(patient)
+  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+  if drug_amount ~= 0 then
+    local str = _S.drug_companies[math.random(1, 5)]
+    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+  end
 end
 
 --! Checks if the room still needs the staff in it and otherwise

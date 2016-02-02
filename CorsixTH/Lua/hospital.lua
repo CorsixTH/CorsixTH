@@ -1574,8 +1574,7 @@ function Hospital:receiveMoneyForTreatment(patient)
 
         if is_over_priced and math.random(1, 5) == 1 then
           -- patient thinks it's too expensive, so he/she's not paying and he/she leaves
-          self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
-          patient:goHome("over_priced")
+          return false
         else
           -- patient is paying normally (but still, he could feel like it's
           -- under- or over-priced and it could impact happiness and reputation)
@@ -1587,6 +1586,8 @@ function Hospital:receiveMoneyForTreatment(patient)
       end
     end
   end
+
+  return true
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage
