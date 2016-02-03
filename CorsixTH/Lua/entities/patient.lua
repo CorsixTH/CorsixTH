@@ -215,27 +215,64 @@ function Patient:setHospital(hospital)
   end
 end
 
--- Returns: true if cured
---          false if dead
-function Patient:treated()
-  local hospital = self.hospital
-
-  -- Either the patient is cured, or he/she dies.
-  local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
-  cure_chance = cure_chance * self.diagnosis_progress
-
-  local die = self.die_anims and math.random(1, 100) > cure_chance
-          and math.random(1, 100) > (self.diagnosis_progress * 100)
-
-  if die then
-    self:die()
+function Patient:getDiseaseId()
+  if self.diagnosed then
+    return self.disease.id
   else
-    self.cured = true
-    self.infected = false
-    self.attributes["health"] = 1
+    local room_info = self:getRoom()
+    if not room_info then
+      print("Warning: Trying to receieve money for treated patient who is "..
+              "not in a room")
+      return
+    end
+    room_info = room_info.room_info
+    return "diag_" .. room_info.id
   end
+end
 
+--! Estimate the subjective perceived distortion between the price level the
+--! patient might expect considering the reputation and the cure effectiveness
+--! of a given treatment and the staff internal state.
+--! Returns a float between [-1, 1]. The smaller the value is, the more the
+--! patient considers the bill to be under-priced. The bigger the value is, the
+--! more the patient patient considers the bill to be over-priced.
+--!param casebook (table): casebook entry for the treatment.
+function Patient:computePriceDistortion(casebook)
+  local room = self:getRoom()
+
+  -- weights
+  local staff_quality_weight = 0.5
+  local reputation_weight = 0.4
+  local effectiveness_weight = 0.1
+
+  -- map the different variables to [0-1] and merge them
+  local reputation = casebook.reputation or self.hospital.reputation
+  local effectiveness = casebook.cure_effectiveness
+
+  local weighted_staff_quality = staff_quality_weight * room:getStaffServiceQuality()
+  local weighted_reputation = reputation_weight * (reputation / 1000)
+  local weighted_effectiveness = effectiveness_weight * (effectiveness / 100)
+
+  local expected_price_level = weighted_staff_quality + weighted_reputation + weighted_effectiveness
+
+  -- map to [0-1]
+  local price_level = ((casebook.price - 0.5) / 3) * 2
+
+  self.price_distortion = price_level - expected_price_level
+end
+
+function Patient:agreesToPay()
+  local disease_id = self:getDiseaseId()
+  local casebook = self.hospital.disease_casebook[disease_id]
+  self:computePriceDistortion(casebook)
+  local is_over_priced = self.price_distortion > self.hospital.over_priced_threshold
+
+  return not (is_over_priced and math.random(1, 5) == 1)
+end
+
+function Patient:checkEmergency()
   if self.is_emergency then
+    local hospital = self.hospital
     local killed = hospital.emergency.killed_emergency_patients
     local cured = hospital.emergency.cured_emergency_patients
     if killed + cured >= hospital.emergency.victims then
@@ -245,8 +282,25 @@ function Patient:treated()
       end
     end
   end
+end
+
+-- Either the patient is cured, or he/she dies.
+-- Returns: true if cured
+--          false if dead
+function Patient:isTreatmentEffective()
+  local cure_chance = self.hospital.disease_casebook[self.disease.id].cure_effectiveness
+  cure_chance = cure_chance * self.diagnosis_progress
+
+  local die = self.die_anims and math.random(1, 100) > cure_chance
+          and math.random(1, 100) > (self.diagnosis_progress * 100)
 
   return not die
+end
+
+function Patient:cure()
+  self.cured = true
+  self.infected = false
+  self.attributes["health"] = 1
 end
 
 function Patient:die()

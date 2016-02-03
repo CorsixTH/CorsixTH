@@ -83,9 +83,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
-  self.under_priced_threshold = -0.3 -- Price distortion level under which the
+  self.under_priced_threshold = -0.4 -- Price distortion level under which the
   -- patients might consider the treatment to be under-priced (TODO: This could
-  -- depend on difficulty and/or level; e.g. Easy: -0.2 / Difficult: -0.4)
+  -- depend on difficulty and/or level; e.g. Easy: -0.3 / Difficult: -0.5)
   self.over_priced_threshold = 0.3 -- Price distortion level over which the
   -- patients might consider the treatment to be over-priced (TODO: This could
   -- depend on difficulty and/or level; e.g. Easy: 0.4 / Difficult: 0.2)
@@ -640,8 +640,8 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 109 then
-    -- Added these two hospital variables, related to price distortion
-    self.under_priced_threshold = -0.3
+    -- price distortion
+    self.under_priced_threshold = -0.4
     self.over_priced_threshold = 0.3
   end
 
@@ -1542,52 +1542,43 @@ end
 !param patient (Patient) The patient that just got treated.
 ]]
 function Hospital:receiveMoneyForTreatment(patient)
+  local function getTransactionReason(patient)
+    if patient.diagnosed then
+      return _S.transactions.cure_colon .. " " .. patient.disease.name
+    else
+      local room_info = patient:getRoom()
+      if not room_info then
+        print("Warning: Trying to receieve money for treated patient who is "..
+                "not in a room")
+        return
+      end
+      room_info = room_info.room_info
+      return _S.transactions.treat_colon .. " " .. room_info.name
+    end
+  end
+
   if not self.world.free_build_mode then
     local disease_id
     local reason
     if not self.world.free_build_mode then
-      if patient.diagnosed then
-        disease_id = patient.disease.id
-        reason = _S.transactions.cure_colon .. " " .. patient.disease.name
-      else
-        local room_info = patient:getRoom()
-        if not room_info then
-          print("Warning: Trying to receieve money for treated patient who is "..
-              "not in a room")
-          return
-        end
-        room_info = room_info.room_info
-        disease_id = "diag_" .. room_info.id
-        reason = _S.transactions.treat_colon .. " " .. room_info.name
-      end
+      local disease_id = patient:getDiseaseId()
       local casebook = self.disease_casebook[disease_id]
       local amount = self:getTreatmentPrice(disease_id)
 
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
-        patient.world:newFloatingDollarSign(patient, amount)
-        casebook.money_earned = casebook.money_earned + amount
         self:addInsuranceMoney(patient.insurance_company, amount)
       else
-        local price_distortion = self:getPriceDistortion(casebook, patient:getRoom())
-        local is_over_priced = price_distortion > self.over_priced_threshold
-
-        if is_over_priced and math.random(1, 5) == 1 then
-          -- patient thinks it's too expensive, so he/she's not paying and he/she leaves
-          return false
-        else
-          -- patient is paying normally (but still, he could feel like it's
-          -- under- or over-priced and it could impact happiness and reputation)
-          patient.world:newFloatingDollarSign(patient, amount)
-          casebook.money_earned = casebook.money_earned + amount
-          self:computePriceLevelImpact(patient, casebook, price_distortion)
-          self:receiveMoney(amount, reason)
-        end
+        -- patient is paying normally (but still, he could feel like it's
+        -- under- or over-priced and it could impact happiness and reputation)
+        self:computePriceLevelImpact(patient, casebook)
+        self:receiveMoney(amount, getTransactionReason(patient))
       end
+
+      casebook.money_earned = casebook.money_earned + amount
+      patient.world:newFloatingDollarSign(patient, amount)
     end
   end
-
-  return true
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage
@@ -1611,6 +1602,15 @@ end
 function Hospital:receiveMoneyForProduct(patient, amount, reason)
   patient.world:newFloatingDollarSign(patient, amount)
   self:receiveMoney(amount, reason)
+end
+
+-- Pay drug if needed
+function Hospital:paySupplierForDrug(patient)
+  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+  if drug_amount ~= 0 then
+    local str = _S.drug_companies[math.random(1, 5)]
+    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+  end
 end
 
 --[[ Add a transaction to the hospital's transaction log.
@@ -2141,6 +2141,7 @@ end
 --!param price_distortion (float): the price distortion
 -- (see Hospital:getPriceDistortion(casebook, room) for more info)
 function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
+  local price_distortion = patient.price_distortion
   patient:changeAttribute("happiness", -(price_distortion / 2))
 
   if price_distortion < self.under_priced_threshold then
@@ -2163,36 +2164,4 @@ function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
     -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
     self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
   end
-end
-
---! Estimate the subjective perceived distortion between the price level the
---! patient might expect considering the reputation and the cure effectiveness 
---! of a given treatment and the staff internal state.
---! Returns a float between [-1, 1]. The smaller the value is, the more the 
---! patient considers the bill to be under-priced. The bigger the value is, the 
---! more the patient patient considers the bill to be over-priced.
---!param casebook (table): casebook entry for the treatment.
---!param room (room): the room we use to get the staff service quality estimation.
-function Hospital:getPriceDistortion(casebook, room)
-  -- weights
-  local staff_quality_weight = 0.40
-  local reputation_weight = 0.35
-  local effectiveness_weight = 0.10
-  local randomness_weight = 0.15
- 
-  -- map the different variables to [0-1] and merge them
-  local reputation = casebook.reputation or self.reputation
-  local effectiveness = casebook.cure_effectiveness
- 
-  local weighted_staff_quality = staff_quality_weight * room:getStaffServiceQuality()
-  local weighted_reputation = reputation_weight * (reputation / 1000)
-  local weighted_effectiveness = effectiveness_weight * (effectiveness / 100)
-  local weighted_randomness = randomness_weight * math.random()
-
-  local expected_price_level = weighted_staff_quality + weighted_reputation + weighted_effectiveness + weighted_randomness
-  
-  -- map to [0-1]
-  local price_level = ((casebook.price - 0.5) / 3) * 2
-
-  return price_level - expected_price_level
 end

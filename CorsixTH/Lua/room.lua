@@ -167,10 +167,6 @@ function Room:dealtWithPatient(patient)
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
 
-  local patient_treated = false
-  local patient_alive = true
-  local next_cure_room
-
   if patient.disease then
     if not patient.diagnosed then
       -- Patient not yet diagnosed, hence just been in a diagnosis room.
@@ -182,34 +178,26 @@ function Room:dealtWithPatient(patient)
       -- Patient just been in a cure room, so either patient now cured, or needs
       -- to move onto next cure room.
       patient.cure_rooms_visited = patient.cure_rooms_visited + 1
-      next_cure_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
+      local next_cure_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
       if next_cure_room then
         -- Do not say that it is a treatment room here, since that check should already have been made.
         patient:queueAction { name = "seek_room", room_type = next_cure_room }
       else
         -- Patient is "done" at the hospital
-        patient_alive = patient:treated()
-        patient_treated = true;
-      end
-    end
-
-    if not next_cure_room then
-      local has_paid = self.hospital:receiveMoneyForTreatment(patient)
-
-      -- We need to pay the price of the drug we used to treat the patient,
-      -- regardless of whether the patient survived of not
-      if patient_treated then
-        self:payDrug(patient)
-      end
-
-      if patient_alive then
-        if has_paid then
-          if patient_treated then
+        if patient:isTreatmentEffective() then
+          patient:cure()
+          if patient:agreesToPay() then
+            self.hospital:receiveMoneyForTreatment(patient)
             patient:goHome("cured")
+          else
+            patient:goHome("over_priced")
           end
         else
-          patient:goHome("over_priced")
+          patient:die()
         end
+
+        self.hospital:paySupplierForDrug(patient)
+        patient:checkEmergency()
       end
     end
   else
@@ -222,15 +210,6 @@ function Room:dealtWithPatient(patient)
   end
   -- The staff member(s) might be needed somewhere else.
   self:findWorkForStaff()
-end
-
--- Pay drug if needed
-function Room:payDrug(patient)
-  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
-  if drug_amount ~= 0 then
-    local str = _S.drug_companies[math.random(1, 5)]
-    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
-  end
 end
 
 --! Checks if the room still needs the staff in it and otherwise
@@ -1026,7 +1005,7 @@ end
 --! Returns a float between [0-1].
 function Room:getStaffServiceQuality()
   local quality = 0.5
-  
+
   if self.staff_member_set then
     -- For rooms with multiple staff member (like operating theatre)
     quality = 0
@@ -1035,12 +1014,12 @@ function Room:getStaffServiceQuality()
       quality = quality + member:getServiceQuality()
       count = count + 1
     end
-    
+
     quality = quality / count
   elseif self.staff_member then
     -- For rooms with one staff member
     quality = self.staff_member:getServiceQuality()
   end
-  
+
   return quality
 end
