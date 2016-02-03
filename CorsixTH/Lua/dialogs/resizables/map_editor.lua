@@ -27,8 +27,11 @@ local UIMapEditor = _G["UIMapEditor"]
 local col_bg = {red = 154, green = 146, blue = 198}
 
 -- {{{ Editor sprites.
--- High byte sprite constants.
-local FLIP_H = DrawFlags.FlipHorizontal * 256
+
+-- Unfortunately, current map file format does not support flags like FLIP_H.
+-- Commented this out until flags can be stored in the file created by the map editor.
+-- -- High byte sprite constants.
+-- local FLIP_H = DrawFlags.FlipHorizontal * 256
 
 -- Each variable below is an array of multi-tile sprites, which is translated
 -- to a list of buttons at a page.
@@ -38,8 +41,10 @@ local FLIP_H = DrawFlags.FlipHorizontal * 256
 -- an array of single sprites, a table of {sprite = ..., xpos = ..., ypos =
 -- ..., type = ...}. It defines which sprite to display at which relative
 -- position. Positions run from 1 upward, sprites are numbers 0..255 (the low
--- byte) while the high byte is used for DrawFlags flags, eg FLIP_H. The type
--- defines where the sprite is stored. 'north' and 'west' mean north
+-- byte).
+-- The high byte is reserved for adding DrawFlags flags in the future, eg FLIP_H.
+--
+-- The type defines where the sprite is stored. 'north' and 'west' mean north
 -- respectively west wall. 'floor' means it is a floor sprite. 'hospital' is
 -- also a floor sprite but it also states that the tile is part of the
 -- hospital. Similarly, 'road' is a floor sprite outside the hospital that can
@@ -171,7 +176,10 @@ local road_spr = {
 local road = {} -- All sprites get horizontally flipped as well, for roads running north-south.
 for _, spr in ipairs(road_spr) do
   road[#road + 1] = spr
-  road[#road + 1] = {sprite = spr.sprite + FLIP_H, height = spr.height, type = spr.type}
+
+  -- Unfortunately, current map file format does not support flags like FLIP_H.
+  -- Commented this out until flags can be stored in the file created by the map editor.
+  -- road[#road + 1] = {sprite = spr.sprite + FLIP_H, height = spr.height, type = spr.type}
 end
 -- }}}
 -- {{{ North wall layout and floor sprites.
@@ -199,8 +207,10 @@ local north_wall = {
   {sprite=122, height=3, type="north"}, -- External North wall inside
   {sprite=124, height=3, type="north"}, -- External North wall inside left part of window
   {sprite=126, height=3, type="north"}, -- External North wall inside right part of window
-  {sprite=209 + FLIP_H, height=3, type="north"}, -- Lamp post pointing East
-  {sprite=210 + FLIP_H, height=3, type="north"}, -- Lamp post pointing West
+-- Unfortunately, current map file format does not support flags like FLIP_H.
+-- Commented this out until flags can be stored in the file created by the map editor.
+--  {sprite=209 + FLIP_H, height=3, type="north"}, -- Lamp post pointing East
+--  {sprite=210 + FLIP_H, height=3, type="north"}, -- Lamp post pointing West
 }
 -- }}}
 -- {{{ West wall layout and floor sprites.
