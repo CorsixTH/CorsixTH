@@ -845,9 +845,9 @@ end
 function Hospital:getHeliportPosition()
   local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
   -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
-  -- the specified tile is suitable by checking the adjacent spawn tile for
+  -- the specified tile is suitable by checking the spawn tile for
   -- passability.
-  if y > 1 and self.world.map:getCellFlag(x, y - 1, "passable") then
+  if y > 0 and self.world.map:getCellFlag(x, y, "passable") then
     return x, y
   end
 end

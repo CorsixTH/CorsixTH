@@ -60,6 +60,30 @@ function Map:getRoomId(x, y)
   return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
 end
 
+function Map:setPlayerCount(count)
+  self.th:setPlayerCount(count)
+end
+
+function Map:getPlayerCount(count)
+  self.th:getPlayerCount(count)
+end
+
+--! Set the camera tile for the given player on the map
+--!param x (int) Horizontal position of tile to set camera on
+--!param y (int) Vertical position of the tile to set the camera on
+--!param player (int) Player number (1-4)
+function Map:setCameraTile(x, y, player)
+  self.th:setCameraTile(x, y, player);
+end
+
+--! Set the heliport tile for the given player on the map
+--!param x (int) Horizontal position of tile to set heliport on
+--!param y (int) Vertical position of the tile to set the heliport on
+--!param player (int) Player number (1-4)
+function Map:setHeliportTile(x, y, player)
+  self.th:setHeliportTile(x, y, player);
+end
+
 --! Set how to display the room temperature in the hospital map.
 --!param method (int) Way of displaying the temperature. See also THMapTemperatureDisplay enum.
 --! 1=red gradients, 2=blue/green/red colour shifts, 3=yellow/orange/red colour shifts
@@ -141,7 +165,7 @@ the original game levels are considered.
 !param level_intro (string) If loading a custom level this message will be shown as soon as the level
 has been loaded.
 ]]
-function Map:load(level, difficulty, level_name, map_file, level_intro)
+function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
   local objects, i
   if not difficulty then
     difficulty = "full"
@@ -197,14 +221,19 @@ function Map:load(level, difficulty, level_name, map_file, level_intro)
       errors, result = self:loadMapConfig(p, result, true)
       self.level_config = result
     end
-  elseif _MAP_EDITOR then
+  elseif map_editor then
     -- We're being fed data by the map editor.
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
     if level == "" then
       i, objects = self.th:loadBlank()
     else
-      i, objects = self.th:load(level)
+      local data, errors = self:getRawData(level)
+      if data then
+        i, objects = self.th:load(data)
+      else
+        return nil, errors
+      end
     end
     assert(base_config, "No base config has been loaded!")
 
@@ -234,13 +263,20 @@ function Map:load(level, difficulty, level_name, map_file, level_intro)
   self.parcelTileCounts = {}
   for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
-    if plot > 1 and not _MAP_EDITOR then
+    if plot > 1 and not map_editor then
       -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
       self.th:setPlotOwner(plot, 0)
     end
   end
 
   return objects
+end
+
+--[[! Saves the map to a .map file
+!param filename (string) Name of the file to save the map in
+]]
+function Map:save(filename)
+  self.th:save(filename)
 end
 
 --[[! Loads map configurations from files. Returns nil as first result
@@ -370,6 +406,50 @@ function Map:updateDebugOverlayHeat()
   end
 end
 
+function Map:updateDebugOverlayParcels()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = self.th:getCellFlags(x, y).parcelId
+      if self.debug_text[xy] == 0 then
+        self.debug_text[xy] = ''
+      end
+    end
+  end
+end
+
+function Map:updateDebugOverlayCamera()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getCameraTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'C'..p
+    end
+  end
+end
+
+function Map:updateDebugOverlayHeliport()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getHeliportTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'H'..p
+    end
+  end
+end
+
 function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   self.debug_text = false
   self.debug_flags = false
@@ -395,6 +475,18 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
   elseif base_offset == "heat" then
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeat
+    self:updateDebugOverlay()
+  elseif base_offset == "parcel" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayParcels
+    self:updateDebugOverlay()
+  elseif base_offset == "camera" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayCamera
+    self:updateDebugOverlay()
+  elseif base_offset == "heliport" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayHeliport
     self:updateDebugOverlay()
   else
     local thData = self:getRawData()

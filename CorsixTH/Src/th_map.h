@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_MAP_H_
 #include "th_gfx.h"
 #include <list>
+#include <string>
 
 /*
     Object type enumeration uses same values as original TH does.
@@ -241,8 +242,7 @@ public:
                         THMapLoadObjectCallback_t fnObjectCallback,
                         void* pCallbackToken);
 
-    void save(void (*fnWriter)(void*, const uint8_t*, size_t),
-              void* pToken);
+    void save(std::string filename);
 
     //! Set the sprite sheet to be used for drawing the map
     /*!
@@ -275,6 +275,9 @@ public:
     inline int getParcelCount() const {return m_iParcelCount - 1;}
 
     inline int getPlayerCount() const {return m_iPlayerCount;}
+
+    void setPlayerCount(int count);
+
     bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
     bool getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const;
     void setPlayerCameraTile(int iPlayer, int iX, int iY);

@@ -80,6 +80,8 @@ tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this dise
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
+menu["player_count"] = "PLAYER COUNT"
+
 menu_file = {
   load =    " (SHIFT+L) LOAD   ",
   save =    " (SHIFT+S) SAVE   ",
@@ -163,6 +165,12 @@ menu_debug_overlay = {
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCEL  ",
+}
+menu_player_count = {
+	players_1 = "  1 PLAYER  ",
+	players_2 = "  2 PLAYERS  ",
+	players_3 = "  3 PLAYERS  ",
+	players_4 = "  4 PLAYERS  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
@@ -253,6 +261,7 @@ main_menu = {
   continue = "Continue Game",
   load_game = "Load Game",
   options = "Settings",
+  map_edit = "Map Editor",
   savegame_version = "Savegame version: ",
   version = "Version: ",
   exit = "Exit",
@@ -265,6 +274,7 @@ tooltip.main_menu = {
   continue = "Continue your latest saved game",
   load_game = "Load a saved game",
   options = "Tweak various settings",
+  map_edit = "Create a custom map",
   exit = "No, no, please don't leave!",
   quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
@@ -309,6 +319,16 @@ save_game_window = {
 tooltip.save_game_window = {
   save_game = "Overwrite savegame %s",
   new_save_game = "Enter name for a new savegame",
+}
+
+save_map_window = {
+  caption = "Save Map (%1%)",
+  new_map = "New Map",
+}
+
+tooltip.save_map_window = {
+  map = "Overwrite map %s",
+  new_map = "Enter name for a map savegame",
 }
 
 menu_list_window = {
@@ -629,6 +649,40 @@ update_window = {
 tooltip.update_window = {
   download = "Go to the download page for the very latest version of CorsixTH",
   ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
+}
+
+map_editor_window = {
+  pages = {
+    inside = "Inside",
+    outside = "Outside",
+    foliage = "Foliage",
+    hedgerow = "Hedgerow",
+    pond = "Pond",
+    road = "Road",
+    north_wall = "North wall",
+    west_wall = "West wall",
+    helipad = "Helipad",
+    delete_wall = "Delete walls",
+    parcel_0 = "Parcel 0",
+    parcel_1 = "Parcel 1",
+    parcel_2 = "Parcel 2",
+    parcel_3 = "Parcel 3",
+    parcel_4 = "Parcel 4",
+    parcel_5 = "Parcel 5",
+    parcel_6 = "Parcel 6",
+    parcel_7 = "Parcel 7",
+    parcel_8 = "Parcel 8",
+    parcel_9 = "Parcel 9",
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    paste = "Paste area",
+  }
 }
 
 --------------------------------  UNUSED  -----------------------------------

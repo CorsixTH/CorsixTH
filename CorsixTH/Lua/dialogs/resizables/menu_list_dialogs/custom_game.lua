@@ -39,9 +39,7 @@ function UICustomGame:UICustomGame(ui)
   self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
 
   -- Supply the required list of items to UIMenuList
-  local path = debug.getinfo(1, "S").source:sub(2, -57)
-
-  path = path .. "Levels" .. pathsep
+  local path = ui.app.level_dir
 
   -- Create the actual list
   local items = {}

@@ -114,6 +114,7 @@ function App:init()
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
+  self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
 
   self:initSavegameDir()
 
@@ -141,12 +142,7 @@ function App:init()
     modes[#modes + 1] = "opengl"
   end
   self.fullscreen = false
-  if _MAP_EDITOR then
-    MapEditorInitWithLuaApp(self)
-    modes[#modes + 1] = "reuse context"
-    self.config.width = 640
-    self.config.height = 480
-  elseif self.config.fullscreen then
+  if self.config.fullscreen then
     self.fullscreen = true
     modes[#modes + 1] = "fullscreen"
   end
@@ -292,40 +288,36 @@ function App:init()
   end
 
   -- Load main menu (which creates UI)
-  if _MAP_EDITOR then
-    self:loadLevel("")
-  else
-    local function callback_after_movie()
-      self:loadMainMenu()
-      -- If we couldn't properly load the language, show an information dialog
-      if not language_load_success then
-        -- At this point we know the language is english, so no use having
-        -- localized strings.
-        self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
-        " to English because the desired language could not be loaded. "..
-        "Please make sure you have specified a font file in the config file."}))
-      end
+  local function callback_after_movie()
+    self:loadMainMenu()
+    -- If we couldn't properly load the language, show an information dialog
+    if not language_load_success then
+      -- At this point we know the language is english, so no use having
+      -- localized strings.
+      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
+      " to English because the desired language could not be loaded. "..
+      "Please make sure you have specified a font file in the config file."}))
+    end
 
-      -- If a savegame was specified, load it
-      if self.command_line.load then
-        local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
-        if not status then
-          err = _S.errors.load_prefix .. err
-          print(err)
-          self.ui:addWindow(UIInformation(self.ui, {err}))
-        end
-      end
-      -- There might also be a message from the earlier initialization process that should be shown.
-      -- Show it using the built-in font in case the game's font is messed up.
-      if error_message then
-        self.ui:addWindow(UIInformation(self.ui, error_message, true))
+    -- If a savegame was specified, load it
+    if self.command_line.load then
+      local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
+      if not status then
+        err = _S.errors.load_prefix .. err
+        print(err)
+        self.ui:addWindow(UIInformation(self.ui, {err}))
       end
     end
-    if self.config.play_intro then
-      self.moviePlayer:playIntro(callback_after_movie)
-    else
-      callback_after_movie()
+    -- There might also be a message from the earlier initialization process that should be shown.
+    -- Show it using the built-in font in case the game's font is messed up.
+    if error_message then
+      self.ui:addWindow(UIInformation(self.ui, error_message, true))
     end
+  end
+  if self.config.play_intro then
+    self.moviePlayer:playIntro(callback_after_movie)
+  else
+    callback_after_movie()
   end
   return true
 end
@@ -546,14 +538,14 @@ end
 -- Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:loadLevel(level, ...)
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()
   end
 
   -- Check that we can load the data before unloading current map
   local new_map = Map(self)
-  local map_objects, errors = new_map:load(level, ...)
+  local map_objects, errors = new_map:load(level, difficulty, level_name, level_file, level_intro, map_editor)
   if not map_objects then
     self.world.ui:addWindow(UIInformation(self.ui, {errors}))
     return
@@ -596,7 +588,7 @@ function App:loadLevel(level, ...)
   self.audio:playSoundEffects(self.config.play_sounds)
 
   -- Load UI
-  self.ui = GameUI(self, self.world:getLocalPlayerHospital())
+  self.ui = GameUI(self, self.world:getLocalPlayerHospital(), map_editor)
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 
   if tonumber(level) then
@@ -1366,6 +1358,11 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, {err}))
     end
   end))
+end
+
+--! Begin the map editor
+function App:mapEdit()
+  self:loadLevel("", nil, nil, nil, nil, true);
 end
 
 --! Exits the game completely (no confirmation window)

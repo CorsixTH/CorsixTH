@@ -28,7 +28,7 @@ class "UIMenuBar" (Window)
 ---@type UIMenuBar
 local UIMenuBar = _G["UIMenuBar"]
 
-function UIMenuBar:UIMenuBar(ui)
+function UIMenuBar:UIMenuBar(ui, map_editor)
   self:Window()
 
   local app = ui.app
@@ -51,7 +51,11 @@ function UIMenuBar:UIMenuBar(ui)
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
 
-  self:makeMenu(app)
+  if map_editor then
+    self:makeMapeditorMenu(app)
+  else
+    self:makeGameMenu(app)
+  end
 end
 
 function UIMenuBar:onTick()
@@ -521,7 +525,26 @@ function UIMenu:appendMenu(text, menu)
   }
 end
 
-function UIMenuBar:makeMenu(app)
+--! Make a menu for the map editor.
+--!param app Application.
+function UIMenuBar:makeMapeditorMenu(app)
+  local menu = UIMenu()
+  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
+    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
+  self:addMenu(_S.menu.file, menu)
+
+  menu = UIMenu()
+  menu:appendItem(_S.menu_player_count.players_1, function() self.ui.map_editor:setPlayerCount(1) end)
+    :appendItem(_S.menu_player_count.players_2, function() self.ui.map_editor:setPlayerCount(2) end)
+    :appendItem(_S.menu_player_count.players_3, function() self.ui.map_editor:setPlayerCount(3) end)
+    :appendItem(_S.menu_player_count.players_4, function() self.ui.map_editor:setPlayerCount(4) end)
+  self:addMenu(_S.menu.player_count, menu)
+end
+
+--! Make a menu for the game.
+--!param app Application.
+function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
@@ -754,7 +777,7 @@ function UIMenuBar:makeMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(35, 8, 5, 5, true), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(35, 8, 6, 6, true), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay(131107, 2, 0, 0, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay("parcel"), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() dofile "sprite_viewer" end)
     )

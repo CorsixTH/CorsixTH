@@ -32,22 +32,28 @@ local WM = SDL.wm
 local lfs = require "lfs"
 local pathsep = package.config:sub(1, 1)
 
-function GameUI:GameUI(app, local_hospital)
+--! Game UI constructor.
+--!param app (Application) Application object.
+--!param local_hospital Hospital to display
+--!param map_editor (bool) Whether the map is editable.
+function GameUI:GameUI(app, local_hospital, map_editor)
   self:UI(app)
 
   self.hospital = local_hospital
   self.tutorial = { chapter = 0, phase = 0 }
-
-  if _MAP_EDITOR then
-    self:addWindow(UIMapEditor(self))
+  if map_editor then
+    self.map_editor = UIMapEditor(self)
+    self:addWindow(self.map_editor)
   else
     self.adviser = UIAdviser(self)
     self.bottom_panel = UIBottomPanel(self)
-    self.menu_bar = UIMenuBar(self)
     self.bottom_panel:addWindow(self.adviser)
     self:addWindow(self.bottom_panel)
-    self:addWindow(self.menu_bar)
   end
+
+  -- UI widgets
+  self.menu_bar = UIMenuBar(self, self.map_editor)
+  self:addWindow(self.menu_bar)
 
   local scr_w = app.config.width
   local scr_h = app.config.height
@@ -55,7 +61,7 @@ function GameUI:GameUI(app, local_hospital)
   if self.visible_diamond.w <= 0 or self.visible_diamond.h <= 0 then
     -- For a standard 128x128 map, screen size would have to be in the
     -- region of 3276x2457 in order to be too large.
-    if not _MAP_EDITOR then
+    if not self.map_editor then
       error "Screen size too large for the map"
     end
   end
@@ -63,7 +69,7 @@ function GameUI:GameUI(app, local_hospital)
     app.map.th:getCameraTile(local_hospital:getPlayerIndex()))
   self.zoom_factor = 1
   self:scrollMap(-scr_w / 2, 16 - scr_h / 2)
-  self.limit_to_visible_diamond = not _MAP_EDITOR
+  self.limit_to_visible_diamond = not self.map_editor
   self.transparent_walls = false
   self.do_world_hit_test = true
 
@@ -141,7 +147,7 @@ end
 function GameUI:draw(canvas)
   local app = self.app
   local config = app.config
-  if _MAP_EDITOR or not self.in_visible_diamond then
+  if self.map_editor or not self.in_visible_diamond then
     canvas:fillBlack()
   end
   local zoom = self.zoom_factor
@@ -505,7 +511,7 @@ function GameUI:onMouseUp(code, x, y)
   end
 
   local button = self.button_codes[code]
-  if button == "right" and not _MAP_EDITOR and highlight_x then
+  if button == "right" and not self.map_editor and highlight_x then
     local window = self:getWindow(UIPatient)
     local patient = (window and window.patient.is_debug and window.patient) or self.hospital:getDebugPatient()
     if patient then

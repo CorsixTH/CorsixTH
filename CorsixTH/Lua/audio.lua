@@ -66,9 +66,7 @@ function Audio:init()
     return
   end
   if not SDL.audio.loaded then
-    if not _MAP_EDITOR then
-      print "Notice: Audio system not loaded as CorsixTH compiled without it"
-    end
+    print "Notice: Audio system not loaded as CorsixTH compiled without it"
     self.not_loaded = true
     return
   end
