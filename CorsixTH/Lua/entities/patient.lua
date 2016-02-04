@@ -215,6 +215,7 @@ function Patient:setHospital(hospital)
   end
 end
 
+-- FIXME: the function name seems wrong
 function Patient:getDiseaseId()
   if self.diagnosed then
     return self.disease.id
@@ -524,6 +525,23 @@ end
 --! -over_priced: When the patient decided to leave because he/she believes
 --! the last treatment is over-priced.
 function Patient:goHome(reason)
+  -- Returns: the name of the last diagnostic, if not yet diagnosed)
+  --          the name of the desease, if diagnosed
+  local function getLastTreatmentName(patient)
+    return patient.hospital.disease_casebook[patient:getDiseaseId()].disease.name
+  end
+
+  -- Increments "cures" statistics
+  local function countCured(patient, casebook)
+    local hosp = patient.hospital
+    hosp.num_cured = hosp.num_cured + 1
+    hosp.num_cured_ty = hosp.num_cured_ty + 1
+    casebook.recoveries = casebook.recoveries + 1
+    if patient.is_emergency then
+      hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
+    end
+  end
+
   local hosp = self.hospital
   if not hosp and self.going_home then
     -- The patient should be going home already! Anything related to the hospital
@@ -545,12 +563,7 @@ function Patient:goHome(reason)
     if hosp.num_cured < 1 then
       self.world.ui.adviser:say(_A.information.first_cure)
     end
-    self.hospital.num_cured = hosp.num_cured + 1
-    self.hospital.num_cured_ty = hosp.num_cured_ty + 1
-    casebook.recoveries = casebook.recoveries + 1
-    if self.is_emergency then
-      hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
-    end
+    countCured(self, casebook)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     self.hospital:msgCured()
   elseif reason == "kicked" then
@@ -562,19 +575,20 @@ function Patient:goHome(reason)
       casebook.turned_away = casebook.turned_away + 1
     end
   elseif reason == "over_priced" then
-    self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(casebook.disease.name))
     self:setMood("sad_money", "activate")
     self:changeAttribute("happiness", -0.5)
+    self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(getLastTreatmentName(self)))
     if not self.is_debug then
-      hosp:changeReputation("over_priced", self.disease)
-      -- The patient refused to pay for diagnostic or an "intermediate" treatment
-      if not self.cured then
+      if self.cured then
+       countCured(self, casebook)
+      else
         hosp.not_cured = hosp.not_cured + 1
         hosp.not_cured_ty = hosp.not_cured_ty + 1
-        self:clearDynamicInfo()
-        self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
       end
+      hosp:changeReputation("over_priced", self.disease)
     end
+    self:clearDynamicInfo()
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end

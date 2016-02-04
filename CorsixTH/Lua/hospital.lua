@@ -2140,24 +2140,18 @@ end
 --! is paying for
 --!param price_distortion (float): the price distortion
 -- (see Hospital:getPriceDistortion(casebook, room) for more info)
-function Hospital:computePriceLevelImpact(patient, casebook, price_distortion)
+function Hospital:computePriceLevelImpact(patient, casebook)
   local price_distortion = patient.price_distortion
   patient:changeAttribute("happiness", -(price_distortion / 2))
 
   if price_distortion < self.under_priced_threshold then
-    if math.random(1, 10) == 1 then
-      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
-    end
-
     if math.random(1, 5) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
       self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
-    if math.random(1, 10) == 1 then
-      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
-    end
-
     if math.random(1, 5) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
       self:changeReputation("over_priced")
     end
   elseif math.abs(price_distortion) <= 0.15 and math.random(1, 20) == 1 then
