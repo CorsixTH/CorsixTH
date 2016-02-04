@@ -1013,20 +1013,19 @@ function Textbox:keyInput(char, rawchar)
   if not self.char_limit or string.len(line) < self.char_limit then
     -- Upper- and lowercase letters
     if self.allowed_input.alpha then
-      if #rawchar == 1 and (("a" <= rawchar and rawchar <= "z")
-      or ("A" <= rawchar and rawchar <= "Z")) then
+      if #char == 1 and string.match(char, '%a') then
         handled = true
       end
     end
     -- Numbers
     if not handled and self.allowed_input.numbers then
-      if #rawchar == 1 and "0" <= rawchar and rawchar <= "9" then
+      if #char == 1 and string.match(char, '%d') then
         handled = true
       end
     end
-    -- Space and hyphen
+    -- Space, hyphen and plus sign
     if not handled and self.allowed_input.misc then
-      if rawchar == "space" or rawchar == "-" then
+      if char == "space" or char == "-" or char == "+" then
         handled = true
       end
     end
@@ -1067,7 +1066,7 @@ function Textbox:keyInput(char, rawchar)
     handled = true
   end
   -- Enter (newline or confirm)
-  if not handled and (char == "return" or char == "keypad enter") then
+  if not handled and (char == "return" or char == "enter") then
     if type(self.text) == "table" then
       local remainder = line:sub(self.cursor_pos[2] + 1, -1)
       self.text[self.cursor_pos[1]] = line:sub(1, self.cursor_pos[2])
@@ -1187,7 +1186,7 @@ function Textbox:textInput(text)
 
   local line = type(self.text) == "table" and self.text[self.cursor_pos[1]] or self.text
   local new_line = line:sub(1, self.cursor_pos[2]) .. text .. line:sub(self.cursor_pos[2] + 1, -1)
-  self.cursor_pos[2] = self.cursor_pos[2] + 1
+  self.cursor_pos[2] = self.cursor_pos[2] + #text
 
   if type(self.text) == "table" then
     self.text[self.cursor_pos[1]] = new_line

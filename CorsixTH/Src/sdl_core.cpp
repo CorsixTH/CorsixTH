@@ -129,6 +129,10 @@ static void l_push_modifiers_table(lua_State *L, Uint16 mod)
     {
         luaT_pushtablebool(L, "gui", true);
     }
+    if ((mod & KMOD_NUM) != 0)
+    {
+        luaT_pushtablebool(L, "numlockactive", true);
+    }
 }
 
 static int l_get_key_modifiers(lua_State *L)

@@ -211,6 +211,10 @@ local scroll_keys = {
   right = {x =  10, y =   0},
   down  = {x =   0, y =  10},
   left  = {x = -10, y =   0},
+  ["keypad 8"] = {x =   0, y = -10},
+  ["keypad 6"] = {x =  10, y =   0},
+  ["keypad 2"] = {x =   0, y =  10},
+  ["keypad 4"] = {x = -10, y =   0},
 }
 
 function GameUI:updateKeyScroll()
