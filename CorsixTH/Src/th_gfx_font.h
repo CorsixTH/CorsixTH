@@ -27,12 +27,13 @@ SOFTWARE.
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #endif
+#include <string>
 
-enum eTHAlign
+enum class text_align
 {
-    Align_Left = 0,
-    Align_Center = 1,
-    Align_Right = 2,
+    left,
+    center,
+    right
 };
 
 /** Structure for the bounds of a text string that is rendered to the screen. */
@@ -107,13 +108,13 @@ public:
         @param iWidth The maximum width of each line of text.
         @param iMaxRows The maximum number of rows to draw. Default is INT_MAX.
         @param iSkipRows Start rendering text after skipping this many rows.
-        @param eAlign How to align each line of text if the width of the line
+        @param text_align How to align each line of text if the width of the line
           of text is smaller than iWidth.
     */
     virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                             size_t iMessageLength, int iX, int iY,
                                             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                            eTHAlign eAlign = Align_Left) const = 0;
+                                            text_align text_align = text_align::left) const = 0;
 };
 
 class THBitmapFont : public THFont
@@ -147,12 +148,27 @@ public:
     virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
                                 int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                eTHAlign eAlign = Align_Left) const;
+                                text_align text_align = text_align::left) const;
 
 protected:
     THSpriteSheet* m_pSpriteSheet;
     int m_iCharSep;
     int m_iLineSep;
+
+    //! Draw a single line of text between two u32string iterators
+    /*!
+    @param pCanvas The render target to draw onto.
+    @param start The beginning of the text to write.
+    @param end The end of the text to write.
+    @param iX The X coordinate of the top-left corner of the bounding
+    rectangle for the drawn text.
+    @param iY The Y coordinate of the top-left corner of the bounding
+    rectangle for the drawn text.
+    */
+    void drawUcs4Substring(THRenderTarget *pCanvas,
+        std::u32string::iterator start,
+        std::u32string::iterator end,
+        int iX, int iY) const;
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
@@ -227,7 +243,7 @@ public:
     virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
                                 int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                eTHAlign eAlign = Align_Left) const;
+                                text_align text_align = text_align::left) const;
 
 protected:
     struct cached_text_t
@@ -263,7 +279,7 @@ protected:
         int iNumRows;
 
         //! Alignment of the message in the box
-        eTHAlign eAlign;
+        text_align text_align;
 
         //! True when the pData reflects the sMessage given the size constraints
         bool bIsValid;
