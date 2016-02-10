@@ -7,7 +7,6 @@
 #   - WITH_FREETYPE2
 #   - WITH_MOVIES  : Activate movies (requires Sound)
 #   - BUILD_ANIMVIEWER
-#   - BUILD_MAPEDITOR
 #   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
 #   - WITH_LIBAV   : Whether to use LibAV (as opposed to FFMEPG) when building movies
 #   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
@@ -37,7 +36,6 @@ OPTION(WITH_FREETYPE2 "Enhanced Font Support" ON)
 OPTION(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 OPTION(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
 OPTION(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
-OPTION(BUILD_MAPEDITOR "Build the map editor as part of the build process" OFF)
 IF(MSVC)
   OPTION(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
 ENDIF(MSVC)
@@ -107,15 +105,6 @@ IF(BUILD_ANIMVIEWER)
   add_subdirectory(AnimView)
 ENDIF(BUILD_ANIMVIEWER)
 
-IF(BUILD_MAPEDITOR)
-  IF(WITH_OPENGL)
-    message("Building MapEdit")
-    add_subdirectory(MapEdit)
-  ELSE(WITH_OPENGL)
-    message(FATAL_ERROR "The map editor can only be built when using OpenGL as renderer")
-  ENDIF(WITH_OPENGL)
-ENDIF(BUILD_MAPEDITOR)
-
 # Documentation generation, construct 'doc' target (or a message it is disabled).
 
 # Try to find 'lua'
@@ -172,14 +161,6 @@ IF (DOXYGEN_FOUND)
   add_dependencies(doc doc_leveledit)
 
 
-  add_custom_target(doc_mapedit
-    ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/mapedit.doxygen
-    WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
-    COMMENT "Generating API documentation for MapEdit" VERBATIM
-  )
-  add_dependencies(doc doc_mapedit)
-
-
   add_custom_target(doc_corsixth_engine
     ${DOXYGEN_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/DoxyGen/corsixth_engine.doxygen
     WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/doc
@@ -223,7 +204,6 @@ IF (DOXYGEN_FOUND)
   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "<ul>\n")
   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"animview/html/index.html\">Animation viewer documentation</a>\n")
   file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"leveledit/html/index.html\">Level editor documentation</a>\n")
-  file(APPEND ${CMAKE_CURRENT_BINARY_DIR}/doc/index.html "  <li><a href=\"mapedit/html/index.html\">Map editor documentation</a>\n")
 ENDIF (DOXYGEN_FOUND)
 
 IF (DOXYGEN_FOUND OR LUA_PROGRAM_FOUND)
