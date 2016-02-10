@@ -39,10 +39,6 @@ FullColourRenderer::FullColourRenderer(int iWidth, int iHeight) : m_iWidth(iWidt
     m_iY = 0;
 }
 
-FullColourRenderer::~FullColourRenderer()
-{
-}
-
 //! Convert a colour to an equivalent grey scale level.
 /*!
     @param iOpacity Opacity of the pixel.

@@ -38,7 +38,7 @@ template <> struct LuaPersistVInt<int> {typedef unsigned int T;};
 class LuaPersistWriter
 {
 public:
-    virtual ~LuaPersistWriter();
+    virtual ~LuaPersistWriter() = default;
 
     virtual lua_State* getStack() = 0;
     virtual void writeStackObject(int iIndex) = 0;
@@ -111,7 +111,7 @@ public:
 class LuaPersistReader
 {
 public:
-    virtual ~LuaPersistReader();
+    virtual ~LuaPersistReader() = default;
 
     virtual lua_State* getStack() = 0;
     virtual bool readStackObject() = 0;

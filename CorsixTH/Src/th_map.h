@@ -381,7 +381,7 @@ public:
 
     void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
 
-protected:
+private:
     THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
                                   int iTestX, int iTestY) const;
     void _readTileIndex(const uint8_t* pData, int& iX, int &iY) const;
@@ -490,7 +490,7 @@ public:
     */
     inline bool isLastOnScanline() const;
 
-protected:
+private:
     // Maximum extents of the visible parts of a node (pixel distances relative
     // to the top-most corner of an isometric cell)
     // If set too low, things will disappear when near the screen edge
@@ -548,7 +548,7 @@ public:
     THMapScanlineIterator operator= (const THMapScanlineIterator &iterator);
     inline const THMapNode* getNode() {return m_pNode;}
 
-protected:
+private:
     const THMapNode* m_pNode;
     const THMapNode* m_pNodeFirst;
     const THMapNode* m_pNodeEnd;

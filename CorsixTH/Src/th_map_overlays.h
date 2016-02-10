@@ -34,7 +34,7 @@ class THSpriteSheet;
 class THMapOverlay
 {
 public:
-    virtual ~THMapOverlay();
+    virtual ~THMapOverlay() = default;
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
                           const THMap* pMap, int iNodeX, int iNodeY) = 0;
@@ -49,10 +49,10 @@ public:
     void setFirst(THMapOverlay* pOverlay, bool bTakeOwnership);
     void setSecond(THMapOverlay* pOverlay, bool bTakeOwnership);
 
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-                          const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 
-protected:
+private:
     THMapOverlay *m_pFirst, *m_pSecond;
     bool m_bOwnFirst, m_bOwnSecond;
 };
@@ -71,6 +71,8 @@ protected:
 
     THSpriteSheet* m_pSprites;
     THFont* m_pFont;
+
+private:
     bool m_bOwnsSprites;
     bool m_bOwnsFont;
 };
@@ -79,6 +81,7 @@ class THMapTextOverlay : public THMapTypicalOverlay
 {
 public:
     THMapTextOverlay();
+    virtual ~THMapTextOverlay() = default;
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
         const THMap* pMap, int iNodeX, int iNodeY);
@@ -86,28 +89,28 @@ public:
     void setBackgroundSprite(size_t iSprite);
     virtual const std::string getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
 
-protected:
+private:
     size_t m_iBackgroundSprite;
 };
 
-class THMapPositionsOverlay : public THMapTextOverlay
+class THMapPositionsOverlay final : public THMapTextOverlay
 {
 public:
-    virtual const std::string getText(const THMap* pMap, int iNodeX, int iNodeY);
+    const std::string getText(const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
-class THMapFlagsOverlay : public THMapTypicalOverlay
+class THMapFlagsOverlay final : public THMapTypicalOverlay
 {
 public:
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-                          const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
-class THMapParcelsOverlay : public THMapTypicalOverlay
+class THMapParcelsOverlay final : public THMapTypicalOverlay
 {
 public:
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-                          const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
 #endif

@@ -25,10 +25,6 @@ SOFTWARE.
 #include "th_map.h"
 #include <sstream>
 
-THMapOverlay::~THMapOverlay()
-{
-}
-
 THMapOverlayPair::THMapOverlayPair()
 {
     m_pFirst = nullptr;

@@ -60,8 +60,7 @@ struct THFontDrawArea
 class THFont
 {
 public:
-    THFont();
-    virtual ~THFont();
+    virtual ~THFont() = default;
 
     //! Get the size of drawn text.
     /*!
@@ -75,7 +74,7 @@ public:
             occupy. Default is INT_MAX.
     */
     virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                                        int iMaxWidth = INT_MAX) const = 0;
+                                       int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
     /*!
@@ -111,12 +110,12 @@ public:
           of text is smaller than iWidth.
     */
     virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                            size_t iMessageLength, int iX, int iY,
-                                            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                            eTHAlign eAlign = Align_Left) const = 0;
+                                           size_t iMessageLength, int iX, int iY,
+                                           int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                           eTHAlign eAlign = Align_Left) const = 0;
 };
 
-class THBitmapFont : public THFont
+class THBitmapFont final : public THFont
 {
 public:
     THBitmapFont();
@@ -138,18 +137,18 @@ public:
     */
     void setSeparation(int iCharSep, int iLineSep);
 
-    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                             int iMaxWidth = INT_MAX) const;
+    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                               int iMaxWidth = INT_MAX) const override;
 
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                          size_t iMessageLength, int iX, int iY) const;
+    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+                  size_t iMessageLength, int iX, int iY) const override;
 
-    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                eTHAlign eAlign = Align_Left) const;
+    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                   size_t iMessageLength, int iX, int iY,
+                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                   eTHAlign eAlign = Align_Left) const override;
 
-protected:
+private:
     THSpriteSheet* m_pSpriteSheet;
     int m_iCharSep;
     int m_iLineSep;
@@ -169,7 +168,7 @@ protected:
     THRawBitmap class, but with an alpha channel, and a single colour rather
     than a palette).
 */
-class THFreeTypeFont : public THFont
+class THFreeTypeFont final : public THFont
 {
 public:
     THFreeTypeFont();
@@ -218,18 +217,18 @@ public:
     */
     FT_Error setPixelSize(int iWidth, int iHeight);
 
-    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                                        int iMaxWidth = INT_MAX) const;
+    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                               int iMaxWidth = INT_MAX) const override;
 
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                          size_t iMessageLength, int iX, int iY) const;
+    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+                  size_t iMessageLength, int iX, int iY) const override;
 
-    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                eTHAlign eAlign = Align_Left) const;
+    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                   size_t iMessageLength, int iX, int iY,
+                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                   eTHAlign eAlign = Align_Left) const override;
 
-protected:
+private:
     struct cached_text_t
     {
         //! The text being converted to pixels

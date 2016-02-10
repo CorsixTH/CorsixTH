@@ -52,9 +52,6 @@ enum PersistTypes
     PERSIST_TCOUNT, // must equal 16 (for compatibility)
 };
 
-LuaPersistWriter::~LuaPersistWriter() {}
-LuaPersistReader::~LuaPersistReader() {}
-
 static int l_writer_mt_index(lua_State *L);
 
 template <class T> static int l_crude_gc(lua_State *L)
@@ -140,7 +137,7 @@ public:
         free(m_pData);
     }
 
-    virtual lua_State* getStack()
+    lua_State* getStack() override
     {
         return m_L;
     }
@@ -188,7 +185,7 @@ public:
         }
     }
 
-    virtual void fastWriteStackObject(int iIndex)
+    void fastWriteStackObject(int iIndex) override
     {
         lua_State *L = m_L;
 
@@ -253,7 +250,7 @@ public:
         lua_pop(L, 1);
     }
 
-    virtual void writeStackObject(int iIndex)
+    void writeStackObject(int iIndex) override
     {
         lua_State *L = m_L;
 
@@ -651,7 +648,7 @@ public:
         lua_pop(L, 2);
     }
 
-    virtual void writeByteStream(const uint8_t *pBytes, size_t iCount)
+    void writeByteStream(const uint8_t *pBytes, size_t iCount) override
     {
         if(m_bHadError)
         {
@@ -669,7 +666,7 @@ public:
         m_iDataLength += iCount;
     }
 
-    virtual void setError(const char *sError)
+    void setError(const char *sError) override
     {
         // If multiple errors occur, only record the first.
         if(m_bHadError)
@@ -704,7 +701,7 @@ public:
             return nullptr;
     }
 
-protected:
+private:
     lua_State *m_L;
     uint64_t m_iNextIndex;
     uint8_t* m_pData;
@@ -749,12 +746,12 @@ public:
         free(m_sStringBuffer);
     }
 
-    virtual lua_State* getStack()
+    lua_State* getStack() override
     {
         return m_L;
     }
 
-    virtual void setError(const char *sError)
+    void setError(const char *sError) override
     {
         m_bHadError = true;
         size_t iErrLength = std::strlen(sError) + 1;
@@ -789,7 +786,7 @@ public:
         lua_setmetatable(L, 1);
     }
 
-    virtual bool readStackObject()
+    bool readStackObject() override
     {
         uint64_t iIndex;
         if(!readVUInt(iIndex))
@@ -1187,7 +1184,7 @@ public:
         return true;
     }
 
-    virtual bool readByteStream(uint8_t *pBytes, size_t iCount)
+    bool readByteStream(uint8_t *pBytes, size_t iCount) override
     {
         if(iCount > m_iDataBufferLength)
         {
@@ -1215,7 +1212,7 @@ public:
             return nullptr;
     }
 
-protected:
+private:
     lua_State *m_L;
     uint64_t m_iNextIndex;
     const uint8_t* m_pData;

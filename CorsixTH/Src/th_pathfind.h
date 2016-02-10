@@ -85,6 +85,7 @@ class BasePathing
 {
 public:
     BasePathing(THPathfinder *pf);
+    virtual ~BasePathing() = default;
 
     //! Initialize the path finder.
     /*!
@@ -134,9 +135,9 @@ class PathFinder : public BasePathing
 public:
     PathFinder(THPathfinder *pf) : BasePathing(pf) { }
 
-    virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction);
+    int makeGuess(node_t *pNode) override;
+    bool tryNode(node_t *pNode, th_map_node_flags flags,
+                 node_t *pNeighbour, int direction) override;
 
     bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
 
@@ -149,9 +150,9 @@ class HospitalFinder : public BasePathing
 public:
     HospitalFinder(THPathfinder *pf) : BasePathing(pf) { }
 
-    virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction);
+    int makeGuess(node_t *pNode) override;
+    bool tryNode(node_t *pNode, th_map_node_flags flags,
+                 node_t *pNeighbour, int direction) override;
 
     bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
 };
@@ -161,9 +162,9 @@ class IdleTileFinder : public BasePathing
 public:
     IdleTileFinder(THPathfinder *pf) : BasePathing(pf) { }
 
-    virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction);
+    int makeGuess(node_t *pNode) override;
+    bool tryNode(node_t *pNode, th_map_node_flags flags,
+                 node_t *pNeighbour, int direction) override;
 
     bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
 
@@ -178,9 +179,9 @@ class Objectsvisitor : public BasePathing
 public:
     Objectsvisitor(THPathfinder *pf) : BasePathing(pf) { }
 
-    virtual int makeGuess(node_t *pNode);
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction);
+    int makeGuess(node_t *pNode) override;
+    bool tryNode(node_t *pNode, th_map_node_flags flags,
+                         node_t *pNeighbour, int direction) override;
 
     bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
                       THObjectType eTHOB, int iMaxDistance,
@@ -290,7 +291,7 @@ public:
     int m_iOpenCount;
     int m_iOpenSize;
 
-protected:
+private:
     PathFinder m_oPathFinder;
     HospitalFinder m_oHospitalFinder;
     IdleTileFinder m_oIdleTileFinder;

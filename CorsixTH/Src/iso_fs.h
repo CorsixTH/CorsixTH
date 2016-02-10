@@ -95,7 +95,7 @@ public:
     */
     bool getFileData(file_handle_t iFile, uint8_t *pBuffer);
 
-protected:
+private:
     struct _file_t
     {
         char *sPath;

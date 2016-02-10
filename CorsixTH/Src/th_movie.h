@@ -142,7 +142,7 @@ public:
     //! \retval -1 Abort is in progress
     //! \retval 1 An error writing the frame
     int write(AVFrame* pFrame, double dPts);
-protected:
+private:
     static const size_t ms_pictureBufferSize = 4; ///< The number of elements to allocate in the picture queue
     bool m_fAborting; ///< Whether we are in the process of aborting
     bool m_fAllocated; ///< Whether the picture buffer has been allocated (and hasn't since been deallocated)

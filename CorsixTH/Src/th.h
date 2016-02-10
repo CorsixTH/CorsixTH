@@ -80,7 +80,7 @@ public:
     */
     const char* getString(size_t section, size_t index);
 
-protected:
+private:
     //! Section information
     std::vector<std::vector<const char *>> sections;
 
