@@ -83,6 +83,12 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.under_priced_threshold = -0.4 -- Price distortion level under which the
+  -- patients might consider the treatment to be under-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: -0.3 / Difficult: -0.5)
+  self.over_priced_threshold = 0.3 -- Price distortion level over which the
+  -- patients might consider the treatment to be over-priced (TODO: This could
+  -- depend on difficulty and/or level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
@@ -631,6 +637,12 @@ function Hospital:afterLoad(old, new)
 
   if old < 107 then
     self.reception_desks = nil
+  end
+
+  if old < 109 then
+    -- price distortion
+    self.under_priced_threshold = -0.4
+    self.over_priced_threshold = 0.3
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1530,34 +1542,41 @@ end
 !param patient (Patient) The patient that just got treated.
 ]]
 function Hospital:receiveMoneyForTreatment(patient)
+  local function getTransactionReason(patient)
+    if patient.diagnosed then
+      return _S.transactions.cure_colon .. " " .. patient.disease.name
+    else
+      local room_info = patient:getRoom()
+      if not room_info then
+        print("Warning: Trying to receieve money for treated patient who is "..
+                "not in a room")
+        return
+      end
+      room_info = room_info.room_info
+      return _S.transactions.treat_colon .. " " .. room_info.name
+    end
+  end
+
   if not self.world.free_build_mode then
     local disease_id
     local reason
     if not self.world.free_build_mode then
-      if patient.diagnosed then
-        disease_id = patient.disease.id
-        reason = _S.transactions.cure_colon .. " " .. patient.disease.name
-      else
-        local room_info = patient:getRoom()
-        if not room_info then
-          print("Warning: Trying to receieve money for treated patient who is "..
-              "not in a room")
-          return
-        end
-        room_info = room_info.room_info
-        disease_id = "diag_" .. room_info.id
-        reason = _S.transactions.treat_colon .. " " .. room_info.name
-      end
-     local casebook = self.disease_casebook[disease_id]
-     local amount = self:getTreatmentPrice(disease_id)
-      casebook.money_earned = casebook.money_earned + amount
-      patient.world:newFloatingDollarSign(patient, amount)
+      local disease_id = patient:getDiseaseId()
+      local casebook = self.disease_casebook[disease_id]
+      local amount = self:getTreatmentPrice(disease_id)
+
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
         self:addInsuranceMoney(patient.insurance_company, amount)
       else
-        self:receiveMoney(amount, reason)
+        -- patient is paying normally (but still, he could feel like it's
+        -- under- or over-priced and it could impact happiness and reputation)
+        self:computePriceLevelImpact(patient, casebook)
+        self:receiveMoney(amount, getTransactionReason(patient))
       end
+
+      casebook.money_earned = casebook.money_earned + amount
+      patient.world:newFloatingDollarSign(patient, amount)
     end
   end
 end
@@ -1583,6 +1602,15 @@ end
 function Hospital:receiveMoneyForProduct(patient, amount, reason)
   patient.world:newFloatingDollarSign(patient, amount)
   self:receiveMoney(amount, reason)
+end
+
+-- Pay drug if needed
+function Hospital:paySupplierForDrug(patient)
+  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+  if drug_amount ~= 0 then
+    local str = _S.drug_companies[math.random(1, 5)]
+    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+  end
 end
 
 --[[ Add a transaction to the hospital's transaction log.
@@ -1739,6 +1767,8 @@ local reputation_changes = {
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
   ["emergency_success"] = 15,
   ["emergency_failed"] = -20,
+  ["over_priced"] = -2,
+  ["under_priced"] = 1,
 }
 
 --! Normally reputation is changed based on a reason, and the affected
@@ -1757,7 +1787,9 @@ function Hospital:changeReputation(reason, disease, valueChange)
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  if self:isReputationChangeAllowed(amount) then
+    self.reputation = self.reputation + amount
+  end
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1780,6 +1812,40 @@ function Hospital:checkReputation()
     return
   end
   self.reputation_above_threshold = false
+end
+
+--! Decide whether a reputation change is effective or not. As we approach 1000,
+--! a gain is less likely. As we approach 0, a loss is less likely.
+--! Under 500, a gain is always effective.  Over 500, a loss is always effective.
+--!param amount (int): The amount of reputation change.
+function Hospital:isReputationChangeAllowed(amount)
+  if (amount > 0 and self.reputation <= 500) or (amount < 0 and self.reputation >= 500) or (amount == 0) then
+    return true
+  else
+    return math.random() <= self:getReputationChangeLikelihood()
+  end
+end
+
+--! Compute the likelihood for a reputation change to be effective.
+--! Result is smaller as hospital reputation gets closer to extreme values.
+--! The result follows a quadratic function, for a curved and smooth evolution.
+--! If reputation == 500, the result is 100%.
+--! Between [380-720], the result is still over 80%.
+--! At 100 or 900, it's under 40%.
+--! At 0 or 1000, it's 0%.
+function Hospital:getReputationChangeLikelihood()
+  -- The a, b and c coefficients have been computed to include points
+  -- (x=0, y=1), (x=500, y=0) and (x=1000, y=1) where x is the current
+  -- reputation and y the likelihood of the reputation change to be
+  -- refused, based a discriminant (aka "delta") == 0
+  local a = 0.000004008
+  local b = 0.004008
+  local c = 1
+
+  local x = self.reputation
+
+  -- The result is "reversed" for more readability
+  return 1 - (a * x * x - b * x + c)
 end
 
 function Hospital:updatePercentages()
@@ -2061,4 +2127,35 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+--! Change patient happiness and hospital reputation based on price distortion.
+--! The patient happiness is adjusted proportionally. The hospital reputation
+--! can only be affected when the distortion level reaches some threshold.
+--!param patient (patient): the patient paying the bill. His/her happiness level
+--! is adjusted. We also need the patient to access the staff present 
+--! in the room where the patient is.
+--!param casebook (object): disease casebook entry. It's used to display the
+-- localised disease name when Adviser tells the warning message.
+--! is paying for
+--!param price_distortion (float): the price distortion
+-- (see Hospital:getPriceDistortion(casebook, room) for more info)
+function Hospital:computePriceLevelImpact(patient, casebook)
+  local price_distortion = patient.price_distortion
+  patient:changeAttribute("happiness", -(price_distortion / 2))
+
+  if price_distortion < self.under_priced_threshold then
+    if math.random(1, 5) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+      self:changeReputation("under_priced")
+    end
+  elseif price_distortion > self.over_priced_threshold then
+    if math.random(1, 5) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+      self:changeReputation("over_priced")
+    end
+  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 20) == 1 then
+    -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
+    self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+  end
 end

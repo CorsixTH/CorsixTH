@@ -129,20 +129,23 @@ function GPRoom:dealtWithPatient(patient)
     self:sendPatientToNextDiagnosisRoom(patient)
     patient.needs_redirecting = false
   elseif patient.disease and not patient.diagnosed then
-    self.hospital:receiveMoneyForTreatment(patient)
-
-    patient:completeDiagnosticStep(self)
-    if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
-      patient:setDiagnosed(true)
-      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
-
-      self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
-      -- Check if this disease has just been discovered
-      if not self.hospital.disease_casebook[patient.disease.id].discovered then
-        self.hospital.research:discoverDisease(patient.disease)
-      end
+    if not patient:agreesToPay() then
+      patient:goHome("over_priced")
     else
-      self:sendPatientToNextDiagnosisRoom(patient)
+      self.hospital:receiveMoneyForTreatment(patient)
+      patient:completeDiagnosticStep(self)
+      if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
+        patient:setDiagnosed(true)
+        patient:queueAction { name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true }
+
+        self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
+        -- Check if this disease has just been discovered
+        if not self.hospital.disease_casebook[patient.disease.id].discovered then
+          self.hospital.research:discoverDisease(patient.disease)
+        end
+      else
+        self:sendPatientToNextDiagnosisRoom(patient)
+      end
     end
   else
     patient:queueAction{name = "meander", count = 2}
@@ -163,7 +166,7 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
   if #patient.available_diagnosis_rooms == 0 then
     -- The very rare case where the patient has visited all his/her possible diagnosis rooms
     -- There's not much to do then... Send home
-    patient:goHome()
+    patient:goHome("kicked")
     patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
   else
     self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
