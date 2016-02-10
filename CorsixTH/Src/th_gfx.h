@@ -189,7 +189,7 @@ public:
     //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
     void chunkFinish(uint8_t value);
 
-protected:
+private:
     inline bool _isDone() {return m_ptr == m_end;}
     inline void _fixNpixels(int& npixels) const;
     inline void _incrementPosition(int npixels);
@@ -360,7 +360,7 @@ public:
      */
     const AnimationStartFrames &getNamedAnimations(const std::string &sName, int iTilesize) const;
 
-protected:
+private:
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
@@ -515,15 +515,12 @@ public:
 
    // bool isMultipleFrameAnimation() { return false;}
 protected:
-    void _clear();
-
     //! X position on tile (not tile x-index)
     int m_iX;
     //! Y position on tile (not tile y-index)
     int m_iY;
 
     THLayers_t m_oLayers;
-
 };
 
 class THAnimation : public THAnimationBase
@@ -559,7 +556,7 @@ public:
     void depersist(LuaPersistReader *pReader);
 
     THAnimationManager* getAnimationManager(){ return m_pManager;}
-protected:
+private:
     THAnimationManager *m_pManager;
     THAnimation* m_pMorphTarget;
     size_t m_iAnimation; ///< Animation number.
@@ -599,7 +596,7 @@ public:
     void persist(LuaPersistWriter *pWriter) const;
     void depersist(LuaPersistReader *pReader);
 
-protected:
+private:
     struct _sprite_t
     {
         size_t iSprite;

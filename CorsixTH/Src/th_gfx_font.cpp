@@ -97,14 +97,6 @@ static const char* utf8prev(const char* sString)
 }
 #endif
 
-THFont::THFont()
-{
-}
-
-THFont::~THFont()
-{
-}
-
 THBitmapFont::THBitmapFont()
 {
     m_pSpriteSheet = nullptr;

@@ -190,7 +190,7 @@ public:
         return m_pPointer == m_pEnd;
     }
 
-protected:
+private:
     template <class T>
     static T _byteSwap(T value)
     {

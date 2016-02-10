@@ -51,7 +51,7 @@ public:
     */
     SDL_RWops* loadSound(size_t iIndex);
 
-protected:
+private:
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
 #pragma pack(1)
@@ -106,7 +106,7 @@ public:
     int reserveChannel();
     void releaseChannel(int iChannel);
 
-protected:
+private:
 #ifdef CORSIX_TH_USE_SDL_MIXER
     static THSoundEffects* ms_pSingleton;
     static void _onChannelFinish(int iChannel);
