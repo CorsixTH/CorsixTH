@@ -146,9 +146,6 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
 #if defined(IS_CORSIXTH_APP)
     "code = loadfile(\"CorsixTH.app/Contents/Resources/\"..name)\n"
     "if code then return code end\n"
-#elif defined(IS_MAPEDIT_APP)
-    "code = loadfile(\"MapEdit.app/Contents/Resources/\"..name)\n"
-    "if code then return code end\n"
 #endif
 #endif
     "for num_dotdot = 0, 3 do\n"

@@ -15,7 +15,6 @@ CorsixTH/Bitmap/flag_travel_east.bmp -text
 CorsixTH/Bitmap/flag_travel_north.bmp -text
 CorsixTH/Bitmap/flag_travel_south.bmp -text
 CorsixTH/Bitmap/flag_travel_west.bmp -text
-CorsixTH/Bitmap/flags32.png -text
 CorsixTH/Bitmap/fullscreen_border_bottom.bmp -text
 CorsixTH/Bitmap/fullscreen_border_bottomleft.bmp -text
 CorsixTH/Bitmap/fullscreen_border_bottomright.bmp -text
@@ -32,13 +31,6 @@ CorsixTH/Bitmap/map_cell_outline_east.bmp -text
 CorsixTH/Bitmap/map_cell_outline_north.bmp -text
 CorsixTH/Bitmap/map_cell_outline_south.bmp -text
 CorsixTH/Bitmap/map_cell_outline_west.bmp -text
-CorsixTH/Bitmap/new32.png -text svneol=unset#image/png
-CorsixTH/Bitmap/open32.png -text svneol=unset#image/png
-CorsixTH/Bitmap/parcels32.png -text
-CorsixTH/Bitmap/positions32.png -text
-CorsixTH/Bitmap/redo32.png -text
-CorsixTH/Bitmap/save32.png -text svneol=unset#image/png
-CorsixTH/Bitmap/transparent_walls32.png -text
 CorsixTH/Bitmap/tree_collapsed.bmp -text
 CorsixTH/Bitmap/tree_ctrl.dat -text
 CorsixTH/Bitmap/tree_ctrl.pal -text
@@ -46,7 +38,6 @@ CorsixTH/Bitmap/tree_ctrl.tab -text
 CorsixTH/Bitmap/tree_expanded.bmp -text
 CorsixTH/Bitmap/tree_leaf.bmp -text
 CorsixTH/Bitmap/tree_level.bmp -text
-CorsixTH/Bitmap/undo32.png -text
 CorsixTH/CorsixTH.ico -text
 CorsixTH/Icon.icns -text
 CorsixTH/Levels/Example.map -text
@@ -54,11 +45,6 @@ CorsixTH/Levels/avatar.map -text
 CorsixTH/Levels/confined_v5.map -text
 CorsixTH/Levels/finisham.map -text
 CorsixTH/Levels/original08.level -text
-CorsixTH/Lua/command.lua -text
-CorsixTH/Lua/command_stack.lua -text
-CorsixTH/Lua/commands/compound.lua -text
-CorsixTH/Lua/commands/set_map_cell.lua -text
-CorsixTH/Lua/commands/set_map_cell_flags.lua -text
 CorsixTH/Lua/dialogs/resizables/customise.lua -text
 CorsixTH/Lua/dialogs/resizables/folder_settings.lua -text
 CorsixTH/Lua/dialogs/resizables/update.lua -text
@@ -104,7 +90,4 @@ LevelEdit/src/icon256.png -text
 LevelEdit/src/icon32.png -text
 LevelEdit/src/icon48.png -text
 LevelEdit/src/icon64.png -text
-MapEdit/Icon.icns -text
-MapEdit/MapEdit.ico -text
-MapEdit/RequiredResources.txt -text
 WindowsInstaller/welcome.bmp -text
