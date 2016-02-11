@@ -395,7 +395,7 @@ function GameUI:onCursorWorldPositionChange()
 
   -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
-    for key, value in pairs(entity.active_moods) do
+    for _, value in pairs(entity.active_moods) do
       if value.on_hover then
         entity:setMoodInfo(value)
         break

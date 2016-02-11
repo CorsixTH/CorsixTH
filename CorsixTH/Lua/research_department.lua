@@ -343,7 +343,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
   ---------------------- An autopsy has been done ---------------------------
   if autopsy_room then
     -- Do something only if the room is among those not yet discovered.
-    for room, value in pairs(self.hospital.undiscovered_rooms) do
+    for room, _ in pairs(self.hospital.undiscovered_rooms) do
       if room.id == autopsy_room then
         -- Find an object within this room that needs research points.
         for object, _ in pairs(room.objects_needed) do
@@ -375,7 +375,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
     -- Divide the points into the different categories and check if
     -- it is time to discover something
     local areas = self.research_policy
-    for name, info in pairs(areas) do
+    for _, info in pairs(areas) do
       -- Don't touch the value "global".
       if type(info) == "table" then
         -- Some categories may be finished

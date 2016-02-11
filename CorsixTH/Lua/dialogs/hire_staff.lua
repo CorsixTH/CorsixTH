@@ -251,7 +251,7 @@ function UIHireStaff:setCategory(name)
   self.complete_blanker.visible = not name
   self.abilities_blanker.visible = name ~= "Doctor"
   self.category = name
-  for i, btn in ipairs(self.tabs) do
+  for _, btn in ipairs(self.tabs) do
     local should_be_toggled = btn.on_click_self == name
     if btn.toggled ~= should_be_toggled then
       btn:toggle()

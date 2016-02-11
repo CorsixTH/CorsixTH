@@ -952,7 +952,7 @@ function Staff:searchForHandymanTask()
   end
   if assignedTask == false then
     -- Make sure that the handyman isn't meandering already.
-    for i, action in ipairs(self.action_queue) do
+    for _, action in ipairs(self.action_queue) do
       if action.name == "meander" then
         return false
       end

@@ -164,7 +164,7 @@ function UIGraphs:updateLines()
 
   local aux_lines = {}
   -- Then add all the nodes available for each graph
-  for i, part in ipairs(values) do
+  for _, part in ipairs(values) do
     for stat, value in pairs(part) do
       -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
       local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0

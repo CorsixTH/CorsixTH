@@ -316,7 +316,7 @@ function UIEditRoom:clearArea()
         else
           -- Look for a queue action and re-arrange the people in it, which
           -- should cause anyone queueing within the blueprint to move
-          for i, action in ipairs(entity.action_queue) do
+          for _, action in ipairs(entity.action_queue) do
             if action.name == "queue" then
               for _, humanoid in ipairs(action.queue) do
                 local callbacks = action.queue.callbacks[humanoid]
@@ -523,7 +523,7 @@ function UIEditRoom:purchaseItems()
         research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
-      for j, p in ipairs(self.objects) do
+      for _, p in ipairs(self.objects) do
         if p.object.id == o then
           cur_qty = p.qty
         end
@@ -642,7 +642,7 @@ function UIEditRoom:returnToDoorPhase()
 
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
-    for i = 1, n_steps do
+    for _ = 1, n_steps do
       local existing = map:getCell(x, y, layer)
       -- Possibly add transparency.
       local flag = 0
@@ -1210,7 +1210,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     flags = flags + 16 -- Use red palette rather than normal palette
   end
   if self.room_type.swing_doors then
-    for i, anim in ipairs(anim) do
+    for _, anim in ipairs(anim) do
       anim:setAnimation(self.anims, 126, flags)
     end
   else

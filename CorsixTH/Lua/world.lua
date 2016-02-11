@@ -133,7 +133,7 @@ function World:World(app)
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
+      for _, id in pairs(wall_type[set]) do
         self.wall_id_by_block_id[id] = wall_type.id
       end
     end
@@ -141,7 +141,7 @@ function World:World(app)
   self.wall_set_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
+      for _, id in pairs(wall_type[set]) do
         self.wall_set_by_block_id[id] = set
       end
     end
@@ -573,7 +573,7 @@ function World:createEarthquake()
 
   -- Prepare machines for getting damage - at most as much as the severity of the earthquake +-1
   for _, room in pairs(self.rooms) do
-    for object, value in pairs(room.objects) do
+    for object, _ in pairs(room.objects) do
       if object.strength then
         object.quake_points = self.earthquake_size + math.random(-1, 1)
       end
@@ -597,7 +597,7 @@ function World:tickEarthquake()
     end
     -- Make sure that machines got all the damage they should get.
     for _, room in pairs(self.rooms) do
-      for object, value in pairs(room.objects) do
+      for object, _ in pairs(room.objects) do
         if object.strength and object.quake_points then
           while object.quake_points > 0 do
             object:machineUsed(room)
@@ -1065,7 +1065,7 @@ function World:onTick()
       -- A patient might arrive to the player hospital.
       -- TODO: Multiplayer support.
       if self.spawn_hours[self.hour + i-1] and self.hospitals[1].opened then
-        for k=1, self.spawn_hours[self.hour + i-1] do
+        for _ = 1, self.spawn_hours[self.hour + i-1] do
           self:spawnPatient()
         end
       end
@@ -1185,7 +1185,7 @@ function World:onEndDay()
   -- Any patients tomorrow?
   self.spawn_hours = {}
   if self.spawn_dates[self.day] then
-    for i = 1, self.spawn_dates[self.day] do
+    for _ = 1, self.spawn_dates[self.day] do
       local hour = math.random(1, self.hours_per_day)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
@@ -1195,7 +1195,7 @@ function World:onEndDay()
 end
 
 function World:checkIfGameWon()
-  for i, hospital in ipairs(self.hospitals) do
+  for i, _ in ipairs(self.hospitals) do
     local res = self:checkWinningConditions(i)
     if res.state == "win" then
       self:winGame(i)
@@ -1255,7 +1255,7 @@ function World:updateSpawnDates()
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
-  for i = 1, no_of_spawns do
+  for _ = 1, no_of_spawns do
     -- We are interested in the coming month, pick days from it at random.
     local day = math.random(1, month_length[self.month % 12 + 1])
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
@@ -1433,7 +1433,7 @@ function World:checkWinningConditions(player_no)
   local hospital = self.hospitals[player_no]
 
   -- Go through the goals
-  for i, goal in ipairs(self.goals) do
+  for _, goal in ipairs(self.goals) do
     local current_value = hospital[goal.name]
     -- If max_min is 1 the value must be > than the goal condition.
     -- If 0 it must be < than the goal condition.
@@ -1603,7 +1603,7 @@ function World:onEndYear()
   end
   -- This is done here instead of in onEndMonth so that the player gets
   -- the chance to receive money or reputation from trophies and awards first.
-  for i, hospital in ipairs(self.hospitals) do
+  for i, _ in ipairs(self.hospitals) do
     local res = self:checkWinningConditions(i)
     if res.state == "lose" then
       self:loseGame(i, res.reason, res.limit)
@@ -2395,7 +2395,7 @@ function World:afterLoad(old, new)
       plant = 0,
       general = 0,
     }
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat then
@@ -2406,7 +2406,7 @@ function World:afterLoad(old, new)
   end
   if old < 43 then
     self.object_counts.reception_desk = 0
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat and count_cat == "reception_desk" then
@@ -2417,7 +2417,7 @@ function World:afterLoad(old, new)
   end
   if old < 47 then
     self.object_counts.bench = 0
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat and count_cat == "bench" then

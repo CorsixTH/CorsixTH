@@ -590,7 +590,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     else
       -- Static position
       local x, y = TableToPixels(arg1)
-      for i = 1, anim_length do
+      for _ = 1, anim_length do
         anims[fn](anims, frame, x, y)
         frame = anims:getNextFrame(frame)
       end

@@ -139,7 +139,7 @@ function UIPlaceObjects:resize(num_slots)
       :preservePanel()
   else
     -- remove buttons
-    for i = self.num_slots, num_slots + 1, -1 do
+    for _ = self.num_slots, num_slots + 1, -1 do
       -- NB: Two panels per item, the latter being a dummy for the button
       self.panels[#self.panels] = nil
       self.panels[#self.panels] = nil
@@ -182,7 +182,7 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
   while true do
     local new_object = object_list[new_index]
     if not new_object then break end
-    for index, object in ipairs(self.objects) do
+    for _, object in ipairs(self.objects) do
       if new_object.qty > 0 and new_object.object.thob == object.object.thob then
         object.qty = object.qty + new_object.qty
         if pay_for then
@@ -286,8 +286,8 @@ end
 function UIPlaceObjects:removeAllObjects(refund)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
   self:setActiveIndex(1)
-  for i = 1, #self.objects do
-    for j = 1, self.objects[1].qty do
+  for _ = 1, #self.objects do
+    for _ = 1, self.objects[1].qty do
       self:removeObject(self.objects[1], true, refund)
     end
   end
@@ -299,11 +299,11 @@ function UIPlaceObjects:removeObjects(object_list, refund)
     object_list = {}
   end
 
-  for i, o in ipairs(object_list) do
+  for _, o in ipairs(object_list) do
     for j, p in ipairs(self.objects) do
       if o.object.id == p.object.id then
         self.active_index = j
-        for k = 1, o.qty do
+        for _ = 1, o.qty do
           self:removeObject(p, true, refund)
         end
       end

@@ -806,7 +806,7 @@ function UI:afterLoad(old, new)
   end
   if old < 63 then
     -- modifiers have been added to key handlers
-    for key, handlers in pairs(self.key_handlers) do
+    for _, handlers in pairs(self.key_handlers) do
       for _, handler in ipairs(handlers) do
         handler.modifiers = {}
       end

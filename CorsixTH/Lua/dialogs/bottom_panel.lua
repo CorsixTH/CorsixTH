@@ -219,7 +219,7 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
         canvas:drawRect(black, x + 166, y + 1 + 10*i, 98, 8)
         canvas:drawRect(orange, x + 166, y + 1 + 10*i, math.floor(98*info["progress"]), 8)
         if info["dividers"] then
-          for k, value in ipairs(info["dividers"]) do
+          for _, value in ipairs(info["dividers"]) do
             canvas:drawRect(white, x + 165 + math.floor(value*100), y + 10*i, 1, 10)
           end
         end
@@ -827,4 +827,3 @@ function UIBottomPanel:afterLoad(old, new)
   end
   Window.afterLoad(self, old, new)
 end
-

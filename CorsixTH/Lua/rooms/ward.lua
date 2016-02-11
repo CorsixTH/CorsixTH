@@ -63,7 +63,7 @@ function WardRoom:roomFinished()
   local objects = self.world:findAllObjectsNear(fx, fy)
   local beds = 0
   local desks = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     if object.object_type.id == "bed" then
       beds = beds + 1
     end

@@ -345,7 +345,7 @@ function CallsDispatcher:answerCall(staff)
   end
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
-  for object, queue in pairs(self.call_queue) do
+  for _, queue in pairs(self.call_queue) do
     for key, call in pairs(queue) do
       local score = call.verification(staff) and call.priority(staff) or nil
       if score ~= nil then
@@ -380,8 +380,8 @@ end
 -- Dump the current call table for debugging
 function CallsDispatcher:dump()
   print("--- Queue ---")
-  for object, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.call_queue) do
+    for _, call in pairs(queue) do
       CallsDispatcher.dumpCall(call, (call.assigned and 'assigned' or 'unassigned'))
     end
   end
@@ -472,7 +472,7 @@ function CallsDispatcher:dropFromQueue(object, key)
       self.call_queue[object][key] = nil
     end
   elseif self.call_queue[object] then
-    for key, call in pairs(self.call_queue[object]) do
+    for _, call in pairs(self.call_queue[object]) do
       call.dropped = true
       if call.assigned then
         CallsDispatcher.unassignCall(call)

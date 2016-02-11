@@ -221,7 +221,7 @@ function Vip:evaluateRoom()
   end
 
   -- evaluate the room we're currently looking at
-  for object, value in pairs(room.objects) do
+  for object, _ in pairs(room.objects) do
     if object.object_type.id == "extinguisher" then
       self.room_eval = self.room_eval + 1
       break
@@ -319,9 +319,9 @@ function Vip:setVIPRating()
 
   -- now we check for toilet presence
   local sum_toilets = 0
-  for i, room in pairs(self.world.rooms) do
+  for _, room in pairs(self.world.rooms) do
     if room.room_info.id == "toilets" then
-      for object, value in pairs(room.objects) do
+      for object, _ in pairs(room.objects) do
         if object.object_type.id == "loo" then
           sum_toilets = sum_toilets + 1
         end
@@ -470,5 +470,3 @@ function Vip:afterLoad(old, new)
   end
   Humanoid.afterLoad(self, old, new)
 end
-
-

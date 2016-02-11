@@ -265,7 +265,7 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
     end
     return false
   else
-    for attribute, count in pairs(missing) do
+    if next(missing) ~= nil then
       return false
     end
     return true
@@ -594,7 +594,7 @@ function Room:onHumanoidLeave(humanoid)
   -- The player might be waiting to edit this room
   if not self.is_active then
     local i = 0
-    for humanoid in pairs(self.humanoids) do
+    for _ in pairs(self.humanoids) do
       i = i + 1
     end
     if i == 0 then
@@ -927,7 +927,7 @@ end
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
-  for humanoid, callback in pairs(self.humanoids_enroute) do
+  for _, callback in pairs(self.humanoids_enroute) do
     callback.callback();
   end
   -- Now empty the humanoids_enroute list since they are not enroute anymore.

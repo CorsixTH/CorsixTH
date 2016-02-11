@@ -196,7 +196,7 @@ function UIStaffManagement:setCategory(name)
   self.skill_blanker.visible = name ~= "Doctor"
   self.title_blanker.visible = name ~= "Doctor"
   self.category = name
-  for i, btn in ipairs(self.categories) do
+  for _, btn in ipairs(self.categories) do
     local should_be_toggled = btn.on_click_self == name
     if btn.toggled ~= should_be_toggled then
       btn:toggle()

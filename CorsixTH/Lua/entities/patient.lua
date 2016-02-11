@@ -877,7 +877,7 @@ function Patient:tickDay()
       end
 
       -- If we are queueing, let the queue handle the situation.
-      for i, current_action in ipairs(self.action_queue) do
+      for _, current_action in ipairs(self.action_queue) do
         if current_action.name == "queue" then
           local callbacks = current_action.queue.callbacks[self]
           if callbacks then
@@ -1028,7 +1028,7 @@ function Patient:notifyNewObject(id)
   assert(id == "bench", "Can only handle benches at the moment")
   -- Look for a queue action and tell this patient to look for a bench
   -- if currently standing up.
-  for i, action in ipairs(self.action_queue) do
+  for _, action in ipairs(self.action_queue) do
     if action.name == "queue" then
       local callbacks = action.queue.callbacks[self]
       if callbacks then

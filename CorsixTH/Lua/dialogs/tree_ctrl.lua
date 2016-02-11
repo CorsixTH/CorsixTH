@@ -339,7 +339,7 @@ end
 --!param sort_by What to sort by. Either "name" or "date".
 --!param order If the ordering should be "ascending" or "descending".
 function FileTreeNode:reSortChildren(sort_by, order)
-  for i, child in ipairs(self.children) do
+  for _, child in ipairs(self.children) do
     if sort_by == "date" then
       child.sort_key = lfs.attributes(child.path, "modification")
       child.sort_by = sort_by
@@ -640,11 +640,11 @@ end
 
 function TreeControl:onScroll()
   if self.scrollbar.value > self.first_visible_ordinal then
-    for i = 1, self.scrollbar.value - self.first_visible_ordinal do
+    for _ = 1, self.scrollbar.value - self.first_visible_ordinal do
       self.first_visible_node = self.first_visible_node:getNextVisible()
     end
   elseif self.scrollbar.value < self.first_visible_ordinal then
-    for i = 1, self.first_visible_ordinal - self.scrollbar.value do
+    for _ = 1, self.first_visible_ordinal - self.scrollbar.value do
       self.first_visible_node = self.first_visible_node:getPrevVisible()
     end
   end

@@ -158,7 +158,7 @@ function UIFurnishCorridor:confirm()
 
   local to_purchase = {}
   local to_sell = {}
-  for i, o in ipairs(self.objects) do
+  for _, o in ipairs(self.objects) do
     local build_cost = self.ui.hospital:getObjectBuildCost(o.object.id)
     if o.qty - o.start_qty > 0 then
       local diff_qty = o.qty - o.start_qty

@@ -208,7 +208,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
   -- Stand up in the correct position in the queue
   local standing_index = 0
   local our_room = humanoid:getRoom()
-  for i, person in ipairs(queue) do
+  for _, person in ipairs(queue) do
     if person == humanoid then
       break
     end

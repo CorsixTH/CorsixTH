@@ -100,7 +100,7 @@ function UIFax:draw(canvas, x, y)
 
   if self.message then
     local last_y = y + 40
-    for i, message in ipairs(self.message) do
+    for _, message in ipairs(self.message) do
       last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190,
                                          last_y + (message.offset or 0), 330,
                                          "center")

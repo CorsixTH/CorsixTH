@@ -193,7 +193,7 @@ function Object:tick()
     if self.num_animation_ticks then
       for i = 2, #self.split_anims do
         local th = self.split_anims[i]
-        for i = 1, self.num_animation_ticks do
+        for _ = 1, self.num_animation_ticks do
           th:tick()
         end
       end
@@ -295,7 +295,7 @@ end
 
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, x, y)
-    for i, xy in ipairs(object_footprint) do
+    for _, xy in ipairs(object_footprint) do
       if(xy[1] == x and xy[2] == y) then
         return true
       end
@@ -616,7 +616,7 @@ function Object:isReservedFor(user)
     if not self.reserved_for_list then
       self.reserved_for_list = {}
     end
-    for i, users in ipairs(self.reserved_for_list) do
+    for _, users in ipairs(self.reserved_for_list) do
       if users == user then
         return true
       end
@@ -696,7 +696,7 @@ function Object:onDestroy()
     room.objects[self] = nil
   end
   if self.user_list then
-    for i, user in ipairs(self.user_list) do
+    for _, user in ipairs(self.user_list) do
       user:handleRemovedObject(self)
     end
     self.user_list = {}
@@ -705,7 +705,7 @@ function Object:onDestroy()
   end
   self.user = nil
   if self.reserved_for_list then
-    for i, reserver in ipairs(self.reserved_for_list) do
+    for _, reserver in ipairs(self.reserved_for_list) do
       reserver:handleRemovedObject(self)
     end
     self.reserved_for_list = {}
@@ -754,7 +754,7 @@ function Object.processTypeDefinition(object_type)
     object_type.count_category = "general"
   end
   if object_type.orientations then
-    for direction, details in pairs(object_type.orientations) do
+    for _, details in pairs(object_type.orientations) do
       -- Set default values
       if not details.animation_offset then
         details.animation_offset = {0, 0}
@@ -851,7 +851,7 @@ function Object.processTypeDefinition(object_type)
       local adjacent_set = {}
       local adjacent_list = {}
       details.adjacent_to_solid_footprint = adjacent_list
-      for k, point in pairs(solid_points) do
+      for _, point in pairs(solid_points) do
         for _, delta in ipairs({{-1, 0}, {0, -1}, {0, 1}, {1, 0}}) do
           local x = point[1] + delta[1]
           local y = point[2] + delta[2]

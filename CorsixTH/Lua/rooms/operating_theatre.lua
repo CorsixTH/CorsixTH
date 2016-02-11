@@ -99,7 +99,7 @@ end
 
 --! Returns true if an operation is ongoing
 function OperatingTheatreRoom:isOperating()
-  for k, v in pairs(self.staff_member_set) do
+  for k, _ in pairs(self.staff_member_set) do
     if k.action_queue[1].name == "multi_use_object" then
       return true
     end

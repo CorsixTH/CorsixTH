@@ -294,7 +294,7 @@ function UIPatient:updateInformation()
 end
 
 function UIPatient:viewQueue()
-  for i, action in ipairs(self.patient.action_queue) do
+  for _, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
       self.ui:addWindow(UIQueue(self.ui, action.queue))
       self.ui:playSound("selectx.wav")
