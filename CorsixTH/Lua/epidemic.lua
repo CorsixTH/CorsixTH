@@ -553,7 +553,7 @@ function Epidemic:spawnInspector()
   self.world.ui.adviser:say(_A.information.epidemic_health_inspector)
   local inspector = self.world:newEntity("Inspector", 2)
   self.inspector = inspector
-  inspector:setType "Inspector"
+  inspector:setType("Inspector")
 
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
   inspector:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}

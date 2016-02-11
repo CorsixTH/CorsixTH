@@ -67,21 +67,21 @@ function UIFax:UIFax(ui, icon)
     return --[[persistable:fax_button]] function() self:appendNumber(char) end
   end
 
-  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button"1"):setSound"Fax_1.wav"
-  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button"2"):setSound"Fax_2.wav"
-  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button"3"):setSound"Fax_3.wav"
+  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button("1")):setSound("Fax_1.wav")
+  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button("2")):setSound("Fax_2.wav")
+  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button("3")):setSound("Fax_3.wav")
 
-  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button"4"):setSound"Fax_4.wav"
-  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button"5"):setSound"Fax_5.wav"
-  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button"6"):setSound"Fax_6.wav"
+  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button("4")):setSound("Fax_4.wav")
+  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button("5")):setSound("Fax_5.wav")
+  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button("6")):setSound("Fax_6.wav")
 
-  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button"7"):setSound"Fax_7.wav"
-  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button"8"):setSound"Fax_8.wav"
-  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button"9"):setSound"Fax_9.wav"
+  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button("7")):setSound("Fax_7.wav")
+  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button("8")):setSound("Fax_8.wav")
+  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button("9")):setSound("Fax_9.wav")
 
-  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button"*")
-  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button"0"):setSound"Fax_0.wav"
-  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button"#")
+  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button("*"))
+  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button("0")):setSound("Fax_0.wav")
+  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button("#"))
 end
 
 function UIFax:updateChoices()

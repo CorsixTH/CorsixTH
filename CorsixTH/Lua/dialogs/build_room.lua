@@ -98,7 +98,7 @@ function UIBuildRoom:UIBuildRoom(ui)
   }
   self.category_rooms = {
   }
-  for i, category in ipairs{"diagnosis", "treatment", "clinics", "facilities"} do
+  for i, category in ipairs({"diagnosis", "treatment", "clinics", "facilities"}) do
     local rooms = {}
     self.category_rooms[i] = rooms
     for _, room in ipairs(app.world.available_rooms) do
@@ -197,7 +197,7 @@ function UIBuildRoom:onMouseMove(x, y, dx, dy)
   end
 
   if hover_idx ~= self.list_hover_index then
-    self.ui:playSound "HLightP2.wav"
+    self.ui:playSound("HLightP2.wav")
     if hover_idx == 0 then
       self.cost_box = _S.build_room_window.cost .. "0"
       self.preview_anim = false

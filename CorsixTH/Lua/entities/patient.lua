@@ -248,7 +248,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       self.cured = true
       self.infected = false
       self:setMood("cured", "activate")
-      self.world.ui:playSound "cheer.wav" -- This sound is always heard
+      self.world.ui:playSound("cheer.wav") -- This sound is always heard
       self.attributes["health"] = 1
       self:changeAttribute("happiness", 0.8)
       hospital:changeReputation("cured", self.disease)

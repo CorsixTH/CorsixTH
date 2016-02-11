@@ -267,11 +267,11 @@ function UIPatient:viewQueue()
   for i, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
       self.ui:addWindow(UIQueue(self.ui, action.queue))
-      self.ui:playSound "selectx.wav"
+      self.ui:playSound("selectx.wav")
       return
     end
   end
-  self.ui:playSound "wrong2.wav"
+  self.ui:playSound("wrong2.wav")
 end
 
 function UIPatient:goHome()
@@ -279,7 +279,7 @@ function UIPatient:goHome()
     return
   end
   self:close()
-  self.patient:playSound "sack.wav"
+  self.patient:playSound("sack.wav")
   self.patient:goHome()
   self.patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
 end

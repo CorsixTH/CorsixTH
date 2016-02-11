@@ -817,7 +817,9 @@ function Object.processTypeDefinition(object_type)
             solid_points[point[1] * 100 + point[2]] = point
           end
         end
-        for _, key in ipairs{"use_position_secondary", "finish_use_position", "finish_use_position_secondary"} do
+        for _, key in ipairs({"use_position_secondary",
+                              "finish_use_position",
+                              "finish_use_position_secondary"}) do
           if details[key] then
             details[key][1] = details[key][1] - x
             details[key][2] = details[key][2] - y
@@ -850,7 +852,7 @@ function Object.processTypeDefinition(object_type)
       local adjacent_list = {}
       details.adjacent_to_solid_footprint = adjacent_list
       for k, point in pairs(solid_points) do
-        for _, delta in ipairs{{-1, 0}, {0, -1}, {0, 1}, {1, 0}} do
+        for _, delta in ipairs({{-1, 0}, {0, -1}, {0, 1}, {1, 0}}) do
           local x = point[1] + delta[1]
           local y = point[2] + delta[2]
           local k2 = x * 100 + y

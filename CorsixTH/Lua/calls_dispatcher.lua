@@ -121,7 +121,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     local sound = room.room_info.handyman_call_sound
     if sound then
       ui:playAnnouncement(sound)
-      ui:playSound "machwarn.wav"
+      ui:playSound("machwarn.wav")
     end
     message = _A.warnings.machines_falling_apart
   end

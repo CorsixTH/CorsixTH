@@ -493,7 +493,7 @@ end
 
 function Graphics:updateTarget(target)
   self.target = target
-  for _, res_set in ipairs{"reload_functions", "reload_functions_last"} do
+  for _, res_set in ipairs({"reload_functions", "reload_functions_last"}) do
     for resource, reloader in pairs(self[res_set]) do
       reloader(resource)
     end
@@ -628,7 +628,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       frame = anims:getNextFrame(frame)
     end
   elseif type == "string" then
-    error "TODO"
+    error("TODO")
   else
     error("Invalid arguments to setMarker", 2)
   end

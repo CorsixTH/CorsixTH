@@ -65,7 +65,7 @@ function UIPlaceStaff:close()
     local staff_pool = self.world.available_staff[self.profile.humanoid_class]
     staff_pool[#staff_pool + 1] = self.profile
   end
-  self.ui:playSound "plac_st2.wav"
+  self.ui:playSound("plac_st2.wav")
   Window.close(self)
 end
 

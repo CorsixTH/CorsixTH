@@ -146,16 +146,16 @@ function loadfile_envcall(filename)
   local result = f:read(4)
   if result == "\239\187\191#" then
     -- UTF-8 BOM plus Unix Shebang
-    result = f:read"*a":gsub("^[^\r\n]*", "", 1)
+    result = f:read("*a"):gsub("^[^\r\n]*", "", 1)
   elseif result:sub(1, 3) == "\239\187\191" then
     -- UTF-8 BOM
-    result = result:sub(4,4) .. f:read"*a"
+    result = result:sub(4,4) .. f:read("*a")
   elseif result:sub(1, 1) == "#" then
     -- Unix Shebang
-    result = (result .. f:read"*a"):gsub("^[^\r\n]*", "", 1)
+    result = (result .. f:read("*a")):gsub("^[^\r\n]*", "", 1)
   else
     -- Normal
-    result = result .. f:read"*a"
+    result = result .. f:read("*a")
   end
   f:close()
   return loadstring_envcall(result, "@".. filename)

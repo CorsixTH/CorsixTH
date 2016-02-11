@@ -66,7 +66,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     self:addPanel(113, 0, y) -- Desc text box
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
+  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound("no4.wav"):setTooltip(_S.tooltip.place_objects_window.cancel)
   self:addKeyHandler("escape", self.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
@@ -76,7 +76,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button =
   self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
-    :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
+    :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
 
   self.list_header = self:addPanel(123, 0, 146) -- Object list header
   self.list_header.visible = false
@@ -446,7 +446,7 @@ end
 
 function UIPlaceObjects:tryNextOrientation()
   if #self.objects > 0 then
-    self.ui:playSound "swoosh.wav"
+    self.ui:playSound("swoosh.wav")
     self.objects[self.active_index].orientation_before = self.object_orientation;
     self:nextOrientation()
   end
@@ -518,7 +518,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     room.objects[real_obj] = true
   end
 
-  self.ui:playSound "place_r.wav"
+  self.ui:playSound("place_r.wav")
 
   self:removeObject(object, dont_close_if_empty)
   object.orientation_before = nil

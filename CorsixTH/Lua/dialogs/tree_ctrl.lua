@@ -31,7 +31,7 @@ end
 
 --! Get the number of childrem which the item has
 function TreeNode:getChildCount()
-  error "To be implemented in subclasses"
+  error("To be implemented in subclasses")
 end
 
 --! Query if the item has any children at all.
@@ -44,18 +44,18 @@ end
 --! Get a child of the item.
 --!param idx (integer) An integer between 1 and getChildCount() (inclusive).
 function TreeNode:getChildByIndex(idx)
-  error "To be implemented in subclasses"
+  error("To be implemented in subclasses")
 end
 
 --! Given a child of the item, determine which index it is
 --!param child (TreeNode) A value returned from getChildByIndex()
 function TreeNode:getIndexOfChild(child)
-  error "To be implemented in subclasses"
+  error("To be implemented in subclasses")
 end
 
 --! Get the text to be displayed for the item
 function TreeNode:getLabel()
-  error "To be implemented in subclasses"
+  error("To be implemented in subclasses")
 end
 
 --! Get the item's parent, if it has one
