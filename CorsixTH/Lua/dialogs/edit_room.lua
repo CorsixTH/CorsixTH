@@ -595,7 +595,6 @@ end
 function UIEditRoom:returnToDoorPhase()
   self.ui:tutorialStep(3, {13, 14, 15}, 9)
   local map = self.ui.app.map.th
-  local rect = self.blueprint_rect
   local room = self.room
   room.built = false
   if room.door and room.door.queue then

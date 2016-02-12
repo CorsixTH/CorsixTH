@@ -277,7 +277,6 @@ function Vip:setVIPRating()
 
   --check the visitor to patient cure ratio
   local cure_diff = self.hospital.num_cured - self.enter_cures
-  local visitors_diff = self.hospital.num_visitors - self.enter_visitors
   if cure_diff == 0 then
     if visitors_diff ~= 0 then --if there have been no new patients, no +/- points
       self.vip_rating = self.vip_rating - 10
@@ -418,7 +417,7 @@ function Vip:setVIPRating()
   end
 
   -- check average staff happiness
-  local avg_happiness = self.hospital:getAverageStaffAttribute("happiness", nil)
+  avg_happiness = self.hospital:getAverageStaffAttribute("happiness", nil)
   if avg_happiness then
     local staff_happy_ratio_rangemap = {
       {upper = 0.20, value = -10},

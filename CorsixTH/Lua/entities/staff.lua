@@ -599,7 +599,7 @@ function Staff:checkIfNeedRest()
         return
       end
 
-      local room = self:getRoom()
+      room = self:getRoom()
       if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
         -- If occupied by patient, staff will go to the staffroom after the patient left.
         self.staffroom_needed = true

@@ -394,7 +394,6 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     end
   end
 
-  local font
   local use_bitmap_font = true
   if not sprite_table:isVisible(46) then -- uppercase M
     -- The font doesn't contain an uppercase M, so (in all liklihood) is used

@@ -840,7 +840,7 @@ function App:saveConfig()
           local _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
           value = temp or value
           -- Remove enclosing [[]], if necessary
-          local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
           value = temp or value
 
           -- If identifier also exists in runtime options, compare their values and
