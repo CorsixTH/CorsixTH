@@ -84,7 +84,7 @@ function Litter:setLitterType(anim_type, mirrorFlag)
     if anim then
       self:setAnimation(anim, mirrorFlag)
     else
-      error "Unknown litter type"
+      error("Unknown litter type")
     end
     if self:isCleanable() then
       local hospital = self.world:getLocalPlayerHospital()

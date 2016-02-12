@@ -66,7 +66,7 @@ function Audio:init()
     return
   end
   if not SDL.audio.loaded then
-    print "Notice: Audio system not loaded as CorsixTH compiled without it"
+    print("Notice: Audio system not loaded as CorsixTH compiled without it")
     self.not_loaded = true
     return
   end
@@ -161,7 +161,7 @@ function Audio:init()
     end
   end
   if #self.background_playlist == 0 and self.app.good_install_folder then
-    print "Notice: Audio system loaded, but found no background tracks"
+    print("Notice: Audio system loaded, but found no background tracks")
     self.has_bg_music = false
   else
     self.has_bg_music = true

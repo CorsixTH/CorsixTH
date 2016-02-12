@@ -106,7 +106,7 @@ function UIMachine:replaceMachine()
   if self.ui.hospital.balance < cost then
     -- give visual warning that player doesn't have enough $ to buy
     self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
-    self.ui:playSound "wrong2.wav"
+    self.ui:playSound("wrong2.wav")
     return
   end
   local strength = hosp.research.research_progress[machine.object_type].start_strength

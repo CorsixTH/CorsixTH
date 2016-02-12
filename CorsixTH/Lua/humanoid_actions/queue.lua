@@ -84,7 +84,7 @@ local function action_queue_find_drink_action(action, humanoid)
     end
   end
   if found_any then
-    error "Proper drink action not in action_queue"
+    error("Proper drink action not in action_queue")
   else
     return -1
   end
@@ -103,7 +103,7 @@ local function action_queue_finish_standing(action, humanoid)
         -- It is likely that the person is sitting down.
         return action_queue_leave_bench(action, humanoid)
       else
-        error "This person seems to neither be standing nor sitting?!"
+        error("This person seems to neither be standing nor sitting?!")
       end
     end
   end
@@ -116,7 +116,7 @@ local function action_queue_finish_standing(action, humanoid)
     end
     index = index - 1
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end
 
 local function action_queue_leave_bench(action, humanoid)
@@ -147,7 +147,7 @@ local function action_queue_leave_bench(action, humanoid)
     end
     index = index - 1
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
@@ -276,7 +276,7 @@ local action_queue_on_leave = permanent"action_queue_on_leave"( function(action,
       return
     end
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end)
 
 -- While queueing one could get thirsty.

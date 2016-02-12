@@ -5,17 +5,17 @@
 -- It does this in the function it returns.
 ---
 local function run()
-  print "NOTE: While CorsixTH is connected to an IDE's debugger server,"
-  print "text will be printed in its output console instead of here."
-  
+  print("NOTE: While CorsixTH is connected to an IDE's debugger server,")
+  print("text will be printed in its output console instead of here.")
+
   if not pcall(require, "socket") then
     print("Can't connect debugger: LuaSocket is not available.")
     return "Can't connect debugger: LuaSocket is not available."
   end
-  
+
   local _, config = dofile("config_finder")
   local connect = dofile("debugger")
-  
+
   local successful, error_message = pcall(connect, config.DBGp_client_idehost,
                                                    config.DBGp_client_ideport,
                                                    config.DBGp_client_idekey,

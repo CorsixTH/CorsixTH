@@ -102,7 +102,7 @@ class = destrict(function(_, name)
     else
       -- (Superclass) decorator
       if arg == nil then
-        error "Superclass not defined at subclass definition"
+        error("Superclass not defined at subclass definition")
       end
       super = arg
     end

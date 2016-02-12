@@ -34,7 +34,7 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
     elseif type(f) == "userdata" then
       val = debug.getuservalue(f)
     else
-      print 'Unhandled argument to th_getfenv'
+      print('Unhandled argument to th_getfenv')
     end
     return val
   end
@@ -65,7 +65,7 @@ end
 
 local --[[persistable:persistance_global_fetch]] function global_fetch(...)
   local val = _G
-  for _, k in ipairs{...} do
+  for _, k in ipairs({...}) do
     val = val[k]
   end
   return val
@@ -129,10 +129,10 @@ local function MakePermanentObjectsTable(inverted)
 
   -- Bits of the app
   permanent[TheApp] = "TheApp"
-  for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx", "fs"} do
+  for _, key in ipairs({"config", "modes", "video", "strings", "audio", "gfx", "fs"}) do
     permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
   end
-  for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do
+  for _, collection in ipairs({"walls", "objects", "rooms", "humanoid_actions", "diseases"}) do
     for k, v in pairs(TheApp[collection]) do
       if type(k) == "string" then
         permanent[v] = inverted and "TheApp.".. collection ..".".. k or {global_fetch, "TheApp", collection, k}
@@ -287,7 +287,7 @@ end
 
 function LoadGameFile(filename)
   local f = assert(io.open(filename, "rb"))
-  local data = f:read"*a"
+  local data = f:read("*a")
   f:close()
   LoadGame(data)
 end

@@ -147,6 +147,6 @@ function TH.stringProxy.sub(str, ...)
   return result
 end
 
-for _, method_name in ipairs{"gsub", "format", "find", "sub"} do
+for _, method_name in ipairs({"gsub", "format", "find", "sub"}) do
   permanent("TH.stringProxy.".. method_name, TH.stringProxy[method_name])
 end

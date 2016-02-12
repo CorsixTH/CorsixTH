@@ -75,7 +75,7 @@ end
 function App:setCommandLine(...)
   self.command_line = {...}
   for i, arg in ipairs(self.command_line) do
-    local setting, value = arg:match"^%-%-([^=]*)=(.*)$" --setting=value
+    local setting, value = arg:match("^%-%-([^=]*)=(.*)$") --setting=value
     if value then
       self.command_line[setting] = value
     end
@@ -130,7 +130,7 @@ function App:init()
     api_version = api_version or 0
     compile_opts.api_version = compile_opts.api_version or 0
     if api_version < compile_opts.api_version then
-      print "Notice: Compiled binary is more recent than Lua scripts."
+      print("Notice: Compiled binary is more recent than Lua scripts.")
     elseif api_version > compile_opts.api_version then
       print("Warning: Compiled binary is out of date. CorsixTH will likely"..
       " fail to run until you recompile the binary.")
@@ -228,7 +228,7 @@ function App:init()
   self.strings = Strings(self)
   self.strings:init()
   local language_load_success = self:initLanguage()
-  if (self.command_line.dump or ""):match"strings" then
+  if (self.command_line.dump or ""):match("strings") then
     -- Specify --dump=strings on the command line to dump strings
     -- (or insert "true or" after the "if" in the above)
     self:dumpStrings()
@@ -241,13 +241,13 @@ function App:init()
   if good_install_folder then
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
-    self.walls = self:loadLuaFolder"walls"
+    self.walls = self:loadLuaFolder("walls")
     dofile "entity"
     dofile "entities/humanoid"
     dofile "entities/object"
     dofile "entities/machine"
 
-    local objects = self:loadLuaFolder"objects"
+    local objects = self:loadLuaFolder("objects")
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
     -- Doors are in their own folder to ensure that the swing doors (which
     -- depend on the door) are loaded after the door object.
@@ -259,11 +259,13 @@ function App:init()
       end
       Object.processTypeDefinition(v)
     end
+
     dofile "room"
-    self.rooms = self:loadLuaFolder"rooms"
-    self.humanoid_actions = self:loadLuaFolder"humanoid_actions"
-    local diseases = self:loadLuaFolder"diseases"
+    self.rooms = self:loadLuaFolder("rooms")
+    self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
+    local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
+
     -- Load world before UI
     dofile "world"
   end
@@ -332,7 +334,7 @@ function App:initSavegameDir()
   end
   if lfs.attributes(self.savegame_dir, "mode") ~= "directory" then
     if not lfs.mkdir(self.savegame_dir) then
-       print "Notice: Savegame directory does not exist and could not be created."
+       print("Notice: Savegame directory does not exist and could not be created.")
        return false
     end
   end
@@ -350,7 +352,7 @@ function App:initScreenshotsDir()
   end
   if lfs.attributes(self.screenshot_dir, "mode") ~= "directory" then
     if not lfs.mkdir(self.screenshot_dir) then
-       print "Notice: Screenshot directory does not exist and could not be created."
+       print("Notice: Screenshot directory does not exist and could not be created.")
        return false
     end
   end
@@ -622,7 +624,7 @@ function App:dumpStrings()
     for j, str in ipairs(sec) do
       fi:write("[" .. i .. "," .. j .. "] " .. ("%q\n"):format(val(str)))
     end
-    fi:write"\n"
+    fi:write("\n")
   end
   fi:close()
 
@@ -766,8 +768,8 @@ function App:fixConfig()
     -- Trim whitespace from beginning and end string values - it shouldn't be
     -- there (at least in any current configuration options).
     if type(value) == "string" then
-      if value:match"^[%s]" or value:match"[%s]$" then
-        self.config[key] = value:match"^[%s]*(.-)[%s]*$"
+      if value:match("^[%s]") or value:match("[%s]$") then
+        self.config[key] = value:match("^[%s]*(.-)[%s]*$")
       end
     end
 
@@ -908,9 +910,9 @@ function App:run()
     print("Almost anything can be the cause, but the detailed information "..
     "below can help the developers find the source of the error.")
     print("Running: The " .. self.last_dispatch_type .. " handler.")
-    print "A stack trace is included below, and the handler has been disconnected."
+    print("A stack trace is included below, and the handler has been disconnected.")
     print(debug.traceback(co, e, 0))
-    print ""
+    print("")
     if self.world then
       self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
       self.world:gameLog(debug.traceback(co, e, 0))
@@ -1093,8 +1095,8 @@ function App:checkInstallFolder()
   -- Check for demo version
   if self.fs:readContents("DataM", "Demo.dat") then
     self.using_demo_files = true
-    print "Notice: Using data files from demo version of Theme Hospital."
-    print "Consider purchasing a full copy of the game to support EA."
+    print("Notice: Using data files from demo version of Theme Hospital.")
+    print("Consider purchasing a full copy of the game to support EA.")
   end
 
   -- Do a few more checks to make sure that commonly corrupted files are OK.
@@ -1181,7 +1183,7 @@ end
 function App:readBitmapDataFile(filename)
   filename = self:getBitmapDir() .. filename
   local file = assert(io.open(filename, "rb"))
-  local data = file:read"*a"
+  local data = file:read("*a")
   file:close()
   if data:sub(1, 3) == "RNC" then
     data = assert(rnc.decompress(data))
@@ -1223,7 +1225,7 @@ function App:readMapDataFile(filename)
     if absolute_path then
       local file = io.open(absolute_path, "rb")
       if file then
-        data = file:read"*a"
+        data = file:read("*a")
         file:close()
       end
     end
@@ -1245,7 +1247,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
   local path = ourpath .. dir
   local results = no_results and "" or (append_to or {})
   for file in lfs.dir(path) do
-    if file:match"%.lua$" then
+    if file:match("%.lua$") then
       local status, result = pcall(dofile, dir .. file:sub(1, -5))
       if not status then
         print("Error loading " .. dir ..  file .. ":\n" .. tostring(result))
@@ -1261,7 +1263,7 @@ function App:loadLuaFolder(dir, no_results, append_to)
             if type(result) == "table" and result.id then
               results[result.id] = result
             elseif type(result) == "function" then
-              results[file:match"(.*)%."] = result
+              results[file:match("(.*)%.")] = result
             end
             results[#results + 1] = result
           end
@@ -1436,7 +1438,7 @@ function App:checkForUpdates()
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
-    print "Will not check for updates since this is the Trunk version."
+    print("Will not check for updates since this is the Trunk version.")
     return
   end
 
@@ -1444,7 +1446,7 @@ function App:checkForUpdates()
 
   if not success then
     -- LuaSocket is not available, just return
-    print "Cannot check for updates since LuaSocket is not available."
+    print("Cannot check for updates since LuaSocket is not available.")
     return
   else
     self.lua_socket_available = true
@@ -1452,7 +1454,7 @@ function App:checkForUpdates()
   local http = require "socket.http"
   local url = require "socket.url"
 
-  print "Checking for CorsixTH updates..."
+  print("Checking for CorsixTH updates...")
   local update_body, status, headers = http.request(update_url)
 
   if not update_body or not (status == 200) then
@@ -1466,7 +1468,7 @@ function App:checkForUpdates()
   local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
 
   if (new_version <= current_version) then
-    print "You are running the latest version of CorsixTH."
+    print("You are running the latest version of CorsixTH.")
     return
   end
 

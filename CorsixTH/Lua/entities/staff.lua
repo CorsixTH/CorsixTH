@@ -365,7 +365,7 @@ function Staff:fire()
       staff_window:close()
   end
   self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "  .. self.profile.name)
-  self.world.ui:playSound "sack.wav"
+  self.world.ui:playSound("sack.wav")
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
@@ -824,7 +824,7 @@ end
 -- the salary by.
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
-  self.world.ui:playSound "cashreg.wav"
+  self.world.ui:playSound("cashreg.wav")
   if self.profile.wage > 2000 then -- What cap here?
     self.profile.wage = 2000
   else -- If the cap has been reached this member of staff won't get unhappy

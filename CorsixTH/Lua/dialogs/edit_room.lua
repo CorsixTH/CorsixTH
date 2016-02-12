@@ -800,22 +800,22 @@ function UIEditRoom:checkReachability()
   end
 
   while x < rect.x + rect.w do
-    if not check"travelSouth" then return false end
+    if not check("travelSouth") then return false end
     x = x + 1
   end
   y = y + 1
   while y < rect.y + rect.h do
-    if not check"travelWest" then return false end
+    if not check("travelWest") then return false end
     y = y + 1
   end
   x = x - 1
   while x >= rect.x do
-    if not check"travelNorth" then return false end
+    if not check("travelNorth") then return false end
     x = x - 1
   end
   y = y - 1
   while y >= rect.y do
-    if not check"travelEast" then return false end
+    if not check("travelEast") then return false end
     y = y - 1
   end
 
@@ -973,7 +973,7 @@ function UIEditRoom:onMouseDown(button, x, y)
         end
       elseif self.phase == "door" then
         if self.blueprint_door.valid then
-          self.ui:playSound "buildclk.wav"
+          self.ui:playSound("buildclk.wav")
           self:confirm(true)
         else
           self.ui:tutorialStep(3, 9, 10)
@@ -1133,7 +1133,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   else
     if anim ~= self.blueprint_door.anim then
       self.blueprint_door.anim = anim
-      self.blueprint_door.anim:setTag"door"
+      self.blueprint_door.anim:setTag("door")
       self.blueprint_door.old_anim = anim:getAnimation()
       self.blueprint_door.old_flags = anim:getFlag()
     end
@@ -1217,7 +1217,7 @@ end
 function UIEditRoom:placeWindowBlueprint()
   if self.blueprint_window.anim and self.blueprint_window.valid then
     self.blueprint_window = {}
-    self.ui:playSound "buildclk.wav"
+    self.ui:playSound("buildclk.wav")
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
     self.ui:tutorialStep(3, 11, 12)
   end
@@ -1264,7 +1264,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
 
   if anim ~= self.blueprint_window.anim then
     self.blueprint_window.anim = anim
-    self.blueprint_window.anim:setTag"window"
+    self.blueprint_window.anim:setTag("window")
     self.blueprint_window.old_anim = anim:getAnimation()
     self.blueprint_window.old_flags = anim:getFlag()
   end

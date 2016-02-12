@@ -1499,7 +1499,7 @@ in _S.transactions.
 function Hospital:spendMoney(amount, reason, changeValue)
   if not self.world.free_build_mode then
     self.balance = self.balance - amount
-    self:logTransaction{spend = amount, desc = reason}
+    self:logTransaction({spend = amount, desc = reason})
     self.money_out = self.money_out + amount
     if changeValue then
       self.value = self.value + changeValue
@@ -1517,7 +1517,7 @@ in _S.transactions.
 function Hospital:receiveMoney(amount, reason, changeValue)
   if not self.world.free_build_mode then
     self.balance = self.balance + amount
-    self:logTransaction{receive = amount, desc = reason}
+    self:logTransaction({receive = amount, desc = reason})
     self.money_in = self.money_in + amount
     if changeValue then
       self.value = self.value - changeValue

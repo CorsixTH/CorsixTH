@@ -95,11 +95,11 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
       if self:purchaseItem(index, qty) == 0 and not is_negative_quantity then
         -- give visual warning that player doesn't have enough $ to buy
         self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
-        self.ui:playSound "wrong2.wav"
+        self.ui:playSound("wrong2.wav")
       elseif qty > 0 then
-        self.ui:playSound "AddItemJ.wav"
+        self.ui:playSound("AddItemJ.wav")
       else
-        self.ui:playSound "DelItemJ.wav"
+        self.ui:playSound("DelItemJ.wav")
       end
     end
   end

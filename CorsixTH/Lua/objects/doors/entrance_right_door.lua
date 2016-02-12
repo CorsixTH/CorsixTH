@@ -74,7 +74,7 @@ function EntranceDoor:onOccupantChange(count_delta)
   self.occupant_count = self.occupant_count + count_delta
   local is_open = self.occupant_count > 0
   if is_open ~= self.is_open then
-    self:playSound "eledoor2.wav"
+    self:playSound("eledoor2.wav")
     self.is_open = is_open
     self.ticks = true
   end
