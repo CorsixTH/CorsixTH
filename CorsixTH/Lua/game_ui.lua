@@ -461,25 +461,25 @@ function GameUI:onMouseMove(x, y, dx, dy)
       (x < scroll_region_size or y < scroll_region_size or
        x >= self.app.config.width - scroll_region_size or
        y >= self.app.config.height - scroll_region_size) then
-    local dx = 0
-    local dy = 0
+    local dx_s = 0
+    local dy_s = 0
     local scroll_power = 7
     if x < scroll_region_size then
-      dx = -scroll_power
+      dx_s = -scroll_power
     elseif x >= self.app.config.width - scroll_region_size then
-      dx = scroll_power
+      dx_s = scroll_power
     end
     if y < scroll_region_size then
-      dy = -scroll_power
+      dy_s = -scroll_power
     elseif y >= self.app.config.height - scroll_region_size then
-      dy = scroll_power
+      dy_s = scroll_power
     end
 
     if not self.tick_scroll_amount_mouse then
-      self.tick_scroll_amount_mouse = {x = dx, y = dy}
+      self.tick_scroll_amount_mouse = {x = dx_s, y = dy_s}
     else
-      self.tick_scroll_amount_mouse.x = dx
-      self.tick_scroll_amount_mouse.y = dy
+      self.tick_scroll_amount_mouse.x = dx_s
+      self.tick_scroll_amount_mouse.y = dy_s
     end
   else
     self.tick_scroll_amount_mouse = false

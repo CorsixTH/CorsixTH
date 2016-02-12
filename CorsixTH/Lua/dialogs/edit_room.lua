@@ -862,7 +862,7 @@ function UIEditRoom:enterDoorPhase()
   -- Re-organise wall anims to index by x and y
   local walls = {}
   for _, wall in ipairs(self.blueprint_wall_anims) do
-    local map, x, y = wall:getTile()
+    local _, x, y = wall:getTile()
     if not walls[x] then
       walls[x] = {}
     end
@@ -966,9 +966,9 @@ function UIEditRoom:onMouseDown(button, x, y)
       if self.phase == "walls" then
         if 0 <= x and x < self.width and 0 <= y and y < self.height then
         else
-          local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-          self.mouse_down_x = math_floor(x)
-          self.mouse_down_y = math_floor(y)
+          local mx, my = self.ui:ScreenToWorld(self.x + x, self.y + y)
+          self.mouse_down_x = math_floor(mx)
+          self.mouse_down_y = math_floor(my)
           if self.move_rect then
             self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
             self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
@@ -1209,8 +1209,8 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     flags = flags + 16 -- Use red palette rather than normal palette
   end
   if self.room_type.swing_doors then
-    for _, anim in ipairs(anim) do
-      anim:setAnimation(self.anims, 126, flags)
+    for _, anim_door in ipairs(anim) do
+      anim_door:setAnimation(self.anims, 126, flags)
     end
   else
     anim:setAnimation(self.anims, 126, flags)

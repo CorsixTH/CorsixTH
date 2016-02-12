@@ -195,8 +195,8 @@ function UIMenuBar:drawMenu(menu, canvas)
   canvas:nonOverlapping(false)
   local btmy = y + h - 6
   panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
-  for y = y + 6, y + h - 6, 4 do
-    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
+  for y_p = y + 6, y + h - 6, 4 do
+    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y_p)
   end
   panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
 

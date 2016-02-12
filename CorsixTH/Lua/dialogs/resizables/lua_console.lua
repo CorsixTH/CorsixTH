@@ -115,10 +115,10 @@ function UILuaConsole:buttonExecute()
     print(err)
   else
     print("Executing UserFunction...")
-    local s, err = pcall(func)
+    local s, err_func = pcall(func)
     if not s then
       print("Error while executing UserFunction:")
-      print(err)
+      print(err_func)
     end
   end
 end

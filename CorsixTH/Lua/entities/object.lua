@@ -344,18 +344,18 @@ function Object:setTile(x, y)
     if self.footprint then
       local map = self.world.map.th
       for _, xy in ipairs(self.footprint) do
-        local x, y = self.tile_x + xy[1], self.tile_y + xy[2]
+        local x_f, y_f = self.tile_x + xy[1], self.tile_y + xy[2]
 
         if xy.only_side then
           if self.set_passable_flags then
             self.set_passable_flags = nil
             local par = direction_parameters[direction]
-            local passableFlag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
-            setPassableFlags(passableFlag, x, y, next_tile_x, next_tile_y, true)
+            local passableFlag, next_tile_x, next_tile_y = par["passable_flag"], x_f + par["x"], y_f + par["y"]
+            setPassableFlags(passableFlag, x_f, y_f, next_tile_x, next_tile_y, true)
           end
           local flags_to_set= {}
           flags_to_set[direction_parameters[direction]["buildable_flag"]] = true
-          map:setCellFlags(x, y, flags_to_set)
+          map:setCellFlags(x_f, y_f, flags_to_set)
         else
           local flags_to_set = {}
           for _, value in pairs(direction_parameters) do
@@ -366,18 +366,18 @@ function Object:setTile(x, y)
           end
 
           if not isEmpty(flags_to_set) then
-            map:setCellFlags(x, y, flags_to_set)
+            map:setCellFlags(x_f, y_f, flags_to_set)
           end
-          if not map:getCellFlags(x, y).passable then
-            map:setCellFlags(x, y, {
+          if not map:getCellFlags(x_f, y_f).passable then
+            map:setCellFlags(x_f, y_f, {
               buildable = true,
               passable = true,
             })
           else
             -- passable tiles can "belong" to multiple objects, so we have to check that
-            if not self.world:isTilePartOfNearbyObject(x, y, 10) then
+            if not self.world:isTilePartOfNearbyObject(x_f, y_f, 10) then
               -- assumption: no object defines a passable tile further than 10 tiles away from its origin
-              map:setCellFlags(x, y, {
+              map:setCellFlags(x_f, y_f, {
                 buildable = true,
               })
             end

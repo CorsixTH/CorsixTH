@@ -199,8 +199,8 @@ function Graphics:makeGreyscaleGhost(pal)
     local g_index = 0
     local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
-      local entry = entries[j]
-      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2
+      local entry_e = entries[j]
+      local diff = (entry_e[1] - g)^2 + (entry_e[2] - g)^2  + (entry_e[3] - g)^2
       if diff < g_diff then
         g_diff = diff
         g_index = j
@@ -336,10 +336,10 @@ function Graphics:onChangeLanguage()
   self.load_info = {} -- Any newly made objects are temporary, and shouldn't
                       -- remember reload information (also avoids insertions
                       -- into a table being iterated over).
-  for object, load_info in pairs(load_info) do
+  for object, load_i in pairs(load_info) do
     if object._proxy then
-      local fn = load_info[1]
-      local new_object = fn(unpack(load_info, 2))
+      local fn = load_i[1]
+      local new_object = fn(unpack(load_i, 2))
       object._proxy = new_object._proxy
     end
   end

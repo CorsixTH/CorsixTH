@@ -176,8 +176,8 @@ function UIHireStaff:draw(canvas, x, y)
         local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
         px = px + x
         py = py + y
-        for x = 0, skill_bar_width - 1 do
-          self.panel_sprites:draw(canvas, 3, px + 22 + x, py + 9)
+        for xs = 0, skill_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 3, px + 22 + xs, py + 9)
         end
       end
     end

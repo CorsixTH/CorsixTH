@@ -50,7 +50,6 @@ function MoviePlayer:init()
 
   --find movies in Anims folder
   local num
-  local movie
   local movies = self.app.fs:listFiles("Anims");
   if movies then
     for _,movie in pairs(movies) do

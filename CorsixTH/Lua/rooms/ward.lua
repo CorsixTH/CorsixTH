@@ -105,7 +105,7 @@ function WardRoom:doStaffUseCycle(humanoid)
     obj.reserved_for = humanoid
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
-      local desk_use_time = math.random(7, 14)
+      desk_use_time = math.random(7, 14)
       humanoid:queueAction {
         name = "use_object",
         object = obj,

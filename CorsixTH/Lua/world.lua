@@ -2081,32 +2081,32 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
   setFootprintTilesPassable(false)
   local prev_x, prev_y
   for _, tile in ipairs(object.orientations[objects_orientation].adjacent_to_solid_footprint) do
-    local x = x + tile[1]
-    local y = y + tile[2]
+    local x_o = x + tile[1]
+    local y_o = y + tile[2]
     local flags = {}
-    if map:getCellFlags(x, y, flags).roomId == spawn_rooms_id and flags.passable then
+    if map:getCellFlags(x_o, y_o, flags).roomId == spawn_rooms_id and flags.passable then
       if prev_x then
-        if not self.pathfinder:findDistance(x, y, prev_x, prev_y) then
+        if not self.pathfinder:findDistance(x_o, y_o, prev_x, prev_y) then
           -- There is no route between the two map nodes. In most cases,
           -- this means that connectedness has changed, though there is
           -- one rare situation where the above test is insufficient. If
-          -- (x, y) is a passable but isolated node outside the hospital
+          -- (x_o, y_o) is a passable but isolated node outside the hospital
           -- and (prev_x, prev_y) is in the corridor, then the two will
           -- not be connected now, but critically, neither were they
           -- connected before.
-          if not isIsolated(x, y) then
+          if not isIsolated(x_o, y_o) then
             if not isIsolated(prev_x, prev_y) then
               all_good = false
               break
             end
           else
-            x = prev_x
-            y = prev_y
+            x_o = prev_x
+            y_o = prev_y
           end
         end
       end
-      prev_x = x
-      prev_y = y
+      prev_x = x_o
+      prev_y = y_o
     end
   end
 
@@ -2136,9 +2136,9 @@ function World:objectPlaced(entity, id)
     local notify_distance = 6
     local w, h = self.map.th:size()
     local tx, ty
-    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
-      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+    for tlx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for tly = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tlx, tly)) do
           if class.is(patient, Patient) then
             patient:notifyNewObject(id)
           end

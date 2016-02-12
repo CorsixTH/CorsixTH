@@ -143,8 +143,8 @@ function UIPatient:draw(canvas, x_, y_)
     happiness_bar_width = math_floor(patient.attributes["happiness"] * 40 + 0.5)
   end
   if happiness_bar_width ~= 0 then
-    for dx = 0, happiness_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 348, x + 58 + dx, y + 126)
+    for dx_h = 0, happiness_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 348, x + 58 + dx_h, y + 126)
     end
   end
   -- The patients thirst level
@@ -153,8 +153,8 @@ function UIPatient:draw(canvas, x_, y_)
     thirst_bar_width = math_floor((1 - patient.attributes["thirst"]) * 40 + 0.5)
   end
   if thirst_bar_width ~= 0 then
-    for dx = 0, thirst_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 351, x + 58 + dx, y + 154)
+    for dx_t = 0, thirst_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 351, x + 58 + dx_t, y + 154)
     end
   end
   -- How warm the patient feels
@@ -165,8 +165,8 @@ function UIPatient:draw(canvas, x_, y_)
     warmth_bar_width = math_floor(warmth * 40 + 0.5)
   end
   if warmth_bar_width ~= 0 then
-    for dx = 0, warmth_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 349, x + 58 + dx, y + 183)
+    for dx_w = 0, warmth_bar_width - 1 do
+      self.panel_sprites:draw(canvas, 349, x + 58 + dx_w, y + 183)
     end
   end
 

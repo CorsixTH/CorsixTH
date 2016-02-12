@@ -147,8 +147,8 @@ local strings_metatable = function(no_restriction) return {
       error("Non-existant string: " .. tostring(k), 2)
     end
     local candidates = {}
-    for _, v in pairs(t) do
-      candidates[#candidates + 1] = v
+    for _, w in pairs(t) do
+      candidates[#candidates + 1] = w
     end
     return candidates[math_random(1, #candidates)]
   end,

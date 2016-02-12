@@ -36,8 +36,8 @@ local function invert(t)
   local r = {}
   for k, v in pairs(t) do
     if type(v) == "table" then
-      for _, v in ipairs(v) do
-        r[v] = k
+      for _, w in ipairs(v) do
+        r[w] = k
       end
     else
       r[v] = k

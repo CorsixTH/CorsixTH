@@ -109,7 +109,7 @@ function UIFax:draw(canvas, x, y)
     if choices then
       local orig_y = y + 190
       for i = 1, #choices do
-        local last_y = orig_y + ((i-1) + (3-#choices)) * 48
+        last_y = orig_y + ((i-1) + (3-#choices)) * 48
         self.fax_font:drawWrapped(canvas, choices[i].text, x + 190,
                                   last_y + (choices[i].offset or 0), 300)
       end

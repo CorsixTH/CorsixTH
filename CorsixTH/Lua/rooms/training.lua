@@ -240,12 +240,12 @@ function TrainingRoom:onHumanoidLeave(humanoid)
     end
 
     if humanoid.profile.is_consultant and humanoid == self.staff_member then
-      local humanoid = self.waiting_staff_member
+      local humanoid_consultant = self.waiting_staff_member
       self:setStaffMember(nil)
-      if humanoid then
-        humanoid.waiting_on_other_staff = nil
+      if humanoid_consultant then
+        humanoid_consultant.waiting_on_other_staff = nil
         self.waiting_staff_member = nil
-        self:commandEnteringStaff(humanoid)
+        self:commandEnteringStaff(humanoid_consultant)
       end
     end
   end

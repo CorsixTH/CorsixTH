@@ -478,9 +478,9 @@ function App:loadCampaign(campaign_file)
   else
     local level_info, err = self:readLevelFile(campaign_info.levels[1])
     if level_info then
-      local _, errors = self:readMapDataFile(level_info.map_file)
-      if errors then
-        self.ui:addWindow(UIInformation(self.ui, {errors}))
+      local _, errors_l = self:readMapDataFile(level_info.map_file)
+      if errors_l then
+        self.ui:addWindow(UIInformation(self.ui, {errors_l}))
         return
       end
       self:loadLevel(campaign_info.levels[1], nil, level_info.name,
@@ -552,8 +552,8 @@ function App:getAbsolutePathToLevelFile(level)
   local path = debug.getinfo(1, "S").source:sub(2, -12)
   -- First look in Campaigns. If not found there, fall back to Levels.
   local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
-  for _, path in ipairs(list_of_possible_paths) do
-    local check_path = path .. pathsep .. level
+  for _, path_l in ipairs(list_of_possible_paths) do
+    local check_path = path_l .. pathsep .. level
     local file, err = io.open(check_path, "rb")
     if file then
       file:close()

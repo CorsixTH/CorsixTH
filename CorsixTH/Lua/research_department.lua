@@ -531,12 +531,12 @@ function ResearchDepartment:discoverObject(object, automatic)
       -- If we're not researching any improvement right now, and the newest discovery was
       -- a machine that requires an improvement, switch the current policy.
       if (not current_improvement_research or current_improvement_research.dummy) then
-        for object, progress in pairs(self.research_progress) do
-          if object.default_strength then
+        for object_r, progress in pairs(self.research_progress) do
+          if object_r.default_strength then
           -- Don't improve those that already have the max strength
             if progress.start_strength < max_strength then
               if progress.discovered and progress.start_strength < min_strength then
-                self.research_policy["improvements"].current = object
+                self.research_policy["improvements"].current = object_r
                 min_strength = progress.start_strength
               end
             end

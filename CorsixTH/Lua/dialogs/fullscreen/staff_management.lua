@@ -96,7 +96,6 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
 
   -- Blankers for each row
   local row_blankers = {}
-  local i
   for i = 1, 10 do
     row_blankers[i] = self:addColourPanel(50, 55 + i*27, 580, 27, 60, 174, 203)
   end

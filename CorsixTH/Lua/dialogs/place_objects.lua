@@ -533,15 +533,15 @@ function UIPlaceObjects:draw(canvas, x, y)
   -- Don't show the object if the game is paused
   if self.world.user_actions_allowed then
     if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
-      local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
+      local x_o, y_o = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
       local zoom = self.ui.zoom_factor
       if canvas:scale(zoom) then
-        x = math.floor(x / zoom)
-        y = math.floor(y / zoom)
+        x_o = math.floor(x_o / zoom)
+        y_o = math.floor(y_o / zoom)
       end
-      self.object_anim:draw(canvas, x, y)
+      self.object_anim:draw(canvas, x_o, y_o)
       if self.objects[self.active_index].object.slave_type then
-        self.object_slave_anim:draw(canvas, x, y)
+        self.object_slave_anim:draw(canvas, x_o, y_o)
       end
       canvas:scale(1)
     end
@@ -555,12 +555,12 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   for i, o in ipairs(self.objects) do
     local font = self.white_font
-    local y = y + 136 + i * 29
+    local y_i = y + 136 + i * 29
     if i == self.active_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 15, y, 130, 0)
-    font:draw(canvas, o.qty, x + 151, y, 19, 0)
+    font:draw(canvas, o.object.name, x + 15, y_i, 130, 0)
+    font:draw(canvas, o.qty, x + 151, y_i, 19, 0)
   end
 end
 
@@ -629,13 +629,13 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     end
 
     for i, tile in ipairs(object_footprint) do
-      local x = x + tile[1]
-      local y = y + tile[2]
+      local x_o = x + tile[1]
+      local y_o = y + tile[2]
       -- Check 1: Does the tile have valid map coordinates?:
-      if world:areFootprintTilesCoardinatesInvalid(x, y) then
+      if world:areFootprintTilesCoardinatesInvalid(x_o, y_o) then
         setAllGood(tile)
-        x = 0
-        y = 0
+        x_o = 0
+        y_o = 0
       else
         local flag = "buildable"
         local good_tile = 24 + flag_alpha75
@@ -652,7 +652,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         end
 
         -- Check 2: Is the tile in the object's allowed room?:
-        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, roomId)
+        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x_o, y_o, object, roomId)
         local is_object_allowed = result.within_room
         roomId = result.roomId
 
@@ -660,23 +660,23 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         if not tile.only_side and is_object_allowed then
            is_object_allowed = world:isFootprintTileBuildableOrPassable(x, y, tile, object_footprint, flag)
         elseif is_object_allowed then
-          is_object_allowed = map:getCellFlags(x, y, flags)[flag]
+          is_object_allowed = map:getCellFlags(x_o, y_o, flags)[flag]
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then
-            map:setCell(x, y, 4, good_tile)
+            map:setCell(x_o, y_o, 4, good_tile)
           end
         else
           if not tile.invisible then
-            map:setCell(x, y, 4, bad_tile)
+            map:setCell(x_o, y_o, 4, bad_tile)
           end
           setAllGood(tile)
         end
       end
-      self.object_footprint[i][1] = x
-      self.object_footprint[i][2] = y
+      self.object_footprint[i][1] = x_o
+      self.object_footprint[i][2] = y_o
     end
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then

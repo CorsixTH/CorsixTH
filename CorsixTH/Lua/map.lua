@@ -228,11 +228,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     if level == "" then
       i, objects = self.th:loadBlank()
     else
-      local data, errors = self:getRawData(level)
+      local data, errors_map_editor = self:getRawData(level)
       if data then
         i, objects = self.th:load(data)
       else
-        return nil, errors
+        return nil, errors_map_editor
       end
     end
     assert(base_config, "No base config has been loaded!")
@@ -244,11 +244,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.level_intro = level_intro
     self.level_number = level
     self.map_file = map_file
-    local data, errors = self:getRawData(map_file)
+    local data, errors_other = self:getRawData(map_file)
     if data then
       i, objects = self.th:load(data)
     else
-      return nil, errors
+      return nil, errors_other
     end
     assert(base_config, "No base config has been loaded!")
     errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)
@@ -635,17 +635,15 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
     local baseX = startX
     local baseY = startY
     while true do
-      local x = baseX
-      local y = baseY
-      local screenX = 32 * (x - y) - sx
-      local screenY = 16 * (x + y) - sy
+      local screenX = 32 * (baseX - baseY) - sx
+      local screenY = 16 * (baseX + baseY) - sy
       if screenY >= sh + 70 then
         break
       elseif screenY > -32 then
         repeat
           if screenX < -32 then
           elseif screenX < sw + 32 then
-            local xy = y * self.width + x
+            local xy = baseY * self.width + baseX
             local x = dx + screenX - 32
             local y = dy + screenY
             if self.debug_flags then
@@ -687,10 +685,8 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
           else
             break
           end
-          x = x + 1
-          y = y - 1
           screenX = screenX + 64
-        until y < 0 or x >= self.width
+        until baseY - 1 < 0 or baseX + 1 >= self.width
       end
       if baseY == self.height - 1 then
         baseX = baseX + 1

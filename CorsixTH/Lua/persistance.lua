@@ -196,12 +196,12 @@ local function NameOf(obj) -- Debug aid
       local i = 0
       while true do
         i = i + 1
-        local name, val = debug.getupvalue(exploring, i)
-        if not name then
+        local name_val, val = debug.getupvalue(exploring, i)
+        if not name_val then
           break
         end
         if val ~= nil and not explored[val] then
-          to_explore[val] = name .. ".<upvalue-" .. i .. tostring(name) .. ">"
+          to_explore[val] = name_val .. ".<upvalue-" .. i .. tostring(name_val) .. ">"
           explored[val] = true
         end
       end

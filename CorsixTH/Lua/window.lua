@@ -1601,12 +1601,12 @@ function Window:onMouseMove(x, y, dx, dy)
     else
       self.active_button.active = false
       btn.panel_for_sprite.lowered = btn.panel_lowered_normal
-      for _, btn in ipairs(self.buttons) do
-        if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
-          btn.panel_for_sprite.sprite_index = btn.sprite_index_active
-          btn.active = true
-          btn.panel_for_sprite.lowered = btn.panel_lowered_active
-          self.active_button = btn
+      for _, button in ipairs(self.buttons) do
+        if button.enabled and button.x <= x and x < button.r and button.y <= y and y < button.b then
+          button.panel_for_sprite.sprite_index = button.sprite_index_active
+          button.active = true
+          button.panel_for_sprite.lowered = button.panel_lowered_active
+          self.active_button = button
           repaint = true
           break
         end
