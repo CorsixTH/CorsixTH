@@ -748,7 +748,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
   local object = self.objects[self.active_index].object
   local room = self.room
   local wx, wy = self.ui:ScreenToWorld(self.x + x, self.y + y)
-  local bestd
+  local bestd = nil
   local bestx, besty = wx, wy
   local besto = self.object_orientation
   if room and object.locked_to_wall then
