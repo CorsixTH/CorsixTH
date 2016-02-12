@@ -132,7 +132,7 @@ end
 --!param menu Menu to add.
 function UIMenuBar:addMenu(title, menu)
   assign_menu_levels(menu, 1)
-  local menu = {
+  menu = {
     title = title,
     menu = menu,
     x = 0,

@@ -662,8 +662,8 @@ function TreeControl:draw(canvas, x, y)
 
   local node = self.first_visible_node
   local num_nodes_drawn = 0
-  local y = y + self.tree_rect.y
-  local x = x + self.tree_rect.x
+  y = y + self.tree_rect.y
+  x = x + self.tree_rect.x
   while node and num_nodes_drawn < self.num_rows do
     local level = node:getLevel()
     for i = 0, level - 1 do

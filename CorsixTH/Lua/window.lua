@@ -1334,7 +1334,7 @@ function Window:onCursorWorldPositionChange(x, y)
 end
 
 function Window:hitTestPanel(x, y, panel)
-  local x, y = x - panel.x, y - panel.y
+  x, y = x - panel.x, y - panel.y
   if panel.visible and x >= 0 and y >= 0 then
     if panel.w and panel.h then
       if x <= panel.w and y <= panel.h then
@@ -1795,7 +1795,7 @@ function Window:getTooltipForElement(elem, x, y)
   else
     text = elem.text
   end
-  local x, y = elem.tooltip_x, elem.tooltip_y
+  x, y = elem.tooltip_x, elem.tooltip_y
   if x then x = x + self.x end -- NB: can be nil, then it means position at mouse cursor
   if y then y = y + self.y end
   if text then
