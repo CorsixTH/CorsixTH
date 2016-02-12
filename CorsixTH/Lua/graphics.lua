@@ -390,7 +390,7 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     if n_pass_on_args < #arg then
       x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
     else
-      x_sep, y_sep = nil
+      x_sep, y_sep = nil, nil
     end
   end
 
@@ -610,7 +610,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     for f = 0, anim_length - 1 do
       if f2 and f == f2 then
         f1, x1, y1 = f2, x2, y2
-        f2, x2, y2 = nil
+        f2, x2, y2 = nil, nil, nil
       end
       if not f2 then
         f2 = args[args_i]

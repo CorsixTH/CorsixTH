@@ -261,7 +261,7 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
   if object.qty == 0 then
     if #self.objects == 1 then
       self:clearBlueprint()
-      self.object_cell_x, self.object_cell_y = nil
+      self.object_cell_x, self.object_cell_y = nil, nil
       if dont_close_if_empty then
         self.list_header.visible = false
         self.place_objects = false -- No object to place
@@ -773,7 +773,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
   bestx, besty = math_floor(bestx), math_floor(besty)
   if bestx < 1 or besty < 1 or
       bestx > self.map.width or besty > self.map.height then
-    bestx, besty = nil
+    bestx, besty = nil, nil
   end
   return bestx, besty, besto
 end

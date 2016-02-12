@@ -82,7 +82,7 @@ local function use_staffroom_action_start(action, humanoid)
     end
   else
     action.target_obj, action.ox, action.oy, action.target_type = action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type
-    action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = nil
+    action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = nil, nil, nil, nil
   end
 
   -- If no target was found, then walk around for a bit and try again later

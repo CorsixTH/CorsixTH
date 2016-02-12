@@ -1257,7 +1257,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
 
   local anim = x and self.blueprint_wall_anims[x][y]
   if anim and anim:getTag() then
-    x, y, wall, orig_x, orig_y, orig_wall = nil
+    x, y, wall, orig_x, orig_y, orig_wall = nil, nil, nil, nil, nil, nil
   end
 
   self.blueprint_window.x = x
