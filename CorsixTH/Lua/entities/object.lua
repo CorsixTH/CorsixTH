@@ -304,7 +304,7 @@ function Object:setTile(x, y)
   end
 
   local function isEmpty(table)
-    for _, _ in pairs(table) do
+    if next(table) ~= nil then
       return false
     end
     return true

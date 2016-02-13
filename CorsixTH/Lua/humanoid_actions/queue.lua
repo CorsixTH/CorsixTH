@@ -116,7 +116,6 @@ local function action_queue_finish_standing(action, humanoid)
     end
     index = index - 1
   end
-  error("Queue action not in action_queue")
 end
 
 local function action_queue_leave_bench(action, humanoid)
@@ -147,7 +146,6 @@ local function action_queue_leave_bench(action, humanoid)
     end
     index = index - 1
   end
-  error("Queue action not in action_queue")
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
