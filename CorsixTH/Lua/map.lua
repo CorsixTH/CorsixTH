@@ -166,7 +166,7 @@ the original game levels are considered.
 has been loaded.
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
-  local objects, i
+  local objects
   if not difficulty then
     difficulty = "full"
   end
@@ -195,7 +195,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     local data
     data, errors = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      _, objects = self.th:load(data)
     else
       return nil, errors
     end
@@ -226,11 +226,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
     if level == "" then
-      i, objects = self.th:loadBlank()
+      _, objects = self.th:loadBlank()
     else
       local data, errors_map_editor = self:getRawData(level)
       if data then
-        i, objects = self.th:load(data)
+        _, objects = self.th:load(data)
       else
         return nil, errors_map_editor
       end
@@ -246,7 +246,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.map_file = map_file
     local data, errors_other = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      _, objects = self.th:load(data)
     else
       return nil, errors_other
     end

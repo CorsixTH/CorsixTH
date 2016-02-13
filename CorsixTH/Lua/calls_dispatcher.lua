@@ -335,7 +335,6 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
   assert(staff.hospital, "Staff should still be a member of the hospital to answer a call");
 
@@ -346,7 +345,7 @@ function CallsDispatcher:answerCall(staff)
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
   for _, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+    for _, call in pairs(queue) do
       local score = call.verification(staff) and call.priority(staff) or nil
       if score ~= nil then
         if call.assigned then -- already being assigned? Can it be preempted?
@@ -358,7 +357,6 @@ function CallsDispatcher:answerCall(staff)
         if score ~= nil and score < min_score then
           min_score = score
           min_call = call
-          min_key = key
         end
       end
     end

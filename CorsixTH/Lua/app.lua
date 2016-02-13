@@ -1084,9 +1084,9 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status, err
+  local status
   if self.config.theme_hospital_install then
-    status, err = self.fs:setRoot(self.config.theme_hospital_install)
+    status, _ = self.fs:setRoot(self.config.theme_hospital_install)
   end
   local message = "Please make sure that you point the game to" ..
       " a valid copy of the data files from the original game," ..

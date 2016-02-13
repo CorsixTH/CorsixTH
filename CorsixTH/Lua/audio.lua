@@ -358,14 +358,13 @@ function Audio:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds, entity
                                   end
 
     if self:canSoundsBePlayed() then
-      local _, warning
       local x, y = Map:WorldToScreen(entity.tile_x, entity.tile_y)
       local dx, dy = entity.th:getPosition()
       x = x + dx - self.app.ui.screen_offset_x
       y = y + dy - self.app.ui.screen_offset_y
 
       self.played_sound_callbacks[tostring(self.unused_played_callback_id)] = sound_played_callback
-      _, warning = self.sound_fx:play(sounds[math.random(1,#sounds)],
+      _, _ = self.sound_fx:play(sounds[math.random(1,#sounds)],
                                       self.app.config.sound_volume,
                                       x,
                                       y,

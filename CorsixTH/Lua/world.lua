@@ -928,7 +928,6 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
-  local pause_state_changed = nil
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
     if self.active_earthquake then
@@ -936,7 +935,6 @@ function World:setSpeed(speed)
     end
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
-    pause_state_changed = true
   elseif self:getCurrentSpeed() == "Pause" then
     self.user_actions_allowed = true
   end

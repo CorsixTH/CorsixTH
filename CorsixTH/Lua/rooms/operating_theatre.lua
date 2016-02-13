@@ -314,7 +314,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
       humanoid:finishAction()
     elseif num_ready[1] == 3 then
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
-      local obj, ox, oy = room.world:findObjectNear(surgeon1, "operating_table")
+      local obj, _, _ = room.world:findObjectNear(surgeon1, "operating_table")
 
       local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
       surgeon1:queueAction(table_action1, 1)

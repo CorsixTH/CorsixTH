@@ -25,7 +25,6 @@ strict_declare_global "permanent"
 strict_declare_global "unpermanent"
 
 local th_getfenv
-local th_getupvalue
 if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
   th_getfenv = function(f)
     local val = nil
@@ -38,13 +37,8 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
     end
     return val
   end
-
-  th_getupvalue = function(f, n)
-    return debug.getupvalue(f, n + 1)
-  end
 else
   th_getfenv = debug.getfenv;
-  th_getupvalue = debug.getupvalue;
 end
 
 function permanent(name, ...)
