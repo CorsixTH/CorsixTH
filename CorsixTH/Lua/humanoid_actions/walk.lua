@@ -279,10 +279,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
     -- A member of staff is entering, but is maybe no longer needed
     -- in this room?
     if not room.is_active or not room:staffFitsInRoom(humanoid) then
-      humanoid:queueAction({name = "idle"},0)
+      humanoid:queueAction(IdleAction(), 0)
       humanoid:setTilePositionSpeed(x1, y1)
-      humanoid:setNextAction({name = "idle", count = 10},0)
-      humanoid:queueAction{name = "meander"}
+      humanoid:setNextAction(IdleAction():setCount(10), 0)
+      humanoid:queueAction(MeanderAction())
       return
     end
   end
@@ -303,21 +303,11 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if is_entering_room and queue:size() == 0 and not room:getPatient() and
         not door.user and not door.reserved_for and humanoid.should_knock_on_doors and
         room.room_info.required_staff and not swinging then
-      humanoid:queueAction({
-        name = "knock_door",
-        door = door,
-        direction = dir,
-      }, action_index)
+      humanoid:queueAction(KnockDoorAction(door, dir), action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction({
-      name = "queue",
-      is_leaving = humanoid:isLeaving(),
-      x = x1,
-      y = y1,
-      queue = queue,
-      reserve_when_done = door,
-    }, action_index)
+    local q_action = QueueAction(x1, y1, queue):setIsLeaving(humanoid:isLeaving())
+    humanoid:queueAction(q_action:setReserveWhenDone(door), action_index)
     action.must_happen = action.saved_must_happen
     action.reserve_on_resume = door
     return
@@ -328,11 +318,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors and
       room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
-    humanoid:queueAction({
-      name = "knock_door",
-      door = door,
-      direction = dir,
-    }, 0)
+    humanoid:queueAction(KnockDoorAction(door, dir), 0)
     action.reserve_on_resume = door
     action.done_knock = true
     return

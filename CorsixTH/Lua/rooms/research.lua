@@ -86,12 +86,8 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         self.hospital.research:addResearchPoints(100)
       end
 
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        loop_callback = loop_callback_desk,
-        after_use = after_use_desk
-      }
+      staff:queueAction(UseObjectAction(obj):setLoopCallback(loop_callback_desk)
+          :setAfterUse(after_use_desk))
     else
       local after_use_obj = --[[persistable:research_obj_after_use]] function()
         if obj.object_type.id == "computer" then
@@ -102,11 +98,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         end
       end
 
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        after_use = after_use_obj
-      }
+      staff:queueAction(UseObjectAction(obj):setAfterUse(after_use_obj))
     end
   end
 
@@ -118,10 +110,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
     end
   end
 
-  staff:queueAction {
-    name = "meander",
-    loop_callback = loop_callback_meander
-  }
+  staff:queueAction(MeanderAction():setLoopCallback(loop_callback_meander))
 end
 
 function ResearchRoom:roomFinished()
@@ -146,8 +135,7 @@ function ResearchRoom:roomFinished()
   end
   -- Also check if it would be good to hire a researcher.
   if not self.hospital:hasStaffOfCategory("Researcher") then
-    self.world.ui.adviser:say(_A.room_requirements
-    .research_room_need_researcher)
+    self.world.ui.adviser:say(_A.room_requirements.research_room_need_researcher)
   end
   return Room.roomFinished(self)
 end
@@ -168,7 +156,7 @@ function ResearchRoom:commandEnteringPatient(patient)
   local orientation = autopsy.object_type.orientations[autopsy.direction]
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{name = "idle", direction = "east"}
+  patient:queueAction(IdleAction():setDirection("east"))
   staff:walkTo(stf_x, stf_y)
 
   local after_use_autopsy = --[[persistable:autopsy_after_use]] function()
@@ -195,12 +183,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     patient.world:destroyEntity(patient)
   end
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = autopsy,
-    use_with = patient,
-    after_use = after_use_autopsy
-  }
+  staff:queueAction(MultiUseObjectAction(autopsy, patient):setAfterUse(after_use_autopsy))
   return Room.commandEnteringPatient(self, patient)
 end
 

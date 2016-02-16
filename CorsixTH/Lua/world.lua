@@ -515,7 +515,7 @@ function World:spawnPatient(hospital)
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local patient = self:newEntity("Patient", 2)
   patient:setDisease(disease)
-  patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  patient:setNextAction(SpawnAction():setMode("spawn"):setPoint(spawn_point))
   patient:setHospital(hospital)
   return patient
 end
@@ -535,11 +535,11 @@ function World:spawnVIP(name)
   vip.enter_explosions = hospital.num_explosions
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
-  vip:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  vip:setNextAction(SpawnAction():setMode("spawn"):setPoint(spawn_point))
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
   hospital.announce_vip = hospital.announce_vip + 1
-  vip:queueAction{name = "seek_reception"}
+  vip:queueAction(SeekReceptionAction())
 end
 
 function World:createEarthquake()

@@ -163,12 +163,9 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     --Spawn the grim reaper and the lava hole:
     local lava_hole = humanoid.world:newObject("gates_to_hell", hole_x, hole_y, holes_orientation)
     local grim_reaper = humanoid.world:newEntity("GrimReaper", 1660)
-    grim_reaper:setNextAction({name = "idle_spawn",
-                               count = 40,
-                               spawn_animation = 1660,
-                               point = { x = grim_x,
-                                         y = grim_y,
-                                         direction=grim_spawn_idle_direction}})
+    grim_reaper:setNextAction(IdleSpawnAction():setCount(40):setAnimation(1660)
+        :setPoint({x = grim_x, y = grim_y, direction = grim_spawn_idle_direction}))
+
     --Initialise the grim reaper:
     grim_reaper:setHospital(humanoid.world:getLocalPlayerHospital())
     grim_reaper.lava_hole = lava_hole
@@ -187,18 +184,14 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     action.phase = 4
     local grim = humanoid.grim_reaper
     if grim.tile_x ~= grim.use_tile_x or grim.tile_y ~= grim.use_tile_y then
-      grim:queueAction({name = "walk",
-                        x = grim.use_tile_x,
-                        y = grim.use_tile_y,
-                        no_truncate = true})
+      grim:queueAction(WalkAction(grim.use_tile_x, grim.use_tile_y):setNoTruncate())
     end
 
     local loop_callback_wait = --[[persistable:reaper_wait]]function()
       grim:setAnimation(1002, grim.mirror)
       action_die_tick_reaper(humanoid)
     end
-
-    grim:queueAction({name = "idle", loop_callback = loop_callback_wait})
+    grim:queueAction(IdleAction():setLoopCallback(loop_callback_wait))
 
   --4: There will be a brief pause before the patient stands up:
   elseif phase == 4 then
@@ -220,18 +213,13 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     local loop_callback_swipe =--[[persistable:reaper_swipe]]function()
       grim:setAnimation(1670, grim.mirror)
     end
-
-    grim:queueAction({name = "idle",
-                      count = grim.world:getAnimLength(1670),
-                      loop_callback = loop_callback_swipe})
+    grim:queueAction(IdleAction():setCount(grim.world:getAnimLength(1670)):setLoopCallback(loop_callback_swipe))
 
     local loop_callback_leave =--[[persistable:reaper_leave]]function()
       grim:setAnimation(1678, grim.mirror)
     end
 
-    grim:queueAction({name = "idle",
-                      count = grim.world:getAnimLength(1678),
-                      loop_callback = loop_callback_leave})
+    grim:queueAction(IdleAction():setCount(grim.world:getAnimLength(1678)):setLoopCallback(loop_callback_leave))
 
     local lava_destroy = --[[persistable:lava_destroy]]function()
       humanoid.world:destroyEntity(lava_hole)
@@ -243,8 +231,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
       grim.world:destroyEntity(grim)
     end
 
-    grim:queueAction({name = "idle",
-                      loop_callback = loop_callback_destroy})
+    grim:queueAction(IdleAction():setLoopCallback(loop_callback_destroy))
 
     --The patient's final actions:
     humanoid:walkTo(humanoid.hole_use_tile_x, humanoid.hole_use_tile_y, true)
@@ -253,10 +240,10 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
       grim:finishAction()
     end
 
-    humanoid:queueAction({name = "use_object",
-                          object = lava_hole,
-                          destroy_user_after_use = true,
-                          after_walk_in = post_walk_into})
+    local use_action = UseObjectAction(lava_hole)
+    use_action.destroy_user_after_use = true
+    use_action.after_walk_in = post_walk_into
+    humanoid:queueAction(use_action)
     humanoid:finishAction()
   end
 end)
@@ -310,7 +297,7 @@ local function action_die_start(action, humanoid)
       else
         humanoid:walkTo(humanoid.tile_x, humanoid.tile_y - 1)
       end
-      humanoid:queueAction({name = "die"})
+      humanoid:queueAction(DieAction())
       humanoid:finishAction()
       return
     end

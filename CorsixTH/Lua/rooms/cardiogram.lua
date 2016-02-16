@@ -58,7 +58,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
     local staff = self.staff_member
     local cardio, cx, cy = self.world:findObjectNear(patient, "cardio")
     staff:walkTo(cardio:getSecondaryUsageTile())
-    local staff_idle = {name = "idle"}
+    local staff_idle = IdleAction()
     staff:queueAction(staff_idle)
     patient:walkTo(cx, cy)
 
@@ -86,50 +86,25 @@ function CardiogramRoom:commandEnteringPatient(patient)
 
     local cardio_after_use = --[[persistable:cardiogram_cardio_after_use]] function()
       if #staff.action_queue == 1 then
-        staff:setNextAction{name = "meander"}
+        staff:setNextAction(MeanderAction())
       else
         staff:finishAction(staff_idle)
       end
     end
 
-    patient:queueAction{
-      name = "multi_use_object",
-      object = cardio,
-      use_with = staff,
-      must_happen = false,
-      prolonged_usage = true,
-      loop_callback = cardio_loop_callback,
-      after_use = cardio_after_use,
-    }
-    patient:queueAction{
-      name = "walk",
-      x = sx,
-      y = sy,
-      is_leaving = true,
-      must_happen = false,
-      no_truncate = true,
-    }
+    patient:queueAction(MultiUseObjectAction(cardio, staff):setMustHappen():setProlongedUsage()
+        :setLoopCallback(cardio_loop_callback):setAfterUse(cardio_after_use))
+    patient:queueAction(WalkAction(sx, sy):setIsLeaving():setMustHappen(false):setNoTruncate())
 
     local leaving_after_use = --[[persistable:cardiogram_screen_after_use2]] function()
       if #patient.action_queue == 1 then
         self:dealtWithPatient(patient)
       end
     end
-
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      is_leaving = true,
-      must_happen = true,
-      after_use = leaving_after_use,
-    }
+    patient:queueAction(UseScreenAction(screen):setIsLeaving():setMustHappen():setAfterUse(leaving_after_use))
   end
 
-  patient:queueAction{
-    name = "use_screen",
-    object = screen,
-    after_use = screen_after_use,
-  }
+  patient:queueAction(UseScreenAction(screen):setAfterUse(screen_after_use))
   return Room.commandEnteringPatient(self, patient)
 end
 

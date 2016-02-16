@@ -74,15 +74,15 @@ function PharmacyRoom:commandEnteringPatient(patient)
     layer3 = math.random(0, 2) * 2
   end
 
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
+  patient:setNextAction(WalkAction(pat_x, pat_y))
+  patient:queueAction(IdleAction():setDirection(cabinet.direction == "north" and "east" or "south"))
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
 
   local after_use_pharmacy = --[[persistable:pharmacy_after_use]] function()
     --if we haven't tried to edit the room while she's animating, meander
     if #staff.action_queue == 1 then
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
     end
     if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
       patient:setType "Standard Male Patient"
@@ -92,13 +92,9 @@ function PharmacyRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = cabinet,
-    use_with = patient,
-    layer3 = layer3,
-    after_use = after_use_pharmacy
-  }
+  local multiuse_action = MultiUseObjectAction(cabinet, patient):setAfterUse(after_use_pharmacy)
+  multiuse_action.layer3 = layer3
+  staff:queueAction(multiuse_action)
 
   return Room.commandEnteringPatient(self, patient)
 end

@@ -67,35 +67,23 @@ function XRayRoom:commandEnteringPatient(patient)
       end
 
       local after_use_xray = --[[persistable:x_ray_after_use]] function()
-        staff:setNextAction{name = "meander"}
+        staff:setNextAction(MeanderAction())
         self:dealtWithPatient(patient)
       end
 
-      patient:setNextAction{
-        name = "use_object",
-        object = x_ray,
-        loop_callback = loop_callback_xray,
-        after_use = after_use_xray
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      patient:setNextAction(UseObjectAction(x_ray):setLoopCallback(loop_callback_xray)
+          :setAfterUse(after_use_xray))
+      staff:setNextAction(UseObjectAction(console))
     end
   end
 
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = x_ray.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(x_ray.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

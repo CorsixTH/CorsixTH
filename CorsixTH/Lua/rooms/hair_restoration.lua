@@ -63,35 +63,24 @@ function HairRestorationRoom:commandEnteringPatient(patient)
 
       local after_use_restore = --[[persistable:hair_restoration_after_use]] function()
         patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
-        staff:setNextAction{name = "meander"}
+        staff:setNextAction(MeanderAction())
         self:dealtWithPatient(patient)
       end
 
-      patient:setNextAction{
-        name = "use_object",
-        object = hair_restorer,
-        loop_callback = loop_callback_restore,
-        after_use = after_use_restore,
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      patient:setNextAction(UseObjectAction(hair_restorer)
+          :setLoopCallback(loop_callback_restore):setAfterUse(after_use_restore))
+
+      staff:setNextAction(UseObjectAction(console))
     end
   end
 
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = hair_restorer.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(hair_restorer.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

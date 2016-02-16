@@ -96,7 +96,7 @@ local function use_staffroom_action_start(action, humanoid)
 
   -- If no target was found, then walk around for a bit and try again later
   if not action.target_obj then
-    humanoid:queueAction({name = "meander", count = 2}, 0)
+    humanoid:queueAction(MeanderAction():setCount(2), 0)
     return
   end
 
@@ -122,7 +122,7 @@ local function use_staffroom_action_start(action, humanoid)
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
       else
         -- Send the staff out of the room
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction())
       end
     else
       obj_use_time = obj_use_time - 1
@@ -143,13 +143,10 @@ local function use_staffroom_action_start(action, humanoid)
     end
   end
 
-  local obj_action = {
-    name = "use_object",
-    prolonged_usage = true,
-    object = action.target_obj,
-    loop_callback = loop_callback_use
-  }
-  humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
+  local obj_action = UseObjectAction(action.target_obj):setProlongedUsage()
+      :setLoopCallback(loop_callback_use)
+
+  humanoid:queueAction(WalkAction(action.ox, action.oy), 0)
   humanoid:queueAction(obj_action, 1)
 end
 

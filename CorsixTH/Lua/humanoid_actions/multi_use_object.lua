@@ -322,7 +322,7 @@ local function action_multi_use_object_start(action, humanoid)
     end
   end
   if use_with.action_queue[1].name ~= "idle" then
-    humanoid:queueAction({name = "idle", count = 2}, 0)
+    humanoid:queueAction(IdleAction():setCount(2), 0)
     return
   else
     action.idle_interrupt = use_with.action_queue[1].on_interrupt

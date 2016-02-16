@@ -215,20 +215,16 @@ function Machine:createHandymanActions(handyman)
     self:machineRepaired(self:getRoom())
   end
 
-  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
+  local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
 
   local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
     action_use.prolonged_usage = false
   end
 
-  local repair_action = {
-    name = "use_object",
-    object = self,
-    prolonged_usage = false,
-    loop_callback = repair_loop_callback,
-    after_use = repair_after_use,
-    min_length = 20,
-  }
+  local repair_action = UseObjectAction(self):setProlongedUsage(false)
+      :setLoopCallback(repair_loop_callback):setAfterUse(repair_after_use)
+  repair_action.min_length = 20
+
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
     handyman:queueAction(action)
@@ -248,16 +244,14 @@ function Machine:createHandymanActions(handyman)
 
   -- Before the actual repair action, insert a meander action to wait for the machine
   -- to become free for use.
-  handyman:queueAction({
-    name = "meander",
-    loop_callback = meander_loop_callback,
-  })
-  -- The last one is another walk action to the repair tile. If the handymand goes directly
+  handyman:queueAction(MeanderAction():setLoopCallback(meander_loop_callback))
+
+  -- The last one is another walk action to the repair tile. If the handyman goes directly
   -- to repair it will simply complete in an instant.
   handyman:queueAction(action)
   handyman:queueAction(repair_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}
+  handyman:queueAction(AnswerCallAction())
   handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
     :format(self.object_type.name))
 end

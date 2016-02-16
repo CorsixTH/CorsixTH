@@ -49,7 +49,7 @@ local function seek_staffroom_action_start(action, humanoid)
     -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists
     print("No staff room found in seek_staffroom action")
     humanoid.going_to_staffroom = nil
-    humanoid:queueAction({name = "meander"})
+    humanoid:queueAction(MeanderAction())
     humanoid:finishAction()
   end
 end

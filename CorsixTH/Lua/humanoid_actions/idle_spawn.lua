@@ -57,14 +57,14 @@ local function action_idle_spawn_start(action, humanoid)
       humanoid:setAnimation(action.spawn_animation)
     end
 
-    humanoid:queueAction({name="idle",count = humanoid.world:getAnimLength(action.spawn_animation),
-                                      loop_callback = loop_callback_spawn})
+    humanoid:queueAction(IdleAction():setCount(humanoid.world:getAnimLength(action.spawn_animation))
+        :setLoopCallback(loop_callback_spawn))
 
   elseif action.spawn_sound then
     humanoid:playSound(action.spawn_sound)
   end
 
-  humanoid:queueAction({name="idle",count = action.count,loop_callback = action.loop_callback})
+  humanoid:queueAction(IdleAction():setCount(action.count):setLoopCallback(action.loop_callback))
   humanoid:finishAction()
 end
 

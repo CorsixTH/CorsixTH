@@ -235,7 +235,7 @@ local function action_seek_room_start(action, humanoid)
   end
   -- Seeking for toilets is a special case with its own action.
   if action.room_type == "toilets" then
-    humanoid:queueAction({name = "seek_toilets"}, 1)
+    humanoid:queueAction(SeekToiletsAction(), 1)
     humanoid:finishAction()
     return
   end
@@ -330,7 +330,7 @@ local function action_seek_room_start(action, humanoid)
       end
       if action_still_valid then
         action.done_walk = true
-        humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
+        humanoid:queueAction(MeanderAction():setCount(1):setMustHappen(), 0)
       end
     else
       -- Make sure the patient stands in a correct way as he/she is waiting.

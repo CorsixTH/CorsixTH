@@ -52,9 +52,11 @@ end
 function GPRoom:doStaffUseCycle(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "cabinet")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
+
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction(ox, oy))
+
   -- A skilled doctor requires less time at the desk to diagnose the patient
   local inv_skill = 1 - humanoid.profile.skill
   local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),
@@ -85,10 +87,7 @@ function GPRoom:doStaffUseCycle(humanoid)
     end
   end
 
-  humanoid:queueAction{name = "use_object",
-    object = obj,
-    loop_callback = gp_loop_callback
-  }
+  humanoid:queueAction(UseObjectAction(obj):setLoopCallback(gp_loop_callback))
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
@@ -100,7 +99,7 @@ end
 function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
   self.max_times = 3
   return Room.commandEnteringPatient(self, humanoid)
 end
@@ -137,7 +136,7 @@ function GPRoom:dealtWithPatient(patient)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed()
       if patient:agreesToPay(patient.disease.id) then
-        patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
+        patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[1]):setIsTreatmentRoom())
       else
         patient:goHome("over_priced", patient.disease.id)
       end
@@ -151,8 +150,8 @@ function GPRoom:dealtWithPatient(patient)
       self:sendPatientToNextDiagnosisRoom(patient)
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction(MeanderAction():setCount(2))
+    patient:queueAction(IdleAction())
   end
 
   if self.dealt_patient_callback then
@@ -176,11 +175,7 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
     local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
     local next_room = patient.available_diagnosis_rooms[next_room_id]
     if patient:agreesToPay("diag_" .. next_room) then
-      patient:queueAction{
-        name = "seek_room",
-        room_type = next_room,
-        diagnosis_room = next_room_id,
-      }
+      patient:queueAction(SeekRoomAction(next_room):setDiagnosisRoom(next_room_id))
     else
       patient:goHome("over_priced", "diag_" .. next_room)
     end

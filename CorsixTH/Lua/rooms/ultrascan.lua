@@ -56,22 +56,17 @@ function UltrascanRoom:commandEnteringPatient(patient)
   local orientation = ultrascan.object_type.orientations[ultrascan.direction]
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
+  staff:queueAction(IdleAction():setDirection(ultrascan.direction == "north" and "west" or "north"))
 
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:setNextAction(WalkAction(pat_x, pat_y))
 
   local after_use_scan = --[[persistable:ultrascan_after_use]] function()
-    staff:setNextAction{name = "meander"}
+    staff:setNextAction(MeanderAction())
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "multi_use_object",
-    object = ultrascan,
-    use_with = staff,
-    after_use = after_use_scan
-  }
+  patient:queueAction(MultiUseObjectAction(ultrascan, staff):setAfterUse(after_use_scan))
   return Room.commandEnteringPatient(self, patient)
 end
 
