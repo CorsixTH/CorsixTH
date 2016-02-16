@@ -195,26 +195,26 @@ end
   @param staff (Staff) staff member to verify if suitable to vaccinate
   @return true if suitable for vaccination false otherwise (boolean) ]]
 function CallsDispatcher.verifyStaffForVaccination(patient, staff)
-  local function close_to_patient(patient,staff)
-
-    local px,py = patient.tile_x, patient.tile_y
-    local nx,ny = staff.tile_x, staff.tile_y
-
-    -- If any of the nurse or the patient tiles are nil
-    if not px or not py or not nx or not ny then return false end
-
-    local x_diff = math.abs(px-nx)
-    local y_diff = math.abs(py-ny)
-    local test_radius = 5
-
-    -- Test if the patient's room is still empty in case they are just entering
-    -- a room when they call for a staff to vaccinate them
-    return x_diff and y_diff and x_diff <= test_radius
-    and y_diff <= test_radius and not patient:getRoom()
+  -- If staff is not a nurse, or nurse is busy, or patient is busy, cannot vaccinate.
+  if staff.humanoid_class ~= "Nurse" or not staff:isIdle() or
+      staff:getRoom() or patient:getRoom() then
+    return false
   end
 
-  return staff.humanoid_class == "Nurse" and staff:isIdle() and not
-    staff:getRoom() and close_to_patient(patient,staff)
+  -- Test proximity of staff and patient.
+  local px,py = patient.tile_x, patient.tile_y
+  local nx,ny = staff.tile_x, staff.tile_y
+
+  -- If any of the nurse or the patient tiles are nil
+  if not px or not py or not nx or not ny then return false end
+
+  local x_diff = math.abs(px - nx)
+  local y_diff = math.abs(py - ny)
+  local test_radius = 5
+
+  -- Test if the patient's room is still empty in case they are just entering
+  -- a room when they call for a staff to vaccinate them
+  return x_diff <= test_radius and y_diff <= test_radius
 end
 
 --[[ Determine which nurse has the highest priority to vaccinate a patient
@@ -492,15 +492,18 @@ function CallsDispatcher.unassignCall(call)
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
-  if staff:isIdle() and staff:fulfillsCriterion(attribute) then
-    local current_room = staff:getRoom()
-    if not staff.hospital.policies["staff_allowed_to_move"]
-    and current_room and current_room ~= room then
-      return false
-    end
-    return true
+  if not staff:isIdle() or not staff:fulfillsCriterion(attribute) then
+    return false
   end
-  return false
+
+  -- Staff is in another room, not usable.
+  local current_room = staff:getRoom()
+  if not staff.hospital.policies["staff_allowed_to_move"] and
+      current_room and current_room ~= room then
+    return false
+  end
+
+  return true
 end
 
 function CallsDispatcher.getPriorityForRoom(room, attribute, staff)

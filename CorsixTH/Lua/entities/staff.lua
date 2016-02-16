@@ -282,26 +282,29 @@ end
 -- Determine if the staff member should contribute to research
 function Staff:isResearching()
   local room = self:getRoom()
-  return room and room.room_info.id == "research" -- in research lab
-    and self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 -- is qualified
-    and self.hospital  -- is not leaving the hospital
+
+  -- Staff is in research lab, is qualified, and is not leaving the hospital.
+  return room and room.room_info.id == "research" and
+      self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 and self.hospital
 end
 
 -- Determine if the staff member should increase their skills
 function Staff:isLearning()
   local room = self:getRoom()
-  return room and room.room_info.id == "training"  -- in training room
-    and room.staff_member                          -- the training room has a consultant
-    and self.action_queue[1].name == "use_object"  -- is using lecture chair
-    and self.action_queue[1].object.object_type.id == "lecture_chair"
+
+  -- Staff is in training room, the training room has a consultant, and  is using lecture chair.
+  return room and room.room_info.id == "training" and room.staff_member and
+      self.action_queue[1].name == "use_object" and
+      self.action_queue[1].object.object_type.id == "lecture_chair"
 end
 
 function Staff:isLearningOnTheJob()
   local room = self:getRoom()
-  return room and room.room_info.id ~= "training" and room.room_info.id ~= "staff_room"
-    and room.room_info.id ~= "toilets" -- is in room but not training room, staff room, or toilets
-    and self.humanoid_class == "Doctor" -- and is a doctor
-    and self.action_queue[1].name == "use_object" -- and is using something
+
+  -- Staff is in room but not training room, staff room, or toilets; is a doctor; and is using something
+  return room and room.room_info.id ~= "training" and
+      room.room_info.id ~= "staff_room" and room.room_info.id ~= "toilets" and
+      self.humanoid_class == "Doctor" and self.action_queue[1].name == "use_object"
 end
 
 

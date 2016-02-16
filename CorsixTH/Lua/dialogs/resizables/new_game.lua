@@ -165,11 +165,10 @@ function UINewGame:hitTest(x, y)
   if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
     return true
   end
-  local test = sprites.hitTest
-  return test(sprites, 10, x + 9, y + 9)
-      or test(sprites, 12, x - 160, y + 9)
-      or test(sprites, 15, x + 9, y - 240)
-      or test(sprites, 17, x - 160, y - 240)
+  return sprites.hitTest(sprites, 10, x + 9,   y + 9) or
+         sprites.hitTest(sprites, 12, x - 160, y + 9) or
+         sprites.hitTest(sprites, 15, x + 9,   y - 240) or
+         sprites.hitTest(sprites, 17, x - 160, y - 240)
 end
 
 function UINewGame:buttonTutorial(checked, button)
