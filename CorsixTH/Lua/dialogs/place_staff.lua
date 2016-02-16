@@ -107,9 +107,8 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       self:onMouseMove(x, y)
       self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
       local room = self.world:getRoom(self.tile_x, self.tile_y)
-      if flag_cache.hospital and flag_cache.passable
-      and (self.allow_in_rooms or flag_cache.roomId == 0)
-      and (not room and true or not room.crashed) then
+      if flag_cache.hospital and flag_cache.passable and
+          (self.allow_in_rooms or flag_cache.roomId == 0) and (not room or not room.crashed) then
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else

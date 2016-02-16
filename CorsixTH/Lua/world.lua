@@ -241,15 +241,18 @@ function World:initLevel(app, avail_rooms)
   local non_visual = level_config.non_visuals
   for _, disease in ipairs(app.diseases) do
     if not disease.pseudo then
+      local vis_id = disease.visuals_id
+      local nonvis_id = disease.non_visuals_id
+
       local vis = 1
-      if visual and (visual[disease.visuals_id] or non_visual[disease.non_visuals_id]) then
-        vis = disease.visuals_id and visual[disease.visuals_id].Value
-        or non_visual[disease.non_visuals_id].Value
+      if visual and (visual[vis_id] or non_visual[nonvis_id]) then
+        vis = vis_id and visual[vis_id].Value or non_visual[nonvis_id].Value
       end
       if vis ~= 0 then
         for _, room_id in ipairs(disease.treatment_rooms) do
           if existing_rooms[room_id] == nil then
-            print("Warning: Removing disease \"" .. disease.id .. "\" due to missing treatment room \"" .. room_id .. "\".")
+            print("Warning: Removing disease \"" .. disease.id ..
+                  "\" due to missing treatment room \"" .. room_id .. "\".")
             vis = 0 -- Missing treatment room, disease cannot be treated. Remove it.
             break
           end
@@ -415,12 +418,13 @@ end
 function World:calculateSpawnTiles()
   self.spawn_points = {}
   local w, h = self.map.width, self.map.height
-  for _, edge in ipairs{
+  local directions = {
     {direction = "north", origin = {1, 1}, step = { 1,  0}},
     {direction = "east" , origin = {w, 1}, step = { 0,  1}},
     {direction = "south", origin = {w, h}, step = {-1,  0}},
     {direction = "west" , origin = {1, h}, step = { 0, -1}},
-  } do
+  }
+  for _, edge in ipairs(directions) do
     -- Find all possible spawn points on the edge
     local xs = {}
     local ys = {}
@@ -505,7 +509,6 @@ end
 function World:spawnVIP(name)
   local hospital = self:getLocalPlayerHospital()
 
-  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   local vip = self:newEntity("Vip", 2)
   vip:setType("VIP")
   vip.name = name
@@ -1106,8 +1109,8 @@ function World:onEndDay()
   self.current_tick_entity = nil
 
   --check if it's time for a VIP visit
-  if (self.year - 1) * 12 + self.month == self.next_vip_month
-  and self.day == self.next_vip_day then
+  if (self.year - 1) * 12 + self.month == self.next_vip_month and
+      self.day == self.next_vip_day then
     if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
       self.hospitals[1]:createVip()
     else
@@ -1116,8 +1119,8 @@ function World:onEndDay()
   end
 
   -- check if it's time for an earthquake, and the user is at least on level 5
-  if (self.year - 1) * 12 + self.month == self.next_earthquake_month
-  and self.day == self.next_earthquake_day then
+  if (self.year - 1) * 12 + self.month == self.next_earthquake_month and
+      self.day == self.next_earthquake_day then
     -- warn the user that an earthquake is on the way
     local announcements = {
       "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
@@ -1128,8 +1131,8 @@ function World:onEndDay()
   end
 
   -- Maybe it's time for an emergency?
-  if (self.year - 1) * 12 + self.month == self.next_emergency_month
-  and self.day == self.next_emergency_day then
+  if (self.year - 1) * 12 + self.month == self.next_emergency_month and
+      self.day == self.next_emergency_day then
     -- Postpone it if anything clock related is already underway.
     if self.ui:getWindow(UIWatch) then
       self.next_emergency_month = self.next_emergency_month + 1
@@ -1283,12 +1286,12 @@ function World:nextEmergency()
       repeat
         self.next_emergency_no = self.next_emergency_no + 1
         -- Level three is missing [5].
-        if not control[self.next_emergency_no]
-        and control[self.next_emergency_no + 1] then
+        if not control[self.next_emergency_no] and
+            control[self.next_emergency_no + 1] then
           self.next_emergency_no = self.next_emergency_no + 1
         end
-      until not control[self.next_emergency_no]
-      or control[self.next_emergency_no].EndMonth >= current_month
+      until not control[self.next_emergency_no] or
+            control[self.next_emergency_no].EndMonth >= current_month
     end
 
     local emergency = control[self.next_emergency_no]
@@ -2114,12 +2117,13 @@ function World:objectPlaced(entity, id)
     end
   end
   if id == "reception_desk" then
-    if not self.ui.start_tutorial
-    and not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
+    if not self.ui.start_tutorial and
+        not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and self.object_counts["reception_desk"] == 1
-    and not self.hospitals[1].receptionist_msg and self.month > 3 then
+    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
+        self.object_counts["reception_desk"] == 1 and
+        not self.hospitals[1].receptionist_msg and self.month > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
@@ -2278,7 +2282,7 @@ end
 function World:dumpGameLog()
   local config_path = TheApp.command_line["config-file"] or ""
   local pathsep = package.config:sub(1, 1)
-  config_path = config_path:match("^(.-)[^".. pathsep .."]*$")
+  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi, err = io.open(gamelog_path, "w")
   if fi then

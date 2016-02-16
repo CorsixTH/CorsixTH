@@ -320,8 +320,8 @@ function GameUI:onCursorWorldPositionChange()
     if self.do_world_hit_test ~= true then
       -- limit to non-door objects in room
       local room = self.do_world_hit_test
-      entity = entity and class.is(entity, Object) and entity:getRoom() == room
-       and entity ~= room.door and entity
+      entity = entity and class.is(entity, Object) and
+          entity:getRoom() == room and entity ~= room.door
     end
   end
   if entity ~= self.cursor_entity then
@@ -457,9 +457,10 @@ function GameUI:onMouseMove(x, y, dx, dy)
     -- In windowed mode, a reasonable size is needed, though not too large.
     scroll_region_size = 8
   end
-  if not self.app.config.prevent_edge_scrolling and (x < scroll_region_size
-  or y < scroll_region_size or x >= self.app.config.width - scroll_region_size
-  or y >= self.app.config.height - scroll_region_size) then
+  if not self.app.config.prevent_edge_scrolling and
+      (x < scroll_region_size or y < scroll_region_size or
+       x >= self.app.config.width - scroll_region_size or
+       y >= self.app.config.height - scroll_region_size) then
     local dx = 0
     local dy = 0
     local scroll_power = 7

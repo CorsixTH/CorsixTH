@@ -98,8 +98,8 @@ end
 
 -- Adjust the toggle state to match if the message is open or not
 function UIMessage:adjustToggle()
-  if self.button.toggled and not self.fax
-  or not self.button.toggled and self.fax then
+  if (self.button.toggled and not self.fax) or
+      (not self.button.toggled and self.fax) then
     self.button:toggle()
   end
 end

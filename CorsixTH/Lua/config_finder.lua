@@ -51,7 +51,7 @@ if fi then
   if #contents ~= 0 then
     config_path = contents
     if config_path:sub(-4, -1):lower() == ".txt" then
-      config_name = config_path:match("([^".. pathsep .."]*)$")
+      config_name = config_path:match("([^" .. pathsep .. "]*)$")
       config_path = config_path:sub(1, -1-#config_name)
     end
   end
@@ -146,7 +146,7 @@ if fi then
   local file_contents = fi:read("*all")
   fi:close()
   for key, value in pairs(config_defaults) do
-    local ind = string.find(file_contents, "\n" .."%s*" .. key .. "%s*=")
+    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
     if not ind then
       needs_rewrite = true
     else

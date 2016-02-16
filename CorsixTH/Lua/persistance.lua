@@ -100,7 +100,7 @@ local function MakePermanentObjectsTable(inverted)
     permanent[class_mt] = name .. ".2"
     for k, v in pairs(class) do
       if type(v) == "function" then
-        permanent[v] = name ..".".. k
+        permanent[v] = name .. "." .. k
       end
     end
   until true end
@@ -114,11 +114,11 @@ local function MakePermanentObjectsTable(inverted)
       for k, v in pairs(lib) do
         local type_of_lib = type(v)
         if type_of_lib == "function" or type_of_lib == "table" or type_of_lib == "userdata" then
-          permanent[v] = name ..".".. k
+          permanent[v] = name .. "." .. k
           if name == "TH" and type_of_lib == "table" then
             -- C class metatables
             local callenv = th_getfenv(getmetatable(v).__call)
-            permanent[callenv] = name ..".".. k ..".<mt>"
+            permanent[callenv] = name .. "." .. k .. ".<mt>"
           end
         end
       end
@@ -130,12 +130,12 @@ local function MakePermanentObjectsTable(inverted)
   -- Bits of the app
   permanent[TheApp] = "TheApp"
   for _, key in ipairs({"config", "modes", "video", "strings", "audio", "gfx", "fs"}) do
-    permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
+    permanent[TheApp[key]] = inverted and "TheApp." .. key or {global_fetch, "TheApp", key}
   end
   for _, collection in ipairs({"walls", "objects", "rooms", "humanoid_actions", "diseases"}) do
     for k, v in pairs(TheApp[collection]) do
       if type(k) == "string" then
-        permanent[v] = inverted and "TheApp.".. collection ..".".. k or {global_fetch, "TheApp", collection, k}
+        permanent[v] = inverted and "TheApp." .. collection .. "." .. k or {global_fetch, "TheApp", collection, k}
       end
     end
   end
@@ -188,7 +188,7 @@ local function NameOf(obj) -- Debug aid
     if type(exploring) == "table" then
       for key, val in pairs(exploring) do
         if not explored[val] then
-          to_explore[val] = name .."."..tostring(key)
+          to_explore[val] = name .. "." ..tostring(key)
           explored[val] = true
         end
       end
@@ -201,19 +201,19 @@ local function NameOf(obj) -- Debug aid
           break
         end
         if val ~= nil and not explored[val] then
-          to_explore[val] = name ..".<upvalue-"..i..tostring(name)..">"
+          to_explore[val] = name .. ".<upvalue-" .. i .. tostring(name) .. ">"
           explored[val] = true
         end
       end
     end
     local mt = debug.getmetatable(exploring)
     if mt and not explored[mt] then
-      to_explore[mt] = name ..".<metatable>"
+      to_explore[mt] = name .. ".<metatable>"
       explored[mt] = true
     end
     mt = th_getfenv(exploring)
     if mt and not explored[mt] then
-      to_explore[mt] = name ..".<env>"
+      to_explore[mt] = name .. ".<env>"
       explored[mt] = true
     end
   end

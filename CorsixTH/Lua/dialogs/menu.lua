@@ -65,9 +65,9 @@ function UIMenuBar:onTick()
     -- item in its parent corresponding to it.
     local deepest = self.open_menus[#self.open_menus]
     local parent = deepest.parent
-    if deepest == self.active_menu or (parent and parent == self.active_menu
-    and parent.items[parent.hover_index]
-    and parent.items[parent.hover_index].submenu == deepest) then
+    if deepest == self.active_menu or
+        (parent and parent == self.active_menu and parent.items[parent.hover_index] and
+        parent.items[parent.hover_index].submenu == deepest) then
       self.menu_disappear_counter = nil
     else
       if self.menu_disappear_counter == 0 then
@@ -479,8 +479,8 @@ function UIMenu:hitTest(x, y, padding)
   -- number -> hit that item
   -- true   -> hit menu, but not an item
   -- false  -> no hit
-  if self.x - padding <= x and x < self.x + self.width + padding
-  and self.y - padding <= y and y < self.y + self.height + padding then
+  if self.x - padding <= x and x < self.x + self.width + padding and
+      self.y - padding <= y and y < self.y + self.height + padding then
     if self.x <= x and x < self.x + self.width then
       local index = math_floor((y - self.y + 12) / 14)
       if 1 <= index and index <= #self.items then

@@ -31,18 +31,18 @@ local function meander_action_start(action, humanoid)
     -- staff room visit
     elseif humanoid.world.dispatcher:answerCall(humanoid) then
       if action.must_happen then
-    humanoid:finishAction()
-    end
-    return
+        humanoid:finishAction()
+      end
+      return
     else
       -- Nowhere to go, start going to the old room if it's still in
       -- need of staff.
       local room = humanoid.last_room
-      if room and room.is_active
-      and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+      if room and room.is_active and
+          room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
         humanoid:queueAction(room:createEnterAction(humanoid))
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for
-        :format(room.room_info.name))
+            :format(room.room_info.name))
         humanoid:finishAction()
         return
       end
@@ -57,7 +57,8 @@ local function meander_action_start(action, humanoid)
     end
   end
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
-    humanoid.tile_y, math.random(1, 24))
+      humanoid.tile_y, math.random(1, 24))
+
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
     if #humanoid.action_queue == 1 then

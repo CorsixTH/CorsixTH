@@ -229,10 +229,10 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
 
   -- sort list by size of object (number of tiles in the first existing orientation (usually north))
   table.sort(self.objects, function(o1, o2)
-    local orient1 = o1.object.orientations.north or o1.object.orientations.east
-                 or o1.object.orientations.south or o1.object.orientations.west
-    local orient2 = o2.object.orientations.north or o2.object.orientations.east
-                 or o2.object.orientations.south or o2.object.orientations.west
+    local orient1 = o1.object.orientations.north or o1.object.orientations.east or
+                    o1.object.orientations.south or o1.object.orientations.west
+    local orient2 = o2.object.orientations.north or o2.object.orientations.east or
+                    o2.object.orientations.south or o2.object.orientations.west
     return #orient1.footprint > #orient2.footprint
   end)
 
@@ -771,8 +771,8 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
     -- TODO: East, South
   end
   bestx, besty = math_floor(bestx), math_floor(besty)
-  if bestx < 1 or besty < 1
-  or bestx > self.map.width or besty > self.map.height then
+  if bestx < 1 or besty < 1 or
+      bestx > self.map.width or besty > self.map.height then
     bestx, besty = nil
   end
   return bestx, besty, besto

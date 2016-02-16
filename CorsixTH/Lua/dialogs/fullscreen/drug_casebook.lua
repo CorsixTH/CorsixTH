@@ -244,8 +244,8 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
 
   -- Treatment Charge is either displayed in percent, or normally
-  local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100)
-                      or "$" .. self.hospital:getTreatmentPrice(disease)
+  local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100) or
+      "$" .. self.hospital:getTreatmentPrice(disease)
   titles:draw(canvas, price_text, x + 262, y + 137, 90, 0) -- Treatment Charge
 
   titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned

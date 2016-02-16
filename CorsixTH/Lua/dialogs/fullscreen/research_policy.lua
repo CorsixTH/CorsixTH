@@ -74,11 +74,10 @@ function UIResearch:UIResearch(ui)
   -- Add tooltips to progress of research.
   local lx = 165
   local ly = 60
-  for i, category in ipairs(research_categories) do
+  for _, category in ipairs(research_categories) do
     self:makeDynamicTooltip(--[[persistable:research_policy_research_progress_tooltip]] function()
       local research = self.research.research_policy
-      if research[category].current
-      and not research[category].current.dummy then
+      if research[category].current and not research[category].current.dummy then
         local required = self.research:getResearchRequired(research[category].current)
         local available = self.research.research_progress[research[category].current].points
         return _S.tooltip.research_policy.research_progress:format(math.round(available), required)
@@ -120,15 +119,19 @@ function UIResearch:updateCategories()
     local current = self.hospital.research.research_policy[area].current
     if current then
       self.adjust_buttons[area] = {
-        less = self:addPanel(0, c1, topy+i*spacing):makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")):setTooltip(get_localized_string("tooltip.research." .. area .. "_dec")),
-        more = self:addPanel(0, c2, topy+i*spacing):makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")):setTooltip(get_localized_string("tooltip.research." .. area .. "_inc")),
+        less = self:addPanel(0, c1, topy + i * spacing)
+            :makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less"))
+            :setTooltip(get_localized_string("tooltip.research." .. area .. "_dec")),
+        more = self:addPanel(0, c2, topy + i * spacing)
+            :makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more"))
+            :setTooltip(get_localized_string("tooltip.research." .. area .. "_inc")),
       }
     else
       if self.adjust_buttons[area] then
         self.adjust_buttons[area].less.enabled = false
         self.adjust_buttons[area].more.enabled = false
       end
-      self:addColourPanel(c1, topy+i*spacing, 120, 30, col_bg.red, col_bg.green, col_bg.blue)
+      self:addColourPanel(c1, topy + i * spacing, 120, 30, col_bg.red, col_bg.green, col_bg.blue)
     end
   end
 end
@@ -212,13 +215,12 @@ function UIResearch:draw(canvas, x, y)
       num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
     end
     -- Display research progress.
-    if research[category].current
-    and not research[category].current.dummy then
+    if research[category].current and not research[category].current.dummy then
       local ly = y + 26
       local lx = x + 172
       local required = self.research:getResearchRequired(research[category].current)
       local available = self.research.research_progress[research[category].current].points
-      local length = 290*available/required
+      local length = 290 * available / required
       local dx = 0
       while dx + 10 < length do
         self.panel_sprites:draw(canvas, 3, lx + dx, ly)
@@ -241,8 +243,8 @@ function UIResearch:afterLoad(old, new)
     self.adjust_buttons = {}
     for i, area in ipairs(research_categories) do
       self.adjust_buttons[area] = {
-        less = self.buttons[2*i],
-        more = self.buttons[2*i+1],
+        less = self.buttons[2 * i],
+        more = self.buttons[2 * i + 1],
       }
     end
   end

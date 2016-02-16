@@ -116,9 +116,8 @@ function UICustomCampaign:draw(canvas, x, y)
   if self.chosen_item and self.chosen_item.name then
     self.label_font:drawWrapped(canvas, self.chosen_item.name,
                                 x + 270, y + 10, details_width)
-    self.label_font:drawWrapped(canvas, "(levels: "
-                                .. self.chosen_item.no_levels .. ")",
-                                x+ 270, y + 22, details_width)
+    self.label_font:drawWrapped(canvas, "(levels: " ..
+        self.chosen_item.no_levels .. ")", x+ 270, y + 22, details_width)
   end
   if self.chosen_item and self.chosen_item.description then
     self.label_font:drawWrapped(canvas, self.chosen_item.description,

@@ -63,7 +63,7 @@ function UIQueue:UIQueue(ui, queue)
 
   self:makeTooltip(_S.tooltip.queue_window.front_of_queue, 168, 25, 213, 105)
   self:makeTooltip(_S.tooltip.queue_window.end_of_queue, 543, 51, 586, 105)
-  self:makeTooltip(_S.tooltip.queue_window.patient        .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
+  self:makeTooltip(_S.tooltip.queue_window.patient .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
 end
 
 function UIQueue:decreaseMaxSize()

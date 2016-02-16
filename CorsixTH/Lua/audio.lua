@@ -118,8 +118,8 @@ function Audio:init()
         if music_dir then
           info.filename_mp3 = music_dir .. file
         else
-          print("Warning: CorsixTH only supports xmi if audio_mp3"
-            .. " is not defined in the config file.")
+          print("Warning: CorsixTH only supports xmi if audio_mp3" ..
+              " is not defined in the config file.")
             music_array[filename:upper()] = nil
         end
          -- Remove the xmi version of this file, if found.
@@ -589,8 +589,8 @@ function Audio:playBackgroundTrack(index)
       SDL.audio.loadMusicAsync(data, function(music, e)
 
         if music == nil then
-          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
-            .. (e and (" (" .. e .. ")" or "")))
+          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'" ..
+              (e and (" (" .. e .. ")" or "")))
         else
           if _DECODA then
             debug.getmetatable(music).__tostring = function(ud)

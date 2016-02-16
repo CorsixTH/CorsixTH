@@ -569,10 +569,9 @@ end
   Typically this is used to determine if a patient can be vaccinated
   @param patient (Patient) the patient we wish to determine if they are static.]]
 local function is_static(patient)
-  local patient_action = patient.action_queue[1]
-  return patient_action.name == "queue" or patient_action.name == "idle" or
-  (patient_action.name == "use_object" and
-  patient_action.object.object_type.id == "bench")
+  local action = patient.action_queue[1]
+  return action.name == "queue" or action.name == "idle" or
+      (action.name == "use_object" and action.object.object_type.id == "bench")
 end
 
 --[[ During a cover up every patient marked for vaccination (clicked)
