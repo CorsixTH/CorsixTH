@@ -80,20 +80,22 @@ function OperatingTheatreRoom:roomFinished()
 end
 
 local function wait_for_object(humanoid, obj, must_happen)
+  local loop_callback_wait = --[[persistable:operatring_theatre_wait]] function(action)
+    if action.todo_interrupt or not obj.user then
+      humanoid:finishAction(action)
+    else
+      humanoid:queueAction({
+        name = "idle",
+        count = 5,
+        must_happen = must_happen,
+      }, 0)
+    end
+  end
+
   return {
     name = "idle",
     must_happen = must_happen,
-    loop_callback = --[[persistable:operatring_theatre_wait]] function(action)
-      if action.todo_interrupt or not obj.user then
-        humanoid:finishAction(action)
-      else
-        humanoid:queueAction({
-          name = "idle",
-          count = 5,
-          must_happen = must_happen,
-        }, 0)
-      end
-    end,
+    loop_callback = loop_callback_wait
   }
 end
 
@@ -133,11 +135,13 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   self.staff_member_set[staff] = true
 
   -- Wait around for patients
+  local loop_callback_more_patients = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
+    self.staff_member_set[staff] = "ready"
+    self:tryAdvanceQueue()
+  end
+
   local meander = {name = "meander", must_happen = true,
-    loop_callback = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
-      self.staff_member_set[staff] = "ready"
-      self:tryAdvanceQueue()
-    end
+    loop_callback = loop_callback_more_patients
   }
   staff:queueAction(meander)
 
@@ -186,23 +190,27 @@ end
 function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
   local room = self
 
+  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
+    -- dirty hack to make the truncated animation work
+    surgeon1.animation_idx = nil
+  end
+
+  local after_use_table = --[[persistable:operatring_theatre_table_after_use]] function()
+    room:dealtWithPatient(patient)
+    -- Tell the patient that it's time to leave, but only if the first action
+    -- is really an idle action.
+    if patient.action_queue[1].name == "idle" then
+      patient:finishAction()
+    end
+  end
+
   return {
     name = "multi_use_object",
     object = operation_table,
     use_with = patient,
     prolonged_usage = true,
-    loop_callback = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
-      -- dirty hack to make the truncated animation work
-      surgeon1.animation_idx = nil
-    end,
-    after_use = --[[persistable:operatring_theatre_table_after_use]] function()
-      room:dealtWithPatient(patient)
-      -- Tell the patient that it's time to leave, but only if the first action
-      -- is really an idle action.
-      if patient.action_queue[1].name == "idle" then
-        patient:finishAction()
-      end
-    end,
+    loop_callback = loop_callback_multi_use,
+    after_use = after_use_table,
     must_happen = true,
     no_truncate = true,
   }
@@ -217,18 +225,22 @@ end
 function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
   local num_loops = math.random(2, 5)
 
+  local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
+    num_loops = num_loops - 1
+    if num_loops <= 0 then
+      action.prolonged_usage = false
+    end
+  end
+
+  local after_use_use_object = --[[persistable:operatring_theatre_after_use]] function()
+    multi_use.prolonged_usage = false
+  end
+
   return {
     name = "use_object",
     object = operation_table_b,
-    loop_callback = --[[persistable:operatring_theatre_use_callback]] function(action)
-      num_loops = num_loops - 1
-      if num_loops <= 0 then
-        action.prolonged_usage = false
-      end
-    end,
-    after_use = --[[persistable:operatring_theatre_after_use]] function()
-      multi_use.prolonged_usage = false
-    end,
+    loop_callback = loop_callback_use_object,
+    after_use = after_use_use_object,
     must_happen = true,
     no_truncate = true,
   }

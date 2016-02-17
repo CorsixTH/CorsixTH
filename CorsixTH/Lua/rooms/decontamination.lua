@@ -95,25 +95,30 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   else
     length = length - 1
   end
+
+  local shower_loop_callback = --[[persistable:shower_loop_callback]] function(action)
+    length = length - 1
+    if length <= 0 then
+      action.prolonged_usage = false
+    end
+  end
+
+  local shower_after_use = --[[persistable:shower_after_use]] function()
+    if not self.staff_member then
+      return
+    end
+    self.staff_member:setNextAction{name = "meander"}
+    if not patient.going_home then
+      self:dealtWithPatient(patient)
+    end
+  end
+
   patient:queueAction{
     name = "use_object",
     object = shower,
     prolonged_usage = prolonged,
-    loop_callback = --[[persistable:shower_loop_callback]] function(action)
-      length = length - 1
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-    end,
-    after_use = --[[persistable:shower_after_use]] function()
-      if not self.staff_member then
-        return
-      end
-      self.staff_member:setNextAction{name = "meander"}
-      if not patient.going_home then
-        self:dealtWithPatient(patient)
-      end
-    end,
+    loop_callback = shower_loop_callback,
+    after_use = shower_after_use,
   }
 
   return Room.commandEnteringPatient(self, patient)

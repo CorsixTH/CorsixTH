@@ -70,26 +70,31 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
         patient:setLayer(1, math.random(0, 3) * 2)
         patient:setLayer(2, 0)
       end
+
+      local loop_callback_electrolysis = --[[persistable:electrolysis_loop_callback]] function(action)
+        num_electrocutions = num_electrocutions - 1
+        if num_electrocutions <= 0 then
+          -- Tired doctors can continue electrocuting for a bit too long...
+          -- Fatigue 0.00 - normal number of electrocutions
+          -- Fatigue 0.45 - normal number of electrocutions
+          -- Fatigue 0.80 - expect 1 extra electrocution
+          -- Fatigue 1.00 - expect 9 extra electrocutions
+          if math.random() <= 0.1 + 2 * (1 - staff.attributes["fatigue"]) then
+            action.prolonged_usage = false
+          end
+        end
+      end
+
+      local after_electrolysis = --[[persistable:electrolysis_after_use]] function()
+        self:dealtWithPatient(patient)
+        staff:setNextAction{name = "meander"}
+      end
+
       patient:setNextAction{
         name = "use_object",
         object = electrolyser,
-        loop_callback = --[[persistable:electrolysis_loop_callback]] function(action)
-          num_electrocutions = num_electrocutions - 1
-          if num_electrocutions <= 0 then
-            -- Tired doctors can continue electrocuting for a bit too long...
-            -- Fatigue 0.00 - normal number of electrocutions
-            -- Fatigue 0.45 - normal number of electrocutions
-            -- Fatigue 0.80 - expect 1 extra electrocution
-            -- Fatigue 1.00 - expect 9 extra electrocutions
-            if math.random() <= 0.1 + 2 * (1 - staff.attributes["fatigue"]) then
-              action.prolonged_usage = false
-            end
-          end
-        end,
-        after_use = --[[persistable:electrolysis_after_use]] function()
-          self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
-        end,
+        loop_callback = loop_callback_electrolysis,
+        after_use = after_electrolysis
       }
 
       staff:setNextAction{

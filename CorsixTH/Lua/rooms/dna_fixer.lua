@@ -62,14 +62,16 @@ function DNAFixerRoom:commandEnteringPatient(patient)
       -- We need to change to another type before starting, to be able
       -- to have different animations depending on gender.
       patient:setType(patient.change_into)
+
+      local fixer_after_use = --[[persistable:dna_fixer_after_use]] function()
+        self:dealtWithPatient(patient)
+        staff:setNextAction{name = "meander"}
+      end
       patient:setNextAction{
         name = "use_object",
         object = dna_fixer,
         prolonged_usage = false,
-        after_use = --[[persistable:dna_fixer_after_use]] function()
-          self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
-        end,
+        after_use = fixer_after_use,
       }
 
       staff:setNextAction{

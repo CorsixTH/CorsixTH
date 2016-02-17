@@ -93,53 +93,55 @@ local function use_staffroom_action_start(action, humanoid)
 
   -- Otherwise, walk to and use the object:
   -- Note: force prolonged_usage, because video_game wouldn't get it by default (because it has no begin and end animation)
-  local object_action
   local obj_use_time = generate_use_time(action.target_type)
-  object_action = {
-    name = "use_object",
-    prolonged_usage = true,
-    object = action.target_obj,
-    loop_callback = --[[persistable:use_staffroom_action_loop_callback]] function()
-      humanoid:wake(relaxation[action.target_type])
-      -- if staff is no longer fatigued, make them leave the staff room
-      if humanoid.attributes["fatigue"] == 0 then
-        humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
-        local room = humanoid.last_room
-        -- Send back to the last room if that room is still empty.
-        -- (applies to training and research only)
-        -- Make sure that the room is still there though.
-        -- If not, just answer the call
-        if room and room.is_active and
-        (room.room_info.id == "research" or room.room_info.id == "training")
-        and room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
-          humanoid:queueAction(room:createEnterAction(humanoid))
-          humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
-        else
-          -- Send the staff out of the room
-          humanoid:queueAction{name = "meander"}
-        end
-      else
 
-        obj_use_time = obj_use_time - 1
-        -- if staff is done using object
-        if obj_use_time == 0 then
-          -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
-          -- also check x,y co-ords to see if the object actually exists in the room
-          action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
-          if (not action.next_ox and not action.next_oy) or action.next_target_type == action.target_type then
-            obj_use_time = generate_use_time(action.target_type)
-          else
-            if action.next_target_obj then
-              action.next_target_obj.reserved_for = humanoid
-            end
-            object_action.prolonged_usage = false
+  local loop_callback_use = --[[persistable:use_staffroom_action_loop_callback]] function(obj_action)
+    humanoid:wake(relaxation[action.target_type])
+    -- if staff is no longer fatigued, make them leave the staff room
+    if humanoid.attributes["fatigue"] == 0 then
+      humanoid:setNextAction(humanoid:getRoom():createLeaveAction())
+
+      local room = humanoid.last_room
+      -- Send back to the last room if that room is still empty.
+      -- (applies to training and research only)
+      -- Make sure that the room is still there though.
+      -- If not, just answer the call
+      if room and room.is_active and
+          (room.room_info.id == "research" or room.room_info.id == "training") and
+          room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
+        humanoid:queueAction(room:createEnterAction(humanoid))
+        humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+      else
+        -- Send the staff out of the room
+        humanoid:queueAction{name = "meander"}
+      end
+    else
+      obj_use_time = obj_use_time - 1
+      -- if staff is done using object
+      if obj_use_time == 0 then
+        -- Decide on the next target. If it happens to be of the same type as the current, just continue using the current.
+        -- also check x,y co-ords to see if the object actually exists in the room
+        action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = decide_next_target(action, humanoid)
+        if (not action.next_ox and not action.next_oy) or action.next_target_type == action.target_type then
+          obj_use_time = generate_use_time(action.target_type)
+        else
+          if action.next_target_obj then
+            action.next_target_obj.reserved_for = humanoid
           end
+          obj_action.prolonged_usage = false
         end
       end
     end
+  end
+
+  local obj_action = {
+    name = "use_object",
+    prolonged_usage = true,
+    object = action.target_obj,
+    loop_callback = loop_callback_use
   }
   humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
-  humanoid:queueAction(object_action, 1)
+  humanoid:queueAction(obj_action, 1)
 end
 
 return use_staffroom_action_start

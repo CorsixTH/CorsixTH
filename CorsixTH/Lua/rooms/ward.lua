@@ -106,28 +106,31 @@ function WardRoom:doStaffUseCycle(humanoid)
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
       local desk_use_time = math.random(7, 14)
+      local desk_loop = --[[persistable:ward_desk_loop_callback]] function()
+        desk_use_time = desk_use_time - 1
+        if desk_use_time == 0 then
+          self:doStaffUseCycle(humanoid)
+        end
+      end
+
       humanoid:queueAction {
         name = "use_object",
         object = obj,
-    loop_callback = --[[persistable:ward_desk_loop_callback]] function()
-      desk_use_time = desk_use_time - 1
-      if desk_use_time == 0 then
-        self:doStaffUseCycle(humanoid)
-      end
-    end,
-  }
+        loop_callback = desk_loop
+      }
+    end
   end
 
-  end
   local num_meanders = math.random(2, 4)
+  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function(action)
+    num_meanders = num_meanders - 1
+    if num_meanders == 0 then
+      self:doStaffUseCycle(humanoid)
+    end
+  end
   humanoid:queueAction {
     name = "meander",
-    loop_callback = --[[persistable:ward_meander_loop_callback]] function(action)
-      num_meanders = num_meanders - 1
-      if num_meanders == 0 then
-        self:doStaffUseCycle(humanoid)
-      end
-    end
+    loop_callback = meanders_loop
   }
 end
 

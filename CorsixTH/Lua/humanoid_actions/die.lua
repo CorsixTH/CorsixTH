@@ -183,11 +183,13 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
                         y = grim.use_tile_y,
                         no_truncate = true})
     end
-    grim:queueAction({name = "idle", loop_callback =
-                                     --[[persistable:reaper_wait]]function()
-                                                                    grim:setAnimation(1002, grim.mirror)
-                                                                    action_die_tick_reaper(humanoid)
-                                                                  end})
+
+    local loop_callback_wait = --[[persistable:reaper_wait]]function()
+      grim:setAnimation(1002, grim.mirror)
+      action_die_tick_reaper(humanoid)
+    end
+
+    grim:queueAction({name = "idle", loop_callback = loop_callback_wait})
 
   --4: There will be a brief pause before the patient stands up:
   elseif phase == 4 then
@@ -204,37 +206,48 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
   elseif phase == 6 then
     local grim = humanoid.grim_reaper
     local lava_hole = grim.lava_hole
+
     --The grim reaper's final actions:
+    local loop_callback_swipe =--[[persistable:reaper_swipe]]function()
+      grim:setAnimation(1670, grim.mirror)
+    end
+
     grim:queueAction({name = "idle",
                       count = grim.world:getAnimLength(1670),
-                      loop_callback =--[[persistable:reaper_swipe]]function()
-                                                                     grim:setAnimation(1670, grim.mirror)
-                                                                   end})
+                      loop_callback = loop_callback_swipe})
+
+    local loop_callback_leave =--[[persistable:reaper_leave]]function()
+      grim:setAnimation(1678, grim.mirror)
+    end
+
     grim:queueAction({name = "idle",
                       count = grim.world:getAnimLength(1678),
-                      loop_callback =--[[persistable:reaper_leave]]function()
-                                                                     grim:setAnimation(1678, grim.mirror)
-                                                                   end})
+                      loop_callback = loop_callback_leave})
+
+    local lava_destroy = --[[persistable:lava_destroy]]function()
+      humanoid.world:destroyEntity(lava_hole)
+    end
+    local loop_callback_destroy =--[[persistable:reaper_destroy]]function()
+      lava_hole.playing_sounds_in_random_sequence = false
+      lava_hole:setTimer(lava_hole.world:getAnimLength(2552), lava_destroy)
+      lava_hole:setAnimation(2552)
+      grim.world:destroyEntity(grim)
+    end
+
     grim:queueAction({name = "idle",
-                      loop_callback =--[[persistable:reaper_destroy]]function()
-                                          lava_hole.playing_sounds_in_random_sequence = false
-                                          lava_hole:setTimer(lava_hole.world:getAnimLength(2552),
-                                                             --[[persistable:lava_destroy]]function()
-                                                                                             humanoid.world:destroyEntity(lava_hole)
-                                                                                           end)
-                                          lava_hole:setAnimation(2552)
-                                          grim.world:destroyEntity(grim)
-                                        end})
+                      loop_callback = loop_callback_destroy})
+
     --The patient's final actions:
     humanoid:walkTo(humanoid.hole_use_tile_x, humanoid.hole_use_tile_y, true)
+
+    local post_walk_into = --[[persistable:walk_into_lava]]function()
+      grim:finishAction()
+    end
+
     humanoid:queueAction({name = "use_object",
                           object = lava_hole,
                           destroy_user_after_use = true,
-                          after_walk_in =
-                          --[[persistable:walk_into_lava]]function()
-                              grim:finishAction()
-                            end})
-
+                          after_walk_in = post_walk_into})
     humanoid:finishAction()
   end
 end)

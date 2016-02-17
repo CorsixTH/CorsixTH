@@ -59,7 +59,7 @@ function ToiletRoom:roomFinished()
 end
 
 function ToiletRoom:dealtWithPatient(patient)
--- Continue to the previous room
+  -- Continue to the previous room
   patient:setNextAction(self:createLeaveAction())
   if patient.next_room_to_visit then
     patient:queueAction{name = "seek_room", room_type = patient.next_room_to_visit.room_info.id}
@@ -79,60 +79,67 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       if humanoid.humanoid_class == "Transparent Female Patient" then
         use_time = math.random(15, 40)
       end
+
+      local loop_callback_toilets = --[[persistable:toilets_loop_callback]] function()
+        use_time = use_time - 1
+        if use_time <= 0 then
+          humanoid:setMood("poo", "deactivate")
+          humanoid:changeAttribute("toilet_need", -(0.85 + math.random() *0.15))
+          humanoid.going_to_toilet = "no"
+
+          -- There are only animations for standard patients to use the sinks.
+          if humanoid.humanoid_class == "Standard Female Patient" or
+              humanoid.humanoid_class == "Standard Male Patient" then
+            local --[[persistable:toilets_find_sink]] function after_use()
+              local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
+              if sink then
+                humanoid:walkTo(sx, sy)
+
+                local after_use_sink = --[[persistable:toilets_after_use_sink]] function()
+                  self:dealtWithPatient(humanoid)
+                end
+
+                humanoid:queueAction{
+                  name = "use_object",
+                  object = sink,
+                  prolonged_usage = false,
+                  after_use = after_use_sink
+                }
+                sink.reserved_for = humanoid
+                -- Make sure that the mood waiting is no longer active.
+                humanoid:setMood("patient_wait", "deactivate")
+              else
+                -- if there is a queue to wash hands there is a chance we might not bother
+                -- but the patient won't be happy about this.
+                if math.random(1, 4) > 2 then
+                  -- Wait for a while before trying again.
+                  humanoid:setNextAction{
+                    name = "idle",
+                    count = 5,
+                    after_use = after_use,
+                    direction = loo.direction == "north" and "south" or "east",
+                  }
+                else
+                  self:dealtWithPatient(humanoid)
+                  humanoid:changeAttribute("happiness", -0.08)
+                  humanoid:setMood("patient_wait", "deactivate")
+                end
+                -- For now, activate the wait icon to show the player that the patient hasn't
+                -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
+                humanoid:setMood("patient_wait", "activate")
+              end
+            end
+            after_use()
+          else
+            self:dealtWithPatient(humanoid)
+          end
+        end
+      end
+
       humanoid:queueAction{
         name = "use_object",
         object = loo,
-        loop_callback = --[[persistable:toilets_loop_callback]] function()
-          use_time = use_time - 1
-          if use_time <= 0 then
-            humanoid:setMood("poo", "deactivate")
-            humanoid:changeAttribute("toilet_need", -(0.85 + math.random()*0.15))
-            humanoid.going_to_toilet = "no"
-          -- There are only animations for standard patients to use the sinks.
-            if humanoid.humanoid_class == "Standard Female Patient" or
-              humanoid.humanoid_class == "Standard Male Patient" then
-              local --[[persistable:toilets_find_sink]] function after_use()
-                local sink, sx, sy = self.world:findFreeObjectNearToUse(humanoid, "sink")
-                if sink then
-                  humanoid:walkTo(sx, sy)
-                  humanoid:queueAction{
-                    name = "use_object",
-                    object = sink,
-                    prolonged_usage = false,
-                    after_use = --[[persistable:toilets_after_use_sink]] function()
-                      self:dealtWithPatient(humanoid)
-                    end,
-                  }
-                  sink.reserved_for = humanoid
-                  -- Make sure that the mood waiting is no longer active.
-                  humanoid:setMood("patient_wait", "deactivate")
-                else
-                  -- if there is a queue to wash hands there is a chance we might not bother
-                  -- but the patient won't be happy about this.
-                  if math.random(1, 4) > 2 then
-                  -- Wait for a while before trying again.
-                    humanoid:setNextAction{
-                      name = "idle",
-                      count = 5,
-                      after_use = after_use,
-                      direction = loo.direction == "north" and "south" or "east",
-                      }
-                    else
-                      self:dealtWithPatient(humanoid)
-                      humanoid:changeAttribute("happiness", -0.08)
-                      humanoid:setMood("patient_wait", "deactivate")
-                    end
-                  -- For now, activate the wait icon to show the player that the patient hasn't
-                  -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
-                  humanoid:setMood("patient_wait", "activate")
-                end
-              end
-              after_use()
-            else
-              self:dealtWithPatient(humanoid)
-            end
-          end
-        end
+        loop_callback = loop_callback_toilets
       }
     else
       --[[ If no loo is found, perhaps the patient followed another one in and they were heading for the same one.

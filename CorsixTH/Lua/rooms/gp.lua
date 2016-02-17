@@ -59,32 +59,35 @@ function GPRoom:doStaffUseCycle(humanoid)
   local inv_skill = 1 - humanoid.profile.skill
   local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),
                                     math.ceil (8 + 10 * inv_skill))
-  humanoid:queueAction{name = "use_object",
-    object = obj,
-    loop_callback = --[[persistable:gp_loop_callback]] function()
-      desk_use_time = desk_use_time - 1
-      if desk_use_time == 0 then
-        -- Consultants who aren't tired might not need to stretch their legs
-        -- to remain alert, so might just remain at the desk and deal with the
-        -- next patient quicker.
-        if humanoid.profile.is_consultant
-        and math.random() >= humanoid.attributes.fatigue then
-          desk_use_time = math.random(7, 14)
-        else
-          self:doStaffUseCycle(humanoid)
-        end
-        local patient = self:getPatient()
-        if patient then
-          if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
-            if patient.user_of and not class.is(patient.user_of, Door) then
-              self:dealtWithPatient(patient)
-            end
-          else
-            self.max_times = self.max_times - 1
+  local gp_loop_callback = --[[persistable:gp_loop_callback]] function()
+    desk_use_time = desk_use_time - 1
+    if desk_use_time == 0 then
+      -- Consultants who aren't tired might not need to stretch their legs
+      -- to remain alert, so might just remain at the desk and deal with the
+      -- next patient quicker.
+      if humanoid.profile.is_consultant and
+          math.random() >= humanoid.attributes.fatigue then
+        desk_use_time = math.random(7, 14)
+      else
+        self:doStaffUseCycle(humanoid)
+      end
+
+      local patient = self:getPatient()
+      if patient then
+        if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
+          if patient.user_of and not class.is(patient.user_of, Door) then
+            self:dealtWithPatient(patient)
           end
+        else
+          self.max_times = self.max_times - 1
         end
       end
-    end,
+    end
+  end
+
+  humanoid:queueAction{name = "use_object",
+    object = obj,
+    loop_callback = gp_loop_callback
   }
 end
 
@@ -200,8 +203,8 @@ function GPRoom:onHumanoidLeave(humanoid)
 end
 
 function GPRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Doctor")
-  and not self.world.ui.start_tutorial then
+  if not self.hospital:hasStaffOfCategory("Doctor") and
+      not self.world.ui.start_tutorial then
     self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
   end
   return Room.roomFinished(self)

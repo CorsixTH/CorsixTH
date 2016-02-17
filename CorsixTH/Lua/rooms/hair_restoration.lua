@@ -57,17 +57,21 @@ function HairRestorationRoom:commandEnteringPatient(patient)
 
   local --[[persistable:hair_restoration_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+      local loop_callback_restore = --[[persistable:hair_restoration_loop_callback]] function(action)
+        action.prolonged_usage = false
+      end
+
+      local after_use_restore = --[[persistable:hair_restoration_after_use]] function()
+        patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
+        staff:setNextAction{name = "meander"}
+        self:dealtWithPatient(patient)
+      end
+
       patient:setNextAction{
         name = "use_object",
         object = hair_restorer,
-        loop_callback = --[[persistable:hair_restoration_loop_callback]] function(action)
-          action.prolonged_usage = false
-        end,
-        after_use = --[[persistable:hair_restoration_after_use]] function()
-          patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
-          staff:setNextAction{name = "meander"}
-          self:dealtWithPatient(patient)
-        end,
+        loop_callback = loop_callback_restore,
+        after_use = after_use_restore,
       }
       staff:setNextAction{
         name = "use_object",

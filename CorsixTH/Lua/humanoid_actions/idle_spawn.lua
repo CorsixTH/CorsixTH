@@ -24,11 +24,14 @@ local function action_idle_spawn_start(action, humanoid)
   humanoid:setTilePositionSpeed(action.point.x,action.point.y)
 
   if action.spawn_animation then
+    local loop_callback_spawn =--[[persistable:idle_spawn_animation]] function()
+      if action.spawn_sound then humanoid:playSound(action.spawn_sound) end
+      humanoid:setAnimation(action.spawn_animation)
+    end
+
     humanoid:queueAction({name="idle",count = humanoid.world:getAnimLength(action.spawn_animation),
-                                      loop_callback=--[[persistable:idle_spawn_animation]] function()
-                                        if action.spawn_sound then humanoid:playSound(action.spawn_sound) end
-                                        humanoid:setAnimation(action.spawn_animation)
-                                      end})
+                                      loop_callback = loop_callback_spawn})
+
   elseif action.spawn_sound then
     humanoid:playSound(action.spawn_sound)
   end
