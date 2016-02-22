@@ -18,6 +18,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "StaffReceptionAction" (HumanoidAction)
+
+---@type StaffReceptionAction
+local StaffReceptionAction = _G["StaffReceptionAction"]
+
+function StaffReceptionAction:StaffReceptionAction()
+  self:HumanoidAction("staff_reception")
+  self.object = nil -- Reception desk object.
+end
+
+function StaffReceptionAction:setObject(desk)
+  self.object = desk
+  return self
+end
+
 local action_staff_reception_interrupt = permanent"action_staff_reception_interrupt"( function(action, humanoid, high_priority)
   local object = action.object
   object.receptionist = nil

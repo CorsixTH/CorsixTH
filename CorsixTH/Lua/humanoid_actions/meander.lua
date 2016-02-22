@@ -18,6 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "MeanderAction" (HumanoidAction)
+
+---@type MeanderAction
+local MeanderAction = _G["MeanderAction"]
+
+function MeanderAction:MeanderAction()
+  self:HumanoidAction("meander")
+  self.can_idle = false -- If set, humanoid can do next action.
+end
+
 local function meander_action_start(action, humanoid)
   local room = humanoid:getRoom()
   -- Answering call queue

@@ -18,6 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekReceptionAction" (HumanoidAction)
+
+---@type SeekReceptionAction
+local SeekReceptionAction = _G["SeekReceptionAction"]
+
+function SeekReceptionAction:SeekReceptionAction()
+  self:HumanoidAction("seek_reception")
+end
+
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room

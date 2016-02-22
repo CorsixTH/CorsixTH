@@ -18,6 +18,33 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "IdleAction" (HumanoidAction)
+
+---@type IdleAction
+local IdleAction = _G["IdleAction"]
+
+function IdleAction:IdleAction()
+  self:HumanoidAction("idle")
+  self.direction = nil -- Direction of standing idle.
+  self.on_interrupt = nil -- Function to call at an interrupt.
+end
+
+--! Set the direction of facing while standing idle.
+--!param direction (string) Direction of facing.
+--!return (action) Self, for daisy-chaining.
+function IdleAction:setDirection(direction)
+  self.direction = direction
+  return self
+end
+
+--! Set the function to call on interrupt.
+--!param on_interrupt (function) Function to call on interrupt.
+--!return (action) Self, for daisy-chaining.
+function IdleAction:setOnInterrupt(on_interrupt)
+  self.on_interrupt = on_interrupt
+  return self
+end
+
 local action_idle_interrupt = permanent"action_idle_interrupt"( function(action, humanoid)
   humanoid:setTimer(1, humanoid.finishAction)
 end)

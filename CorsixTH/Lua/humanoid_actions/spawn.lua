@@ -18,6 +18,42 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SpawnAction" (HumanoidAction)
+
+---@type SpawnAction
+local SpawnAction = _G["SpawnAction"]
+
+function SpawnAction:SpawnAction()
+  self:HumanoidAction("spawn")
+  self.point = nil -- x, y, direction
+  self.mode = nil -- mode of spawaning: "spawn" or "despawn"
+  self.offset = nil -- Offset in position??
+end
+
+--! Set the position and direction of the spawn point.
+--!param point (table: x, y, direction) point Position and direction.
+--!return (action) Return self for daisy chaining.
+function SpawnAction:setPoint(point)
+  self.point = point
+  return self
+end
+
+--! Set the mode of spawning (spawn or despawn).
+--!param mode (str) Spawning mode.
+--!return (action) Return self for daisy chaining.
+function SpawnAction:setMode(mode)
+  self.mode = mode
+  return self
+end
+
+--! Set the offset of spawning.
+--!param offset (table x, y) Position offset.
+--!return (action) Return self for daisy chaining.
+function SpawnAction:setOffset(offset)
+  self.offset = offset
+  return self
+end
+
 local orient_opposite = {
   north = "south",
   west = "east",

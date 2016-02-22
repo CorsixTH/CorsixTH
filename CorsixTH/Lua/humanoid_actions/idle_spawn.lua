@@ -17,6 +17,34 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+
+class "IdleSpawnAction" (HumanoidAction)
+
+---@type IdleSpawnAction
+local IdleSpawnAction = _G["IdleSpawnAction"]
+
+function IdleSpawnAction:IdleSpawnAction()
+  self:HumanoidAction("idle_spawn")
+  self.spawn_animation = nil
+  self.point = nil -- x, y, direction of the spawn animation
+end
+
+--! Set the animation.
+--!param anim (int) Animation to play.
+--!return (action) Return self for daisy chaining.
+function IdleSpawnAction:setAnimation(anim)
+  self.spawn_animation = anim
+  return self
+end
+
+--! Set the position and direction of the animation.
+--!param point (table x, y, direction) Position and direction.
+--!return (action) Return self for daisy chaining.
+function IdleSpawnAction:setPoint(point)
+  self.point = point
+  return self
+end
+
 local function action_idle_spawn_start(action, humanoid)
   action.must_happen = true
 

@@ -18,6 +18,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "KnockDoorAction" (HumanoidAction)
+
+---@type KnockDoorAction
+local KnockDoorAction = _G["KnockDoorAction"]
+
+--! Constructor for knocking on the door action.
+--!param door (Object) Door to knock on.
+--!param direction (string) Direction of facing.
+function KnockDoorAction:KnockDoorAction(door, direction)
+  self:HumanoidAction("knock_door")
+  self:setMustHappen()
+  self.door = door -- Door to knock on.
+  self.direction = direction -- Direction of facing.
+end
+
 local action_knock_door_tick = permanent"action_knock_door_tick"( function(humanoid)
   local door = humanoid.user_of
   door:removeUser(humanoid)

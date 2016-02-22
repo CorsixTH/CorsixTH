@@ -18,6 +18,50 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "WalkAction" (HumanoidAction)
+
+---@type WalkAction
+local WalkAction = _G["WalkAction"]
+
+--! Action to walk to a given position.
+--!param x (int) X coordinate of the destination tile.
+--!param y (int) Y coordinate of the destination tile.
+function WalkAction:WalkAction(x, y)
+  self:HumanoidAction("walk")
+  self.x = x
+  self.y = y
+  self.truncate_only_on_high_priority = false
+  self.walking_to_vaccinate = false -- Nurse walking with the intention to vaccinate
+  self.is_entering = false -- Whether the walk enters a room.
+end
+
+function WalkAction:setTruncateOnHighPriority(allow_truncate)
+  if allow_truncate == nil then allow_truncate = true end
+
+  self.truncate_only_on_high_priority = allow_truncate
+  return self
+end
+
+--! Nurse is walking with the intention to vaccinate.
+--!param wtv (boolean or nil) If set or nil, set the walking_to_vaccinate flag.
+--!return (action) self, for daisy-chaining.
+function WalkAction:setWalkingToVaccinate(wtv)
+  if wtv == nil then wtv = true end
+
+  self.walking_to_vaccinate = wtv
+  return self
+end
+
+--! Set a flag whether the walk enters a room.
+--!param entering (bool) If set or nil, set the flag of entering the room.
+--!return (action) self, for daisy-chaining.
+function WalkAction:setIsEntering(entering)
+  if entering == nil then entering = true end
+
+  self.is_entering = entering
+  return self
+end
+
 local action_walk_interrupt
 action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
   if action.truncate_only_on_high_priority and not high_priority then

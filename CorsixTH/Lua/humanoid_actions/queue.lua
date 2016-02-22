@@ -18,6 +18,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "QueueAction" (HumanoidAction)
+
+---@type QueueAction
+local QueueAction = _G["QueueAction"]
+
+--! Queue for something (door or reception desk).
+--!param x X position of the queue.
+--!param y Y position of the queue.
+--!param queue (Queue) Queue to join
+function QueueAction:QueueAction(x, y, queue)
+  self:HumanoidAction("queue")
+  self.x = x -- Position of the queue(?)
+  self.y = y
+  self.face_x = nil -- Tile to turn the face to.
+  self.face_y = nil
+  self.queue = queue
+  self.reserve_when_done = nil -- Object to reserve when leaving the queue.
+end
+
+--! Set the object to reserve when queueing is done.
+--!param door (object) Object to reserve when leaving the queue.
+--!return (action) self, for daisy-chaining.
+function QueueAction:setReserveWhenDone(door)
+  self.reserve_when_done = door
+  return self
+end
+
+--! Set the tile to face.
+--!param face_x (int) X coordinate of the tile to face.
+--!param face_y (int) Y coordinate of the tile to face.
+--!return (action) self, for daisy-chaining.
+function QueueAction:setFaceDirection(face_x, face_y)
+  self.face_x = face_x
+  self.face_y = face_y
+  return self
+end
+
 local function get_direction(x, y, facing_x, facing_y)
   if facing_y < y then
     return "north"

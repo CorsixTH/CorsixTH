@@ -17,6 +17,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+
+class "VipGoToNextRoomAction" (HumanoidAction)
+
+---@type VipGoToNextRoomAction
+local VipGoToNextRoomAction = _G["VipGoToNextRoomAction"]
+
+function VipGoToNextRoomAction:VipGoToNextRoomAction()
+  self:HumanoidAction("vip_go_to_next_room")
+end
+
 local action_vip_go_to_next_room_end = permanent"action_next_room_end"( function(humanoid)
   humanoid:finishAction()
 end)
