@@ -13,43 +13,6 @@ And if there is no existing issue discussion for what you want to work on
 please open a new issue for it and tell other devs here that your going to/
 have started working on it.
 
-ISSUE REPORTING:
-
-GitHub currently doesn't support automatic issue templates, so follow the
-instructions below when you want to make a suggestion, bug report, or pull
-request.
-
-Please report only one bug, suggestion or pull request per issue,
-
-BUG REPORT
-
-Please answer the questions below when you want to report a bug. A bug could
-be for example an error crash, graphical glitch or unexpected behavior. Please
-copy the questions below to your issue and answer them when you want to report
-a bug:
-
-What steps will reproduce the problem?
-1.
-2.
-3.
-
-What is the expected output? What do you see instead?
-
-What version of CorsixTH are you using (e.g. "0.30", "4c66e39985")?
-
-What operating system / compile settings are you using?
-
-What level was this on (e.g. "Demo level", "Full game level 12")?
-
-Upload a saved game file (preferably an autosave from before the error) if you
-have one and it is relevant. Look at HOW TO UPLOAD GAMELOG AND/OR SAVES for how
-to do this.
-
-If possible, also upload the gamelog. Look at HOW TO UPLOAD GAMELOG AND/OR
-SAVES for how to do this.
-
-Please provide any additional information below.
-
 SUGGESTION
 
 If you want to make a suggestion, please copy the following  questions into
@@ -64,17 +27,6 @@ PULL REQUEST
 When providing a pull request ensure the description field describes the major
 changes from the request. If your pull request relates to any existing
 issues, include those issues in the description. e.g. "Fixes issue #1"
-
-HOW TO UPLOAD GAMELOG AND/OR SAVES
-
-As GitHub currently only supports uploading of images, you will have to upload
-your gamelog(.txt) and your savegames to an another source such as Google
-Drive, Dropbox, or SkyDrive/OneDrive. Add the link to the file to your issue
-and make the file(s) public, so we can access your gamelog or savegame. The
-most important thing is to not remove these files after you uploaded them!
-
-Also make sure you don't use a file hosting service which will automatically
-delete your file after a time.
 
 
 CONTRIBUTING CODE:
