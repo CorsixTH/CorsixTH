@@ -1561,9 +1561,9 @@ function Hospital:receiveMoneyForTreatment(patient)
     local disease_id
     local reason
     if not self.world.free_build_mode then
-      local disease_id = patient:getDiseaseId()
-      local casebook = self.disease_casebook[disease_id]
-      local amount = self:getTreatmentPrice(disease_id)
+      local casebook_id = patient:getCasebookId()
+      local casebook = self.disease_casebook[casebook_id]
+      local amount = self:getTreatmentPrice(casebook_id)
 
       -- 25% of the payments now go through insurance
       if patient.insurance_company then
@@ -1582,7 +1582,7 @@ function Hospital:receiveMoneyForTreatment(patient)
 end
 
 --! Function to determine the price for a treatment, modified by reputation and percentage
--- Treatment charge should never be less than the starting price if reputation falls below 500
+--! Treatment charge should never be less than the starting price if reputation falls below 500
 function Hospital:getTreatmentPrice(disease)
   local reputation = self.disease_casebook[disease].reputation or self.reputation
   local percentage = self.disease_casebook[disease].price
@@ -1604,7 +1604,8 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
--- Pay drug if needed
+--! Pay drug if drug has been purshased to treat a patient
+--!param patient(patient); the patient who's been treated with the drug
 function Hospital:paySupplierForDrug(patient)
   local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
   if drug_amount ~= 0 then
