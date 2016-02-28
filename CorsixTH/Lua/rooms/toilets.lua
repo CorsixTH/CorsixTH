@@ -40,8 +40,6 @@ class "ToiletRoom" (Room)
 ---@type ToiletRoom
 local ToiletRoom = _G["ToiletRoom"]
 
-room.free_loos = 0
-
 function ToiletRoom:ToiletRoom(...)
   self:Room(...)
   self.door.queue:setBenchThreshold(3)
@@ -58,21 +56,6 @@ function ToiletRoom:roomFinished()
   end
   self.maximum_patients = number
   Room.roomFinished(self)
-end
-
--- if any of the occupants are not using a loo then the loo must be free!
-function ToiletRoom:freeLoos()
-  local number = 0
-  for humanoid in pairs(self.humanoids) do
-    if class.is(humanoid, Patient) then
-      if (humanoid.action_queue[1].name == "use_object"
-      and humanoid.action_queue[1].object.object_type.id ~= "loo") then
-        number = number + 1
-        room.free_loos = number
-      end
-    end
-  end
-  return room.free_loos
 end
 
 function ToiletRoom:dealtWithPatient(patient)
@@ -170,25 +153,29 @@ end
 -- that some of them may not be using the loo, allowing others to enter the room earlier than normal;
 -- but not if there is only one loo in the room, then it becomes a private toilet with only one person at a time.
 function ToiletRoom:getPatientCount()
-  local count = 0
-  local true_space = 0
+  local number_users = 0
+  local not_using_loo = 0
   for humanoid in pairs(self.humanoids) do
     if class.is(humanoid, Patient) then
-      count = count + 1
-      self:freeLoos()
-      if self.maximum_patients > 1 then
-        true_space = count - room.free_loos
-      else
-        true_space = count
+      number_users = number_users + 1
+
+      if humanoid.action_queue[1].name == "use_object" and
+          humanoid.action_queue[1].object.object_type.id ~= "loo" then
+        not_using_loo = not_using_loo + 1
       end
     end
   end
-  return true_space
+
+  if self.maximum_patients == 1 then
+    return number_users
+  else
+    return number_users - not_using_loo
+  end
 end
 
 function ToiletRoom:afterLoad(old, new)
-  if old < 74 then
-    room.free_loos = 0
+  if old < 110 then
+    room.free_loos = nil
   end
   Room.afterLoad(self, old, new)
 end
