@@ -637,6 +637,8 @@ tooltip.casebook.cure_type.unknown = "Todavía no sabes cómo curar esta enferme
 tooltip.research_policy.no_research = "En este momento no se está investigando ningún apartado de esta categoría."
 tooltip.research_policy.research_progress = "Progreso del siguiente descubrimiento de esta categoría: %1%/%2%"
 
+menu["player_count"] = "CANTIDAD DE JUGADORES"
+
 menu_file = {
   load =    " (MAYUS+L) CARGAR   ",
   save =    " (MAYUS+S) GUARDAR   ",
@@ -692,6 +694,7 @@ menu_charts = {
 
 menu_debug = {
   jump_to_level               = "  CAMBIAR DE NIVEL  ",
+  connect_debugger            = "  (CTRL + C) CONECTAR A SERVIDOR DBGp LUA  ",
   transparent_walls           = "  (X) PAREDES TRANSPARENTES  ",
   limit_camera                = "  LIMITAR CáMARA  ",
   disable_salary_raise        = "  DESACTIVAR SUBIDA DE SUELDO  ",
@@ -705,7 +708,6 @@ menu_debug = {
   dump_gamelog                = "  (CTRL+D) VOLCAR REGISTRO DEL JUEGO  ",
   map_overlay                 = "  SOBREPONER MAPA  ",
   sprite_viewer               = "  VISUALIZADOR DE ANIMACIONES  ",
-  connect_debugger            = "  (CTRL + C) CONECTAR SERVIDOR LUA DBGp  "
 }
 menu_debug_overlay = {
   none                        = "  NADA  ",
@@ -720,6 +722,12 @@ menu_debug_overlay = {
   byte_6                      = "  BYTE 6  ",
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCELA  ",
+}
+menu_player_count = {
+	players_1 = "  1 JUGADOR  ",
+	players_2 = "  2 JUGADORES  ",
+	players_3 = "  3 JUGADORES  ",
+	players_4 = "  4 JUGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación ahí bloquearás el acceso a ciertas partes del hospital.",
@@ -797,6 +805,9 @@ letter = {
   dear_player = "Estimado %s,",
   custom_level_completed = "¡Bien hecho! ¡Has completado todos los objetivos de este nivel personalizado!",
   return_to_main_menu = "¿Quieres volver al menú principal o seguir jugando?",
+  campaign_level_completed = "¡Buen trabajo! Has superado este nivel, ¡pero aún no has acabado!\n ¿Te interesaría aceptar un puesto en el hospital %s?",
+  campaign_completed = "¡Increíble! Has conseguido superar todos los niveles. Ya puedes relajarte y disfrutar mientras hablas de tus logros en los foros de toda Internet. ¡Buena suerte!",
+  campaign_level_missing = "Parece que el siguiente nivel de esta campaña está desaparecido. (Nombre: %s)",
 }
 
 install = {
@@ -812,10 +823,12 @@ misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto
 
 main_menu = {
   new_game = "Campaña",
+  custom_campaign = "Campaña personalizada",
   custom_level = "Misión individual",
   continue = "Continuar partida",
   load_game = "Cargar partida",
   options = "Opciones",
+  map_edit = "Editor de mapas",
   savegame_version = "Versión del guardado: ",
   version = "Versión: ",
   exit = "Salir",
@@ -823,10 +836,12 @@ main_menu = {
 
 tooltip.main_menu = {
   new_game = "Empezar el primer nivel de la campaña.",
+  custom_campaign = "Juega una campaña creada por la comunidad.",
   custom_level = "Construir tu hospital en un nivel concreto.",
   continue = "Reanuda tu última partida guardada.",
   load_game = "Cargar una partida guardada.",
   options = "Ajustar la configuración.",
+  map_edit = "Crear un mapa personalizado.",
   exit = "¡No, no, por favor, no te vayas!",
   quit = "Estás a punto de salir de CorsixTH.   ¿Seguro que quieres continuar?",
 }
@@ -844,11 +859,23 @@ tooltip.load_game_window = {
 custom_game_window = {
   caption = "Partida personalizada",
   free_build = "Construcción libre",
+  load_selected_level = "Comenzar",
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Información de este escenario, que utiliza: %s           Informe: %s",
+  choose_game = "Haz clic en un nivel para ver más información sobre el mismo.",
   free_build = "Marca esta casilla si quieres jugar sin dinero ni condiciones para ganar o perder.",
+  load_selected_level = "Cargar e iniciar el nivel seleccionado.",
+}
+
+custom_campaign_window = {
+  caption = "Campaña personalizada",
+  start_selected_campaign = "Comenzar campaña",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Selecciona una campaña para ver más información sobre la misma.",
+  start_selected_campaign = "Cargar el primer nivel de esta campaña.",
 }
 
 save_game_window = {
@@ -859,6 +886,16 @@ save_game_window = {
 tooltip.save_game_window = {
   save_game = "Sobrescribir guardado %s",
   new_save_game = "Introduce el nombre de la nueva partida guardada",
+}
+
+save_map_window = {
+  caption = "Guardar mapa (%1%)",
+  new_map = "Nuevo mapa",
+}
+
+tooltip.save_map_window = {
+  map = "Sobrescribir el mapa %s.",
+  new_map = "Introduce el nombre del mapa guardado.",
 }
 
 menu_list_window = {
@@ -1030,6 +1067,13 @@ errors = {
   unavailable_screen_size = "El tamaño de pantalla que has seleccionado no está disponible en el modo de pantalla completa.",
   alien_dna = "NOTA: Los pacientes alienígenas no tienen animaciones para sentarse, abrir puertas, llamar a puertas, etc. Por lo tanto, al igual que en Theme Hospital, para hacer estas cosas aparentarán cambiar a una imagen normal y luego volverán a su estado.  Los pacientes con ADN alienígena solo aparecerán si el archivo del nivel lo indica.",
   fractured_bones = "NOTA: La animación de las pacientes femeninas con Fracturas óseas no es perfecta.",
+  could_not_load_campaign = "Error al cargar la campaña %s.",
+  could_not_find_first_campaign_level = "No se ha encontrado el primer nivel de la campaña %s.",
+}
+
+warnings = {
+  levelfile_variable_is_deprecated = "Aviso: El nivel %s contiene una definición de variable obsoleta en el archivo del nivel." ..
+                                     "'%LevelFile' ha sido renombrado como '%MapFile'. Avisa al creador del mapa para que actualice el nivel.",
 }
 
 confirmation = {
@@ -1121,8 +1165,6 @@ cheats_window = {
 tooltip.cheats_window = {
   close = "Cerrar la ventana de trucos",
   cheats = {
-    end_month = "Avanza al final del mes.",
-    end_year = "Avanza al final del año.",
     money = "Añade 10.000 dólares a tu cuenta bancaria.",
     all_research = "Completa todas las investigaciones.",
     emergency = "Crea una emergencia.",
@@ -1136,6 +1178,16 @@ tooltip.cheats_window = {
     lose_level = "Hace que pierdas el nivel actual.",
     win_level = "Hace que ganes el nivel actual.",
   }
+}
+
+introduction_texts = {
+  demo =
+    "¡Bienvenido al hospital de demostración!" ..
+    "Por desgracia, la demo sólo contiene este nivel. ¡Pero tiene cosas como para distraerte un buen rato!" ..
+    "Te enfrentarás a varias enfermedades que deberás curar construyendo varias salas. De vez en cuando pueden aparecer emergencias. Necesitarás investigar varios tipos de consultas mediante una consulta de investigación." ..
+    "Tu objetivo es ganar 100.000 dólares, una reputación de 700, que tu hospital tenga un valor de 70.000 dólares y que hayas curado al menos al 75% de tus pacientes." ..
+    "Procura que tu reputación no caiga por debajo de 300 ni que mates a más del 40% de tus pacientes o perderás el nivel." ..
+    "¡Suerte!",
 }
 
 calls_dispatcher = {
@@ -1164,6 +1216,40 @@ update_window = {
 tooltip.update_window = {
   download = "Ir a la página de descargas para obtener la última versión de CorsixTH.",
   ignore = "Ignorar esta actualización por el momento. Volverás a ser notificado la próxima vez que ejecutes CorsixTH.",
+}
+
+map_editor_window = {
+  pages = {
+    inside = "Interior",
+    outside = "Exterior",
+    foliage = "Vegetación",
+    hedgerow = "Setos",
+    pond = "Estaque",
+    road = "Camino",
+    north_wall = "Muro norte",
+    west_wall = "Muro oeste",
+    helipad = "Helipuerto",
+    delete_wall = "Borrar muros",
+    parcel_0 = "Parcel 0",
+    parcel_1 = "Parcel 1",
+    parcel_2 = "Parcel 2",
+    parcel_3 = "Parcel 3",
+    parcel_4 = "Parcel 4",
+    parcel_5 = "Parcel 5",
+    parcel_6 = "Parcel 6",
+    parcel_7 = "Parcel 7",
+    parcel_8 = "Parcel 8",
+    parcel_9 = "Parcel 9",
+    camera_1 = "Cámara 1",
+    camera_2 = "Cámara 2",
+    camera_3 = "Cámara 3",
+    camera_4 = "Cámara 4",
+    heliport_1 = "Helipuerto 1",
+    heliport_2 = "Helipuerto 2",
+    heliport_3 = "Helipuerto 3",
+    heliport_4 = "Helipuerto 4",
+    paste = "Pegar zona",
+  }
 }
 
 dynamic_info.patient.actions.epidemic_vaccinated = "Ya no soy contagioso"
