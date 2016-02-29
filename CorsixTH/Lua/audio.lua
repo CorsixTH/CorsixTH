@@ -198,7 +198,7 @@ function Audio:initSpeech(speech_file)
   end
   local archive_data, err = load_sound_file(speech_file)
 
-  -- If sound file not found and language choosen is not English,
+  -- If sound file not found and language chosen is not English,
   -- maybe we can have more chance loading English sounds
   if not archive_data and speech_file ~= "Sound-0.dat" and self.app.good_install_folder then
     if self.speech_file_name == "Sound-0.dat" then

@@ -34,7 +34,7 @@ function Patient:Patient(...)
   self.action_string = ""
   self.cured = false
   self.infected = false
-  -- To distingish between actually being dead and having a nil hospital
+  -- To distinguish between actually being dead and having a nil hospital
   self.dead = false
   -- Is the patient reserved for a particular nurse when being vaccinated
   self.reserved_for = false
@@ -624,7 +624,7 @@ function Patient:tickDay()
   -- Vomitings.
   if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
-    --Only a patient with a health value of less than 0.8 can be the inital vomiter, however :)
+    --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
     local initialVomitMult = 0.002   --The initial chance of vomiting.
     local proximityVomitMult = 1.5  --The multiplier used when in proximity to vomit.
     local nausea = (1.0 - self.attributes["health"]) * initialVomitMult

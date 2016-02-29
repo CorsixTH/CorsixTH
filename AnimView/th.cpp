@@ -309,7 +309,7 @@ bool THAnimations::loadFrameFile(wxString sFilename)
     /*
       256 is a common flag - could be x-flip.
       The lower byte can also take non-zero values - could be ghost palette
-      indicies.
+      indices.
     */
     /*
     FILE *f = fopen("E:\\list.txt", "wt");

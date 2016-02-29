@@ -7,7 +7,7 @@ ENDIF(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
 # Project Declaration
 PROJECT(CorsixTH)
 
-# Basic platform dependant stuff
+# Basic platform dependent stuff
 IF(UNIX)
   IF(APPLE)
     # fruit goes here
@@ -94,7 +94,7 @@ IF(SDL_FOUND)
     message(FATAL_ERROR "Error: SDL was found but SDLmain was not")
     message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
   ENDIF(SDLMAIN_LIBRARY STREQUAL "")
-  # No need to specify sdlmain seperately, the FindSDL.cmake file will take care of that. If not we get an error about it
+  # No need to specify sdlmain separately, the FindSDL.cmake file will take care of that. If not we get an error about it
   TARGET_LINK_LIBRARIES(CorsixTH ${SDL_LIBRARY})
   message("  SDL found")
 ELSE(SDL_FOUND)

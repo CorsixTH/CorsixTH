@@ -623,7 +623,7 @@ public class ReaderWriter {
             // whitespaces
             // result: "#town", "StartCash", "InterestRate", "100000", "300"
             // we check the position of each parameter, so we know which value
-            // belongs to which paramter.
+            // belongs to which parameter.
             if ((line.split("[\\.\\s+]")[i]).matches(parameter))
                 if (variable != "interest") {
 

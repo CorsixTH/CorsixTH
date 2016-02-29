@@ -395,7 +395,7 @@ public:
                     writeStackObject(-2);
                     // The naive thing to do now would be writeStackObject(-1)
                     // but this can easily lead to Lua's C call stack limit
-                    // being hit. To reduce the likelyhood of this happening,
+                    // being hit. To reduce the likelihood of this happening,
                     // we check to see if about to write another table.
                     if(lua_type(L, -1) == LUA_TTABLE)
                     {

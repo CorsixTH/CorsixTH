@@ -78,7 +78,7 @@ function FilteredFileTreeNode:getLabel()
   return label
 end
 
---! A sortable tree control that accomodates a certain file type and also possibly shows
+--! A sortable tree control that accommodates a certain file type and also possibly shows
 --  their last modification dates.
 class "FilteredTreeControl" (TreeControl)
 

@@ -172,8 +172,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- A list of how much each insurance company owes you. The first entry for
   -- each company is the current month's dept, the second the previous
   -- month and the third the month before that.
-  -- All payment that goes through an insurance company a given month is payed two
-  -- months later. For example diagnoses in April are payed the 1st of July
+  -- All payment that goes through an insurance company a given month is paid two
+  -- months later. For example diagnoses in April are paid the 1st of July
   self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
 
   -- Initialize diseases
@@ -1075,7 +1075,7 @@ function Hospital:onEndMonth()
 
   -- TODO: do you get interest on the balance owed?
   for i, company in ipairs(self.insurance_balance) do
-    -- Get the amount that is about to be payed to the player
+    -- Get the amount that is about to be paid to the player
     local payout_amount = company[3]
     if payout_amount > 0 then
       local str = _S.transactions.insurance_colon .. " " .. self.insurance[i]
