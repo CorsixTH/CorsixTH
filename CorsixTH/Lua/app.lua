@@ -756,7 +756,7 @@ function App:checkMissingStringsInLanguage(dir, language)
 end
 
 function App:fixConfig()
-  -- Fill in default values for things which dont exist
+  -- Fill in default values for things which don't exist
   local _, config_defaults = dofile "config_finder"
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
@@ -1124,7 +1124,7 @@ function App:checkInstallFolder()
 
     if #corrupt ~= 0 then
       table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " ..
-      "so don't be suprised if CorsixTH crashes. At least the following files are wrong:")
+      "so don't be surprised if CorsixTH crashes. At least the following files are wrong:")
       table.insert(corrupt, message)
     end
   end

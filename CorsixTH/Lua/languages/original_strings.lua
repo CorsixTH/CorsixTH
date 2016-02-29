@@ -961,7 +961,7 @@ insurance_companies = {
 -- Menu strings are a little complicated: Different versions of the original
 -- game have slightly different menu strings. The strings are also organised
 -- by more levels than traditional strings. For the most part, this extra
--- organisation can be use to offset the differences in menu string indicies.
+-- organisation can be use to offset the differences in menu string indices.
 local M = {{}}
 do
   local i = 2

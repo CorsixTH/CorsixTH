@@ -519,7 +519,7 @@ changelog for version 0.10 below.
   
 -- User Interface --
 
-* Enchancement: Since consultants are unable to learn new skills icons for 
+* Enhancement: Since consultants are unable to learn new skills icons for
   not yet fully learned skills are now removed when a doctor is promoted.
 * Fix: Disabling background music no longer disables sound effects on Windows.
 * Fix: Checking if a sound exists crashed the game if there was no sound 
@@ -816,7 +816,7 @@ Version Beta 6 - released 2011-03-24
 * Fix: Various tweaks to the operating theatre logic.
 * Fix: Don't crash if the staff window of a leaving staff member
   is open when he/she leaves the world.
-* Fix: Persistant data (salary, built rooms etc) are no longer lost
+* Fix: Persistent data (salary, built rooms etc) are no longer lost
   after restarting a level.
 
 -- User Interface --
@@ -992,7 +992,7 @@ Version Beta 2 - released 2010-03-24
 * Feature: Tooltips are displayed when hovering over buttons for some time.
 * Feature: Emergencies may happen every now and then.
 * Feature: Hospital reputation system.
-* Feature: Humurous disease description faxes are now shown when a disease is
+* Feature: Humorous disease description faxes are now shown when a disease is
   first diagnosed.
 * Feature: Room blueprints can be resized during the build process.
 

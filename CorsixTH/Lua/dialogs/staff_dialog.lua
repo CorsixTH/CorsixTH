@@ -260,7 +260,7 @@ function UIStaff:onMouseDown(button, x, y)
   return Window.onMouseDown(self, button, x, y)
 end
 
--- Helper function to faciliate humanoid_class comparison wrt. Surgeons
+-- Helper function to facilitate humanoid_class comparison wrt. Surgeons
 local function surg_compat(class)
   return class == "Surgeon" and "Doctor" or class
 end

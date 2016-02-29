@@ -600,7 +600,7 @@ local function utf8char(c)
   end
   codepoint = codepoint + (c:byte(1) % 2^(7 - #c)) * multiplier
   -- If the utf-8 character is a combining diacritical mark, merge it with the
-  -- preceeding normal character
+  -- preceding normal character
   if prechar and (0x300 <= codepoint and codepoint < 0x370) then
     if combine_diacritical_marks[prechar] then
       if combine_diacritical_marks[prechar][codepoint] then
@@ -619,7 +619,7 @@ end
 
 utf8conv = function(s)
   -- Pull out each individual utf-8 character and pass it through utf8char
-  -- [\1-\127] picks up a preceeding ASCII character to combine diacritics
+  -- [\1-\127] picks up a preceding ASCII character to combine diacritics
   -- [\192-\253] picks up the first byte of a utf-8 character (technically
   --   only 194 through 244 should be used)
   -- [\128-\191] picks up the remaining bytes of a utf-8 character

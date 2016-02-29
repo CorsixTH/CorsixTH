@@ -985,7 +985,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY);
         if(!bFirst) {
             //since the scanline count from one THMapScanlineIterator to another can differ
-            //syncronization between the current iterator and the former one is neeeded
+            //synchronization between the current iterator and the former one is neeeded
              if(itrNode.x() < -64)
                  ++itrNode;
              while(formerIterator.x() < itrNode.x())

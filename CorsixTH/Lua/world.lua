@@ -640,7 +640,7 @@ function World:tickEarthquake()
       self.ui.tick_scroll_amount = {x = self.randomX, y = self.randomY}
 
       local hospital = self:getLocalPlayerHospital()
-      -- loop through the patients and allow the possibilty for them to fall over
+      -- loop through the patients and allow the possibility for them to fall over
       for _, patient in ipairs(hospital.patients) do
         local current = patient.action_queue[1]
 

@@ -261,11 +261,11 @@ public:
     //! Load original animations.
     /*!
         setSpriteSheet() must be called before calling this.
-        @param pStartData Animation first frame indicies (e.g. VSTART-1.ANI)
+        @param pStartData Animation first frame indices (e.g. VSTART-1.ANI)
         @param iStartDataLength Length of \a pStartData.
         @param pFrameData Frame details (e.g. VFRA-1.ANI)
         @param iFrameDataLength Length of \a pFrameData
-        @param pListData Element indicies list (e.g. VLIST-1.ANI)
+        @param pListData Element indices list (e.g. VLIST-1.ANI)
         @param iListDataLength Length of \a pListData
         @param pElementData Element details (e.g. VELE-1.ANI)
         @param iElementDataLength Length of \a pElementData
@@ -322,7 +322,7 @@ public:
         @param pCanvas The render target to draw onto.
         @param iFrame The frame index to draw (should be in range [0, getFrameCount() - 1])
         @param oLayers Information to decide what to draw on each layer.
-            An animation is comprised of upto thirteen layers, numbered 0
+            An animation is comprised of up to thirteen layers, numbered 0
             through 12. Some animations will have different options for what to
             render on each layer. For example, patient animations generally
             have the different options on layer 1 as different clothes, so if

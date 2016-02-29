@@ -37,7 +37,7 @@ Not a programmer? Don't know another language? Well you can still help! come vis
 
 ## More
 
-Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, if you cant find what you are looking for feel free to contact us using one of the methods below.
+Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, if you can't find what you are looking for feel free to contact us using one of the methods below.
 
 ## Contact
 

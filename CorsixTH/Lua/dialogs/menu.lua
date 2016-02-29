@@ -45,7 +45,7 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over
-  -- This should be present in self.open_menus, else it wont be drawn
+  -- This should be present in self.open_menus, else it won't be drawn
   self.active_menu = false
   -- The list of menus which should be displayed
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x

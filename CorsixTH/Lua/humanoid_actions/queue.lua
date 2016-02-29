@@ -319,7 +319,7 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     must_happen = true,
   }, num_actions_prior + 1)
   machine:addReservedUser(humanoid)
-  -- Make sure noone thinks we're sitting down anymore.
+  -- Make sure no one thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end)
 

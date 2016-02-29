@@ -240,7 +240,7 @@ end
 --[[ Register a function (related to the entity) to be called at a later time.
 ! Each `Entity` can have a single timer associated with it, and due to this
 limit of one, it is almost always the case that the currently active humanoid
-action is the only thing wich calls `setTimer`.
+action is the only thing which calls `setTimer`.
 If self.slow_animation is set then all timers will be doubled as animation
 length will be doubled.
 !param tick_count (integer) If 0, then `f` will be called during the entity's

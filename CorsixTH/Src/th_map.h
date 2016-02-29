@@ -202,9 +202,9 @@ struct THMapNode : public THLinkList
     uint16_t iRoomId;
 
     //! A value between 0 (extreme cold) and 65535 (extreme heat) representing
-    //! the temperature of the tile. To allow efficent calculation of a tile's
+    //! the temperature of the tile. To allow efficient calculation of a tile's
     //! heat based on the previous tick's heat of the surrounding tiles, the
-    //! previous temperature is also stored, with the array indicies switching
+    //! previous temperature is also stored, with the array indices switching
     //! every tick.
     uint16_t aiTemperature[2];
 

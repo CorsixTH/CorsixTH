@@ -283,7 +283,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   local num_ready = {0}
   ----- BEGIN Save game compatibility -----
-  -- These function are merely for save game compability.
+  -- These function are merely for save game compatibility.
   -- And they does not participate in the current game logic.
   -- Do not move or edit
   local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)

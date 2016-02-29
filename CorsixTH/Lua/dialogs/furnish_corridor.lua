@@ -60,7 +60,7 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   }
   if objects then
     for _, object in pairs(objects) do
-      self.objects[#self.objects + 1] = {object = object.object, start_qty = object.qty, qty = object.qty, min_qty = object.min_qty} -- Had to make a copy of objects list. Otherwise, we will modify the original variable (Opening dialog twice keeps memory of previously choosen quantities)
+      self.objects[#self.objects + 1] = {object = object.object, start_qty = object.qty, qty = object.qty, min_qty = object.min_qty} -- Had to make a copy of objects list. Otherwise, we will modify the original variable (Opening dialog twice keeps memory of previously chosen quantities)
     end
   else
     for _, object in ipairs(app.objects) do

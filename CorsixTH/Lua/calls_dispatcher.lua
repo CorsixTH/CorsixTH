@@ -433,7 +433,7 @@ function CallsDispatcher.actionInterruptHandler(action, humanoid)
   end
 end
 
--- Called when a call is completed sucessfully
+-- Called when a call is completed successfully
 function CallsDispatcher.onCheckpointCompleted(call)
   if not call.dropped and call.assigned then
     if debug then CallsDispatcher.dumpCall(call, "completed") end
