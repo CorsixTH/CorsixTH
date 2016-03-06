@@ -242,38 +242,28 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   end
 
   -- Either the patient is no longer sick, or he/she dies.
-
-  local cure_chance = hospital.disease_casebook[self.disease.id].cure_effectiveness
-  cure_chance = cure_chance * self.diagnosis_progress
-  if self.die_anims and math.random(1, 100) > cure_chance then
-    self:die()
-  else
-    -- to guess the cure is risky and the patient could die
-    if self.die_anims and math.random(1, 100) > (self.diagnosis_progress * 100) then
-      self:die()
-    else
-      if hospital.num_cured < 1 then
-        self.world.ui.adviser:say(_A.information.first_cure)
-      end
-      self.hospital.num_cured = hospital.num_cured + 1
-      self.hospital.num_cured_ty = hospital.num_cured_ty + 1
-      self.hospital:msgCured()
-      local casebook = hospital.disease_casebook[self.disease.id]
-      casebook.recoveries = casebook.recoveries + 1
-      if self.is_emergency then
-        self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
-      end
-      self.cured = true
-      self.infected = false
-      self:setMood("cured", "activate")
-      self.world.ui:playSound("cheer.wav") -- This sound is always heard
-      self.attributes["health"] = 1
-      self:changeAttribute("happiness", 0.8)
-      hospital:changeReputation("cured", self.disease)
-      self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
-      self:goHome(self.cured)
-      self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+  if self:isTreatmentEffective() then
+    if hospital.num_cured < 1 then
+      self.world.ui.adviser:say(_A.information.first_cure)
     end
+    self.hospital.num_cured = hospital.num_cured + 1
+    self.hospital.num_cured_ty = hospital.num_cured_ty + 1
+    self.hospital:msgCured()
+    local casebook = hospital.disease_casebook[self.disease.id]
+    casebook.recoveries = casebook.recoveries + 1
+    if self.is_emergency then
+      self.hospital.emergency.cured_emergency_patients = hospital.emergency.cured_emergency_patients + 1
+    end
+    self:cure()
+    self:setMood("cured", "activate")
+    self.world.ui:playSound("cheer.wav") -- This sound is always heard
+    self:changeAttribute("happiness", 0.8)
+    hospital:changeReputation("cured", self.disease)
+    self.treatment_history[#self.treatment_history + 1] = _S.dynamic_info.patient.actions.cured
+    self:goHome(self.cured)
+    self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
+  else
+    self:die()
   end
 
   hospital:updatePercentages()
@@ -288,6 +278,23 @@ function Patient:treated() -- If a drug was used we also need to pay for this
       end
     end
   end
+end
+
+--! Either the patient is cured, or he/she dies.
+--!return (boolean) True if cured, false if died.
+function Patient:isTreatmentEffective()
+  local cure_chance = self.hospital.disease_casebook[self.disease.id].cure_effectiveness
+  cure_chance = cure_chance * self.diagnosis_progress
+
+  local die = self.die_anims and math.random(1, 100) > cure_chance
+  return not die
+end
+
+--! Change patient internal state to "cured".
+function Patient:cure()
+  self.cured = true
+  self.infected = false
+  self.attributes["health"] = 1
 end
 
 function Patient:die()
