@@ -167,24 +167,26 @@ function Room:dealtWithPatient(patient)
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
 
-  if patient.disease and not patient.diagnosed then
-    -- Patient not yet diagnosed, hence just been in a diagnosis room.
-    -- Increment diagnosis_progress, and send patient back to GP.
+  if patient.disease then
+    if not patient.diagnosed then
+      -- Patient not yet diagnosed, hence just been in a diagnosis room.
+      -- Increment diagnosis_progress, and send patient back to GP.
 
-    patient:completeDiagnosticStep(self)
-    patient:queueAction{name = "seek_room", room_type = "gp"}
-    self.hospital:receiveMoneyForTreatment(patient)
-  elseif patient.disease and patient.diagnosed then
-    -- Patient just been in a cure room, so either patient now cured, or needs
-    -- to move onto next cure room.
-    patient.cure_rooms_visited = patient.cure_rooms_visited + 1
-    local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
-    if next_room then
-      -- Do not say that it is a treatment room here, since that check should already have been made.
-      patient:queueAction{name = "seek_room", room_type = next_room}
+      patient:completeDiagnosticStep(self)
+      patient:queueAction{name = "seek_room", room_type = "gp"}
+      self.hospital:receiveMoneyForTreatment(patient)
     else
-      -- Patient is "done" at the hospital
-      patient:treated()
+      -- Patient just been in a cure room, so either patient now cured, or needs
+      -- to move onto next cure room.
+      patient.cure_rooms_visited = patient.cure_rooms_visited + 1
+      local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
+      if next_room then
+        -- Do not say that it is a treatment room here, since that check should already have been made.
+        patient:queueAction{name = "seek_room", room_type = next_room}
+      else
+        -- Patient is "done" at the hospital
+        patient:treated()
+      end
     end
   else
     patient:queueAction{name = "meander", count = 2}
