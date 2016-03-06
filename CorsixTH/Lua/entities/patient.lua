@@ -516,6 +516,25 @@ function Patient:tapFoot()
   end
 end
 
+-- Increments "cures" statistics
+function Patient:incrementCuredCounts()
+  local hosp = self.hospital
+  hosp.num_cured = hosp.num_cured + 1
+  hosp.num_cured_ty = hosp.num_cured_ty + 1
+  local casebook = hosp.disease_casebook[self.disease.id]
+  casebook.recoveries = casebook.recoveries + 1
+  if self.is_emergency then
+    hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
+  end
+end
+
+-- Increment "not_cured" statistics
+function Patient:incrementNotCuredCounts()
+  local hosp = self.hospital
+  hosp.not_cured = hosp.not_cured + 1
+  hosp.not_cured_ty = hosp.not_cured_ty + 1
+end
+
 --! Make the patient leave the hospital. This function also handles some
 --! statistics (number of cured/kicked out patients, etc.)
 --! The mood icon is updated accordingly. Reputation is impacted accordingly.
@@ -544,21 +563,14 @@ function Patient:goHome(reason)
     if hosp.num_cured < 1 then
       self.world.ui.adviser:say(_A.information.first_cure)
     end
-    hosp.num_cured = hosp.num_cured + 1
-    hosp.num_cured_ty = hosp.num_cured_ty + 1
-    local casebook = hosp.disease_casebook[self.disease.id]
-    casebook.recoveries = casebook.recoveries + 1
-    if self.is_emergency then
-      hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
-    end
+    self:incrementCuredCounts()
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     self.hospital:msgCured()
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
     if not self.is_debug then
       hosp:changeReputation("kicked", self.disease)
-      hosp.not_cured = hosp.not_cured + 1
-      hosp.not_cured_ty = hosp.not_cured_ty + 1
+      self:incrementNotCuredCounts()
       local casebook = hosp.disease_casebook[self.disease.id]
       casebook.turned_away = casebook.turned_away + 1
     end
