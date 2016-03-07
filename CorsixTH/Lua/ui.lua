@@ -87,6 +87,24 @@ function UI:initKeyAndButtonCodes()
     end
   end
 
+  local keypad = {
+    ["Keypad 0"] = "insert",
+    ["Keypad 1"] = "end",
+    ["Keypad 2"] = "down",
+    ["Keypad 3"] = "pagedown",
+    ["Keypad 4"] = "left",
+    ["Keypad 6"] = "right",
+    ["Keypad 7"] = "home",
+    ["Keypad 8"] = "up",
+    ["Keypad 9"] = "pageup",
+    ["Keypad ."] = "delete",
+  }
+
+  -- Apply keypad remapping
+  for k, v in pairs(keypad) do
+    key_remaps[key_norms[k]] = key_norms[v]
+  end
+
   self.key_remaps = key_remaps
   self.key_to_button_remaps = key_to_button_remaps
 
@@ -498,6 +516,8 @@ end
 function UI:onKeyDown(rawchar, modifiers, is_repeat)
   local handled = false
   -- Apply key-remapping and normalisation
+  rawchar = string.sub(rawchar,1,6) == "Keypad" and
+            modifiers["numlockactive"] and string.sub(rawchar,8) or rawchar
   local key = rawchar:lower()
   do
     local mapped_button = self.key_to_button_remaps[key]
@@ -507,6 +527,9 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
     end
     key = self.key_remaps[key] or key
   end
+
+  -- Remove numlock modifier
+  modifiers["numlockactive"] = nil
 
   -- If there is one, the current textbox gets the key.
   -- It will not process any text at this point though.
@@ -541,6 +564,9 @@ end
 --! Called when the user releases a key on the keyboard
 --!param rawchar (string) The name of the key the user pressed.
 function UI:onKeyUp(rawchar)
+  rawchar = SDL.getKeyModifiers().numlockactive and
+            string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
+            rawchar
   local key = rawchar:lower()
   do
     local mapped_button = self.key_to_button_remaps[key]
