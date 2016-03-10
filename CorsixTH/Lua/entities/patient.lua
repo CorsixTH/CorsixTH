@@ -214,6 +214,24 @@ function Patient:setHospital(hospital)
   end
 end
 
+--! Decide the ID of the disease or treatment that the patient is paying for.
+--!return (string or nil) Id of the disease or treatment, or nil if the Id could
+--! not be decided.
+function Patient:getTreatmentDiseaseId()
+  if self.diagnosed then
+    return self.disease.id
+  else
+    local room_info = self:getRoom()
+    if not room_info then
+      print("Warning: Trying to receive money for treated patient who is "..
+          "not in a room")
+      return nil
+    end
+    room_info = room_info.room_info
+    return "diag_" .. room_info.id
+  end
+end
+
 function Patient:treated() -- If a drug was used we also need to pay for this
   local hospital = self.hospital
   local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0

@@ -1529,33 +1529,23 @@ end
 ]]
 function Hospital:receiveMoneyForTreatment(patient)
   if not self.world.free_build_mode then
-    local disease_id
+    local disease_id = patient:getTreatmentDiseaseId()
+    if disease_id == nil then return end
+    local casebook = self.disease_casebook[disease_id]
     local reason
-    if not self.world.free_build_mode then
-      if patient.diagnosed then
-        disease_id = patient.disease.id
-        reason = _S.transactions.cure_colon .. " " .. patient.disease.name
-      else
-        local room_info = patient:getRoom()
-        if not room_info then
-          print("Warning: Trying to receieve money for treated patient who is "..
-              "not in a room")
-          return
-        end
-        room_info = room_info.room_info
-        disease_id = "diag_" .. room_info.id
-        reason = _S.transactions.treat_colon .. " " .. room_info.name
-      end
-     local casebook = self.disease_casebook[disease_id]
-     local amount = self:getTreatmentPrice(disease_id)
-      casebook.money_earned = casebook.money_earned + amount
-      patient.world:newFloatingDollarSign(patient, amount)
-      -- 25% of the payments now go through insurance
-      if patient.insurance_company then
-        self:addInsuranceMoney(patient.insurance_company, amount)
-      else
-        self:receiveMoney(amount, reason)
-      end
+    if casebook.pseudo then
+      reason = _S.transactions.treat_colon .. " " .. casebook.disease.name
+    else
+      reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
+    end
+    local amount = self:getTreatmentPrice(disease_id)
+    casebook.money_earned = casebook.money_earned + amount
+    patient.world:newFloatingDollarSign(patient, amount)
+    -- 25% of the payments now go through insurance
+    if patient.insurance_company then
+      self:addInsuranceMoney(patient.insurance_company, amount)
+    else
+      self:receiveMoney(amount, reason)
     end
   end
 end
