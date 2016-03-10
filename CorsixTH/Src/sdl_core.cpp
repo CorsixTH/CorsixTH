@@ -26,11 +26,6 @@ SOFTWARE.
 #include <cstring>
 #include <cstdio>
 #include <vector>
-#ifndef _MSC_VER
-#define stricmp strcasecmp
-#else
-#pragma warning (disable: 4996) // CRT deprecation
-#endif
 
 static int l_init(lua_State *L)
 {
@@ -40,13 +35,13 @@ static int l_init(lua_State *L)
     for(i = 1; i <= argc; ++i)
     {
         const char* s = luaL_checkstring(L, i);
-        if(stricmp(s, "video") == 0)
+        if(std::strcmp(s, "video") == 0)
             flags |= SDL_INIT_VIDEO;
-        else if(stricmp(s, "audio") == 0)
+        else if(std::strcmp(s, "audio") == 0)
             flags |= SDL_INIT_AUDIO;
-        else if(stricmp(s, "timer") == 0)
+        else if(std::strcmp(s, "timer") == 0)
             flags |= SDL_INIT_TIMER;
-        else if(stricmp(s, "*") == 0)
+        else if(std::strcmp(s, "*") == 0)
             flags |= SDL_INIT_EVERYTHING;
         else
             luaL_argerror(L, i, "Expected SDL part name");

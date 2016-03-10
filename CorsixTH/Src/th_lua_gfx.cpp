@@ -577,8 +577,8 @@ static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int 
         if(sOption[0] == 0)
             continue;
 
-        if (stricmp(sOption, "fullscreen") == 0)        oParams.bFullscreen       = true;
-        if (stricmp(sOption, "present immediate") == 0) oParams.bPresentImmediate = true;
+        if (std::strcmp(sOption, "fullscreen") == 0)        oParams.bFullscreen       = true;
+        if (std::strcmp(sOption, "present immediate") == 0) oParams.bPresentImmediate = true;
     }
 
     return oParams;

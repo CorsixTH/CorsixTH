@@ -26,6 +26,7 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include <cstring>
 #include <map>
+#include <cctype>
 
 static int m_a_iPlayedSoundCallbackIDs[1000];
 static int m_iPlayedSoundCallbackIDsPointer = 0;
@@ -57,6 +58,26 @@ static int l_soundarc_count(lua_State *L)
     return 1;
 }
 
+/**
+ * Perform case-insensitive string compare.
+ * @param s1 First string to compare.
+ * @param s2 Second string to compare.
+ * @return Negative number when \a s1 should be before \a s2, zero if both
+ *      string are equal, else a positive number.
+ */
+static int ignorecase_cmp(const char *s1, const char *s2)
+{
+    while(*s1 && *s2)
+    {
+        if (std::tolower(*s1) != std::tolower(*s2))
+            break;
+
+        s1++;
+        s2++;
+    }
+    return std::tolower(*s1) - std::tolower(*s2);
+}
+
 static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchive)
 {
     if(lua_isnumber(L, iArg))
@@ -86,7 +107,7 @@ static size_t l_soundarc_checkidx(lua_State *L, int iArg, THSoundArchive* pArchi
     size_t iCount = pArchive->getSoundCount();
     for(size_t i = 0; i < iCount; ++i)
     {
-        if(stricmp(sName, pArchive->getSoundFilename(i)) == 0)
+        if(ignorecase_cmp(sName, pArchive->getSoundFilename(i)) == 0)
         {
             lua_getfenv(L, 1);
             lua_pushvalue(L, iArg);
