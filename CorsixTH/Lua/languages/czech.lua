@@ -1293,6 +1293,7 @@ tooltip = {
     exit = "Ne, ne, prosím neodcházejte!",
     quit = "Odejít",
     custom_campaign = "Hrát komunitou vytvořenou kampaň",
+    map_edit = "Vytvořit vlastní mapu",
   },
   queue_window = {
     num_expected = "Počet pacientů, u kterých Recepční očekává, že se brzy připojí do fronty",
@@ -1597,6 +1598,10 @@ tooltip = {
   custom_campaign_window = {
     choose_campaign = "Zvolte kampaň pro zobrazení informací o ní.",
     start_selected_campaign = "Načte první úroveň kampaně",
+  },
+  save_map_window = {
+    map = "Přepsat mapu %s",
+    new_map = "Zadejte název uložené hry s mapou",
   },
 }
 humanoid_name_ends = {
@@ -2615,6 +2620,7 @@ menu = {
   file = "  SOUBOR  ",
   display = "  ZOBRAZENÍ  ",
   debug = "  LADĚNÍ  ",
+  player_count = "POČET HRÁČŮ",
 }
 lua_console = {
   close = "Zavřít",
@@ -2701,6 +2707,7 @@ main_menu = {
   new_game = "Nová hra",
   continue = "Pokračovat ve hře",
   custom_campaign = "Vlastní kampaň",
+  map_edit = "Editor map",
 }
 letter = {
   [1] = {
@@ -3239,5 +3246,49 @@ custom_campaign_window = {
   start_selected_campaign = "Spustit kampaň",
 }
 warnings = {
-  levelfile_variable_is_deprecated = "Upozornění: ˇUroveň '%s' ve svém souboru obsahuje zastaralé určení proměnné.'%LevelFile' bylo přejmenováno na '%MapFile'. Pro aktualizaci úrovně prosím použijte editor map."
+  levelfile_variable_is_deprecated = "Upozornění: Úroveň '%s' ve svém souboru obsahuje zastaralé určení proměnné.'%LevelFile' bylo přejmenováno na '%MapFile'. Pro aktualizaci úrovně prosím použijte editor map.",
 }
+map_editor_window = {
+  pages = {
+    paste = "Vložit oblast",
+    camera_3 = "Kamera 3",
+    hedgerow = "Živý plot",
+    delete_wall = "Smazat zdi",
+    road = "Silnice",
+    parcel_7 = "Parcela 7",
+    pond = "Rybníky",
+    heliport_3 = "Heliport 3",
+    outside = "Vnější prostory",
+    parcel_3 = "Parcela 3",
+    helipad = "Přistávací plocha",
+    parcel_1 = "Parcela 1",
+    heliport_4 = "Heliport 4",
+    parcel_6 = "Parcela 6",
+    foliage = "Rostliny",
+    parcel_2 = "Parcela 2",
+    parcel_5 = "Parcela 5",
+    parcel_4 = "Parcela 4",
+    parcel_0 = "Parcela 0",
+    north_wall = "Severní zeď",
+    inside = "Vnitřní prostory",
+    parcel_9 = "Parcela 9",
+    heliport_2 = "Heliport 2",
+    parcel_8 = "Parcela 8",
+    camera_4 = "Kamera 4",
+    camera_1 = "Kamera 1",
+    camera_2 = "Kamera 2",
+    west_wall = "Západní zeď",
+    heliport_1 = "Heliport 1",
+  },
+}
+save_map_window = {
+  new_map = "Nová mapa",
+  caption = "Uložit mapu (%1%)",
+}
+menu_player_count = {
+  players_1 = "  1 HRÁČ  ",
+  players_2 = "  2 HRÁČI  ",
+  players_3 = "  3 HRÁČI  ",
+  players_4 = "  4 HRÁČI  ",
+}
+
