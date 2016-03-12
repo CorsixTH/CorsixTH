@@ -24,11 +24,6 @@ SOFTWARE.
 #define CORSIX_TH_TH_LUA_INTERNAL_H_
 #include "config.h"
 #include "th_lua.h"
-#ifndef _MSC_VER
-#define stricmp strcasecmp
-#else
-#pragma warning(disable: 4996) // Deprecated CRT
-#endif
 
 enum eTHLuaMetatable
 {
