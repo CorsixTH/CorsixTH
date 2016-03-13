@@ -269,14 +269,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   hospital:updatePercentages()
 
   if self.is_emergency then
-    local killed = hospital.emergency.killed_emergency_patients
-    local cured = hospital.emergency.cured_emergency_patients
-    if killed + cured >= hospital.emergency.victims then
-      local window = hospital.world.ui:getWindow(UIWatch)
-      if window then
-        window:onCountdownEnd()
-      end
-    end
+    hospital:checkEmergencyOver()
   end
 end
 

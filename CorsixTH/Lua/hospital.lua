@@ -1279,6 +1279,19 @@ function Hospital:resolveEmergency()
   self.world:nextEmergency()
 end
 
+--! Determine if all of the patients in the emergency have been cured or killed.
+--! If they have end the emergency timer.
+function Hospital:checkEmergencyOver()
+  local killed = self.emergency.killed_emergency_patients
+  local cured = self.emergency.cured_emergency_patients
+  if killed + cured >= self.emergency.victims then
+    local window = self.world.ui:getWindow(UIWatch)
+    if window then
+      window:onCountdownEnd()
+    end
+  end
+end
+
 -- Creates VIP and sends a FAX to query the user.
 function Hospital:createVip()
   local vipName =  _S.vip_names[math.random(1,10)]
