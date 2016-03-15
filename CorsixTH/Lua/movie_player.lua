@@ -55,11 +55,11 @@ function MoviePlayer:init()
   if movies then
     for _,movie in pairs(movies) do
       --lose level movies
-      if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .."]+$") then
+      if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
       end
       --advance level movies
-      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .."]+$")
+      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
         self.advance_movies[tonumber(num, 10)] = movie
       end

@@ -619,8 +619,8 @@ function UI:onMouseDown(code, x, y)
     end
     return true
   end
-  if self.cursor_entity == nil and self.down_count == 0
-  and self.cursor == self.default_cursor then
+  if self.cursor_entity == nil and self.down_count == 0 and
+      self.cursor == self.default_cursor then
     self:setCursor(self.down_cursor)
     repaint = true
   end
@@ -756,7 +756,7 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
-  if window.modal_class == "main"  or window.modal_class == "fullscreen" then
+  if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)

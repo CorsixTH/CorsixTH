@@ -234,8 +234,8 @@ local function action_use_phase(action, humanoid, phase)
     -- Even it out so that an integer number of animation sequences are done.
     length = action.min_length + action.min_length % length
   end
-  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage
-  and action.on_interrupt and not action.loop_callback then
+  if phase == 0 and (not is_list) and length == 1 and action.prolonged_usage and
+      action.on_interrupt and not action.loop_callback then
     -- a timer would be redundant, so do not set one
   else
     humanoid:setTimer(length, action_use_object_tick)

@@ -234,7 +234,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         -- Going to get a drink. Do nothing since it will be fixed after getting the drink.
         return
       else
-        error "Could not find an idle or drink action when trying to stand in line."
+        error("Could not find an idle or drink action when trying to stand in line.")
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
@@ -319,6 +319,7 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     must_happen = true,
   }, num_actions_prior + 1)
   machine:addReservedUser(humanoid)
+
   -- Make sure no one thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end)

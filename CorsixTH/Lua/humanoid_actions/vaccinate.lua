@@ -37,7 +37,7 @@ function (patient,nurse)
 end)
 
 local find_face_direction = permanent"vacc_find_face_direction"(
-function(nurse,patient)
+function(nurse, patient)
   local nx, ny = nurse.tile_x, nurse.tile_y
   local px, py = patient.tile_x, patient.tile_y
 
@@ -69,27 +69,27 @@ local function vaccinate(action, nurse)
 
   local patient = action.patient
 
-  local perform_vaccination = --[[persistable:action_perform_vaccination]](function(humanoid)
+  local perform_vaccination = --[[persistable:action_perform_vaccination]] function(humanoid)
     -- Check if they STILL are in an adjacent square
-    if is_in_adjacent_square(nurse,patient) then
+    if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)
       nurse:queueAction{name = "answer_call"}
       -- Disable either vaccination icon that may be present (edge case)
-      patient:setMood("epidemy2","deactivate")
-      patient:setMood("epidemy3","deactivate")
-      patient:setMood("epidemy1","activate")
+      patient:setMood("epidemy2", "deactivate")
+      patient:setMood("epidemy3", "deactivate")
+      patient:setMood("epidemy1", "activate")
       patient.vaccinated = true
       patient.hospital:spendMoney(action.vaccination_fee, _S.transactions.vaccination)
       patient:updateDynamicInfo()
     else
-      patient:setMood("epidemy3","deactivate")
-      patient:setMood("epidemy2","activate")
+      patient:setMood("epidemy3", "deactivate")
+      patient:setMood("epidemy2", "activate")
       -- Drop it they may not even be the vacc candidate anymore
       CallsDispatcher.queueCallCheckpointAction(nurse)
       nurse:queueAction{name = "answer_call"}
       patient.reserved_for = nil
     end
-  end)
+  end
 
   if is_in_adjacent_square(nurse,patient) then
     local face_direction = find_face_direction(nurse,patient)
@@ -101,7 +101,6 @@ local function vaccinate(action, nurse)
                        must_happen=true})
   else
     patient:removeVaccinationCandidateStatus()
-    local patient_direction = patient.last_move_direction
     nurse:setCallCompleted()
     patient.reserved_for = nil
     nurse:queueAction({name="meander"})

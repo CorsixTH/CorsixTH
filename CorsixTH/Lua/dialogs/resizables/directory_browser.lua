@@ -36,8 +36,8 @@ end
 
 function DirTreeNode:isValidFile(name)
   -- Check parent criteria and that it's a directory.
-  if FileTreeNode.isValidFile(self, name)
-  and lfs.attributes(self:childPath(name), "mode") == "directory" then
+  if FileTreeNode.isValidFile(self, name) and
+      lfs.attributes(self:childPath(name), "mode") == "directory" then
     -- Make sure that we are allowed to read the directory.
     local status, result = pcall(lfs.dir, self:childPath(name))
     return status

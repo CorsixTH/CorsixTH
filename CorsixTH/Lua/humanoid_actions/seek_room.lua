@@ -144,8 +144,8 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Send home automatically
     humanoid:goHome()
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
-  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"]
-    or not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
+  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] or
+      not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
     -- If the disease hasn't been discovered yet it cannot be guessed, go here instead.
     -- Ask the player
     -- Wait two months before going home anyway.

@@ -59,15 +59,15 @@ function Patient:onClick(ui, button)
       local hospital = self.hospital or self.world:getLocalPlayerHospital()
       local epidemic = hospital and hospital.epidemic
       if not epidemic or
-        (not epidemic.coverup_in_progress
-        or (not self.infected or self.marked_for_vaccination)
-        and not epidemic.vaccination_mode_active) then
+          (not epidemic.coverup_in_progress or
+            (not self.infected or self.marked_for_vaccination) and
+            not epidemic.vaccination_mode_active) then
         ui:addWindow(UIPatient(ui, self))
       end
       if epidemic and epidemic.coverup_in_progress and
-        self.infected and not self.marked_for_vaccination and
-        -- Prevent further vaccinations when the timer ends
-        not epidemic.timer.closed then
+          self.infected and not self.marked_for_vaccination and
+          -- Prevent further vaccinations when the timer ends
+          not epidemic.timer.closed then
         epidemic:markForVaccination(self)
       end
     end
@@ -287,7 +287,7 @@ function Patient:die()
   end
   hospital:msgKilled()
   self:setMood("dead", "activate")
-  self.world.ui:playSound "boo.wav" -- this sound is always heard
+  self.world.ui:playSound("boo.wav") -- this sound is always heard
   self.going_home = true
   if self:getRoom() then
     self:queueAction{name = "meander", count = 1}
@@ -302,10 +302,12 @@ function Patient:die()
 end
 
 function Patient:canPeeOrPuke(current)
-  return ((current.name == "walk" or current.name == "idle" or current.name == "seek_room" or current.name == "queue")
-         and not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
+  return ((current.name == "walk" or current.name == "idle" or
+           current.name == "seek_room" or current.name == "queue") and
+      not self.going_home and self.world.map.th:getCellFlags(self.tile_x, self.tile_y).buildable)
 end
-  -- animations for when there is an earth quake
+
+--! Animations for when there is an earth quake
 function Patient:falling()
   local current = self.action_queue[1]
   current.keep_reserved = true
@@ -319,18 +321,18 @@ function Patient:falling()
       self:setNextAction{name = "on_ground"}
       self.on_ground = true
     end
-      if self.on_ground then
-        self:setNextAction{name = "get_up"}
-      end
-      if current.name == "idle" or current.name == "walk" then
-        self:queueAction({
-          name = current.name,
-          x = current.x,
-          y = current.y,
-          must_happen = current.must_happen,
-          is_entering = current.is_entering,
-        }, 2)
-      else
+    if self.on_ground then
+      self:setNextAction{name = "get_up"}
+    end
+    if current.name == "idle" or current.name == "walk" then
+      self:queueAction({
+        name = current.name,
+        x = current.x,
+        y = current.y,
+        must_happen = current.must_happen,
+        is_entering = current.is_entering,
+      }, 2)
+    else
       self:queueAction({
         name = current.name,
         room_type = current.room_type,
@@ -338,18 +340,18 @@ function Patient:falling()
         diagnosis_room = current.diagnosis_room,
         treatment_room = current.treatment_room,
       }, 2)
-      end
-      if current.on_interrupt then
-        current.on_interrupt(current, self)
-      else
+    end
+    if current.on_interrupt then
+      current.on_interrupt(current, self)
+    else
       self:finishAction()
-      end
-      self.on_ground = false
-      if math.random(1, 5) == 3 then
-        self:shake_fist()
-      end
-      self:fallingAnnounce()
-      self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
+    end
+    self.on_ground = false
+    if math.random(1, 5) == 3 then
+      self:shake_fist()
+    end
+    self:fallingAnnounce()
+    self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
   else
     return
   end
@@ -701,8 +703,8 @@ function Patient:tickDay()
   end
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.75 then
-    if self.pee_anim and not self.action_queue[1].is_leaving
-    and not self.action_queue[1].is_entering and not self.in_room then
+    if self.pee_anim and not self.action_queue[1].is_leaving and
+        not self.action_queue[1].is_entering and not self.in_room then
       if math.random(1, 10) < 5 then
         self:pee()
         self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
@@ -748,8 +750,7 @@ function Patient:tickDay()
     -- The only allowed situations to grab a soda is when queueing
     -- or idling/walking in the corridors
     -- Also make sure the walk action when leaving a room has a chance to finish.
-    if not self:getRoom() and not self.action_queue[1].is_leaving
-    and not self.going_home then
+    if not self:getRoom() and not self.action_queue[1].is_leaving and not self.going_home then
       local machine, lx, ly = self.world:
           findObjectNear(self, "drinks_machine", 8)
 
@@ -853,8 +854,8 @@ function Patient:tickDay()
   -- anymore, but should be. If this is the case for more than
   -- 2 ticks, go to reception
   if #self.action_queue > 1 and (self.action_queue[1].name == "use_object" or
-    self.action_queue[1].name == "idle") and
-    self.action_queue[2].name == "queue" then
+      self.action_queue[1].name == "idle") and
+      self.action_queue[2].name == "queue" then
     local found = false
     for _, humanoid in ipairs(self.action_queue[2].queue) do
       if humanoid == self then
@@ -890,14 +891,15 @@ function Patient:setTile(x, y)
   if self.litter_countdown then
     self.litter_countdown = self.litter_countdown - 1
     if self.litter_countdown == 0 and self.hospital then
-      if x and not self:getRoom() and not self.world:getObjects(x, y)
-      and self.world.map.th:getCellFlags(x, y).buildable then
+      if x and not self:getRoom() and not self.world:getObjects(x, y) and
+          self.world.map.th:getCellFlags(x, y).buildable then
         -- Drop some litter!
         local trash = math.random(1, 4)
         local litter = self.world:newObject("litter", x, y)
         litter:setLitterType(trash, math.random(0, 1))
         if not self.hospital.hospital_littered then
           self.hospital.hospital_littered = true
+
           -- A callout is only needed if there are no handymen employed
           if not self.hospital:hasStaffOfCategory("Handyman") then
             self.world.ui.adviser:say(_A.staff_advice.need_handyman_litter)

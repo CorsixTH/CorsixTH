@@ -292,8 +292,9 @@ end
 function UIPatient:guessDisease()
   local patient = self.patient
   -- NB: the first line of conditions should already be ruled out by button being disabled, but just in case
-  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or patient.going_home
-  or patient:getRoom() or not patient.hospital.disease_casebook[patient.disease.id].discovered then
+  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or
+      patient.going_home or patient:getRoom() or
+      not patient.hospital.disease_casebook[patient.disease.id].discovered then
     self.ui:playSound("wrong2.wav")
     return
   end

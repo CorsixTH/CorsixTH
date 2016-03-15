@@ -229,7 +229,7 @@ function Strings:load(language, no_restriction, no_inheritance)
     -- LoadStrings() should return the original game string table
     LoadStrings = function(filename)
       return assert(TH.LoadStrings(self.app:readDataFile(filename)),
-                    "Cannot load original string file '"..filename.."'")
+                    "Cannot load original string file '" .. filename .. "'")
     end,
     -- SetSpeechFile() should remember the named file to return to our caller
     SetSpeechFile = function(...)
@@ -299,7 +299,7 @@ function Strings:_loadPrivate(language, env, ...)
   local chunk = self.language_to_chunk[language:lower()]
   if not chunk then -- If selected language could not be found, try to revert to English
     print_table(self.language_to_chunk)
-    print("Language '".. language .."' could not be found. Reverting to English.")
+    print("Language '" .. language .. "' could not be found. Reverting to English.")
     chunk = self.language_to_chunk["english"]
     if not chunk then -- If english could not be found, raise an error
       error("Language 'English' could not be found. Please verify your installation.")

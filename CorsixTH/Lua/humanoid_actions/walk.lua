@@ -164,9 +164,10 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   if not recalc_route and flags_here.roomId ~= flags_there.roomId then
     local door = TheApp.objects.door.thob
     local door2 = TheApp.objects.swing_door_right.thob
-    if ((flags_here.thob ~= door and flags_here.thob ~= door2) and (flags_there.thob ~= door
-    and flags_there.thob ~= door2)) and (not flags_there.room
-    or map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId) then
+    if flags_here.thob ~= door and flags_here.thob ~= door2 and
+        flags_there.thob ~= door and flags_there.thob ~= door2 and
+        (not flags_there.room or
+          map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId) then
       recalc_route = true
     end
   end
@@ -229,8 +230,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
   local room = door:getRoom()
   local is_entering_room = room and humanoid:getRoom() ~= room
 
-  if class.is(humanoid, Staff) and is_entering_room
-  and humanoid.humanoid_class ~= "Handyman" then
+  if class.is(humanoid, Staff) and is_entering_room and
+      humanoid.humanoid_class ~= "Handyman" then
     -- A member of staff is entering, but is maybe no longer needed
     -- in this room?
     if not room.is_active or not room:staffFitsInRoom(humanoid) then
@@ -241,9 +242,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
       return
     end
   end
-  if (door.user)
-  or (door.reserved_for and door.reserved_for ~= humanoid)
-  or (is_entering_room and not room:canHumanoidEnter(humanoid)) then
+  if door.user or (door.reserved_for and door.reserved_for ~= humanoid) or
+      (is_entering_room and not room:canHumanoidEnter(humanoid)) then
     --queueing patients are no longer enroute
     room.humanoids_enroute[humanoid] = nil
     local queue = door.queue
@@ -256,9 +256,9 @@ navigateDoor = function(humanoid, x1, y1, dir)
     end
     humanoid:setTilePositionSpeed(x1, y1)
     local action_index = 0
-    if is_entering_room and queue:size() == 0 and not room:getPatient()
-    and not door.user and not door.reserved_for and humanoid.should_knock_on_doors
-    and room.room_info.required_staff and not swinging then
+    if is_entering_room and queue:size() == 0 and not room:getPatient() and
+        not door.user and not door.reserved_for and humanoid.should_knock_on_doors and
+        room.room_info.required_staff and not swinging then
       humanoid:queueAction({
         name = "knock_door",
         door = door,
@@ -281,8 +281,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
   if action.reserve_on_resume then
     assert(action.reserve_on_resume == door)
     action.reserve_on_resume = nil
-  elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors
-  and room.room_info.required_staff and not swinging then
+  elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors and
+      room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
     humanoid:queueAction({
       name = "knock_door",

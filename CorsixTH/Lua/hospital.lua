@@ -662,10 +662,10 @@ function Hospital:countSittingStanding()
   local numberSitting = 0
   local numberStanding = 0
   for _, patient in ipairs(self.patients) do
-    if patient.action_queue[1].name == "idle" then
+    local pat_action = patient.action_queue[1]
+    if pat_action.name == "idle" then
       numberStanding = numberStanding + 1
-    elseif patient.action_queue[1].name == "use_object"
-    and patient.action_queue[1].object.object_type.id == "bench" then
+    elseif pat_action.name == "use_object" and pat_action.object.object_type.id == "bench" then
       numberSitting = numberSitting + 1
     end
   end
@@ -716,8 +716,8 @@ function Hospital:checkFacilities()
         self.seating_warning = 0
       end
     end
-    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg
-    and (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
+    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg and
+        (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -947,8 +947,7 @@ function Hospital:onEndDay()
         for object, value in pairs(room.objects) do
           if object.strength then
             -- The or clause is for backwards compatibility. Then the machine takes one damage each day.
-            if (object.quake_points and object.quake_points > 0)
-            or object.quake_points == nil then
+            if (object.quake_points and object.quake_points > 0) or object.quake_points == nil then
               object:machineUsed(room)
             end
             if object.quake_points then
@@ -960,7 +959,7 @@ function Hospital:onEndDay()
     end
   end
 
-  -- check if we still have to anounce VIP visit
+  -- check if we still have to announce VIP visit
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for i, e in ipairs(self.world.entities) do
@@ -985,8 +984,8 @@ function Hospital:onEndDay()
 
   -- Is the boiler working today?
   local breakdown = math.random(1, 240)
-  if breakdown == 1 and not self.heating_broke and self.boiler_can_break
-  and self.world.object_counts.radiator > 0 then
+  if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
+      self.world.object_counts.radiator > 0 then
     if tonumber(self.world.map.level_number) then
       if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
         self:boilerBreakdown()
@@ -1037,8 +1036,7 @@ function Hospital:onEndMonth()
   if self:isPlayerHospital() then
     if self.balance < 1000 and not self.cash_msg then
       self:cashLow()
-    elseif self.balance > 6000
-    and self.loan > 0 and not self.cash_ms then
+    elseif self.balance > 6000 and self.loan > 0 and not self.cash_ms then
       self.world.ui.adviser:say(_A.warnings.pay_back_loan)
     end
     self.cash_msg = true

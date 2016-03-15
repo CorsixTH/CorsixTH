@@ -103,8 +103,8 @@ function UIBuildRoom:UIBuildRoom(ui)
     self.category_rooms[i] = rooms
     for _, room in ipairs(app.world.available_rooms) do
       -- NB: Unimplemented rooms are hidden unless in debug mode
-      if (app.config.debug or room.class) and room.categories[category]
-      and ui.hospital.discovered_rooms[room] then
+      if (app.config.debug or room.class) and room.categories[category] and
+          ui.hospital.discovered_rooms[room] then
         rooms[#rooms + 1] = room
       end
     end

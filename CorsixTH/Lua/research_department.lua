@@ -305,8 +305,8 @@ function ResearchDepartment:getResearchRequired(thing)
       -- It didn't know, so use the fallback instead.
       if not thing.research_fallback then
         -- This object is not researchable!
-        print(("Warning: %s has been defined as "):format(thing.id)
-        .. "researchable, but no requirements to fulfil could be found.")
+        print(("Warning: %s has been defined as "):format(thing.id) ..
+              "researchable, but no requirements to fulfil could be found.")
       else
         required = expert[thing.research_fallback].RschReqd
       end
@@ -508,8 +508,8 @@ function ResearchDepartment:discoverObject(object, automatic)
   for room, _ in pairs(self.hospital.undiscovered_rooms) do
     local discovery = true
     for needed, _ in pairs(room.objects_needed) do
-      if self.research_progress[TheApp.objects[needed]]
-      and not self.research_progress[TheApp.objects[needed]].discovered then
+      local obj = self.research_progress[TheApp.objects[needed]]
+      if obj and not obj.discovered then
         discovery = false
         break
       end
@@ -519,11 +519,9 @@ function ResearchDepartment:discoverObject(object, automatic)
       self.hospital.undiscovered_rooms[room] = nil
       if self.hospital == self.world.ui.hospital then
         if automatic then
-          self.world.ui.adviser:say(_A.research.new_available
-          :format(object.name))
+          self.world.ui.adviser:say(_A.research.new_available:format(object.name))
         else
-          self.world.ui.adviser:say(_A.research.new_machine_researched
-          :format(object.name))
+          self.world.ui.adviser:say(_A.research.new_machine_researched:format(object.name))
         end
       end
       -- It may now be possible to continue researching machine improvements
@@ -580,8 +578,8 @@ function ResearchDepartment:discoverDisease(disease)
   local current_drug_research = self.research_policy.drugs.current
   -- If we're not researching any drug right now, and the newest discovery was
   -- a disease that requires a drug, switch the current policy.
-  if (not current_drug_research or current_drug_research.dummy)
-  and casebook_disease.drug then
+  if (not current_drug_research or current_drug_research.dummy) and
+      casebook_disease.drug then
     self.research_policy.drugs.current = casebook_disease
   end
   self:setResearchConcentration()

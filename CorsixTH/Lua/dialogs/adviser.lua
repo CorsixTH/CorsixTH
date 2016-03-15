@@ -188,9 +188,10 @@ function UIAdviser:onMouseDown(button, x, y)
     return Window.onMouseDown(self, button, x, y)
   end
   -- Normal operation outside the adviser bounds
-  if x + self.balloon_width < 128 or x > 200 or y + self.y > 0 or y + self.y + 40 < 0 then
-    if x < self.x - 200 or y < self.y - 40 or x > self.x - 200 + self.width
-      or y > self.y + self.height - 40 then
+  if x + self.balloon_width < 128 or x > 200 or
+      y + self.y > 0 or y + self.y + 40 < 0 then
+    if x < self.x - 200 or y < self.y - 40 or
+        x > self.x - 200 + self.width or y > self.y + self.height - 40 then
       return Window.onMouseDown(self, button, x, y)
     end
   end

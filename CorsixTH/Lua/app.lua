@@ -102,10 +102,10 @@ function App:init()
   local conf_path = self.command_line["config-file"] or "config.txt"
   local conf_chunk, conf_err = loadfile_envcall(conf_path)
   if not conf_chunk then
-    error("Unable to load the config file. Please ensure that CorsixTH "..
-    "has permission to read/write ".. conf_path ..", or use the "..
-    "--config-file=filename command line option to specify a writable file. "..
-    "For reference, the error loading the config file was: " .. conf_err)
+    error("Unable to load the config file. Please ensure that CorsixTH " ..
+        "has permission to read/write " .. conf_path .. ", or use the " ..
+        "--config-file=filename command line option to specify a writable file. " ..
+        "For reference, the error loading the config file was: " .. conf_err)
   else
     conf_chunk(self.config)
   end
@@ -132,7 +132,7 @@ function App:init()
     if api_version < compile_opts.api_version then
       print("Notice: Compiled binary is more recent than Lua scripts.")
     elseif api_version > compile_opts.api_version then
-      print("Warning: Compiled binary is out of date. CorsixTH will likely"..
+      print("Warning: Compiled binary is out of date. CorsixTH will likely" ..
       " fail to run until you recompile the binary.")
     end
   end
@@ -296,9 +296,9 @@ function App:init()
     if not language_load_success then
       -- At this point we know the language is english, so no use having
       -- localized strings.
-      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted"..
-      " to English because the desired language could not be loaded. "..
-      "Please make sure you have specified a font file in the config file."}))
+      self.ui:addWindow(UIInformation(self.ui, {"The game language has been reverted" ..
+          " to English because the desired language could not be loaded. " ..
+          "Please make sure you have specified a font file in the config file."}))
     end
 
     -- If a savegame was specified, load it
@@ -328,7 +328,9 @@ end
 --! false on failure.
 function App:initSavegameDir()
   local conf_path = self.command_line["config-file"] or "config.txt"
-  self.savegame_dir = self.config.savegames or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Saves"
+  self.savegame_dir = self.config.savegames or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Saves"
+
   if self.savegame_dir:sub(-1, -1) == pathsep then
     self.savegame_dir = self.savegame_dir:sub(1, -2)
   end
@@ -346,7 +348,9 @@ end
 
 function App:initScreenshotsDir()
   local conf_path = self.command_line["config-file"] or "config.txt"
-  self.screenshot_dir = self.config.screenshots or conf_path:match("^(.-)[^".. pathsep .. "]*$") .. "Screenshots"
+  self.screenshot_dir = self.config.screenshots or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Screenshots"
+
   if self.screenshot_dir:sub(-1, -1) == pathsep then
     self.screenshot_dir = self.screenshot_dir:sub(1, -2)
   end
@@ -386,7 +390,8 @@ function App:initLanguage()
   _S = strings
   -- For immediate compatibility:
   getmetatable(_S).__call = function(_, sec, str, ...)
-    assert(_S.deprecated[sec] and _S.deprecated[sec][str], "_S(".. sec ..", ".. str ..") does not exist!")
+    assert(_S.deprecated[sec] and _S.deprecated[sec][str],
+           "_S(" .. sec .. ", " .. str .. ") does not exist!")
 
     str = _S.deprecated[sec][str]
     if ... then
@@ -907,8 +912,8 @@ function App:run()
       self.last_dispatch_type = where
     end
     print("An error has occurred!")
-    print("Almost anything can be the cause, but the detailed information "..
-    "below can help the developers find the source of the error.")
+    print("Almost anything can be the cause, but the detailed information " ..
+        "below can help the developers find the source of the error.")
     print("Running: The " .. self.last_dispatch_type .. " handler.")
     print("A stack trace is included below, and the handler has been disconnected.")
     print(debug.traceback(co, e, 0))
@@ -931,13 +936,13 @@ function App:run()
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
       self.ui:addWindow(UIConfirmDialog(self.ui,
-        "Sorry, but an error has occurred. There can be many reasons - see the log "..
-        "window for details. Would you like to attempt a recovery?",
-        --[[persistable:app_attempt_recovery]] function()
-          self.world:gameLog("Recovering from error in timer handler...")
-          entity.ticks = false
-          self.eventHandlers.timer = handler
-        end
+          "Sorry, but an error has occurred. There can be many reasons - see the " ..
+          "log window for details. Would you like to attempt a recovery?",
+          --[[persistable:app_attempt_recovery]] function()
+            self.world:gameLog("Recovering from error in timer handler...")
+            entity.ticks = false
+            self.eventHandlers.timer = handler
+          end
       ))
     end
     self.eventHandlers[self.last_dispatch_type] = nil
@@ -1062,9 +1067,9 @@ function App:checkInstallFolder()
   if self.config.theme_hospital_install then
     status, err = self.fs:setRoot(self.config.theme_hospital_install)
   end
-  local message = "Please make sure that you point the game to"..
-    " a valid copy of the data files from the original game,"..
-    " as said files are required for graphics and sounds."
+  local message = "Please make sure that you point the game to" ..
+      " a valid copy of the data files from the original game," ..
+      " as said files are required for graphics and sounds."
   if not status then
     -- If the given directory didn't exist, then likely the config file hasn't
     -- been changed at all from the default, so we continue to initialise the
@@ -1079,14 +1084,14 @@ function App:checkInstallFolder()
       missing[#missing + 1] = path
     end
   end
-  check("Data".. pathsep .."VBlk-0.tab")
-  check("Levels".. pathsep .."Level.L1")
-  check("QData".. pathsep .."SPointer.dat")
+  check("Data"   .. pathsep .. "VBlk-0.tab")
+  check("Levels" .. pathsep .. "Level.L1")
+  check("QData"  .. pathsep .. "SPointer.dat")
   if #missing ~= 0 then
     missing = table.concat(missing, ", ")
-    message = "Invalid Theme Hospital folder specified in config file, "..
-          "as at least the following files are missing: ".. missing ..".\n"..
-          message
+    message = "Invalid Theme Hospital folder specified in config file, " ..
+        "as at least the following files are missing: " .. missing .. ".\n" ..
+        message
     print(message)
     print("Trying to let the user select a new one.")
     return false, {message}
@@ -1131,44 +1136,6 @@ function App:checkInstallFolder()
 
   return true, #corrupt ~= 0 and corrupt or nil
 end
-
--- TODO: is it okay to remove this without replacement?
---[[
-function App:checkLanguageFile()
-  -- Some TH installs are trimmed down to a single language file, rather than
-  -- providing every language file. If the user has selected a language which
-  -- isn't present, then we should detect this and inform the user of their
-  -- options.
-
-  local filename = self:getDataFilename("Lang-" .. self.config.language .. ".dat")
-  local file, err = io.open(filename, "rb")
-  if file then
-    -- Everything is fine
-    file:close()
-    return
-  end
-
-  print "Theme Hospital install seems to be missing the language file for the language which you requested."
-  print "The following language files are present:"
-  local none = true
-  local is_win32 = not not package.cpath:lower():find(".dll", 1, true)
-  for item in lfs.dir(self.config.theme_hospital_install .. self.data_dir_map.DATA) do
-    local n = item:upper():match"^LANG%-([0-9]+)%.DAT$"
-    if n then
-      local name = languages_by_num[tonumber(n)] or "??"
-      local warning = ""
-      if not is_win32 and item ~= item:upper() then
-        warning = " (Needs to be renamed to " .. item:upper() .. ")"
-      end
-      print(" " .. item .. " (" .. name .. ")" .. warning)
-      none = false
-    end
-  end
-  if none then
-    print " (none)"
-  end
-  error(err)
-end]]
 
 --! Get the directory containing the bitmap files.
 --!return Name of the directory containing the bitmap files, ending with a
@@ -1395,8 +1362,8 @@ function App:afterLoad()
   end
   local first = self.world.original_savegame_version
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion()
-      .. "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
+    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
+        "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     self.world:playLoadedEntitySounds()
     return
   elseif new > old then
@@ -1482,7 +1449,7 @@ function App:checkForUpdates()
     end
   end
   if not valid_url then
-    print ("Update download url is not on the trusted domains list (" .. update_table["download_url"] .. ")")
+    print("Update download url is not on the trusted domains list (" .. update_table["download_url"] .. ")")
     return
   end
 
@@ -1495,7 +1462,7 @@ function App:checkForUpdates()
     end
   end
 
-  print ("New version found: " .. new_version)
+  print("New version found: " .. new_version)
   -- Display the update window
   self.ui:addWindow(UIUpdate(self.ui, current_version, new_version, changelog, update_table["download_url"]))
 end

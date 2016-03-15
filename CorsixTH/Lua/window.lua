@@ -1042,7 +1042,8 @@ function Textbox:keyInput(char, rawchar)
     else
       local pos = self.cursor_pos[2] - 1
       if ui.app.key_modifiers.ctrl then
-        pos = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
+        pos = string.find(string.sub(line, 1, self.cursor_pos[2]),
+            "[^" .. pat .. "][" .. pat .. "]+[^" .. pat .. "]*$") or 0
       end
       new_line = line:sub(1, pos) .. line:sub(self.cursor_pos[2] + 1, -1)
       self.cursor_pos[2] = pos
@@ -1059,7 +1060,8 @@ function Textbox:keyInput(char, rawchar)
     else
       local pos = self.cursor_pos[2] + 2
       if ui.app.key_modifiers.ctrl then
-        pos = (string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)) + 1
+        pos = (string.find(line, "[^" .. pat .. "][" .. pat .. "]",
+            self.cursor_pos[2] + 1) or string.len(line)) + 1
       end
       new_line = line:sub(1, self.cursor_pos[2]) .. line:sub(pos, -1)
     end
@@ -1116,7 +1118,8 @@ function Textbox:keyInput(char, rawchar)
       else
         if ui.app.key_modifiers.ctrl then
           -- to the right until next word or end of line
-          self.cursor_pos[2] = string.find(line, "[^"..pat.."]["..pat.."]", self.cursor_pos[2] + 1) or string.len(line)
+          self.cursor_pos[2] = string.find(line, "[^" .. pat .. "][" .. pat .. "]",
+              self.cursor_pos[2] + 1) or string.len(line)
         else
           -- one to the right
           self.cursor_pos[2] = self.cursor_pos[2] + 1
@@ -1133,7 +1136,8 @@ function Textbox:keyInput(char, rawchar)
       else
         if ui.app.key_modifiers.ctrl then
           -- to the left until beginning of word or beginning of line
-          self.cursor_pos[2] = string.find(string.sub(line, 1, self.cursor_pos[2]), "[^"..pat.."]["..pat.."]+[^"..pat.."]*$") or 0
+          self.cursor_pos[2] = string.find(string.sub(line, 1, self.cursor_pos[2]),
+              "[^" .. pat .. "][" .. pat .. "]+[^" .. pat .. "]*$") or 0
         else
           -- one to the left
           self.cursor_pos[2] = self.cursor_pos[2] - 1
@@ -1158,8 +1162,8 @@ function Textbox:keyInput(char, rawchar)
   end
   if not self.char_limit or string.len(self.text) < self.char_limit then
     -- Experimental "all" category
-    if not handled and self.allowed_input.all
-       and not (char == "shift" or char == "ctrl" or char == "alt") then -- F-Keys
+    if not handled and self.allowed_input.all and
+        not (char == "shift" or char == "ctrl" or char == "alt") then -- F-Keys
       handled = true
     end
   end
@@ -1529,8 +1533,8 @@ end
 !param y The Y position of the cursor in window co-ordinatees.
 ]]
 function Window:beginDrag(x, y)
-  if not self.width or not self.height or not self.ui
-  or self.ui.app.runtime_config.lock_windows or not self.draggable then
+  if not self.width or not self.height or not self.ui or
+      self.ui.app.runtime_config.lock_windows or not self.draggable then
     -- Need width, height and UI to do a drag
     return false
   end

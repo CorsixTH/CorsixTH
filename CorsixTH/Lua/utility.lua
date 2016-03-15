@@ -72,7 +72,7 @@ local pt_reflist = {}
 -- Helper function to print the contents of a table. Child tables are printed recursively.
 -- Call without specifying level, only obj and (if wished) max_level.
 function print_table(obj, max_level, level)
-  assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
+  assert(type(obj) == "table", "Tried to print " .. tostring(obj) .. " with print_table.")
   pt_reflist[#pt_reflist + 1] = obj
   level = level or 0
   local spacer = ""
@@ -158,7 +158,7 @@ function loadfile_envcall(filename)
     result = result .. f:read("*a")
   end
   f:close()
-  return loadstring_envcall(result, "@".. filename)
+  return loadstring_envcall(result, "@" .. filename)
 end
 
 if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then

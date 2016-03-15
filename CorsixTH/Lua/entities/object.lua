@@ -639,9 +639,9 @@ function Object:onClick(ui, button, data)
     local room = self:getRoom()
     window = window and window.visible and window
     local direction = self.direction
-    if (not room and window)
-    or (room and not (window and window.room == room) and not self.object_type.corridor_object)
-    or (not room and not self.object_type.corridor_object) then
+    if (not room and window) or
+        (room and not (window and window.room == room) and not self.object_type.corridor_object) or
+        (not room and not self.object_type.corridor_object) then
       return
     end
 
@@ -742,15 +742,12 @@ end
 local all_pathfind_dirs = {[0] = true, [1] = true, [2] = true, [3] = true}
 
 function Object.processTypeDefinition(object_type)
-  if object_type.id == "extinguisher"
-  or object_type.id == "radiator"
-  or object_type.id == "plant"
-  or object_type.id == "reception_desk"
-  or object_type.id == "bench" then
+  if object_type.id == "extinguisher" or object_type.id == "radiator" or
+      object_type.id == "plant" or object_type.id == "reception_desk" or
+      object_type.id == "bench" then
     object_type.count_category = object_type.id
-  elseif object_type.id ~= "bin"
-  and not object_type.corridor_object
-  and not object_type.id:find("door") then
+  elseif object_type.id ~= "bin" and not object_type.corridor_object and
+      not object_type.id:find("door") then
     object_type.count_category = "general"
   end
   if object_type.orientations then
@@ -858,7 +855,7 @@ function Object.processTypeDefinition(object_type)
           local k2 = x * 100 + y
           if not solid_points[k2] and not adjacent_set[k2] then
             adjacent_set[k2] = {x, y}
-            adjacent_list[#adjacent_list+1] = adjacent_set[k2]
+            adjacent_list[#adjacent_list + 1] = adjacent_set[k2]
           end
         end
       end

@@ -573,8 +573,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   local world = self.ui.app.world
 
   -- Draw titles
-  font:draw(canvas, _S.menu.charts .. " "
-  .. (world.year + 1999), x + 210, y + 30, 200, 0)
+  font:draw(canvas, _S.menu.charts .. " " .. (world.year + 1999), x + 210, y + 30, 200, 0)
   font:draw(canvas, _S.high_score.categories.money, x + 140, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.salary, x + 328, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.cures, x + 140, y + 205, 170, 0)
