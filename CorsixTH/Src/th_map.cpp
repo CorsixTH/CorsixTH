@@ -740,7 +740,7 @@ bool THMap::isParcelPurchasable(int iParcelId, int iPlayer)
 void THMap::setPlayerCount(int count)
 {
     if (count < 1 || count > 4)
-        throw new std::out_of_range("Player count must be between 1 and 4");
+        throw std::out_of_range("Player count must be between 1 and 4");
 
     m_iPlayerCount = count;
 }
