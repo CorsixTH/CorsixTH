@@ -185,7 +185,7 @@ function Room:dealtWithPatient(patient)
         patient:queueAction{name = "seek_room", room_type = next_room}
       else
         -- Patient is "done" at the hospital
-        patient:treated()
+        patient:treatDisease()
       end
     end
   else

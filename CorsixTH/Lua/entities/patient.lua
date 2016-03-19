@@ -261,7 +261,12 @@ function Patient:getPriceDistortion(casebook)
   return price_level - expected_price_level
 end
 
-function Patient:treated() -- If a drug was used we also need to pay for this
+--! Handle attempting to treat this patient
+--!
+--! If the treatment is effective the patient will be sent home, otherwise they
+--! will die. The patient may or may not agree to pay for the treatment
+--! depending on whether they consider the price reasonable.
+function Patient:treatDisease()
   local hospital = self.hospital
   hospital:receiveMoneyForTreatment(self)
 
