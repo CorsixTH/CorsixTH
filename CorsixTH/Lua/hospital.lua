@@ -1604,6 +1604,16 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
+--! Pay drug if drug has been purshased to treat a patient
+--!param patient(patient); the patient who's been treated with the drug
+function Hospital:paySupplierForDrug(patient)
+  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+  if drug_amount ~= 0 then
+    local str = _S.drug_companies[math.random(1, 5)]
+    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+  end
+end
+
 --[[ Add a transaction to the hospital's transaction log.
 !param transaction (table) A table containing a string field called `desc`, and
 at least one of the following integer fields: `spend`, `receive`.

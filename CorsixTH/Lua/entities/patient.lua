@@ -263,12 +263,7 @@ end
 
 function Patient:treated() -- If a drug was used we also need to pay for this
   local hospital = self.hospital
-  local amount = self.hospital.disease_casebook[self.disease.id].drug_cost or 0
   hospital:receiveMoneyForTreatment(self)
-  if amount ~= 0 then
-    local str = _S.drug_companies[math.random(1 , 5)]
-    hospital:spendMoney(amount, _S.transactions.drug_cost .. ": " .. str)
-  end
 
   -- Either the patient is no longer sick, or he/she dies.
   if self:isTreatmentEffective() then
@@ -280,7 +275,7 @@ function Patient:treated() -- If a drug was used we also need to pay for this
   end
 
   hospital:updatePercentages()
-
+  hospital:paySupplierForDrug(self)
   if self.is_emergency then
     hospital:checkEmergencyOver()
   end
