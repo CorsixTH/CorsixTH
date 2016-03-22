@@ -492,12 +492,12 @@ void THMap::save(std::string filename)
 {
     uint8_t aBuffer[256] = {0};
     int iBufferNext = 0;
-    std::basic_ofstream<uint8_t, std::char_traits<uint8_t>> os(filename, std::ios_base::trunc | std::ios_base::binary);
+    std::ofstream os(filename, std::ios_base::trunc | std::ios_base::binary);
 
     // Header
     aBuffer[0] = static_cast<uint8_t>(m_iPlayerCount);
     // TODO: Determine correct contents for the next 33 bytes
-    os.write(aBuffer, 34);
+    os.write(reinterpret_cast<char*>(aBuffer), 34);
 
     uint8_t aReverseBlockLUT[256] = {0};
     for(int i = 0; i < 256; ++i)
@@ -543,7 +543,7 @@ void THMap::save(std::string filename)
 
         if(iBufferNext == sizeof(aBuffer))
         {
-            os.write(aBuffer, sizeof(aBuffer));
+            os.write(reinterpret_cast<char*>(aBuffer), sizeof(aBuffer));
             iBufferNext = 0;
         }
     }
@@ -554,7 +554,7 @@ void THMap::save(std::string filename)
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
         if(iBufferNext == sizeof(aBuffer))
         {
-            os.write(aBuffer, sizeof(aBuffer));
+            os.write(reinterpret_cast<char*>(aBuffer), sizeof(aBuffer));
             iBufferNext = 0;
         }
     }
@@ -562,7 +562,7 @@ void THMap::save(std::string filename)
     // TODO: What are these two bytes?
     aBuffer[iBufferNext++] = 3;
     aBuffer[iBufferNext++] = 0;
-    os.write(aBuffer, iBufferNext);
+    os.write(reinterpret_cast<char*>(aBuffer), iBufferNext);
     iBufferNext = 0;
 
     std::memset(aBuffer, 0, 56);
@@ -574,10 +574,10 @@ void THMap::save(std::string filename)
             m_aiHeliportX[i], m_aiHeliportY[i]);
         iBufferNext += 2;
     }
-    os.write(aBuffer, 16);
+    os.write(reinterpret_cast<char*>(aBuffer), 16);
     std::memset(aBuffer, 0, 16);
     // TODO: What are these 56 bytes?
-    os.write(aBuffer, 56);
+    os.write(reinterpret_cast<char*>(aBuffer), 56);
     os.close();
 }
 
