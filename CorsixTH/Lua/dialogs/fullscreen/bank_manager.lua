@@ -124,6 +124,9 @@ function UIBankManager:afterLoad(old, new)
   UIFullscreen.afterLoad(self, old, new)
 end
 
+--! Sum the values in the provided array.
+--!param t Array to sum.
+--!return (int) The sum of all values from the t array.
 local function sum(t)
   local sum = 0
   for _, entry in ipairs(t) do
@@ -132,7 +135,7 @@ local function sum(t)
   return sum
 end
 
--- animation function
+--! Animation function.
 function UIBankManager:onTick()
   self.counter = self.counter + 1
   -- animate the eyes to blink
@@ -229,6 +232,15 @@ function UIBankManager:draw(canvas, x, y)
     font:draw(canvas, _S.bank_manager.statistics_page.money_in, x + 449, y + 41, 70, 0)
     font:draw(canvas, _S.bank_manager.statistics_page.balance, x + 525, y + 40, 70, 0)
 
+    -- Lua < 5.3 stored integer money amount in floating point values.
+    -- Lua 5.3 introduced an integer representation, and started printing
+    -- integer floating point numbers with a trailing .0 .
+    --
+    -- As a result, CorsixTH games converted from earlier Lua versions print a
+    -- trailing .0 in the bank manager window. The "math.floor" around all
+    -- numbers printed below avoids that problem by converting to integer
+    -- representation for Lua 5.3, and doing nothing in Lua < 5.3.
+
     -- Each transaction
     -- A for loop going backwards
     for no = 1, #hospital.transactions do
@@ -237,11 +249,11 @@ function UIBankManager:draw(canvas, x, y)
       font:draw(canvas, _S.date_format.daymonth:format(values.day, values.month), x + 48, current_y)
       font:draw(canvas, values.desc, x + 129, current_y)
       if values.spend then
-        font:draw(canvas, "$ " .. values.spend, x + 377, current_y)
+        font:draw(canvas, "$ " .. math.floor(values.spend), x + 377, current_y)
       else
-        font:draw(canvas, "$ " .. values.receive, x + 453, current_y)
+        font:draw(canvas, "$ " .. math.floor(values.receive), x + 453, current_y)
       end
-      font:draw(canvas, "$ " .. values.balance, x + 529, current_y)
+      font:draw(canvas, "$ " .. math.floor(values.balance), x + 529, current_y)
     end
 
     -- Summary
@@ -255,11 +267,11 @@ function UIBankManager:draw(canvas, x, y)
 
     -- The left side
     font:draw(canvas, _S.bank_manager.hospital_value, x + 60, y + 109, 143, 0)
-    font:draw(canvas, "$ " .. hospital.value, x + 60, y + 139, 143, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.value), x + 60, y + 139, 143, 0)
     font:draw(canvas, _S.bank_manager.balance, x + 60, y + 174, 143, 0)
-    font:draw(canvas, "$ " .. hospital.balance, x + 60, y + 204, 143, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.balance), x + 60, y + 204, 143, 0)
     font:draw(canvas, _S.bank_manager.current_loan, x + 60, y + 239, 143, 0)
-    font:draw(canvas, "$ " .. hospital.loan, x + 60, y + 269, 143, 0)
+    font:draw(canvas, "$ " .. math.floor(hospital.loan), x + 60, y + 269, 143, 0)
     font:draw(canvas, _S.bank_manager.interest_payment, x + 60, y + 305, 143, 0)
     local interest = math.floor(hospital.loan * hospital.interest_rate / 12)
     font:draw(canvas, "$ " .. interest, x + 60, y + 334, 143, 0)
@@ -270,11 +282,11 @@ function UIBankManager:draw(canvas, x, y)
       font:draw(canvas, hospital.insurance[self.chosen_insurance], x + 430, y + 132, 158, 0)
     else
       font:draw(canvas, hospital.insurance[1], x + 430, y + 132, 158, 0)
-      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[1]), x + 430, y + 162, 100, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[1])), x + 430, y + 162, 100, 0)
       font:draw(canvas, hospital.insurance[2], x + 430, y + 192, 158, 0)
-      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[2]), x + 430, y + 222, 100, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[2])), x + 430, y + 222, 100, 0)
       font:draw(canvas, hospital.insurance[3], x + 430, y + 252, 158, 0)
-      font:draw(canvas, "$ ".. sum(hospital.insurance_balance[3]), x + 430, y + 282, 100, 0)
+      font:draw(canvas, "$ ".. math.floor(sum(hospital.insurance_balance[3])), x + 430, y + 282, 100, 0)
     end
     font:draw(canvas, _S.bank_manager.inflation_rate, x + 430, y + 312, 100, 0)
     font:draw(canvas, hospital.inflation_rate*100 .. " %", x + 550, y + 313, 38, 0)
