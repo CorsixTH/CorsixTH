@@ -2,17 +2,20 @@
 # to help with copying the required resources into the 
 # bundles for the Mac build.
 
-- .svn
+- .git/
 - .DS_Store
-- CVS
 + CorsixTH.lua
 + Lua/
 + Lua/**
 + Levels/
-+ Levels/*
++ Levels/**
 + Bitmap/
 + Bitmap/aux_ui.*
 + Bitmap/tree_ctrl.*
 + Bitmap/mainmenu1080.dat
 + Bitmap/mainmenu1080.pal
++ Campaigns/
++ Campaigns/**
++ Graphics/
++ Graphics/**
 - *
