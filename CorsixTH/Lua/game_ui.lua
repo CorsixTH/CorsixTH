@@ -321,7 +321,7 @@ function GameUI:onCursorWorldPositionChange()
       -- limit to non-door objects in room
       local room = self.do_world_hit_test
       entity = entity and class.is(entity, Object) and
-          entity:getRoom() == room and entity ~= room.door
+          entity:getRoom() == room and entity ~= room.door and entity
     end
   end
   if entity ~= self.cursor_entity then
