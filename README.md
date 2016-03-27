@@ -1,5 +1,5 @@
 ![](http://i.imgur.com/fYp148T.jpg)
-### Latest Release [![Release 0.50](https://img.shields.io/badge/release-0.50-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases) [![Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH)
+### Latest Release [![Release 0.50](https://img.shields.io/badge/release-0.50-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases) [![Travis Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
 ##### [Forum](http://forums.corsixth.com) | [IRC Chat](http://webchat.freenode.net/?channels=corsix-th) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new)
 
