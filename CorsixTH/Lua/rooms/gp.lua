@@ -130,11 +130,14 @@ function GPRoom:dealtWithPatient(patient)
     patient.needs_redirecting = false
   elseif patient.disease and not patient.diagnosed then
     self.hospital:receiveMoneyForTreatment(patient)
-
     patient:completeDiagnosticStep(self)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed(true)
-      patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
+      if patient:agreesToPay(patient.disease.id) then
+        patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
+      else
+        patient:goHome("over_priced", patient.disease.id)
+      end
 
       self.staff_member:setMood("idea3", "activate") -- Show the light bulb over the doctor
       -- Check if this disease has just been discovered
@@ -163,16 +166,21 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
   if #patient.available_diagnosis_rooms == 0 then
     -- The very rare case where the patient has visited all his/her possible diagnosis rooms
     -- There's not much to do then... Send home
-    patient:goHome()
+    patient:goHome("kicked")
     patient:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
   else
     self.staff_member:setMood("reflexion", "activate") -- Show the uncertainty mood over the doctor
-    local next_room = math.random(1, #patient.available_diagnosis_rooms)
-    patient:queueAction{
-      name = "seek_room",
-      room_type = patient.available_diagnosis_rooms[next_room],
-      diagnosis_room = next_room,
-    }
+    local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
+    local next_room = patient.available_diagnosis_rooms[next_room_id]
+    if patient:agreesToPay("diag_" .. next_room) then
+      patient:queueAction{
+        name = "seek_room",
+        room_type = next_room,
+        diagnosis_room = next_room_id,
+      }
+    else
+      patient:goHome("over_priced", "diag_" .. next_room)
+    end
   end
 end
 

@@ -54,7 +54,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
     humanoid:setAnimation(humanoid.die_anims.fly_east, mirror)
     humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y, nil, nil, 0, -4)
   else
-    humanoid:setHospital(nil)
+    humanoid:despawn()
     humanoid.world:destroyEntity(humanoid)
   end
 end)

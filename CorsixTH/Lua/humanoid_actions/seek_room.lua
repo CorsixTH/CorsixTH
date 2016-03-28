@@ -142,7 +142,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
   -- Otherwise, depending on hospital policy three things can happen:
   if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
-    humanoid:goHome()
+    humanoid:goHome("kicked")
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
   elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] or
       not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
@@ -175,11 +175,15 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- A patient with an undiscovered disease should never get here.
     assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
     humanoid:setDiagnosed(true)
-    humanoid:queueAction({
-      name = "seek_room",
-      room_type = humanoid.disease.treatment_rooms[1],
-      treatment_room = true,
-    }, 1)
+    if humanoid:agreesToPay(humanoid.disease.id) then
+      humanoid:queueAction({
+        name = "seek_room",
+        room_type = humanoid.disease.treatment_rooms[1],
+        treatment_room = true,
+      }, 1)
+    else
+      humanoid:goHome("over_priced", humanoid.disease.id)
+    end
     humanoid:finishAction()
   end
 end

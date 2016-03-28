@@ -371,7 +371,7 @@ function Staff:fire()
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.hospital:changeReputation("kicked")
-  self:setHospital(nil)
+  self:despawn()
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
   self:leaveAnnounce()
@@ -385,7 +385,7 @@ function Staff:fire()
 end
 
 function Staff:die()
-  self:setHospital(nil)
+  self:despawn()
   if self.task then
     -- If the staff member had a task outstanding, unassigning them from that task.
     -- Tasks with no handyman assigned will be eligible for reassignment by the hospital.
@@ -988,6 +988,21 @@ function Staff:getDrawingLayer()
   else
     return 4
   end
+end
+
+--! Estimate staff service quality based on skills, fatigue and happiness.
+--!return (float) between [0-1] indicating quality of the service.
+function Staff:getServiceQuality()
+  -- weights
+  local skill_weight = 0.7
+  local fatigue_weight = 0.2
+  local happiness_weight = 0.1
+
+  local weighted_skill = skill_weight * self.profile.skill
+  local weighted_fatigue = fatigue_weight * self.attributes["fatigue"]
+  local weighted_happiness = happiness_weight * self.attributes["happiness"]
+
+  return weighted_skill + weighted_fatigue + weighted_happiness
 end
 
 -- Dummy callback for savegame compatibility
