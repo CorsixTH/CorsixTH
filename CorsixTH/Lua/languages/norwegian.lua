@@ -1,4 +1,4 @@
---[[ Copyright (c) 2015 Erlend Mongstad, Ola Skogrand
+--[[ Copyright (c) 2016 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -56,6 +56,7 @@ because the letters ø and Ø is not included in the original ingame-font.
 
 -----------------------------------------------------------------------------]]
 
+-- TODO GENERAL: Skal det benevnes "spill", "brett", "nivå" eller noe annet?
 
 -------------------------------------------------------------------------------
 --   SECTION A - NEW STRINGS
@@ -176,15 +177,17 @@ main_menu = {
   version = "Versjon: ",
   continue = "Fortsett spill",
   savegame_version = "Lagringsversjon: ", --todo: en bedre oversettelse eller omskriving?
+  custom_campaign = "Brukerskapt karriere", -- todo: en bedre oversettelse eller omskriving?
+  map_edit = "Brettkonstruksjon",
   exit       = "Avslutt",
 }
 
 tooltip.main_menu = {
   new_game     = "Start et nytt spill fra begynnelsen",
-  custom_level   = "Bygg sykehuset ditt på et valgfritt område",
+  custom_level   = "Bygg sykehuset ditt på et valgfritt område", -- todo: forbedre tekst?
   load_game   = "Last inn et tidligere spill",
   options     = "Endre diverse innstillinger",
-  exit       = "Nei, nei, vær så snill å ikke stikk!",
+  exit       = "Nei, nei, vær så snill å ikke avslutt!",
 }
 
 load_game_window = {
@@ -200,11 +203,13 @@ tooltip.load_game_window = {
 custom_game_window = {
   caption = "Brukerdefinert spill",
   free_build = "Bygg fritt",
+  load_selected_level = "Start",
 }
-
 tooltip.custom_game_window = {
-  start_game_with_name = "Last nivå %s",
+  start_game_with_name = "Last brett %s",
   free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
+  load_selected_level = "Last og spill valgt brett",
+  choose_game = "Klikk på et brett for å lese mer om det",
 }
 save_game_window = {
   caption = "Lagre spill",
@@ -462,6 +467,8 @@ errors = {
   alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
   fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
   no_games_to_contine = "Det fins ingen lagrede spill",
+  could_not_load_campaign = "Lasting av brettet feilet: %s", -- todo: skal det kalles "brett" her?
+  could_not_find_first_campaign_level = "Kunne ikke finne det förste brettet i denne karrieren: %s", -- todo: skal det hete karrieren her?
 }
 
 confirmation = {
@@ -517,6 +524,56 @@ totd_window = {
 tooltip.totd_window = {
   previous = "Vis forrige tips",
   next = "Vis neste tips",
+}
+
+-- Mapmaker?
+save_map_window = { -- Usikker på om denne hörer til her, eller om den skal flyttes?
+caption = "Lagre brett (%1%)",
+new_map = "Nytt brett",
+}
+tooltip.save_map_window = {
+  map = "Overskriv brett %s", -- Overskriv/lagre?
+  new_map = "Skriv inn navn for nytt brett",
+}
+
+-- Custom campaign
+custom_campaign_window = {
+  caption = "Brukerskapte karrierer", -- todo: Forbedre? Sjekke om det passer når spillet har implementer dette.
+  start_selected_campaign = "Start karriere",
+}
+
+map_editor_window = { -- Sjekkes når de er implementert. Mulig hjelpeteksten må korrigeres!
+  pages = {
+    pond = "Dam",
+    hedgerow = "Hekk",
+    inside = "Innside", -- Riktig? Innvendig?
+    outside = "Utside",
+    road = "Vei",
+    delete_wall = "Slett vegger",
+    parcel_9 = "Tomt 9",
+    camera_1 = "Kamera 1",
+    camera_2 = "Kamera 2",
+    camera_3 = "Kamera 3",
+    camera_4 = "Kamera 4",
+    foliage = "Beplantning",
+    west_wall = "Vestvegg",
+    north_wall = "Nordvegg",
+    helipad = "Helikopterplass",
+    parcel_0 = "Tomt 0",
+    parcel_1 = "Tomt 1",
+    parcel_2 = "Tomt 2",
+    parcel_3 = "Tomt 3",
+    parcel_4 = "Tomt 4",
+    parcel_5 = "Tomt 5",
+    parcel_6 = "Tomt 6", -- Riktig å bruke "tomt"?
+    parcel_7 = "Tomt 7",
+    parcel_8 = "Tomt 8",
+    paste = "Innlimingsområde",
+    heliport_1 = "Helikopterplass 1",
+    heliport_2 = "Helikopterplass 2",
+    heliport_3 = "Helikopterplass 3",
+    heliport_4 = "Helikopterplass 4",
+  },
 }
 
 
@@ -1141,6 +1198,7 @@ menu = {
   options               = "  INNSTILLINGER  ",
   display               = "  VIS  ",
   charts                = "  OVERSIKTER  ",
+  player_count          = "SPILLERANTALL",  -- In map editor
   debug                 = "  DEBUG  ",
 }
 
@@ -1150,6 +1208,12 @@ menu_file = {
   save                  = "  LAGRE  ",
   restart               = "  START PÅ NYTT  ",
   quit                  = "  AVSLUTT  ",
+}
+menu_player_count = { -- In map editor
+  players_1 = "  1 SPILLER  ",
+  players_2 = "  2 SPILLERE  ",
+  players_3 = "  3 SPILLERE  ",
+  players_4 = "  4 SPILLERE  ",
 }
 menu_file_load = {
   [1] = "  SPILL 1  ",
@@ -1693,9 +1757,11 @@ tooltip = {
   -- Main menu
   main_menu = {
     new_game           = "Start en ny karriere",
+    custom_campaign = "Start en ny karriere skapt av andre spillere",
     load_game          = "Last inn et tidligere spill",
     continue           = "Fortsett forrige spill",
     network            = "Start nettverksspill",
+    map_edit = "Lag et eget brett",
     quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?", --todo: Her tror jeg det er valgt feil navn/sted for "quit". Denne viser til spörsmålet man får ved å trykke på Avslutt i hovedmenyen.
     load_menu = {
       load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
@@ -1707,6 +1773,12 @@ tooltip = {
     cancel             = "Avbryt",
     confirm            = "Bekreft",
   },
+  -- Custom campaign
+  custom_campaign_window = {
+    choose_campaign = "Velg en karriere for å lese mer om den",
+    start_selected_campaign = "Last det förste brettet i denne karrieren",
+  },
+
   -- Patient window
   patient_window = {
     close              = "Lukk vindu",
@@ -2397,6 +2469,11 @@ adviser = {
   },
 }
 
+-- Warnings (more warnings in adviser.warnings)
+warnings = {
+  levelfile_variable_is_deprecated = "Merk: Brett '%s' inneholder en forringet variabeldefinisjon i brettfilen.'%LevelFile' har fått endret navn til '%MapFile'. Vennligst gi beskjed til brett-designeren om å oppdatere brettet", -- Forbedre tekst?
+}
+
 -- Confirmation
 confirmation = {
   quit                 = "Du har valgt å avslutte. Er du sikker på at du vil forlate spillet?",
@@ -2459,7 +2536,12 @@ newspaper = {
 -- Letters
 -- TODO
 letter = {
+  campaign_level_completed = "Bra jobbet! Du klarte brettet, men det er ike over enda!  Kunne du tenkt den en stilling hos %s Sykehus?",
+  campaign_completed = "Utrolig! Du har fullført alle brettene. Nå kan du slappe av og skryte på utallige nettforum om dine bragder!",
+  campaign_level_missing = "Beklaer, men det neste brette i denne karrieren ser ut til å mangle (Navn: %s).",
+
     --original line-ends:             5          4               2    3
+
   [1] = {
     [1] = "Kjære %s//",
     [2] = "Fantastisk! Dette sykehuset har du driftet helt utmerket. Vi i departementet vil vite om du er interessert i å gå lös på et större prosjekt. Vi har en jobbstilling vi tror du ville passet perfekt i. Vi kan friste deg med en lönn på $%d. Tenk litt på det.//",
@@ -3075,22 +3157,22 @@ dynamic_info = {
 
 
 introduction_texts = {
-  level17 = "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. " ..
-            "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået!//" ..
-            "Nå må du klare deg selv. Lykke til med det.",
-  level1 = "Velkommen til ditt förste sykehus!//" ..
+  demo =
+          "Velkommen til demonstrasjonssykehuset!" ..
+          "Uheldigvis inneholder demoversjonen kun dette nivået. Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!" ..
+          "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling." ..
+          "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene." ..
+          "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået." ..
+          "Lykke til!",
+
+  level1 =
+           "Velkommen til ditt förste sykehus!//" ..
            "Få stedet opp og gå ved å plassere en Resepsjon, bygge en Allmennpraksis, og ansette en Resepsjonist og en Lege. " ..
            "Vent så til det begynner å skje ting." ..
            "Det er smart å bygge Psykiatri og ansette en Lege med fordypning innenfor psykiatri. " ..
            "Et Apotek og en Sykepleier er essensielt for å kurere pasientene dine. " ..
            "Se opp for mange tilfeller av Ballonghode - et Pumperom vil fort kunne være til stor hjelp. " ..
            "Du må kurere 10 pasienter og sörge for at omdömmet ditt ikke blir mindre enn 200. ",
-  level9 =
-          "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousin, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. " ..
-          "Du må forvente å stöte på en rekke problemer her." ..
-          "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. " ..
-          "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. " ..
-          "Med noe mindre får du ikke fullfört dette nivået.",
 
   level2 =
           "Det er et större spekter av plager i dette området. " ..
@@ -3099,70 +3181,6 @@ introduction_texts = {
           "Du kan også bygge Kardiorom for å forbedre diagnostisering. " ..
           "Begge disse rommene vil måtte forskes på för du kan bygge de. Du kan også utvide sykehustomten slik at du får mer plass å boltre deg på - Bruk Områdekartet til dette. " ..
           "Streb etter et omdömme på 300 og en banksaldo på $10,000, samt 40 kurerte pasienter. ",
-
-  level7 =
-          "Her vil du være under nöye gransking fra Helsedepartementet, så sörg for at kontoene dine viser at du tjener en masse penger, og at omdömmet ditt er svært bra. " ..
-          "Vi har ikke råd til unödvendige dödsfall - det er dårlig for forretningene. " ..
-          "Sörg for at personalet er i tipp-topp form, og at du har alt utstyret du trenger. " ..
-          "Få et omdömme på 600, pluss $200,000 i banken.",
-
-  level5 =
-          "Dette blir et travelt sykehus, siden du må håndtere et bredt spekter av tilfeller. " ..
-          "Legene du kan ansette kommer rett fra skolen, så det kommer til å være avgjörende for deg å bygge et Klasserom og skolere dem til et akseptabelt nivå. " ..
-          "Du har kun tre Konsulenter til å lære opp de uerfarne medarbeiderne, så hold dem lykkelige slik at de ikke slutter. " ..
-          "Merk deg også at sykehusets fundament står på en grunn full av geologiske feil. " ..
-          "Faren for jordskjelv er alltid tilstedeværende. " ..
-          "De vil forårsake betydelig skade på maskiner, og forstyrre den jevne driften av sykehuset. " ..
-          "Få omdömmet ditt opp til 400, og ha $50,000 i banken for å lykkes. Du må også kurere 200 pasienter.",
-
-  level4 =
-          "Hold alle pasientene dine fornöyde, ta deg av dem så effektivt som mulig og hold dödsfall til et absolutt minimum. " ..
-          "Ditt omdömme står på spill, så sörg for at du får det så höyt som mulig. " ..
-          "Ikke bekymre deg for mye over penger - det vil komme etter som ditt vitale omdömme vokser. " ..
-          "Du vil kunne skolere Leger til å utvide sine evner. " ..
-          "Du kan komme til få pasienter som synes å være mer gjennomsiktig enn de fleste. " .. --sjekk english.lua er det bra nok oversettelse?
-          "Oppnå et omdömme på over 500.",
-
-  level14 =
-          "Det er nok en utfordring - det helt uventede overraskelsessykehuset. " ..
-          "Om du klarer å gjöre en suksess ut av dette, vil du bli vinneren over alle andre vinnere. " ..
-          "Ikke forvent at det skal være fort gjort, ettersom det er det töffeste oppdraget du noensinne vil få. " ..
-          "Lykke til!",
-
-  level15 =
-          "Ok, det var den grunnleggende teknikken i å sette et sykehus sammen.//" ..
-          "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnostisere noen av disse pasientene. Du kan hjelpe dem ved å " ..
-          "bygg et ny diagnoserom, for eksempel Generell Diagnose.",
-
-  level8 =
-          "Det er opp til deg å sette opp det mest effektive og kostnadseffektive sykehuset som mulig. " ..
-          "Menneskene rundt her er ganske velstående, så flå dem for så mye grunker du bare klarer. " ..
-          "Husk at det å kurere mennesker er veldig fint, men du trenger virkelig pengene det bringer. " ..
-          "Behandle disse syke personene med Pengeutsugeren. " ..
-          "Samle opp en pengehaug på $300,000 for å fullföre dette nivået.",
-
-  level13 =
-          "Din enestående dyktighet som sykehusadministrator har blitt oppdaget av Hemmelig Super-avdeling fra Superhemmelige Tjenester. " ..
-          "De har en spesiell bonus for deg; det er et rotteinfisert sykehus som trenger en effektiv Terminator. " ..
-          "Du må skyte så mange rotter som mulig för Vaktmesterne rydder opp all söpla. " ..
-          "Tror du at du klarer oppgaven?",
-
-  level16 =
-          "Når du har diagnostisert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne " ..
-          "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
-
-  level6 =
-          "Bruk all din kunnskap til å sette opp et velsmurt og kompetent sykehus som gjör et sunt overskudd og kan håndtere alt som den sykelige offentligheten kan kaste på det. " ..  --todo - godt nok oversatt?
-          "Du bör være klar over at atmosfæren rundt her er kjent for å bære med seg bakterier og infeksjoner. " ..
-          "Med mindre du klarer å holde institusjonen din omhyggelig ren, kan du stå overfor en rekke epidemier blant pasientene. " ..
-          "Pass på at du skaffer deg $150,000, og at sykehuset er verdt over $140,000.",
-
-  level12 =
-          "Du har fått moderen av alle utfordringer nå. " ..
-          "Departementet er imponert over din suksess, og har skaffet toppjobben for deg; de vil at du skal bygge enda et storslagent sykehus, skaffe en stor haug med penger og få et bra utrolig rykte. " ..
-          "Det forventes at du kjöper opp alle områdene du klarer, kurerer alle sykdommer (og da mener vi alle) og vinner alle premiene. " ..
-          "Tror du at du klarer det?" ..
-          "Tjen $650,000, kurer 750 pasienter og få et omdömme på 800 for å vinne dette nivået.",
 
   level3 =
           "Du setter opp et sykehus i et velstående område denne gangen. " ..
@@ -3173,6 +3191,49 @@ introduction_texts = {
           "Kurerer du alle innen tidsfristen så får du et bedre rykte, og en stor xbonus. " ..
           "Sykdommer som Rock'n'Roll-syndrom kan inntreffe og du bör budsjettere for en Operasjonssal med en Sykestue i nærheten. " ..
           "Tjen opp $20,000 for å klare nivået.",
+
+  level4 =
+          "Hold alle pasientene dine fornöyde, ta deg av dem så effektivt som mulig og hold dödsfall til et absolutt minimum. " ..
+          "Ditt omdömme står på spill, så sörg for at du får det så höyt som mulig. " ..
+          "Ikke bekymre deg for mye over penger - det vil komme etter som ditt vitale omdömme vokser. " ..
+          "Du vil kunne skolere Leger til å utvide sine evner. " ..
+          "Du kan komme til få pasienter som synes å være mer gjennomsiktig enn de fleste. " .. --sjekk english.lua er det bra nok oversettelse?
+          "Oppnå et omdömme på over 500.",
+
+  level5 =
+          "Dette blir et travelt sykehus, siden du må håndtere et bredt spekter av tilfeller. " ..
+          "Legene du kan ansette kommer rett fra skolen, så det kommer til å være avgjörende for deg å bygge et Klasserom og skolere dem til et akseptabelt nivå. " ..
+          "Du har kun tre Konsulenter til å lære opp de uerfarne medarbeiderne, så hold dem lykkelige slik at de ikke slutter. " ..
+          "Merk deg også at sykehusets fundament står på en grunn full av geologiske feil. " ..
+          "Faren for jordskjelv er alltid tilstedeværende. " ..
+          "De vil forårsake betydelig skade på maskiner, og forstyrre den jevne driften av sykehuset. " ..
+          "Få omdömmet ditt opp til 400, og ha $50,000 i banken for å lykkes. Du må også kurere 200 pasienter.",
+
+  level6 =
+          "Bruk all din kunnskap til å sette opp et velsmurt og kompetent sykehus som gjör et sunt overskudd og kan håndtere alt som den sykelige offentligheten kan kaste på det. " ..  --todo - godt nok oversatt?
+          "Du bör være klar over at atmosfæren rundt her er kjent for å bære med seg bakterier og infeksjoner. " ..
+          "Med mindre du klarer å holde institusjonen din omhyggelig ren, kan du stå overfor en rekke epidemier blant pasientene. " ..
+          "Pass på at du skaffer deg $150,000, og at sykehuset er verdt over $140,000.",
+
+  level7 =
+          "Her vil du være under nöye gransking fra Helsedepartementet, så sörg for at kontoene dine viser at du tjener en masse penger, og at omdömmet ditt er svært bra. " ..
+          "Vi har ikke råd til unödvendige dödsfall - det er dårlig for forretningene. " ..
+          "Sörg for at personalet er i tipp-topp form, og at du har alt utstyret du trenger. " ..
+          "Få et omdömme på 600, pluss $200,000 i banken.",
+
+  level8 =
+          "Det er opp til deg å sette opp det mest effektive og kostnadseffektive sykehuset som mulig. " ..
+          "Menneskene rundt her er ganske velstående, så flå dem for så mye grunker du bare klarer. " ..
+          "Husk at det å kurere mennesker er veldig fint, men du trenger virkelig pengene det bringer. " ..
+          "Behandle disse syke personene med Pengeutsugeren. " ..
+          "Samle opp en pengehaug på $300,000 for å fullföre dette nivået.",
+
+  level9 =
+          "Etter å ha fylt opp Ministerens bankkonto og finansiert Ministerens nye limousin, kan du nå konsentrere deg om å lage et omsorgsfullt og velfungerende sykehus for de trengende. " ..
+          "Du må forvente å stöte på en rekke problemer her." ..
+          "Om du har nok av rom og flinke ansatte, skal du kunne ha dette under kontroll. " ..
+          "Sykehuset ditt må ha en verdi på $200,000, og du må ha $400,000 i banken. " ..
+          "Med noe mindre får du ikke fullfört dette nivået.",
 
   level10 =
           "I tillegg til å få bukt med alle sykdommene som dukker opp i denne skogkanten, så vil Departementet at du bruker litt tid på å konsentrere deg om effektiviteten av legemidlene dine. " ..
@@ -3190,16 +3251,43 @@ introduction_texts = {
           "Merk også at det har vært observasjoner av UFO-er i området. Sörg for at personalet er forberedt på noen uventede gjester. " ..
           "Sykehuset ditt må være verdt $240,000, du må ha $500,000 i banken og ditt omdömme må være på minst 700.",
 
-  demo = "Velkommen til demonstrasjonssykehuset!" ..
-          "Uheldigvis inneholder demoversjonen kun dette nivået. Uansett så er det mer enn nok å gjöre her for å holde deg opptatt en stund!" ..
-          "Du vil möte på forskjellige sykdommer som krever forskjellige rom for å kureres. Fra tid til annen kan nödstilfeller oppstå. Du må også forske frem nye rom ved hjelp av en forskningsavdeling." ..
-          "Målet ditt er å tjene $100,000, ha et sykehus som er verdt $70,000 og et omdömme på 700, samt kurert minst 75% av pasientene." ..
-          "Pass på at omdömmet ditt ikke faller under 300 og at du ikke dreper mer enn 40% av pasientene, for ellers vil du tape nivået." ..
+  level12 =
+          "Du har fått moderen av alle utfordringer nå. " ..
+          "Departementet er imponert over din suksess, og har skaffet toppjobben for deg; de vil at du skal bygge enda et storslagent sykehus, skaffe en stor haug med penger og få et bra utrolig rykte. " ..
+          "Det forventes at du kjöper opp alle områdene du klarer, kurerer alle sykdommer (og da mener vi alle) og vinner alle premiene. " ..
+          "Tror du at du klarer det?" ..
+          "Tjen $650,000, kurer 750 pasienter og få et omdömme på 800 for å vinne dette nivået.",
+
+  level13 =
+          "Din enestående dyktighet som sykehusadministrator har blitt oppdaget av Hemmelig Super-avdeling fra Superhemmelige Tjenester. " ..
+          "De har en spesiell bonus for deg; det er et rotteinfisert sykehus som trenger en effektiv Terminator. " ..
+          "Du må skyte så mange rotter som mulig för Vaktmesterne rydder opp all söpla. " ..
+          "Tror du at du klarer oppgaven?",
+
+  level14 =
+          "Det er nok en utfordring - det helt uventede overraskelsessykehuset. " ..
+          "Om du klarer å gjöre en suksess ut av dette, vil du bli vinneren over alle andre vinnere. " ..
+          "Ikke forvent at det skal være fort gjort, ettersom det er det töffeste oppdraget du noensinne vil få. " ..
           "Lykke til!",
+
+  level15 =
+          "Ok, det var den grunnleggende teknikken i å sette et sykehus sammen.//" ..
+          "Legene dine kommer til å trenge all den hjelpen de kan få til å diagnostisere noen av disse pasientene. Du kan hjelpe dem ved å " ..
+          "bygg et ny diagnoserom, for eksempel Generell Diagnose.",
+
+  level16 =
+          "Når du har diagnostisert noen av pasientene må du bygge behandlingsrom og klinikker for å kurere dem - en god idé å begynne " ..
+          "med Apoteket. Du trenger også en Sykepleier for å utlevere ulike legemidler fra Apoteket.",
+
+  level17 = "Siste advarsel - hold öye med omdömmet ditt - det er dette som tiltrekker pasienter til sykehuset ditt. " ..
+            "Om du ikke dreper for mange mennesker og samtidig holder pasientene noenlunde i godt humör, skal du ikke ha for store problemer med dette nivået!//" ..
+            "Nå må du klare deg selv. Lykke til med det.",
+
+  level18 = "",
 }
 
 
--- Miscellangelous
+-- Miscellaneous
 -- Category of strings that fit nowhere else or we are not sure where they belong.
 -- If you think a string of these fits somewhere else, please move it there.
 -- Don't forget to change all references in the code and other language files.
