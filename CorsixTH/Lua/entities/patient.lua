@@ -390,7 +390,7 @@ function Patient:falling()
     end
     self.on_ground = false
     if math.random(1, 5) == 3 then
-      self:shake_fist()
+      self:shakeFist()
     end
     self:fallingAnnounce()
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
@@ -412,7 +412,9 @@ function Patient:fallingAnnounce()
     self.world.ui.adviser:say(msg[math.random(1, #msg)])
   end
 end
-function Patient:shake_fist()
+
+--! Perform 'shake fist' action.
+function Patient:shakeFist()
   if self.shake_fist_anim then
     self:queueAction({
         name = "shake_fist",
