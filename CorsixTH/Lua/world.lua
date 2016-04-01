@@ -749,7 +749,7 @@ end
 --!param parcel (int) Plot to change.
 --!param owner (int) New owner (may be 0).
 function World:setPlotOwner(parcel, owner)
-  self.map.th:setPlotOwner(parcel, owner)
+  self.map:setPlotOwner(parcel, owner)
   if owner ~= 0 and self.delayed_map_objects then
     for info, p in pairs(self.delayed_map_objects) do
       if p == parcel then

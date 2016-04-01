@@ -589,8 +589,8 @@ void THMap::save(std::string filename)
    * A divider wall is removed if the owners are the same and 'iParcelId' is involved.
    \return True if a border was removed, false otherwise
 */
-static void addRemoveDividerWalls(THMap* pMap, THMapNode* pNode, const THMapNode* pOriginalNode,
-    int iXY, int delta, int block, int iParcelId)
+static bool addRemoveDividerWalls(THMap* pMap, THMapNode* pNode, const THMapNode* pOriginalNode,
+                                  int iXY, int delta, int block, int iParcelId)
 {
     if (iXY > 0 && pOriginalNode->flags.hospital &&
         pOriginalNode[-delta].flags.hospital &&
@@ -605,18 +605,22 @@ static void addRemoveDividerWalls(THMap* pMap, THMapNode* pNode, const THMapNode
         else if (pNode->iParcelId == iParcelId || pNode[-delta].iParcelId == iParcelId)
         {
             pNode->iBlock[block] = 0;
+            return true;
         }
     }
+    return false;
 }
 
-void THMap::setParcelOwner(int iParcelId, int iOwner)
+std::vector<std::pair<int, int>> THMap::setParcelOwner(int iParcelId, int iOwner)
 {
+    std::vector<std::pair<int, int>> vSplitTiles;
     if(iParcelId <= 0 || m_iParcelCount <= iParcelId || iOwner < 0)
-        return;
+        return vSplitTiles;
     m_pPlotOwner[iParcelId] = iOwner;
 
     THMapNode *pNode = m_pCells;
     const THMapNode *pOriginalNode = m_pOriginalCells;
+    
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
@@ -647,14 +651,21 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
                     }
                 }
             }
-            addRemoveDividerWalls(this, pNode, pOriginalNode, iX, 1, 2, iParcelId);
-            addRemoveDividerWalls(this, pNode, pOriginalNode, iY, 128, 1, iParcelId);
+            if (addRemoveDividerWalls(this, pNode, pOriginalNode, iX, 1, 2, iParcelId))
+            {
+                vSplitTiles.push_back(std::make_pair(iX, iY));
+            }
+            if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, 128, 1, iParcelId))
+            {
+                vSplitTiles.push_back(std::make_pair(iX, iY));
+            }
         }
     }
 
     updatePathfinding();
     updateShadows();
     _updatePurchaseMatrix();
+    return vSplitTiles;
 }
 
 void THMap::_makeAdjacencyMatrix()

@@ -265,11 +265,69 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
     if plot > 1 and not map_editor then
       -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
-      self.th:setPlotOwner(plot, 0)
+      self:setPlotOwner(plot, 0)
     end
   end
 
   return objects
+end
+
+--[[! Sets the plot owner of the given plot number to the given new owner. Makes sure
+      that any room adjacent to the new plot have walls in all directions after the purchase.
+!param plot_number (int) Number of the plot to change owner of. Plot 0 is the outside and
+       should never change owner.
+!param new_owner (int) The player number that should own plot_number. 0 means no owner.
+]]
+function Map:setPlotOwner(plot_number, new_owner)
+  local split_tiles = self.th:setPlotOwner(plot_number, new_owner)
+  for _, coordinates in ipairs(split_tiles) do
+    local x = coordinates[1]
+    local y = coordinates[2]
+
+    local _, north_wall, west_wall = self.th:getCell(x, y)
+    local cell_flags = self.th:getCellFlags(x, y)
+    local north_cell_flags = self.th:getCellFlags(x, y - 1)
+    local west_cell_flags = self.th:getCellFlags(x - 1, y)
+    local wall_dirs = {
+      south = { layer = north_wall,
+                block_id = 2,
+                room_cell_flags = cell_flags,
+                adj_cell_flags = north_cell_flags,
+                tile_cat = 'inside_tiles',
+                wall_dir = 'north'
+              },
+      north = { layer = north_wall,
+                block_id = 2,
+                room_cell_flags = north_cell_flags,
+                adj_cell_flags = cell_flags,
+                tile_cat = 'outside_tiles',
+                wall_dir = 'north'
+              },
+      east = { layer = west_wall,
+               block_id = 3,
+               room_cell_flags = cell_flags,
+               adj_cell_flags = west_cell_flags,
+               tile_cat = 'inside_tiles',
+               wall_dir = 'west'
+             },
+      west = { layer = west_wall,
+               block_id = 3,
+               room_cell_flags = west_cell_flags,
+               adj_cell_flags = cell_flags,
+               tile_cat = 'outside_tiles',
+               wall_dir = 'west'
+             },
+    }
+    for _, dir in pairs(wall_dirs) do
+      if dir.layer == 0 and dir.room_cell_flags.roomId ~= 0 and
+          dir.room_cell_flags.parcelId ~= dir.adj_cell_flags.parcelId then
+        local room = self.app.world.rooms[dir.room_cell_flags.roomId]
+        local wall_type = self.app.walls[room.room_info.wall_type][dir.tile_cat][dir.wall_dir]
+        self.th:setCell(x, y, dir.block_id, wall_type)
+      end
+    end
+  end
+  self.th:updatePathfinding()
 end
 
 --[[! Saves the map to a .map file

@@ -670,6 +670,14 @@ static int l_map_updateshadows(lua_State *L)
     return 1;
 }
 
+static int l_map_updatepathfinding(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    pMap->updatePathfinding();
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_map_mark_room(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -775,8 +783,30 @@ static int l_map_get_parcel_count(lua_State *L)
 static int l_map_set_parcel_owner(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    pMap->setParcelOwner(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
-    lua_settop(L, 1);
+    int iX = static_cast<int>(luaL_checkinteger(L, 2));
+    int iY = static_cast<int>(luaL_checkinteger(L, 3));
+    if(lua_type(L, 4) != LUA_TTABLE)
+    {
+        lua_settop(L, 3);
+        lua_newtable(L);
+    }
+    else
+    {
+        lua_settop(L, 4);
+    }
+    std::vector<std::pair<int, int>> vSplitTiles = pMap->setParcelOwner(iX, iY);
+    for (std::vector<std::pair<int, int>>::size_type i = 0; i != vSplitTiles.size(); i++)
+    {
+      lua_pushinteger(L, i + 1);
+      lua_createtable(L, 0, 2);
+      lua_pushinteger(L, 1);
+      lua_pushinteger(L, vSplitTiles[i].first + 1);
+      lua_settable(L, 6);
+      lua_pushinteger(L, 2);
+      lua_pushinteger(L, vSplitTiles[i].second + 1);
+      lua_settable(L, 6);
+      lua_settable(L, 4);
+    }
     return 1;
 }
 
@@ -929,6 +959,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", MT_Anims, MT_Anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
+    luaT_setfunction(l_map_updatepathfinding, "updatePathfinding");
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_unmark_room, "unmarkRoom");
     luaT_setfunction(l_map_set_sheet, "setSheet", MT_Sheet);
