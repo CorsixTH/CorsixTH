@@ -667,7 +667,7 @@ function Hospital:countPatients()
   -- i.e. calling it from town map to use here
   -- so Town map now takes this information from here.  (If I am wrong, put it back)
   self.patientcount = 0
-  for _, patient in pairs(self.patients) do
+  for _, patient in ipairs(self.patients) do
   -- only count patients that are in the hospital
     local tx, ty = patient.tile_x, patient.tile_y
     if tx and ty and self:isInHospital(tx, ty) then
@@ -1750,6 +1750,11 @@ function Hospital:hasRoomOfType(type)
   return result
 end
 
+--! Remove the first entry with a given value from a table.
+--! Only works reliably for lists.
+--!param t Table to search for the value, and update.
+--!param value Value to search and remove.
+--!return Whether the value was removed.
 local function RemoveByValue(t, value)
   for i, v in ipairs(t) do
     if v == value then
@@ -1760,10 +1765,14 @@ local function RemoveByValue(t, value)
   return false
 end
 
+--! Remove a staff member from the hospital staff.
+--!param staff (Staff) Staff member to remove.
 function Hospital:removeStaff(staff)
   RemoveByValue(self.staff, staff)
 end
 
+--! Remove a patient from the hospital.
+--!param patient (Patient) Patient to remove.
 function Hospital:removePatient(patient)
   RemoveByValue(self.patients, patient)
 end
