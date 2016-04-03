@@ -295,7 +295,7 @@ function Patient:treatDisease()
   end
 
   hospital:updatePercentages()
-  hospital:paySupplierForDrug(self)
+  hospital:paySupplierForDrug(self.disease.id)
   if self.is_emergency then
     hospital:checkEmergencyOver()
   end

@@ -1611,13 +1611,13 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
---! Pay drug if drug has been purshased to treat a patient
---!param patient(patient); the patient who's been treated with the drug
-function Hospital:paySupplierForDrug(patient)
-  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+--! Pay drug if drug has been purchased to treat a patient.
+--!param disease_id Disease that was treated.
+function Hospital:paySupplierForDrug(disease_id)
+  local drug_amount = self.disease_casebook[disease_id].drug_cost or 0
   if drug_amount ~= 0 then
     local str = _S.drug_companies[math.random(1, 5)]
-    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+    self:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
   end
 end
 
