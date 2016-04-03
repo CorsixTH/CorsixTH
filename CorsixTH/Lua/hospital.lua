@@ -1867,6 +1867,26 @@ function Hospital:getReputationChangeLikelihood()
   return 1 - (a * x * x - b * x + c)
 end
 
+--! Update the 'cured' counts of the hospital.
+--!param patient Patient that was cured.
+function Hospital:updateCuredCounts(patient)
+  self.num_cured = self.num_cured + 1
+  self.num_cured_ty = self.num_cured_ty + 1
+
+  local casebook = self.disease_casebook[patient.disease.id]
+  casebook.recoveries = casebook.recoveries + 1
+
+  if patient.is_emergency then
+    self.emergency.cured_emergency_patients = self.emergency.cured_emergency_patients + 1
+  end
+end
+
+--! Update the 'not cured' counts of the hospital.
+function Hospital:updateNotCuredCounts()
+  self.not_cured = self.not_cured + 1
+  self.not_cured_ty = self.not_cured_ty + 1
+end
+
 function Hospital:updatePercentages()
   local killed = self.num_deaths / (self.num_cured + self.num_deaths) * 100
   self.percentage_killed = math.round(killed)
