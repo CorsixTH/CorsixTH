@@ -29,6 +29,8 @@ function Patient:Patient(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("patient")
   self.should_knock_on_doors = true
   self.treatment_history = {}
+  self.going_home = false -- If set, the patient is going home.
+  self.litter_countdown = nil -- If set, number of tiles to walk before attempting to drop litter.
   self.has_fallen = 1
   self.has_vomitted = 0
   self.action_string = ""
@@ -905,8 +907,8 @@ function Patient:tickDay()
         end
         -- The patient might also throw the can on the floor, bad patient!
         if math.random() < 0.6 then
-          -- It will be dropped between 1 and 5 tiles away.
-          self.litter_countdown = math.random(1, 5)
+          -- It will be dropped between 1 and 12 tiles away (litter bin catches 8 radius).
+          self.litter_countdown = math.random(1, 12)
         end
       end
 
@@ -1017,12 +1019,21 @@ end
 
 -- Called each time the patient moves to a new tile.
 function Patient:setTile(x, y)
-  -- Is the patient about to drop some litter?
-  if self.litter_countdown then
+  if not self.litter_countdown then
+    -- If arrived at the first tile of the hospital, give patient some litter.
+    if x and self.world.map.th:getCellFlags(x, y).buildable then
+      -- Small hospitals are around 40-50 tiles.
+      self.litter_countdown = math.random(20, 100)
+    end
+
+  elseif self.hospital and not self.going_home then
     self.litter_countdown = self.litter_countdown - 1
-    if self.litter_countdown == 0 and self.hospital then
+
+    -- Is the patient about to drop some litter?
+    if self.litter_countdown == 0 then
       if x and not self:getRoom() and not self.world:getObjects(x, y) and
-          self.world.map.th:getCellFlags(x, y).buildable then
+          self.world.map.th:getCellFlags(x, y).buildable and
+          (not self.world:findObjectNear(self, "bin", 8) or math.random() < 0.05) then
         -- Drop some litter!
         local trash = math.random(1, 4)
         local litter = self.world:newObject("litter", x, y)
@@ -1036,9 +1047,12 @@ function Patient:setTile(x, y)
           end
         end
       end
-      self.litter_countdown = nil
+
+      -- Always give new litter to drop.
+      self.litter_countdown = math.random(30, 150)
     end
   end
+
   Humanoid.setTile(self, x, y)
 end
 
