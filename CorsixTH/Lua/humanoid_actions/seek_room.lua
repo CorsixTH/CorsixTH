@@ -174,7 +174,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Guess "type of disease" automatically.
     -- A patient with an undiscovered disease should never get here.
     assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
-    humanoid:setDiagnosed(true)
+    humanoid:setDiagnosed()
     if humanoid:agreesToPay(humanoid.disease.id) then
       humanoid:queueAction({
         name = "seek_room",

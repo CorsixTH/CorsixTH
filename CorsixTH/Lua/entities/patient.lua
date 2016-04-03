@@ -156,13 +156,16 @@ function Patient:setdiagDiff()
   return self.diagnosis_difficulty
 end
 
-function Patient:setDiagnosed(diagnosed)
-  self.diagnosed = diagnosed
+--! Mark patient as being diagnosed.
+function Patient:setDiagnosed()
+  self.diagnosed = true
   self.treatment_history[#self.treatment_history + 1] = self.disease.name
+
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
   end
+
   self:updateDynamicInfo()
 end
 
@@ -192,7 +195,8 @@ function Patient:completeDiagnosticStep(room)
   -- Did the staff member manage to leave the room before the patient had
   -- a chance to get diagnosed? Then use a default middle value.
   if room.staff_member then
-  local fatigue = room.staff_member.attributes["fatigue"] or 0
+    local fatigue = room.staff_member.attributes["fatigue"] or 0
+
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
     -- tiredness reduces the chance of diagnosis if staff member is above 50% tired

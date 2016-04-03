@@ -155,7 +155,7 @@ function UIFax:choice(choice_number)
         owner:updateDynamicInfo(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
       end
     elseif choice == "guess_cure" then
-      owner:setDiagnosed(true)
+      owner:setDiagnosed()
       if owner:agreesToPay(owner.disease.id) then
         owner:setNextAction{
           name = "seek_room",
