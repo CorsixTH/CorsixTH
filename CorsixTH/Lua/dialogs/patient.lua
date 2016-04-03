@@ -172,6 +172,36 @@ function UIPatient:draw(canvas, x_, y_)
 
   if self.history_panel.visible then
     self:drawTreatmentHistory(canvas, x + 40, y + 25)
+  elseif patient.health_history then
+    local hor_length = 76
+    local vert_length = 70
+    local startx = 58
+    local starty = 27
+
+    local hh = patient.health_history
+    local index = hh["last"]
+    local size = hh["size"]
+
+    local dx = hor_length / size
+    local line = nil -- Make a line the first time we find a non-nil value.
+    for i = 1, size do
+      index = (index == size) and 1 or (index + 1)
+      if hh[index] then
+        local posy = starty + (1.0 - hh[index]) * vert_length
+
+        if not line then
+          line = TH.line()
+          line:setWidth(2)
+          line:setColour(200, 55, 30, 255)
+          line:moveTo(startx, posy)
+        else
+          line:lineTo(startx, posy)
+        end
+      end
+      startx = startx + dx
+    end
+
+    if line then line:draw(canvas, x, y) end
   end
 end
 

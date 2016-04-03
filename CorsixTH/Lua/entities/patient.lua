@@ -49,6 +49,12 @@ function Patient:Patient(...)
 
   -- Is the patient trying to get to the toilet? ("yes", "no", or "no-toilets")
   self.going_to_toilet = "no"
+
+  -- Health history in entries 1..SIZE (may not all exist at first). The "last"
+  -- entry indicates last written entry, "(last+1) % SIZE" is the oldest entry.
+  -- The "size" entry holds the length of the array (that is, SIZE).
+  -- Variable gets automatically initialized on first day.
+  self.health_history = nil
 end
 
 function Patient:onClick(ui, button)
@@ -715,6 +721,7 @@ function Patient:tickDay()
     --dead people aren't thirsty
     return
   end
+
   -- Note: to avoid empty action queue error if the player spam clicks a patient at the same time as the day changes
   -- there is now an inbetween "neutal" stage.
   if self.has_fallen == 3 then
@@ -722,6 +729,22 @@ function Patient:tickDay()
   elseif self.has_fallen == 2 then
     self.has_fallen = 3
   end
+
+  -- Update health history.
+  if not self.health_history then
+    -- First day, initialize health history.
+    self.health_history = {}
+    self.health_history[1] = self.attributes["health"]
+    self.health_history["last"] = 1
+    self.health_history["size"] = 20
+  else
+    -- Update the health history, wrapping around the array.
+    local last = self.health_history["last"] + 1
+    if last > self.health_history["size"] then last = 1 end
+    self.health_history[last] = self.attributes["health"]
+    self.health_history["last"] = last
+  end
+
   -- Vomitings.
   if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
