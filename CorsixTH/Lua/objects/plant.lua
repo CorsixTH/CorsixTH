@@ -25,7 +25,7 @@ object.name = _S.object.plant
 object.class = "Plant"
 object.tooltip = _S.tooltip.objects.plant
 object.ticks = false
-object.corridor_object = 6
+object.corridor_object = 7
 object.build_preview_animation = 934
 
 object.idle_animations = {
