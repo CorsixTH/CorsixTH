@@ -905,9 +905,7 @@ function Patient:tickDay()
         self:setMood("thirsty", "deactivate")
         -- The patient might be kicked while buying a drink
         if not self.going_home then
-          self.hospital:receiveMoneyForProduct(self, 20, _S.transactions.drinks)
-          -- Also increase the number of sodas sold this year.
-          self.hospital.sodas_sold = self.hospital.sodas_sold + 1
+          self.hospital:sellSodaToPatient(self)
         end
         -- The patient might also throw the can on the floor, bad patient!
         if math.random() < 0.6 then

@@ -1581,6 +1581,13 @@ function Hospital:receiveMoneyForTreatment(patient)
   end
 end
 
+--! Sell a soda to a patient.
+--!param patient (patient) The patient buying the soda.
+function Hospital:sellSodaToPatient(patient)
+  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  self.sodas_sold = self.sodas_sold + 1
+end
+
 --! Function to determine the price for a treatment, modified by reputation and percentage
 -- Treatment charge should never be less than the starting price if reputation falls below 500
 function Hospital:getTreatmentPrice(disease)
