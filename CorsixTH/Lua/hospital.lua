@@ -1870,6 +1870,13 @@ end
 --! Update the 'cured' counts of the hospital.
 --!param patient Patient that was cured.
 function Hospital:updateCuredCounts(patient)
+  if not patient.is_debug then
+    self:changeReputation("cured", patient.disease)
+  end
+
+  if self.num_cured < 1 then
+    self.world.ui.adviser:say(_A.information.first_cure)
+  end
   self.num_cured = self.num_cured + 1
   self.num_cured_ty = self.num_cured_ty + 1
 
@@ -1882,9 +1889,21 @@ function Hospital:updateCuredCounts(patient)
 end
 
 --! Update the 'not cured' counts of the hospital.
-function Hospital:updateNotCuredCounts()
+--!param patient Patient that was not cured.
+--!param reason (string) the reason why the patient is not cured.
+--! -"kicked": Patient goes home early (manually sent, no treatment room, etc).
+--! -"over_priced": Patient considers the price too high.
+function Hospital:updateNotCuredCounts(patient, reason)
+  if patient.is_debug then return end
+
+  self:changeReputation(reason, patient.disease)
   self.not_cured = self.not_cured + 1
   self.not_cured_ty = self.not_cured_ty + 1
+
+  if reason == "kicked" then
+    local casebook = self.disease_casebook[patient.disease.id]
+    casebook.turned_away = casebook.turned_away + 1
+  end
 end
 
 function Hospital:updatePercentages()

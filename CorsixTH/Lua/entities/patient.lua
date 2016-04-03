@@ -567,34 +567,21 @@ function Patient:goHome(reason, disease_id)
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
     self.world.ui:playSound("cheer.wav") -- This sound is always heard
-    if not self.is_debug then
-      hosp:changeReputation("cured", self.disease)
-    end
-    if hosp.num_cured < 1 then
-      self.world.ui.adviser:say(_A.information.first_cure)
-    end
     self.hospital:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     self.hospital:msgCured()
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
-    if not self.is_debug then
-      hosp:changeReputation("kicked", self.disease)
-      self.hospital:updateNotCuredCounts()
-      local casebook = hosp.disease_casebook[self.disease.id]
-      casebook.turned_away = casebook.turned_away + 1
-    end
+    self.hospital:updateNotCuredCounts(self, reason)
 
   elseif reason == "over_priced" then
     self:setMood("sad_money", "activate")
     self:changeAttribute("happiness", -0.5)
+
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
     self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
-    if not self.is_debug then
-      hosp:changeReputation("over_priced", self.disease)
-      self.hospital:updateNotCuredCounts()
-    end
+    self.hospital:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
 
