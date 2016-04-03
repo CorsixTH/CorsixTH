@@ -145,17 +145,6 @@ function Patient:changeDisease(new_disease)
   self.disease = new_disease -- Finally, make the patient carry the new disease.
 end
 
-function Patient:setdiagDiff()
-  local disease = self.disease
-  local difficulty = 0
-  local expertise = self.world.map.level_config.expertise
-  if expertise then
-    difficulty = expertise[disease.expertise_id].MaxDiagDiff
-    self.diagnosis_difficulty = difficulty / 1000
-  end
-  return self.diagnosis_difficulty
-end
-
 --! Mark patient as being diagnosed.
 function Patient:setDiagnosed()
   self.diagnosed = true
@@ -188,8 +177,10 @@ function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
   -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
   local multiplier = 1
-  local diagnosis_difficulty = self:setdiagDiff()
-  local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
+
+  local expertise = self.world.map.level_config.expertise
+  local diagnosis_difficulty = expertise[self.disease.expertise_id].MaxDiagDiff / 1000
+  local diagnosis_base = 0.4 * (1 - diagnosis_difficulty)
   local diagnosis_bonus = 0.4
 
   -- Did the staff member manage to leave the room before the patient had
