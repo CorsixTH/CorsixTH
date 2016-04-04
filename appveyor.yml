@@ -5,9 +5,9 @@ init:
 - git clone --depth=1 https://github.com/CorsixTH/deps.git c:/deps
 environment:
   matrix:
-  - GENERATOR: Visual Studio 12 2013 Win64
-    CMAKE_LIBRARY_PATH: c:/deps/win_x64_msvc12/lib
-    CMAKE_INCLUDE_PATH: c:/deps/win_x64_msvc12/include
+  - GENERATOR: Visual Studio 14 2015 Win64
+    CMAKE_LIBRARY_PATH: c:/deps/win_x64_msvc14/lib
+    CMAKE_INCLUDE_PATH: c:/deps/win_x64_msvc14
 before_build:
 - cmake -G "%GENERATOR%" -DCMAKE_LIBRARY_PATH="%CMAKE_LIBRARY_PATH%" -DCMAKE_INCLUDE_PATH="%CMAKE_INCLUDE_PATH%"
 build:
@@ -20,6 +20,7 @@ after_build:
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Lua
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Bitmap
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Levels
+- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Campaigns %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/Campaigns
 - cp %APPVEYOR_BUILD_FOLDER%/CorsixTH/CorsixTH.lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Debug/
 artifacts:
 - path: CorsixTH/Debug/
