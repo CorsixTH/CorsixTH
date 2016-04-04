@@ -18,10 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local flag_cache = {}
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
-  return humanoid.world.map.th:getCellFlags(x, y, flag_cache).hospital
-    and (not flag_cache.room)
+  local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
+  return flag_cache.hospital and not flag_cache.room
 end
 
 local function action_seek_reception_start(action, humanoid)
@@ -31,7 +30,7 @@ local function action_seek_reception_start(action, humanoid)
   local score
 
   -- Go through all receptions desks.
-  for desk, _ in pairs(humanoid.hospital.reception_desks) do
+  for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
     if (not desk.receptionist and not desk.reserved_for) then
       -- Not an allowed reception desk to go to.
     else

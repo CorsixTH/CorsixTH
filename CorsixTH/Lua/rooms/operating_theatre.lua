@@ -49,6 +49,9 @@ room.call_sound = "reqd010.wav" -- TODO: There is also an unused sound
 
 class "OperatingTheatreRoom" (Room)
 
+---@type OperatingTheatreRoom
+local OperatingTheatreRoom = _G["OperatingTheatreRoom"]
+
 function OperatingTheatreRoom:OperatingTheatreRoom(...)
   self:Room(...)
   self.staff_member_set = {}
@@ -117,7 +120,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
 
   -- Resume operation if already ongoing
   if self:isOperating() then
-    local surgeon1 = next(self.staff_member_set) 
+    local surgeon1 = next(self.staff_member_set)
     local ongoing_action = surgeon1.action_queue[1]
     assert(ongoing_action.name == "multi_use_object")
 
@@ -175,12 +178,14 @@ function OperatingTheatreRoom:getStaffMember()
 end
 
 --! Builds the first operation action (i.e. with the surgeon whose we see the front).
---!param surgeon (Staff): the surgeon who does this operation action. He must
+--!param surgeon1 (Staff): the surgeon who does this operation action. He must
 --! be the same as the surgeon who gets the action on his queue.
 --!param patient (Patient): the patient to be operated.
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
-function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_table)
+function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
+  local room = self
+
   return {
     name = "multi_use_object",
     object = operation_table,
@@ -188,10 +193,10 @@ function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_tabl
     prolonged_usage = true,
     loop_callback = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
       -- dirty hack to make the truncated animation work
-      surgeon.animation_idx = nil
+      surgeon1.animation_idx = nil
     end,
     after_use = --[[persistable:operatring_theatre_table_after_use]] function()
-      self:dealtWithPatient(patient)
+      room:dealtWithPatient(patient)
       -- Tell the patient that it's time to leave, but only if the first action
       -- is really an idle action.
       if patient.action_queue[1].name == "idle" then
@@ -203,13 +208,13 @@ function OperatingTheatreRoom:buildTableAction1(surgeon, patient, operation_tabl
   }
 end
 
---! Builds the second operation action (i.e. with the surgeon whose we 
---! see the back). Called either when the operation starts or when the 
+--! Builds the second operation action (i.e. with the surgeon whose we
+--! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
 --! the second surgeon.
---!param first_action (action): the first operation action (built with via buildTableAction1()).
+--!param multi_use (action): the first operation action (built with via buildTableAction1()).
 --!param operation_table_b (OperatingTable): slave object representing the operation table.
-function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
+function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
   local num_loops = math.random(2, 5)
 
   return {
@@ -222,15 +227,15 @@ function OperatingTheatreRoom:buildTableAction2(first_action, operation_table_b)
       end
     end,
     after_use = --[[persistable:operatring_theatre_after_use]] function()
-      first_action.prolonged_usage = false
+      multi_use.prolonged_usage = false
     end,
     must_happen = true,
     no_truncate = true,
   }
 end
 
---! Sends the surgeon to the nearest operation sink ("op_sink1") 
---! and makes him wash his hands 
+--! Sends the surgeon to the nearest operation sink ("op_sink1")
+--! and makes him wash his hands
 --!param at_front (boolean): If true, add the actions at the front the action queue.
 --! Add the actions at the end of the queue otherwise.
 --! Default value is true.
@@ -278,7 +283,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   local num_ready = {0}
   ----- BEGIN Save game compatibility -----
-  -- These function are merely for save game compability.
+  -- These function are merely for save game compatibility.
   -- And they does not participate in the current game logic.
   -- Do not move or edit
   local --[[persistable:operatring_theatre_wait_for_ready]] function wait_for_ready(action)
@@ -358,7 +363,7 @@ function OperatingTheatreRoom:onHumanoidLeave(humanoid)
 
   if class.is(humanoid, Patient) then
     -- Turn off x-ray viewer
-    -- (FIXME: would be better when patient dress back?)     
+    -- (FIXME: would be better when patient dress back?)
     self:setXRayOn(false)
 
     local surgeon1 = next(self.staff_member_set)

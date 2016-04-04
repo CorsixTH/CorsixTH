@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include "th_lua.h"
 #include "lua_sdl.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>
@@ -28,27 +29,22 @@ SOFTWARE.
 #include "../resource.h"
 #endif
 
-static int l_set_caption(lua_State *L)
-{
-    SDL_WM_SetCaption(luaL_checkstring(L, 1), NULL);
-    return 0;
-}
-
 static int l_set_icon_win32(lua_State *L)
 {
     // Hack to set the window icon from the EXE resource under Windows.
     // Does nothing (and returns false) on other platforms.
 
     lua_pushboolean(L, 0);
-#ifdef CORSIX_TH_USE_WIN32_SDK
+#if 0
+    // XXX: Doesn't work any more, since window is inside renderer. Move to renderer.
     SDL_SysWMinfo oWindowInfo;
     oWindowInfo.version.major = SDL_MAJOR_VERSION;
     oWindowInfo.version.minor = SDL_MINOR_VERSION;
     oWindowInfo.version.patch = SDL_PATCHLEVEL;
-    if(SDL_GetWMInfo(&oWindowInfo) == 1)
+    if(SDL_GetWindowWMInfo(window,&oWindowInfo) == 1)
     {
-        HWND hWindow = oWindowInfo.window;
-        HICON hIcon = LoadIcon((HINSTANCE)GetModuleHandle(NULL), (LPCTSTR)IDI_CORSIXTH);
+        HWND hWindow = oWindowInfo.info.win.window;
+        HICON hIcon = LoadIcon((HINSTANCE)GetModuleHandle(nullptr), (LPCTSTR)IDI_CORSIXTH);
         SetClassLongPtr(hWindow, GCLP_HICON, (LONG_PTR)hIcon);
         SetClassLongPtr(hWindow, GCLP_HICONSM, (LONG_PTR)hIcon);
         lua_pushboolean(L, 1);
@@ -63,17 +59,16 @@ static int l_show_cursor(lua_State *L)
     return 0;
 }
 
-static const struct luaL_reg sdl_wmlib[] = {
+static const struct luaL_Reg sdl_wmlib[] = {
     {"setIconWin32", l_set_icon_win32},
-    {"setCaption", l_set_caption},
     {"showCursor", l_show_cursor},
-    {NULL, NULL}
+    {nullptr, nullptr}
 };
 
 int luaopen_sdl_wm(lua_State *L)
 {
     lua_newtable(L);
-    luaL_register(L, NULL, sdl_wmlib);
+    luaT_setfuncs(L, sdl_wmlib);
 
     return 1;
 }

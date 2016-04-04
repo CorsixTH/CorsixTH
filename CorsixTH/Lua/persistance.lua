@@ -24,6 +24,29 @@ local saved_permanents = {}
 strict_declare_global "permanent"
 strict_declare_global "unpermanent"
 
+local th_getfenv
+local th_getupvalue
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
+  th_getfenv = function(f)
+    local val = nil
+    if type(f) == "function" then
+      _, val = debug.getupvalue(f, 1)
+    elseif type(f) == "userdata" then
+      val = debug.getuservalue(f)
+    else
+      print('Unhandled argument to th_getfenv')
+    end
+    return val
+  end
+
+  th_getupvalue = function(f, n)
+    return debug.getupvalue(f, n + 1)
+  end
+else
+  th_getfenv = debug.getfenv;
+  th_getupvalue = debug.getupvalue;
+end
+
 function permanent(name, ...)
   if select('#', ...) == 0 then
     return function (...) return permanent(name, ...) end
@@ -42,7 +65,7 @@ end
 
 local --[[persistable:persistance_global_fetch]] function global_fetch(...)
   local val = _G
-  for _, k in ipairs{...} do
+  for _, k in ipairs({...}) do
     val = val[k]
   end
   return val
@@ -77,7 +100,7 @@ local function MakePermanentObjectsTable(inverted)
     permanent[class_mt] = name .. ".2"
     for k, v in pairs(class) do
       if type(v) == "function" then
-        permanent[v] = name ..".".. k
+        permanent[v] = name .. "." .. k
       end
     end
   until true end
@@ -89,12 +112,13 @@ local function MakePermanentObjectsTable(inverted)
     end
     if type(lib) == "table" then
       for k, v in pairs(lib) do
-        local type = type(v)
-        if type == "function" or type == "table" or type == "userdata" then
-          permanent[v] = name ..".".. k
-          if name == "TH" and type == "table" then
+        local type_of_lib = type(v)
+        if type_of_lib == "function" or type_of_lib == "table" or type_of_lib == "userdata" then
+          permanent[v] = name .. "." .. k
+          if name == "TH" and type_of_lib == "table" then
             -- C class metatables
-            permanent[debug.getfenv(getmetatable(v).__call)] = name ..".".. k ..".<mt>"
+            local callenv = th_getfenv(getmetatable(v).__call)
+            permanent[callenv] = name .. "." .. k .. ".<mt>"
           end
         end
       end
@@ -105,13 +129,13 @@ local function MakePermanentObjectsTable(inverted)
 
   -- Bits of the app
   permanent[TheApp] = "TheApp"
-  for _, key in ipairs{"config", "modes", "video", "strings", "audio", "gfx", "fs"} do
-    permanent[TheApp[key]] = inverted and "TheApp.".. key or {global_fetch, "TheApp", key}
+  for _, key in ipairs({"config", "modes", "video", "strings", "audio", "gfx", "fs"}) do
+    permanent[TheApp[key]] = inverted and "TheApp." .. key or {global_fetch, "TheApp", key}
   end
-  for _, collection in ipairs{"walls", "objects", "rooms", "humanoid_actions", "diseases"} do
+  for _, collection in ipairs({"walls", "objects", "rooms", "humanoid_actions", "diseases"}) do
     for k, v in pairs(TheApp[collection]) do
       if type(k) == "string" then
-        permanent[v] = inverted and "TheApp.".. collection ..".".. k or {global_fetch, "TheApp", collection, k}
+        permanent[v] = inverted and "TheApp." .. collection .. "." .. k or {global_fetch, "TheApp", collection, k}
       end
     end
   end
@@ -164,7 +188,7 @@ local function NameOf(obj) -- Debug aid
     if type(exploring) == "table" then
       for key, val in pairs(exploring) do
         if not explored[val] then
-          to_explore[val] = name .."."..tostring(key)
+          to_explore[val] = name .. "." ..tostring(key)
           explored[val] = true
         end
       end
@@ -177,19 +201,19 @@ local function NameOf(obj) -- Debug aid
           break
         end
         if val ~= nil and not explored[val] then
-          to_explore[val] = name ..".<upvalue-"..i..tostring(name)..">"
+          to_explore[val] = name .. ".<upvalue-" .. i .. tostring(name) .. ">"
           explored[val] = true
         end
       end
     end
     local mt = debug.getmetatable(exploring)
     if mt and not explored[mt] then
-      to_explore[mt] = name ..".<metatable>"
+      to_explore[mt] = name .. ".<metatable>"
       explored[mt] = true
     end
-    mt = debug.getfenv(exploring)
+    mt = th_getfenv(exploring)
     if mt and not explored[mt] then
-      to_explore[mt] = name ..".<env>"
+      to_explore[mt] = name .. ".<env>"
       explored[mt] = true
     end
   end
@@ -222,6 +246,8 @@ function SaveGame()
   --end, persist.errcatch)
 end
 
+--! Save a game to disk.
+--!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
   local f = assert(io.open(filename, "wb"))
@@ -231,7 +257,8 @@ end
 
 function LoadGame(data)
   --local status, res = xpcall(function()
-  local state = assert(persist.load(data, MakePermanentObjectsTable(true)))
+  local objtable = MakePermanentObjectsTable(true)
+  local state = assert(persist.load(data, objtable))
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world
@@ -260,7 +287,7 @@ end
 
 function LoadGameFile(filename)
   local f = assert(io.open(filename, "rb"))
-  local data = f:read"*a"
+  local data = f:read("*a")
   f:close()
   LoadGame(data)
 end

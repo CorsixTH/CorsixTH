@@ -23,7 +23,7 @@ SOFTWARE.
 #include "th_movie.h"
 #include "config.h"
 #include "lua_sdl.h"
-#ifdef CORSIX_TH_USE_FFMPEG
+#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && defined(CORSIX_TH_USE_SDL_MIXER)
 
 #include "th_gfx.h"
 extern "C"
@@ -31,38 +31,43 @@ extern "C"
     #include <libavcodec/avcodec.h>
     #include <libswscale/swscale.h>
     #include <libavutil/avutil.h>
+    #include <libavutil/mathematics.h>
     #include <libavutil/opt.h>
 }
 #include <SDL_mixer.h>
 #include <iostream>
+#include <cstring>
 
-#define INBUF_SIZE 4096
-#define AUDIO_BUFFER_SIZE 1024
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
+#define av_frame_alloc avcodec_alloc_frame
+#define av_frame_unref avcodec_get_frame_defaults
+#define av_frame_free avcodec_free_frame
+#endif
 
-int th_movie_stream_reader_thread(void* pState)
+static int th_movie_stream_reader_thread(void* pState)
 {
     THMovie *pMovie = (THMovie *)pState;
     pMovie->readStreams();
     return 0;
 }
 
-int th_movie_video_thread(void* pState)
+static int th_movie_video_thread(void* pState)
 {
     THMovie *pMovie = (THMovie *)pState;
     pMovie->runVideo();
     return 0;
 }
 
-void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
+static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
 {
     THMovie *pMovie = (THMovie *)pUserData;
     pMovie->copyAudioToStream((uint8_t*)pStream, iStreamSize);
 }
 
 THMoviePicture::THMoviePicture():
-    m_pOverlay(NULL),
-    m_pixelFormat(PIX_FMT_YUV420P),
-    m_pSurface(NULL)
+    m_pBuffer(nullptr),
+    m_pixelFormat(AV_PIX_FMT_RGB24)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -70,72 +75,23 @@ THMoviePicture::THMoviePicture():
 
 THMoviePicture::~THMoviePicture()
 {
-    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
-    {
-        SDL_FreeYUVOverlay(m_pOverlay);
-        m_pOverlay = NULL;
-    }
+    av_freep(&m_pBuffer);
     SDL_DestroyMutex(m_pMutex);
     SDL_DestroyCond(m_pCond);
 }
 
-void THMoviePicture::allocate(int iX, int iY, int iWidth, int iHeight)
+void THMoviePicture::allocate(int iWidth, int iHeight)
 {
-    m_iX = iX;
-    m_iY = iY;
     m_iWidth = iWidth;
     m_iHeight = iHeight;
-    SDL_Surface* pSurface = SDL_GetVideoSurface();
-    if(m_pOverlay)
-    {
-        if(m_pSurface == pSurface)
-        {
-            SDL_FreeYUVOverlay(m_pOverlay);
-        }
-        std::cerr << "THMovie overlay should be deallocated before being allocated!";
-    }
-    m_pSurface = pSurface;
-    m_pOverlay = SDL_CreateYUVOverlay(m_iWidth, m_iHeight, SDL_YV12_OVERLAY, pSurface);
-    if(m_pOverlay == NULL || m_pOverlay->pitches[0] < m_iWidth)
-    {
-        std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
-        return;
-    }
+    av_freep(&m_pBuffer);
+    int numBytes = avpicture_get_size(m_pixelFormat, m_iWidth, m_iHeight);
+    m_pBuffer = static_cast<uint8_t*>(av_mallocz(numBytes));
 }
 
 void THMoviePicture::deallocate()
 {
-    if(m_pOverlay)
-    {
-        if(m_pSurface == SDL_GetVideoSurface())
-        {
-            SDL_FreeYUVOverlay(m_pOverlay);
-        }
-        else
-        {
-            std::cerr << "THMovie overlay must be deallocated before a surface change";
-        }
-        m_pOverlay = NULL;
-    }
-}
-
-void THMoviePicture::draw()
-{
-    SDL_Rect rcDest;
-    int iError;
-
-    rcDest.x = m_iX;
-    rcDest.y = m_iY;
-    rcDest.w = m_iWidth;
-    rcDest.h = m_iHeight;
-    if(m_pOverlay && m_pSurface == SDL_GetVideoSurface())
-    {
-        iError = SDL_DisplayYUVOverlay(m_pOverlay, &rcDest);
-        if(iError < 0)
-        {
-            std::cerr << "Error displaying overlay: " << SDL_GetError();
-        }
-    }
+    av_freep(&m_pBuffer);
 }
 
 THMoviePictureBuffer::THMoviePictureBuffer():
@@ -144,7 +100,8 @@ THMoviePictureBuffer::THMoviePictureBuffer():
     m_iCount(0),
     m_iReadIndex(0),
     m_iWriteIndex(0),
-    m_pSwsContext(NULL)
+    m_pSwsContext(nullptr),
+    m_pTexture(nullptr)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -155,6 +112,11 @@ THMoviePictureBuffer::~THMoviePictureBuffer()
     SDL_DestroyCond(m_pCond);
     SDL_DestroyMutex(m_pMutex);
     sws_freeContext(m_pSwsContext);
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = nullptr;
+    }
 }
 
 void THMoviePictureBuffer::abort()
@@ -170,11 +132,22 @@ void THMoviePictureBuffer::reset()
     m_fAborting = false;
 }
 
-void THMoviePictureBuffer::allocate(int iX, int iY, int iWidth, int iHeight)
+void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iWidth, int iHeight)
 {
-    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    if (m_pTexture)
     {
-        m_aPictureQueue[i].allocate(iX, iY, iWidth, iHeight);
+        SDL_DestroyTexture(m_pTexture);
+        std::cerr << "THMovie overlay should be deallocated before being allocated!\n";
+    }
+    m_pTexture = SDL_CreateTexture(pRenderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING, iWidth, iHeight);
+    if (m_pTexture == nullptr)
+    {
+        std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
+        return;
+    }
+    for(int i = 0; i < ms_pictureBufferSize; i++)
+    {
+        m_aPictureQueue[i].allocate(iWidth, iHeight);
     }
     //Do not change m_iWriteIndex, it's used by the other thread.
     //m_iReadIndex is only used in this thread.
@@ -191,11 +164,16 @@ void THMoviePictureBuffer::deallocate()
     SDL_LockMutex(m_pMutex);
     m_fAllocated = false;
     SDL_UnlockMutex(m_pMutex);
-    for(int i=0; i<PICTURE_BUFFER_SIZE; i++)
+    for(int i = 0; i < ms_pictureBufferSize; i++)
     {
         SDL_LockMutex(m_aPictureQueue[i].m_pMutex);
         m_aPictureQueue[i].deallocate();
         SDL_UnlockMutex(m_aPictureQueue[i].m_pMutex);
+    }
+    if (m_pTexture)
+    {
+        SDL_DestroyTexture(m_pTexture);
+        m_pTexture = nullptr;
     }
 }
 
@@ -204,7 +182,7 @@ bool THMoviePictureBuffer::advance()
     if(empty()) { return false; }
 
     m_iReadIndex++;
-    if(m_iReadIndex == PICTURE_BUFFER_SIZE)
+    if(m_iReadIndex == ms_pictureBufferSize)
     {
         m_iReadIndex = 0;
     }
@@ -216,20 +194,25 @@ bool THMoviePictureBuffer::advance()
     return true;
 }
 
-void THMoviePictureBuffer::draw()
+void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer, const SDL_Rect &dstrect)
 {
     if(!empty())
     {
-        SDL_LockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
-        m_aPictureQueue[m_iReadIndex].draw();
-        SDL_UnlockMutex(m_aPictureQueue[m_iReadIndex].m_pMutex);
-    }
-}
+        auto cur_pic = &(m_aPictureQueue[m_iReadIndex]);
+        SDL_LockMutex(cur_pic->m_pMutex);
 
-double THMoviePictureBuffer::getCurrentPts()
-{
-    if(empty()) { return 0; }
-    return m_aPictureQueue[m_iReadIndex].m_dPts;
+        if (cur_pic->m_pBuffer)
+        {
+            SDL_UpdateTexture(m_pTexture, nullptr, cur_pic->m_pBuffer, cur_pic->m_iWidth * 3);
+            int iError = SDL_RenderCopy(pRenderer, m_pTexture, nullptr, &dstrect);
+            if (iError < 0)
+            {
+                std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
+            }
+        }
+
+        SDL_UnlockMutex(cur_pic->m_pMutex);
+    }
 }
 
 double THMoviePictureBuffer::getNextPts()
@@ -242,7 +225,7 @@ double THMoviePictureBuffer::getNextPts()
     }
     else
     {
-        nextPts = m_aPictureQueue[(m_iReadIndex+1)%PICTURE_BUFFER_SIZE].m_dPts;
+        nextPts = m_aPictureQueue[(m_iReadIndex + 1) % ms_pictureBufferSize].m_dPts;
     }
     SDL_UnlockMutex(m_pMutex);
     return nextPts;
@@ -261,14 +244,14 @@ bool THMoviePictureBuffer::full()
 {
     bool full;
     SDL_LockMutex(m_pMutex);
-    full = (!m_fAllocated || m_iCount == PICTURE_BUFFER_SIZE);
+    full = (!m_fAllocated || m_iCount == ms_pictureBufferSize);
     SDL_UnlockMutex(m_pMutex);
     return full;
 }
 
 int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 {
-    THMoviePicture* pMoviePicture = NULL;
+    THMoviePicture* pMoviePicture = nullptr;
     SDL_LockMutex(m_pMutex);
     while(full() && !m_fAborting)
     {
@@ -280,35 +263,30 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
     pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
     SDL_LockMutex(pMoviePicture->m_pMutex);
 
-    if(pMoviePicture->m_pOverlay)
+    if(pMoviePicture->m_pBuffer)
     {
-        AVPicture picture = {};
-
-        SDL_LockYUVOverlay(pMoviePicture->m_pOverlay);
-        picture.data[0] = pMoviePicture->m_pOverlay->pixels[0];
-        picture.data[1] = pMoviePicture->m_pOverlay->pixels[2];
-        picture.data[2] = pMoviePicture->m_pOverlay->pixels[1];
-
-        picture.linesize[0] = pMoviePicture->m_pOverlay->pitches[0];
-        picture.linesize[1] = pMoviePicture->m_pOverlay->pitches[2];
-        picture.linesize[2] = pMoviePicture->m_pOverlay->pitches[1];
-
-        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (PixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, NULL, NULL, NULL);
-        if(m_pSwsContext == NULL)
+        m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (AVPixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
+        if(m_pSwsContext == nullptr)
         {
             SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
-            std::cerr << "Failed to initialize SwsContext";
+            std::cerr << "Failed to initialize SwsContext\n";
             return 1;
         }
 
-        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pMoviePicture->m_iHeight, picture.data, picture.linesize);
-        SDL_UnlockYUVOverlay(pMoviePicture->m_pOverlay);
+        /* Allocate a new frame and buffer for the destination RGB24 data. */
+        AVFrame *pFrameRGB = av_frame_alloc();
+        avpicture_fill((AVPicture *)pFrameRGB, pMoviePicture->m_pBuffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
+
+        /* Rescale the frame data and convert it to RGB24. */
+        sws_scale(m_pSwsContext, pFrame->data, pFrame->linesize, 0, pFrame->height, pFrameRGB->data, pFrameRGB->linesize);
+
+        av_frame_free(&pFrameRGB);
 
         pMoviePicture->m_dPts = dPts;
 
         SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
         m_iWriteIndex++;
-        if(m_iWriteIndex == PICTURE_BUFFER_SIZE)
+        if(m_iWriteIndex == ms_pictureBufferSize)
         {
             m_iWriteIndex = 0;
         }
@@ -316,13 +294,14 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
         m_iCount++;
         SDL_UnlockMutex(m_pMutex);
     }
+
     return 0;
 }
 
 THAVPacketQueue::THAVPacketQueue():
-    iCount(0),
-    m_pFirstPacket(NULL),
-    m_pLastPacket(NULL)
+    m_pFirstPacket(nullptr),
+    m_pLastPacket(nullptr),
+    iCount(0)
 {
     m_pMutex = SDL_CreateMutex();
     m_pCond = SDL_CreateCond();
@@ -334,7 +313,7 @@ THAVPacketQueue::~THAVPacketQueue()
     SDL_DestroyMutex(m_pMutex);
 }
 
-int THAVPacketQueue::getCount()
+int THAVPacketQueue::getCount() const
 {
     return iCount;
 }
@@ -346,11 +325,11 @@ void THAVPacketQueue::push(AVPacket *pPacket)
 
     pNode = (AVPacketList*)av_malloc(sizeof(AVPacketList));
     pNode->pkt = *pPacket;
-    pNode->next = NULL;
+    pNode->next = nullptr;
 
     SDL_LockMutex(m_pMutex);
 
-    if(m_pLastPacket == NULL)
+    if(m_pLastPacket == nullptr)
     {
         m_pFirstPacket = pNode;
     }
@@ -373,20 +352,20 @@ AVPacket* THAVPacketQueue::pull(bool fBlock)
     SDL_LockMutex(m_pMutex);
 
     pNode = m_pFirstPacket;
-    if(pNode == NULL && fBlock)
+    if(pNode == nullptr && fBlock)
     {
         SDL_CondWait(m_pCond, m_pMutex);
         pNode = m_pFirstPacket;
     }
 
-    if(pNode == NULL)
+    if(pNode == nullptr)
     {
-        pPacket = NULL;
+        pPacket = nullptr;
     }
     else
     {
         m_pFirstPacket = pNode->next;
-        if(m_pFirstPacket == NULL) { m_pLastPacket = NULL; }
+        if(m_pFirstPacket == nullptr) { m_pLastPacket = nullptr; }
         iCount--;
 
         pPacket = (AVPacket*)av_malloc(sizeof(AVPacket));
@@ -407,22 +386,23 @@ void THAVPacketQueue::release()
 }
 
 THMovie::THMovie():
+    m_pRenderer(nullptr),
     m_sLastError(),
-    m_pFormatContext(NULL),
-    m_pVideoCodecContext(NULL),
-    m_pAudioCodecContext(NULL),
-    m_pVideoQueue(NULL),
-    m_pAudioQueue(NULL),
+    m_pFormatContext(nullptr),
+    m_pVideoCodecContext(nullptr),
+    m_pAudioCodecContext(nullptr),
+    m_pVideoQueue(nullptr),
+    m_pAudioQueue(nullptr),
     m_pMoviePictureBuffer(new THMoviePictureBuffer()),
-    m_pSwrContext(NULL),
+    m_pAudioResampleContext(nullptr),
     m_iAudioBufferSize(0),
     m_iAudioBufferMaxSize(0),
-    m_frame(NULL),
-    m_pChunk(NULL),
+    m_pAudioPacket(nullptr),
+    m_audio_frame(nullptr),
+    m_pChunk(nullptr),
     m_iChannel(-1),
-    m_pStreamThread(NULL),
-    m_pVideoThread(NULL),
-    m_pAudioPacket(NULL)
+    m_pStreamThread(nullptr),
+    m_pVideoThread(nullptr)
 {
     av_register_all();
 
@@ -431,8 +411,9 @@ THMovie::THMovie():
     m_flushPacket->data = (uint8_t *)"FLUSH";
     m_flushPacket->size = 5;
 
-    m_pbChunkBuffer = (uint8_t*)malloc(AUDIO_BUFFER_SIZE);
-    memset(m_pbChunkBuffer, 0, AUDIO_BUFFER_SIZE);
+    m_pbChunkBuffer = (uint8_t*)std::calloc(ms_audioBufferSize, sizeof(uint8_t));
+
+    m_pDecodingAudioMutex = SDL_CreateMutex();
 }
 
 THMovie::~THMovie()
@@ -442,9 +423,16 @@ THMovie::~THMovie()
     av_free_packet(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
+
+    SDL_DestroyMutex(m_pDecodingAudioMutex);
 }
 
-bool THMovie::moviesEnabled()
+void THMovie::setRenderer(SDL_Renderer *pRenderer)
+{
+    m_pRenderer = pRenderer;
+}
+
+bool THMovie::moviesEnabled() const
 {
     return true;
 }
@@ -458,31 +446,31 @@ bool THMovie::load(const char* szFilepath)
     unload(); //Unload any currently loaded video to free memory
     m_fAborting = false;
 
-    iError = avformat_open_input(&m_pFormatContext, szFilepath, NULL, NULL);
+    iError = avformat_open_input(&m_pFormatContext, szFilepath, nullptr, nullptr);
     if(iError < 0)
     {
-        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        av_strerror(iError, m_szErrorBuffer, ms_movieErrorBufferSize);
         m_sLastError = std::string(m_szErrorBuffer);
         return false;
     }
 
-    iError = avformat_find_stream_info(m_pFormatContext, NULL);
+    iError = avformat_find_stream_info(m_pFormatContext, nullptr);
     if(iError < 0)
     {
-        av_strerror(iError, m_szErrorBuffer, MOVIE_ERROR_BUFFER_SIZE);
+        av_strerror(iError, m_szErrorBuffer, ms_movieErrorBufferSize);
         m_sLastError = std::string(m_szErrorBuffer);
         return false;
     }
 
     m_iVideoStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &m_pVideoCodec, 0);
     m_pVideoCodecContext = m_pFormatContext->streams[m_iVideoStream]->codec;
-    avcodec_open2(m_pVideoCodecContext, m_pVideoCodec, NULL);
+    avcodec_open2(m_pVideoCodecContext, m_pVideoCodec, nullptr);
 
     m_iAudioStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_AUDIO, -1, -1, &m_pAudioCodec, 0);
     if(m_iAudioStream >= 0)
     {
         m_pAudioCodecContext = m_pFormatContext->streams[m_iAudioStream]->codec;
-        avcodec_open2(m_pAudioCodecContext, m_pAudioCodec, NULL);
+        avcodec_open2(m_pAudioCodecContext, m_pAudioCodec, nullptr);
     }
 
     return true;
@@ -504,13 +492,13 @@ void THMovie::unload()
 
     if(m_pStreamThread)
     {
-        SDL_WaitThread(m_pStreamThread, NULL);
-        m_pStreamThread = NULL;
+        SDL_WaitThread(m_pStreamThread, nullptr);
+        m_pStreamThread = nullptr;
     }
     if(m_pVideoThread)
     {
-        SDL_WaitThread(m_pVideoThread, NULL);
-        m_pVideoThread = NULL;
+        SDL_WaitThread(m_pVideoThread, nullptr);
+        m_pVideoThread = nullptr;
     }
 
     //wait until after other threads are closed to clear the packet queues
@@ -523,7 +511,7 @@ void THMovie::unload()
             av_free_packet(p);
         }
         delete m_pAudioQueue;
-        m_pAudioQueue = NULL;
+        m_pAudioQueue = nullptr;
     }
     if(m_pVideoQueue)
     {
@@ -533,9 +521,15 @@ void THMovie::unload()
             av_free_packet(p);
         }
         delete m_pVideoQueue;
-        m_pVideoQueue = NULL;
+        m_pVideoQueue = nullptr;
     }
     m_pMoviePictureBuffer->deallocate();
+
+    if(m_pVideoCodecContext)
+    {
+        avcodec_close(m_pVideoCodecContext);
+        m_pVideoCodecContext = nullptr;
+    }
 
     if(m_iChannel >= 0)
     {
@@ -545,34 +539,29 @@ void THMovie::unload()
         m_iChannel = -1;
     }
 
+    SDL_LockMutex(m_pDecodingAudioMutex);
     if(m_iAudioBufferMaxSize > 0)
     {
         av_free(m_pbAudioBuffer);
         m_iAudioBufferMaxSize = 0;
     }
-
-    if(m_pVideoCodecContext)
-    {
-        avcodec_close(m_pVideoCodecContext);
-        m_pVideoCodecContext = NULL;
-    }
     if(m_pAudioCodecContext)
     {
         avcodec_close(m_pAudioCodecContext);
-        m_pAudioCodecContext = NULL;
+        m_pAudioCodecContext = nullptr;
     }
-    if(m_pFormatContext)
-    {
-        avformat_close_input(&m_pFormatContext);
-    }
+    av_frame_free(&m_audio_frame);
 
-    if(m_frame)
+#ifdef CORSIX_TH_USE_FFMPEG
+    swr_free(&m_pAudioResampleContext);
+#elif defined(CORSIX_TH_USE_LIBAV)
+    // avresample_free doesn't skip nullptr on it's own.
+    if (m_pAudioResampleContext != nullptr)
     {
-        av_free(m_frame);
-        m_frame = NULL;
+        avresample_free(&m_pAudioResampleContext);
+        m_pAudioResampleContext = nullptr;
     }
-
-    swr_free(&m_pSwrContext);
+#endif
 
     if(m_pAudioPacket)
     {
@@ -580,32 +569,35 @@ void THMovie::unload()
         m_pAudioPacket->size = m_iAudioPacketSize;
         av_free_packet(m_pAudioPacket);
         av_free(m_pAudioPacket);
-        m_pAudioPacket = NULL;
-        m_pbAudioPacketData = NULL;
+        m_pAudioPacket = nullptr;
+        m_pbAudioPacketData = nullptr;
         m_iAudioPacketSize = 0;
+    }
+    SDL_UnlockMutex(m_pDecodingAudioMutex);
+
+    if(m_pFormatContext)
+    {
+        avformat_close_input(&m_pFormatContext);
     }
 }
 
-void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
+void THMovie::play(const SDL_Rect &destination_rect, int iChannel)
 {
-    m_iX = iX;
-    m_iY = iY;
-    m_iWidth = iWidth;
-    m_iHeight = iHeight;
+    m_destination_rect = SDL_Rect{ destination_rect.x, destination_rect.y, destination_rect.w, destination_rect.h };
 
-    #ifdef CORSIX_TH_USE_OGL_RENDERER
-    SDL_Surface* pSurface = SDL_GetVideoSurface();
-    SDL_SetVideoMode(pSurface->w, pSurface->h, 0, pSurface->flags & ~SDL_OPENGL);
-    #endif
-    m_frame = NULL;
+    if(!m_pRenderer)
+    {
+        m_sLastError = std::string("Cannot play before setting the renderer");
+        return;
+    }
 
     m_pVideoQueue = new THAVPacketQueue();
     m_pMoviePictureBuffer->reset();
-    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, m_pVideoCodecContext->width, m_pVideoCodecContext->height);
 
-    m_pAudioPacket = NULL;
+    m_pAudioPacket = nullptr;
     m_iAudioPacketSize = 0;
-    m_pbAudioPacketData = NULL;
+    m_pbAudioPacketData = nullptr;
 
     m_iAudioBufferSize = 0;
     m_iAudioBufferIndex = 0;
@@ -617,9 +609,10 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
 
     if(m_iAudioStream >= 0)
     {
-        Mix_QuerySpec(&m_iMixerFrequency, NULL, &m_iMixerChannels);
-        m_pSwrContext = swr_alloc_set_opts(
-            m_pSwrContext,
+        Mix_QuerySpec(&m_iMixerFrequency, nullptr, &m_iMixerChannels);
+#ifdef CORSIX_TH_USE_FFMPEG
+        m_pAudioResampleContext = swr_alloc_set_opts(
+            m_pAudioResampleContext,
             m_iMixerChannels==1?AV_CH_LAYOUT_MONO:AV_CH_LAYOUT_STEREO,
             AV_SAMPLE_FMT_S16,
             m_iMixerFrequency,
@@ -627,10 +620,19 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
             m_pAudioCodecContext->sample_fmt,
             m_pAudioCodecContext->sample_rate,
             0,
-            NULL);
-        swr_init(m_pSwrContext);
-
-        m_pChunk = Mix_QuickLoad_RAW(m_pbChunkBuffer, AUDIO_BUFFER_SIZE);
+            nullptr);
+        swr_init(m_pAudioResampleContext);
+#elif defined(CORSIX_TH_USE_LIBAV)
+        m_pAudioResampleContext = avresample_alloc_context();
+        av_opt_set_int(m_pAudioResampleContext, "in_channel_layout", m_pAudioCodecContext->channel_layout, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_channel_layout", m_iMixerChannels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO, 0);
+        av_opt_set_int(m_pAudioResampleContext, "in_sample_rate", m_pAudioCodecContext->sample_rate, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_sample_rate", m_iMixerFrequency, 0);
+        av_opt_set_int(m_pAudioResampleContext, "in_sample_fmt", m_pAudioCodecContext->sample_fmt, 0);
+        av_opt_set_int(m_pAudioResampleContext, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
+        avresample_open(m_pAudioResampleContext);
+#endif
+        m_pChunk = Mix_QuickLoad_RAW(m_pbChunkBuffer, ms_audioBufferSize);
 
         m_iChannel = Mix_PlayChannel(iChannel, m_pChunk, -1);
         if(m_iChannel < 0)
@@ -640,12 +642,12 @@ void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
         }
         else
         {
-            Mix_RegisterEffect(m_iChannel, th_movie_audio_callback, NULL, this);
+            Mix_RegisterEffect(m_iChannel, th_movie_audio_callback, nullptr, this);
         }
     }
 
-    m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, this);
-    m_pVideoThread = SDL_CreateThread(th_movie_video_thread, this);
+    m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, "Stream", this);
+    m_pVideoThread = SDL_CreateThread(th_movie_video_thread, "Video", this);
 }
 
 void THMovie::stop()
@@ -653,7 +655,7 @@ void THMovie::stop()
     m_fAborting = true;
 }
 
-int THMovie::getNativeHeight()
+int THMovie::getNativeHeight() const
 {
     int iHeight = 0;
 
@@ -664,7 +666,7 @@ int THMovie::getNativeHeight()
     return iHeight;
 }
 
-int THMovie::getNativeWidth()
+int THMovie::getNativeWidth() const
 {
     int iWidth = 0;
 
@@ -675,21 +677,12 @@ int THMovie::getNativeWidth()
     return iWidth;
 }
 
-bool THMovie::hasAudioTrack()
+bool THMovie::hasAudioTrack() const
 {
     return (m_iAudioStream >= 0);
 }
 
-bool THMovie::requiresVideoReset()
-{
-#ifdef CORSIX_TH_USE_OGL_RENDERER
-    return true;
-#else
-    return false;
-#endif
-}
-
-const char* THMovie::getLastError()
+const char* THMovie::getLastError() const
 {
     return m_sLastError.c_str();
 }
@@ -704,32 +697,20 @@ void THMovie::refresh()
     if(!m_pMoviePictureBuffer->empty())
     {
         double dCurTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
-        double dCurPts = m_pMoviePictureBuffer->getCurrentPts();
         double dNextPts = m_pMoviePictureBuffer->getNextPts();
 
-        //don't play a frame too early
-        if(dCurPts > 0)
-        {
-            if(dCurPts * 1000.0 > dCurTime)
-            {
-                return;
-            }
-        }
-
-        //if we have another frame and it's time has already passed, drop the current frame
-        if(dNextPts > 0 && dNextPts * 1000.0 < dCurTime)
+        if(dNextPts > 0 && dNextPts * 1000.0 <= dCurTime)
         {
             m_pMoviePictureBuffer->advance();
         }
 
-        m_pMoviePictureBuffer->draw();
-        m_pMoviePictureBuffer->advance();
+        m_pMoviePictureBuffer->draw(m_pRenderer, m_destination_rect);
     }
 }
 
 void THMovie::allocatePictureBuffer()
 {
-    m_pMoviePictureBuffer->allocate(m_iX, m_iY, m_iWidth, m_iHeight);
+    m_pMoviePictureBuffer->allocate(m_pRenderer, getNativeWidth(), getNativeHeight());
 }
 
 void THMovie::deallocatePictureBuffer()
@@ -771,7 +752,7 @@ void THMovie::readStreams()
 
     while(!m_fAborting)
     {
-        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_pMoviePictureBuffer->empty())
+        if(m_pVideoQueue->getCount() == 0 && m_pAudioQueue->getCount() == 0 && m_pMoviePictureBuffer->getNextPts() == 0)
         {
             break;
         }
@@ -786,14 +767,14 @@ void THMovie::readStreams()
 
 void THMovie::runVideo()
 {
-    AVFrame *pFrame = avcodec_alloc_frame();
+    AVFrame *pFrame = av_frame_alloc();
     int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
 
     while(!m_fAborting)
     {
-        avcodec_get_frame_defaults(pFrame);
+        av_frame_unref(pFrame);
 
         iError = getVideoFrame(pFrame, &iStreamPts);
         if(iError < 0)
@@ -805,7 +786,7 @@ void THMovie::runVideo()
             continue;
         }
 
-        dClockPts = iStreamPts * av_q2d(m_pVideoCodecContext->time_base);
+        dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iVideoStream]->time_base);
         iError = m_pMoviePictureBuffer->write(pFrame, dClockPts);
 
         if(iError < 0)
@@ -815,7 +796,7 @@ void THMovie::runVideo()
     }
 
     avcodec_flush_buffers(m_pVideoCodecContext);
-    av_free(pFrame);
+    av_frame_free(&pFrame);
 }
 
 int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
@@ -824,7 +805,7 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     int iError;
 
     AVPacket *pPacket = m_pVideoQueue->pull(true);
-    if(pPacket == NULL)
+    if(pPacket == nullptr)
     {
         return -1;
     }
@@ -849,11 +830,19 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     {
         iError = 1;
 
+#ifdef CORSIX_TH_USE_LIBAV
+        *piPts = pFrame->pts;
+        if (*piPts == AV_NOPTS_VALUE)
+        {
+            *piPts = pFrame->pkt_dts;
+        }
+#else
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
         *piPts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), pFrame, "best_effort_timestamp");
 #else
         *piPts = av_frame_get_best_effort_timestamp(pFrame);
-#endif
+#endif //LIBAVCODEC_VERSION_INT
+#endif //CORSIX_T_USE_LIBAV
 
         if(*piPts == AV_NOPTS_VALUE)
         {
@@ -869,8 +858,9 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
     int iAudioSize;
     int iCopyLength;
     bool fFirst = true;
+    SDL_LockMutex(m_pDecodingAudioMutex);
 
-    while(iStreamSize > 0)
+    while(iStreamSize > 0  && !m_fAborting)
     {
         if(m_iAudioBufferIndex >= m_iAudioBufferSize)
         {
@@ -879,7 +869,7 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 
             if(iAudioSize <= 0)
             {
-                memset(m_pbAudioBuffer, 0, m_iAudioBufferSize);
+                std::memset(m_pbAudioBuffer, 0, m_iAudioBufferSize);
             }
             else
             {
@@ -890,11 +880,13 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 
         iCopyLength = m_iAudioBufferSize - m_iAudioBufferIndex;
         if(iCopyLength > iStreamSize) { iCopyLength = iStreamSize; }
-        memcpy(pbStream, (uint8_t *)m_pbAudioBuffer + m_iAudioBufferIndex, iCopyLength);
+        std::memcpy(pbStream, (uint8_t *)m_pbAudioBuffer + m_iAudioBufferIndex, iCopyLength);
         iStreamSize -= iCopyLength;
         pbStream += iCopyLength;
         m_iAudioBufferIndex += iCopyLength;
     }
+
+    SDL_UnlockMutex(m_pDecodingAudioMutex);
 }
 
 int THMovie::decodeAudioFrame(bool fFirst)
@@ -918,7 +910,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
                 m_pAudioPacket->size = m_iAudioPacketSize;
                 av_free_packet(m_pAudioPacket);
                 av_free(m_pAudioPacket);
-                m_pAudioPacket = NULL;
+                m_pAudioPacket = nullptr;
             }
             m_pAudioPacket = m_pAudioQueue->pull(true);
             if(m_fAborting)
@@ -929,7 +921,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
             m_pbAudioPacketData = m_pAudioPacket->data;
             m_iAudioPacketSize = m_pAudioPacket->size;
 
-            if(m_pAudioPacket == NULL)
+            if(m_pAudioPacket == nullptr)
             {
                 fNewPacket = false;
                 return -1;
@@ -958,13 +950,13 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
         while(m_pAudioPacket->size > 0 || (!m_pAudioPacket->data && fNewPacket))
         {
-            if(!m_frame)
+            if(!m_audio_frame)
             {
-                m_frame = avcodec_alloc_frame();
+                m_audio_frame = av_frame_alloc();
             }
             else
             {
-                avcodec_get_frame_defaults(m_frame);
+                av_frame_unref(m_audio_frame);
             }
 
             if(fFlushComplete)
@@ -974,7 +966,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
             fNewPacket = false;
 
-            iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_frame, &iGotFrame, m_pAudioPacket);
+            iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_audio_frame, &iGotFrame, m_pAudioPacket);
 
             if(iBytesConsumed < 0)
             {
@@ -994,9 +986,8 @@ int THMovie::decodeAudioFrame(bool fFirst)
         }
     }
 
-#if LIBSWRESAMPLE_VERSION_INT < AV_VERSION_INT(0, 12, 100)
     //over-estimate output samples
-    iOutSamples = (int)av_rescale_rnd(m_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
+    iOutSamples = (int)av_rescale_rnd(m_audio_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
     iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
 
     if(iSampleSize > m_iAudioBufferMaxSize)
@@ -1008,50 +999,32 @@ int THMovie::decodeAudioFrame(bool fFirst)
         m_pbAudioBuffer = (uint8_t*)av_malloc(iSampleSize);
         m_iAudioBufferMaxSize = iSampleSize;
     }
-#else
-    //output samples = (input samples + delay) * output rate / input rate
-    iOutSamples = (int)av_rescale_rnd(
-        swr_get_delay(
-            m_pSwrContext,
-            m_pAudioCodecContext->sample_rate) + m_frame->nb_samples,
-            m_iMixerFrequency,
-            m_pAudioCodecContext->sample_rate,
-            AV_ROUND_UP);
-    iSampleSize = av_samples_get_buffer_size(NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
 
-    if(iSampleSize > m_iAudioBufferMaxSize)
-    {
-        if(m_iAudioBufferMaxSize > 0)
-        {
-            av_free(m_pbAudioBuffer);
-        }
-        av_samples_alloc(&m_pbAudioBuffer, NULL, m_iMixerChannels, iOutSamples, AV_SAMPLE_FMT_S16, 0);
-        m_iAudioBufferMaxSize = iSampleSize;
-    }
+#ifdef CORSIX_TH_USE_FFMPEG
+    swr_convert(m_pAudioResampleContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_audio_frame->data[0], m_audio_frame->nb_samples);
+#elif defined(CORSIX_TH_USE_LIBAV)
+    avresample_convert(m_pAudioResampleContext, &m_pbAudioBuffer, 0, iOutSamples, (uint8_t**)&m_audio_frame->data[0], 0, m_audio_frame->nb_samples);
 #endif
-
-    swr_convert(m_pSwrContext, &m_pbAudioBuffer, iOutSamples, (const uint8_t**)&m_frame->data[0], m_frame->nb_samples);
-
     return iSampleSize;
 }
-#else //CORSIX_TH_USE_FFMPEG
+#else //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 THMovie::THMovie() {}
 THMovie::~THMovie() {}
-bool THMovie::moviesEnabled() { return false; }
+void THMovie::setRenderer(SDL_Renderer *pRenderer) {}
+bool THMovie::moviesEnabled() const { return false; }
 bool THMovie::load(const char* filepath) { return true; }
 void THMovie::unload() {}
-void THMovie::play(int iX, int iY, int iWidth, int iHeight, int iChannel)
+void THMovie::play(const SDL_Rect &destination_rect, int iChannel)
 {
     SDL_Event endEvent;
     endEvent.type = SDL_USEREVENT_MOVIE_OVER;
     SDL_PushEvent(&endEvent);
 }
 void THMovie::stop() {}
-int THMovie::getNativeHeight() { return 0; }
-int THMovie::getNativeWidth() { return 0; }
-bool THMovie::hasAudioTrack() { return false; }
-bool THMovie::requiresVideoReset() { return false; }
-const char* THMovie::getLastError() { return NULL; }
+int THMovie::getNativeHeight() const { return 0; }
+int THMovie::getNativeWidth() const  { return 0; }
+bool THMovie::hasAudioTrack() const  { return false; }
+const char* THMovie::getLastError() const { return nullptr; }
 void THMovie::clearLastError() {}
 void THMovie::refresh() {}
 void THMovie::allocatePictureBuffer() {}

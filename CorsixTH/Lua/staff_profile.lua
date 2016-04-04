@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "StaffProfile"
 
+---@type StaffProfile
+local StaffProfile = _G["StaffProfile"]
+
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.world = world
   self.humanoid_class = humanoid_class
@@ -196,8 +199,10 @@ end
 -- Update junior and consultant status
 function StaffProfile:parseSkillLevel()
   local level_config = self.world.map.level_config
+
   local junior_skill = level_config.gbv.DoctorThreshold / 1000
-  self.is_junior     = self.skill <= junior_skill and 1 or nil
+  self.is_junior = self.skill <= junior_skill and 1 or nil
+
   local consultant_skill = level_config.gbv.ConsultantThreshold / 1000
   self.is_consultant = self.skill >= consultant_skill and 1 or nil
 end

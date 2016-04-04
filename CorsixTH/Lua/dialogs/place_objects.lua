@@ -30,6 +30,9 @@ local ATTACH_BLUEPRINT_TO_TILE = false
 --! The dialog shown when placing objects.
 class "UIPlaceObjects" (Window)
 
+---@type UIPlaceObjects
+local UIPlaceObjects = _G["UIPlaceObjects"]
+
 --[[ Constructor for the class.
 !param ui (UI) The active ui.
 !param object_list (table) a list of tables with objects to place. Keys are "object", "qty" and
@@ -63,8 +66,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     self:addPanel(113, 0, y) -- Desc text box
   end
   self:addPanel(114,   0, 90) -- Dialog mid-piece
-  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound"no4.wav":setTooltip(_S.tooltip.place_objects_window.cancel)
-  self:addKeyHandler("esc", self.cancel)
+  self:addPanel(115,   0, 100):makeButton(9, 8, 41, 42, 116, self.cancel):setSound("no4.wav"):setTooltip(_S.tooltip.place_objects_window.cancel)
+  self:addKeyHandler("escape", self.cancel)
   self.purchase_button =
   self:addPanel(117,  50, 100):makeButton(1, 8, 41, 42, 118, self.purchaseItems):setTooltip(_S.tooltip.place_objects_window.buy_sell)
     :setDisabledSprite(127):enable(false) -- Disabled purchase items button
@@ -73,7 +76,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
     :setDisabledSprite(128):enable(false):makeToggle() -- Disabled pick up items button
   self.confirm_button =
   self:addPanel(121, 134, 100):makeButton(1, 8, 43, 42, 122, self.confirm):setTooltip(_S.tooltip.place_objects_window.confirm)
-    :setDisabledSprite(129):enable(false):setSound"YesX.wav" -- Disabled confirm button
+    :setDisabledSprite(129):enable(false):setSound("YesX.wav") -- Disabled confirm button
 
   self.list_header = self:addPanel(123, 0, 146) -- Object list header
   self.list_header.visible = false
@@ -83,7 +86,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
   self.num_slots = 0
 
   self:addObjects(object_list, pay_for)
-  self:addKeyHandler(" ", self.tryNextOrientation)
+  self:addKeyHandler("space", self.tryNextOrientation)
 
   ui:setWorldHitTest(false)
 end
@@ -184,7 +187,8 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
         object.qty = object.qty + new_object.qty
         if pay_for then
           local build_cost = self.ui.hospital:getObjectBuildCost(new_object.object.id)
-          self.ui.hospital:spendMoney(new_object.qty * build_cost, _S.transactions.buy_object .. ": " .. object.object.name, new_object.qty * build_cost)
+          local msg = _S.transactions.buy_object .. ": " .. object.object.name
+          self.ui.hospital:spendMoney(new_object.qty * build_cost, msg, new_object.qty * build_cost)
         end
         -- If this is an object that has been created in the world already, add it to the
         -- associated list of objects to re-place.
@@ -218,16 +222,17 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
     self.objects[#self.objects + 1] = object
     if pay_for then
       local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
-      self.ui.hospital:spendMoney(object.qty * build_cost, _S.transactions.buy_object .. ": " .. object.object.name, object.qty * build_cost)
+      local msg = _S.transactions.buy_object .. ": " .. object.object.name
+      self.ui.hospital:spendMoney(object.qty * build_cost, msg, object.qty * build_cost)
     end
   end
 
   -- sort list by size of object (number of tiles in the first existing orientation (usually north))
   table.sort(self.objects, function(o1, o2)
-    local orient1 = o1.object.orientations.north or o1.object.orientations.east
-                 or o1.object.orientations.south or o1.object.orientations.west
-    local orient2 = o2.object.orientations.north or o2.object.orientations.east
-                 or o2.object.orientations.south or o2.object.orientations.west
+    local orient1 = o1.object.orientations.north or o1.object.orientations.east or
+                    o1.object.orientations.south or o1.object.orientations.west
+    local orient2 = o2.object.orientations.north or o2.object.orientations.east or
+                    o2.object.orientations.south or o2.object.orientations.west
     return #orient1.footprint > #orient2.footprint
   end)
 
@@ -238,9 +243,10 @@ end
 
 -- precondition: self.active_index has to correspond to the object to be removed
 function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
-  local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
   if refund then
-    self.ui.hospital:receiveMoney(build_cost, _S.transactions.sell_object .. ": " .. object.object.name, build_cost)
+    local build_cost = self.ui.hospital:getObjectBuildCost(object.object.id)
+    local msg = _S.transactions.sell_object .. ": " .. object.object.name
+    self.ui.hospital:receiveMoney(build_cost, msg, build_cost)
   end
 
   object.qty = object.qty - 1
@@ -330,13 +336,14 @@ function UIPlaceObjects:setActiveIndex(index)
     self.ui:tutorialStep(1, {4, 5}, 6)
   end
   local anims = self.anims
+  local grey_scale = anims.Alt32_GreyScale
   local _, ghost = self.ui.app.gfx:loadPalette()
   for _, anim in pairs(object.idle_animations) do
-    anims:setAnimationGhostPalette(anim, ghost)
+    anims:setAnimationGhostPalette(anim, ghost, grey_scale)
   end
   if object.slave_type then
     for _, anim in pairs(object.slave_type.idle_animations) do
-      anims:setAnimationGhostPalette(anim, ghost)
+      anims:setAnimationGhostPalette(anim, ghost, grey_scale)
     end
   end
 
@@ -439,7 +446,7 @@ end
 
 function UIPlaceObjects:tryNextOrientation()
   if #self.objects > 0 then
-    self.ui:playSound "swoosh.wav"
+    self.ui:playSound("swoosh.wav")
     self.objects[self.active_index].orientation_before = self.object_orientation;
     self:nextOrientation()
   end
@@ -486,6 +493,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     real_obj = object.existing_objects[1]
     table.remove(object.existing_objects, 1)
   end
+  local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if real_obj then
     -- If there is such an object then we don't want to make a new one, but move this one instead.
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
@@ -498,16 +506,19 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     end
     -- Some objects (e.g. the plant) uses this flag to avoid doing stupid things when picked up.
     real_obj.picked_up = false
+    -- Machines may have smoke, recalculate it to ensure the animation is in the correct state
+    if real_obj.strength then
+      real_obj:calculateSmoke(room)
+    end
   else
     real_obj = self.world:newObject(object.object.id, self.object_cell_x,
     self.object_cell_y, self.object_orientation)
   end
-  local room = self.room or self.world:getRoom(self.object_cell_x, self.object_cell_y)
   if room then
     room.objects[real_obj] = true
   end
 
-  self.ui:playSound "place_r.wav"
+  self.ui:playSound("place_r.wav")
 
   self:removeObject(object, dont_close_if_empty)
   object.orientation_before = nil
@@ -525,8 +536,8 @@ function UIPlaceObjects:draw(canvas, x, y)
       local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
       local zoom = self.ui.zoom_factor
       if canvas:scale(zoom) then
-        x = x / zoom
-        y = y / zoom
+        x = math.floor(x / zoom)
+        y = math.floor(y / zoom)
       end
       self.object_anim:draw(canvas, x, y)
       if self.objects[self.active_index].object.slave_type then
@@ -652,7 +663,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           is_object_allowed = map:getCellFlags(x, y, flags)[flag]
         end
 
-        -- Having checked if the tile is good set its blueprint appearance flag: 
+        -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then
             map:setCell(x, y, 4, good_tile)
@@ -760,8 +771,8 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
     -- TODO: East, South
   end
   bestx, besty = math_floor(bestx), math_floor(besty)
-  if bestx < 1 or besty < 1
-  or bestx > self.map.width or besty > self.map.height then
+  if bestx < 1 or besty < 1 or
+      bestx > self.map.width or besty > self.map.height then
     bestx, besty = nil
   end
   return bestx, besty, besto

@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Options window used in the main menu and ingame.
 class "UIOptions" (UIResizable)
 
+---@type UIOptions
+local UIOptions = _G["UIOptions"]
+
 local col_bg = {
   red = 154,
   green = 146,
@@ -112,7 +115,14 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
   -- Language
-  local lang = string.upper(app.config.language)
+  -- Get language name in the language to normalize display.
+  -- If it doesn't exist, display the current config option.
+  local lang = self.app.strings:getLanguageNames(app.config.language)
+  if lang then
+    lang = lang[1]
+  else
+    lang = app.config.language
+  end
   self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
   self.language_panel = self:addBevelPanel(165, 95, 135, 20, col_bg):setLabel(lang)
@@ -272,6 +282,9 @@ end
 
 --! A custom resolution selection window
 class "UIResolution" (UIResizable)
+
+---@type UIResolution
+local UIResolution = _G["UIResolution"]
 
 function UIResolution:UIResolution(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)

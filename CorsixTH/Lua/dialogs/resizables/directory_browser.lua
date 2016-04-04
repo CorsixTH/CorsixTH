@@ -19,9 +19,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local lfs = require "lfs"
+local TH = require "TH"
+local lfsext = TH.lfsExt()
 
 --! A tree node representing a directory in the physical file-system.
 class "DirTreeNode" (FileTreeNode)
+
+---@type DirTreeNode
+local DirTreeNode = _G["DirTreeNode"]
 
 local pathsep = package.config:sub(1, 1)
 
@@ -31,8 +36,8 @@ end
 
 function DirTreeNode:isValidFile(name)
   -- Check parent criteria and that it's a directory.
-  if FileTreeNode.isValidFile(self, name)
-  and lfs.attributes(self:childPath(name), "mode") == "directory" then
+  if FileTreeNode.isValidFile(self, name) and
+      lfs.attributes(self:childPath(name), "mode") == "directory" then
     -- Make sure that we are allowed to read the directory.
     local status, result = pcall(lfs.dir, self:childPath(name))
     return status
@@ -52,6 +57,9 @@ end
 
 --! This tree only shows directories and highlights valid TH directories.
 class "InstallDirTreeNode" (DirTreeNode)
+
+---@type InstallDirTreeNode
+local InstallDirTreeNode = _G["InstallDirTreeNode"]
 
 function InstallDirTreeNode:InstallDirTreeNode(path)
   self:FileTreeNode(path)
@@ -97,6 +105,9 @@ end
 --! Prompter for Theme Hospital install directory
 class "UIDirectoryBrowser" (UIResizable)
 
+---@type UIDirectoryBrowser
+local UIDirectoryBrowser = _G["UIDirectoryBrowser"]
+
 --! Creates a new directory browser window
 --!param ui The active UI to hook into.
 --!param mode Whether the dialog has been opened from the main_menu or somewhere else. Currently
@@ -137,14 +148,14 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   else
     self.font = ui.app.gfx:loadBuiltinFont()
     self:setDefaultPosition(0.05, 0.5)
-    self:addKeyHandler("esc", self.exit)
+    self:addKeyHandler("escape", self.exit)
     self.exit_button:setLabel(_S.install.exit, self.font):makeButton(0, 0, 100, 18, nil, self.exit)
   end
 
   -- Create the root item (or items, on Windows), and set it as the
   -- first_visible_node.
   local root
-  local roots = lfs.volumes()
+  local roots = lfsext.volumes()
   if #roots > 1 then
     for k, v in pairs(roots) do
       roots[k] = _G[treenode_class](v)

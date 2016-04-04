@@ -27,7 +27,7 @@ local orient_opposite = {
 
 local action_spawn_despawn = permanent"action_spawn_despawn"( function(humanoid)
   if humanoid.hospital then
-    humanoid:setHospital(nil)
+    humanoid:despawn()
   end
   humanoid.world:destroyEntity(humanoid)
 end)

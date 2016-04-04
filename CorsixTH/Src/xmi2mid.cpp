@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
-#include <memory.h>
+#include <cstring>
 #include <algorithm>
 #include <iterator>
 #include <new>
@@ -35,29 +35,29 @@ class MemoryBuffer
 {
 public:
     MemoryBuffer()
-        : m_pData(NULL), m_pPointer(NULL), m_pEnd(NULL), m_pBufferEnd(NULL)
+        : m_pData(nullptr), m_pPointer(nullptr), m_pEnd(nullptr), m_pBufferEnd(nullptr)
     {
     }
 
-    MemoryBuffer(const unsigned char* pData, size_t iLength)
+    MemoryBuffer(const uint8_t* pData, size_t iLength)
     {
         m_pData = m_pPointer = (char*)pData;
         m_pEnd = m_pData + iLength;
-        m_pBufferEnd = NULL;
+        m_pBufferEnd = nullptr;
     }
 
     ~MemoryBuffer()
     {
-        if(m_pBufferEnd != NULL)
+        if(m_pBufferEnd != nullptr)
             delete[] m_pData;
     }
 
-    unsigned char* takeData(size_t *pLength)
+    uint8_t* takeData(size_t *pLength)
     {
         if(pLength)
             *pLength = m_pEnd - m_pData;
-        unsigned char* pResult = (unsigned char*)m_pData;
-        m_pData = m_pPointer = m_pEnd = m_pBufferEnd = NULL;
+        uint8_t* pResult = (unsigned char*)m_pData;
+        m_pData = m_pPointer = m_pEnd = m_pBufferEnd = nullptr;
         return pResult;
     }
 
@@ -91,7 +91,7 @@ public:
     {
         for(; m_pPointer + iLength <= m_pEnd; ++m_pPointer)
         {
-            if(memcmp(m_pPointer, pData, iLength) == 0)
+            if(std::memcmp(m_pPointer, pData, iLength) == 0)
                 return true;
         }
         return false;
@@ -113,7 +113,7 @@ public:
     {
         if(m_pPointer + sizeof(T) * count > m_pEnd)
             return false;
-        memcpy(values, m_pPointer, sizeof(T) * count);
+        std::memcpy(values, m_pPointer, sizeof(T) * count);
         m_pPointer += sizeof(T) * count;
         return true;
     }
@@ -153,7 +153,7 @@ public:
     {
         if(!skip(static_cast<int>(sizeof(T) * count)))
             return false;
-        memcpy(m_pPointer - sizeof(T) * count, values, sizeof(T) * count);
+        std::memcpy(m_pPointer - sizeof(T) * count, values, sizeof(T) * count);
         return true;
     }
 
@@ -190,14 +190,14 @@ public:
         return m_pPointer == m_pEnd;
     }
 
-protected:
+private:
     template <class T>
     static T _byteSwap(T value)
     {
         T swapped = 0;
         for(int i = 0; i < static_cast<int>(sizeof(T)) * 8; i += 8)
         {
-            swapped |= ((value >> i) & 0xFF) << (sizeof(T) * 8 - 8 - i);
+            swapped = static_cast<T>(swapped | ((value >> i) & 0xFF) << (sizeof(T) * 8 - 8 - i));
         }
         return swapped;
     }
@@ -211,12 +211,12 @@ protected:
         }
 
         char *pNewData = new (std::nothrow) char[size * 2];
-        if(pNewData == NULL)
+        if(pNewData == nullptr)
             return false;
         size_t iOldLength = m_pEnd - m_pData;
-        memcpy(pNewData, m_pData, size > iOldLength ? iOldLength : size);
+        std::memcpy(pNewData, m_pData, size > iOldLength ? iOldLength : size);
         m_pPointer = m_pPointer - m_pData + pNewData;
-        if(m_pBufferEnd != NULL)
+        if(m_pBufferEnd != nullptr)
             delete[] m_pData;
         m_pData = pNewData;
         m_pEnd = pNewData + size;
@@ -253,14 +253,14 @@ struct midi_token_list_t : std::vector<midi_token_t>
     }
 };
 
-unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
+uint8_t* TranscodeXmiToMid(const unsigned char* pXmiData,
                                  size_t iXmiLength, size_t* pMidLength)
 {
     MemoryBuffer bufInput(pXmiData, iXmiLength);
     MemoryBuffer bufOutput;
 
     if(!bufInput.scanTo("EVNT", 4) || !bufInput.skip(8))
-        return NULL;
+        return nullptr;
 
     midi_token_list_t lstTokens;
     midi_token_t* pToken;
@@ -275,7 +275,7 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
         while(true)
         {
             if(!bufInput.read(iTokenType))
-                return NULL;
+                return nullptr;
 
             if(iTokenType & 0x80)
                 break;
@@ -289,24 +289,24 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
         case 0xC0:
         case 0xD0:
             if(!bufInput.read(pToken->iData))
-                return NULL;
-            pToken->pBuffer = NULL;
+                return nullptr;
+            pToken->pBuffer = nullptr;
             break;
         case 0x80:
         case 0xA0:
         case 0xB0:
         case 0xE0:
             if(!bufInput.read(pToken->iData))
-                return NULL;
+                return nullptr;
             if(!bufInput.skip(1))
-                return NULL;
+                return nullptr;
             break;
         case 0x90:
             if(!bufInput.read(iExtendedType))
-                return NULL;
+                return nullptr;
             pToken->iData = iExtendedType;
             if(!bufInput.skip(1))
-                return NULL;
+                return nullptr;
             pToken = lstTokens.append(iTokenTime + bufInput.readUIntVar() * 3,
                 iTokenType);
             pToken->iData = iExtendedType;
@@ -317,7 +317,7 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
             if(iTokenType == 0xFF)
             {
                 if(!bufInput.read(iExtendedType))
-                    return NULL;
+                    return nullptr;
 
                 if(iExtendedType == 0x2F)
                     bEnd = true;
@@ -334,7 +334,7 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
                     {
                         lstTokens.pop_back();
                         if(!bufInput.skip(bufInput.readUIntVar()))
-                            return NULL;
+                            return nullptr;
                         break;
                     }
                 }
@@ -343,19 +343,19 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
             pToken->iBufferLength = bufInput.readUIntVar();
             pToken->pBuffer = bufInput.getPointer();
             if(!bufInput.skip(pToken->iBufferLength))
-                return NULL;
+                return nullptr;
             break;
         }
     }
 
     if(lstTokens.empty())
-        return NULL;
+        return nullptr;
     if(!bufOutput.write("MThd\0\0\0\x06\0\0\0\x01", 12))
-        return NULL;
-    if(!bufOutput.writeBigEndianUInt16((iTempo * 3) / 25000))
-        return NULL;
+        return nullptr;
+    if(!bufOutput.writeBigEndianUInt16(static_cast<uint16_t>((iTempo * 3) / 25000)))
+        return nullptr;
     if(!bufOutput.write("MTrk\xBA\xAD\xF0\x0D", 8))
-        return NULL;
+        return nullptr;
 
     std::sort(lstTokens.begin(), lstTokens.end());
 
@@ -367,37 +367,37 @@ unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
         itrEnd = lstTokens.end(); itr != itrEnd && !bEnd; ++itr)
     {
         if(!bufOutput.writeUIntVar(itr->iTime - iTokenTime))
-            return NULL;
+            return nullptr;
         iTokenTime = itr->iTime;
         if(itr->iType >= 0xF0)
         {
             if(!bufOutput.write(iTokenType = itr->iType))
-                return NULL;
+                return nullptr;
             if(iTokenType == 0xFF)
             {
                 if(!bufOutput.write(itr->iData))
-                    return NULL;
+                    return nullptr;
                 if(itr->iData == 0x2F)
                     bEnd = true;
             }
             if(!bufOutput.writeUIntVar(itr->iBufferLength))
-                return NULL;
+                return nullptr;
             if(!bufOutput.write(itr->pBuffer, itr->iBufferLength))
-                return NULL;
+                return nullptr;
         }
         else
         {
             if(itr->iType != iTokenType)
             {
                 if(!bufOutput.write(iTokenType = itr->iType))
-                    return NULL;
+                    return nullptr;
             }
             if(!bufOutput.write(itr->iData))
-                return NULL;
+                return nullptr;
             if(itr->pBuffer)
             {
                 if(!bufOutput.write(itr->pBuffer, 1))
-                    return NULL;
+                    return nullptr;
             }
         }
     }

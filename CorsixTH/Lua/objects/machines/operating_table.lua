@@ -115,6 +115,10 @@ object.orientations = {
 }
 
 class "OperatingTable" (Machine)
+
+---@type OperatingTable
+local OperatingTable = _G["OperatingTable"]
+
 OperatingTable:slaveMixinClass()
 
 function OperatingTable:machineUsed(...)

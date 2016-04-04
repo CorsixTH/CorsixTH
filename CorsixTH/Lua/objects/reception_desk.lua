@@ -70,6 +70,9 @@ dofile "queue"
 
 class "ReceptionDesk" (Object)
 
+---@type ReceptionDesk
+local ReceptionDesk = _G["ReceptionDesk"]
+
 function ReceptionDesk:ReceptionDesk(...)
   self:Object(...)
   self.queue = Queue()
@@ -116,7 +119,11 @@ function ReceptionDesk:tick()
             end
             -- VIP has his own list, don't add the gp office twice
           elseif queue_front.humanoid_class ~= "VIP" then
-            queue_front:queueAction{name = "seek_room", room_type = "gp"}
+            if queue_front:agreesToPay("diag_gp") then
+              queue_front:queueAction{name = "seek_room", room_type = "gp"}
+            else
+              queue_front:goHome("over_priced", "diag_gp")
+            end
           else
             -- the VIP will realise that he is idle, and start going round rooms
             queue_front:queueAction{name = "idle"}
@@ -135,6 +142,8 @@ function ReceptionDesk:tick()
   return Object.tick(self)
 end
 
+--! Reception desk looks for a receptionist.
+--!return (boolean) Desk has a receptionist attached to it (may still be on her way to the desk).
 function ReceptionDesk:checkForNearbyStaff()
   if self.receptionist or self.reserved_for then
     -- Already got staff, or a staff member is on the way
@@ -199,7 +208,6 @@ function ReceptionDesk:onDestroy()
     end)
   end
   self.queue:rerouteAllPatients({name = "seek_reception"})
-  self.world:getLocalPlayerHospital().reception_desks[self] = nil
 
   self.being_destroyed = nil
   return Object.onDestroy(self)

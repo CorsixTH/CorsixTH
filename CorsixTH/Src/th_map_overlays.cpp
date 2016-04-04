@@ -23,23 +23,20 @@ SOFTWARE.
 #include "th_map_overlays.h"
 #include "th_gfx.h"
 #include "th_map.h"
-
-THMapOverlay::~THMapOverlay()
-{
-}
+#include <sstream>
 
 THMapOverlayPair::THMapOverlayPair()
 {
-    m_pFirst = NULL;
-    m_pSecond = NULL;
+    m_pFirst = nullptr;
+    m_pSecond = nullptr;
     m_bOwnFirst = false;
     m_bOwnSecond = false;
 }
 
 THMapOverlayPair::~THMapOverlayPair()
 {
-    setFirst(NULL, false);
-    setSecond(NULL, false);
+    setFirst(nullptr, false);
+    setSecond(nullptr, false);
 }
 
 void THMapOverlayPair::setFirst(THMapOverlay* pOverlay, bool bTakeOwnership)
@@ -73,7 +70,7 @@ THMapTextOverlay::THMapTextOverlay()
     m_iBackgroundSprite = 0;
 }
 
-void THMapTextOverlay::setBackgroundSprite(unsigned int iSprite)
+void THMapTextOverlay::setBackgroundSprite(size_t iSprite)
 {
     m_iBackgroundSprite = iSprite;
 }
@@ -89,29 +86,29 @@ void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     }
     if(m_pFont)
     {
-        _drawText(pCanvas, iCanvasX, iCanvasY, "%s",
-            getText(pMap, iNodeX, iNodeY));
+        _drawText(pCanvas, iCanvasX, iCanvasY, getText(pMap, iNodeX, iNodeY));
     }
 }
 
-const char* THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
+const std::string THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
 {
-    sprintf(m_sBuffer, "%i,%i", iNodeX + 1, iNodeY + 1);
-    return m_sBuffer;
+    std::ostringstream str;
+    str << iNodeX + 1 << ',' << iNodeY + 1;
+    return str.str();
 }
 
 THMapTypicalOverlay::THMapTypicalOverlay()
 {
-    m_pSprites = NULL;
-    m_pFont = NULL;
+    m_pSprites = nullptr;
+    m_pFont = nullptr;
     m_bOwnsSprites = false;
     m_bOwnsFont = false;
 }
 
 THMapTypicalOverlay::~THMapTypicalOverlay()
 {
-    setSprites(NULL, false);
-    setFont(NULL, false);
+    setSprites(nullptr, false);
+    setFont(nullptr, false);
 }
 
 void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
@@ -123,30 +120,43 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
         return;
     if(m_pSprites)
     {
-        if(pNode->iFlags & THMN_Passable)
+        if(pNode->flags.passable)
             m_pSprites->drawSprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
-        if(pNode->iFlags & THMN_Hospital)
+        if(pNode->flags.hospital)
             m_pSprites->drawSprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
-        if(pNode->iFlags & THMN_Buildable)
+        if(pNode->flags.buildable)
             m_pSprites->drawSprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
-#define TRAVEL(flag, dx, dy, sprite) \
-        if(pNode->iFlags & flag && pMap->getNode(iNodeX + dx, iNodeY + dy)-> \
-            iFlags & THMN_Passable) \
-        { \
-            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, 0); \
+        if(pNode->flags.can_travel_n && pMap->getNode(iNodeX, iNodeY - 1)->flags.passable)
+        {
+            m_pSprites->drawSprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
         }
-        TRAVEL(THMN_CanTravelN,  0, -1, 4);
-        TRAVEL(THMN_CanTravelE,  1,  0, 5);
-        TRAVEL(THMN_CanTravelS,  0,  1, 6);
-        TRAVEL(THMN_CanTravelW, -1,  0, 7);
-#undef TRAVEL
+        if(pNode->flags.can_travel_e && pMap->getNode(iNodeX + 1, iNodeY)->flags.passable)
+        {
+            m_pSprites->drawSprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
+        }
+        if(pNode->flags.can_travel_s && pMap->getNode(iNodeX, iNodeY + 1)->flags.passable)
+        {
+            m_pSprites->drawSprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
+        }
+        if(pNode->flags.can_travel_w && pMap->getNode(iNodeX - 1, iNodeY)->flags.passable)
+        {
+            m_pSprites->drawSprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
+        }
     }
     if(m_pFont)
     {
-        if(pNode->iFlags >> 24)
-            _drawText(pCanvas, iCanvasX, iCanvasY - 8, "T%i", (int)(pNode->iFlags >> 24));
+        if(!pNode->objects.empty())
+        {
+            std::ostringstream str;
+            str << 'T' << static_cast<int>(pNode->objects.front());
+            _drawText(pCanvas, iCanvasX, iCanvasY - 8, str.str());
+        }
         if(pNode->iRoomId)
-            _drawText(pCanvas, iCanvasX, iCanvasY + 8, "R%i", (int)pNode->iRoomId);
+        {
+            std::ostringstream str;
+            str << 'R' << static_cast<int>(pNode->iRoomId);
+            _drawText(pCanvas, iCanvasX, iCanvasY + 8, str.str());
+        }
     }
 }
 
@@ -158,7 +168,7 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(!pNode)
         return;
     if(m_pFont)
-        _drawText(pCanvas, iCanvasX, iCanvasY, "%i", (int)pNode->iParcelId);
+        _drawText(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
     if(m_pSprites)
     {
         uint16_t iParcel = pNode->iParcelId;
@@ -176,17 +186,11 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 
 
 void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
-        const char* sFormat, ...)
+        std::string str)
 {
-    char sBuffer[64];
-    va_list args;
-    va_start(args, sFormat);
-    size_t iLen = (int)vsprintf(sBuffer, sFormat, args);
-    va_end(args);
-    int iW, iH;
-    m_pFont->getTextSize(sBuffer, iLen, &iW, &iH);
-    m_pFont->drawText(pCanvas, sBuffer, iLen, iX + (64 - iW) / 2,
-        iY + (32 - iH) / 2);
+    THFontDrawArea oArea = m_pFont->getTextSize(str.c_str(), str.length());
+    m_pFont->drawText(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.iEndX) / 2,
+        iY + (32 - oArea.iEndY) / 2);
 }
 
 void THMapTypicalOverlay::setSprites(THSpriteSheet* pSheet, bool bTakeOwnership)

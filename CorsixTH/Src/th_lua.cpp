@@ -23,7 +23,9 @@ SOFTWARE.
 #include "th.h"
 #include "th_lua_internal.h"
 #include "bootstrap.h"
-#include <string.h>
+#include <cstring>
+#include <cstdio>
+#include <stdexcept>
 
 void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
@@ -32,6 +34,7 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState);
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState);
 void THLuaRegisterStrings(const THLuaRegisterState_t *pState);
 void THLuaRegisterUI(const THLuaRegisterState_t *pState);
+void THLuaRegisterLfsExt(const THLuaRegisterState_t *pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -58,22 +61,22 @@ void luaT_getfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_getenv(L, iIndex);
+        lua_getuservalue(L, iIndex);
         break;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
         {
             // Our convention: upvalue at #1 is environment
-            if(lua_getupvalue(L, iIndex, 1) == NULL)
+            if(lua_getupvalue(L, iIndex, 1) == nullptr)
                 lua_pushglobaltable(L);
         }
         else
         {
             // Language convention: upvalue called _ENV is environment
-            const char* sUpName = NULL;
+            const char* sUpName = nullptr;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
-                if(strcmp(sUpName, "_ENV") == 0)
+                if(std::strcmp(sUpName, "_ENV") == 0)
                     return;
                 else
                     lua_pop(L, 1);
@@ -93,13 +96,13 @@ int luaT_setfenv52(lua_State *L, int iIndex)
     switch(iType)
     {
     case LUA_TUSERDATA:
-        lua_setenv(L, iIndex);
+        lua_setuservalue(L, iIndex);
         return 1;
     case LUA_TFUNCTION:
         if(lua_iscfunction(L, iIndex))
         {
             // Our convention: upvalue at #1 is environment
-            if(lua_setupvalue(L, iIndex, 1) == NULL)
+            if(lua_setupvalue(L, iIndex, 1) == nullptr)
             {
                 lua_pop(L, 1);
                 return 0;
@@ -110,10 +113,11 @@ int luaT_setfenv52(lua_State *L, int iIndex)
         {
             // Language convention: upvalue called _ENV is environment, which
             // might be shared with other functions.
-            const char* sUpName = NULL;
+            const char* sUpName = nullptr;
             for(int i = 1; (sUpName = lua_getupvalue(L, iIndex, i)) ; ++i)
             {
-                if(strcmp(sUpName, "_ENV") == 0)
+                lua_pop(L, 1); // lua_getupvalue puts the value on the stack, but we just want to replace it
+                if(std::strcmp(sUpName, "_ENV") == 0)
                 {
                     luaL_loadstring(L, "local upv = ... return function() return upv end");
                     lua_insert(L, -2);
@@ -122,24 +126,14 @@ int luaT_setfenv52(lua_State *L, int iIndex)
                     lua_pop(L, 1);
                     return 1;
                 }
-                else
-                    lua_pop(L, 1);
             }
+            lua_pop(L, 1);
             return 0;
         }
     default:
         return 0;
     }
 }
-
-void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
-{
-    ++nups;
-    lua_pushvalue(L, luaT_environindex);
-    lua_insert(L, -nups);
-    lua_pushcclosure(L, f, nups);
-}
-
 #endif
 
 //! Push a C closure as a callable table
@@ -155,29 +149,19 @@ void luaT_pushcclosuretable(lua_State *L, lua_CFunction fn, int n)
     lua_setmetatable(L, -2); // .. t <top
 }
 
-void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void))
-{
-    lua_checkstack(L, 2);
-    lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
-    int idx = 1 + (int)lua_objlen(L, -1);
-    lua_pushlightuserdata(L, (void*)fnCleanup);
-    lua_rawseti(L, -2, idx);
-    lua_pop(L, 1);
-}
-
 //! Check for a string or userdata
-const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
+const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 {
-    const unsigned char *pData;
+    const uint8_t *pData;
     size_t iLength;
     if(lua_type(L, idx) == LUA_TUSERDATA)
     {
-        pData = (const unsigned char*)lua_touserdata(L, idx);
+        pData = reinterpret_cast<const uint8_t*>(lua_touserdata(L, idx));
         iLength = lua_objlen(L, idx);
     }
     else
     {
-        pData = (const unsigned char*)luaL_checklstring(L, idx, &iLength);
+        pData = reinterpret_cast<const uint8_t*>(luaL_checklstring(L, idx, &iLength));
     }
     if(pDataLen != 0)
         *pDataLen = iLength;
@@ -187,27 +171,28 @@ const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
 static int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
-    const unsigned char* pData = luaT_checkfile(L, 1, &iDataLength);
+    const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
 
-    THStringList oStrings;
-    if(!oStrings.loadFromTHFile(pData, iDataLength))
+    try
+    {
+        THStringList oStrings(pData, iDataLength);
+        lua_settop(L, 0);
+        lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
+        for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
+        {
+            size_t iCount = oStrings.getSectionSize(iSec);
+            lua_createtable(L, static_cast<int>(iCount), 0);
+            for(size_t iStr = 0; iStr < iCount; ++iStr)
+            {
+                lua_pushstring(L, oStrings.getString(iSec, iStr));
+                lua_rawseti(L, 2, static_cast<int>(iStr + 1));
+            }
+            lua_rawseti(L, 1, static_cast<int>(iSec + 1));
+        }
+    }
+    catch(std::invalid_argument)
     {
         lua_pushboolean(L, 0);
-        return 1;
-    }
-
-    lua_settop(L, 0);
-    lua_createtable(L, (int)oStrings.getSectionCount(), 0);
-    for(unsigned int iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
-    {
-        unsigned int iCount = oStrings.getSectionSize(iSec);
-        lua_createtable(L, (int)iCount, 0);
-        for(unsigned int iStr = 0; iStr < iCount; ++iStr)
-        {
-            lua_pushstring(L, oStrings.getString(iSec, iStr));
-            lua_rawseti(L, 2, (int)(iStr + 1));
-        }
-        lua_rawseti(L, 1, (int)(iSec + 1));
     }
     return 1;
 }
@@ -229,15 +214,7 @@ static int l_get_compile_options(lua_State *L)
 #endif
     lua_setfield(L, -2, "arch_64");
 
-#if defined(CORSIX_TH_USE_OGL_RENDERER)
-    lua_pushliteral(L, "OpenGL");
-#elif defined(CORSIX_TH_USE_DX9_RENDERER)
-    lua_pushliteral(L, "DirectX 9");
-#elif defined(CORSIX_TH_USE_SDL_RENDERER)
     lua_pushliteral(L, "SDL");
-#else
-    lua_pushliteral(L, "Unknown");
-#endif
     lua_setfield(L, -2, "renderer");
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
@@ -317,6 +294,7 @@ int luaopen_th(lua_State *L)
     THLuaRegisterMovie(pState);
     THLuaRegisterStrings(pState);
     THLuaRegisterUI(pState);
+    THLuaRegisterLfsExt(pState);
 
     lua_settop(L, oState.iMainTable);
     return 1;
@@ -340,6 +318,15 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 lua_error(L);
         }
         lua_pop(L, 1);
+#if LUA_VERSION_NUM >= 502
+        luaL_loadstring(L, "local assert, load = assert, load\n"
+            "return setmetatable({}, {__mode = [[v]], \n"
+            "__index = function(t, k)\n"
+            "local v = assert(load(k))\n"
+            "t[k] = v\n"
+            "return v\n"
+            "end})");
+#else
         luaL_loadstring(L, "local assert, loadstring = assert, loadstring\n"
             "return setmetatable({}, {__mode = [[v]], \n"
             "__index = function(t, k)\n"
@@ -347,6 +334,7 @@ void luaT_execute_loadstring(lua_State *L, const char* sLuaString)
                 "t[k] = v\n"
                 "return v\n"
             "end})");
+#endif
         lua_call(L, 0, 1);
         lua_pushvalue(L, -1);
         lua_rawseti(L, LUA_REGISTRYINDEX, iRegistryCacheIndex);
@@ -374,4 +362,72 @@ void luaT_push(lua_State *L, int i)
 void luaT_push(lua_State *L, const char* s)
 {
     lua_pushstring(L, s);
+}
+
+void luaT_pushtablebool(lua_State *L, const char *k, bool v)
+{
+    lua_pushstring(L, k);
+    lua_pushboolean(L, v);
+    lua_settable(L, -3);
+}
+
+void luaT_printstack(lua_State* L)
+{
+    int i;
+    int top = lua_gettop(L);
+
+    std::printf("total items in stack %d\n", top);
+
+    for (i = 1; i <= top; i++)
+    { /* repeat for each level */
+        int t = lua_type(L, i);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            std::printf("string: '%s'\n", lua_tostring(L, i));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            std::printf("boolean %s\n", lua_toboolean(L, i) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            std::printf("number: %g\n", lua_tonumber(L, i));
+            break;
+        default: /* other values */
+            std::printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        std::printf(" "); /* put a separator */
+
+    }
+    std::printf("\n"); /* end the listing */
+}
+
+void luaT_printrawtable(lua_State* L, int idx)
+{
+    int i;
+    int len = static_cast<int>(lua_objlen(L, idx));
+
+    std::printf("total items in table %d\n", len);
+
+    for (i = 1; i <= len; i++)
+    {
+        lua_rawgeti(L, idx, i);
+        int t = lua_type(L, -1);
+        switch (t) {
+        case LUA_TSTRING: /* strings */
+            std::printf("string: '%s'\n", lua_tostring(L, -1));
+            break;
+        case LUA_TBOOLEAN: /* booleans */
+            std::printf("boolean %s\n", lua_toboolean(L, -1) ? "true" : "false");
+            break;
+        case LUA_TNUMBER: /* numbers */
+            std::printf("number: %g\n", lua_tonumber(L, -1));
+            break;
+        default: /* other values */
+            std::printf("%s\n", lua_typename(L, t));
+            break;
+        }
+        std::printf(" "); /* put a separator */
+        lua_pop(L, 1);
+    }
+    std::printf("\n"); /* end the listing */
 }

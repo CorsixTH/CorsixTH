@@ -20,13 +20,16 @@ SOFTWARE. --]]
 
 local lfs = require "lfs"
 local TH = require "TH"
-local type, loadfile, pcall, tostring, setfenv, setmetatable, math_random
-    = type, loadfile, pcall, tostring, setfenv, setmetatable, math.random
+local type, loadfile, pcall, tostring, setmetatable, math_random, math_floor
+    = type, loadfile, pcall, tostring, setmetatable, math.random, math.floor
 local rawset, rawget
     = rawset, rawget
 
 --! Layer which handles the loading of localised text.
 class "Strings"
+
+---@type Strings
+local Strings = _G["Strings"]
 
 function Strings:Strings(app)
   self.app = app
@@ -97,7 +100,7 @@ function Strings:init()
         for _, name in pairs(names) do
           self.language_to_chunk[name:lower()] = chunk
         end
-		self.chunk_to_names[chunk] = names
+        self.chunk_to_names[chunk] = names
         error(good_error_marker)
       end,
       Font = function(...)
@@ -226,7 +229,7 @@ function Strings:load(language, no_restriction, no_inheritance)
     -- LoadStrings() should return the original game string table
     LoadStrings = function(filename)
       return assert(TH.LoadStrings(self.app:readDataFile(filename)),
-                    "Cannot load original string file '"..filename.."'")
+                    "Cannot load original string file '" .. filename .. "'")
     end,
     -- SetSpeechFile() should remember the named file to return to our caller
     SetSpeechFile = function(...)
@@ -296,7 +299,7 @@ function Strings:_loadPrivate(language, env, ...)
   local chunk = self.language_to_chunk[language:lower()]
   if not chunk then -- If selected language could not be found, try to revert to English
     print_table(self.language_to_chunk)
-    print("Language '".. language .."' could not be found. Reverting to English.")
+    print("Language '" .. language .. "' could not be found. Reverting to English.")
     chunk = self.language_to_chunk["english"]
     if not chunk then -- If english could not be found, raise an error
       error("Language 'English' could not be found. Please verify your installation.")
@@ -474,21 +477,21 @@ local function utf8encode(codepoint)
     return string.char(codepoint)
   elseif codepoint <= 0x7FF then
     local sextet = codepoint % 64
-    codepoint = (codepoint - sextet) / 64
+    codepoint = math_floor((codepoint - sextet) / 64)
     return string.char(0xC0 + codepoint, 0x80 + sextet)
   elseif codepoint <= 0xFFFF then
     local sextet2 = codepoint % 64
-    codepoint = (codepoint - sextet2) / 64
+    codepoint = math_floor((codepoint - sextet2) / 64)
     local sextet1 = codepoint % 64
-    codepoint = (codepoint - sextet2) / 64
+    codepoint = math_floor((codepoint - sextet2) / 64)
     return string.char(0xE0 + codepoint, 0x80 + sextet1, 0x80 + sextet2)
   else
     local sextet3 = codepoint % 64
-    codepoint = (codepoint - sextet3) / 64
+    codepoint = math_floor((codepoint - sextet3) / 64)
     local sextet2 = codepoint % 64
-    codepoint = (codepoint - sextet2) / 64
+    codepoint = math_floor((codepoint - sextet2) / 64)
     local sextet1 = codepoint % 64
-    codepoint = (codepoint - sextet2) / 64
+    codepoint = math_floor((codepoint - sextet2) / 64)
     return string.char(0xF0 + codepoint, 0x80 + sextet1, 0x80 + sextet2,
                        0x80 + sextet3)
   end
@@ -597,7 +600,7 @@ local function utf8char(c)
   end
   codepoint = codepoint + (c:byte(1) % 2^(7 - #c)) * multiplier
   -- If the utf-8 character is a combining diacritical mark, merge it with the
-  -- preceeding normal character
+  -- preceding normal character
   if prechar and (0x300 <= codepoint and codepoint < 0x370) then
     if combine_diacritical_marks[prechar] then
       if combine_diacritical_marks[prechar][codepoint] then
@@ -616,7 +619,7 @@ end
 
 utf8conv = function(s)
   -- Pull out each individual utf-8 character and pass it through utf8char
-  -- [\1-\127] picks up a preceeding ASCII character to combine diacritics
+  -- [\1-\127] picks up a preceding ASCII character to combine diacritics
   -- [\192-\253] picks up the first byte of a utf-8 character (technically
   --   only 194 through 244 should be used)
   -- [\128-\191] picks up the remaining bytes of a utf-8 character

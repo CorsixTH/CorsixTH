@@ -30,6 +30,9 @@ end
 --! Individual patient information dialog
 class "UIPatient" (Window)
 
+---@type UIPatient
+local UIPatient = _G["UIPatient"]
+
 function UIPatient:UIPatient(ui, patient)
   self:Window()
 
@@ -169,6 +172,36 @@ function UIPatient:draw(canvas, x_, y_)
 
   if self.history_panel.visible then
     self:drawTreatmentHistory(canvas, x + 40, y + 25)
+  elseif patient.health_history then
+    local hor_length = 76
+    local vert_length = 70
+    local startx = 58
+    local starty = 27
+
+    local hh = patient.health_history
+    local index = hh["last"]
+    local size = hh["size"]
+
+    local dx = hor_length / size
+    local line = nil -- Make a line the first time we find a non-nil value.
+    for i = 1, size do
+      index = (index == size) and 1 or (index + 1)
+      if hh[index] then
+        local posy = starty + (1.0 - hh[index]) * vert_length
+
+        if not line then
+          line = TH.line()
+          line:setWidth(2)
+          line:setColour(200, 55, 30, 255)
+          line:moveTo(startx, posy)
+        else
+          line:lineTo(startx, posy)
+        end
+      end
+      startx = startx + dx
+    end
+
+    if line then line:draw(canvas, x, y) end
   end
 end
 
@@ -213,13 +246,18 @@ function UIPatient:onMouseMove(x, y, dx, dy)
   return Window.onMouseMove(self, x, y, dx, dy)
 end
 
+--[[! Scrolls the map to the position of the patient which this dialog belongs to ]]
+function UIPatient:scrollToPatient()
+  local ui = self.ui
+  local patient = self.patient
+  local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
+  local dx, dy = patient.th:getPosition()
+  ui:scrollMapTo(px + dx, py + dy)
+end
+
 function UIPatient:onTick()
   if self.do_scroll then
-    local ui = self.ui
-    local patient = self.patient
-    local px, py = ui.app.map:WorldToScreen(patient.tile_x, patient.tile_y)
-    local dx, dy = patient.th:getPosition()
-    ui:scrollMapTo(px + dx, py + dy)
+    self:scrollToPatient()
   end
   return Window.onTick(self)
 end
@@ -259,11 +297,11 @@ function UIPatient:viewQueue()
   for i, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
       self.ui:addWindow(UIQueue(self.ui, action.queue))
-      self.ui:playSound "selectx.wav"
+      self.ui:playSound("selectx.wav")
       return
     end
   end
-  self.ui:playSound "wrong2.wav"
+  self.ui:playSound("wrong2.wav")
 end
 
 function UIPatient:goHome()
@@ -271,8 +309,8 @@ function UIPatient:goHome()
     return
   end
   self:close()
-  self.patient:playSound "sack.wav"
-  self.patient:goHome()
+  self.patient:playSound("sack.wav")
+  self.patient:goHome("kicked")
   self.patient:updateDynamicInfo(_S.dynamic_info.patient.actions.sent_home)
 end
 
@@ -284,17 +322,22 @@ end
 function UIPatient:guessDisease()
   local patient = self.patient
   -- NB: the first line of conditions should already be ruled out by button being disabled, but just in case
-  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or patient.going_home
-  or patient:getRoom() or not patient.hospital.disease_casebook[patient.disease.id].discovered then
+  if patient.is_debug or patient.diagnosis_progress == 0 or patient.diagnosed or
+      patient.going_home or patient:getRoom() or
+      not patient.hospital.disease_casebook[patient.disease.id].discovered then
     self.ui:playSound("wrong2.wav")
     return
   end
   patient:setDiagnosed(true)
-  patient:setNextAction({
-    name = "seek_room",
-    room_type = patient.disease.treatment_rooms[1],
-    treatment_room = true,
-  }, 1)
+  if patient:agreesToPay(patient.disease.id) then
+    patient:setNextAction({
+      name = "seek_room",
+      room_type = patient.disease.treatment_rooms[1],
+      treatment_room = true,
+    }, 1)
+  else
+    patient:goHome("over_priced")
+  end
 end
 
 function UIPatient:hitTest(x, y)

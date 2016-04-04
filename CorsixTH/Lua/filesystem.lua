@@ -20,11 +20,14 @@ SOFTWARE. --]]
 
 local LFS = require "lfs"
 local pathsep = package.config:sub(1, 1)
-local part_pattern = "[^".. pathsep .."]+"
+local part_pattern = "[^" .. pathsep .. "]+"
 local ISO_FS = require "ISO_FS"
 
 --! Layer for abstracting away differences in file systems
 class "FileSystem"
+
+---@type FileSystem
+local FileSystem = _G["FileSystem"]
 
 function FileSystem:FileSystem()
 end
@@ -64,7 +67,7 @@ function FileSystem:setRoot(physical_path)
     physical_path = physical_path:sub(1, -2)
   end
   if lfs.attributes(physical_path, "mode") ~= "directory"  then
-    return nil, "Specified path ('".. physical_path .. "') is not a directory"
+    return nil, "Specified path ('" .. physical_path .. "') is not a directory"
   end
   self.physical_path = physical_path
   self:_enumerate()

@@ -34,6 +34,9 @@ dofile "queue"
 
 class "Door" (Object)
 
+---@type Door
+local Door = _G["Door"]
+
 function Door:Door(...)
   self:Object(...)
   self.queue = Queue()
@@ -61,7 +64,7 @@ function Door:updateDynamicInfo()
       self:setDynamicInfo('text', {
         self.room.room_info.name,
         _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()),
-        _S.dynamic_info.object.queue_expected:format(self.queue.expected_count)
+        _S.dynamic_info.object.queue_expected:format(self.queue:expectedSize())
       })
     end
   end

@@ -25,9 +25,13 @@ local pathsep = package.config:sub(1, 1)
 
 class "MoviePlayer"
 
-function MoviePlayer:MoviePlayer(app, audio)
+---@type MoviePlayer
+local MoviePlayer = _G["MoviePlayer"]
+
+function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio
+  self.video = video
   self.playing = false
   self.holding_bg_music = false
   self.channel = -1
@@ -42,6 +46,7 @@ end
 
 function MoviePlayer:init()
   self.moviePlayer = TH.moviePlayer()
+  self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
   local num
@@ -49,19 +54,19 @@ function MoviePlayer:init()
   local movies = self.app.fs:listFiles("Anims");
   if movies then
     for _,movie in pairs(movies) do
-        --lose level movies
-        if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .."]+$") then
+      --lose level movies
+      if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
-        end
-        --advance level movies
-        num = tonumber(movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .."]+$"), 10)
-        if(num ~= nil) then
-        self.advance_movies[num] = movie
-        end
-        --win game movie
-        if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
+      end
+      --advance level movies
+      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
+      if num ~= nil and tonumber(num, 10) ~= nil then
+        self.advance_movies[tonumber(num, 10)] = movie
+      end
+      --win game movie
+      if movie:upper():match(pathsep .. "WINGAME%.[^" .. pathsep .. "]+$") then
         self.win_movie = movie
-        end
+      end
     end
   end
 
@@ -159,15 +164,15 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
       w, h = screen_w, screen_h
     else
       if(screen_w > screen_h / native_h * native_w) then
-        w = screen_h / native_h * native_w
+        w = math.floor(screen_h / native_h * native_w)
         h = screen_h
-        x = (screen_w - w) / 2
+        x = math.floor((screen_w - w) / 2)
         y = 0
       else
         w = screen_w
-        h = screen_w / native_w * native_h
+        h = math.floor(screen_w / native_w * native_h)
         x = 0
-        y = (screen_h - h) / 2
+        y = math.floor((screen_h - h) / 2)
       end
     end
   else
@@ -175,9 +180,9 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
     w, h = screen_w, screen_h
   end
 
-  self.app.video:startFrame()
-  self.app.video:fillBlack()
-  self.app.video:endFrame()
+  self.video:startFrame()
+  self.video:fillBlack()
+  self.video:endFrame()
 
   self.can_skip = can_skip
   self.wait_for_stop = wait_for_stop
@@ -219,7 +224,6 @@ function MoviePlayer:deallocatePictureBuffer()
 end
 
 function MoviePlayer:onMovieOver()
-  self.moviePlayer:unload()
   self.wait_for_over = false
   if not self.wait_for_stop then
     self:_destroyMovie()
@@ -237,11 +241,9 @@ function MoviePlayer:stop()
 end
 
 function MoviePlayer:_destroyMovie()
+  self.moviePlayer:unload()
   if self.opengl_mode_index then
     self.app.modes[self.opengl_mode_index] = "opengl"
-  end
-  if(self.moviePlayer:requiresVideoReset()) then
-    self.app.ui:resetVideo()
   end
   if self.channel >= 0 then
     self.audio:releaseChannel(self.channel)
@@ -264,3 +266,6 @@ function MoviePlayer:refresh()
   self.moviePlayer:refresh()
 end
 
+function MoviePlayer:updateRenderer()
+  self.moviePlayer:setRenderer(self.video)
+end

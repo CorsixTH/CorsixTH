@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).
 class "UIPolicy" (UIFullscreen)
 
+---@type UIPolicy
+local UIPolicy = _G["UIPolicy"]
+
 function UIPolicy:UIPolicy(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
@@ -70,10 +73,10 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   end
 
   -- Slider positions
-  local guess = 129 + hosp.policies["guess_cure"]*299
-  local home = 129 + hosp.policies["send_home"]*299
-  local stop = 124 + (hosp.policies["stop_procedure"] - 1)*299
-  local staffroom = 149 + hosp.policies["goto_staffroom"]*250
+  local guess = 129 + math.floor(hosp.policies["guess_cure"]*299)
+  local home = 129 + math.floor(hosp.policies["send_home"]*299)
+  local stop = 124 + math.floor((hosp.policies["stop_procedure"] - 1)*299)
+  local staffroom = 149 + math.floor(hosp.policies["goto_staffroom"]*250)
 
   -- Sliders
   self.sliders = {}

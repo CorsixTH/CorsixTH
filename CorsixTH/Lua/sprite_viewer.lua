@@ -37,7 +37,7 @@ local sdown = false
 local y_off
 local old_event_handlers
 
-for _, dir in ipairs{"Data", "QData", "DataM", "QDataM"} do
+for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
   for item in pairs(app.fs:listFiles(dir) or {}) do
     if item:match"%.TAB$" then
       sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
@@ -62,36 +62,38 @@ local function LoadTable(n, complex)
 end
 LoadTable(1, false)
 
-local function DoKey(self, code)
-  if code == string.byte"c" then
+local function DoKey(self, rawchar, modifiers, is_repeat)
+  local key = rawchar:lower()
+  if key == "c" then
     gfx.cache.tabled = {}
     LoadTable(sprite_table_index, not is_complex)
-  elseif code == string.byte"a" then
+  elseif key == "a" then
     if sprite_table_index > 1 then
       LoadTable(sprite_table_index - 1, is_complex)
     end
-  elseif code == string.byte"d" then
+  elseif key == "d" then
     if sprite_table_index < #sprite_table_paths then
       LoadTable(sprite_table_index + 1, is_complex)
     end
-  elseif code == string.byte"w" then
+  elseif key == "w" then
     wdown = true
     need_draw = true
-  elseif code == string.byte"s" then
+  elseif key == "s" then
     sdown = true
     need_draw = true
-  elseif code == string.byte"q" then
+  elseif key == "q" then
     app.eventHandlers = old_event_handlers
     need_draw = false
   end
   return need_draw
 end
 
-local function DoKeyUp(self, code)
-    if code == string.byte"w" then
+local function DoKeyUp(self, rawchar)
+    local key = rawchar:lower()
+    if key == "w" then
         wdown = false
     end
-    if code == string.byte"s" then
+    if key == "s" then
         sdown = false
     end
 end
@@ -111,7 +113,7 @@ local function Render(canvas)
   local tallest = 0
   for i = 0, #sprite_table - 1 do
     local w, h = sprite_table:size(i)
-    local lbl = "#" .. i .. " (" .. w .. "x" .. h ..")"
+    local lbl = "#" .. i .. " (" .. w .. "x" .. h .. ")"
     local lw = font:sizeOf(lbl)
     if lw > w then w = lw end
     h = h + fonth + sep

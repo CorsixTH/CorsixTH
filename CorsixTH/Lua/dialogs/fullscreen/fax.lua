@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "UIFax" (UIFullscreen)
 
+---@type UIFax
+local UIFax = _G["UIFax"]
+
 function UIFax:UIFax(ui, icon)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
@@ -42,11 +45,10 @@ function UIFax:UIFax(ui, icon)
     for i = 1, #choices do
       local y = orig_y + ((i-1) + (3-#choices)) * 48
       local choice = choices[i].choice
-      local additionalInfo = choices[i].additionalInfo
       -- NB: both nil and true result in enabled; also handle old "disabled" choice
       local enabled = (choices[i].enabled ~= false) and (choice ~= "disabled")
       local --[[persistable:fax_choice_button]] function callback()
-        self:choice(choice,additionalInfo)
+        self:choice(i)
       end
       self.choice_buttons[i] = self:addPanel(17, 492, y):makeButton(0, 0, 43, 43, 18, callback)
         :setDisabledSprite(19):enable(enabled)
@@ -65,21 +67,21 @@ function UIFax:UIFax(ui, icon)
     return --[[persistable:fax_button]] function() self:appendNumber(char) end
   end
 
-  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button"1"):setSound"Fax_1.wav"
-  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button"2"):setSound"Fax_2.wav"
-  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button"3"):setSound"Fax_3.wav"
+  self:addPanel(0, 220, 348):makeButton(0, 0, 43, 10,  2, button("1")):setSound("Fax_1.wav")
+  self:addPanel(0, 272, 348):makeButton(0, 0, 44, 10,  3, button("2")):setSound("Fax_2.wav")
+  self:addPanel(0, 327, 348):makeButton(0, 0, 43, 10,  4, button("3")):setSound("Fax_3.wav")
 
-  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button"4"):setSound"Fax_4.wav"
-  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button"5"):setSound"Fax_5.wav"
-  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button"6"):setSound"Fax_6.wav"
+  self:addPanel(0, 219, 358):makeButton(0, 0, 44, 10,  5, button("4")):setSound("Fax_4.wav")
+  self:addPanel(0, 272, 358):makeButton(0, 0, 43, 10,  6, button("5")):setSound("Fax_5.wav")
+  self:addPanel(0, 326, 358):makeButton(0, 0, 44, 10,  7, button("6")):setSound("Fax_6.wav")
 
-  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button"7"):setSound"Fax_7.wav"
-  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button"8"):setSound"Fax_8.wav"
-  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button"9"):setSound"Fax_9.wav"
+  self:addPanel(0, 218, 370):makeButton(0, 0, 44, 11,  8, button("7")):setSound("Fax_7.wav")
+  self:addPanel(0, 271, 370):makeButton(0, 0, 44, 11,  9, button("8")):setSound("Fax_8.wav")
+  self:addPanel(0, 326, 370):makeButton(0, 0, 44, 11, 10, button("9")):setSound("Fax_9.wav")
 
-  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button"*")
-  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button"0"):setSound"Fax_0.wav"
-  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button"#")
+  self:addPanel(0, 217, 382):makeButton(0, 0, 45, 12, 11, button("*"))
+  self:addPanel(0, 271, 382):makeButton(0, 0, 44, 11, 12, button("0")):setSound("Fax_0.wav")
+  self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button("#"))
 end
 
 function UIFax:updateChoices()
@@ -115,14 +117,26 @@ function UIFax:draw(canvas, x, y)
   end
 end
 
-function UIFax:choice(choice,additionalInfo)
+--A choice was made for the fax.
+--!param choice_number (integer) Number of the choice
+function UIFax:choice(choice_number)
+  local choices = self.message.choices
+  local choice, additionalInfo
+  if choices and choice_number >= 1 and choice_number <= #choices then
+    choice = choices[choice_number].choice
+    additionalInfo = choices[choice_number].additionalInfo
+  else
+    choice = "disabled"
+    additionalInfo = nil
+  end
+
   local owner = self.owner
   if owner then
     -- A choice was made, the patient is no longer waiting for a decision
     owner:setMood("patient_wait", "deactivate")
     owner.message_callback = nil
     if choice == "send_home" then
-      owner:goHome()
+      owner:goHome("kicked")
       if owner.diagnosed then
         -- No treatment rooms
         owner:updateDynamicInfo(_S.dynamic_info.patient.actions.no_treatment_available)
@@ -142,11 +156,15 @@ function UIFax:choice(choice,additionalInfo)
       end
     elseif choice == "guess_cure" then
       owner:setDiagnosed(true)
-      owner:setNextAction{
-        name = "seek_room",
-        room_type = owner.disease.treatment_rooms[1],
-        treatment_room = true,
-      }
+      if owner:agreesToPay(owner.disease.id) then
+        owner:setNextAction{
+          name = "seek_room",
+          room_type = owner.disease.treatment_rooms[1],
+          treatment_room = true,
+        }
+      else
+        owner:goHome("over_priced", owner.disease.id)
+      end
     elseif choice == "research" then
       owner:setMood("idea", "activate")
       owner:setNextAction {
@@ -190,7 +208,17 @@ function UIFax:choice(choice,additionalInfo)
     if tonumber(self.ui.app.world.map.level_number) then
       self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
     else
-      -- TODO: Allow some kind of custom campaign with custom levels
+      for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
+        if self.ui.app.world.map.level_number == level then
+          local next_level = self.ui.app.world.campaign_info.levels[i + 1]
+          local level_info, err = self.ui.app:readLevelFile(next_level)
+          if level_info then
+            self.ui.app:loadLevel(next_level, nil, level_info.name,
+                     level_info.map_file, level_info.briefing)
+            break
+          end
+        end
+      end
     end
   elseif choice == "return_to_main_menu" then
     self.ui.app.moviePlayer:playWinMovie()

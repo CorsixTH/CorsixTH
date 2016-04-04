@@ -18,25 +18,19 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Only lines beginning with % or # as explained below will be considered by the game.
-
-Each line beginning with a %-sign are directives to use when loading the game, such as what
-the level is called and where to find the map file. Available commands:
-- Name: What the level should be called (within quotes)
-- LevelFile: The name of the binary map file to load. First the Levels directory of the 
-  original game will be searched, and then the Levels directory of CorsixTH.
-  
-Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available. Note that if a player is using the demo files 
-on the contrary everything is available unless specified otherwise in the level file.
-
-
 ---------------------- General Information -------------------------
 %Name = "Finisham"
-%LevelFile = "finisham.map"
+%MapFile = "finisham.map"
 
-Note that the below introduction text at the moment must reside on a single line within this file!
-%LevelBriefing = "The Ministry of Health wants you to run his newest hospital in the holiday resort of Finisham.                                                                 This hospital is located in a popular tourist spot and they are opening a Theme Park nearby next year, so expect seasonal peaks in visitors. You are expected to run a superb hospital with the highest of standards; he expects nothing less than perfection.                                                                 You should aim to keep queues to a minimum and keep your staff happy at the same time.                                                                      Get a reputation of at least 700, treat 85% of your visitors, cure 900 patients, amass $500,000 in the bank and have a hospital worth $400,000 to keep the Minister happy and make him a big wad of cash at the same time."
+%LevelBriefing = "The Ministry of Health wants you to run his newest hospital in the holiday resort of Finisham.
+
+This hospital is located in a popular tourist spot and they are opening a Theme Park nearby next year, so expect seasonal peaks in visitors. You are expected to run a superb hospital with the highest of standards; he expects nothing less than perfection.
+
+You should aim to keep queues to a minimum and keep your staff happy at the same time.
+
+Get a reputation of at least 700, treat 85% of your visitors, cure 900 patients, amass $500,000 in the bank and have a hospital worth $400,000 to keep the Minister happy and make him a big wad of cash at the same time."
+
+%LevelDebriefing = "Extremely good work! Where to next?"
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
@@ -46,7 +40,7 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
-#gbv.StartRating 80 
+#gbv.StartRating 80
 
 The following table contains all diagnoses and treatments that shows up inthe drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
@@ -108,7 +102,7 @@ RschReqd how much research is required to discover the treatment room for the di
 #objects[30].StartAvail.StartStrength.AvailableForLevel 1 12 1 Operating Table
 #objects[37].StartAvail.StartStrength.AvailableForLevel 1 0 1 Projector
 #objects[40].StartAvail.StartStrength.AvailableForLevel	0 1 1 Research Computer
-#objects[41].StartAvail.StartStrength.AvailableForLevel	0 1 1 Chemical Mixer 
+#objects[41].StartAvail.StartStrength.AvailableForLevel	0 1 1 Chemical Mixer
 #objects[42].StartAvail.StartStrength.AvailableForLevel 0 10 1 Blood Machine
 #objects[46].StartAvail.StartStrength.AvailableForLevel 0 8 1 Electrolysis Machine
 #objects[47].StartAvail.StartStrength.AvailableForLevel 0 7 1 Jellyitus Moulding Machine
@@ -255,7 +249,7 @@ How much the skill of the doctor adds to the salary. skill * 1000 / divisor
 --------------------- Research Configuration -----------------------
 
 Divides research input to get the amount of research points. must be > 0
-#gbv.ResearchPointsDivisor 5 
+#gbv.ResearchPointsDivisor 5
 
 ---------------------- Awards and Trophies -------------------------
 

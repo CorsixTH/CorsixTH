@@ -26,6 +26,7 @@ SOFTWARE.
 #include <wx/msgdlg.h>
 #include <wx/dirdlg.h>
 #include <wx/filedlg.h>
+#include <wx/vscroll.h>
 #include <wx/dcclient.h>
 
 BEGIN_EVENT_TABLE(frmSprites, wxFrame)
@@ -63,7 +64,7 @@ frmSprites::frmSprites()
     pMainSizer->Add(pFiles, 0, wxEXPAND | wxALL, 2);
 
     wxStaticBoxSizer *pSprites = new wxStaticBoxSizer(wxVERTICAL, this, L"Sprites");
-    pSprites->Add(m_panFrame = new wxPanel(this, wxID_ANY), 1, wxEXPAND);
+    pSprites->Add(m_panFrame = new MyVScrolled(this), 1, wxEXPAND);
     pMainSizer->Add(pSprites, 1, wxEXPAND | wxALL, 2);
     m_panFrame->Connect(wxEVT_PAINT, (wxObjectEventFunction)&frmSprites::_onPanelPaint, NULL, this);
 
@@ -153,28 +154,40 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt)
 
     int iAvailableWidth, iAvailableHeight;
     m_panFrame->GetClientSize(&iAvailableWidth, &iAvailableHeight);
-    int iX = 0, iY = 0, iTallest = 0;
+    int iX = 0;
+    int iTallest = 0;
+    int iTotal = 0;
+    int iY = -m_panFrame->GetVisibleRowsBegin();
 
     for(std::vector<_sprite_t>::iterator itr = m_vSprites.begin(), itrEnd = m_vSprites.end();
         itr != itrEnd; ++itr)
     {
         wxSize szLabel = dc.GetTextExtent(itr->caption);
         int iWidth = wxMax(szLabel.GetWidth(), itr->bitmap.IsOk() ? itr->bitmap.GetWidth() : 0);
+        int iHeight = (itr->bitmap.IsOk() ? itr->bitmap.GetHeight() : 0) + szLabel.GetHeight() + 2;
         if(iWidth + iX > iAvailableWidth)
         {
             iY += iTallest;
+            iTotal += iTallest;
             iX = iTallest = 0;
-            if(iY > iAvailableHeight)
-                break;
         }
 
-        dc.DrawText(itr->caption, iX, iY);
-        if(itr->bitmap.IsOk())
-            dc.DrawBitmap(itr->bitmap, iX, iY + szLabel.GetHeight() + 1);
+        if (iY + iHeight >= 0 && iY < iAvailableHeight) {
+            dc.DrawText(itr->caption, iX, iY);
+            if(itr->bitmap.IsOk())
+                dc.DrawBitmap(itr->bitmap, iX, iY + szLabel.GetHeight() + 1);
+        }
 
-        int iHeight = (itr->bitmap.IsOk() ? itr->bitmap.GetHeight() : 0) + szLabel.GetHeight() + 2;
         iTallest = wxMax(iTallest, iHeight);
         iX += iWidth + 2;
+    }
+
+    iTotal += iTallest; // Add last row too.
+
+    // Update the row count if it doesn't match.
+    if (iTotal != m_panFrame->iMyCount) {
+        m_panFrame->iMyCount = iTotal;
+        m_panFrame->SetRowCount(iTotal);
     }
 }
 

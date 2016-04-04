@@ -45,14 +45,29 @@ static int l_anims_set_spritesheet(lua_State *L)
     return 1;
 }
 
+//! Set the video target for the sprites.
+/*!
+    setCanvas(<video-surface>)
+ */
+static int l_anims_set_canvas(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    lua_settop(L, 2);
+
+    pAnims->setCanvas(pCanvas);
+    luaT_setenvfield(L, 1, "target");
+    return 1;
+}
+
 static int l_anims_load(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     size_t iStartDataLength, iFrameDataLength, iListDataLength, iElementDataLength;
-    const unsigned char* pStartData = luaT_checkfile(L, 2, &iStartDataLength);
-    const unsigned char* pFrameData = luaT_checkfile(L, 3, &iFrameDataLength);
-    const unsigned char* pListData = luaT_checkfile(L, 4, &iListDataLength);
-    const unsigned char* pElementData = luaT_checkfile(L, 5, &iElementDataLength);
+    const uint8_t* pStartData = luaT_checkfile(L, 2, &iStartDataLength);
+    const uint8_t* pFrameData = luaT_checkfile(L, 3, &iFrameDataLength);
+    const uint8_t* pListData = luaT_checkfile(L, 4, &iListDataLength);
+    const uint8_t* pElementData = luaT_checkfile(L, 5, &iElementDataLength);
 
     if(pAnims->loadFromTHFile(pStartData, iStartDataLength, pFrameData, iFrameDataLength,
         pListData, iListDataLength, pElementData, iElementDataLength))
@@ -67,34 +82,79 @@ static int l_anims_load(lua_State *L)
     return 1;
 }
 
+//! Load custom animations.
+/*!
+    loadCustom(<data-of-an-animation-file>) -> true/false
+ */
+static int l_anims_loadcustom(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    size_t iDataLength;
+    const uint8_t* pData = luaT_checkfile(L, 2, &iDataLength);
+
+    if (pAnims->loadCustomAnimations(pData, iDataLength))
+    {
+        lua_pushboolean(L, 1);
+    }
+    else
+    {
+        lua_pushboolean(L, 0);
+    }
+
+    return 1;
+}
+
+//! Lua interface for getting a set of animations by name and tile size (one for
+//! each view direction, 'nil' if no animation is available for a direction).
+/*!
+    getAnimations(<tile-size>, <animation-name>) -> (<anim-north>, <anim-east>,  <anim-south>, <anim-west>)
+ */
+static int l_anims_getanims(lua_State *L)
+{
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
+    int iTileSize = static_cast<int>(luaL_checkinteger(L, 2));
+    const char *pName = luaL_checkstring(L, 3);
+
+    const AnimationStartFrames &oFrames = pAnims->getNamedAnimations(pName, iTileSize);
+    if (oFrames.iNorth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iNorth)); }
+    if (oFrames.iEast  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iEast));  }
+    if (oFrames.iSouth < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iSouth)); }
+    if (oFrames.iWest  < 0) { lua_pushnil(L); } else { lua_pushnumber(L, static_cast<double>(oFrames.iWest));  }
+    return 4;
+}
+
+
 static int l_anims_getfirst(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    int iAnim = luaL_checkint(L, 2);
+    int iAnim = static_cast<int>(luaL_checkinteger(L, 2));
 
-    lua_pushinteger(L, pAnims->getFirstFrame((unsigned int)iAnim));
+    lua_pushinteger(L, pAnims->getFirstFrame(iAnim));
     return 1;
 }
 
 static int l_anims_getnext(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    int iFrame = luaL_checkint(L, 2);
+    int iFrame = static_cast<int>(luaL_checkinteger(L, 2));
 
-    lua_pushinteger(L, pAnims->getNextFrame((unsigned int)iFrame));
+    lua_pushinteger(L, pAnims->getNextFrame(iFrame));
     return 1;
 }
 
 static int l_anims_set_alt_pal(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    unsigned int iAnimation = luaL_checkint(L, 2);
+    size_t iAnimation = luaL_checkinteger(L, 2);
     size_t iPalLen;
-    const unsigned char *pPal = luaT_checkfile(L, 3, &iPalLen);
+    const uint8_t *pPal = luaT_checkfile(L, 3, &iPalLen);
     if(iPalLen != 256)
-        return luaL_typerror(L, 3, "GhostPalette string");
+    {
+        return luaL_argerror(L, 3, "GhostPalette string is not a valid palette");
+    }
+    uint32_t iAlt32 = static_cast<uint32_t>(luaL_checkinteger(L, 4));
 
-    pAnims->setAnimationAltPaletteMap(iAnimation, pPal);
+    pAnims->setAnimationAltPaletteMap(iAnimation, pPal, iAlt32);
 
     lua_getfenv(L, 1);
     lua_insert(L, 2);
@@ -107,16 +167,16 @@ static int l_anims_set_alt_pal(lua_State *L)
 static int l_anims_set_marker(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    lua_pushboolean(L, pAnims->setFrameMarker((unsigned int)luaL_checkinteger(L, 2),
-        luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
+    lua_pushboolean(L, pAnims->setFrameMarker(luaL_checkinteger(L, 2),
+        static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4))) ? 1 : 0);
     return 1;
 }
 
 static int l_anims_set_secondary_marker(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
-    lua_pushboolean(L, pAnims->setFrameSecondaryMarker((unsigned int)luaL_checkinteger(L, 2),
-        luaL_checkint(L, 3), luaL_checkint(L, 4)) ? 1 : 0);
+    lua_pushboolean(L, pAnims->setFrameSecondaryMarker(luaL_checkinteger(L, 2),
+        static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4))) ? 1 : 0);
     return 1;
 }
 
@@ -124,13 +184,13 @@ static int l_anims_draw(lua_State *L)
 {
     THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
-    int iFrame = luaL_checkint(L, 3);
+    size_t iFrame = luaL_checkinteger(L, 3);
     THLayers_t* pLayers = luaT_testuserdata<THLayers_t>(L, 4, luaT_upvalueindex(2));
-    int iX = luaL_checkint(L, 5);
-    int iY = luaL_checkint(L, 6);
-    int iFlags = luaL_optint(L, 7, 0);
+    int iX = static_cast<int>(luaL_checkinteger(L, 5));
+    int iY = static_cast<int>(luaL_checkinteger(L, 6));
+    int iFlags = static_cast<int>(luaL_optinteger(L, 7, 0));
 
-    pAnims->drawFrame(pCanvas, (unsigned int)iFrame, *pLayers, iX, iY, iFlags);
+    pAnims->drawFrame(pCanvas, iFrame, *pLayers, iX, iY, iFlags);
 
     lua_settop(L, 1);
     return 1;
@@ -182,7 +242,7 @@ static int l_anim_pre_depersist(lua_State *L)
     // soon as possible, thus preventing issues like an anim -> map -> anim
     // reference chain whereby l_anim_depersist is called after l_map_depersist
     // (as anim references map in its environment table) causing the pPrev
-    // field to be set during map depersistence, then cleared to NULL by the
+    // field to be set during map depersistence, then cleared to nullptr by the
     // constructor during l_anim_depersist.
     T* pAnimation = luaT_testuserdata<T>(L);
     new (pAnimation) T; // Call constructor
@@ -227,7 +287,7 @@ static int l_anim_set_hitresult(lua_State *L)
 static int l_anim_set_frame(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    pAnimation->setFrame(luaL_checkint(L, 2));
+    pAnimation->setFrame(luaL_checkinteger(L, 2));
     lua_settop(L, 1);
     return 1;
 }
@@ -242,7 +302,7 @@ static int l_anim_get_frame(lua_State *L)
 static int l_anim_set_crop(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
-    pAnimation->setCropColumn(luaL_checkint(L, 2));
+    pAnimation->setCropColumn(static_cast<int>(luaL_checkinteger(L, 2)));
     lua_settop(L, 1);
     return 1;
 }
@@ -258,14 +318,14 @@ static int l_anim_set_anim(lua_State *L)
 {
     THAnimation* pAnimation = luaT_testuserdata<THAnimation>(L);
     THAnimationManager* pManager = luaT_testuserdata<THAnimationManager>(L, 2);
-    int iAnim = luaL_checkint(L, 3);
-    if(iAnim < 0 || (unsigned int)iAnim >= pManager->getAnimationCount())
+    size_t iAnim = luaL_checkinteger(L, 3);
+    if(iAnim < 0 || iAnim >= pManager->getAnimationCount())
         luaL_argerror(L, 3, "Animation index out of bounds");
 
     if(lua_isnoneornil(L, 4))
         pAnimation->setFlags(0);
     else
-        pAnimation->setFlags(luaL_checkint(L, 4));
+        pAnimation->setFlags(static_cast<uint32_t>(luaL_checkinteger(L, 4)));
 
     pAnimation->setAnimation(pManager, iAnim);
     lua_settop(L, 2);
@@ -282,8 +342,8 @@ static int l_anim_set_morph(lua_State *L)
     THAnimation* pMorphTarget = luaT_testuserdata<THAnimation>(L, 2, luaT_environindex);
 
     unsigned int iDurationFactor = 1;
-    if(!lua_isnoneornil(L, 3) && luaL_checkint(L, 3) > 0)
-        iDurationFactor = luaL_checkint(L, 3);
+    if(!lua_isnoneornil(L, 3) && luaL_checkinteger(L, 3) > 0)
+        iDurationFactor = static_cast<unsigned int>(luaL_checkinteger(L, 3));
 
     pAnimation->setMorphTarget(pMorphTarget, iDurationFactor);
     lua_settop(L, 2);
@@ -294,7 +354,7 @@ static int l_anim_set_morph(lua_State *L)
 
 static int l_anim_set_drawable_layer(lua_State *L)
 {
-    lastLayer = luaL_checkint(L, 2);
+    lastLayer = static_cast<int>(luaL_checkinteger(L, 2));
     return 1;
 }
 
@@ -321,7 +381,7 @@ static int l_anim_set_tile(lua_State *L)
     else
     {
         THMap* pMap = luaT_testuserdata<THMap>(L, 2);
-        THMapNode* pNode = pMap->getNode(luaL_checkint(L, 3) - 1, luaL_checkint(L, 4) - 1);
+        THMapNode* pNode = pMap->getNode(static_cast<int>(luaL_checkinteger(L, 3) - 1), static_cast<int>(luaL_checkinteger(L, 4) - 1));
         if(pNode)
             pAnimation->attachToTile(pNode, lastLayer);
 
@@ -386,7 +446,7 @@ template <typename T>
 static int l_anim_set_flag(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    pAnimation->setFlags(luaL_checkint(L, 2));
+    pAnimation->setFlags(static_cast<uint32_t>(luaL_checkinteger(L, 2)));
 
     lua_settop(L, 1);
     return 1;
@@ -396,7 +456,7 @@ template <typename T>
 static int l_anim_set_flag_partial(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    int iFlags = luaL_checkint(L, 2);
+    uint32_t iFlags = static_cast<uint32_t>(luaL_checkinteger(L, 2));
     if(lua_isnone(L, 3) || lua_toboolean(L, 3))
     {
         pAnimation->setFlags(pAnimation->getFlags() | iFlags);
@@ -413,7 +473,7 @@ template <typename T>
 static int l_anim_make_visible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    pAnimation->setFlags(pAnimation->getFlags() & ~(THDF_Alpha50 | THDF_Alpha75));
+    pAnimation->setFlags(pAnimation->getFlags() & ~static_cast<uint32_t>(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
     return 1;
@@ -423,7 +483,7 @@ template <typename T>
 static int l_anim_make_invisible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
-    pAnimation->setFlags(pAnimation->getFlags() | THDF_Alpha50 | THDF_Alpha75);
+    pAnimation->setFlags(pAnimation->getFlags() | static_cast<uint32_t>(THDF_Alpha50 | THDF_Alpha75));
 
     lua_settop(L, 1);
     return 1;
@@ -443,7 +503,7 @@ static int l_anim_set_position(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
-    pAnimation->setPosition(luaL_checkint(L, 2), luaL_checkint(L, 3));
+    pAnimation->setPosition(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
 
     lua_settop(L, 1);
     return 1;
@@ -464,7 +524,7 @@ static int l_anim_set_speed(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
-    pAnimation->setSpeed(luaL_optint(L, 2, 0), luaL_optint(L, 3, 0));
+    pAnimation->setSpeed(static_cast<int>(luaL_optinteger(L, 2, 0)), static_cast<int>(luaL_optinteger(L, 3, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -475,7 +535,7 @@ static int l_anim_set_layer(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
-    pAnimation->setLayer(luaL_checkint(L, 2), luaL_optint(L, 3, 0));
+    pAnimation->setLayer(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_optinteger(L, 3, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -545,7 +605,7 @@ static int l_anim_draw(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
-    pAnimation->draw(pCanvas, luaL_checkint(L, 3), luaL_checkint(L, 4));
+    pAnimation->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)));
     lua_settop(L, 1);
     return 1;
 }
@@ -564,8 +624,8 @@ static int l_srl_set_sheet(lua_State *L)
 static int l_srl_append(lua_State *L)
 {
     THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
-    pSrl->appendSprite((unsigned int)luaL_checkint(L, 2),
-                       luaL_checkint(L, 3), luaL_checkint(L, 4));
+    pSrl->appendSprite(luaL_checkinteger(L, 2),
+                       static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)));
     lua_settop(L, 1);
     return 1;
 }
@@ -573,7 +633,7 @@ static int l_srl_append(lua_State *L)
 static int l_srl_set_lifetime(lua_State *L)
 {
     THSpriteRenderList *pSrl = luaT_testuserdata<THSpriteRenderList>(L);
-    pSrl->setLifetime(luaL_checkint(L, 2));
+    pSrl->setLifetime(static_cast<int>(luaL_checkinteger(L, 2)));
     lua_settop(L, 1);
     return 1;
 }
@@ -590,13 +650,18 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     // Anims
     luaT_class(THAnimationManager, l_anims_new, "anims", MT_Anims);
     luaT_setfunction(l_anims_load, "load");
+    luaT_setfunction(l_anims_loadcustom, "loadCustom");
     luaT_setfunction(l_anims_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_setfunction(l_anims_set_canvas, "setCanvas", MT_Surface);
+    luaT_setfunction(l_anims_getanims, "getAnimations");
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
     luaT_setfunction(l_anims_getnext, "getNextFrame");
     luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
     luaT_setfunction(l_anims_set_marker, "setFrameMarker");
     luaT_setfunction(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     luaT_setfunction(l_anims_draw, "draw", MT_Surface, MT_Layers);
+    luaT_setconstant("Alt32_GreyScale",   THDF_Alt32_GreyScale);
+    luaT_setconstant("Alt32_BlueRedSwap", THDF_Alt32_BlueRedSwap);
     luaT_endclass();
 
     // Weak table at AnimMetatable[1] for light UD -> object lookup

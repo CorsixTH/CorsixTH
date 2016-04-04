@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Abstraction for visible gameplay things which sit somewhere on the map.
 class "Entity"
 
+---@type Entity
+local Entity = _G["Entity"]
+
 local TH = require "TH"
 
 function Entity:Entity(animation)
@@ -201,6 +204,7 @@ function Entity:tick()
   else
     self:_tick()
   end
+  -- Tick any mood animation
   if self.mood_info then
     self.mood_info:tick()
   end
@@ -236,7 +240,7 @@ end
 --[[ Register a function (related to the entity) to be called at a later time.
 ! Each `Entity` can have a single timer associated with it, and due to this
 limit of one, it is almost always the case that the currently active humanoid
-action is the only thing wich calls `setTimer`.
+action is the only thing which calls `setTimer`.
 If self.slow_animation is set then all timers will be doubled as animation
 length will be doubled.
 !param tick_count (integer) If 0, then `f` will be called during the entity's
@@ -292,7 +296,16 @@ end
 function Entity:tickDay()
 end
 
+--! Notify the entity of a new object.
+--!param id Name of the new object.
+-- TODO Currently only used for benches placed nearby.
+-- TODO Maybe also pass the object tile coordinates?
 function Entity:notifyNewObject(id)
+end
+
+--! Notify the entity that a new room was built.
+--!param room (Room) The new room.
+function Entity:notifyNewRoom(room)
 end
 
 function Entity:setMood(mood_name, activate)

@@ -38,6 +38,9 @@ room.has_no_queue_dialog = true
 
 class "TrainingRoom" (Room)
 
+---@type TrainingRoom
+local TrainingRoom = _G["TrainingRoom"]
+
 function TrainingRoom:TrainingRoom(...)
   self:Room(...)
 end
@@ -99,8 +102,8 @@ function TrainingRoom:getStaffCount()
 end
 
 function TrainingRoom:testStaffCriteria(criteria, extra_humanoid)
-  if extra_humanoid and extra_humanoid.profile
-  and extra_humanoid.profile.is_consultant and self.staff_member then
+  if extra_humanoid and extra_humanoid.profile and
+      extra_humanoid.profile.is_consultant and self.staff_member then
     -- Training room can only have on consultant
     return false
   end

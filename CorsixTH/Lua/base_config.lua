@@ -470,11 +470,11 @@ local configuration = {
     EmergencyAward = 90,
     -- <x Percentage - to win the award MIN 0 MAX 100
     EmergencyPoor = 50,
-    -- >x Percentage - to win the award MIN 0 MAX 100 - staff mean happiness thoughout the year
+    -- >x Percentage - to win the award MIN 0 MAX 100 - staff mean happiness throughout the year
     StaffHappinessAward = 75,
     -- <x Percentage - to win the award MIN 0 MAX 100
     StaffHappinessPoor = 25,
-    -- >x Percentage - to win the award MIN 0 MAX 100 - peeps mean happiness thoughout the year
+    -- >x Percentage - to win the award MIN 0 MAX 100 - peeps mean happiness throughout the year
     PeepHappinessAward = 75,
     -- <x Percentage - to win the award MIN 0 MAX 100
     PeepHappinessPoor = 25,

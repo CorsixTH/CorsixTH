@@ -50,6 +50,9 @@ room.call_sound = "reqd009.wav"
 
 class "WardRoom" (Room)
 
+---@type WardRoom
+local WardRoom = _G["WardRoom"]
+
 function WardRoom:WardRoom(...)
   self:Room(...)
   self.staff_member_set = {}
@@ -98,7 +101,7 @@ function WardRoom:doStaffUseCycle(humanoid)
     count = meander_time,
   }
   local obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "desk")
-   if obj then
+  if obj then
     obj.reserved_for = humanoid
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
@@ -218,10 +221,9 @@ function WardRoom:afterLoad(old, new)
     local flags = {}
 
     local function checkLocation(x, y)
-      if self.world:getRoom(x, y)
-      or not map:getCellFlags(x, y, flags).passable then
-        local message = "Warning: An update has resolved a problem concerning "
-        .. "swing doors, but not all tiles adjacent to them could be fixed."
+      if self.world:getRoom(x, y) or not map:getCellFlags(x, y, flags).passable then
+        local message = "Warning: An update has resolved a problem concerning " ..
+            "swing doors, but not all tiles adjacent to them could be fixed."
         self.world.ui:addWindow(UIInformation(self.world.ui, {message}))
         return false
       end

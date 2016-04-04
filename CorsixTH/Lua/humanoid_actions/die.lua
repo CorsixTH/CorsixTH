@@ -54,7 +54,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
     humanoid:setAnimation(humanoid.die_anims.fly_east, mirror)
     humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y, nil, nil, 0, -4)
   else
-    humanoid:setHospital(nil)
+    humanoid:despawn()
     humanoid.world:destroyEntity(humanoid)
   end
 end)
@@ -104,7 +104,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
       holes_orientation = spawn_scenario[1]
       hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(spawn_scenario[2], spawn_scenario[3], 0)
 
-      if humanoid.world:canNonSideObjectBeSpawnedAt(hole_x, hole_y, "gates_to_hell", holes_orientation, 0) then
+      if hole_x and humanoid.world:canNonSideObjectBeSpawnedAt(hole_x, hole_y, "gates_to_hell", holes_orientation, 0) then
         if holes_orientation == "east" then
           mirror_grim = 1
         end
@@ -124,7 +124,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
         for _, find_grim_spawn_attempt in ipairs(spawn_scenario[9]) do
           grim_spawn_idle_direction = find_grim_spawn_attempt.after_spawn_idle_direction or spawn_scenario[6]
           grim_x, grim_y = humanoid.world.pathfinder:findIdleTile(hole_x + find_grim_spawn_attempt.hole_x_offset, hole_y + find_grim_spawn_attempt.hole_y_offset, 0)
-          if not humanoid.world:getRoom(grim_x, grim_y) then
+          if grim_x and not humanoid.world:getRoom(grim_x, grim_y) then
             grim_cant_walk_to_use_tile = false
             break
           end
@@ -304,7 +304,7 @@ local function action_die_start(action, humanoid)
     --so this animation is ended early, action_die_tick will then use the standard male fall animation:
     fall_anim_duration = 21
   end
-  -- Bloaty head patients can't go to hell because they don't have a 
+  -- Bloaty head patients can't go to hell because they don't have a
   -- "transform to standard male"/"fall into lava hole" animation.
   if humanoid:isMalePatient() and humanoid.disease.id ~= "bloaty_head" then
     if math.random(1, 100) <= 65 then

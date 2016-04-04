@@ -31,6 +31,10 @@ end
 --! Individual staff information dialog
 class "UIStaff" (Window)
 
+---@type UIStaff
+local UIStaff = _G["UIStaff"]
+
+--! Callback function for handyman to change his parcel.
 function UIStaff:changeParcel()
   local index = 0
   for i, v in ipairs(self.staff.hospital.ownedPlots) do
@@ -256,7 +260,7 @@ function UIStaff:onMouseDown(button, x, y)
   return Window.onMouseDown(self, button, x, y)
 end
 
--- Helper function to faciliate humanoid_class comparison wrt. Surgeons
+-- Helper function to facilitate humanoid_class comparison wrt. Surgeons
 local function surg_compat(class)
   return class == "Surgeon" and "Doctor" or class
 end
@@ -324,62 +328,57 @@ function UIStaff:fireStaff()
   end))
 end
 
-local attributes = {"cleaning", "watering", "repairing"}
 
+--! Function to balance 'cleaning','watering', and 'repairing', where
+--! one of them is increased, and the other two are decreased.
+--!param increased Attribute to increase.
 function UIStaff:changeHandymanAttributes(increased)
-  self.staff:changeAttribute(increased, 0.1)
-  local extra_decrease = 0
-  for no, attr in ipairs(attributes) do
-    if attr ~= increased then
-      if self.staff.attributes[attr] < 0.05 then
-        extra_decrease = 0.05 - self.staff.attributes[attr]
+  if not self.staff.attributes[increased] then
+    return
+  end
+
+  local incr_value = 0.1  -- Increase of 'increased'
+  local smallest_decr = 0.05 -- Smallest decrement that can be performed.
+  local decr_attrs = {}
+
+  local attributes = {"cleaning", "watering", "repairing"}
+  for _, attr in ipairs(attributes) do
+    if attr == increased then
+      -- Adding too much is not a problem, it gets clipped to 1.
+      self.staff:changeAttribute(attr, incr_value)
+      if self.staff.attributes[attr] == 1 then
+        incr_value = 2.0 -- Doing 'increased' 100%, set other attributes to 0.
       end
-      self.staff:changeAttribute(attr, -0.05)
+    else
+      decr_attrs[#decr_attrs + 1] = attr
+      smallest_decr = math.min(smallest_decr, self.staff.attributes[attr])
     end
   end
-  if extra_decrease ~= 0 then
-    for no, attr in ipairs(attributes) do
-    if attr ~= increased then
-      self.staff:changeAttribute(attr, -extra_decrease)
-    end
-  end
+  assert(#decr_attrs == 2)
+
+  -- The decreasing attributes should together decrease '-incr_value', but one
+  -- or both may be smaller than '-incr_value / 2'.
+  -- Compensate by subtracting the biggest value from both.
+  local decr_value = incr_value - smallest_decr
+  for _, attr in ipairs(decr_attrs) do
+    -- Subtracting too much is not a problem, it gets clipped to 0.
+    self.staff:changeAttribute(attr, -decr_value)
   end
 end
 
+--! UI callback function to increase 'cleaning' (wiping litter).
 function UIStaff:doMoreCleaning()
-  if self.staff.attributes["cleaning"] then
-    if self.staff.attributes["cleaning"] < 0.9 then
-      self:changeHandymanAttributes("cleaning")
-    else
-      self.staff.attributes["cleaning"] = 1.0
-      self.staff.attributes["watering"] = 0.0
-      self.staff.attributes["repairing"] = 0.0
-    end
-  end
+  self:changeHandymanAttributes("cleaning")
 end
 
+--! UI callback function to increase 'watering' (plants).
 function UIStaff:doMoreWatering()
-  if self.staff.attributes["watering"] then
-    if self.staff.attributes["watering"] < 0.9 then
-      self:changeHandymanAttributes("watering")
-    else
-      self.staff.attributes["cleaning"] = 0.0
-      self.staff.attributes["watering"] = 1.0
-      self.staff.attributes["repairing"] = 0.0
-    end
-  end
+  self:changeHandymanAttributes("watering")
 end
 
+--! UI callback function to increase 'repairing' (machines).
 function UIStaff:doMoreRepairing()
-  if self.staff.attributes["repairing"] then
-    if self.staff.attributes["repairing"] < 0.9 then
-      self:changeHandymanAttributes("repairing")
-    else
-      self.staff.attributes["cleaning"] = 0.0
-      self.staff.attributes["watering"] = 0.0
-      self.staff.attributes["repairing"] = 1.0
-    end
-  end
+  self:changeHandymanAttributes("repairing")
 end
 
 function UIStaff:openStaffManagement()

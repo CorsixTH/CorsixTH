@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, "Fabiomsouto"
+--[[ Copyright (c) 2010 Manuel "Roujin" Wolf, "Fabiomsouto"
 Copyright (c) 2011 Sérgio "Get_It" Ribeiro
 Copyright (c) 2012 <Filipe "Aka" Carvalho>
 
@@ -42,7 +42,7 @@ confirmation.restart_level = "Tem a certeza que deseja reiniciar este nível?"
 
 -------------------------------  NEW STRINGS  -------------------------------
 confirmation.maximum_screen_size = "A resolução de ecrã que escolheu é maior que 3000 x 2000. Resoluções mais altas são possíveis, mas requerem melhor hardware de forma a manter uma taxa de fotogramas (FPS) jogável. De certeza que deseja continuar?"
-confirmation.music_warning = "Antes de escolher usar mp3 para a música dentro do jogo, necessita de ter o smpeg.dll ou equivalente para o seu sistema operativo, caso contrário, não terá música no jogo. Actualmente não existe equivalente para sistemas 64bit. Deseja continuar?"
+confirmation.music_warning = "Antes de escolher usar mp3 para a música dentro do jogo, necessita de ter o smpeg.dll ou equivalente para o seu sistema operativo, caso contrário, não terá música no jogo. Deseja continuar?"
 menu_options_wage_increase.deny = "    NEGAR "
 menu_options_wage_increase.grant = "    PERMITIR "
 tooltip.options_window.audio_button = "Ligar ou desligar todo o som do jogo"
@@ -530,14 +530,14 @@ dynamic_info.staff.actions.fired = "Despedido"
 
 
 
-introduction_texts.demo = {
-  "Bem-vindo ao hospital do demo!",
-  "Infelizmente este demo só tem este nível.Contudo existe aqui muito trabalho para te manter ocupado!",
-  "Encontrarás várias doenças que requerem salas diferentes para os seus tratamentos.Ao longo do tempo irão ocorrer algumas emergências e precisarás de descobrir novos tratamentos atráves da sala de pesquisa.",
-  "O teu objectivo é ganhar 100,000$,ter um hospital avaliado em 70,000$,uma reputação de 700 e uma cura de 75% dos pacientes.",
-  "Garante que a tua reputação não cai abaixo de 300 e que não mates 40% dos teus pacientes senão perderás o nível.",
-  "Boa sorte!",
-}
+introduction_texts.demo =
+  "Bem-vindo ao hospital do demo!" ..
+  "Infelizmente este demo só tem este nível.Contudo existe aqui muito trabalho para te manter ocupado!" ..
+  "Encontrarás várias doenças que requerem salas diferentes para os seus tratamentos.Ao longo do tempo " ..
+  "irão ocorrer algumas emergências e precisarás de descobrir novos tratamentos atráves da sala de pesquisa." ..
+  "O teu objectivo é ganhar 100,000$,ter um hospital avaliado em 70,000$,uma reputação de 700 e uma cura de 75% dos pacientes." ..
+  "Garante que a tua reputação não cai abaixo de 300 e que não mates 40% dos teus pacientes senão perderás o nível." ..
+  "Boa sorte!"
 
 
 

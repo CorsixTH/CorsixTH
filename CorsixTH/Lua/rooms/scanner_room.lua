@@ -45,6 +45,9 @@ room.call_sound = "reqd002.wav"
 
 class "ScannerRoom" (Room)
 
+---@type ScannerRoom
+local ScannerRoom = _G["ScannerRoom"]
+
 function ScannerRoom:ScannerRoom(...)
   self:Room(...)
 end
@@ -128,9 +131,10 @@ function ScannerRoom:onHumanoidLeave(humanoid)
 end
 
 function ScannerRoom:makeHumanoidLeave(humanoid)
-  if humanoid.action_queue[1].name == "use_object" and humanoid.action_queue[1].object == self.world:findObjectNear(humanoid, "scanner") then
+  if humanoid.action_queue[1].name == "use_object" and
+      humanoid.action_queue[1].object == self.world:findObjectNear(humanoid, "scanner") then
     humanoid.action_queue[1].after_use = nil
-  end 
+  end
 
   self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
 end

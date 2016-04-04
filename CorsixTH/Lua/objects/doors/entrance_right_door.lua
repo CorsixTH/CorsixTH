@@ -33,6 +33,9 @@ object.supports_creation_for_map = true
 
 class "EntranceDoor" (Object)
 
+---@type EntranceDoor
+local EntranceDoor = _G["EntranceDoor"]
+
 function EntranceDoor:EntranceDoor(world, object_type, x, y, direction, etc)
   self.is_master = object_type == object
   self:Object(world, object_type, x, y, direction, etc)
@@ -71,7 +74,7 @@ function EntranceDoor:onOccupantChange(count_delta)
   self.occupant_count = self.occupant_count + count_delta
   local is_open = self.occupant_count > 0
   if is_open ~= self.is_open then
-    self:playSound "eledoor2.wav"
+    self:playSound("eledoor2.wav")
     self.is_open = is_open
     self.ticks = true
   end

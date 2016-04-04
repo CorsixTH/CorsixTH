@@ -24,6 +24,9 @@ SOFTWARE. --]]
 -- OR
 --  class "Name" (SuperclassName)
 --
+--  ---@type Name
+--  local Name = _G["Name"]
+--
 --  function Name:Name(arguments)
 --    self:SuperclassName(arguments) -- required when there is a superclass
 --    --(constructor)--
@@ -99,7 +102,7 @@ class = destrict(function(_, name)
     else
       -- (Superclass) decorator
       if arg == nil then
-        error "Superclass not defined at subclass definition"
+        error("Superclass not defined at subclass definition")
       end
       super = arg
     end

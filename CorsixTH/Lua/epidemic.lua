@@ -20,6 +20,9 @@ SOFTWARE. --]]
 
 class "Epidemic"
 
+---@type Epidemic
+local Epidemic = _G["Epidemic"]
+
 --[[Manages the epidemics that occur in hospitals. Generally, any epidemic
 logic that happens outside this class will call functions contained here.]]
 function Epidemic:Epidemic(hospital, contagious_patient)
@@ -30,9 +33,6 @@ function Epidemic:Epidemic(hospital, contagious_patient)
 
   -- The contagious disease the epidemic is based around
   self.disease = contagious_patient.disease
-
-  -- Config to retrieve the custom fines (if they exist)
-  self.config = self.world.map.level_config
 
   -- Can the epidemic be revealed to the player
   self.ready_to_reveal = false
@@ -75,15 +75,16 @@ function Epidemic:Epidemic(hospital, contagious_patient)
   -- Number of times any infected patient has tried to infected another - successful or not
   self.attempted_infections = 0
 
+  local level_config = self.world.map.level_config
   -- How often is the epidemic disease passed on? Represents a percentage
   -- spread_factor% of the time a disease is passed on to a suitable target
-  self.spread_factor = self.config.gbv.ContagiousSpreadFactor or 25
+  self.spread_factor = level_config.gbv.ContagiousSpreadFactor or 25
   -- How many people still infected and not cure causes the player to take a reputation hit as well as a fine
   -- has no effect if more than evacuation_minimum - hospital is evacuated anyway
-  self.reputation_loss_minimum = self.config.gbv.EpidemicRepLossMinimum or 5
+  self.reputation_loss_minimum = level_config.gbv.EpidemicRepLossMinimum or 5
   -- How many people need to still be infected and not cure to cause the
   -- inspector to evacuate the hospital
-  self.evacuation_minimum = self.config.gbv.EpidemicEvacMinimum or 10
+  self.evacuation_minimum = level_config.gbv.EpidemicEvacMinimum or 10
 
   -- The health inspector who reveals the result of the epidemic
   self.inspector = nil
@@ -130,24 +131,31 @@ end
  them into an infected patient too. ]]
 function Epidemic:infectOtherPatients()
   --[[ Can an infected patient infect another patient - taking into account
-   spread factor as defined in the configuration. Patients must be both in the
-   corridors  or in the same room - don't infect through walls.
-   @param patient (Patient) already infected patient
-   @param other (Patient) target to possibly infect
-   @return true if patient can infect other, false otherwise (boolean) ]]
-   local function canInfectOther(patient,other)
-     local can_infect = false
-     if not other.infected and not other.cured and not other.vaccinated
-       and not patient.cured and not patient.vaccinated and not other.is_emergency and
-       (patient.disease == other.disease or other.disease.contagious and not other.diagnosed) and
-       not other.attempted_to_infect
-       and patient:getRoom() == other:getRoom() then
-       can_infect=true
-     end
-     return can_infect
-   end
+  spread factor as defined in the configuration. Patients must be both in the
+  corridors or in the same room - don't infect through walls.
+  @param patient (Patient) already infected patient
+  @param other (Patient) target to possibly infect
+  @return true if patient can infect other, false otherwise (boolean) ]]
+  local function canInfectOther(patient, other)
+    -- Patient is not infectious.
+    if patient.cured or patient.vaccinated then return false end
 
-  local function infect_other(infected_patient,patient)
+    -- 'other' is already infected or is going home.
+    if other.infected or other.cured or other.vaccinated then return false end
+    if other.is_emergency then return false end -- Don't interact with emergencies.
+
+    -- If the other patient has a different disease OR the other patient's
+    -- disease cannot be changed.
+    if patient.disease ~= other.disease and
+        (not other.disease.contagious or other.diagnosed) then return false end
+
+    if other.attempted_to_infect then return false end
+
+    -- Only infect if both are in the same room.
+    return patient:getRoom() == other:getRoom()
+  end
+
+  local function infect_other(infected_patient, patient)
     if infected_patient.disease == patient.disease then
       self:addContagiousPatient(patient)
       self.total_infections = self.total_infections + 1
@@ -174,12 +182,12 @@ function Epidemic:infectOtherPatients()
       local adjacent_patients =
       entity_map:getPatientsInAdjacentSquares(infected_patient.tile_x, infected_patient.tile_y)
       for _, patient in ipairs(adjacent_patients) do
-        if canInfectOther(infected_patient,patient) then
+        if canInfectOther(infected_patient, patient) then
           patient.attempted_to_infect = true
           self.attempted_infections = self.attempted_infections + 1
           if (self.total_infections / self.attempted_infections) <
               (self.spread_factor / spread_scale_factor) then
-            infect_other(infected_patient,patient)
+            infect_other(infected_patient, patient)
           end
         end
       end
@@ -233,25 +241,22 @@ end
  the length of the timer. If an infected patient leaves the
  hospital it's discovered instantly and will result in a fail.]]
 function Epidemic:checkNoInfectedPlayerHasLeft()
-  local function infected_patient_left()
-    for _, infected_patient in ipairs(self.infected_patients) do
-      local px, py = infected_patient.tile_x, infected_patient.tile_y
-      -- If leaving and longer in the hospital
-      if infected_patient.going_home
-          and not infected_patient.cured
-          and px and py and not self.hospital:isInHospital(px,py) then
-        return true
-      end
-    end
-    return false
-  end
+  if self.result_determined then return end
 
-  if infected_patient_left() and not self.result_determined then
-    self.result_determined = true
-    if not self.inspector then
-      self:spawnInspector()
+  -- Check whether a patient has left.
+  for _, infected_patient in ipairs(self.infected_patients) do
+    local px, py = infected_patient.tile_x, infected_patient.tile_y
+    -- If leaving and no longer in the hospital.
+    if infected_patient.going_home and not infected_patient.cured and
+        px and py and not self.hospital:isInHospital(px,py) then
+      -- Patient escaped from the hospital, discovery is inevitable.
+      self.result_determined = true
+      if not self.inspector then
+        self:spawnInspector()
+      end
+      self:finishCoverUp()
+      return
     end
-    self:finishCoverUp()
   end
 end
 
@@ -261,8 +266,8 @@ Additionally if any patients die during an epidemic we also remove them,
 otherwise a player may never win the epidemic in such a case.]]
 function Epidemic:checkPatientsForRemoval()
   for i, infected_patient in ipairs(self.infected_patients) do
-    if (not self.coverup_in_progress and infected_patient.going_home)
-      or infected_patient.dead then
+    if (not self.coverup_in_progress and infected_patient.going_home) or
+        infected_patient.dead then
       table.remove(self.infected_patients,i)
     end
   end
@@ -282,8 +287,8 @@ end
  possibly become a vaccination candidate. Marking is done by clicking
  the player and can only happen during a cover up. ]]
 function Epidemic:markForVaccination(patient)
-  if patient.infected and not patient.vaccinated
-    and not patient.marked_for_vaccination then
+  if patient.infected and not patient.vaccinated and
+      not patient.marked_for_vaccination then
     patient.marked_for_vaccination = true
     patient:setMood("epidemy4","deactivate")
     patient:setMood("epidemy2","activate")
@@ -343,7 +348,8 @@ end
 --@param infected_count (Integer) number of patients still infected
 --@return fine (Integer) the fine amount ]]
 function Epidemic:calculateInfectedFine(infected_count)
-  local fine_per_infected = self.config.gbv.EpidemicFine or 2000
+  local level_config = self.world.map.level_config
+  local fine_per_infected = level_config.gbv.EpidemicFine or 2000
   return math.max(2000, infected_count * fine_per_infected)
 end
 
@@ -376,6 +382,9 @@ end
  any epidemic-specific icons from their heads.]]
 function Epidemic:clearAllInfectedPatients()
   for _, infected_patient in ipairs(self.infected_patients) do
+    -- Remove any vaccination calls still open
+    infected_patient:removeVaccinationCandidateStatus()
+    self.world.dispatcher:dropFromQueue(infected_patient)
     infected_patient.vaccinated = true
     infected_patient:setMood("epidemy1","deactivate")
     infected_patient:setMood("epidemy2","deactivate")
@@ -434,8 +443,9 @@ function Epidemic:determineFaxAndFines(still_infected)
 
   if still_infected == 0 then
     -- Compensation fine (if epidemic is "won")
-    local compensation_low_value = self.config.gbv.EpidemicCompLo or 1000
-    local compensation_high_value = self.config.gbv.EpidemicCompHi or 5000
+    local level_config = self.world.map.level_config
+    local compensation_low_value = level_config.gbv.EpidemicCompLo or 1000
+    local compensation_high_value = level_config.gbv.EpidemicCompHi or 5000
     self.compensation = math.random(compensation_low_value,compensation_high_value)
 
     self.cover_up_result_fax = {
@@ -497,18 +507,14 @@ end
 --who is evacuated @see evacuateHospital. For new patients they are marked
 --as they leave the reception desks.]]
 function Epidemic:markPatientsAsPassedReception()
-  local function get_reception_queuing_patients()
-    local queuing_patients = {}
-    for desk, _ in pairs(self.hospital.reception_desks) do
-      for _, patient in ipairs(desk.queue) do
-        -- Use patient as map key to speed up lookup
-        queuing_patients[patient] = true
-      end
+  local queuing_patients = {}
+  for _, desk in ipairs(self.hospital:findReceptionDesks()) do
+    for _, patient in ipairs(desk.queue) do
+      -- Use patient as map key to speed up lookup
+      queuing_patients[patient] = true
     end
-    return queuing_patients
   end
 
-  local queuing_patients = get_reception_queuing_patients()
   for _, patient in ipairs(self.hospital.patients) do
     -- Patient is not queuing for reception
     local px, py = patient.tile_x, patient.tile_y
@@ -521,6 +527,10 @@ end
 --[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
 function Epidemic:evacuateHospital()
   for _, patient in ipairs(self.hospital.patients) do
+    local patient_room = patient:getRoom()
+    if patient_room then
+      patient_room:makeHumanoidDressIfNecessaryAndThenLeave(patient)
+    end
     if patient.has_passed_reception then
       patient:clearDynamicInfo()
       patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
@@ -547,7 +557,7 @@ function Epidemic:spawnInspector()
   self.world.ui.adviser:say(_A.information.epidemic_health_inspector)
   local inspector = self.world:newEntity("Inspector", 2)
   self.inspector = inspector
-  inspector:setType "Inspector"
+  inspector:setType("Inspector")
 
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
   inspector:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
@@ -559,10 +569,9 @@ end
   Typically this is used to determine if a patient can be vaccinated
   @param patient (Patient) the patient we wish to determine if they are static.]]
 local function is_static(patient)
-  local patient_action = patient.action_queue[1]
-  return patient_action.name == "queue" or patient_action.name == "idle" or
-  (patient_action.name == "use_object" and
-  patient_action.object.object_type.id == "bench")
+  local action = patient.action_queue[1]
+  return action.name == "queue" or action.name == "idle" or
+      (action.name == "use_object" and action.object.object_type.id == "bench")
 end
 
 --[[ During a cover up every patient marked for vaccination (clicked)
@@ -593,15 +602,16 @@ function Epidemic:createVaccinationActions(patient,nurse)
     nurse:setNextAction({name = "meander"})
     patient:removeVaccinationCandidateStatus()
   else
-  -- Give selected patient the cursor with the arrow once they are next
-  -- in line for vaccination i.e. call assigned
+    -- Give selected patient the cursor with the arrow once they are next
+    -- in line for vaccination i.e. call assigned
     patient:giveVaccinationCandidateStatus()
-    local vaccination_fee = self.config.gbv.VacCost or 50
+    local level_config = self.world.map.level_config
+    local fee = level_config.gbv.VacCost or 50
     nurse:setNextAction({name = "walk", x = x, y = y,
                         must_happen = true,
                         walking_to_vaccinate = true})
     nurse:queueAction({name ="vaccinate",
-                      vaccination_fee = vaccination_fee,
+                      vaccination_fee = fee,
                       patient = patient, must_happen = true})
   end
 end
@@ -684,15 +694,15 @@ end
 function Epidemic:showAppropriateAdviceMessages()
   if self.countdown_intervals then
     if not self.has_said_hurry_up and self:countInfectedPatients() > 0 and
-      -- If only 1/4 of the countdown_intervals remaining on the timer
-        self.timer.open_timer == math.floor(self.countdown_intervals * 1/4) then
+        -- If only 1/4 of the countdown_intervals remaining on the timer
+        self.timer.open_timer == math.floor(self.countdown_intervals * 1 / 4) then
       self.world.ui.adviser:say(_A.epidemic.hurry_up)
       self.has_said_hurry_up = true
-      -- Wait until at least 1/4 of the countdown_intervals has expired before giving
-      -- this warning so it doesn't happen straight away
-    elseif self.timer.open_timer <= math.floor(self.countdown_intervals * 3/4)
-        and not self.has_said_serious
-        and self:countInfectedPatients() > 10 then
+
+    -- Wait until at least 1/4 of the countdown_intervals has expired before giving
+    -- this warning so it doesn't happen straight away
+    elseif self.timer.open_timer <= math.floor(self.countdown_intervals * 3 / 4) and
+        not self.has_said_serious and self:countInfectedPatients() > 10 then
       self.world.ui.adviser:say(_A.epidemic.serious_warning)
       self.has_said_serious = true
     end
@@ -711,5 +721,11 @@ function Epidemic:tryAnnounceInspector()
       self.hospital:isInHospital(inspector.tile_x, inspector.tile_y) then
     inspector:announce()
     inspector.has_been_announced = true
+  end
+end
+
+function Epidemic:afterLoad(old, new)
+  if old < 106 then
+    self.level_config = nil
   end
 end

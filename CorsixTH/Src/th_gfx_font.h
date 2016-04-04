@@ -35,25 +35,46 @@ enum eTHAlign
     Align_Right = 2,
 };
 
+/** Structure for the bounds of a text string that is rendered to the screen. */
+struct THFontDrawArea
+{
+    //! Number of rows the rendered text spans
+    int iNumRows;
+
+    //! Left X-coordinate for the start of the text
+    int iStartX;
+
+    //! Right X-coordinate for the right part of the last letter rendered
+    int iEndX;
+
+    //! Top Y-coordinate for the start of the text
+    int iStartY;
+
+    //! Bottom Y-coordinate for the end of the text
+    int iEndY;
+
+    //! Width of the widest line in the text
+    int iWidth;
+};
+
 class THFont
 {
 public:
-    THFont();
-    virtual ~THFont();
+    virtual ~THFont() = default;
 
-    //! Get the size of a single line of drawn text
+    //! Get the size of drawn text.
     /*!
+        If iMaxWidth is specified the text will wrap, so that the height can
+        span multiple rows. Otherwise gets the size of a single line of text.
         @param sMessage A UTF-8 encoded string containing a single line of text
             to measure the width and height of.
         @param iMessageLength The length, in bytes (not characters), of the
             string at sMessage.
-        @param pX If not NULL, the width (in pixels) of the drawn message will
-            be stored at this pointer.
-        @param pY If not NULL, the height (in pixels) of the drawn message will
-            be stored at this pointer.
+        @param iMaxWidth The maximum length, in pixels, that the text may
+            occupy. Default is INT_MAX.
     */
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const = 0;
+    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                                       int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
     /*!
@@ -75,30 +96,26 @@ public:
         This function still only draws a single line of text (i.e. any line
         breaks like \r and \n in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
-        @param pCanvas The canvas on which to draw. Can be NULL, in which case
+        If iMaxRows is specified it will simply cut after that many rows.
+        @param pCanvas The canvas on which to draw. Can be nullptr, in which case
           nothing is drawn, but other calculations are still made.
         @param sMessage The line of text to draw, encoded in CP437.
         @param iMessageLength The length (in bytes) of sMessage.
         @param iX The X position to start drawing on the canvas.
         @param iY The Y position to start drawing on the canvas.
         @param iWidth The maximum width of each line of text.
-        @param pResultingWidth If not NULL, the maximum width of a line will
-          be stored here (the resulting value should be similar to iWidth,
-          but a bit smaller).
-        @param pLastX If not NULL, iX plus the the width of the last printed
-          line will be stored here.
+        @param iMaxRows The maximum number of rows to draw. Default is INT_MAX.
+        @param iSkipRows Start rendering text after skipping this many rows.
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
-        @return iY plus the height (in pixels) of the resulting text.
     */
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
-                                eTHAlign eAlign = Align_Left) const = 0;
+    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                           size_t iMessageLength, int iX, int iY,
+                                           int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                           eTHAlign eAlign = Align_Left) const = 0;
 };
 
-class THBitmapFont : public THFont
+class THBitmapFont final : public THFont
 {
 public:
     THBitmapFont();
@@ -113,26 +130,25 @@ public:
 
     THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
 
-    //! Set the seperation between characters and between lines
+    //! Set the separation between characters and between lines
     /*!
         Generally, the sprite sheet glyphs will already include separation, and
         thus no extra separation is required (set iCharSep and iLineSep to 0).
     */
     void setSeparation(int iCharSep, int iLineSep);
 
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const;
+    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                               int iMaxWidth = INT_MAX) const override;
 
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                          size_t iMessageLength, int iX, int iY) const;
+    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+                  size_t iMessageLength, int iX, int iY) const override;
 
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
-                                eTHAlign eAlign = Align_Left) const;
+    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                   size_t iMessageLength, int iX, int iY,
+                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                   eTHAlign eAlign = Align_Left) const override;
 
-protected:
+private:
     THSpriteSheet* m_pSpriteSheet;
     int m_iCharSep;
     int m_iLineSep;
@@ -152,7 +168,7 @@ protected:
     THRawBitmap class, but with an alpha channel, and a single colour rather
     than a palette).
 */
-class THFreeTypeFont : public THFont
+class THFreeTypeFont final : public THFont
 {
 public:
     THFreeTypeFont();
@@ -172,6 +188,9 @@ public:
     */
     FT_Error initialise();
 
+    //! Remove all cached strings, as our graphics context has changed
+    void clearCache();
+
     //! Set the font face to be used.
     /*!
         @param pData Pointer to the start of a font file loaded into memory.
@@ -179,7 +198,7 @@ public:
             of the THFreeTypeFont objcect.
         @param iLength The size, in bytes, of the font file at pData.
     */
-    FT_Error setFace(const unsigned char* pData, size_t iLength);
+    FT_Error setFace(const uint8_t* pData, size_t iLength);
 
     //! Set the font size and colour to match that of a bitmap font.
     /*!
@@ -198,34 +217,54 @@ public:
     */
     FT_Error setPixelSize(int iWidth, int iHeight);
 
-    virtual void getTextSize(const char* sMessage, size_t iMessageLength,
-                             int* pX, int* pY) const;
+    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
+                               int iMaxWidth = INT_MAX) const override;
 
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                          size_t iMessageLength, int iX, int iY) const;
+    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+                  size_t iMessageLength, int iX, int iY) const override;
 
-    virtual int drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                size_t iMessageLength, int iX, int iY,
-                                int iWidth, int *pResultingWidth = NULL,
-                                int *pLastX = NULL,
-                                eTHAlign eAlign = Align_Left) const;
+    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+                                   size_t iMessageLength, int iX, int iY,
+                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+                                   eTHAlign eAlign = Align_Left) const override;
 
-protected:
+private:
     struct cached_text_t
     {
+        //! The text being converted to pixels
         char* sMessage;
-        unsigned char* pData;
-        union {
-            void* pTexture;
-            int iTexture;
-        };
+
+        //! Raw pixel data in row major 8-bit greyscale
+        uint8_t* pData;
+
+        //! Generated texture ready to be rendered
+        void* pTexture;
+
+        //! The length of sMessage
         size_t iMessageLength;
+
+        //! The size of the buffer allocated to store sMessage
         size_t iMessageBufferLength;
+
+        //! Width of the image to draw
         int iWidth;
+
+        //! Height of the image to draw
         int iHeight;
+
+        //! The width of the longest line of text in in the textbox in pixels
         int iWidestLine;
+
+        //! X Coordinate trailing the last character in canvas coordinates
         int iLastX;
+
+        //! Number of rows required
+        int iNumRows;
+
+        //! Alignment of the message in the box
         eTHAlign eAlign;
+
+        //! True when the pData reflects the sMessage given the size constraints
         bool bIsValid;
     };
 
@@ -253,27 +292,21 @@ protected:
     */
     bool _isMonochrome() const;
 
-    //! Set the texture field of a cache entry to indicate no texture.
-    /*!
-        @param pCacheEntry A cache entry whose pTexture or iTexture field
-            should be set to a null value, whatever that means for the
-            rendering engine.
-    */
-    void _setNullTexture(cached_text_t* pCacheEntry) const;
-
     //! Convert a cache canvas containing rendered text into a texture.
     /*!
+        @param pEventualCanvas A pointer to the rendertarget we'll be using to
+            draw this.
         @param pCacheEntry A cache entry whose pData field points to a pixmap
             of size iWidth by iHeight. This method will convert said pixmap to
             an object which can be used by the rendering engine, and store the
             result in the pTexture or iTexture field.
     */
-    void _makeTexture(cached_text_t* pCacheEntry) const;
+    void _makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const;
 
     //! Free a previously-made texture of a cache entry.
     /*!
         This call should free all the resources previously allocated by a call
-        to _makeTexture().
+        to _makeTexture() and set the texture field to indicate no texture.
 
         @param pCacheEntry A cache entry previously passed to _makeTexture().
     */

@@ -18,25 +18,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-Only lines beginning with % or # as explained below will be considered by the game.
-
-Each line beginning with a %-sign are directives to use when loading the game, such as what
-the level is called and where to find the map file. Available commands:
-- Name: What the level should be called (within quotes)
-- LevelFile: The name of the binary map file to load. First the Levels directory of the 
-  original game will be searched, and then the Levels directory of CorsixTH.
-  
-Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available. Note that if a player is using the demo files 
-on the contrary everything is available unless specified otherwise in the level file.
-
-
 ---------------------- General Information -------------------------
 %Name = "Avatar"
-%LevelFile = "avatar.map"
+%MapFile = "avatar.map"
 
-Note that the below introduction text at the moment must reside on a single line within this file!
-%LevelBriefing = "In this town, there are no doctors available for hire, so you have decided to take the matter into your own hands. Luckily, you happen to be a fully skilled consultant. Try to earn 50.000 - and don't worry too much about killing off your patients, you're only in for the money."
+%LevelBriefing = "In this town, there are no doctors available for hire, so you have decided to take the matter into your own hands.
+Luckily, you happen to be a fully skilled consultant. Try to earn 50.000 - and don't worry too much about killing off your patients, you're only in for the money."
+
+%LevelDebriefing = "Good work! Having only one doctor is not easy, but you managed to get a really good hospital up and running anyway."
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.
@@ -46,7 +35,7 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
-#gbv.StartRating 100 
+#gbv.StartRating 100
 
 The following table contains all diagnoses and treatments that shows up inte drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
@@ -187,7 +176,7 @@ How much the skill of the doctor adds to the salary. skill * 1000 / divisor
 --------------------- Research Configuration -----------------------
 
 Divides research input to get the amount of research points. must be > 0
-#gbv.ResearchPointsDivisor 1 
+#gbv.ResearchPointsDivisor 1
 
 ---------------------- Awards and Trophies -------------------------
 

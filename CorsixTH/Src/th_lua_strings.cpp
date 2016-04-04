@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "persist_lua.h"
-#include <string.h>
+#include <cstring>
 
 /*
     This file implements a string proxy system. A string proxy is a userdata
@@ -55,7 +55,7 @@ struct THStringProxy_t {};
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
-unsigned char g_aStringDummyGlobals[2] = {0};
+static uint8_t g_aStringDummyGlobals[2] = {0};
 
 static inline void aux_push_weak_table(lua_State *L, int iIndex)
 {
@@ -188,7 +188,7 @@ static int l_str_index(lua_State *L)
     {
         size_t iLen;
         const char* sKey = lua_tolstring(L, 2, &iLen);
-        if(iLen == 8 && strcmp(sKey, "__random") == 0)
+        if(iLen == 8 && std::strcmp(sKey, "__random") == 0)
         {
             aux_push_random_key(L);
             lua_replace(L, 2);
@@ -687,7 +687,7 @@ static int l_str_reload(lua_State *L)
 static int l_mk_cache(lua_State *L)
 {
     lua_newtable(L);
-    lua_pushvalue(L, lua_upvalueindex(1));
+    lua_pushvalue(L, luaT_upvalueindex(1));
     lua_setmetatable(L, -2);
     lua_pushvalue(L, 2);
     lua_pushvalue(L, 3);
@@ -716,7 +716,7 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
             lua_pushliteral(L, "__mode");
             lua_pushliteral(L, "kv");
             lua_rawset(L, -3);
-            lua_pushcclosure(L, l_mk_cache, 1);
+            luaT_pushcclosure(L, l_mk_cache, 1);
             lua_rawset(L, -3);
         }
         lua_setmetatable(L, -2);

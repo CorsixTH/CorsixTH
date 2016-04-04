@@ -139,6 +139,7 @@ level_names = {
 custom_game_window = {
   free_build = "Volné stavění",
   caption = "Vlastní Hra",
+  load_selected_level = "Spustit",
 }
 menu_debug_overlay = {
   positions = "    POZICE  ",
@@ -388,9 +389,7 @@ adviser = {
       in_progress = "Dám Vám vědět, zdali tato osoba bude chtít jít pro Vás pracovat.",
     },
     everyone_failed = "Všichni nedokázali splnit poslední úkol. Takže všichni budou hrát dál !",
-    objective_completed = "Splnili jste úkol. Blahopřejeme!",
     players_failed = "Následující hráč(i) nedokázal(i) splnit poslední úkol : ",
-    objective_failed = "Nesplnili jste úkol.",
   },
   staff_place_advice = {
     only_doctors_in_room = "Pouze Doktoři mohou v %s pracovat",
@@ -1095,8 +1094,8 @@ tooltip = {
     movies = "Globální kontrola videí, toto umožňuje zákaz všech videí",
     fractured_bones = "Kvůli špatné animaci jsou standardně zakázány pacientky se Zlomenými Kostmi. Pro povolení pacientek s touto diagnózou ve vaší nemocnici musíte toto vypnout.",
     volume = "Pokud tlačítko pro snížení hlasitosti zároveň také otevírá Knihu léčby pacientů, můžete toto zapnout pro změnu klávesové zkratky knihy na Shift + C",
-	intro = "Zapne nebo vypne úvodní video. Pokud chcete, aby video bylo přehráváno při každém spuštění CorsixTH, je třeba zapnout globální kontrolu videí.",
-	paused = "V Theme Hospital může hráč použít horní nabídku pouze při pozastavení hry. To samé platí v CorsixTH, ale pomocí této volby můžete při pozastavení povolit vše.",
+    intro = "Zapne nebo vypne úvodní video. Pokud chcete, aby video bylo přehráváno při každém spuštění CorsixTH, je třeba zapnout globální kontrolu videí.",
+    paused = "V Theme Hospital může hráč použít horní nabídku pouze při pozastavení hry. To samé platí v CorsixTH, ale pomocí této volby můžete při pozastavení povolit vše.",
   },
   options_window = {
     language = "Vybrat %s jako jazyk",
@@ -1155,8 +1154,9 @@ tooltip = {
     increase = "Koupit o jednu položku více",
   },
   custom_game_window = {
-    start_game_with_name = "Načíst úroveň %s",
     free_build = "Toto políčko zaškrtněte, pokud chcete hrát bez peněz a podmínek pro vítězství a prohru",
+    load_selected_level = "Načíst a hrát zvolenou úroveň",
+    choose_game = "Klikněte na úroveň pro zobrazení informací o ní.",
   },
   new_game_window = {
     easy = "Pokud jste začátečníci v simulačních hrách, tak toto je volba pro Vás",
@@ -1292,6 +1292,8 @@ tooltip = {
     network = "Spustit hru po síti",
     exit = "Ne, ne, prosím neodcházejte!",
     quit = "Odejít",
+    custom_campaign = "Hrát komunitou vytvořenou kampaň",
+    map_edit = "Vytvořit vlastní mapu",
   },
   queue_window = {
     num_expected = "Počet pacientů, u kterých Recepční očekává, že se brzy připojí do fronty",
@@ -1592,6 +1594,14 @@ tooltip = {
     crash_trolley = "20 OB_CRASH",
     swing_door1 = "52 OB_DOUBLE_DOOR1",
     skeleton = "Kostlivec: používán ke cvičebním účelům a na Halloween.",
+  },
+  custom_campaign_window = {
+    choose_campaign = "Zvolte kampaň pro zobrazení informací o ní.",
+    start_selected_campaign = "Načte první úroveň kampaně",
+  },
+  save_map_window = {
+    map = "Přepsat mapu %s",
+    new_map = "Zadejte název uložené hry s mapou",
   },
 }
 humanoid_name_ends = {
@@ -2601,6 +2611,8 @@ errors = {
   fractured_bones = "POZNÁMKA: Animace ženských pacientů se Zlomenými kostmi není dokonalá",
   load_quick_save = "Chyba! Rychle uloženou pozici nelze načíst, protože neexistuje. Není třeba se obávat, hned jsme jednu pro Vás vytvořili!",
   no_games_to_contine = "Žádné uložené hry.",
+  could_not_load_campaign = "Nelze načíst kampaň: %s",
+  could_not_find_first_campaign_level = "Nelze načíst první úroveň této kampaně: %s",
 }
 menu = {
   charts = "  GRAFY  ",
@@ -2608,6 +2620,7 @@ menu = {
   file = "  SOUBOR  ",
   display = "  ZOBRAZENÍ  ",
   debug = "  LADĚNÍ  ",
+  player_count = "POČET HRÁČŮ",
 }
 lua_console = {
   close = "Zavřít",
@@ -2677,21 +2690,24 @@ menu_debug = {
   mapwho_checking = "    KONTROLA MAPYKDO      ",
   display_big_cells = "    ZOBRAZIT VELKÉ BUŇKY    ",
   porter_pagers = "    PAGERY OBSLUHY        ",
-  debug_script = "    (SHIFT + D) SPUSTIT SKRIPT PRO LADĚNÍ  "
+  debug_script = "    (SHIFT + D) SPUSTIT SKRIPT PRO LADĚNÍ  ",
+  connect_debugger = "    (CTRL + C) PŘIPOJIT LUA DBGp SERVER  ",
 }
 save_game_window = {
   caption = "Uložit Hru (%1%)",
   new_save_game = "Nová Uložená Hra",
 }
 main_menu = {
-  custom_level = "Vlastní Úroveň",
-  load_game = "Načíst Hru",
+  custom_level = "Vlastní úroveň",
+  load_game = "Načíst hru",
   options = "Nastavení",
   savegame_version = "Verze ukládaných her: ",
   version = "Verze: ",
   exit = "Ukončit",
-  new_game = "Nová Hra",
+  new_game = "Nová hra",
   continue = "Pokračovat ve hře",
+  custom_campaign = "Vlastní kampaň",
+  map_edit = "Editor map",
 }
 letter = {
   [1] = {
@@ -2754,13 +2770,16 @@ letter = {
   },
   [12] = {
     [1] = "Vážený/á %s//",
-    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýli ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d€ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!//",
+    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýlí ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d€ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!//",
     [3] = "Prosím přijměte tuto pozici. Nebude to těžká práce a poskytneme Vám auto a policejní doprovod kamkoliv se hnete.//",
     [4] = "",
   },
   custom_level_completed = "Výborně! Dokončili jste všechny úkoly v této vlastní úrovni!",
   dear_player = "Vážený/á %s",
   return_to_main_menu = "Chtěli byste se vrátit do hlavního menu, nebo pokračovat v hraní?",
+  campaign_level_completed = "Dobrá práce! Splnili jste úroveň. Ale ještě není konec! Chtěli byste přijmout pozici v nemocnici %s?",
+  campaign_level_missing = "Je nám líto, ale zdá se, že následující úroveň této kampaně chybí. (Název: %s)",
+  campaign_completed = "Neuvěřitelné! Zvládli jste splnit všechny úrovně. Nyní si můžete oddychnout a začít sepisovat sebechválu na všech fórech na Internetu. Hodně štěstí!",
 }
 rooms_short = {
   dna_fixer = "Spravovač DNA",
@@ -3008,135 +3027,116 @@ staff_list = {
   skill = "DOVEDNOSTI",
 }
 introduction_texts = {
-  level14 = {
-    [1] = "Je tu ještě jedna výzva - naprosto nečekaná nemocnice jako překvapení. ",
-    [2] = "Jestliže toto bude úspěch, bude vítěz nad všemi vítězi. ",
-    [3] = "Nečekejte ale, že to bude lehké, protože je to ten nejtěžší úkol, jaký jste kdy viděli. ",
-    [4] = "Hodně Štěstí!",
-  },
-  level16 = {
-    [1] = "Jakmile jste některé pacienty vyšetřili, budete muset pro jejich léčbu postavit léčebná zařízení a oddělení - dobrý začátek ",
-    [2] = "je Lékárna. Budete také potřebovat Sestru k vydávání různých léků v Lékárně.",
-  },
-  level15 = {
-    [1] = "Dobrá, tak toto jsou základní instrukce jak sestavit nemocnici.//",
-    [2] = "Vaši Doktoři budou potřebovat veškerou pomoc, kterou mohou získat k vyšetření některých pacientů. Můžete jim pomoci ",
-    [3] = "postavením jiného diagnostického zařízení jako např. Místnost Obecného Vyšetření.",
-  },
-  level18 = {
-  },
-  level12 = {
-    [1] = "Nyní máte matku všech výzev. ",
-    [2] = "Ohromeni Vašim úspěchem, Ministerstvo má pro Vás špičkovou práci; chtějí, aby někdo postavil tu nejlepší nemocnici, vydělat obrovské množství prašulí a mít neuvěřitelnou reputaci. ",
-    [3] = "Očekává se, že také koupíte všechny pozemky, které můžete, všechno vyléčíte (a tím myslíme všechno) a vyhrajete všechna ocenění. ",
-    [4] = "Myslíte, že na to máte?",
-    [5] = "Vydělejte 650,000€, vylečte 750 lidí, a mějte reputaci ve výši 800, abyste toto vyhráli.",
-  },
-  level17 = {
-    [1] = "Malé varování - velmi si hlídejte Vaši reputaci - to je co pacienty přiláká z široko daleka do Vašeho zařízení. ",
-    [2] = "Pokud nezabijete příliš mnoho lidí a udržíte je rozumně šťastné, neměli byste mít v této úrovni problémy!//",
-    [3] = "Teď jste v tom sami. Hodně štěstí a tak dále.",
-  },
-  level4 = {
-    [1] = "Udržte všechny lidi šťastné, zacházejte s nimi tak dobře jak to jen a udržte úmrtí na absolutní minimum.",
-    [2] = "Vaše reputace je v sázce, takže se ujistěte, že ji budete mít tak vysoko, jak je to jen možné. ",
-    [3] = "O peníze se moc nestarejte - ty přijdou, jak Vaše důležitá reputace poroste. ",
-    [4] = "Budete mít také možnost učit Doktory k rozšíření jejich schopností. ",
-    [5] = "Mohli by mít na starost pacienta, který se zdá být méně neprůhledný, než většina. ",
-    [6] = "Dosáhněte reputace přes 500.",
-  },
-  level13 = {
-    [1] = "Vaše neuvěřitelné dovednosti správce nemocnice neunikly Zvláštnímu Tajnému Oddělení Zvláštní Tajné. ",
-    [2] = "Mají pro Vás zvláštní bonus; je tu krysami zamořená nemocnice, která potřebuje účinného Terminátora. ",
-    [3] = "Musíte zastřelit tolik krys, kolik můžete, než Údržbáři uklidí všechen bordel. ",
-    [4] = "Myslíte, že to zvládnete?",
-  },
-  level6 = {
-    [1] = "Použijte všechny Vaše znalosti k zřízení bezproblémové, dobře spravované nemocnice, která má zdravý příjem a může se vypořádat s čímkoliv, co na ní nemocná veřejnost může hodit. ",
-    [2] = "Musíte si uvědomit, že zdejší atmosféra je zvláště vhodná k přenášení bacilů a infekcí. ",
-    [3] = "Pokud nebudete Vaše zařízení udržovat až puntičkářsky čisté, můžete čelit řadě epidemií mezi pacienty. ",
-    [4] = "Ujistěte se, že si vyděláte 150,000€ a že Vaše nemocnice má hodnotu přes 140,000€.",
-  },
-  level5 = {
-    [1] = "Toto bude zaneprázdněná nemocnice, která bude řešit různé případy. ",
-    [2] = "Vaši Doktoři jsou všichni přímo ze zdravotnické školy, takže bude zásadní vybudovat výukovou místnost a naučit je do přípustných úrovní. ",
-    [3] = "Máte pouze tři Konzultanty, kteří Vám pomohou s výukou Vašich nezkušených zaměstnanců, takže je udržujte šťastné. ",
-    [4] = "Nezapomeňte, také, že, základy této nemocnice sedí na geologickém zlomu San Robot. ",
-    [5] = "Je tu vždy přítomné nebezpečí zemětřesení. ",
-    [6] = "Způsobí vážné poškození Vašich přístrojů a naruší hladký chod Vaší nemocnice. ",
-    [7] = "Dostaňte Vaši reputaci na značku 400, a uložte suprových 50,000€ abyste uspěli. Také, vylečte 200 pacientů.",
-  },
-  level8 = {
-    [1] = "Je na Vás zřídit tu nejúčinnější a nákladově efektivní nemocnici, jak to jen jde. ",
-    [2] = "lidé v tomto okolí se mají za dobře, takže z nich vymáčkněte tolik prašulí, kolik můžete. ",
-    [3] = "Nezapomeňte, léčení lidí je sice hezké, ale opravdu POTŘEBUJETE peníze, které to přináší. ",
-    [4] = "Vezměte tyto nemocné lidi do čistírny. ",
-    [5] = "Nashromážděte ohromných 300,000€ k dokončení této úrovně.",
-  },
-  level7 = {
-    [1] = "Zde budete pod pečlivou kontrolou z Ministerstva Zdravotnictví, takže se ujistěte, že Vaše účty ukazují, že vyděláváte hodně peněz a že Vaše reputace je ve výšinách. ",
-    [2] = "Nemůžeme si dovolit zbytečná úmrtí - jsou špatná pro byznys. ",
-    [3] = "Ujistěte se, že Vaši zaměstnanci jsou v nejlepší formě, a že máte veškeré vybavení, které potřebujete. ",
-    [4] = "Dostaňte reputaci ve výši 600, plus 200,000€ v bance.",
-  },
-  level2 = {
-    [1] = "V této oblasti je větší škála nemocí. ",
-    [2] = "Postavte Vaši nemocnici, aby zvládla více pacientů a nachystejte se na vybudování Výzkumného Oddělení. ",
-    [3] = "Nezapomeňte udržovat Vaše zařízení čisté a zkuste dostat vaši reputaci tak vysoko, jak to jen jde - budete čelit nemocem jako je Ochablý Jazyk, takže potřebujete Oddělení Ochablého Jazyka. ",
-    [4] = "Můžete také postavit Kardiogram, aby Vám pomohl vyšetřit nové nemoci. ",
-    [5] = "Obě tyto místnosti musí být vyzkoumány předtím, než je budete moci postavit. Nyní si také můžete zakoupit dodatečné parcely pozemků k rozšíření Vaší nemocnice - pro toto použijte Mapu Města. ",
-    [6] = "Miřte k reputaci 300 a bankovní bilance 10,000€ a 40 vyléčeným lidem.",
-  },
-  level9 = {
-    [1] = "Když jste naplnili bankovní účet Ministerstva a zaplatili a novou limuzínu pro samotného Ministra, nyní se můžete vrátit zpět k vytváření pečující, dobře zřízené nemocnice ve prospěch nemocných a potřebných. ",
-    [2] = "Můžete očekávat, že se zde objeví spousta rozdílných problémů.",
-    [3] = "Pokud máte dostatek dobře vyškolených zaměstnanců a místností, měli byste mít všechno pokryto. ",
-    [4] = "Vaše nemocnice musí mít hodnotu 200,000€ a budete potřebovat 400,000€ v bance. ",
-    [5] = "Cokoliv méně a nebudete moct dokončit úroveň.",
-  },
-  demo = {
-    [1] = "Vítejte v demo nemocnici!",
-    [2] = "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili!",
-    [3] = "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času se můžou stát havárie. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumného oddělení.",
-    [4] = "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice ve výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% Vašich pacientů.",
-    [5] = "Ujistěte se, že Vaše reputace nespadne 300 a že nezabijete více než 40% Vašich pacientů, nebo prohrajete.",
-    [6] = "Hodně štěstí!",
-  },
-  level10 = {
-    [1] = "Stejně jako zvládnutí všech nemocí, které se v této oblasti vyskytují, Ministerstvo žádá, abyste strávil nějaký čas soustředěním se na účinnost Vašich léků. ",
-    [2] = "Z ČasNemoci, Hlídacího Psa Zdravotnictví, se ozívají jisté stížnosti, takže abyste vypadali dobře, musíte zajistit, že Vaše léky jsou mimořádně účinné. ",
-    [3] = "Také zajistěte, aby Vaše nemocnice nemusela být kárána. Ať ty úmrtí nejsou vysoká. ",
-    [4] = "Jako nápověda, možná byste měli vyhradit prostor pro Želé Nádrž. ",
-    [5] = "Zdokonalte všechny Vaše léky na alespoň 80 procentní účinnost, mějte reputaci 650 a ukryjte 500,000€ v bance, abyste vyhráli. ",
-  },
-  level11 = {
-    [1] = "Byla Vám dána šance vybudovat to nejlepší z nemocnic. ",
-    [2] = "Toto je mimořádně prestižní oblast a Ministerstvo by rádo chtělo vidět tu nejlepší možnou nemocnici. ",
-    [3] = "Očekáváme, že budete vydělávat velké peníze, mít skvostně vysokou reputaci a zvládat všechny možné případy. ",
-    [4] = "Toto je důležitá práce. ",
-    [5] = "Budete muset být něco zvláštního, abyste toto zvládli. ",
-    [6] = "Nezapomeňte, také, že v oblasti byla zpozorována UFO. Ujistěte se, že Vaši zaměstnanci jsou připraveni na nečekané návštěvníky. ",
-    [7] = "Vaše nemocnice potřebuje mít hodnotu 240,000€, v bance potřebujete 500,000€ a Vaše reputace bude potřeba být na 700.",
-  },
-  level3 = {
-    [1] = "Tentokrát budete zřizovat nemocnici v zámožné oblasti. ",
-    [2] = "Ministerstvo Zdravotnictví očekává od Vás, že zde zajistíte zdravý příjem. ",
-    [3] = "Především budete muset získat dobrou reputaci, ale jakmile nemocnice běží naprázdno, soustřeďte se co nejvíce na vydělávání peněz. ",
-    [4] = "Je tu také možnost výskytu Havárií. ",
-    [5] = "To je tehdy, když velký počet lidí přijde najednou a všichni mají stejnou nemoc. ",
-    [6] = "Vyléčení všech v časovém limitu Vám přidá lepší reputaci a velký bonus. ",
-    [7] = "Nemoci jako Králův Komplex se mohou objevit a měli byste dát do rozpočtu výstavbu Operačního Sálu a Nemocničního Pokoje poblíž. ",
-    [8] = "Vydělejte si 20,000€ abyste dosáhli další úrovně.",
-  },
-  level1 = {
-    [1] = "Vítejte ve Vaší první nemocnici!//",
-    [2] = "Rozchoďte to tu umístěním Recepce, vybudováním Kanceláře Praktického Lékaře a najmutím Recepční a Doktora. ",
-    [3] = "Pak počkejte, až přijde nějaký byznys.",
-    [4] = "Je dobrý nápad postavit Odd. Psychiatrie a najmout Doktora s Psychiatrickými kvalifikacemi. ",
-    [5] = "Lékárna a Sestra jsou také nutné k léčbě Vašich pacientů. ",
-    [6] = "Dejte si pozor na ničemné případy Nafouknuté Hlavy - Nafukovárna je brzy spraví. ",
-    [7] = "Budete chtít vyléčit 10 lidí a zajistit, že Vaše reputace nespadne pod 200.",
-  },
+  level14 =
+    "Je tu ještě jedna výzva - naprosto nečekaná nemocnice jako překvapení. " ..
+    "Jestliže toto bude úspěch, bude vítěz nad všemi vítězi. " ..
+    "Nečekejte ale, že to bude lehké, protože je to ten nejtěžší úkol, jaký jste kdy viděli. " ..
+    "Hodně Štěstí!",
+  level16 =
+    "Jakmile jste některé pacienty vyšetřili, budete muset pro jejich léčbu postavit léčebná zařízení a oddělení - dobrý začátek " ..
+    "je Lékárna. Budete také potřebovat Sestru k vydávání různých léků v Lékárně.",
+  level15 =
+    "Dobrá, tak toto jsou základní instrukce jak sestavit nemocnici.//" ..
+    "Vaši Doktoři budou potřebovat veškerou pomoc, kterou mohou získat k vyšetření některých pacientů. Můžete jim pomoci " ..
+    "postavením jiného diagnostického zařízení jako např. Místnost Obecného Vyšetření.",
+  level18 = "",
+  level12 =
+    "Nyní máte matku všech výzev. " ..
+    "Ohromeni Vašim úspěchem, Ministerstvo má pro Vás špičkovou práci; chtějí, aby někdo postavil tu nejlepší nemocnici, vydělat obrovské množství prašulí a mít neuvěřitelnou reputaci. " ..
+    "Očekává se, že také koupíte všechny pozemky, které můžete, všechno vyléčíte (a tím myslíme všechno) a vyhrajete všechna ocenění. " ..
+    "Myslíte, že na to máte?" ..
+    "Vydělejte 650,000€, vylečte 750 lidí, a mějte reputaci ve výši 800, abyste toto vyhráli.",
+  level17 =
+    "Malé varování - velmi si hlídejte Vaši reputaci - to je co pacienty přiláká z široko daleka do Vašeho zařízení. " ..
+    "Pokud nezabijete příliš mnoho lidí a udržíte je rozumně šťastné, neměli byste mít v této úrovni problémy!//" ..
+    "Teď jste v tom sami. Hodně štěstí a tak dále.",
+  level4 =
+    "Udržte všechny lidi šťastné, zacházejte s nimi tak dobře jak to jen a udržte úmrtí na absolutní minimum." ..
+    "Vaše reputace je v sázce, takže se ujistěte, že ji budete mít tak vysoko, jak je to jen možné. " ..
+    "O peníze se moc nestarejte - ty přijdou, jak Vaše důležitá reputace poroste. " ..
+    "Budete mít také možnost učit Doktory k rozšíření jejich schopností. " ..
+    "Mohli by mít na starost pacienta, který se zdá být méně neprůhledný, než většina. " ..
+    "Dosáhněte reputace přes 500.",
+  level13 =
+    "Vaše neuvěřitelné dovednosti správce nemocnice neunikly Zvláštnímu Tajnému Oddělení Zvláštní Tajné. " ..
+    "Mají pro Vás zvláštní bonus; je tu krysami zamořená nemocnice, která potřebuje účinného Terminátora. " ..
+    "Musíte zastřelit tolik krys, kolik můžete, než Údržbáři uklidí všechen bordel. " ..
+    "Myslíte, že to zvládnete?",
+  level6 =
+    "Použijte všechny Vaše znalosti k zřízení bezproblémové, dobře spravované nemocnice, která má zdravý příjem a může se vypořádat s čímkoliv, co na ní nemocná veřejnost může hodit. " ..
+    "Musíte si uvědomit, že zdejší atmosféra je zvláště vhodná k přenášení bacilů a infekcí. " ..
+    "Pokud nebudete Vaše zařízení udržovat až puntičkářsky čisté, můžete čelit řadě epidemií mezi pacienty. " ..
+    "Ujistěte se, že si vyděláte 150,000€ a že Vaše nemocnice má hodnotu přes 140,000€.",
+  level5 =
+    "Toto bude zaneprázdněná nemocnice, která bude řešit různé případy. " ..
+    "Vaši Doktoři jsou všichni přímo ze zdravotnické školy, takže bude zásadní vybudovat výukovou místnost a naučit je do přípustných úrovní. " ..
+    "Máte pouze tři Konzultanty, kteří Vám pomohou s výukou Vašich nezkušených zaměstnanců, takže je udržujte šťastné. " ..
+    "Nezapomeňte, také, že, základy této nemocnice sedí na geologickém zlomu San Robot. " ..
+    "Je tu vždy přítomné nebezpečí zemětřesení. " ..
+    "Způsobí vážné poškození Vašich přístrojů a naruší hladký chod Vaší nemocnice. " ..
+    "Dostaňte Vaši reputaci na značku 400, a uložte suprových 50,000€ abyste uspěli. Také, vylečte 200 pacientů.",
+  level8 =
+    "Je na Vás zřídit tu nejúčinnější a nákladově efektivní nemocnici, jak to jen jde. " ..
+    "lidé v tomto okolí se mají za dobře, takže z nich vymáčkněte tolik prašulí, kolik můžete. " ..
+    "Nezapomeňte, léčení lidí je sice hezké, ale opravdu POTŘEBUJETE peníze, které to přináší. " ..
+    "Vezměte tyto nemocné lidi do čistírny. " ..
+    "Nashromážděte ohromných 300,000€ k dokončení této úrovně.",
+  level7 =
+    "Zde budete pod pečlivou kontrolou z Ministerstva Zdravotnictví, takže se ujistěte, že Vaše účty ukazují, že vyděláváte hodně peněz a že Vaše reputace je ve výšinách. " ..
+    "Nemůžeme si dovolit zbytečná úmrtí - jsou špatná pro byznys. " ..
+    "Ujistěte se, že Vaši zaměstnanci jsou v nejlepší formě, a že máte veškeré vybavení, které potřebujete. " ..
+    "Dostaňte reputaci ve výši 600, plus 200,000€ v bance.",
+  level2 =
+    "V této oblasti je větší škála nemocí. " ..
+    "Postavte Vaši nemocnici, aby zvládla více pacientů a nachystejte se na vybudování Výzkumného Oddělení. " ..
+    "Nezapomeňte udržovat Vaše zařízení čisté a zkuste dostat vaši reputaci tak vysoko, jak to jen jde - budete čelit nemocem jako je Ochablý Jazyk, takže potřebujete Oddělení Ochablého Jazyka. " ..
+    "Můžete také postavit Kardiogram, aby Vám pomohl vyšetřit nové nemoci. " ..
+    "Obě tyto místnosti musí být vyzkoumány předtím, než je budete moci postavit. Nyní si také můžete zakoupit dodatečné parcely pozemků k rozšíření Vaší nemocnice - pro toto použijte Mapu Města. " ..
+    "Miřte k reputaci 300 a bankovní bilance 10,000€ a 40 vyléčeným lidem.",
+  level9 =
+    "Když jste naplnili bankovní účet Ministerstva a zaplatili a novou limuzínu pro samotného Ministra, nyní se můžete vrátit zpět k vytváření pečující, dobře zřízené nemocnice ve prospěch nemocných a potřebných. " ..
+    "Můžete očekávat, že se zde objeví spousta rozdílných problémů." ..
+    "Pokud máte dostatek dobře vyškolených zaměstnanců a místností, měli byste mít všechno pokryto. " ..
+    "Vaše nemocnice musí mít hodnotu 200,000€ a budete potřebovat 400,000€ v bance. " ..
+    "Cokoliv méně a nebudete moct dokončit úroveň.",
+  demo =
+    "Vítejte v demo nemocnici!" ..
+    "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili!" ..
+    "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času se můžou stát havárie. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumného oddělení." ..
+    "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice ve výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% Vašich pacientů." ..
+    "Ujistěte se, že Vaše reputace nespadne 300 a že nezabijete více než 40% Vašich pacientů, nebo prohrajete." ..
+    "Hodně štěstí!",
+  level10 =
+    "Stejně jako zvládnutí všech nemocí, které se v této oblasti vyskytují, Ministerstvo žádá, abyste strávil nějaký čas soustředěním se na účinnost Vašich léků. " ..
+    "Z ČasNemoci, Hlídacího Psa Zdravotnictví, se ozívají jisté stížnosti, takže abyste vypadali dobře, musíte zajistit, že Vaše léky jsou mimořádně účinné. " ..
+    "Také zajistěte, aby Vaše nemocnice nemusela být kárána. Ať ty úmrtí nejsou vysoká. " ..
+    "Jako nápověda, možná byste měli vyhradit prostor pro Želé Nádrž. " ..
+    "Zdokonalte všechny Vaše léky na alespoň 80 procentní účinnost, mějte reputaci 650 a ukryjte 500,000€ v bance, abyste vyhráli. ",
+  level11 =
+    "Byla Vám dána šance vybudovat to nejlepší z nemocnic. " ..
+    "Toto je mimořádně prestižní oblast a Ministerstvo by rádo chtělo vidět tu nejlepší možnou nemocnici. " ..
+    "Očekáváme, že budete vydělávat velké peníze, mít skvostně vysokou reputaci a zvládat všechny možné případy. " ..
+    "Toto je důležitá práce. " ..
+    "Budete muset být něco zvláštního, abyste toto zvládli. " ..
+    "Nezapomeňte, také, že v oblasti byla zpozorována UFO. Ujistěte se, že Vaši zaměstnanci jsou připraveni na nečekané návštěvníky. " ..
+    "Vaše nemocnice potřebuje mít hodnotu 240,000€, v bance potřebujete 500,000€ a Vaše reputace bude potřeba být na 700.",
+  level3 =
+    "Tentokrát budete zřizovat nemocnici v zámožné oblasti. " ..
+    "Ministerstvo Zdravotnictví očekává od Vás, že zde zajistíte zdravý příjem. " ..
+    "Především budete muset získat dobrou reputaci, ale jakmile nemocnice běží naprázdno, soustřeďte se co nejvíce na vydělávání peněz. " ..
+    "Je tu také možnost výskytu Havárií. " ..
+    "To je tehdy, když velký počet lidí přijde najednou a všichni mají stejnou nemoc. " ..
+    "Vyléčení všech v časovém limitu Vám přidá lepší reputaci a velký bonus. " ..
+    "Nemoci jako Králův Komplex se mohou objevit a měli byste dát do rozpočtu výstavbu Operačního Sálu a Nemocničního Pokoje poblíž. " ..
+    "Vydělejte si 20,000€ abyste dosáhli další úrovně.",
+  level1 =
+    "Vítejte ve Vaší první nemocnici!//" ..
+    "Rozchoďte to tu umístěním Recepce, vybudováním Kanceláře Praktického Lékaře a najmutím Recepční a Doktora. " ..
+    "Pak počkejte, až přijde nějaký byznys." ..
+    "Je dobrý nápad postavit Odd. Psychiatrie a najmout Doktora s Psychiatrickými kvalifikacemi. " ..
+    "Lékárna a Sestra jsou také nutné k léčbě Vašich pacientů. " ..
+    "Dejte si pozor na ničemné případy Nafouknuté Hlavy - Nafukovárna je brzy spraví. " ..
+    "Budete chtít vyléčit 10 lidí a zajistit, že Vaše reputace nespadne pod 200.",
 }
 install = {
   th_directory = "CorsixTH potřebuje kopii datových souborů z původní hry Theme Hospital (nebo demoverze), aby mohla běžet. Prosím použijte okno níže k nalezení instalační složky Theme Hospital.",
@@ -3241,5 +3241,54 @@ customise_window = {
   aliens = "PAcienti s mimozemskou DNA",
   fractured_bones = "Zlomené kosti",
 }
-
+custom_campaign_window = {
+  caption = "Vlastní kampaň",
+  start_selected_campaign = "Spustit kampaň",
+}
+warnings = {
+  levelfile_variable_is_deprecated = "Upozornění: Úroveň '%s' ve svém souboru obsahuje zastaralé určení proměnné.'%LevelFile' bylo přejmenováno na '%MapFile'. Pro aktualizaci úrovně prosím použijte editor map.",
+}
+map_editor_window = {
+  pages = {
+    paste = "Vložit oblast",
+    camera_3 = "Kamera 3",
+    hedgerow = "Živý plot",
+    delete_wall = "Smazat zdi",
+    road = "Silnice",
+    parcel_7 = "Parcela 7",
+    pond = "Rybníky",
+    heliport_3 = "Heliport 3",
+    outside = "Vnější prostory",
+    parcel_3 = "Parcela 3",
+    helipad = "Přistávací plocha",
+    parcel_1 = "Parcela 1",
+    heliport_4 = "Heliport 4",
+    parcel_6 = "Parcela 6",
+    foliage = "Rostliny",
+    parcel_2 = "Parcela 2",
+    parcel_5 = "Parcela 5",
+    parcel_4 = "Parcela 4",
+    parcel_0 = "Parcela 0",
+    north_wall = "Severní zeď",
+    inside = "Vnitřní prostory",
+    parcel_9 = "Parcela 9",
+    heliport_2 = "Heliport 2",
+    parcel_8 = "Parcela 8",
+    camera_4 = "Kamera 4",
+    camera_1 = "Kamera 1",
+    camera_2 = "Kamera 2",
+    west_wall = "Západní zeď",
+    heliport_1 = "Heliport 1",
+  },
+}
+save_map_window = {
+  new_map = "Nová mapa",
+  caption = "Uložit mapu (%1%)",
+}
+menu_player_count = {
+  players_1 = "  1 HRÁČ  ",
+  players_2 = "  2 HRÁČI  ",
+  players_3 = "  3 HRÁČI  ",
+  players_4 = "  4 HRÁČI  ",
+}
 

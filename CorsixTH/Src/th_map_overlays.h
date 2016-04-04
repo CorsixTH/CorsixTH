@@ -23,6 +23,9 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_MAP_OVERLAYS_H_
 #define CORSIX_TH_TH_MAP_OVERLAYS_H_
 
+#include <cstddef>
+#include <string>
+
 class THFont;
 class THMap;
 class THRenderTarget;
@@ -31,10 +34,10 @@ class THSpriteSheet;
 class THMapOverlay
 {
 public:
-    virtual ~THMapOverlay();
+    virtual ~THMapOverlay() = default;
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY) = 0;
+                          const THMap* pMap, int iNodeX, int iNodeY) = 0;
 };
 
 class THMapOverlayPair : public THMapOverlay
@@ -46,10 +49,10 @@ public:
     void setFirst(THMapOverlay* pOverlay, bool bTakeOwnership);
     void setSecond(THMapOverlay* pOverlay, bool bTakeOwnership);
 
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 
-protected:
+private:
     THMapOverlay *m_pFirst, *m_pSecond;
     bool m_bOwnFirst, m_bOwnSecond;
 };
@@ -64,11 +67,12 @@ public:
     void setFont(THFont* pFont, bool bTakeOwnership);
 
 protected:
-    void _drawText(THRenderTarget* pCanvas, int iX, int iY,
-        const char* sFormat, ...);
+    void _drawText(THRenderTarget* pCanvas, int iX, int iY, std::string str);
 
     THSpriteSheet* m_pSprites;
     THFont* m_pFont;
+
+private:
     bool m_bOwnsSprites;
     bool m_bOwnsFont;
 };
@@ -77,38 +81,36 @@ class THMapTextOverlay : public THMapTypicalOverlay
 {
 public:
     THMapTextOverlay();
+    virtual ~THMapTextOverlay() = default;
 
     virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
         const THMap* pMap, int iNodeX, int iNodeY);
 
-    void setBackgroundSprite(unsigned int iSprite);
-    virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
+    void setBackgroundSprite(size_t iSprite);
+    virtual const std::string getText(const THMap* pMap, int iNodeX, int iNodeY) = 0;
 
-protected:
-    unsigned int m_iBackgroundSprite;
+private:
+    size_t m_iBackgroundSprite;
 };
 
-class THMapPositionsOverlay : public THMapTextOverlay
+class THMapPositionsOverlay final : public THMapTextOverlay
 {
 public:
-    virtual const char* getText(const THMap* pMap, int iNodeX, int iNodeY);
-
-protected:
-    char m_sBuffer[16];
+    const std::string getText(const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
-class THMapFlagsOverlay : public THMapTypicalOverlay
+class THMapFlagsOverlay final : public THMapTypicalOverlay
 {
 public:
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
-class THMapParcelsOverlay : public THMapTypicalOverlay
+class THMapParcelsOverlay final : public THMapTypicalOverlay
 {
 public:
-    virtual void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
-        const THMap* pMap, int iNodeX, int iNodeY);
+    void drawCell(THRenderTarget* pCanvas, int iCanvasX, int iCanvasY,
+                  const THMap* pMap, int iNodeX, int iNodeY) override;
 };
 
 #endif

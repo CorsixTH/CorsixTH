@@ -72,7 +72,7 @@ local pt_reflist = {}
 -- Helper function to print the contents of a table. Child tables are printed recursively.
 -- Call without specifying level, only obj and (if wished) max_level.
 function print_table(obj, max_level, level)
-  assert(type(obj) == "table", "Tried to print ".. tostring(obj) .." with print_table.")
+  assert(type(obj) == "table", "Tried to print " .. tostring(obj) .. " with print_table.")
   pt_reflist[#pt_reflist + 1] = obj
   level = level or 0
   local spacer = ""
@@ -112,6 +112,24 @@ function table_length(table)
   return count
 end
 
+--! Checks if a file exists and is readable.
+--!param path (string)
+--!param root_path (boolean) Optional, default: false. If true the file's path
+-- will be appended to the CorsixTH root directory's path. 
+--!return (String) Returns an error message for the file read error or nil.
+function is_file_unreadable(path, root_path)
+  if root_path then
+    local root_dir = debug.getinfo(1, "S").source:sub(2, -26) .. package.config:sub(1, 1)
+    path = root_dir .. path
+  end
+  local file, error_message = io.open(path, "r")
+  if file then
+    io.close(file)
+  else
+    return error_message
+  end
+end
+
 -- Variation on loadfile() which allows for the loaded file to have global
 -- references resolved in supplied tables. On failure, returns nil and an
 -- error. On success, returns the file as a function just like loadfile() does
@@ -128,29 +146,29 @@ function loadfile_envcall(filename)
   local result = f:read(4)
   if result == "\239\187\191#" then
     -- UTF-8 BOM plus Unix Shebang
-    result = f:read"*a":gsub("^[^\r\n]*", "", 1)
+    result = f:read("*a"):gsub("^[^\r\n]*", "", 1)
   elseif result:sub(1, 3) == "\239\187\191" then
     -- UTF-8 BOM
-    result = result:sub(4,4) .. f:read"*a"
+    result = result:sub(4,4) .. f:read("*a")
   elseif result:sub(1, 1) == "#" then
     -- Unix Shebang
-    result = (result .. f:read"*a"):gsub("^[^\r\n]*", "", 1)
+    result = (result .. f:read("*a")):gsub("^[^\r\n]*", "", 1)
   else
     -- Normal
-    result = result .. f:read"*a"
+    result = result .. f:read("*a")
   end
   f:close()
-  return loadstring_envcall(result, "@".. filename)
+  return loadstring_envcall(result, "@" .. filename)
 end
 
-if rawget(_G, "loadin") then
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
   function loadstring_envcall(contents, chunkname)
-    -- Lua 5.2 lacks setfenv(), but does provide loadin()
-    -- loadin() still only allows a chunk to have an environment set once, so
+    -- Lua 5.2+ lacks setfenv()
+    -- load() still only allows a chunk to have an environment set once, so
     -- we give it an empty environment and use __[new]index metamethods on it
     -- to allow the same effect as changing the actual environment.
     local env_mt = {}
-    local result, err = loadin(setmetatable({}, env_mt), contents, chunkname)
+    local result, err = load(contents, chunkname, "bt", setmetatable({}, env_mt))
     if result then
       return function(env, ...)
         env_mt.__index = env

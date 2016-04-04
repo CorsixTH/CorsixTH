@@ -51,7 +51,7 @@ if fi then
   if #contents ~= 0 then
     config_path = contents
     if config_path:sub(-4, -1):lower() == ".txt" then
-      config_name = config_path:match("([^".. pathsep .."]*)$")
+      config_name = config_path:match("([^" .. pathsep .. "]*)$")
       config_path = config_path:sub(1, -1-#config_name)
     end
   end
@@ -121,9 +121,18 @@ local config_defaults = {
   audio_buffer_size = 2048,
   theme_hospital_install = [[F:\ThemeHospital\hospital]],
   debug = false,
+  DBGp_client_idehost = nil,
+  DBGp_client_ideport = nil,
+  DBGp_client_idekey = nil,
+  DBGp_client_transport = nil,
+  DBGp_client_platform = nil,
+  DBGp_client_workingdir = nil,
   track_fps = false,
   zoom_speed = 80,
   scroll_speed = 2,
+  shift_scroll_speed = 4,
+  new_graphics_folder = nil,
+  use_new_graphics = false,
   check_for_updates = true
 }
 local fi = io.open(config_filename, "r")
@@ -137,7 +146,7 @@ if fi then
   local file_contents = fi:read("*all")
   fi:close()
   for key, value in pairs(config_defaults) do
-    local ind = string.find(file_contents, "\n" .."%s*" .. key .. "%s*=")
+    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
     if not ind then
       needs_rewrite = true
     else
@@ -180,16 +189,21 @@ if needs_rewrite then
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
+--  Brazilian Portuguese  / pt_br / br
 --  Chinese (simplified)  / zh(s) / chi(s)
 --  Chinese (traditional) / zh(s) / chi(s)
+--  Czech                 / cs / cze
 --  Danish                / da / dk
 --  Dutch                 / Nederlands / nl / dut / nld
 --  English               / en / eng
 --  Finnish               / Suomi / fi / fin
 --  French                / fr / fre / fra
 --  German                / de / ger / deu
+--  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Korean                / kor / ko
 --  Norwegian             / nb / nob
+--  Polish                / pl / pol
 --  Portuguese            / pt / por
 --  Russian               / ru / rus
 --  Spanish               / es / spa
@@ -218,13 +232,13 @@ if needs_rewrite then
 ----------------------------------------------- OPTIONS MENU ---------------------------------------------------
 --These settings can also be changed from within the game from the options menu
 -------------------------------------------------------------------------------------------------------------------------
--- Sounds: By default enabled and set at level 0.5 
--- ]=] .. '\n' .. 
+-- Sounds: By default enabled and set at level 0.5
+-- ]=] .. '\n' ..
 'play_sounds = ' .. tostring(config_values.play_sounds) .. '\n' ..
 'sound_volume = ' .. tostring(config_values.sound_volume) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
--- Announcements: By default set at level 0.5 
+-- Announcements: By default set at level 0.5
 -- ]=] .. '\n' ..
 'play_announcements = ' .. tostring(config_values.play_announcements) .. '\n' ..
 'announcement_volume = ' .. tostring(config_values.announcement_volume) .. '\n' .. [=[
@@ -249,7 +263,7 @@ if needs_rewrite then
 -------------------------------------------------------------------------------------------------------------------------
 -- Scrolling Momentum.
 -- Determines the amount of momentum when scrolling the map with the mouse.
--- This should be a value between 0 and 1 where 0 is no momentum 
+-- This should be a value between 0 and 1 where 0 is no momentum
 -- ]=] .. '\n' ..
 'scrolling_momentum = ' .. tostring(config_values.scrolling_momentum) .. '\n' .. [=[
 
@@ -354,13 +368,27 @@ if needs_rewrite then
 --
 unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 
- -------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
 --
 savegames = nil -- [[X:\ThemeHospital\Saves]]
+
+ ------------------------------------------------------------------------------------------------------------------------
+-- Use new graphics. Whether to use the original graphics from Theme Hospital
+-- or use new graphics created by the CorsixTH project.
+use_new_graphics = false
+
+-------------------------------------------------------------------------------------------------------------------------
+-- Graphics folder. All graphics are initially taken from the original Theme Hospital,
+-- but the game can also try to find new graphics in the specified folder below.
+-- Some graphics are shipped with CorsixTH, and they will be used if you just switch
+-- on new graphics. If you however have acquired graphics from somewhere else, then
+-- uncomment the following line and point it to the directory which contains the new
+-- graphics.
+new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
@@ -405,6 +433,18 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 -- and a debug menu will be visible.
 -- ]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
+
+--Optional settings for CorsixTH's Lua DBGp client.
+--Default settings are nil values, platform & workingdir will be autodected if nil.
+--https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
+-- ]=] .. '\n' ..
+'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
+'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..
+'idekey = ' .. tostring(config_values.DBGp_client_idekey) .. '\n' ..
+'transport = ' .. tostring(config_values.DBGp_client_transport) .. '\n' ..
+'platform = ' .. tostring(config_values.DBGp_platform) .. '\n' ..
+'workingdir = ' .. tostring(config_values.DBGp_workingdir) .. '\n' .. [=[
+
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
@@ -419,11 +459,11 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 'zoom_speed = ' .. tostring(config_values.zoom_speed) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
--- Scroll Speed: By default this is set at level 2
+-- Scroll Speeds: The speed of scrolling with and without shift being held.
 -- Any number value between 1 and 10, 1 is very slow and 10 is fast!
--- Press shift when you are scrolling and it will be a lot quicker
 -- ]=] .. '\n' ..
-'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' .. [=[
+'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
+'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the

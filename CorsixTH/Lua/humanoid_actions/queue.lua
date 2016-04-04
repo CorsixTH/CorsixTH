@@ -68,10 +68,9 @@ local function action_queue_find_idle(action, humanoid)
     end
   end
   if found_any then
-    error "Proper idle not in action_queue"
-  else
-    return -1
+    print("Warning: Proper idle not in action_queue")
   end
+  return -1
 end
 
 local function action_queue_find_drink_action(action, humanoid)
@@ -85,7 +84,7 @@ local function action_queue_find_drink_action(action, humanoid)
     end
   end
   if found_any then
-    error "Proper drink action not in action_queue"
+    error("Proper drink action not in action_queue")
   else
     return -1
   end
@@ -104,7 +103,7 @@ local function action_queue_finish_standing(action, humanoid)
         -- It is likely that the person is sitting down.
         return action_queue_leave_bench(action, humanoid)
       else
-        error "This person seems to neither be standing nor sitting?!"
+        error("This person seems to neither be standing nor sitting?!")
       end
     end
   end
@@ -117,7 +116,7 @@ local function action_queue_finish_standing(action, humanoid)
     end
     index = index - 1
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end
 
 local function action_queue_leave_bench(action, humanoid)
@@ -148,10 +147,15 @@ local function action_queue_leave_bench(action, humanoid)
     end
     index = index - 1
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
+  -- Only proceed with this handler if the patient is still in the queue
+  if not action.is_in_queue then
+    return
+  end
+
   -- Find out if we have to be standing up - considering humanoid_class covers both health inspector and VIP
   local must_stand = class.is(humanoid, Staff) or humanoid.humanoid_class == "Inspector" or
     humanoid.humanoid_class == "VIP" or (humanoid.disease and humanoid.disease.must_stand)
@@ -230,7 +234,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         -- Going to get a drink. Do nothing since it will be fixed after getting the drink.
         return
       else
-        error "Could not find an idle or drink action when trying to stand in line."
+        error("Could not find an idle or drink action when trying to stand in line.")
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
@@ -272,7 +276,7 @@ local action_queue_on_leave = permanent"action_queue_on_leave"( function(action,
       return
     end
   end
-  error "Queue action not in action_queue"
+  error("Queue action not in action_queue")
 end)
 
 -- While queueing one could get thirsty.
@@ -288,14 +292,17 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   -- Callback function used after the drinks machine has been used.
   local --[[persistable:action_queue_get_soda_after_use]] function after_use()
     fun_after_use() -- Defined in patient:tickDay
-    -- Insert an idle action so that change_position can do its work.
+    -- If the patient is still in the queue, insert an idle action so that
+    -- change_position can do its work.
     -- Note that it is inserted after the currently executing use_object action.
-    humanoid:queueAction({
-      name = "idle",
-      --direction = machine,
-      must_happen = true,
-    }, 1)
-    action_queue_on_change_position(action, humanoid)
+    if action.is_in_queue then
+      humanoid:queueAction({
+        name = "idle",
+        --direction = machine,
+        must_happen = true,
+      }, 1)
+      action_queue_on_change_position(action, humanoid)
+    end
   end
 
   -- Walk to the machine and then use it.
@@ -312,7 +319,8 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     must_happen = true,
   }, num_actions_prior + 1)
   machine:addReservedUser(humanoid)
-  -- Make sure noone thinks we're sitting down anymore.
+
+  -- Make sure no one thinks we're sitting down anymore.
   action.current_bench_distance = nil
 end)
 

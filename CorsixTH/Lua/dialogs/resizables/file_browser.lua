@@ -24,6 +24,9 @@ local lfs = require "lfs"
 --  that meets a given file extension criterion.
 class "FilteredFileTreeNode" (FileTreeNode)
 
+---@type FilteredFileTreeNode
+local FilteredFileTreeNode = _G["FilteredFileTreeNode"]
+
 local pathsep = package.config:sub(1, 1)
 
 function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
@@ -75,9 +78,12 @@ function FilteredFileTreeNode:getLabel()
   return label
 end
 
---! A sortable tree control that accomodates a certain file type and also possibly shows
+--! A sortable tree control that accommodates a certain file type and also possibly shows
 --  their last modification dates.
 class "FilteredTreeControl" (TreeControl)
+
+---@type FilteredTreeControl
+local FilteredTreeControl = _G["FilteredTreeControl"]
 
 function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
   self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
@@ -146,6 +152,9 @@ end
 --! A file browser with a scrollbar. Used by load_game and save_game.
 class "UIFileBrowser" (UIResizable)
 
+---@type UIFileBrowser
+local UIFileBrowser = _G["UIFileBrowser"]
+
 local col_caption = {
   red = 174,
   green = 166,
@@ -194,12 +203,7 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
       if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
-        local name = node.label
-        while (node.parent.parent) do
-          name = node.parent.label .. pathsep .. name
-          node = node.parent
-        end
-        self:choiceMade(name)
+        self:choiceMade(node.path)
       end
     end)
   self:addWindow(self.control)

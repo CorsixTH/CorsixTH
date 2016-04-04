@@ -49,6 +49,9 @@ room.call_sound = "reqd023.wav"
 
 class "ResearchRoom" (Room)
 
+---@type ResearchRoom
+local ResearchRoom = _G["ResearchRoom"]
+
 function ResearchRoom:ResearchRoom(...)
   self:Room(...)
   self.staff_member_set = {}
@@ -182,10 +185,7 @@ function ResearchRoom:commandEnteringPatient(patient)
         self.hospital.discover_autopsy_risk = self.hospital.discover_autopsy_risk + 10
       end
       if patient.hospital then
-        -- NB: Do not use patient:setHospital(nil) as that also causes despawning, which
-        -- has some bad effects if the autopsy machine is directly next to the room's door
         hosp:removePatient(patient)
-        patient.hospital = nil
       end
       patient.world:destroyEntity(patient)
     end,

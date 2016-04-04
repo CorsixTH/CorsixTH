@@ -22,11 +22,20 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_movie.h"
+#include "th_gfx.h"
 
 static int l_movie_new(lua_State *L)
 {
     luaT_stdnew<THMovie>(L, luaT_environindex, true);
     return 1;
+}
+
+static int l_movie_set_renderer(lua_State *L)
+{
+    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    THRenderTarget *pRenderTarget = luaT_testuserdata<THRenderTarget>(L, 2);
+    pMovie->setRenderer(pRenderTarget->getRenderer());
+    return 0;
 }
 
 static int l_movie_enabled(lua_State *L)
@@ -41,7 +50,7 @@ static int l_movie_load(lua_State *L)
     bool loaded;
     const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    const char* filepath = lua_tolstring(L, 2, NULL);
+    const char* filepath = lua_tolstring(L, 2, nullptr);
     pMovie->clearLastError();
     loaded = pMovie->load(filepath);
     warning = pMovie->getLastError();
@@ -62,7 +71,13 @@ static int l_movie_play(lua_State *L)
     const char* warning;
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->clearLastError();
-    pMovie->play(luaL_checkinteger(L, 2), luaL_checkinteger(L, 3), luaL_checkinteger(L, 4), luaL_checkinteger(L, 5), luaL_checkinteger(L, 6));
+    pMovie->play(
+        SDL_Rect{
+            static_cast<int>(luaL_checkinteger(L, 2)),
+            static_cast<int>(luaL_checkinteger(L, 3)),
+            static_cast<int>(luaL_checkinteger(L, 4)),
+            static_cast<int>(luaL_checkinteger(L, 5)) },
+        static_cast<int>(luaL_checkinteger(L, 6)));
     warning = pMovie->getLastError();
     lua_pushstring(L, warning);
     return 1;
@@ -96,13 +111,6 @@ static int l_movie_has_audio_track(lua_State *L)
     return 1;
 }
 
-static int l_movie_requires_video_reset(lua_State *L)
-{
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushboolean(L, pMovie->requiresVideoReset());
-    return 1;
-}
-
 static int l_movie_refresh(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
@@ -127,6 +135,7 @@ static int l_movie_deallocate_picture_buffer(lua_State *L)
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
 {
     luaT_class(THMovie, l_movie_new, "moviePlayer", MT_Movie);
+    luaT_setfunction(l_movie_set_renderer, "setRenderer", MT_Surface);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");
@@ -135,7 +144,6 @@ void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_movie_get_native_height, "getNativeHeight");
     luaT_setfunction(l_movie_get_native_width, "getNativeWidth");
     luaT_setfunction(l_movie_has_audio_track, "hasAudioTrack");
-    luaT_setfunction(l_movie_requires_video_reset, "requiresVideoReset");
     luaT_setfunction(l_movie_refresh, "refresh");
     luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
     luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");

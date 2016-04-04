@@ -1,0 +1,13 @@
+name = "Example campaign"
+
+description = "This is an example campaign where you get the chance to play " ..
+  "through some of the levels shipped with CorsixTH. Happy gaming!"
+
+levels = {
+  "finisham.level",
+  "avatar.level",
+  "confined_v5.level",
+  "st.peter's.level",
+}
+
+winning_text = "Congratulations! You have successfully completed all the levels."

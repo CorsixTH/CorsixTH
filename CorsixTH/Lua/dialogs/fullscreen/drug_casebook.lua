@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Drug Casebook fullscreen window (view disease statistics and set prices).
 class "UICasebook" (UIFullscreen)
 
+---@type UICasebook
+local UICasebook = _G["UICasebook"]
+
 function UICasebook:UICasebook(ui, disease_selection)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
@@ -56,7 +59,6 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addKeyHandler("down", self.scrollDown)
   self:addKeyHandler("right", self.increasePay)
   self:addKeyHandler("left", self.decreasePay)
-  self.ui:enableKeyboardRepeat() -- To quickly change values
 
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
@@ -96,11 +98,11 @@ function UICasebook:UICasebook(ui, disease_selection)
 end
 
 function UICasebook:close()
-  self.ui:disableKeyboardRepeat()
   UIFullscreen.close(self)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
+--! The diseases list has been changed, update the list.
 function UICasebook:updateDiseaseList()
   -- A sorted list of known diseases and pseudo diseases.
   -- Used to be able to list the diseases in, believe it or not,
@@ -118,11 +120,14 @@ function UICasebook:updateDiseaseList()
     end
     return c1.disease.name:upper() < c2.disease.name:upper()
   end)
-  if self.selected_index then
-    self.selected_disease = self.names_sorted[self.selected_index]
+
+  if self.selected_disease then -- Re-select the current disease.
+    self:selectDisease(self.selected_disease)
   end
 end
 
+--! Select a disease by name.
+--!param disease (string) Name of the disease
 function UICasebook:selectDisease(disease)
   for i = 1, #self.names_sorted do
     if disease == self.names_sorted[i] then
@@ -239,8 +244,8 @@ function UICasebook:draw(canvas, x, y)
   titles:draw(canvas, rep, x + 248, y + 92, 114, 0) -- Reputation
 
   -- Treatment Charge is either displayed in percent, or normally
-  local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100)
-                      or "$" .. self.hospital:getTreatmentPrice(disease)
+  local price_text = self.percentage_counter and ("%.0f%%"):format(book[disease].price * 100) or
+      "$" .. self.hospital:getTreatmentPrice(disease)
   titles:draw(canvas, price_text, x + 262, y + 137, 90, 0) -- Treatment Charge
 
   titles:draw(canvas, "$" .. book[disease].money_earned, x + 248, y + 181, 114, 0) -- Money Earned
@@ -268,7 +273,7 @@ end
 
 function UICasebook:scrollUp()
   if self.selected_index > 1 then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = 1
     else
       self.selected_index = self.selected_index - 1
@@ -284,7 +289,7 @@ end
 
 function UICasebook:scrollDown()
   if self.selected_index < #self.names_sorted then
-    if self.buttons_down.ctrl then
+    if self.ui.app.key_modifiers.ctrl then
       self.selected_index = #self.names_sorted
     else
       self.selected_index = self.selected_index + 1
@@ -301,9 +306,9 @@ end
 function UICasebook:increasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price + amount
@@ -320,9 +325,9 @@ end
 function UICasebook:decreasePay()
   local price = self.casebook[self.selected_disease].price
   local amount = 0.01
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 25
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   price = price - amount
@@ -367,14 +372,13 @@ function UICasebook:onMouseDown(button, x, y)
   end
 end
 
-function UICasebook:onMouseUp(code, x, y)
-  if not UIFullscreen.onMouseUp(self, code, x, y) then
-    if self:hitTest(x, y) then
-      if code == 4 then
-        -- Mouse wheel, scroll.
+function UICasebook:onMouseWheel(x, y)
+  if not UIFullscreen.onMouseWheel(self, x, y) then
+    if self:hitTest(self.cursor_x, self.cursor_y) then
+      if y > 0 then
         self:scrollUp()
         return true
-      elseif code == 5 then
+      else
         self:scrollDown()
         return true
       end

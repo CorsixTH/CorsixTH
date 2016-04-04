@@ -22,37 +22,100 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_LUA_H_
 #define CORSIX_TH_TH_LUA_H_
+#include "config.h"
 #include "lua.hpp"
 #include <new>
+#include <vector>
 
 int luaopen_th(lua_State *L);
 
 // Compatibility layer for removal of environments in 5.2
 #if LUA_VERSION_NUM >= 502
-#define luaT_environindex lua_upvalueindex(1)
-#define luaT_upvalueindex(i) lua_upvalueindex((i) + 1)
-void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
-#define luaT_register(L, n, p) (\
-    lua_pushvalue(L, luaT_enrivonindex), \
-    luaL_openlib(L, n, p, 1) )
+const int luaT_environindex = lua_upvalueindex(1);
 #else
-#define luaT_environindex LUA_ENVIRONINDEX
-#define luaT_upvalueindex lua_upvalueindex
-#define luaT_pushcclosure lua_pushcclosure
-#define luaT_register luaL_register
+const int luaT_environindex = LUA_ENVIRONINDEX;
 #endif
-#define luaT_pushcfunction(L, f) luaT_pushcclosure(L, f, 0)
 
-// Compatibility layer for removal of cpcall in 5.2
+inline int luaT_upvalueindex(int i)
+{
 #if LUA_VERSION_NUM >= 502
-#define luaT_cpcall(L, f, u) (\
-    lua_checkstack(L, 2), \
-    lua_pushcfunction(L, f), \
-    lua_pushlightuserdata(L, u), \
-    lua_pcall(L, 1, 0, 0) )
+    return lua_upvalueindex(i + 1);
 #else
-#define luaT_cpcall lua_cpcall
+    return lua_upvalueindex(i);
 #endif
+}
+
+inline void luaT_register(lua_State *L, const char *n, const std::vector<luaL_Reg> &l)
+{
+#if LUA_VERSION_NUM >= 502
+    lua_createtable(L, 0, static_cast<int>(l.size()));
+    lua_pushvalue(L, luaT_environindex);
+    luaL_setfuncs(L, l.data(), 1);
+    lua_pushvalue(L, -1);
+    lua_setglobal(L, n);
+#else
+    luaL_register(L, n, l.data());
+#endif
+}
+
+inline void luaT_setfuncs(lua_State *L, const luaL_Reg *R)
+{
+#if LUA_VERSION_NUM >= 502
+    lua_pushvalue(L, luaT_environindex);
+    luaL_setfuncs(L, R, 1);
+#else
+    luaL_register(L, nullptr, R);
+#endif
+}
+
+inline void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups)
+{
+#if LUA_VERSION_NUM >= 502
+    ++nups;
+    lua_pushvalue(L, luaT_environindex);
+    lua_insert(L, -nups);
+    lua_pushcclosure(L, f, nups);
+#else
+    lua_pushcclosure(L, f, nups);
+#endif
+}
+
+inline void luaT_pushcfunction(lua_State *L, lua_CFunction f)
+{
+    luaT_pushcclosure(L, f, 0);
+}
+
+inline int luaT_cpcall(lua_State *L, lua_CFunction f, void *u)
+{
+#if LUA_VERSION_NUM >= 502
+    lua_checkstack(L, 2);
+    lua_pushcfunction(L, f);
+    lua_pushlightuserdata(L, u);
+    return lua_pcall(L, 1, 0, 0);
+#else
+    return lua_cpcall(L, f, u);
+#endif
+}
+
+// Compatibility for missing mode argument on lua_load in 5.1
+inline int luaT_load(lua_State *L, lua_Reader r, void *d, const char *s, const char *m)
+{
+#if LUA_VERSION_NUM >= 502
+    return lua_load(L, r, d, s, m);
+#else
+    return lua_load(L, r, d, s);
+#endif
+}
+
+// Compatibility for missing from argument on lua_resume in 5.1
+inline int luaT_resume(lua_State *L, lua_State *f, int n)
+{
+#if LUA_VERSION_NUM >= 502
+    return lua_resume(L, f, n);
+#else
+    return lua_resume(L, n);
+#endif
+}
 
 //! Version of operator new which allocates into a Lua userdata
 /*!
@@ -65,16 +128,13 @@ void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups);
 */
 #define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
 
-//! Register a function to be called after a lua_State is destroyed
-void luaT_addcleanup(lua_State *L, void(*fnCleanup)(void));
-
 //! Check that a Lua argument is a binary data blob
 /*!
     If the given argument is a string or (full) userdata, then returns a
     pointer to the start of it, and the length of it. Otherwise, throws a
     Lua error.
 */
-const unsigned char* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
+const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen);
 
 //! Check that a Lua argument is a string or a proxied string
 const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength);
@@ -217,6 +277,11 @@ template <> struct luaT_classinfo<THStringProxy_t> {
     static inline const char* name() {return "StringProxy";}
 };
 
+struct THLfsExt;
+template <> struct luaT_classinfo <THLfsExt> {
+    static inline const char* name() {return "LfsExt";}
+};
+
 class IsoFilesystem;
 template <> struct luaT_classinfo<IsoFilesystem> {
     static inline const char* name() {return "ISO Filesystem";}
@@ -234,7 +299,7 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
         mt_idx = lua_gettop(L) + mt_idx + 1;
 
     void *ud = lua_touserdata(L, idx);
-    if(ud != NULL && lua_getmetatable(L, idx) != 0)
+    if(ud != nullptr && lua_getmetatable(L, idx) != 0)
     {
         while(true)
         {
@@ -252,9 +317,12 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
         lua_pop(L, 1);
     }
 
-    if(required)
-        luaL_typerror(L, idx, luaT_classinfo<T>::name());
-    return NULL;
+    if (required)
+    {
+        const char *msg = lua_pushfstring(L, "%s expected, got %s", luaT_classinfo<T>::name(), luaL_typename(L, idx));
+        luaL_argerror(L, idx, msg);
+    }
+    return nullptr;
 }
 
 template <class T>
@@ -270,7 +338,7 @@ template <class T, int mt>
 static int luaT_stdgc(lua_State *L)
 {
     T* p = luaT_testuserdata<T>(L, 1, mt, false);
-    if(p != NULL)
+    if(p != nullptr)
     {
         p->~T();
     }
@@ -324,5 +392,11 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
     luaT_push(L, arg4);
     lua_call(L, 4, LUA_MULTRET);
 }
+
+void luaT_pushtablebool(lua_State *L, const char *k, bool v);
+
+void luaT_printstack(lua_State *L);
+
+void luaT_printrawtable(lua_State *L, int idx);
 
 #endif // CORSIX_TH_TH_LUA_H_

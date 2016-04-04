@@ -50,6 +50,9 @@ litter_types[4] = 1900
 
 class "Litter" (Entity)
 
+---@type Litter
+local Litter = _G["Litter"]
+
 function Litter:Litter(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)
@@ -81,7 +84,7 @@ function Litter:setLitterType(anim_type, mirrorFlag)
     if anim then
       self:setAnimation(anim, mirrorFlag)
     else
-      error "Unknown litter type"
+      error("Unknown litter type")
     end
     if self:isCleanable() then
       local hospital = self.world:getLocalPlayerHospital()
@@ -92,10 +95,6 @@ end
 
 function Litter:getDrawingLayer()
   return 0
-end
-
-function Litter:randomiseLitter()
-  self:setAnimation(litter_types[math.random(1, 4)], math.random(0, 1))
 end
 
 function Litter:vomitInducing()

@@ -1,4 +1,4 @@
-﻿--[[
+--[[
 Copyright (c) 2010 Robin Madsen (RobseRob)
 Copyright (c) 2010-2011 Ole Frandsen (Froksen)
 Copyright (c) 2011 Rene Bergfort (Kleeze)
@@ -2445,129 +2445,111 @@ dynamic_info = {
 }
 
 
-   introduction_texts = {
-  level17 = {
-    [1] = "Dette er sidste advarsel - hold öje med dit omdömme - det er det, som tiltrækker patienter til dit hospital. ",
-    [2] = "Hvis der ikke dör for mange patienter og du samtidig holder resten af patienterne i nogenlunde godt humör, skulle denne bane ikke være noget problem.//",
-    [3] = "Nu må du klare dig selv. Held og lykke!",
-  },
-  level1 = {
-    [1] = "Velkommen til dit förste hospital!//",
-    [2] = "Du kan komme godt fra start ved at ved at få placeret en reception, bygge en lægekonsultation og ansætte en læge og en receptionist. ",
-    [3] = "Derefter kan du åbne hospitalet, og de første patienter vil derefter begynde at ankomme til hospitalet.",
-    [4] = "Det vil være fornuftigt at bygge en psykiatri rimelig hurtigt og ansætte en læge med speciale i psykiatri. ",
-    [5] = "Et apotek og en sygeplejerske er essentielle for at helbrede dine patienter. Mange sygdomme behandles nemlig med medicin. ",
-    [6] = "Læg mærke til hvis der er mange tilfælde af opsvulmet hoved - et pumperum kan klare opgaven. ",
-    [7] = "For at gennemföre banen skal du helbrede mindst 10 patienter og sörge for, at dit omdömme ikke dykker under 200. ",
-  },
-  level9 = {
-    [1] = "Efter du har fyldt ministerens bankkonto op og betalt for hans nye limousine, kan du nu koncentrere dig om at lave et omsorgsfuldt, velfungerende hospital for de trængende. ",
-    [2] = "Du må forvente at möde en række problemer her.",
-    [3] = "Hvis du har nok lokaler og flinke ansatte, vil du sikkert få styr på banens udfordringer. ",
-    [4] = "Dit hospital skal have en værdi af 200,000, og du skal have mindst 400,000 i banken. ",
-    [5] = "Mindre kan ikke göre det.",
-  },
-  level2 = {
-    [1] = "Der er store problemer med sygdomme i dette område. ",
-    [2] = "Byg hospitalet med henblik på at behandle flere patienter og anlæg en forskningsafdeling. ",
-    [3] = "Husk at holde hospitalet rent og stræb efter at få så höjt et omdömme som muligt - hvis du vil kunne håndtere sygdomme som slap tunge, bliver det nödvendigt at bygge en tungeklinik. ",
-    [4] = "Du kan også bygge et löbebånd for at forbedre diagnosticeringen. Disse rum er först tilgængelige, når du har forsket i området i din forskningsafdeling. ",
-    [5] = "Du kan udvide hospitalet så du får mere plads at bygge på - brug oversigtskortet til dette ",
-    [6] = "Stræb efter at få et omdömme på 300 og en banksaldo på 10,000, samt helbrede mindst 40 patienter. ",
-  },
-  level7 = {
-    [1] = "Her vil du være under overvågning af sundhedsmyndighederne, så husk at få det til at se ud som om du tjener kassen samtidig med at du opbygger et godt omdömme. ",
-    [2] = "Vi kan ikke holde til unödvendige dödsfald - de er dårlige for virksomheden. ",
-    [3] = "Vær sikker på at dit personale er i tip-top form, og at du har alt det udstyr, de har brug for. ",
-    [4] = "Opbyg dit omdömme til 600, og få 200,000 ind på din bankkonto.",
-  },
-  level5 = {
-    [1] = "Dette bliver et travlt hospital, hvor du skal håndtere en lang række sager. ",
-    [2] = "Alle læger kommer direkte fra fakultetet, så det er vitalt, at du får bygget et undervisningsrum og uddanner lægerne så de bliver dygtigere, hurtigere og gerne så de får et speciale eller to. ",
-    [3] = "Du har kun tre konsulenter til at undervise dit uerfarende personale med, så hold dem glade. ",
-    [4] = "Hold for öje, at hospitalet er bygget på San Androids geologiske undergrund. ",
-    [5] = "Der er derfor en evig risiko for, at der kommer jordskælv. ",
-    [6] = "Jordskælv kan forårsage betydlig skade på dine maskiner og påvirke effektiviteten på dit hospital. ",
-    [7] = "Få dit omdömme op på 400 og din bankbalance op på 50,000 for at gennemföre banen. Du skal også helbrede 200 patienter.",
-  },
-  level4 = {
-    [1] = "Hold alle dine patienter glade, få dem hurtigt igennem systemet og hold dödstallet så lavt som muligt.",
-    [2] = "Dit omdömme er på spil, sörg for at have et så godt omdömme som muligt.",
-    [3] = "Lad være med at fokusere for meget på pengene - de skal nok rulle ind i takt med dit stigende omdömme. ",
-    [4] = "Det vil være muligt for dig at undervise dine læger, så de kan udvikle deres evner og blive endnu hurtigere. ",
-    [5] = "Undervisningen varetages af konsulenter. Hvis de har særlige færdigheder som psykiater eller kirurg, vil deres elever med tiden også blive oplært i disse færdigheder. Og det kan de hurtigt få brug for, når patienter med mere krævende sygdomme begynder at ankomme. ",
-    [6] = "Opnå et omdömme på mere end 500.",
-  },
-  level14 = {
-    [1] = "Der er lige en udfordring mere - det fuldstændigt uregerlige hospital. ",
-    [2] = "Hvis det lykkedes for dig at göre dette hospital til en succes, vil du være en mester af mestrene. ",
-    [3] = "Men forvent ikke, at du kan tage den på rutinen, for dette er den stöste udfordring, du nogensinde vil möde. ",
-    [4] = "Held og lykke!",
-  },
-  level15 = {
-    [1] = "Sådan, det er det mest basale, som holder et hospital sammen.//",
-    [2] = "Dine læger får brug for al den hjælp de kan få til at diagosticere patienterne. Du kan hjælpe dig ved at",
-    [3] = "bygge andre diagnose faciliteter, så som et generel diagnoserum.",
-  },
-  level8 = {
-    [1] = "Det er op til dig at skabe det mest effektive og produktive hospital som muligt. ",
-    [2] = "Folk fra dette område er ret velhavende, så pres dem for så mange penge som muligt. ",
-    [3] = "Husk: At helbrede folk er meget rart, men du har VIRKELIG BRUG FOR de penge det giver.",
-    [4] = "Flå disse patienter indtil selv Stein Bagger ville få moralske skrubler! ",
-    [5] = "Opnå et massivt overskud på 300,000 for at gennemföre denne bane.",
-  },
-  level13 = {
-    [1] = "Dine fantastiske evner til at administrere et hospital, er blevet bemærket af en speciel hemmelig afdeling under hemmelige specielle afdelinger. ",
-    [2] = "De har en speciel bonus til dig; der er et rotteproblem på et hospital, som mangler en kærlig hånd. ",
-    [3] = "Du skal skyde så mange rotter som muligt för pedellerne kan rydde op i skidtet. ",
-    [4] = "Tror du, at du kan klare opgaven?",
-  },
-  level16 = {
-    [1] = "Når du har diagnosticeret nogle af patienterne, bliver du nödt til at bygge behandlingsfaciliteter og klinikker til at helbrede dem - en godt sted at begynde med",
-    [2] = "er et apotek. Du skal bruge en sygeplejerske til at udlevere medicinen.",
-  },
-  level6 = {
-    [1] = "Brug al din viden til at udvikle et velfungerende og komfortabelt hospital, som kan skabe et sundt overskud og håndtere alle former for sygdomme, som samfundet smider efter det. ",
-    [2] = "Du skal være opmærksom på, at atmosfæren i dette område er perfekt til at bære infektioner og sygdomme. ",
-    [3] = "Med mindre du holder dit hospital helt rent, risikerer du, at der udbryder epidemier blandt patienterne. ",
-    [4] = "Tjen 150,000 og forög hospitalets samlede værdi til 140,000.",
-  },
-  level12 = {
-    [1] = "Du möder nu udfordringen over dem alle. ",
-    [2] = "Ministeriet er imponeret over dine succeser og har derfor et top-job til dig: De vil have dig til at bygge det ultimative hospital, hvor du skal tjene en pokkers masse penge og have et skyhöjt omdömme. ",
-    [3] = "Det forventes, at du köber alle bygninger, helbreder alle sygdomme (og vi mener alle!) og opnår banens mål og priser. ",
-    [4] = "Klar til udfordringen?",
-    [5] = "Tjen 650,000, helbred 750 personer, og få et omdömme på 800 for at gennemföre banen.",
-  },
-  level3 = {
-    [1] = "Du vil denne gang skulle bygge dit hospital i et velhavende kvarter. ",
-    [2] = "Sundhedsmyndighederne holder öje med dig for at sikre, at du skaber et overskud her. ",
-    [3] = "Du begynder med et godt omdömme, men så snart hospitalet er åbent, skal du fokusere på at få tjent så mange penge som muligt. ",
-    [4] = "Der er også stor sandsynlighed for akuttilfælde. ",
-    [5] = "Disse indeholder et stort antal patienter, som ankommer samtidig og som alle har den samme sygdom. ",
-    [6] = "Hvis du helbreder dem indenfor tidsgrænsen, forbedrer det dit omdömme og modtager en stor bonus. Når du ikke at helbrede dem inden tiden löber ud, dör patienterne og dit omdömme falder. ",
-    [7] = "Sygdomme som kongekomplekset kan forekomme, og du bör bygge en operationsstue samt et sengeafsnit i nærheden af operationsstuen. ",
-    [8] = "Tjen 20,000 for at gennemföre banen.",
-  },
-  level10 = {
-    [1] = "Såvel som at kunne behandle alle former for sygdomme, vil Sundhedsmyndighederne gerne have, at du bruger noget tid på at forske i effektiviteten af din medicin. ",
-    [2] = "Der har været nogle klager fra Foreningen af Syge, de syges vagthund. Så for at holde dit omdömme höjt skal du sörge for, at din medicin er effektiv. ",
-    [3] = "Du skal også sikre dig, at dit hospital er over gennemsnittet. Hold dödstallet så lavt som muligt",
-    [4] = "Et lille tip er at du holder lidt plads fri til et gelérör. ",
-    [5] = "Udvikl al din medicin til mindst 80% i effektivitet og få et omdömme på 650 og en bankbeholdning på 500,000 for at gennemföre banen. ",
-  },
-  level11 = {
-    [1] = "Du har nu fået chancen for at bygge det ultimative hospital. ",
-    [2] = "Dette er et ekstremt velhavende område, hvor Sundhedsmyndighederne gerne vil sig, at der opföres det bedst mulige hospital. ",
-    [3] = "Vi forventer, at du tjener kassen, har et skyhöjt omdömme og håndterer alle uventede situationer. ",
-    [4] = "Dette er en vigtig opgave.",
-    [5] = "Du skal være lavet af noget specielt for at dette skal lykkedes. ",
-    [6] = "Bemærk, at en UFO er set i området. Så forbered dit personale på uventet besög. ",
-    [7] = "Dit hospital skal være mindst 240,000 værd, og du skal have mindst 500,000 i banken samt et omdömme på 700 för syndhedsmyndighederne er tilfredse.",
-  },
-  level18 = {
-  },
-      }
+introduction_texts = {
+  level17 =
+    "Dette er sidste advarsel - hold öje med dit omdömme - det er det, som tiltrækker patienter til dit hospital. " ..
+    "Hvis der ikke dör for mange patienter og du samtidig holder resten af patienterne i nogenlunde godt humör, skulle denne bane ikke være noget problem.//" ..
+    "Nu må du klare dig selv. Held og lykke!",
+  level1 =
+    "Velkommen til dit förste hospital!//" ..
+    "Du kan komme godt fra start ved at ved at få placeret en reception, bygge en lægekonsultation og ansætte en læge og en receptionist. " ..
+    "Derefter kan du åbne hospitalet, og de første patienter vil derefter begynde at ankomme til hospitalet." ..
+    "Det vil være fornuftigt at bygge en psykiatri rimelig hurtigt og ansætte en læge med speciale i psykiatri. " ..
+    "Et apotek og en sygeplejerske er essentielle for at helbrede dine patienter. Mange sygdomme behandles nemlig med medicin. " ..
+    "Læg mærke til hvis der er mange tilfælde af opsvulmet hoved - et pumperum kan klare opgaven. " ..
+    "For at gennemföre banen skal du helbrede mindst 10 patienter og sörge for, at dit omdömme ikke dykker under 200. ",
+  level9 =
+    "Efter du har fyldt ministerens bankkonto op og betalt for hans nye limousine, kan du nu koncentrere dig om at lave et omsorgsfuldt, velfungerende hospital for de trængende. " ..
+    "Du må forvente at möde en række problemer her." ..
+    "Hvis du har nok lokaler og flinke ansatte, vil du sikkert få styr på banens udfordringer. " ..
+    "Dit hospital skal have en værdi af 200,000, og du skal have mindst 400,000 i banken. " ..
+    "Mindre kan ikke göre det.",
+  level2 =
+    "Der er store problemer med sygdomme i dette område. " ..
+    "Byg hospitalet med henblik på at behandle flere patienter og anlæg en forskningsafdeling. " ..
+    "Husk at holde hospitalet rent og stræb efter at få så höjt et omdömme som muligt - hvis du vil kunne håndtere sygdomme som slap tunge, bliver det nödvendigt at bygge en tungeklinik. " ..
+    "Du kan også bygge et löbebånd for at forbedre diagnosticeringen. Disse rum er först tilgængelige, når du har forsket i området i din forskningsafdeling. " ..
+    "Du kan udvide hospitalet så du får mere plads at bygge på - brug oversigtskortet til dette " ..
+    "Stræb efter at få et omdömme på 300 og en banksaldo på 10,000, samt helbrede mindst 40 patienter. ",
+  level7 =
+    "Her vil du være under overvågning af sundhedsmyndighederne, så husk at få det til at se ud som om du tjener kassen samtidig med at du opbygger et godt omdömme. " ..
+    "Vi kan ikke holde til unödvendige dödsfald - de er dårlige for virksomheden. " ..
+    "Vær sikker på at dit personale er i tip-top form, og at du har alt det udstyr, de har brug for. " ..
+    "Opbyg dit omdömme til 600, og få 200,000 ind på din bankkonto.",
+  level5 =
+    "Dette bliver et travlt hospital, hvor du skal håndtere en lang række sager. " ..
+    "Alle læger kommer direkte fra fakultetet, så det er vitalt, at du får bygget et undervisningsrum og uddanner lægerne så de bliver dygtigere, hurtigere og gerne så de får et speciale eller to. " ..
+    "Du har kun tre konsulenter til at undervise dit uerfarende personale med, så hold dem glade. " ..
+    "Hold for öje, at hospitalet er bygget på San Androids geologiske undergrund. " ..
+    "Der er derfor en evig risiko for, at der kommer jordskælv. " ..
+    "Jordskælv kan forårsage betydlig skade på dine maskiner og påvirke effektiviteten på dit hospital. " ..
+    "Få dit omdömme op på 400 og din bankbalance op på 50,000 for at gennemföre banen. Du skal også helbrede 200 patienter.",
+  level4 =
+    "Hold alle dine patienter glade, få dem hurtigt igennem systemet og hold dödstallet så lavt som muligt." ..
+    "Dit omdömme er på spil, sörg for at have et så godt omdömme som muligt." ..
+    "Lad være med at fokusere for meget på pengene - de skal nok rulle ind i takt med dit stigende omdömme. " ..
+    "Det vil være muligt for dig at undervise dine læger, så de kan udvikle deres evner og blive endnu hurtigere. " ..
+    "Undervisningen varetages af konsulenter. Hvis de har særlige færdigheder som psykiater eller kirurg, vil deres elever med tiden også blive oplært i disse færdigheder. Og det kan de hurtigt få brug for, når patienter med mere krævende sygdomme begynder at ankomme. " ..
+    "Opnå et omdömme på mere end 500.",
+  level14 =
+    "Der er lige en udfordring mere - det fuldstændigt uregerlige hospital. " ..
+    "Hvis det lykkedes for dig at göre dette hospital til en succes, vil du være en mester af mestrene. " ..
+    "Men forvent ikke, at du kan tage den på rutinen, for dette er den stöste udfordring, du nogensinde vil möde. " ..
+    "Held og lykke!",
+  level15 =
+    "Sådan, det er det mest basale, som holder et hospital sammen.//" ..
+    "Dine læger får brug for al den hjælp de kan få til at diagosticere patienterne. Du kan hjælpe dig ved at" ..
+    "bygge andre diagnose faciliteter, så som et generel diagnoserum.",
+  level8 =
+    "Det er op til dig at skabe det mest effektive og produktive hospital som muligt. " ..
+    "Folk fra dette område er ret velhavende, så pres dem for så mange penge som muligt. " ..
+    "Husk: At helbrede folk er meget rart, men du har VIRKELIG BRUG FOR de penge det giver." ..
+    "Flå disse patienter indtil selv Stein Bagger ville få moralske skrubler! " ..
+    "Opnå et massivt overskud på 300,000 for at gennemföre denne bane.",
+  level13 =
+    "Dine fantastiske evner til at administrere et hospital, er blevet bemærket af en speciel hemmelig afdeling under hemmelige specielle afdelinger. " ..
+    "De har en speciel bonus til dig; der er et rotteproblem på et hospital, som mangler en kærlig hånd. " ..
+    "Du skal skyde så mange rotter som muligt för pedellerne kan rydde op i skidtet. " ..
+    "Tror du, at du kan klare opgaven?",
+  level16 =
+    "Når du har diagnosticeret nogle af patienterne, bliver du nödt til at bygge behandlingsfaciliteter og klinikker til at helbrede dem - en godt sted at begynde med" ..
+    "er et apotek. Du skal bruge en sygeplejerske til at udlevere medicinen.",
+  level6 =
+    "Brug al din viden til at udvikle et velfungerende og komfortabelt hospital, som kan skabe et sundt overskud og håndtere alle former for sygdomme, som samfundet smider efter det. " ..
+    "Du skal være opmærksom på, at atmosfæren i dette område er perfekt til at bære infektioner og sygdomme. " ..
+    "Med mindre du holder dit hospital helt rent, risikerer du, at der udbryder epidemier blandt patienterne. " ..
+    "Tjen 150,000 og forög hospitalets samlede værdi til 140,000.",
+  level12 =
+    "Du möder nu udfordringen over dem alle. " ..
+    "Ministeriet er imponeret over dine succeser og har derfor et top-job til dig: De vil have dig til at bygge det ultimative hospital, hvor du skal tjene en pokkers masse penge og have et skyhöjt omdömme. " ..
+    "Det forventes, at du köber alle bygninger, helbreder alle sygdomme (og vi mener alle!) og opnår banens mål og priser. " ..
+    "Klar til udfordringen?" ..
+    "Tjen 650,000, helbred 750 personer, og få et omdömme på 800 for at gennemföre banen.",
+  level3 =
+    "Du vil denne gang skulle bygge dit hospital i et velhavende kvarter. " ..
+    "Sundhedsmyndighederne holder öje med dig for at sikre, at du skaber et overskud her. " ..
+    "Du begynder med et godt omdömme, men så snart hospitalet er åbent, skal du fokusere på at få tjent så mange penge som muligt. " ..
+    "Der er også stor sandsynlighed for akuttilfælde. " ..
+    "Disse indeholder et stort antal patienter, som ankommer samtidig og som alle har den samme sygdom. " ..
+    "Hvis du helbreder dem indenfor tidsgrænsen, forbedrer det dit omdömme og modtager en stor bonus. Når du ikke at helbrede dem inden tiden löber ud, dör patienterne og dit omdömme falder. " ..
+    "Sygdomme som kongekomplekset kan forekomme, og du bör bygge en operationsstue samt et sengeafsnit i nærheden af operationsstuen. " ..
+    "Tjen 20,000 for at gennemföre banen.",
+  level10 =
+    "Såvel som at kunne behandle alle former for sygdomme, vil Sundhedsmyndighederne gerne have, at du bruger noget tid på at forske i effektiviteten af din medicin. " ..
+    "Der har været nogle klager fra Foreningen af Syge, de syges vagthund. Så for at holde dit omdömme höjt skal du sörge for, at din medicin er effektiv. " ..
+    "Du skal også sikre dig, at dit hospital er over gennemsnittet. Hold dödstallet så lavt som muligt" ..
+    "Et lille tip er at du holder lidt plads fri til et gelérör. " ..
+    "Udvikl al din medicin til mindst 80% i effektivitet og få et omdömme på 650 og en bankbeholdning på 500,000 for at gennemföre banen. ",
+  level11 =
+    "Du har nu fået chancen for at bygge det ultimative hospital. " ..
+    "Dette er et ekstremt velhavende område, hvor Sundhedsmyndighederne gerne vil sig, at der opföres det bedst mulige hospital. " ..
+    "Vi forventer, at du tjener kassen, har et skyhöjt omdömme og håndterer alle uventede situationer. " ..
+    "Dette er en vigtig opgave." ..
+    "Du skal være lavet af noget specielt for at dette skal lykkedes. " ..
+    "Bemærk, at en UFO er set i området. Så forbered dit personale på uventet besög. " ..
+    "Dit hospital skal være mindst 240,000 værd, og du skal have mindst 500,000 i banken samt et omdömme på 700 för syndhedsmyndighederne er tilfredse.",
+  level18 = "",
+}
 
 -- Miscellangelous
 -- Category of strings that fit nowhere else or we are not sure where they belong.
@@ -2658,7 +2640,7 @@ adviser.room_requirements.training_room_need_consultant = "Du skal ansætte en k
 adviser.room_requirements.gps_office_need_doctor = "Du skal ansætte en læge til at arbejde i lægekonsultationen."
 
 confirmation.maximum_screen_size = "Skærmopløsningen du har valgt er større end 3000 x 2000. Større opløsninger kan bruges men vil kræve bedre hardware for at køre med en spilbar FPS. Er du sikker på du vil fortsætte?"
-confirmation.music_warning = "Før du  vælger at bruge mp3'er til musikken i spillet, har du brug for smpeg.dll eller lignende til dit styresystem, ellers vil du ikke have musik i spillet. Lige nu er der ikke tilsvarende til 64bit systemer. Vil du fortsætte?"
+confirmation.music_warning = "Før du  vælger at bruge mp3'er til musikken i spillet, har du brug for smpeg.dll eller lignende til dit styresystem, ellers vil du ikke have musik i spillet. Vil du fortsætte?"
 menu_options_wage_increase.deny = "    AFVIS "
 menu_options_wage_increase.grant = "    TILLAD "
 tooltip.options_window.audio_button = "Slå alle lyde til og fra i spillet "

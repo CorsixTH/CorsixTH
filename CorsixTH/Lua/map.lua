@@ -20,6 +20,10 @@ SOFTWARE. --]]
 
 --! Lua extensions to the C++ THMap class
 class "Map"
+
+---@type Map
+local Map = _G["Map"]
+
 local pathsep = package.config:sub(1, 1)
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
@@ -38,14 +42,51 @@ function Map:Map(app)
 end
 
 local flag_cache = {}
+
+--! Get the value of the given flag from the tile at x, y in the map.
+--!param x (int) Horizontal position of the tile to query in the map.
+--!param x (int) Vertical position of the tile to query in the map.
+--!param flag (string) Name of the queried flag.
+--!return (?) value of the queried flag.
 function Map:getCellFlag(x, y, flag)
-  return self.th:getCellFlags(x, y, flag_cache)[flag]
+  return self.th:getCellFlags(math.floor(x), math.floor(y), flag_cache)[flag]
 end
 
+--! Get the ID of the room of the tile at x, y in the map.
+--!param x (int) Horizontal position of the tile to query in the map.
+--!param x (int) Vertical position of the tile to query in the map.
+--!return ID of the room at the queried tile.
 function Map:getRoomId(x, y)
-  return self.th:getCellFlags(x, y).roomId
+  return self.th:getCellFlags(math.floor(x), math.floor(y)).roomId
 end
 
+function Map:setPlayerCount(count)
+  self.th:setPlayerCount(count)
+end
+
+function Map:getPlayerCount(count)
+  self.th:getPlayerCount(count)
+end
+
+--! Set the camera tile for the given player on the map
+--!param x (int) Horizontal position of tile to set camera on
+--!param y (int) Vertical position of the tile to set the camera on
+--!param player (int) Player number (1-4)
+function Map:setCameraTile(x, y, player)
+  self.th:setCameraTile(x, y, player);
+end
+
+--! Set the heliport tile for the given player on the map
+--!param x (int) Horizontal position of tile to set heliport on
+--!param y (int) Vertical position of the tile to set the heliport on
+--!param player (int) Player number (1-4)
+function Map:setHeliportTile(x, y, player)
+  self.th:setHeliportTile(x, y, player);
+end
+
+--! Set how to display the room temperature in the hospital map.
+--!param method (int) Way of displaying the temperature. See also THMapTemperatureDisplay enum.
+--! 1=red gradients, 2=blue/green/red colour shifts, 3=yellow/orange/red colour shifts
 function Map:setTemperatureDisplayMethod(method)
   if method ~= 1 and method ~= 2 and method ~= 3 then
     method = 1
@@ -55,6 +96,7 @@ function Map:setTemperatureDisplayMethod(method)
   self.th:setTemperatureDisplay(method)
 end
 
+--! Copy the temperature display method from the Lua data, if available, else use the default.
 function Map:registerTemperatureDisplayMethod()
   if not self.temperature_display_method then
     self:setTemperatureDisplayMethod(self.app.config.warmth_colors_display_default)
@@ -84,9 +126,16 @@ function Map:ScreenToWorld(x, y)
   --  1/64 1/32
   -- -1/64 1/32
   -- And then adjust origin from (0, 0) to (1, 1)
-  y = (y / 32) + 1
+  y = y / 32 + 1
   x = x / 64
-  return y + x, y - x
+  local tile_x, tile_y = y + x, y - x
+  if self.width ~= nil and self.height ~= nil then
+    if tile_x < 1 then tile_x = 1 end
+    if tile_x > self.width then tile_x = self.width end
+    if tile_y < 1 then tile_y = 1 end
+    if tile_y > self.height then tile_y = self.height end
+  end
+  return tile_x, tile_y
 end
 
 local function bits(n)
@@ -107,26 +156,28 @@ local function bits(n)
 end
 
 --[[! Loads the specified level. If a string is passed it looks for the file with the same name
- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
- the original game.
-!param level The name (or number) of the level to load. If this is a number the game assumes
+ in the "Levels" and/or "Campaigns" folder of CorsixTH, if it is a number it tries to load
+ that level from the original game.
+!param level (string or int) The name (or number) of the level to load. If this is a number the game assumes
 the original game levels are considered.
-!param level_name The name of the actual map/area/hospital as written in the config file.
-!param level_file The path to the map file as supplied by the config file.
+!param level_name (string) The name of the actual map/area/hospital as written in the config file.
+!param map_file (string) The path to the map file as supplied by the config file.
+!param level_intro (string) If loading a custom level this message will be shown as soon as the level
+has been loaded.
 ]]
-function Map:load(level, difficulty, level_name, level_file, level_intro)
+function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
   local objects, i
   if not difficulty then
     difficulty = "full"
   end
   -- Load CorsixTH base configuration for all levels.
-  -- We want to load the file a new each time.
+  -- We want to load the file again each time.
   local function file (filename)
       local f = assert(loadfile(filename))
       return f()
     end
-  local path = debug.getinfo(1, "S").source:sub(2, -8)
-  local result = file(path .. "base_config.lua")
+  local path = debug.getinfo(1, "S").source:sub(2, -12)
+  local result = file(path .. "Lua" .. pathsep .. "base_config.lua")
 
   local base_config = result
   local errors
@@ -142,7 +193,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     self.difficulty = difficulty
     self.level_number = level
     local data
-    data, errors = self:getRawData(level_file)
+    data, errors = self:getRawData(map_file)
     if data then
       i, objects = self.th:load(data)
     else
@@ -165,19 +216,24 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
       end
       -- Override with the specific configuration for this level
       errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
-      -- Finally load additional CorsixTH config per level (currently only for level 5)
+      -- Finally load additional CorsixTH config per level
       local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
       errors, result = self:loadMapConfig(p, result, true)
       self.level_config = result
     end
-  elseif _MAP_EDITOR then
+  elseif map_editor then
     -- We're being fed data by the map editor.
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
     if level == "" then
       i, objects = self.th:loadBlank()
     else
-      i, objects = self.th:load(level)
+      local data, errors = self:getRawData(level)
+      if data then
+        i, objects = self.th:load(data)
+      else
+        return nil, errors
+      end
     end
     assert(base_config, "No base config has been loaded!")
 
@@ -187,15 +243,18 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
     self.level_name = level_name
     self.level_intro = level_intro
     self.level_number = level
-    self.level_file = level_file
-    local data, errors = self:getRawData(level_file)
+    self.map_file = map_file
+    local data, errors = self:getRawData(map_file)
     if data then
       i, objects = self.th:load(data)
     else
       return nil, errors
     end
     assert(base_config, "No base config has been loaded!")
-    errors, result = self:loadMapConfig(level, base_config, true)
+    errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)
+    if errors then
+      print(errors)
+    end
     self.level_config = result
   end
 
@@ -204,7 +263,7 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
   self.parcelTileCounts = {}
   for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
-    if plot > 1 and not _MAP_EDITOR then
+    if plot > 1 and not map_editor then
       -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
       self.th:setPlotOwner(plot, 0)
     end
@@ -213,10 +272,17 @@ function Map:load(level, difficulty, level_name, level_file, level_intro)
   return objects
 end
 
+--[[! Saves the map to a .map file
+!param filename (string) Name of the file to save the map in
+]]
+function Map:save(filename)
+  self.th:save(filename)
+end
+
 --[[! Loads map configurations from files. Returns nil as first result
 if no configuration could be loaded and config as second result no matter what.
-!param filename
-!param config If a base config already exists and only some values should be overridden
+!param filename (string) The absolute path to the config file to load
+!param config (string) If a base config already exists and only some values should be overridden
 this is the base config
 !param custom If true The configuration file is searched for where filename points, otherwise
 it is assumed that we're looking in the theme_hospital_install path.
@@ -266,7 +332,7 @@ function Map:loadMapConfig(filename, config, custom)
     end
     return nil, config
   else
-    return "Error: Could not find the configuration file", config
+    return "Error: Could not find the configuration file, only 'Base Config' will be loaded for this level.", config
   end
 end
 
@@ -305,13 +371,13 @@ function Map:clearDebugText()
   self.updateDebugOverlay = nil
 end
 
-function Map:getRawData(level_file)
+function Map:getRawData(map_file)
   if not self.thData then
     local data, errors
-    if not level_file then
+    if not map_file then
       data, errors = self.app:readDataFile("Levels", "Level.L".. self.level_number)
     else
-      data, errors = self.app:readDataFile("Levels", level_file)
+      data, errors = self.app:readDataFile("Levels", map_file)
     end
     if data then
       self.thData = data
@@ -336,6 +402,50 @@ function Map:updateDebugOverlayHeat()
     for y = 1, self.height do
       local xy = (y - 1) * self.width + x - 1
       self.debug_text[xy] = ("%02.1f"):format(self.th:getCellTemperature(x, y) * 50)
+    end
+  end
+end
+
+function Map:updateDebugOverlayParcels()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = self.th:getCellFlags(x, y).parcelId
+      if self.debug_text[xy] == 0 then
+        self.debug_text[xy] = ''
+      end
+    end
+  end
+end
+
+function Map:updateDebugOverlayCamera()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getCameraTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'C'..p
+    end
+  end
+end
+
+function Map:updateDebugOverlayHeliport()
+  for x = 1, self.width do
+    for y = 1, self.height do
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = ''
+    end
+  end
+  for p = 1, self.th:getPlayerCount() do
+    local x, y = self.th:getHeliportTile(p)
+    if x and y then
+      local xy = (y - 1) * self.width + x - 1
+      self.debug_text[xy] = 'H'..p
     end
   end
 end
@@ -366,6 +476,18 @@ function Map:loadDebugText(base_offset, xy_offset, first, last, bits_)
     self.debug_text = {}
     self.updateDebugOverlay = self.updateDebugOverlayHeat
     self:updateDebugOverlay()
+  elseif base_offset == "parcel" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayParcels
+    self:updateDebugOverlay()
+  elseif base_offset == "camera" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayCamera
+    self:updateDebugOverlay()
+  elseif base_offset == "heliport" then
+    self.debug_text = {}
+    self.updateDebugOverlay = self.updateDebugOverlayHeliport
+    self:updateDebugOverlay()
   else
     local thData = self:getRawData()
     for x = 1, self.width do
@@ -393,6 +515,8 @@ function Map:onTick()
   end
 end
 
+--! Set the sprites to be used by the map.
+--!param blocks (object) Sprite sheet for the map.
 function Map:setBlocks(blocks)
   self.blocks = blocks
   self.th:setSheet(blocks)
@@ -424,10 +548,14 @@ function Map:setDebugText(x, y, msg, ...)
   self.debug_text[(y - 1) * self.width + x - 1] = text
 end
 
---[[!
-  @arguments canvas, screen_x, screen_y, screen_width, screen_height, destination_x, destination_y
-
-  Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
+--! Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas
+--!param canvas
+--!param sx Horizontal start position at the screen.
+--!param sy Vertical start position at the screen.
+--!param sw (int) Width of the screen.
+--!param sh (int) Height of the screen.
+--!param dx (jnt) Horizontal destination at the canvas.
+--!param dy (int) Vertical destination at the canvas.
 --]]
 function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   -- All the heavy work is done by C code:
@@ -518,6 +646,9 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
   end
 end
 
+--! Get the price of a parcel
+--!param parcel (int) Parcel number being queried.
+--!return Price of the queried parcel.
 function Map:getParcelPrice(parcel)
   local conf = self.level_config
   conf = conf and conf.gbv
@@ -525,6 +656,9 @@ function Map:getParcelPrice(parcel)
   return self:getParcelTileCount(parcel) * (conf or 25)
 end
 
+--! Get the number of tiles in a parcel.
+--!param parcel (int) Parcel number being queried.
+--!return Number of tiles in the queried parcel.
 function Map:getParcelTileCount(parcel)
   return self.parcelTileCounts[parcel] or 0
 end

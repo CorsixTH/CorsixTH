@@ -29,6 +29,9 @@ local ipairs
 --! Layer which handles the Lua-facing side of loading and playing audio.
 class "Audio"
 
+---@type Audio
+local Audio = _G["Audio"]
+
 function Audio:Audio(app)
   self.app = app
 
@@ -63,9 +66,7 @@ function Audio:init()
     return
   end
   if not SDL.audio.loaded then
-    if not _MAP_EDITOR then
-      print "Notice: Audio system not loaded as CorsixTH compiled without it"
-    end
+    print("Notice: Audio system not loaded as CorsixTH compiled without it")
     self.not_loaded = true
     return
   end
@@ -117,8 +118,8 @@ function Audio:init()
         if music_dir then
           info.filename_mp3 = music_dir .. file
         else
-          print("Warning: CorsixTH only supports xmi if audio_mp3"
-            .. " is not defined in the config file.")
+          print("Warning: CorsixTH only supports xmi if audio_mp3" ..
+              " is not defined in the config file.")
             music_array[filename:upper()] = nil
         end
          -- Remove the xmi version of this file, if found.
@@ -160,12 +161,9 @@ function Audio:init()
     end
   end
   if #self.background_playlist == 0 and self.app.good_install_folder then
-    print "Notice: Audio system loaded, but found no background tracks"
+    print("Notice: Audio system loaded, but found no background tracks")
     self.has_bg_music = false
   else
-    table.sort(self.background_playlist, function(left, right)
-      return left.title:upper() < right.title:upper()
-    end)
     self.has_bg_music = true
   end
 
@@ -200,7 +198,7 @@ function Audio:initSpeech(speech_file)
   end
   local archive_data, err = load_sound_file(speech_file)
 
-  -- If sound file not found and language choosen is not English,
+  -- If sound file not found and language chosen is not English,
   -- maybe we can have more chance loading English sounds
   if not archive_data and speech_file ~= "Sound-0.dat" and self.app.good_install_folder then
     if self.speech_file_name == "Sound-0.dat" then
@@ -232,14 +230,14 @@ function Audio:initSpeech(speech_file)
       self.sound_fx = TH.soundEffects()
       self.sound_fx:setSoundArchive(self.sound_archive)
       local w, h = self.app.config.width / 2, self.app.config.height / 2
-      self.sound_fx:setCamera(w, h, (w^2 + h^2)^0.5)
+      self.sound_fx:setCamera(math.floor(w), math.floor(h), math.floor((w^2 + h^2)^0.5))
       --self:dumpSoundArchive[[E:\CPP\2K8\CorsixTH\DataRaw\Sound\]]
     end
   end
 end
 
 function Audio:dumpSoundArchive(out_dir)
-  local info,warning = io.open(out_dir .. "info.csv", "wt")
+  local info,warning = io.open(out_dir .. "info.csv", "w")
 
   if info == nil then
     print("Error: Audio dump failed because info.csv couldn't be created and/or opened in the dump directory:" .. out_dir)
@@ -591,8 +589,8 @@ function Audio:playBackgroundTrack(index)
       SDL.audio.loadMusicAsync(data, function(music, e)
 
         if music == nil then
-          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'"
-            .. (e and (" (" .. e .. ")" or "")))
+          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'" ..
+              (e and (" (" .. e .. ")" or "")))
         else
           if _DECODA then
             debug.getmetatable(music).__tostring = function(ud)
@@ -618,7 +616,7 @@ function Audio:playBackgroundTrack(index)
 end
 
 function Audio:onMusicOver()
-  if self.not_loaded or #self.background_playlist == 0 then
+  if self.not_loaded or #self.background_playlist == 0 or self.background_music == nil then
     return
   end
   self:playNextBackgroundTrack()

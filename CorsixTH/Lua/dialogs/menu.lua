@@ -25,7 +25,10 @@ local TH = require "TH"
 --! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)
 
-function UIMenuBar:UIMenuBar(ui)
+---@type UIMenuBar
+local UIMenuBar = _G["UIMenuBar"]
+
+function UIMenuBar:UIMenuBar(ui, map_editor)
   self:Window()
 
   local app = ui.app
@@ -42,13 +45,17 @@ function UIMenuBar:UIMenuBar(ui)
   -- The list of top-level menus, from left to right
   self.menus = {}
   -- The menu which the cursor was most recently over
-  -- This should be present in self.open_menus, else it wont be drawn
+  -- This should be present in self.open_menus, else it won't be drawn
   self.active_menu = false
   -- The list of menus which should be displayed
   -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
 
-  self:makeMenu(app)
+  if map_editor then
+    self:makeMapeditorMenu(app)
+  else
+    self:makeGameMenu(app)
+  end
 end
 
 function UIMenuBar:onTick()
@@ -58,9 +65,9 @@ function UIMenuBar:onTick()
     -- item in its parent corresponding to it.
     local deepest = self.open_menus[#self.open_menus]
     local parent = deepest.parent
-    if deepest == self.active_menu or (parent and parent == self.active_menu
-    and parent.items[parent.hover_index]
-    and parent.items[parent.hover_index].submenu == deepest) then
+    if deepest == self.active_menu or
+        (parent and parent == self.active_menu and parent.items[parent.hover_index] and
+        parent.items[parent.hover_index].submenu == deepest) then
       self.menu_disappear_counter = nil
     else
       if self.menu_disappear_counter == 0 then
@@ -120,6 +127,9 @@ local function assign_menu_levels(menu, level)
   end
 end
 
+--! Add a menu to the menu bar.
+--!param title Title of the menu (at the bar).
+--!param menu Menu to add.
 function UIMenuBar:addMenu(title, menu)
   assign_menu_levels(menu, 1)
   local menu = {
@@ -350,7 +360,7 @@ function UIMenuBar:onMouseDown(button, x, y)
     self.open_menus = {new_active}
     self.active_menu = new_active
     repaint = true
-    self.ui:playSound "selectx.wav"
+    self.ui:playSound("selectx.wav")
   end
   return repaint
 end
@@ -402,7 +412,7 @@ function UIMenuBar:onMouseUp(button, x, y)
         end
         self.active_menu = false
       end
-      self.ui:playSound "selectx.wav"
+      self.ui:playSound("selectx.wav")
       repaint = true
       break
     end
@@ -455,6 +465,9 @@ end
 
 class "UIMenu"
 
+---@type UIMenu
+local UIMenu = _G["UIMenu"]
+
 function UIMenu:UIMenu()
   self.items = {}
   self.parent = false
@@ -466,8 +479,8 @@ function UIMenu:hitTest(x, y, padding)
   -- number -> hit that item
   -- true   -> hit menu, but not an item
   -- false  -> no hit
-  if self.x - padding <= x and x < self.x + self.width + padding
-  and self.y - padding <= y and y < self.y + self.height + padding then
+  if self.x - padding <= x and x < self.x + self.width + padding and
+      self.y - padding <= y and y < self.y + self.height + padding then
     if self.x <= x and x < self.x + self.width then
       local index = math_floor((y - self.y + 12) / 14)
       if 1 <= index and index <= #self.items then
@@ -512,7 +525,26 @@ function UIMenu:appendMenu(text, menu)
   }
 end
 
-function UIMenuBar:makeMenu(app)
+--! Make a menu for the map editor.
+--!param app Application.
+function UIMenuBar:makeMapeditorMenu(app)
+  local menu = UIMenu()
+  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
+    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
+  self:addMenu(_S.menu.file, menu)
+
+  menu = UIMenu()
+  menu:appendItem(_S.menu_player_count.players_1, function() self.ui.map_editor:setPlayerCount(1) end)
+    :appendItem(_S.menu_player_count.players_2, function() self.ui.map_editor:setPlayerCount(2) end)
+    :appendItem(_S.menu_player_count.players_3, function() self.ui.map_editor:setPlayerCount(3) end)
+    :appendItem(_S.menu_player_count.players_4, function() self.ui.map_editor:setPlayerCount(4) end)
+  self:addMenu(_S.menu.player_count, menu)
+end
+
+--! Make a menu for the game.
+--!param app Application.
+function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
@@ -722,6 +754,7 @@ function UIMenuBar:makeMenu(app)
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
+      :appendItem(_S.menu_debug.connect_debugger, function() self.ui:connectDebugger() end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
@@ -734,9 +767,9 @@ function UIMenuBar:makeMenu(app)
       :appendItem(_S.menu_debug.dump_gamelog,       function() self.ui.app.world:dumpGameLog() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
         :appendCheckItem(_S.menu_debug_overlay.none,         true, overlay(), "")
-        :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay"flags", "")
-        :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay"positions", "")
-        :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay"heat", "")
+        :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")
+        :appendCheckItem(_S.menu_debug_overlay.positions,   false, overlay("positions"), "")
+        :appendCheckItem(_S.menu_debug_overlay.heat,        false, overlay("heat"), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_0_1,    false, overlay(35, 8, 0, 1, false), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_floor,  false, overlay(35, 8, 2, 2, false), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_n_wall, false, overlay(35, 8, 3, 3, false), "")
@@ -744,7 +777,7 @@ function UIMenuBar:makeMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.byte_5,      false, overlay(35, 8, 5, 5, true), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_6,      false, overlay(35, 8, 6, 6, true), "")
         :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
-        :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay(131107, 2, 0, 0, false), "")
+        :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay("parcel"), "")
       )
       :appendItem(_S.menu_debug.sprite_viewer, function() dofile "sprite_viewer" end)
     )

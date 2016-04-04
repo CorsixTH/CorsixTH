@@ -43,6 +43,9 @@ room.call_sound = "reqd003.wav"
 
 class "PsychRoom" (Room)
 
+---@type PsychRoom
+local PsychRoom = _G["PsychRoom"]
+
 function PsychRoom:PsychRoom(...)
   self:Room(...)
 end
@@ -102,13 +105,18 @@ function PsychRoom:commandEnteringPatient(patient)
           name = "use_screen",
           object = obj,
           after_use = --[[persistable:psych_screen_after_use]] function()
+            if self:getStaffMember() then
+              self:getStaffMember():setNextAction{name = "meander"}
+            end
             self:dealtWithPatient(patient)
           end,
         }
       else
+        if self:getStaffMember() then
+          self:getStaffMember():setNextAction{name = "meander"}
+        end
         self:dealtWithPatient(patient)
       end
-      self:getStaffMember():setNextAction{name = "meander"}
       return
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then

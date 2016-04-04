@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --[[ An `Inspector` is called to the hospital after an epidemic to issue a report]]
 class "Inspector" (Humanoid)
 
+---@type Inspector
+local Inspector = _G["Inspector"]
+
 function Inspector:Inspector(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
@@ -42,12 +45,11 @@ function Inspector:goHome()
 
   self:unregisterCallbacks()
   self.going_home = true
-  self:setHospital(nil)
+  self:despawn()
 end
 
 --[[ Called when the inspector has left the map ]]
 function Inspector:onDestroy()
-  print("Destroying Inspector")
   return Humanoid.onDestroy(self)
 end
 

@@ -59,16 +59,21 @@ allow_user_actions_while_paused = false-----------------------------------------
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
+--  Brazilian Portuguese  / pt_br / br
 --  Chinese (simplified)  / zh(s) / chi(s)
 --  Chinese (traditional) / zh(s) / chi(s)
+--  Czech                 / cs / cze
 --  Danish                / da / dk
 --  Dutch                 / Nederlands / nl / dut / nld
 --  English               / en / eng
 --  Finnish               / Suomi / fi / fin
 --  French                / fr / fre / fra
 --  German                / de / ger / deu
+--  Hungarian             / hu / hun
 --  Italian               / it / ita
+--  Korean                / kor / ko
 --  Norwegian             / nb / nob
+--  Polish                / pl / pol
 --  Portuguese            / pt / por
 --  Russian               / ru / rus
 --  Spanish               / es / spa

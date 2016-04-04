@@ -20,7 +20,10 @@ SOFTWARE. --]]
 
 class "Hospital"
 
-function Hospital:Hospital(world, name)
+---@type Hospital
+local Hospital = _G["Hospital"]
+
+function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
@@ -33,10 +36,6 @@ function Hospital:Hospital(world, name)
     elseif level_config.town then
       balance = level_config.town.StartCash
       interest_rate = level_config.town.InterestRate / 10000
-    end
-    -- Check if awards are available
-    if level_config.awards_trophies then
-      self.win_awards = true
     end
   end
   self.name = name or "PLAYER"
@@ -74,7 +73,7 @@ function Hospital:Hospital(world, name)
   -- How many epidemics can exist simultaneously counting current and future
   -- epidemics. If epidemic_limit = 1 then only one epidemic can exist at a
   -- time either in the futures pool or as a current epidemic.
-  self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
+  self.concurrent_epidemic_limit = level_config.gbv.EpidemicConcurrentLimit or 1
 
   -- Initial values
   self.interest_rate = interest_rate
@@ -84,6 +83,17 @@ function Hospital:Hospital(world, name)
   self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+
+  -- Price distortion level under which the patients might consider the
+  -- treatment to be under-priced (TODO: This could depend on difficulty and/or
+  -- level; e.g. Easy: -0.3 / Difficult: -0.5)
+  self.under_priced_threshold = -0.4
+
+  -- Price distortion level over which the patients might consider the
+  -- treatment to be over-priced (TODO: This could depend on difficulty and/or
+  -- level; e.g. Easy: 0.4 / Difficult: 0.2)
+  self.over_priced_threshold = 0.3
+
   self.radiator_heat = 0.5
   self.num_visitors = 0
   self.num_deaths = 0
@@ -124,26 +134,34 @@ function Hospital:Hospital(world, name)
 
   -- Other statistics, back to zero each year
   self.sodas_sold = 0
-  self.reputation_above_threshold = self.win_awards and level_config.awards_trophies.Reputation < self.reputation or false
+  self:checkReputation() -- Reset self.reputation_above_threshold
   self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
   self.pleased_vips_ty  = 0
   self.num_cured_ty = 0
   self.not_cured_ty = 0
   self.num_visitors_ty = 0
 
-  self.ownedPlots = {1}
-  self.is_in_world = true
+  self.ownedPlots = {1} -- Plots owned by the hospital
+  self.is_in_world = true -- Whether the hospital is in this world (AI hospitals are not)
   self.opened = false
   self.transactions = {}
   self.staff = {}
-  self.reception_desks = {}
   self.patients = {}
   self.debug_patients = {} -- right-click-commandable patients for testing
   self.disease_casebook = {}
   self.policies = {}
   self.discovered_diseases = {} -- a list
+
   self.discovered_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are true or nil
   self.undiscovered_rooms = {} -- NB: These two together must form the list world.available_rooms
+  for _, avail_room in ipairs(avail_rooms) do
+    if avail_room.is_discovered then
+      self.discovered_rooms[avail_room.room] = true
+    else
+      self.undiscovered_rooms[avail_room.room] = true
+    end
+  end
+
   self.policies["staff_allowed_to_move"] = true
   self.policies["send_home"] = 0.1
   self.policies["guess_cure"] = 0.9
@@ -165,14 +183,14 @@ function Hospital:Hospital(world, name)
   -- A list of how much each insurance company owes you. The first entry for
   -- each company is the current month's dept, the second the previous
   -- month and the third the month before that.
-  -- All payment that goes through an insurance company a given month is payed two
-  -- months later. For example diagnoses in April are payed the 1st of July
+  -- All payment that goes through an insurance company a given month is paid two
+  -- months later. For example diagnoses in April are paid the 1st of July
   self.insurance_balance = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}
 
   -- Initialize diseases
   local diseases = TheApp.diseases
-  local expertise = self.world.map.level_config.expertise
-  local gbv = self.world.map.level_config.gbv
+  local expertise = level_config.expertise
+  local gbv = level_config.gbv
   for i, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95
@@ -213,6 +231,14 @@ function Hospital:Hospital(world, name)
     end
   end
   self.research = ResearchDepartment(self)
+
+  -- Initialize build cost for all available rooms.
+  for _, avail_room in ipairs(avail_rooms) do
+    self.research.research_progress[avail_room.room] = {
+        -- In free build mode, everything is freely available.
+        build_cost = not self.free_build_mode and avail_room.build_cost or 0,
+      }
+  end
 end
 
 -- Seasoned players will know these things, but it does not harm to be reminded if there is no staff room or toilet!
@@ -373,9 +399,6 @@ function Hospital:afterLoad(old, new)
     self.num_visitors = 0
     self.player_salary = 10000
     self.sodas_sold = 0
-    if self.world.map.level_config and self.world.map.level_config.awards_trophies then
-      self.win_awards = true
-    end
   end
   if old < 20 then
     -- New variables
@@ -443,19 +466,17 @@ function Hospital:afterLoad(old, new)
     local research = ResearchDepartment(self)
     self.undiscovered_rooms = {}
     local cure, diagnosis
-    local config = self.world.map.level_config.objects
+    local cfg_objects = self.world.map.level_config.objects
     for _, room in ipairs(self.world.available_rooms) do
       -- If a room is discovered, make sure its objects are also
       -- discovered, otherwise add it to the undiscovered list.
       if self.discovered_rooms[room] then
         for name, _ in pairs(room.objects_needed) do
           local object = TheApp.objects[name]
-          if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
-          and object.research_category
-          and not research.research_progress[object].discovered then
+          if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
+              object.research_category and not research.research_progress[object].discovered then
             local progress = self.research_rooms[room]
-            if self.research.cure.current == room
-            or self.research.diagnosis.current == room then
+            if self.research.cure.current == room or self.research.diagnosis.current == room then
               progress = progress + self.research.diagnosis.points
             end
             research.research_progress[object].discovered = true
@@ -467,9 +488,8 @@ function Hospital:afterLoad(old, new)
         if not cure or not diagnosis then
           for name, _ in pairs(room.objects_needed) do
             local object = TheApp.objects[name]
-            if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
-            and object.research_category
-            and not research.research_progress[object].discovered then
+            if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
+                object.research_category and not research.research_progress[object].discovered then
               if object.research_category == "cure" then
                 cure = object
               elseif object.research_category == "diagnosis" then
@@ -544,14 +564,14 @@ function Hospital:afterLoad(old, new)
   end
   if old < 35 then
     -- Define build costs for rooms once again.
-    local config = self.world.map.level_config.objects
-    local rooms = self.world.map.level_config.rooms
+    local cfg_objects = self.world.map.level_config.objects
+    local cfg_rooms = self.world.map.level_config.rooms
     for i, room in ipairs(TheApp.rooms) do
       -- Sum up the build cost of the room
-      local build_cost = rooms[room.level_config_id].Cost
+      local build_cost = cfg_rooms[room.level_config_id].Cost
       for name, no in pairs(room.objects_needed) do
         -- Add cost for this object.
-        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+        build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
       end
       -- Now define the total build cost for the room.
       self.research.research_progress[room] = {
@@ -586,15 +606,6 @@ function Hospital:afterLoad(old, new)
     self.num_cured_ty = 0
     self.not_cured_ty = 0
     self.num_visitors_ty = 0
-
-    self.reception_desks = {}
-    for _, obj_list in pairs(self.world.objects) do
-      for _, obj in ipairs(obj_list) do
-        if obj.object_type.id == "reception_desk" then
-          self.reception_desks[obj] = true
-        end
-      end
-    end
   end
 
   if old < 52 then
@@ -629,6 +640,22 @@ function Hospital:afterLoad(old, new)
     self.concurrent_epidemic_limit = self.world.map.level_config.gbv.EpidemicConcurrentLimit or 1
   end
 
+  if old < 107 then
+    self.reception_desks = nil
+  end
+
+  if old < 109 then
+    -- price distortion
+    self.under_priced_threshold = -0.4
+    self.over_priced_threshold = 0.3
+  end
+
+  -- Update other objects in the hospital (added in version 106).
+  if self.epidemic then self.epidemic.afterLoad(old, new) end
+  for _, future_epidemic in ipairs(self.future_epidemics_pool) do
+    future_epidemic.afterLoad(old, new)
+  end
+  self.research.afterLoad(old, new)
 end
 
 --! Update the Hospital.patientcount variable.
@@ -652,10 +679,10 @@ function Hospital:countSittingStanding()
   local numberSitting = 0
   local numberStanding = 0
   for _, patient in ipairs(self.patients) do
-    if patient.action_queue[1].name == "idle" then
+    local pat_action = patient.action_queue[1]
+    if pat_action.name == "idle" then
       numberStanding = numberStanding + 1
-    elseif patient.action_queue[1].name == "use_object"
-    and patient.action_queue[1].object.object_type.id == "bench" then
+    elseif pat_action.name == "use_object" and pat_action.object.object_type.id == "bench" then
       numberSitting = numberSitting + 1
     end
   end
@@ -706,8 +733,8 @@ function Hospital:checkFacilities()
         self.seating_warning = 0
       end
     end
-    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg
-    and (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
+    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg and
+        (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -835,9 +862,9 @@ end
 function Hospital:getHeliportPosition()
   local x, y = self.world.map.th:getHeliportTile(self:getPlayerIndex())
   -- NB: Level 2 has a heliport tile set, but no heliport, so we ensure that
-  -- the specified tile is suitable by checking the adjacent spawn tile for
+  -- the specified tile is suitable by checking the spawn tile for
   -- passability.
-  if y > 1 and self.world.map:getCellFlag(x, y - 1, "passable") then
+  if y > 0 and self.world.map:getCellFlag(x, y, "passable") then
     return x, y
   end
 end
@@ -937,8 +964,7 @@ function Hospital:onEndDay()
         for object, value in pairs(room.objects) do
           if object.strength then
             -- The or clause is for backwards compatibility. Then the machine takes one damage each day.
-            if (object.quake_points and object.quake_points > 0)
-            or object.quake_points == nil then
+            if (object.quake_points and object.quake_points > 0) or object.quake_points == nil then
               object:machineUsed(room)
             end
             if object.quake_points then
@@ -950,7 +976,7 @@ function Hospital:onEndDay()
     end
   end
 
-  -- check if we still have to anounce VIP visit
+  -- check if we still have to announce VIP visit
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
     for i, e in ipairs(self.world.entities) do
@@ -975,8 +1001,8 @@ function Hospital:onEndDay()
 
   -- Is the boiler working today?
   local breakdown = math.random(1, 240)
-  if breakdown == 1 and not self.heating_broke and self.boiler_can_break
-  and self.world.object_counts.radiator > 0 then
+  if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
+      self.world.object_counts.radiator > 0 then
     if tonumber(self.world.map.level_number) then
       if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
         self:boilerBreakdown()
@@ -1027,8 +1053,7 @@ function Hospital:onEndMonth()
   if self:isPlayerHospital() then
     if self.balance < 1000 and not self.cash_msg then
       self:cashLow()
-    elseif self.balance > 6000
-    and self.loan > 0 and not self.cash_ms then
+    elseif self.balance > 6000 and self.loan > 0 and not self.cash_ms then
       self.world.ui.adviser:say(_A.warnings.pay_back_loan)
     end
     self.cash_msg = true
@@ -1065,7 +1090,7 @@ function Hospital:onEndMonth()
 
   -- TODO: do you get interest on the balance owed?
   for i, company in ipairs(self.insurance_balance) do
-    -- Get the amount that is about to be payed to the player
+    -- Get the amount that is about to be paid to the player
     local payout_amount = company[3]
     if payout_amount > 0 then
       local str = _S.transactions.insurance_colon .. " " .. self.insurance[i]
@@ -1120,8 +1145,27 @@ function Hospital:isPlayerHospital()
   return self == self.world:getLocalPlayerHospital()
 end
 
+--! Does the hospital have a working reception?
+--!return (bool) Whether there is a working reception in the hospital.
 function Hospital:hasStaffedDesk()
-  return (self.world.object_counts["reception_desk"] ~= 0 and self:hasStaffOfCategory("Receptionist"))
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    if desk.receptionist or desk.reserved_for then return true end
+  end
+  return false
+end
+
+--! Collect the reception desks in the hospital.
+--!return (list) The reception desks in the hospital.
+function Hospital:findReceptionDesks()
+  local reception_desks = {}
+  for _, obj_list in pairs(self.world.objects) do
+    for _, obj in ipairs(obj_list) do
+      if obj.object_type.id == "reception_desk" then
+        reception_desks[#reception_desks + 1] = obj
+      end
+    end
+  end
+  return reception_desks
 end
 
 --! Called at the end of each year
@@ -1129,8 +1173,8 @@ function Hospital:onEndYear()
   self.sodas_sold = 0
   self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
-  self.reputation_above_threshold = self.win_awards
-  and self.world.map.level_config.awards_trophies.Reputation < self.reputation or false
+  self:checkReputation()
+
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. I have still to check other levels above 5 to
   -- see if there are other large increases.
@@ -1252,7 +1296,20 @@ function Hospital:resolveEmergency()
   self.world:nextEmergency()
 end
 
--- Creates VIP
+--! Determine if all of the patients in the emergency have been cured or killed.
+--! If they have end the emergency timer.
+function Hospital:checkEmergencyOver()
+  local killed = self.emergency.killed_emergency_patients
+  local cured = self.emergency.cured_emergency_patients
+  if killed + cured >= self.emergency.victims then
+    local window = self.world.ui:getWindow(UIWatch)
+    if window then
+      window:onCountdownEnd()
+    end
+  end
+end
+
+-- Creates VIP and sends a FAX to query the user.
 function Hospital:createVip()
   local vipName =  _S.vip_names[math.random(1,10)]
   local message = {
@@ -1349,17 +1406,16 @@ function Hospital:determineIfContagious(patient)
   end
   -- ContRate treated like a percentage with ContRate% of patients with
   -- a disease having the contagious strain
-  local config = self.world.map.level_config
-  local expertise = config.expertise
+  local level_config = self.world.map.level_config
   local disease = patient.disease
-  local contRate = expertise[disease.expertise_id].ContRate or 0
+  local contRate = level_config.expertise[disease.expertise_id].ContRate or 0
 
   -- The patient is potentially contagious as we do not yet know if there
   -- is a suitable epidemic which they can belong to
   local potentially_contagious = contRate > 0 and (math.random(1,contRate) == contRate)
   -- The patient isn't contagious if these conditions aren't passed
-  local reduce_months = config.ReduceContMonths or 14
-  local reduce_people = config.ReduceContPeepCount or 20
+  local reduce_months = level_config.ReduceContMonths or 14
+  local reduce_people = level_config.ReduceContPeepCount or 20
   local date_in_months = self.world.month + (self.world.year - 1)*12
 
   if potentially_contagious and date_in_months > reduce_months and
@@ -1446,18 +1502,19 @@ may be affected by research progress.
 !param name (string) The name (id) of the object to investigate.
 ]]
 function Hospital:getObjectBuildCost(name)
-  -- Some helpers
+  -- Everything is free in free build mode.
+  if self.world.free_build_mode then return 0 end
+
   local progress = self.research.research_progress
-  local config = self.world.map.level_config.objects
+  local cfg_objects = self.world.map.level_config.objects
   local obj_def = TheApp.objects[name]
   -- Get how much this item costs at the start of the level.
-  local obj_cost = config[obj_def.thob].StartCost
+  local obj_cost = cfg_objects[obj_def.thob].StartCost
   -- Some objects might have got their cost reduced by research.
   if progress[obj_def] then
     obj_cost = progress[obj_def].cost
   end
-  -- Everything is free in free build mode.
-  return not self.world.free_build_mode and obj_cost or 0
+  return obj_cost
 end
 
 --[[ Lowers the player's money by the given amount and logs the transaction.
@@ -1470,7 +1527,7 @@ in _S.transactions.
 function Hospital:spendMoney(amount, reason, changeValue)
   if not self.world.free_build_mode then
     self.balance = self.balance - amount
-    self:logTransaction{spend = amount, desc = reason}
+    self:logTransaction({spend = amount, desc = reason})
     self.money_out = self.money_out + amount
     if changeValue then
       self.value = self.value + changeValue
@@ -1488,7 +1545,7 @@ in _S.transactions.
 function Hospital:receiveMoney(amount, reason, changeValue)
   if not self.world.free_build_mode then
     self.balance = self.balance + amount
-    self:logTransaction{receive = amount, desc = reason}
+    self:logTransaction({receive = amount, desc = reason})
     self.money_in = self.money_in + amount
     if changeValue then
       self.value = self.value - changeValue
@@ -1502,34 +1559,28 @@ end
 ]]
 function Hospital:receiveMoneyForTreatment(patient)
   if not self.world.free_build_mode then
-    local disease_id
+    local disease_id = patient:getTreatmentDiseaseId()
+    if disease_id == nil then return end
+    local casebook = self.disease_casebook[disease_id]
     local reason
-    if not self.world.free_build_mode then
-      if patient.diagnosed then
-        disease_id = patient.disease.id
-        reason = _S.transactions.cure_colon .. " " .. patient.disease.name
-      else
-        local room_info = patient:getRoom()
-        if not room_info then
-          print("Warning: Trying to receieve money for treated patient who is "..
-              "not in a room")
-          return
-        end
-        room_info = room_info.room_info
-        disease_id = "diag_" .. room_info.id
-        reason = _S.transactions.treat_colon .. " " .. room_info.name
-      end
-     local casebook = self.disease_casebook[disease_id]
-     local amount = self:getTreatmentPrice(disease_id)
-      casebook.money_earned = casebook.money_earned + amount
-      patient.world:newFloatingDollarSign(patient, amount)
-      -- 25% of the payments now go through insurance
-      if patient.insurance_company then
-        self:addInsuranceMoney(patient.insurance_company, amount)
-      else
-        self:receiveMoney(amount, reason)
-      end
+    if casebook.pseudo then
+      reason = _S.transactions.treat_colon .. " " .. casebook.disease.name
+    else
+      reason = _S.transactions.cure_colon .. " " .. casebook.disease.name
     end
+    local amount = self:getTreatmentPrice(disease_id)
+
+    -- 25% of the payments now go through insurance
+    if patient.insurance_company then
+      self:addInsuranceMoney(patient.insurance_company, amount)
+    else
+      -- patient is paying normally (but still, he could feel like it's
+      -- under- or over-priced and it could impact happiness and reputation)
+      self:computePriceLevelImpact(patient, casebook)
+      self:receiveMoney(amount, reason)
+    end
+    casebook.money_earned = casebook.money_earned + amount
+    patient.world:newFloatingDollarSign(patient, amount)
   end
 end
 
@@ -1556,6 +1607,16 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
+--! Pay drug if drug has been purshased to treat a patient
+--!param patient(patient); the patient who's been treated with the drug
+function Hospital:paySupplierForDrug(patient)
+  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+  if drug_amount ~= 0 then
+    local str = _S.drug_companies[math.random(1, 5)]
+    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+  end
+end
+
 --[[ Add a transaction to the hospital's transaction log.
 !param transaction (table) A table containing a string field called `desc`, and
 at least one of the following integer fields: `spend`, `receive`.
@@ -1569,6 +1630,61 @@ function Hospital:logTransaction(transaction)
   end
   table.insert(self.transactions, 1, transaction)
 end
+
+--! Initialize hospital staff from the level config.
+function Hospital:initStaff()
+  local level_config = self.world.map.level_config
+  if level_config.start_staff then
+    local i = 0
+    for n, conf in ipairs(level_config.start_staff) do
+      local profile
+      local skill = 0
+      local added_staff = true
+      if conf.Skill then
+        skill = conf.Skill / 100
+      end
+
+      if conf.Nurse == 1 then
+        profile = StaffProfile(self.world, "Nurse", _S.staff_class["nurse"])
+        profile:init(skill)
+      elseif conf.Receptionist == 1 then
+        profile = StaffProfile(self.world, "Receptionist", _S.staff_class["receptionist"])
+        profile:init(skill)
+      elseif conf.Handyman == 1 then
+        profile = StaffProfile(self.world, "Handyman", _S.staff_class["handyman"])
+        profile:init(skill)
+      elseif conf.Doctor == 1 then
+        profile = StaffProfile(self.world, "Doctor", _S.staff_class["doctor"])
+
+        local shrink = 0
+        local rsch = 0
+        local surg = 0
+        local jr, cons
+
+        if conf.Shrink == 1 then shrink = 1 end
+        if conf.Surgeon == 1 then surg = 1 end
+        if conf.Researcher == 1 then rsch = 1 end
+
+        if conf.Junior == 1 then jr = 1
+        elseif conf.Consultant == 1 then cons = 1
+        end
+        profile:initDoctor(shrink,surg,rsch,jr,cons,skill)
+      else
+        added_staff = false
+      end
+      if added_staff then
+        local staff = self.world:newEntity("Staff", 2)
+        staff:setProfile(profile)
+        -- TODO: Make a somewhat "nicer" placing algorithm.
+        staff:setTile(self.world.map.th:getCameraTile(1))
+        staff:onPlaceInCorridor()
+        self.staff[#self.staff + 1] = staff
+        staff:setHospital(self)
+      end
+    end
+  end
+end
+
 
 function Hospital:addStaff(staff)
   self.staff[#self.staff + 1] = staff
@@ -1655,6 +1771,8 @@ local reputation_changes = {
   ["kicked"] = -3, -- firing a staff member OR sending a patient home
   ["emergency_success"] = 15,
   ["emergency_failed"] = -20,
+  ["over_priced"] = -2,
+  ["under_priced"] = 1,
 }
 
 --! Normally reputation is changed based on a reason, and the affected
@@ -1666,14 +1784,16 @@ local reputation_changes = {
 function Hospital:changeReputation(reason, disease, valueChange)
   local amount
   if reason == "autopsy_discovered" then
-    local config = self.world.map.level_config.gbv.AutopsyRepHitPercent
-    amount = config and math.floor(-self.reputation*config/100) or -70
+    local rep_hit_perc = self.world.map.level_config.gbv.AutopsyRepHitPercent
+    amount = rep_hit_perc and math.floor(-self.reputation * rep_hit_perc / 100) or -70
   elseif valueChange then
     amount = valueChange
   else
     amount = reputation_changes[reason]
   end
-  self.reputation = self.reputation + amount
+  if self:isReputationChangeAllowed(amount) then
+    self.reputation = self.reputation + amount
+  end
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
@@ -1684,9 +1804,54 @@ function Hospital:changeReputation(reason, disease, valueChange)
     self.reputation = self.reputation_max
   end
   -- Check if criteria for trophy is still met
-  if self.reputation_above_threshold then
-    self.reputation_above_threshold = self.world.map.level_config.awards_trophies.Reputation < self.reputation
+  if self.reputation_above_threshold then self:checkReputation() end
+end
+
+--! Check whether the reputation is still above the treshold.
+function Hospital:checkReputation()
+  local level_config = self.world.map.level_config
+  if level_config.awards_trophies then
+    local min_repuration = level_config.awards_trophies.Reputation
+    self.reputation_above_threshold = min_repuration < self.reputation
+    return
   end
+  self.reputation_above_threshold = false
+end
+
+--! Decide whether a reputation change is effective or not. As we approach 1000,
+--! a gain is less likely. As we approach 0, a loss is less likely.
+--! Under 500, a gain is always effective.  Over 500, a loss is always effective.
+--!param amount (int): The amount of reputation change.
+function Hospital:isReputationChangeAllowed(amount)
+  if (amount > 0 and self.reputation <= 500) or (amount < 0 and self.reputation >= 500) or (amount == 0) then
+    return true
+  else
+    return math.random() <= self:getReputationChangeLikelihood()
+  end
+end
+
+--! Compute the likelihood for a reputation change to be effective.
+--! Likelihood gets smaller as hospital reputation gets closer to extreme values.
+--!return (float) Likelihood of a reputation change.
+function Hospital:getReputationChangeLikelihood()
+  -- The result follows a quadratic function, for a curved and smooth evolution.
+  -- If reputation == 500, the result is 100%.
+  -- Between [380-720], the result is still over 80%.
+  -- At 100 or 900, it's under 40%.
+  -- At 0 or 1000, it's 0%.
+  --
+  -- The a, b and c coefficients have been computed to include points
+  -- (x=0, y=1), (x=500, y=0) and (x=1000, y=1) where x is the current
+  -- reputation and y the likelihood of the reputation change to be
+  -- refused, based a discriminant (aka "delta") == 0
+  local a = 0.000004008
+  local b = 0.004008
+  local c = 1
+
+  local x = self.reputation
+
+  -- The result is "reversed" for more readability
+  return 1 - (a * x * x - b * x + c)
 end
 
 function Hospital:updatePercentages()
@@ -1744,6 +1909,9 @@ end
 
 class "AIHospital" (Hospital)
 
+---@type AIHospital
+local AIHospital = _G["AIHospital"]
+
 function AIHospital:AIHospital(competitor, ...)
   self:Hospital(...)
   if _S.competitor_names[competitor] then
@@ -1763,7 +1931,6 @@ function AIHospital:logTransaction()
 end
 
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
-
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
   table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
@@ -1772,7 +1939,7 @@ end
 function Hospital:modifyHandymanTaskPriority(taskIndex, newPriority, taskType)
   if taskIndex ~= -1 then
     local subTable = self:findHandymanTaskSubtable(taskType)
-    self:findHandymanTaskSubtable(taskType)[taskIndex].priority = newPriority;
+    subTable[taskIndex].priority = newPriority;
   end
 end
 
@@ -1807,10 +1974,10 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
   if taskIndex ~= -1 then
     local subTable = self:findHandymanTaskSubtable(taskType)
     if not subTable[taskIndex].assignedHandyman then
-      subTable[taskIndex].assignedHandyman  = handyman
+      subTable[taskIndex].assignedHandyman = handyman
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
-      subTable[taskIndex].assignedHandyman  = handyman
+      subTable[taskIndex].assignedHandyman = handyman
       formerHandyman:interruptHandymanTask()
     end
   end
@@ -1901,6 +2068,7 @@ function Hospital:getIndexOfTask(x, y, taskType)
   return -1
 end
 
+--! Afterload function to initialize the owned plots.
 function Hospital:initOwnedPlots()
   self.ownedPlots = {}
   for i, v in ipairs(self.world.entities) do
@@ -1965,4 +2133,31 @@ function Hospital:canConcentrateResearch(disease)
     return progress.start_strength < self.world.map.level_config.gbv.MaxObjectStrength
   end
   return false
+end
+
+--! Change patient happiness and hospital reputation based on price distortion.
+--! The patient happiness is adjusted proportionally. The hospital reputation
+--! can only be affected when the distortion level reaches some threshold.
+--!param patient (patient) The patient paying the bill. His/her happiness level
+--! is adjusted.
+--!param casebook (object) Disease casebook entry. It's used to display the
+--! localised disease name when Adviser tells the warning message.
+function Hospital:computePriceLevelImpact(patient, casebook)
+  local price_distortion = patient:getPriceDistortion(casebook)
+  patient:changeAttribute("happiness", -(price_distortion / 2))
+
+  if price_distortion < self.under_priced_threshold then
+    if math.random(1, 100) == 1 then
+      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+      self:changeReputation("under_priced")
+    end
+  elseif price_distortion > self.over_priced_threshold then
+    if math.random(1, 100) == 1 then
+      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+      self:changeReputation("over_priced")
+    end
+  elseif math.abs(price_distortion) <= 0.15 and math.random(1, 200) == 1 then
+    -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
+    self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+  end
 end

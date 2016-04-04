@@ -25,7 +25,9 @@ SOFTWARE.
 #include "../Src/bootstrap.h"
 #include <stack>
 #include <SDL.h>
-
+#ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_mixer.h>
+#endif
 // Template magic for checking type equality
 template <typename T1, typename T2>
 struct types_equal{ enum{
@@ -36,6 +38,17 @@ template <typename T1>
 struct types_equal<T1, T1>{ enum{
     result = 1,
 }; };
+
+static void cleanup()
+{
+#ifdef CORSIX_TH_USE_SDL_MIXER
+    while(Mix_QuerySpec(nullptr, nullptr, nullptr))
+    {
+        Mix_CloseAudio();
+    }
+#endif
+    SDL_Quit();
+}
 
 //! Program entry point
 /*!
@@ -91,7 +104,7 @@ int main(int argc, char** argv)
             }
             else
             {
-                fprintf(stderr, "An error has occured in CorsixTH:\n"
+                fprintf(stderr, "An error has occurred in CorsixTH:\n"
                     "Uncaught non-string Lua error\n");
             }
             lua_pushcfunction(L, Bootstrap_lua_error_report);
@@ -105,29 +118,7 @@ int main(int argc, char** argv)
         lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
         bRun = lua_toboolean(L, -1) != 0;
 
-        // Get cleanup functions out of the Lua state (but don't run them yet)
-        std::stack<void(*)(void)> stkCleanup;
-        lua_getfield(L, LUA_REGISTRYINDEX, "_CLEANUP");
-        if(lua_type(L, -1) == LUA_TTABLE)
-        {
-            for(unsigned int i = 1; i <= lua_objlen(L, -1); ++i)
-            {
-                lua_rawgeti(L, -1, (int)i);
-                stkCleanup.push((void(*)(void))lua_touserdata(L, -1));
-                lua_pop(L, 1);
-            }
-        }
-
-        lua_close(L);
-
-        // The cleanup functions are executed _after_ the Lua state is fully
-        // closed, and in reserve order to that in which they were registered.
-        while(!stkCleanup.empty())
-        {
-            if(stkCleanup.top() != NULL)
-                stkCleanup.top()();
-            stkCleanup.pop();
-        }
+        cleanup();
 
         if(bRun)
         {

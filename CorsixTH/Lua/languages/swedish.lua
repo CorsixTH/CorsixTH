@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf, Edvin "Lego3" Linge
+--[[ Copyright (c) 2010-2016 Manuel "Roujin" Wolf, Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -37,7 +37,10 @@ room_descriptions.psych = {
   "Patienter som får diagnosen psykisk sjukdom måste uppsöka den psykiatriska avdelningen för att få behandling. Psykiatriker kan också ställa diagnoser, ta reda på vilken typ av sjukdom patienterna har och, i det fall det är mentalt behandla dem på den pålitliga gamla britsen.//",
   "Här behövs en läkare utbildad i psykiatri. "
 }
-introduction_texts.level1[4] = "En bra ide vore att bygga en psykiatrisk avdelning och anställa en läkare med psykiatrisk kompetens."
+introduction_texts.level1 = "Välkommen till ditt första sjukhus!//Sätt igång genom att placera ut en reception och bygga en allmänpraktik, anställ en receptionist och en läkare. " ..
+                            "Vänta därefter på att jobben ska trilla in. En bra idé vore att bygga en psykmottagning och anställa en läkare med psykiatrisk kompetens. " ..
+                            "Ett apotek och en syster behövs också för att du ska kunna bota dina patienter. Se upp för svåra fall av pöshuvud - ett pumprum behövs för att greja dessa. " ..
+                            "Försök bota 10 personer och se till att ditt anseende inte sjunker under 200."
 
 tooltip.staff_list.next_person = "Visa nästa sida"
 tooltip.staff_list.prev_person = "Visa föregående sida"
@@ -69,6 +72,8 @@ handyman_window.parcel = "Tomt"
 tooltip.handyman_window.parcel_select = "Tomten där vaktmästaren accepterar uppdrag. Klicka för att ändra"
 tooltip.new_game_window.player_name = "Skriv in det namn du vill kallas i spelet"
 new_game_window.player_name = "Namn"
+
+menu.player_count = "ANTAL SPELARE"
 
 menu_options = {
   lock_windows = "  LÅS FÖNSTER  ",
@@ -116,6 +121,7 @@ menu_file.restart = "  STARTA OM  "
 
 menu_debug = {
   jump_to_level               = "  HOPPA TILL NIVÅ  ",
+  connect_debugger            = "  (CTRL + C) KOPPLA LUA DBGp SERVER  ",
   transparent_walls           = "  (X) TRANSPARENTA VÄGGAR  ",
   limit_camera                = "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = "  STÄNG AV LÖNEÖKNINGAR  ",
@@ -145,6 +151,13 @@ menu_debug_overlay = {
   parcel                      = "  TOMT  ",
 }
 
+menu_player_count = {
+  players_1 = "  1 SPELARE  ",
+  players_2 = "  2 SPELARE  ",
+  players_3 = "  3 SPELARE  ",
+  players_4 = "  4 SPELARE  ",
+}
+
 adviser = {
   room_forbidden_non_reachable_parts = "Rummet kan inte placeras här eftersom delar av sjukhuset då blir oåtkomliga.",
   warnings = {
@@ -171,6 +184,10 @@ adviser = {
     researcher_needs_desk_3 = "En forskare behöver alltid ett skrivbord.",
     nurse_needs_desk_1 = "Varje sköterska behöver ett eget skrivbord.",
     nurse_needs_desk_2 = "Din sköterska är glad att få en paus. Du kanske ville ha flera personer att jobba på avdelningen? Då behöver de var sitt skrivbord.",
+    low_prices = "Du tar för lite betalt för %s. Det lockar visserligen fler patienter, men du kommer inte att tjäna så mycket på var och en.",
+    high_prices = "Avgiften på %s är hög. Du tjänar mycket kortsiktigt, men till slut kommer du att driva iväg folk.",
+    fair_prices = "Avgiften på %s verkar rimlig och balanserad.",
+    patient_not_paying = "En patient lämnade just sjukhuset utan att betala för %s eftersom det är alldeles för dyrt!",
   },
   cheats = {
     th_cheat = "Ojoj, nån vill fuska sig till segern!",
@@ -189,7 +206,7 @@ progress_report.free_build = "FRITT BYGGANDE"
 fax = {
   choices = {
     return_to_main_menu = "Gå till huvudmenyn",
-    accept_new_level = "Gå vidare till nästa bana",
+    accept_new_level = "Gå vidare till nästa nivå",
     decline_new_level = "Fortsätt spela ett tag till",
   },
   emergency = {
@@ -209,8 +226,11 @@ fax = {
 
 letter = {
   dear_player = "Käre %s",
-  custom_level_completed = "Bra gjort! Du klarade alla mål på den här specialbanan!",
+  custom_level_completed = "Bra gjort! Du klarade alla mål på den här specialnivån!",
   return_to_main_menu = "Vill du gå tillbaka till huvudmenyn eller fortsätta spela?",
+  campaign_level_completed = "Bra jobbat! Du klarade nivån, men det är inte över än!\n Vill du ha jobbet som chef vid %s?",
+  campaign_completed = "Otroligt! Du lyckades med alla nivåer. Nu är det bara att mysa och njuta av att fylla forum överallt på nätet om dina bedrifter. Lycka till!",
+  campaign_level_missing = "Ledsen, men det verkar som att nästa nivå på den här kampanjen saknas. (Namn: %s)",
 }
 
 install = {
@@ -222,25 +242,30 @@ install = {
 }
 
 misc.not_yet_implemented = "(ej tillgänglig ännu)"
-misc.no_heliport = "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här banan."
+misc.no_heliport = "Antingen har inga sjukdomar upptäckts ännu, eller så finns det ingen helikopterplatta på den här nivån."
 
 main_menu = {
-  new_game = "Kampanj",
+  new_game = "Originalkampanjen",
+  custom_campaign = "Nya kampanjer",
   custom_level = "Enskild nivå",
   continue = "Fortsätt spel",
   load_game = "Ladda spel",
   options = "Alternativ",
+  map_edit = "Kartredigerare",
   savegame_version = "Sparningsversion: ",
   version = "Version: ",
   exit = "Avsluta",
 }
 
 tooltip.main_menu = {
-  new_game = "Starta bana ett i kampanjen",
+  new_game = "Starta nivå ett i originalkampanjen från Theme Hospital",
+  custom_campaign = "Spela en kampanj som är skapad av andra spelare",
   custom_level = "Bygg ditt sjukhus på en valfri nivå",
   load_game = "Ladda ett sparat spel",
   options = "Fixa till dina inställningar",
+  map_edit = "Starta kartredigeraren för att skapa din egen karta",
   exit = "Nej! Du vill väl inte sluta redan?",
+  quit = "Du håller på att avsluta CorsixTH. Är du säker på att du vill det?"
 }
 
 load_game_window = {
@@ -254,13 +279,25 @@ tooltip.load_game_window = {
 }
 
 custom_game_window = {
-  caption = "Specialbanor",
+  caption = "Enskilda nivåer",
   free_build = "Bygg fritt",
+  load_selected_level = "Starta",
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Ladda banan %s",
+  choose_game = "Välj en nivå för att läsa mer om den",
   free_build = "Bocka för den här rutan om du vill spela utan pengar och vinst- och förlustkriterier",
+  load_selected_level = "Ladda och spela den valda nivån",
+}
+
+custom_campaign_window = {
+  caption = "Nya kampanjer",
+  start_selected_campaign = "Starta kampanj",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Välj en kampanj för att läsa mer om den",
+  start_selected_campaign = "Ladda den första nivån på den valda kampanjen",
 }
 
 save_game_window = {
@@ -271,6 +308,16 @@ save_game_window = {
 tooltip.save_game_window = {
   save_game = "Skriv över %s",
   new_save_game = "Skriv namnet på den nya filen",
+}
+
+save_map_window = {
+  caption = "Spara karta (%1%)",
+  new_map = "Ny karta",
+}
+
+tooltip.save_map_window = {
+  map = "Skriv över kartan %s",
+  new_map = "Skriv ett kartnamn",
 }
 
 menu_list_window = {
@@ -430,20 +477,27 @@ errors = {
   unavailable_screen_size = "Skärmupplösningen du valde finns inte i fullskärmsläge.",
   alien_dna = "NOTERA: Det finns inga animeringar för patienter med utomjordiskt DNA när de sitter ner, öppnar dörrar osv. Precis som i Theme Hospital gör de därför det i mänsklig skepnad. Dessa patienter anländer som vanligt endast om nivån du spelar definierat att sjukdomen ska finnas",
   fractured_bones = "NOTERA: Animeringen för kvinnliga Krossade patienter är inte perfekt",
+  could_not_load_campaign = "Kunde inte ladda kampanjen %s",
+  could_not_find_first_campaign_level = "Kunde inte hitta den första nivån på den här kampanjen: %s",
+}
+
+warnings = {
+  levelfile_variable_is_deprecated = "Notera: Nivån '%s' innehåller en föråldrad variabeldefinition i nivåfilen." ..
+                                     "'%LevelFile' har bytt namn till '%MapFile'. Meddela nivåskaparen att uppdatera nivån.",
 }
 
 confirmation = {
   needs_restart = "Att ändra denna inställning kräver en omstart av spelet. Osparad data kommer att gå förlorad. Är du säker på att du vill göra detta?",
   abort_edit_room = "Du håller på att bygga eller ändra ett rum. Om alla obligatoriska föremål är placerade kommer rummet att färdigställas som det är, annars tas det bort. Fortsätta?",
   maximum_screen_size = "Upplösningen du valt är större än 3000 x 2000. Större upplösningar är möjliga, men kräver bättre hårdvara. Är du säker på att du vill fortsätta?",
-  music_warning = "Innan du väljer att använda mp3-filer som spelmusik behövs smpeg.dll eller motsvarande för ditt operativsystem, annars blir det ingen musik i spelet. Det finns i dagsläget ingen 64-bitarsversion. Vill du fortsätta?",
+  music_warning = "Notera: När du väljer att använda mp3-filer som spelmusik behövs smpeg.dll eller motsvarande för ditt operativsystem, annars blir det ingen musik i spelet. Vill du fortsätta?",
 }
 
 information = {
-  custom_game = "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialbanan!",
+  custom_game = "Välkommen till CorsixTH. Ha nu riktigt kul med den här specialnivån!",
   no_custom_game_in_demo = "Ledsen, men det går inte att spela enskilda nivåer med demofilerna.",
   cannot_restart = "Tyvärr sparades detta spel innan funktionen att starta om hade implementerats.",
-  very_old_save = "Det har hänt en hel del med spelet sedan du startade den här banan. För att vara säker på att allt fungerar som det är tänkt kan det vara bra att överväga att starta om banan.",
+  very_old_save = "Det har hänt en hel del med spelet sedan du startade den här nivån. För att vara säker på att allt fungerar som det är tänkt kan det vara bra att överväga att starta om nivån.",
   level_lost = {
     "Attans! Du förlorade. Bättre lycka nästa gång!",
     "Anledning till att du förlorade:",
@@ -472,7 +526,7 @@ totd_window = {
     "Hittar du en massa text på engelska i spelet? Hjälp oss översätta färdigt till Svenska!",
     "Teamet bakom CorsixTH söker förstärkning! Vill du koda, översätta eller skapa grafik till spelet? Kontakta oss i forumet, på mejllistan eller i IRC-kanalen (corsix-th at freenode).",
     "Om du hittar en bugg, rapportera den gärna i vår bugghanterare på adressen th-issues.corsix.org.",
-    "Varje bana har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",
+    "Varje nivå har vissa krav som ska uppfyllas innan du kan gå vidare till nästa. Kolla statusfönstret för att se hur nära målen du är.",
     "Om du vill ändra eller ta bort ett existerande rum kan du göra det med hjälp av ändra rum-knappen i panelen längst ner (saxen).",
     "Om du ur högen av patienter vill ta reda på vilka som köar till ett visst rum är det bara att föra muspekaren över rummet.",
     "Klicka på dörren till ett rum för att se kön till det. Sedan går det att genomföra finlir som att ändra ordning eller skicka en patient till ett annat likadant rum.",
@@ -514,6 +568,8 @@ cheats_window = {
     end_year = "Hoppa till nyår",
     lose_level = "Förlora nivå",
     win_level = "Vinn nivå",
+    increase_prices = "Öka priser",
+    decrease_prices = "Minska priser",
   },
   close = "Stäng",
 }
@@ -533,18 +589,20 @@ tooltip.cheats_window = {
     end_year = "Hoppar till slutet av året.",
     lose_level = "Förlora nuvarande nivå.",
     win_level = "Vinn nuvarande nivå.",
+    increase_prices = "Öka alla priser med 50% (max. 200%)",
+    decrease_prices = "Minska alla priser med 50% (min. 50%)",
   }
 }
 
 introduction_texts = {
-  demo = {
-    "Välkommen till demosjukhuset!",
-    "Tyvärr innehåller demon bara denna nivå. Ändå finns det garanterat tillräckligt att göra ett tag framöver!",
-    "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum.",
-    "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna.",
-    "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du.",
+  demo =
+    "Välkommen till demosjukhuset!" ..
+    "Tyvärr innehåller demon bara denna nivå. Ändå finns det garanterat tillräckligt att göra ett tag framöver!" ..
+    "Du kommer att råka ut för diverse sjukdomar som kräver olika rum för att botas. " ..
+    "Ibland kan olyckor hända, så att det kommer akutfall till sjukhuset. Dessutom behöver du forska för att upptäcka fler rum." ..
+    "Målet är att tjäna $100,000, ha ett sjukhusvärde av $70,000 och 700 i anseende, samtidigt som du botar minst 75% av patienterna." ..
+    "Se till att ditt anseende inte sjunker under 300 och att du inte dödar mer än 40% av dina patienter, annars förlorar du." ..
     "Lycka till!",
-  },
 }
 
 calls_dispatcher = {
@@ -573,6 +631,40 @@ update_window = {
 tooltip.update_window = {
   download = "gå till nedladdningssidan där du hittar den absolut senaste versionen av CorsixTH",
   ignore = "Skippa updateringen just nu. Du kommer att få en ny notis nästa gång du öppnar CorsixTH",
+}
+
+map_editor_window = {
+  pages = {
+    inside = "Inomhus",
+    outside = "Utomhus",
+    foliage = "Grönska",
+    hedgerow = "Häck",
+    pond = "Damm",
+    road = "Väg",
+    north_wall = "Nordlig vägg",
+    west_wall = "Västlig vägg",
+    helipad = "Helikopterplatta",
+    delete_wall = "Ta bort väggar",
+    parcel_0 = "Tomt 0",
+    parcel_1 = "Tomt 1",
+    parcel_2 = "Tomt 2",
+    parcel_3 = "Tomt 3",
+    parcel_4 = "Tomt 4",
+    parcel_5 = "Tomt 5",
+    parcel_6 = "Tomt 6",
+    parcel_7 = "Tomt 7",
+    parcel_8 = "Tomt 8",
+    parcel_9 = "Tomt 9",
+    camera_1 = "Kamera 1",
+    camera_2 = "Kamera 2",
+    camera_3 = "Kamera 3",
+    camera_4 = "Kamera 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    paste = "Klistra in",
+  }
 }
 
 date_format.daymonth = "%1% %2:months%"

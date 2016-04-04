@@ -32,36 +32,36 @@ date_format = {
   daymonth = "%2%月 %1%日",
 }
 misc = {
-  no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.",
+  no_heliport = "还没有疾病被发现或者地图上需要一个直升机场",
   not_yet_implemented = "(尚未实现)",
 }
 debug_patient_window = {
-  caption = "Debug Patient",
+  caption = "病人除错",
 }
 totd_window = {
-  previous = "上一个提示",
   tips = {
-    [1] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
-    [2] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
-    [3] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
-    [4] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
-    [5] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
-    [6] = "项目论坛地址1：http://forums.corsix-th.com",
-    [7] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
-    [8] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
-    [9] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
-    [10] = "自定义游戏里面有一幅地图Avatar，里面有特殊的任务",
-    [11] = "Corsix-TH，主题医院复刻版，项目主页：http://code.google.com/p/corsix-th",
-    [12] = "运行游戏需要原版主题医院，下载地址：http://www.gougou.com/search?search=主题医院",
-    [13] = "找到bug可以提交到这里：http://code.google.com/p/corsix-th/issues/list",
-    [14] = "这个复刻版还有很多功能没有实现，例如地震、传染病等，这里有说明：http://code.google.com/p/corsix-th/wiki/ProgrammingIdeas",
-    [15] = "有问题可加入QQ群“【主题医院】交流平台”(群号：13365299)详细询问，或者到百度贴吧“主题医院”吧详细询问",
-    [16] = "项目论坛地址1：http://forums.corsix-th.com",
-    [17] = "项目论坛地址2：http://groups.google.com/group/corsix-th-dev",
-    [18] = "如果你对这个项目有兴趣，最新版源码在这里：http://th.corsix.org/corsix-th-latest.tar.gz",
-    [19] = "编译源码的方法：http://code.google.com/p/corsix-th/wiki/HowToCompile",
+    "医院想开张就需要一个前台桌子和一个问诊室.这之后还需要根据不同病人建立各种房间.但有个药房总是对的.",
+    "有一些机器需要维护,比如说充气机.所以雇一两个修理人员还是必要的, 不然那就是个定时炸弹.",
+    "你的员工会不时感到疲倦. 所以建一间休闲室也很必要.",
+    "多放点几个暖气,让你的员工和病人感到春天般温暖.用全景地图来查看它们的覆盖面积以决定是否还需要多放些.",
+    "一个医生的医疗水平很大程度影响他的诊断速度.把最牛逼的医生放在问诊室,这样你会省下其他的问诊室.",
+    "实习生和医生们可以通过在学习室向专家学习来提高水平.如果请来的专家拥有某一项专长,他也会教给他的学生们.",
+    "有没有试过在传真机上拨112?这是欧洲的急救电话.别忘了把你的音箱开到最大!",
+    "在主菜单和游戏菜单里面,找到选项窗口,在那里可以调整分辨率和语言.",
+    "你选择了中文,但是你还是可能会在游戏中不停地看到英文.把他们翻译了吧,我们需要你的帮助!",
+    "CorsixTH小组正在壮大!如果你对编程,翻译,创做主题医院需要的图片等等任何方面感兴趣,请通过我们的论坛,邮件列表或者IRC频道(corsix-th at freenode)联系我们.",
+    "如果你碰到了bug,请提交给我们: th-issues.corsix.org",
+    "每一关都需要满足特定的条件才能过关.你可以通过状态窗口看到你的进度.",
+    "如果你需要编辑或者删除一间房间,屏幕下方找到工具栏,然后点编辑房间按钮.",
+    "在成群结队等待就诊的病人中, 你可以通过指向房间的门来找到哪些病人在等.",
+    "点击房间门可以看到等待队列.你可以做些调整让某些人走个后门,或者送到另一个房间去.",
+    "不开心的员工只有通过涨薪来平衡自己了.你要保证你的员工的工作环境像家一样,才能让他们甘心给你卖命.",
+    "病人等的时间长了,会口渴,如果开了暖气,口渴得会更快!放些自动贩卖机吧,还能多些零花钱.",
+    "如果你见过某种病,你可以中断诊疗过程直接去治,治死了不要找我.",
+    "从紧急事件总能赚一大笔,但是你要按时处理好才行.",
   },
-  next = "下一个提示",
+  previous = "前一项提示",
+  next = "下一项提示",
 }
 tooltip = {
   totd_window = {
@@ -76,16 +76,16 @@ tooltip = {
     start_game_with_name = "%s",
   },
   cheats_window = {
-    close = "Close the cheats dialog",
+    close = "关闭作弊窗口",
     cheats = {
-      end_month = "Jumps to the end of the month.",
-      emergency = "Creates an emergency.",
-      win_level = "Win the current level.",
-      create_patient = "Creates a Patient at the map border.",
-      money = "Adds 10.000 to your bank balance.",
-      lose_level = "Lose the current level.",
-      all_research = "Completes all research.",
-      end_year = "Jumps to the end of the year.",
+      end_month = "跳到月末.",
+      emergency = "建一个急诊室.",
+      win_level = "赢得当前关卡.",
+      create_patient = "在地图的边缘生成一个病人.",
+      money = "往银行里存 10.000.",
+      lose_level = "在当前关卡败北.",
+      all_research = "完成所有的研究.",
+      end_year = "跳到年末.",
     },
   },
   casebook = {
@@ -116,21 +116,21 @@ tooltip = {
     save_game = "%s",
   },
   calls_dispatcher = {
-    assigned = "This box is marked if someone is assigned to the corresponding task.",
-    task = "List of tasks - click task to open assigned staff's window and scroll to location of task",
-    close = "Close the calls dispatcher dialog",
+    assigned = "这个框代表是否有人被分配给此任务.",
+    task = "任务列表 - 点击任务打开人员分配窗口然后滚动到任务的位置",
+    close = "关闭接线员窗口",
   },
   research_policy = {
-    research_progress = "Progress towards the next discovery in this category: %1%/%2%",
-    no_research = "No research is being carried out in this category at the moment",
+    research_progress = "此类研究下次发现的进度: %1%/%2%",
+    no_research = "当前没有任何此类研究在进行中",
   },
   information = {
     close = "关闭",
   },
   lua_console = {
-    textbox = "Enter Lua code to run here",
-    execute_code = "Run the code you have entered",
-    close = "Close the console",
+    textbox = "输入Lua代码可直接运行",
+    execute_code = "运行输入的代码",
+    close = "关闭控制台",
   },
   load_game_window = {
     load_game = "%s",
@@ -141,7 +141,7 @@ tooltip = {
     close = "关闭此窗口，但不删除消息",
   },
   objects = {
-    litter = "Litter: Left on the floor by a patient because he did not find a bin to throw it in.",
+    litter = "废弃物: 病人找不到垃圾桶,所以随意丢在了地上.",
   },
   options_window = {
     fullscreen_button = "全屏幕",
@@ -157,26 +157,26 @@ custom_game_window = {
 }
 cheats_window = {
   cheats = {
-    end_month = "End of Month",
-    emergency = "Create Emergency",
-    win_level = "Win Level",
-    create_patient = "Create Patient",
-    money = "Money Cheat",
-    lose_level = "Lose Level",
-    all_research = "All Research Cheat",
-    end_year = "End of Year",
+    end_month = "月末",
+    emergency = "修建急诊室",
+    win_level = "获胜",
+    create_patient = "生成病人",
+    money = "给我钱!!",
+    lose_level = "失败",
+    all_research = "所有研究",
+    end_year = "年末",
   },
-  close = "Close",
-  caption = "Cheats",
+  close = "关闭",
+  caption = "作弊",
   cheated = {
-    no = "Cheats used: No",
-    yes = "Cheats used: Yes",
+    no = "作弊了吗: 否",
+    yes = "作弊了吗: 是",
   },
-  warning = "Warning: You will not get any bonus points at the end of the level if you cheat!",
+  warning = "警告: 如果作弊关卡结束时你将得不到任何奖励!",
 }
 errors = {
   unavailable_screen_size = "你设置的屏幕大小无法应用于全屏模式。",
-  dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
+  dialog_missing_graphics = "哎呀, Demo 数据文件不包含这个对话框.",
   load_prefix = "载入游戏失败：",
   save_prefix = "保存游戏失败：",
   map_file_missing = "找不到该关卡的地图文件 %s！",
@@ -192,30 +192,38 @@ main_menu = {
   exit = "退出"
 }
 menu_debug = {
-  lua_console = "  (F12) LUA CONSOLE  ",
-  disable_salary_raise = "  DISABLE SALARY RAISE  ",
-  make_debug_fax = "  MAKE DEBUG FAX  ",
-  make_debug_patient = "  MAKE DEBUG PATIENT  ",
-  sprite_viewer = "  SPRITE VIEWER  ",
-  dump_strings = "  DUMP STRINGS  ",
-  map_overlay = "  MAP OVERLAY  ",
-  calls_dispatcher = "  CALLS DISPATCHER  ",
-  cheats = "  (F11) CHEATS  ",
-  dump_gamelog = "  (CTRL+D) DUMP GAME LOG  ",
-  limit_camera = "  LIMIT CAMERA  ",
-  transparent_walls = "  (X) TRANSPARENT WALLS  ",
-  jump_to_level = "  JUMP TO LEVEL  ",
+  lua_console = "  (F12) LUA 控制台  ",
+  disable_salary_raise = "  关闭涨工资  ",
+  make_debug_fax = "  建一个传真DEBUG  ",
+  make_debug_patient = "  建一个病人DEBUG   ",
+  sprite_viewer = "  图像浏览器  ",
+  dump_strings = "  输出字符串  ",
+  map_overlay = "  地图层次  ",
+  calls_dispatcher = "  接线员窗口  ",
+  cheats = "  (F11) 作弊  ",
+  dump_gamelog = "  (CTRL+D) 输出游戏记录文本  ",
+  limit_camera = "   限制镜头   ",
+  transparent_walls = "  (X) 把墙变透明 ",
+  jump_to_level = "  跳关  ",
 }
 menu_options = {
-  edge_scrolling = "    开启鼠标滚动",
+  edge_scrolling = "    边缘滚动",
   lock_windows = "    锁定窗口",
+  sound = "  (ALT+S) 音效   ",
+  announcements = "  (ALT+A) 公告   ",
+  music = "  (ALT+M) 音乐   ",
+  jukebox = "  (J) 音乐盒  ",
+  adviser_disabled = "  (SHIFT+A) 建议  ",
+  warmth_colors = "  暖气区域显示  ",
+  wage_increase = "  涨工资要求",
+  twentyfour_hour_clock = "  24小时时钟  "
 }
 menu_options_game_speed = {
   pause = "    暂停",
 }
 lua_console = {
-  execute_code = "Execute",
-  close = "Close",
+  execute_code = "运行",
+  close = "关闭",
 }
 install = {
   title = "-------------------------------- CorsixTH  游戏设置 -------------------------------",
@@ -229,23 +237,48 @@ load_game_window = {
 }
 adviser = {
   cheats = {
-    th_cheat = "Congratulations, you have unlocked cheats!",
-    hairyitis_cheat = "Hairyitis cheat activated!",
-    roujin_on_cheat = "Roujin's challenge activated! Good luck...",
-    crazy_on_cheat = "Oh no! All doctors have gone crazy!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    crazy_off_cheat = "Phew... the doctors regained their sanity.",
-    roujin_off_cheat = "Roujin's challenge deactivated.",
-    hairyitis_off_cheat = "Hairyitis cheat deactivated.",
+    th_cheat = "恭喜, 你解锁了作弊选项!",
+    hairyitis_cheat = "Hairyitis 作弊模式已经开启!",
+    roujin_on_cheat = "Roujin's challenge已经开启!祝你好运...",
+    crazy_on_cheat = "不会吧!所有的医生都疯了!",
+    bloaty_off_cheat = "大头病作弊被关闭.",
+    bloaty_cheat = "大头病作弊开启!",
+    crazy_off_cheat = "还好... 所有的一生都恢复理智了.",
+    roujin_off_cheat = "Roujin's challenge关闭.",
+    hairyitis_off_cheat = "Hairyitis 作弊模式关闭.",
   },
-  room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
+  warnings = {
+    no_desk = "你总得有个前台吧!",
+    no_desk_1 = "你得有个前台,这样才会有病人来!",
+    no_desk_2 = "干的不错, 基本上也是个世界纪录了吧:快一年了,一个病人都没有! 如果你想继续当这个经理的话,你需要去雇一个前台,然后给她一张桌子工作!",
+    no_desk_3 = "你真是个天才,一年了连个前台都没有! 你怎么可能有任何的病人来? 赶紧给我搞定,别在那里不务正业了!",
+    no_desk_4 = "前台需要一个桌子来接待来访的病人",
+    no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
+    no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
+    no_desk_7 = "You've built the reception desk, so how about hiring a receptionist?  You won't see any patients until you get this sorted out you know!",
+    falling_1 = "嘿!别开玩笑了, 看看你都是怎么点鼠标的, 你可能会伤到人!",
+    falling_2 = "不要再胡搞了, 跟有病似的?",
+    falling_3 = "啊~有人受伤了,赶紧叫医生!",
+    falling_4 = "这里是医院,不是主题公园!",
+    falling_5 = "这里不适合逗人玩,他们是病人好吗?",
+    falling_6 = "这里不是保龄球馆, 应该对待病人如春天般温暖!",
+    cannot_afford = "你已经没有足够的钱来雇这个人!",-- I can't see anything like this in the original strings
+    cannot_afford_2 = "你没有足够的存款来做这件事!",
+    research_screen_open_1 = "你需要建设一个研究科室才能访问研究页面.",
+    research_screen_open_2 = "这一关不能开展研究.",
+    researcher_needs_desk_1 = "研究员需要一张桌子展开工作.",
+    researcher_needs_desk_2 = "你的研究员对你允许他休息片刻表示感谢,但如果你想让每个人都工作,你需要给每个人一张桌子.",
+    researcher_needs_desk_3 = "每个研究院需要自己的桌子.",
+    nurse_needs_desk_1 = "每个护士都需要自己的桌子.",
+    nurse_needs_desk_2 = "你的护士对你允许他休息片刻表示感谢,但如果你想让每个人都工作,你需要给每个人一张桌子.",
+  },
+  room_forbidden_non_reachable_parts = "在这个地方放置房间会导致医院的部分空间无法到达.",
 }
 calls_dispatcher = {
-  repair = "Repair %s",
-  summary = "%d calls; %d assigned",
-  close = "Close",
-  watering = "Watering @ %d,%d",
+  repair = "修理 %s",
+  summary = "%d 次电话; %d 被分配",
+  close = "关闭",
+  watering = "浇水 @ %d,%d",
   staff = "%s - %s",
 }
 information = {
@@ -256,11 +289,11 @@ information = {
     balance = "银行账户资金低于%d。",
     percentage_killed = "杀死了%d的病人。",
   },
-  cannot_restart = "Unfortunately this custom game was saved before the restart feature was implemented.",
+  cannot_restart = "不幸的是这个自定义地图是在 重新开始 功能开发之前创建的.",
   custom_game = "欢迎来到 CorsixTH。尽情享受自定义地图吧！",
 }
 new_game_window = {
-  caption = "Campaign",
+  caption = "竞争上岗",
   player_name = "玩家名称",
   option_on = "开",
   option_off = "关",
@@ -299,7 +332,7 @@ menu_list_window = {
 
 save_game_window = {
   caption = "保存游戏",
-  new_save_game = "",
+  new_save_game = "给新游戏存档起个名",
 }
 fax = {
   choices = {
@@ -309,7 +342,7 @@ fax = {
   },
 }
 menu_debug_overlay = {
-  heat = "  TEMPERATURE  ",
+  heat = "  温度  ",
   byte_0_1 = "  BYTE 0 & 1  ",
   byte_6 = "  BYTE 6  ",
   flags = "  FLAGS  ",
@@ -323,8 +356,8 @@ menu_debug_overlay = {
   none = "  NONE  ",
 }
 confirmation = {
-  abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
+  abort_edit_room = "你正在修建或者就该一个房间.如果所有必需的物品都被放置了就没有问题,否则所做的修改将被删除. 继续吗?",
+  needs_restart = "这项设置的改动需要重新启动 CorsixTH. 尚未保存的进度将会丢失. 确定要这么做吗?",
 }
 dynamic_info = {
   patient = {
@@ -340,17 +373,16 @@ dynamic_info = {
   },
 }
 introduction_texts = {
-  demo = {
-    [1] = "Welcome to the demo hospital!",
-    [2] = "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!",
-    [3] = "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room.",
-    [4] = "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.",
-    [5] = "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",
-    [6] = "Good luck!",
-  },
+  demo =
+    "欢迎来到演示版医院!" ..
+    "演示版本只有当前这一个关卡. 但有一堆事情足够你忙一阵了!" ..
+    "你将会遇到各种疾病需要各种医疗室来救治. 紧急情况也会经常性地发生. 你需要通过研究室来研发更多的医疗室." ..
+    "你的目标是挣够 $100,000, 使医院的价值达到 $70,000 以及得到 700 声望值, 同时你还需要救治超过 75% 的病人." ..
+    "确保你的声望值不会掉到 300 以下, 你的病人死亡率不超过 40% , 否则你就完了." ..
+    "祝你好运!",
 }
 object = {
-  litter = "Litter",
+  litter = "废弃物",
 }
 letter = {
   custom_level_completed = "做的好！你已完成自定义游戏的所有目标！",
@@ -366,37 +398,26 @@ update_window = {
   ignore = "回到主菜单"
 }
 
-tooltip.custom_game_window.free_build = "Tick this box if you want to play without money or winning and losing conditions"
-tooltip.cheats_window.cheats.vip = "Creates a VIP."
-tooltip.menu_list_window.save_date = "Click here to sort the list by last modification date"
-tooltip.menu_list_window.name = "Click here to sort the list by name"
-custom_game_window.free_build = "Free Build"
-cheats_window.cheats.vip = "Create VIP"
-main_menu.version = "Version: "
-main_menu.savegame_version = "Savegame version: "
-progress_report.free_build = "FREE BUILD"
-menu_options.adviser_disabled = "    显示助手"
-install.exit = "Exit"
-adviser.warnings.falling_2 = "Stop messing about, how would you like it?"
-adviser.warnings.no_desk_2 = "Well done, that must be a world record: nearly a year and no patients! If you want to continue as Manager of this hospital, you will need to hire a receptionist and build a reception desk for her to work from!"
-adviser.warnings.falling_5 = "This is not the place for knocking people over, they're ill you know!"
-adviser.warnings.falling_4 = "This is an Hospital, not a Theme Park!"
-adviser.warnings.falling_6 = "This is not a bowling alley, sick people should not be treated like that!"
-adviser.warnings.falling_3 = "Ouch, that had to hurt, someone call a Doctor!"
-adviser.warnings.no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!"
-adviser.warnings.cannot_afford = "You don't have enough money in the bank to hire that person!"
-adviser.warnings.no_desk = "You should build a reception desk and hire a receptionist at some point!"
-adviser.warnings.no_desk_1 = "If you want patients to come to your hospital, you will need to hire a receptionist and build her a desk to work at!"
-adviser.warnings.falling_1 = "Hey! that is not funny, watch where you click that mouse; someone could get hurt!"
-information.very_old_save = "There have been a lot of updates to the game since you started this level. To be sure that all features work as intended please consider restarting it."
+tooltip.custom_game_window.free_build = "勾选此框你将不需要为钱以及胜利失败而操心"
+tooltip.cheats_window.cheats.vip = "创建一个 VIP."
+tooltip.menu_list_window.save_date = "点击整理一个按照最后修改日期排序的列表"
+tooltip.menu_list_window.name = "点击按照名字整理"
+custom_game_window.free_build = "自由模式"
+cheats_window.cheats.vip = "创建 VIP"
+main_menu.version = "版本: "
+main_menu.savegame_version = "存档版本: "
+progress_report.free_build = "自由模式"
+menu_options.adviser_disabled = "    显示建议"
+install.exit = "退出"
+information.very_old_save = "你上次存档之后,这个游戏有很多更新. 为了保证你能玩到最新最酷的游戏,请考虑重新来过"
 options_window.cancel = "取消"
 menu_list_window.save_date = "修改日期"
 menu_list_window.name = "名称"
-fax.vip_visit_result.remarks.free_build[1] = "It is a very nice hospital you have there! Not very hard to get it working without money limitations though, eh?"
-fax.vip_visit_result.remarks.free_build[2] = "I'm no economist, but I think I could run this hospital too if you know what I mean..."
-fax.vip_visit_result.remarks.free_build[3] = "A very well run hospital. Watch out for the recession though! Right... you didn't have to worry about that."
-fax.emergency.free_build = "If you are successful your reputation will increase but if you fail your reputation will be seriously dented."
-fax.emergency.num_disease_singular = "There is 1 person with %s and they require immediate attention."
+fax.vip_visit_result.remarks.free_build[1] = "你的医院相当不错! 没有预算的限制,搞定很容易吧?"
+fax.vip_visit_result.remarks.free_build[2] = "我不是一个经济学家, 但我要是你我也行. 你懂我啥意思..."
+fax.vip_visit_result.remarks.free_build[3] = "医院经营的不错. 但要小心经济不景气. 哦对了,你才不操那个心."
+fax.emergency.free_build = "成功的话,你的声望就会上升,但你要是失败了, 就会一落千丈."
+fax.emergency.num_disease_singular = "那里有一个人患了 %s ,他们需要马上救治."
 
 ------------------------------------
 --OLD STRINGS IN LANGUAGE "简体中文":
@@ -610,7 +631,7 @@ tooltip = {
     research = "研究",
     hire = "雇佣员工",
     status = "状态",
-    town_map = "城镇地图",
+    town_map = "城市地图",
     rooms = "建造房屋",
     bank_button = "左击进入银行经理画面，右击进入银行帐户",
   },
@@ -847,15 +868,16 @@ tooltip = {
   },
 }
 menu_charts = {
-  briefing = "    任务简报",
-  casebook = "    治疗手册",
-  graphs = "    图表",
-  policy = "    制度",
-  bank_manager = "    银行经理",
-  statement = "    银行账户",
-  staff_listing = "    员工列表",
-  research = "    研究",
-  status = "    状态",
+  briefing     = "   任务简报",
+  casebook     = " (F5) 治疗手册",
+  graphs       = " (F8) 图表",
+  policy       = " (F9) 制度",
+  bank_manager = " (F1) 银行经理",
+  statement    = " (F2) 银行账户",
+  town_map     = " (F4) 城市地图  ",
+  staff_listing= " (F3) 员工列表",
+  research     = " (F6) 研究",
+  status       = " (F7) 状态",
 }
 town_map = {
   number = "地区编号",
@@ -2849,127 +2871,109 @@ dynamic_info = {
   },
 }
 introduction_texts = {
-  level17 = {
-    [1] = "最后的警告－时刻关注您的声望－这是真正吸引病人前来就诊的关键。",
-    [2] = "如果您没有杀死太多的病人，且使就诊病人保持快乐，则不必太担心声望！",
-    [3] = "决定权就在您的手中。祝您好运。",
-  },
-  level1 = {
-    [1] = "欢迎来到您的第一座医院！//",
-    [2] = "首先要摆放接待台，建造一般诊断室，并雇佣一名接待员和一名医生。",
-    [3] = "随后就可以等待开张了。",
-    [4] = "建造精神病诊断治疗室并雇佣一名精神病医生是一个好主意。",
-    [5] = "药房和护士也是治疗病人所必需的。",
-    [6] = "建造一个充气机房间就可以治疗头部肿胀患者。",
-    [7] = "您需要治愈10个病人，并使声望保持在200以上。",
-  },
-  level9 = {
-    [1] = "当填满了卫生部的银行帐户并为部长大人购买了一辆轿车后，您现在又要开始新的工作了。",
-    [2] = "在这里您要面对很多问题。",
-    [3] = "只有拥有足够经验充分的员工和房间，您才能够顺利过关。",
-    [4] = "医院价值需要达到$200,000，且银行帐户上要有$400,000。",
-    [5] = "如果无法达到上述要求，则无法胜利完成任务。",
-  },
-  level2 = {
-    [1] = "在该区域内还有一些其它的疾病。",
-    [2] = "建造医院从而可以治疗更多的病人，并应该考虑建造研究部门。",
-    [3] = "记住保持内部的清洁，从而使声望尽可能地高－您将遇到患有舌头松弛症的病人，因此需要建造舌头诊治房间。",
-    [4] = "您也可以建造心电图房间来帮助诊断疾病。",
-    [5] = "这些房间都需要经过研究才能够被建造。现在你可以购买其它土地扩展医院－使用城镇地图就可以购买土地。",
-    [6] = "目标是声望300，银行现金为10000，且治愈40个病人。",
-  },
-  level7 = {
-    [1] = "在这里您将受到卫生部的密切监察，因此要在赚钱的同时，努力提高自己的声望。",
-    [2] = "我们无法处理太多的医疗事故－这对于医院的运营是十分不利的。",
-    [3] = "确认所有员工都很快乐，并确认已经购买了所有需要的仪器装备。",
-    [4] = "声望需要达到600，且银行里需要有$200,000。",
-  },
-  level5 = {
-    [1] = "医院将非常繁忙，处理各种各样的病人。",
-    [2] = "医生都是刚刚毕业的实习医生，因此需要建造一间培训室对他们进行培训，提高能力。",
-    [3] = "您只有3名专家可以帮助培训这些员工，因此一定要让专家快乐。",
-    [4] = "另外要注意的是，医院的位置不是很好。",
-    [5] = "经常会发生地震。",
-    [6] = "地震将对医院中的机器产生损坏，从而影响医院的运营。",
-    [7] = "使您声望达到400以上，现金达到$50,000。另外需要治愈200个病人。",
-  },
-  level4 = {
-    [1] = "使所有的病人快乐，保持治疗的高效率并尽量降低死亡人数。",
-    [2] = "声望是十分重要的，因此尽量赢得更高的声望。",
-    [3] = "不要太多担心收入情况－当声望提高了，收入也自然会提高。",
-    [4] = "您需要培训您的医生，拓宽他们的能力。",
-    [5] = "这样他们就可以更好的为病人服务。",
-    [6] = "胜利条件是声望达到500以上。",
-  },
-  level14 = {
-    [1] = "这里还有一个挑战－一个充满惊奇的医院。",
-    [2] = "如果您能够成功完成这个任务，则您将成为所有胜利者中的佼佼者。",
-    [3] = "不要认为完成这个任务就象吃蛋糕一样，这将是您所遇到的最艰苦的工作。",
-    [4] = "祝您好运！",
-  },
-  level15 = {
-    [1] = "好的，下面是管理医院的一些技巧。//",
-    [2] = "医生需要各种帮助来诊断病人。您可以",
-    [3] = "建造另一个诊断类房间，例如高级诊断室。",
-  },
-  level8 = {
-    [1] = "需要您来建造一座高效的医院。",
-    [2] = "很多人都无事可做，因此需要适量的裁员以保持高效。",
-    [3] = "记住治愈病人是很重要的一件事情，但是您更要从中赚钱。",
-    [4] = "让恶心呕吐的病人靠近清洁工人。",
-    [5] = "需要赚取$300,000就可以过关。",
-  },
-  level13 = {
-    [1] = "您的高超管理技能被特殊机密部门获知。",
-    [2] = "他们将向您提高特别奖金，因为他们有一座被老鼠困扰的医院需要有效管理。",
-    [3] = "您必须杀死尽可能多的老鼠，并让清洁工人打扫干净。",
-    [4] = "接受这个任务？",
-  },
-  level16 = {
-    [1] = "当对病人完成诊断后，需要建造处理和治疗类房间完成对病人的治疗工作。可以从",
-    [2] = "建造药房开始。在药房中需要一名护士分配各种药品。",
-  },
-  level6 = {
-    [1] = "使用您的所有知识来建造一个运行平稳的医院，从而可以赚取利润并处理任何问题。",
-    [2] = "您需要注意一点，医院周围的空气对细菌繁殖，传染病流行非常适宜。",
-    [3] = "如果您没有保持医院的清洁，则将面对传染病的流行。",
-    [4] = "赚取$150,000，并使医院价值超过$140,000。",
-  },
-  level12 = {
-    [1] = "您现在遇到了最大的挑战。",
-    [2] = "我们为您的成功感到由衷地高兴，卫生部为您准备了一项顶级工作；他们需要有人建造另一个超级医院，赚钱的同时获取较高的声望。",
-    [3] = "您可以购买任何需要的土地，治疗各种疾病赢得各种奖励。",
-    [4] = "动心了吗？",
-    [5] = "赚取$650,000，治愈750个病人，使声望达到800就可以胜利过关。",
-  },
-  level3 = {
-    [1] = "这次您将在一个富裕地区建造医院。",
-    [2] = "卫生部希望您能够在这里赚取更多的利润。",
-    [3] = "开始时您被要求获取好的声望，但是一旦医院步入正轨，就可以集中精力赚取更多的钱。",
-    [4] = "有可能会发生紧急事件。",
-    [5] = "也就是说一次会有大量病人就诊，且他们的病情都一样。",
-    [6] = "在时间限制内如果能够治愈他们，则不仅可以拿到奖金，声望也会提高。",
-    [7] = "一些疾病如猫王综合症等有可能发生，因此最好建造一间手术中心和附属病房。",
-    [8] = "胜利条件是赚取$20,000。",
-  },
-  level10 = {
-    [1] = "随着您的经验不断增长，卫生部要求您集中精力提高药品的治疗效果。",
-    [2] = "有人对您颇有微辞，为此您必须使所有的药物都非常有效。",
-    [3] = "另外，一定要降低医疗事故的发生次数，减少死亡人数。",
-    [4] = "作为提示，您需要为建造胶桶留一些空地。",
-    [5] = "使所有药物的疗效都达到80%%，声望达到650且在银行帐户上有$500,000，这样就可以胜利过关。",
-  },
-  level11 = {
-    [1] = "现在您有机会建造一座终极医院。",
-    [2] = "该地区享有极高的声望，因此卫生部希望能够看到最好的医院建造在这里。",
-    [3] = "我们希望您能够赚取大量的金钱，获得很高的声望，并能够成功地处理任何事件。",
-    [4] = "这是一项非常重要的工作。",
-    [5] = "这需要您的努力工作。",
-    [6] = "注意一点，该区域常常会看到不明飞行物。因此请让您的员工做好准备迎接不速之客。",
-    [7] = "您的医院价值需要达到$240,000，在银行帐户内需要$500,000，且声望需要达到700。",
-  },
-  level18 = {
-  },
+  level17 =
+    "最后的警告－时刻关注您的声望－这是真正吸引病人前来就诊的关键。" ..
+    "如果您没有杀死太多的病人，且使就诊病人保持快乐，则不必太担心声望！" ..
+    "决定权就在您的手中。祝您好运。",
+  level1 =
+    "欢迎来到您的第一座医院！//" ..
+    "首先要摆放接待台，建造一般诊断室，并雇佣一名接待员和一名医生。" ..
+    "随后就可以等待开张了。" ..
+    "建造精神病诊断治疗室并雇佣一名精神病医生是一个好主意。" ..
+    "药房和护士也是治疗病人所必需的。" ..
+    "建造一个充气机房间就可以治疗头部肿胀患者。" ..
+    "您需要治愈10个病人，并使声望保持在200以上。",
+  level9 =
+    "当填满了卫生部的银行帐户并为部长大人购买了一辆轿车后，您现在又要开始新的工作了。" ..
+    "在这里您要面对很多问题。" ..
+    "只有拥有足够经验充分的员工和房间，您才能够顺利过关。" ..
+    "医院价值需要达到$200,000，且银行帐户上要有$400,000。" ..
+    "如果无法达到上述要求，则无法胜利完成任务。",
+  level2 =
+    "在该区域内还有一些其它的疾病。" ..
+    "建造医院从而可以治疗更多的病人，并应该考虑建造研究部门。" ..
+    "记住保持内部的清洁，从而使声望尽可能地高－您将遇到患有舌头松弛症的病人，因此需要建造舌头诊治房间。" ..
+    "您也可以建造心电图房间来帮助诊断疾病。" ..
+    "这些房间都需要经过研究才能够被建造。现在你可以购买其它土地扩展医院－使用城镇地图就可以购买土地。" ..
+    "目标是声望300，银行现金为10000，且治愈40个病人。",
+  level7 =
+    "在这里您将受到卫生部的密切监察，因此要在赚钱的同时，努力提高自己的声望。" ..
+    "我们无法处理太多的医疗事故－这对于医院的运营是十分不利的。" ..
+    "确认所有员工都很快乐，并确认已经购买了所有需要的仪器装备。" ..
+    "声望需要达到600，且银行里需要有$200,000。",
+  level5 =
+    "医院将非常繁忙，处理各种各样的病人。" ..
+    "医生都是刚刚毕业的实习医生，因此需要建造一间培训室对他们进行培训，提高能力。" ..
+    "您只有3名专家可以帮助培训这些员工，因此一定要让专家快乐。" ..
+    "另外要注意的是，医院的位置不是很好。" ..
+    "经常会发生地震。" ..
+    "地震将对医院中的机器产生损坏，从而影响医院的运营。" ..
+    "使您声望达到400以上，现金达到$50,000。另外需要治愈200个病人。",
+  level4 =
+    "使所有的病人快乐，保持治疗的高效率并尽量降低死亡人数。" ..
+    "声望是十分重要的，因此尽量赢得更高的声望。" ..
+    "不要太多担心收入情况－当声望提高了，收入也自然会提高。" ..
+    "您需要培训您的医生，拓宽他们的能力。" ..
+    "这样他们就可以更好的为病人服务。" ..
+    "胜利条件是声望达到500以上。",
+  level14 =
+    "这里还有一个挑战－一个充满惊奇的医院。" ..
+    "如果您能够成功完成这个任务，则您将成为所有胜利者中的佼佼者。" ..
+    "不要认为完成这个任务就象吃蛋糕一样，这将是您所遇到的最艰苦的工作。" ..
+    "祝您好运！",
+  level15 =
+    "好的，下面是管理医院的一些技巧。//" ..
+    "医生需要各种帮助来诊断病人。您可以" ..
+    "建造另一个诊断类房间，例如高级诊断室。",
+  level8 =
+    "需要您来建造一座高效的医院。" ..
+    "很多人都无事可做，因此需要适量的裁员以保持高效。" ..
+    "记住治愈病人是很重要的一件事情，但是您更要从中赚钱。" ..
+    "让恶心呕吐的病人靠近清洁工人。" ..
+    "需要赚取$300,000就可以过关。",
+  level13 =
+    "您的高超管理技能被特殊机密部门获知。" ..
+    "他们将向您提高特别奖金，因为他们有一座被老鼠困扰的医院需要有效管理。" ..
+    "您必须杀死尽可能多的老鼠，并让清洁工人打扫干净。" ..
+    "接受这个任务？",
+  level16 =
+    "当对病人完成诊断后，需要建造处理和治疗类房间完成对病人的治疗工作。可以从" ..
+    "建造药房开始。在药房中需要一名护士分配各种药品。",
+  level6 =
+    "使用您的所有知识来建造一个运行平稳的医院，从而可以赚取利润并处理任何问题。" ..
+    "您需要注意一点，医院周围的空气对细菌繁殖，传染病流行非常适宜。" ..
+    "如果您没有保持医院的清洁，则将面对传染病的流行。" ..
+    "赚取$150,000，并使医院价值超过$140,000。",
+  level12 =
+    "您现在遇到了最大的挑战。" ..
+    "我们为您的成功感到由衷地高兴，卫生部为您准备了一项顶级工作；他们需要有人建造另一个超级医院，赚钱的同时获取较高的声望。" ..
+    "您可以购买任何需要的土地，治疗各种疾病赢得各种奖励。" ..
+    "动心了吗？" ..
+    "赚取$650,000，治愈750个病人，使声望达到800就可以胜利过关。",
+  level3 =
+    "这次您将在一个富裕地区建造医院。" ..
+    "卫生部希望您能够在这里赚取更多的利润。" ..
+    "开始时您被要求获取好的声望，但是一旦医院步入正轨，就可以集中精力赚取更多的钱。" ..
+    "有可能会发生紧急事件。" ..
+    "也就是说一次会有大量病人就诊，且他们的病情都一样。" ..
+    "在时间限制内如果能够治愈他们，则不仅可以拿到奖金，声望也会提高。" ..
+    "一些疾病如猫王综合症等有可能发生，因此最好建造一间手术中心和附属病房。" ..
+    "胜利条件是赚取$20,000。",
+  level10 =
+    "随着您的经验不断增长，卫生部要求您集中精力提高药品的治疗效果。" ..
+    "有人对您颇有微辞，为此您必须使所有的药物都非常有效。" ..
+    "另外，一定要降低医疗事故的发生次数，减少死亡人数。" ..
+    "作为提示，您需要为建造胶桶留一些空地。" ..
+    "使所有药物的疗效都达到80%%，声望达到650且在银行帐户上有$500,000，这样就可以胜利过关。",
+  level11 =
+    "现在您有机会建造一座终极医院。" ..
+    "该地区享有极高的声望，因此卫生部希望能够看到最好的医院建造在这里。" ..
+    "我们希望您能够赚取大量的金钱，获得很高的声望，并能够成功地处理任何事件。" ..
+    "这是一项非常重要的工作。" ..
+    "这需要您的努力工作。" ..
+    "注意一点，该区域常常会看到不明飞行物。因此请让您的员工做好准备迎接不速之客。" ..
+    "您的医院价值需要达到$240,000，在银行帐户内需要$500,000，且声望需要达到700。",
+  level18 = "",
 }
 humanoid_name_starts = {
   [1] = "欧得",
@@ -3210,9 +3214,50 @@ build_room_window = {
   cost = "花费：",
 }
 menu = {
-  debug = "DEBUG",
+  debug = "除错",
   display = "显示",
   file = "文件",
   options = "选项",
   charts = "图表",
 }
+menu_display.shadows = "  影子  "
+menu_display.mcga_lo_res = "  MCGA低分辨率  "
+cheats_window.cheats.earthquake = "制造地震"
+confirmation.maximum_screen_size = "你使用的分辨率比 3000 x 2000 大。大的分辨率是可行的，但是要维持一个可以接受的帧率你需要好点的硬件。是否继续？"
+confirmation.music_warning = "選擇MP3檔為你的音樂之前，你需要有 smpeg.dll 或者你的作業系統的版本，否則你在遊戲裡不會有任何音樂。是否繼續?"
+menu_options_wage_increase.deny = "    拒绝 "
+menu_options_wage_increase.grant = "    允许 "
+tooltip.options_window.select_language = "选择语言"
+tooltip.options_window.select_resolution = "选择分辨率"
+tooltip.options_window.language_dropdown_item = "选择 %s 为语言"
+tooltip.options_window.audio_button = "开关所有的声音"
+tooltip.options_window.resolution = "在此分辨率下运行游戏"
+tooltip.options_window.audio_toggle = "开关"
+tooltip.options_window.fullscreen = "應該在全屏還是窗口模式運行"
+tooltip.options_window.apply = "应用此分辨率"
+tooltip.options_window.cancel = "取消"
+tooltip.options_window.folder_button = "文件夹选项"
+tooltip.options_window.customise_button = "更多可以改变游戏体验的选项"
+tooltip.cheats_window.cheats.earthquake = "制造地震"
+tooltip.new_game_window.difficulty = "选择游戏难度"
+tooltip.new_game_window.player_name = "输入你游戏中的名字"
+tooltip.new_game_window.start = "使用当前设置开始游戏"
+tooltip.update_window.download = "前往下载页面下载CorsixTH"
+tooltip.update_window.ignore = "忽略这次更新。你将在下次启动CorsixTH时再次被通知"
+tooltip.folders_window.browse_font = "寻找另一个字体 ( 现在的位置: %1% )"
+tooltip.folders_window.screenshots_location = "屏幕截图默认和设置文件在一起。如果不想这样，选择你想存储屏幕截图的位置。"
+tooltip.folders_window.reset_to_default = "重置到默认选项"
+tooltip.folders_window.back = "关闭及返回选项菜单"
+tooltip.folders_window.music_location = "选择存储MP3文件的位置. 此目录必须已经存在."
+tooltip.folders_window.font_location = "选择可以显示你的语言所需Unicode字体的位置,如果没有指定，你将不能使用原游戏提供字体之外的语言,例如中文和俄语.（你一定已经选了,要不怎么可以看到这句话呢?）"
+tooltip.folders_window.savegames_location = "游戏存档默认和设置文件在一起。如果不想这样，选择你想存储游戏存档的位置。"
+tooltip.folders_window.browse_data = "寻找主题医院安装位置 ( 現在的位置: %1% )"
+tooltip.folders_window.browse = "寻找文件夹的位置"
+tooltip.folders_window.browse_screenshots = "寻找另一个储存屏幕截图的位置 ( 现在的位置: %1% )"
+tooltip.folders_window.browse_music = "寻找另一个存储音乐的位置 ( 现在的位置: %1% )"
+tooltip.folders_window.no_font_specified = "没有指定字体的位置！"
+tooltip.folders_window.not_specified = "没有指定文件夹位置！"
+tooltip.folders_window.browse_saves = "寻找另一个储存游戏存档的位置  ( 现在的位置: %1% ) "
+tooltip.folders_window.default = "默认位置"
+tooltip.folders_window.data_location = "需要用来运行CorsixTH的主题医院的位置"
+tooltip.customise_window.aliens = "因为缺少动画,默认设置下外星人DNA病人只会从紧急事件中来. 要在紧急事件以外允许有外星人DNA的病人来你的意愿,请关闭此选项。"

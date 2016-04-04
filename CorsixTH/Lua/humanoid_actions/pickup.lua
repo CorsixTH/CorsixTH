@@ -72,7 +72,7 @@ local function action_pickup_start(action, humanoid)
   local ui = action.ui
   action.window = UIPlaceStaff(ui, humanoid, ui.cursor_x, ui.cursor_y)
   ui:addWindow(action.window)
-  ui:playSound "pickup.wav"
+  ui:playSound("pickup.wav")
   ui:setDefaultCursor(ui.grab_cursor)
 end
 

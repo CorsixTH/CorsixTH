@@ -22,7 +22,7 @@ SOFTWARE.
 
 #include "config.h"
 #include "th_lua.h"
-#include <stdio.h>
+#include <cstdio>
 
 //! Layer for reading Theme Hospital files out of an .iso disk image
 /*!
@@ -93,9 +93,9 @@ public:
         \param pBuffer The buffer to place the resulting data in
         \return true on success, false on failure - call getError() for reason
     */
-    bool getFileData(file_handle_t iFile, unsigned char *pBuffer);
+    bool getFileData(file_handle_t iFile, uint8_t *pBuffer);
 
-protected:
+private:
     struct _file_t
     {
         char *sPath;
@@ -121,7 +121,7 @@ protected:
     bool _seekToSector(uint32_t iSector);
 
     //! Read data from the disk image
-    bool _readData(uint32_t iByteCount, unsigned char *pBuffer);
+    bool _readData(uint32_t iByteCount, uint8_t *pBuffer);
 
     //! Scan the given array of directory entries for a Theme Hospital file
     /*!
@@ -133,7 +133,7 @@ protected:
           contains a Theme Hospital data file. 2 if the given array is the
           top-level Theme Hospital data directory. Other values otherwise.
     */
-    int _findHospDirectory(const unsigned char *pDirEnt, int iDirEntsSize, int iLevel);
+    int _findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel);
 
     //! Build the list of Theme Hospital data files
     /*!
@@ -149,7 +149,7 @@ protected:
 
     static char _normalise(char c);
     static int _fileNameComp(const void* lhs, const void* rhs);
-    static void _trimIdentifierVersion(const unsigned char* sIdent, uint8_t& iLength);
+    static void _trimIdentifierVersion(const uint8_t* sIdent, uint8_t& iLength);
 };
 
 int luaopen_iso_fs(lua_State *L);

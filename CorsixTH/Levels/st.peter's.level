@@ -18,28 +18,22 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This level file and map have been put together iwth epidemics in mind.  Whereever there are values
+This level file and map have been put together with epidemics in mind.  Wherever there are values
 that have not been used previously there are some notes to assist map makers.
-
-Only lines beginning with % or # as explained below will be considered by the game.
-
-Each line beginning with a %-sign are directives to use when loading the game, such as what
-the level is called and where to find the map file. Available commands:
-- Name: What the level should be called (within quotes)
-- LevelFile: The name of the binary map file to load. First the Levels directory of the
-  original game will be searched, and then the Levels directory of CorsixTH.
-
-Lines that begin with # defines all parameters for the level. By default there are no diseases
-and only some basic rooms are available. Note that if a player is using the demo files
-on the contrary everything is available unless specified otherwise in the level file.
-
 
 ---------------------- General Information -------------------------
 %Name = "St. Peter's near Cawley"
-%LevelFile = "st.peter's.map"
+%MapFile = "st.peter's.map"
 
-Note that the below introduction text at the moment must reside on a single line within this file!
-%LevelBriefing = "The St Peter's hospital is near the small town of Cawley in the beautiful English countryside.  Use all your knowledge to set up a well-run hospital which makes a healthy profit and can deal with anything the sickly public can throw up in it.                                                                        You'll need to be aware that the atmosphere around here is particularly good at carrying germs and infections.  The nearby swamp will add to your troubles, so you should expect frequent epidemics.  You are expected to run a superb hospital with the highest of standards; the Minister of Health expects nothing less than perfection here.                                                                                  You should aim to keep queues to a minimum as this will help you combat epidemics and keep your staff happy at the same time.                                                                               Get a reputation of at least 600, treat 80% of your visitors, cure 400 patients, amass $600,000 in the bank and have a hospital worth $275,000."
+%LevelBriefing = "The St Peter's hospital is near the small town of Cawley in the beautiful English countryside.  Use all your knowledge to set up a well-run hospital which makes a healthy profit and can deal with anything the sickly public can throw up in it.
+
+You'll need to be aware that the atmosphere around here is particularly good at carrying germs and infections.  The nearby swamp will add to your troubles, so you should expect frequent epidemics.  You are expected to run a superb hospital with the highest of standards; the Minister of Health expects nothing less than perfection here.
+
+You should aim to keep queues to a minimum as this will help you combat epidemics and keep your staff happy at the same time.
+
+Get a reputation of at least 600, treat 80% of your visitors, cure 400 patients, amass $600,000 in the bank and have a hospital worth $275,000."
+
+%LevelDebriefing = "Congratulations, you made it! Now you can sit back and enjoy life."
 
 Town properties
 InterestRate is defined as centiprocent to allow for two decimals precision, i.e.

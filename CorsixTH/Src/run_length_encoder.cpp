@@ -27,8 +27,8 @@ SOFTWARE.
 
 IntegerRunLengthEncoder::IntegerRunLengthEncoder()
 {
-    m_pBuffer = NULL;
-    m_pOutput = NULL;
+    m_pBuffer = nullptr;
+    m_pOutput = nullptr;
     _clean();
 }
 
@@ -41,8 +41,8 @@ void IntegerRunLengthEncoder::_clean()
 {
     delete[] m_pBuffer;
     delete[] m_pOutput;
-    m_pBuffer = NULL;
-    m_pOutput = NULL;
+    m_pBuffer = nullptr;
+    m_pOutput = nullptr;
     m_iRecordSize = 0;
     m_iBufferSize = 0;
     m_iBufferSizeUsed = 0;
@@ -232,7 +232,7 @@ void IntegerRunLengthEncoder::pumpOutput(LuaPersistWriter *pWriter) const
 
 IntegerRunLengthDecoder::IntegerRunLengthDecoder()
 {
-    m_pBuffer = NULL;
+    m_pBuffer = nullptr;
     _clean();
 }
 
@@ -244,10 +244,10 @@ IntegerRunLengthDecoder::~IntegerRunLengthDecoder()
 void IntegerRunLengthDecoder::_clean()
 {
     delete[] m_pBuffer;
-    m_pBuffer = NULL;
-    m_pReader = NULL;
-    m_pInput = NULL;
-    m_pInputEnd = NULL;
+    m_pBuffer = nullptr;
+    m_pReader = nullptr;
+    m_pInput = nullptr;
+    m_pInputEnd = nullptr;
     m_iNumReadsRemaining = 0;
     m_iRepeatCount = 0;
     m_iRecordSize = 0;

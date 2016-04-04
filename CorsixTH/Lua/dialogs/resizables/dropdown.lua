@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Dropdown "window" used for selection of one item from a list.
 class "UIDropdown" (UIResizable)
 
+---@type UIDropdown
+local UIDropdown = _G["UIDropdown"]
+
 --! Constructor for the dropdown "window"
 --!param ui (UI) The ui the window is created in
 --!param parent_window (Window) The window that this dropdown will be attached to

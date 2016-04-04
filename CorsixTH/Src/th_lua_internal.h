@@ -24,11 +24,6 @@ SOFTWARE.
 #define CORSIX_TH_TH_LUA_INTERNAL_H_
 #include "config.h"
 #include "th_lua.h"
-#ifndef _MSC_VER
-#define stricmp strcasecmp
-#else
-#pragma warning(disable: 4996) // Deprecated CRT
-#endif
 
 enum eTHLuaMetatable
 {
@@ -47,6 +42,7 @@ enum eTHLuaMetatable
     MT_Surface,
     MT_Bitmap,
     MT_Cursor,
+    MT_LfsExt,
     MT_SoundArc,
     MT_SoundFx,
     MT_Movie,
@@ -115,6 +111,15 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
 
 #define luaT_setfunction(fn, name, ...) \
     luaT_setclosure(pState, fn, ## __VA_ARGS__, MT_Count); \
+    lua_setfield(pState->L, -2, name)
+
+/**
+ * Add a named constant to the lua interface.
+ * @param name (string literal) Name of the constant.
+ * @param value (tested with int) Value of the constant.
+ */
+#define luaT_setconstant(name, value) \
+    luaT_push(pState->L, value); \
     lua_setfield(pState->L, -2, name)
 
 #endif

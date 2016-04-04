@@ -25,17 +25,17 @@ SOFTWARE.
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 
-unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
+uint8_t* TranscodeXmiToMid(const unsigned char* pXmiData,
                                  size_t iXmiLength, size_t* pMidLength);
 
 #else // CORSIX_TH_USE_SDL_MIXER
 
-inline unsigned char* TranscodeXmiToMid(const unsigned char* pXmiData,
+inline uint8_t* TranscodeXmiToMid(const unsigned char* pXmiData,
                                  size_t iXmiLength, size_t* pMidLength)
 {
     // When SDL_mixer isn't being used, there is no need to transocde XMI to
     // MIDI, so the function always fails.
-    return NULL;
+    return nullptr;
 }
 
 #endif // CORSIX_TH_USE_SDL_MIXER

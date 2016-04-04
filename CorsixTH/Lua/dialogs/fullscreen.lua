@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! Base class for 640x480px dialogs (fullscreen in original game resolution).
 class "UIFullscreen" (Window)
 
+---@type UIFullscreen
+local UIFullscreen = _G["UIFullscreen"]
+
 function UIFullscreen:UIFullscreen(ui)
   self:Window()
 
@@ -60,15 +63,15 @@ function UIFullscreen:onChangeResolution()
     end
   end
 
-  self.x = (app.config.width - self.width) / 2
+  self.x = math.floor((app.config.width - self.width) / 2)
 
   -- NB: Bottom panel is 48 pixels high
   if app.config.height > 480 + 48 then
-    self.y = (app.config.height - 48 - self.height) / 2
+    self.y = math.floor((app.config.height - 48 - self.height) / 2)
   elseif app.config.height >= 480 then
     self.y = 0
   else
-    self.y = (app.config.height - self.height) / 2
+    self.y = math.floor((app.config.height - self.height) / 2)
   end
 end
 
@@ -119,11 +122,11 @@ function UIFullscreen:hitTest(x, y)
   if (0 <= x and x < self.width) or (0 <= y and y < self.height) then
     return true
   end
-  local test = sprites.hitTest
-  return test(sprites, 10, x + 9, y + 9)
-      or test(sprites, 12, x - 600, y + 9)
-      or test(sprites, 15, x + 9, y - 440)
-      or test(sprites, 17, x - 600, y - 440)
+
+  return sprites.hitTest(sprites, 10, x + 9,   y + 9) or
+         sprites.hitTest(sprites, 12, x - 600, y + 9) or
+         sprites.hitTest(sprites, 15, x + 9,   y - 440) or
+         sprites.hitTest(sprites, 17, x - 600, y - 440)
 end
 
 function UIFullscreen:afterLoad(old, new)

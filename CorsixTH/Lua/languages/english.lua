@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010 Manuel "Roujin" Wolf
+--[[ Copyright (c) 2010-2014 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -55,7 +55,13 @@ vip_names = {
 }
 
 -- A small error in the introduction text of level 2
-introduction_texts.level2[6] = "Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+introduction_texts.level2 = "There is a greater variety of ailments in this area. Set up your hospital to deal with more patients, " ..
+                            "and plan to build a Research Department. Remember to keep your establishment clean, and try to get your " ..
+                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
+                            "Tongue Clinic. You can also build a Cardiogram to help you diagnose new illnesses. Both these rooms will " ..
+                            "need to be researched before you can build them. Now you can also buy extra plots of land to expand your " ..
+                            "hospital - use the Town map for this. Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
+
 -- An override for the squits becoming the the squits see issue 1646
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 -------------------------------  NEW STRINGS  -------------------------------
@@ -73,6 +79,8 @@ tooltip.casebook.cure_requirement.hire_staff = "You need to employ staff to hand
 tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this disease"
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
+
+menu["player_count"] = "PLAYER COUNT"
 
 menu_file = {
   load =    " (SHIFT+L) LOAD   ",
@@ -129,6 +137,7 @@ menu_charts = {
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
+  connect_debugger            = "  (CTRL + C) CONNECT LUA DBGp SERVER  ",
   transparent_walls           = "  (X) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
@@ -157,6 +166,12 @@ menu_debug_overlay = {
   byte_7                      = "  BYTE 7  ",
   parcel                      = "  PARCEL  ",
 }
+menu_player_count = {
+	players_1 = "  1 PLAYER  ",
+	players_2 = "  2 PLAYERS  ",
+	players_3 = "  3 PLAYERS  ",
+	players_4 = "  4 PLAYERS  ",
+}
 adviser = {
   room_forbidden_non_reachable_parts = "Placing the room in this location would result in parts of the hospital not being reachable.",
   warnings = {
@@ -183,6 +198,10 @@ adviser = {
     researcher_needs_desk_3 = "Each Researcher needs to have his own desk to work from.",
     nurse_needs_desk_1 = "Each Nurse needs to have her own desk to work from.",
     nurse_needs_desk_2 = "Your Nurse is pleased that you have allowed her to have a break. If you were intending to have more than one working in the ward, then you need to provide them each with a desk to work from.",
+    low_prices = "You're charging too little for %s. This will bring people to your hospital, but you won't make a lot of profit from each one.",
+    high_prices = "Your charges for %s are high. This will make big profits in the short-term, but ultimately you'll start to drive people away.",
+    fair_prices = "Your charges for %s seem fair and balanced.",
+    patient_not_paying = "A patient left without paying for %s because it's too expensive!",
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",
@@ -220,9 +239,12 @@ fax = {
 }
 
 letter = {
-  dear_player = "Dear %s",
+  dear_player = "Dear %s\n",
   custom_level_completed = "Well done! You've completed all goals on this custom level!",
   return_to_main_menu = "Would you like to return to the main menu or continue playing?",
+  campaign_level_completed = "Good job! You beat the level. But it's not over yet!\n Would you like a position at %s Hospital?",
+  campaign_completed = "Incredible! You managed to finish all the levels. You can now relax and enjoy filling forums across the Internet of your achievements. Good luck!",
+  campaign_level_missing = "Sorry, but the next level of this campaign seems to be missing. (Name: %s)",
 }
 
 install = {
@@ -238,10 +260,12 @@ misc.no_heliport = "Either no diseases have been discovered yet, or there is no 
 
 main_menu = {
   new_game = "Campaign",
+  custom_campaign = "Custom Campaign",
   custom_level = "Single Scenario",
   continue = "Continue Game",
   load_game = "Load Game",
   options = "Settings",
+  map_edit = "Map Editor",
   savegame_version = "Savegame version: ",
   version = "Version: ",
   exit = "Exit",
@@ -249,10 +273,12 @@ main_menu = {
 
 tooltip.main_menu = {
   new_game = "Start the first level on the campaign",
+  custom_campaign = "Play a campaign created by the community",
   custom_level = "Build your hospital in a single scenario",
   continue = "Continue your latest saved game",
   load_game = "Load a saved game",
   options = "Tweak various settings",
+  map_edit = "Create a custom map",
   exit = "No, no, please don't leave!",
   quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
 }
@@ -270,11 +296,23 @@ tooltip.load_game_window = {
 custom_game_window = {
   caption = "Custom Game",
   free_build = "Free Build",
+  load_selected_level = "Start",
 }
 
 tooltip.custom_game_window = {
-  start_game_with_name = "Information about this scenario which is using: %s           Briefing: %s",
+  choose_game = "Click a level to read more about it",
   free_build = "Tick this box if you want to play without money or winning and losing conditions",
+  load_selected_level = "Load and play the selected level",
+}
+
+custom_campaign_window = {
+  caption = "Custom Campaign",
+  start_selected_campaign = "Start campaign",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Choose a campaign to read more about it",
+  start_selected_campaign = "Load the first level of this campaign",
 }
 
 save_game_window = {
@@ -285,6 +323,16 @@ save_game_window = {
 tooltip.save_game_window = {
   save_game = "Overwrite savegame %s",
   new_save_game = "Enter name for a new savegame",
+}
+
+save_map_window = {
+  caption = "Save Map (%1%)",
+  new_map = "New Map",
+}
+
+tooltip.save_map_window = {
+  map = "Overwrite map %s",
+  new_map = "Enter name for a map savegame",
 }
 
 menu_list_window = {
@@ -456,13 +504,20 @@ errors = {
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
   alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file",
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
+  could_not_load_campaign = "Failed to load the campaign: %s",
+  could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
+}
+
+warnings = {
+  levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
+                                     "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
 }
 
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
   maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000.  Larger resolutions are possible, but will require better hardware in order to maintain a playable frame rate.  Are you sure you want to continue?",
-  music_warning = "Before choosing to use mp3's for your in game music, you will need to have smpeg.dll or the equivalent for your operating system, otherwise you will have no music in the game.  Currently there is no equivalent file for 64bit systems.  Do you want to continue?",
+  music_warning = "Note: You will need to have smpeg.dll or the equivalent for your operating system, otherwise you will hear no music in the game. Do you want to continue?",
 }
 
 information = {
@@ -540,6 +595,8 @@ cheats_window = {
     end_year = "End of Year",
     lose_level = "Lose Level",
     win_level = "Win Level",
+    increase_prices = "Increase prices",
+    decrease_prices = "Decrease prices",
   },
   close = "Close",
 }
@@ -559,18 +616,19 @@ tooltip.cheats_window = {
     end_year = "Jumps to the end of the year.",
     lose_level = "Lose the current level.",
     win_level = "Win the current level.",
+    increase_prices = "Increase all prices by 50% (max. 200%)",
+    decrease_prices = "Decrease all prices by 50% (min. 50%)",
   }
 }
 
 introduction_texts = {
-  demo = {
-    "Welcome to the demo hospital!",
-    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!",
-    "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room.",
-    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.",
-    "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.",
+  demo =
+    "Welcome to the demo hospital!" ..
+    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while!" ..
+    "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room." ..
+    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients." ..
+    "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose." ..
     "Good luck!",
-  },
 }
 
 calls_dispatcher = {
@@ -599,6 +657,40 @@ update_window = {
 tooltip.update_window = {
   download = "Go to the download page for the very latest version of CorsixTH",
   ignore = "Ignore this update for now. You will be notified again when you next open CorsixTH",
+}
+
+map_editor_window = {
+  pages = {
+    inside = "Inside",
+    outside = "Outside",
+    foliage = "Foliage",
+    hedgerow = "Hedgerow",
+    pond = "Pond",
+    road = "Road",
+    north_wall = "North wall",
+    west_wall = "West wall",
+    helipad = "Helipad",
+    delete_wall = "Delete walls",
+    parcel_0 = "Parcel 0",
+    parcel_1 = "Parcel 1",
+    parcel_2 = "Parcel 2",
+    parcel_3 = "Parcel 3",
+    parcel_4 = "Parcel 4",
+    parcel_5 = "Parcel 5",
+    parcel_6 = "Parcel 6",
+    parcel_7 = "Parcel 7",
+    parcel_8 = "Parcel 8",
+    parcel_9 = "Parcel 9",
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    paste = "Paste area",
+  }
 }
 
 --------------------------------  UNUSED  -----------------------------------

@@ -66,7 +66,7 @@ public:
     uint32_t* getOutput(size_t *pCount) const;
     void pumpOutput(LuaPersistWriter *pWriter) const;
 
-protected:
+private:
     void _clean();
 
     //! Reduce the amount of data in the buffer
@@ -114,7 +114,7 @@ public:
     uint32_t read();
     bool isFinished() const;
 
-protected:
+private:
     void _clean();
 
     uint32_t* m_pBuffer;

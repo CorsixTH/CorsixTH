@@ -23,6 +23,9 @@ local TH = require "TH"
 --! Annual Report fullscreen window shown at the start of each year.
 class "UIAnnualReport" (UIFullscreen)
 
+---@type UIAnnualReport
+local UIAnnualReport = _G["UIAnnualReport"]
+
 function UIAnnualReport:UIAnnualReport(ui, world)
 
   self:UIFullscreen(ui)
@@ -164,10 +167,11 @@ end
 function UIAnnualReport:checkTrophiesAndAwards(world)
 
   local hosp = self.ui.hospital
-  local prices = world.map.level_config.awards_trophies
+  local level_config = world.map.level_config
+  local prices = level_config and level_config.awards_trophies or nil
 
   -- Check CuresAward so that we know the new config settings are available
-  if hosp.win_awards and prices.TrophyMayorBonus then
+  if prices and prices.TrophyMayorBonus then
     self.won_amount = 0
     self.rep_amount = 0
     self.award_won_amount = 0
@@ -569,8 +573,7 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   local world = self.ui.app.world
 
   -- Draw titles
-  font:draw(canvas, _S.menu.charts .. " "
-  .. (world.year + 1999), x + 210, y + 30, 200, 0)
+  font:draw(canvas, _S.menu.charts .. " " .. (world.year + 1999), x + 210, y + 30, 200, 0)
   font:draw(canvas, _S.high_score.categories.money, x + 140, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.salary, x + 328, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.cures, x + 140, y + 205, 170, 0)

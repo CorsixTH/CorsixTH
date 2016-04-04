@@ -142,10 +142,10 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
   -- Otherwise, depending on hospital policy three things can happen:
   if humanoid.diagnosis_progress < humanoid.hospital.policies["send_home"] then
     -- Send home automatically
-    humanoid:goHome()
+    humanoid:goHome("kicked")
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
-  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"]
-    or not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
+  elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] or
+      not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
     -- If the disease hasn't been discovered yet it cannot be guessed, go here instead.
     -- Ask the player
     -- Wait two months before going home anyway.
@@ -175,11 +175,15 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- A patient with an undiscovered disease should never get here.
     assert(humanoid.hospital.disease_casebook[humanoid.disease.id].discovered)
     humanoid:setDiagnosed(true)
-    humanoid:queueAction({
-      name = "seek_room",
-      room_type = humanoid.disease.treatment_rooms[1],
-      treatment_room = true,
-    }, 1)
+    if humanoid:agreesToPay(humanoid.disease.id) then
+      humanoid:queueAction({
+        name = "seek_room",
+        room_type = humanoid.disease.treatment_rooms[1],
+        treatment_room = true,
+      }, 1)
+    else
+      humanoid:goHome("over_priced", humanoid.disease.id)
+    end
     humanoid:finishAction()
   end
 end
@@ -257,7 +261,12 @@ local function action_seek_room_start(action, humanoid)
           end
         end
         if found then
-          action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+          -- Don't add a "go to room" action to the patient's queue if the
+          -- autopsy machine is about to kill them:
+          local current_room = humanoid:getRoom()
+          if not current_room or not (current_room.room_info.id == "research" and current_room:getStaffMember() and current_room:getStaffMember().action_queue[1].name == "multi_use_object") then
+            action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+          end
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)

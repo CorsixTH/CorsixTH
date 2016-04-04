@@ -25,6 +25,9 @@ local math_floor
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
 
+---@type UIQueue
+local UIQueue = _G["UIQueue"]
+
 function UIQueue:UIQueue(ui, queue)
   self:Window()
 
@@ -60,14 +63,14 @@ function UIQueue:UIQueue(ui, queue)
 
   self:makeTooltip(_S.tooltip.queue_window.front_of_queue, 168, 25, 213, 105)
   self:makeTooltip(_S.tooltip.queue_window.end_of_queue, 543, 51, 586, 105)
-  self:makeTooltip(_S.tooltip.queue_window.patient        .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
+  self:makeTooltip(_S.tooltip.queue_window.patient .. " " .. _S.misc.not_yet_implemented, 218, 15, 537, 107)
 end
 
 function UIQueue:decreaseMaxSize()
   local amount = 1
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 10
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   self.queue:decreaseMaxSize(amount)
@@ -75,9 +78,9 @@ end
 
 function UIQueue:increaseMaxSize()
   local amount = 1
-  if self.buttons_down.ctrl then
+  if self.ui.app.key_modifiers.ctrl then
     amount = amount * 10
-  elseif self.buttons_down.shift then
+  elseif self.ui.app.key_modifiers.shift then
     amount = amount * 5
   end
   self.queue:increaseMaxSize(amount)
@@ -95,7 +98,7 @@ function UIQueue:draw(canvas, x, y)
   font:draw(canvas, num_patients, x + 140, y + 22)
 
   font:draw(canvas, _S.queue_window.num_expected, x + 22, y + 45)
-  font:draw(canvas, queue.expected_count, x + 140, y + 45)
+  font:draw(canvas, queue:expectedSize(), x + 140, y + 45)
 
   font:draw(canvas, _S.queue_window.num_entered, x + 22, y + 68)
   font:draw(canvas, queue.visitor_count, x + 140, y + 68)
@@ -182,7 +185,7 @@ function UIQueue:onMouseUp(button, x, y)
     elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
       local dx = 1
       if num_patients ~= 1 then
-        dx = width / (num_patients - 1)
+        dx = math.floor(width / (num_patients - 1))
       end
       queue:move(index, math.floor((x - 220) / dx) + 1) -- move to dropped position
       self:onMouseMove(x, y, 0, 0)
@@ -255,7 +258,7 @@ function UIQueue:getHoveredPatient(x, y)
 
   local dx = 0
   if num_patients ~= 1 then
-    dx = width / (num_patients - 1)
+    dx = math.floor(width / (num_patients - 1))
   end
 
   local offset = 0
@@ -295,7 +298,7 @@ function UIQueue:drawPatients(canvas, x, y)
 
   if not self.hovered then
     if num_patients ~= 1 then
-      dx = width / (num_patients - 1)
+      dx = math.floor(width / (num_patients - 1))
     end
 
     for index = 1, num_patients do
@@ -304,7 +307,7 @@ function UIQueue:drawPatients(canvas, x, y)
     end
   else
     if num_patients ~= 1 then
-      dx = (width - 2 * gap) / (num_patients - 1)
+      dx = math.floor((width - 2 * gap) / (num_patients - 1))
     end
 
     x = x + 239
@@ -340,6 +343,9 @@ end
 
 class "UIQueuePopup" (Window)
 
+---@type UIQueuePopup
+local UIQueuePopup = _G["UIQueuePopup"]
+
 function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   self:Window()
   self.esc_closes = true
@@ -357,7 +363,7 @@ function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   local function send_to_hospital(i)
     return --[[persistable:queue_dialog_popup_hospital_button]] function()
       -- TODO: Actually send to another hospital (when they exist)
-      self.patient:goHome()
+      self.patient:goHome("kicked")
       local str = _S.dynamic_info.patient.actions.sent_to_other_hospital
       self.patient:updateDynamicInfo(str)
       self:close()
@@ -395,6 +401,6 @@ function UIQueuePopup:sendToReception()
 end
 
 function UIQueuePopup:sendHome()
-  self.patient:goHome()
+  self.patient:goHome("kicked")
   self:close()
 end

@@ -1341,113 +1341,81 @@ rooms_short = {
 
 -- 8.  Objetivos da Fase
 introduction_texts = {
-  demo = {
-    "Bem-vindo ao hospital de demonstração!",
-    "Infelizmente esta versão demo são possui esta fase. Entretanto, teremos aqui o suficiente para mantê-lo ocupado por enquanto !",
-    "Você encontrará várias doenças que necessitarão de salas diferentes para cura. De tempos em tempos, emergências ocorrerão. E você precisará pesquisar por salas adicionais usando o Departamento de Pesquisas.",
-    "Seu objetivo é ter um saldo bancário de $100.000,00, o valor do hospital em $ 70.000,00 e uma reputação de 700, enquanto você cura pelo menos 75% de seus pacientes.",
-    "Certifique-se que sua reputação não fique abaixo de 300 e você não mate mais de 40% dos seus pacientes, senão você perde.",
+  demo =
+    "Bem-vindo ao hospital de demonstração!" ..
+    "Infelizmente esta versão demo são possui esta fase. Entretanto, teremos aqui o suficiente para mantê-lo ocupado por enquanto !" ..
+    "Você encontrará várias doenças que necessitarão de salas diferentes para cura. De tempos em tempos, emergências ocorrerão. E você precisará pesquisar por salas adicionais usando o Departamento de Pesquisas." ..
+    "Seu objetivo é ter um saldo bancário de $100.000,00, o valor do hospital em $ 70.000,00 e uma reputação de 700, enquanto você cura pelo menos 75% de seus pacientes." ..
+    "Certifique-se que sua reputação não fique abaixo de 300 e você não mate mais de 40% dos seus pacientes, senão você perde." ..
     "Boa sorte!",
-  },
-  level1 = {
-    [1] = "Bem-vindo(a) ao seu primeiro hospital !//",
-    [2] = "Tenha-o pronto e rodando colocando um balcão de recepção, construindo um consultório de clínica geral e contratando uma recepcionista e médico. ",
-    [3] = "Então espere os negócios prosperarem.",
-    [4] = "É uma boa idéia construir um departamento de psiquiatria e contratar um médico psiquiatra, além de uma farmácia e enfermeira que também serão essenciais para curar seus pacientes. ",
-    [5] = "Cuidado com os casos de 'Cabeça inchada' - Uma sala com um Inflador resolverá os casos rapidamente.",
-    [6] = "Seu objetivo será curar 10 pessoas e garantir que sua reputação não fique abaixo de 200.",
-    [7] = "",
-  },
-  level2 = {
-    [1] = "Há uma grande variedade de doenças nesta área, sendo assim planeje seu hospital para lidar com mais pacientes, além de construir um Departamento de Pesquisas. ",
-    [2] = "Lembre-se de manter o estabelecimento limpo e procure manter sua reputação a mais alta possível - você estará lidando com doenças como Língua negligente, então precisará de um Fatiador. Adicionalmente, poderá construir uma máquina de Eletrocardiograma para ajudá-lo a diagnosticar novas doenças",
-    [3] = "Ambas precisarão ser pesquisadas antes de serem construídas. Agora você poderá comprar lotes de terreno extras para expandir seu hospital - use o Mapa da Cidade para fazê-lo.",
-    [4] = "Tenha como objetivo uma reputação de 300, um saldo bancário de $10.000,00 e 40 pessoas curadas.",
-    [5] = "",
-    [6] = "",
-  },
-  level3 = {
-    [1] = "Desta vez, você irá construir seu hospital em uma área nobre da cidade.",
-    [2] = "O Ministro da Saúde está contando com você para manter os níveis da saúde por aqui.",
-    [3] = "Você precisa ganhar uma boa reputação para começar, mas uma vez que seu hospital esteja estabelecido, concentre-se em lucrar a maior quantidade de dinheiro que puder.",
-    [4] = "Há uma grande possibilidade de ter de lidar com Emergências - isso acontece quando um grande número de pessoas chega de uma só vez, na mesma condição clínica - Curando-as à tempo você ganhará uma boa reputação e um grande bônus.",
-    [5] = "Doenças como o Complexo de Rei podem ocorrer, e você deverá planejar seu orçamento para construir uma Sala de Operações com uma Enfermaria ao lado. ",
-    [6] = "Consiga $ 20.000,00 em dinheiro para vencer a fase.",
-    [7] = "",
-    [8] = "",
-  },
-  level4 = {
-    [1] = "Mantenha seus pacientes felizes, lide com eles da forma mais eficiente que puder e mantenha o número de óbitos no mínimo.",
-    [2] = "Sua reputação está em jogo, portanto mantenha-a a mais alta que conseguir.",
-    [3] = "Não se preocupe tanto com dinheiro - ele virá a medida que sua reputação cresce.",
-    [4] = "Você terá a possibilidade de treinar seus médicos para ampliar suas habilidades também, pois ele poderão ter que lidar com pacientes mais opacos que a maioria.",
-    [5] = "Consiga uma reputação acima de 500 para vencer a fase.",
-    [6] = "",
-  },
-  level5 = {
-    [1] = "Você administrará agora um hospital ocupado, lidando com um grande variedade de casos.",
-    [2] = "Seus médicos são todos calouros da escola de medicina, portanto será de vital importância construir um sala de treinamento e treiná-los até um nível aceitável.",
-    [3] = "Você possui apenas três médicos sêniores para ajudá-lo a ensinar sua inexperiente equipe, portanto mantenha-os felizes.",
-    [4] = "Note, também, que as fundações deste hospital ficam no centro da falha geológica de São Android - existe um risco eminente de terremotos. que causarão um estrago significativo em seus equipamentos, atrapalhando uma calma administração de seu hospital.",
-    [5] = "Sua reputação deve ultrapassar a marca de 400, e um saldo bancário de $ 50.000,00 para ter sucesso - além de curar pelo menos 200 pacientes.",
-    [6] = "",
-    [7] = "",
-  },
-  level6 = {
-    [1] = "Utilize todo seu know-how para montar um hospital eficiente que gere lucro e possa lidar com qualquer coisa que o público doente colocar em suas mãos.",
-    [2] = "Você deve estar ciente que a atmosfera do local é propícia para alastrar germes e infecções - Mantenha a instituição espetacularmente limpa se não quiser enfrentar uma série de epidemias envolvendo os pacientes.",
-    [3] = "Suas metas são fazer $ 150.000,00 em dinheiro e o valor do hospital deve valer pelo menos   $140.000,00",
-    [4] = "",
-  },
-  level7 = {
-    [1] = "Você está sendo observado de perto pelo Ministro de Saúde, então certifique-se que seus números indiquem que você está ganhando muito dinheiro e reputação crescente.",
-    [2] = "Não se dê ao luxo de mortes desnecessárias - elas são ruins para os negócios",
-    [3] = "Certifique-se que seu quadro de funcionários seja hábil e que você possua todos os equipamentos que precisa.",
-    [4] = "Obtenha uma reputação de 600 e $ 200.000,00 de saldo bancário.",
-  },
-  level8 = {
-    [1] = "Só depende de você construir o hospital mais rentável e eficiente possível.",
-    [2] = "As pessoas por aqui são bem afortunadas, portanto 'enfie a faca' como puder. ",
-    [3] = "Lembre-se, curar pessoas é uma coisa muito legal, mas do que você realmente PRECISA é da grana que elas trarão.",
-    [4] = "Limpe estas pessoas doentes, consiga incríveis $ 300.000,00 para vencer esta fase.",
-    [5] = "",
-  },
-  level9 = {
-    [1] = "Tendo enchido os bolsos e custeado a nova limousine do Ministro da Saúde, finalmente você pode voltar a criar um hospital modelo em benefício dos mais necessitados. ",
-    [2] = "Você pode esperar muitos e diversos problemas por aqui - Treine muito bem seus funcionários, tenha boas salas para cobrir todas as possibilidades.",
-    [3] = "Seu hospital precisa valer $200.000,00 e precisará de $400.000,00 no balco - qualquer coisa menos do que isso você não poderá terminar esta fase.",
-    [4] = "",
-    [5] = "",
-  },
-  level10 = {
-    [1] = "Assim que você cuidar de todas as doenças que surgirem por estas bandas, o Ministro solicitou que você se concentre na eficiência de seus medicamentos. ",
-    [2] = "Existem algumas queixas feitas no 'SemDoenças' - que faz Auditorias na área da Saúde - então para ficar bonito na foto certifique-se que seus medicamentos sejam extremamente eficientes. Portanto, o hospital precisar ficar ótimo. Mantenha os óbitos em níveis baixos.",
-    [3] = "Fica a dica, deixe espaço livre para o Moldador Gelatinoso.",
-    [4] = "Pesquise e crie todos os medicamento com pelo menos 80% de eficiência, obtenha uma reputação de 650 e um saldo bancário de $500.000,00 para vencer! ",
-    [5] = "",
-  },
-  level11 = {
-    [1] = "Você está tendo a oportunidade de construir a última palavra em hospitais. Está em uma área extremamente privilegiada, e o ministro gostaria de ver o melhor hospital possível.",
-    [2] = "A expectativa é que você faça muito dinheiro, tenha uma reputação soberba e esteja preparado para qualquer eventualidade.",
-    [4] = "É um trabalho importante este. ",
-    [5] = "Você precisa ser especial para conseguir se dar bem nessa fase.",
-    [6] = "Existem vários relatos de OVNIs nessa área. Certifique-se que seus funcionários estejam preparados para um eventual contato imediato.",
-    [7] = "Seu hospital precisa valer $240,000, você precisará de $500,000 no banco e uma reputação de 700.",
-  },
-  level12 = {
-  },
-  level13 = {
-  },
-  level14 = {
-  },
-  level15 = {
-  },
-  level16 = {
-  },
-  level17 = {
-  },
-  level18 = {
-  },
+  level1 =
+    "Bem-vindo(a) ao seu primeiro hospital !//" ..
+    "Tenha-o pronto e rodando colocando um balcão de recepção, construindo um consultório de clínica geral e contratando uma recepcionista e médico. " ..
+    "Então espere os negócios prosperarem." ..
+    "É uma boa idéia construir um departamento de psiquiatria e contratar um médico psiquiatra, além de uma farmácia e enfermeira que também serão essenciais para curar seus pacientes. " ..
+    "Cuidado com os casos de 'Cabeça inchada' - Uma sala com um Inflador resolverá os casos rapidamente." ..
+    "Seu objetivo será curar 10 pessoas e garantir que sua reputação não fique abaixo de 200.",
+  level2 =
+    "Há uma grande variedade de doenças nesta área, sendo assim planeje seu hospital para lidar com mais pacientes, além de construir um Departamento de Pesquisas. " ..
+    "Lembre-se de manter o estabelecimento limpo e procure manter sua reputação a mais alta possível - você estará lidando com doenças como Língua negligente, então precisará de um Fatiador. Adicionalmente, poderá construir uma máquina de Eletrocardiograma para ajudá-lo a diagnosticar novas doenças" ..
+    "Ambas precisarão ser pesquisadas antes de serem construídas. Agora você poderá comprar lotes de terreno extras para expandir seu hospital - use o Mapa da Cidade para fazê-lo." ..
+    "Tenha como objetivo uma reputação de 300, um saldo bancário de $10.000,00 e 40 pessoas curadas.",
+  level3 =
+    "Desta vez, você irá construir seu hospital em uma área nobre da cidade." ..
+    "O Ministro da Saúde está contando com você para manter os níveis da saúde por aqui." ..
+    "Você precisa ganhar uma boa reputação para começar, mas uma vez que seu hospital esteja estabelecido, concentre-se em lucrar a maior quantidade de dinheiro que puder." ..
+    "Há uma grande possibilidade de ter de lidar com Emergências - isso acontece quando um grande número de pessoas chega de uma só vez, na mesma condição clínica - Curando-as à tempo você ganhará uma boa reputação e um grande bônus." ..
+    "Doenças como o Complexo de Rei podem ocorrer, e você deverá planejar seu orçamento para construir uma Sala de Operações com uma Enfermaria ao lado. " ..
+    "Consiga $ 20.000,00 em dinheiro para vencer a fase.",
+  level4 =
+    "Mantenha seus pacientes felizes, lide com eles da forma mais eficiente que puder e mantenha o número de óbitos no mínimo." ..
+    "Sua reputação está em jogo, portanto mantenha-a a mais alta que conseguir." ..
+    "Não se preocupe tanto com dinheiro - ele virá a medida que sua reputação cresce." ..
+    "Você terá a possibilidade de treinar seus médicos para ampliar suas habilidades também, pois ele poderão ter que lidar com pacientes mais opacos que a maioria." ..
+    "Consiga uma reputação acima de 500 para vencer a fase.",
+  level5 =
+    "Você administrará agora um hospital ocupado, lidando com um grande variedade de casos." ..
+    "Seus médicos são todos calouros da escola de medicina, portanto será de vital importância construir um sala de treinamento e treiná-los até um nível aceitável." ..
+    "Você possui apenas três médicos sêniores para ajudá-lo a ensinar sua inexperiente equipe, portanto mantenha-os felizes." ..
+    "Note, também, que as fundações deste hospital ficam no centro da falha geológica de São Android - existe um risco eminente de terremotos. que causarão um estrago significativo em seus equipamentos, atrapalhando uma calma administração de seu hospital." ..
+    "Sua reputação deve ultrapassar a marca de 400, e um saldo bancário de $ 50.000,00 para ter sucesso - além de curar pelo menos 200 pacientes.",
+  level6 =
+    "Utilize todo seu know-how para montar um hospital eficiente que gere lucro e possa lidar com qualquer coisa que o público doente colocar em suas mãos." ..
+    "Você deve estar ciente que a atmosfera do local é propícia para alastrar germes e infecções - Mantenha a instituição espetacularmente limpa se não quiser enfrentar uma série de epidemias envolvendo os pacientes." ..
+    "Suas metas são fazer $ 150.000,00 em dinheiro e o valor do hospital deve valer pelo menos   $140.000,00",
+  level7 =
+    "Você está sendo observado de perto pelo Ministro de Saúde, então certifique-se que seus números indiquem que você está ganhando muito dinheiro e reputação crescente." ..
+    "Não se dê ao luxo de mortes desnecessárias - elas são ruins para os negócios" ..
+    "Certifique-se que seu quadro de funcionários seja hábil e que você possua todos os equipamentos que precisa." ..
+    "Obtenha uma reputação de 600 e $ 200.000,00 de saldo bancário.",
+  level8 =
+    "Só depende de você construir o hospital mais rentável e eficiente possível." ..
+    "As pessoas por aqui são bem afortunadas, portanto 'enfie a faca' como puder. " ..
+    "Lembre-se, curar pessoas é uma coisa muito legal, mas do que você realmente PRECISA é da grana que elas trarão." ..
+    "Limpe estas pessoas doentes, consiga incríveis $ 300.000,00 para vencer esta fase.",
+  level9 =
+    "Tendo enchido os bolsos e custeado a nova limousine do Ministro da Saúde, finalmente você pode voltar a criar um hospital modelo em benefício dos mais necessitados. " ..
+    "Você pode esperar muitos e diversos problemas por aqui - Treine muito bem seus funcionários, tenha boas salas para cobrir todas as possibilidades." ..
+    "Seu hospital precisa valer $200.000,00 e precisará de $400.000,00 no balco - qualquer coisa menos do que isso você não poderá terminar esta fase.",
+  level10 =
+    "Assim que você cuidar de todas as doenças que surgirem por estas bandas, o Ministro solicitou que você se concentre na eficiência de seus medicamentos. " ..
+    "Existem algumas queixas feitas no 'SemDoenças' - que faz Auditorias na área da Saúde - então para ficar bonito na foto certifique-se que seus medicamentos sejam extremamente eficientes. Portanto, o hospital precisar ficar ótimo. Mantenha os óbitos em níveis baixos." ..
+    "Fica a dica, deixe espaço livre para o Moldador Gelatinoso." ..
+    "Pesquise e crie todos os medicamento com pelo menos 80% de eficiência, obtenha uma reputação de 650 e um saldo bancário de $500.000,00 para vencer!",
+  level11 =
+    "Você está tendo a oportunidade de construir a última palavra em hospitais. Está em uma área extremamente privilegiada, e o ministro gostaria de ver o melhor hospital possível." ..
+    "A expectativa é que você faça muito dinheiro, tenha uma reputação soberba e esteja preparado para qualquer eventualidade." ..
+    "É um trabalho importante este. " ..
+    "Você precisa ser especial para conseguir se dar bem nessa fase." ..
+    "Existem vários relatos de OVNIs nessa área. Certifique-se que seus funcionários estejam preparados para um eventual contato imediato." ..
+    "Seu hospital precisa valer $240,000, você precisará de $500,000 no banco e uma reputação de 700.",
+  level12 = "",
+  level13 = "",
+  level14 = "",
+  level15 = "",
+  level16 = "",
+  level17 = "",
+  level18 = "",
 }
 
 graphs = {
@@ -1784,7 +1752,7 @@ dynamic_info.staff.ability = "Habilidade"
 dynamic_info.vip = "Visitante VIP"
 dynamic_info.health_inspector = "Inspetor de Saúde"
 confirmation.maximum_screen_size = "O Tamanho da Tela que você colocou é maior de 3000 x 2000.  Resoluções grandes são possíveis, mais irá requerer um hardware melhor para ter um framerate bom, você deseja continuar?"
-confirmation.music_warning = "Antes de escolher usar os seus mp3's para usar na música do jogo, você precisará ter o smpeg.dll or equivalente para o seu sistema operacional, se não tiver, você não terá música no jogo.  No momento não existe equivalente para sistemas operacionas de 64bit.  Você deseja continuar?"
+confirmation.music_warning = "Antes de escolher usar os seus mp3's para usar na música do jogo, você precisará ter o smpeg.dll or equivalente para o seu sistema operacional, se não tiver, você não terá música no jogo. Você deseja continuar?"
 menu_options_wage_increase.deny = "    RECUSAR "
 menu_options_wage_increase.grant = "    CONCEDER "
 build_room_window.cost = "Custo: "

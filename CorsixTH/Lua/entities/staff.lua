@@ -21,6 +21,9 @@ SOFTWARE. --]]
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
 
+---@type Staff
+local Staff = _G["Staff"]
+
 --!param ... Arguments to base class constructor.
 function Staff:Staff(...)
   self:Humanoid(...)
@@ -268,6 +271,7 @@ end
 
 function Staff:isResting()
   local room = self:getRoom()
+
   if room and room.room_info.id == "staff_room" and not self.on_call then
     return true
   else
@@ -278,26 +282,29 @@ end
 -- Determine if the staff member should contribute to research
 function Staff:isResearching()
   local room = self:getRoom()
-  return room and room.room_info.id == "research" -- in research lab
-    and self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 -- is qualified
-    and self.hospital  -- is not leaving the hospital
+
+  -- Staff is in research lab, is qualified, and is not leaving the hospital.
+  return room and room.room_info.id == "research" and
+      self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 and self.hospital
 end
 
 -- Determine if the staff member should increase their skills
 function Staff:isLearning()
   local room = self:getRoom()
-  return room and room.room_info.id == "training"  -- in training room
-    and room.staff_member                          -- the training room has a consultant
-    and self.action_queue[1].name == "use_object"  -- is using lecture chair
-    and self.action_queue[1].object.object_type.id == "lecture_chair"
+
+  -- Staff is in training room, the training room has a consultant, and  is using lecture chair.
+  return room and room.room_info.id == "training" and room.staff_member and
+      self.action_queue[1].name == "use_object" and
+      self.action_queue[1].object.object_type.id == "lecture_chair"
 end
 
 function Staff:isLearningOnTheJob()
   local room = self:getRoom()
-  return room and room.room_info.id ~= "training" and room.room_info.id ~= "staff_room"
-    and room.room_info.id ~= "toilets" -- is in room but not training room, staff room, or toilets
-    and self.humanoid_class == "Doctor" -- and is a doctor
-    and self.action_queue[1].name == "use_object" -- and is using something
+
+  -- Staff is in room but not training room, staff room, or toilets; is a doctor; and is using something
+  return room and room.room_info.id ~= "training" and
+      room.room_info.id ~= "staff_room" and room.room_info.id ~= "toilets" and
+      self.humanoid_class == "Doctor" and self.action_queue[1].name == "use_object"
 end
 
 
@@ -361,13 +368,13 @@ function Staff:fire()
   if staff_window and staff_window.staff == self then
       staff_window:close()
   end
-  self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "  .. self.profile.name)
-  self.world.ui:playSound "sack.wav"
+  self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": " .. self.profile.name)
+  self.world.ui:playSound("sack.wav")
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
   self.fired = true
   self.hospital:changeReputation("kicked")
-  self:setHospital(nil)
+  self:despawn()
   self.hover_cursor = nil
   self.attributes["fatigue"] = nil
   self:leaveAnnounce()
@@ -381,10 +388,10 @@ function Staff:fire()
 end
 
 function Staff:die()
-  self:setHospital(nil)
+  self:despawn()
   if self.task then
-    -- If the staff member had a task outstanding, unassigning them from that task. 
-    -- Tasks with no handyman assigned will be eligable for reassignment by the hospital.
+    -- If the staff member had a task outstanding, unassigning them from that task.
+    -- Tasks with no handyman assigned will be eligible for reassignment by the hospital.
     self.task.assignedHandyman = nil
     self.task = nil
   end
@@ -457,6 +464,7 @@ function Staff:setProfile(profile)
   end
   self:setLayer(5, profile.layer5)
   self:updateStaffTitle()
+  self.waiting_for_staffroom = false -- Staff member has detected there is no staff room to rest.
 end
 
 function Staff:needsWorkStation()
@@ -557,16 +565,16 @@ function Staff:checkIfNeedRest()
       self:changeAttribute("happiness", -0.0002)
     end
     -- If above the policy threshold, go to the staff room.
-    if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"]
-    and not class.is(self:getRoom(), StaffRoom) then
+    if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] and
+        not class.is(self:getRoom(), StaffRoom) then
       local profile = self.profile
       if self.waiting_for_staffroom then
       -- The staff will get unhappy if there is no staffroom to rest in.
         self:changeAttribute("happiness", -0.001)
       end
       local room = self:getRoom()
-      if self.staffroom_needed and ((room and not room:getPatient()) or not room)
-      or (room and self.going_to_staffroom) then
+      if (self.staffroom_needed and ((room and not room:getPatient()) or not room)) or
+          (room and self.going_to_staffroom) then
         if self.action_queue[1].name ~= "walk" and self.action_queue[1].name ~= "queue" then
           self.staffroom_needed = nil
           self:goToStaffRoom()
@@ -574,23 +582,17 @@ function Staff:checkIfNeedRest()
       end
       -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
       -- already going to staffroom or being picked up
-      if self.waiting_for_staffroom or self.staffroom_needed
-      or self.going_to_staffroom or self.pickup then
+      if self.waiting_for_staffroom or self.staffroom_needed or
+          self.going_to_staffroom or self.pickup then
         return
       end
+
       -- If no staff room exists, prevent further checks until one is built
       if not self.world:findRoomNear(self, "staff_room") then
-        self.waiting_for_staffroom = true
-        local callback
-        callback = --[[persistable:staff_build_staff_room_callback]] function(room)
-          if room.room_info.id == "staff_room" then
-            self.waiting_for_staffroom = nil
-            self:unregisterRoomBuildCallback(callback)
-          end
-        end
-        self:registerRoomBuildCallback(callback)
+        self.waiting_for_staffroom = true -- notifyNewRoom resets it when a staff room gets built.
         return
       end
+
       local room = self:getRoom()
       if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
         -- If occupied by patient, staff will go to the staffroom after the patient left.
@@ -602,6 +604,12 @@ function Staff:checkIfNeedRest()
         self:goToStaffRoom()
       end
     end
+  end
+end
+
+function Staff:notifyNewRoom(room)
+  if room.room_info.id == "staff_room" then
+    self.waiting_for_staffroom = false
   end
 end
 
@@ -752,8 +760,8 @@ function Staff:isIdle()
   local room = self:getRoom()
   if room then
     -- in special rooms, never
-    if room.room_info.id == "staff_room" or room.room_info.id == "research"
-    or room.room_info.id == "training" then
+    if room.room_info.id == "staff_room" or room.room_info.id == "research" or
+        room.room_info.id == "training" then
       return false
     end
 
@@ -765,8 +773,9 @@ function Staff:isIdle()
     -- For other staff...
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- or if the only one in sight is actually leaving.
-    if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and not self.action_queue[1].is_leaving
-    and not (room.door.reserved_for and class.is(room.door.reserved_for, Patient)) then
+    if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and
+        not self.action_queue[1].is_leaving and
+        not (room.door.reserved_for and class.is(room.door.reserved_for, Patient)) then
       if room:getPatientCount() == 0 then
         return true
       else
@@ -784,8 +793,7 @@ function Staff:isIdle()
     local x, y = self.action_queue[1].x, self.action_queue[1].y
     if x then
       room = self.world:getRoom(x, y)
-      if room and (room.room_info.id == "training"
-                   or room.room_info.id == "research") then
+      if room and (room.room_info.id == "training" or room.room_info.id == "research") then
         return false
       end
     end
@@ -822,7 +830,7 @@ end
 -- the salary by.
 function Staff:increaseWage(amount)
   self.profile.wage = self.profile.wage + amount
-  self.world.ui:playSound "cashreg.wav"
+  self.world.ui:playSound("cashreg.wav")
   if self.profile.wage > 2000 then -- What cap here?
     self.profile.wage = 2000
   else -- If the cap has been reached this member of staff won't get unhappy
@@ -921,7 +929,7 @@ function Staff:searchForHandymanTask()
   else
     if self.attributes[task] < 1 then
       local sum = self.attributes[task2] + self.attributes[task3]
-      if math.random(0, sum * 100) > self.attributes[task2] * 100 then
+      if math.random(0, math.floor(sum * 100)) > math.floor(self.attributes[task2] * 100) then
         task2, task3 =  task3, task2
       end
       index = self.hospital:searchForHandymanTask(self, task2)
@@ -984,3 +992,21 @@ function Staff:getDrawingLayer()
     return 4
   end
 end
+
+--! Estimate staff service quality based on skills, fatigue and happiness.
+--!return (float) between [0-1] indicating quality of the service.
+function Staff:getServiceQuality()
+  -- weights
+  local skill_weight = 0.7
+  local fatigue_weight = 0.2
+  local happiness_weight = 0.1
+
+  local weighted_skill = skill_weight * self.profile.skill
+  local weighted_fatigue = fatigue_weight * self.attributes["fatigue"]
+  local weighted_happiness = happiness_weight * self.attributes["happiness"]
+
+  return weighted_skill + weighted_fatigue + weighted_happiness
+end
+
+-- Dummy callback for savegame compatibility
+local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function(room) end

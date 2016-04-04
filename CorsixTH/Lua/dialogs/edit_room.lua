@@ -26,19 +26,24 @@ dofile "dialogs/place_objects"
 
 class "UIEditRoom" (UIPlaceObjects)
 
+---@type UIEditRoom
+local UIEditRoom = _G["UIEditRoom"]
+
 function UIEditRoom:UIEditRoom(ui, room_type)
 
   -- NB: UIEditRoom:onCursorWorldPositionChange is called by the UIPlaceObjects
   -- constructor, hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
-  self:addKeyHandler("Enter", self.confirm) -- UIPlaceObjects does not need this
+  self:addKeyHandler("return", self.confirm) -- UIPlaceObjects does not need this
+  self:addKeyHandler("keypad enter", self.confirm)
 
   local app = ui.app
+  local blue_red_swap = self.anims.Alt32_BlueRedSwap
   -- Set alt palette on wall blueprint to make it red
-  self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
+  self.anims:setAnimationGhostPalette(124, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   -- Set on door and window blueprints too
-  self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
-  self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6))
+  self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
+  self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
   if not room_type.room_info then
     self.blueprint_rect = {
@@ -182,6 +187,7 @@ function UIEditRoom:cancel()
     else
       self:close()
     end
+    self.ui:setCursor(self.ui.default_cursor)
   elseif self.phase == "objects" then
     self:stopPickupItems()
     self:returnToDoorPhase()
@@ -209,7 +215,6 @@ function UIEditRoom:confirm(force)
     self.mouse_down_y = false
     self.move_rect_x = false
     self.move_rect_y = false
-    self.ui:setCursor(self.ui.default_cursor)
     self.phase = "door"
     self:enterDoorPhase()
   elseif self.phase == "door" then
@@ -252,8 +257,8 @@ end
 
 function UIEditRoom:isHumanoidObscuringArea(entity, x1, x2, y1, y2)
   if entity.tile_x then
-    if x1 <= entity.tile_x and entity.tile_x <= x2
-    and y1 <= entity.tile_y and entity.tile_y <= y2 then
+    if x1 <= entity.tile_x and entity.tile_x <= x2 and
+        y1 <= entity.tile_y and entity.tile_y <= y2 then
       if (x1 == entity.tile_x or x2 == entity.tile_x) or (y1 == entity.tile_y or y2 == entity.tile_y) then
         -- Humanoid not in the rectangle, but might be walking into it
         local action = entity.action_queue[1]
@@ -286,8 +291,8 @@ function UIEditRoom:clearArea()
     local y1 = rect.y - 1
     local y2 = rect.y + rect.h
     for _, entity in ipairs(world.entities) do
-      if class.is(entity, Humanoid)
-      and self:isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
+      if class.is(entity, Humanoid) and
+          self:isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
 
         -- Try to make the humanoid leave the area
@@ -498,14 +503,16 @@ function UIEditRoom:purchaseItems()
   self.place_objects = false
   self:stopPickupItems()
 
+  local cfg_objects = self.world.map.level_config.objects
+  local research = self.ui.hospital.research
+
   local object_list = {} -- transform set to list
   for i, o in ipairs(self.room.room_info.objects_additional) do
     -- Don't show the object if it hasn't been researched yet.
     local object = TheApp.objects[o]
-    local research = self.ui.hospital.research
-    local avail = research.level_config.objects[object.thob].AvailableForLevel
-    if avail == 1 and (not research.research_progress[object]
-    or research.research_progress[object].discovered) then
+    local avail = cfg_objects[object.thob].AvailableForLevel
+    if avail == 1 and (not research.research_progress[object] or
+        research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
       for j, p in ipairs(self.objects) do
@@ -596,6 +603,10 @@ function UIEditRoom:returnToDoorPhase()
       while true do
         local obj = self.world:getObject(x, y)
         if not obj or obj == room.door or class.is(obj, SwingDoor) then
+          break
+        end
+        if obj.object_type.id == "litter" then -- Silently remove litter from the world.
+          self.world:removeLitter(obj, x, y)
           break
         end
         self.world:destroyEntity(obj)
@@ -746,8 +757,8 @@ function UIEditRoom:screenToWall(x, y)
       cellx = cellx + 1
     end
     return cellx, rect.y, "north"
-  elseif (cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1)
-      and rect.y <= celly and celly < rect.y + rect.h then
+  elseif (cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1) and
+      rect.y <= celly and celly < rect.y + rect.h then
     -- east edge
     if celly == rect.y then
       celly = rect.y + 1
@@ -755,8 +766,8 @@ function UIEditRoom:screenToWall(x, y)
       celly = rect.y + rect.h - 2
     end
     return rect.x + rect.w - 1, celly, "east"
-  elseif (celly == rect.y + rect.h or celly == rect.y + rect.h - 1)
-      and rect.x <= cellx and cellx < rect.x + rect.w then
+  elseif (celly == rect.y + rect.h or celly == rect.y + rect.h - 1) and
+      rect.x <= cellx and cellx < rect.x + rect.w then
     -- south edge
     if cellx == rect.x then
       cellx = rect.x + 1
@@ -789,22 +800,22 @@ function UIEditRoom:checkReachability()
   end
 
   while x < rect.x + rect.w do
-    if not check"travelSouth" then return false end
+    if not check("travelSouth") then return false end
     x = x + 1
   end
   y = y + 1
   while y < rect.y + rect.h do
-    if not check"travelWest" then return false end
+    if not check("travelWest") then return false end
     y = y + 1
   end
   x = x - 1
   while x >= rect.x do
-    if not check"travelNorth" then return false end
+    if not check("travelNorth") then return false end
     x = x - 1
   end
   y = y - 1
   while y >= rect.y do
-    if not check"travelEast" then return false end
+    if not check("travelEast") then return false end
     y = y - 1
   end
 
@@ -860,6 +871,7 @@ function UIEditRoom:enterWindowsPhase()
 end
 
 function UIEditRoom:enterObjectsPhase()
+  self.ui:setCursor(self.ui.default_cursor)
   self.ui:tutorialStep(3, {11, 12}, 13)
   self.ui:setWorldHitTest(self.room)
   local confirm = self:checkEnableConfirm()
@@ -896,8 +908,8 @@ function UIEditRoom:computeAverageContents()
   local average_objects = {} -- what does the average room of this type contain?
   local room_count = 0
   for _, room in pairs(self.world.rooms) do
-    if room and room.built and not room.crashed
-    and room.hospital == self.ui.hospital and room.room_info == self.room_type then
+    if room and room.built and not room.crashed and
+        room.hospital == self.ui.hospital and room.room_info == self.room_type then
       room_count = room_count + 1
       for obj, _ in pairs(room.objects) do
         average_objects[obj.object_type.id] = (average_objects[obj.object_type.id] or 0) + 1
@@ -931,8 +943,8 @@ function UIEditRoom:draw(canvas, ...)
     local x, y = ui:WorldToScreen(self.mouse_cell_x, self.mouse_cell_y)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
-      x = x / zoom
-      y = y / zoom
+      x = math.floor(x / zoom)
+      y = math.floor(y / zoom)
     end
     self.cell_outline:draw(canvas, 2, x - 32, y)
     canvas:scale(1)
@@ -961,7 +973,7 @@ function UIEditRoom:onMouseDown(button, x, y)
         end
       elseif self.phase == "door" then
         if self.blueprint_door.valid then
-          self.ui:playSound "buildclk.wav"
+          self.ui:playSound("buildclk.wav")
           self:confirm(true)
         else
           self.ui:tutorialStep(3, 9, 10)
@@ -997,6 +1009,8 @@ end
 function UIEditRoom:setBlueprintRect(x, y, w, h)
   local rect = self.blueprint_rect
   local map = self.ui.app.map
+  if x < 1 then x = 1 end
+  if y < 1 then y = 1 end
   if x + w > map.width  then w = map.width  - x end
   if y + h > map.height then h = map.height - y end
 
@@ -1119,7 +1133,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   else
     if anim ~= self.blueprint_door.anim then
       self.blueprint_door.anim = anim
-      self.blueprint_door.anim:setTag"door"
+      self.blueprint_door.anim:setTag("door")
       self.blueprint_door.old_anim = anim:getAnimation()
       self.blueprint_door.old_flags = anim:getFlag()
     end
@@ -1137,8 +1151,8 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     end
     -- If it is a swing door there are two more locations to check.
     if self.room_type.swing_doors then
-      if map:getCell(x, y - 1, 3) % 0x100 ~= 0
-      or map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
+      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 or
+          map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
         self.blueprint_door.valid = false
       end
     end
@@ -1150,8 +1164,8 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     end
     -- If it is a swing door there are two more locations to check.
     if self.room_type.swing_doors then
-      if map:getCell(x - 1, y, 2) % 0x100 ~= 0
-      or map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
+      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 or
+          map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
         self.blueprint_door.valid = false
       end
     end
@@ -1165,21 +1179,21 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     else
       flag_names = {"buildableWest", "buildableEast"}
     end
-    if not (map:getCellFlags(x , y , flags).buildable or flags.passable)
-    or not (flags[flag_names[1]] and flags[flag_names[2]])
-    or not (map:getCellFlags(x2, y2, flags).buildable or flags.passable)
-    or not (flags[flag_names[1]] and flags[flag_names[2]])
+    if not (map:getCellFlags(x , y , flags).buildable or flags.passable) or
+        not (flags[flag_names[1]] and flags[flag_names[2]]) or
+        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) or
+        not (flags[flag_names[1]] and flags[flag_names[2]])
     then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not (map:getCellFlags(x + (x_mod and 1 or 0) , y + (y_mod and 1 or 0) , flags).buildable or flags.passable)
-      or not (map:getCellFlags(x2 + (x_mod and 1 or 0) , y2 + (y_mod and 1 or 0) , flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable) or
+          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable) then
         self.blueprint_door.valid = false
       end
-      if not (map:getCellFlags(x - (x_mod and 1 or 0) , y - (y_mod and 1 or 0) , flags).buildable or flags.passable)
-      or not (map:getCellFlags(x2 - (x_mod and 1 or 0) , y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable) or
+          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
         self.blueprint_door.valid = false
       end
     end
@@ -1196,14 +1210,14 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   if self.blueprint_door.valid then
     map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4,
-      door_floor_blueprint_markers[orig_wall])
+        door_floor_blueprint_markers[orig_wall])
   end
 end
 
 function UIEditRoom:placeWindowBlueprint()
   if self.blueprint_window.anim and self.blueprint_window.valid then
     self.blueprint_window = {}
-    self.ui:playSound "buildclk.wav"
+    self.ui:playSound("buildclk.wav")
   elseif self.blueprint_window.anim and not self.blueprint_window.valid then
     self.ui:tutorialStep(3, 11, 12)
   end
@@ -1250,7 +1264,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
 
   if anim ~= self.blueprint_window.anim then
     self.blueprint_window.anim = anim
-    self.blueprint_window.anim:setTag"window"
+    self.blueprint_window.anim:setTag("window")
     self.blueprint_window.old_anim = anim:getAnimation()
     self.blueprint_window.old_flags = anim:getFlag()
   end
@@ -1300,7 +1314,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
         self.resize_rect = false
       elseif wx < rect.x or wx >= rect.x + rect.w or wy < rect.y or wy >= rect.y + rect.h then
         -- outside blueprint
-        ui:setCursor(ui.default_cursor)
+        ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
         self.move_rect = false
         self.resize_rect = false
       else
@@ -1323,6 +1337,9 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
       end
     end
   else
+    if self.phase ~= "objects" then
+      ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
+    end
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
     if self.phase == "door" then
       self:setDoorBlueprint(cell_x, cell_y, wall)
@@ -1410,5 +1427,15 @@ function UIEditRoom:placeObject()
   local obj = UIPlaceObjects.placeObject(self, true)
   if obj then
     self:checkEnableConfirm()
+  end
+end
+
+function UIEditRoom:afterLoad(old, new)
+  if old < 101 then
+    self:removeKeyHandler("enter")
+    self:addKeyHandler("return", self.confirm)
+  end
+  if old < 104 then
+    self:addKeyHandler("keypad enter", self.confirm)
   end
 end

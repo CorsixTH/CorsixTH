@@ -31,35 +31,38 @@ stored for future use anyway.
 --! Manages all things related to research for one hospital.
 class "ResearchDepartment"
 
+---@type ResearchDepartment
+local ResearchDepartment = _G["ResearchDepartment"]
+
 function ResearchDepartment:ResearchDepartment(hospital)
   self.hospital = hospital
   self.world = hospital.world
+
   -- This list contains a lot of information.
   -- Progress of object discovery, object improvement, drug improvement
   -- dito costs and room build costs.
   self.research_progress = {}
-  self.level_config = hospital.world.map.level_config
   self:initResearch()
 end
 
 -- Initialize research for the level.
 function ResearchDepartment:initResearch()
   local hospital = self.hospital
-  local config = self.level_config.objects
+  local cfg_objects = self.world.map.level_config.objects
   local cure, diagnosis, improve, drug
   -- Initialize object research
   for _, object in ipairs(TheApp.objects) do
-    if config[object.thob] and (config[object.thob].AvailableForLevel == 1)
-    and object.research_category then
+    if cfg_objects[object.thob] and cfg_objects[object.thob].AvailableForLevel == 1 and
+        object.research_category then
       self.research_progress[object] = {
         points = 0,
-        start_strength = config[object.thob].StartStrength,
-        cost = not self.world.free_build_mode and config[object.thob].StartCost or 0,
-        discovered = config[object.thob].StartAvail == 1,
+        start_strength = cfg_objects[object.thob].StartStrength,
+        cost = not self.world.free_build_mode and cfg_objects[object.thob].StartCost or 0,
+        discovered = cfg_objects[object.thob].StartAvail == 1,
         strength_imp = 0,
         cost_imp = 0,
       }
-      if config[object.thob].StartAvail == 0 then
+      if cfg_objects[object.thob].StartAvail == 0 then
         if object.research_category == "cure" then
           cure = object
         elseif object.research_category == "diagnosis" then
@@ -68,7 +71,7 @@ function ResearchDepartment:initResearch()
       end
       -- TODO: Do we want some kind of specific order here, e.g.
       -- the same as in the original?
-      if object.default_strength and config[object.thob].StartAvail == 1 then
+      if object.default_strength and cfg_objects[object.thob].StartAvail == 1 then
         improve = object
       end
     end
@@ -131,7 +134,7 @@ function ResearchDepartment:checkAutomaticDiscovery(month)
   for object, progress in pairs(self.research_progress) do
     -- Only check objects
     if object.default_strength then
-      local avail_at = self.level_config.objects[object.thob].WhenAvail
+      local avail_at = self.world.map.level_config.objects[object.thob].WhenAvail
       if not progress.discovered and avail_at ~= 0 and month >= avail_at then
         self:discoverObject(object, true)
       end
@@ -237,8 +240,8 @@ function ResearchDepartment:nextResearch(category)
     end
   elseif category == "improvements" then
     -- Find the object which needs improvements the most.
-    local min_strength = self.level_config.gbv.MaxObjectStrength
-    local max_strength = self.level_config.gbv.MaxObjectStrength
+    local max_strength = self.world.map.level_config.gbv.MaxObjectStrength
+    local min_strength = max_strength
     for object, progress in pairs(self.research_progress) do
       if object.default_strength then
         -- Don't improve those that already have the max strength
@@ -292,30 +295,29 @@ If this thing cannot be processed nil is returned.
 --]]
 function ResearchDepartment:getResearchRequired(thing)
   local required
-  local level_config = self.level_config
-  local objects = level_config.objects
+  local level_config = self.world.map.level_config
   local expert = level_config.expertise
-  local research_info = self.research_progress[thing]
 
   if thing.thob then
     -- An object
-    required = objects[thing.thob].RschReqd
+    required = level_config.objects[thing.thob].RschReqd
     if not required then
       -- It didn't know, so use the fallback instead.
       if not thing.research_fallback then
         -- This object is not researchable!
-        print(("Warning: %s has been defined as "):format(thing.id)
-        .. "researchable, but no requirements to fulfil could be found.")
+        print(("Warning: %s has been defined as "):format(thing.id) ..
+              "researchable, but no requirements to fulfil could be found.")
       else
         required = expert[thing.research_fallback].RschReqd
       end
     end
     -- Actually want to know how much to improve?
+    local research_info = self.research_progress[thing]
     if research_info.discovered then
       local improve_percent = level_config.gbv.RschImproveCostPercent
       local increment = level_config.gbv.RschImproveIncrementPercent
-      improve_percent = improve_percent + increment*research_info.cost_imp
-      required = required * improve_percent/100
+      improve_percent = improve_percent + increment * research_info.cost_imp
+      required = required * improve_percent / 100
     end
   elseif thing.drug then
     -- A drug
@@ -336,23 +338,19 @@ an autopsy, then this is the id of that room.
 ]]
 function ResearchDepartment:addResearchPoints(points, autopsy_room)
 
-  local level_config = self.level_config
-  local objects = level_config.objects
-  local expert = level_config.expertise
-  local areas = self.research_policy
-  local hospital = self.hospital
+  local level_config = self.world.map.level_config
 
   ---------------------- An autopsy has been done ---------------------------
   if autopsy_room then
     -- Do something only if the room is among those not yet discovered.
-    for room, value in pairs(hospital.undiscovered_rooms) do
+    for room, value in pairs(self.hospital.undiscovered_rooms) do
       if room.id == autopsy_room then
         -- Find an object within this room that needs research points.
         for object, _ in pairs(room.objects_needed) do
           local research = self.research_progress[TheApp.objects[object]]
           if research and not research.discovered then
             local required = self:getResearchRequired(TheApp.objects[object])
-            local advance = required * level_config.gbv.AutopsyRschPercent/100
+            local advance = required * level_config.gbv.AutopsyRschPercent / 100
             research.points = research.points + advance
 
             -- Maybe we now have enough to discover the object?
@@ -372,10 +370,11 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
     -- Fetch the level research divisor.
     local divisor = level_config.gbv.ResearchPointsDivisor or 5
 
-    points = math.ceil(points*self.research_policy.global/(100*divisor))
+    points = math.ceil(points * self.research_policy.global / (100 * divisor))
 
     -- Divide the points into the different categories and check if
     -- it is time to discover something
+    local areas = self.research_policy
     for name, info in pairs(areas) do
       -- Don't touch the value "global".
       if type(info) == "table" then
@@ -385,7 +384,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
           local research_info = self.research_progress[info.current]
           local stored = research_info.points
           -- Add just a little randomness
-          research_info.points = stored + math.n_random(1, 0.2)*points*info.frac/100
+          research_info.points = stored + math.n_random(1, 0.2) * points * info.frac / 100
           local required = self:getResearchRequired(info.current)
           if required and required < research_info.points then
             research_info.points = 0
@@ -431,9 +430,8 @@ function ResearchDepartment:improveDrug(drug)
     end
   else
     -- Time to improve effectiveness
-    local improve_rate = self.level_config.gbv.DrugImproveRate
-    disease.cure_effectiveness = math.min(100,
-      disease.cure_effectiveness + improve_rate)
+    local improve_rate = self.world.map.level_config.gbv.DrugImproveRate
+    disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
     research_info.effect_imp = research_info.effect_imp + 1
   end
   if self.hospital == self.world.ui.hospital then
@@ -472,7 +470,7 @@ function ResearchDepartment:improveMachine(machine)
       end
     end
     research_info.cost_imp = research_info.cost_imp + 1
-    local max = self.level_config.gbv.MaxObjectStrength
+    local max = self.world.map.level_config.gbv.MaxObjectStrength
     if research_info.start_strength >= max then
       if self.research_policy.specialisation.current == machine then
         self.research_policy.specialisation.current = self.drain
@@ -485,7 +483,7 @@ function ResearchDepartment:improveMachine(machine)
     end
   else
     -- Time to improve strength
-    local improve_rate = self.level_config.gbv.ResearchIncrement
+    local improve_rate = self.world.map.level_config.gbv.ResearchIncrement
     research_info.start_strength = research_info.start_strength
       + improve_rate
     research_info.strength_imp = research_info.strength_imp + 1
@@ -510,8 +508,8 @@ function ResearchDepartment:discoverObject(object, automatic)
   for room, _ in pairs(self.hospital.undiscovered_rooms) do
     local discovery = true
     for needed, _ in pairs(room.objects_needed) do
-      if self.research_progress[TheApp.objects[needed]]
-      and not self.research_progress[TheApp.objects[needed]].discovered then
+      local obj = self.research_progress[TheApp.objects[needed]]
+      if obj and not obj.discovered then
         discovery = false
         break
       end
@@ -521,17 +519,15 @@ function ResearchDepartment:discoverObject(object, automatic)
       self.hospital.undiscovered_rooms[room] = nil
       if self.hospital == self.world.ui.hospital then
         if automatic then
-          self.world.ui.adviser:say(_A.research.new_available
-          :format(object.name))
+          self.world.ui.adviser:say(_A.research.new_available:format(object.name))
         else
-          self.world.ui.adviser:say(_A.research.new_machine_researched
-          :format(object.name))
+          self.world.ui.adviser:say(_A.research.new_machine_researched:format(object.name))
         end
       end
       -- It may now be possible to continue researching machine improvements
       local current_improvement_research = self.research_policy.improvements.current
-      local min_strength = self.level_config.gbv.MaxObjectStrength
-      local max_strength = self.level_config.gbv.MaxObjectStrength
+      local max_strength = self.world.map.level_config.gbv.MaxObjectStrength
+      local min_strength = max_strength
       -- If we're not researching any improvement right now, and the newest discovery was
       -- a machine that requires an improvement, switch the current policy.
       if (not current_improvement_research or current_improvement_research.dummy) then
@@ -582,8 +578,8 @@ function ResearchDepartment:discoverDisease(disease)
   local current_drug_research = self.research_policy.drugs.current
   -- If we're not researching any drug right now, and the newest discovery was
   -- a disease that requires a drug, switch the current policy.
-  if (not current_drug_research or current_drug_research.dummy)
-  and casebook_disease.drug then
+  if (not current_drug_research or current_drug_research.dummy) and
+      casebook_disease.drug then
     self.research_policy.drugs.current = casebook_disease
   end
   self:setResearchConcentration()
@@ -679,5 +675,11 @@ function ResearchDepartment:concentrateResearch(disease_id)
       -- we want to discover (including the cabinet) or improve it.
       self.research_policy.specialisation.current = object
     end
+  end
+end
+
+function ResearchDepartment:afterLoad(old, new)
+  if old < 106 then
+    self.level_config = nil
   end
 end

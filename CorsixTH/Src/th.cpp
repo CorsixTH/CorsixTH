@@ -22,15 +22,14 @@ SOFTWARE.
 
 #include "config.h"
 #include "th.h"
-#include <string.h>
-#include <memory.h>
-#include <new>
+#include <cstring>
+#include <stdexcept>
 
 THLinkList::THLinkList()
 {
     m_drawingLayer = 0;
-    m_pPrev = NULL;
-    m_pNext = NULL;
+    m_pPrev = nullptr;
+    m_pNext = nullptr;
 }
 
 THLinkList::~THLinkList()
@@ -40,37 +39,22 @@ THLinkList::~THLinkList()
 
 void THLinkList::removeFromList()
 {
-    if(m_pPrev != NULL)
+    if(m_pPrev != nullptr)
     {
         m_pPrev->m_pNext = m_pNext;
     }
-    if(m_pNext != NULL)
+    if(m_pNext != nullptr)
     {
         m_pNext->m_pPrev = m_pPrev;
-        m_pNext = NULL;
+        m_pNext = nullptr;
     }
-    m_pPrev = NULL;
-}
-
-THStringList::THStringList()
-{
-    m_iSectionCount = 0;
-    m_pSections = NULL;
-    m_sData = NULL;
-}
-
-THStringList::~THStringList()
-{
-    for(unsigned int i = 0; i < m_iSectionCount; ++i)
-        delete[] m_pSections[i].pStrings;
-    delete[] m_pSections;
-    delete[] m_sData;
+    m_pPrev = nullptr;
 }
 
 #include "cp437_table.h"
 #include "cp936_table.h"
 
-static void utf8encode(unsigned char*& sOut, uint32_t iCodepoint)
+static void utf8encode(uint8_t*& sOut, uint32_t iCodepoint)
 {
     if(iCodepoint <= 0x7F)
     {
@@ -79,50 +63,42 @@ static void utf8encode(unsigned char*& sOut, uint32_t iCodepoint)
     }
     else if(iCodepoint <= 0x7FF)
     {
-        unsigned char cSextet = iCodepoint & 0x3F;
+        uint8_t cSextet = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        sOut[0] = 0xC0 + iCodepoint;
-        sOut[1] = 0x80 + cSextet;
+        sOut[0] = static_cast<uint8_t>(0xC0 + iCodepoint);
+        sOut[1] = static_cast<uint8_t>(0x80 + cSextet);
         sOut += 2;
     }
     else if(iCodepoint <= 0xFFFF)
     {
-        unsigned char cSextet2 = iCodepoint & 0x3F;
+        uint8_t cSextet2 = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        unsigned char cSextet1 = iCodepoint & 0x3F;
+        uint8_t cSextet1 = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        sOut[0] = 0xE0 + iCodepoint;
-        sOut[1] = 0x80 + cSextet1;
-        sOut[2] = 0x80 + cSextet2;
+        sOut[0] = static_cast<uint8_t>(0xE0 + iCodepoint);
+        sOut[1] = static_cast<uint8_t>(0x80 + cSextet1);
+        sOut[2] = static_cast<uint8_t>(0x80 + cSextet2);
         sOut += 3;
     }
     else
     {
-        unsigned char cSextet3 = iCodepoint & 0x3F;
+        uint8_t cSextet3 = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        unsigned char cSextet2 = iCodepoint & 0x3F;
+        uint8_t cSextet2 = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        unsigned char cSextet1 = iCodepoint & 0x3F;
+        uint8_t cSextet1 = iCodepoint & 0x3F;
         iCodepoint >>= 6;
-        sOut[0] = 0xF0 + iCodepoint;
-        sOut[1] = 0x80 + cSextet1;
-        sOut[2] = 0x80 + cSextet2;
-        sOut[3] = 0x80 + cSextet3;
+        sOut[0] = static_cast<uint8_t>(0xF0 + iCodepoint);
+        sOut[1] = static_cast<uint8_t>(0x80 + cSextet1);
+        sOut[2] = static_cast<uint8_t>(0x80 + cSextet2);
+        sOut[3] = static_cast<uint8_t>(0x80 + cSextet3);
         sOut += 4;
     }
 }
 
-static void CopyStringId(const unsigned char*& sIn, unsigned char*& sOut)
+static void CopyStringCP437(const uint8_t*& sIn, uint8_t*& sOut)
 {
-    size_t iLength = strlen(reinterpret_cast<const char*>(sIn)) + 1;
-    memcpy(sOut, sIn, iLength);
-    sIn += iLength;
-    sOut += iLength;
-}
-
-static void CopyStringCP437(const unsigned char*& sIn, unsigned char*& sOut)
-{
-    unsigned char cChar;
+    uint8_t cChar;
     do
     {
         cChar = *sIn;
@@ -139,9 +115,9 @@ static void CopyStringCP437(const unsigned char*& sIn, unsigned char*& sOut)
     } while(cChar != 0);
 }
 
-static void CopyStringCP936(const unsigned char*& sIn, unsigned char*& sOut)
+static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
 {
-    unsigned char cChar1, cChar2;
+    uint8_t cChar1, cChar2;
     do
     {
         cChar1 = *sIn;
@@ -175,89 +151,78 @@ static void CopyStringCP936(const unsigned char*& sIn, unsigned char*& sOut)
     } while(cChar1 != 0);
 }
 
-bool THStringList::loadFromTHFile(const unsigned char* pData, size_t iDataLength)
+THStringList::THStringList(const uint8_t* data, size_t length)
 {
-    for(unsigned int i = 0; i < m_iSectionCount; ++i)
-        delete[] m_pSections[i].pStrings;
-    delete[] m_pSections;
-    delete[] m_sData;
-    m_pSections = NULL;
-    m_sData = NULL;
-    m_iSectionCount = 0;
+    if(length < 2)
+        throw std::invalid_argument("length must be 2 or larger");
 
-    if(iDataLength < 2)
-        return false;
+    size_t iSectionCount = *reinterpret_cast<const uint16_t*>(data);
+    size_t iHeaderLength = (iSectionCount + 1) * 2;
 
-    unsigned int iSectionCount = *reinterpret_cast<const uint16_t*>(pData);
-    unsigned int iHeaderLength = (iSectionCount + 1) * 2;
+    if(length < iHeaderLength)
+        throw std::invalid_argument("iDataLength must be larger than the header");
 
-    if(iDataLength < iHeaderLength)
-        return false;
+    size_t iStringDataLength = length - iHeaderLength;
+    const uint8_t *sStringData = data + iHeaderLength;
+    const uint8_t *sDataEnd = sStringData + iStringDataLength;
 
     // Determine whether the encoding is CP437 or GB2312 (CP936).
     // The range of bytes 0xB0 through 0xDF are box drawing characters in CP437
     // which shouldn't occur much (if ever) in TH strings, whereas they are
-    // commonly used in GB2312 encoding.
-    const unsigned char *sStringData = pData + iHeaderLength;
-    size_t iStringDataLength = iDataLength - iHeaderLength;
+    // commonly used in GB2312 encoding. We use 10% as a threshold.
     size_t iBCDCount = 0;
     for(size_t i = 0; i < iStringDataLength; ++i)
     {
         if(0xB0 <= sStringData[i] && sStringData[i] <= 0xDF)
             ++iBCDCount;
     }
-    void (*fnCopyString)(const unsigned char*&, unsigned char*&);
+    void (*fnCopyString)(const uint8_t*&, uint8_t*&);
     if(iBCDCount * 10 >= iStringDataLength)
         fnCopyString = CopyStringCP936;
     else
         fnCopyString = CopyStringCP437;
 
-    m_sData = new (std::nothrow) unsigned char[iStringDataLength * 2 + 2];
-    if(m_sData == NULL)
-        return false;
+    // String buffer sized to accept the largest possible reencoding of the
+    // characters interpreted as CP936 or CP437 (2 bytes per character).
+    string_buffer.resize(iStringDataLength * 2 + 2);
 
-    unsigned char *sDataOut = m_sData;
-    const unsigned char *sDataEnd = sStringData + iStringDataLength;
-
-    m_iSectionCount = iSectionCount;
-    m_pSections = new section_t[iSectionCount];
-    for(unsigned int i = 0; i < iSectionCount; ++i)
+    uint8_t *sDataOut = string_buffer.data();
+    sections.resize(iSectionCount);
+    for(size_t i = 0; i < iSectionCount; ++i)
     {
-        m_pSections[i].iSize = reinterpret_cast<const uint16_t*>(pData)[i + 1];
-        m_pSections[i].pStrings = new const char*[m_pSections[i].iSize];
-
-        for(unsigned int j = 0; j < m_pSections[i].iSize; ++j)
+        size_t section_size = reinterpret_cast<const uint16_t*>(data)[i + 1];
+        sections[i].reserve(section_size);
+        for(size_t j = 0; j < section_size; ++j)
         {
-            m_pSections[i].pStrings[j] = reinterpret_cast<char*>(sDataOut);
+            sections[i].push_back(reinterpret_cast<char*>(sDataOut));
             if(sStringData != sDataEnd)
             {
                 fnCopyString(sStringData, sDataOut);
             }
         }
     }
+    // Terminate final string with nil character
     *sDataOut = 0;
-
-    return true;
 }
 
-unsigned int THStringList::getSectionCount()
+THStringList::~THStringList()
+{}
+
+size_t THStringList::getSectionCount()
 {
-    return m_iSectionCount;
+    return sections.size();
 }
 
-unsigned int THStringList::getSectionSize(unsigned int iSection)
+size_t THStringList::getSectionSize(size_t section)
 {
-    return iSection < m_iSectionCount ? m_pSections[iSection].iSize : 0;
+    return section < sections.size() ? sections[section].size() : 0;
 }
 
-const char* THStringList::getString(unsigned int iSection, unsigned int iIndex)
+const char* THStringList::getString(size_t section, size_t index)
 {
-    if(iSection < m_iSectionCount)
+    if(index < getSectionSize(section))
     {
-        if(iIndex < m_pSections[iSection].iSize)
-        {
-            return m_pSections[iSection].pStrings[iIndex];
-        }
+        return sections[section][index];
     }
-    return NULL;
+    return nullptr;
 }

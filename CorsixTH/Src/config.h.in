@@ -23,36 +23,12 @@ SOFTWARE.
 #ifndef CORSIX_TH_CONFIG_H_
 #define CORSIX_TH_CONFIG_H_
 
-/** Rendering engine choice **/
-// SDL - Multiplatform, but suboptimal on some platforms
-// DirectX 9 - Windows only, but always has HW accellerated (alpha) blitting
-// OpenGL - Faster than SDL on supported platforms, but DX9 may still be
-//          preferable on Windows (not yet finished, but should work).
-#ifndef CORSIX_TH_RENDERING_ENGINE_DEFINED
-#cmakedefine CORSIX_TH_USE_OGL_RENDERER
-#cmakedefine CORSIX_TH_USE_DX9_RENDERER
-#cmakedefine CORSIX_TH_USE_SDL_RENDERER
-#endif //CORSIX_TH_RENDERING_ENGINE_DEFINED
-
-// When OpenGL is used as the rendering engine, try to make use of the
-// extension which allows for rendering to a texture. This must be enabled to
-// allow the zooming feature to work.
-#define CORSIX_TH_USE_OGL_RENDER_TO_TEXTURE
-
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when
 // using the SDL rendering engine, the platform SDK is not used for anything
 // critical, and so its use can be avoided if necessary.
 #ifdef _WIN32
 #define CORSIX_TH_USE_WIN32_SDK
-#endif
-
-/** SDL options **/
-// On Windows, the default is to use the copy of SDLmain which is included with
-// CorsixTH (SDL_main_win32.c), but a prebuilt SDLmain library can be used
-// instead.
-#ifdef CORSIX_TH_USE_WIN32_SDK
-#define CORSIX_TH_USE_INCLUDED_SDL_MAIN
 #endif
 
 /** Audio options **/
@@ -62,11 +38,13 @@ SOFTWARE.
 #cmakedefine CORSIX_TH_USE_SDL_MIXER
 
 /** Movie options **/
-// FFMPEG is used for in game movies.  If this library is not present on your
-// system, then you can comment out the next line and the game will not have
-// movies.
+// FFMPEG or LibAV are used for in game movies.
+// If this library is not present on your system, then you can comment out the
+// next line and the game will not have movies.
 #cmakedefine CORSIX_TH_USE_FFMPEG
-
+#ifndef CORSIX_TH_USE_FFMPEG
+#cmakedefine CORSIX_TH_USE_LIBAV
+#endif
 /** Font options **/
 // FreeType2 can be used for font support beyond the CP437 bitmap fonts which
 // come with Theme Hospital. It must be used if translations like Russian or
@@ -93,23 +71,22 @@ SOFTWARE.
 #ifndef __STDC_CONSTANT_MACROS
 #  define __STDC_CONSTANT_MACROS
 #endif
-#include <stddef.h>
-#cmakedefine CORSIX_TH_HAS_STDINT_H
-#cmakedefine CORSIX_TH_HAS_MALLOC_H
-#cmakedefine CORSIX_TH_HAS_ALLOCA_H
-#ifdef CORSIX_TH_HAS_STDINT_H
-#include <stdint.h>
-#else
-// Some compilers (e.g. MSVC) don't have stdint.h, so define the bits we use
-// from stdint.h
-typedef   signed __int8   int8_t;
-typedef   signed __int16  int16_t;
-typedef   signed __int32  int32_t;
-typedef   signed __int64  int64_t;
-typedef unsigned __int8  uint8_t;
-typedef unsigned __int16 uint16_t;
-typedef unsigned __int32 uint32_t;
-typedef unsigned __int64 uint64_t;
-#endif // CORSIX_TH_HAS_STDINT
+#include <cstddef>
+#include <cstdint>
+
+// We bring in the most common stddef and stdint types to avoid typing
+using std::size_t;
+using std::uint8_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::int8_t;
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
+
+/** Visual Leak Detector **/
+// In Visual Studio, Visual Leak Detector can be used to find memory leaks.
+#cmakedefine CORSIX_TH_USE_VLD
 
 #endif // CORSIX_TH_CONFIG_H_

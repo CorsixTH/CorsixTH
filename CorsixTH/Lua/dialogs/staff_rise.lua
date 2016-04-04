@@ -24,6 +24,9 @@ local math_floor
 --! Dialog for staff member requesting a salaray raise.
 class "UIStaffRise" (Window)
 
+---@type UIStaffRise
+local UIStaffRise = _G["UIStaffRise"]
+
 function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   self:Window()
   local app = ui.app
@@ -46,6 +49,7 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req12V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
+  self.black_font = app.gfx:loadFont("QData", "Font00V")
   self.face_parts = app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
 
   -- Left hand side
@@ -136,7 +140,7 @@ function UIStaffRise:draw(canvas, x, y)
   end
 
   -- Complaint text
-  font:drawWrapped(canvas, self.text, x + 200, y + 20, 140)
+  self.black_font:drawWrapped(canvas, self.text, x + 200, y + 20, 140)
 end
 
 function UIStaffRise:drawDoctorAttributes(canvas)
@@ -184,5 +188,11 @@ function UIStaffRise:increaseSalary()
   local world = self.ui.app.world
   if world and world:isCurrentSpeed("Pause") then
     world:setSpeed(world.prev_speed)
+  end
+end
+
+function UIStaffRise:afterLoad(old, new)
+  if not self.black_font then
+    self.black_font = self.ui.app.gfx:loadFont("QData", "Font00V")
   end
 end
