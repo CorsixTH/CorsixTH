@@ -269,6 +269,9 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR\Levels"
   File /r /x .svn ..\CorsixTH\Levels\*.*
 
+  SetOutPath "$INSTDIR\Campaigns"
+  File /r /x .svn ..\CorsixTH\Campaigns\*.*
+
 ; Shortcuts and final files
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
