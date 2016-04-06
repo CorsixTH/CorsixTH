@@ -24,17 +24,21 @@ wall.inside_tiles = {
   north = 122,
   north_window_1 = 124,
   north_window_2 = 126,
+  north_expansion = 144,
   west = 123,
   west_window_1 = 127,
   west_window_2 = 125,
+  west_expansion = 145,
 }
 wall.outside_tiles = {
   north = 114,
   north_window_1 = 116,
   north_window_2 = 118,
+  north_expansion = 142,
   west = 115,
   west_window_1 = 119,
   west_window_2 = 117,
+  west_expansion = 143,
 }
 wall.window_tiles = {
 }
