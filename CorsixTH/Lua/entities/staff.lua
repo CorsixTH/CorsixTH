@@ -404,6 +404,12 @@ function Staff:die()
   self.world.ui.hospital:humanoidDeath(self)
 end
 
+-- Despawns the staff member and removes them from the hospital
+function Staff:despawn()
+  self.hospital:removeStaff(self)
+  Humanoid.despawn(self)
+end
+
 -- Function which is called when the user clicks on the staff member.
 -- Responsible for opening a staff information dialog on left click and picking
 -- up the staff member on right click.
@@ -672,10 +678,9 @@ function Staff:onPlaceInCorridor()
   end
 end
 
+-- Sets the Hospital for a member of staff
+--!param hospital (Hospital) - hospital to assign to member of staff
 function Staff:setHospital(hospital)
-  if self.hospital then
-    self.hospital:removeStaff(self)
-  end
   Humanoid.setHospital(self, hospital)
   self:updateDynamicInfo()
 end
