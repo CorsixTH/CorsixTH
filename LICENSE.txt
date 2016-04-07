@@ -1,7 +1,59 @@
 CorsixTH is free software, distributed under the following terms:
 
-Copyright (C) 2009-2015 Peter "Corsix" Cawley, Edvin "Lego3" Linge,
-  Haico "brainball" van Roeden, Manuel "Roujin" Wolf, et al.
+Copyright (C) 2009-2016 Peter "Corsix" Cawley
+Copyright (C) 2009-2016 Edvin "Lego3" Linge,
+Copyright (C) 2009-2013 Manuel "Roujin" Wolf
+Copyright (C) 2009-2012,2014 Nicolas "MeV" Elie
+Copyright (C) 2009 Haico "brainball" van Roeden
+Copyright (C) 2009-2012 Darrel "redneon" Blake
+Copyright (C) 2009 Manuel König
+Copyright (C) 2010 M.Chalon
+Copyright (C) 2010 Sjors Gielen
+Copyright (C) 2010 Sam Wong
+Copyright (C) 2010 Edwin "Dutchy" Smulders
+Copyright (C) 2010 Miika-Petteri Matikainen
+Copyright (C) 2010-2016 Erlend Mongstad
+Copyright (C) 2010-2011 Ole "Froksen" Frandsen
+Copyright (C) 2010 Robin "RobseRob" Madsen
+Copyright (C) 2010 RAS
+Copyright (C) 2010 Jukka Kauppinen
+Copyright (C) 2010 "Fabiomsouto"
+Copyright (C) 2010 Justin Pasher
+Copyright (C) 2010 Wendell Misiedjan
+Copyright (C) 2011 David "ChronosHD" Horváth
+Copyright (C) 2011 Adam Kirk
+Copyright (C) 2011 Ted "IntelOrca" John
+Copyright (C) 2011 Chris James
+Copyright (C) 2011 John Pirie
+Copyright (C) 2011-2015 Mark Lawlor
+Copyright (C) 2011-2016 William "Sadger" Gatens
+Copyright (C) 2011-2016 Ola Skogrand
+Copyright (C) 2011-2015 Jørgen P. Tjernø
+Copyright (C) 2011-2012 Zbyněk "teh dude :D" Schwarz
+Copyright (C) 2011 Rene "Kleeze" Bergfort
+Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
+Copyright (C) 2011 Sergei Larionov
+Copyright (C) 2011 Alexey Pinyagin
+Copyright (C) 2012-2016 Stephen "TheCycoONE" Baker
+Copyright (C) 2012 Alex Ghiran
+Copyright (C) 2012-2013 Luis "Driver" Duarte
+Copyright (C) 2012-2013 Ryan Hugh Dean
+Copyright (C) 2012 Henrique Poyatos
+Copyright (C) 2012 lwglwsss
+Copyright (C) 2013 Koanxd aka Snowblind
+Copyright (C) 2013 Chris "ChrizmanTV" Wilkinson
+Copyright (C) 2013-2014 Alan Woolley
+Copyright (C) 2013 YoungSeok Yoon
+Copyright (C) 2013-2015 Maarten Peters
+Copyright (C) 2013 nullstein
+Copyright (C) 2013 BuTcHeR (extragry.pl)
+Copyright (C) 2013-2016 Albert "Alberth" Hofkamp
+Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
+Copyright (C) 2014 Phillipp Röll
+Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
+Copyright (C) 2015 Víctor "mccunyao" González
+Copyright (C) 2016 Toby Lane
+et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -27,7 +79,7 @@ Uses the Lua 5.3 library, which is available from http://www.lua.org/ as well as
 the lpeg, library available from http://www.inf.puc-rio.br/~roberto/lpeg, both
 under the following terms:
 
-Copyright � 1994�2015 Lua.org, PUC-Rio.
+Copyright © 1994-2015 Lua.org, PUC-Rio.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -51,7 +103,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 Uses the luafilesystem library available at https://keplerproject.github.io
 under the following terms:
 
-Copyright � 2003 Kepler Project.
+Copyright © 2003 Kepler Project.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -76,7 +128,7 @@ Uses the luasocket library available from
 https://github.com/diegonehab/luasocket under the following terms:
 
 LuaSocket 3.0 license
-Copyright � 2004-2013 Diego Nehab
+Copyright © 2004-2013 Diego Nehab
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -187,7 +239,7 @@ Introduction
   encourage you to use the following text:
 
    """
-    Portions of this software are copyright ? <year> The FreeType
+    Portions of this software are copyright © <year> The FreeType
     Project (www.freetype.org).  All rights reserved.
    """
 
