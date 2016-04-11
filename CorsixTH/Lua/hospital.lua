@@ -48,7 +48,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.acc_overdraft = 0
   self.acc_heating = 0
   self.discover_autopsy_risk = 10
-  self.initial_grace = true
 
   -- The sum of all material values (tiles, rooms, objects).
   -- Initial value: hospital tile count * tile value + 20000
@@ -648,6 +647,10 @@ function Hospital:afterLoad(old, new)
     -- price distortion
     self.under_priced_threshold = -0.4
     self.over_priced_threshold = 0.3
+  end
+
+  if old < 111 then
+    self.initial_grace = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
