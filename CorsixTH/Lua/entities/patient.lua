@@ -207,17 +207,19 @@ function Patient:completeDiagnosticStep(room)
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
 
+-- Sets the hospital for the patient - additionally removing them from a
+-- hospital if they already belong to one. For player hospitals, patients who
+-- are not debug or emergency patients are made to seek a reception desk.
+--!param hospital (Hospital): hospital to assign to patient
 function Patient:setHospital(hospital)
   if self.hospital then
     self.hospital:removePatient(self)
   end
   Humanoid.setHospital(self, hospital)
-  if hospital then
-    if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-      self:setNextAction{name = "seek_reception"}
-    end
-    hospital:addPatient(self)
+  if hospital.is_in_world and not self.is_debug and not self.is_emergency then
+    self:setNextAction{name = "seek_reception"}
   end
+  hospital:addPatient(self)
 end
 
 --! Decide the ID of the disease or treatment that the patient is paying for.
@@ -631,6 +633,12 @@ function Patient:goHome(reason, disease_id)
     room:makeHumanoidLeave(self)
   end
   self:despawn()
+end
+
+-- Despawns the patient and removes them from the hospital
+function Patient:despawn()
+  self.hospital:removePatient(self)
+  Humanoid.despawn(self)
 end
 
 -- This function handles changing of the different attributes of the patient.
