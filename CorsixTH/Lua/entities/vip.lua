@@ -389,15 +389,8 @@ function Vip:setVIPRating()
   end
 
   -- check average patient thirst
-  local totalThirst = 0
-  for _, patient in ipairs(self.hospital.patients) do
-    if patient.attributes["thirst"] then
-      totalThirst = totalThirst + patient.attributes["thirst"]
-    end
-  end
-
-  if #self.hospital.patients ~= 0 then
-    local averageThirst = totalThirst / #self.hospital.patients
+  local averageThirst = self.hospital:getAveragePatientAttribute("thirst", nil)
+  if averageThirst then
     local thirst_ratio_rangemap = {
       {upper = 0.20, value = -5},
       {upper = 0.40, value = -1},
@@ -413,13 +406,8 @@ function Vip:setVIPRating()
   end
 
   -- check average patient happiness
-  local totalHappiness = 0
-  for _, patient in ipairs(self.hospital.patients) do
-    totalHappiness = totalHappiness + patient.attributes["happiness"]
-  end
-
-  if #self.hospital.patients ~= 0 then
-    local averageHappiness = totalHappiness / #self.hospital.patients
+  local averageHappiness = self.hospital:getAveragePatientAttribute("happiness", nil)
+  if averageHappiness then
     local patients_happy_ratio_rangemap = {
       {upper = 0.20, value = -10},
       {upper = 0.40, value = -5},
@@ -431,13 +419,8 @@ function Vip:setVIPRating()
   end
 
   -- check average staff happiness
-  local totalHappiness = 0
-  for _, staff in ipairs(self.hospital.staff) do
-    totalHappiness = totalHappiness + staff.attributes["happiness"]
-  end
-
-  if #self.hospital.staff ~= 0 then
-    local averageHappiness = totalHappiness / #self.hospital.staff
+  local averageHappiness = self.hospital:getAverageStaffAttribute("happiness", nil)
+  if averageHappiness then
     local staff_happy_ratio_rangemap = {
       {upper = 0.20, value = -10},
       {upper = 0.40, value = -5},
