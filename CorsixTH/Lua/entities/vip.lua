@@ -265,15 +265,14 @@ function Vip:setVIPRating()
     end
   else
     local deathRatio = numberVisitorsDiff / deathDiff
-    if deathRatio > 12 then
-      self.vip_rating = self.vip_rating + 10
-    elseif deathRatio >= 8 then
-      self.vip_rating = self.vip_rating + 5
-    elseif deathRatio >= 2 and deathRatio <= 4 then
-      self.vip_rating = self.vip_rating - 10
-    elseif deathRatio < 2 then
-      self.vip_rating = self.vip_rating - 20
-    end
+    local death_ratio_rangemap = {
+      {upper = 2, value = -20},
+      {upper = 4, value = -10},
+      {upper = 8, value = 0},
+      {upper = 12, value = 5},
+                  {value = 10}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(deathRatio, death_ratio_rangemap)
   end
 
   --check the visitor to patient cure ratio
@@ -285,15 +284,14 @@ function Vip:setVIPRating()
     end
   else
     local cureRatio = numberVisitorsDiff / cureDiff
-    if cureRatio > 12 then
-      self.vip_rating = self.vip_rating - 10
-    elseif cureRatio >= 10 then
-      self.vip_rating = self.vip_rating - 5
-    elseif cureRatio >= 3 and cureRatio <= 6 then
-      self.vip_rating = self.vip_rating + 10
-    elseif cureRatio < 3 then
-      self.vip_rating = self.vip_rating + 20
-    end
+    local cure_ratio_rangemap = {
+      {upper = 3, value = 20},
+      {upper = 6, value = 10},
+      {upper = 10, value = 0},
+      {upper = 12, value = -5},
+                 {value = -10}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(cureRatio, cure_ratio_rangemap)
   end
 
   -- check for the average queue length
@@ -309,17 +307,14 @@ function Vip:setVIPRating()
     self.vip_rating = self.vip_rating + 6
   else
     local queueRatio = queueCounter / #self.world.rooms
-    if queueRatio < 2 then
-      self.vip_rating = self.vip_rating + 6
-    else
-      if queueRatio >= 3 and queueRatio <=5 then
-        self.vip_rating = self.vip_rating + 3
-      elseif queueRatio >= 9 and queueRatio <=11 then
-        self.vip_rating = self.vip_rating - 3
-      elseif queueRatio > 11 then
-        self.vip_rating = self.vip_rating - 6
-      end
-    end
+    local queue_ratio_rangemap = {
+      {upper = 2, value = 6},
+      {upper = 5, value = 3},
+      {upper = 9, value = 0},
+      {upper = 11, value = -3},
+                  {value = -6}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(queueRatio, queue_ratio_rangemap)
   end
 
   -- now we check for toilet presence
@@ -337,46 +332,36 @@ function Vip:setVIPRating()
     self.vip_rating = self.vip_rating - 6
   else
     local patientToToilet = #self.hospital.patients / toiletsFound
-    if patientToToilet <= 10 then
-      self.vip_rating = self.vip_rating + 6
-    elseif patientToToilet <= 20 then
-      self.vip_rating = self.vip_rating + 3
-    elseif patientToToilet > 40 then
-      self.vip_rating = self.vip_rating - 3
-    end
+    local toilet_ratio_rangemap = {
+      {upper = 10, value = 6},
+      {upper = 20, value = 3},
+      {upper = 40, value = 0},
+                  {value = -3}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(patientToToilet, toilet_ratio_rangemap)
   end
 
   -- check the levels of non-vomit inducing litter in the hospital
-  if self.num_vomit_noninducing < 3 then
-    self.vip_rating = self.vip_rating + 4
-  else
-    if self.num_vomit_noninducing < 5 then
-      self.vip_rating = self.vip_rating + 2
-    elseif self.num_vomit_noninducing >= 7 and self.num_vomit_noninducing <= 8 then
-      self.vip_rating = self.vip_rating - 2
-    elseif self.num_vomit_noninducing > 8 then
-      self.vip_rating = self.vip_rating - 4
-    end
-  end
+  local litter_ratio_rangemap = {
+    {upper = 3, value = 4},
+    {upper = 5, value = 2},
+    {upper = 7, value = 0},
+    {upper = 8, value = -2},
+               {value = -4}
+  }
+  self.vip_rating = self.vip_rating + rangeMapLookup(self.num_vomit_noninducing, litter_ratio_rangemap)
 
   -- check the levels of vomit inducing litter in the hospital
-  if self.num_vomit_inducing < 3 then
-    self.vip_rating = self.vip_rating + 8
-  else
-    if self.num_vomit_inducing < 5 then
-      self.vip_rating = self.vip_rating + 4
-    else
-      if self.num_vomit_inducing >= 6 and self.num_vomit_inducing <= 7 then
-        self.vip_rating = self.vip_rating - 6
-      elseif self.num_vomit_inducing < 10 then
-        self.vip_rating = self.vip_rating - 12
-      elseif self.num_vomit_inducing <= 12 then
-        self.vip_rating = self.vip_rating - 16
-      elseif self.num_vomit_inducing > 12 then
-        self.vip_rating = self.vip_rating - 20
-      end
-    end
-  end
+  local inducing_ratio_rangemap = {
+    {upper = 3, value = 8},
+    {upper = 5, value = 4},
+    {upper = 6, value = 0},
+    {upper = 7, value = -6},
+    {upper = 10, value = -12},
+    {upper = 12, value = -16},
+                {value = -20}
+  }
+  self.vip_rating = self.vip_rating + rangeMapLookup(self.num_vomit_inducing, inducing_ratio_rangemap)
 
   -- if there were explosions, hit the user hard
   local explosionsDiff =  self.hospital.num_explosions - self.enter_explosions
@@ -385,15 +370,14 @@ function Vip:setVIPRating()
   end
 
   -- check the vip heat level
-  if self.attributes["warmth"] >= 0.80 then
-    self.vip_rating = self.vip_rating + 5
-  elseif self.attributes["warmth"] >= 0.60 then
-    self.vip_rating = self.vip_rating + 3
-  elseif self.attributes["warmth"] >= 0.20 and self.attributes["warmth"] < 0.40  then
-    self.vip_rating = self.vip_rating - 3
-  elseif self.attributes["warmth"] < 0.20 then
-    self.vip_rating = self.vip_rating - 5
-  end
+  local heat_ratio_rangemap = {
+    {upper = 0.20, value = -5},
+    {upper = 0.40, value = -3},
+    {upper = 0.60, value = 0},
+    {upper = 0.80, value = 3},
+                  {value = 5}
+  }
+  self.vip_rating = self.vip_rating + rangeMapLookup(self.attributes["warmth"], heat_ratio_rangemap)
 
   -- check the seating : standing ratio of waiting patients
   -- find all the patients who are currently waiting around
@@ -414,15 +398,14 @@ function Vip:setVIPRating()
 
   if #self.hospital.patients ~= 0 then
     local averageThirst = totalThirst / #self.hospital.patients
-    if averageThirst >= 0.80 then
-      self.vip_rating = self.vip_rating + 3
-    elseif averageThirst >= 0.60 then
-      self.vip_rating = self.vip_rating + 1
-    elseif averageThirst >= 0.20 and averageThirst < 0.40 then
-      self.vip_rating = self.vip_rating - 1
-    elseif averageThirst < 0.20 then
-      self.vip_rating = self.vip_rating - 5
-    end
+    local thirst_ratio_rangemap = {
+      {upper = 0.20, value = -5},
+      {upper = 0.40, value = -1},
+      {upper = 0.60, value = 0},
+      {upper = 0.80, value = 1},
+                    {value = 3}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(averageThirst, thirst_ratio_rangemap)
   end
 
   if self.num_visited_rooms ~= 0 then
@@ -437,15 +420,14 @@ function Vip:setVIPRating()
 
   if #self.hospital.patients ~= 0 then
     local averageHappiness = totalHappiness / #self.hospital.patients
-    if averageHappiness >= 0.80 then
-      self.vip_rating = self.vip_rating + 10
-    elseif averageHappiness >= 0.60 then
-      self.vip_rating = self.vip_rating + 5
-    elseif averageHappiness >= 0.20 and averageHappiness < 0.40 then
-      self.vip_rating = self.vip_rating - 5
-    else
-      self.vip_rating = self.vip_rating - 10
-    end
+    local patients_happy_ratio_rangemap = {
+      {upper = 0.20, value = -10},
+      {upper = 0.40, value = -5},
+      {upper = 0.60, value = 0},
+      {upper = 0.80, value = 5},
+                    {value = 10}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(averageHappiness, patients_happy_ratio_rangemap)
   end
 
   -- check average staff happiness
@@ -456,15 +438,14 @@ function Vip:setVIPRating()
 
   if #self.hospital.staff ~= 0 then
     local averageHappiness = totalHappiness / #self.hospital.staff
-    if averageHappiness >= 0.80 then
-      self.vip_rating = self.vip_rating + 10
-    elseif averageHappiness >= 0.60 then
-      self.vip_rating = self.vip_rating + 5
-    elseif averageHappiness >= 0.20 and averageHappiness < 0.40 then
-      self.vip_rating = self.vip_rating - 5
-    else
-      self.vip_rating = self.vip_rating - 10
-    end
+    local staff_happy_ratio_rangemap = {
+      {upper = 0.20, value = -10},
+      {upper = 0.40, value = -5},
+      {upper = 0.60, value = 0},
+      {upper = 0.80, value = 5},
+                    {value = 10}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(averageHappiness, staff_happy_ratio_rangemap)
   end
 
   -- set the cash reward value
@@ -479,17 +460,14 @@ function Vip:setVIPRating()
   end
 
   -- give the rating between 1 and 5
-  if self.vip_rating < 25 then
-    self.vip_rating = 1
-  elseif self.vip_rating < 45 then
-    self.vip_rating = 2
-  elseif self.vip_rating < 65 then
-    self.vip_rating = 3
-  elseif self.vip_rating < 85 then
-    self.vip_rating = 4
-  else
-    self.vip_rating = 5
-  end
+  local rating_ratio_rangemap = {
+    {upper = 25, value = 1},
+    {upper = 45, value = 2},
+    {upper = 65, value = 3},
+    {upper = 85, value = 4},
+                {value = 5}
+  }
+  self.vip_rating = rangeMapLookup(self.vip_rating, rating_ratio_rangemap)
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
 
