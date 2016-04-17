@@ -141,28 +141,16 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local x_min = 455
   local x_max = 551
   local width = x_max - x_min
-  local happiness = self.ui.hospital:getAveragePatientAttribute("happiness")
-  local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst")
-  local warmth = self.ui.hospital:getAveragePatientAttribute("warmth")
-  local world = self.ui.app.world
-
-  -- in lua, NaN value comparisons always return false
-  local function isnan(val)
-    return val ~= 0 and not (val < 0 or val > 0)
-  end
-
-  if isnan(happiness) then happiness = 0.5 end
-  if isnan(thirst) then thirst = 0.5 end
-  if isnan(warmth) then
-    warmth = 0.5
-  else
-    warmth = UIPatient.normaliseWarmth(warmth)
-  end
+  local happiness = self.ui.hospital:getAveragePatientAttribute("happiness", 0.5)
+  local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst", 0.5)
+  local warmth = self.ui.hospital:getAveragePatientAttribute("warmth", nil)
+  warmth = warmth and UIPatient.normaliseWarmth(warmth) or 0.5
 
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193)
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223)
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254)
 
+  local world = self.ui.app.world
   if world.free_build_mode then
     self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")
   end

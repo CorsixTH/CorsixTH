@@ -294,3 +294,20 @@ function list_to_set(list)
   end
   return set
 end
+
+--! Find the smallest bucket with its upper value less or equal to a given number,
+--! and return the value of the bucket, or its index.
+--!param number (number) Value to accept by the bucket.
+--!param buckets (list) Available buckets, pairs of {upper=x, value=y} tables,
+--  in increasing x value, where nil is taken as infinite. The y value is
+--  returned for the first bucket in the list where number <= x. If y is nil,
+--  the index of the bucket in the list is returned.
+--!return (number) Value or index of the matching bucket.
+function rangeMapLookup(number, buckets)
+  for index, bucket in ipairs(buckets) do
+    if not bucket.upper or bucket.upper >= number then
+      return bucket.value or index
+    end
+  end
+  assert(false) -- Should never get here.
+end

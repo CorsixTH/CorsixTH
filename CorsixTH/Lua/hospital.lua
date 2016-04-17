@@ -758,7 +758,7 @@ function Hospital:checkFacilities()
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
     if not self.heating_broke then
       if not self.warmth_msg and self.world.day == 15 then
-        local warmth = self:getAveragePatientAttribute("warmth")
+        local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
         if (self.world.year > 1 or self.world.month > 4) and warmth < 0.22 then
           self:warningTooCold()
         elseif self.world.month > 4 and warmth >= 0.36 then
@@ -767,30 +767,24 @@ function Hospital:checkFacilities()
       end
       -- Are the staff warm enough?
       if not self.warmth_msg and self.world.day == 20 then
-        local warmth = 0
-        local no = 0
-        for _, staff in ipairs(self.staff) do
-          warmth = warmth + staff.attributes["warmth"]
-          no = no + 1
-        end
-        if (self.world.year > 1 or self.world.month > 4) and warmth / no < 0.22 then
+        local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
+        if (self.world.year > 1 or self.world.month > 4) and avgWarmth < 0.22 then
           self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-        elseif self.world.month > 4 and warmth / no >= 0.36 then
+        elseif self.world.month > 4 and avgWarmth >= 0.36 then
           self.world.ui.adviser:say(_A.warnings.staff_too_hot)
         end
       end
     end
     -- Are the patients in need of a drink
     if not self.thirst_msg and self.world.day == 24 then
-      local thirst = self:getAveragePatientAttribute("thirst")
+      local thirst = self:getAveragePatientAttribute("thirst", 0) -- Default value does not result in a message.
       if self.world.year == 1 and self.world.month > 4 then
         if thirst > 0.8 then
           self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
         elseif thirst > 0.6 then
           self:warningThirst()
         end
-      end
-      if self.world.year > 1 then
+      elseif self.world.year > 1 then
         if thirst > 0.9 then
           self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
         elseif thirst > 0.6 then
@@ -1864,17 +1858,45 @@ function Hospital:updatePercentages()
   self.percentage_cured = math.round(cured)
 end
 
-function Hospital:getAveragePatientAttribute(attribute)
-  -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
+--! Compute average of an attribute for all patients in the hospital.
+--!param attribute (str) Name of the attribute.
+--!param default_value Value to return if there are no patients.
+--!return Average value of the attribute for all hospital patients, or the default value.
+function Hospital:getAveragePatientAttribute(attribute, default_value)
   local sum = 0
   local count = 0
   for _, patient in ipairs(self.patients) do
-    sum = sum + (patient.attributes[attribute] or 0)
+    -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
     if patient.attributes[attribute] then
+      sum = sum + patient.attributes[attribute]
       count = count + 1
     end
   end
-  return sum / count
+
+  if count == 0 then
+    return default_value
+  else
+    return sum / count
+  end
+end
+
+--! Compute average of an attribute for all staff in the hospital.
+--!param attribute (str) Name of the attribute.
+--!param default_value Value to return if there is no staff.
+--!return Average value of the attribute for all staff, or the default value.
+function Hospital:getAverageStaffAttribute(attribute, default_value)
+  local sum = 0
+  local count = 0
+  for _, staff in ipairs(self.staff) do
+    sum = sum + staff.attributes[attribute]
+    count = count + 1
+  end
+
+  if count == 0 then
+    return default_value
+  else
+    return sum / count
+  end
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.
