@@ -38,6 +38,11 @@ extern "C"
 #include <iostream>
 #include <cstring>
 
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 7, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
+#define av_packet_unref av_free_packet
+#endif
+
 #if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
     (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
 #define av_frame_alloc avcodec_alloc_frame
@@ -320,10 +325,12 @@ int THAVPacketQueue::getCount() const
 
 void THAVPacketQueue::push(AVPacket *pPacket)
 {
-    AVPacketList* pNode;
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 8, 0))
     if(av_dup_packet(pPacket) < 0) { throw -1; }
+#endif
 
-    pNode = (AVPacketList*)av_malloc(sizeof(AVPacketList));
+    AVPacketList* pNode = (AVPacketList*)av_malloc(sizeof(AVPacketList));
     pNode->pkt = *pPacket;
     pNode->next = nullptr;
 
@@ -420,7 +427,7 @@ THMovie::~THMovie()
 {
     unload();
 
-    av_free_packet(m_flushPacket);
+    av_packet_unref(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
 
@@ -508,7 +515,7 @@ void THMovie::unload()
         while(m_pAudioQueue->getCount() > 0)
         {
             AVPacket* p = m_pAudioQueue->pull(false);
-            av_free_packet(p);
+            av_packet_unref(p);
         }
         delete m_pAudioQueue;
         m_pAudioQueue = nullptr;
@@ -518,7 +525,7 @@ void THMovie::unload()
         while(m_pVideoQueue->getCount() > 0)
         {
             AVPacket* p = m_pVideoQueue->pull(false);
-            av_free_packet(p);
+            av_packet_unref(p);
         }
         delete m_pVideoQueue;
         m_pVideoQueue = nullptr;
@@ -567,7 +574,7 @@ void THMovie::unload()
     {
         m_pAudioPacket->data = m_pbAudioPacketData;
         m_pAudioPacket->size = m_iAudioPacketSize;
-        av_free_packet(m_pAudioPacket);
+        av_packet_unref(m_pAudioPacket);
         av_free(m_pAudioPacket);
         m_pAudioPacket = nullptr;
         m_pbAudioPacketData = nullptr;
@@ -745,7 +752,7 @@ void THMovie::readStreams()
             }
             else
             {
-                av_free_packet(&packet);
+                av_packet_unref(&packet);
             }
         }
     }
@@ -818,7 +825,7 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     }
 
     iError = avcodec_decode_video2(m_pVideoCodecContext, pFrame, &iGotPicture, pPacket);
-    av_free_packet(pPacket);
+    av_packet_unref(pPacket);
     av_free(pPacket);
 
     if(iError < 0)
@@ -908,7 +915,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
             {
                 m_pAudioPacket->data = m_pbAudioPacketData;
                 m_pAudioPacket->size = m_iAudioPacketSize;
-                av_free_packet(m_pAudioPacket);
+                av_packet_unref(m_pAudioPacket);
                 av_free(m_pAudioPacket);
                 m_pAudioPacket = nullptr;
             }
