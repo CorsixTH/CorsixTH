@@ -1012,6 +1012,7 @@ function Patient:tickDay()
 end
 
 function Patient:notifyNewRoom(room)
+  Humanoid.notifyNewRoom(self, room)
   if self.going_to_toilet == "no-toilets" and room.room_info.id == "toilets" then
     self.going_to_toilet = "no" -- Patient can try again going to the loo.
   end
