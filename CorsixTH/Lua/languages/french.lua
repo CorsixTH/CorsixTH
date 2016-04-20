@@ -111,7 +111,7 @@ tooltip.pay_rise_window.decline = "Ne payez pas, licenciez !"
 tooltip.watch = {
   emergency = "Urgence : temps qui reste pour soigner les patients entrés en urgence.",
   hospital_opening = "Délai : ceci est le temps qui reste avant que votre hôpital soit ouvert. Cliquez sur GO pour l'ouvrir tout de suite.",
-  epidemic = "Epidémie : temps qui reste pour arrêter l'épidémie. Si ce délai expire OU si un malade contagieux quitte l'hôpital, un inspecteur sanitaire viendra... Le bouton active ou désactive la vaccination. Cliquez sur un patient pour lancer la vaccination par une infermière.",
+  epidemic = "Épidémie : temps qui reste pour arrêter l'épidémie. Si ce délai expire OU si un malade contagieux quitte l'hôpital, un inspecteur sanitaire viendra... Le bouton active ou désactive la vaccination. Cliquez sur un patient pour lancer la vaccination par une infirmière.",
 }
 tooltip.objects = {
   chair = "Chaise : le patient s'y assied pour parler de ses symptômes.",
@@ -171,7 +171,7 @@ room_descriptions = {
 }
 
 progress_report.too_hot = "Réglez le chauffage : on étouffe."
-adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infermière."
+adviser.tutorial.build_pharmacy = "Félicitations ! Construisez maintenant une pharmacie et embauchez une infirmière."
 adviser.epidemic.serious_warning = "Cette maladie contagieuse est dangereuse. Vous devez prendre des mesures d'urgence !"
 adviser.staff_advice.too_many_doctors = "Il y a trop de médecins. Certains n'ont rien à faire !"
 adviser.earthquake.ended = "Ouh là ! J'ai cru que c'était la fin ! C'était du %d sur l'échelle de Richter."
@@ -215,7 +215,7 @@ buy_objects_window = {
 }
 fax = {
   epidemic_result = {
-    close_text = "Hourrah !",
+    close_text = "Hourra !",
     rep_loss_fine_amount = "Les journaux vont s'en donner à cœur joie avec cette affaire. Votre réputation va en prendre un coup ! Sans oublier l'amende de %d.",
   },
   vip_visit_result = {
@@ -387,7 +387,7 @@ diseases = {
   gastric_ejections = {
     cause = "Cause : nourriture mexicaine ou indienne très épicée.",
     cure = "Traitement : administration par voie orale d'une solution spéciale pour endiguer les rejets.",
-    name = "Ejections gastriques",
+    name = "Éjections gastriques",
     symptoms = "Symptômes : le patient rejette par accès des bribes de nourriture mal digérée.",
   },
   uncommon_cold = {
@@ -404,7 +404,7 @@ diseases = {
   },
   sleeping_illness = {
     cause = "Cause : hypertrophie de la glande palatale de Morphée.",
-    cure = "Traitement : une infermière administre une forte dose d'un puissant stimulant.",
+    cure = "Traitement : une infirmière administre une forte dose d'un puissant stimulant.",
     name = "Roupillance",
     symptoms = "Symptômes : tendance irrépressible à tomber de sommeil.",
   },
@@ -428,7 +428,7 @@ diseases = {
   },
   gut_rot = {
     cause = "Cause : la Bonne Vieille Bibine de la Mère Sam.",
-    cure = "Traitement : une infermière doit administrer diverses substances chimiques pour tenter de colmater le tout.",
+    cure = "Traitement : une infirmière doit administrer diverses substances chimiques pour tenter de colmater le tout.",
     name = "Tripurulente",
     symptoms = "Symptômes : aucun microbe mais plus de paroi intestinale non plus.",
   },
@@ -488,7 +488,7 @@ diseases = {
   },
   chronic_nosehair = {
     cause = "Cause : avoir reniflé avec dédain à la vue de plus malheureux que soi.",
-    cure = "Traitement : une épouvantable potion dépilatoire est administrée par une infermière à la pharmacie.",
+    cure = "Traitement : une épouvantable potion dépilatoire est administrée par une infirmière à la pharmacie.",
     name = "Poilonisme",
     symptoms = "Symptômes : poils au nez si drus qu'un oiseau pourrait y nicher.",
   },
@@ -606,7 +606,7 @@ menu_debug_overlay = {
   none                        = "  AUCUN  ",
   flags                       = "  DRAPEAUX  ",
   positions                   = "  POSITIONS  ",
-  heat                        = "  TEMPERATURE  ",
+  heat                        = "  TEMPÉRATURE  ",
   byte_0_1                    = "  OCTETS 0 & 1  ",
   byte_floor                  = "  OCTET SOL  ",
   byte_n_wall                 = "  OCTET MUR N  ",
@@ -835,7 +835,7 @@ tooltip.customise_window = {
 }
 
 folders_window = {
-  caption = "Parametres de dossier",
+  caption = "Paramètres de dossier",
   data_label = "Données de TH",
   font_label = "Police",
   music_label = "MP3",
@@ -843,24 +843,24 @@ folders_window = {
   screenshots_label = "Captures d'écran",
   -- next four are the captions for the browser window, which are called from the folder setting menu
   new_th_location = "Ici vous pouvez spécifier un nouveau répertoire d'installation de Theme Hospital. Dès que vous choisissez le nouveau répertoire, le jeu sera redémarré.",
-  savegames_location = "Sélectionner le repertoire que vous voulez utiliser pour les sauvegardes",
+  savegames_location = "Sélectionner le répertoire que vous voulez utiliser pour les sauvegardes",
   music_location = "Sélectionner le répertoire que vous voulez utiliser pour la musique",
-  screenshots_location = "Sélectionner le réportoire que vous voulez utiliser pour les captures d'écran",
+  screenshots_location = "Sélectionner le répertoire que vous voulez utiliser pour les captures d'écran",
   back  = "Retour",
 }
 
 tooltip.folders_window = {
   browse = "Parcourir l'emplacement du dossier",
   data_location = "Le répertoire d'origine de l'installation de Theme Hospital, qui est requis pour faire fonctionner CorsixTH",
-  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si aucun emplacement n'est spécifié vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple: Russe et Chinois",
+  font_location = "Emplacement d'un fichier de police qui est capable d'afficher des caractères Unicode requises par votre langue. Si aucun emplacement n'est spécifié vous ne serez pas en mesure de choisir des langues qui ont des caractères que le jeu original ne peut pas fournir. Exemple : Russe et Chinois",
   savegames_location = "Par défaut, le répertoire de sauvegardes est à côté du fichier de configuration et sera utilisé pour stocker les sauvegardes. Si cela n'est pas approprié vous pouvez modifier ce répertoire.",
   screenshots_location = "Par défaut, les captures d'écran sont stockés dans un dossier avec le fichier de configuration. Si cela ne convient pas vous pouvez choisir votre propre dossier.",
   music_location = "Sélectionnez un emplacement pour vos fichiers MP3.",
-  browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel: %1%)",
-  browse_font = "Parcourir un autre fichier de police (emplacement actuel: %1%)",
-  browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel: %1%)",
-  browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel: %1%)",
-  browse_music = "Parcourir un autre répertoire de musique (emplacement actuel: %1%)",
+  browse_data = "Parcourir un autre emplacement d'une installation de Theme Hospital (emplacement actuel : %1%)",
+  browse_font = "Parcourir un autre fichier de police (emplacement actuel : %1%)",
+  browse_saves = "Parcourir un autre répertoire de sauvegardes (emplacement actuel : %1%)",
+  browse_screenshots = "Parcourir un autre répertoire de captures d'écrans (emplacement actuel : %1%)",
+  browse_music = "Parcourir un autre répertoire de musique (emplacement actuel : %1%)",
   no_font_specified = "Aucun répertoire de police spécifié !",
   not_specified = "Aucun répertoire spécifié !",
   default = "Emplacement par défaut",
@@ -929,8 +929,8 @@ errors = {
   map_file_missing = "Impossible de trouver le fichier de carte %s pour ce niveau !",
   minimum_screen_size = "Veuillez entrer une résolution supérieure à 640x480.",
   unavailable_screen_size = "La résolution que vous avez demandée n'est pas disponible en plein écran.",
-  alien_dna = "NOTE: Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
-  fractured_bones = "NOTE: L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
+  alien_dna = "NOTE : Il n'y a pas d'animations pour les patients étrangers pour s'asseoir, ouvrir ou de frapper aux portes, etc. Donc, comme avec Theme Hospital pour faire ces choses, ils semblent changer à la normale et ensuite changer de nouveau. Les patients avec l'ADN Alien apparaîtront seulement s'ils sont définis dans le fichier de niveau.",
+  fractured_bones = "NOTE : L'animation pour les patients de sexe féminin avec des os fracturés n'est pas parfaite.",
   load_quick_save = "Erreur, impossible de charger la sauvegarde rapide car elle n'existe pas, ne vous inquiétez pas nous avons créé une pour vous !",
 }
 
@@ -1056,8 +1056,8 @@ introduction_texts = {
     "Bienvenue dans votre premier hôpital !//Démarrez l'activité en installant un bureau de réception et " ..
     "en construisant un cabinet de médecine générale. Embauchez une réceptionniste et un médecin. Il vous " ..
     "suffit d'attendre des admissions. Il serait bon de construire un cabinet de psychiatrie et d'embaucher " ..
-    "un médecin formé dans ce domaine. Une pharmacie et une infermière sont également indispensables pour soigner " ..
-    "les patients. Attention aux cas d'encéphalantiasis: une salle de gonflage suffit pour traiter cette maladie. " ..
+    "un médecin formé dans ce domaine. Une pharmacie et une infirmière sont également indispensables pour soigner " ..
+    "les patients. Attention aux cas d'encéphalantiasis : une salle de gonflage suffit pour traiter cette maladie. " ..
     "Il vous faut soigner 10 personnes et vous assurer que votre réputation ne tombe pas en-dessous de 200",
   level8 =
     "A vous de gérer l'hôpital le plus efficace et le plus rentable possible.//Les gens du coin sont bien nantis alors " ..
@@ -1070,13 +1070,13 @@ introduction_texts = {
     "toutes les récompenses. Alors, heureux ? Gagnez $650.000, soignez 750 personnes et affichez une réputation de 800 pour gagner ce niveau. ",
   level13 =
     "Votre incroyable talent en tant que directeur d'hôpital a attiré l'attention de la Division Spéciale Secrète des " ..
-    "Services Spéciaux Secrets. On vous propose un bonus: il y a un hôpital infesté de rats qui réclame un Nettoyeur efficace. " ..
+    "Services Spéciaux Secrets. On vous propose un bonus : il y a un hôpital infesté de rats qui réclame un Nettoyeur efficace. " ..
     "Vous devez descendre le plus de rats possible avant que les agents de maintenance fassent leur boulot. Vous pensez y arriver ?",
   level14 =
     "Et encore un défi ! Eh oui, voici l'hôpital-surprise ! Si vous réussissez cette épreuve, vous serez le gagnant des gagnants. " ..
     "Mais ça ne sera pas du gâteau car vous n'aviez encore rien vu de pareil... Bonne chance !",
   level17 =
-    "Un bon conseil: veillez à votre réputation car c'est elle qui vous garantira une clientèle. Si vous ne tuez pas trop de " ..
+    "Un bon conseil : veillez à votre réputation car c'est elle qui vous garantira une clientèle. Si vous ne tuez pas trop de " ..
     "gens et les gardez raisonnablement satisfaits, vous n'aurez pas trop de difficultés à ce niveau. //A vous de jouer, maintenant. " ..
     "Bonne chance et tout ça, quoi !",
 }
@@ -1100,8 +1100,8 @@ tooltip.calls_dispatcher = {
 -- Updates
 update_window = {
   caption = "Une mise à jour est disponible !",
-  new_version = "Nouvelle version:",
-  current_version = "Version actuelle:",
+  new_version = "Nouvelle version :",
+  current_version = "Version actuelle :",
   download = "Aller à la page de téléchargement",
   ignore = "Sauter et aller au menu principal",
 }
