@@ -3,7 +3,7 @@
 
 ##### [Forum](http://forums.corsixth.com) | [IRC Chat](http://webchat.freenode.net/?channels=corsix-th) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new)
 
-A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original CorsixTH adds support for modern operating systems (Windows, Mac OSX and Linux), high resolutions and much more.
+A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, Mac OSX and Linux), high resolutions and much more.
 
 ![](http://i.imgur.com/qHV60Ui.png)
 
