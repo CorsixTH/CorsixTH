@@ -34,15 +34,10 @@ local col_scrollbar = {
 
 local details_width = 280
 
-function UICustomGame:UICustomGame(ui)
-
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
-
-  -- Supply the required list of items to UIMenuList
-  local path = ui.app.level_dir
-
-  -- Create the actual list
-  local items = {}
+--! Compile metainfo for all of the levels in the given path.
+--!param path (string) The path that should contain level files.
+--!param items (table) Table to insert the level metadata into.
+local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
     if file:match"%.level$" then
       local level_info = TheApp:readLevelFile(file)
@@ -58,6 +53,16 @@ function UICustomGame:UICustomGame(ui)
       end
     end
   end
+end
+
+function UICustomGame:UICustomGame(ui)
+  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+
+  -- Supply the required list of items to UIMenuList
+  -- Create the actual list
+  local items = {}
+  findLevelsInDir(TheApp.level_dir, items)
+  findLevelsInDir(TheApp.user_level_dir, items)
   self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items, 10, details_width + 40)
 
   -- Create a toolbar ready to be used if the description for a level is
