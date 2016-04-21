@@ -1256,7 +1256,7 @@ function Hospital:resolveEmergency()
   local emer = self.emergency
   local rescued_patients = emer.cured_emergency_patients
   for i, patient in ipairs(self.emergency_patients) do
-    if patient and patient.hospital and not patient:getRoom() then
+    if patient and not patient.cured and not patient:getRoom() then
       patient:die()
     end
   end
