@@ -342,7 +342,7 @@ function UIEditRoom:clearArea()
 
   self.check_for_clear_area_timer = 10
   self.humanoids_to_watch = humanoids_to_watch
-  self.ui:setDefaultCursor "sleep"
+  self.ui:setCursor(self.ui.waiting_cursor)
 end
 
 function UIEditRoom:onTick()
@@ -1345,7 +1345,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
       end
     end
   else
-    if self.phase ~= "objects" then
+    if self.phase ~= "clear_area" and self.phase ~= "objects" then
       ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
     end
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
