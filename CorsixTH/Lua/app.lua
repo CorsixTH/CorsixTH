@@ -115,9 +115,8 @@ function App:init()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
-
+  self:initUserLevelDir()
   self:initSavegameDir()
-
   self:initScreenshotsDir()
 
   -- Create the window
@@ -320,6 +319,28 @@ function App:init()
     self.moviePlayer:playIntro(callback_after_movie)
   else
     callback_after_movie()
+  end
+  return true
+end
+
+--! Tries to initialize the user and built in level directories, returns true on
+--! success and false on failure.
+function App:initUserLevelDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.user_level_dir = self.config.levels or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Levels"
+
+  if self.user_level_dir:sub(-1, -1) == pathsep then
+    self.user_level_dir = self.user_level_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.user_level_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.user_level_dir) then
+       print("Notice: Level directory does not exist and could not be created.")
+       return false
+    end
+  end
+  if self.user_level_dir:sub(-1, -1) ~= pathsep then
+    self.user_level_dir = self.user_level_dir .. pathsep
   end
   return true
 end
@@ -530,7 +551,7 @@ end
 function App:getAbsolutePathToLevelFile(level)
   local path = debug.getinfo(1, "S").source:sub(2, -12)
   -- First look in Campaigns. If not found there, fall back to Levels.
-  local list_of_possible_paths = {path .. "Campaigns", path .. "Levels"}
+  local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
   for _, path in ipairs(list_of_possible_paths) do
     local check_path = path .. pathsep .. level
     local file, err = io.open(check_path, "rb")

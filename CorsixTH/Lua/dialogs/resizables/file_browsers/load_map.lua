@@ -25,7 +25,7 @@ class "UILoadMap" (UIFileBrowser)
 local UILoadMap = _G["UILoadMap"]
 
 function UILoadMap:UILoadMap(ui, mode)
-  local path = ui.app.level_dir
+  local path = ui.app.user_level_dir
   local treenode = FilteredFileTreeNode(path, ".map")
   treenode.label = "Maps"
   self:UIFileBrowser(ui, mode, _S.load_game_window.caption:format(".map"), 295, treenode, true)
@@ -38,7 +38,7 @@ function UILoadMap:choiceMade(name)
   local app = self.ui.app
   -- Make sure there is no blue filter active.
   app.video:setBlueFilterActive(false)
-  name = name:sub(app.level_dir:len() + 1)
+  name = name:sub(app.user_level_dir:len() + 1)
   local status, err = pcall(app.loadLevel, app, name, nil, nil, nil, nil, true)
   if not status then
     err = _S.errors.load_prefix .. err
