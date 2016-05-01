@@ -33,7 +33,8 @@ extern "C"
     #include <libavutil/avutil.h>
     #include <libavutil/mathematics.h>
     #include <libavutil/opt.h>
-#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100)
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
     #include <libavutil/imgutils.h>
 #endif
 }
@@ -93,7 +94,8 @@ void THMoviePicture::allocate(int iWidth, int iHeight)
     m_iWidth = iWidth;
     m_iHeight = iHeight;
     av_freep(&m_pBuffer);
-#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100)
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
     int numBytes = av_image_get_buffer_size(m_pixelFormat, m_iWidth, m_iHeight, 1);
 #else
     int numBytes = avpicture_get_size(m_pixelFormat, m_iWidth, m_iHeight);
@@ -287,7 +289,8 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
         /* Allocate a new frame and buffer for the destination RGB24 data. */
         AVFrame *pFrameRGB = av_frame_alloc();
-#if LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100)
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
         av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, pMoviePicture->m_pBuffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, 1);
 #else
         avpicture_fill((AVPicture *)pFrameRGB, pMoviePicture->m_pBuffer, pMoviePicture->m_pixelFormat, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight);
