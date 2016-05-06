@@ -348,6 +348,11 @@ function Entity:playAfterLoadSound()
   end
 end
 
+--! Stub to be extended in subclasses, if needed.
+function Entity:eraseObject()
+  -- Give entity the chance to clear itself from the map before resetAnimation gets called.
+end
+
 function Entity:resetAnimation()
   self.th:setDrawingLayer(self:getDrawingLayer())
   local x, y = self.tile_x, self.tile_y

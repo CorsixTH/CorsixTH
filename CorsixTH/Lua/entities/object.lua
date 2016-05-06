@@ -680,8 +680,11 @@ function Object:onClick(ui, button, data)
   end
 end
 
-function Object:resetAnimation()
+function Object:eraseObject()
   self.world.map.th:eraseObjectTypes(self.tile_x, self.tile_y)
+end
+
+function Object:resetAnimation()
   self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {thob = self.object_type.thob})
   self.th:setDrawingLayer(self:getDrawingLayer())
   self.th:setTile(self.world.map.th, self:getRenderAttachTile())

@@ -2313,6 +2313,11 @@ end
 --! Because the save file only saves one thob per tile if they are more that information
 -- will be lost. To solve this after a load we need to set again all the thobs on each tile.
 function World:resetAnimations()
+  -- Erase entities from the map if they want.
+  for _, entity in ipairs(self.entities) do
+    entity:eraseObject()
+  end
+  -- Add them again.
   for _, entity in ipairs(self.entities) do
     entity:resetAnimation()
   end
