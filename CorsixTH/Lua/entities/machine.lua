@@ -255,6 +255,27 @@ function Machine:createHandymanActions(handyman)
     :format(self.object_type.name))
 end
 
+--! Replace this machine (make it pretend it's brand new)
+function Machine:machineReplaced()
+  -- Reset usage stats
+  self.total_usage = 0
+  self.times_used = 0
+  
+  -- Update strength to match the current level of research for it
+  self.strength = self.hospital.research.research_progress[self.object_type].start_strength
+  
+  -- Remove any queued repair jobs
+  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
+  if index ~= -1 then
+    self.hospital:removeHandymanTask(index, "repairing")
+  end
+  
+  -- Clear icon showing handyman is coming to repair the machine
+  self:setRepairing(nil)
+  -- Clear smoke
+  setSmoke(self, false)
+end
+
 function Machine:machineRepaired(room)
   room.needs_repair = nil
   local str = self.strength
