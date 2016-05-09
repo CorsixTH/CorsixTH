@@ -109,20 +109,14 @@ function UIMachine:replaceMachine()
     self.ui:playSound("wrong2.wav")
     return
   end
-  local strength = hosp.research.research_progress[machine.object_type].start_strength
   self.ui:addWindow(UIConfirmDialog(self.ui,
     _S.confirmation.replace_machine:format(machine.object_type.name, cost),
     --[[persistable:replace_machine_confirm_dialog]]function()
-
+      -- Charge for new machine
       hosp:spendMoney(cost, _S.transactions.machine_replacement)
-      machine.total_usage = 0
-      machine.times_used = 0
-      self.machine.strength = strength
-      local index = machine.hospital:getIndexOfTask(machine.tile_x, machine.tile_y, "repairing")
-      if index ~= -1 then
-        machine.hospital:removeHandymanTask(index, "repairing")
-      end
-      machine:setRepairing(nil)
+      
+      -- Tell the machine to pretend it's a shiny new one
+      machine:machineReplaced()
     end
   ))
 end
