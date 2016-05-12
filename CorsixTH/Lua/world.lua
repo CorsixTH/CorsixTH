@@ -468,9 +468,8 @@ function World:spawnPatient(hospital)
   --!param disease (disease) Disease to test.
   --!return (boolean) Whether the disease is visible and available.
   local function isVisualDiseaseAvailable(disease)
-    if not disease.visuals_id then
-      return true
-    end
+    if disease.only_emergency then return false end
+    if not disease.visuals_id then return true end
 
     local current_month = (self.year - 1) * 12 + self.month
 
@@ -496,7 +495,7 @@ function World:spawnPatient(hospital)
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-    while disease.only_emergency or not isVisualDiseaseAvailable(disease) do
+    while not isVisualDiseaseAvailable(disease) do
       disease = self.available_diseases[math.random(1, #self.available_diseases)]
     end
     patient:setDisease(disease)
