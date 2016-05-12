@@ -447,6 +447,35 @@ function World:calculateSpawnTiles()
   end
 end
 
+--! Function to determine whether a given disease is available for new patients.
+--!param self (World) World object.
+--!param disease (disease) Disease to test.
+--!param hospital (Hospital) Hospital that needs a new patient.
+--!return (boolean) Whether the disease is visible and available.
+local function isDiseaseUsableForNewPatient(self, disease, hospital)
+  if disease.only_emergency then return false end
+  if not disease.visuals_id then return true end
+
+  local current_month = (self.year - 1) * 12 + self.month
+
+  --! level files can delay visuals to a given month
+  --! and / or until a given number of patients have arrived
+  local level_config = self.map.level_config
+  local hold_visual_months = level_config.gbv.HoldVisualMonths
+  local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
+
+  --! if the month is greater than either of these values then visuals will not appear in the game
+  if hold_visual_months and hold_visual_months > current_month or
+  hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors then
+    return false
+  end
+  --! the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
+  if level_config.visuals_available[disease.visuals_id].Value >= current_month then
+    return false
+  end
+  return true
+end
+
 --! Spawn a patient from a spawn point for the given hospital.
 --!param hospital (Hospital) Hospital that the new patient should visit.
 --!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
@@ -462,35 +491,6 @@ function World:spawnPatient(hospital)
   end
   if not hospital then
     hospital = self:getLocalPlayerHospital()
-  end
-
-  --! Function to determine whether a given disease is available for new patients.
-  --!param self (World) World object.
-  --!param disease (disease) Disease to test.
-  --!param hospital (Hospital) Hospital that needs a new patient.
-  --!return (boolean) Whether the disease is visible and available.
-  local function isDiseaseUsableForNewPatient(self, disease, hospital)
-    if disease.only_emergency then return false end
-    if not disease.visuals_id then return true end
-
-    local current_month = (self.year - 1) * 12 + self.month
-
-    --! level files can delay visuals to a given month
-    --! and / or until a given number of patients have arrived
-    local level_config = self.map.level_config
-    local hold_visual_months = level_config.gbv.HoldVisualMonths
-    local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
-
-    --! if the month is greater than either of these values then visuals will not appear in the game
-    if hold_visual_months and hold_visual_months > current_month or
-    hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors then
-      return false
-    end
-    --! the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
-    if level_config.visuals_available[disease.visuals_id].Value >= current_month then
-      return false
-    end
-    return true
   end
 
   if hospital:hasStaffedDesk() then
