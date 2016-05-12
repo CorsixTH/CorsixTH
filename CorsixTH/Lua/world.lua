@@ -476,8 +476,9 @@ function World:spawnPatient(hospital)
 
     --! level files can delay visuals to a given month
     --! and / or until a given number of patients have arrived
-    local hold_visual_months = self.map.level_config.gbv.HoldVisualMonths
-    local hold_visual_peep_count = self.map.level_config.gbv.HoldVisualPeepCount
+    local level_config = self.map.level_config
+    local hold_visual_months = level_config.gbv.HoldVisualMonths
+    local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
 
     --! if the month is greater than either of these values then visuals will not appear in the game
     if hold_visual_months and hold_visual_months > current_month or
@@ -485,7 +486,6 @@ function World:spawnPatient(hospital)
       return false
     end
     --! the value against #visuals_available determines from which month a disease can appear. 0 means it can show up anytime.
-    local level_config = self.map.level_config
     if level_config.visuals_available[disease.visuals_id].Value >= current_month then
       return false
     end
