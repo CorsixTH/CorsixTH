@@ -495,10 +495,20 @@ function World:spawnPatient(hospital)
 
   if not hospital:hasStaffedDesk() then return nil end
 
-  -- Construct disease.
+  -- Construct disease, take a random guess first, as a quick clear-sky attempt.
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-  while not isDiseaseUsableForNewPatient(self, disease, hospital) do
-    disease = self.available_diseases[math.random(1, #self.available_diseases)]
+  if not isDiseaseUsableForNewPatient(self, disease, hospital) then
+    -- Lucky shot failed, do a proper calculation.
+    local usable_diseases = {}
+    for _, d in ipairs(self.available_diseases) do
+      if isDiseaseUsableForNewPatient(self, d, hospital) then
+        usable_diseases[#usable_diseases + 1] = d
+      end
+    end
+
+    if #usable_diseases == 0 then return nil end
+
+    disease = usable_diseases[math.random(1, #usable_diseases)]
   end
 
   -- Construct patient.
