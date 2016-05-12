@@ -467,7 +467,7 @@ function World:spawnPatient(hospital)
   --! Function to determine whether a given disease is visible and available.
   --!param disease (disease) Disease to test.
   --!return (boolean) Whether the disease is visible and available.
-  local function isVisualDiseaseAvailable(disease)
+  local function isDiseaseUsableForNewPatient(disease)
     if disease.only_emergency then return false end
     if not disease.visuals_id then return true end
 
@@ -495,7 +495,7 @@ function World:spawnPatient(hospital)
     local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
     local patient = self:newEntity("Patient", 2)
     local disease = self.available_diseases[math.random(1, #self.available_diseases)]
-    while not isVisualDiseaseAvailable(disease) do
+    while not isDiseaseUsableForNewPatient(disease) do
       disease = self.available_diseases[math.random(1, #self.available_diseases)]
     end
     patient:setDisease(disease)
