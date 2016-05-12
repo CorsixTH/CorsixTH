@@ -479,6 +479,10 @@ end
 --!param hospital (Hospital) Hospital that the new patient should visit.
 --!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
 function World:spawnPatient(hospital)
+  if not hospital then
+    hospital = self:getLocalPlayerHospital()
+  end
+
   -- The level might not contain any diseases
   if #self.available_diseases < 1 then
     self.ui:addWindow(UIInformation(self.ui, {"There are no diseases on this level! Please add some to your level."}))
@@ -488,22 +492,21 @@ function World:spawnPatient(hospital)
     self.ui:addWindow(UIInformation(self.ui, {"Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level."}))
     return
   end
-  if not hospital then
-    hospital = self:getLocalPlayerHospital()
-  end
 
   if not hospital:hasStaffedDesk() then return nil end
 
-  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
-  local patient = self:newEntity("Patient", 2)
+  -- Construct disease.
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   while not isDiseaseUsableForNewPatient(self, disease, hospital) do
     disease = self.available_diseases[math.random(1, #self.available_diseases)]
   end
+
+  -- Construct patient.
+  local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
+  local patient = self:newEntity("Patient", 2)
   patient:setDisease(disease)
   patient:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
   patient:setHospital(hospital)
-
   return patient
 end
 
