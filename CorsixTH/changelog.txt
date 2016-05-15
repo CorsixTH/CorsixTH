@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.60 - rc1 - released May 2016
+Version 0.60 - rc2 - released May 2016
 -------------------------------------------------------------------------------
 
 --- Highlights from this release ---
@@ -44,6 +44,8 @@ Version 0.60 - rc1 - released May 2016
   has been patched.
 * King complex patients only pay for their cure once.
 * Patients will notice when a room they are waiting for becomes available.
+* Properly load saves with more than one object on a tile.
+* Do not get stuck in an infinite loop when no disease is available to spawn.
 
 -------------------------------------------------------------------------------
 Version 0.50 - released July 2015
