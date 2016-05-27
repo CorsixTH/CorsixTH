@@ -20,12 +20,12 @@ SOFTWARE. --]]
 
 local function meander_action_start(action, humanoid)
   local room = humanoid:getRoom()
-  -- Answering call queue
+  -- Answering call queue when not in a room:
   if class.is(humanoid, Staff) and humanoid:isIdle() and not room then
-  if humanoid.humanoid_class == "Handyman" then
-    if humanoid:searchForHandymanTask() == true then
-      return
-    end
+    if humanoid.humanoid_class == "Handyman" then
+      if humanoid:searchForHandymanTask() == true then
+        return
+      end
     -- If staff starts wandering around in Idle mode,
     -- he's effectively not in any room and need not to comeback after
     -- staff room visit
@@ -54,6 +54,12 @@ local function meander_action_start(action, humanoid)
   if humanoid.humanoid_class == "Doctor" or humanoid.humanoid_class == "Nurse" then
     if not room then
       humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.wandering)
+    -- Answering call queue when in a room:
+    elseif humanoid:isIdle() and humanoid.world.dispatcher:answerCall(humanoid) then
+      if action.must_happen then
+        humanoid:finishAction()
+      end
+      return
     end
   end
   local x, y = humanoid.world.pathfinder:findIdleTile(humanoid.tile_x,
