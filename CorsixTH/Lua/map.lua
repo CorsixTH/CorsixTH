@@ -263,9 +263,8 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
   self.parcelTileCounts = {}
   for plot = 1, self.th:getPlotCount() do
     self.parcelTileCounts[plot] = self.th:getParcelTileCount(plot)
-    if plot > 1 and not map_editor then
-      -- TODO: On multiplayer maps, assign plots 2-N to players 2-N
-      self:setPlotOwner(plot, 0)
+    if not map_editor then
+      self:setPlotOwner(plot, plot <= self.th:getPlayerCount() and plot or 0)
     end
   end
 

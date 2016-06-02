@@ -104,7 +104,7 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
       holes_orientation = spawn_scenario[1]
       hole_x, hole_y = humanoid.world.pathfinder:findIdleTile(spawn_scenario[2], spawn_scenario[3], 0)
 
-      if hole_x and humanoid.world:canNonSideObjectBeSpawnedAt(hole_x, hole_y, "gates_to_hell", holes_orientation, 0) then
+      if hole_x and humanoid.world:canNonSideObjectBeSpawnedAt(hole_x, hole_y, "gates_to_hell", holes_orientation, 0, 0) then
         if holes_orientation == "east" then
           mirror_grim = 1
         end

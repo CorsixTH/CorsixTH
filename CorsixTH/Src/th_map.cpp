@@ -438,7 +438,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             if(!(pData[5] & 1))
             {
                 pNode->flags.passable = true;
-                if(*pParcel && !(pData[7] & 16))
+                if(!(pData[7] & 16))
                 {
                     pNode->flags.hospital = true;
                     if(!(pData[5] & 2)) {

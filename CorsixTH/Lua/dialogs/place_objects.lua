@@ -607,6 +607,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     local allgood = true
     local opt_tiles_blocked = 0
     local world = self.ui.app.world
+    local player_id = self.ui.hospital:getPlayerIndex()
     local roomId = self.room and self.room.id
     local passable_flag
     local direction = self.object_orientation
@@ -658,9 +659,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         if not tile.only_side and is_object_allowed then
-           is_object_allowed = world:isFootprintTileBuildableOrPassable(x, y, tile, object_footprint, flag)
+           is_object_allowed = world:isFootprintTileBuildableOrPassable(x, y, tile, object_footprint, flag, player_id)
         elseif is_object_allowed then
-          is_object_allowed = map:getCellFlags(x, y, flags)[flag]
+          is_object_allowed = map:getCellFlags(x, y, flags)[flag] and (player_id == 0 or flags.owner == player_id)
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:
