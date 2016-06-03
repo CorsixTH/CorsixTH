@@ -850,17 +850,13 @@ end
 --!param ysize (int) Vertical size in tiles.
 function UIMapEditor:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
   local ui = self.ui
-  local zoom = self.ui.zoom_factor
-  local scaled = canvas:scale(zoom)
+  local zoom = ui.zoom_factor
 
   for x = 0, xsize - 1 do
     for y = 0, ysize - 1 do
       local xcoord, ycoord = ui:WorldToScreen(xpos + x, ypos + y)
       self.cell_outline:draw(canvas, 2, math.floor(xcoord / zoom) - 32, math.floor(ycoord / zoom))
     end
-  end
-  if scaled then
-    canvas:scale(1)
   end
 end
 
@@ -886,9 +882,13 @@ function UIMapEditor:draw(canvas, ...)
       xsize, ysize = self.cursor.sprite.xsize, self.cursor.sprite.ysize
     end
     -- Draw cursors.
+    local scaled = canvas:scale(ui.zoom_factor)
     for _, coord in ipairs(coords) do
       local xpos, ypos = coord.xpos, coord.ypos
       self:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
+    end
+    if scaled then
+      canvas:scale(1)
     end
   end
 
