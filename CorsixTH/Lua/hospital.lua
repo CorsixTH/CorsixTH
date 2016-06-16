@@ -667,7 +667,7 @@ function Hospital:countPatients()
   -- i.e. calling it from town map to use here
   -- so Town map now takes this information from here.  (If I am wrong, put it back)
   self.patientcount = 0
-  for _, patient in pairs(self.patients) do
+  for _, patient in ipairs(self.patients) do
   -- only count patients that are in the hospital
     local tx, ty = patient.tile_x, patient.tile_y
     if tx and ty and self:isInHospital(tx, ty) then
@@ -1581,6 +1581,13 @@ function Hospital:receiveMoneyForTreatment(patient)
   end
 end
 
+--! Sell a soda to a patient.
+--!param patient (patient) The patient buying the soda.
+function Hospital:sellSodaToPatient(patient)
+  self:receiveMoneyForProduct(patient, 20, _S.transactions.drinks)
+  self.sodas_sold = self.sodas_sold + 1
+end
+
 --! Function to determine the price for a treatment, modified by reputation and percentage
 -- Treatment charge should never be less than the starting price if reputation falls below 500
 function Hospital:getTreatmentPrice(disease)
@@ -1604,13 +1611,13 @@ function Hospital:receiveMoneyForProduct(patient, amount, reason)
   self:receiveMoney(amount, reason)
 end
 
---! Pay drug if drug has been purshased to treat a patient
---!param patient(patient); the patient who's been treated with the drug
-function Hospital:paySupplierForDrug(patient)
-  local drug_amount = patient.hospital.disease_casebook[patient.disease.id].drug_cost or 0
+--! Pay drug if drug has been purchased to treat a patient.
+--!param disease_id Disease that was treated.
+function Hospital:paySupplierForDrug(disease_id)
+  local drug_amount = self.disease_casebook[disease_id].drug_cost or 0
   if drug_amount ~= 0 then
     local str = _S.drug_companies[math.random(1, 5)]
-    patient.hospital:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
+    self:spendMoney(drug_amount, _S.transactions.drug_cost .. ": " .. str)
   end
 end
 
@@ -1743,6 +1750,11 @@ function Hospital:hasRoomOfType(type)
   return result
 end
 
+--! Remove the first entry with a given value from a table.
+--! Only works reliably for lists.
+--!param t Table to search for the value, and update.
+--!param value Value to search and remove.
+--!return Whether the value was removed.
 local function RemoveByValue(t, value)
   for i, v in ipairs(t) do
     if v == value then
@@ -1753,10 +1765,14 @@ local function RemoveByValue(t, value)
   return false
 end
 
+--! Remove a staff member from the hospital staff.
+--!param staff (Staff) Staff member to remove.
 function Hospital:removeStaff(staff)
   RemoveByValue(self.staff, staff)
 end
 
+--! Remove a patient from the hospital.
+--!param patient (Patient) Patient to remove.
 function Hospital:removePatient(patient)
   RemoveByValue(self.patients, patient)
 end
@@ -1849,6 +1865,45 @@ function Hospital:getReputationChangeLikelihood()
 
   -- The result is "reversed" for more readability
   return 1 - (a * x * x - b * x + c)
+end
+
+--! Update the 'cured' counts of the hospital.
+--!param patient Patient that was cured.
+function Hospital:updateCuredCounts(patient)
+  if not patient.is_debug then
+    self:changeReputation("cured", patient.disease)
+  end
+
+  if self.num_cured < 1 then
+    self.world.ui.adviser:say(_A.information.first_cure)
+  end
+  self.num_cured = self.num_cured + 1
+  self.num_cured_ty = self.num_cured_ty + 1
+
+  local casebook = self.disease_casebook[patient.disease.id]
+  casebook.recoveries = casebook.recoveries + 1
+
+  if patient.is_emergency then
+    self.emergency.cured_emergency_patients = self.emergency.cured_emergency_patients + 1
+  end
+end
+
+--! Update the 'not cured' counts of the hospital.
+--!param patient Patient that was not cured.
+--!param reason (string) the reason why the patient is not cured.
+--! -"kicked": Patient goes home early (manually sent, no treatment room, etc).
+--! -"over_priced": Patient considers the price too high.
+function Hospital:updateNotCuredCounts(patient, reason)
+  if patient.is_debug then return end
+
+  self:changeReputation(reason, patient.disease)
+  self.not_cured = self.not_cured + 1
+  self.not_cured_ty = self.not_cured_ty + 1
+
+  if reason == "kicked" then
+    local casebook = self.disease_casebook[patient.disease.id]
+    casebook.turned_away = casebook.turned_away + 1
+  end
 end
 
 function Hospital:updatePercentages()

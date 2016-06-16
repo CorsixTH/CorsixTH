@@ -145,24 +145,16 @@ function Patient:changeDisease(new_disease)
   self.disease = new_disease -- Finally, make the patient carry the new disease.
 end
 
-function Patient:setdiagDiff()
-  local disease = self.disease
-  local difficulty = 0
-  local expertise = self.world.map.level_config.expertise
-  if expertise then
-    difficulty = expertise[disease.expertise_id].MaxDiagDiff
-    self.diagnosis_difficulty = difficulty / 1000
-  end
-  return self.diagnosis_difficulty
-end
-
-function Patient:setDiagnosed(diagnosed)
-  self.diagnosed = diagnosed
+--! Mark patient as being diagnosed.
+function Patient:setDiagnosed()
+  self.diagnosed = true
   self.treatment_history[#self.treatment_history + 1] = self.disease.name
+
   local window = self.world.ui:getWindow(UIPatient)
   if window and window.patient == self then
     window:updateInformation()
   end
+
   self:updateDynamicInfo()
 end
 
@@ -185,14 +177,17 @@ function Patient:completeDiagnosticStep(room)
   -- Base: depending on difficulty of disease as set in sam file
   -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
   local multiplier = 1
-  local diagnosis_difficulty = self:setdiagDiff()
-  local diagnosis_base = (0.4 * (1 - diagnosis_difficulty))
+
+  local expertise = self.world.map.level_config.expertise
+  local diagnosis_difficulty = expertise[self.disease.expertise_id].MaxDiagDiff / 1000
+  local diagnosis_base = 0.4 * (1 - diagnosis_difficulty)
   local diagnosis_bonus = 0.4
 
   -- Did the staff member manage to leave the room before the patient had
   -- a chance to get diagnosed? Then use a default middle value.
   if room.staff_member then
-  local fatigue = room.staff_member.attributes["fatigue"] or 0
+    local fatigue = room.staff_member.attributes["fatigue"] or 0
+
     -- Bonus: based on skill and attn to detail (with some randomness).
     -- additional bonus if the staff member is highly skilled / consultant
     -- tiredness reduces the chance of diagnosis if staff member is above 50% tired
@@ -291,7 +286,7 @@ function Patient:treatDisease()
   end
 
   hospital:updatePercentages()
-  hospital:paySupplierForDrug(self)
+  hospital:paySupplierForDrug(self.disease.id)
   if self.is_emergency then
     hospital:checkEmergencyOver()
   end
@@ -539,25 +534,6 @@ function Patient:tapFoot()
   end
 end
 
--- Increments "cures" statistics
-function Patient:incrementCuredCounts()
-  local hosp = self.hospital
-  hosp.num_cured = hosp.num_cured + 1
-  hosp.num_cured_ty = hosp.num_cured_ty + 1
-  local casebook = hosp.disease_casebook[self.disease.id]
-  casebook.recoveries = casebook.recoveries + 1
-  if self.is_emergency then
-    hosp.emergency.cured_emergency_patients = hosp.emergency.cured_emergency_patients + 1
-  end
-end
-
--- Increment "not_cured" statistics
-function Patient:incrementNotCuredCounts()
-  local hosp = self.hospital
-  hosp.not_cured = hosp.not_cured + 1
-  hosp.not_cured_ty = hosp.not_cured_ty + 1
-end
-
 --! Make the patient leave the hospital. This function also handles some
 --! statistics (number of cured/kicked out patients, etc.)
 --! The mood icon is updated accordingly. Reputation is impacted accordingly.
@@ -582,34 +558,24 @@ function Patient:goHome(reason, disease_id)
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
     self.world.ui:playSound("cheer.wav") -- This sound is always heard
-    if not self.is_debug then
-      hosp:changeReputation("cured", self.disease)
-    end
-    if hosp.num_cured < 1 then
-      self.world.ui.adviser:say(_A.information.first_cure)
-    end
-    self:incrementCuredCounts()
+    self.hospital:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
     self.hospital:msgCured()
+
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
-    if not self.is_debug then
-      hosp:changeReputation("kicked", self.disease)
-      self:incrementNotCuredCounts()
-      local casebook = hosp.disease_casebook[self.disease.id]
-      casebook.turned_away = casebook.turned_away + 1
-    end
+    self.hospital:updateNotCuredCounts(self, reason)
+
   elseif reason == "over_priced" then
     self:setMood("sad_money", "activate")
     self:changeAttribute("happiness", -0.5)
+
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
     self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
-    if not self.is_debug then
-      hosp:changeReputation("over_priced", self.disease)
-      self:incrementNotCuredCounts()
-    end
+    self.hospital:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
+
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end
@@ -901,9 +867,7 @@ function Patient:tickDay()
         self:setMood("thirsty", "deactivate")
         -- The patient might be kicked while buying a drink
         if not self.going_home then
-          self.hospital:receiveMoneyForProduct(self, 20, _S.transactions.drinks)
-          -- Also increase the number of sodas sold this year.
-          self.hospital.sodas_sold = self.hospital.sodas_sold + 1
+          self.hospital:sellSodaToPatient(self)
         end
         -- The patient might also throw the can on the floor, bad patient!
         if math.random() < 0.6 then

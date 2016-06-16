@@ -328,7 +328,7 @@ function UIPatient:guessDisease()
     self.ui:playSound("wrong2.wav")
     return
   end
-  patient:setDiagnosed(true)
+  patient:setDiagnosed()
   if patient:agreesToPay(patient.disease.id) then
     patient:setNextAction({
       name = "seek_room",
