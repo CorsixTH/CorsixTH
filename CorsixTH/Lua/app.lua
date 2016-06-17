@@ -63,7 +63,9 @@ function App:App()
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
-  self.check_for_updates = true
+
+  -- Disable updates until remote exploit can be fixed.
+  self.check_for_updates = false
 end
 
 --! Starts a Lua DBGp client & connects it to a DBGp server.
@@ -1453,6 +1455,7 @@ function App:checkForUpdates()
     return
   end
 
+  -- XXX: Unsafe, we must not execute code fetched over the internet!
   local update_table = loadstring_envcall(update_body, "@updatechecker"){}
   local changelog = update_table["changelog_" .. default_language]
   local new_version = update_table["major"] .. '.' .. update_table["minor"] .. update_table["revision"]
