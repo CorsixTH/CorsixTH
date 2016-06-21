@@ -209,7 +209,7 @@ IF(APPLE)
     ")
 ELSE()
   install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
-  install(DIRECTORY Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)
+  install(DIRECTORY Campaigns Lua Levels DESTINATION CorsixTH PATTERN "*.svn" EXCLUDE)
   install(DIRECTORY Bitmap DESTINATION CorsixTH
         FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
         PATTERN "*.svn" EXCLUDE)
