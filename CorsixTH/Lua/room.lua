@@ -86,7 +86,7 @@ end
 --!return Action to move to the tile just outside the room.
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return WalkAction(x, y):setIsLeaving():setTruncateOnHighPriority(true)
+  return WalkAction(x, y):setIsLeaving():setTruncateOnHighPriority()
 end
 
 function Room:createEnterAction(humanoid_entering, callback)

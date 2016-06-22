@@ -35,20 +35,15 @@ function WalkAction:WalkAction(x, y)
   self.is_entering = false -- Whether the walk enters a room.
 end
 
-function WalkAction:setTruncateOnHighPriority(allow_truncate)
-  if allow_truncate == nil then allow_truncate = true end
-
-  self.truncate_only_on_high_priority = allow_truncate
+function WalkAction:setTruncateOnHighPriority()
+  self.truncate_only_on_high_priority = true
   return self
 end
 
 --! Nurse is walking with the intention to vaccinate.
---!param wtv (boolean or nil) If set or nil, set the walking_to_vaccinate flag.
 --!return (action) self, for daisy-chaining.
-function WalkAction:setWalkingToVaccinate(wtv)
-  if wtv == nil then wtv = true end
-
-  self.walking_to_vaccinate = wtv
+function WalkAction:setWalkingToVaccinate()
+  self.walking_to_vaccinate = true
   return self
 end
 
