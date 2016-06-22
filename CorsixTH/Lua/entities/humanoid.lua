@@ -723,10 +723,7 @@ end
 -- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
   local action = WalkAction(tile_x, tile_y)
-  if must_happen then
-    action:setMustHappen(must_happen)
-  end
-
+  action:setMustHappen(must_happen or false)
   self:setNextAction(action)
 end
 

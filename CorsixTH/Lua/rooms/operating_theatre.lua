@@ -88,7 +88,7 @@ local function wait_for_object(humanoid, obj, must_happen)
     end
   end
 
-  return IdleAction():setMustHappen(must_happen):setLoopCallback(loop_callback_wait)
+  return IdleAction():setMustHappen(must_happen or false):setLoopCallback(loop_callback_wait)
 end
 
 --! Returns true if an operation is ongoing

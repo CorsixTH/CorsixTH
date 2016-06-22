@@ -77,7 +77,7 @@ local function action_seek_reception_start(action, humanoid)
       local q_action = QueueAction(x, y, best_desk.queue):setMustHappen()
       humanoid:setNextAction(q_action:setFaceDirection(face_x, face_y))
     else
-      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
+      local walk = WalkAction(x, y):setMustHappen(action.must_happen or false)
       humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
@@ -95,14 +95,14 @@ local function action_seek_reception_start(action, humanoid)
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
     if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
-      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
+      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen or false)
       if not humanoid.waiting then
         -- Eventually people are going to get bored and leave.
         humanoid.waiting = 5
       end
     else
       local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen)
+      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen or false)
     end
     humanoid:queueAction(procrastination, 0)
   end

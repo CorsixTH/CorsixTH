@@ -72,7 +72,7 @@ local function action_spawn_start(action, humanoid)
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)
   local x, y =  action.point.x,  action.point.y
   if action.mode == "despawn" and (humanoid.tile_x ~= x or humanoid.tile_y ~= y) then
-    humanoid:queueAction(WalkAction(action.point.x, action.point.y):setMustHappen(action.must_happen), 0)
+    humanoid:queueAction(WalkAction(action.point.x, action.point.y):setMustHappen(action.must_happen or false), 0)
     return
   end
   action.must_happen = true

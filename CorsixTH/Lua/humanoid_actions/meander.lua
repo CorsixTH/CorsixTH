@@ -97,10 +97,10 @@ local function meander_action_start(action, humanoid)
 
   local procrastination
   if action.can_idle and math.random(1, 3) == 1 then
-    procrastination = IdleAction():setCount(math.random(25, 40)):setMustHappen(action.must_happen)
+    procrastination = IdleAction():setCount(math.random(25, 40)):setMustHappen(action.must_happen or false)
   else
     action.can_idle = true
-    procrastination = WalkAction(x, y):setMustHappen(action.must_happen)
+    procrastination = WalkAction(x, y):setMustHappen(action.must_happen or false)
   end
   humanoid:queueAction(procrastination, 0)
 end
