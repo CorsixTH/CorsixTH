@@ -70,7 +70,7 @@ function Vip:tickDay()
       while self.next_room and not self.next_room.is_active do
         self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       end
-      self:setNextAction{name = "vip_go_to_next_room"}
+      self:setNextAction(VipGoToNextRoomAction())
     end
   end
 
