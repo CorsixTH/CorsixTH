@@ -344,7 +344,7 @@ function Patient:die()
   if self.is_emergency then
     hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
-  self:queueAction{name = "die"}
+  self:queueAction(DieAction())
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
