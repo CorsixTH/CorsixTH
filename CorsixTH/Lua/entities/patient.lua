@@ -362,7 +362,7 @@ function Patient:falling()
     self:setNextAction(FallingAction(), 0)
     self.has_fallen = 2
     if self.has_fallen == 2 then
-      self:setNextAction{name = "on_ground"}
+      self:setNextAction(OnGroundAction())
       self.on_ground = true
     end
     if self.on_ground then
