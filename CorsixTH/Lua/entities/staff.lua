@@ -428,7 +428,7 @@ function Staff:onClick(ui, button)
     end
   elseif button == "right" then
     self.pickup = true
-    self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
+    self:setNextAction(PickupAction(ui), true)
   end
   Humanoid.onClick(self, ui, button)
 end

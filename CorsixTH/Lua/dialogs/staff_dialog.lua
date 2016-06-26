@@ -314,12 +314,7 @@ end
 
 function UIStaff:placeStaff()
   self.staff.pickup = true
-  self.staff:setNextAction({
-    name = "pickup",
-    ui = self.ui,
-    todo_close = self,
-    must_happen = true,
-  }, true)
+  self.staff:setNextAction(PickupAction(self.ui):setTodoClose(self), true)
 end
 
 function UIStaff:fireStaff()
