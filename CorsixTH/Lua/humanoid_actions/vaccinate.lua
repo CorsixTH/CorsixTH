@@ -118,7 +118,7 @@ local function vaccinate(action, nurse)
     patient:removeVaccinationCandidateStatus()
     nurse:setCallCompleted()
     patient.reserved_for = nil
-    nurse:queueAction({name="meander"})
+    nurse:queueAction(MeanderAction())
   end
   nurse:finishAction()
 end

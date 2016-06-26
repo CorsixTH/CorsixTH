@@ -109,7 +109,7 @@ function Room:createEnterAction(humanoid_entering, callback)
       end
     else
       callback = --[[persistable:room_humanoid_enroute_cancel]] function()
-        humanoid_entering:setNextAction({name = "meander"})
+        humanoid_entering:setNextAction(MeanderAction())
       end
     end
   end
@@ -193,7 +193,7 @@ function Room:dealtWithPatient(patient)
       end
     end
   else
-    patient:queueAction{name = "meander", count = 2}
+    patient:queueAction(MeanderAction():setCount(2))
     patient:queueAction{name = "idle"}
   end
 
@@ -310,7 +310,7 @@ function Room:onHumanoidEnter(humanoid)
       humanoid:queueAction(SeekRoomAction(self.room_info.id))
     else
       humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction({name = "meander"})
+      humanoid:queueAction(MeanderAction())
     end
     return
   end
@@ -351,7 +351,7 @@ function Room:onHumanoidEnter(humanoid)
           end
         if not staff_member.dealing_with_patient then
           staff_member:setNextAction(self:createLeaveAction())
-          staff_member:queueAction{name = "meander"}
+          staff_member:queueAction(MeanderAction())
           self.staff_member = humanoid
           humanoid:setCallCompleted()
           self:commandEnteringStaff(humanoid)
@@ -359,16 +359,16 @@ function Room:onHumanoidEnter(humanoid)
           if self.waiting_staff_member then
             self.waiting_staff_member.waiting_on_other_staff = nil
             self.waiting_staff_member:setNextAction(self:createLeaveAction())
-            self.waiting_staff_member:queueAction{name = "meander"}
+            self.waiting_staff_member:queueAction(MeanderAction())
           end
           self:createDealtWithPatientCallback(humanoid)
           humanoid.waiting_on_other_staff = true
-          humanoid:setNextAction{name = "meander"}
+          humanoid:setNextAction(MeanderAction())
         end
       else
         self.humanoids[humanoid] = true
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction())
         humanoid:adviseWrongPersonForThisRoom()
       end
     else
@@ -413,7 +413,7 @@ function Room:createDealtWithPatientCallback(humanoid)
     local staff_member = self:getStaffMember()
     if staff_member then
       staff_member:setNextAction(self:createLeaveAction())
-      staff_member:queueAction{name = "meander"}
+      staff_member:queueAction(MeanderAction())
       staff_member:setMood("staff_wait", "deactivate")
       staff_member:setDynamicInfoText("")
     end
@@ -471,7 +471,7 @@ end
 function Room:commandEnteringStaff(humanoid, already_initialized)
   if not already_initialized then
     self.staff_member = humanoid
-    humanoid:setNextAction{name = "meander"}
+    humanoid:setNextAction(MeanderAction())
   end
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
@@ -949,7 +949,7 @@ function Room:tryToEdit()
         humanoid:queueAction(SeekRoomAction(self.room_info.id))
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction({name = "meander"})
+        humanoid:queueAction(MeanderAction())
       end
     end
     i = i + 1

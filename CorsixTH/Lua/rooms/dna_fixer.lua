@@ -68,7 +68,7 @@ function DNAFixerRoom:commandEnteringPatient(patient)
         prolonged_usage = false,
         after_use = --[[persistable:dna_fixer_after_use]] function()
           self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
+          staff:setNextAction(MeanderAction())
         end,
       }
 

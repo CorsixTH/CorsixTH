@@ -105,7 +105,7 @@ local function action_seek_reception_start(action, humanoid)
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
     if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
-      procrastination = {name = "meander", count = 1}
+      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
       if not humanoid.waiting then
         -- Eventually people are going to get bored and leave.
         humanoid.waiting = 5
@@ -113,8 +113,8 @@ local function action_seek_reception_start(action, humanoid)
     else
       local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
       procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+      procrastination.must_happen = action.must_happen
     end
-    procrastination.must_happen = action.must_happen
     humanoid:queueAction(procrastination, 0)
   end
 end

@@ -186,13 +186,13 @@ function TrainingRoom:commandEnteringStaff(humanoid)
           local staff = self.waiting_staff_member
           staff.waiting_on_other_staff = nil
           staff:setNextAction(self:createLeaveAction())
-          staff:queueAction{name = "meander"}
+          staff:queueAction(MeanderAction())
         end
         humanoid.waiting_on_other_staff = true
-        humanoid:setNextAction{name = "meander"}
+        humanoid:setNextAction(MeanderAction())
         self.waiting_staff_member = humanoid
         self.staff_member:setNextAction(self:createLeaveAction())
-        self.staff_member:queueAction{name = "meander"}
+        self.staff_member:queueAction(MeanderAction())
       else
         if obj then
           obj.reserved_for = humanoid
@@ -201,7 +201,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
           self:setStaffMember(humanoid)
         else
           humanoid:setNextAction(self:createLeaveAction())
-          humanoid:queueAction{name = "meander"}
+          humanoid:queueAction(MeanderAction())
         end
       end
     else
@@ -210,10 +210,10 @@ function TrainingRoom:commandEnteringStaff(humanoid)
         obj.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
         humanoid:queueAction{name = "use_object", object = obj}
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction())
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction())
         humanoid.last_room = nil
       end
     end
@@ -221,7 +221,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
     self.world.ui.adviser:say(_A.staff_place_advice.only_doctors_in_room
     :format(_S.rooms_long.training_room))
     humanoid:setNextAction(self:createLeaveAction())
-    humanoid:queueAction{name = "meander"}
+    humanoid:queueAction(MeanderAction())
     return
   end
 

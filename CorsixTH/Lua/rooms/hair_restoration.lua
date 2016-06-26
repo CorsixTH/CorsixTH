@@ -65,7 +65,7 @@ function HairRestorationRoom:commandEnteringPatient(patient)
         end,
         after_use = --[[persistable:hair_restoration_after_use]] function()
           patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
-          staff:setNextAction{name = "meander"}
+          staff:setNextAction(MeanderAction())
           self:dealtWithPatient(patient)
         end,
       }

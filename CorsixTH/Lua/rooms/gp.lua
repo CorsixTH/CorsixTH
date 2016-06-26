@@ -148,7 +148,7 @@ function GPRoom:dealtWithPatient(patient)
       self:sendPatientToNextDiagnosisRoom(patient)
     end
   else
-    patient:queueAction{name = "meander", count = 2}
+    patient:queueAction(MeanderAction():setCount(2))
     patient:queueAction{name = "idle"}
   end
 

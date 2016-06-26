@@ -70,7 +70,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
         prolonged_usage = false,
         after_use = --[[persistable:general_diag_trolley_after_use]] function()
           if #staff.action_queue == 1 then
-            staff:setNextAction{name = "meander"}
+            staff:setNextAction(MeanderAction())
           else
             staff:finishAction(staff_idle)
           end

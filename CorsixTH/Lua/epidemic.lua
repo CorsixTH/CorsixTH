@@ -595,7 +595,7 @@ function Epidemic:createVaccinationActions(patient,nurse)
   if not x or not y then
     nurse:setCallCompleted()
     patient.reserved_for = nil
-    nurse:setNextAction({name = "meander"})
+    nurse:setNextAction(MeanderAction())
     patient:removeVaccinationCandidateStatus()
   else
     -- Give selected patient the cursor with the arrow once they are next

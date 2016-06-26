@@ -133,13 +133,11 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   self.staff_member_set[staff] = true
 
   -- Wait around for patients
-  local meander = {name = "meander", must_happen = true,
-    loop_callback = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
-      self.staff_member_set[staff] = "ready"
-      self:tryAdvanceQueue()
-    end
-  }
-  staff:queueAction(meander)
+  local loop_callback_more_patients = --[[persistable:operatring_theatre_after_surgeon_clothes_on]] function()
+    self.staff_member_set[staff] = "ready"
+    self:tryAdvanceQueue()
+  end
+  staff:queueAction(MeanderAction():setMustHappen(true):setLoopCallback(loop_callback_more_patients))
 
   -- Ensure that surgeons turn back into doctors when they leave
   staff:queueAction{

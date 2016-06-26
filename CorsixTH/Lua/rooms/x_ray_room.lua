@@ -69,7 +69,7 @@ function XRayRoom:commandEnteringPatient(patient)
           length = length - 1
         end,
         after_use = --[[persistable:x_ray_after_use]] function()
-          staff:setNextAction{name = "meander"}
+          staff:setNextAction(MeanderAction())
           self:dealtWithPatient(patient)
         end,
       }

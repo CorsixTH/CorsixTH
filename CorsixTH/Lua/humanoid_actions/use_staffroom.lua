@@ -96,7 +96,7 @@ local function use_staffroom_action_start(action, humanoid)
 
   -- If no target was found, then walk around for a bit and try again later
   if not action.target_obj then
-    humanoid:queueAction({name = "meander", count = 2}, 0)
+    humanoid:queueAction(MeanderAction():setCount(2), 0)
     return
   end
 
@@ -125,7 +125,7 @@ local function use_staffroom_action_start(action, humanoid)
           humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
         else
           -- Send the staff out of the room
-          humanoid:queueAction{name = "meander"}
+          humanoid:queueAction(MeanderAction())
         end
       else
 

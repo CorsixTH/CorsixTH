@@ -74,7 +74,7 @@ function BloodMachineRoom:commandEnteringPatient(patient)
       length = length - 1
     end,
     after_use = --[[persistable:blood_machine_after_use]] function()
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

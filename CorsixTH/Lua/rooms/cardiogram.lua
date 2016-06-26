@@ -92,7 +92,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
         end,
         after_use = --[[persistable:cardiogram_cardio_after_use]] function()
           if #staff.action_queue == 1 then
-            staff:setNextAction{name = "meander"}
+            staff:setNextAction(MeanderAction())
           else
             staff:finishAction(staff_idle)
           end

@@ -85,7 +85,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
     after_use = --[[persistable:pharmacy_after_use]] function()
       --if we haven't tried to edit the room while she's animating, meander
       if #staff.action_queue == 1 then
-        staff:setNextAction{name = "meander"}
+        staff:setNextAction(MeanderAction())
       end
       if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
         patient:setType "Standard Male Patient"

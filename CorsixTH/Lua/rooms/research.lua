@@ -105,15 +105,14 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
   end
 
   local num_meanders = math.random(2, 4)
-  staff:queueAction {
-    name = "meander",
-    loop_callback = --[[persistable:research_meander_loop_callback]] function(action)
-      num_meanders = num_meanders - 1
-      if num_meanders == 0 then
-        self:doStaffUseCycle(staff)
-      end
+  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function(action)
+    num_meanders = num_meanders - 1
+    if num_meanders == 0 then
+      self:doStaffUseCycle(staff)
     end
-  }
+  end
+
+  staff:queueAction(MeanderAction():setLoopCallback(loop_callback_meander))
 end
 
 function ResearchRoom:roomFinished()
@@ -138,8 +137,7 @@ function ResearchRoom:roomFinished()
   end
   -- Also check if it would be good to hire a researcher.
   if not self.hospital:hasStaffOfCategory("Researcher") then
-    self.world.ui.adviser:say(_A.room_requirements
-    .research_room_need_researcher)
+    self.world.ui.adviser:say(_A.room_requirements.research_room_need_researcher)
   end
   return Room.roomFinished(self)
 end

@@ -95,11 +95,8 @@ end
 function WardRoom:doStaffUseCycle(humanoid)
   local meander_time = math.random(4, 10)
   local desk_use_time = math.random(8, 16)
+  humanoid:setNextAction(MeanderAction():setCount(meander_time))
 
-  humanoid:setNextAction{
-    name = "meander",
-    count = meander_time,
-  }
   local obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "desk")
   if obj then
     obj.reserved_for = humanoid
@@ -120,15 +117,13 @@ function WardRoom:doStaffUseCycle(humanoid)
 
   end
   local num_meanders = math.random(2, 4)
-  humanoid:queueAction {
-    name = "meander",
-    loop_callback = --[[persistable:ward_meander_loop_callback]] function(action)
-      num_meanders = num_meanders - 1
-      if num_meanders == 0 then
-        self:doStaffUseCycle(humanoid)
-      end
+  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function(action)
+    num_meanders = num_meanders - 1
+    if num_meanders == 0 then
+      self:doStaffUseCycle(humanoid)
     end
-  }
+  end
+  humanoid:queueAction(MeanderAction():setLoopCallback(meanders_loop))
 end
 
 
@@ -262,7 +257,7 @@ function WardRoom:afterLoad(old, new)
     local nurse = self.staff_member
     if nurse then
       nurse:setNextAction(self:createLeaveAction())
-      nurse:queueAction({name = "meander"})
+      nurse:queueAction(MeanderAction())
     end
   end
   Room.afterLoad(self, old, new)

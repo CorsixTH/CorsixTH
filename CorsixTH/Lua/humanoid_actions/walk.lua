@@ -238,7 +238,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
       humanoid:queueAction({name = "idle"},0)
       humanoid:setTilePositionSpeed(x1, y1)
       humanoid:setNextAction({name = "idle", count = 10},0)
-      humanoid:queueAction{name = "meander"}
+      humanoid:queueAction(MeanderAction())
       return
     end
   end

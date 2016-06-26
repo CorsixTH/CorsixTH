@@ -116,7 +116,7 @@ function ScannerRoom:commandEnteringPatient(patient)
         -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
         return
       end
-      self.staff_member:setNextAction{name = "meander"}
+      self.staff_member:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

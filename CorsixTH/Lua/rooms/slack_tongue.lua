@@ -69,7 +69,7 @@ function SlackTongueRoom:commandEnteringPatient(patient)
       else
         patient:setLayer(0, patient.layers[0] - 8) -- Change to normal head
       end
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

@@ -339,7 +339,7 @@ function Staff:updateSkill(consultant, trait, amount)
       self.world.ui.adviser:say(_A.information.promotion_to_consultant)
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
-        self:queueAction{name = "meander"}
+        self:queueAction(MeanderAction())
         self.last_room = nil
       end
       self:updateStaffTitle()
@@ -669,7 +669,7 @@ function Staff:onPlaceInCorridor()
     self.task = nil
   end
   self:updateSpeed()
-  self:setNextAction{name = "meander"}
+  self:setNextAction(MeanderAction())
   if self.humanoid_class == "Receptionist" then
     world:findObjectNear(self, "reception_desk", nil, function(x, y)
       local obj = world:getObject(x, y, "reception_desk")
@@ -960,7 +960,7 @@ function Staff:searchForHandymanTask()
     if self:getRoom() then
       self:queueAction(self:getRoom():createLeaveAction())
     end
-    self:queueAction({name = "meander"})
+    self:queueAction(MeanderAction())
   end
   return assignedTask
 end

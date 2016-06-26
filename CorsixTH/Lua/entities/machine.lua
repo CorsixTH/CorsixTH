@@ -231,21 +231,22 @@ function Machine:createHandymanActions(handyman)
   else
     handyman:setNextAction(action)
   end
+
+  local meander_loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
+    if not self.user then
+      -- The machine is ready to be repaired.
+      -- The following statement will finish the meander action in the handyman's
+      -- action queue.
+      handyman:finishAction()
+    end
+    -- Otherwise do nothing and let the meandering continue.
+  end
+
   -- Before the actual repair action, insert a meander action to wait for the machine
   -- to become free for use.
-  handyman:queueAction({
-    name = "meander",
-    loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
-      if not self.user then
-        -- The machine is ready to be repaired.
-        -- The following statement will finish the meander action in the handyman's
-        -- action queue.
-        handyman:finishAction()
-      end
-      -- Otherwise do nothing and let the meandering continue.
-    end,
-  })
-  -- The last one is another walk action to the repair tile. If the handymand goes directly
+  handyman:queueAction(MeanderAction():setLoopCallback(meander_loop_callback))
+
+  -- The last one is another walk action to the repair tile. If the handyman goes directly
   -- to repair it will simply complete in an instant.
   handyman:queueAction(action)
   handyman:queueAction(repair_action)

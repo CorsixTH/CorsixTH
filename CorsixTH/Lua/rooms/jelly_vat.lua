@@ -63,7 +63,7 @@ function JellyVatRoom:commandEnteringPatient(patient)
     use_with = patient,
     invisible_phase_span = {-3, 4},
     after_use = --[[persistable:jelly_vat_after_use]] function()
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

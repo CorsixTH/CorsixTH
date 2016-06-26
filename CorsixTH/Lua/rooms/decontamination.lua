@@ -52,7 +52,7 @@ end
 
 function DecontaminationRoom:commandEnteringStaff(staff)
   self.staff_member = staff
-  staff:setNextAction{name = "meander"}
+  staff:setNextAction(MeanderAction())
   return Room.commandEnteringStaff(self, staff)
 end
 
@@ -109,7 +109,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
       if not self.staff_member then
         return
       end
-      self.staff_member:setNextAction{name = "meander"}
+      self.staff_member:setNextAction(MeanderAction())
       if not patient.going_home then
         self:dealtWithPatient(patient)
       end

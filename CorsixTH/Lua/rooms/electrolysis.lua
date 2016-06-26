@@ -88,7 +88,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
         end,
         after_use = --[[persistable:electrolysis_after_use]] function()
           self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
+          staff:setNextAction(MeanderAction())
         end,
       }
 

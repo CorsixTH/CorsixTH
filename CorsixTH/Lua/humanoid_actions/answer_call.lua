@@ -26,7 +26,7 @@ local function action_answer_call_start(action, humanoid)
     if room then
       humanoid:queueAction(room:createLeaveAction())
     end
-    humanoid:queueAction({name = "meander"})
+    humanoid:queueAction(MeanderAction())
   end
   humanoid:finishAction(action)
 end

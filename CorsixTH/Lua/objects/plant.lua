@@ -208,9 +208,9 @@ function Plant:createHandymanActions(handyman)
     handyman:setCallCompleted()
     if handyman_room then
       handyman:setNextAction(handyman_room:createLeaveAction())
-      handyman:queueAction{name = "meander"}
+      handyman:queueAction(MeanderAction())
     else
-      handyman:setNextAction{name = "meander"}
+      handyman:setNextAction(MeanderAction())
     end
     return
   end

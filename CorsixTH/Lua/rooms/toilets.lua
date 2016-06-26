@@ -138,10 +138,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
       --[[ If no loo is found, perhaps the patient followed another one in and they were heading for the same one.
       Now there is no free loo, so wait for a bit and then leave the room to wait outside.  No need for a warning
       as this is what happens in busy toilets]]
-      humanoid:setNextAction{
-        name = "meander",
-        count = 1
-        }
+      humanoid:setNextAction(MeanderAction():setCount(1))
       humanoid:queueAction(self:createLeaveAction())
       humanoid:queueAction(self:createEnterAction(humanoid))
     end

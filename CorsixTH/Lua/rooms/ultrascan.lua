@@ -64,7 +64,7 @@ function UltrascanRoom:commandEnteringPatient(patient)
     object = ultrascan,
     use_with = staff,
     after_use = --[[persistable:ultrascan_after_use]] function()
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

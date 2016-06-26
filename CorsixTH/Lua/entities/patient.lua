@@ -337,9 +337,9 @@ function Patient:die()
   self.world.ui:playSound("boo.wav") -- this sound is always heard
   self.going_home = true
   if self:getRoom() then
-    self:queueAction{name = "meander", count = 1}
+    self:queueAction(MeanderAction():setCount(1))
   else
-    self:setNextAction{name = "meander", count = 1}
+    self:setNextAction(MeanderAction():setCount(1))
   end
   if self.is_emergency then
     hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
@@ -897,10 +897,7 @@ function Patient:tickDay()
           -- If we were idling, also go away a little before continuing with
           -- that important action.
           if current.name == "idle" then
-            self:queueAction({
-              name = "meander",
-              count = 1,
-            }, 3)
+            self:queueAction(MeanderAction():setCount(1), 3)
           end
         else -- We were seeking a room, start that action from the beginning
              -- i.e. do not set the must_happen flag.

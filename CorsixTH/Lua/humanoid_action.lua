@@ -28,7 +28,17 @@ local HumanoidAction = _G["HumanoidAction"]
 --!param name (str) Name of the action.
 function HumanoidAction:HumanoidAction(name)
   self.name = name
+  self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
   self.must_happen = nil -- If true, action cannot be skipped.
+  self.loop_callback = nil -- Periodic callback to check for termination conditions.
+end
+
+--! Set the number of times the action should happen.
+--!param count (int or nil) Set to 'nil' if 'forever', else integer count.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setCount(count)
+  self.count = count
+  return self
 end
 
 --! Set the 'must happen' flag (that is, action cannot be skipped).
@@ -36,5 +46,14 @@ end
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setMustHappen(must_happen)
   self.must_happen = must_happen
+  return self
+end
+
+--! Set the callback for checking termination conditions.
+--!param loop_callback (func) Callback function that is called each iteration to check for
+--! termination conditions.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setLoopCallback(loop_callback)
+  self.loop_callback = loop_callback
   return self
 end

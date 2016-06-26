@@ -67,7 +67,7 @@ function FractureRoom:commandEnteringPatient(patient)
       patient:setLayer(2, 0) -- Remove casts
       patient:setLayer(3, 0)
       patient:setLayer(4, 0)
-      staff:setNextAction{name = "meander"}
+      staff:setNextAction(MeanderAction())
       self:dealtWithPatient(patient)
     end,
   }

@@ -518,7 +518,7 @@ local function Humanoid_startAction(self)
     end
     -- Is it a member of staff, grim or a patient?
     if class.is(self, Staff) then
-      self:queueAction({name = "meander"})
+      self:queueAction(MeanderAction())
     elseif class.is(self,GrimReaper) then
       self:queueAction({name = "idle"})
     else
@@ -744,7 +744,7 @@ end
 function Humanoid:handleRemovedObject(object)
   local replacement_action
   if self.humanoid_class and self.humanoid_class == "Receptionist" then
-    replacement_action = {name = "meander"}
+    replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
     replacement_action = {name = "idle", must_happen = true}
   end
