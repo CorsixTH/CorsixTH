@@ -535,12 +535,8 @@ function Epidemic:evacuateHospital()
       patient:clearDynamicInfo()
       patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
       patient:setMood("exit","activate")
-      patient:setNextAction{
-        name = "spawn",
-        mode = "despawn",
-        point = self.world.spawn_points[math.random(1, #self.world.spawn_points)],
-        must_happen = true,
-      }
+      local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+      patient:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
     end
   end
 end
@@ -560,7 +556,7 @@ function Epidemic:spawnInspector()
   inspector:setType("Inspector")
 
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
-  inspector:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  inspector:setNextAction(SpawnAction("spawn", spawn_point))
   inspector:setHospital(self.hospital)
   inspector:queueAction(SeekReceptionAction())
 end

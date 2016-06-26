@@ -87,12 +87,7 @@ function Helicopter:spawnPatient()
   patient.is_emergency = self.spawned_patients
   hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
   local x, y = hospital:getHeliportSpawnPosition()
-  patient:setNextAction{
-    name = "spawn",
-    mode = "spawn",
-    point = {x = x, y = y},
-    offset = {y = 1},
-  }
+  patient:setNextAction(SpawnAction("spawn", {x = x, y = y}):setOffset({y = 1}))
   patient:setHospital(hospital)
   -- TODO: If new combined diseases are added this will not work correctly anymore.
   patient.cure_rooms_visited = #patient.disease.treatment_rooms - 1

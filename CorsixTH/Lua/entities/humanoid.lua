@@ -437,13 +437,8 @@ end
 
 --! Despawn the humanoid.
 function Humanoid:despawn()
-  local spawn_points = self.world.spawn_points
-  self:setNextAction{
-    name = "spawn",
-    mode = "despawn",
-    point = spawn_points[math.random(1, #spawn_points)],
-    must_happen = true,
-  }
+  local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+  self:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
 end
 
 -- Function to activate/deactivate moods of a humanoid.
