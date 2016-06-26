@@ -796,10 +796,7 @@ function Patient:tickDay()
             self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
           -- Otherwise we can queue the action, but only if not in any rooms right now.
           elseif not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].pee then
-            self:setNextAction{
-              name = "seek_toilets",
-              must_happen = true,
-              }
+            self:setNextAction(SeekToiletsAction():setMustHappen(true))
             self.going_to_toilet = "yes"
           end
         end

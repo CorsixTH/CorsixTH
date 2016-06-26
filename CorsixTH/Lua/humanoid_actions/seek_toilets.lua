@@ -19,6 +19,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekToiletsAction" (HumanoidAction)
+
+---@type SeekToiletsAction
+local SeekToiletsAction = _G["SeekToiletsAction"]
+
+function SeekToiletsAction:SeekToiletsAction()
+  self:HumanoidAction("seek_toilets")
+end
+
 local function seek_toilets_action_start(action, humanoid)
   -- Mechanism for clearing the going_to_toilets flag when this action is
   -- interrupted.
