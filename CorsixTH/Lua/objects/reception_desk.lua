@@ -222,9 +222,10 @@ function ReceptionDesk:occupy(receptionist)
   if not self.receptionist and not self.reserved_for then
     self.reserved_for = receptionist
     receptionist.associated_desk = self
+
     local use_x, use_y = self:getSecondaryUsageTile()
     receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-    receptionist:queueAction{name = "staff_reception", object = self, must_happen = true}
+    receptionist:queueAction(StaffReceptionAction(self))
     return true
   end
 end
