@@ -359,10 +359,7 @@ function Patient:falling()
   local current = self.action_queue[1]
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
-    self:setNextAction({
-      name = "falling",
-      must_happen = true
-      }, 0)
+    self:setNextAction(FallingAction(), 0)
     self.has_fallen = 2
     if self.has_fallen == 2 then
       self:setNextAction{name = "on_ground"}
