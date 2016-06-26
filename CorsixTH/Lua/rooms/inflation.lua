@@ -61,15 +61,17 @@ function InflationRoom:commandEnteringPatient(patient)
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
 
+  local inflation_after_use = --[[persistable:inflation_after_use]] function()
+    patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
   patient:queueAction{
     name = "multi_use_object",
     object = inflator,
     use_with = staff,
-    after_use = --[[persistable:inflation_after_use]] function()
-      patient:setLayer(0, patient.layers[0] - 10) -- Change to normal head
-      staff:setNextAction(MeanderAction())
-      self:dealtWithPatient(patient)
-    end,
+    after_use = inflation_after_use
   }
 
   return Room.commandEnteringPatient(self, patient)
