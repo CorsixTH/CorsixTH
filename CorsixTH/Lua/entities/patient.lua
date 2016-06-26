@@ -502,10 +502,7 @@ end
 
 function Patient:checkWatch()
   if self.check_watch_anim and not self.action_queue[1].is_leaving then
-    self:queueAction({
-      name = "check_watch",
-      must_happen = true
-      }, 0)
+    self:queueAction(CheckWatchAction(), 0)
   end
 end
 

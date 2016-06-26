@@ -17,6 +17,17 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+
+class "CheckWatchAction" (HumanoidAction)
+
+---@type CheckWatchAction
+local CheckWatchAction = _G["CheckWatchAction"]
+
+function CheckWatchAction:CheckWatchAction()
+  self:HumanoidAction("check_watch")
+  self:setMustHappen(true)
+end
+
 local action_check_watch_end = permanent"action_check_watch_end"( function(humanoid)
   humanoid:finishAction()
 end)
