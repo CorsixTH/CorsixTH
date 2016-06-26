@@ -28,4 +28,13 @@ local HumanoidAction = _G["HumanoidAction"]
 --!param name (str) Name of the action.
 function HumanoidAction:HumanoidAction(name)
   self.name = name
+  self.must_happen = nil -- If true, action cannot be skipped.
+end
+
+--! Set the 'must happen' flag (that is, action cannot be skipped).
+--!param must_happen (bool) Whether or not the action must happen.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setMustHappen(must_happen)
+  self.must_happen = must_happen
+  return self
 end

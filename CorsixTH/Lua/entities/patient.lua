@@ -527,10 +527,7 @@ end
 
 function Patient:tapFoot()
   if self.tap_foot_anim and not self.action_queue[1].is_leaving then
-    self:queueAction({
-      name = "tap_foot",
-      must_happen = true
-      }, 0)
+    self:queueAction(TapFootAction(), 0)
   end
 end
 
