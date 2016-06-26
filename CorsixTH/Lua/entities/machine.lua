@@ -214,7 +214,9 @@ function Machine:createHandymanActions(handyman)
     handyman:setDynamicInfoText("")
     self:machineRepaired(self:getRoom())
   end
-  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
+
+  local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
+
   local repair_action = {
     name = "use_object",
     object = self,

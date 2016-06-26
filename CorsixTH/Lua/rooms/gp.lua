@@ -54,7 +54,8 @@ function GPRoom:doStaffUseCycle(humanoid)
   humanoid:walkTo(ox, oy)
   humanoid:queueAction{name = "use_object", object = obj}
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction(ox, oy))
+
   -- A skilled doctor requires less time at the desk to diagnose the patient
   local inv_skill = 1 - humanoid.profile.skill
   local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),

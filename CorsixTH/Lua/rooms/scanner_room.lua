@@ -85,11 +85,7 @@ function ScannerRoom:commandEnteringPatient(patient)
       name = "use_screen",
       object = screen,
     }
-    patient:queueAction{
-      name = "walk",
-      x = pat_x,
-      y = pat_y,
-    }
+    patient:queueAction(WalkAction(pat_x, pat_y))
   else
     patient:walkTo(pat_x, pat_y)
   end
@@ -142,14 +138,9 @@ end
 function ScannerRoom:dealtWithPatient(patient)
   if string.find(patient.humanoid_class, "Stripped") then
     local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-    patient:setNextAction{
-      name = "walk",
-      x = sx,
-      y = sy,
-      must_happen = true,
-      no_truncate = true,
-      is_leaving = true,
-    }
+    patient:setNextAction(WalkAction(sx, sy):setMustHappen(true):setIsLeaving(true)
+        :disableTruncate())
+
     patient:queueAction{
       name = "use_screen",
       object = screen,

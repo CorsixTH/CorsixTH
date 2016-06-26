@@ -721,12 +721,7 @@ end
 --!param must_happen (boolean, nil) If true, then the walk action will not be
 -- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
-  self:setNextAction {
-    name = "walk",
-    x = tile_x,
-    y = tile_y,
-    must_happen = must_happen,
-  }
+  self:setNextAction(WalkAction(tile_x, tile_y):setMustHappen(must_happen))
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,

@@ -120,7 +120,7 @@ end
 
 function TrainingRoom:doStaffUseCycle(humanoid)
   local projector, ox, oy = self.world:findObjectNear(humanoid, "projector")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction(ox, oy))
   local projector_use_time = math.random(6,20)
   humanoid:queueAction{name = "use_object",
     object = projector,

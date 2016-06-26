@@ -147,7 +147,7 @@ local function use_staffroom_action_start(action, humanoid)
       end
     end
   }
-  humanoid:queueAction({name = "walk", x = action.ox, y = action.oy}, 0)
+  humanoid:queueAction(WalkAction(action.ox, action.oy), 0)
   humanoid:queueAction(object_action, 1)
 end
 

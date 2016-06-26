@@ -972,9 +972,9 @@ function Staff:assignHandymanTask(taskIndex, taskType)
   if taskType == "cleaning" then
     if self:getRoom() then
       self:setNextAction(self:getRoom():createLeaveAction())
-      self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
+      self:queueAction(WalkAction(task.tile_x, task.tile_y))
     else
-      self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
+      self:setNextAction(WalkAction(task.tile_x, task.tile_y))
     end
     self:queueAction(SweepFloorAction(task.object))
     self:queueAction(AnswerCallAction())

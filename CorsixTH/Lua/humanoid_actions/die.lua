@@ -187,11 +187,9 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
     action.phase = 4
     local grim = humanoid.grim_reaper
     if grim.tile_x ~= grim.use_tile_x or grim.tile_y ~= grim.use_tile_y then
-      grim:queueAction({name = "walk",
-                        x = grim.use_tile_x,
-                        y = grim.use_tile_y,
-                        no_truncate = true})
+      grim:queueAction(WalkAction(grim.use_tile_x, grim.use_tile_y):disableTruncate())
     end
+
     grim:queueAction({name = "idle", loop_callback =
                                      --[[persistable:reaper_wait]]function()
                                                                     grim:setAnimation(1002, grim.mirror)

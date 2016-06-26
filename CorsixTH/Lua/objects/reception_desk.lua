@@ -224,7 +224,7 @@ function ReceptionDesk:occupy(receptionist)
     receptionist.associated_desk = self
 
     local use_x, use_y = self:getSecondaryUsageTile()
-    receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
+    receptionist:setNextAction(WalkAction(use_x, use_y):setMustHappen(true))
     receptionist:queueAction(StaffReceptionAction(self))
     return true
   end

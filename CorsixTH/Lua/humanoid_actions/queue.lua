@@ -186,12 +186,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         num_actions_prior = action_queue_leave_bench(action, humanoid)
       end
       action.current_bench_distance = dist
-      humanoid:queueAction({
-        name = "walk",
-        x = bx,
-        y = by,
-        must_happen = true,
-      }, num_actions_prior)
+      humanoid:queueAction(WalkAction(bx, by):setMustHappen(true), num_actions_prior)
       humanoid:queueAction({
         name = "use_object",
         object = bench,
@@ -238,21 +233,11 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
-    humanoid:queueAction({
-      name = "walk",
-      x = ix,
-      y = iy,
-      must_happen = true,
-    }, idle_index - 1)
+    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true), idle_index - 1)
   else
     action.current_bench_distance = nil
     local num_actions_prior = action_queue_leave_bench(action, humanoid)
-    humanoid:queueAction({
-      name = "walk",
-      x = ix,
-      y = iy,
-      must_happen = true,
-    }, num_actions_prior)
+    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true), num_actions_prior)
     humanoid:queueAction({
       name = "idle",
       direction = idle_direction,
@@ -306,12 +291,7 @@ function(action, humanoid, machine, mx, my, fun_after_use)
   end
 
   -- Walk to the machine and then use it.
-  humanoid:queueAction({
-    name = "walk",
-    x = mx,
-    y = my,
-    must_happen = true,
-  }, num_actions_prior)
+  humanoid:queueAction(WalkAction(mx, my):setMustHappen(true), num_actions_prior)
   humanoid:queueAction({
     name = "use_object",
     object = machine,

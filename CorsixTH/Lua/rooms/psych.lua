@@ -120,7 +120,7 @@ function PsychRoom:commandEnteringPatient(patient)
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then
       staff:walkTo(bx, by)
       staff:queueAction{name = "use_object", object = bookcase}
-      staff:queueAction{name = "walk", x = ox, y = oy}
+      staff:queueAction(WalkAction(ox, oy))
       staff:queueAction{
         name = "use_object",
         object = obj,

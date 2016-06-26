@@ -56,9 +56,11 @@ function InflationRoom:commandEnteringPatient(patient)
   local orientation = inflator.object_type.orientations[inflator.direction]
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
   staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+
+  patient:setNextAction(WalkAction(pat_x, pat_y))
+
   patient:queueAction{
     name = "multi_use_object",
     object = inflator,

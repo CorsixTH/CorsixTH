@@ -56,9 +56,10 @@ function SlackTongueRoom:commandEnteringPatient(patient)
   local orientation = slicer.object_type.orientations[slicer.direction]
   local stf_x, stf_y = slicer:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
   staff:queueAction{name = "idle", direction = slicer.direction == "north" and "east" or "south"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+
+  patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction{
     name = "multi_use_object",
     object = slicer,

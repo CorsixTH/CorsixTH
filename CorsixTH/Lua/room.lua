@@ -86,13 +86,7 @@ end
 --!return Action to move to the tile just outside the room.
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return {
-    name = "walk",
-    x = x,
-    y = y,
-    is_leaving = true,
-    truncate_only_on_high_priority = true,
-  }
+  return WalkAction(x, y):setIsLeaving(true):truncateOnHighPriority()
 end
 
 function Room:createEnterAction(humanoid_entering, callback)
@@ -117,8 +111,7 @@ function Room:createEnterAction(humanoid_entering, callback)
     self.humanoids_enroute[humanoid_entering] = {callback = callback}
   end
 
-  return {name = "walk", x = x, y = y,
-    is_entering = humanoid_entering and self or true}
+  return WalkAction(x, y):setIsEntering(humanoid_entering and self or true)
 end
 
 --! Get a patient in the room.
@@ -868,15 +861,13 @@ end
 -- Tells a humanoid in the room to leave it. This can be overridden for special
 -- handling, e.g. if the humanoid needs to change before leaving the room.
 function Room:makeHumanoidLeave(patient)
-  local leave = self:createLeaveAction()
-  leave.must_happen = true
+  local leave = self:createLeaveAction():setMustHappen(true)
   patient:setNextAction(leave)
 end
 
 function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
   if not humanoid:isLeaving() then
-    local leave = self:createLeaveAction()
-    leave.must_happen = true
+    local leave = self:createLeaveAction():setMustHappen(true)
 
     if not string.find(humanoid.humanoid_class, "Stripped") then
       humanoid:setNextAction(leave)
@@ -908,14 +899,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
       humanoid.action_queue[1].after_use = nil
       humanoid:setNextAction(use_screen)
     else
-      humanoid:setNextAction{
-        name = "walk",
-        x = sx,
-        y = sy,
-        must_happen = true,
-        no_truncate = true,
-        is_leaving = true
-      }
+      humanoid:setNextAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate():setIsLeaving(true))
       humanoid:queueAction(use_screen)
     end
 

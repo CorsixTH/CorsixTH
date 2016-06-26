@@ -74,9 +74,11 @@ function PharmacyRoom:commandEnteringPatient(patient)
     layer3 = math.random(0, 2) * 2
   end
 
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+  patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+
+  staff:setNextAction(WalkAction(stf_x, stf_y))
+
   staff:queueAction{
     name = "multi_use_object",
     object = cabinet,

@@ -870,13 +870,7 @@ function Patient:tickDay()
         -- Go to the machine, use it, and then continue with
         -- whatever he/she was doing.
         current.keep_reserved = true
-        self:queueAction({
-          name = "walk",
-          x = lx,
-          y = ly,
-          must_happen = true,
-          no_truncate = true,
-        }, 1)
+        self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
         self:queueAction({
           name = "use_object",
           object = machine,

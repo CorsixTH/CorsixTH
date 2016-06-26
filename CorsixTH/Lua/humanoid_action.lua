@@ -31,6 +31,8 @@ function HumanoidAction:HumanoidAction(name)
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
   self.must_happen = nil -- If true, action cannot be skipped.
   self.loop_callback = nil -- Periodic callback to check for termination conditions.
+  self.is_leaving = nil -- Whether the humanoid is leaving.
+  self.no_truncate = nil -- If set, disable shortening the action.
 end
 
 --! Set the number of times the action should happen.
@@ -55,5 +57,20 @@ end
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setLoopCallback(loop_callback)
   self.loop_callback = loop_callback
+  return self
+end
+
+--! Set whether the humanoid is leaving.
+--!param is_leaving (bool) Whether or not the humanoid is leaving. If not specified, value is true.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setIsLeaving(is_leaving)
+  self.is_leaving = is_leaving
+  return self
+end
+
+--! Do not allow truncating the action.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:disableTruncate()
+  self.no_truncate = true
   return self
 end

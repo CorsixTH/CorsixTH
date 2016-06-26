@@ -42,9 +42,7 @@ local function seek_toilets_action_start(action, humanoid)
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
-    local task = room:createEnterAction(humanoid)
-    task.must_happen = true
-    humanoid:setNextAction(task)
+    humanoid:setNextAction(room:createEnterAction(humanoid):setMustHappen(true))
     -- Unexpect the patient from a possible destination room.
     if humanoid.next_room_to_visit then
       local queue = humanoid.next_room_to_visit.door.queue

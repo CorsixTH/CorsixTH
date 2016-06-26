@@ -56,9 +56,10 @@ function UltrascanRoom:commandEnteringPatient(patient)
   local orientation = ultrascan.object_type.orientations[ultrascan.direction]
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
   staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
+
+  patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction{
     name = "multi_use_object",
     object = ultrascan,

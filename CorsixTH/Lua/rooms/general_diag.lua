@@ -76,14 +76,8 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
           end
         end,
       }
-      patient:queueAction{
-        name = "walk",
-        x = sx,
-        y = sy,
-        is_leaving = true,
-        must_happen = false,
-        no_truncate = true,
-      }
+      patient:queueAction(WalkAction(sx, sy):setIsLeaving(true):setMustHappen(false):disableTruncate())
+
       patient:queueAction{
         name = "use_screen",
         object = screen,

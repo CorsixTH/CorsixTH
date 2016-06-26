@@ -603,9 +603,7 @@ function Epidemic:createVaccinationActions(patient,nurse)
     patient:giveVaccinationCandidateStatus()
     local level_config = self.world.map.level_config
     local fee = level_config.gbv.VacCost or 50
-    nurse:setNextAction({name = "walk", x = x, y = y,
-                        must_happen = true,
-                        walking_to_vaccinate = true})
+    nurse:setNextAction(WalkAction(x, y):setMustHappen(true):enableWalkingToVaccinate())
     nurse:queueAction(VaccinateAction(patient, fee))
   end
 end

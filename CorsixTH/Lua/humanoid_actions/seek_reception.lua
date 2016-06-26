@@ -87,7 +87,7 @@ local function action_seek_reception_start(action, humanoid)
         must_happen = action.must_happen,
       }
     else
-      local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
+      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
@@ -112,8 +112,7 @@ local function action_seek_reception_start(action, humanoid)
       end
     else
       local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-      procrastination = {name = "walk", x = hosp_x, y = hosp_y}
-      procrastination.must_happen = action.must_happen
+      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen)
     end
     humanoid:queueAction(procrastination, 0)
   end
