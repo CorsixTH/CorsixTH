@@ -261,7 +261,10 @@ function App:init()
 
     dofile "room"
     self.rooms = self:loadLuaFolder("rooms")
+
+    dofile "humanoid_action"
     self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
+
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
 
