@@ -92,25 +92,29 @@ function ScannerRoom:commandEnteringPatient(patient)
   patient:queueAction(idle_action)
 
   local length = math.random(10, 20) * (2 - staff.profile.skill)
+  local loop_callback_scan = --[[persistable:scanner_loop_callback]] function(action)
+    if length <= 0 then
+      action.prolonged_usage = false
+    end
+    length = length - 1
+  end
+
+  local after_use_scan = --[[persistable:scanner_after_use]] function()
+    if not self.staff_member or patient.going_home then
+      -- If we aborted somehow, don't do anything here.
+      -- The patient already has orders to change back if necessary and leave.
+      -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
+      return
+    end
+    self.staff_member:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
   patient:queueAction{
     name = "use_object",
     object = scanner,
-    loop_callback = --[[persistable:scanner_loop_callback]] function(action)
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-      length = length - 1
-    end,
-    after_use = --[[persistable:scanner_after_use]] function()
-      if not self.staff_member or patient.going_home then
-        -- If we aborted somehow, don't do anything here.
-        -- The patient already has orders to change back if necessary and leave.
-        -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
-        return
-      end
-      self.staff_member:setNextAction(MeanderAction())
-      self:dealtWithPatient(patient)
-    end,
+    loop_callback = loop_callback_scan,
+    after_use = after_use_scan
   }
   return Room.commandEnteringPatient(self, patient)
 end
