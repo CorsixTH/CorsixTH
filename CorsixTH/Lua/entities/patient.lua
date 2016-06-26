@@ -466,10 +466,7 @@ function Patient:pee()
   local current = self.action_queue[1]
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
   if self:canPeeOrPuke(current) then
-    self:queueAction({
-      name = "pee",
-      must_happen = true
-      }, 1)
+    self:queueAction(PeeAction(), 1)
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
         name = current.name,
