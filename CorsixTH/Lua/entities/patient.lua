@@ -429,10 +429,7 @@ function Patient:vomit()
   local current = self.action_queue[1]
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
   if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
-    self:queueAction({
-      name = "vomit",
-      must_happen = true
-      }, 1)
+    self:queueAction(VomitAction(), 1)
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
         name = current.name,

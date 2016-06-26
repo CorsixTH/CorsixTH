@@ -18,6 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "VomitAction" (HumanoidAction)
+
+---@type VomitAction
+local VomitAction = _G["VomitAction"]
+
+function VomitAction:VomitAction()
+  self:HumanoidAction("vomit")
+  self:setMustHappen(true)
+end
+
 local action_vomit_end = permanent"action_vomit_end"( function(humanoid)
   local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
   litter:setLitterType("puke", humanoid.last_move_direction == "south" and 0 or 1)  --For some reason the vomit is inverted.
