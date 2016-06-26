@@ -61,23 +61,26 @@ function BloodMachineRoom:commandEnteringPatient(patient)
   patient:queueAction(IdleAction():setDirection(machine.direction == "north" and "west" or "north"))
 
   local length = math.random(2, 4)
-  local action
+  local loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
+    if length <= 0 then
+      action.prolonged_usage = false
+    end
+    length = length - 1
+  end
+
+  local after_use = --[[persistable:blood_machine_after_use]] function()
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
   staff:queueAction{
     name = "multi_use_object",
     object = machine,
     use_with = patient,
     prolonged_usage = true,
     invisible_phase_span = {-3, 3},
-    loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-      length = length - 1
-    end,
-    after_use = --[[persistable:blood_machine_after_use]] function()
-      staff:setNextAction(MeanderAction())
-      self:dealtWithPatient(patient)
-    end,
+    loop_callback = loop_callback,
+    after_use = after_use
   }
 
   return Room.commandEnteringPatient(self, patient)
