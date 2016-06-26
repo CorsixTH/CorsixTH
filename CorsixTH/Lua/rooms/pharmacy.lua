@@ -79,23 +79,25 @@ function PharmacyRoom:commandEnteringPatient(patient)
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
 
+  local after_use_pharmacy = --[[persistable:pharmacy_after_use]] function()
+    --if we haven't tried to edit the room while she's animating, meander
+    if #staff.action_queue == 1 then
+      staff:setNextAction(MeanderAction())
+    end
+    if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
+      patient:setType "Standard Male Patient"
+    elseif patient_class == "Transparent Female Patient" then
+      patient:setType "Standard Female Patient"
+    end
+    self:dealtWithPatient(patient)
+  end
+
   staff:queueAction{
     name = "multi_use_object",
     object = cabinet,
     use_with = patient,
     layer3 = layer3,
-    after_use = --[[persistable:pharmacy_after_use]] function()
-      --if we haven't tried to edit the room while she's animating, meander
-      if #staff.action_queue == 1 then
-        staff:setNextAction(MeanderAction())
-      end
-      if patient_class == "Invisible Patient" or patient_class == "Transparent Male Patient" then
-        patient:setType "Standard Male Patient"
-      elseif patient_class == "Transparent Female Patient" then
-        patient:setType "Standard Female Patient"
-      end
-      self:dealtWithPatient(patient)
-    end,
+    after_use = after_use_pharmacy
   }
 
   return Room.commandEnteringPatient(self, patient)
