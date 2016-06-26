@@ -418,11 +418,8 @@ end
 -- A interrupt handler could be supplied if special handling is needed.
 -- If not, the default would be reinsert the call into the queue
 function CallsDispatcher.queueCallCheckpointAction(humanoid, interrupt_handler)
-  return humanoid:queueAction{
-    name = "call_checkpoint",
-    call = humanoid.on_call,
-    on_remove = interrupt_handler or CallsDispatcher.actionInterruptHandler
-  }
+  interrupt_handler = interrupt_handler or CallsDispatcher.actionInterruptHandler
+  return humanoid:queueAction(CallCheckPointAction(humanoid.on_call, interrupt_handler))
 end
 
 -- Default checkpoint interrupt handler
