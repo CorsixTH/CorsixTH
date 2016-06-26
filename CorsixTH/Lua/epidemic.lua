@@ -610,9 +610,7 @@ function Epidemic:createVaccinationActions(patient,nurse)
     nurse:setNextAction({name = "walk", x = x, y = y,
                         must_happen = true,
                         walking_to_vaccinate = true})
-    nurse:queueAction({name ="vaccinate",
-                      vaccination_fee = fee,
-                      patient = patient, must_happen = true})
+    nurse:queueAction(VaccinateAction(patient, fee))
   end
 end
 

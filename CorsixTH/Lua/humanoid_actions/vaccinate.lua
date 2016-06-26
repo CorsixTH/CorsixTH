@@ -18,6 +18,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "VaccinateAction" (HumanoidAction)
+
+---@type VaccinateAction
+local VaccinateAction = _G["VaccinateAction"]
+
+-- Vaccinate action constructor for a nurse.
+--!param patient (Patient) Patient to vaccinate.
+--!param fee Amount of money to pay.
+function VaccinateAction:VaccinateAction(patient, fee)
+  self:HumanoidAction("vaccinate")
+  self.patient = patient -- Patient to vaccinate.
+  self.vaccination_fee = fee -- Money to get from the patient.
+  self:setMustHappen(true)
+end
+
 local is_in_adjacent_square = permanent"vacc_adjacent_square"(
 function (patient,nurse)
   local x1, y1 = patient.tile_x, patient.tile_y
