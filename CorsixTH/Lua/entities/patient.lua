@@ -366,7 +366,7 @@ function Patient:falling()
       self.on_ground = true
     end
     if self.on_ground then
-      self:setNextAction{name = "get_up"}
+      self:setNextAction(GetUpAction())
     end
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
