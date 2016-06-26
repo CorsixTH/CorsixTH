@@ -69,24 +69,22 @@ function DecontaminationRoom:commandEnteringPatient(patient)
   end
 
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "west" or "north",
-    loop_callback = loop_callback,
-    shower_ready = true,
-  }
+
+  local idle_action = IdleAction():setDirection(console.direction == "north" and "west" or "north")
+      :setLoopCallback(loop_callback)
+  idle_action.shower_ready = true
+  staff:queueAction(idle_action)
   staff:queueAction{
     name = "use_object",
     object = console,
   }
 
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = shower.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-    shower_ready = true,
-  }
+
+  idle_action = IdleAction():setDirection(shower.direction == "north" and "north" or "west")
+      :setLoopCallback(loop_callback)
+  idle_action.shower_ready = true
+  patient:queueAction(idle_action)
 
   local prolonged = true
   local length = math.random() * 3 - staff.profile.skill

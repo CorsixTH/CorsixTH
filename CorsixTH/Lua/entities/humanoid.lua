@@ -520,7 +520,7 @@ local function Humanoid_startAction(self)
     if class.is(self, Staff) then
       self:queueAction(MeanderAction())
     elseif class.is(self,GrimReaper) then
-      self:queueAction({name = "idle"})
+      self:queueAction(IdleAction())
     else
       self:queueAction(SeekReceptionAction())
     end
@@ -698,7 +698,7 @@ function Humanoid:setType(humanoid_class)
   self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
-    self:setNextAction {name = "idle"}
+    self:setNextAction(IdleAction())
   end
 
   self.th:setPartialFlag(self.permanent_flags or 0, false)
@@ -741,7 +741,7 @@ function Humanoid:handleRemovedObject(object)
   if self.humanoid_class and self.humanoid_class == "Receptionist" then
     replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
-    replacement_action = {name = "idle", must_happen = true}
+    replacement_action = IdleAction():setMustHappen(true)
   end
 
   for i, action in ipairs(self.action_queue) do

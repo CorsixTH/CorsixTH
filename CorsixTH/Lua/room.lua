@@ -98,7 +98,7 @@ function Room:createEnterAction(humanoid_entering, callback)
       end
     elseif class.is(humanoid_entering, Vip) then
       callback = --[[persistable:room_vip_enroute_cancel]] function()
-        humanoid_entering:setNextAction({name = "idle"})
+        humanoid_entering:setNextAction(IdleAction())
         humanoid_entering.waiting = 1;
       end
     else
@@ -187,7 +187,7 @@ function Room:dealtWithPatient(patient)
     end
   else
     patient:queueAction(MeanderAction():setCount(2))
-    patient:queueAction{name = "idle"}
+    patient:queueAction(IdleAction())
   end
 
   if self.dealt_patient_callback then
@@ -766,7 +766,7 @@ function Room:crashRoom()
     if not person:isLeaving() then
       if class.is(person, Patient) then
         --Delay so that room is destroyed before the SeekRoom search.
-        person:queueAction({name = "idle", count = 1})
+        person:queueAction(IdleAction():setCount(1))
         person:queueAction(SeekRoomAction(self.room_info.id))
       end
     end
@@ -775,7 +775,7 @@ function Room:crashRoom()
   end
 
   local remove_humanoid = function(humanoid)
-    humanoid:queueAction({name = "idle"}, 1)
+    humanoid:queueAction(IdleAction(), 1)
     humanoid.user_of = nil
     -- Make sure any emergency list is not messed up.
     -- Note that these humanoids might just have been kicked. (No hospital set)

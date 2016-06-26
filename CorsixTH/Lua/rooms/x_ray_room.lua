@@ -81,17 +81,12 @@ function XRayRoom:commandEnteringPatient(patient)
   end
 
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = x_ray.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(x_ray.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

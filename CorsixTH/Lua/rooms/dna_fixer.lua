@@ -80,17 +80,12 @@ function DNAFixerRoom:commandEnteringPatient(patient)
   end
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = dna_fixer.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(dna_fixer.direction == "north" and "north" or "west")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "north" or "west")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

@@ -110,18 +110,14 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                   -- if there is a queue to wash hands there is a chance we might not bother
                   -- but the patient won't be happy about this.
                   if math.random(1, 4) > 2 then
-                  -- Wait for a while before trying again.
-                    humanoid:setNextAction{
-                      name = "idle",
-                      count = 5,
-                      after_use = after_use,
-                      direction = loo.direction == "north" and "south" or "east",
-                      }
-                    else
-                      self:dealtWithPatient(humanoid)
-                      humanoid:changeAttribute("happiness", -0.08)
-                      humanoid:setMood("patient_wait", "deactivate")
-                    end
+                    -- Wait for a while before trying again.
+                    humanoid:setNextAction(IdleAction():setCount(5):setAfterUse(after_use)
+                        :setDirection(loo.direction == "north" and "south" or "east"))
+                  else
+                    self:dealtWithPatient(humanoid)
+                    humanoid:changeAttribute("happiness", -0.08)
+                    humanoid:setMood("patient_wait", "deactivate")
+                  end
                   -- For now, activate the wait icon to show the player that the patient hasn't
                   -- got stuck. TODO: Make a custom mood? Let many people use the sinks?
                   humanoid:setMood("patient_wait", "activate")

@@ -71,7 +71,7 @@ local function meander_action_start(action, humanoid)
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
     if #humanoid.action_queue == 1 then
-      humanoid:queueAction{name = "idle"}
+      humanoid:queueAction(IdleAction())
     end
     humanoid:finishAction()
     return
@@ -96,8 +96,7 @@ local function meander_action_start(action, humanoid)
 
   local procrastination
   if action.can_idle and math.random(1, 3) == 1 then
-    procrastination = {name = "idle", count = math.random(25, 40)}
-    procrastination.must_happen = action.must_happen
+    procrastination = IdleAction():setCount(math.random(25, 40)):setMustHappen(action.must_happen)
   else
     action.can_idle = true
     procrastination = WalkAction(x, y):setMustHappen(action.must_happen)

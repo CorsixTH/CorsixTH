@@ -57,7 +57,7 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
     local staff = self.staff_member
     local trolley, cx, cy = self.world:findObjectNear(patient, "crash_trolley")
     staff:walkTo(trolley:getSecondaryUsageTile())
-    local staff_idle = {name = "idle"}
+    local staff_idle = IdleAction()
     staff:queueAction(staff_idle)
     patient:walkTo(cx, cy, true)
 

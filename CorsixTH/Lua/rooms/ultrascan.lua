@@ -57,7 +57,7 @@ function UltrascanRoom:commandEnteringPatient(patient)
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
-  staff:queueAction{name = "idle", direction = ultrascan.direction == "north" and "west" or "north"}
+  staff:queueAction(IdleAction():setDirection(ultrascan.direction == "north" and "west" or "north"))
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction{

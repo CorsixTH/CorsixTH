@@ -80,21 +80,15 @@ function OperatingTheatreRoom:roomFinished()
 end
 
 local function wait_for_object(humanoid, obj, must_happen)
-  return {
-    name = "idle",
-    must_happen = must_happen,
-    loop_callback = --[[persistable:operatring_theatre_wait]] function(action)
-      if action.todo_interrupt or not obj.user then
-        humanoid:finishAction(action)
-      else
-        humanoid:queueAction({
-          name = "idle",
-          count = 5,
-          must_happen = must_happen,
-        }, 0)
-      end
-    end,
-  }
+  local loop_callback_wait = --[[persistable:operatring_theatre_wait]] function(action)
+    if action.todo_interrupt or not obj.user then
+      humanoid:finishAction(action)
+    else
+      humanoid:queueAction(IdleAction():setCount(5):setMustHappen(true), 0)
+    end
+  end
+
+  return IdleAction():setMustHappen(must_happen):setLoopCallback(loop_callback_wait)
 end
 
 --! Returns true if an operation is ongoing
@@ -322,12 +316,12 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- first surgeon walk over to the operating table
   local obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table")
   surgeon1:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate(), 4)
-  surgeon1:queueAction({name = "idle", loop_callback = operation_standby, must_happen = true}, 5)
+  surgeon1:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true), 5)
 
   -- Patient walk to the side of the operating table
   ox, oy = obj:getSecondaryUsageTile()
   patient:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate())
-  patient:queueAction{name = "idle", loop_callback = operation_standby, must_happen = true}
+  patient:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true))
 
   -- Patient changes out of the gown afterwards
   patient:queueAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate())
@@ -336,7 +330,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- Meanwhile, second surgeon walks over to other side of operating table
   obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
   surgeon2:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate(), 4)
-  surgeon2:queueAction({name = "idle", loop_callback = operation_standby, must_happen = true}, 5)
+  surgeon2:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true), 5)
 
   return Room.commandEnteringPatient(self, patient)
 end

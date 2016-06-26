@@ -108,12 +108,9 @@ local function vaccinate(action, nurse)
 
   if is_in_adjacent_square(nurse,patient) then
     local face_direction = find_face_direction(nurse,patient)
-    nurse:queueAction({name="idle",
-                       direction=face_direction,
-                       count=5,
-                       after_use=perform_vaccination,
-                       on_interrupt=interrupt_vaccination,
-                       must_happen=true})
+    nurse:queueAction(IdleAction():setDirection(face_direction):setCount(5)
+        :setAfterUse(perform_vaccination):setOnInterrupt(interrupt_vaccination):setMustHappen(true))
+
   else
     patient:removeVaccinationCandidateStatus()
     nurse:setCallCompleted()

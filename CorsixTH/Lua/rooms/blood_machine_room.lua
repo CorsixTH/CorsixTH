@@ -58,7 +58,7 @@ function BloodMachineRoom:commandEnteringPatient(patient)
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
   patient:setNextAction(WalkAction(pat_x, pat_y))
-  patient:queueAction{name = "idle", direction = machine.direction == "north" and "west" or "north"}
+  patient:queueAction(IdleAction():setDirection(machine.direction == "north" and "west" or "north"))
 
   local length = math.random(2, 4)
   local action

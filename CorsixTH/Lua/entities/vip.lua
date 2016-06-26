@@ -456,7 +456,7 @@ end
 function Vip:afterLoad(old, new)
   if old < 50 then
     self.num_visited_rooms = 0
-    self:setNextAction{name = "idle"}
+    self:setNextAction(IdleAction())
     self.waiting = 1
     for _, room in pairs(self.world.rooms) do
       if room.door.reserved_for == self then

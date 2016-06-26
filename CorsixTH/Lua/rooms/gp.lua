@@ -150,7 +150,7 @@ function GPRoom:dealtWithPatient(patient)
     end
   else
     patient:queueAction(MeanderAction():setCount(2))
-    patient:queueAction{name = "idle"}
+    patient:queueAction(IdleAction())
   end
 
   if self.dealt_patient_callback then

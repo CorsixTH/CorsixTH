@@ -70,7 +70,7 @@ function JellyVatRoom:commandEnteringPatient(patient)
   }
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
-  patient:queueAction{name = "idle", direction = moulder.direction == "north" and "west" or "north"}
+  patient:queueAction(IdleAction():setDirection(moulder.direction == "north" and "west" or "north"))
 
   return Room.commandEnteringPatient(self, patient)
 end

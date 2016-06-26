@@ -58,7 +58,7 @@ function CardiogramRoom:commandEnteringPatient(patient)
     local staff = self.staff_member
     local cardio, cx, cy = self.world:findObjectNear(patient, "cardio")
     staff:walkTo(cardio:getSecondaryUsageTile())
-    local staff_idle = {name = "idle"}
+    local staff_idle = IdleAction()
     staff:queueAction(staff_idle)
     patient:walkTo(cx, cy)
 

@@ -126,7 +126,7 @@ function ReceptionDesk:tick()
             end
           else
             -- the VIP will realise that he is idle, and start going round rooms
-            queue_front:queueAction{name = "idle"}
+            queue_front:queueAction(IdleAction())
             queue_front.waiting = 1
           end
         end

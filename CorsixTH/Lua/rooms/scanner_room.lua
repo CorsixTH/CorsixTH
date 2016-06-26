@@ -68,12 +68,11 @@ function ScannerRoom:commandEnteringPatient(patient)
   end
 
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "west" or "north",
-    loop_callback = loop_callback,
-    scanner_ready = true,
-  }
+  local idle_action = IdleAction():setDirection(console.direction == "north" and "west" or "north")
+      :setLoopCallback(loop_callback)
+  idle_action.scanner_ready = true
+  staff:queueAction(idle_action)
+
   staff:queueAction{
     name = "use_object",
     object = console,
@@ -86,12 +85,12 @@ function ScannerRoom:commandEnteringPatient(patient)
   else
     patient:walkTo(pat_x, pat_y)
   end
-  patient:queueAction{
-    name = "idle",
-    direction = scanner.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-    scanner_ready = true,
-  }
+
+  idle_action = IdleAction():setDirection(scanner.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback)
+  idle_action.scanner_ready = true
+  patient:queueAction(idle_action)
+
   local length = math.random(10, 20) * (2 - staff.profile.skill)
   patient:queueAction{
     name = "use_object",

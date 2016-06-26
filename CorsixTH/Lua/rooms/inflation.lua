@@ -57,7 +57,7 @@ function InflationRoom:commandEnteringPatient(patient)
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
-  staff:queueAction{name = "idle", direction = inflator.direction == "north" and "east" or "south"}
+  staff:queueAction(IdleAction():setDirection(inflator.direction == "north" and "east" or "south"))
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
 

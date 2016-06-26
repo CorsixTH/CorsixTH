@@ -57,7 +57,7 @@ function SlackTongueRoom:commandEnteringPatient(patient)
   local stf_x, stf_y = slicer:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
-  staff:queueAction{name = "idle", direction = slicer.direction == "north" and "east" or "south"}
+  staff:queueAction(IdleAction():setDirection(slicer.direction == "north" and "east" or "south"))
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction{

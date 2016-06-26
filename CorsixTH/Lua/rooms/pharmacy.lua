@@ -75,7 +75,7 @@ function PharmacyRoom:commandEnteringPatient(patient)
   end
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
-  patient:queueAction{name = "idle", direction = cabinet.direction == "north" and "east" or "south"}
+  patient:queueAction(IdleAction():setDirection(cabinet.direction == "north" and "east" or "south"))
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
 

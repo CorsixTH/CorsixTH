@@ -521,7 +521,7 @@ function GameUI:onMouseUp(code, x, y)
     local patient = (window and window.patient.is_debug and window.patient) or self.hospital:getDebugPatient()
     if patient then
       patient:walkTo(highlight_x, highlight_y)
-      patient:queueAction{name = "idle"}
+      patient:queueAction(IdleAction())
     end
   end
 
