@@ -976,7 +976,7 @@ function Staff:assignHandymanTask(taskIndex, taskType)
     else
       self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
     end
-    self:queueAction{name = "sweep_floor", litter = task.object}
+    self:queueAction(SweepFloorAction(task.object))
     self:queueAction{name = "answer_call"}
   else
     if task.call.dropped then
