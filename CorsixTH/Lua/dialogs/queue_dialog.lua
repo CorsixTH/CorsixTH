@@ -396,7 +396,7 @@ function UIQueuePopup:draw(canvas, x, y)
 end
 
 function UIQueuePopup:sendToReception()
-  self.patient:setNextAction{name = "seek_reception"}
+  self.patient:setNextAction(SeekReceptionAction())
   self:close()
 end
 

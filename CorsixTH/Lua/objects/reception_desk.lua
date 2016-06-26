@@ -207,7 +207,7 @@ function ReceptionDesk:onDestroy()
       end
     end)
   end
-  self.queue:rerouteAllPatients({name = "seek_reception"})
+  self.queue:rerouteAllPatients(SeekReceptionAction())
 
   self.being_destroyed = nil
   return Object.onDestroy(self)

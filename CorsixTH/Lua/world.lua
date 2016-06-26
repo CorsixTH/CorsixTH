@@ -539,7 +539,7 @@ function World:spawnVIP(name)
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
   hospital.announce_vip = hospital.announce_vip + 1
-  vip:queueAction{name = "seek_reception"}
+  vip:queueAction(SeekReceptionAction())
 end
 
 function World:createEarthquake()

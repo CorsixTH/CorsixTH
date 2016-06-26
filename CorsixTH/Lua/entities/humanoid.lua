@@ -527,7 +527,7 @@ local function Humanoid_startAction(self)
     elseif class.is(self,GrimReaper) then
       self:queueAction({name = "idle"})
     else
-      self:queueAction({name = "seek_reception"})
+      self:queueAction(SeekReceptionAction())
     end
     -- Open the dialog of the humanoid.
     local ui = self.world.ui
