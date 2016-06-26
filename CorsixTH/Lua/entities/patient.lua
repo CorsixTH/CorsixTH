@@ -421,10 +421,7 @@ end
 --! Perform 'shake fist' action.
 function Patient:shakeFist()
   if self.shake_fist_anim then
-    self:queueAction({
-        name = "shake_fist",
-        must_happen = true
-        }, 1)
+    self:queueAction(ShakeFistAction(), 1)
   end
 end
 
