@@ -17,6 +17,18 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+
+class "IdleSpawnAction" (HumanoidAction)
+
+---@type IdleSpawnAction
+local IdleSpawnAction = _G["IdleSpawnAction"]
+
+function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
+  self:HumanoidAction("idle_spawn")
+  self.spawn_animation = anim
+  self.point = point_dir -- x, y, direction of the spawn animation
+end
+
 local function action_idle_spawn_start(action, humanoid)
   action.must_happen = true
 
