@@ -299,14 +299,8 @@ navigateDoor = function(humanoid, x1, y1, dir)
       humanoid:queueAction(KnockDoorAction(door, dir), action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction({
-      name = "queue",
-      is_leaving = humanoid:isLeaving(),
-      x = x1,
-      y = y1,
-      queue = queue,
-      reserve_when_done = door,
-    }, action_index)
+    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(humanoid:isLeaving())
+        :setReserveWhenDone(door), action_index)
     action.must_happen = action.saved_must_happen
     action.reserve_on_resume = door
     return

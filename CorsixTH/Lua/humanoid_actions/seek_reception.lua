@@ -77,15 +77,8 @@ local function action_seek_reception_start(action, humanoid)
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
-      humanoid:setNextAction{
-        name = "queue",
-        x = x,
-        y = y,
-        queue = best_desk.queue,
-        face_x = face_x,
-        face_y = face_y,
-        must_happen = action.must_happen,
-      }
+      humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.mustHappen)
+          :setFaceDirection(face_x, face_y))
     else
       local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
