@@ -649,9 +649,9 @@ function Staff:goToStaffRoom()
   if room then
     room.staff_leaving = true
     self:setNextAction(room:createLeaveAction())
-    self:queueAction{name = "seek_staffroom", must_happen = true}
+    self:queueAction(SeekStaffRoomAction())
   else
-    self:setNextAction{name = "seek_staffroom", must_happen = true}
+    self:setNextAction(SeekStaffRoomAction())
   end
 end
 
