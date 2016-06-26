@@ -518,10 +518,7 @@ end
 function Patient:yawn()
   local action = self.action_queue[1]
   if self.yawn_anim and action.name == "idle" then
-    self:queueAction({
-      name = "yawn",
-      must_happen = true
-      }, 0)
+    self:queueAction(YawnAction(), 0)
   end
 end
 
