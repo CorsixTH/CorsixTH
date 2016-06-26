@@ -31,6 +31,7 @@ function HumanoidAction:HumanoidAction(name)
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
   self.must_happen = nil -- If true, action cannot be skipped.
   self.loop_callback = nil -- Periodic callback to check for termination conditions.
+  self.after_use = nil -- Callback for performing updates afterwards.
   self.is_leaving = nil -- Whether the humanoid is leaving.
   self.no_truncate = nil -- If set, disable shortening the action.
 end
@@ -57,6 +58,14 @@ end
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setLoopCallback(loop_callback)
   self.loop_callback = loop_callback
+  return self
+end
+
+--! Set the callback for performing updates afterwards.
+--!param after_use (func) Callback function that is called after the action ends.
+--!return (action) Returning self, for daisy-chaining.
+function HumanoidAction:setAfterUse(after_use)
+  self.after_use = after_use
   return self
 end
 

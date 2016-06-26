@@ -81,10 +81,7 @@ function ScannerRoom:commandEnteringPatient(patient)
 
   if do_change then
     patient:walkTo(sx, sy)
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-    }
+    patient:queueAction(UseScreenAction(screen))
     patient:queueAction(WalkAction(pat_x, pat_y))
   else
     patient:walkTo(pat_x, pat_y)
@@ -141,13 +138,12 @@ function ScannerRoom:dealtWithPatient(patient)
     patient:setNextAction(WalkAction(sx, sy):setMustHappen(true):setIsLeaving(true)
         :disableTruncate())
 
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      must_happen = true,
-      is_leaving = true,
-      after_use = --[[persistable:scanner_exit]] function() Room.dealtWithPatient(self, patient) end,
-    }
+    local after_use_patient = --[[persistable:scanner_exit]] function()
+      Room.dealtWithPatient(self, patient)
+    end
+
+    patient:queueAction(UseScreenAction(screen):setMustHappen(true):setIsLeaving(true)
+        :setAfterUse(after_use_patient))
     patient:queueAction(self:createLeaveAction())
   else
     Room.dealtWithPatient(self, patient)

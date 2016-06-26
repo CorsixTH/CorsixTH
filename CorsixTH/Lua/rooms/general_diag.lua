@@ -85,20 +85,11 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       end
     end
 
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      is_leaving = true,
-      must_happen = true,
-      after_use = after_use_screen2,
-    }
+    patient:queueAction(UseScreenAction(screen):setIsLeaving(true):setMustHappen(true)
+        :setAfterUse(after_use_screen2))
   end
 
-  patient:queueAction{
-    name = "use_screen",
-    object = screen,
-    after_use = after_use_screen1
-  }
+  patient:queueAction(UseScreenAction(screen):setAfterUse(after_use_screen1))
   return Room.commandEnteringPatient(self, patient)
 end
 

@@ -113,10 +113,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   local screen, screen_x, screen_y = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(screen_x, screen_y)
   staff:queueAction(wait_for_object(staff, screen))
-  staff:queueAction{
-    name = "use_screen",
-    object = screen
-  }
+  staff:queueAction(UseScreenAction(screen))
 
   -- Resume operation if already ongoing
   if self:isOperating() then
@@ -266,7 +263,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   -- Patient changes into surgical gown
   local screen, sx, sy = self.world:findObjectNear(patient, "surgeon_screen")
   patient:walkTo(sx, sy)
-  patient:queueAction{name = "use_screen", object = screen}
+  patient:queueAction(UseScreenAction(screen))
 
   -- Meanwhile, surgeons wash their hands
   -- TODO: They sometimes overlap each other when doing that. Can we avoid that?
@@ -334,7 +331,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
 
   -- Patient changes out of the gown afterwards
   patient:queueAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate())
-  patient:queueAction{name = "use_screen", object = screen, must_happen = true}
+  patient:queueAction(UseScreenAction(screen):setMustHappen(true))
 
   -- Meanwhile, second surgeon walks over to other side of operating table
   obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")

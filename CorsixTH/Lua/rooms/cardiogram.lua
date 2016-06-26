@@ -108,20 +108,10 @@ function CardiogramRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
     end
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      is_leaving = true,
-      must_happen = true,
-      after_use = leaving_after_use
-    }
+    patient:queueAction(UseScreenAction(screen):setIsLeaving(true):setMustHappen(true):setAfterUse(leaving_after_use))
   end
 
-  patient:queueAction{
-    name = "use_screen",
-    object = screen,
-    after_use = screen_after_use
-  }
+  patient:queueAction(UseScreenAction(screen):setAfterUse(screen_after_use))
   return Room.commandEnteringPatient(self, patient)
 end
 

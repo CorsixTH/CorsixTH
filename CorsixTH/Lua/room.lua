@@ -875,12 +875,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
     end
 
     local screen, sx, sy = self.world:findObjectNear(humanoid, "screen")
-    local use_screen = {
-      name = "use_screen",
-      object = screen,
-      must_happen = true,
-      is_leaving = true
-    }
+    local use_screen = UseScreenAction(screen):setMustHappen(true):setIsLeaving(true)
 
     --Make old saved game action queues compatible with the changes made by the #293 fix commit:
     for actions_index, action in ipairs(humanoid.action_queue) do
