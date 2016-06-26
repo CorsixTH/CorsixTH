@@ -599,7 +599,7 @@ function UIEditRoom:returnToDoorPhase()
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
-    room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
+    room.door.queue:rerouteAllPatients(SeekRoomAction(room.room_info.id))
   end
 
   self.purchase_button:enable(false)

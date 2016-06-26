@@ -134,7 +134,7 @@ function GPRoom:dealtWithPatient(patient)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
       patient:setDiagnosed()
       if patient:agreesToPay(patient.disease.id) then
-        patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
+        patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[1]):enableTreatmentRoom())
       else
         patient:goHome("over_priced", patient.disease.id)
       end
@@ -173,11 +173,7 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
     local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
     local next_room = patient.available_diagnosis_rooms[next_room_id]
     if patient:agreesToPay("diag_" .. next_room) then
-      patient:queueAction{
-        name = "seek_room",
-        room_type = next_room,
-        diagnosis_room = next_room_id,
-      }
+      patient:queueAction(SeekRoomAction(next_room):setDiagnosisRoom(next_room_id))
     else
       patient:goHome("over_priced", "diag_" .. next_room)
     end
@@ -202,8 +198,8 @@ function GPRoom:onHumanoidLeave(humanoid)
 end
 
 function GPRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Doctor")
-  and not self.world.ui.start_tutorial then
+  if not self.hospital:hasStaffOfCategory("Doctor") and
+      not self.world.ui.start_tutorial then
     self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
   end
   return Room.roomFinished(self)

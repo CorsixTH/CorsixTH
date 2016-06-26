@@ -101,7 +101,7 @@ function ReceptionDesk:tick()
       if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
         if queue_front.next_room_to_visit then
-          queue_front:queueAction{name = "seek_room", room_type = queue_front.next_room_to_visit.room_info.id}
+          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
         else
           if class.is(queue_front, Inspector) then
             local inspector = queue_front
@@ -120,7 +120,7 @@ function ReceptionDesk:tick()
             -- VIP has his own list, don't add the gp office twice
           elseif queue_front.humanoid_class ~= "VIP" then
             if queue_front:agreesToPay("diag_gp") then
-              queue_front:queueAction{name = "seek_room", room_type = "gp"}
+              queue_front:queueAction(SeekRoomAction("gp"))
             else
               queue_front:goHome("over_priced", "diag_gp")
             end

@@ -18,6 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekRoomAction" (HumanoidAction)
+
+---@type SeekRoomAction
+local SeekRoomAction = _G["SeekRoomAction"]
+
+--! Find another room (and go to it).
+--!param room_type Type of the new room.
+function SeekRoomAction:SeekRoomAction(room_type)
+  self:HumanoidAction("seek_room")
+  self.room_type = room_type
+  self.treatment_room = nil -- Whether the next room is a treatment room.
+  self.diagnosis_room = nil
+end
+
+--! Denote that the room being looked for is a treatment room.
+--!return (action) self, for daisy-chaining.
+function SeekRoomAction:enableTreatmentRoom()
+  self.treatment_room = true
+  return self
+end
+
+function SeekRoomAction:setDiagnosisRoom(room)
+  self.diagnosis_room = room
+  return self
+end
+
 local function action_seek_room_find_room(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
