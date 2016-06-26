@@ -229,7 +229,7 @@ function Plant:createHandymanActions(handyman)
   end
   handyman:queueAction(water_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}
+  handyman:queueAction(AnswerCallAction())
 end
 
 --! When a handyman should go to the plant he should approach it from the closest reachable tile.

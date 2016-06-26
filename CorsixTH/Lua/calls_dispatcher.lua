@@ -258,7 +258,7 @@ function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
     -- The epidemic may have ended before the call can be executed
     -- so just finish the call immediately
     CallsDispatcher.queueCallCheckpointAction(nurse)
-    nurse:queueAction{name = "answer_call"}
+    nurse:queueAction(AnswerCallAction())
     nurse:finishAction()
     patient.reserved_for = nil
   end
@@ -485,7 +485,7 @@ function CallsDispatcher.unassignCall(call)
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
   call.assigned = nil
   assigned.on_call = nil
-  assigned:setNextAction{name = "answer_call"}
+  assigned:setNextAction(AnswerCallAction())
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)

@@ -251,7 +251,7 @@ function Machine:createHandymanActions(handyman)
   handyman:queueAction(action)
   handyman:queueAction(repair_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}
+  handyman:queueAction(AnswerCallAction())
   handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
     :format(self.object_type.name))
 end

@@ -88,7 +88,7 @@ local function vaccinate(action, nurse)
     -- Check if they STILL are in an adjacent square
     if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)
-      nurse:queueAction{name = "answer_call"}
+      nurse:queueAction(AnswerCallAction())
       -- Disable either vaccination icon that may be present (edge case)
       patient:setMood("epidemy2", "deactivate")
       patient:setMood("epidemy3", "deactivate")
@@ -101,7 +101,7 @@ local function vaccinate(action, nurse)
       patient:setMood("epidemy2", "activate")
       -- Drop it they may not even be the vacc candidate anymore
       CallsDispatcher.queueCallCheckpointAction(nurse)
-      nurse:queueAction{name = "answer_call"}
+      nurse:queueAction(AnswerCallAction())
       patient.reserved_for = nil
     end
   end

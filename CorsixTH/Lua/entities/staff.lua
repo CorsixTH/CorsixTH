@@ -912,7 +912,7 @@ function Staff:interruptHandymanTask()
     self.on_call = nil
   end
   self.task = nil
-  self:setNextAction{name = "answer_call"}
+  self:setNextAction(AnswerCallAction())
 end
 
 function Staff:searchForHandymanTask()
@@ -977,7 +977,7 @@ function Staff:assignHandymanTask(taskIndex, taskType)
       self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
     end
     self:queueAction(SweepFloorAction(task.object))
-    self:queueAction{name = "answer_call"}
+    self:queueAction(AnswerCallAction())
   else
     if task.call.dropped then
       task.call.dropped = nil

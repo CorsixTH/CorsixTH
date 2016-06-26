@@ -323,7 +323,7 @@ function Room:onHumanoidEnter(humanoid)
       assert(humanoid.on_call.object:getRoom() == self, "Handyman arrived is on call but not arriving to the designated room")
     else
       -- If the handyman was not assigned for the job (e.g. drop by manual pickup), do answer a call
-      humanoid:setNextAction{name = "answer_call"}
+      humanoid:setNextAction(AnswerCallAction())
     end
     return
   end
