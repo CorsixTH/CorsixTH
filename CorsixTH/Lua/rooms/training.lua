@@ -122,33 +122,35 @@ function TrainingRoom:doStaffUseCycle(humanoid)
   local projector, ox, oy = self.world:findObjectNear(humanoid, "projector")
   humanoid:queueAction(WalkAction(ox, oy))
   local projector_use_time = math.random(6,20)
+  local loop_callback_training = --[[persistable:training_loop_callback]] function()
+    projector_use_time = projector_use_time - 1
+    if projector_use_time == 0 then
+      local skeleton, sox, soy = self.world:findFreeObjectNearToUse(humanoid, "skeleton", "near")
+      local bookcase, box, boy = self.world:findFreeObjectNearToUse(humanoid, "bookcase", "near")
+      if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose one
+      if skeleton then
+        humanoid:walkTo(sox, soy)
+        for i = 1, math.random(3, 10) do
+          humanoid:queueAction{name = "use_object", object = skeleton}
+        end
+      elseif bookcase then
+        humanoid:walkTo(box, boy)
+        for i = 1, math.random(3, 10) do
+          humanoid:queueAction{name = "use_object", object = bookcase}
+        end
+      end
+      -- go back to the projector
+      self:doStaffUseCycle(humanoid)
+    elseif projector_use_time < 0 then
+      -- reset variable to avoid potential overflow (over a VERY long
+      -- period of time)
+      projector_use_time = 0
+    end
+  end
+
   humanoid:queueAction{name = "use_object",
     object = projector,
-    loop_callback = --[[persistable:training_loop_callback]] function()
-      projector_use_time = projector_use_time - 1
-      if projector_use_time == 0 then
-        local skeleton, sox, soy = self.world:findFreeObjectNearToUse(humanoid, "skeleton", "near")
-        local bookcase, box, boy = self.world:findFreeObjectNearToUse(humanoid, "bookcase", "near")
-        if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose one
-        if skeleton then
-          humanoid:walkTo(sox, soy)
-          for i = 1, math.random(3, 10) do
-            humanoid:queueAction{name = "use_object", object = skeleton}
-          end
-        elseif bookcase then
-          humanoid:walkTo(box, boy)
-          for i = 1, math.random(3, 10) do
-            humanoid:queueAction{name = "use_object", object = bookcase}
-          end
-        end
-        -- go back to the projector
-        self:doStaffUseCycle(humanoid)
-      elseif projector_use_time < 0 then
-        -- reset variable to avoid potential overflow (over a VERY long
-        -- period of time)
-        projector_use_time = 0
-      end
-    end,
+    loop_callback = loop_callback_training
   }
 end
 
