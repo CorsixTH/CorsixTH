@@ -60,14 +60,17 @@ function UltrascanRoom:commandEnteringPatient(patient)
   staff:queueAction(IdleAction():setDirection(ultrascan.direction == "north" and "west" or "north"))
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
+
+  local after_use_scan = --[[persistable:ultrascan_after_use]] function()
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
   patient:queueAction{
     name = "multi_use_object",
     object = ultrascan,
     use_with = staff,
-    after_use = --[[persistable:ultrascan_after_use]] function()
-      staff:setNextAction(MeanderAction())
-      self:dealtWithPatient(patient)
-    end,
+    after_use = after_use_scan
   }
 
   return Room.commandEnteringPatient(self, patient)
