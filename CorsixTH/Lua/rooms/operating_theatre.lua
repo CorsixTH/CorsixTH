@@ -169,23 +169,27 @@ end
 function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
   local room = self
 
+  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
+    -- dirty hack to make the truncated animation work
+    surgeon1.animation_idx = nil
+  end
+
+  local after_use_table = --[[persistable:operatring_theatre_table_after_use]] function()
+    room:dealtWithPatient(patient)
+    -- Tell the patient that it's time to leave, but only if the first action
+    -- is really an idle action.
+    if patient.action_queue[1].name == "idle" then
+      patient:finishAction()
+    end
+  end
+
   return {
     name = "multi_use_object",
     object = operation_table,
     use_with = patient,
     prolonged_usage = true,
-    loop_callback = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
-      -- dirty hack to make the truncated animation work
-      surgeon1.animation_idx = nil
-    end,
-    after_use = --[[persistable:operatring_theatre_table_after_use]] function()
-      room:dealtWithPatient(patient)
-      -- Tell the patient that it's time to leave, but only if the first action
-      -- is really an idle action.
-      if patient.action_queue[1].name == "idle" then
-        patient:finishAction()
-      end
-    end,
+    loop_callback = loop_callback_multi_use,
+    after_use = after_use_table
     must_happen = true,
     no_truncate = true,
   }
@@ -200,18 +204,22 @@ end
 function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
   local num_loops = math.random(2, 5)
 
+  local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
+    num_loops = num_loops - 1
+    if num_loops <= 0 then
+      action.prolonged_usage = false
+    end
+  end
+
+  local after_use_use_object = --[[persistable:operatring_theatre_after_use]] function()
+    multi_use.prolonged_usage = false
+  end
+
   return {
     name = "use_object",
     object = operation_table_b,
-    loop_callback = --[[persistable:operatring_theatre_use_callback]] function(action)
-      num_loops = num_loops - 1
-      if num_loops <= 0 then
-        action.prolonged_usage = false
-      end
-    end,
-    after_use = --[[persistable:operatring_theatre_after_use]] function()
-      multi_use.prolonged_usage = false
-    end,
+    loop_callback = loop_callback_use_object,
+    after_use = after_use_use_object,
     must_happen = true,
     no_truncate = true,
   }
