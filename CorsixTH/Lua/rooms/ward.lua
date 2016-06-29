@@ -110,11 +110,7 @@ function WardRoom:doStaffUseCycle(humanoid)
         end
       end
 
-      humanoid:queueAction {
-        name = "use_object",
-        object = obj,
-        loop_callback = desk_loop
-      }
+      humanoid:queueAction(UseObjectAction(obj):setLoopCallback(desk_loop))
     end
   end
 
@@ -154,13 +150,8 @@ function WardRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end
     patient:walkTo(pat_x, pat_y)
-    patient:queueAction{
-      name = "use_object",
-      object = bed,
-      prolonged_usage = true,
-      loop_callback = loop_callback,
-      after_use = after_use,
-    }
+    patient:queueAction(UseObjectAction(bed):setProlongedUsage(true):setLoopCallback(loop_callback)
+        :setAfterUse(after_use))
   end
 
   return Room.commandEnteringPatient(self, patient)

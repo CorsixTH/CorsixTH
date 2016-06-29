@@ -73,10 +73,7 @@ function ScannerRoom:commandEnteringPatient(patient)
   idle_action.scanner_ready = true
   staff:queueAction(idle_action)
 
-  staff:queueAction{
-    name = "use_object",
-    object = console,
-  }
+  staff:queueAction(UseObjectAction(console))
 
   if do_change then
     patient:walkTo(sx, sy)
@@ -110,12 +107,8 @@ function ScannerRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "use_object",
-    object = scanner,
-    loop_callback = loop_callback_scan,
-    after_use = after_use_scan
-  }
+  patient:queueAction(UseObjectAction(scanner):setLoopCallback(loop_callback_scan)
+      :setAfterUse(after_use_scan))
   return Room.commandEnteringPatient(self, patient)
 end
 

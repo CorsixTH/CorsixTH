@@ -871,12 +871,7 @@ function Patient:tickDay()
         -- whatever he/she was doing.
         current.keep_reserved = true
         self:queueAction(WalkAction(lx, ly):setMustHappen(true):disableTruncate(), 1)
-        self:queueAction({
-          name = "use_object",
-          object = machine,
-          after_use = after_use,
-          must_happen = true,
-        }, 2)
+        self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(true), 2)
         machine:addReservedUser(self)
         -- Insert the old action again, a little differently depending on
         -- what the previous action was.

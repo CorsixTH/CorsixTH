@@ -143,12 +143,9 @@ local function use_staffroom_action_start(action, humanoid)
     end
   end
 
-  local obj_action = {
-    name = "use_object",
-    prolonged_usage = true,
-    object = action.target_obj,
-    loop_callback = loop_callback_use
-  }
+  local obj_action = UseObjectAction(action.target_obj):setProlongedUsage(true)
+      :setLoopCallback(loop_callback_use)
+
   humanoid:queueAction(WalkAction(action.ox, action.oy), 0)
   humanoid:queueAction(obj_action, 1)
 end

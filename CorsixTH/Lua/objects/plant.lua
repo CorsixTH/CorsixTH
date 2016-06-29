@@ -216,18 +216,13 @@ function Plant:createHandymanActions(handyman)
   end
   self.reserved_for = handyman
   local walk_action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
-  local water_action = {
-    name = "use_object",
-    object = self,
-    watering_plant = true,
-  }
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
     handyman:queueAction(walk_action)
   else
     handyman:setNextAction(walk_action)
   end
-  handyman:queueAction(water_action)
+  handyman:queueAction(UseObjectAction(self):enableWateringPlant())
   CallsDispatcher.queueCallCheckpointAction(handyman)
   handyman:queueAction(AnswerCallAction())
 end

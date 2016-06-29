@@ -86,12 +86,8 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         self.hospital.research:addResearchPoints(100)
       end
 
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        loop_callback = loop_callback_desk,
-        after_use = after_use_desk
-      }
+      staff:queueAction(UseObjectAction(obj):setLoopCallback(loop_callback_desk)
+          :setAfterUse(after_use_desk))
     else
       local after_use_obj = --[[persistable:research_obj_after_use]] function()
         if obj.object_type.id == "computer" then
@@ -102,11 +98,7 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
         end
       end
 
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        after_use = after_use_obj
-      }
+      staff:queueAction(UseObjectAction(obj):setAfterUse(after_use_obj))
     end
   end
 

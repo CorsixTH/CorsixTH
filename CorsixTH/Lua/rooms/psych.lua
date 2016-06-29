@@ -65,7 +65,7 @@ function PsychRoom:commandEnteringStaff(staff)
     staff:setNextAction(MeanderAction())
   else
     staff:walkTo(ox, oy)
-    staff:queueAction{name = "use_object", object = obj}
+    staff:queueAction(UseObjectAction(obj))
     local num_meanders = math.random(2, 8)
     local loop_callback_meanders = --[[persistable:psych_meander_loop_callback]] function(action)
       num_meanders = num_meanders - 1
@@ -83,7 +83,7 @@ function PsychRoom:commandEnteringPatient(patient)
 
   local obj, ox, oy = self.world:findObjectNear(patient, "couch")
   patient:walkTo(ox, oy)
-  patient:queueAction{name = "use_object", object = obj}
+  patient:queueAction(UseObjectAction(obj))
 
   local duration = math.random(16, 72)
   local bookcase, bx, by
@@ -117,23 +117,15 @@ function PsychRoom:commandEnteringPatient(patient)
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then
       staff:walkTo(bx, by)
-      staff:queueAction{name = "use_object", object = bookcase}
+      staff:queueAction(UseObjectAction(bookcase))
       staff:queueAction(WalkAction(ox, oy))
-      staff:queueAction{
-        name = "use_object",
-        object = obj,
-        loop_callback = loop_callback,
-      }
+      staff:queueAction(UseObjectAction(obj):setLoopCallback(loop_callback))
       duration = math.max(8, duration - 72)
     end
   end
   obj, ox, oy = self.world:findObjectNear(staff, "comfortable_chair")
   staff:walkTo(ox, oy)
-  staff:queueAction{
-    name = "use_object",
-    object = obj,
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(UseObjectAction(obj):setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

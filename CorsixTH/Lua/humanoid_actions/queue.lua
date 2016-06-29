@@ -224,11 +224,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       end
       action.current_bench_distance = dist
       humanoid:queueAction(WalkAction(bx, by):setMustHappen(true), num_actions_prior)
-      humanoid:queueAction({
-        name = "use_object",
-        object = bench,
-        must_happen = true,
-      }, num_actions_prior + 1)
+      humanoid:queueAction(UseObjectAction(bench):setMustHappen(true), num_actions_prior + 1)
       bench.reserved_for = humanoid
       return
     elseif not action:isStanding() then
@@ -322,12 +318,8 @@ function(action, humanoid, machine, mx, my, fun_after_use)
 
   -- Walk to the machine and then use it.
   humanoid:queueAction(WalkAction(mx, my):setMustHappen(true), num_actions_prior)
-  humanoid:queueAction({
-    name = "use_object",
-    object = machine,
-    after_use = after_use,
-    must_happen = true,
-  }, num_actions_prior + 1)
+  humanoid:queueAction(UseObjectAction(machine):setAfterUse(after_use)
+      :setMustHappen(true), num_actions_prior + 1)
   machine:addReservedUser(humanoid)
 
   -- Make sure no one thinks we're sitting down anymore.

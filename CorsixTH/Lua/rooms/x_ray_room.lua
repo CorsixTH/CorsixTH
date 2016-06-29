@@ -71,16 +71,9 @@ function XRayRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
 
-      patient:setNextAction{
-        name = "use_object",
-        object = x_ray,
-        loop_callback = loop_callback_xray,
-        after_use = after_use_xray
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      patient:setNextAction(UseObjectAction(x_ray):setLoopCallback(loop_callback_xray)
+          :setAfterUse(after_use_xray))
+      staff:setNextAction(UseObjectAction(console))
     end
   end
 

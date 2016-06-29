@@ -215,14 +215,8 @@ function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
     multi_use.prolonged_usage = false
   end
 
-  return {
-    name = "use_object",
-    object = operation_table_b,
-    loop_callback = loop_callback_use_object,
-    after_use = after_use_use_object,
-    must_happen = true,
-    no_truncate = true,
-  }
+  return UseObjectAction(operation_table_b):setLoopCallback(loop_callback_use_object)
+      :setAfterUse(after_use_use_object):setMustHappen(true):disableTruncate()
 end
 
 --! Sends the surgeon to the nearest operation sink ("op_sink1")
@@ -234,7 +228,7 @@ function OperatingTheatreRoom:queueWashHands(surgeon, at_front)
   local sink, sink_x, sink_y = self.world:findObjectNear(surgeon, "op_sink1")
   local walk = WalkAction(sink_x, sink_y):setMustHappen(true):disableTruncate()
   local wait = wait_for_object(surgeon, sink, true)
-  local wash = {name = "use_object", object = sink, must_happen = true}
+  local wash = UseObjectAction(sink):setMustHappen(true)
 
   for pos, action in pairs({walk, wait, wash}) do
     if (at_front) then

@@ -99,12 +99,8 @@ function ToiletRoom:onHumanoidEnter(humanoid)
                   self:dealtWithPatient(humanoid)
                 end
 
-                humanoid:queueAction{
-                    name = "use_object",
-                    object = sink,
-                    prolonged_usage = false,
-                    after_use = after_use_sink
-                  }
+                humanoid:queueAction(UseObjectAction(sink):setProlongedUsage(false)
+                    :setAfterUse(after_use_sink))
                 sink.reserved_for = humanoid
                 -- Make sure that the mood waiting is no longer active.
                 humanoid:setMood("patient_wait", "deactivate")
@@ -133,11 +129,7 @@ function ToiletRoom:onHumanoidEnter(humanoid)
         end
       end
 
-      humanoid:queueAction{
-        name = "use_object",
-        object = loo,
-        loop_callback = loop_callback_toilets
-      }
+      humanoid:queueAction(UseObjectAction(loo):setLoopCallback(loop_callback_toilets))
     else
       --[[ If no loo is found, perhaps the patient followed another one in and they were heading for the same one.
       Now there is no free loo, so wait for a bit and then leave the room to wait outside.  No need for a warning

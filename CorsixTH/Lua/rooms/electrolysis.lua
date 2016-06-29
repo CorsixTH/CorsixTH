@@ -90,17 +90,10 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
         staff:setNextAction(MeanderAction())
       end
 
-      patient:setNextAction{
-        name = "use_object",
-        object = electrolyser,
-        loop_callback = loop_callback_electrolysis,
-        after_use = after_electrolysis
-      }
+      patient:setNextAction(UseObjectAction(electrolyser):setLoopCallback(loop_callback_electrolysis)
+          :setAfterUse(after_electrolysis))
 
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      staff:setNextAction(UseObjectAction(console))
     end
   end
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.

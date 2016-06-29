@@ -62,20 +62,15 @@ function DNAFixerRoom:commandEnteringPatient(patient)
       -- We need to change to another type before starting, to be able
       -- to have different animations depending on gender.
       patient:setType(patient.change_into)
-      patient:setNextAction{
-        name = "use_object",
-        object = dna_fixer,
-        prolonged_usage = false,
-        after_use = --[[persistable:dna_fixer_after_use]] function()
-          self:dealtWithPatient(patient)
-          staff:setNextAction(MeanderAction())
-        end,
-      }
 
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      local fixer_after_use = --[[persistable:dna_fixer_after_use]] function()
+        self:dealtWithPatient(patient)
+        staff:setNextAction(MeanderAction())
+      end
+
+      patient:setNextAction(UseObjectAction(dna_fixer):setProlongedUsage(false)
+          :setAfterUse(fixer_after_use))
+      staff:setNextAction(UseObjectAction(console))
     end
   end
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.

@@ -233,14 +233,15 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
 
     --The patient's final actions:
     humanoid:walkTo(humanoid.hole_use_tile_x, humanoid.hole_use_tile_y, true)
-    humanoid:queueAction({name = "use_object",
-                          object = lava_hole,
-                          destroy_user_after_use = true,
-                          after_walk_in =
-                          --[[persistable:walk_into_lava]]function()
-                              grim:finishAction()
-                            end})
 
+    local post_walk_into = --[[persistable:walk_into_lava]]function()
+      grim:finishAction()
+    end
+
+    local use_action = UseObjectAction(lava_hole)
+    use_action.destroy_user_after_use = true
+    use_action.after_walk_in = post_walk_into
+    humanoid:queueAction(use_action)
     humanoid:finishAction()
   end
 end)

@@ -209,7 +209,7 @@ function Machine:createHandymanActions(handyman)
   self.repairing = handyman
   self:setRepairingMode()
 
-  local --[[persistable:handyman_repair_after_use]] function after_use()
+  local --[[persistable:handyman_repair_after_use]] function repair_after_use()
     handyman:setCallCompleted()
     handyman:setDynamicInfoText("")
     self:machineRepaired(self:getRoom())
@@ -217,16 +217,14 @@ function Machine:createHandymanActions(handyman)
 
   local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
 
-  local repair_action = {
-    name = "use_object",
-    object = self,
-    prolonged_usage = false,
-    loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
-      action_use.prolonged_usage = false
-    end,
-    after_use = after_use,
-    min_length = 20,
-  }
+  local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
+    action_use.prolonged_usage = false
+  end
+
+  local repair_action = UseObjectAction(self):setProlongedUsage(false)
+      :setLoopCallback(repair_loop_callback):setAfterUse(repair_after_use)
+  repair_action.min_length = 20
+
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
     handyman:queueAction(action)

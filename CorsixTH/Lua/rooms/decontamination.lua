@@ -74,10 +74,7 @@ function DecontaminationRoom:commandEnteringPatient(patient)
       :setLoopCallback(loop_callback)
   idle_action.shower_ready = true
   staff:queueAction(idle_action)
-  staff:queueAction{
-    name = "use_object",
-    object = console,
-  }
+  staff:queueAction(UseObjectAction(console))
 
   patient:walkTo(pat_x, pat_y)
 
@@ -111,13 +108,8 @@ function DecontaminationRoom:commandEnteringPatient(patient)
     end
   end
 
-  patient:queueAction{
-    name = "use_object",
-    object = shower,
-    prolonged_usage = prolonged,
-    loop_callback = shower_loop_callback,
-    after_use = shower_after_use
-  }
+  patient:queueAction(UseObjectAction(shower):setProlongedUsage(prolonged)
+      :setLoopCallback(shower_loop_callback):setAfterUse(shower_after_use))
 
   return Room.commandEnteringPatient(self, patient)
 end

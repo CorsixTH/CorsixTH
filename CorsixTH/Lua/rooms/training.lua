@@ -131,12 +131,12 @@ function TrainingRoom:doStaffUseCycle(humanoid)
       if skeleton then
         humanoid:walkTo(sox, soy)
         for i = 1, math.random(3, 10) do
-          humanoid:queueAction{name = "use_object", object = skeleton}
+          humanoid:queueAction(UseObjectAction(skeleton))
         end
       elseif bookcase then
         humanoid:walkTo(box, boy)
         for i = 1, math.random(3, 10) do
-          humanoid:queueAction{name = "use_object", object = bookcase}
+          humanoid:queueAction(UseObjectAction(bookcase))
         end
       end
       -- go back to the projector
@@ -148,10 +148,7 @@ function TrainingRoom:doStaffUseCycle(humanoid)
     end
   end
 
-  humanoid:queueAction{name = "use_object",
-    object = projector,
-    loop_callback = loop_callback_training
-  }
+  humanoid:queueAction(UseObjectAction(projector):setLoopCallback(loop_callback_training))
 end
 
 function TrainingRoom:onHumanoidEnter(humanoid)
@@ -211,7 +208,7 @@ function TrainingRoom:commandEnteringStaff(humanoid)
       if obj then
         obj.reserved_for = humanoid
         humanoid:walkTo(ox, oy)
-        humanoid:queueAction{name = "use_object", object = obj}
+        humanoid:queueAction(UseObjectAction(obj))
         humanoid:queueAction(MeanderAction())
       else
         humanoid:setNextAction(self:createLeaveAction())

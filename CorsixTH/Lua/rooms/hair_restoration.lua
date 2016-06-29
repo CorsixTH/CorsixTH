@@ -67,16 +67,10 @@ function HairRestorationRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
 
-      patient:setNextAction{
-        name = "use_object",
-        object = hair_restorer,
-        loop_callback = loop_callback_restore,
-        after_use = after_use_restore
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      patient:setNextAction(UseObjectAction(hair_restorer)
+          :setLoopCallback(loop_callback_restore):setAfterUse(after_use_restore))
+
+      staff:setNextAction(UseObjectAction(console))
     end
   end
 

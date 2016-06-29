@@ -52,7 +52,8 @@ end
 function GPRoom:doStaffUseCycle(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "cabinet")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
+
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
   humanoid:queueAction(WalkAction(ox, oy))
 
@@ -86,10 +87,7 @@ function GPRoom:doStaffUseCycle(humanoid)
     end
   end
 
-  humanoid:queueAction{name = "use_object",
-    object = obj,
-    loop_callback = gp_loop_callback
-  }
+  humanoid:queueAction(UseObjectAction(obj):setLoopCallback(gp_loop_callback))
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
@@ -101,7 +99,7 @@ end
 function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
   self.max_times = 3
   return Room.commandEnteringPatient(self, humanoid)
 end
