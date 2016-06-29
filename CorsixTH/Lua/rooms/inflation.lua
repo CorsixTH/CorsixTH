@@ -67,12 +67,7 @@ function InflationRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "multi_use_object",
-    object = inflator,
-    use_with = staff,
-    after_use = inflation_after_use
-  }
+  patient:queueAction(MultiUseObjectAction(inflator, staff):setAfterUse(inflation_after_use))
 
   return Room.commandEnteringPatient(self, patient)
 end

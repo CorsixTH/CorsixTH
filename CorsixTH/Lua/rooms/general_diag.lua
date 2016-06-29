@@ -69,14 +69,8 @@ function GeneralDiagRoom:commandEnteringPatient(patient)
       end
     end
 
-    patient:queueAction{
-      name = "multi_use_object",
-      object = trolley,
-      use_with = staff,
-      must_happen = false,
-      prolonged_usage = false,
-      after_use = after_use_trolley
-    }
+    patient:queueAction(MultiUseObjectAction(trolley, staff):setMustHappen(false)
+        :setProlongedUsage(false):setAfterUse(after_use_trolley))
     patient:queueAction(WalkAction(sx, sy):setIsLeaving(true):setMustHappen(false):disableTruncate())
 
     local after_use_screen2 = --[[persistable:general_diag_screen_after_use2]] function()

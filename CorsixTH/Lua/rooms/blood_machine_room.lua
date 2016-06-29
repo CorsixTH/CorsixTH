@@ -73,15 +73,8 @@ function BloodMachineRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = machine,
-    use_with = patient,
-    prolonged_usage = true,
-    invisible_phase_span = {-3, 3},
-    loop_callback = loop_callback,
-    after_use = after_use
-  }
+  staff:queueAction(MultiUseObjectAction(machine, patient):setProlongedUsage(true)
+      :setInvisiblePhaseSpan({-3, 3}):setLoopCallback(loop_callback):setAfterUse(after_use))
 
   return Room.commandEnteringPatient(self, patient)
 end

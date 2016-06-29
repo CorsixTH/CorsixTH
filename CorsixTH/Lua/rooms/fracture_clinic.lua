@@ -69,12 +69,7 @@ function FractureRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "multi_use_object",
-    object = cast,
-    use_with = staff,
-    after_use = after_fracture
-  }
+  patient:queueAction(MultiUseObjectAction(cast, staff):setAfterUse(after_fracture))
   return Room.commandEnteringPatient(self, patient)
 end
 

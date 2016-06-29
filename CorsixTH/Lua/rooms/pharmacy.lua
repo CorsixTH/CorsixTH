@@ -92,13 +92,8 @@ function PharmacyRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = cabinet,
-    use_with = patient,
-    layer3 = layer3,
-    after_use = after_use_pharmacy
-  }
+  staff:queueAction(MultiUseObjectAction(cabinet, patient):setAfterUse(after_use_pharmacy)
+      :setLayer3(layer3))
 
   return Room.commandEnteringPatient(self, patient)
 end

@@ -183,12 +183,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     patient.world:destroyEntity(patient)
   end
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = autopsy,
-    use_with = patient,
-    after_use = after_use_autopsy
-  }
+  staff:queueAction(MultiUseObjectAction(autopsy, patient):setAfterUse(after_use_autopsy))
   return Room.commandEnteringPatient(self, patient)
 end
 

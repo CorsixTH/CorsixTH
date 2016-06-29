@@ -66,13 +66,7 @@ function UltrascanRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "multi_use_object",
-    object = ultrascan,
-    use_with = staff,
-    after_use = after_use_scan
-  }
-
+  patient:queueAction(MultiUseObjectAction(ultrascan, staff):setAfterUse(after_use_scan))
   return Room.commandEnteringPatient(self, patient)
 end
 

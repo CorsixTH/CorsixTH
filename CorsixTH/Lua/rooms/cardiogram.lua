@@ -92,15 +92,8 @@ function CardiogramRoom:commandEnteringPatient(patient)
       end
     end
 
-    patient:queueAction{
-      name = "multi_use_object",
-      object = cardio,
-      use_with = staff,
-      must_happen = false,
-      prolonged_usage = true,
-      loop_callback = cardio_loop_callback,
-      after_use = cardio_after_use
-    }
+    patient:queueAction(MultiUseObjectAction(cardio, staff):setMustHappen(false)
+        :setProlongedUsage(true):setLoopCallback(cardio_loop_callback):setAfterUse(cardio_after_use))
     patient:queueAction(WalkAction(sx, sy):setIsLeaving(true):setMustHappen(false):disableTruncate())
 
     local leaving_after_use = --[[persistable:cardiogram_screen_after_use2]] function()

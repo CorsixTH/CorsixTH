@@ -71,12 +71,7 @@ function SlackTongueRoom:commandEnteringPatient(patient)
     self:dealtWithPatient(patient)
   end
 
-  patient:queueAction{
-    name = "multi_use_object",
-    object = slicer,
-    use_with = staff,
-    after_use = after_use_slack_tongue
-  }
+  patient:queueAction(MultiUseObjectAction(slicer, staff):setAfterUse(after_use_slack_tongue))
   return Room.commandEnteringPatient(self, patient)
 end
 

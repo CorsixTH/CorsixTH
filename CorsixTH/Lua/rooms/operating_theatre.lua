@@ -183,16 +183,9 @@ function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_tab
     end
   end
 
-  return {
-    name = "multi_use_object",
-    object = operation_table,
-    use_with = patient,
-    prolonged_usage = true,
-    loop_callback = loop_callback_multi_use,
-    after_use = after_use_table
-    must_happen = true,
-    no_truncate = true,
-  }
+  return MultiUseObjectAction(operation_table, patient):setProlongedUsage(true)
+      :setLoopCallback(loop_callback_multi_use):setAfterUse(after_use_table)
+      :setMustHappen(true):disableTruncate()
 end
 
 --! Builds the second operation action (i.e. with the surgeon whose we

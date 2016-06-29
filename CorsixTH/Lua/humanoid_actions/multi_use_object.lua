@@ -18,7 +18,48 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "MultiUseObjectAction" (HumanoidAction)
+
+---@type MultiUseObjectAction
+local MultiUseObjectAction = _G["MultiUseObjectAction"]
+
+--! Construct a multi-use object action.
+--!param object (Object) Object being used.
+--!param use_with (Humanoid) Fellow user of the object.
+function MultiUseObjectAction:MultiUseObjectAction(object, use_with)
+  self:HumanoidAction("multi_use_object")
+  self.object = object
+  self.use_with = use_with
+  self.prolonged_usage = nil -- If true, the usage is prolonged.
+  self.layer3 = nil
+end
+
+--! Set the invisibility span.
+--!param span (array) Span of invisibility, {from, to}
+--!return (action) self, for daisy-chaining.
+function MultiUseObjectAction:setInvisiblePhaseSpan(span)
+  self.invisible_phase_span = span
+  return self
+end
+
+--! Set prolonged usage of the object.
+--!param prolonged (bool) If set, enable prolonged usage of the object.
+--!return (action) self, for daisy-chaining.
+function MultiUseObjectAction:setProlongedUsage(prolonged)
+  self.prolonged_usage = prolonged
+  return self
+end
+
+-- Set animation layer3 to the given value.
+--!param layer3 (int) Value to set for animation layer 3.
+--!return (action) self, for daisy-chaining.
+function MultiUseObjectAction:setLayer3(layer3)
+  self.layer3 = layer3
+  return self
+end
+
 local TH = require "TH"
+
 local orient_mirror = {
   north = "west",
   west = "north",

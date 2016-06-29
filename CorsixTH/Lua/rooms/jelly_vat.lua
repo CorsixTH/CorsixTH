@@ -58,16 +58,13 @@ function JellyVatRoom:commandEnteringPatient(patient)
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
 
-  staff:queueAction{
-    name = "multi_use_object",
-    object = moulder,
-    use_with = patient,
-    invisible_phase_span = {-3, 4},
-    after_use = --[[persistable:jelly_vat_after_use]] function()
-      staff:setNextAction(MeanderAction())
-      self:dealtWithPatient(patient)
-    end,
-  }
+  local jellyvat_after_use = --[[persistable:jelly_vat_after_use]] function()
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
+  staff:queueAction(MultiUseObjectAction(moulder, patient):setInvisiblePhaseSpan({-3, 4})
+      :setAfterUse(jellyvat_after_use))
 
   patient:setNextAction(WalkAction(pat_x, pat_y))
   patient:queueAction(IdleAction():setDirection(moulder.direction == "north" and "west" or "north"))
