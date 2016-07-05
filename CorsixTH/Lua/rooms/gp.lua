@@ -186,9 +186,11 @@ end
 
 function GPRoom:onHumanoidLeave(humanoid)
   -- Reset moods when either the patient or the doctor leaves the room.
-  if self.staff_member then
-    self.staff_member:setMood("idea3", "deactivate")
-    self.staff_member:setMood("reflexion", "deactivate")
+  if humanoid.humanoid_class ~= "Handyman" then
+    for staff, _ in pairs(self.humanoids) do
+      staff:setMood("idea3", "deactivate")
+      staff:setMood("reflexion", "deactivate")
+    end
   end
   if self.staff_member == humanoid then
     self.staff_member = nil
