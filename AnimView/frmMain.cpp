@@ -190,9 +190,9 @@ frmMain::frmMain()
     wxStaticBoxSizer *pMoodOverlay = new wxStaticBoxSizer(wxVERTICAL, this, L"Overlays");
     pMoodOverlay->Add(new wxCheckBox(this, ID_DRAW_MOOD, L"Draw mood overlay"), 0, wxEXPAND | wxALL, 1);
     wxBoxSizer *pMoodRow = new wxBoxSizer(wxHORIZONTAL);
-    pMoodRow->Add(new wxStaticText(this, wxID_ANY, L"Marker position (click to move it):"), 0, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 2);
-    pMoodRow->Add(m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"), 1, wxEXPAND | wxRIGHT | wxALIGN_CENTER_VERTICAL, 1);
-    pMoodRow->Add(m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"), 1, wxEXPAND | wxALIGN_CENTER_VERTICAL);
+    pMoodRow->Add(new wxStaticText(this, wxID_ANY, L"Marker position (click to move it):"), 0, wxEXPAND | wxRIGHT, 2);
+    pMoodRow->Add(m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"), 1, wxEXPAND | wxRIGHT, 1);
+    pMoodRow->Add(m_txtMoodPosition[1] = new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"), 1, wxEXPAND);
     pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
     pMoodOverlay->Add(new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"), 0, wxEXPAND | wxALL, 0);
     pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
