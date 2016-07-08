@@ -182,7 +182,7 @@ function UIPatient:draw(canvas, x_, y_)
     local index = hh["last"]
     local size = hh["size"]
 
-    local dx = hor_length / size
+    local dx_h = hor_length / size
     local line = nil -- Make a line the first time we find a non-nil value.
     for i = 1, size do
       index = (index == size) and 1 or (index + 1)
@@ -198,7 +198,7 @@ function UIPatient:draw(canvas, x_, y_)
           line:lineTo(startx, posy)
         end
       end
-      startx = startx + dx
+      startx = startx + dx_h
     end
 
     if line then line:draw(canvas, x, y) end

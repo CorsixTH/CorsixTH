@@ -1179,28 +1179,28 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
-    local flags = {}
+    local flags_l = {}
     local flag_names
     if wall == "west" then
       flag_names = {"buildableNorth", "buildableSouth"}
     else
       flag_names = {"buildableWest", "buildableEast"}
     end
-    if not (map:getCellFlags(x , y , flags).buildable or flags.passable) or
-        not (flags[flag_names[1]] and flags[flag_names[2]]) or
-        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) or
-        not (flags[flag_names[1]] and flags[flag_names[2]])
+    if not (map:getCellFlags(x , y , flags_l).buildable or flags_l.passable) or
+        not (flags_l[flag_names[1]] and flags_l[flag_names[2]]) or
+        not (map:getCellFlags(x2, y2, flags_l).buildable or flags_l.passable) or
+        not (flags_l[flag_names[1]] and flags_l[flag_names[2]])
     then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) or
+          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) then
         self.blueprint_door.valid = false
       end
-      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) or
+          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) then
         self.blueprint_door.valid = false
       end
     end
