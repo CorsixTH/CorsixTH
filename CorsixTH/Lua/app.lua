@@ -1084,7 +1084,7 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status
+  local status, _
   if self.config.theme_hospital_install then
     status, _ = self.fs:setRoot(self.config.theme_hospital_install)
   end
