@@ -52,9 +52,9 @@ script:
   # Validate lua files
   - cd $TRAVIS_BUILD_DIR
   - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
-  # Run lua lint tests
+  # Run luacheck linter
   - cd $TRAVIS_BUILD_DIR
-  - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Bitmap/*" -not -path "CorsixTH/Lua/languages/*" -not -path "CorsixTH/Lua/api_version.lua"`; do /home/travis/.luarocks/bin/luacheck $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
+  - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Bitmap/*" -not -path "CorsixTH/Lua/languages/*" -not -path "CorsixTH/Lua/api_version.lua"`; do /home/travis/.luarocks/bin/luacheck -q $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
   # Run lua unit tests
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
   - eval `luarocks --local path`
