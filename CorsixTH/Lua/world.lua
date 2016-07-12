@@ -661,8 +661,6 @@ function World:tickEarthquake()
       local hospital = self:getLocalPlayerHospital()
       -- loop through the patients and allow the possibility for them to fall over
       for _, patient in ipairs(hospital.patients) do
-        local current = patient.action_queue[1]
-
         if not patient.in_room and patient.falling_anim then
 
           -- make the patients fall
@@ -997,7 +995,6 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
-      local pathsep = package.config:sub(1, 1)
       local dir = TheApp.savegame_dir
       if not dir:sub(-1, -1) == pathsep then
         dir = dir .. pathsep
@@ -1346,8 +1343,6 @@ end
 
 -- Called when it is time to have another VIP
 function World:nextVip()
-  local current_month = (self.year - 1) * 12 + self.month
-
   -- Support standard values for mean and variance
   local mean = 180
   local variance = 30
@@ -1383,8 +1378,6 @@ function World:nextEarthquake()
   else
     if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
     (not tonumber(self.map.level_number)) then
-      local current_month = (self.year - 1) * 12 + self.month
-
       -- Support standard values for mean and variance
       local mean = 180
       local variance = 30
@@ -1669,24 +1662,17 @@ function World:isTileEmpty(x, y, not_in_room)
   return true
 end
 
-local face_dir = {
-  [0] = "south",
-  [1] = "west",
-  [2] = "north",
-  [3] = "east",
-}
-
 function World:getFreeBench(x, y, distance)
   local bench, rx, ry, bench_distance
   local object_type = self.object_types.bench
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
-  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d, dist)
-    local b = self:getObject(x, y, "bench")
+  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x_pos, y_pos, d, dist)
+    local b = self:getObject(x_pos, y_pos, "bench")
     if b and not b.user and not b.reserved_for then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
-        rx = x + orientation.use_position[1]
-        ry = y + orientation.use_position[2]
+        rx = x_pos + orientation.use_position[1]
+        ry = y_pos + orientation.use_position[2]
         bench = b
         bench_distance = dist
         return true
@@ -1734,8 +1720,8 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
     thob = obj_type.thob
   end
 
-  local callback = function(x, y, d)
-    local obj = self:getObject(x, y, object_type_name)
+  local callback = function(x_pos, y_pos, d)
+    local obj = self:getObject(x_pos, y_pos, object_type_name)
     if obj then
       objects[obj] = true
     end
@@ -1787,7 +1773,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if type(object_type_name) == "table" then
     local original_callback = callback
     callback = function(x, y, ...)
-      local obj = self:getObject(x, y, object_type_name)
+      obj = self:getObject(x, y, object_type_name)
       if obj then
         return original_callback(x, y, ...)
       end
@@ -1830,15 +1816,14 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
     object = obj
     ox = x
     oy = y
-    if which == "far" then
-      -- just take the last found object, so don't ever abort
-    elseif which == "near" then
+    -- if which == "far" then just take the last found object, so don't ever abort
+    if which == "near" then
       -- abort at each item with 50% probability
       local chance = math.random(1, 2)
       if chance == 1 then
         return true
       end
-    else
+    elseif which ~= "far" then
       -- default: return at the first found item
       return true
     end
@@ -2006,12 +1991,12 @@ end
 -- flag's boolean value or false if the tile isn't valid.
 ---
 function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag)
-  local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)
+  local function isTileValid(x_pos, y_pos, complete_cell, flags, flag_name, need_side)
     if complete_cell or need_side then
       return flags[flag_name]
     end
-    for _, tile in ipairs(footprint) do
-      if(tile[1] == x and tile[2] == y) then
+    for _, tile_fp in ipairs(footprint) do
+      if(tile_fp[1] == x_pos and tile_fp[2] == y_pos) then
         return flags[flag_name]
       end
     end
@@ -2060,9 +2045,9 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     end
   end
 
-  local function isIsolated(x, y)
+  local function isIsolated(x_pos, y_pos)
     setFootprintTilesPassable(false)
-    local result = not self.pathfinder:isReachableFromHospital(x, y)
+    local result = not self.pathfinder:isReachableFromHospital(x_pos, y_pos)
     setFootprintTilesPassable(true)
     return result
   end
@@ -2134,7 +2119,6 @@ function World:objectPlaced(entity, id)
   if id == "bench" and entity.tile_x and entity.tile_y then
     local notify_distance = 6
     local w, h = self.map.th:size()
-    local tx, ty
     for tlx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
       for tly = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
         for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tlx, tly)) do
@@ -2310,7 +2294,6 @@ end
 -- This is automatically done on each error.
 function World:dumpGameLog()
   local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi, err = io.open(gamelog_path, "w")

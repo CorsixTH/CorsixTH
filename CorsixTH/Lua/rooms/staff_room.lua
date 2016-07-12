@@ -56,8 +56,6 @@ function StaffRoom:onHumanoidEnter(humanoid)
       humanoid:setNextAction({name = "use_staffroom"})
       self.door.queue.visitor_count = self.door.queue.visitor_count + 1
     end
-  else
-    -- Other humanoids shouldn't be entering, so don't worry about them
   end
 end
 

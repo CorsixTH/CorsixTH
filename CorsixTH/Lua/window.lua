@@ -926,7 +926,7 @@ function Textbox:drawCursor(canvas, x, y)
   if self.cursor_state then
     local col = TheApp.video:mapRGB(255, 255, 255)
     local cursor_y, cursor_x = self.panel:drawLabel(nil, x, y, self.cursor_pos)
-    local w, h = self.panel.label_font:sizeOf("0")
+    local w, _ = self.panel.label_font:sizeOf("0")
     if self.panel.align == nil or self.panel.align == "center" then
       local _, text_x = self.panel:drawLabel(nil, x, y, {self.cursor_pos[1], #self.text})
       cursor_x = text_x - (text_x - cursor_x) * 2
@@ -1356,9 +1356,6 @@ top-left corner of the window.
 top-left corner of the window.
 ]]
 function Window:hitTest(x, y)
-  if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
---    return false
-  end
   if self.panels[1] then
     for _, panel in ipairs(self.panels) do
       if self:hitTestPanel(x, y, panel) then
@@ -1718,7 +1715,6 @@ end
 
 -- Tell the window to bring the specified sub-window to its bottom
 function Window:sendToBottom(window)
-  local window_index
   if self.windows then
     for i = 1, #self.windows do -- Search specified window in windows list
       if self.windows[i] == window then

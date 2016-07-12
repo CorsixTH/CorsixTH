@@ -32,7 +32,6 @@ local col_scrollbar = {
   blue = 208,
 }
 
-local max_details_rows = 14
 local details_width = 280
 
 function UICustomCampaign:UICustomCampaign(ui)
@@ -95,7 +94,7 @@ function UICustomCampaign:buttonClicked(num)
   local item = self.items[num + self.scrollbar.value - 1]
   self.chosen_item = item
   if item.description then
-    local x, y, rows = self.label_font:sizeOf(item.description, details_width)
+    local _, _, rows = self.label_font:sizeOf(item.description, details_width)
     self.details_scrollbar:setRange(1, rows, 13, 1)
   else
     self.details_scrollbar:setRange(1, 13, 13, 1)

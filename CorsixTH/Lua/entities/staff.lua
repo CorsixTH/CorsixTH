@@ -573,7 +573,6 @@ function Staff:checkIfNeedRest()
     -- If above the policy threshold, go to the staff room.
     if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] and
         not class.is(self:getRoom(), StaffRoom) then
-      local profile = self.profile
       if self.waiting_for_staffroom then
       -- The staff will get unhappy if there is no staffroom to rest in.
         self:changeAttribute("happiness", -0.001)

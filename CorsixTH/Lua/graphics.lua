@@ -19,7 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 local assert, string_char, table_concat, unpack, type, pairs, ipairs
@@ -336,10 +335,10 @@ function Graphics:onChangeLanguage()
   self.load_info = {} -- Any newly made objects are temporary, and shouldn't
                       -- remember reload information (also avoids insertions
                       -- into a table being iterated over).
-  for object, load_i in pairs(load_info) do
+  for object, load_info in pairs(load_info) do
     if object._proxy then
-      local fn = load_i[1]
-      local new_object = fn(unpack(load_i, 2))
+      local fn = load_info[1]
+      local new_object = fn(unpack(load_info, 2))
       object._proxy = new_object._proxy
     end
   end

@@ -351,7 +351,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   patient:queueAction{name = "use_screen", object = screen, must_happen = true}
 
   -- Meanwhile, second surgeon walks over to other side of operating table
-  obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
+  _, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
   surgeon2:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 4)
   surgeon2:queueAction({name = "idle", loop_callback = operation_standby, must_happen = true}, 5)
 

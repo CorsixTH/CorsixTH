@@ -554,7 +554,7 @@ function App:getAbsolutePathToLevelFile(level)
   local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
   for _, path_l in ipairs(list_of_possible_paths) do
     local check_path = path_l .. pathsep .. level
-    local file, err = io.open(check_path, "rb")
+    local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
@@ -1432,7 +1432,7 @@ function App:checkForUpdates()
     return
   end
 
-  local success, socket = pcall(require, "socket")
+  local success, _ = pcall(require, "socket")
 
   if not success then
     -- LuaSocket is not available, just return
@@ -1445,7 +1445,7 @@ function App:checkForUpdates()
   local url = require "socket.url"
 
   print("Checking for CorsixTH updates...")
-  local update_body, status, headers = http.request(update_url)
+  local update_body, status, _ = http.request(update_url)
 
   if not update_body or not (status == 200) then
     print("Couldn't check for updates. Server returned code: " .. status)

@@ -206,13 +206,13 @@ function Strings:load(language, no_restriction, no_inheritance)
     end,
     -- Inherit() should evaluate the named language in the current environment
     -- NB: Inheritance of any but original_strings disabled when no_inheritance set
-    Inherit = function(language, ...)
-      if no_inheritance and language ~= "original_strings" then return end
+    Inherit = function(lang, ...)
+      if no_inheritance and lang ~= "original_strings" then return end
       local old_encoding = encoding
       encoding = default_encoding
       local old_language_called = language_called
       language_called = false
-      self:_loadPrivate(language, env, ...)
+      self:_loadPrivate(lang, env, ...)
       encoding = old_encoding
       language_called = old_language_called
     end,

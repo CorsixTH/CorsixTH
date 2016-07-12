@@ -157,7 +157,6 @@ end
 function ResearchRoom:commandEnteringPatient(patient)
   local staff = next(self.staff_member_set)
   local autopsy, stf_x, stf_y = self.world:findObjectNear(patient, "autopsy")
-  local orientation = autopsy.object_type.orientations[autopsy.direction]
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{name = "idle", direction = "east"}

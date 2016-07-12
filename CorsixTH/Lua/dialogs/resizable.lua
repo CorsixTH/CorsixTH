@@ -83,12 +83,12 @@ function UIResizable:setColour(colour)
   self.background_panel:setColour(colour)
 end
 
-function UIResizable:draw(canvas, dx, dy)
+function UIResizable:draw(canvas, x_pos, y_pos)
   local sprites = self.border_sprites
   if sprites then
     local draw = sprites.draw
-    local x = self.x + dx
-    local y = self.y + dy
+    local x = self.x + x_pos
+    local y = self.y + y_pos
 
     canvas:nonOverlapping(true)
     draw(sprites, canvas, 10, x + self.border_pos.left        , y + self.border_pos.upper) -- upper left corner
@@ -108,7 +108,7 @@ function UIResizable:draw(canvas, dx, dy)
     canvas:nonOverlapping(false)
   end
   -- Draw window components
-  Window.draw(self, canvas, dx, dy)
+  Window.draw(self, canvas, x_pos, y_pos)
 end
 
 function UIResizable:onMouseDown(button, x, y)

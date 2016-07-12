@@ -23,7 +23,6 @@ SOFTWARE. --]]
 -- crude sprite viewer is better than no sprite viewer.
 
 local app = TheApp
-local lfs = require"lfs"
 local gfx = app.gfx
 gfx.cache.tabled = {}
 local font = gfx:loadFont("QData", "Font00V")

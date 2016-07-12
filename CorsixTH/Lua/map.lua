@@ -216,9 +216,15 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
       end
       -- Override with the specific configuration for this level
       errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
+      if errors then
+        print(errors)
+      end
       -- Finally load additional CorsixTH config per level
       local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
       errors, result = self:loadMapConfig(p, result, true)
+      if errors then
+        print(errors)
+      end
       self.level_config = result
     end
   elseif map_editor then
@@ -228,11 +234,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     if level == "" then
       _, objects = self.th:loadBlank()
     else
-      local data, errors_map_editor = self:getRawData(level)
+      local data, errors_level = self:getRawData(level)
       if data then
         _, objects = self.th:load(data)
       else
-        return nil, errors_map_editor
+        return nil, errors_level
       end
     end
     assert(base_config, "No base config has been loaded!")
@@ -244,11 +250,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.level_intro = level_intro
     self.level_number = level
     self.map_file = map_file
-    local data, errors_other = self:getRawData(map_file)
+    local data, errors_map = self:getRawData(map_file)
     if data then
       _, objects = self.th:load(data)
     else
-      return nil, errors_other
+      return nil, errors_map
     end
     assert(base_config, "No base config has been loaded!")
     errors, result = self:loadMapConfig(self.app:getAbsolutePathToLevelFile(level), base_config, true)

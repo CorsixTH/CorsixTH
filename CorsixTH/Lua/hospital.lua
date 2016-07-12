@@ -1446,7 +1446,7 @@ function Hospital:addToEpidemic(patient)
   @param patient (Patient) the patient who will be the first
   contagious patient of the new epidemic]]
   local function add_new_epidemic_to_pool(patient)
-    local new_epidemic = Epidemic(self,patient)
+    local new_epidemic = Epidemic(self, patient)
     self.future_epidemics_pool[#self.future_epidemics_pool + 1] = new_epidemic
   end
 
@@ -1639,7 +1639,6 @@ end
 function Hospital:initStaff()
   local level_config = self.world.map.level_config
   if level_config.start_staff then
-    local i = 0
     for _, conf in ipairs(level_config.start_staff) do
       local profile
       local skill = 0

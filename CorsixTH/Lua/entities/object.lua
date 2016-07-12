@@ -433,7 +433,6 @@ function Object:setTile(x, y)
               flag = "passable"
             end
 
-            local cell_flags = map:getCellFlags(lx, ly, flags)[flag]
             local is_object_allowed = true
             if roomId and flags.roomId ~= roomId then
               is_object_allowed = false

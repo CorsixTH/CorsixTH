@@ -364,12 +364,12 @@ function Audio:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds, entity
       y = y + dy - self.app.ui.screen_offset_y
 
       self.played_sound_callbacks[tostring(self.unused_played_callback_id)] = sound_played_callback
-      _, _ = self.sound_fx:play(sounds[math.random(1,#sounds)],
-                                      self.app.config.sound_volume,
-                                      x,
-                                      y,
-                                      self.unused_played_callback_id,
-                                      silences_pointer)
+      self.sound_fx:play(sounds[math.random(1,#sounds)],
+                         self.app.config.sound_volume,
+                         x,
+                         y,
+                         self.unused_played_callback_id,
+                         silences_pointer)
 
       self.unused_played_callback_id = self.unused_played_callback_id + 1
       if #silences > 1 then

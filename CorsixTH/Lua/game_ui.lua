@@ -27,10 +27,6 @@ class "GameUI" (UI)
 local GameUI = _G["GameUI"]
 
 local TH = require "TH"
-local SDL = require "sdl"
-local WM = SDL.wm
-local lfs = require "lfs"
-local pathsep = package.config:sub(1, 1)
 
 --! Game UI constructor.
 --!param app (Application) Application object.

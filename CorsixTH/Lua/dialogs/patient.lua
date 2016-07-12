@@ -184,7 +184,7 @@ function UIPatient:draw(canvas, x_, y_)
 
     local dx_h = hor_length / size
     local line = nil -- Make a line the first time we find a non-nil value.
-    for i = 1, size do
+    for _ = 1, size do
       index = (index == size) and 1 or (index + 1)
       if hh[index] then
         local posy = starty + (1.0 - hh[index]) * vert_length
