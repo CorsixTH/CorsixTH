@@ -1028,12 +1028,13 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   end
 
   local too_small = w < self.room_type.minimum_size or h < self.room_type.minimum_size
+  local player_id = self.ui.hospital:getPlayerIndex()
 
   -- Entire update of floor tiles and wall animations done in C to replace
   -- several hundred calls into C with just a single call. The price for this
   -- is reduced flexibility. See l_map_updateblueprint in th_lua.cpp for code.
   local is_valid = map.th:updateRoomBlueprint(rect.x, rect.y, rect.w, rect.h,
-    x, y, w, h, self.blueprint_wall_anims, self.anims, too_small)
+    x, y, w, h, player_id, self.blueprint_wall_anims, self.anims, too_small)
 
   -- NB: due to the unflexibility, tutorial step "too small AND invalid position" (3.7)
   --     is currently unusable, as it's not possible to determine if the position would
@@ -1187,21 +1188,22 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     else
       flag_names = {"buildableWest", "buildableEast"}
     end
-    if not (map:getCellFlags(x , y , flags).buildable or flags.passable) or
+    local player_id = self.ui.hospital:getPlayerIndex()
+    if not (map:getCellFlags(x, y, flags).buildable or flags.passable or flags.owner == player_id ) or
         not (flags[flag_names[1]] and flags[flag_names[2]]) or
-        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) or
+        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable or flags.owner == player_id) or
         not (flags[flag_names[1]] and flags[flag_names[2]])
     then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) or
+          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) then
         self.blueprint_door.valid = false
       end
-      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) or
+          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) then
         self.blueprint_door.valid = false
       end
     end

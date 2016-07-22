@@ -20,14 +20,17 @@ SOFTWARE. --]]
 
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
-  return flag_cache.hospital and not flag_cache.room
+  return flag_cache.hospital and not flag_cache.room and
+      humanoid.hospital and
+      flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
-
   local best_desk
   local score
+
+  assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
   -- Go through all receptions desks.
   for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
@@ -92,7 +95,7 @@ local function action_seek_reception_start(action, humanoid)
     -- No reception desk found. One will probably be built soon, somewhere in
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
-    if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
+    if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
       procrastination = {name = "meander", count = 1}
       if not humanoid.waiting then
         -- Eventually people are going to get bored and leave.

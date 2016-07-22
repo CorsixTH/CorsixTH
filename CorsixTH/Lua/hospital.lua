@@ -875,13 +875,13 @@ function Hospital:getHeliportSpawnPosition()
   end
 end
 
---[[ Test if a given map tile is part of the hospital.
+--[[ Test if a given map tile is part of this hospital.
 !param x (integer) The 1-based X co-ordinate of the tile to test.
 !param y (integer) The 1-based Y co-ordinate of the tile to test.
 ]]
 function Hospital:isInHospital(x, y)
-  -- TODO: Fix to work when there are multiple hospitals.
-  return self.world.map.th:getCellFlags(x, y).hospital
+  local flags = self.world.map.th:getCellFlags(x, y)
+  return flags.hospital and flags.owner == self:getPlayerIndex()
 end
 function Hospital:coldWarning()
   local announcements = {

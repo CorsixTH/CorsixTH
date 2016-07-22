@@ -1951,7 +1951,7 @@ function World:newObject(id, ...)
   return entity
 end
 
-function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_rooms_id)
+function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_rooms_id, player_id)
   local object = self.object_types[objects_id]
   local objects_footprint = object.orientations[orientation].footprint
   for _, tile in ipairs(objects_footprint) do
@@ -1965,7 +1965,7 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
       return false
     end
 
-    if not self:isFootprintTileBuildableOrPassable(x, y, tile, objects_footprint, "buildable") then
+    if not self:isFootprintTileBuildableOrPassable(x, y, tile, objects_footprint, "buildable", player_id) then
       return false
     end
   end
@@ -2007,7 +2007,7 @@ end
 -- checks if its buildable/passable using the tile's appropriate flag and then returns this
 -- flag's boolean value or false if the tile isn't valid.
 ---
-function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag)
+function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag, player_id)
   local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)
     if complete_cell or need_side then
       return flags[flag_name]
@@ -2027,7 +2027,8 @@ function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, require
       west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
     }
   local flags = {}
-  local requirement_met = self.map.th:getCellFlags(x, y, flags)[requirement_flag]
+  local requirement_met = self.map.th:getCellFlags(x, y, flags)[requirement_flag] and
+      (player_id == 0 or player_id == flags.owner)
 
   if requirement_met then
     -- For each direction check that the tile is valid:
