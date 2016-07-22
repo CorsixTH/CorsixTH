@@ -18,6 +18,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "PickupAction" (HumanoidAction)
+
+---@type PickupAction
+local PickupAction = _G["PickupAction"]
+
+function PickupAction:PickupAction()
+  self:HumanoidAction("pickup")
+  self.ui = nil
+  self.todo_close = nil
+end
+
+function PickupAction:setUi(ui)
+  self.ui = ui
+  return self
+end
+
+function PickupAction:setTodoClose(dialog)
+  self.todo_close = dialog
+  return self
+end
+
 local action_pickup_interrupt = permanent"action_pickup_interrupt"( function(action, humanoid)
   if action.window then
     action.window:close()

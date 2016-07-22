@@ -56,19 +56,18 @@ function JellyVatRoom:commandEnteringPatient(patient)
   local orientation = moulder.object_type.orientations[moulder.direction]
   local pat_x, pat_y = moulder:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  staff:queueAction{
-    name = "multi_use_object",
-    object = moulder,
-    use_with = patient,
-    invisible_phase_span = {-3, 4},
-    after_use = --[[persistable:jelly_vat_after_use]] function()
-      staff:setNextAction{name = "meander"}
-      self:dealtWithPatient(patient)
-    end,
-  }
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = moulder.direction == "north" and "west" or "north"}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
+
+  local jellyvat_after_use = --[[persistable:jelly_vat_after_use]] function()
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
+  staff:queueAction(MultiUseObjectAction(moulder, patient):setInvisiblePhaseSpan({-3, 4})
+      :setAfterUse(jellyvat_after_use))
+
+  patient:setNextAction(WalkAction(pat_x, pat_y))
+  patient:queueAction(IdleAction():setDirection(moulder.direction == "north" and "west" or "north"))
 
   return Room.commandEnteringPatient(self, patient)
 end

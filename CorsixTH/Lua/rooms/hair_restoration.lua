@@ -57,37 +57,30 @@ function HairRestorationRoom:commandEnteringPatient(patient)
 
   local --[[persistable:hair_restoration_shared_loop_callback]] function loop_callback()
     if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
-      patient:setNextAction{
-        name = "use_object",
-        object = hair_restorer,
-        loop_callback = --[[persistable:hair_restoration_loop_callback]] function(action)
-          action.prolonged_usage = false
-        end,
-        after_use = --[[persistable:hair_restoration_after_use]] function()
-          patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
-          staff:setNextAction{name = "meander"}
-          self:dealtWithPatient(patient)
-        end,
-      }
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      local loop_callback_restore = --[[persistable:hair_restoration_loop_callback]] function(action)
+        action.prolonged_usage = false
+      end
+
+      local after_use_restore = --[[persistable:hair_restoration_after_use]] function()
+        patient:setLayer(0, patient.layers[0] + 2) -- Change to normal hair
+        staff:setNextAction(MeanderAction())
+        self:dealtWithPatient(patient)
+      end
+
+      patient:setNextAction(UseObjectAction(hair_restorer)
+          :setLoopCallback(loop_callback_restore):setAfterUse(after_use_restore))
+
+      staff:setNextAction(UseObjectAction(console))
     end
   end
 
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = hair_restorer.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(hair_restorer.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

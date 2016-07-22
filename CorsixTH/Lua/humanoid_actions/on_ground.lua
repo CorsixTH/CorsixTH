@@ -18,6 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "OnGroundAction" (HumanoidAction)
+
+---@type OnGroundAction
+local OnGroundAction = _G["OnGroundAction"]
+
+function OnGroundAction:OnGroundAction()
+  self:HumanoidAction("on_ground")
+end
+
 local action_on_ground_end = permanent"action_on_ground_end"( function(humanoid)
   humanoid:finishAction()
 end)

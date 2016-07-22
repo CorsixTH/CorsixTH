@@ -18,6 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekRoomAction" (HumanoidAction)
+
+---@type SeekRoomAction
+local SeekRoomAction = _G["SeekRoomAction"]
+
+--! Find another room (and go to it).
+--!param room_type Type of the new room.
+function SeekRoomAction:SeekRoomAction(room_type)
+  self:HumanoidAction("seek_room")
+  self.room_type = room_type
+  self.treatment_room = nil -- Whether the next room is a treatment room.
+  self.diagnosis_room = nil
+end
+
+--! Denote that the room being looked for is a treatment room.
+--!return (action) self, for daisy-chaining.
+function SeekRoomAction:setIsTreatmentRoom()
+  self.treatment_room = true
+  return self
+end
+
+function SeekRoomAction:setDiagnosisRoom(room)
+  self.diagnosis_room = room
+  return self
+end
+
 local function action_seek_room_find_room(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
@@ -211,7 +237,7 @@ local function action_seek_room_start(action, humanoid)
   end
   -- Seeking for toilets is a special case with its own action.
   if action.room_type == "toilets" then
-    humanoid:queueAction({name = "seek_toilets"}, 1)
+    humanoid:queueAction(SeekToiletsAction(), 1)
     humanoid:finishAction()
     return
   end
@@ -306,7 +332,7 @@ local function action_seek_room_start(action, humanoid)
       end
       if action_still_valid then
         action.done_walk = true
-        humanoid:queueAction({name = "meander", count = 1, must_happen = true}, 0)
+        humanoid:queueAction(MeanderAction():setCount(1):setMustHappen(), 0)
       end
     else
       -- Make sure the patient stands in a correct way as he/she is waiting.

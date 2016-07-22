@@ -18,6 +18,32 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "VaccinateAction" (HumanoidAction)
+
+---@type VaccinateAction
+local VaccinateAction = _G["VaccinateAction"]
+
+function VaccinateAction:VaccinateAction()
+  self:HumanoidAction("vaccinate")
+  self.patient = nil -- Patient to vaccinate.
+  self.vaccination_fee = nil -- Money to get from the patient.
+end
+
+--! Set the patient to vaccinate.
+--!param patient (Patient) Patient to vaccinate.
+--!return (action) Self, for daisy-chaining.
+function VaccinateAction:setPatient(patient)
+  self.patient = patient
+  return self
+end
+
+--! Set the amount of money to pay for vaccinating.
+--!param fee Amount of money to pay.
+--!return (action) Self, for daisy-chaining.
+function VaccinateAction:setFee(fee)
+  self.vaccination_fee = fee
+end
+
 local is_in_adjacent_square = permanent"vacc_adjacent_square"(
 function (patient,nurse)
   local x1, y1 = patient.tile_x, patient.tile_y
@@ -73,7 +99,7 @@ local function vaccinate(action, nurse)
     -- Check if they STILL are in an adjacent square
     if is_in_adjacent_square(nurse, patient) then
       CallsDispatcher.queueCallCheckpointAction(nurse)
-      nurse:queueAction{name = "answer_call"}
+      nurse:queueAction(AnswerCallAction())
       -- Disable either vaccination icon that may be present (edge case)
       patient:setMood("epidemy2", "deactivate")
       patient:setMood("epidemy3", "deactivate")
@@ -86,24 +112,21 @@ local function vaccinate(action, nurse)
       patient:setMood("epidemy2", "activate")
       -- Drop it they may not even be the vacc candidate anymore
       CallsDispatcher.queueCallCheckpointAction(nurse)
-      nurse:queueAction{name = "answer_call"}
+      nurse:queueAction(AnswerCallAction())
       patient.reserved_for = nil
     end
   end
 
-  if is_in_adjacent_square(nurse,patient) then
-    local face_direction = find_face_direction(nurse,patient)
-    nurse:queueAction({name="idle",
-                       direction=face_direction,
-                       count=5,
-                       after_use=perform_vaccination,
-                       on_interrupt=interrupt_vaccination,
-                       must_happen=true})
+  if is_in_adjacent_square(nurse, patient) then
+    local face_direction = find_face_direction(nurse, patient)
+    nurse:queueAction(IdleAction():setDirection(face_direction):setCount(5)
+        :setAfterUse(perform_vaccination):setOnInterrupt(interrupt_vaccination):setMustHappen())
+
   else
     patient:removeVaccinationCandidateStatus()
     nurse:setCallCompleted()
     patient.reserved_for = nil
-    nurse:queueAction({name="meander"})
+    nurse:queueAction(MeanderAction())
   end
   nurse:finishAction()
 end

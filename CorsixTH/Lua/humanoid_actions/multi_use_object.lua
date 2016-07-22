@@ -18,7 +18,41 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "MultiUseObjectAction" (HumanoidAction)
+
+---@type MultiUseObjectAction
+local MultiUseObjectAction = _G["MultiUseObjectAction"]
+
+--! Construct a multi-use object action.
+--!param object (Object) Object being used.
+--!param use_with (Humanoid) Fellow user of the object.
+function MultiUseObjectAction:MultiUseObjectAction(object, use_with)
+  self:HumanoidAction("multi_use_object")
+  self.object = object
+  self.use_with = use_with
+  self.prolonged_usage = nil -- If true, the usage is prolonged.
+end
+
+--! Set the invisibility span.
+--!param span (array) Span of invisibility, {from, to}
+--!return (action) self, for daisy-chaining.
+function MultiUseObjectAction:setInvisiblePhaseSpan(span)
+  self.invisible_phase_span = span
+  return self
+end
+
+--! Set prolonged usage of the object.
+--!param prolonged (bool or nil) If nil or true, enable prolonged usage of the object.
+--!return (action) self, for daisy-chaining.
+function MultiUseObjectAction:setProlongedUsage(prolonged)
+  if prolonged == nil then prolonged = true end
+
+  self.prolonged_usage = prolonged
+  return self
+end
+
 local TH = require "TH"
+
 local orient_mirror = {
   north = "west",
   west = "north",
@@ -288,7 +322,7 @@ local function action_multi_use_object_start(action, humanoid)
     end
   end
   if use_with.action_queue[1].name ~= "idle" then
-    humanoid:queueAction({name = "idle", count = 2}, 0)
+    humanoid:queueAction(IdleAction():setCount(2), 0)
     return
   else
     action.idle_interrupt = use_with.action_queue[1].on_interrupt

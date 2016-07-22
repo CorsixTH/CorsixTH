@@ -18,6 +18,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "QueueAction" (HumanoidAction)
+
+---@type QueueAction
+local QueueAction = _G["QueueAction"]
+
+--! Queue for something (door or reception desk).
+--!param x X position of the queue.
+--!param y Y position of the queue.
+--!param queue (Queue) Queue to join
+function QueueAction:QueueAction(x, y, queue)
+  self:HumanoidAction("queue")
+  self.x = x -- Position of the queue(?)
+  self.y = y
+  self.face_x = nil -- Tile to turn the face to.
+  self.face_y = nil
+  self.queue = queue
+  self.reserve_when_done = nil -- Object to reserve when leaving the queue.
+end
+
+--! Set the object to reserve when queueing is done.
+--!param door (object) Object to reserve when leaving the queue.
+--!return (action) self, for daisy-chaining.
+function QueueAction:setReserveWhenDone(door)
+  self.reserve_when_done = door
+  return self
+end
+
+--! Set the tile to face.
+--!param face_x (int) X coordinate of the tile to face.
+--!param face_y (int) Y coordinate of the tile to face.
+--!return (action) self, for daisy-chaining.
+function QueueAction:setFaceDirection(face_x, face_y)
+  self.face_x = face_x
+  self.face_y = face_y
+  return self
+end
+
 local function get_direction(x, y, facing_x, facing_y)
   if facing_y < y then
     return "north"
@@ -186,17 +223,8 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
         num_actions_prior = action_queue_leave_bench(action, humanoid)
       end
       action.current_bench_distance = dist
-      humanoid:queueAction({
-        name = "walk",
-        x = bx,
-        y = by,
-        must_happen = true,
-      }, num_actions_prior)
-      humanoid:queueAction({
-        name = "use_object",
-        object = bench,
-        must_happen = true,
-      }, num_actions_prior + 1)
+      humanoid:queueAction(WalkAction(bx, by):setMustHappen(), num_actions_prior)
+      humanoid:queueAction(UseObjectAction(bench):setMustHappen(), num_actions_prior + 1)
       bench.reserved_for = humanoid
       return
     elseif not action:isStanding() then
@@ -238,26 +266,13 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
-    humanoid:queueAction({
-      name = "walk",
-      x = ix,
-      y = iy,
-      must_happen = true,
-    }, idle_index - 1)
+    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(), idle_index - 1)
   else
     action.current_bench_distance = nil
     local num_actions_prior = action_queue_leave_bench(action, humanoid)
-    humanoid:queueAction({
-      name = "walk",
-      x = ix,
-      y = iy,
-      must_happen = true,
-    }, num_actions_prior)
-    humanoid:queueAction({
-      name = "idle",
-      direction = idle_direction,
-      must_happen = true,
-    }, num_actions_prior + 1)
+    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(), num_actions_prior)
+    humanoid:queueAction(IdleAction():setDirection(idle_direction):setMustHappen(),
+        num_actions_prior + 1)
   end
 end)
 
@@ -296,28 +311,15 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     -- change_position can do its work.
     -- Note that it is inserted after the currently executing use_object action.
     if action.is_in_queue then
-      humanoid:queueAction({
-        name = "idle",
-        --direction = machine,
-        must_happen = true,
-      }, 1)
+      humanoid:queueAction(IdleAction():setMustHappen(), 1)
       action_queue_on_change_position(action, humanoid)
     end
   end
 
   -- Walk to the machine and then use it.
-  humanoid:queueAction({
-    name = "walk",
-    x = mx,
-    y = my,
-    must_happen = true,
-  }, num_actions_prior)
-  humanoid:queueAction({
-    name = "use_object",
-    object = machine,
-    after_use = after_use,
-    must_happen = true,
-  }, num_actions_prior + 1)
+  humanoid:queueAction(WalkAction(mx, my):setMustHappen(), num_actions_prior)
+  humanoid:queueAction(UseObjectAction(machine):setAfterUse(after_use)
+      :setMustHappen(), num_actions_prior + 1)
   machine:addReservedUser(humanoid)
 
   -- Make sure no one thinks we're sitting down anymore.
@@ -364,11 +366,7 @@ local function action_queue_start(action, humanoid)
       humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
     end
   end
-  humanoid:queueAction({
-    name = "idle",
-    is_leaving = humanoid:isLeaving(),
-    must_happen = true,
-  }, 0)
+  humanoid:queueAction(IdleAction():setMustHappen():setIsLeaving(humanoid:isLeaving()), 0)
   action:onChangeQueuePosition(humanoid)
 
   if queue.same_room_priority then

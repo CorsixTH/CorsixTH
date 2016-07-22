@@ -101,7 +101,7 @@ function ReceptionDesk:tick()
       if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
         if queue_front.next_room_to_visit then
-          queue_front:queueAction{name = "seek_room", room_type = queue_front.next_room_to_visit.room_info.id}
+          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
         else
           if class.is(queue_front, Inspector) then
             local inspector = queue_front
@@ -120,13 +120,13 @@ function ReceptionDesk:tick()
             -- VIP has his own list, don't add the gp office twice
           elseif queue_front.humanoid_class ~= "VIP" then
             if queue_front:agreesToPay("diag_gp") then
-              queue_front:queueAction{name = "seek_room", room_type = "gp"}
+              queue_front:queueAction(SeekRoomAction("gp"))
             else
               queue_front:goHome("over_priced", "diag_gp")
             end
           else
             -- the VIP will realise that he is idle, and start going round rooms
-            queue_front:queueAction{name = "idle"}
+            queue_front:queueAction(IdleAction())
             queue_front.waiting = 1
           end
         end
@@ -207,7 +207,7 @@ function ReceptionDesk:onDestroy()
       end
     end)
   end
-  self.queue:rerouteAllPatients({name = "seek_reception"})
+  self.queue:rerouteAllPatients(SeekReceptionAction())
 
   self.being_destroyed = nil
   return Object.onDestroy(self)
@@ -222,9 +222,10 @@ function ReceptionDesk:occupy(receptionist)
   if not self.receptionist and not self.reserved_for then
     self.reserved_for = receptionist
     receptionist.associated_desk = self
+
     local use_x, use_y = self:getSecondaryUsageTile()
-    receptionist:setNextAction{name = "walk", x = use_x, y = use_y, must_happen = true}
-    receptionist:queueAction{name = "staff_reception", object = self, must_happen = true}
+    receptionist:setNextAction(WalkAction(use_x, use_y):setMustHappen())
+    receptionist:queueAction(StaffReceptionAction():setObject(self):setMustHappen())
     return true
   end
 end

@@ -214,7 +214,7 @@ function Patient:setHospital(hospital)
   end
   Humanoid.setHospital(self, hospital)
   if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-    self:setNextAction{name = "seek_reception"}
+    self:setNextAction(SeekReceptionAction())
   end
   hospital:addPatient(self)
 end
@@ -337,14 +337,14 @@ function Patient:die()
   self.world.ui:playSound("boo.wav") -- this sound is always heard
   self.going_home = true
   if self:getRoom() then
-    self:queueAction{name = "meander", count = 1}
+    self:queueAction(MeanderAction():setCount(1))
   else
-    self:setNextAction{name = "meander", count = 1}
+    self:setNextAction(MeanderAction():setCount(1))
   end
   if self.is_emergency then
     hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
-  self:queueAction{name = "die"}
+  self:queueAction(DieAction())
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
 end
 
@@ -359,17 +359,14 @@ function Patient:falling()
   local current = self.action_queue[1]
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
-    self:setNextAction({
-      name = "falling",
-      must_happen = true
-      }, 0)
+    self:setNextAction(FallingAction():setMustHappen(), 0)
     self.has_fallen = 2
     if self.has_fallen == 2 then
-      self:setNextAction{name = "on_ground"}
+      self:setNextAction(OnGroundAction())
       self.on_ground = true
     end
     if self.on_ground then
-      self:setNextAction{name = "get_up"}
+      self:setNextAction(GetUpAction())
     end
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
@@ -421,10 +418,7 @@ end
 --! Perform 'shake fist' action.
 function Patient:shakeFist()
   if self.shake_fist_anim then
-    self:queueAction({
-        name = "shake_fist",
-        must_happen = true
-        }, 1)
+    self:queueAction(ShakeFistAction():setMustHappen(), 1)
   end
 end
 
@@ -432,10 +426,7 @@ function Patient:vomit()
   local current = self.action_queue[1]
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
   if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
-    self:queueAction({
-      name = "vomit",
-      must_happen = true
-      }, 1)
+    self:queueAction(VomitAction():setMustHappen(), 1)
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
         name = current.name,
@@ -469,10 +460,7 @@ function Patient:pee()
   local current = self.action_queue[1]
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
   if self:canPeeOrPuke(current) then
-    self:queueAction({
-      name = "pee",
-      must_happen = true
-      }, 1)
+    self:queueAction(PeeAction():setMustHappen(), 1)
     if current.name == "idle" or current.name == "walk" then
       self:queueAction({
         name = current.name,
@@ -508,29 +496,20 @@ end
 
 function Patient:checkWatch()
   if self.check_watch_anim and not self.action_queue[1].is_leaving then
-    self:queueAction({
-      name = "check_watch",
-      must_happen = true
-      }, 0)
+    self:queueAction(CheckWatchAction(), 0)
   end
 end
 
 function Patient:yawn()
   local action = self.action_queue[1]
   if self.yawn_anim and action.name == "idle" then
-    self:queueAction({
-      name = "yawn",
-      must_happen = true
-      }, 0)
+    self:queueAction(YawnAction(), 0)
   end
 end
 
 function Patient:tapFoot()
   if self.tap_foot_anim and not self.action_queue[1].is_leaving then
-    self:queueAction({
-      name = "tap_foot",
-      must_happen = true
-      }, 0)
+    self:queueAction(TapFootAction(), 0)
   end
 end
 
@@ -817,10 +796,7 @@ function Patient:tickDay()
             self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
           -- Otherwise we can queue the action, but only if not in any rooms right now.
           elseif not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].pee then
-            self:setNextAction{
-              name = "seek_toilets",
-              must_happen = true,
-              }
+            self:setNextAction(SeekToiletsAction():setMustHappen())
             self.going_to_toilet = "yes"
           end
         end
@@ -894,19 +870,8 @@ function Patient:tickDay()
         -- Go to the machine, use it, and then continue with
         -- whatever he/she was doing.
         current.keep_reserved = true
-        self:queueAction({
-          name = "walk",
-          x = lx,
-          y = ly,
-          must_happen = true,
-          no_truncate = true,
-        }, 1)
-        self:queueAction({
-          name = "use_object",
-          object = machine,
-          after_use = after_use,
-          must_happen = true,
-        }, 2)
+        self:queueAction(WalkAction(lx, ly):setMustHappen():setNoTruncate(), 1)
+        self:queueAction(UseObjectAction(machine):setAfterUse(after_use):setMustHappen(), 2)
         machine:addReservedUser(self)
         -- Insert the old action again, a little differently depending on
         -- what the previous action was.
@@ -921,10 +886,7 @@ function Patient:tickDay()
           -- If we were idling, also go away a little before continuing with
           -- that important action.
           if current.name == "idle" then
-            self:queueAction({
-              name = "meander",
-              count = 1,
-            }, 3)
+            self:queueAction(MeanderAction():setCount(1), 3)
           end
         else -- We were seeking a room, start that action from the beginning
              -- i.e. do not set the must_happen flag.
@@ -965,7 +927,7 @@ function Patient:tickDay()
         self.noqueue_ticks = 1
       elseif self.noqueue_ticks > 2 then
         self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
-        self:setNextAction{name = 'seek_reception'}
+        self:setNextAction(SeekReceptionAction())
       else
         self.noqueue_ticks = self.noqueue_ticks + 1
       end

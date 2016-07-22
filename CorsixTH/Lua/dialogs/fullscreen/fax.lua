@@ -157,20 +157,13 @@ function UIFax:choice(choice_number)
     elseif choice == "guess_cure" then
       owner:setDiagnosed()
       if owner:agreesToPay(owner.disease.id) then
-        owner:setNextAction{
-          name = "seek_room",
-          room_type = owner.disease.treatment_rooms[1],
-          treatment_room = true,
-        }
+        owner:setNextAction(SeekRoomAction(owner.disease.treatment_rooms[1]):setIsTreatmentRoom())
       else
         owner:goHome("over_priced", owner.disease.id)
       end
     elseif choice == "research" then
       owner:setMood("idea", "activate")
-      owner:setNextAction {
-        name = "seek_room",
-        room_type = "research",
-      }
+      owner:setNextAction(SeekRoomAction("research"))
     end
   end
   local vip_ignores_refusal = math.random(1, 2)

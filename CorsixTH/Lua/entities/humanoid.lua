@@ -438,12 +438,8 @@ end
 --! Despawn the humanoid.
 function Humanoid:despawn()
   local spawn_points = self.world.spawn_points
-  self:setNextAction{
-    name = "spawn",
-    mode = "despawn",
-    point = spawn_points[math.random(1, #spawn_points)],
-    must_happen = true,
-  }
+  self:setNextAction(SpawnAction():setMode("despawn")
+      :setPoint(spawn_points[math.random(1, #spawn_points)]):setMustHappen())
 end
 
 -- Function to activate/deactivate moods of a humanoid.
@@ -523,11 +519,11 @@ local function Humanoid_startAction(self)
     end
     -- Is it a member of staff, grim or a patient?
     if class.is(self, Staff) then
-      self:queueAction({name = "meander"})
+      self:queueAction(MeanderAction())
     elseif class.is(self,GrimReaper) then
-      self:queueAction({name = "idle"})
+      self:queueAction(IdleAction())
     else
-      self:queueAction({name = "seek_reception"})
+      self:queueAction(SeekReceptionAction())
     end
     -- Open the dialog of the humanoid.
     local ui = self.world.ui
@@ -703,7 +699,7 @@ function Humanoid:setType(humanoid_class)
   self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
-    self:setNextAction {name = "idle"}
+    self:setNextAction(IdleAction())
   end
 
   self.th:setPartialFlag(self.permanent_flags or 0, false)
@@ -726,12 +722,9 @@ end
 --!param must_happen (boolean, nil) If true, then the walk action will not be
 -- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
-  self:setNextAction {
-    name = "walk",
-    x = tile_x,
-    y = tile_y,
-    must_happen = must_happen,
-  }
+  local action = WalkAction(tile_x, tile_y)
+  action:setMustHappen(must_happen or false)
+  self:setNextAction(action)
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
@@ -749,9 +742,9 @@ end
 function Humanoid:handleRemovedObject(object)
   local replacement_action
   if self.humanoid_class and self.humanoid_class == "Receptionist" then
-    replacement_action = {name = "meander"}
+    replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
-    replacement_action = {name = "idle", must_happen = true}
+    replacement_action = IdleAction():setMustHappen()
   end
 
   for i, action in ipairs(self.action_queue) do

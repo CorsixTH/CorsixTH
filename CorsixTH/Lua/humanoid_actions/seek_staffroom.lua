@@ -18,6 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekStaffRoomAction" (HumanoidAction)
+
+---@type SeekStaffRoomAction
+local SeekStaffRoomAction = _G["SeekStaffRoomAction"]
+
+function SeekStaffRoomAction:SeekStaffRoomAction()
+  self:HumanoidAction("seek_staffroom")
+  self:setMustHappen()
+end
+
 local function seek_staffroom_action_start(action, humanoid)
   -- Mechanism for clearing the going_to_staffroom flag when this action is
   -- interrupted (due to entering the staff room, being picked up, etc.)
@@ -39,7 +49,7 @@ local function seek_staffroom_action_start(action, humanoid)
     -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists
     print("No staff room found in seek_staffroom action")
     humanoid.going_to_staffroom = nil
-    humanoid:queueAction({name = "meander"})
+    humanoid:queueAction(MeanderAction())
     humanoid:finishAction()
   end
 end

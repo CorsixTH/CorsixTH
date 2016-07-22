@@ -339,7 +339,7 @@ function Staff:updateSkill(consultant, trait, amount)
       self.world.ui.adviser:say(_A.information.promotion_to_consultant)
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
-        self:queueAction{name = "meander"}
+        self:queueAction(MeanderAction())
         self.last_room = nil
       end
       self:updateStaffTitle()
@@ -428,7 +428,7 @@ function Staff:onClick(ui, button)
     end
   elseif button == "right" then
     self.pickup = true
-    self:setNextAction({name = "pickup", ui = ui, must_happen = true}, true)
+    self:setNextAction(PickupAction():setUi(ui):setMustHappen(), true)
   end
   Humanoid.onClick(self, ui, button)
 end
@@ -649,9 +649,9 @@ function Staff:goToStaffRoom()
   if room then
     room.staff_leaving = true
     self:setNextAction(room:createLeaveAction())
-    self:queueAction{name = "seek_staffroom", must_happen = true}
+    self:queueAction(SeekStaffRoomAction())
   else
-    self:setNextAction{name = "seek_staffroom", must_happen = true}
+    self:setNextAction(SeekStaffRoomAction())
   end
 end
 
@@ -669,7 +669,7 @@ function Staff:onPlaceInCorridor()
     self.task = nil
   end
   self:updateSpeed()
-  self:setNextAction{name = "meander"}
+  self:setNextAction(MeanderAction())
   if self.humanoid_class == "Receptionist" then
     world:findObjectNear(self, "reception_desk", nil, function(x, y)
       local obj = world:getObject(x, y, "reception_desk")
@@ -912,7 +912,7 @@ function Staff:interruptHandymanTask()
     self.on_call = nil
   end
   self.task = nil
-  self:setNextAction{name = "answer_call"}
+  self:setNextAction(AnswerCallAction())
 end
 
 function Staff:searchForHandymanTask()
@@ -960,7 +960,7 @@ function Staff:searchForHandymanTask()
     if self:getRoom() then
       self:queueAction(self:getRoom():createLeaveAction())
     end
-    self:queueAction({name = "meander"})
+    self:queueAction(MeanderAction())
   end
   return assignedTask
 end
@@ -972,12 +972,12 @@ function Staff:assignHandymanTask(taskIndex, taskType)
   if taskType == "cleaning" then
     if self:getRoom() then
       self:setNextAction(self:getRoom():createLeaveAction())
-      self:queueAction{name = "walk", x = task.tile_x, y = task.tile_y}
+      self:queueAction(WalkAction(task.tile_x, task.tile_y))
     else
-      self:setNextAction{name = "walk", x = task.tile_x, y = task.tile_y}
+      self:setNextAction(WalkAction(task.tile_x, task.tile_y))
     end
-    self:queueAction{name = "sweep_floor", litter = task.object}
-    self:queueAction{name = "answer_call"}
+    self:queueAction(SweepFloorAction():setLitter(task.object))
+    self:queueAction(AnswerCallAction())
   else
     if task.call.dropped then
       task.call.dropped = nil

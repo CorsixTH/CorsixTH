@@ -74,46 +74,43 @@ function ResearchRoom:doStaffUseCycle(staff, previous_object)
     staff:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
       local desk_use_time = math.random(7, 14)
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        loop_callback = --[[persistable:research_desk_loop_callback]] function(action)
-          desk_use_time = desk_use_time - 1
-          if action.todo_interrupt or desk_use_time == 0 then
-            action.prolonged_usage = false
-          end
-        end,
-        after_use = --[[persistable:research_desk_after_use]] function()
-          -- TODO: Should interactions give points?
-          self.hospital.research:addResearchPoints(100)
-        end,
-      }
+      local loop_callback_desk = --[[persistable:research_desk_loop_callback]] function(action)
+        desk_use_time = desk_use_time - 1
+        if action.todo_interrupt or desk_use_time == 0 then
+          action.prolonged_usage = false
+        end
+      end
+
+      local after_use_desk = --[[persistable:research_desk_after_use]] function()
+        -- TODO: Should interactions give points?
+        self.hospital.research:addResearchPoints(100)
+      end
+
+      staff:queueAction(UseObjectAction(obj):setLoopCallback(loop_callback_desk)
+          :setAfterUse(after_use_desk))
     else
-      staff:queueAction {
-        name = "use_object",
-        object = obj,
-        after_use = --[[persistable:research_obj_after_use]] function()
-          if obj.object_type.id == "computer" then
-            self.hospital.research:addResearchPoints(500)
-          elseif obj.object_type.id == "analyser" then
-            self.hospital.research:addResearchPoints(800)
-            -- TODO: Balance value, find it in level config?
-          end
-        end,
-      }
+      local after_use_obj = --[[persistable:research_obj_after_use]] function()
+        if obj.object_type.id == "computer" then
+          self.hospital.research:addResearchPoints(500)
+        elseif obj.object_type.id == "analyser" then
+          self.hospital.research:addResearchPoints(800)
+          -- TODO: Balance value, find it in level config?
+        end
+      end
+
+      staff:queueAction(UseObjectAction(obj):setAfterUse(after_use_obj))
     end
   end
 
   local num_meanders = math.random(2, 4)
-  staff:queueAction {
-    name = "meander",
-    loop_callback = --[[persistable:research_meander_loop_callback]] function(action)
-      num_meanders = num_meanders - 1
-      if num_meanders == 0 then
-        self:doStaffUseCycle(staff)
-      end
+  local loop_callback_meander = --[[persistable:research_meander_loop_callback]] function(action)
+    num_meanders = num_meanders - 1
+    if num_meanders == 0 then
+      self:doStaffUseCycle(staff)
     end
-  }
+  end
+
+  staff:queueAction(MeanderAction():setLoopCallback(loop_callback_meander))
 end
 
 function ResearchRoom:roomFinished()
@@ -138,8 +135,7 @@ function ResearchRoom:roomFinished()
   end
   -- Also check if it would be good to hire a researcher.
   if not self.hospital:hasStaffOfCategory("Researcher") then
-    self.world.ui.adviser:say(_A.room_requirements
-    .research_room_need_researcher)
+    self.world.ui.adviser:say(_A.room_requirements.research_room_need_researcher)
   end
   return Room.roomFinished(self)
 end
@@ -160,36 +156,34 @@ function ResearchRoom:commandEnteringPatient(patient)
   local orientation = autopsy.object_type.orientations[autopsy.direction]
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{name = "idle", direction = "east"}
+  patient:queueAction(IdleAction():setDirection("east"))
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "multi_use_object",
-    object = autopsy,
-    use_with = patient,
-    after_use = --[[persistable:autopsy_after_use]] function()
-      self:commandEnteringStaff(staff)
-      -- Patient dies :(
-      self:onHumanoidLeave(patient)
-      -- Some research is done. :) Might trigger a loss of reputation though.
-      local hosp = self.hospital
-      local room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
-      hosp.research:addResearchPoints("dummy", room)
-      if hosp.discover_autopsy_risk > math.random(1, 100) and not hosp.autopsy_discovered then
-        -- Can only be discovered once.
-        hosp.autopsy_discovered = true
-        hosp:changeReputation("autopsy_discovered")
-        hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
-      else
-        -- The risk increases after each use.
-        -- TODO: Should it ever become 100%?
-        self.hospital.discover_autopsy_risk = self.hospital.discover_autopsy_risk + 10
-      end
-      if patient.hospital then
-        hosp:removePatient(patient)
-      end
-      patient.world:destroyEntity(patient)
-    end,
-  }
+
+  local after_use_autopsy = --[[persistable:autopsy_after_use]] function()
+    self:commandEnteringStaff(staff)
+    -- Patient dies :(
+    self:onHumanoidLeave(patient)
+    -- Some research is done. :) Might trigger a loss of reputation though.
+    local hosp = self.hospital
+    local room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
+    hosp.research:addResearchPoints("dummy", room)
+    if hosp.discover_autopsy_risk > math.random(1, 100) and not hosp.autopsy_discovered then
+      -- Can only be discovered once.
+      hosp.autopsy_discovered = true
+      hosp:changeReputation("autopsy_discovered")
+      hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
+    else
+      -- The risk increases after each use.
+      -- TODO: Should it ever become 100%?
+      self.hospital.discover_autopsy_risk = self.hospital.discover_autopsy_risk + 10
+    end
+    if patient.hospital then
+      hosp:removePatient(patient)
+    end
+    patient.world:destroyEntity(patient)
+  end
+
+  staff:queueAction(MultiUseObjectAction(autopsy, patient):setAfterUse(after_use_autopsy))
   return Room.commandEnteringPatient(self, patient)
 end
 
