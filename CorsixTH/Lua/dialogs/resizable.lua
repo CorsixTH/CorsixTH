@@ -83,12 +83,12 @@ function UIResizable:setColour(colour)
   self.background_panel:setColour(colour)
 end
 
-function UIResizable:draw(canvas, x, y)
+function UIResizable:draw(canvas, x_pos, y_pos)
   local sprites = self.border_sprites
   if sprites then
     local draw = sprites.draw
-    local x = self.x + x
-    local y = self.y + y
+    local x = self.x + x_pos
+    local y = self.y + y_pos
 
     canvas:nonOverlapping(true)
     draw(sprites, canvas, 10, x + self.border_pos.left        , y + self.border_pos.upper) -- upper left corner
@@ -96,19 +96,19 @@ function UIResizable:draw(canvas, x, y)
     draw(sprites, canvas, 15, x + self.border_pos.left        , y + self.border_pos.corner_lower) -- lower left corner
     draw(sprites, canvas, 17, x + self.border_pos.corner_right, y + self.border_pos.corner_lower) -- lower right corner
 
-    for x = x + border_size_x, x + self.border_pos.corner_right - 1, border_size_x do
-      draw(sprites, canvas, 11, x, y + self.border_pos.upper) -- upper edge
-      draw(sprites, canvas, 16, x, y + self.border_pos.lower) -- lower edge
+    for xx = x + border_size_x, x + self.border_pos.corner_right - 1, border_size_x do
+      draw(sprites, canvas, 11, xx, y + self.border_pos.upper) -- upper edge
+      draw(sprites, canvas, 16, xx, y + self.border_pos.lower) -- lower edge
     end
-    for y = y + border_size_y, y + self.border_pos.corner_lower - 1, border_size_y do
-      draw(sprites, canvas, 13, x + self.border_pos.left, y)  -- left edge
-      draw(sprites, canvas, 14, x + self.border_pos.right, y) -- right edge
+    for yy = y + border_size_y, y + self.border_pos.corner_lower - 1, border_size_y do
+      draw(sprites, canvas, 13, x + self.border_pos.left, yy)  -- left edge
+      draw(sprites, canvas, 14, x + self.border_pos.right, yy) -- right edge
     end
 
     canvas:nonOverlapping(false)
   end
   -- Draw window components
-  Window.draw(self, canvas, x, y)
+  Window.draw(self, canvas, x_pos, y_pos)
 end
 
 function UIResizable:onMouseDown(button, x, y)

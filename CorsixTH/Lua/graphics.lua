@@ -19,7 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local SDL = require "sdl"
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 local assert, string_char, table_concat, unpack, type, pairs, ipairs
@@ -199,8 +198,8 @@ function Graphics:makeGreyscaleGhost(pal)
     local g_index = 0
     local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
-      local entry = entries[j]
-      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2
+      local entry_e = entries[j]
+      local diff = (entry_e[1] - g)^2 + (entry_e[2] - g)^2  + (entry_e[3] - g)^2
       if diff < g_diff then
         g_diff = diff
         g_index = j
@@ -390,11 +389,10 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     if n_pass_on_args < #arg then
       x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
     else
-      x_sep, y_sep = nil
+      x_sep, y_sep = nil, nil
     end
   end
 
-  local font
   local use_bitmap_font = true
   if not sprite_table:isVisible(46) then -- uppercase M
     -- The font doesn't contain an uppercase M, so (in all liklihood) is used
@@ -590,7 +588,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     else
       -- Static position
       local x, y = TableToPixels(arg1)
-      for i = 1, anim_length do
+      for _ = 1, anim_length do
         anims[fn](anims, frame, x, y)
         frame = anims:getNextFrame(frame)
       end
@@ -610,7 +608,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     for f = 0, anim_length - 1 do
       if f2 and f == f2 then
         f1, x1, y1 = f2, x2, y2
-        f2, x2, y2 = nil
+        f2, x2, y2 = nil, nil, nil
       end
       if not f2 then
         f2 = args[args_i]

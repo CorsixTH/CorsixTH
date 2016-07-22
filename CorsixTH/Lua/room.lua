@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-
 class "Room"
 
 ---@type Room
@@ -265,7 +263,7 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
     end
     return false
   else
-    for attribute, count in pairs(missing) do
+    if next(missing) ~= nil then
       return false
     end
     return true
@@ -487,11 +485,11 @@ function Room:commandEnteringPatient(humanoid)
   self.door.queue.visitor_count = self.door.queue.visitor_count + 1
   humanoid:updateDynamicInfo("")
 
-  for humanoid in pairs(self.humanoids) do -- Staff is no longer waiting
-    if class.is(humanoid, Staff) then
-      if humanoid.humanoid_class ~= "Handyman" then
-        humanoid:setMood("staff_wait", "deactivate")
-        humanoid:setDynamicInfoText("")
+  for h in pairs(self.humanoids) do -- Staff is no longer waiting
+    if class.is(h, Staff) then
+      if h.humanoid_class ~= "Handyman" then
+        h:setMood("staff_wait", "deactivate")
+        h:setDynamicInfoText("")
       end
     end
   end
@@ -537,14 +535,14 @@ function Room:onHumanoidLeave(humanoid)
 
   if class.is(humanoid, Patient) then
     -- Some staff member in the room might be waiting to get to the staffroom.
-    for humanoid in pairs(self.humanoids) do
+    for h in pairs(self.humanoids) do
       -- A patient leaving allows doctors/nurses inside to go to staffroom, if needed
       -- In a rare case a handyman that just decided he wants to go to the staffroom
       -- could be in the room at the same time as a patient leaves.
-      if class.is(humanoid, Staff) and humanoid.humanoid_class ~= "Handyman" then
-        if humanoid.staffroom_needed then
-          humanoid.staffroom_needed = nil
-          humanoid:goToStaffRoom()
+      if class.is(h, Staff) and h.humanoid_class ~= "Handyman" then
+        if h.staffroom_needed then
+          h.staffroom_needed = nil
+          h:goToStaffRoom()
           staff_leaving = true
         end
       end
@@ -575,10 +573,10 @@ function Room:onHumanoidLeave(humanoid)
     -- Make patients leave the room if there are no longer enough staff
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
       local patient_needs_to_reenter = false
-      for humanoid in pairs(self.humanoids) do
-        if class.is(humanoid, Patient) and self:shouldHavePatientReenter(humanoid) then
-          self:makeHumanoidLeave(humanoid)
-          humanoid:queueAction(self:createEnterAction(humanoid))
+      for h in pairs(self.humanoids) do
+        if class.is(h, Patient) and self:shouldHavePatientReenter(h) then
+          self:makeHumanoidLeave(h)
+          h:queueAction(self:createEnterAction(h))
           patient_needs_to_reenter = true
         end
       end
@@ -594,7 +592,7 @@ function Room:onHumanoidLeave(humanoid)
   -- The player might be waiting to edit this room
   if not self.is_active then
     local i = 0
-    for humanoid in pairs(self.humanoids) do
+    for _ in pairs(self.humanoids) do
       i = i + 1
     end
     if i == 0 then
@@ -722,8 +720,8 @@ local function tryMovePatient(old_room, new_room, patient)
     if action.name == 'queue' then
       action.is_in_queue = false
     elseif action.name == "walk" and action.x == old_x and action.y == old_y then
-      local action = new_room:createEnterAction(patient)
-      patient:queueAction(action, i)
+      local action_p = new_room:createEnterAction(patient)
+      patient:queueAction(action_p, i)
       break
     end
   end
@@ -927,7 +925,7 @@ end
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
-  for humanoid, callback in pairs(self.humanoids_enroute) do
+  for _, callback in pairs(self.humanoids_enroute) do
     callback.callback();
   end
   -- Now empty the humanoids_enroute list since they are not enroute anymore.

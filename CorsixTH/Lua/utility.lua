@@ -32,7 +32,7 @@ function values(root_table, wildcard)
   local function f()
     local value = root_table
     local nkey = 1
-    for i, part in ipairs(wildcard_parts) do
+    for _, part in ipairs(wildcard_parts) do
       if part == "*" then
         local key = keys[nkey]
         if nkey >= #keys then
@@ -76,7 +76,7 @@ function print_table(obj, max_level, level)
   pt_reflist[#pt_reflist + 1] = obj
   level = level or 0
   local spacer = ""
-  for i = 1, level do
+  for _ = 1, level do
     spacer = spacer .. " "
   end
   for k, v in pairs(obj) do
@@ -115,7 +115,7 @@ end
 --! Checks if a file exists and is readable.
 --!param path (string)
 --!param root_path (boolean) Optional, default: false. If true the file's path
--- will be appended to the CorsixTH root directory's path. 
+-- will be appended to the CorsixTH root directory's path.
 --!return (String) Returns an error message for the file read error or nil.
 function is_file_unreadable(path, root_path)
   if root_path then
@@ -279,7 +279,7 @@ function compare_tables(t1, t2)
     if t2[k] ~= v then return false end
   end
   local count2 = 0
-  for k, v in pairs(t2) do
+  for _, _ in pairs(t2) do
     count2 = count2 + 1
   end
   if count1 ~= count2 then return false end
@@ -289,7 +289,7 @@ end
 -- Convert a list to a set
 function list_to_set(list)
   local set = {}
-  for i, v in ipairs(list) do
+  for _, v in ipairs(list) do
     set[v] = true
   end
   return set

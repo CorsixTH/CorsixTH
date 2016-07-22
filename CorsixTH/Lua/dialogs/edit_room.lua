@@ -18,7 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
 local math_floor
     = math.floor
 
@@ -316,7 +315,7 @@ function UIEditRoom:clearArea()
         else
           -- Look for a queue action and re-arrange the people in it, which
           -- should cause anyone queueing within the blueprint to move
-          for i, action in ipairs(entity.action_queue) do
+          for _, action in ipairs(entity.action_queue) do
             if action.name == "queue" then
               for _, humanoid in ipairs(action.queue) do
                 local callbacks = action.queue.callbacks[humanoid]
@@ -523,7 +522,7 @@ function UIEditRoom:purchaseItems()
         research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
-      for j, p in ipairs(self.objects) do
+      for _, p in ipairs(self.objects) do
         if p.object.id == o then
           cur_qty = p.qty
         end
@@ -595,7 +594,6 @@ end
 function UIEditRoom:returnToDoorPhase()
   self.ui:tutorialStep(3, {13, 14, 15}, 9)
   local map = self.ui.app.map.th
-  local rect = self.blueprint_rect
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
@@ -642,7 +640,7 @@ function UIEditRoom:returnToDoorPhase()
 
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
-    for i = 1, n_steps do
+    for _ = 1, n_steps do
       local existing = map:getCell(x, y, layer)
       -- Possibly add transparency.
       local flag = 0
@@ -863,7 +861,7 @@ function UIEditRoom:enterDoorPhase()
   -- Re-organise wall anims to index by x and y
   local walls = {}
   for _, wall in ipairs(self.blueprint_wall_anims) do
-    local map, x, y = wall:getTile()
+    local _, x, y = wall:getTile()
     if not walls[x] then
       walls[x] = {}
     end
@@ -967,9 +965,9 @@ function UIEditRoom:onMouseDown(button, x, y)
       if self.phase == "walls" then
         if 0 <= x and x < self.width and 0 <= y and y < self.height then
         else
-          local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-          self.mouse_down_x = math_floor(x)
-          self.mouse_down_y = math_floor(y)
+          local mx, my = self.ui:ScreenToWorld(self.x + x, self.y + y)
+          self.mouse_down_x = math_floor(mx)
+          self.mouse_down_y = math_floor(my)
           if self.move_rect then
             self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
             self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
@@ -1180,28 +1178,28 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
-    local flags = {}
+    local flags_l = {}
     local flag_names
     if wall == "west" then
       flag_names = {"buildableNorth", "buildableSouth"}
     else
       flag_names = {"buildableWest", "buildableEast"}
     end
-    if not (map:getCellFlags(x , y , flags).buildable or flags.passable) or
-        not (flags[flag_names[1]] and flags[flag_names[2]]) or
-        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) or
-        not (flags[flag_names[1]] and flags[flag_names[2]])
+    if not (map:getCellFlags(x , y , flags_l).buildable or flags_l.passable) or
+        not (flags_l[flag_names[1]] and flags_l[flag_names[2]]) or
+        not (map:getCellFlags(x2, y2, flags_l).buildable or flags_l.passable) or
+        not (flags_l[flag_names[1]] and flags_l[flag_names[2]])
     then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) or
+          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) then
         self.blueprint_door.valid = false
       end
-      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable) or
-          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) or
+          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags_l).buildable or flags_l.passable) then
         self.blueprint_door.valid = false
       end
     end
@@ -1210,8 +1208,8 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
     flags = flags + 16 -- Use red palette rather than normal palette
   end
   if self.room_type.swing_doors then
-    for i, anim in ipairs(anim) do
-      anim:setAnimation(self.anims, 126, flags)
+    for _, anim_door in ipairs(anim) do
+      anim_door:setAnimation(self.anims, 126, flags)
     end
   else
     anim:setAnimation(self.anims, 126, flags)
@@ -1257,7 +1255,7 @@ function UIEditRoom:setWindowBlueprint(x, y, wall)
 
   local anim = x and self.blueprint_wall_anims[x][y]
   if anim and anim:getTag() then
-    x, y, wall, orig_x, orig_y, orig_wall = nil
+    x, y, wall, orig_x, orig_y, orig_wall = nil, nil, nil, nil, nil, nil
   end
 
   self.blueprint_window.x = x

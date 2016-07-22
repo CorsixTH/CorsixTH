@@ -99,7 +99,7 @@ end
 
 --! Returns true if an operation is ongoing
 function OperatingTheatreRoom:isOperating()
-  for k, v in pairs(self.staff_member_set) do
+  for k, _ in pairs(self.staff_member_set) do
     if k.action_queue[1].name == "multi_use_object" then
       return true
     end
@@ -314,7 +314,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
       humanoid:finishAction()
     elseif num_ready[1] == 3 then
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
-      local obj, ox, oy = room.world:findObjectNear(surgeon1, "operating_table")
+      local obj, _, _ = room.world:findObjectNear(surgeon1, "operating_table")
 
       local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
       surgeon1:queueAction(table_action1, 1)
@@ -351,7 +351,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   patient:queueAction{name = "use_screen", object = screen, must_happen = true}
 
   -- Meanwhile, second surgeon walks over to other side of operating table
-  obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
+  _, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
   surgeon2:queueAction({name = "walk", x = ox, y = oy, must_happen = true, no_truncate = true}, 4)
   surgeon2:queueAction({name = "idle", loop_callback = operation_standby, must_happen = true}, 5)
 

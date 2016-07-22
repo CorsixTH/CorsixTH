@@ -50,7 +50,6 @@ function MoviePlayer:init()
 
   --find movies in Anims folder
   local num
-  local movie
   local movies = self.app.fs:listFiles("Anims");
   if movies then
     for _,movie in pairs(movies) do
@@ -117,7 +116,7 @@ function MoviePlayer:playLoseMovie()
 end
 
 function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
-  local x, y, w, h = 0
+  local x, y, w, h
   local screen_w, screen_h = self.app.config.width, self.app.config.height
   local ar
   local success, warning

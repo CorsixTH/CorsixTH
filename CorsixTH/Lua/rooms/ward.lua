@@ -63,7 +63,7 @@ function WardRoom:roomFinished()
   local objects = self.world:findAllObjectsNear(fx, fy)
   local beds = 0
   local desks = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     if object.object_type.id == "bed" then
       beds = beds + 1
     end
@@ -105,7 +105,7 @@ function WardRoom:doStaffUseCycle(humanoid)
     obj.reserved_for = humanoid
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
-      local desk_use_time = math.random(7, 14)
+      desk_use_time = math.random(7, 14)
       humanoid:queueAction {
         name = "use_object",
         object = obj,

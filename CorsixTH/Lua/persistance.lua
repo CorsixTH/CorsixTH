@@ -25,7 +25,6 @@ strict_declare_global "permanent"
 strict_declare_global "unpermanent"
 
 local th_getfenv
-local th_getupvalue
 if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
   th_getfenv = function(f)
     local val = nil
@@ -38,13 +37,8 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
     end
     return val
   end
-
-  th_getupvalue = function(f, n)
-    return debug.getupvalue(f, n + 1)
-  end
 else
   th_getfenv = debug.getfenv;
-  th_getupvalue = debug.getupvalue;
 end
 
 function permanent(name, ...)
@@ -196,12 +190,12 @@ local function NameOf(obj) -- Debug aid
       local i = 0
       while true do
         i = i + 1
-        local name, val = debug.getupvalue(exploring, i)
-        if not name then
+        local name_val, val = debug.getupvalue(exploring, i)
+        if not name_val then
           break
         end
         if val ~= nil and not explored[val] then
-          to_explore[val] = name .. ".<upvalue-" .. i .. tostring(name) .. ">"
+          to_explore[val] = name_val .. ".<upvalue-" .. i .. tostring(name_val) .. ">"
           explored[val] = true
         end
       end

@@ -118,9 +118,9 @@ function UIPlaceStaff:onMouseUp(button, x, y)
           entity:setTile(self.tile_x, self.tile_y)
           self.ui.hospital:addStaff(entity)
           entity:setHospital(self.ui.hospital)
-          local room = entity:getRoom()
-          if room then
-            room:onHumanoidEnter(entity)
+          local entity_room = entity:getRoom()
+          if entity_room then
+            entity_room:onHumanoidEnter(entity)
           else
             entity:onPlaceInCorridor()
           end

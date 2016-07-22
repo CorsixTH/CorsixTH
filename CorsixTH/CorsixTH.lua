@@ -101,13 +101,10 @@ end
 -- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
 -- it to a running server, using this CorsixTH startup arg: -debugger
 if decoda_output then
-  _DECODA = true
   if jit then
     jit.off()
     decoda_output "JIT compilation disabled"
   end
-else
-  _DECODA = false
 end
 
 -- Enable strict mode

@@ -54,7 +54,7 @@ restrict(newindex, index)
 function destrict(fn)
   return function(...)
     local ni, i = strict_mt.__newindex, strict_mt.__index
-    strict_mt.__newindex, strict_mt.__index = nil
+    strict_mt.__newindex, strict_mt.__index = nil, nil
     return restrict(ni, i, fn(...))
   end
 end

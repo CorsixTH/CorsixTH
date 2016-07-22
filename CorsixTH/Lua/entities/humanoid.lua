@@ -24,8 +24,6 @@ class "Humanoid" (Entity)
 ---@type Humanoid
 local Humanoid = _G["Humanoid"]
 
-local TH = require "TH"
-
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
@@ -464,7 +462,7 @@ function Humanoid:setMood(mood_name, activate)
   end
   local new_mood = nil
   -- TODO: Make equal priorities cycle, or make all moods unique
-  for key, value in pairs(self.active_moods) do
+  for _, value in pairs(self.active_moods) do
     if new_mood then -- There is a mood, check priorities.
       if new_mood.priority < value.priority then
         new_mood = value
@@ -838,7 +836,7 @@ end
 
 -- Helper function that finds out if there is an action queued to use the specified object
 function Humanoid:goingToUseObject(object_type)
-  for i, action in ipairs(self.action_queue) do
+  for _, action in ipairs(self.action_queue) do
     if action.object and action.object.object_type.id == object_type then
       return true
     end

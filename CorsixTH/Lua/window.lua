@@ -926,7 +926,7 @@ function Textbox:drawCursor(canvas, x, y)
   if self.cursor_state then
     local col = TheApp.video:mapRGB(255, 255, 255)
     local cursor_y, cursor_x = self.panel:drawLabel(nil, x, y, self.cursor_pos)
-    local w, h = self.panel.label_font:sizeOf("0")
+    local w, _ = self.panel.label_font:sizeOf("0")
     if self.panel.align == nil or self.panel.align == "center" then
       local _, text_x = self.panel:drawLabel(nil, x, y, {self.cursor_pos[1], #self.text})
       cursor_x = text_x - (text_x - cursor_x) * 2
@@ -1334,7 +1334,7 @@ function Window:onCursorWorldPositionChange(x, y)
 end
 
 function Window:hitTestPanel(x, y, panel)
-  local x, y = x - panel.x, y - panel.y
+  x, y = x - panel.x, y - panel.y
   if panel.visible and x >= 0 and y >= 0 then
     if panel.w and panel.h then
       if x <= panel.w and y <= panel.h then
@@ -1356,9 +1356,6 @@ top-left corner of the window.
 top-left corner of the window.
 ]]
 function Window:hitTest(x, y)
-  if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
---    return false
-  end
   if self.panels[1] then
     for _, panel in ipairs(self.panels) do
       if self:hitTestPanel(x, y, panel) then
@@ -1601,12 +1598,12 @@ function Window:onMouseMove(x, y, dx, dy)
     else
       self.active_button.active = false
       btn.panel_for_sprite.lowered = btn.panel_lowered_normal
-      for _, btn in ipairs(self.buttons) do
-        if btn.enabled and btn.x <= x and x < btn.r and btn.y <= y and y < btn.b then
-          btn.panel_for_sprite.sprite_index = btn.sprite_index_active
-          btn.active = true
-          btn.panel_for_sprite.lowered = btn.panel_lowered_active
-          self.active_button = btn
+      for _, button in ipairs(self.buttons) do
+        if button.enabled and button.x <= x and x < button.r and button.y <= y and y < button.b then
+          button.panel_for_sprite.sprite_index = button.sprite_index_active
+          button.active = true
+          button.panel_for_sprite.lowered = button.panel_lowered_active
+          self.active_button = button
           repaint = true
           break
         end
@@ -1718,7 +1715,6 @@ end
 
 -- Tell the window to bring the specified sub-window to its bottom
 function Window:sendToBottom(window)
-  local window_index
   if self.windows then
     for i = 1, #self.windows do -- Search specified window in windows list
       if self.windows[i] == window then
@@ -1795,7 +1791,7 @@ function Window:getTooltipForElement(elem, x, y)
   else
     text = elem.text
   end
-  local x, y = elem.tooltip_x, elem.tooltip_y
+  x, y = elem.tooltip_x, elem.tooltip_y
   if x then x = x + self.x end -- NB: can be nil, then it means position at mouse cursor
   if y then y = y + self.y end
   if text then

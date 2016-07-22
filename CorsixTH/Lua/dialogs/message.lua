@@ -62,7 +62,7 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self.type = type
 
   local types = { emergency = 43, epidemy = 45, strike = 47, personality = 49, information = 51, disease = 53, report = 55 }
-  local type = types[type]
+  type = types[type]
 
   self.can_dismiss = self.type ~= "strike" and #self.message.choices == 1
 

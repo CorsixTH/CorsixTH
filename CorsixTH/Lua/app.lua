@@ -74,7 +74,7 @@ end
 
 function App:setCommandLine(...)
   self.command_line = {...}
-  for i, arg in ipairs(self.command_line) do
+  for _, arg in ipairs(self.command_line) do
     local setting, value = arg:match("^%-%-([^=]*)=(.*)$") --setting=value
     if value then
       self.command_line[setting] = value
@@ -478,9 +478,9 @@ function App:loadCampaign(campaign_file)
   else
     local level_info, err = self:readLevelFile(campaign_info.levels[1])
     if level_info then
-      local _, errors = self:readMapDataFile(level_info.map_file)
-      if errors then
-        self.ui:addWindow(UIInformation(self.ui, {errors}))
+      local _, errors_l = self:readMapDataFile(level_info.map_file)
+      if errors_l then
+        self.ui:addWindow(UIInformation(self.ui, {errors_l}))
         return
       end
       self:loadLevel(campaign_info.levels[1], nil, level_info.name,
@@ -552,9 +552,9 @@ function App:getAbsolutePathToLevelFile(level)
   local path = debug.getinfo(1, "S").source:sub(2, -12)
   -- First look in Campaigns. If not found there, fall back to Levels.
   local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
-  for _, path in ipairs(list_of_possible_paths) do
-    local check_path = path .. pathsep .. level
-    local file, err = io.open(check_path, "rb")
+  for _, path_l in ipairs(list_of_possible_paths) do
+    local check_path = path_l .. pathsep .. level
+    local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
@@ -840,7 +840,7 @@ function App:saveConfig()
           local _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
           value = temp or value
           -- Remove enclosing [[]], if necessary
-          local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
           value = temp or value
 
           -- If identifier also exists in runtime options, compare their values and
@@ -1084,9 +1084,9 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status, err
+  local status, _
   if self.config.theme_hospital_install then
-    status, err = self.fs:setRoot(self.config.theme_hospital_install)
+    status, _ = self.fs:setRoot(self.config.theme_hospital_install)
   end
   local message = "Please make sure that you point the game to" ..
       " a valid copy of the data files from the original game," ..
@@ -1432,7 +1432,7 @@ function App:checkForUpdates()
     return
   end
 
-  local success, socket = pcall(require, "socket")
+  local success, _ = pcall(require, "socket")
 
   if not success then
     -- LuaSocket is not available, just return
@@ -1445,7 +1445,7 @@ function App:checkForUpdates()
   local url = require "socket.url"
 
   print("Checking for CorsixTH updates...")
-  local update_body, status, headers = http.request(update_url)
+  local update_body, status, _ = http.request(update_url)
 
   if not update_body or not (status == 200) then
     print("Couldn't check for updates. Server returned code: " .. status)

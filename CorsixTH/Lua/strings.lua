@@ -115,7 +115,7 @@ function Strings:init()
     }, infinite_table_mt)
     -- Actually run the language file
     local status, err = pcall(chunk, env)
-    if not status and err ~= good_error_marker and app.good_install_folder then
+    if not status and err ~= good_error_marker and self.app.good_install_folder then
       print("Error evaluating " .. filename .. ":\n" .. tostring(err))
     end
   end
@@ -147,8 +147,8 @@ local strings_metatable = function(no_restriction) return {
       error("Non-existant string: " .. tostring(k), 2)
     end
     local candidates = {}
-    for k, v in pairs(t) do
-      candidates[#candidates + 1] = v
+    for _, w in pairs(t) do
+      candidates[#candidates + 1] = w
     end
     return candidates[math_random(1, #candidates)]
   end,
@@ -206,13 +206,13 @@ function Strings:load(language, no_restriction, no_inheritance)
     end,
     -- Inherit() should evaluate the named language in the current environment
     -- NB: Inheritance of any but original_strings disabled when no_inheritance set
-    Inherit = function(language, ...)
-      if no_inheritance and language ~= "original_strings" then return end
+    Inherit = function(lang, ...)
+      if no_inheritance and lang ~= "original_strings" then return end
       local old_encoding = encoding
       encoding = default_encoding
       local old_language_called = language_called
       language_called = false
-      self:_loadPrivate(language, env, ...)
+      self:_loadPrivate(lang, env, ...)
       encoding = old_encoding
       language_called = old_language_called
     end,

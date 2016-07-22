@@ -195,7 +195,7 @@ end
 -- recurring or long-duration tasks.
 function Entity:tick()
   if self.num_animation_ticks then
-    for i = 1, self.num_animation_ticks do
+    for _ = 1, self.num_animation_ticks do
       self:_tick()
     end
     if self.num_animation_ticks == 1 then

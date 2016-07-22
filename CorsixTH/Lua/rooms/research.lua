@@ -120,7 +120,7 @@ function ResearchRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
   local number = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     -- The number of desks in the room determines how many researchers
     -- can work there at once.
     if object.object_type.id == "desk" then
@@ -157,7 +157,6 @@ end
 function ResearchRoom:commandEnteringPatient(patient)
   local staff = next(self.staff_member_set)
   local autopsy, stf_x, stf_y = self.world:findObjectNear(patient, "autopsy")
-  local orientation = autopsy.object_type.orientations[autopsy.direction]
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
   patient:queueAction{name = "idle", direction = "east"}

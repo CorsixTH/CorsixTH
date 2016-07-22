@@ -115,8 +115,8 @@ end
 function UICallsDispatcher:update()
   self.call_list = {}
   local assigned = 0
-  for object, queue in pairs(self.dispatcher.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.dispatcher.call_queue) do
+    for _, call in pairs(queue) do
       table.insert(self.call_list, call)
       if call.assigned then
         assigned = assigned + 1

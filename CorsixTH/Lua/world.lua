@@ -133,7 +133,7 @@ function World:World(app)
   self.wall_id_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
+      for _, id in pairs(wall_type[set]) do
         self.wall_id_by_block_id[id] = wall_type.id
       end
     end
@@ -141,7 +141,7 @@ function World:World(app)
   self.wall_set_by_block_id = {}
   for _, wall_type in ipairs(self.wall_types) do
     for _, set in ipairs({"inside_tiles", "outside_tiles", "window_tiles"}) do
-      for name, id in pairs(wall_type[set]) do
+      for _, id in pairs(wall_type[set]) do
         self.wall_set_by_block_id[id] = set
       end
     end
@@ -573,7 +573,7 @@ function World:createEarthquake()
 
   -- Prepare machines for getting damage - at most as much as the severity of the earthquake +-1
   for _, room in pairs(self.rooms) do
-    for object, value in pairs(room.objects) do
+    for object, _ in pairs(room.objects) do
       if object.strength then
         object.quake_points = self.earthquake_size + math.random(-1, 1)
       end
@@ -597,7 +597,7 @@ function World:tickEarthquake()
     end
     -- Make sure that machines got all the damage they should get.
     for _, room in pairs(self.rooms) do
-      for object, value in pairs(room.objects) do
+      for object, _ in pairs(room.objects) do
         if object.strength and object.quake_points then
           while object.quake_points > 0 do
             object:machineUsed(room)
@@ -661,8 +661,6 @@ function World:tickEarthquake()
       local hospital = self:getLocalPlayerHospital()
       -- loop through the patients and allow the possibility for them to fall over
       for _, patient in ipairs(hospital.patients) do
-        local current = patient.action_queue[1]
-
         if not patient.in_room and patient.falling_anim then
 
           -- make the patients fall
@@ -929,7 +927,6 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
-  local pause_state_changed = nil
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
     if self.active_earthquake then
@@ -937,7 +934,6 @@ function World:setSpeed(speed)
     end
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
-    pause_state_changed = true
   elseif self:getCurrentSpeed() == "Pause" then
     self.user_actions_allowed = true
   end
@@ -999,7 +995,6 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
-      local pathsep = package.config:sub(1, 1)
       local dir = TheApp.savegame_dir
       if not dir:sub(-1, -1) == pathsep then
         dir = dir .. pathsep
@@ -1065,7 +1060,7 @@ function World:onTick()
       -- A patient might arrive to the player hospital.
       -- TODO: Multiplayer support.
       if self.spawn_hours[self.hour + i-1] and self.hospitals[1].opened then
-        for k=1, self.spawn_hours[self.hour + i-1] do
+        for _ = 1, self.spawn_hours[self.hour + i-1] do
           self:spawnPatient()
         end
       end
@@ -1185,7 +1180,7 @@ function World:onEndDay()
   -- Any patients tomorrow?
   self.spawn_hours = {}
   if self.spawn_dates[self.day] then
-    for i = 1, self.spawn_dates[self.day] do
+    for _ = 1, self.spawn_dates[self.day] do
       local hour = math.random(1, self.hours_per_day)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
@@ -1195,7 +1190,7 @@ function World:onEndDay()
 end
 
 function World:checkIfGameWon()
-  for i, hospital in ipairs(self.hospitals) do
+  for i, _ in ipairs(self.hospitals) do
     local res = self:checkWinningConditions(i)
     if res.state == "win" then
       self:winGame(i)
@@ -1255,7 +1250,7 @@ function World:updateSpawnDates()
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
-  for i = 1, no_of_spawns do
+  for _ = 1, no_of_spawns do
     -- We are interested in the coming month, pick days from it at random.
     local day = math.random(1, month_length[self.month % 12 + 1])
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
@@ -1348,8 +1343,6 @@ end
 
 -- Called when it is time to have another VIP
 function World:nextVip()
-  local current_month = (self.year - 1) * 12 + self.month
-
   -- Support standard values for mean and variance
   local mean = 180
   local variance = 30
@@ -1385,8 +1378,6 @@ function World:nextEarthquake()
   else
     if (tonumber(self.map.level_number) and tonumber(self.map.level_number) >= 5) or
     (not tonumber(self.map.level_number)) then
-      local current_month = (self.year - 1) * 12 + self.month
-
       -- Support standard values for mean and variance
       local mean = 180
       local variance = 30
@@ -1433,7 +1424,7 @@ function World:checkWinningConditions(player_no)
   local hospital = self.hospitals[player_no]
 
   -- Go through the goals
-  for i, goal in ipairs(self.goals) do
+  for _, goal in ipairs(self.goals) do
     local current_value = hospital[goal.name]
     -- If max_min is 1 the value must be > than the goal condition.
     -- If 0 it must be < than the goal condition.
@@ -1603,7 +1594,7 @@ function World:onEndYear()
   end
   -- This is done here instead of in onEndMonth so that the player gets
   -- the chance to receive money or reputation from trophies and awards first.
-  for i, hospital in ipairs(self.hospitals) do
+  for i, _ in ipairs(self.hospitals) do
     local res = self:checkWinningConditions(i)
     if res.state == "lose" then
       self:loseGame(i, res.reason, res.limit)
@@ -1671,24 +1662,17 @@ function World:isTileEmpty(x, y, not_in_room)
   return true
 end
 
-local face_dir = {
-  [0] = "south",
-  [1] = "west",
-  [2] = "north",
-  [3] = "east",
-}
-
 function World:getFreeBench(x, y, distance)
   local bench, rx, ry, bench_distance
   local object_type = self.object_types.bench
   x, y, distance = math.floor(x), math.floor(y), math.ceil(distance)
-  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x, y, d, dist)
-    local b = self:getObject(x, y, "bench")
+  self.pathfinder:findObject(x, y, object_type.thob, distance, function(x_pos, y_pos, d, dist)
+    local b = self:getObject(x_pos, y_pos, "bench")
     if b and not b.user and not b.reserved_for then
       local orientation = object_type.orientations[b.direction]
       if orientation.pathfind_allowed_dirs[d] then
-        rx = x + orientation.use_position[1]
-        ry = y + orientation.use_position[2]
+        rx = x_pos + orientation.use_position[1]
+        ry = y_pos + orientation.use_position[2]
         bench = b
         bench_distance = dist
         return true
@@ -1736,8 +1720,8 @@ function World:findAllObjectsNear(x, y, distance, object_type_name)
     thob = obj_type.thob
   end
 
-  local callback = function(x, y, d)
-    local obj = self:getObject(x, y, object_type_name)
+  local callback = function(x_pos, y_pos, d)
+    local obj = self:getObject(x_pos, y_pos, object_type_name)
     if obj then
       objects[obj] = true
     end
@@ -1789,7 +1773,7 @@ function World:findObjectNear(humanoid, object_type_name, distance, callback)
   if type(object_type_name) == "table" then
     local original_callback = callback
     callback = function(x, y, ...)
-      local obj = self:getObject(x, y, object_type_name)
+      obj = self:getObject(x, y, object_type_name)
       if obj then
         return original_callback(x, y, ...)
       end
@@ -1832,15 +1816,14 @@ function World:findFreeObjectNearToUse(humanoid, object_type_name, which, curren
     object = obj
     ox = x
     oy = y
-    if which == "far" then
-      -- just take the last found object, so don't ever abort
-    elseif which == "near" then
+    -- if which == "far" then just take the last found object, so don't ever abort
+    if which == "near" then
       -- abort at each item with 50% probability
       local chance = math.random(1, 2)
       if chance == 1 then
         return true
       end
-    else
+    elseif which ~= "far" then
       -- default: return at the first found item
       return true
     end
@@ -2008,12 +1991,12 @@ end
 -- flag's boolean value or false if the tile isn't valid.
 ---
 function World:isFootprintTileBuildableOrPassable(x, y, tile, footprint, requirement_flag)
-  local function isTileValid(x, y, complete_cell, flags, flag_name, need_side)
+  local function isTileValid(x_pos, y_pos, complete_cell, flags, flag_name, need_side)
     if complete_cell or need_side then
       return flags[flag_name]
     end
-    for _, tile in ipairs(footprint) do
-      if(tile[1] == x and tile[2] == y) then
+    for _, tile_fp in ipairs(footprint) do
+      if(tile_fp[1] == x_pos and tile_fp[2] == y_pos) then
         return flags[flag_name]
       end
     end
@@ -2062,9 +2045,9 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
     end
   end
 
-  local function isIsolated(x, y)
+  local function isIsolated(x_pos, y_pos)
     setFootprintTilesPassable(false)
-    local result = not self.pathfinder:isReachableFromHospital(x, y)
+    local result = not self.pathfinder:isReachableFromHospital(x_pos, y_pos)
     setFootprintTilesPassable(true)
     return result
   end
@@ -2082,32 +2065,32 @@ function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, objec
   setFootprintTilesPassable(false)
   local prev_x, prev_y
   for _, tile in ipairs(object.orientations[objects_orientation].adjacent_to_solid_footprint) do
-    local x = x + tile[1]
-    local y = y + tile[2]
+    local x_o = x + tile[1]
+    local y_o = y + tile[2]
     local flags = {}
-    if map:getCellFlags(x, y, flags).roomId == spawn_rooms_id and flags.passable then
+    if map:getCellFlags(x_o, y_o, flags).roomId == spawn_rooms_id and flags.passable then
       if prev_x then
-        if not self.pathfinder:findDistance(x, y, prev_x, prev_y) then
+        if not self.pathfinder:findDistance(x_o, y_o, prev_x, prev_y) then
           -- There is no route between the two map nodes. In most cases,
           -- this means that connectedness has changed, though there is
           -- one rare situation where the above test is insufficient. If
-          -- (x, y) is a passable but isolated node outside the hospital
+          -- (x_o, y_o) is a passable but isolated node outside the hospital
           -- and (prev_x, prev_y) is in the corridor, then the two will
           -- not be connected now, but critically, neither were they
           -- connected before.
-          if not isIsolated(x, y) then
+          if not isIsolated(x_o, y_o) then
             if not isIsolated(prev_x, prev_y) then
               all_good = false
               break
             end
           else
-            x = prev_x
-            y = prev_y
+            x_o = prev_x
+            y_o = prev_y
           end
         end
       end
-      prev_x = x
-      prev_y = y
+      prev_x = x_o
+      prev_y = y_o
     end
   end
 
@@ -2136,10 +2119,9 @@ function World:objectPlaced(entity, id)
   if id == "bench" and entity.tile_x and entity.tile_y then
     local notify_distance = 6
     local w, h = self.map.th:size()
-    local tx, ty
-    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
-      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+    for tlx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for tly = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tlx, tly)) do
           if class.is(patient, Patient) then
             patient:notifyNewObject(id)
           end
@@ -2312,7 +2294,6 @@ end
 -- This is automatically done on each error.
 function World:dumpGameLog()
   local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi, err = io.open(gamelog_path, "w")
@@ -2395,7 +2376,7 @@ function World:afterLoad(old, new)
       plant = 0,
       general = 0,
     }
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat then
@@ -2406,7 +2387,7 @@ function World:afterLoad(old, new)
   end
   if old < 43 then
     self.object_counts.reception_desk = 0
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat and count_cat == "reception_desk" then
@@ -2417,7 +2398,7 @@ function World:afterLoad(old, new)
   end
   if old < 47 then
     self.object_counts.bench = 0
-    for position, obj_list in pairs(self.objects) do
+    for _, obj_list in pairs(self.objects) do
       for _, obj in ipairs(obj_list) do
         local count_cat = obj.object_type.count_category
         if count_cat and count_cat == "bench" then

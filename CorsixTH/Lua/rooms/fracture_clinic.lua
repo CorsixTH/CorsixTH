@@ -53,7 +53,6 @@ end
 function FractureRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local cast, pat_x, pat_y = self.world:findObjectNear(patient, "cast_remover")
-  local orientation = cast.object_type.orientations[cast.direction]
   local stf_x, stf_y = cast:getSecondaryUsageTile()
 
   staff:walkTo(stf_x, stf_y)

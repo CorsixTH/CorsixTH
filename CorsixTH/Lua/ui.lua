@@ -30,14 +30,13 @@ local TH = require "TH"
 local SDL = require "sdl"
 local WM = SDL.wm
 local lfs = require "lfs"
-local pathsep = package.config:sub(1, 1)
 
 local function invert(t)
   local r = {}
   for k, v in pairs(t) do
     if type(v) == "table" then
-      for _, v in ipairs(v) do
-        r[v] = k
+      for _, w in ipairs(v) do
+        r[w] = k
       end
     else
       r[v] = k
@@ -327,7 +326,6 @@ end
 
 function UI:draw(canvas)
   local app = self.app
-  local config = app.config
   if self.background then
     local bg_w, bg_h = self.background_width, self.background_height
     local screen_w, screen_h = app.config.width, app.config.height
@@ -430,8 +428,6 @@ function UI:unregisterTextBox(box)
 end
 
 function UI:changeResolution(width, height)
-  local old_width, old_height = self.app.config.width, self.app.config.height
-
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(width, height, unpack(self.app.modes))
   self.app:finishVideoUpdate()
@@ -806,7 +802,7 @@ function UI:afterLoad(old, new)
   end
   if old < 63 then
     -- modifiers have been added to key handlers
-    for key, handlers in pairs(self.key_handlers) do
+    for _, handlers in pairs(self.key_handlers) do
       for _, handler in ipairs(handlers) do
         handler.modifiers = {}
       end

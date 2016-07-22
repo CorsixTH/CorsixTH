@@ -70,7 +70,6 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
 end)
 
 local flag_list_bottom = 2048
-local flag_early_list = 1024
 local flag_flip_h = 1
 
 local navigateDoor

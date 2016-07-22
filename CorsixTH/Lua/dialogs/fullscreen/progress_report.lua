@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-
 --! Progress Report fullscreen window (check level goals, competitors and alerts).
 class "UIProgressReport" (UIFullscreen)
 
@@ -57,7 +55,7 @@ function UIProgressReport:UIProgressReport(ui)
   -- Add the icons for the criteria
   local x = 263
   local world_goals = world.goals
-  for i, tab in ipairs(world_goals) do
+  for _, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
     local res_value = world_goals[crit_name].win_value
     world_goals[crit_name].visible = true
@@ -199,7 +197,7 @@ function UIProgressReport:draw(canvas, x, y)
 
   -- Draw the vertical bars for the winning conditions
   local lx = 270
-  for i, tab in ipairs(world_goals) do
+  for _, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
     if world_goals[crit_name].visible then
       local sprite_offset = world_goals[crit_name].red and 2 or 0

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local action_queue_leave_bench
+
 local function get_direction(x, y, facing_x, facing_y)
   if facing_y < y then
     return "north"
@@ -116,10 +118,9 @@ local function action_queue_finish_standing(action, humanoid)
     end
     index = index - 1
   end
-  error("Queue action not in action_queue")
 end
 
-local function action_queue_leave_bench(action, humanoid)
+function action_queue_leave_bench(action, humanoid)
   local index
   for i, current_action in ipairs(humanoid.action_queue) do
     -- Check to see that we haven't
@@ -147,7 +148,6 @@ local function action_queue_leave_bench(action, humanoid)
     end
     index = index - 1
   end
-  error("Queue action not in action_queue")
 end
 
 local action_queue_on_change_position = permanent"action_queue_on_change_position"( function(action, humanoid)
@@ -208,7 +208,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
   -- Stand up in the correct position in the queue
   local standing_index = 0
   local our_room = humanoid:getRoom()
-  for i, person in ipairs(queue) do
+  for _, person in ipairs(queue) do
     if person == humanoid then
       break
     end

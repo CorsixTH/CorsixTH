@@ -864,7 +864,6 @@ end
 --!param canvas (draw object) Canvas to draw on.
 function UIMapEditor:draw(canvas, ...)
   local ui = self.ui
-  local map = self.ui.app.map
 
   -- Draw the red grid for the selected tile.
   local coords = self:getDrawPoints()
@@ -961,7 +960,6 @@ end
 --!return (int, int) Tile x,y coordinates, limited to the map.
 function UIMapEditor:mouseToWorld(mx, my)
   local ui = self.ui
-  local map = self.ui.app.map
 
   local wxr, wyr = ui:ScreenToWorld(self.x + mx, self.y + my)
   local wx = math.floor(wxr)
@@ -1566,4 +1564,3 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   return repaint
 end
-

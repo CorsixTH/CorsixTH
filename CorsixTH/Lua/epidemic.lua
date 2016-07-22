@@ -420,9 +420,7 @@ function Epidemic:finishCoverUp()
     self:toggleVaccinationMode()
   end
 
-  local total_infected = #self.infected_patients
   local still_infected = self:countInfectedPatients()
-  local total_cured = self:countCuredPatients()
 
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
@@ -581,7 +579,7 @@ function Epidemic:markedPatientsCallForVaccination()
   for _, infected_patient in ipairs(self.infected_patients) do
     if infected_patient.marked_for_vaccination and
         not infected_patient.reserved_for and is_static(infected_patient) then
-      local call = self.world.dispatcher:callNurseForVaccination(infected_patient)
+      self.world.dispatcher:callNurseForVaccination(infected_patient)
     end
   end
 end

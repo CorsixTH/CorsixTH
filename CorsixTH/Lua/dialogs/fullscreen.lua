@@ -75,28 +75,28 @@ function UIFullscreen:onChangeResolution()
   end
 end
 
-function UIFullscreen:draw(canvas, x, y)
+function UIFullscreen:draw(canvas, x_pos, y_pos)
   local sprites = self.border_sprites
   if sprites then
     local draw = sprites.draw
-    local x = self.x + x
-    local y = self.y + y
+    local x = self.x + x_pos
+    local y = self.y + y_pos
     canvas:nonOverlapping(true)
     draw(sprites, canvas, 10, x - 9, y - 9)
     draw(sprites, canvas, 12, x + 600, y - 9)
     draw(sprites, canvas, 15, x - 9, y + 440)
     draw(sprites, canvas, 17, x + 600, y + 440)
-    for x = x + 40, x + 560, 40 do
-      draw(sprites, canvas, 11, x, y - 9)
-      draw(sprites, canvas, 16, x, y + 480)
+    for xx = x + 40, x + 560, 40 do
+      draw(sprites, canvas, 11, xx, y - 9)
+      draw(sprites, canvas, 16, xx, y + 480)
     end
-    for y = y + 40, y + 400, 40 do
-      draw(sprites, canvas, 13, x - 9, y)
-      draw(sprites, canvas, 14, x + 640, y)
+    for yy = y + 40, y + 400, 40 do
+      draw(sprites, canvas, 13, x - 9, yy)
+      draw(sprites, canvas, 14, x + 640, yy)
     end
     canvas:nonOverlapping(false)
   end
-  return Window.draw(self, canvas, x, y)
+  return Window.draw(self, canvas, x_pos, y_pos)
 end
 
 function UIFullscreen:onMouseDown(button, x, y)

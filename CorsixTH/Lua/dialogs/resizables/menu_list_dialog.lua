@@ -58,7 +58,6 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_beside_li
   self.items = items
   self.num_rows = num_rows and num_rows or 10
 
-  local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
   self.on_top = mode == "menu"
@@ -135,4 +134,3 @@ function UIMenuList:close()
     self.ui:addWindow(UIMainMenu(self.ui))
   end
 end
-
