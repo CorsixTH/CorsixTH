@@ -91,9 +91,10 @@ static int l_map_load(lua_State *L)
     THMap* pMap = luaT_testuserdata<THMap>(L);
     size_t iDataLen;
     const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
+    bool for_edit = static_cast<bool>(lua_toboolean(L, 3));
     lua_settop(L, 2);
     lua_newtable(L);
-    if(pMap->loadFromTHFile(pData, iDataLen, l_map_load_obj_cb, (void*)L))
+    if(pMap->loadFromTHFile(pData, iDataLen, l_map_load_obj_cb, (void*)L, for_edit))
         lua_pushboolean(L, 1);
     else
         lua_pushboolean(L, 0);

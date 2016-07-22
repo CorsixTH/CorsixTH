@@ -195,7 +195,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     local data
     data, errors = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      i, objects = self.th:load(data, map_editor)
     else
       return nil, errors
     end
@@ -230,7 +230,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     else
       local data, errors = self:getRawData(level)
       if data then
-        i, objects = self.th:load(data)
+        i, objects = self.th:load(data, map_editor)
       else
         return nil, errors
       end
@@ -246,7 +246,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.map_file = map_file
     local data, errors = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      i, objects = self.th:load(data, map_editor)
     else
       return nil, errors
     end

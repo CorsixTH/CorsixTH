@@ -352,7 +352,7 @@ bool THMap::loadBlank()
 
 bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
                            THMapLoadObjectCallback_t fnObjectCallback,
-                           void* pCallbackToken)
+                           void* pCallbackToken, bool for_edit)
 {
     if(iDataLength < 163948 || !setSize(128, 128))
         return false;
@@ -438,7 +438,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             if(!(pData[5] & 1))
             {
                 pNode->flags.passable = true;
-                if(*pParcel && !(pData[7] & 16))
+                if((*pParcel || for_edit) && !(pData[7] & 16))
                 {
                     pNode->flags.hospital = true;
                     if(!(pData[5] & 2)) {

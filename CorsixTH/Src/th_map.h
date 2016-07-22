@@ -240,7 +240,7 @@ public:
     bool loadBlank();
     bool loadFromTHFile(const uint8_t* pData, size_t iDataLength,
                         THMapLoadObjectCallback_t fnObjectCallback,
-                        void* pCallbackToken);
+                        void* pCallbackToken, bool for_edit);
 
     void save(std::string filename);
 
