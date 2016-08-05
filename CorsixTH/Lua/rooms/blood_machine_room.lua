@@ -56,28 +56,25 @@ function BloodMachineRoom:commandEnteringPatient(patient)
   local orientation = machine.object_type.orientations[machine.direction]
   local pat_x, pat_y = machine:getSecondaryUsageTile()
 
-  staff:setNextAction{name = "walk", x = stf_x, y = stf_y}
-  patient:setNextAction{name = "walk", x = pat_x, y = pat_y}
-  patient:queueAction{name = "idle", direction = machine.direction == "north" and "west" or "north"}
+  staff:setNextAction(WalkAction(stf_x, stf_y))
+  patient:setNextAction(WalkAction(pat_x, pat_y))
+  patient:queueAction(IdleAction():setDirection(machine.direction == "north" and "west" or "north"))
+
   local length = math.random(2, 4)
-  local action
-  staff:queueAction{
-    name = "multi_use_object",
-    object = machine,
-    use_with = patient,
-    prolonged_usage = true,
-    invisible_phase_span = {-3, 3},
-    loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-      length = length - 1
-    end,
-    after_use = --[[persistable:blood_machine_after_use]] function()
-      staff:setNextAction{name = "meander"}
-      self:dealtWithPatient(patient)
-    end,
-  }
+  local loop_callback = --[[persistable:blood_machine_loop_callback]] function(action)
+    if length <= 0 then
+      action.prolonged_usage = false
+    end
+    length = length - 1
+  end
+
+  local after_use = --[[persistable:blood_machine_after_use]] function()
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
+  staff:queueAction(MultiUseObjectAction(machine, patient):setProlongedUsage(true)
+      :setInvisiblePhaseSpan({-3, 3}):setLoopCallback(loop_callback):setAfterUse(after_use))
 
   return Room.commandEnteringPatient(self, patient)
 end

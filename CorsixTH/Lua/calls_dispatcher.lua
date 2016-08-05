@@ -258,7 +258,7 @@ function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
     -- The epidemic may have ended before the call can be executed
     -- so just finish the call immediately
     CallsDispatcher.queueCallCheckpointAction(nurse)
-    nurse:queueAction{name = "answer_call"}
+    nurse:queueAction(AnswerCallAction())
     nurse:finishAction()
     patient.reserved_for = nil
   end
@@ -418,11 +418,8 @@ end
 -- A interrupt handler could be supplied if special handling is needed.
 -- If not, the default would be reinsert the call into the queue
 function CallsDispatcher.queueCallCheckpointAction(humanoid, interrupt_handler)
-  return humanoid:queueAction{
-    name = "call_checkpoint",
-    call = humanoid.on_call,
-    on_remove = interrupt_handler or CallsDispatcher.actionInterruptHandler
-  }
+  interrupt_handler = interrupt_handler or CallsDispatcher.actionInterruptHandler
+  return humanoid:queueAction(CallCheckPointAction(humanoid.on_call, interrupt_handler))
 end
 
 -- Default checkpoint interrupt handler
@@ -488,7 +485,7 @@ function CallsDispatcher.unassignCall(call)
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
   call.assigned = nil
   assigned.on_call = nil
-  assigned:setNextAction{name = "answer_call"}
+  assigned:setNextAction(AnswerCallAction())
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)

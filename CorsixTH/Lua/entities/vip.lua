@@ -70,7 +70,7 @@ function Vip:tickDay()
       while self.next_room and not self.next_room.is_active do
         self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       end
-      self:setNextAction{name = "vip_go_to_next_room"}
+      self:setNextAction(VipGoToNextRoomAction())
     end
   end
 
@@ -456,7 +456,7 @@ end
 function Vip:afterLoad(old, new)
   if old < 50 then
     self.num_visited_rooms = 0
-    self:setNextAction{name = "idle"}
+    self:setNextAction(IdleAction())
     self.waiting = 1
     for _, room in pairs(self.world.rooms) do
       if room.door.reserved_for == self then

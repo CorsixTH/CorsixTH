@@ -309,7 +309,7 @@ function UIEditRoom:clearArea()
         elseif entity.action_queue[1].name == "seek_room" or (meander and meander.name == "seek_room") then
           -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
           if entity.action_queue[1].name == "seek_room" then
-            entity:queueAction({name = "meander", count = 1, must_happen = true}, 0)
+            entity:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
           else
             meander.done_walk = false
           end
@@ -599,7 +599,7 @@ function UIEditRoom:returnToDoorPhase()
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
-    room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
+    room.door.queue:rerouteAllPatients(SeekRoomAction(room.room_info.id))
   end
 
   self.purchase_button:enable(false)

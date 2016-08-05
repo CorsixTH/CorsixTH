@@ -18,6 +18,17 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "CallCheckPointAction" (HumanoidAction)
+
+---@type CallCheckPointAction
+local CallCheckPointAction = _G["CallCheckPointAction"]
+
+function CallCheckPointAction:CallCheckPointAction(call, on_remove)
+  self:HumanoidAction("call_checkpoint")
+  self.call = call -- Whether the humanoid is on call.
+  self.on_remove = on_remove -- Interrupt handler to use.
+end
+
 local function action_call_checkpoint_start(action, humanoid)
   action.must_happen = true
   CallsDispatcher.onCheckpointCompleted(action.call)

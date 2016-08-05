@@ -18,6 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "MeanderAction" (HumanoidAction)
+
+---@type MeanderAction
+local MeanderAction = _G["MeanderAction"]
+
+function MeanderAction:MeanderAction()
+  self:HumanoidAction("meander")
+end
+
 local function meander_action_start(action, humanoid)
   local room = humanoid:getRoom()
   -- Answering call queue
@@ -62,7 +71,7 @@ local function meander_action_start(action, humanoid)
   if x == humanoid.tile_x and y == humanoid.tile_y then
     -- Nowhere to walk to - go idle instead, or go onto the next action
     if #humanoid.action_queue == 1 then
-      humanoid:queueAction{name = "idle"}
+      humanoid:queueAction(IdleAction())
     end
     humanoid:finishAction()
     return
@@ -84,14 +93,14 @@ local function meander_action_start(action, humanoid)
       return
     end
   end
+
   local procrastination
   if action.can_idle and math.random(1, 3) == 1 then
-    procrastination = {name = "idle", count = math.random(25, 40)}
+    procrastination = IdleAction():setCount(math.random(25, 40)):setMustHappen(action.must_happen)
   else
     action.can_idle = true
-    procrastination = {name = "walk", x = x, y = y}
+    procrastination = WalkAction(x, y):setMustHappen(action.must_happen)
   end
-  procrastination.must_happen = action.must_happen
   humanoid:queueAction(procrastination, 0)
 end
 

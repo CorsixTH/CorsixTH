@@ -18,6 +18,43 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "WalkAction" (HumanoidAction)
+
+---@type WalkAction
+local WalkAction = _G["WalkAction"]
+
+--! Action to walk to a given position.
+--!param x (int) X coordinate of the destination tile.
+--!param y (int) Y coordinate of the destination tile.
+function WalkAction:WalkAction(x, y)
+  self:HumanoidAction("walk")
+  self.x = x
+  self.y = y
+  self.truncate_only_on_high_priority = false
+  self.walking_to_vaccinate = false -- Nurse walking with the intention to vaccinate
+  self.is_entering = nil -- Whether the walk enters a room.
+end
+
+function WalkAction:truncateOnHighPriority()
+  self.truncate_only_on_high_priority = true
+  return self
+end
+
+--! Nurse is walking with the intention to vaccinate.
+--!return (action) self, for daisy-chaining.
+function WalkAction:enableWalkingToVaccinate()
+  self.walking_to_vaccinate = true
+  return self
+end
+
+--! Set a flag whether the walk enters a room.
+--!param entering (bool) If set or nil, set the flag of entering the room.
+--!return (action) self, for daisy-chaining.
+function WalkAction:setIsEntering(entering)
+  self.is_entering = entering
+  return self
+end
+
 local action_walk_interrupt
 action_walk_interrupt = permanent"action_walk_interrupt"( function(action, humanoid, high_priority)
   if action.truncate_only_on_high_priority and not high_priority then
@@ -235,10 +272,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
     -- A member of staff is entering, but is maybe no longer needed
     -- in this room?
     if not room.is_active or not room:staffFitsInRoom(humanoid) then
-      humanoid:queueAction({name = "idle"},0)
+      humanoid:queueAction(IdleAction(), 0)
       humanoid:setTilePositionSpeed(x1, y1)
-      humanoid:setNextAction({name = "idle", count = 10},0)
-      humanoid:queueAction{name = "meander"}
+      humanoid:setNextAction(IdleAction():setCount(10), 0)
+      humanoid:queueAction(MeanderAction())
       return
     end
   end
@@ -259,21 +296,11 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if is_entering_room and queue:size() == 0 and not room:getPatient() and
         not door.user and not door.reserved_for and humanoid.should_knock_on_doors and
         room.room_info.required_staff and not swinging then
-      humanoid:queueAction({
-        name = "knock_door",
-        door = door,
-        direction = dir,
-      }, action_index)
+      humanoid:queueAction(KnockDoorAction(door, dir), action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction({
-      name = "queue",
-      is_leaving = humanoid:isLeaving(),
-      x = x1,
-      y = y1,
-      queue = queue,
-      reserve_when_done = door,
-    }, action_index)
+    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(humanoid:isLeaving())
+        :setReserveWhenDone(door), action_index)
     action.must_happen = action.saved_must_happen
     action.reserve_on_resume = door
     return
@@ -284,11 +311,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors and
       room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
-    humanoid:queueAction({
-      name = "knock_door",
-      door = door,
-      direction = dir,
-    }, 0)
+    humanoid:queueAction(KnockDoorAction(door, dir), 0)
     action.reserve_on_resume = door
     action.done_knock = true
     return

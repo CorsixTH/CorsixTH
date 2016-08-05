@@ -535,12 +535,8 @@ function Epidemic:evacuateHospital()
       patient:clearDynamicInfo()
       patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
       patient:setMood("exit","activate")
-      patient:setNextAction{
-        name = "spawn",
-        mode = "despawn",
-        point = self.world.spawn_points[math.random(1, #self.world.spawn_points)],
-        must_happen = true,
-      }
+      local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+      patient:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
     end
   end
 end
@@ -560,9 +556,9 @@ function Epidemic:spawnInspector()
   inspector:setType("Inspector")
 
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
-  inspector:setNextAction{name = "spawn", mode = "spawn", point = spawn_point}
+  inspector:setNextAction(SpawnAction("spawn", spawn_point))
   inspector:setHospital(self.hospital)
-  inspector:queueAction{name = "seek_reception"}
+  inspector:queueAction(SeekReceptionAction())
 end
 
 --[[ Is the patient "still" either idle queuing or sitting on a bench
@@ -599,7 +595,7 @@ function Epidemic:createVaccinationActions(patient,nurse)
   if not x or not y then
     nurse:setCallCompleted()
     patient.reserved_for = nil
-    nurse:setNextAction({name = "meander"})
+    nurse:setNextAction(MeanderAction())
     patient:removeVaccinationCandidateStatus()
   else
     -- Give selected patient the cursor with the arrow once they are next
@@ -607,12 +603,8 @@ function Epidemic:createVaccinationActions(patient,nurse)
     patient:giveVaccinationCandidateStatus()
     local level_config = self.world.map.level_config
     local fee = level_config.gbv.VacCost or 50
-    nurse:setNextAction({name = "walk", x = x, y = y,
-                        must_happen = true,
-                        walking_to_vaccinate = true})
-    nurse:queueAction({name ="vaccinate",
-                      vaccination_fee = fee,
-                      patient = patient, must_happen = true})
+    nurse:setNextAction(WalkAction(x, y):setMustHappen(true):enableWalkingToVaccinate())
+    nurse:queueAction(VaccinateAction(patient, fee))
   end
 end
 

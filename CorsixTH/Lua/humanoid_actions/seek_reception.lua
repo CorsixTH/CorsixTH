@@ -18,6 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekReceptionAction" (HumanoidAction)
+
+---@type SeekReceptionAction
+local SeekReceptionAction = _G["SeekReceptionAction"]
+
+function SeekReceptionAction:SeekReceptionAction()
+  self:HumanoidAction("seek_reception")
+end
+
 local function can_join_queue_at(humanoid, x, y, use_x, use_y)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
@@ -68,17 +77,10 @@ local function action_seek_reception_start(action, humanoid)
     -- immediately, so walk them closer to the desk before joining the queue
     if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
-      humanoid:setNextAction{
-        name = "queue",
-        x = x,
-        y = y,
-        queue = best_desk.queue,
-        face_x = face_x,
-        face_y = face_y,
-        must_happen = action.must_happen,
-      }
+      humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.mustHappen)
+          :setFaceDirection(face_x, face_y))
     else
-      local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
+      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
@@ -96,16 +98,15 @@ local function action_seek_reception_start(action, humanoid)
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
     if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
-      procrastination = {name = "meander", count = 1}
+      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
       if not humanoid.waiting then
         -- Eventually people are going to get bored and leave.
         humanoid.waiting = 5
       end
     else
       local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-      procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen)
     end
-    procrastination.must_happen = action.must_happen
     humanoid:queueAction(procrastination, 0)
   end
 end

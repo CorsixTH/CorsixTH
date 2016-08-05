@@ -86,13 +86,7 @@ end
 --!return Action to move to the tile just outside the room.
 function Room:createLeaveAction()
   local x, y = self:getEntranceXY(false)
-  return {
-    name = "walk",
-    x = x,
-    y = y,
-    is_leaving = true,
-    truncate_only_on_high_priority = true,
-  }
+  return WalkAction(x, y):setIsLeaving(true):truncateOnHighPriority()
 end
 
 function Room:createEnterAction(humanoid_entering, callback)
@@ -100,16 +94,16 @@ function Room:createEnterAction(humanoid_entering, callback)
   if not callback then
     if class.is(humanoid_entering, Patient) then
       callback = --[[persistable:room_patient_enroute_cancel]] function()
-        humanoid_entering:setNextAction({name = "seek_room", room_type = self.room_info.id})
+        humanoid_entering:setNextAction(SeekRoomAction(self.room_info.id))
       end
     elseif class.is(humanoid_entering, Vip) then
       callback = --[[persistable:room_vip_enroute_cancel]] function()
-        humanoid_entering:setNextAction({name = "idle"})
+        humanoid_entering:setNextAction(IdleAction())
         humanoid_entering.waiting = 1;
       end
     else
       callback = --[[persistable:room_humanoid_enroute_cancel]] function()
-        humanoid_entering:setNextAction({name = "meander"})
+        humanoid_entering:setNextAction(MeanderAction())
       end
     end
   end
@@ -117,8 +111,7 @@ function Room:createEnterAction(humanoid_entering, callback)
     self.humanoids_enroute[humanoid_entering] = {callback = callback}
   end
 
-  return {name = "walk", x = x, y = y,
-    is_entering = humanoid_entering and self or true}
+  return WalkAction(x, y):setIsEntering(humanoid_entering and self or true)
 end
 
 --! Get a patient in the room.
@@ -175,7 +168,7 @@ function Room:dealtWithPatient(patient)
       patient:completeDiagnosticStep(self)
       self.hospital:receiveMoneyForTreatment(patient)
       if patient:agreesToPay("diag_gp") then
-        patient:queueAction{name = "seek_room", room_type = "gp"}
+        patient:queueAction(SeekRoomAction("gp"))
       else
         patient:goHome("over_priced", "diag_gp")
       end
@@ -186,15 +179,15 @@ function Room:dealtWithPatient(patient)
       local next_room = patient.disease.treatment_rooms[patient.cure_rooms_visited + 1]
       if next_room then
         -- Do not say that it is a treatment room here, since that check should already have been made.
-        patient:queueAction{name = "seek_room", room_type = next_room}
+        patient:queueAction(SeekRoomAction(next_room))
       else
         -- Patient is "done" at the hospital
         patient:treatDisease()
       end
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction(MeanderAction():setCount(2))
+    patient:queueAction(IdleAction())
   end
 
   if self.dealt_patient_callback then
@@ -307,10 +300,10 @@ function Room:onHumanoidEnter(humanoid)
     self.humanoids[humanoid] = true
     if class.is(humanoid, Patient) then
       self:makeHumanoidLeave(humanoid)
-      humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+      humanoid:queueAction(SeekRoomAction(self.room_info.id))
     else
       humanoid:setNextAction(self:createLeaveAction())
-      humanoid:queueAction({name = "meander"})
+      humanoid:queueAction(MeanderAction())
     end
     return
   end
@@ -323,7 +316,7 @@ function Room:onHumanoidEnter(humanoid)
       assert(humanoid.on_call.object:getRoom() == self, "Handyman arrived is on call but not arriving to the designated room")
     else
       -- If the handyman was not assigned for the job (e.g. drop by manual pickup), do answer a call
-      humanoid:setNextAction{name = "answer_call"}
+      humanoid:setNextAction(AnswerCallAction())
     end
     return
   end
@@ -351,7 +344,7 @@ function Room:onHumanoidEnter(humanoid)
           end
         if not staff_member.dealing_with_patient then
           staff_member:setNextAction(self:createLeaveAction())
-          staff_member:queueAction{name = "meander"}
+          staff_member:queueAction(MeanderAction())
           self.staff_member = humanoid
           humanoid:setCallCompleted()
           self:commandEnteringStaff(humanoid)
@@ -359,16 +352,16 @@ function Room:onHumanoidEnter(humanoid)
           if self.waiting_staff_member then
             self.waiting_staff_member.waiting_on_other_staff = nil
             self.waiting_staff_member:setNextAction(self:createLeaveAction())
-            self.waiting_staff_member:queueAction{name = "meander"}
+            self.waiting_staff_member:queueAction(MeanderAction())
           end
           self:createDealtWithPatientCallback(humanoid)
           humanoid.waiting_on_other_staff = true
-          humanoid:setNextAction{name = "meander"}
+          humanoid:setNextAction(MeanderAction())
         end
       else
         self.humanoids[humanoid] = true
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction{name = "meander"}
+        humanoid:queueAction(MeanderAction())
         humanoid:adviseWrongPersonForThisRoom()
       end
     else
@@ -389,7 +382,7 @@ function Room:onHumanoidEnter(humanoid)
         not self:isDiagnosisRoomForPatient(humanoid) then
       humanoid:queueAction(self:createLeaveAction())
       humanoid.needs_redirecting = true
-      humanoid:queueAction({name = "seek_room", room_type = "gp"})
+      humanoid:queueAction(SeekRoomAction("gp"))
       return
     end
     -- Check if the staff requirements are still fulfilled (the staff might have left / been picked up meanwhile)
@@ -413,7 +406,7 @@ function Room:createDealtWithPatientCallback(humanoid)
     local staff_member = self:getStaffMember()
     if staff_member then
       staff_member:setNextAction(self:createLeaveAction())
-      staff_member:queueAction{name = "meander"}
+      staff_member:queueAction(MeanderAction())
       staff_member:setMood("staff_wait", "deactivate")
       staff_member:setDynamicInfoText("")
     end
@@ -471,7 +464,7 @@ end
 function Room:commandEnteringStaff(humanoid, already_initialized)
   if not already_initialized then
     self.staff_member = humanoid
-    humanoid:setNextAction{name = "meander"}
+    humanoid:setNextAction(MeanderAction())
   end
   self:tryToFindNearbyPatients()
   humanoid:setDynamicInfoText("")
@@ -772,9 +765,9 @@ function Room:crashRoom()
     local person = self.door.reserved_for
     if not person:isLeaving() then
       if class.is(person, Patient) then
-        --Delay so that room is destroyed before the seek_room search.
-        person:queueAction({name = "idle", count = 1})
-        person:queueAction({name = "seek_room", room_type = self.room_info.id})
+        --Delay so that room is destroyed before the SeekRoom search.
+        person:queueAction(IdleAction():setCount(1))
+        person:queueAction(SeekRoomAction(self.room_info.id))
       end
     end
     person:finishAction()
@@ -782,7 +775,7 @@ function Room:crashRoom()
   end
 
   local remove_humanoid = function(humanoid)
-    humanoid:queueAction({name = "idle"}, 1)
+    humanoid:queueAction(IdleAction(), 1)
     humanoid.user_of = nil
     -- Make sure any emergency list is not messed up.
     -- Note that these humanoids might just have been kicked. (No hospital set)
@@ -868,15 +861,13 @@ end
 -- Tells a humanoid in the room to leave it. This can be overridden for special
 -- handling, e.g. if the humanoid needs to change before leaving the room.
 function Room:makeHumanoidLeave(patient)
-  local leave = self:createLeaveAction()
-  leave.must_happen = true
+  local leave = self:createLeaveAction():setMustHappen(true)
   patient:setNextAction(leave)
 end
 
 function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
   if not humanoid:isLeaving() then
-    local leave = self:createLeaveAction()
-    leave.must_happen = true
+    local leave = self:createLeaveAction():setMustHappen(true)
 
     if not string.find(humanoid.humanoid_class, "Stripped") then
       humanoid:setNextAction(leave)
@@ -884,12 +875,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
     end
 
     local screen, sx, sy = self.world:findObjectNear(humanoid, "screen")
-    local use_screen = {
-      name = "use_screen",
-      object = screen,
-      must_happen = true,
-      is_leaving = true
-    }
+    local use_screen = UseScreenAction(screen):setMustHappen(true):setIsLeaving(true)
 
     --Make old saved game action queues compatible with the changes made by the #293 fix commit:
     for actions_index, action in ipairs(humanoid.action_queue) do
@@ -908,14 +894,7 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
       humanoid.action_queue[1].after_use = nil
       humanoid:setNextAction(use_screen)
     else
-      humanoid:setNextAction{
-        name = "walk",
-        x = sx,
-        y = sy,
-        must_happen = true,
-        no_truncate = true,
-        is_leaving = true
-      }
+      humanoid:setNextAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate():setIsLeaving(true))
       humanoid:queueAction(use_screen)
     end
 
@@ -946,10 +925,10 @@ function Room:tryToEdit()
     if not humanoid:isLeaving() then
       if class.is(humanoid, Patient) then
         self:makeHumanoidLeave(humanoid)
-        humanoid:queueAction({name = "seek_room", room_type = self.room_info.id})
+        humanoid:queueAction(SeekRoomAction(self.room_info.id))
       else
         humanoid:setNextAction(self:createLeaveAction())
-        humanoid:queueAction({name = "meander"})
+        humanoid:queueAction(MeanderAction())
       end
     end
     i = i + 1

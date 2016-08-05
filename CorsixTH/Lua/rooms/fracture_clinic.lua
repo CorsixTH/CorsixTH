@@ -57,21 +57,19 @@ function FractureRoom:commandEnteringPatient(patient)
   local stf_x, stf_y = cast:getSecondaryUsageTile()
 
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{name = "idle", direction = cast.direction == "north" and "west" or "north"}
-  patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "multi_use_object",
-    object = cast,
-    use_with = staff,
-    after_use = --[[persistable:fracture_clinic_after_use]] function()
-      patient:setLayer(2, 0) -- Remove casts
-      patient:setLayer(3, 0)
-      patient:setLayer(4, 0)
-      staff:setNextAction{name = "meander"}
-      self:dealtWithPatient(patient)
-    end,
-  }
+  staff:queueAction(IdleAction():setDirection(cast.direction == "north" and "west" or "north"))
 
+  patient:walkTo(pat_x, pat_y)
+
+  local after_fracture = --[[persistable:fracture_clinic_after_use]] function()
+    patient:setLayer(2, 0) -- Remove casts
+    patient:setLayer(3, 0)
+    patient:setLayer(4, 0)
+    staff:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
+  patient:queueAction(MultiUseObjectAction(cast, staff):setAfterUse(after_fracture))
   return Room.commandEnteringPatient(self, patient)
 end
 

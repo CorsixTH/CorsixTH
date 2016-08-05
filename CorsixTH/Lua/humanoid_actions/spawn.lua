@@ -18,6 +18,29 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SpawnAction" (HumanoidAction)
+
+---@type SpawnAction
+local SpawnAction = _G["SpawnAction"]
+
+-- Spawn an entity.
+--!param mode (str) Mode of spawning: "spawn" or "despawn"
+--!param point (table x, y, optional direction) Position and optional face direction of spawning or despawning.
+function SpawnAction:SpawnAction(mode, point)
+  self:HumanoidAction("spawn")
+  self.mode = mode -- mode of spawning: "spawn" or "despawn"
+  self.point = point
+  self.offset = nil -- Offset in position??
+end
+
+--! Set the offset of spawning.
+--!param offset (table x, y) Position offset.
+--!return (action) Return self for daisy chaining.
+function SpawnAction:setOffset(offset)
+  self.offset = offset
+  return self
+end
+
 local orient_opposite = {
   north = "south",
   west = "east",
@@ -36,12 +59,7 @@ local function action_spawn_start(action, humanoid)
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)
   local x, y =  action.point.x,  action.point.y
   if action.mode == "despawn" and (humanoid.tile_x ~= x or humanoid.tile_y ~= y) then
-    humanoid:queueAction({
-      name = "walk",
-      x = action.point.x,
-      y = action.point.y,
-      must_happen = action.must_happen,
-    }, 0)
+    humanoid:queueAction(WalkAction(action.point.x, action.point.y):setMustHappen(action.must_happen), 0)
     return
   end
   action.must_happen = true

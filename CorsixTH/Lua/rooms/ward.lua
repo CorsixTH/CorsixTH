@@ -95,40 +95,33 @@ end
 function WardRoom:doStaffUseCycle(humanoid)
   local meander_time = math.random(4, 10)
   local desk_use_time = math.random(8, 16)
+  humanoid:setNextAction(MeanderAction():setCount(meander_time))
 
-  humanoid:setNextAction{
-    name = "meander",
-    count = meander_time,
-  }
   local obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "desk")
   if obj then
     obj.reserved_for = humanoid
     humanoid:walkTo(ox, oy)
     if obj.object_type.id == "desk" then
       local desk_use_time = math.random(7, 14)
-      humanoid:queueAction {
-        name = "use_object",
-        object = obj,
-    loop_callback = --[[persistable:ward_desk_loop_callback]] function()
-      desk_use_time = desk_use_time - 1
-      if desk_use_time == 0 then
-        self:doStaffUseCycle(humanoid)
+      local desk_loop = --[[persistable:ward_desk_loop_callback]] function()
+        desk_use_time = desk_use_time - 1
+        if desk_use_time == 0 then
+          self:doStaffUseCycle(humanoid)
+        end
       end
-    end,
-  }
+
+      humanoid:queueAction(UseObjectAction(obj):setLoopCallback(desk_loop))
+    end
   end
 
-  end
   local num_meanders = math.random(2, 4)
-  humanoid:queueAction {
-    name = "meander",
-    loop_callback = --[[persistable:ward_meander_loop_callback]] function(action)
-      num_meanders = num_meanders - 1
-      if num_meanders == 0 then
-        self:doStaffUseCycle(humanoid)
-      end
+  local meanders_loop = --[[persistable:ward_meander_loop_callback]] function(action)
+    num_meanders = num_meanders - 1
+    if num_meanders == 0 then
+      self:doStaffUseCycle(humanoid)
     end
-  }
+  end
+  humanoid:queueAction(MeanderAction():setLoopCallback(meanders_loop))
 end
 
 
@@ -157,13 +150,8 @@ function WardRoom:commandEnteringPatient(patient)
       self:dealtWithPatient(patient)
     end
     patient:walkTo(pat_x, pat_y)
-    patient:queueAction{
-      name = "use_object",
-      object = bed,
-      prolonged_usage = true,
-      loop_callback = loop_callback,
-      after_use = after_use,
-    }
+    patient:queueAction(UseObjectAction(bed):setProlongedUsage(true):setLoopCallback(loop_callback)
+        :setAfterUse(after_use))
   end
 
   return Room.commandEnteringPatient(self, patient)
@@ -262,7 +250,7 @@ function WardRoom:afterLoad(old, new)
     local nurse = self.staff_member
     if nurse then
       nurse:setNextAction(self:createLeaveAction())
-      nurse:queueAction({name = "meander"})
+      nurse:queueAction(MeanderAction())
     end
   end
   Room.afterLoad(self, old, new)

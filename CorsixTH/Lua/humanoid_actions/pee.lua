@@ -18,6 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "PeeAction" (HumanoidAction)
+
+---@type PeeAction
+local PeeAction = _G["PeeAction"]
+
+function PeeAction:PeeAction()
+  self:HumanoidAction("pee")
+  self:setMustHappen(true)
+end
+
 local action_pee_end = permanent"action_pee_end"( function(humanoid)
   local litter = humanoid.world:newObject("litter", humanoid.tile_x, humanoid.tile_y)
   litter:setLitterType("pee", humanoid.last_move_direction == "south" and 0 or 1)
