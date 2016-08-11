@@ -141,6 +141,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_visitors_ty = 0
 
   self.ownedPlots = {1} -- Plots owned by the hospital
+  self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
   self.is_in_world = true -- Whether the hospital is in this world (AI hospitals are not)
   self.opened = false
   self.transactions = {}
@@ -653,6 +654,10 @@ function Hospital:afterLoad(old, new)
     self.initial_grace = nil
   end
 
+  if old < 114 then
+    self.ratholes = {}
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -929,6 +934,49 @@ function Hospital:boilerFixed()
   end
 end
 
+--! Daily update of the ratholes.
+--!param self (Hospital) hospital being updated.
+local function dailyUpdateRatholes(self)
+  local map = self.world.map
+  local th = map.th
+
+  local wanted_holes = math.round(th:getLitterFraction(self:getPlayerIndex()) * 200)
+  if #self.ratholes < wanted_holes then -- Not enough holes, find a new spot
+    -- Try to find a wall in a corridor, and add it if possible.
+    -- Each iteration does a few probes at a random position, most tries will
+    -- fail on not being on a free (non-built) tile in a corridor with a wall
+    -- in the right hospital.
+    -- Doing more iterations speeds up finding a suitable location, less
+    -- iterations is reduces needed processor time.
+    -- "6 + 2 * difference" is an arbitrary value that seems to work nicely, 12
+    -- is an arbitrary upper limit on the number of tries.
+    for _ = 1, math.min(12, 6 + 2 * (wanted_holes - #self.ratholes)) do
+      local x = math.random(1, map.width)
+      local y = math.random(1, map.height)
+      local flags = th:getCellFlags(x, y)
+      if self:isInHospital(x, y) and flags.roomId == 0 and flags.buildable then
+        local walls = self:getWallsAround(x, y)
+        if #walls > 0 then
+          -- Found a wall, check it for not being used.
+          local wall = walls[math.random(1, #walls)]
+          local found = false
+          for _, hole in ipairs(self.ratholes) do
+            if hole.x == x and hole.y == y and hole.wall == wall.wall then
+              found = true
+              break
+            end
+          end
+
+          if not found then
+            self:addRathole(x, y, wall.wall, wall.parcel)
+            break
+          end
+        end
+      end
+    end
+  end
+end
+
 -- Called at the end of each day.
 function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
@@ -1029,6 +1077,8 @@ function Hospital:onEndDay()
   local radiators = self.world.object_counts.radiator
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
   self.acc_heating = self.acc_heating + heating_costs
+
+  if self:isPlayerHospital() then dailyUpdateRatholes(self) end
 end
 
 -- Called at the end of each month.
@@ -1985,6 +2035,124 @@ function Hospital:checkDiseaseRequirements(disease)
   end
   -- False if no rooms and no staff were added
   return any and {rooms = rooms, staff = staff}
+end
+
+--! Get the set of walls around a tile position.
+--!param x (int) X position of the queried tile.
+--!param y (int) Y position of the queried tile.
+--!return (table {wall, parcel}) The walls around the given position.
+function Hospital:getWallsAround(x, y)
+  local map = self.world.map
+  local th = map.th
+
+  local nw, ww
+  local walls = {} -- List of {wall="north"/"west"/"south"/"east", parcel}
+  local flags = th:getCellFlags(x, y)
+
+  _, nw, ww = th:getCell(x, y) -- floor, north wall, west wall
+  if ww ~= 0 then
+    walls[#walls + 1] = {wall = "west", parcel = flags.parcelId}
+  end
+  if nw ~= 0 then
+    walls[#walls + 1] = {wall = "north",  parcel = flags.parcelId}
+  end
+
+  if x ~= map.width then
+    _, _, ww = th:getCell(x + 1, y)
+    if ww ~= 0 then
+      walls[#walls + 1] = {wall = "east", parcel = flags.parcelId}
+    end
+  end
+
+  if y ~= map.height then
+    _, nw, _ = th:getCell(x, y + 1)
+    if nw ~= 0 then
+      walls[#walls + 1] = {wall = "south", parcel = flags.parcelId}
+    end
+  end
+
+  return walls
+end
+
+--! Test for the given position to be inside the given rectangle.
+--!param x (int) X position to test.
+--!param y (int) Y position to test.
+--!param rect (table x, y, width, height) Rectangle to check against.
+--!return (bool) Whether the position is inside the rectangle.
+local function isInside(x, y, rect)
+  return x >= rect.x and x < rect.x + rect.width and y >= rect.y and y < rect.y + rect.height
+end
+
+--! Find all ratholes that match the `to_match` criteria.
+--!param holes (list ratholes) Currently existing holes.
+--!param to_match (table) For each direction a rectangle with matching tile positions.
+--!return (list) Matching ratholes.
+local function findMatchingRatholes(holes, to_match)
+  local matched = {}
+  for _, hole in ipairs(holes) do
+    if isInside(hole.x, hole.y, to_match[hole.wall]) then table.insert(matched, hole) end
+  end
+  return matched
+end
+
+--! Remove the ratholes that use the walls of the provided room.
+--!param room (Room) Room being de-activated.
+function Hospital:removeRatholesAroundRoom(room)
+  local above_rect = {x = room.x, width = room.width, y = room.y - 1,          height = 1}
+  local below_rect = {x = room.x, width = room.width, y = room.y +room.height, height = 1}
+  local left_rect  = {x = room.x - 1,          width = 1, y = room.y, height = room.height}
+  local right_rect = {x = room.x + room.width, width = 1, y = room.y, height = room.height}
+
+  local to_delete = {east = left_rect, west = right_rect, south = above_rect, north = below_rect}
+
+  local remove_holes = findMatchingRatholes(self.ratholes, to_delete)
+  for _, hole in ipairs(remove_holes) do self:removeRathole(hole) end
+end
+
+-- Add a rathole to the room.
+--!param x (int) X position of the tile containing the rathole.
+--!param y (int) Y position of the tile containing the rathole.
+--!param wall (string) Wall containing the hole (north, west, south, east)
+--!param parcel (int) Parcel number of the xy position.
+function Hospital:addRathole(x, y, wall, parcel)
+  for _, rathole in ipairs(self.ratholes) do
+    if rathole.x == x and rathole.y == y and rathole.wall == wall then return end
+  end
+
+  local hole = {x = x, y = y, wall = wall, parcel = parcel}
+  if wall == "north" or wall == "west" then
+    -- Only add a rat-hole graphics object for the visible holes.
+    hole["object"] = self.world:newObject("rathole", hole.x, hole.y, hole.wall)
+  end
+  table.insert(self.ratholes, hole)
+end
+
+--! Remove the provided rathole.
+--!param hole (table{x, y, wall, optional object}) Hole to remove.
+function Hospital:removeRathole(hole)
+  for i, rathole in ipairs(self.ratholes) do
+    if rathole.x == hole.x and rathole.y == hole.y and rathole.wall == hole.wall then
+      table.remove(self.ratholes, i)
+      if rathole.object then
+        self.world:destroyEntity(rathole.object)
+      end
+
+      break
+    end
+  end
+end
+
+--! Remove any rathole from the given position.
+--!param x X position of the tile that should not have ratholes.
+--!param y Y position of the tile that should not have ratholes.
+function Hospital:removeRatholeXY(x, y)
+  for i = #self.ratholes, 1, -1 do
+    local rathole = self.ratholes[i]
+    if rathole.x == x and rathole.y == y then
+      table.remove(self.ratholes, i)
+      if rathole.object then self.world:destroyEntity(rathole.object) end
+    end
+  end
 end
 
 class "AIHospital" (Hospital)

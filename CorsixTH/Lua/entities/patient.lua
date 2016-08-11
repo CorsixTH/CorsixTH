@@ -735,7 +735,7 @@ function Patient:tickDay()
         self:changeAttribute("happiness", -0.0004)
       end
     end) -- End of findObjectNear
-    -- As we don't yet have rats, rat holes and dead rats the chances of vomitting are slim
+    -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
     -- as a temp  fix for this I have added 0.5 to the < nausea equation,
     -- this may want adjusting or removing when the other factors are in the game MarkL
     if self.attributes["health"] <= 0.8 or numVomit > 0 or self.attributes["happiness"] < 0.6 then

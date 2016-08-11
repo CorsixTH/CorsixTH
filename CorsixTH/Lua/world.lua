@@ -2281,28 +2281,35 @@ function World:removeAllLitter(x, y)
   for _, litter in ipairs(litters) do litter:remove() end
 end
 
---! Remove all litter from the foot print of an object.
+--! Prepare all tiles of the footprint for build of an object.
+--!param object_footprint Footprint of the object being build.
 --!param x (int) X position of the object
 --!param y (int) Y position of the object
-function World:removeAllLitterFromFootprint(object_footprint, x, y)
+function World:prepareFootprintTilesForBuild(object_footprint, x, y)
+  local hospital = self:getLocalPlayerHospital()
+
   for _, tile in ipairs(object_footprint) do
     if tile.complete_cell or not (tile.passable or tile.only_passable) then
       self:removeAllLitter(x + tile[1], y + tile[2])
+      hospital:removeRatholeXY(x + tile[1], y + tile[2])
     end
   end
 end
 
---! Remove all litter from a rectangular area.
+--! Prepare all tiles in the given rectangle for building a room.
 --!param x (int) Start x position of the area.
 --!param y (int) Start y position of the area.
 --!param w (int) Number of tiles in x direction.
 --!param h (int) Number of tiles in y direction.
-function World:removeAllLitterFromRectangle(x, y, w, h)
+function World:prepareRectangleTilesForBuild(x, y, w, h)
+  local hospital = self:getLocalPlayerHospital()
+
   x = x - 1
   y = y - 1
   for dx = 1, w do
     for dy = 1, h do
       self:removeAllLitter(x + dx, y + dy)
+      if dx == 1 or dx == w or dy == 1 or dy == h then hospital:removeRatholeXY(x + dx, y + dy) end
     end
   end
 end

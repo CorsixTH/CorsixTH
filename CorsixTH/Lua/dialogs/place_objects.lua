@@ -501,7 +501,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
       real_obj:initOrientation(self.object_orientation)
     end
-    self.world:removeAllLitterFromFootprint(real_obj.footprint, self.object_cell_x, self.object_cell_y)
+    self.world:prepareFootprintTilesForBuild(real_obj.footprint, self.object_cell_x, self.object_cell_y)
     real_obj:setTile(self.object_cell_x, self.object_cell_y)
     self.world:objectPlaced(real_obj)
     if real_obj.slave then
@@ -515,7 +515,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     end
   else
     local object_footprint = object.object.orientations[self.object_orientation].footprint
-    self.world:removeAllLitterFromFootprint(object_footprint, self.object_cell_x, self.object_cell_y)
+    self.world:prepareFootprintTilesForBuild(object_footprint, self.object_cell_x, self.object_cell_y)
     real_obj = self.world:newObject(object.object.id,
         self.object_cell_x, self.object_cell_y, self.object_orientation)
   end
