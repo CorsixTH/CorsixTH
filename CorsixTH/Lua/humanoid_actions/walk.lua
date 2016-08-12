@@ -32,7 +32,7 @@ function WalkAction:WalkAction(x, y)
   self.y = y
   self.truncate_only_on_high_priority = false
   self.walking_to_vaccinate = false -- Nurse walking with the intention to vaccinate
-  self.is_entering = nil -- Whether the walk enters a room.
+  self.is_entering = false -- Whether the walk enters a room.
 end
 
 function WalkAction:truncateOnHighPriority()

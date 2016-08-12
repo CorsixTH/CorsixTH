@@ -339,6 +339,11 @@ function Humanoid:afterLoad(old, new)
   if old < 83 and self.humanoid_class == "Chewbacca Patient" then
     self.die_anims.extra_east = 1682
   end
+
+  for _, action in pairs(self.action_queue) do
+    -- Sometimes actions not actual instances of HumanoidAction
+    HumanoidAction.afterLoad(action, old, new)
+  end
   Entity.afterLoad(self, old, new)
 end
 
@@ -669,7 +674,7 @@ end
 
 -- Check if the humanoid is running actions intended to leave the room, as indicated by the flag
 function Humanoid:isLeaving()
-  return self.action_queue[1].is_leaving
+  return self.action_queue[1].is_leaving and true or false
 end
 
 -- Check if there is "is_leaving" action in the action queue
@@ -721,7 +726,8 @@ end
 --!param must_happen (boolean, nil) If true, then the walk action will not be
 -- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
-  self:setNextAction(WalkAction(tile_x, tile_y):setMustHappen(must_happen))
+  self:setNextAction(WalkAction(tile_x, tile_y)
+      :setMustHappen(not not must_happen))
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,

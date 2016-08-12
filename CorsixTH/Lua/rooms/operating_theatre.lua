@@ -80,6 +80,8 @@ function OperatingTheatreRoom:roomFinished()
 end
 
 local function wait_for_object(humanoid, obj, must_happen)
+  assert(type(must_happen) == "boolean", "must happen must be true or false")
+
   local loop_callback_wait = --[[persistable:operatring_theatre_wait]] function(action)
     if action.todo_interrupt or not obj.user then
       humanoid:finishAction(action)
@@ -106,7 +108,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   -- Put surgeon outfit on
   local screen, screen_x, screen_y = self.world:findObjectNear(staff, "surgeon_screen")
   staff:walkTo(screen_x, screen_y)
-  staff:queueAction(wait_for_object(staff, screen))
+  staff:queueAction(wait_for_object(staff, screen, false))
   staff:queueAction(UseScreenAction(screen))
 
   -- Resume operation if already ongoing

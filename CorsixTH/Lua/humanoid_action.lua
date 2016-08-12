@@ -29,11 +29,11 @@ local HumanoidAction = _G["HumanoidAction"]
 function HumanoidAction:HumanoidAction(name)
   self.name = name
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
-  self.must_happen = nil -- If true, action cannot be skipped.
+  self.must_happen = false -- If true, action cannot be skipped.
   self.loop_callback = nil -- Periodic callback to check for termination conditions.
   self.after_use = nil -- Callback for performing updates afterwards.
-  self.is_leaving = nil -- Whether the humanoid is leaving.
-  self.no_truncate = nil -- If set, disable shortening the action.
+  self.is_leaving = false -- Whether the humanoid is leaving.
+  self.no_truncate = false -- If set, disable shortening the action.
 end
 
 --! Set the number of times the action should happen.
@@ -82,4 +82,18 @@ end
 function HumanoidAction:disableTruncate()
   self.no_truncate = true
   return self
+end
+
+function HumanoidAction:afterLoad(old, new)
+  if old < 112 then
+    self.is_leaving = not not self.is_leaving
+    self.must_happen = not not self.must_happen
+    self.no_truncate = not not self.no_truncate
+    self.saved_must_happen = not not self.saved_must_happen
+    self.idle_must_happen = not not self.idle_must_happen
+
+    if self.name == "walk" then
+      self.is_entering = not not self.is_entering
+    end
+  end
 end
