@@ -27,6 +27,9 @@ local VaccinateAction = _G["VaccinateAction"]
 --!param patient (Patient) Patient to vaccinate.
 --!param fee Amount of money to pay.
 function VaccinateAction:VaccinateAction(patient, fee)
+  assert(class.is(patient, Patient), "Invalid value for parameter 'patient'")
+  assert(type(fee) == "number", "Invalid value for parameter 'fee'")
+
   self:HumanoidAction("vaccinate")
   self.patient = patient -- Patient to vaccinate.
   self.vaccination_fee = fee -- Money to get from the patient.

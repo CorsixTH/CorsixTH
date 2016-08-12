@@ -27,6 +27,11 @@ local SpawnAction = _G["SpawnAction"]
 --!param mode (str) Mode of spawning: "spawn" or "despawn"
 --!param point (table x, y, optional direction) Position and optional face direction of spawning or despawning.
 function SpawnAction:SpawnAction(mode, point)
+  assert(mode == "spawn" or mode == "despawn", "Invalid value for parameter 'mode'")
+  assert(type(point) == "table" and
+    type(point.x) == "number" and type(point.y) == "number",
+    "Invalid value for parameter 'point'")
+
   self:HumanoidAction("spawn")
   self.mode = mode -- mode of spawning: "spawn" or "despawn"
   self.point = point
@@ -37,6 +42,10 @@ end
 --!param offset (table x, y) Position offset.
 --!return (action) Return self for daisy chaining.
 function SpawnAction:setOffset(offset)
+  assert(type(offset) == "table" and
+      type(offset.x) == "number" and type(offset.y) == "number",
+      "Invalid value for parameter 'offset'")
+
   self.offset = offset
   return self
 end
@@ -57,7 +66,7 @@ end)
 
 local function action_spawn_start(action, humanoid)
   assert(action.mode == "spawn" or action.mode == "despawn", "spawn action given invalid mode: " .. action.mode)
-  local x, y =  action.point.x,  action.point.y
+  local x, y = action.point.x, action.point.y
   if action.mode == "despawn" and (humanoid.tile_x ~= x or humanoid.tile_y ~= y) then
     humanoid:queueAction(WalkAction(action.point.x, action.point.y):setMustHappen(action.must_happen), 0)
     return

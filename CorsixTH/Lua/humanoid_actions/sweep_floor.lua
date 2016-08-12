@@ -24,6 +24,8 @@ class "SweepFloorAction" (HumanoidAction)
 local SweepFloorAction = _G["SweepFloorAction"]
 
 function SweepFloorAction:SweepFloorAction(litter)
+  assert(class.is(litter, Litter), "Invalid value for parameter 'litter'")
+
   self:HumanoidAction("sweep_floor")
   self.litter = litter
 end

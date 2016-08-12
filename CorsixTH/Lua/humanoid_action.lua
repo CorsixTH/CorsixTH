@@ -27,6 +27,8 @@ local HumanoidAction = _G["HumanoidAction"]
 --! Construct a humanoid action (base class constructor).
 --!param name (str) Name of the action.
 function HumanoidAction:HumanoidAction(name)
+  assert(type(name) == "string", "Invalid value for parameter 'name'")
+
   self.name = name
   self.count = nil -- 'nil' means 'forever' (until finished), else the number to perform.
   self.must_happen = false -- If true, action cannot be skipped.
@@ -40,6 +42,8 @@ end
 --!param count (int or nil) Set to 'nil' if 'forever', else integer count.
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setCount(count)
+  assert(count == nil or type(count) == "number", "Invalid value for parameter 'count'")
+
   self.count = count
   return self
 end
@@ -48,6 +52,8 @@ end
 --!param must_happen (bool) Whether or not the action must happen.
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setMustHappen(must_happen)
+  assert(type(must_happen) == "boolean", "Invalid value for parameters 'must_happen'")
+
   self.must_happen = must_happen
   return self
 end
@@ -57,6 +63,9 @@ end
 --! termination conditions.
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setLoopCallback(loop_callback)
+  assert(loop_callback == nil or type(loop_callback) == "function",
+      "Invalid value for parameter 'loop_callback'")
+
   self.loop_callback = loop_callback
   return self
 end
@@ -65,6 +74,9 @@ end
 --!param after_use (func) Callback function that is called after the action ends.
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setAfterUse(after_use)
+  assert(after_use == nil or type(after_use) == "function",
+      "Invalid value for parameter 'after_use'")
+
   self.after_use = after_use
   return self
 end
@@ -73,6 +85,8 @@ end
 --!param is_leaving (bool) Whether or not the humanoid is leaving. If not specified, value is true.
 --!return (action) Returning self, for daisy-chaining.
 function HumanoidAction:setIsLeaving(is_leaving)
+  assert(type(is_leaving) == "boolean", "Invalid value for parameter 'is_leaving'")
+
   self.is_leaving = is_leaving
   return self
 end

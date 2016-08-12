@@ -24,8 +24,13 @@ class "CallCheckPointAction" (HumanoidAction)
 local CallCheckPointAction = _G["CallCheckPointAction"]
 
 function CallCheckPointAction:CallCheckPointAction(call, on_remove)
+  assert(call == nil or
+      (type(call) == "table" and type(call.key) == "string"),
+      "Invalid value for parameter 'call'")
+  assert(type(on_remove) == "function", "Invalid value for parameter 'on_remove'")
+
   self:HumanoidAction("call_checkpoint")
-  self.call = call -- Whether the humanoid is on call.
+  self.call = call -- The call the humanoid is on (humanoid.on_call) or nil
   self.on_remove = on_remove -- Interrupt handler to use.
 end
 

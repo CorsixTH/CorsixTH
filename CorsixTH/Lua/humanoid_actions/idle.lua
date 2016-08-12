@@ -33,6 +33,11 @@ end
 --!param direction (string) Direction of facing.
 --!return (action) Self, for daisy-chaining.
 function IdleAction:setDirection(direction)
+  assert(direction == nil or
+      direction == "north" or direction == "south" or
+      direction == "east" or direction == "west",
+      "Invalid value for parameter 'direction'")
+
   self.direction = direction
   return self
 end
@@ -41,6 +46,9 @@ end
 --!param on_interrupt (function) Function to call on interrupt.
 --!return (action) Self, for daisy-chaining.
 function IdleAction:setOnInterrupt(on_interrupt)
+  assert(on_interrupt == nil or type(on_interrupt) == "function",
+      "Invalid value for parameter 'on_interrupt'")
+
   self.on_interrupt = on_interrupt
   return self
 end

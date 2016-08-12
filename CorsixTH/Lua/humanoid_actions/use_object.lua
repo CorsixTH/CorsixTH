@@ -29,6 +29,8 @@ local UseObjectAction = _G["UseObjectAction"]
 --! Construct a 'use object' action.
 --!param object (Object) Object to use.
 function UseObjectAction:UseObjectAction(object)
+  assert(class.is(object, Object), "Invalid value for parameter 'object'")
+
   self:HumanoidAction("use_object")
   self.object = object
   self.watering_plant = false -- Whether the action is watering the plant.
@@ -46,6 +48,9 @@ end
 --!param prolonged (bool or nil) If set, enable prolonged usage of the object.
 --!return (action) self, for daisy-chaining.
 function UseObjectAction:setProlongedUsage(prolonged)
+  assert(prolonged == nil or type(prolonged) == "boolean",
+      "Invalid value for parameter 'prolonged'")
+
   self.prolonged_usage = prolonged
   return self
 end

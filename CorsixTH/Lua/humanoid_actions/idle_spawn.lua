@@ -24,6 +24,13 @@ class "IdleSpawnAction" (HumanoidAction)
 local IdleSpawnAction = _G["IdleSpawnAction"]
 
 function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
+  assert(type(anim) == "number", "Invalid value for parameter 'anim'")
+  assert(type(point_dir) == "table" and
+      type(point_dir.x) == "number" and type(point_dir.y) == "number" and
+      point_dir.direction == "north" or point_dir.direction == "south" or
+      point_dir.direction == "east" or point_dir.direction == "west",
+      "Invalid value for parameter 'point_dir'")
+
   self:HumanoidAction("idle_spawn")
   self.spawn_animation = anim
   self.point = point_dir -- x, y, direction of the spawn animation

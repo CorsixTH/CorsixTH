@@ -28,6 +28,10 @@ local QueueAction = _G["QueueAction"]
 --!param y Y position of the queue.
 --!param queue (Queue) Queue to join
 function QueueAction:QueueAction(x, y, queue)
+  assert(type(x) == "number", "Invalid value for parameter 'x'")
+  assert(type(y) == "number", "Invalid value for parameter 'y'")
+  assert(class.is(queue, Queue), "Invalid value for parameter 'queue'")
+
   self:HumanoidAction("queue")
   self.x = x -- Position of the queue(?)
   self.y = y
@@ -41,6 +45,8 @@ end
 --!param door (object) Object to reserve when leaving the queue.
 --!return (action) self, for daisy-chaining.
 function QueueAction:setReserveWhenDone(door)
+  assert(class.is(door, Door), "Invalid value for parameter 'door'")
+
   self.reserve_when_done = door
   return self
 end
@@ -50,6 +56,9 @@ end
 --!param face_y (int) Y coordinate of the tile to face.
 --!return (action) self, for daisy-chaining.
 function QueueAction:setFaceDirection(face_x, face_y)
+  assert(type(face_x) == "number", "Invalid value for parameter 'face_x'")
+  assert(type(face_y) == "number", "Invalid value for parameter 'face_y'")
+
   self.face_x = face_x
   self.face_y = face_y
   return self
