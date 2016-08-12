@@ -337,7 +337,7 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
     {
         return false;
     }
-    else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
+    else if(false && eWhatToScale == THSI_All && m_bSupportsTargetTextures)
     {
         //Draw everything from now until the next scale to m_pZoomTexture
         //with the appropriate virtual size, which will be copied scaled to
