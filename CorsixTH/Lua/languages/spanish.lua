@@ -724,10 +724,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 menu_player_count = {
-	players_1 = "  1 JUGADOR  ",
-	players_2 = "  2 JUGADORES  ",
-	players_3 = "  3 JUGADORES  ",
-	players_4 = "  4 JUGADORES  ",
+    players_1 = "  1 JUGADOR  ",
+    players_2 = "  2 JUGADORES  ",
+    players_3 = "  3 JUGADORES  ",
+    players_4 = "  4 JUGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación ahí bloquearás el acceso a ciertas partes del hospital.",
@@ -759,7 +759,7 @@ adviser = {
     high_prices = "Estás cobrando mucho por el uso de %s. Así tendrás muchos beneficios a corto plazo, pero harás que los pacientes dejen de venir.",
     fair_prices = "El precio de %s parece justo.",
     patient_not_paying = "¡Un paciente se ha ido sin pagar por %s porque es demasiado caro!",
-	},
+    },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
     roujin_on_cheat = "¡Desafío de Roujin activado! Buena suerte...",
