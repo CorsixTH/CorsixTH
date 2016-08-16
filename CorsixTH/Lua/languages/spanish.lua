@@ -1,4 +1,4 @@
---[[ Copyright (c) 2015 Víctor González a.k.a. "mccunyao"
+--[[ Copyright (c) 2016 Víctor González a.k.a. "mccunyao"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -620,7 +620,7 @@ room_descriptions = {
 }
 
 -- An override for the squits becoming the the squits see issue 1646
-adviser.research.drug_improved_1 = "Tu Departamento de Investigación ha mejorado el medicamento para la %s."
+adviser.research.drug_improved_1 = "Tu departamento de investigación ha mejorado el medicamento para la %s."
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
@@ -645,7 +645,7 @@ menu_file = {
   restart = " (MAYUS+R) REINICIAR  ",
   quit =    " (MAYUS+Q) SALIR   "
 }
-
+--These menus lack uppercase accented characters, so lowercase are a must.
 menu_options = {
   sound = "  (ALT+S)  SONIDO  ",
   announcements = "  (ALT+A)  ANUNCIOS  ",
@@ -675,8 +675,8 @@ menu_options_warmth_colors = {
 }
 
 menu_options_wage_increase = {
-  grant = "    CONCEDER ",
-  deny =  "    RECHAZAR ",
+  grant = "    CONCEDER  ",
+  deny =  "    RECHAZAR  ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
@@ -724,10 +724,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 menu_player_count = {
-	players_1 = "  1 JUGADOR  ",
-	players_2 = "  2 JUGADORES  ",
-	players_3 = "  3 JUGADORES  ",
-	players_4 = "  4 JUGADORES  ",
+  players_1 = "  1 JUGADOR  ",
+  players_2 = "  2 JUGADORES  ",
+  players_3 = "  3 JUGADORES  ",
+  players_4 = "  4 JUGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Si colocas la habitación ahí bloquearás el acceso a ciertas partes del hospital.",
@@ -748,13 +748,17 @@ adviser = {
     falling_4 = "¡Esto es un hospital, no un parque de atracciones!",
     falling_5 = "¡Este no es lugar para tirar personas al suelo, que están enfermas!",
     falling_6 = "¡Esto no es una bolera, no trates así a los enfermos!",
-    research_screen_open_1 = "Para acceder a la pantalla de investigación, tienes que construir un Departamento de Investigación.",
+    research_screen_open_1 = "Para acceder a la pantalla de investigación, tienes que construir un departamento de investigación.",
     research_screen_open_2 = "No se pueden realizar investigaciones en este nivel.",
     researcher_needs_desk_1 = "Un investigador necesita una mesa en la que trabajar.",
     researcher_needs_desk_2 = "Tu investigador agradece que le hayas dado un descanso. Si pretendías tener a más personas investigando, tienes que dar a cada uno una mesa para que trabajen.",
     researcher_needs_desk_3 = "Cada investigador necesita una mesa para trabajar.",
     nurse_needs_desk_1 = "Cada enfermera necesita una mesa para trabajar.",
     nurse_needs_desk_2 = "Tu enfermera agradece que le hayas dado un descanso. Si pretendías tener a más personas trabajando en la enfermería, tienes que dar a cada una una mesa para que trabajen.",
+    low_prices = "Estás cobrando muy poco por el uso de %s. Así atraerás a más personas a tu hospital, pero no te darán muchos beneficios.",
+    high_prices = "Estás cobrando mucho por el uso de %s. Así tendrás muchos beneficios a corto plazo, pero harás que los pacientes dejen de venir.",
+    fair_prices = "El precio de %s parece justo.",
+    patient_not_paying = "¡Un paciente se ha ido sin pagar por %s porque es demasiado caro!",
   },
   cheats = {
     th_cheat = "¡Felicidades, has desbloqueado los trucos!",
@@ -806,7 +810,7 @@ letter = {
   custom_level_completed = "¡Bien hecho! ¡Has completado todos los objetivos de este nivel personalizado!",
   return_to_main_menu = "¿Quieres volver al menú principal o seguir jugando?",
   campaign_level_completed = "¡Buen trabajo! Has superado este nivel, ¡pero aún no has acabado!\n ¿Te interesaría aceptar un puesto en el hospital %s?",
-  campaign_completed = "¡Increíble! Has conseguido superar todos los niveles. Ya puedes relajarte y disfrutar mientras hablas de tus logros en los foros de toda Internet. ¡Buena suerte!",
+  campaign_completed = "¡Increíble! Has conseguido superar todos los niveles. Ya puedes relajarte y disfrutar mientras hablas de tus logros en los foros de Internet. ¡Buena suerte!",
   campaign_level_missing = "Parece que el siguiente nivel de esta campaña está desaparecido. (Nombre: %s)",
 }
 
@@ -819,7 +823,7 @@ install = {
 }
 
 misc.not_yet_implemented = "(aún no implementado)"
-misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  Quizás necesitas comprar una mesa de recepción y contratar a una recepcionista."
+misc.no_heliport = "O no se han descubierto enfermedades, o no hay un helipuerto en este nivel.  Quizás te haga falta comprar una mesa de recepción y contratar a una recepcionista."
 
 main_menu = {
   new_game = "Campaña",
@@ -885,7 +889,7 @@ save_game_window = {
 
 tooltip.save_game_window = {
   save_game = "Sobrescribir guardado %s",
-  new_save_game = "Introduce el nombre de la nueva partida guardada",
+  new_save_game = "Introduce el nombre de la partida guardada.",
 }
 
 save_map_window = {
@@ -916,7 +920,7 @@ options_window = {
   option_off = "No",
   fullscreen = "Pantalla completa",
   resolution = "Resolución",
-  custom_resolution = "Personalizada...",
+  custom_resolution = "Personalizar...",
   width = "Ancho",
   height = "Alto",
   audio = "Sonido",
@@ -943,7 +947,7 @@ tooltip.options_window = {
   folder_button = "Opciones de carpetas.",
   language = "Selecciona el idioma de los textos.",
   select_language = "Selecciona el idioma del juego.",
-  language_dropdown_item = "Utilizar el idioma %s.",
+  language_dropdown_item = "Seleccionar el idioma %s.",
   back = "Cierra la ventana de opciones.",
 }
 
@@ -968,15 +972,15 @@ tooltip.customise_window = {
   volume = "Si la tecla de bajar volumen abre también el botiquín, utiliza esta opción para cambiar el acceso directo a Mayúsculas + C.",
   aliens = "Debido a la falta de animaciones decentes disponibles, hemos hecho que los pacientes con ADN alienígena solo aparezcan en una emergencia. Para permitir que los pacientes con ADN alienígena puedan visitar tu hospital, desactiva esta opción.",
   fractured_bones = "Debido a una animación deficiente, hemos hecho que no existan pacientes con Fracturas óseas femeninas. Para permitir que las pacientes con Fracturas óseas visiten tu hospital, desactiva esta opción.",
-  average_contents = "Activa esta opción si quieres que el juego recuerde que objetos adicionales sueles añadir cuando construyes habitaciones.",
-  back = "Cerrar este menú y volver al menú de Opciones",
+  average_contents = "Activa esta opción si quieres que el juego recuerde los objetos adicionales que sueles añadir cuando construyes habitaciones.",
+  back = "Cerrar este menú y volver al menú de opciones.",
 }
 
 folders_window = {
   caption = "Ubicación de carpetas",
   data_label = "Datos de TH",
   font_label = "Fuente",
-  music_label = "MP3s",
+  music_label = "MP3",
   savegames_label = "Part. guardadas",
   screenshots_label = "Capt. de pantalla",
   -- next four are the captions for the browser window, which are called from the folder setting menu
@@ -999,8 +1003,8 @@ tooltip.folders_window = {
   browse_saves = "Buscar otra ubicación para tu carpeta de partidas guardadas. (Ubicación actual: %1%)",
   browse_screenshots = "Buscar otra ubicación para tu carpeta de capturas de pantalla. (Ubicación actual: %1%)",
   browse_music = "Buscar otra ubicación para tu carpeta de música. (Ubicación actual: %1%)",
-  no_font_specified = "¡No se ha especificado!",
-  not_specified = "¡No se ha especificado!",
+  no_font_specified = "¡No se ha especificado una carpeta de fuentes!",
+  not_specified = "¡No se ha especificado una carpeta!",
   default = "Ubicación predeterminada",
   reset_to_default = "Vuelve a asignar la carpeta a su ubicación predeterminada.",
  -- original_path = "Carpeta actual con la instalación del Theme Hospital original", -- where is this used, I have left if for the time being?
@@ -1077,19 +1081,19 @@ warnings = {
 }
 
 confirmation = {
-  needs_restart = "Para cambiar este ajuste, antes debes reiniciar CorsixTH. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
+  needs_restart = "Para cambiar este ajuste debes reiniciar CorsixTH. Se perderá todo el progreso que no hayas guardado. ¿Seguro que quieres continuar?",
   abort_edit_room = "Ahora mismo estás construyendo o editando una habitación. Si has colocado todos los objetos necesarios será terminada, de lo contrario se borrará. ¿Quieres continuar?",
-  maximum_screen_size = "El tamaño de pantalla que has introducido es mayor que 3000 x 2000.  Es posible utilizar una resolución más grande, pero necesitará de un ordenador mejor para que la velocidad de fotogramas sea aceptable. ¿Seguro que quieres continuar?",
-  music_warning = "Antes de seleccionar el uso de MP3s para tu música dentro del juego, necesitarás tener el archivo smpeg.dll, o el equivalente para tu sistema operativo, o de lo contrario no tendrás música en el juego. ¿Quieres continuar?",
+  maximum_screen_size = "El tamaño de pantalla que has introducido es mayor que 3000x2000.  Es posible utilizar una resolución más grande, pero necesitarás un ordenador potente para que la velocidad de fotogramas sea aceptable. ¿Seguro que quieres continuar?",
+  music_warning = "Nota: Necesitas el archivo smpeg.dll o el equivalente para tu sistema operativo, de lo contrario no tendrás música en el juego. ¿Quieres continuar?",
 }
 
 information = {
   custom_game = "Bienvenido a CorsixTH. ¡Diviértete con este mapa personalizado!",
   no_custom_game_in_demo = "La versión demo no permite jugar a mapas personalizados.",
   cannot_restart = "Esta partida personalizada se guardó antes de que se implementara la característica de reiniciar.",
-  very_old_save = "Desde que empezaste a jugar en este nivel, el juego ha recibido muchas actualizaciones. Para asegurarte de que todas las características funcionen como es debido, considera empezarlo de nuevo.",
+  very_old_save = "Desde que empezaste a jugar en este nivel, el juego ha recibido muchas actualizaciones. Para asegurarte de que todas las características funcionen como es debido, deberías pensar en volver a empezar.",
   level_lost = {
-    "¡Qué pena! Has fracasado en este nivel. ¡Mejor suerte la próxima vez!",
+    "¡Qué pena! Has fracasado en este nivel. ¡Ya tendrás más suerte la próxima vez!",
     "La razón por la que has perdido es:",
     reputation = "Tu reputación ha caído por debajo de %d.",
     balance = "Tu cuenta bancaria ha llegado a tener menos de %d.",
@@ -1105,25 +1109,25 @@ tooltip.information = {
 
 totd_window = {
   tips = {
-    "Todo hospital necesita una mesa de recepción y una consulta para empezar a funcionar. Después de eso, depende del tipo de pacientes que visite tu hospital. Eso sí, una farmacia siempre es una buena opción.",
-    "Las máquinas como el inflador necesitan mantenimiento. Utiliza a un bedel o dos para reparar tus máquinas, o te arriesgarás a herir a tus pacientes y a tu personal.",
-    "Tras un tiempo, tu personal se cansará. Asegúrate de construir una sala de personal, para que puedan relajarse.",
-    "Coloca varios radiadores para mantener calentitos a tu personal y empleados, o se enfadarán. Usa el mapa superior para buscar los puntos de tu hospital que no tengan calefacción.",
-    "El nivel de habilidad de un doctor influye significativamente la calidad y la velocidad de sus diagnósticos. Coloca a un doctor habilidoso en tu consulta, y no necesitarás tantas salas de diagnóstico adicionales.",
-    "Los doctores pueden mejorar sus habilidades aprendiendo de un asesor en la sala de entrenamiento. Si el asesor tiene una calificación especial (cirujano, psiquiatra o investigador), también pasará sus conocimientos a sus pupilos.",
+    "Todo hospital necesita una mesa de recepción y una consulta para empezar a funcionar. A partir de ahí depende del tipo de pacientes que visite tu hospital. Eso sí, una farmacia siempre es una buena opción.",
+    "Las máquinas como el inflador necesitan mantenimiento. Contrata a un par de bedeles para que reparen tus máquinas o podrías herir a tus pacientes y a tu personal.",
+    "Tu personal se cansará pasado un tiempo. Procura construir una sala de personal para que puedan relajarse.",
+    "Coloca varios radiadores para mantener calentitos a tu personal y empleados o se enfadarán. Usa el mapa de la ciudad para buscar las zonas que no tienen calefacción en tu hospital.",
+    "El nivel de cualificación de un médico influye en la calidad y la velocidad de sus diagnósticos. Si asignas un médico cualificado a tu consulta no necesitarás tantas consultas de diagnosis.",
+    "Los principiantes y los médicos pueden mejorar su cualificación si un especialista les enseña en la sala de formación. Si el especialista tiene una cualificación especial (cirujano, psiquiatra o investigador), también enseñará sus conocimientos a sus alumnos.",
     "¿Has probado a meter el número de emergencias (112) en el fax? ¡Asegúrate de tener el sonido activado!",
-    "Puedes ajustar algunos parámetros como la resolución y el idioma del juego en la ventana de Opciones que encontrarás tanto en el menú principal como dentro del juego.",
-    "¿Has seleccionado el Castellano, pero sigues viendo textos en inglés en algún lugar? ¡Ayúdanos avisando de las líneas de texto que estén en inglés para que podamos traducirlas!",
+    "Puedes ajustar algunos parámetros como la resolución y el idioma del juego en la ventana de opciones, que se encuentra tanto en el menú principal como dentro del juego.",
+    "¿Has seleccionado el castellano, pero sigues viendo textos en inglés en algún lugar? ¡Avísanos de qué líneas de texto están en inglés para que podamos traducirlas!",
     "¡El equipo de CorsixTH busca refuerzos! ¿Te interesa programar, traducir o crear gráficos para CorsixTH? Contáctanos en nuestro foro, lista de correo o canal IRC (corsix-th en freenode).",
     "Si encuentras un fallo, puedes enviarnos un informe en nuestro registro de fallos: th-issues.corsix.org",
-    "Cada nivel tiene unos requisitos concretos que debes conseguir antes de poder continuar al siguiente nivel. Mira en la ventana de estado para ver como llevas los objetivos del nivel.",
-    "Si quieres editar o quitar una habitación ya existente, puedes hacerlo con el botón de Editar habitación que verás en la barra de herramientas inferior.",
-    "Cuando tengas muchos pacientes esperando, puedes averiguar rápidamente quienes están esperando para una habitación en concreto pasando el cursor del ratón por encima de la habitación.",
-    "Pulsa en la puerta de una habitación para ver su cola. Aquí puedes manipular ciertos aspectos, como reordenar la cola o mandar a un paciente hacia otra habitación.",
+    "Cada nivel tiene unos requisitos concretos que debes conseguir antes de poder avanzar al siguiente nivel. Mira en la ventana de estado para ver como llevas los objetivos del nivel.",
+    "Si quieres editar o quitar una habitación ya existente, puedes hacerlo con el botón Editar habitación, en la barra de herramientas inferior.",
+    "Cuando tengas muchos pacientes esperando, puedes averiguar quienes están esperando para una habitación en concreto pasando el cursor por encima de la habitación.",
+    "Pulsa en la puerta de una habitación para ver su cola. Aquí puedes afinar ciertas cosas, como el orden la cola o mandar a un paciente hacia otra habitación.",
     "El personal que no esté contento pedirá aumentos de sueldo con frecuencia. Asegúrate de que tu personal trabaja en un entorno cómodo para evitar que esto ocurra.",
-    "Los pacientes tendrán sed mientras esperan en tu hospital, ¡y aún más si subes la calefacción! Coloca máquinas de bebidas en lugares estratégicos para ganar un dinerillo extra.",
-    "Puedes cancelar el progreso del diagnóstico de un paciente de forma prematura y adivinar la cura si ya has descubierto la enfermedad. Ten en cuenta que esto aumentará el riesgo de darle el tratamiento equivocado, lo que matará al paciente.",
-    "Las emergencias pueden ser una buena forma de llevarte algo de dinero extra, siempre y cuando tengas la capacidad suficiente para ocuparte de los pacientes de la emergencia a tiempo.",
+    "Los pacientes tendrán sed mientras esperan en tu hospital, ¡y más si subes la calefacción! Coloca máquinas de bebidas en lugares estratégicos para ganar un dinerillo extra.",
+    "Puedes cancelar el progreso del diagnóstico de un paciente y adivinar la cura si ya has descubierto la enfermedad. Ten en cuenta que esto aumentará el riesgo de darle el tratamiento equivocado, lo que matará al paciente.",
+    "Las emergencias pueden ser una buena forma de ganar un dinerillo extra, siempre y cuando tengas la capacidad suficiente para ocuparte de los pacientes de la emergencia a tiempo.",
   },
   previous = "Siguiente consejo",
   next = "Consejo anterior",
@@ -1158,6 +1162,8 @@ cheats_window = {
     end_year = "Fin del año",
     lose_level = "Perder el nivel",
     win_level = "Ganar el nivel",
+    increase_prices = "Subir precios",
+    decrease_prices = "Bajar precios",
   },
   close = "Cerrar",
 }
@@ -1177,16 +1183,18 @@ tooltip.cheats_window = {
     end_year = "Avanza hasta el final del año actual.",
     lose_level = "Hace que pierdas el nivel actual.",
     win_level = "Hace que ganes el nivel actual.",
+    increase_prices = "Aumenta los precios en un 50% (200% máximo).",
+    decrease_prices = "Reduce los precios en un 50% (50% mínimo).",
   }
 }
 
 introduction_texts = {
   demo =
     "¡Bienvenido al hospital de demostración!" ..
-    "Por desgracia, la demo sólo contiene este nivel. ¡Pero tiene cosas como para distraerte un buen rato!" ..
-    "Te enfrentarás a varias enfermedades que deberás curar construyendo varias salas. De vez en cuando pueden aparecer emergencias. Necesitarás investigar varios tipos de consultas mediante una consulta de investigación." ..
+    "Por desgracia, la demo sólo contiene este nivel. ¡Pero tiene más que suficiente para distraerte un buen rato!" ..
+    "Te enfrentarás a varias enfermedades que deberás curar construyendo varias salas. De vez en cuando pueden aparecer emergencias. Necesitarás investigar varios tipos de consultas utilizando una consulta de investigación." ..
     "Tu objetivo es ganar 100.000 dólares, una reputación de 700, que tu hospital tenga un valor de 70.000 dólares y que hayas curado al menos al 75% de tus pacientes." ..
-    "Procura que tu reputación no caiga por debajo de 300 ni que mates a más del 40% de tus pacientes o perderás el nivel." ..
+    "Procura que tu reputación no caiga por debajo de 300 y no mates a más del 40% de tus pacientes o perderás el nivel." ..
     "¡Suerte!",
 }
 
@@ -1230,16 +1238,16 @@ map_editor_window = {
     west_wall = "Muro oeste",
     helipad = "Helipuerto",
     delete_wall = "Borrar muros",
-    parcel_0 = "Parcel 0",
-    parcel_1 = "Parcel 1",
-    parcel_2 = "Parcel 2",
-    parcel_3 = "Parcel 3",
-    parcel_4 = "Parcel 4",
-    parcel_5 = "Parcel 5",
-    parcel_6 = "Parcel 6",
-    parcel_7 = "Parcel 7",
-    parcel_8 = "Parcel 8",
-    parcel_9 = "Parcel 9",
+    parcel_0 = "Parcela 0",
+    parcel_1 = "Parcela 1",
+    parcel_2 = "Parcela 2",
+    parcel_3 = "Parcela 3",
+    parcel_4 = "Parcela 4",
+    parcel_5 = "Parcela 5",
+    parcel_6 = "Parcela 6",
+    parcel_7 = "Parcela 7",
+    parcel_8 = "Parcela 8",
+    parcel_9 = "Parcela 9",
     camera_1 = "Cámara 1",
     camera_2 = "Cámara 2",
     camera_3 = "Cámara 3",
@@ -1251,11 +1259,6 @@ map_editor_window = {
     paste = "Pegar zona",
   }
 }
-
-dynamic_info.patient.actions.epidemic_vaccinated = "Ya no soy contagioso"
-cheats_window.cheats.end_month = "Fin de mes"
-cheats_window.cheats.end_year = "Fin de año"
-errors.no_games_to_contine = "No hay partidas guardadas."
 
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
