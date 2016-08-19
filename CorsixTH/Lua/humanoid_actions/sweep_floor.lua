@@ -42,14 +42,10 @@ local finish = permanent"action_sweep_floor_finish"( function(humanoid)
 end)
 
 local remove_litter = permanent"action_sweep_floor_remove_litter"( function(humanoid)
-  humanoid.world:removeLitter(humanoid.user_of, humanoid.tile_x, humanoid.tile_y)
+  humanoid.user_of:remove()
   humanoid.user_of:setTile(nil)
   humanoid.user_of = nil
   humanoid:setTimer(humanoid.world:getAnimLength(animation_numbers[2]) * 2, finish)
-
-  local hospital = humanoid.world:getHospital(humanoid.tile_x, humanoid.tile_y)
-  local taskIndex = hospital:getIndexOfTask(humanoid.tile_x, humanoid.tile_y, "cleaning")
-  hospital:removeHandymanTask(taskIndex, "cleaning")
 end)
 
 local sweep = permanent"action_sweep_floor_sweep"( function(humanoid)

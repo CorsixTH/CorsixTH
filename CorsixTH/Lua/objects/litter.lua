@@ -93,6 +93,20 @@ function Litter:setLitterType(anim_type, mirrorFlag)
   end
 end
 
+--! Remove the litter from the world.
+function Litter:remove()
+  assert(self:isCleanable())
+
+  self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+  self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {buildable = true})
+
+  local hospital = self.world:getHospital(self.tile_x, self.tile_y)
+  local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
+  hospital:removeHandymanTask(taskIndex, "cleaning")
+
+  self.world:destroyEntity(self)
+end
+
 function Litter:getDrawingLayer()
   return 0
 end

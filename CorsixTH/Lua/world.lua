@@ -2252,16 +2252,6 @@ function World:getObject(x, y, id)
   return -- nil
 end
 
---! Remove litter from a tile.
---!param obj (Litter) litter to remove.
---!param x (int) X position of the tile.
---!param y (int) Y position of the tile.
-function World:removeLitter(obj, x, y)
-  self:removeObjectFromTile(obj, x, y)
-  self:destroyEntity(obj)
-  self.map.th:setCellFlags(x, y, {buildable = true})
-end
-
 --! Get the room at a given tile location.
 --!param x (int) X position of the queried tile.
 --!param y (int) Y position of the queried tile.
