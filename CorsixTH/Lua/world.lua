@@ -799,8 +799,7 @@ function World:newRoom(x, y, w, h, room_info, ...)
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
   local class = room_info.class and _G[room_info.class] or Room
-  -- TODO: Take hospital based on the owner of the plot the room is built on
-  local hospital = self.hospitals[1]
+  local hospital = self:getHospital(x, y)
   local room = class(x, y, w, h, id, room_info, self, hospital, ...)
 
   self.rooms[id] = room
@@ -2264,11 +2263,23 @@ function World:removeLitter(obj, x, y)
 end
 
 --! Get the room at a given tile location.
---!param x X position of the queried tile.
---!param y Y position of the queried tile.
+--!param x (int) X position of the queried tile.
+--!param y (int) Y position of the queried tile.
 --!return (Room) Room of the tile, or 'nil'.
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
+end
+
+--! Get the hospital at a given tile location.
+--!param x (int) X position of the queried tile.
+--!param y (int) Y position of the queried tile.
+--!return (Hospital) Hospital at the given location or 'nil'.
+function World:getHospital(x, y)
+  local th = self.map.th
+
+  local flags = th:getCellFlags(x, y)
+  if not flags.hospital then return nil end
+  return self.hospitals[flags.owner]
 end
 
 --! Returns localized name of the room, internal required staff name

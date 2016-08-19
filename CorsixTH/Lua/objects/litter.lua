@@ -87,7 +87,7 @@ function Litter:setLitterType(anim_type, mirrorFlag)
       error("Unknown litter type")
     end
     if self:isCleanable() then
-      local hospital = self.world:getLocalPlayerHospital()
+      local hospital = self.world:getHospital(self.tile_x, self.tile_y)
       hospital:addHandymanTask(self, "cleaning", 1, self.tile_x, self.tile_y)
     end
   end
@@ -133,7 +133,7 @@ function Litter:afterLoad(old, new)
   end
   if old < 54 then
     if not self:isCleanable() then
-      local hospital = self.world:getLocalPlayerHospital()
+      local hospital = self.world:getHospital(self.tile_x, self.tile_y)
       local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
       hospital:removeHandymanTask(taskIndex, "cleaning")
     end
