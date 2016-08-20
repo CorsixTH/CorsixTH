@@ -2229,11 +2229,20 @@ function World:addObjectToTile(object, x, y)
   return true
 end
 
+--! Retrieve all objects from a given position.
+--!param x (int) X position of the object to retrieve.
+--!param y (int) Y position of the object to retrieve.
 function World:getObjects(x, y)
   local index = (y - 1) * self.map.width + x
   return self.objects[index]
 end
 
+--! Retrieve one object from a given position.
+--!param x (int) X position of the object to retrieve.
+--!param y (int) Y position of the object to retrieve.
+--!param id Id to search, nil gets first object, string gets first object with
+--! that id, set of strings gets first object that matches an entry in the set.
+--!return (Object or nil) The found object, or nil if the object is not found.
 function World:getObject(x, y, id)
   local objects = self:getObjects(x, y)
   if objects then
@@ -2254,6 +2263,48 @@ function World:getObject(x, y, id)
     end
   end
   return -- nil
+end
+
+--! Remove all cleanable litter from a given tile.
+--!param x (int) X position of the tile to clean.
+--!param y (int) Y position of the tile to clean.
+function World:removeAllLitter(x, y)
+  local litters = {}
+  local objects = self:getObjects(x, y)
+  if not objects then return end
+
+  for _, obj in ipairs(objects) do
+    if obj.object_type.id == "litter" and obj:isCleanable() then
+      litters[#litters + 1] = obj
+    end
+  end
+  for _, litter in ipairs(litters) do litter:remove() end
+end
+
+--! Remove all litter from the foot print of an object.
+--!param x (int) X position of the object
+--!param y (int) Y position of the object
+function World:removeAllLitterFromFootprint(object_footprint, x, y)
+  for _, tile in ipairs(object_footprint) do
+    if tile.complete_cell then
+      self:removeAllLitter(x + tile[1], y + tile[2])
+    end
+  end
+end
+
+--! Remove all litter from a rectangular area.
+--!param x (int) Start x position of the area.
+--!param y (int) Start y position of the area.
+--!param w (int) Number of tiles in x direction.
+--!param h (int) Number of tiles in y direction.
+function World:removeAllLitterFromRectangle(x, y, w, h)
+  x = x - 1
+  y = y - 1
+  for dx = 1, w do
+    for dy = 1, h do
+      self:removeAllLitter(x + dx, y + dy)
+    end
+  end
 end
 
 --! Get the room at a given tile location.
