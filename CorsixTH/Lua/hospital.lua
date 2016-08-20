@@ -2137,11 +2137,16 @@ function Hospital:searchForHandymanTask(handyman, taskType)
   return index
 end
 
-
-function Hospital:getIndexOfTask(x, y, taskType)
+--! Find a handyman task by task type, position, and possibly the used object.
+--!param x (int) The X coordinate of the position.
+--!param y (int) The Y coordinate of the position.
+--!param taskType Type of the task.
+--!param obj (Object) If specified, the object used for doing the task.
+--! Since multiple litter objects may exist at the same tile, the object must be given when cleaning.
+function Hospital:getIndexOfTask(x, y, taskType, obj)
   local subTable = self:findHandymanTaskSubtable(taskType)
   for i, v in ipairs(subTable) do
-    if v.tile_x == x and v.tile_y == y then
+    if v.tile_x == x and v.tile_y == y and (obj == nil or v.object == obj) then
       return i
     end
   end

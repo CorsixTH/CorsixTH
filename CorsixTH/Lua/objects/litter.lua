@@ -101,7 +101,7 @@ function Litter:remove()
   self.world.map.th:setCellFlags(self.tile_x, self.tile_y, {buildable = true})
 
   local hospital = self.world:getHospital(self.tile_x, self.tile_y)
-  local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
+  local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
   hospital:removeHandymanTask(taskIndex, "cleaning")
 
   self.world:destroyEntity(self)
@@ -148,7 +148,7 @@ function Litter:afterLoad(old, new)
   if old < 54 then
     if not self:isCleanable() then
       local hospital = self.world:getHospital(self.tile_x, self.tile_y)
-      local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
+      local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
       hospital:removeHandymanTask(taskIndex, "cleaning")
     end
   end
