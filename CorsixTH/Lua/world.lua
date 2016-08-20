@@ -2678,6 +2678,15 @@ function World:afterLoad(old, new)
   if old < 108 then
     self.room_build_callbacks = nil
   end
+  if old < 113 then -- Make cleanable littered tiles buildable.
+    for x = 1, self.map.width do
+      for y = 1, self.map.height do
+        local litter = self:getObject(x, y, "litter")
+        if litter and litter:isCleanable() then self.map:setCellFlags(x, y, {buildable=true}) end
+      end
+    end
+  end
+
   self.savegame_version = new
 end
 
