@@ -481,7 +481,8 @@ function UIPlaceObjects:onMouseUp(button, x, y)
 end
 
 function UIPlaceObjects:placeObject(dont_close_if_empty)
-  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+  if not self.place_objects then
+    -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return
   end
 
@@ -511,8 +512,8 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
       real_obj:calculateSmoke(room)
     end
   else
-    real_obj = self.world:newObject(object.object.id, self.object_cell_x,
-    self.object_cell_y, self.object_orientation)
+    real_obj = self.world:newObject(object.object.id,
+        self.object_cell_x, self.object_cell_y, self.object_orientation)
   end
   if room then
     room.objects[real_obj] = true
@@ -682,7 +683,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
         allgood = not world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId)
- 	    end
+      end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)
       end
