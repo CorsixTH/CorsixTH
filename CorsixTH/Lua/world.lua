@@ -1956,7 +1956,7 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
   for _, tile in ipairs(objects_footprint) do
     local tiles_world_x = x + tile[1]
     local tiles_world_y = y + tile[2]
-    if self:areFootprintTilesCoardinatesInvalid(tiles_world_x, tiles_world_y) then
+    if not self:isOnMap(tiles_world_x, tiles_world_y) then
       return false
     end
 
@@ -1971,8 +1971,12 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
   return not self:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, orientation, spawn_rooms_id)
 end
 
-function World:areFootprintTilesCoardinatesInvalid(x, y)
-  return x < 1 or x > self.map.width or y < 1 or y > self.map.height
+--! Test whether the given coordinate is on the map.
+--!param x (int) X position of the coordinate to test.
+--!param y (int) Y position of the coordinate to test.
+--!return (boolean) Whether the provided position is on the map.
+function World:isOnMap(x, y)
+  return x >= 1 and x <= self.map.width and y >= 1 and y <= self.map.height
 end
 
 ---

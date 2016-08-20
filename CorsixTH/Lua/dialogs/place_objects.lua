@@ -634,7 +634,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       local x = x + tile[1]
       local y = y + tile[2]
       -- Check 1: Does the tile have valid map coordinates?:
-      if world:areFootprintTilesCoardinatesInvalid(x, y) then
+      if not world:isOnMap(x, y) then
         setAllGood(tile)
         x = 0
         y = 0
