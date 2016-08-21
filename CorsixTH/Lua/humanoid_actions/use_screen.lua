@@ -26,6 +26,9 @@ local UseScreenAction = _G["UseScreenAction"]
 --! Action to use the screen.
 --!param screen (object) Screen to use.
 function UseScreenAction:UseScreenAction(screen)
+  assert(class.is(screen, Object) and screen.object_type.id == "screen",
+      "Invalid value for parameter 'screen'")
+
   self:HumanoidAction("use_screen")
   self.object = screen
 end

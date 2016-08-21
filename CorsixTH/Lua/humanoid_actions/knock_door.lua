@@ -27,6 +27,11 @@ local KnockDoorAction = _G["KnockDoorAction"]
 --!param door (Object) Door to knock on.
 --!param direction (string) Direction of facing.
 function KnockDoorAction:KnockDoorAction(door, direction)
+  assert(class.is(door, Door), "Invalid value for parameter 'door'")
+  assert(direction == "north" or direction == "south" or
+      direction == "east" or direction == "west",
+      "Invalid value for parameter 'direction'")
+
   self:HumanoidAction("knock_door")
   self.door = door -- Door to knock on.
   self.direction = direction -- Direction of facing.

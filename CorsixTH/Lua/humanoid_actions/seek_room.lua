@@ -26,6 +26,8 @@ local SeekRoomAction = _G["SeekRoomAction"]
 --! Find another room (and go to it).
 --!param room_type Type of the new room.
 function SeekRoomAction:SeekRoomAction(room_type)
+  assert(type(room_type) == "string", "Invalid value for parameter 'room_type'")
+
   self:HumanoidAction("seek_room")
   self.room_type = room_type
   self.treatment_room = nil -- Whether the next room is a treatment room.
@@ -40,6 +42,8 @@ function SeekRoomAction:enableTreatmentRoom()
 end
 
 function SeekRoomAction:setDiagnosisRoom(room)
+  assert(type(room) == "number", "Invalid value for parameter 'room'")
+
   self.diagnosis_room = room
   return self
 end

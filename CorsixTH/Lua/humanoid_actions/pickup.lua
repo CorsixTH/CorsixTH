@@ -26,6 +26,8 @@ local PickupAction = _G["PickupAction"]
 -- Construct a pick-up action
 --!param ui User interface
 function PickupAction:PickupAction(ui)
+  assert(class.is(ui, UI), "Invalid value for parameter 'ui'")
+
   self:HumanoidAction("pickup")
   self.ui = ui
   self.todo_close = nil
@@ -33,6 +35,8 @@ function PickupAction:PickupAction(ui)
 end
 
 function PickupAction:setTodoClose(dialog)
+  assert(class.is(dialog, Window), "Invalid value for parameter 'dialog'")
+
   self.todo_close = dialog
   return self
 end

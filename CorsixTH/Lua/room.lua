@@ -111,7 +111,7 @@ function Room:createEnterAction(humanoid_entering, callback)
     self.humanoids_enroute[humanoid_entering] = {callback = callback}
   end
 
-  return WalkAction(x, y):setIsEntering(humanoid_entering and self or true)
+  return WalkAction(x, y):setIsEntering(true)
 end
 
 --! Get a patient in the room.
