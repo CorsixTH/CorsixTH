@@ -799,8 +799,7 @@ function World:newRoom(x, y, w, h, room_info, ...)
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
   local class = room_info.class and _G[room_info.class] or Room
-  -- TODO: Take hospital based on the owner of the plot the room is built on
-  local hospital = self.hospitals[1]
+  local hospital = self:getHospital(x, y)
   local room = class(x, y, w, h, id, room_info, self, hospital, ...)
 
   self.rooms[id] = room
@@ -1957,7 +1956,7 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
   for _, tile in ipairs(objects_footprint) do
     local tiles_world_x = x + tile[1]
     local tiles_world_y = y + tile[2]
-    if self:areFootprintTilesCoardinatesInvalid(tiles_world_x, tiles_world_y) then
+    if not self:isOnMap(tiles_world_x, tiles_world_y) then
       return false
     end
 
@@ -1972,8 +1971,12 @@ function World:canNonSideObjectBeSpawnedAt(x, y, objects_id, orientation, spawn_
   return not self:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, orientation, spawn_rooms_id)
 end
 
-function World:areFootprintTilesCoardinatesInvalid(x, y)
-  return x < 1 or x > self.map.width or y < 1 or y > self.map.height
+--! Test whether the given coordinate is on the map.
+--!param x (int) X position of the coordinate to test.
+--!param y (int) Y position of the coordinate to test.
+--!return (boolean) Whether the provided position is on the map.
+function World:isOnMap(x, y)
+  return x >= 1 and x <= self.map.width and y >= 1 and y <= self.map.height
 end
 
 ---
@@ -2226,11 +2229,20 @@ function World:addObjectToTile(object, x, y)
   return true
 end
 
+--! Retrieve all objects from a given position.
+--!param x (int) X position of the object to retrieve.
+--!param y (int) Y position of the object to retrieve.
 function World:getObjects(x, y)
   local index = (y - 1) * self.map.width + x
   return self.objects[index]
 end
 
+--! Retrieve one object from a given position.
+--!param x (int) X position of the object to retrieve.
+--!param y (int) Y position of the object to retrieve.
+--!param id Id to search, nil gets first object, string gets first object with
+--! that id, set of strings gets first object that matches an entry in the set.
+--!return (Object or nil) The found object, or nil if the object is not found.
 function World:getObject(x, y, id)
   local objects = self:getObjects(x, y)
   if objects then
@@ -2253,22 +2265,66 @@ function World:getObject(x, y, id)
   return -- nil
 end
 
---! Remove litter from a tile.
---!param obj (Litter) litter to remove.
---!param x (int) X position of the tile.
---!param y (int) Y position of the tile.
-function World:removeLitter(obj, x, y)
-  self:removeObjectFromTile(obj, x, y)
-  self:destroyEntity(obj)
-  self.map.th:setCellFlags(x, y, {buildable = true})
+--! Remove all cleanable litter from a given tile.
+--!param x (int) X position of the tile to clean.
+--!param y (int) Y position of the tile to clean.
+function World:removeAllLitter(x, y)
+  local litters = {}
+  local objects = self:getObjects(x, y)
+  if not objects then return end
+
+  for _, obj in ipairs(objects) do
+    if obj.object_type.id == "litter" and obj:isCleanable() then
+      litters[#litters + 1] = obj
+    end
+  end
+  for _, litter in ipairs(litters) do litter:remove() end
+end
+
+--! Remove all litter from the foot print of an object.
+--!param x (int) X position of the object
+--!param y (int) Y position of the object
+function World:removeAllLitterFromFootprint(object_footprint, x, y)
+  for _, tile in ipairs(object_footprint) do
+    if tile.complete_cell then
+      self:removeAllLitter(x + tile[1], y + tile[2])
+    end
+  end
+end
+
+--! Remove all litter from a rectangular area.
+--!param x (int) Start x position of the area.
+--!param y (int) Start y position of the area.
+--!param w (int) Number of tiles in x direction.
+--!param h (int) Number of tiles in y direction.
+function World:removeAllLitterFromRectangle(x, y, w, h)
+  x = x - 1
+  y = y - 1
+  for dx = 1, w do
+    for dy = 1, h do
+      self:removeAllLitter(x + dx, y + dy)
+    end
+  end
 end
 
 --! Get the room at a given tile location.
---!param x X position of the queried tile.
---!param y Y position of the queried tile.
+--!param x (int) X position of the queried tile.
+--!param y (int) Y position of the queried tile.
 --!return (Room) Room of the tile, or 'nil'.
 function World:getRoom(x, y)
   return self.rooms[self.map:getRoomId(x, y)]
+end
+
+--! Get the hospital at a given tile location.
+--!param x (int) X position of the queried tile.
+--!param y (int) Y position of the queried tile.
+--!return (Hospital) Hospital at the given location or 'nil'.
+function World:getHospital(x, y)
+  local th = self.map.th
+
+  local flags = th:getCellFlags(x, y)
+  if not flags.hospital then return nil end
+  return self.hospitals[flags.owner]
 end
 
 --! Returns localized name of the room, internal required staff name
@@ -2622,6 +2678,15 @@ function World:afterLoad(old, new)
   if old < 108 then
     self.room_build_callbacks = nil
   end
+  if old < 113 then -- Make cleanable littered tiles buildable.
+    for x = 1, self.map.width do
+      for y = 1, self.map.height do
+        local litter = self:getObject(x, y, "litter")
+        if litter and litter:isCleanable() then self.map:setCellFlags(x, y, {buildable=true}) end
+      end
+    end
+  end
+
   self.savegame_version = new
 end
 

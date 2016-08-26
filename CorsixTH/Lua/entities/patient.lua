@@ -321,8 +321,7 @@ end
 
 function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up.
-  -- (Hospital not set when going home)
-  local hospital = self.hospital or self.world:getLocalPlayerHospital()
+  local hospital = self.hospital
 
   if hospital.num_deaths < 1 then
     self.world.ui.adviser:say(_A.information.first_death)

@@ -64,6 +64,8 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.objects = {--[[a set rather than a list]]}
   -- the set of humanoids walking to this room
   self.humanoids_enroute = {--[[a set rather than a list]]}
+
+  self.world:removeAllLitterFromRectangle(self.x, self.y, self.width, self.height)
 end
 
 --! Get the tile next to the door.

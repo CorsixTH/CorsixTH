@@ -481,12 +481,14 @@ function UIPlaceObjects:onMouseUp(button, x, y)
 end
 
 function UIPlaceObjects:placeObject(dont_close_if_empty)
-  if not self.place_objects then -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
+  if not self.place_objects then
+    -- We don't want to place objects because we are selecting new objects for adding in a room being built/edited
     return
   end
 
   local object = self.objects[self.active_index]
   if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "next") end
+
   local real_obj
   -- There might be an existing object that has been picked up.
   if object.existing_objects and #object.existing_objects > 0 then
@@ -499,6 +501,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     if real_obj.orientation_before and real_obj.orientation_before ~= self.object_orientation then
       real_obj:initOrientation(self.object_orientation)
     end
+    self.world:removeAllLitterFromFootprint(real_obj.footprint, self.object_cell_x, self.object_cell_y)
     real_obj:setTile(self.object_cell_x, self.object_cell_y)
     self.world:objectPlaced(real_obj)
     if real_obj.slave then
@@ -511,8 +514,10 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
       real_obj:calculateSmoke(room)
     end
   else
-    real_obj = self.world:newObject(object.object.id, self.object_cell_x,
-    self.object_cell_y, self.object_orientation)
+    local object_footprint = object.object.orientations[self.object_orientation].footprint
+    self.world:removeAllLitterFromFootprint(object_footprint, self.object_cell_x, self.object_cell_y)
+    real_obj = self.world:newObject(object.object.id,
+        self.object_cell_x, self.object_cell_y, self.object_orientation)
   end
   if room then
     room.objects[real_obj] = true
@@ -633,7 +638,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       local x = x + tile[1]
       local y = y + tile[2]
       -- Check 1: Does the tile have valid map coordinates?:
-      if world:areFootprintTilesCoardinatesInvalid(x, y) then
+      if not world:isOnMap(x, y) then
         setAllGood(tile)
         x = 0
         y = 0
@@ -682,7 +687,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
         allgood = not world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId)
- 	    end
+      end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)
       end

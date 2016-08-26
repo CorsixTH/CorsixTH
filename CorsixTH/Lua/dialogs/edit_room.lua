@@ -614,7 +614,7 @@ function UIEditRoom:returnToDoorPhase()
           break
         end
         if obj.object_type.id == "litter" then -- Silently remove litter from the world.
-          self.world:removeLitter(obj, x, y)
+          obj.remove()
           break
         end
         self.world:destroyEntity(obj)
