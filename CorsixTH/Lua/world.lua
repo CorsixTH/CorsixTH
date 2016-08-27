@@ -2286,7 +2286,7 @@ end
 --!param y (int) Y position of the object
 function World:removeAllLitterFromFootprint(object_footprint, x, y)
   for _, tile in ipairs(object_footprint) do
-    if tile.complete_cell then
+    if tile.complete_cell or not (tile.passable or tile.only_passable) then
       self:removeAllLitter(x + tile[1], y + tile[2])
     end
   end
