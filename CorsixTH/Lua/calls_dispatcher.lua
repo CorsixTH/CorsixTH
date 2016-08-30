@@ -117,7 +117,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
 
   if not manual and urgent then
-    local room = object:getRoom();
+    local room = object:getRoom()
     local sound = room.room_info.handyman_call_sound
     if sound then
       ui:playAnnouncement(sound)
@@ -228,13 +228,13 @@ function CallsDispatcher.getPriorityForVaccination(patient, nurse)
   --Lower the priority "score" the more urgent it is
   --The closest nurse to the patient has the highest priority for vaccination
   --Any nurse who cannot reach the paitient suffers a priority penalty
-  local score = 0;
+  local score = 0
   local nil_penalty = 10000
   local x, y = patient.tile_x, patient.tile_y
 
   -- Nurses prefer to vaccinate the closest patient
   local distance =
-    patient.world:getPathDistance(nurse.tile_x, nurse.tile_y, x, y);
+    patient.world:getPathDistance(nurse.tile_x, nurse.tile_y, x, y)
   if distance then
     score = score + distance
   else
@@ -337,7 +337,7 @@ function CallsDispatcher:answerCall(staff)
   local min_call = nil
   local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
-  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call");
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
 
   if staff.humanoid_class == "Handyman" then
    staff:searchForHandymanTask()
@@ -504,11 +504,11 @@ function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
 end
 
 function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
-  local score = 0;
+  local score = 0
   local x, y = room:getEntranceXY()
 
   -- Doctor prefer serving nearby rooms
-  local distance = room.world:getPathDistance(staff.tile_x, staff.tile_y, x, y);
+  local distance = room.world:getPathDistance(staff.tile_x, staff.tile_y, x, y)
   if distance then
     score = score + distance
   end

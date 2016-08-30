@@ -43,8 +43,8 @@ if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
     return debug.getupvalue(f, n + 1)
   end
 else
-  th_getfenv = debug.getfenv;
-  th_getupvalue = debug.getupvalue;
+  th_getfenv = debug.getfenv
+  th_getupvalue = debug.getupvalue
 end
 
 function permanent(name, ...)

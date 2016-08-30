@@ -781,7 +781,7 @@ end
 function Humanoid:changeAttribute(attribute, amount)
   -- Receptionist is always 100% happy
   if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
-    self.attributes[attribute] = 1;
+    self.attributes[attribute] = 1
     return true
   end
 

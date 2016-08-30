@@ -1215,7 +1215,7 @@ function World:onEndMonth()
     self:checkIfGameWon()
   end
 
-  local local_hospital = self:getLocalPlayerHospital();
+  local local_hospital = self:getLocalPlayerHospital()
   local_hospital.population = 0.25
   if self.month >= self.map.level_config.gbv.AllocDelay then
     local_hospital.population = local_hospital.population * self:getReputationImpact(local_hospital)

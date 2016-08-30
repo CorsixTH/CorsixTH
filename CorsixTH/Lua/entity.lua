@@ -34,7 +34,7 @@ function Entity:Entity(animation)
   self.playing_sounds_in_random_sequence = false
   self.waiting_for_sound_effects_to_be_turned_on = false
   self.random_sound_sequence_parameters = nil
-  self.dynamic_info = nil;
+  self.dynamic_info = nil
 end
 
 --[[
