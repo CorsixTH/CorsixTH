@@ -563,8 +563,8 @@ local function Humanoid_startAction(self)
           self:goHome("kicked")
         end
         if TheApp.world:isCurrentSpeed("Pause") then
-        TheApp.world:setSpeed(TheApp.world.prev_speed)
-      end
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
       end,
       --[[persistable:humanoid_stay_in_hospital]] function()
         if TheApp.world:isCurrentSpeed("Pause") then
