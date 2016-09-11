@@ -66,7 +66,7 @@ function SideObject:getDrawingLayer()
         return 8
       end
     else --south
-      return 9;
+      return 9
     end
   end
 end

@@ -1357,7 +1357,7 @@ end
 
 --! Begin the map editor
 function App:mapEdit()
-  self:loadLevel("", nil, nil, nil, nil, true);
+  self:loadLevel("", nil, nil, nil, nil, true)
 end
 
 --! Exits the game completely (no confirmation window)

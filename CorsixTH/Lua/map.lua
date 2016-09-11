@@ -73,7 +73,7 @@ end
 --!param y (int) Vertical position of the tile to set the camera on
 --!param player (int) Player number (1-4)
 function Map:setCameraTile(x, y, player)
-  self.th:setCameraTile(x, y, player);
+  self.th:setCameraTile(x, y, player)
 end
 
 --! Set the heliport tile for the given player on the map
@@ -81,7 +81,7 @@ end
 --!param y (int) Vertical position of the tile to set the heliport on
 --!param player (int) Player number (1-4)
 function Map:setHeliportTile(x, y, player)
-  self.th:setHeliportTile(x, y, player);
+  self.th:setHeliportTile(x, y, player)
 end
 
 --! Set how to display the room temperature in the hospital map.

@@ -563,8 +563,8 @@ local function Humanoid_startAction(self)
           self:goHome("kicked")
         end
         if TheApp.world:isCurrentSpeed("Pause") then
-        TheApp.world:setSpeed(TheApp.world.prev_speed)
-      end
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
       end,
       --[[persistable:humanoid_stay_in_hospital]] function()
         if TheApp.world:isCurrentSpeed("Pause") then
@@ -781,7 +781,7 @@ end
 function Humanoid:changeAttribute(attribute, amount)
   -- Receptionist is always 100% happy
   if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
-    self.attributes[attribute] = 1;
+    self.attributes[attribute] = 1
     return true
   end
 

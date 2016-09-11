@@ -379,8 +379,8 @@ function Audio:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds, entity
     --If the sound can't be played now:
     else
       self.entities_waiting_for_sound_to_be_enabled[entity] = sound_played_callback
-	    entity:setWaitingForSoundEffectsToBeTurnedOn(true)
-	  end
+      entity:setWaitingForSoundEffectsToBeTurnedOn(true)
+    end
   else
     if self.entities_waiting_for_sound_to_be_enabled[entity] then
       self.entities_waiting_for_sound_to_be_enabled[entity] = nil

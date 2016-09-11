@@ -229,8 +229,8 @@ function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
         end
       end
 
-	-- Sort always puts directories first so when this else closure is reached in this iterative for loop
-	-- all the sub directories will have been checked:
+    -- Sort always puts directories first so when this else closure is reached in this iterative for loop
+    -- all the sub directories will have been checked:
     else
       -- 2. Get the most recently modified root directory file which matches the name filter:
       local matches_filter = true

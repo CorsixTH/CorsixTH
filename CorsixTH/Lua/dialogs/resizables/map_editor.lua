@@ -1514,7 +1514,7 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   elseif self.cursor.state == "camera" then
     if button == "left" then
-      local dp = self:getDrawPoints();
+      local dp = self:getDrawPoints()
       map:setCameraTile(dp[1].xpos, dp[1].ypos, self.cursor.camera)
       map:updateDebugOverlay()
       repaint = true

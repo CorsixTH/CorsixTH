@@ -101,7 +101,7 @@ function Room:createEnterAction(humanoid_entering, callback)
     elseif class.is(humanoid_entering, Vip) then
       callback = --[[persistable:room_vip_enroute_cancel]] function()
         humanoid_entering:setNextAction(IdleAction())
-        humanoid_entering.waiting = 1;
+        humanoid_entering.waiting = 1
       end
     else
       callback = --[[persistable:room_humanoid_enroute_cancel]] function()
@@ -909,7 +909,7 @@ function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
   for humanoid, callback in pairs(self.humanoids_enroute) do
-    callback.callback();
+    callback.callback()
   end
   -- Now empty the humanoids_enroute list since they are not enroute anymore.
   self.humanoids_enroute = {}

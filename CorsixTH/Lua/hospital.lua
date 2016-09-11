@@ -2013,13 +2013,13 @@ end
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
-  table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call});
+  table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call})
 end
 
 function Hospital:modifyHandymanTaskPriority(taskIndex, newPriority, taskType)
   if taskIndex ~= -1 then
     local subTable = self:findHandymanTaskSubtable(taskType)
-    subTable[taskIndex].priority = newPriority;
+    subTable[taskIndex].priority = newPriority
   end
 end
 
@@ -2100,7 +2100,7 @@ function Hospital:searchForHandymanTask(handyman, taskType)
           -- This should normally never be the case. If the handyman doesn't belong to a hsopital
           -- then they should not have any tasks assigned to them however it was previously possible
           -- We need to tidy up to make sure the task can be reassigned.
-          print("Warning: Orphaned handyman is still assigned a task. Removing.");
+          print("Warning: Orphaned handyman is still assigned a task. Removing.")
           v.assignedHandyman = nil
         else
           local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
@@ -2158,7 +2158,7 @@ function Hospital:initOwnedPlots()
   self.ownedPlots = {}
   for i, v in ipairs(self.world.entities) do
     if v.tile_x and v.tile_y then
-      local parcel = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId;
+      local parcel = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
       local isAlreadyContained = false
       for i2, v2 in ipairs(self.ownedPlots) do
         if parcel == v2 then

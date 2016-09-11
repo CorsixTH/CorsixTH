@@ -447,7 +447,7 @@ end
 function UIPlaceObjects:tryNextOrientation()
   if #self.objects > 0 then
     self.ui:playSound("swoosh.wav")
-    self.objects[self.active_index].orientation_before = self.object_orientation;
+    self.objects[self.active_index].orientation_before = self.object_orientation
     self:nextOrientation()
   end
 end

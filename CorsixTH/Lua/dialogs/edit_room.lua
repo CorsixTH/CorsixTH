@@ -896,7 +896,7 @@ function UIEditRoom:enterObjectsPhase()
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
   else
-    local room_objects = self.room.room_info.objects_needed;
+    local room_objects = self.room.room_info.objects_needed
     if TheApp.config.enable_avg_contents then
       room_objects = self:computeAverageContents()
     end
