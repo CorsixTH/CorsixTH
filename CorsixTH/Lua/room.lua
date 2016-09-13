@@ -65,7 +65,7 @@ function Room:initRoom(x, y, w, h, door, door2)
   -- the set of humanoids walking to this room
   self.humanoids_enroute = {--[[a set rather than a list]]}
 
-  self.world:removeAllLitterFromRectangle(self.x, self.y, self.width, self.height)
+  self.world:prepareRectangleTilesForBuild(self.x, self.y, self.width, self.height)
 end
 
 --! Get the tile next to the door.
@@ -913,6 +913,8 @@ function Room:deactivate()
   end
   -- Now empty the humanoids_enroute list since they are not enroute anymore.
   self.humanoids_enroute = {}
+
+  self.hospital:removeRatholesAroundRoom(self)
 end
 
 function Room:tryToEdit()

@@ -832,6 +832,47 @@ static int l_map_is_parcel_purchasable(lua_State *L)
     return 1;
 }
 
+/* Compute the fraction of corridor tiles with litter, of the parcels owned by the given player. */
+static int l_map_get_litter_fraction(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int owner = static_cast<int>(luaL_checkinteger(L, 2));
+    if (owner == 0)
+    {
+        lua_pushnumber(L, 0.0); // Outside has no litter.
+        return 1;
+    }
+
+    double tile_count = 0;
+    double litter_count = 0;
+    for (int x = 0; x < pMap->getWidth(); x++)
+    {
+        for (int y = 0; y < pMap->getHeight(); y++)
+        {
+            const THMapNode* pNode = pMap->getNodeUnchecked(x, y);
+            if (pNode->iParcelId == 0 || owner != pMap->getParcelOwner(pNode->iParcelId) ||
+                pNode->iRoomId != 0)
+            {
+                continue;
+            }
+
+            tile_count++;
+            for(auto iter = pNode->objects.begin(); iter != pNode->objects.end(); iter++)
+            {
+                if(*iter == THObjectType::litter)
+                {
+                    litter_count++;
+                    break;
+                }
+            }
+        }
+    }
+
+    double fraction = (tile_count == 0) ? 0.0 : litter_count / tile_count;
+    lua_pushnumber(L, fraction);
+    return 1;
+}
+
 static int l_path_new(lua_State *L)
 {
     luaT_stdnew<THPathfinder>(L, luaT_environindex, true);
@@ -979,6 +1020,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_is_parcel_purchasable, "isParcelPurchasable");
     luaT_setfunction(l_map_erase_thobs, "eraseObjectTypes");
     luaT_setfunction(l_map_remove_cell_thob, "removeObjectType");
+    luaT_setfunction(l_map_get_litter_fraction, "getLitterFraction");
     luaT_endclass();
 
     // Pathfinder

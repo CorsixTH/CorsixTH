@@ -95,7 +95,10 @@ enum class THObjectType : uint8_t
     entrance_right_door = 59,
     skeleton = 60,
     comfy_chair = 61,
-    // 62 through 255 are unused
+    litter = 62,
+    helicopter = 63,
+    rathole = 64,
+    // 65 through 255 are unused
 };
 
 //! Map flags and object type

@@ -30,7 +30,7 @@ local runDebugger = dofile "run_debugger"
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 113
+local SAVEGAME_VERSION = 114
 
 class "App"
 
@@ -1409,6 +1409,13 @@ function App:afterLoad()
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
+  end
+
+  if old < 114 then
+    local rathole_type = dofile "objects/rathole"
+    Object.processTypeDefinition(rathole_type)
+    self.objects[rathole_type.id] = rathole_type
+    self.world:newObjectType(rathole_type)
   end
 
   self.map:afterLoad(old, new)
