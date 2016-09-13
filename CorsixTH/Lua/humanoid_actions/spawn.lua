@@ -23,7 +23,7 @@ class "SpawnAction" (HumanoidAction)
 ---@type SpawnAction
 local SpawnAction = _G["SpawnAction"]
 
--- Spawn an entity.
+--! Spawn an entity.
 --!param mode (str) Mode of spawning: "spawn" or "despawn"
 --!param point (table x, y, optional direction) Position and optional face direction of spawning or despawning.
 function SpawnAction:SpawnAction(mode, point)
@@ -39,11 +39,18 @@ function SpawnAction:SpawnAction(mode, point)
 end
 
 --! Set the offset of spawning.
+--!
+--! These two values specifies how many tiles away the humanoid should start
+--! walking before actually spawning in the destination tile. Default is x and
+--! y values are 2, and should not be set less than or equal to 0. Only one of
+--! x or y offsets are used depending on the initial walk direction of the
+--! newly spawned humanoid.
 --!param offset (table x, y) Position offset.
 --!return (action) Return self for daisy chaining.
 function SpawnAction:setOffset(offset)
-  assert(type(offset) == "table" and
-      type(offset.x) == "number" and type(offset.y) == "number",
+  assert(type(offset) == "table" and 
+      (offset.x == nil or (type(offset.x) == "number" and offset.x > 0)) and
+      (offset.y == nil or (type(offset.y) == "number" and offset.y > 0)),
       "Invalid value for parameter 'offset'")
 
   self.offset = offset
@@ -78,8 +85,6 @@ local function action_spawn_start(action, humanoid)
   if action.mode == "spawn" then
     walk_dir = orient_opposite[walk_dir]
   end
-  -- These two values specifies how many tiles away the patient should start walking before actually
-  -- spawning in the destination tile. Default is 2, and it should not be set to 0.
   local offset_x = 2
   local offset_y = 2
   if action.offset then
