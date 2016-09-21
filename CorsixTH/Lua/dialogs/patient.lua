@@ -98,7 +98,12 @@ function UIPatient:UIPatient(ui, patient)
   self:addKeyHandler("H", self.goHome)
 end
 
+--! Normalise warmth of a patient.
+--!param warmth (number or nil) If given, the fraction of warmth of the patient.
+--!return (float) Normalized warmth level.
 function UIPatient.normaliseWarmth(warmth)
+  if not warmth then return 0.5 end -- Return 1/2 if unknown.
+
   if warmth < 0.08 then
     warmth = 0
   elseif warmth > 0.50 then
@@ -158,12 +163,8 @@ function UIPatient:draw(canvas, x_, y_)
     end
   end
   -- How warm the patient feels
-  local warmth_bar_width = 22
-  local warmth = patient.attributes["warmth"]
-  if warmth then
-    warmth = self.normaliseWarmth(warmth)
-    warmth_bar_width = math_floor(warmth * 40 + 0.5)
-  end
+  local warmth = self.normaliseWarmth(patient.attributes["warmth"])
+  local warmth_bar_width = math_floor(warmth * 40 + 0.5)
   if warmth_bar_width ~= 0 then
     for dx = 0, warmth_bar_width - 1 do
       self.panel_sprites:draw(canvas, 349, x + 58 + dx, y + 183)
