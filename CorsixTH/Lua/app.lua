@@ -475,19 +475,21 @@ end
 --! to be able to progress through that campaign.
 --!param campaign_file (string) Name of a CorsixTH Campaign definition Lua file.
 function App:loadCampaign(campaign_file)
-  local campaign_info, errors = self:readCampaignFile(campaign_file)
+  local campaign_info, level_info, errors, _
+
+  campaign_info, errors = self:readCampaignFile(campaign_file)
   if not campaign_info then
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_load_campaign:format(errors)}))
     return
   end
 
-  local level_info, err = self:readLevelFile(campaign_info.levels[1])
+  level_info, errors = self:readLevelFile(campaign_info.levels[1])
   if not level_info then
-    self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_find_first_campaign_level:format(err)}))
+    self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_find_first_campaign_level:format(errors)}))
     return
   end
 
-  local _, errors = self:readMapDataFile(level_info.map_file)
+  _, errors = self:readMapDataFile(level_info.map_file)
   if errors then
     self.ui:addWindow(UIInformation(self.ui, {errors}))
     return
