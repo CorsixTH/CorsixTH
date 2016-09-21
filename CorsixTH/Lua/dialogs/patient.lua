@@ -165,42 +165,56 @@ function UIPatient:draw(canvas, x_, y_)
   if self.history_panel.visible then
     self:drawTreatmentHistory(canvas, x + 40, y + 25)
   elseif patient.health_history then
-    local hor_length = 76
-    local vert_length = 70
-    local startx = 58
-    local starty = 27
-
-    local hh = patient.health_history
-    local index = hh["last"]
-    local size = hh["size"]
-
-    local dx = hor_length / size
-    local line = nil -- Make a line the first time we find a non-nil value.
-    for i = 1, size do
-      index = (index == size) and 1 or (index + 1)
-      if hh[index] then
-        local posy = starty + (1.0 - hh[index]) * vert_length
-
-        if not line then
-          line = TH.line()
-          line:setWidth(2)
-          line:setColour(200, 55, 30, 255)
-          line:moveTo(startx, posy)
-        else
-          line:lineTo(startx, posy)
-        end
-      end
-      startx = startx + dx
-    end
-
-    if line then line:draw(canvas, x, y) end
+    self:drawHealthHistory(canvas, x, y)
   end
 end
 
+--! List the treatments that were performed on the patient.
+--!param canvas Destination to draw on.
+--!param x (int) X position of the top of the list.
+--!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
   for _, room in ipairs(self.patient.treatment_history) do
     y = self.font:drawWrapped(canvas, room, x, y, 95)
   end
+end
+
+--! Draw the health graph of the patient.
+--!param canvas Destination to draw on.
+--!param x (int) X position of the top-left of the graph.
+--!param y (int) Y position of the top-left of the graph.
+function UIPatient:drawHealthHistory(canvas, x, y)
+  -- Sizes and positions of the graph in the window.
+  local hor_length = 76
+  local vert_length = 70
+  local startx = 58
+  local starty = 27
+
+  -- Health history information.
+  local hh = self.patient.health_history
+  local index = hh["last"]
+  local size = hh["size"]
+
+  local dx = hor_length / size
+  local line = nil -- Make a line the first time we find a non-nil value.
+  for i = 1, size do
+    index = (index == size) and 1 or (index + 1)
+    if hh[index] then
+      local posy = starty + (1.0 - hh[index]) * vert_length
+
+      if not line then
+        line = TH.line()
+        line:setWidth(2)
+        line:setColour(200, 55, 30, 255)
+        line:moveTo(startx, posy)
+      else
+        line:lineTo(startx, posy)
+      end
+    end
+    startx = startx + dx
+  end
+
+  if line then line:draw(canvas, x, y) end
 end
 
 function UIPatient:onMouseDown(button, x, y)
