@@ -1071,6 +1071,40 @@ local window_floor_blueprint_markers = {
   west = 36,
 }
 
+--! Check walls for having room for the door
+--!param x (int) X tile position of the door.
+--!param y (int) Y tile position of the door.
+--!param wall (string) Name of the wall (either 'north' or 'west').
+--!param has_swingdoor Whether the room has a normal door (false) or a swing door (true) as entrance.
+--!return whether the door can be placed at the given position and orientation.
+local function checkDoorWalls(x, y, wall, has_swingdoor)
+  local th = TheApp.map.th
+
+  local dx, dy, wall_num
+  if wall == "west" then
+    wall_num = 3
+    dx = 0
+    dy = 1
+  else
+    wall_num = 2
+    dx = 1
+    dy = 0
+  end
+
+  if th:getCell(x, y, wall_num) % 0x100 ~= 0 then
+    return false
+  end
+
+  -- If it is a swing door there are two more locations to check.
+  if has_swingdoor then
+    if th:getCell(x - dx, y - dy, wall_num) % 0x100 ~= 0 or
+        th:getCell(x + dx, y + dy, wall_num) % 0x100 ~= 0 then
+      return false
+    end
+  end
+  return true
+end
+
 --! Check whether the given tile can function as a door entry/exit tile.
 --!param xpos (int) X position of the tile.
 --!param ypos (int) Y position of the tile.
@@ -1078,7 +1112,7 @@ local window_floor_blueprint_markers = {
 --!param flag_names (array) If set, array with two additional required properties.
 --!return Whether the tile is considered to be valid.
 function UIEditRoom:validDoorTile(xpos, ypos, player_id, flag_names)
-  local th = self.ui.app.map.th
+  local th = TheApp.map.th
 
   local tile_flags = th:getCellFlags(xpos, ypos)
   if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
@@ -1107,7 +1141,7 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   else
     y_mod = 2
   end
-  local map = self.ui.app.map.th
+  local map = TheApp.map.th
 
   if self.blueprint_door.anim then
     if self.room_type.swing_doors then
@@ -1162,38 +1196,18 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
       self.blueprint_door.old_flags = anim:getFlag()
     end
   end
-  self.blueprint_door.valid = true
+
   local flags
   local x2, y2 = x, y
   if wall == "west" then
     flags = 1
     x2 = x2 - 1
-    -- Check for a wall to the west, and prevent placing a door on top of an
-    -- existing wall.
-    if map:getCell(x, y, 3) % 0x100 ~= 0 then
-      self.blueprint_door.valid = false
-    end
-    -- If it is a swing door there are two more locations to check.
-    if self.room_type.swing_doors then
-      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 or
-          map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
-        self.blueprint_door.valid = false
-      end
-    end
   else--if wall == "north" then
     flags = 0
     y2 = y2 - 1
-    if map:getCell(x, y, 2) % 0x100 ~= 0 then
-      self.blueprint_door.valid = false
-    end
-    -- If it is a swing door there are two more locations to check.
-    if self.room_type.swing_doors then
-      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 or
-          map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
-        self.blueprint_door.valid = false
-      end
-    end
   end
+
+  self.blueprint_door.valid = checkDoorWalls(x, y, wall, self.room_type.swing_doors)
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
     local flag_names
