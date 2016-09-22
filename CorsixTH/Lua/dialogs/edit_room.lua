@@ -1071,6 +1071,21 @@ local window_floor_blueprint_markers = {
   west = 36,
 }
 
+--! Check whether the given tile can function as a door entry/exit tile.
+--!param xpos (int) X position of the tile.
+--!param ypos (int) Y position of the tile.
+--!param player_id (int) Player id owning the hospital.
+--!param flag_names (array) If set, array with two additional required properties.
+--!return Whether the tile is considered to be valid.
+function UIEditRoom:validDoorTile(xpos, ypos, player_id, flag_names)
+  local th = self.ui.app.map.th
+
+  local tile_flags = th:getCellFlags(xpos, ypos)
+  if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
+  if not flag_names then return true end
+  return tile_flags[flag_names[1]] and tile_flags[flag_names[2]]
+end
+
 function UIEditRoom:setDoorBlueprint(x, y, wall)
   local orig_x = x
   local orig_y = y
@@ -1181,7 +1196,6 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
   end
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
-    local flags = {}
     local flag_names
     if wall == "west" then
       flag_names = {"buildableNorth", "buildableSouth"}
@@ -1189,21 +1203,21 @@ function UIEditRoom:setDoorBlueprint(x, y, wall)
       flag_names = {"buildableWest", "buildableEast"}
     end
     local player_id = self.ui.hospital:getPlayerIndex()
-    if not (map:getCellFlags(x, y, flags).buildable or flags.passable or flags.owner == player_id ) or
-        not (flags[flag_names[1]] and flags[flag_names[2]]) or
-        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable or flags.owner == player_id) or
-        not (flags[flag_names[1]] and flags[flag_names[2]])
-    then
+
+    if not self:validDoorTile(x, y, player_id, flag_names) or
+        not self:validDoorTile(x2, y2, player_id, flag_names) then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) or
-          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) then
+      local dx = x_mod and 1 or 0
+      local dy = y_mod and 1 or 0
+      if not self:validDoorTile(x + dx, y + dy, player_id, nil) or
+          not self:validDoorTile(x2 + dx, y2 + dy, player_id, nil) then
         self.blueprint_door.valid = false
       end
-      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) or
-          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable or flags.owner == player_id) then
+      if not self:validDoorTile(x - dx, y - dy, player_id, nil) or
+          not self:validDoorTile(x2 - dx, y2 - dy, player_id, nil) then
         self.blueprint_door.valid = false
       end
     end
