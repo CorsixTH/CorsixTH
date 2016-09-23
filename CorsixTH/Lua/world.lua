@@ -74,6 +74,16 @@ function World:World(app)
   self.rooms = {} -- List that can have gaps when a room is deleted, so use pairs to iterate.
   self.entity_map = EntityMap(self.map)
 
+  -- All information relating to the next or current earthquake, nil if
+  -- there is no scheduled earthquake.
+  -- Contains the following fields:
+  -- active (boolean) Whether the earthquake is currently happening.
+  -- start_month (integer) The month the earthquake is triggered.
+  -- start_day (integer) The day of the month the earthquake is triggered.
+  -- stop_day (integer) the day of the month the earthquake ends.
+  -- size (integer) The amount of damage the earthquake causes (1-9).
+  self.next_earthquake = { active = false }
+
   -- Time
   self.hours_per_day = 50
   self.hours_per_tick = 1
@@ -544,14 +554,14 @@ end
 
 function World:createEarthquake()
   -- Sanity check
-  if not self.earthquake_size then
+  if not self.next_earthquake.size then
     return false
   end
 
   -- the bigger the earthquake, the longer it lasts. We add one
   -- further day, as we use those to give a small earthquake first,
   -- before the bigger one begins
-  local stop_day = math.round(self.earthquake_size / 3) + 1
+  local stop_day = math.round(self.next_earthquake.size / 3) + 1
 
   -- make sure the user has at least two days of an earthquake
   if stop_day < 2 then
@@ -563,37 +573,37 @@ function World:createEarthquake()
   self.currentY = self.ui.screen_offset_y
 
   -- we add an extra 1 at the end because we register the start of earthquakes at the end of the day
-  self.earthquake_stop_day = self.day + stop_day + 1
+  self.next_earthquake.stop_day = self.day + stop_day + 1
 
   -- if the day the earthquake is supposed to stop on a day greater than the length of the current month (eg 34)
-  if self.earthquake_stop_day > self:getCurrentMonthLength() then
+  if self.next_earthquake.stop_day > self:getCurrentMonthLength() then
     -- subtract the current length of the month so the earthquake will stop at the start of the next month
-    self.earthquake_stop_day = self.earthquake_stop_day - self:getCurrentMonthLength()
+    self.next_earthquake.stop_day = self.next_earthquake.stop_day - self:getCurrentMonthLength()
   end
 
   -- Prepare machines for getting damage - at most as much as the severity of the earthquake +-1
   for _, room in pairs(self.rooms) do
     for object, value in pairs(room.objects) do
       if object.strength then
-        object.quake_points = self.earthquake_size + math.random(-1, 1)
+        object.quake_points = self.next_earthquake.size + math.random(-1, 1)
       end
     end
   end
 
   -- set a flag to indicate that we are now having an earthquake
-  self.active_earthquake = true
+  self.next_earthquake.active = true
   return true
 end
 
 --! Perform actions to simulate an active earthquake.
 function World:tickEarthquake()
   -- check if this is the day that the earthquake is supposed to stop
-  if self.day == self.earthquake_stop_day then
-    self.active_earthquake = false
+  if self.day == self.next_earthquake.stop_day then
+    self.next_earthquake.active = false
     self.ui.tick_scroll_amount = false
     -- if the earthquake measured more than 7 on the richter scale, tell the user about it
-    if self.earthquake_size > 7 then
-      self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.earthquake_size)))
+    if self.next_earthquake.size > 7 then
+      self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.next_earthquake.size)))
     end
     -- Make sure that machines got all the damage they should get.
     for _, room in pairs(self.rooms) do
@@ -612,14 +622,14 @@ function World:tickEarthquake()
   else
     -- Multiplier for how much the screen moves around during the quake.
     local multi = 4
-    if (self.day > self.earthquake_stop_day) or (self.day < math.round(self.earthquake_size / 3)) then
+    if (self.day > self.next_earthquake.stop_day) or (self.day < math.round(self.next_earthquake.size / 3)) then
       -- if we are in the first two days of the earthquake, make it smaller
-      self.randomX = math.random(-(self.earthquake_size/2)*multi, (self.earthquake_size/2)*multi)
-      self.randomY = math.random(-(self.earthquake_size/2)*multi, (self.earthquake_size/2)*multi)
+      self.randomX = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
+      self.randomY = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
     else
       -- otherwise, hit the user with the full earthquake
-      self.randomX = math.random(-self.earthquake_size*multi, self.earthquake_size*multi)
-      self.randomY = math.random(-self.earthquake_size*multi, self.earthquake_size*multi)
+      self.randomX = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
+      self.randomY = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
     end
 
     -- if the game is not paused
@@ -931,7 +941,7 @@ function World:setSpeed(speed)
   local pause_state_changed = nil
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
-    if self.active_earthquake then
+    if self.next_earthquake.active then
       self.ui.tick_scroll_amount = {x = 0, y = 0}
     end
     -- By default actions are not allowed when the game is paused.
@@ -1021,10 +1031,9 @@ function World:onTick()
     self.hour = self.hour + self.hours_per_tick
 
     -- if an earthquake is supposed to be going on, call the earthquake function
-    if self.active_earthquake then
+    if self.next_earthquake.active then
       self:tickEarthquake()
     end
-
 
     -- End of day/month/year
     if self.hour >= self.hours_per_day then
@@ -1129,8 +1138,8 @@ function World:onEndDay()
   end
 
   -- check if it's time for an earthquake, and the user is at least on level 5
-  if (self.year - 1) * 12 + self.month == self.next_earthquake_month and
-      self.day == self.next_earthquake_day then
+  if (self.year - 1) * 12 + self.month == self.next_earthquake.start_month and
+      self.day == self.next_earthquake.start_day then
     -- warn the user that an earthquake is on the way
     local announcements = {
       "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
@@ -1371,15 +1380,18 @@ end
 
 -- Called when it is time to have another earthquake
 function World:nextEarthquake()
+  self.next_earthquake = {}
+  self.next_earthquake.active = false
+
   local level_config = self.map.level_config
   -- check carefully that no value that we are going to use is going to be nil
   if level_config.quake_control and level_config.quake_control[self.current_map_earthquake] and
       level_config.quake_control[self.current_map_earthquake].Severity ~= 0 then
     -- this map has rules to follow when making earthquakes, let's follow them
     local control = level_config.quake_control[self.current_map_earthquake]
-    self.next_earthquake_month = math.random(control.StartMonth, control.EndMonth)
-    self.next_earthquake_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
-    self.earthquake_size = control.Severity
+    self.next_earthquake.start_month = math.random(control.StartMonth, control.EndMonth)
+    self.next_earthquake.start_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
+    self.next_earthquake.size = control.Severity
     self.current_map_earthquake = self.current_map_earthquake + 1
   end
 end
@@ -2664,6 +2676,20 @@ function World:afterLoad(old, new)
         if litter and litter:isCleanable() then self.map:setCellFlags(x, y, {buildable=true}) end
       end
     end
+  end
+  if old < 115 then
+    self.next_earthquake = {
+      start_month = self.next_earthquake_month,
+      start_day = self.next_earthquake_day,
+      stop_day = self.earthquake_stop_day,
+      size = self.earthquake_size,
+      active = self.earthquake_active or false
+    }
+    self.next_earthquake_month = nil
+    self.next_earthquake_day = nil
+    self.earthquake_stop_day = nil
+    self.earthquake_size = nil
+    self.earthquake_active = nil
   end
 
   self.savegame_version = new
