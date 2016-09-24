@@ -1120,10 +1120,10 @@ function UIEditRoom:validDoorTile(xpos, ypos, player_id, flag_names)
   return tile_flags[flag_names[1]] and tile_flags[flag_names[2]]
 end
 
-function UIEditRoom:setDoorBlueprint(x, y, wall)
-  local orig_x = x
-  local orig_y = y
-  local orig_wall = wall
+function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
+  local x = orig_x
+  local y = orig_y
+  local wall = orig_wall
 
   -- Used to get the adjacent tiles when placing swing doors.
   local x_mod
@@ -1261,10 +1261,10 @@ function UIEditRoom:placeWindowBlueprint()
   end
 end
 
-function UIEditRoom:setWindowBlueprint(x, y, wall)
-  local orig_x = x
-  local orig_y = y
-  local orig_wall = wall
+function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
+  local x = orig_x
+  local y = orig_y
+  local wall = orig_wall
 
   if wall == "south" then
     y = y + 1
