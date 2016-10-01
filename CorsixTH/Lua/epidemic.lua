@@ -614,35 +614,6 @@ end
  @param patient (Patient) the patient to be vaccinated
  @return best_x,best_y (Integer,nil) the best tiles to vaccinate from.]]
 function Epidemic:getBestVaccinationTile(nurse, patient)
-  -- General usage tile finder, used in the other cases
-  -- when the patient isn't sitting on a bench
-  local function get_best_usage_no_bench(nurse,patient)
-    -- Tile patient is standing on
-    local px, py = patient.tile_x, patient.tile_y
-    -- Location of the nurse
-    local nx, ny = nurse.tile_x, nurse.tile_y
-
-    local best_x, best_y = nil
-    local shortest_distance = nil
-    local free_tiles = self.world.entity_map:getAdjacentFreeTiles(px,py)
-
-    for _, coord in ipairs(free_tiles) do
-      local x = coord['x']
-      local y = coord['y']
-
-      local distance = self.world:getPathDistance(nx,ny,x,y)
-      -- If the tile is reachable for the nurse
-      if distance then
-        -- If the tile is closer then it's a better choice
-        if not shortest_distance or distance < shortest_distance then
-          shortest_distance = distance
-          best_x, best_y = x, y
-        end
-      end
-    end
-    return best_x, best_y
-  end
-
   local action = patient.action_queue[1]
   local px, py = patient.tile_x, patient.tile_y
   -- If the patient is using a bench the best tile to use is
@@ -652,17 +623,42 @@ function Epidemic:getBestVaccinationTile(nurse, patient)
     if object_in_use.object_type.id == "bench" then
       local direction = object_in_use.direction
       if direction == "north" then
-        return px, py-1
+        return px, py - 1
       elseif direction == "south" then
-        return px, py+1
+        return px, py + 1
       elseif direction == "east" then
-        return px+1, py
+        return px + 1, py
       elseif direction == "west" then
-        return px-1, py
+        return px - 1, py
       end
     end
   end
-  return get_best_usage_no_bench(nurse, patient)
+
+  -- General usage tile finder, used in the other cases
+  -- when the patient isn't sitting on a bench
+
+  -- Location of the nurse
+  local nx, ny = nurse.tile_x, nurse.tile_y
+
+  local best_x, best_y = nil
+  local shortest_distance = nil
+  local free_tiles = self.world.entity_map:getAdjacentFreeTiles(px, py)
+
+  for _, coord in ipairs(free_tiles) do
+    local x = coord['x']
+    local y = coord['y']
+
+    local distance = self.world:getPathDistance(nx, ny, x, y)
+    -- If the tile is reachable for the nurse
+    if distance then
+      -- If the tile is closer then it's a better choice
+      if not shortest_distance or distance < shortest_distance then
+        shortest_distance = distance
+        best_x, best_y = x, y
+      end
+    end
+  end
+  return best_x, best_y
 end
 
 --[[When the nurse is interrupted unreserve the patient and unassign the call.

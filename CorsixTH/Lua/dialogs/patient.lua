@@ -98,7 +98,12 @@ function UIPatient:UIPatient(ui, patient)
   self:addKeyHandler("H", self.goHome)
 end
 
+--! Normalise warmth of a patient.
+--!param warmth (number or nil) If given, the fraction of warmth of the patient.
+--!return (float) Normalized warmth level.
 function UIPatient.normaliseWarmth(warmth)
+  if not warmth then return 0.5 end -- Return 1/2 if unknown.
+
   if warmth < 0.08 then
     warmth = 0
   elseif warmth > 0.50 then
@@ -107,6 +112,20 @@ function UIPatient.normaliseWarmth(warmth)
     warmth = (warmth - 0.08) / (0.50 - 0.08)
   end
   return warmth
+end
+
+--! Draw a bar in the patient dialogue window.
+--!param canvas Canvas to draw at.
+--!param xbase Horizontal base position.
+--!param ybase Vertical base position.
+--!param xpos Horizontal offset.
+--!param ypos Vertical offset.
+--!param value Fraction to draw.
+function UIPatient:drawBar(canvas, xbase, ybase, xpos, ypos, value)
+  local width = math.floor(value * 40 + 0.5)
+  for dx = 0, width - 1 do
+    self.panel_sprites:draw(canvas, xbase, xpos + 58 + dx, ypos + ybase)
+  end
 end
 
 function UIPatient:draw(canvas, x_, y_)
@@ -136,79 +155,66 @@ function UIPatient:draw(canvas, x_, y_)
   self.ui.app.map:draw(canvas, px, py, 75, 76, x + 17, y + 216)
   Window.draw(self, canvas, x_, y_)
 
-  -- The patients happiness. Each bar is by default half way if the actual value
-  -- cannot be found.
-  local happiness_bar_width = 22
-  if patient.attributes["happiness"] then
-    happiness_bar_width = math_floor(patient.attributes["happiness"] * 40 + 0.5)
-  end
-  if happiness_bar_width ~= 0 then
-    for dx = 0, happiness_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 348, x + 58 + dx, y + 126)
-    end
-  end
-  -- The patients thirst level
-  local thirst_bar_width = 22
-  if patient.attributes["thirst"] then
-    thirst_bar_width = math_floor((1 - patient.attributes["thirst"]) * 40 + 0.5)
-  end
-  if thirst_bar_width ~= 0 then
-    for dx = 0, thirst_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 351, x + 58 + dx, y + 154)
-    end
-  end
-  -- How warm the patient feels
-  local warmth_bar_width = 22
-  local warmth = patient.attributes["warmth"]
-  if warmth then
-    warmth = self.normaliseWarmth(warmth)
-    warmth_bar_width = math_floor(warmth * 40 + 0.5)
-  end
-  if warmth_bar_width ~= 0 then
-    for dx = 0, warmth_bar_width - 1 do
-      self.panel_sprites:draw(canvas, 349, x + 58 + dx, y + 183)
-    end
-  end
+  -- The patient bars (happiness, thirst, and warmth).
+  local warmth = self.normaliseWarmth(patient.attributes["warmth"])
+
+  self.drawBar(canvas, 348, 126, x, y, patient.attributes["happiness"] or 0.5)
+  self.drawBar(canvas, 351, 154, x, y, 1 - (patient.attributes["thirst"] or 0.5))
+  self.drawBar(canvas, 349, 183, x, y, warmth)
 
   if self.history_panel.visible then
     self:drawTreatmentHistory(canvas, x + 40, y + 25)
   elseif patient.health_history then
-    local hor_length = 76
-    local vert_length = 70
-    local startx = 58
-    local starty = 27
-
-    local hh = patient.health_history
-    local index = hh["last"]
-    local size = hh["size"]
-
-    local dx = hor_length / size
-    local line = nil -- Make a line the first time we find a non-nil value.
-    for i = 1, size do
-      index = (index == size) and 1 or (index + 1)
-      if hh[index] then
-        local posy = starty + (1.0 - hh[index]) * vert_length
-
-        if not line then
-          line = TH.line()
-          line:setWidth(2)
-          line:setColour(200, 55, 30, 255)
-          line:moveTo(startx, posy)
-        else
-          line:lineTo(startx, posy)
-        end
-      end
-      startx = startx + dx
-    end
-
-    if line then line:draw(canvas, x, y) end
+    self:drawHealthHistory(canvas, x, y)
   end
 end
 
+--! List the treatments that were performed on the patient.
+--!param canvas Destination to draw on.
+--!param x (int) X position of the top of the list.
+--!param y (int) Y position of the top of the list.
 function UIPatient:drawTreatmentHistory(canvas, x, y)
   for _, room in ipairs(self.patient.treatment_history) do
     y = self.font:drawWrapped(canvas, room, x, y, 95)
   end
+end
+
+--! Draw the health graph of the patient.
+--!param canvas Destination to draw on.
+--!param x (int) X position of the top-left of the graph.
+--!param y (int) Y position of the top-left of the graph.
+function UIPatient:drawHealthHistory(canvas, x, y)
+  -- Sizes and positions of the graph in the window.
+  local hor_length = 76
+  local vert_length = 70
+  local startx = 58
+  local starty = 27
+
+  -- Health history information.
+  local hh = self.patient.health_history
+  local index = hh["last"]
+  local size = hh["size"]
+
+  local dx = hor_length / size
+  local line = nil -- Make a line the first time we find a non-nil value.
+  for i = 1, size do
+    index = (index == size) and 1 or (index + 1)
+    if hh[index] then
+      local posy = starty + (1.0 - hh[index]) * vert_length
+
+      if not line then
+        line = TH.line()
+        line:setWidth(2)
+        line:setColour(200, 55, 30, 255)
+        line:moveTo(startx, posy)
+      else
+        line:lineTo(startx, posy)
+      end
+    end
+    startx = startx + dx
+  end
+
+  if line then line:draw(canvas, x, y) end
 end
 
 function UIPatient:onMouseDown(button, x, y)
