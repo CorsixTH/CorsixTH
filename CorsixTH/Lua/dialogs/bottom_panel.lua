@@ -210,17 +210,17 @@ function UIBottomPanel:drawDynamicInfo(canvas, x, y)
     local info = self.dynamic_info
     local font = self.white_font
     for i, text in ipairs(info["text"]) do
-      font:drawWrapped(canvas, text, x + 20, y + 10*i, 240)
+      font:drawWrapped(canvas, text, x + 20, y + 10 * i, 240)
       if i == #info["text"] and info["progress"] then
         local white = canvas:mapRGB(255, 255, 255)
         local black = canvas:mapRGB(0, 0, 0)
         local orange = canvas:mapRGB(221, 83, 0)
-        canvas:drawRect(white, x + 165, y + 10*i, 100, 10)
-        canvas:drawRect(black, x + 166, y + 1 + 10*i, 98, 8)
-        canvas:drawRect(orange, x + 166, y + 1 + 10*i, math.floor(98*info["progress"]), 8)
+        canvas:drawRect(white, x + 165, y + 10 * i, 100, 10)
+        canvas:drawRect(black, x + 166, y + 1 + 10 * i, 98, 8)
+        canvas:drawRect(orange, x + 166, y + 1 + 10 * i, math.floor(98 * info["progress"]), 8)
         if info["dividers"] then
-          for k, value in ipairs(info["dividers"]) do
-            canvas:drawRect(white, x + 165 + math.floor(value*100), y + 10*i, 1, 10)
+          for _, value in ipairs(info["dividers"]) do
+            canvas:drawRect(white, x + 165 + math.floor(value * 100), y + 10 * i, 1, 10)
           end
         end
       end
@@ -311,7 +311,7 @@ function UIBottomPanel:queueMessage(type, message, owner, timeout, default_choic
   end
 end
 
---[[ A fax can be queued if the event the fax causes does not effect
+--[[ A fax can be queued if the event the fax causes does not affect
 an event caused by any other fax that is queued. i.e both emergency
 and epidemics use the timer, so both faxes cannot appear at the same time.
 @param fax (table) the fax we want to determine if can be queued.
@@ -323,14 +323,14 @@ function UIBottomPanel:canQueueFax(fax)
   @return true if any of fax_type is queued false otherwise (boolean) ]]
   local function isFaxTypeQueued(fax_type)
     -- Check the queued messages
-    for _, fax in ipairs(self.message_queue) do
-      if fax.type == fax_type then
+    for _, fax_msg in ipairs(self.message_queue) do
+      if fax_msg.type == fax_type then
         return true
       end
     end
     -- Then the messages displayed on the bottom bar
-    for _, fax in ipairs(self.message_windows) do
-      if fax.type == fax_type then
+    for _, fax_msg in ipairs(self.message_windows) do
+      if fax_msg.type == fax_type then
         return true
       end
     end

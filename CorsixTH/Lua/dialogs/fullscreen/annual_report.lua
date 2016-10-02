@@ -18,13 +18,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-
 --! Annual Report fullscreen window shown at the start of each year.
 class "UIAnnualReport" (UIFullscreen)
 
 ---@type UIAnnualReport
 local UIAnnualReport = _G["UIAnnualReport"]
+
+--! Helper function that enables and makes visible button or table of buttons/panels.
+--!param button The button or table of buttons that should be activated/deactivated. If
+-- a table is given it needs to have the is_table flag set to true.
+--!param active Defines if the new state is active (true) or inactive (false).
+local function setActive(button, active)
+  if button.is_table then
+    for _, btn in ipairs(button) do
+      btn.enabled = active
+      btn.visible = active
+    end
+  else
+    button.enabled = active
+    button.visible = active
+  end
+end
 
 function UIAnnualReport:UIAnnualReport(ui, world)
 
@@ -68,15 +82,15 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   -- Close button, in the future different behaviours for different screens though
   --self.first_close = self:addPanel(0, 609, 449):makeButton(0, 0, 26, 26, 1, self.changePage)
   self.second_close = self:addPanel(0, 608, 449):makeButton(0, 0, 26, 26, 1, self.close)
-  self:setActive(self.second_close, true)
+  setActive(self.second_close, true)
 
   -- Change page buttons for the second and third pages
   local --[[persistable:annual_report_change_page]] function change() self:changePage(3) end
   self.second_change = self:addPanel(0, 274, 435):makeButton(0, 0, 91, 42, 3, change)
-  self:setActive(self.second_change, true)
+  setActive(self.second_change, true)
 
   self.third_change = self:addPanel(0, 272, 367):makeButton(0, 0, 91, 42, 3, self.changePage)
-  self:setActive(self.third_change, false)
+  setActive(self.third_change, false)
 
   -- The plaque showed after the player has clicked on a trophy
   local plaque = {}
@@ -86,11 +100,11 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   plaque[4] = self:addPanel(22, 206, 321)
   plaque.is_table = true
   self.plaque = plaque
-  self:setActive(self.plaque, false)
+  setActive(self.plaque, false)
 
   -- Close button for the trophy motivations
   self.third_close = self:addPanel(0, 389, 378):makeButton(0, 0, 26, 26, 2, self.showTrophyMotivation)
-  self:setActive(self.third_close, false)
+  setActive(self.third_close, false)
 
   -- The scroll showed after the player has clicked on an award
   local scroll = {}
@@ -100,11 +114,11 @@ function UIAnnualReport:UIAnnualReport(ui, world)
   scroll[4] = self:addPanel(15, 300, 341)
   scroll.is_table = true
   self.scroll = scroll
-  self:setActive(self.scroll, false)
+  setActive(self.scroll, false)
 
   -- Close button for the award motivations
   self.fourth_close = self:addPanel(0, 369, 358):makeButton(0, 0, 26, 26, 2, self.showAwardMotivation)
-  self:setActive(self.fourth_close, false)
+  setActive(self.fourth_close, false)
 
   -- How many awards the player got this year. Will increase after the checkup.
   self.no_awards = 0
@@ -343,7 +357,7 @@ function UIAnnualReport:addTrophy(text, award_type, amount)
     trophy_parts[1] = self:addPanel(prop.sprite, prop.x, prop.y)
     trophy_parts[2] = trophy_parts[1]:makeButton(0, 0, prop.w, prop.h, prop.sprite, change)
 
-    self:setActive(trophy_parts, false)
+    setActive(trophy_parts, false)
     self.trophies[no] = trophy_parts
   end
   self.no_trophies = no
@@ -391,7 +405,7 @@ function UIAnnualReport:addAward(text, award_type, amount)
     local --[[persistable:annual_report_show_award_motivation]] function change() self:showAwardMotivation(no) end
     award_parts[4] = award_parts[3]:makeButton(0, 0, 105, 103, award_shadows[no].shadow, change)
     self.awards[no] = award_parts
-    self:setActive(award_parts, false)
+    setActive(award_parts, false)
   end
 
   -- The economic part of the award.
@@ -404,18 +418,18 @@ function UIAnnualReport:showAwardMotivation(text_index_to_show)
   if text_index_to_show then
     -- Make sure no trophy motivation is shown
     self:showTrophyMotivation()
-    self:setActive(self.scroll, true)
+    setActive(self.scroll, true)
     -- Possibly hide the black award symbol
     if self.awards[text_index_to_show].info.amount > 0 then
-      self:setActive(self.scroll[4], false)
+      setActive(self.scroll[4], false)
     end
-    self:setActive(self.fourth_close, true)
-    self:setActive(self.third_change, false)
+    setActive(self.fourth_close, true)
+    setActive(self.third_change, false)
     self.award_motivation = text_index_to_show
   else
-    self:setActive(self.scroll, false)
-    self:setActive(self.fourth_close, false)
-    self:setActive(self.third_change, true)
+    setActive(self.scroll, false)
+    setActive(self.fourth_close, false)
+    setActive(self.third_change, true)
     self.award_motivation = nil
   end
 end
@@ -426,31 +440,15 @@ function UIAnnualReport:showTrophyMotivation(text_index_to_show)
   if text_index_to_show then
     -- Make sure no award motivation is shown
     self:showAwardMotivation()
-    self:setActive(self.plaque, true)
-    self:setActive(self.third_close, true)
-    self:setActive(self.third_change, false)
+    setActive(self.plaque, true)
+    setActive(self.third_close, true)
+    setActive(self.third_change, false)
     self.trophy_motivation = text_index_to_show
   else
-    self:setActive(self.plaque, false)
-    self:setActive(self.third_close, false)
-    self:setActive(self.third_change, true)
+    setActive(self.plaque, false)
+    setActive(self.third_close, false)
+    setActive(self.third_change, true)
     self.trophy_motivation = nil
-  end
-end
-
---! Helper function that enables and makes visible button or table of buttons/panels.
---!param button The button or table of buttons that should be activated/deactivated. If
--- a table is given it needs to have the is_table flag set to true.
---!param active Defines if the new state is active (true) or inactive (false).
-function UIAnnualReport:setActive(button, active)
-  if button.is_table then
-    for _, btn in ipairs(button) do
-      btn.enabled = active
-      btn.visible = active
-    end
-  else
-    button.enabled = active
-    button.visible = active
   end
 end
 
@@ -478,31 +476,31 @@ end
 --!param page_no The page to go to, either page 1, 2 or 3. Default is currently page 2.
 function UIAnnualReport:changePage(page_no)
   -- Can only go to page 2 from page 1, and then only between page 2 and 3
-  --self:setActive(self.first_close, false)
-  self:setActive(self.second_close, true)
+  --setActive(self.first_close, false)
+  setActive(self.second_close, true)
   self.second_close.visible = true
   if page_no == 2 or not page_no then -- Statistics page.
     self.background = self.stat_background
-    self:setActive(self.third_change, false)
-    self:setActive(self.second_change, true)
+    setActive(self.third_change, false)
+    setActive(self.second_change, true)
     for i, _ in ipairs(self.trophies) do
-      self:setActive(self.trophies[i], false)
+      setActive(self.trophies[i], false)
     end
     for i, _ in ipairs(self.awards) do
-      self:setActive(self.awards[i], false)
+      setActive(self.awards[i], false)
     end
     self.state = 2
   else -- Awards and trophies
     self.background = self.award_background
-    self:setActive(self.third_change, true)
-    self:setActive(self.second_change, false)
+    setActive(self.third_change, true)
+    setActive(self.second_change, false)
     -- Show awards given.
     for i, _ in ipairs(self.awards) do
-      self:setActive(self.awards[i], true)
+      setActive(self.awards[i], true)
     end
     -- And trophies given.
     for i, _ in ipairs(self.trophies) do
-      self:setActive(self.trophies[i], true)
+      setActive(self.trophies[i], true)
     end
     self.state = 3
   end
@@ -530,7 +528,7 @@ function UIAnnualReport:draw(canvas, x, y)
       font:draw(canvas, i .. ".", x + 220, y + 160 + dy)
       font:draw(canvas, world.hospitals[1].name:upper(), x + 260, y + 160 + dy)
       font:draw(canvas, "NA", x + 360, y + 160 + dy)
-      dy = dy + 25
+      -- dy = dy + 25
     --end
   elseif self.state == 2 then -- Statistics screen
     self:drawStatisticsScreen(canvas, x, y)
@@ -613,49 +611,49 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
     local name = player.name
 
     -- Most Money
-    local index, dup_m = getindex(self.money_sort, self.money[name])
-    -- index is the returned value of the sorted place for this player.
+    local index_m, dup_m = getindex(self.money_sort, self.money[name])
+    -- index_* is the returned value of the sorted place for this player.
     -- However there might be many players with the same value, so each iteration a
     -- duplicate has been found, one additional row lower is the right place to be.
     font:draw(canvas, name:upper(), x + 140,
-      y + row_y + row_dy*(index-1) + row_dy*(dup_money))
+        y + row_y + row_dy * (index_m - 1) + row_dy * dup_money)
     font:draw(canvas, self.money[name], x + 240,
-      y + row_y + row_dy*(index-1) + row_dy*(dup_money), 70, 0, "right")
+        y + row_y + row_dy * (index_m - 1) + row_dy * dup_money, 70, 0, "right")
 
     -- Highest Salary
-    local index, dup_s = getindex(self.salary_sort, self.salary[name])
+    local index_s, dup_s = getindex(self.salary_sort, self.salary[name])
     font:draw(canvas, name:upper(), x + 140 + col_x,
-      y + row_y + row_dy*(index-1) + row_dy*(dup_salary))
+        y + row_y + row_dy * (index_s - 1) + row_dy * dup_salary)
     font:draw(canvas, self.salary[name], x + 240 + col_x,
-      y + row_y + row_dy*(index-1) + row_dy*(dup_salary), 70, 0, "right")
+        y + row_y + row_dy * (index_s - 1) + row_dy * dup_salary, 70, 0, "right")
 
     -- Most Cures
-    local index, dup_c = getindex(self.cures_sort, self.cures[name])
+    local index_c, dup_c = getindex(self.cures_sort, self.cures[name])
     font:draw(canvas, name:upper(), x + 140,
-      y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures))
+        y + row_y + row_no_y + row_dy * (index_c - 1) + row_dy * dup_cures)
     font:draw(canvas, self.cures[name], x + 240,
-      y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_cures), 70, 0, "right")
+        y + row_y + row_no_y + row_dy * (index_c - 1) + row_dy * dup_cures, 70, 0, "right")
 
     -- Most Deaths
-    local index, dup_d = getindex(self.deaths_sort, self.deaths[name])
+    local index_d, dup_d = getindex(self.deaths_sort, self.deaths[name])
     font:draw(canvas, name:upper(), x + 140 + col_x,
-      y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths))
+        y + row_y + row_no_y + row_dy * (index_d - 1) + row_dy * dup_deaths)
     font:draw(canvas, self.deaths[name], x + 240 + col_x,
-      y + row_y + row_no_y + row_dy*(index-1) + row_dy*(dup_deaths), 70, 0, "right")
+        y + row_y + row_no_y + row_dy * (index_d - 1) + row_dy * dup_deaths, 70, 0, "right")
 
     -- Most Visitors
-    local index, dup_v = getindex(self.visitors_sort, self.visitors[name])
+    local index_v, dup_v = getindex(self.visitors_sort, self.visitors[name])
     font:draw(canvas, name:upper(), x + 140,
-      y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors))
+        y + row_y + row_no_y * 2 + row_dy * (index_v - 1) + row_dy * dup_visitors)
     font:draw(canvas, self.visitors[name], x + 240,
-      y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_visitors), 70, 0, "right")
+        y + row_y + row_no_y * 2 + row_dy * (index_v - 1) + row_dy * dup_visitors, 70, 0, "right")
 
     -- Highest Value
-    local index, dup_v2 = getindex(self.value_sort, self.value[name])
+    local index_v2, dup_v2 = getindex(self.value_sort, self.value[name])
     font:draw(canvas, name:upper(), x + 140 + col_x,
-      y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value))
+        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1) + row_dy * dup_value)
     font:draw(canvas, self.value[name], x + 240 + col_x,
-      y + row_y + row_no_y*2 + row_dy*(index-1) + row_dy*(dup_value), 70, 0, "right")
+        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1) + row_dy * dup_value, 70, 0, "right")
 
     if dup_m > 1 then dup_money = dup_money + 1 else dup_money = 0 end
     if dup_s > 1 then dup_salary = dup_salary + 1 else dup_salary = 0 end
