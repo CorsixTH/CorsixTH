@@ -71,13 +71,13 @@ function UICallsDispatcher:createControls()
 
   if rows ~= self.rows_shown then
     local function assigned_factory(num)
-      return --[[persistable:calls_dispatcher_assigned_button]] function(self)
-        self:itemButtonClicked(num)
+      return --[[persistable:calls_dispatcher_assigned_button]] function(window)
+        window:itemButtonClicked(num)
       end
     end
     local function task_factory(num)
-      return --[[persistable:calls_dispatcher_task_button]] function(self)
-        self:itemButtonClicked(num)
+      return --[[persistable:calls_dispatcher_task_button]] function(window)
+        window:itemButtonClicked(num)
       end
     end
     local callback = --[[persistable:calls_dispatcher_scrollbar]] function()
@@ -115,8 +115,8 @@ end
 function UICallsDispatcher:update()
   self.call_list = {}
   local assigned = 0
-  for object, queue in pairs(self.dispatcher.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.dispatcher.call_queue) do
+    for _, call in pairs(queue) do
       table.insert(self.call_list, call)
       if call.assigned then
         assigned = assigned + 1

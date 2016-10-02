@@ -23,8 +23,6 @@ local rnc = require "rnc"
 local lfs = require "lfs"
 local TH = require "TH"
 local SDL = require "sdl"
-local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
-    = assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 local runDebugger = dofile "run_debugger"
 
 -- Increment each time a savegame break would occur
@@ -75,7 +73,7 @@ end
 
 function App:setCommandLine(...)
   self.command_line = {...}
-  for i, arg in ipairs(self.command_line) do
+  for _, arg in ipairs(self.command_line) do
     local setting, value = arg:match("^%-%-([^=]*)=(.*)$") --setting=value
     if value then
       self.command_line[setting] = value
@@ -282,11 +280,10 @@ function App:init()
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
     local function callback(path)
-      local app = TheApp
-      app.config.theme_hospital_install = path
-      app:saveConfig()
+      TheApp.config.theme_hospital_install = path
+      TheApp:saveConfig()
       debug.getregistry()._RESTART = true
-      app.running = false
+      TheApp.running = false
     end
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
@@ -561,9 +558,9 @@ function App:getAbsolutePathToLevelFile(level)
   local path = debug.getinfo(1, "S").source:sub(2, -12)
   -- First look in Campaigns. If not found there, fall back to Levels.
   local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
-  for _, path in ipairs(list_of_possible_paths) do
-    local check_path = path .. pathsep .. level
-    local file, err = io.open(check_path, "rb")
+  for _, parent_path in ipairs(list_of_possible_paths) do
+    local check_path = parent_path .. pathsep .. level
+    local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
@@ -845,27 +842,26 @@ function App:saveConfig()
         -- Look for identifiers we want to save
         local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
         if identifier then
+          local _, temp
           -- Trim possible trailing comment from value
-          local _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
+          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
           value = temp or value
           -- Remove enclosing [[]], if necessary
-          local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
           value = temp or value
 
           -- If identifier also exists in runtime options, compare their values and
           -- replace the line, if needed
-          --if self.config[identifier] ~= nil then
-            handled_ids[identifier] = true
-            if value ~= tostring(self.config[identifier]) then
-              local new_value = self.config[identifier]
-              if type(new_value) == "string" then
-                new_value = string.format("[[%s]]", new_value)
-              else
-                new_value = tostring(new_value)
-              end
-              lines[#lines] = string.format("%s = %s", identifier, new_value)
+          handled_ids[identifier] = true
+          if value ~= tostring(self.config[identifier]) then
+            local new_value = self.config[identifier]
+            if type(new_value) == "string" then
+              new_value = string.format("[[%s]]", new_value)
+            else
+              new_value = tostring(new_value)
             end
-          --end
+            lines[#lines] = string.format("%s = %s", identifier, new_value)
+          end
         end
       end
     end
@@ -902,12 +898,12 @@ function App:run()
   --  2) If an error occurs, the call stack is preserved in the coroutine, so
   --     Lua can query or print the call stack as required, rather than
   --     hardcoding error behaviour in C.
-  local co = coroutine.create(function(self)
+  local co = coroutine.create(function(app)
     local yield = coroutine.yield
-    local dispatch = self.dispatch
+    local dispatch = app.dispatch
     local repaint = true
-    while self.running do
-      repaint = dispatch(self, yield(repaint))
+    while app.running do
+      repaint = dispatch(app, yield(repaint))
     end
   end)
 
@@ -1099,9 +1095,9 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status, err
+  local status, _
   if self.config.theme_hospital_install then
-    status, err = self.fs:setRoot(self.config.theme_hospital_install)
+    status, _ = self.fs:setRoot(self.config.theme_hospital_install)
   end
   local message = "Please make sure that you point the game to" ..
       " a valid copy of the data files from the original game," ..
@@ -1454,7 +1450,7 @@ function App:checkForUpdates()
     return
   end
 
-  local success, socket = pcall(require, "socket")
+  local success, _ = pcall(require, "socket")
 
   if not success then
     -- LuaSocket is not available, just return
@@ -1467,7 +1463,7 @@ function App:checkForUpdates()
   local url = require "socket.url"
 
   print("Checking for CorsixTH updates...")
-  local update_body, status, headers = http.request(update_url)
+  local update_body, status, _ = http.request(update_url)
 
   if not update_body or not (status == 200) then
     print("Couldn't check for updates. Server returned code: " .. status)
@@ -1500,7 +1496,7 @@ function App:checkForUpdates()
 
   -- Check to see if there's a changelog in the user's language
   local current_langs = self.strings:getLanguageNames(self.config.language)
-  for _,v in ipairs(current_langs) do
+  for _, v in ipairs(current_langs) do
     if (update_table["changelog_" .. v]) then
       changelog = update_table["changelog_" .. v]
       break
