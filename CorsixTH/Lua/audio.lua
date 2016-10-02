@@ -358,19 +358,14 @@ function Audio:playSoundsAtEntityInRandomSequenceRecursionHandler(sounds, entity
                                   end
 
     if self:canSoundsBePlayed() then
-      local _, warning
       local x, y = Map:WorldToScreen(entity.tile_x, entity.tile_y)
       local dx, dy = entity.th:getPosition()
       x = x + dx - self.app.ui.screen_offset_x
       y = y + dy - self.app.ui.screen_offset_y
 
       self.played_sound_callbacks[tostring(self.unused_played_callback_id)] = sound_played_callback
-      _, warning = self.sound_fx:play(sounds[math.random(1,#sounds)],
-                                      self.app.config.sound_volume,
-                                      x,
-                                      y,
-                                      self.unused_played_callback_id,
-                                      silences_pointer)
+      self.sound_fx:play(sounds[math.random(1,#sounds)], self.app.config.sound_volume,
+          x, y, self.unused_played_callback_id, silences_pointer)
 
       self.unused_played_callback_id = self.unused_played_callback_id + 1
       if #silences > 1 then
@@ -586,19 +581,19 @@ function Audio:playBackgroundTrack(index)
       -- Someone might want to stop the player from
       -- starting to play once it's loaded though.
       self.load_music = true
-      SDL.audio.loadMusicAsync(data, function(music, e)
+      SDL.audio.loadMusicAsync(data, function(music_data, e)
 
-        if music == nil then
+        if music_data == nil then
           error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'" ..
               (e and (" (" .. e .. ")" or "")))
         else
           if _DECODA then
-            debug.getmetatable(music).__tostring = function(ud)
+            debug.getmetatable(music_data).__tostring = function(ud)
               return debug.getfenv(ud).tostring
             end
-            debug.getfenv(music).tostring = "Music <".. info.filename .. ">"
+            debug.getfenv(music_data).tostring = "Music <".. info.filename .. ">"
           end
-          info.music = music
+          info.music = music_data
           -- Do we still want it to play?
           if self.load_music then
             return self:playBackgroundTrack(index)
