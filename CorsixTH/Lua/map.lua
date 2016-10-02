@@ -166,7 +166,7 @@ the original game levels are considered.
 has been loaded.
 ]]
 function Map:load(level, difficulty, level_name, map_file, level_intro, map_editor)
-  local objects, i
+  local objects
   if not difficulty then
     difficulty = "full"
   end
@@ -180,8 +180,9 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
   local result = file(path .. "Lua" .. pathsep .. "base_config.lua")
 
   local base_config = result
-  local errors
+  local _
   if type(level) == "number" then
+    local errors, data
     -- Playing the original campaign.
     -- Add TH's base config if possible, otherwise our own config
     -- roughly corresponds to "full".
@@ -192,10 +193,9 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     end
     self.difficulty = difficulty
     self.level_number = level
-    local data
     data, errors = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      _, objects = self.th:load(data)
     else
       return nil, errors
     end
@@ -215,10 +215,10 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
         level_no = "0" .. level
       end
       -- Override with the specific configuration for this level
-      errors, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
+      _, result = self:loadMapConfig(difficulty .. level_no .. ".SAM", base_config)
       -- Finally load additional CorsixTH config per level
       local p = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep .. "original" .. level_no .. ".level"
-      errors, result = self:loadMapConfig(p, result, true)
+      _, result = self:loadMapConfig(p, result, true)
       self.level_config = result
     end
   elseif map_editor then
@@ -226,11 +226,11 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.level_name = "MAP EDITOR"
     self.level_number = "MAP EDITOR"
     if level == "" then
-      i, objects = self.th:loadBlank()
+      _, objects = self.th:loadBlank()
     else
       local data, errors = self:getRawData(level)
       if data then
-        i, objects = self.th:load(data)
+        _, objects = self.th:load(data)
       else
         return nil, errors
       end
@@ -246,7 +246,7 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     self.map_file = map_file
     local data, errors = self:getRawData(map_file)
     if data then
-      i, objects = self.th:load(data)
+      _, objects = self.th:load(data)
     else
       return nil, errors
     end
@@ -645,42 +645,42 @@ function Map:draw(canvas, sx, sy, sw, sh, dx, dy)
           if screenX < -32 then
           elseif screenX < sw + 32 then
             local xy = y * self.width + x
-            local x = dx + screenX - 32
-            local y = dy + screenY
+            local xpos = dx + screenX - 32
+            local ypos = dy + screenY
             if self.debug_flags then
               local flags = self.debug_flags[xy]
               if flags.passable then
-                self.cell_outline:draw(canvas, 3, x, y)
+                self.cell_outline:draw(canvas, 3, xpos, ypos)
               end
               if flags.hospital then
-                self.cell_outline:draw(canvas, 8, x, y)
+                self.cell_outline:draw(canvas, 8, xpos, ypos)
               end
               if flags.buildable then
-                self.cell_outline:draw(canvas, 9, x, y)
+                self.cell_outline:draw(canvas, 9, xpos, ypos)
               end
               if flags.travelNorth and self.debug_flags[xy - self.width].passable then
-                self.cell_outline:draw(canvas, 4, x, y)
+                self.cell_outline:draw(canvas, 4, xpos, ypos)
               end
               if flags.travelEast and self.debug_flags[xy + 1].passable then
-                self.cell_outline:draw(canvas, 5, x, y)
+                self.cell_outline:draw(canvas, 5, xpos, ypos)
               end
               if flags.travelSouth and self.debug_flags[xy + self.width].passable then
-                self.cell_outline:draw(canvas, 6, x, y)
+                self.cell_outline:draw(canvas, 6, xpos, ypos)
               end
               if flags.travelWest and self.debug_flags[xy - 1].passable then
-                self.cell_outline:draw(canvas, 7, x, y)
+                self.cell_outline:draw(canvas, 7, xpos, ypos)
               end
               if flags.thob ~= 0 then
-                self.debug_font:draw(canvas, "T"..flags.thob, x, y, 64, 16)
+                self.debug_font:draw(canvas, "T"..flags.thob, xpos, ypos, 64, 16)
               end
               if flags.roomId ~= 0 then
-                self.debug_font:draw(canvas, "R"..flags.roomId, x, y + 16, 64, 16)
+                self.debug_font:draw(canvas, "R"..flags.roomId, xpos, ypos + 16, 64, 16)
               end
             else
               local msg = self.debug_text[xy]
               if msg and msg ~= "" then
-                self.cell_outline:draw(canvas, 2, x, y)
-                self.debug_font:draw(canvas, msg, x, y, 64, 32)
+                self.cell_outline:draw(canvas, 2, xpos, ypos)
+                self.debug_font:draw(canvas, msg, xpos, ypos, 64, 32)
               end
             end
           else
