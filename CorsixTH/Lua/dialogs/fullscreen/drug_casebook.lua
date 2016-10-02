@@ -166,7 +166,7 @@ function UICasebook:updateIcons()
       local staff = false
       -- Room requirements
       if #req.rooms > 0 then
-        for i, room_id in ipairs(req.rooms) do
+        for _, room_id in ipairs(req.rooms) do
           -- Not researched yet?
           if not hosp.discovered_rooms[world.available_rooms[room_id]] then
             known = false
