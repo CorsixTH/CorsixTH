@@ -58,7 +58,6 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_beside_li
   self.items = items
   self.num_rows = num_rows and num_rows or 10
 
-  local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
   self.on_top = mode == "menu"
@@ -66,18 +65,17 @@ function UIMenuList:UIMenuList(ui, mode, title, items, num_rows, extra_beside_li
   self.resizable = false
   self:setDefaultPosition(0.5, 0.25)
 
-  self:addBevelPanel(20, 10, 240, 20, col_caption):setLabel(title)
-    .lowered = true
+  self:addBevelPanel(20, 10, 240, 20, col_caption):setLabel(title).lowered = true
 
   local scrollbar_base = self:addBevelPanel(240, 40, 20, self.num_rows * 17, self.col_bg)
   scrollbar_base.lowered = true
-  self.scrollbar = scrollbar_base:makeScrollbar(col_scrollbar, --[[persistable:menu_list_scrollbar_callback]] function()
-    self:updateButtons()
-  end, 1, math.max(#items, 1), self.num_rows)
+  self.scrollbar = scrollbar_base:makeScrollbar(col_scrollbar,
+      --[[persistable:menu_list_scrollbar_callback]] function() self:updateButtons() end,
+      1, math.max(#items, 1), self.num_rows)
 
   local function button_clicked(num)
-    return --[[persistable:menu_list_button]] function(self)
-      self:buttonClicked(num)
+    return --[[persistable:menu_list_button]] function(window)
+      window:buttonClicked(num)
     end
   end
 
