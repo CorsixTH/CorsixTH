@@ -72,8 +72,8 @@ end
 
 function UIInformation:onChangeLanguage()
   local total_req_height = 0
-  for i, text in ipairs(self.text) do
-    local req_width, req_height = self.black_font:sizeOf(text, self.text_width)
+  for _, text in ipairs(self.text) do
+    local _, req_height = self.black_font:sizeOf(text, self.text_width)
     total_req_height = total_req_height + req_height
   end
 
@@ -105,7 +105,7 @@ function UIInformation:draw(canvas, x, y)
   local background = self.black_background and canvas:mapRGB(0, 0, 0) or canvas:mapRGB(255, 255, 255)
   canvas:drawRect(background, dx + 4, dy + 4, self.width - 8, self.height - 8)
   local last_y = dy + self.spacing.t
-  for i, text in ipairs(self.text) do
+  for _, text in ipairs(self.text) do
     last_y = self.black_font:drawWrapped(canvas, text, dx + self.spacing.l, last_y, self.text_width)
   end
 
