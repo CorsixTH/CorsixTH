@@ -49,7 +49,6 @@ function UIMainMenu:UIMainMenu(ui)
   self.no_menu_entries = #menu_items
   self:UIResizable(ui, 200, (menu_item_height + 10) * (#menu_items + 1), col_bg)
 
-  local app = ui.app
   self.esc_closes = false
   self.modal_class = "main menu"
   self.on_top = true

@@ -37,7 +37,6 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
   local col = colour or parent_window.colour
   self:UIResizable(ui, 1, 1, col, true, true)
 
-  local app = ui.app
   self.modal_class = "dropdown"
   self.esc_closes = true
   self.resizable = false
