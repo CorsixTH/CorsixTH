@@ -335,7 +335,6 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
   assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
 
@@ -345,8 +344,8 @@ function CallsDispatcher:answerCall(staff)
   end
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
-  for object, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.call_queue) do
+    for _, call in pairs(queue) do
       local score = call.verification(staff) and call.priority(staff) or nil
       if score ~= nil then
         if call.assigned then -- already being assigned? Can it be preempted?
@@ -358,7 +357,6 @@ function CallsDispatcher:answerCall(staff)
         if score ~= nil and score < min_score then
           min_score = score
           min_call = call
-          min_key = key
         end
       end
     end
@@ -380,8 +378,8 @@ end
 -- Dump the current call table for debugging
 function CallsDispatcher:dump()
   print("--- Queue ---")
-  for object, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.call_queue) do
+    for _, call in pairs(queue) do
       CallsDispatcher.dumpCall(call, (call.assigned and 'assigned' or 'unassigned'))
     end
   end
@@ -469,7 +467,7 @@ function CallsDispatcher:dropFromQueue(object, key)
       self.call_queue[object][key] = nil
     end
   elseif self.call_queue[object] then
-    for key, call in pairs(self.call_queue[object]) do
+    for _, call in pairs(self.call_queue[object]) do
       call.dropped = true
       if call.assigned then
         CallsDispatcher.unassignCall(call)
