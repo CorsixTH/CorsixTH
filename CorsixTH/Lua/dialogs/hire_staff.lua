@@ -176,8 +176,8 @@ function UIHireStaff:draw(canvas, x, y)
         local px, py = self.skill_bg_panel.x, self.skill_bg_panel.y
         px = px + x
         py = py + y
-        for x = 0, skill_bar_width - 1 do
-          self.panel_sprites:draw(canvas, 3, px + 22 + x, py + 9)
+        for dx = 0, skill_bar_width - 1 do
+          self.panel_sprites:draw(canvas, 3, px + 22 + dx, py + 9)
         end
       end
     end
@@ -251,7 +251,7 @@ function UIHireStaff:setCategory(name)
   self.complete_blanker.visible = not name
   self.abilities_blanker.visible = name ~= "Doctor"
   self.category = name
-  for i, btn in ipairs(self.tabs) do
+  for _, btn in ipairs(self.tabs) do
     local should_be_toggled = btn.on_click_self == name
     if btn.toggled ~= should_be_toggled then
       btn:toggle()
