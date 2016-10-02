@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local pathsep = package.config:sub(1, 1)
-
 --! Custom Game Window
 class "UICustomGame" (UIMenuList)
 
@@ -110,9 +108,8 @@ function UICustomGame:buttonClicked(num)
   self.chosen_index = num
   self.chosen_level_name = item.name
   self.chosen_level_description = item.intro
-  local filename = item.path
   if self.chosen_level_description then
-    local x, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
+    local _, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
     local row_height = y / rows
     self.max_rows_shown = math.floor(self.num_rows*17 / row_height)
     self.details_scrollbar:setRange(1, rows, math.min(rows, self.max_rows_shown), 1)
