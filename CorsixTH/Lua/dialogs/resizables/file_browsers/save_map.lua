@@ -24,8 +24,6 @@ class "UISaveMap" (UIFileBrowser)
 ---@type UISaveMap
 local UISaveMap = _G["UISaveMap"]
 
-local pathsep = package.config:sub(1, 1)
-
 local col_textbox = {
   red = 0,
   green = 0,
