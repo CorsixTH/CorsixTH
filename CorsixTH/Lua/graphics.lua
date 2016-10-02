@@ -19,7 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local SDL = require "sdl"
+
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 local assert, string_char, table_concat, unpack, type, pairs, ipairs
@@ -182,7 +182,7 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
   return cursor
 end
 
-function Graphics:makeGreyscaleGhost(pal)
+local function makeGreyscaleGhost(pal)
   local remap = {}
   -- Convert pal from a string to an array of palette entries
   local entries = {}
@@ -199,8 +199,8 @@ function Graphics:makeGreyscaleGhost(pal)
     local g_index = 0
     local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
-      local entry = entries[j]
-      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2
+      local entry_j = entries[j]
+      local diff = (entry_j[1] - g)^2 + (entry_j[2] - g)^2 + (entry_j[3] - g)^2
       if diff < g_diff then
         g_diff = diff
         g_index = j
@@ -222,7 +222,7 @@ function Graphics:loadPalette(dir, name)
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
-  self.cache.palette_greyscale_ghost[name] = self:makeGreyscaleGhost(data)
+  self.cache.palette_greyscale_ghost[name] = makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
   self.load_info[palette] = {self.loadPalette, self, dir, name}
   return palette, self.cache.palette_greyscale_ghost[name]
@@ -258,11 +258,12 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   end
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
-  local function reloader(bitmap)
-    bitmap:setPalette(palette)
-    local data = self.app:readDataFile(dir, name .. ".dat")
-    data = data:sub(1, width * height)
-    assert(bitmap:load(data, width, self.target))
+
+  local function reloader(bm)
+    bm:setPalette(palette)
+    local bitmap_data = self.app:readDataFile(dir, name .. ".dat")
+    bitmap_data = bitmap_data:sub(1, width * height)
+    assert(bm:load(bitmap_data, width, self.target))
   end
   self.reload_functions[bitmap] = reloader
 
@@ -336,14 +337,20 @@ function Graphics:onChangeLanguage()
   self.load_info = {} -- Any newly made objects are temporary, and shouldn't
                       -- remember reload information (also avoids insertions
                       -- into a table being iterated over).
-  for object, load_info in pairs(load_info) do
+  for object, info in pairs(load_info) do
     if object._proxy then
-      local fn = load_info[1]
-      local new_object = fn(unpack(load_info, 2))
+      local fn = info[1]
+      local new_object = fn(unpack(info, 2))
       object._proxy = new_object._proxy
     end
   end
   self.load_info = load_info
+end
+
+--! Font reload function.
+--!param font The font to (force) reloading.
+local function font_reloader(font)
+  font:clearCache()
 end
 
 function Graphics:loadLanguageFont(name, sprite_table, ...)
@@ -358,10 +365,7 @@ function Graphics:loadLanguageFont(name, sprite_table, ...)
       -- TODO: Choose face based on "name" rather than always using same face.
       font:setFace(self.ttf_font_data)
       font:setSheet(sprite_table)
-      local function reloader(font)
-        font:clearCache()
-      end
-      self.reload_functions_last[font] = reloader
+      self.reload_functions_last[font] = font_reloader
 
       if not cache then
         cache = {}
@@ -390,14 +394,13 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     if n_pass_on_args < #arg then
       x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
     else
-      x_sep, y_sep = nil
+      x_sep, y_sep = nil, nil
     end
   end
 
-  local font
   local use_bitmap_font = true
   if not sprite_table:isVisible(46) then -- uppercase M
-    -- The font doesn't contain an uppercase M, so (in all liklihood) is used
+    -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.
   elseif self.language_font then
@@ -472,12 +475,12 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
   end
 
   local sheet = TH.sheet()
-  local function reloader(sheet)
-    sheet:setPalette(palette or self:loadPalette())
+  local function reloader(sht)
+    sht:setPalette(palette or self:loadPalette())
     local data_tab, data_dat
     data_tab = self.app:readDataFile(dir, name .. ".tab")
     data_dat = self.app:readDataFile(dir, name .. ".dat")
-    if not sheet:load(data_tab, data_dat, complex, self.target) then
+    if not sht:load(data_tab, data_dat, complex, self.target) then
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
     end
   end
@@ -573,11 +576,11 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     end
     return
   end
-  local type = type(arg1)
+  local tp_arg1 = type(arg1)
   local anim_length = self:getAnimLength(anim)
   local anims = self.anims
   local frame = anims:getFirstFrame(anim)
-  if type == "table" then
+  if tp_arg1 == "table" then
     if arg2 then
       -- Linear-interpolation positions
       local x1, y1 = TableToPixels(arg1)
@@ -590,12 +593,12 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     else
       -- Static position
       local x, y = TableToPixels(arg1)
-      for i = 1, anim_length do
+      for _ = 1, anim_length do
         anims[fn](anims, frame, x, y)
         frame = anims:getNextFrame(frame)
       end
     end
-  elseif type == "number" then
+  elseif tp_arg1 == "number" then
     -- Keyframe positions
     local f1, x1, y1 = 0, 0, 0
     local args
@@ -610,7 +613,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     for f = 0, anim_length - 1 do
       if f2 and f == f2 then
         f1, x1, y1 = f2, x2, y2
-        f2, x2, y2 = nil
+        f2, x2, y2 = nil, nil, nil
       end
       if not f2 then
         f2 = args[args_i]
@@ -627,7 +630,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       end
       frame = anims:getNextFrame(frame)
     end
-  elseif type == "string" then
+  elseif tp_arg1 == "string" then
     error("TODO")
   else
     error("Invalid arguments to setMarker", 2)
