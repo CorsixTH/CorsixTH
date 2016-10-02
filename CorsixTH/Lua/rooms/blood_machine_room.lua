@@ -53,7 +53,6 @@ end
 function BloodMachineRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local machine, stf_x, stf_y = self.world:findObjectNear(patient, "blood_machine")
-  local orientation = machine.object_type.orientations[machine.direction]
   local pat_x, pat_y = machine:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))

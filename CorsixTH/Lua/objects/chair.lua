@@ -32,12 +32,12 @@ object.idle_animations = {
 object.walk_in_to_use = true
 local function make_list(not_talking, nodding, talking)
   local list = {}
-  for i = 1, 16 do list[#list+1] = not_talking end
+  for _ = 1, 16 do list[#list+1] = not_talking end
   if nodding then
-    for i = 1, 3 do list[#list+1] = nodding end
+    for _ = 1, 3 do list[#list+1] = nodding end
   end
   if talking then
-    for i = 1, 1 do list[#list+1] = talking end
+    for _ = 1, 1 do list[#list+1] = talking end
   end
   return list
 end
