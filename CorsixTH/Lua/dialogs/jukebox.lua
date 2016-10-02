@@ -68,8 +68,8 @@ function UIJukebox:UIJukebox(app)
     if not info.enabled then
       self.track_buttons[i]:toggle()
     end
-    self.track_buttons[i].on_click = --[[persistable:jukebox_toggle_track]] function(self, off)
-      self:toggleTrack(i, info, not off)
+    self.track_buttons[i].on_click = --[[persistable:jukebox_toggle_track]] function(window, off)
+      window:toggleTrack(i, info, not off)
     end
   end
 
@@ -157,7 +157,7 @@ function UIJukebox:draw(canvas, x, y)
 
   local playing = self.audio.background_music or ""
   for i, info in ipairs(self.audio.background_playlist) do
-    local y = y + 47 + i * 30
+    local ypos = y + 47 + i * 30
     local font = self.white_font
     if info.music == playing then
       font = self.blue_font
@@ -166,7 +166,7 @@ function UIJukebox:draw(canvas, x, y)
     while font:sizeOf(str) > 185 do
       str = string.sub(str, 1, string.len(str) - 5) .. "..."
     end
-    font:draw(canvas, str, x + 24, y + 11)
+    font:draw(canvas, str, x + 24, ypos + 11)
     if info.music == playing then
       font:draw(canvas, str, x + 24, self.y + 27)
     end

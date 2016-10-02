@@ -90,16 +90,16 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:addPanel(237, 154, 238):makeButton(0, 0, 197, 28, 238, self.confirm):setTooltip(_S.tooltip.buy_objects_window.confirm)
   local i = 1
   local function item_callback(index, qty)
-  local is_negative_quantity = qty < 0
-    return --[[persistable:furnish_corridor_item_callback]] function(self)
-      if self:purchaseItem(index, qty) == 0 and not is_negative_quantity then
+    local is_negative_quantity = qty < 0
+    return --[[persistable:furnish_corridor_item_callback]] function(window)
+      if window:purchaseItem(index, qty) == 0 and not is_negative_quantity then
         -- give visual warning that player doesn't have enough $ to buy
-        self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
-        self.ui:playSound("wrong2.wav")
+        window.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
+        window.ui:playSound("wrong2.wav")
       elseif qty > 0 then
-        self.ui:playSound("AddItemJ.wav")
+        window.ui:playSound("AddItemJ.wav")
       else
-        self.ui:playSound("DelItemJ.wav")
+        window.ui:playSound("DelItemJ.wav")
       end
     end
   end
@@ -158,7 +158,7 @@ function UIFurnishCorridor:confirm()
 
   local to_purchase = {}
   local to_sell = {}
-  for i, o in ipairs(self.objects) do
+  for _, o in ipairs(self.objects) do
     local build_cost = self.ui.hospital:getObjectBuildCost(o.object.id)
     if o.qty - o.start_qty > 0 then
       local diff_qty = o.qty - o.start_qty
