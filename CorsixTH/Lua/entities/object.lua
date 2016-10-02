@@ -193,7 +193,7 @@ function Object:tick()
     if self.num_animation_ticks then
       for i = 2, #self.split_anims do
         local th = self.split_anims[i]
-        for i = 1, self.num_animation_ticks do
+        for _ = 1, self.num_animation_ticks do
           th:tick()
         end
       end
@@ -294,9 +294,9 @@ function Object:getWalkableTiles()
 end
 
 function Object:setTile(x, y)
-  local function coordinatesAreInFootprint(object_footprint, x, y)
-    for i, xy in ipairs(object_footprint) do
-      if(xy[1] == x and xy[2] == y) then
+  local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
+    for _, xy in ipairs(object_footprint) do
+      if(xy[1] == xpos and xy[2] == ypos) then
         return true
       end
     end
@@ -318,10 +318,10 @@ function Object:setTile(x, y)
     end
   end
 
-  local function setPassableFlags(passable_flag, x, y, next_x, next_y, value)
+  local function setPassableFlags(passable_flag, xpos, ypos, next_x, next_y, value)
     local flags1 = {}
     flags1[passable_flag] = value
-    self.world.map.th:setCellFlags(x, y, flags1)
+    self.world.map.th:setCellFlags(xpos, ypos, flags1)
     local flags2 = {}
     flags2[getComplementaryPassableFlag(passable_flag)] = value
     self.world.map.th:setCellFlags(next_x, next_y, flags2)
@@ -344,40 +344,40 @@ function Object:setTile(x, y)
     if self.footprint then
       local map = self.world.map.th
       for _, xy in ipairs(self.footprint) do
-        local x, y = self.tile_x + xy[1], self.tile_y + xy[2]
+        local xpos, ypos = self.tile_x + xy[1], self.tile_y + xy[2]
 
         if xy.only_side then
           if self.set_passable_flags then
             self.set_passable_flags = nil
             local par = direction_parameters[direction]
-            local passableFlag, next_tile_x, next_tile_y = par["passable_flag"], x + par["x"], y + par["y"]
-            setPassableFlags(passableFlag, x, y, next_tile_x, next_tile_y, true)
+            local passableFlag, next_tile_x, next_tile_y = par["passable_flag"], xpos + par["x"], ypos + par["y"]
+            setPassableFlags(passableFlag, xpos, ypos, next_tile_x, next_tile_y, true)
           end
           local flags_to_set= {}
           flags_to_set[direction_parameters[direction]["buildable_flag"]] = true
-          map:setCellFlags(x, y, flags_to_set)
+          map:setCellFlags(xpos, ypos, flags_to_set)
         else
           local flags_to_set = {}
           for _, value in pairs(direction_parameters) do
             if coordinatesAreInFootprint(self.footprint, xy[1] + value["x"], xy[2] + value["y"]) or
-            xy.complete_cell or xy[value["needed_side"]] then
+                xy.complete_cell or xy[value["needed_side"]] then
               flags_to_set[value["buildable_flag"]] = true
             end
           end
 
           if not isEmpty(flags_to_set) then
-            map:setCellFlags(x, y, flags_to_set)
+            map:setCellFlags(xpos, ypos, flags_to_set)
           end
-          if not map:getCellFlags(x, y).passable then
-            map:setCellFlags(x, y, {
+          if not map:getCellFlags(xpos, ypos).passable then
+            map:setCellFlags(xpos, ypos, {
               buildable = true,
               passable = true,
             })
           else
             -- passable tiles can "belong" to multiple objects, so we have to check that
-            if not self.world:isTilePartOfNearbyObject(x, y, 10) then
+            if not self.world:isTilePartOfNearbyObject(xpos, ypos, 10) then
               -- assumption: no object defines a passable tile further than 10 tiles away from its origin
-              map:setCellFlags(x, y, {
+              map:setCellFlags(xpos, ypos, {
                 buildable = true,
               })
             end
@@ -409,7 +409,6 @@ function Object:setTile(x, y)
     if self.footprint then
       local map = self.world.map.th
       local optional_found = false
-      local flags = {}
       local room = self.world:getRoom(x, y)
       local roomId = room and room.id
       local next_tile_x, next_tile_y = x,y
@@ -420,20 +419,14 @@ function Object:setTile(x, y)
         local flags_to_set = {}
         local lx = x + xy[1]
         local ly = y + xy[2]
-        local flag
+        local flags
 
         if xy.optional then
           if optional_found then
             -- An optional tile has been accepted, we don't need anymore such tiles.
             change_flags = false
           else
-            -- Check if this optional tile is acceptable
-            flag = "buildable"
-            if xy.only_passable then
-              flag = "passable"
-            end
-
-            local cell_flags = map:getCellFlags(lx, ly, flags)[flag]
+            flags = map:getCellFlags(lx, ly)
             local is_object_allowed = true
             if roomId and flags.roomId ~= roomId then
               is_object_allowed = false
@@ -450,7 +443,7 @@ function Object:setTile(x, y)
           end
         end
 
-        map:getCellFlags(lx, ly, flags)
+        flags = map:getCellFlags(lx, ly)
         if xy.only_side then
           local par = direction_parameters[direction]
           flags_to_set[par["buildable_flag"]] = false
@@ -616,7 +609,7 @@ function Object:isReservedFor(user)
     if not self.reserved_for_list then
       self.reserved_for_list = {}
     end
-    for i, users in ipairs(self.reserved_for_list) do
+    for _, users in ipairs(self.reserved_for_list) do
       if users == user then
         return true
       end
@@ -696,7 +689,7 @@ function Object:onDestroy()
     room.objects[self] = nil
   end
   if self.user_list then
-    for i, user in ipairs(self.user_list) do
+    for _, user in ipairs(self.user_list) do
       user:handleRemovedObject(self)
     end
     self.user_list = {}
@@ -705,7 +698,7 @@ function Object:onDestroy()
   end
   self.user = nil
   if self.reserved_for_list then
-    for i, reserver in ipairs(self.reserved_for_list) do
+    for _, reserver in ipairs(self.reserved_for_list) do
       reserver:handleRemovedObject(self)
     end
     self.reserved_for_list = {}
@@ -754,7 +747,7 @@ function Object.processTypeDefinition(object_type)
     object_type.count_category = "general"
   end
   if object_type.orientations then
-    for direction, details in pairs(object_type.orientations) do
+    for _, details in pairs(object_type.orientations) do
       -- Set default values
       if not details.animation_offset then
         details.animation_offset = {0, 0}
@@ -851,7 +844,7 @@ function Object.processTypeDefinition(object_type)
       local adjacent_set = {}
       local adjacent_list = {}
       details.adjacent_to_solid_footprint = adjacent_list
-      for k, point in pairs(solid_points) do
+      for _, point in pairs(solid_points) do
         for _, delta in ipairs({{-1, 0}, {0, -1}, {0, 1}, {1, 0}}) do
           local x = point[1] + delta[1]
           local y = point[2] + delta[2]
