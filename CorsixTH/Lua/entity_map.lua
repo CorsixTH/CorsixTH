@@ -26,7 +26,7 @@ local EntityMap = _G["EntityMap"]
 --[[ An entity map is a structure is a 2 dimensional structure created from a
 game map, it has the same dimensions as the game map which intitalises it.
 The purpose of the map is store the location of entities in the map in
-real-time. Each cell given by an (x,y) coordinate is a
+real-time. Each cell given by an (x, y) coordinate is a
 table {humanoids ={}, objects = {}} where the tables of humanoids/objects
 may be empty or contain the entity/entities that currently exist in that tile.]]
 function EntityMap:EntityMap(map)
@@ -40,54 +40,55 @@ function EntityMap:EntityMap(map)
   end
 end
 
+local function add_entity_to_table(entity, entity_table)
+  entity_table[#entity_table+1] = entity
+end
+
 --[[Adds an entity to the entity map in a specified location
 @param x (integer) the x coordinate of the entity
 @param y (integer) the y coordinate of the entity
-@param entity (Entity) the entity to be added to the map in the (x,y) position]]
-function EntityMap:addEntity(x,y,entity)
-  local function add_entity_to_table(entity,entity_table)
-    entity_table[#entity_table+1] = entity
-  end
+@param entity (Entity) the entity to be added to the map in the (x, y) position]]
+function EntityMap:addEntity(x, y, entity)
   -- Distinguish between entity types and add them
   -- to the respective tables
   if x and y and entity then
-    if class.is(entity,Humanoid) then
-      add_entity_to_table(entity,self:getHumanoidsAtCoordinate(x,y))
+    if class.is(entity, Humanoid) then
+      add_entity_to_table(entity, self:getHumanoidsAtCoordinate(x, y))
     elseif class.is(entity, Object) then
-      add_entity_to_table(entity, self:getObjectsAtCoordinate(x,y))
+      add_entity_to_table(entity, self:getObjectsAtCoordinate(x, y))
     end
   end
 end
 
+-- Iterates through a table and removes the given entity
+local function remove_entity_from_table(entity, entity_table)
+  local index = -1
+  for i, h in ipairs(entity_table) do
+    if h == entity then
+      -- If we have found it no need to keep looking
+      index = i
+      break
+    end
+  end
+  -- We haven't found it so we have incorrectly tried to remove it
+  assert(index ~= -1, "Tried to remove entity from entity_map - entity not found")
+  table.remove(entity_table, index)
+end
+
 --[[Removes an entity from the entity map given specified location
-Assumes the entity already has been added in the (x,y) position or will cause
+Assumes the entity already has been added in the (x, y) position or will cause
 the assertion that the entity is contained in the map to fail.
 @param x (integer) the x coordinate of the entity
 @param y (integer) the y coordinate of the entity
-@param entity (Entity) the entity to be removed from the map in the (x,y) position ]]
-function EntityMap:removeEntity(x,y,entity)
-  -- Iterates through a table and removes the given entity
-  local function remove_entity_from_table(entity, entity_table)
-    local index = -1
-    for i, h in ipairs(entity_table) do
-      if h == entity then
-        -- If we have found it no need to keep looking
-        index = i
-        break
-      end
-    end
-    -- We haven't found it so we have incorrectly tried to remove it
-    assert(index ~= -1, "Tried to remove entity from entity_map - entity not found")
-    table.remove(entity_table,index)
-  end
-
+@param entity (Entity) the entity to be removed from the map in the (x, y) position ]]
+function EntityMap:removeEntity(x, y, entity)
   -- Distinguish between entity types to find table to remove from
   -- then remove the entity from that table
   if x and y and entity then
-    if class.is(entity,Humanoid) then
-      remove_entity_from_table(entity, self:getHumanoidsAtCoordinate(x,y))
+    if class.is(entity, Humanoid) then
+      remove_entity_from_table(entity, self:getHumanoidsAtCoordinate(x, y))
     elseif class.is(entity, Object) then
-      remove_entity_from_table(entity,self:getObjectsAtCoordinate(x,y))
+      remove_entity_from_table(entity, self:getObjectsAtCoordinate(x, y))
     end
   end
 end
@@ -96,17 +97,17 @@ end
 --[[Returns a map of all entities (objects and humanoids) at a specified coordinate
 @param x (integer) the x coordinate to retrieve entities from
 @param y (integer) the y coordinate to retrieve entities from
-@return entity_map (table) containing the entities at the (x,y) coordinate ]]
-function EntityMap:getEntitiesAtCoordinate(x,y)
+@return entity_map (table) containing the entities at the (x, y) coordinate ]]
+function EntityMap:getEntitiesAtCoordinate(x, y)
   --Add all the humanoids
   local entity_table = {}
-  for _, obj in ipairs(self:getHumanoidsAtCoordinate(x,y)) do
-    table.insert(entity_table,obj)
+  for _, obj in ipairs(self:getHumanoidsAtCoordinate(x, y)) do
+    table.insert(entity_table, obj)
   end
 
   --Add all the objects
-  for _, obj in ipairs(self:getObjectsAtCoordinate(x,y)) do
-    table.insert(entity_table,obj)
+  for _, obj in ipairs(self:getObjectsAtCoordinate(x, y)) do
+    table.insert(entity_table, obj)
   end
 
   return entity_table
@@ -115,8 +116,8 @@ end
 --[[Returns a table of all humanoids at a specified coordinate
 @param x (integer) the x coordinate to retrieve entities from
 @param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the humanoids at the (x,y) coordinate ]]
-function EntityMap:getHumanoidsAtCoordinate(x,y)
+@return (table) containing the humanoids at the (x, y) coordinate ]]
+function EntityMap:getHumanoidsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
   return self.entity_map[x][y]["humanoids"]
@@ -125,20 +126,20 @@ end
 --[[Returns a table of all objects at a specified coordinate
 @param x (integer) the x coordinate to retrieve entities from
 @param y (integer) the y coordinate to retrieve entities from
-@return (table) containing the objects at the (x,y) coordinate ]]
-function EntityMap:getObjectsAtCoordinate(x,y)
+@return (table) containing the objects at the (x, y) coordinate ]]
+function EntityMap:getObjectsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
   return self.entity_map[x][y]["objects"]
 end
 
 
---[[ Returns a map of coordinates {{x1,y1}, ... {xn,yn}} directly
-adjacent to a given (x,y) coordinate - no diagonals
+--[[ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
+adjacent to a given (x, y) coordinate - no diagonals
 @param x (integer) the x coordinate to obtain adjacent tiles from
 @param y (integer) the y coordinate to obtain adjacent tiles from ]]
-function EntityMap:getAdjacentSquares(x,y)
-  -- Table of coordinates {x=integer, y=integer} representing (x,y) coordinates
+function EntityMap:getAdjacentSquares(x, y)
+  -- Table of coordinates {x=integer, y=integer} representing (x, y) coordinates
   local adjacent_squares = {}
   if x and y then
     if x ~= 1 then
@@ -158,35 +159,35 @@ function EntityMap:getAdjacentSquares(x,y)
 end
 
 --[[ Returns all the entities which are patients in the squares directly adjacent
-to the given (x,y) coordinate - diagonals are not considered
+to the given (x, y) coordinate - diagonals are not considered
 @param x (integer) the x coordinate to obtain adjacent patients from
 @param y (integer) the y coordinate to obtain adjacent patients from ]]
-function EntityMap:getPatientsInAdjacentSquares(x,y)
+function EntityMap:getPatientsInAdjacentSquares(x, y)
   local adjacent_patients = {}
-  for _, coord in ipairs(self:getAdjacentSquares(x,y)) do
-    for _, humanoid in ipairs(self:getHumanoidsAtCoordinate(coord['x'],coord['y'])) do
-      if class.is(humanoid,Patient) then
-        adjacent_patients[#adjacent_patients+1] = humanoid
+  for _, coord in ipairs(self:getAdjacentSquares(x, y)) do
+    for _, humanoid in ipairs(self:getHumanoidsAtCoordinate(coord.x, coord.y)) do
+      if class.is(humanoid, Patient) then
+        adjacent_patients[#adjacent_patients + 1] = humanoid
       end
     end
   end
   return adjacent_patients
 end
 
---[[ Returns a map of coordinates {{x1,y1}, ... {xn,yn}} of
+--[[ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} of
 the adjacent tiles (no diagonals) which do not contain any humanoids or objects
-does NOT determine if the tile is reachable from (x,y)  may even be in a
+does NOT determine if the tile is reachable from (x, y)  may even be in a
 different room
 @param x (integer) the x coordinate to obtain free tiles from
 @param y (integer) the y coordinate to obtain free tiles from ]]
-function EntityMap:getAdjacentFreeTiles(x,y)
+function EntityMap:getAdjacentFreeTiles(x, y)
   local adjacent_free_tiles = {}
-  for _, coord in ipairs(self:getAdjacentSquares(x,y)) do
+  for _, coord in ipairs(self:getAdjacentSquares(x, y)) do
     local x_coord = coord['x']
     local y_coord = coord['y']
     -- If no object or humanoid occupy the til_coorde
-    if self:getHumanoidsAtCoordinate(x_coord,y_coord) == nil and
-      self:getObjectsAtCoordinate(x_coord,y_coord) == nil then
+    if self:getHumanoidsAtCoordinate(x_coord, y_coord) == nil and
+      self:getObjectsAtCoordinate(x_coord, y_coord) == nil then
       adjacent_free_tiles[#adjacent_free_tiles+1] = coord
     end
   end

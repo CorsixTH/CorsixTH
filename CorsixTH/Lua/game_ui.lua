@@ -27,10 +27,6 @@ class "GameUI" (UI)
 local GameUI = _G["GameUI"]
 
 local TH = require "TH"
-local SDL = require "sdl"
-local WM = SDL.wm
-local lfs = require "lfs"
-local pathsep = package.config:sub(1, 1)
 
 -- The maximum distance to shake the screen from the origin during an
 -- earthquake with full intensity.
@@ -434,7 +430,7 @@ function GameUI:onCursorWorldPositionChange()
 
   -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
-    for key, value in pairs(entity.active_moods) do
+    for _, value in pairs(entity.active_moods) do
       if value.on_hover then
         entity:setMoodInfo(value)
         break
@@ -500,25 +496,25 @@ function GameUI:onMouseMove(x, y, dx, dy)
       (x < scroll_region_size or y < scroll_region_size or
        x >= self.app.config.width - scroll_region_size or
        y >= self.app.config.height - scroll_region_size) then
-    local dx = 0
-    local dy = 0
+    local scroll_dx = 0
+    local scroll_dy = 0
     local scroll_power = 7
     if x < scroll_region_size then
-      dx = -scroll_power
+      scroll_dx = -scroll_power
     elseif x >= self.app.config.width - scroll_region_size then
-      dx = scroll_power
+      scroll_dx = scroll_power
     end
     if y < scroll_region_size then
-      dy = -scroll_power
+      scroll_dy = -scroll_power
     elseif y >= self.app.config.height - scroll_region_size then
-      dy = scroll_power
+      scroll_dy = scroll_power
     end
 
     if not self.tick_scroll_amount_mouse then
-      self.tick_scroll_amount_mouse = {x = dx, y = dy}
+      self.tick_scroll_amount_mouse = {x = scroll_dx, y = scroll_dy}
     else
-      self.tick_scroll_amount_mouse.x = dx
-      self.tick_scroll_amount_mouse.y = dy
+      self.tick_scroll_amount_mouse.x = scroll_dx
+      self.tick_scroll_amount_mouse.y = scroll_dy
     end
   else
     self.tick_scroll_amount_mouse = false
@@ -584,10 +580,7 @@ function GameUI:onMouseUp(code, x, y)
     end
   end
 
-  -- During vaccination mode you can only interact with
-  -- infected patients
-  local epidemic = self.hospital.epidemic
-  -- infected patients
+  -- During vaccination mode you can only interact with infected patients
   local epidemic = self.hospital.epidemic
   if epidemic and epidemic.vaccination_mode_active then
     if button == "left" then
