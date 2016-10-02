@@ -310,20 +310,6 @@ function Epidemic:countInfectedPatients()
   return infected_count
 end
 
---[[Counts the number of patients that have been infected that are now cured.
-@return cured_count (Integer) the number of cured patients that were once
-infected]]
-function Epidemic:countCuredPatients()
-  local cured_count = 0
-  for _, infected_patient in ipairs(self.infected_patients) do
-    if infected_patient.cured then
-      cured_count = cured_count + 1
-    end
-  end
-  return cured_count
-end
-
-
 --[[ Sends the initial fax to the player when the epidemic is revealed.]]
 function Epidemic:sendInitialFax()
   local num_infected = self:countInfectedPatients()
@@ -353,6 +339,15 @@ function Epidemic:calculateInfectedFine(infected_count)
   return math.max(2000, infected_count * fine_per_infected)
 end
 
+--[[ Gets the amount of reputation to add/remove from the player
+ based on a given fine. Reputation gain/loss isn't specified
+ in the configs so we use a percentage of the fine as a base
+ value with extra being gained/lost for specific circumstances.
+ @param fine_amount (Integer) amount the player will be fined
+ @return reputation hit (Integer) reputation to be deducted relative to fine]]
+local function getBaseReputationFromFine(fine_amount)
+  return math.round(fine_amount / 100)
+end
 
 --[[ When the player chooses to declare the epidemic instead of trying
  to cover up it from the initial faxes - ends the epidemic immediately
@@ -363,19 +358,9 @@ function Epidemic:resolveDeclaration()
 
   --No fax for declaration just apply fines and rep hit
   self.hospital:spendMoney(self.declare_fine, _S.transactions.epidemy_fine)
-  local reputation_hit = self:getBaseReputationFromFine(self.declare_fine)
+  local reputation_hit = getBaseReputationFromFine(self.declare_fine)
   self.hospital.reputation = self.hospital.reputation - reputation_hit
   self.hospital.epidemic = nil
-end
-
---[[ Gets the amount of reputation to add/remove from the player
- based on a given fine. Reputation gain/loss isn't specified
- in the configs so we use a percentage of the fine as a base
- value with extra being gained/lost for specific circumstances.
- @param fine_amount (Integer) amount the player will be fined
- @return reputation hit (Integer) reputation to be deducted relative to fine]]
-function Epidemic:getBaseReputationFromFine(fine_amount)
-  return math.round(fine_amount / 100)
 end
 
 --[[ Remove all infected patients by vaccinating from the hospital and clear
@@ -420,10 +405,7 @@ function Epidemic:finishCoverUp()
     self:toggleVaccinationMode()
   end
 
-  local total_infected = #self.infected_patients
   local still_infected = self:countInfectedPatients()
-  local total_cured = self:countCuredPatients()
-
   self:determineFaxAndFines(still_infected)
   self:clearAllInfectedPatients()
 end
@@ -488,7 +470,7 @@ function Epidemic:applyOutcome()
       self.reputation_hit = math.round(self.hospital.reputation * (1/3))
       self:evacuateHospital()
     else
-      self.reputation_hit = self:getBaseReputationFromFine(self.coverup_fine)
+      self.reputation_hit = getBaseReputationFromFine(self.coverup_fine)
     end
     -- Apply fine and reputation hit
     self.hospital:spendMoney(self.coverup_fine,_S.transactions.epidemy_coverup_fine)
@@ -577,7 +559,7 @@ function Epidemic:markedPatientsCallForVaccination()
   for _, infected_patient in ipairs(self.infected_patients) do
     if infected_patient.marked_for_vaccination and
         not infected_patient.reserved_for and is_static(infected_patient) then
-      local call = self.world.dispatcher:callNurseForVaccination(infected_patient)
+      self.world.dispatcher:callNurseForVaccination(infected_patient)
     end
   end
 end
@@ -614,20 +596,23 @@ end
  @param patient (Patient) the patient to be vaccinated
  @return best_x,best_y (Integer,nil) the best tiles to vaccinate from.]]
 function Epidemic:getBestVaccinationTile(nurse, patient)
-  local action = patient.action_queue[1]
   local px, py = patient.tile_x, patient.tile_y
   -- If the patient is using a bench the best tile to use is
   -- directly in front of them
+  local action = patient.action_queue[1]
   if action.name == "use_object" then
     local object_in_use = action.object
     if object_in_use.object_type.id == "bench" then
       local direction = object_in_use.direction
       if direction == "north" then
         return px, py - 1
+
       elseif direction == "south" then
         return px, py + 1
+
       elseif direction == "east" then
         return px + 1, py
+
       elseif direction == "west" then
         return px - 1, py
       end
