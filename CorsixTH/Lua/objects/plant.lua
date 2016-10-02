@@ -73,9 +73,6 @@ object.orientations = {
 -- For plant: droop down: 1950
 -- back up again: 1952
 
--- The states specify which frame to show
-local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
-
 local days_between_states = 75
 
 -- days before we reannouncing our watering status if we were unreachable
