@@ -135,7 +135,7 @@ local config_defaults = {
   use_new_graphics = false,
   check_for_updates = true
 }
-local fi = io.open(config_filename, "r")
+fi = io.open(config_filename, "r")
 local config_values = {}
 local needs_rewrite = false
 for key, value in pairs(config_defaults) do
