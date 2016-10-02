@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local math_floor
-    = math.floor
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)
@@ -197,7 +195,7 @@ function UIPatient:drawHealthHistory(canvas, x, y)
 
   local dx = hor_length / size
   local line = nil -- Make a line the first time we find a non-nil value.
-  for i = 1, size do
+  for _ = 1, size do
     index = (index == size) and 1 or (index + 1)
     if hh[index] then
       local posy = starty + (1.0 - hh[index]) * vert_length
@@ -300,7 +298,7 @@ function UIPatient:updateInformation()
 end
 
 function UIPatient:viewQueue()
-  for i, action in ipairs(self.patient.action_queue) do
+  for _, action in ipairs(self.patient.action_queue) do
     if action.name == "queue" then
       self.ui:addWindow(UIQueue(self.ui, action.queue))
       self.ui:playSound("selectx.wav")
