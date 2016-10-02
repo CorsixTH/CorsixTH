@@ -248,7 +248,7 @@ end)
 
 local function action_die_start(action, humanoid)
   humanoid:setMoodInfo() -- clear all mood icons
-  local preferred_fall_direction = nil
+  local preferred_fall_direction
   if math.random(0, 1) == 1 then
     preferred_fall_direction = "east"
   else
@@ -266,7 +266,7 @@ local function action_die_start(action, humanoid)
 
   --[[Make the patient fall over: because this animation requires two tiles make sure there's
   enough space for this animation--]]
-  local mirror_fall = -1
+  local mirror_fall
   local east_tile_usable = humanoid.world:isTileEmpty(humanoid.tile_x + 1, humanoid.tile_y, true)
   local south_tile_usable = humanoid.world:isTileEmpty(humanoid.tile_x, humanoid.tile_y + 1, true)
   --Are the preferred fall directions usable?
