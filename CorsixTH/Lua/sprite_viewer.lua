@@ -23,7 +23,6 @@ SOFTWARE. --]]
 -- crude sprite viewer is better than no sprite viewer.
 
 local app = TheApp
-local lfs = require"lfs"
 local gfx = app.gfx
 gfx.cache.tabled = {}
 local font = gfx:loadFont("QData", "Font00V")
@@ -131,18 +130,18 @@ local function Render(canvas)
   end
 end
 
-local function DoFrame(app)
-  local canvas = app.video
+local function DoFrame(application)
+  local canvas = application.video
   canvas:startFrame()
   if need_draw then
-    need_draw = app.config.track_fps
+    need_draw = application.config.track_fps
     canvas:fillBlack()
     Render(canvas)
   end
   canvas:endFrame()
 end
 
-local function DoTimer(app)
+local function DoTimer(application)
   if wdown then
     y_off = y_off + 32
     need_draw = true
