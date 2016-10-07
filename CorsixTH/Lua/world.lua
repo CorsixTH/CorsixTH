@@ -53,6 +53,8 @@ local local_criteria_variable = {
 
 -- time between each damage caused by an earthquake
 local earthquake_damage_time = 16 -- hours
+local earthquake_warning_period = 600 -- hours between warning and real thing
+local earthquake_warning_length = 25 -- length of early warning quake
 
 function World:World(app)
   self.map = app.map
@@ -80,12 +82,13 @@ function World:World(app)
   -- All information relating to the next or current earthquake, nil if
   -- there is no scheduled earthquake.
   -- Contains the following fields:
-  -- active (boolean) Whether the earthquake is currently happening.
-  -- start_month (integer) The month the earthquake is triggered.
-  -- start_day (integer) The day of the month the earthquake is triggered.
+  -- active (boolean) Whether we are currently running the warning or damage timers (after start_day of start_month is passed).
+  -- start_month (integer) The month the earthquake warning is triggered.
+  -- start_day (integer) The day of the month the earthquake warning is triggered.
   -- size (integer) The amount of damage the earthquake causes (1-9).
   -- remaining_damage (integer) The amount of damage this earthquake has yet to inflict.
   -- damage_timer (integer) The number of hours until the earthquake next inflicts damage if active.
+  -- warning_timer (integer) The number of hours left until the real damaging earthquake begins.
   self.next_earthquake = { active = false }
 
   -- Time
@@ -556,21 +559,6 @@ function World:spawnVIP(name)
   vip:queueAction(SeekReceptionAction())
 end
 
-function World:createEarthquake()
-  -- Sanity check
-  if not self.next_earthquake.size then
-    return false
-  end
-
-  -- store the offsets so we can not shake the user to some too distant location
-  self.currentX = self.ui.screen_offset_x
-  self.currentY = self.ui.screen_offset_y
-
-  -- set a flag to indicate that we are now having an earthquake
-  self.next_earthquake.active = true
-  return true
-end
-
 --! Perform actions to simulate an active earthquake.
 function World:tickEarthquake()
   -- check if this is the day that the earthquake is supposed to stop
@@ -585,6 +573,38 @@ function World:tickEarthquake()
     -- set up the next earthquake date
     self:nextEarthquake()
   else
+    local announcements = {
+      "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
+    }
+
+    -- play announcement for start of warning quake
+    if self.next_earthquake.warning_timer == earthquake_warning_period then
+      self.currentX = self.ui.screen_offset_x
+      self.currentY = self.ui.screen_offset_y
+      self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+    end
+
+    -- end of warning quake
+    if self.next_earthquake.warning_timer >= earthquake_warning_period - earthquake_warning_length and
+        self.next_earthquake.warning_timer - self.hours_per_tick < earthquake_warning_period - earthquake_warning_length then
+      self.ui.tick_scroll_amount = false
+    end
+
+    if self.next_earthquake.warning_timer > 0 then
+      self.next_earthquake.warning_timer = self.next_earthquake.warning_timer - self.hours_per_tick
+      -- nothing more to do during inactive warning period
+      if self.next_earthquake.warning_timer < earthquake_warning_period - earthquake_warning_length then
+        return
+      end
+
+      -- start of real earthquake
+      if self.next_earthquake.warning_timer <= 0 then
+        self.currentX = self.ui.screen_offset_x
+        self.currentY = self.ui.screen_offset_y
+        self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+      end
+    end
+
     -- All earthquakes start and end small (small earthquakes never become
     -- larger), so when there has been less than 2 damage applied or only
     -- 2 damage remaining to be applied, move the screen with less
@@ -634,6 +654,11 @@ function World:tickEarthquake()
       end
 
       self.ui.tick_scroll_amount = {x = self.randomX, y = self.randomY}
+
+      -- do not continue to damage phase while in a warning quake
+      if self.next_earthquake.warning_timer > 0 then
+        return
+      end
 
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer - self.hours_per_tick
       if self.next_earthquake.damage_timer <= 0 then
@@ -1122,12 +1147,7 @@ function World:onEndDay()
   if (self.year - 1) * 12 + self.month == self.next_earthquake.start_month and
       self.day == self.next_earthquake.start_day then
     -- warn the user that an earthquake is on the way
-    local announcements = {
-      "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
-    }
-    self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
-
-    self:createEarthquake()
+    self.next_earthquake.active = true
   end
 
   -- Maybe it's time for an emergency?
@@ -1381,6 +1401,7 @@ function World:nextEarthquake()
     self.next_earthquake.size = control.Severity
     self.next_earthquake.remaining_damage = self.next_earthquake.size
     self.next_earthquake.damage_timer = earthquake_damage_time
+    self.next_earthquake.warning_timer = earthquake_warning_period
     self.current_map_earthquake = self.current_map_earthquake + 1
   end
 end
@@ -2691,6 +2712,7 @@ function World:afterLoad(old, new)
       end
       self.next_earthquake.remaining_damage = rd
       self.next_earthquake.damage_timer = earthquake_damage_time
+      self.next_earthquake.warning_timer = 0
     end
   end
 
