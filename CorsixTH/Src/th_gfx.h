@@ -297,6 +297,10 @@ public:
     size_t getFrameCount() const;
 
     //! Get the index of the first frame of an animation
+    /**!
+        @param iAnimation Animation to obtain.
+        @return The first frame of the requested animation if it exists, else \c 0.
+     */
     size_t getFirstFrame(size_t iAnimation) const;
 
     //! Get the index of the frame after a given frame
@@ -493,6 +497,21 @@ private:
         @param iLength Number of frames in the animation.
      */
     void fixNextFrame(uint32_t iFirst, size_t iLength);
+
+    //! Get the index of the first frame of an original animation
+    /*!
+        @param iAnimation Animation to obtain.
+        @return The first frame of the requested animation if it exists, else \c 0.
+     */
+    size_t getOriginalFirstFrame(size_t iAnimation) const;
+
+    //! Get the index of the first frame of a custom animation
+    /*!
+        @param iAnimation Animation to obtain.
+        @return The first frame of the requested animation if it exists, else \c 0.
+     */
+    size_t getCustomFirstFrame(size_t iAnimation) const;
+
 };
 
 struct THMapNode;
