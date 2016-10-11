@@ -32,6 +32,10 @@ local WM = SDL.wm
 local lfs = require "lfs"
 local pathsep = package.config:sub(1, 1)
 
+-- The maximum distance to shake the screen from the origin during an
+-- earthquake with full intensity.
+local shake_screen_max_movement = 50 --pixels
+
 --! Game UI constructor.
 --!param app (Application) Application object.
 --!param local_hospital Hospital to display
@@ -80,6 +84,11 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
 
   self.speed_up_key_pressed = false
+
+  -- The currently specified intensity value for earthquakes. To abstract
+  -- the effect from the implementation this value is a number between 0
+  -- and 1.
+  self.shake_screen_intensity = 0
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -151,12 +160,16 @@ function GameUI:draw(canvas)
     canvas:fillBlack()
   end
   local zoom = self.zoom_factor
+  local dx = self.screen_offset_x +
+      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
+  local dy = self.screen_offset_y +
+      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
   if canvas:scale(zoom) then
-    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
+    app.map:draw(canvas, dx, dy, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
     canvas:scale(1)
   else
     self:setZoom(1)
-    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
+    app.map:draw(canvas, dx, dy, config.width, config.height, 0, 0)
   end
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
@@ -749,6 +762,18 @@ function GameUI:scrollMap(dx, dy)
   self.screen_offset_y = floor(dy + 0.5)
 end
 
+--! Start shaking the screen, e.g. an earthquake effect
+--!param intensity (number) The magnitude of the effect, between 0 for no
+-- movement to 1 for significant shaking.
+function GameUI:beginShakeScreen(intensity)
+  self.shake_screen_intensity = intensity
+end
+
+--! Stop the screen from shaking after beginShakeScreen is called.
+function GameUI:endShakeScreen()
+  self.shake_screen_intensity = 0
+end
+
 function GameUI:limitCamera(mode)
   self.limit_to_visible_diamond = mode
   self:scrollMap(0, 0)
@@ -1045,6 +1070,9 @@ function GameUI:afterLoad(old, new)
     self:removeKeyHandler("x", self, self.toggleWallsTransparent)
     self:addKeyHandler("z", self, self.keySpeedUp)
     self:addKeyHandler("x", self, self.keyTransparent)
+  end
+  if old < 115 then
+    self.shake_screen_intensity = 0
   end
   return UI.afterLoad(self, old, new)
 end

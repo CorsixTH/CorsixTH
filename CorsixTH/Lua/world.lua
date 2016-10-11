@@ -561,10 +561,12 @@ end
 
 --! Perform actions to simulate an active earthquake.
 function World:tickEarthquake()
+  if self:isCurrentSpeed("Pause") then return end
+
   -- check if this is the day that the earthquake is supposed to stop
   if self.next_earthquake.remaining_damage == 0 then
     self.next_earthquake.active = false
-    self.ui.tick_scroll_amount = false
+    self.ui:endShakeScreen()
     -- if the earthquake measured more than 7 on the richter scale, tell the user about it
     if self.next_earthquake.size > 7 then
       self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.next_earthquake.size)))
@@ -577,17 +579,16 @@ function World:tickEarthquake()
       "quake001.wav", "quake002.wav", "quake003.wav", "quake004.wav",
     }
 
-    -- play announcement for start of warning quake
+    -- start of warning quake
     if self.next_earthquake.warning_timer == earthquake_warning_period then
-      self.currentX = self.ui.screen_offset_x
-      self.currentY = self.ui.screen_offset_y
+      self.ui:beginShakeScreen(0.2)
       self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
     end
 
     -- end of warning quake
     if self.next_earthquake.warning_timer >= earthquake_warning_period - earthquake_warning_length and
         self.next_earthquake.warning_timer - self.hours_per_tick < earthquake_warning_period - earthquake_warning_length then
-      self.ui.tick_scroll_amount = false
+      self.ui:endShakeScreen()
     end
 
     if self.next_earthquake.warning_timer > 0 then
@@ -599,8 +600,6 @@ function World:tickEarthquake()
 
       -- start of real earthquake
       if self.next_earthquake.warning_timer <= 0 then
-        self.currentX = self.ui.screen_offset_x
-        self.currentY = self.ui.screen_offset_y
         self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
       end
     end
@@ -609,90 +608,57 @@ function World:tickEarthquake()
     -- larger), so when there has been less than 2 damage applied or only
     -- 2 damage remaining to be applied, move the screen with less
     -- intensity than otherwise.
-    local multi = 4
     if self.next_earthquake.remaining_damage <= 2 or
         self.next_earthquake.size - self.next_earthquake.remaining_damage <= 2 then
-      self.randomX = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
-      self.randomY = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
+      self.ui:beginShakeScreen(0.5)
     else
-      self.randomX = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
-      self.randomY = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
+      self.ui:beginShakeScreen(1)
     end
 
-    -- if the game is not paused
-    if not self:isCurrentSpeed("Pause") then
-      -- Play the earthquake sound. It has different names depending on language used though.
-      if TheApp.audio:soundExists("quake2.wav") then
-        self.ui:playSound("quake2.wav")
-      else
-        self.ui:playSound("quake.wav")
-      end
+    -- Play the earthquake sound. It has different names depending on language used though.
+    if TheApp.audio:soundExists("quake2.wav") then
+      self.ui:playSound("quake2.wav")
+    else
+      self.ui:playSound("quake.wav")
+    end
 
-      -- shake the screen randomly to give the appearance of an earthquake
-      -- the greater the earthquake, the more the screen will shake
+    -- do not continue to damage phase while in a warning quake
+    if self.next_earthquake.warning_timer > 0 then
+      return
+    end
 
-      -- restrict the amount the earthquake can shift the user left and right
-      if self.ui.screen_offset_x > (self.currentX + 600) then
-        if self.randomX > 0 then
-          self.randomX = -self.randomX
-        end
-      elseif self.ui.screen_offset_x < (self.currentX - 600) then
-        if self.randomX < 0 then
-          self.randomX = -self.randomX
-        end
-      end
-
-      -- restrict the amount the earthquake can shift the user up and down
-      if self.ui.screen_offset_y > (self.currentY + 600) then
-        if self.randomY > 0 then
-          self.randomY = -self.randomY
-        end
-      elseif self.ui.screen_offset_y < (self.currentY - 600) then
-        if self.randomY < 0 then
-          self.randomY = -self.randomY
-        end
-      end
-
-      self.ui.tick_scroll_amount = {x = self.randomX, y = self.randomY}
-
-      -- do not continue to damage phase while in a warning quake
-      if self.next_earthquake.warning_timer > 0 then
-        return
-      end
-
-      self.next_earthquake.damage_timer = self.next_earthquake.damage_timer - self.hours_per_tick
-      if self.next_earthquake.damage_timer <= 0 then
-        for _, room in pairs(self.rooms) do
-          for object, _ in pairs(room.objects) do
-            if object.strength then
-              object:machineUsed(room)
-            end
+    self.next_earthquake.damage_timer = self.next_earthquake.damage_timer - self.hours_per_tick
+    if self.next_earthquake.damage_timer <= 0 then
+      for _, room in pairs(self.rooms) do
+        for object, _ in pairs(room.objects) do
+          if object.strength then
+            object:machineUsed(room)
           end
         end
-
-        self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
-        self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
       end
 
-      local hospital = self:getLocalPlayerHospital()
-      -- loop through the patients and allow the possibility for them to fall over
-      for _, patient in ipairs(hospital.patients) do
-        local current = patient.action_queue[1]
+      self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
+      self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
+    end
 
-        if not patient.in_room and patient.falling_anim then
+    local hospital = self:getLocalPlayerHospital()
+    -- loop through the patients and allow the possibility for them to fall over
+    for _, patient in ipairs(hospital.patients) do
+      local current = patient.action_queue[1]
 
-          -- make the patients fall
+      if not patient.in_room and patient.falling_anim then
 
-          -- jpirie: this is currently disabled. Calling this function
-          -- really screws up the action queue, sometimes the patients
-          -- end up with nil action queues, and sometimes the resumed
-          -- actions throw exceptions. Also, patients in the hospital
-          -- who have not yet found reception throw exceptions after
-          -- they visit reception. Some debugging needed here to get
-          -- this working.
+        -- make the patients fall
 
-          -- patient:falling()
-        end
+        -- jpirie: this is currently disabled. Calling this function
+        -- really screws up the action queue, sometimes the patients
+        -- end up with nil action queues, and sometimes the resumed
+        -- actions throw exceptions. Also, patients in the hospital
+        -- who have not yet found reception throw exceptions after
+        -- they visit reception. Some debugging needed here to get
+        -- this working.
+
+        -- patient:falling()
       end
     end
   end
@@ -948,7 +914,7 @@ function World:setSpeed(speed)
   if speed == "Pause" then
     -- stop screen shaking if there was an earthquake in progress
     if self.next_earthquake.active then
-      self.ui.tick_scroll_amount = {x = 0, y = 0}
+      self.ui:endShakeScreen()
     end
     -- By default actions are not allowed when the game is paused.
     self.user_actions_allowed = TheApp.config.allow_user_actions_while_paused
@@ -2699,6 +2665,10 @@ function World:afterLoad(old, new)
     self.earthquake_stop_day = nil
     self.earthquake_size = nil
     self.earthquake_active = nil
+    self.randomX = nil
+    self.randomY = nil
+    self.currentX = nil
+    self.currentY = nil
 
     if self.next_earthquake.active then
       local rd = 0
