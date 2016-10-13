@@ -51,6 +51,9 @@ local local_criteria_variable = {
   {name = "population",       icon = 11, formats = 1},
 }
 
+-- time between each damage caused by an earthquake
+local earthquake_damage_time = 16 -- hours
+
 function World:World(app)
   self.map = app.map
   self.wall_types = app.walls
@@ -80,8 +83,9 @@ function World:World(app)
   -- active (boolean) Whether the earthquake is currently happening.
   -- start_month (integer) The month the earthquake is triggered.
   -- start_day (integer) The day of the month the earthquake is triggered.
-  -- stop_day (integer) the day of the month the earthquake ends.
   -- size (integer) The amount of damage the earthquake causes (1-9).
+  -- remaining_damage (integer) The amount of damage this earthquake has yet to inflict.
+  -- damage_timer (integer) The number of hours until the earthquake next inflicts damage if active.
   self.next_earthquake = { active = false }
 
   -- Time
@@ -558,37 +562,9 @@ function World:createEarthquake()
     return false
   end
 
-  -- the bigger the earthquake, the longer it lasts. We add one
-  -- further day, as we use those to give a small earthquake first,
-  -- before the bigger one begins
-  local stop_day = math.round(self.next_earthquake.size / 3) + 1
-
-  -- make sure the user has at least two days of an earthquake
-  if stop_day < 2 then
-    stop_day = 2
-  end
-
   -- store the offsets so we can not shake the user to some too distant location
   self.currentX = self.ui.screen_offset_x
   self.currentY = self.ui.screen_offset_y
-
-  -- we add an extra 1 at the end because we register the start of earthquakes at the end of the day
-  self.next_earthquake.stop_day = self.day + stop_day + 1
-
-  -- if the day the earthquake is supposed to stop on a day greater than the length of the current month (eg 34)
-  if self.next_earthquake.stop_day > self:getCurrentMonthLength() then
-    -- subtract the current length of the month so the earthquake will stop at the start of the next month
-    self.next_earthquake.stop_day = self.next_earthquake.stop_day - self:getCurrentMonthLength()
-  end
-
-  -- Prepare machines for getting damage - at most as much as the severity of the earthquake +-1
-  for _, room in pairs(self.rooms) do
-    for object, value in pairs(room.objects) do
-      if object.strength then
-        object.quake_points = self.next_earthquake.size + math.random(-1, 1)
-      end
-    end
-  end
 
   -- set a flag to indicate that we are now having an earthquake
   self.next_earthquake.active = true
@@ -598,36 +574,27 @@ end
 --! Perform actions to simulate an active earthquake.
 function World:tickEarthquake()
   -- check if this is the day that the earthquake is supposed to stop
-  if self.day == self.next_earthquake.stop_day then
+  if self.next_earthquake.remaining_damage == 0 then
     self.next_earthquake.active = false
     self.ui.tick_scroll_amount = false
     -- if the earthquake measured more than 7 on the richter scale, tell the user about it
     if self.next_earthquake.size > 7 then
       self.ui.adviser:say(_A.earthquake.ended:format(math.floor(self.next_earthquake.size)))
     end
-    -- Make sure that machines got all the damage they should get.
-    for _, room in pairs(self.rooms) do
-      for object, value in pairs(room.objects) do
-        if object.strength and object.quake_points then
-          while object.quake_points > 0 do
-            object:machineUsed(room)
-            object.quake_points = object.quake_points - 1
-          end
-        end
-      end
-    end
 
     -- set up the next earthquake date
     self:nextEarthquake()
   else
-    -- Multiplier for how much the screen moves around during the quake.
+    -- All earthquakes start and end small (small earthquakes never become
+    -- larger), so when there has been less than 2 damage applied or only
+    -- 2 damage remaining to be applied, move the screen with less
+    -- intensity than otherwise.
     local multi = 4
-    if (self.day > self.next_earthquake.stop_day) or (self.day < math.round(self.next_earthquake.size / 3)) then
-      -- if we are in the first two days of the earthquake, make it smaller
+    if self.next_earthquake.remaining_damage <= 2 or
+        self.next_earthquake.size - self.next_earthquake.remaining_damage <= 2 then
       self.randomX = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
       self.randomY = math.random(-(self.next_earthquake.size / 2) * multi, (self.next_earthquake.size / 2) * multi)
     else
-      -- otherwise, hit the user with the full earthquake
       self.randomX = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
       self.randomY = math.random(-self.next_earthquake.size * multi, self.next_earthquake.size * multi)
     end
@@ -667,6 +634,20 @@ function World:tickEarthquake()
       end
 
       self.ui.tick_scroll_amount = {x = self.randomX, y = self.randomY}
+
+      self.next_earthquake.damage_timer = self.next_earthquake.damage_timer - self.hours_per_tick
+      if self.next_earthquake.damage_timer <= 0 then
+        for _, room in pairs(self.rooms) do
+          for object, _ in pairs(room.objects) do
+            if object.strength then
+              object:machineUsed(room)
+            end
+          end
+        end
+
+        self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
+        self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
+      end
 
       local hospital = self:getLocalPlayerHospital()
       -- loop through the patients and allow the possibility for them to fall over
@@ -1390,8 +1371,16 @@ function World:nextEarthquake()
     -- this map has rules to follow when making earthquakes, let's follow them
     local control = level_config.quake_control[self.current_map_earthquake]
     self.next_earthquake.start_month = math.random(control.StartMonth, control.EndMonth)
-    self.next_earthquake.start_day = math.random(1, month_length[(self.next_earthquake_month % 12)+1])
+
+    -- Month length of the start of the earthquake. From start to finish
+    -- earthquakes do not persist for >= a month so we can wrap all days
+    -- after the start around the month length unambiguously.
+    local eqml = month_length[(self.next_earthquake.start_month % 12) + 1]
+    self.next_earthquake.start_day = math.random(1, eqml)
+
     self.next_earthquake.size = control.Severity
+    self.next_earthquake.remaining_damage = self.next_earthquake.size
+    self.next_earthquake.damage_timer = earthquake_damage_time
     self.current_map_earthquake = self.current_map_earthquake + 1
   end
 end
@@ -2681,7 +2670,6 @@ function World:afterLoad(old, new)
     self.next_earthquake = {
       start_month = self.next_earthquake_month,
       start_day = self.next_earthquake_day,
-      stop_day = self.earthquake_stop_day,
       size = self.earthquake_size,
       active = self.earthquake_active or false
     }
@@ -2690,6 +2678,20 @@ function World:afterLoad(old, new)
     self.earthquake_stop_day = nil
     self.earthquake_size = nil
     self.earthquake_active = nil
+
+    if self.next_earthquake.active then
+      local rd = 0
+      for _, room in pairs(self.rooms) do
+        for object, _ in pairs(room.objects) do
+          if object.quake_points then
+            rd = math.max(rd, object.quake_points)
+            object.quake_points = nil
+          end
+        end
+      end
+      self.next_earthquake.remaining_damage = rd
+      self.next_earthquake.damage_timer = earthquake_damage_time
+    end
   end
 
   self.savegame_version = new
