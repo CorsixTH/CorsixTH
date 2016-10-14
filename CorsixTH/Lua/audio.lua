@@ -357,6 +357,10 @@ function Audio:playEntitySounds(names, entity, min_silence_lengths, max_silence_
   end
 end
 
+local function canSoundsBePlayed()
+  return TheApp.config.play_sounds and not TheApp.world:isPaused()
+end
+
 --[[
 Called by the above function.
 
@@ -376,7 +380,7 @@ function Audio:entitySoundsHandler(sounds, entity, silences, silences_pointer)
       self:entitySoundsHandler(sounds, entity, silences, silences_pointer)
     end
 
-    if self:canSoundsBePlayed() then
+    if canSoundsBePlayed() then
       local x, y = Map:WorldToScreen(entity.tile_x, entity.tile_y)
       local dx, dy = entity.th:getPosition()
       x = x + dx - self.app.ui.screen_offset_x
@@ -400,10 +404,6 @@ function Audio:entitySoundsHandler(sounds, entity, silences, silences_pointer)
       self.entities_waiting_for_sound_to_be_enabled[entity] = nil
     end
   end
-end
-
-function Audio:canSoundsBePlayed()
-  return TheApp.config.play_sounds and not TheApp.world:isPaused()
 end
 
 function Audio:onEndPause()
@@ -635,7 +635,7 @@ function Audio:playSoundEffects(play_effects)
     self.sound_fx:setSoundEffectsOn(play_effects)
   end
 
-  if self:canSoundsBePlayed() then
+  if canSoundsBePlayed() then
     self:tellInterestedEntitiesTheyCanNowPlaySounds()
   end
 end
