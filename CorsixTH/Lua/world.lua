@@ -2168,10 +2168,8 @@ function World:objectPlaced(entity, id)
     self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
   end
   if id == "gates_to_hell" then
-    entity:playSoundsAtEntityInRandomSequence("LAVA00*.WAV",
-                                              {0,1350,1150,950,750,350},
-                                              {0,1450,1250,1050,850,450},
-                                              40)
+    entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
+        {0,1450,1250,1050,850,450}, 40)
     entity:setTimer(entity.world:getAnimLength(2550),
                     --[[persistable:lava_hole_spawn_animation_end]]
                     function(entity)
