@@ -67,7 +67,7 @@ they can all be a specified length by providing min and max tables with one valu
 !param max_silence_lengths (table) the desired maximum silences length for the different tick rates, [3] = Normal
 !param num_silences (integer) how many different silence lengths should be used, this can be a nil parameter.
 -]]
-function Entity:playSoundsAtEntityInRandomSequence(name_pattern, min_silence_lengths, max_silence_lengths, num_silences)
+function Entity:playEntitySounds(name_pattern, min_silence_lengths, max_silence_lengths, num_silences)
   self.playing_sounds_in_random_sequence = true
   self.random_sound_sequence_parameters = {}
   self.random_sound_sequence_parameters["namePattern"] = name_pattern
@@ -75,11 +75,8 @@ function Entity:playSoundsAtEntityInRandomSequence(name_pattern, min_silence_len
   self.random_sound_sequence_parameters["maxSilence"] = max_silence_lengths
   self.random_sound_sequence_parameters["numSilences"] = num_silences
 
-  TheApp.audio:playSoundsAtEntityInRandomSequence(name_pattern,
-                                                  self,
-                                                  min_silence_lengths,
-                                                  max_silence_lengths,
-                                                  num_silences)
+  TheApp.audio:playEntitySounds(name_pattern, self,
+      min_silence_lengths, max_silence_lengths, num_silences)
 end
 
 --[[ Set which animation is used to give the entity a visual appearance.
@@ -341,10 +338,10 @@ end
 function Entity:playAfterLoadSound()
   if self.random_sound_sequence_parameters then
     self.playing_sounds_in_random_sequence = true
-    self:playSoundsAtEntityInRandomSequence(self.random_sound_sequence_parameters["namePattern"],
-                                            self.random_sound_sequence_parameters["minSilence"],
-                                            self.random_sound_sequence_parameters["maxSilence"],
-                                            self.random_sound_sequence_parameters["numSilences"])
+    self:playEntitySounds(self.random_sound_sequence_parameters["namePattern"],
+                          self.random_sound_sequence_parameters["minSilence"],
+                          self.random_sound_sequence_parameters["maxSilence"],
+                          self.random_sound_sequence_parameters["numSilences"])
   end
 end
 
