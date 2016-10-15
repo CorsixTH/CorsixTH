@@ -58,11 +58,11 @@ function Door:updateDynamicInfo()
   if self.room and self.queue then
     if not self.room:hasQueueDialog() then
       self:setDynamicInfo('text', {
-        self.room.room_info.name
+        self.room.data.name
       })
     else
       self:setDynamicInfo('text', {
-        self.room.room_info.name,
+        self.room.data.name,
         _S.dynamic_info.object.queue_size:format(self.queue:reportedSize()),
         _S.dynamic_info.object.queue_expected:format(self.queue:expectedSize())
       })
@@ -145,7 +145,7 @@ end
 
 function Door:closeDoor()
   if self.queue then
-    self.queue:rerouteAllPatients(SeekRoomAction(self:getRoom().room_info.id))
+    self.queue:rerouteAllPatients(SeekRoomAction(self:getRoom().data.id))
     self.queue = nil
   end
   self:clearDynamicInfo(nil)

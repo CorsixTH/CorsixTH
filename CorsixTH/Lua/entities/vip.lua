@@ -203,7 +203,7 @@ function Vip:evaluateRoom()
   self.num_visited_rooms = self.num_visited_rooms + 1
   local room = self.next_room
   -- if the player is about to kill a live patient for research, lower their rating dramatically
-  if room.room_info.id == "research" then
+  if room.data.id == "research" then
     if room:getPatient() then
       self.vip_rating = self.vip_rating - 80
     end
@@ -320,7 +320,7 @@ function Vip:setVIPRating()
   -- now we check for toilet presence
   local sum_toilets = 0
   for i, room in pairs(self.world.rooms) do
-    if room.room_info.id == "toilets" then
+    if room.data.id == "toilets" then
       for object, value in pairs(room.objects) do
         if object.object_type.id == "loo" then
           sum_toilets = sum_toilets + 1

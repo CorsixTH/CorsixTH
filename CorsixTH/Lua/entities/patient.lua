@@ -226,14 +226,14 @@ function Patient:getTreatmentDiseaseId()
   if self.diagnosed then
     return self.disease.id
   else
-    local room_info = self:getRoom()
-    if not room_info then
+    local data = self:getRoom()
+    if not data then
       print("Warning: Trying to receive money for treated patient who is "..
           "not in a room")
       return nil
     end
-    room_info = room_info.room_info
-    return "diag_" .. room_info.id
+    data = data.data
+    return "diag_" .. data.id
   end
 end
 
@@ -938,7 +938,7 @@ end
 
 function Patient:notifyNewRoom(room)
   Humanoid.notifyNewRoom(self, room)
-  if self.going_to_toilet == "no-toilets" and room.room_info.id == "toilets" then
+  if self.going_to_toilet == "no-toilets" and room.data.id == "toilets" then
     self.going_to_toilet = "no" -- Patient can try again going to the loo.
   end
 end

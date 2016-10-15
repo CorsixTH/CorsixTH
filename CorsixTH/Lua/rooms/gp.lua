@@ -123,7 +123,7 @@ function GPRoom:dealtWithPatient(patient)
   end
 
   patient:setNextAction(self:createLeaveAction())
-  patient:addToTreatmentHistory(self.room_info)
+  patient:addToTreatmentHistory(self.data)
 
   -- If the patient got sent to the wrong room and needs telling where
   -- to go next - this happens when a disease changes for an epidemic

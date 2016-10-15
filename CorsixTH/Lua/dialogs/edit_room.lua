@@ -45,7 +45,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   self.anims:setAnimationGhostPalette(126, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   self.anims:setAnimationGhostPalette(130, app.gfx:loadGhost("QData", "Ghost1.dat", 6), blue_red_swap)
   self.cell_outline = TheApp.gfx:loadSpriteTable("Bitmap", "aux_ui", true)
-  if not room_type.room_info then
+  if not room_type.data then
     self.blueprint_rect = {
       x = 1,
       y = 1,
@@ -63,8 +63,8 @@ function UIEditRoom:UIEditRoom(ui, room_type)
     self.desc_text = _S.place_objects_window.drag_blueprint
   else
     self.phase = "objects"
-    self.room_type = room_type.room_info
-    self.title_text = room_type.room_info.name
+    self.room_type = room_type.data
+    self.title_text = room_type.data.name
     self.room = room_type
     self.desc_text = _S.place_objects_window.confirm_or_buy_objects
     self.paid = true
@@ -74,7 +74,7 @@ function UIEditRoom:UIEditRoom(ui, room_type)
       w = room_type.width,
       h = room_type.height,
     }
-    if room_type.room_info.swing_doors then
+    if room_type.data.swing_doors then
       self.blueprint_door = {anim = {}, old_anim = {}, old_flags = {}}
     else
       self.blueprint_door = {}
@@ -141,12 +141,12 @@ function UIEditRoom:abortRoom()
   if self.paid then
     -- Return half the cost.
     local progress = self.ui.hospital.research.research_progress
-    local cost = math.floor(progress[self.room.room_info].build_cost/2)
+    local cost = math.floor(progress[self.room.data].build_cost/2)
     -- TODO: Return also the cost for additional objects.
 
     -- Decrease the hospital value by the whole room build cost
-    local valueChange = progress[self.room.room_info].build_cost
-    for obj, num in pairs(self.room.room_info.objects_needed) do
+    local valueChange = progress[self.room.data].build_cost
+    for obj, num in pairs(self.room.data.objects_needed) do
       -- Get how much this item costs.
       local obj_cost = self.ui.hospital:getObjectBuildCost(obj)
       cost = cost - math.floor(obj_cost)/2
@@ -233,8 +233,8 @@ function UIEditRoom:confirm(force)
     -- Pay for room (subtract cost of needed objects, which were already paid for)
     if not self.paid then
       local progress = self.ui.hospital.research.research_progress
-      local cost = progress[self.room.room_info].build_cost
-      for obj, num in pairs(self.room.room_info.objects_needed) do
+      local cost = progress[self.room.data].build_cost
+      for obj, num in pairs(self.room.data.objects_needed) do
         -- Get how much this item costs.
         local obj_cost = self.ui.hospital:getObjectBuildCost(obj)
         cost = cost - num * obj_cost
@@ -515,7 +515,7 @@ function UIEditRoom:purchaseItems()
   local research = self.ui.hospital.research
 
   local object_list = {} -- transform set to list
-  for i, o in ipairs(self.room.room_info.objects_additional) do
+  for i, o in ipairs(self.room.data.objects_additional) do
     -- Don't show the object if it hasn't been researched yet.
     local object = TheApp.objects[o]
     local avail = cfg_objects[object.thob].AvailableForLevel
@@ -530,7 +530,7 @@ function UIEditRoom:purchaseItems()
       end
 
       -- look up minimum quantity (required objects list)
-      local min_qty = self.room.room_info.objects_needed[o] or 0
+      local min_qty = self.room.data.objects_needed[o] or 0
 
       -- subtract number of objects in room from minimum quantity
       for obj, _ in pairs(self.room.objects) do
@@ -599,7 +599,7 @@ function UIEditRoom:returnToDoorPhase()
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
-    room.door.queue:rerouteAllPatients(SeekRoomAction(room.room_info.id))
+    room.door.queue:rerouteAllPatients(SeekRoomAction(room.data.id))
   end
 
   self.purchase_button:enable(false)
@@ -658,7 +658,7 @@ function UIEditRoom:returnToDoorPhase()
             if set == "inside_tiles" then
               set = "outside_tiles"
             end
-            map:setCell(x, y, layer, flag + self.world.wall_types[neighbour.room_info.wall_type][set][dir])
+            map:setCell(x, y, layer, flag + self.world.wall_types[neighbour.data.wall_type][set][dir])
           end
         else
           map:setCell(x, y, layer, flag)
@@ -883,12 +883,12 @@ function UIEditRoom:enterObjectsPhase()
   self.ui:tutorialStep(3, {11, 12}, 13)
   self.ui:setWorldHitTest(self.room)
   local confirm = self:checkEnableConfirm()
-  if #self.room.room_info.objects_additional == 0 and confirm then
+  if #self.room.data.objects_additional == 0 and confirm then
     self:confirm(true)
     return
   end
   self.desc_text = _S.place_objects_window.confirm_or_buy_objects
-  if #self.room.room_info.objects_additional > 0 then
+  if #self.room.data.objects_additional > 0 then
     self.purchase_button:enable(true)
   end
   self.pickup_button:enable(true)
@@ -896,7 +896,7 @@ function UIEditRoom:enterObjectsPhase()
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
   else
-    local room_objects = self.room.room_info.objects_needed
+    local room_objects = self.room.data.objects_needed
     if TheApp.config.enable_avg_contents then
       room_objects = self:computeAverageContents()
     end
@@ -917,7 +917,7 @@ function UIEditRoom:computeAverageContents()
   local room_count = 0
   for _, room in pairs(self.world.rooms) do
     if room and room.built and not room.crashed and
-        room.hospital == self.ui.hospital and room.room_info == self.room_type then
+        room.hospital == self.ui.hospital and room.data == self.room_type then
       room_count = room_count + 1
       for obj, _ in pairs(room.objects) do
         average_objects[obj.object_type.id] = (average_objects[obj.object_type.id] or 0) + 1
@@ -925,9 +925,9 @@ function UIEditRoom:computeAverageContents()
     end
   end
   -- Ensure room contents is within the boundaries of objects_needed and objects_additional.
-  local objects_needed = self.room.room_info.objects_needed
+  local objects_needed = self.room.data.objects_needed
   local additional_objects = {} -- Reversed mapping
-  for _, obj in pairs(self.room.room_info.objects_additional) do
+  for _, obj in pairs(self.room.data.objects_additional) do
     additional_objects[obj] = 1
   end
   for id, count in pairs(average_objects) do
@@ -1433,7 +1433,7 @@ end
 -- also returns the new state of the confirm button
 function UIEditRoom:checkEnableConfirm()
   local needed = {} -- copy list of required objects
-  for k, v in pairs(self.room.room_info.objects_needed) do
+  for k, v in pairs(self.room.data.objects_needed) do
     needed[k] = v
   end
 

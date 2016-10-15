@@ -116,10 +116,10 @@ local function use_staffroom_action_start(action, humanoid)
       -- Make sure that the room is still there though.
       -- If not, just answer the call
       if room and room.is_active and
-          (room.room_info.id == "research" or room.room_info.id == "training") and
+          (room.data.id == "research" or room.data.id == "training") and
           room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
         humanoid:queueAction(room:createEnterAction(humanoid))
-        humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+        humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.data.name))
       else
         -- Send the staff out of the room
         humanoid:queueAction(MeanderAction())

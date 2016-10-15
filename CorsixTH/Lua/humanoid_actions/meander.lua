@@ -51,7 +51,7 @@ local function meander_action_start(action, humanoid)
           room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
         humanoid:queueAction(room:createEnterAction(humanoid))
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for
-            :format(room.room_info.name))
+            :format(room.data.name))
         humanoid:finishAction()
         return
       end

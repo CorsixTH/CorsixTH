@@ -427,9 +427,9 @@ function Hospital:afterLoad(old, new)
     -- Go through all rooms and find if a research department has been built
     -- Also check for training rooms where the training_factor needs to be set
     for _, room in pairs(self.world.rooms) do
-      if room.room_info.id == "research" then
+      if room.data.id == "research" then
         self.research_dep_built = true
-      elseif room.room_info.id == "training" then
+      elseif room.data.id == "training" then
         -- A standard value to keep things going
         room.training_factor = 5
       end
@@ -1787,13 +1787,13 @@ function Hospital:hasStaffOfCategory(category)
 end
 
 --! Checks if the hospital has a room of a given type.
---!param type (string) A room_info.id, e.g. "ward".
+--!param type (string) A data.id, e.g. "ward".
 --! Returns false if none, else number of that type found
 function Hospital:hasRoomOfType(type)
   -- Check how many rooms there are.
   local result = false
   for _, room in pairs(self.world.rooms) do
-    if room.hospital == self and room.room_info.id == type and room.is_active then
+    if room.hospital == self and room.data.id == type and room.is_active then
       result = (result or 0) + 1
     end
   end

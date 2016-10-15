@@ -254,7 +254,7 @@ function Staff:isTiring()
   local room = self:getRoom()
   -- Being in a staff room is actually quite refreshing, as long as you're not a handyman watering plants.
   if room then
-    if room.room_info.id == "staff_room" and not self.on_call then
+    if room.data.id == "staff_room" and not self.on_call then
       tiring = false
     end
   elseif self.humanoid_class ~= "Handyman" then
@@ -272,7 +272,7 @@ end
 function Staff:isResting()
   local room = self:getRoom()
 
-  if room and room.room_info.id == "staff_room" and not self.on_call then
+  if room and room.data.id == "staff_room" and not self.on_call then
     return true
   else
     return false
@@ -284,7 +284,7 @@ function Staff:isResearching()
   local room = self:getRoom()
 
   -- Staff is in research lab, is qualified, and is not leaving the hospital.
-  return room and room.room_info.id == "research" and
+  return room and room.data.id == "research" and
       self.humanoid_class == "Doctor" and self.profile.is_researcher >= 1.0 and self.hospital
 end
 
@@ -293,7 +293,7 @@ function Staff:isLearning()
   local room = self:getRoom()
 
   -- Staff is in training room, the training room has a consultant, and  is using lecture chair.
-  return room and room.room_info.id == "training" and room.staff_member and
+  return room and room.data.id == "training" and room.staff_member and
       self.action_queue[1].name == "use_object" and
       self.action_queue[1].object.object_type.id == "lecture_chair"
 end
@@ -302,8 +302,8 @@ function Staff:isLearningOnTheJob()
   local room = self:getRoom()
 
   -- Staff is in room but not training room, staff room, or toilets; is a doctor; and is using something
-  return room and room.room_info.id ~= "training" and
-      room.room_info.id ~= "staff_room" and room.room_info.id ~= "toilets" and
+  return room and room.data.id ~= "training" and
+      room.data.id ~= "staff_room" and room.data.id ~= "toilets" and
       self.humanoid_class == "Doctor" and self.action_queue[1].name == "use_object"
 end
 
@@ -337,7 +337,7 @@ function Staff:updateSkill(consultant, trait, amount)
       self:updateStaffTitle()
     elseif not old_profile.is_consultant and self.profile.is_consultant then
       self.world.ui.adviser:say(_A.information.promotion_to_consultant)
-      if self:getRoom().room_info.id == "training" then
+      if self:getRoom().data.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
         self.last_room = nil
@@ -444,7 +444,7 @@ function Staff:dump()
   print("Busy: ", (self:isIdle() and "idle" or "busy") .. (self.pickup and " and picked up" or ''))
   if self.going_to_staffroom then print("Going to staffroom") end
   if self.last_room then
-      print("Last room: ", self.last_room.room_info.id .. '@' .. self.last_room.x ..','.. self.last_room.y)
+      print("Last room: ", self.last_room.data.id .. '@' .. self.last_room.x ..','.. self.last_room.y)
   end
 
   if self.humanoid_class == "Handyman" then
@@ -540,7 +540,7 @@ function Staff:updateSpeed()
     level = 3
   end
   local room = self:getRoom()
-  if room and room.room_info.id == "training" then
+  if room and room.data.id == "training" then
     level = 1
   elseif self.attributes["fatigue"] then
     if self.attributes["fatigue"] >= 0.8 then
@@ -614,7 +614,7 @@ function Staff:checkIfNeedRest()
 end
 
 function Staff:notifyNewRoom(room)
-  if room.room_info.id == "staff_room" then
+  if room.data.id == "staff_room" then
     self.waiting_for_staffroom = false
   end
 end
@@ -719,13 +719,13 @@ end
 
 function Staff:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
-  local room_name = room.room_info.long_name
-  local required = (room.room_info.maximum_staff or room.room_info.required_staff)
-  if self.humanoid_class == "Doctor" and room.room_info.id == "toilets" then
+  local room_name = room.data.long_name
+  local required = (room.data.maximum_staff or room.data.required_staff)
+  if self.humanoid_class == "Doctor" and room.data.id == "toilets" then
     self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
   elseif self.humanoid_class == "Nurse" then
     self.world.ui.adviser:say(_A.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
-  elseif self.humanoid_class == "Doctor" and not room.room_info.id == "training" then
+  elseif self.humanoid_class == "Doctor" and not room.data.id == "training" then
     self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
   elseif required then
     if required.Nurse then
@@ -765,8 +765,8 @@ function Staff:isIdle()
   local room = self:getRoom()
   if room then
     -- in special rooms, never
-    if room.room_info.id == "staff_room" or room.room_info.id == "research" or
-        room.room_info.id == "training" then
+    if room.data.id == "staff_room" or room.data.id == "research" or
+        room.data.id == "training" then
       return false
     end
 
@@ -798,7 +798,7 @@ function Staff:isIdle()
     local x, y = self.action_queue[1].x, self.action_queue[1].y
     if x then
       room = self.world:getRoom(x, y)
-      if room and (room.room_info.id == "training" or room.room_info.id == "research") then
+      if room and (room.data.id == "training" or room.data.id == "research") then
         return false
       end
     end
