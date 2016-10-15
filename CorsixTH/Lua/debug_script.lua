@@ -1,9 +1,9 @@
 ---
 -- Calling "execute script" while CorsixTH is running will execute the latest
 -- code in this script so you don't need to restart CorsixTH.
--- 
--- This script's execution key command and the key commands for the debug console 
--- & connecting a Lua DBGp server can be used anywhere at any time in CorsixTH 
+--
+-- This script's execution key command and the key commands for the debug console
+-- & connecting a Lua DBGp server can be used anywhere at any time in CorsixTH
 -- when debug mode is enabled.
 --
 -- Like with the console you can reference clicked humanoids with the underscore
