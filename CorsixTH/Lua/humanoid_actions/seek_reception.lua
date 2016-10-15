@@ -27,7 +27,7 @@ function SeekReceptionAction:SeekReceptionAction()
   self:HumanoidAction("seek_reception")
 end
 
-local function can_join_queue_at(humanoid, x, y, use_x, use_y)
+local function can_join_queue_at(humanoid, x, y)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
       humanoid.hospital and
@@ -75,7 +75,7 @@ local function action_seek_reception_start(action, humanoid)
 
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
-    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
+    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
       humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
           :setFaceDirection(face_x, face_y))
@@ -85,7 +85,7 @@ local function action_seek_reception_start(action, humanoid)
 
       -- Trim the walk to finish once it is possible to join the queue
       for i = #walk.path_x, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], x, y) then
+        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i]) then
           walk.path_x[i + 1] = nil
           walk.path_y[i + 1] = nil
         else
