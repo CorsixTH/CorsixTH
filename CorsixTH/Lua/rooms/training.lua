@@ -52,7 +52,7 @@ function TrainingRoom:roomFinished()
   local chairs = 0
   local skeletons = 0
   local bookcases = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     if object.object_type.id == "lecture_chair" then
       chairs = chairs + 1
     elseif object.object_type.id == "skeleton" then
@@ -130,12 +130,12 @@ function TrainingRoom:doStaffUseCycle(humanoid)
       if math.random(0, 1) == 0 and bookcase then skeleton = nil end -- choose one
       if skeleton then
         humanoid:walkTo(sox, soy)
-        for i = 1, math.random(3, 10) do
+        for _ = 1, math.random(3, 10) do
           humanoid:queueAction(UseObjectAction(skeleton))
         end
       elseif bookcase then
         humanoid:walkTo(box, boy)
-        for i = 1, math.random(3, 10) do
+        for _ = 1, math.random(3, 10) do
           humanoid:queueAction(UseObjectAction(bookcase))
         end
       end
@@ -232,19 +232,19 @@ function TrainingRoom:onHumanoidLeave(humanoid)
     -- unreserve whatever it was they we using
     local fx, fy = self:getEntranceXY(true)
     local objects = self.world:findAllObjectsNear(fx,fy)
-    for object, value in pairs(objects) do
+    for object, _ in pairs(objects) do
       if object.reserved_for == humanoid then
         object:removeReservedUser()
       end
     end
 
     if humanoid.profile.is_consultant and humanoid == self.staff_member then
-      local humanoid = self.waiting_staff_member
+      local staff = self.waiting_staff_member
       self:setStaffMember(nil)
-      if humanoid then
-        humanoid.waiting_on_other_staff = nil
+      if staff then
+        staff.waiting_on_other_staff = nil
         self.waiting_staff_member = nil
-        self:commandEnteringStaff(humanoid)
+        self:commandEnteringStaff(staff)
       end
     end
   end
