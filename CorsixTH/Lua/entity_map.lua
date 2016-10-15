@@ -40,14 +40,15 @@ function EntityMap:EntityMap(map)
   end
 end
 
+local function add_entity_to_table(entity, entity_table)
+  entity_table[#entity_table+1] = entity
+end
+
 --[[Adds an entity to the entity map in a specified location
 @param x (integer) the x coordinate of the entity
 @param y (integer) the y coordinate of the entity
 @param entity (Entity) the entity to be added to the map in the (x,y) position]]
 function EntityMap:addEntity(x,y,entity)
-  local function add_entity_to_table(entity,entity_table)
-    entity_table[#entity_table+1] = entity
-  end
   -- Distinguish between entity types and add them
   -- to the respective tables
   if x and y and entity then
@@ -59,28 +60,28 @@ function EntityMap:addEntity(x,y,entity)
   end
 end
 
+-- Iterates through a table and removes the given entity
+local function remove_entity_from_table(entity, entity_table)
+  local index = -1
+  for i, h in ipairs(entity_table) do
+    if h == entity then
+      -- If we have found it no need to keep looking
+      index = i
+      break
+    end
+  end
+  -- We haven't found it so we have incorrectly tried to remove it
+  assert(index ~= -1, "Tried to remove entity from entity_map - entity not found")
+  table.remove(entity_table,index)
+end
+
 --[[Removes an entity from the entity map given specified location
 Assumes the entity already has been added in the (x,y) position or will cause
 the assertion that the entity is contained in the map to fail.
 @param x (integer) the x coordinate of the entity
 @param y (integer) the y coordinate of the entity
 @param entity (Entity) the entity to be removed from the map in the (x,y) position ]]
-function EntityMap:removeEntity(x,y,entity)
-  -- Iterates through a table and removes the given entity
-  local function remove_entity_from_table(entity, entity_table)
-    local index = -1
-    for i, h in ipairs(entity_table) do
-      if h == entity then
-        -- If we have found it no need to keep looking
-        index = i
-        break
-      end
-    end
-    -- We haven't found it so we have incorrectly tried to remove it
-    assert(index ~= -1, "Tried to remove entity from entity_map - entity not found")
-    table.remove(entity_table,index)
-  end
-
+function EntityMap:removeEntity(x, y, entity)
   -- Distinguish between entity types to find table to remove from
   -- then remove the entity from that table
   if x and y and entity then

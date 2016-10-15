@@ -49,7 +49,7 @@ function ToiletRoom:roomFinished()
   local fx, fy = self:getEntranceXY(true)
   local objects = self.world:findAllObjectsNear(fx, fy)
   local number = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     if object.object_type.id == "loo" then
       number = number + 1
     end

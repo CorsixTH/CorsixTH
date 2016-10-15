@@ -50,10 +50,9 @@ function MoviePlayer:init()
 
   --find movies in Anims folder
   local num
-  local movie
   local movies = self.app.fs:listFiles("Anims")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
@@ -117,19 +116,14 @@ function MoviePlayer:playLoseMovie()
 end
 
 function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
-  local x, y, w, h = 0
-  local screen_w, screen_h = self.app.config.width, self.app.config.height
-  local ar
-  local success, warning
-
-  if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
+  if not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil then
     if callback then
       callback()
     end
     return
   end
 
-  success, warning = self.moviePlayer:load(filename)
+  local success, warning = self.moviePlayer:load(filename)
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
     if self.app.world then
@@ -155,10 +149,12 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   end
 
   -- calculate target dimensions
+  local x, y, w, h
+  local screen_w, screen_h = self.app.config.width, self.app.config.height
   local native_w = self.moviePlayer:getNativeWidth()
   local native_h = self.moviePlayer:getNativeHeight()
   if(native_w ~= 0 and native_h ~= 0) then
-    ar = native_w / native_h
+    local ar = native_w / native_h
     if(math.abs((screen_w / screen_h) - ar) < 0.001) then
       x, y = 0, 0
       w, h = screen_w, screen_h

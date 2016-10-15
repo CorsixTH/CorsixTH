@@ -30,13 +30,6 @@ local col_bg = {
   blue = 198,
 }
 
-local col_button = {
-  red = 84,
-  green = 200,
-  blue = 84,
-}
-
-
 local col_old_version = {
   red = 255,
   green = 0,

@@ -191,7 +191,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   local diseases = TheApp.diseases
   local expertise = level_config.expertise
   local gbv = level_config.gbv
-  for i, disease in ipairs(diseases) do
+  for _, disease in ipairs(diseases) do
     local disease_available = true
     local drug_effectiveness = 95
     local drug = disease.treatment_rooms and disease.treatment_rooms[1] == "pharmacy" or nil
@@ -547,12 +547,12 @@ function Hospital:afterLoad(old, new)
       }
       self.world.map.level_config.rooms = rooms
     end
-    for i, room in ipairs(TheApp.rooms) do
+    for _, room in ipairs(TheApp.rooms) do
       -- Sum up the build cost of the room
       local build_cost = rooms[room.level_config_id].Cost
       for name, no in pairs(room.objects_needed) do
         -- Add cost for this object.
-        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+        build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
       end
       -- Now define the total build cost for the room.
       room.build_cost = build_cost
@@ -566,7 +566,7 @@ function Hospital:afterLoad(old, new)
     -- Define build costs for rooms once again.
     local cfg_objects = self.world.map.level_config.objects
     local cfg_rooms = self.world.map.level_config.rooms
-    for i, room in ipairs(TheApp.rooms) do
+    for _, room in ipairs(TheApp.rooms) do
       -- Sum up the build cost of the room
       local build_cost = cfg_rooms[room.level_config_id].Cost
       for name, no in pairs(room.objects_needed) do
@@ -996,7 +996,7 @@ function Hospital:onEndDay()
   end
   local hosp = self.world.hospitals[1]
   hosp.receptionist_count = 0
-  for i, staff in ipairs(self.staff) do
+  for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == "Receptionist" then
       hosp.receptionist_count = hosp.receptionist_count + 1
     end
@@ -1006,7 +1006,7 @@ function Hospital:onEndDay()
     for _, room in pairs(self.world.rooms) do
       -- Only damage this hospital's objects.
       if room.hospital == self then -- TODO: For multiplayer?
-        for object, value in pairs(room.objects) do
+        for object, _ in pairs(room.objects) do
           if object.strength then
             -- The or clause is for backwards compatibility. Then the machine takes one damage each day.
             if (object.quake_points and object.quake_points > 0) or object.quake_points == nil then
@@ -1024,7 +1024,7 @@ function Hospital:onEndDay()
   -- check if we still have to announce VIP visit
   if self.announce_vip > 0 then
     -- check if the VIP is in the building yet
-    for i, e in ipairs(self.world.entities) do
+    for _, e in ipairs(self.world.entities) do
       if e.humanoid_class == "VIP" and e.announced == false then
         if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
           -- play VIP arrival sound and show tooltips
@@ -1085,7 +1085,7 @@ end
 function Hospital:onEndMonth()
   -- Spend wages
   local wages = 0
-  for i, staff in ipairs(self.staff) do
+  for _, staff in ipairs(self.staff) do
     wages = wages + staff.profile.wage
   end
   if wages ~= 0 then
@@ -1305,7 +1305,7 @@ end
 function Hospital:resolveEmergency()
   local emer = self.emergency
   local rescued_patients = emer.cured_emergency_patients
-  for i, patient in ipairs(self.emergency_patients) do
+  for _, patient in ipairs(self.emergency_patients) do
     if patient and not patient.cured and not patient:getRoom() then
       patient:die()
     end
@@ -1334,7 +1334,7 @@ function Hospital:resolveEmergency()
   end
 
   --check if there's a VIP in the building, and if there is then let him know the outcome
-  for i, e in ipairs(self.world.entities) do
+  for _, e in ipairs(self.world.entities) do
     if class.is(e, Vip) then
       e:evaluateEmergency(emergency_success)
     end
@@ -1479,13 +1479,13 @@ end
 function Hospital:addToEpidemic(patient)
   --[[ See if there exists a future epidemic with the same
   disease as the contagious patient - if so add them to it
-  @param patient (Patient) the patient to add to the epidemic
+  @param pat (Patient) the patient to add to the epidemic
   @return true if patient was successfully added to a future epidemic
   false otherwise (boolean) ]]
-  local function add_to_existing_future_epidemic(patient)
+  local function add_to_existing_future_epidemic(pat)
     for _, future_epidemic in ipairs(self.future_epidemics_pool) do
-      if future_epidemic.disease == patient.disease then
-        future_epidemic:addContagiousPatient(patient)
+      if future_epidemic.disease == pat.disease then
+        future_epidemic:addContagiousPatient(pat)
         return true
       end
     end
@@ -1493,10 +1493,10 @@ function Hospital:addToEpidemic(patient)
   end
 
   --[[ Create a new epidemic and add it to the pool of future epidemics
-  @param patient (Patient) the patient who will be the first
+  @param pat (Patient) the patient who will be the first
   contagious patient of the new epidemic]]
-  local function add_new_epidemic_to_pool(patient)
-    local new_epidemic = Epidemic(self,patient)
+  local function add_new_epidemic_to_pool(pat)
+    local new_epidemic = Epidemic(self, pat)
     self.future_epidemics_pool[#self.future_epidemics_pool + 1] = new_epidemic
   end
 
@@ -1689,8 +1689,7 @@ end
 function Hospital:initStaff()
   local level_config = self.world.map.level_config
   if level_config.start_staff then
-    local i = 0
-    for n, conf in ipairs(level_config.start_staff) do
+    for _, conf in ipairs(level_config.start_staff) do
       local profile
       local skill = 0
       local added_staff = true
@@ -1771,7 +1770,7 @@ end
 --! returns false if none, else number of that type employed
 function Hospital:hasStaffOfCategory(category)
   local result = false
-  for i, staff in ipairs(self.staff) do
+  for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == category then
       result = (result or 0) + 1
     elseif staff.humanoid_class == "Doctor" then
@@ -2016,7 +2015,7 @@ function Hospital:checkDiseaseRequirements(disease)
   local rooms = {}
   local staff = {}
   local any = false
-  for i, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
+  for _, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
     local found = self:hasRoomOfType(room_id)
     if not found then
       rooms[#rooms + 1] = room_id
@@ -2045,7 +2044,7 @@ function Hospital:getWallsAround(x, y)
   local map = self.world.map
   local th = map.th
 
-  local nw, ww
+  local _, nw, ww
   local walls = {} -- List of {wall="north"/"west"/"south"/"east", parcel}
   local flags = th:getCellFlags(x, y)
 
@@ -2205,7 +2204,7 @@ function Hospital:removeHandymanTask(taskIndex, taskType)
 end
 
 function Hospital:findHandymanTaskSubtable(taskType)
-  for i,v in ipairs(self.handymanTasks) do
+  for i = 1, #self.handymanTasks do
     if self.handymanTasks[i].taskType == taskType then
       return self.handymanTasks[i].subTable
     end
@@ -2324,11 +2323,11 @@ end
 --! Afterload function to initialize the owned plots.
 function Hospital:initOwnedPlots()
   self.ownedPlots = {}
-  for i, v in ipairs(self.world.entities) do
+  for _, v in ipairs(self.world.entities) do
     if v.tile_x and v.tile_y then
       local parcel = self.world.map.th:getCellFlags(v.tile_x, v.tile_y).parcelId
       local isAlreadyContained = false
-      for i2, v2 in ipairs(self.ownedPlots) do
+      for _, v2 in ipairs(self.ownedPlots) do
         if parcel == v2 then
           isAlreadyContained = true
           break
@@ -2347,7 +2346,7 @@ end
 function Hospital:roomNotYetResearched(disease)
   local req = self:checkDiseaseRequirements(disease)
   if type(req) == "table" and #req.rooms > 0 then
-    for i, room_id in ipairs(req.rooms) do
+    for _, room_id in ipairs(req.rooms) do
       if not self.discovered_rooms[self.world.available_rooms[room_id]] then
         return true
       end

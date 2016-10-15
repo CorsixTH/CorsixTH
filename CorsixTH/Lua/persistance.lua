@@ -28,7 +28,7 @@ local th_getfenv
 local th_getupvalue
 if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
   th_getfenv = function(f)
-    local val = nil
+    local _, val = nil, nil
     if type(f) == "function" then
       _, val = debug.getupvalue(f, 1)
     elseif type(f) == "userdata" then
@@ -151,7 +151,7 @@ local function MakePermanentObjectsTable(inverted)
   if inverted then
     -- as the object was persisted as a table, we need to add some magic to
     -- the __index metamethod to interpret this table as a function call
-    getmetatable(return_val).__index = function(t, k)
+    getmetatable(return_val).__index = function(_, k)
       if type(k) == "table" then
         return k[1](unpack(k, 2))
       end
@@ -196,8 +196,8 @@ local function NameOf(obj) -- Debug aid
       local i = 0
       while true do
         i = i + 1
-        local name, val = debug.getupvalue(exploring, i)
-        if not name then
+        local dbg_name, val = debug.getupvalue(exploring, i)
+        if not dbg_name then
           break
         end
         if val ~= nil and not explored[val] then

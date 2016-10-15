@@ -63,7 +63,7 @@ function WardRoom:roomFinished()
   local objects = self.world:findAllObjectsNear(fx, fy)
   local beds = 0
   local desks = 0
-  for object, value in pairs(objects) do
+  for object, _ in pairs(objects) do
     if object.object_type.id == "bed" then
       beds = beds + 1
     end
@@ -94,7 +94,6 @@ end
 
 function WardRoom:doStaffUseCycle(humanoid)
   local meander_time = math.random(4, 10)
-  local desk_use_time = math.random(8, 16)
   humanoid:setNextAction(MeanderAction():setCount(meander_time))
 
   local obj, ox, oy = self.world:findFreeObjectNearToUse(humanoid, "desk")
@@ -208,8 +207,8 @@ function WardRoom:afterLoad(old, new)
     local map = self.world.map.th
     local flags = {}
 
-    local function checkLocation(x, y)
-      if self.world:getRoom(x, y) or not map:getCellFlags(x, y, flags).passable then
+    local function checkLocation(xpos, ypos)
+      if self.world:getRoom(xpos, ypos) or not map:getCellFlags(xpos, ypos, flags).passable then
         local message = "Warning: An update has resolved a problem concerning " ..
             "swing doors, but not all tiles adjacent to them could be fixed."
         self.world.ui:addWindow(UIInformation(self.world.ui, {message}))

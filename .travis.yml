@@ -19,6 +19,7 @@ before_install:
   - luarocks --local install luafilesystem
   - luarocks --local install luasocket
   # Required for lua unit tests
+  - luarocks --local install luacheck
   - luarocks --local install luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
   - luarocks --local install busted
   - git clone --depth=1 https://github.com/CorsixTH/deps.git $HOME/deps
@@ -49,6 +50,8 @@ script:
   - make VERBOSE=1
   # Validate lua files
   - find $TRAVIS_BUILD_DIR -path $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages -prune -o -name '*.lua' -print0 | xargs -0 luac -p --
+  - cd $TRAVIS_BUILD_DIR
+  - /home/travis/.luarocks/bin/luacheck -q .
   # Run lua unit tests
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
   - eval `luarocks --local path`

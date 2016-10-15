@@ -53,7 +53,6 @@ end
 function JellyVatRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local moulder, stf_x, stf_y = self.world:findObjectNear(patient, "jelly_moulder")
-  local orientation = moulder.object_type.orientations[moulder.direction]
   local pat_x, pat_y = moulder:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))

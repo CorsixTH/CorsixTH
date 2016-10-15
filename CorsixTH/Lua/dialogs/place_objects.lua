@@ -104,14 +104,14 @@ function UIPlaceObjects:resize(num_slots)
   end
 
   local function idx(i)
-    return --[[persistable:place_objects_idx1]] function(self)
-      if i == self.active_index then
-        self:nextOrientation()
+    return --[[persistable:place_objects_idx1]] function(window)
+      if i == window.active_index then
+        window:nextOrientation()
       else
-        self.place_objects = true
-        self:setActiveIndex(i)
+        window.place_objects = true
+        window:setActiveIndex(i)
         -- Stop picking up items when user presses object in list
-        local edit_room_window = self.ui:getWindow(UIEditRoom)
+        local edit_room_window = window.ui:getWindow(UIEditRoom)
         if edit_room_window and edit_room_window.in_pickup_mode then
           edit_room_window:stopPickupItems()
         end
@@ -139,7 +139,7 @@ function UIPlaceObjects:resize(num_slots)
       :preservePanel()
   else
     -- remove buttons
-    for i = self.num_slots, num_slots + 1, -1 do
+    for _ = self.num_slots, num_slots + 1, -1 do
       -- NB: Two panels per item, the latter being a dummy for the button
       self.panels[#self.panels] = nil
       self.panels[#self.panels] = nil
@@ -167,22 +167,13 @@ function UIPlaceObjects:addObjects(object_list, pay_for)
     return
   end
 
-  local function idx(i)
-    return --[[persistable:place_objects_idx2]] function(self)
-      if i == self.active_index then
-        self:nextOrientation()
-      else
-        self:setActiveIndex(i)
-      end
-    end
-  end
-
-  -- Detect objects already existing in self.objects and increment its quantity rather than adding new objects lines
+  -- Detect objects already existing in self.objects and increment its quantity
+  -- rather than adding new objects lines.
   local new_index = 1
   while true do
     local new_object = object_list[new_index]
     if not new_object then break end
-    for index, object in ipairs(self.objects) do
+    for _, object in ipairs(self.objects) do
       if new_object.qty > 0 and new_object.object.thob == object.object.thob then
         object.qty = object.qty + new_object.qty
         if pay_for then
@@ -261,7 +252,8 @@ function UIPlaceObjects:removeObject(object, dont_close_if_empty, refund)
   if object.qty == 0 then
     if #self.objects == 1 then
       self:clearBlueprint()
-      self.object_cell_x, self.object_cell_y = nil
+      self.object_cell_x = nil
+      self.object_cell_y = nil
       if dont_close_if_empty then
         self.list_header.visible = false
         self.place_objects = false -- No object to place
@@ -286,8 +278,8 @@ end
 function UIPlaceObjects:removeAllObjects(refund)
   -- There is surely a nicer way to implement this than the current hack. Rewrite it sometime later.
   self:setActiveIndex(1)
-  for i = 1, #self.objects do
-    for j = 1, self.objects[1].qty do
+  for _ = 1, #self.objects do
+    for _ = 1, self.objects[1].qty do
       self:removeObject(self.objects[1], true, refund)
     end
   end
@@ -299,11 +291,11 @@ function UIPlaceObjects:removeObjects(object_list, refund)
     object_list = {}
   end
 
-  for i, o in ipairs(object_list) do
+  for _, o in ipairs(object_list) do
     for j, p in ipairs(self.objects) do
       if o.object.id == p.object.id then
         self.active_index = j
-        for k = 1, o.qty do
+        for _ = 1, o.qty do
           self:removeObject(p, true, refund)
         end
       end
@@ -538,15 +530,15 @@ function UIPlaceObjects:draw(canvas, x, y)
   -- Don't show the object if the game is paused
   if self.world.user_actions_allowed then
     if not ATTACH_BLUEPRINT_TO_TILE and self.object_cell_x and self.object_anim then
-      local x, y = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
+      local xpos, ypos = self.ui:WorldToScreen(self.object_cell_x, self.object_cell_y)
       local zoom = self.ui.zoom_factor
       if canvas:scale(zoom) then
-        x = math.floor(x / zoom)
-        y = math.floor(y / zoom)
+        xpos = math.floor(xpos / zoom)
+        ypos = math.floor(ypos / zoom)
       end
-      self.object_anim:draw(canvas, x, y)
+      self.object_anim:draw(canvas, xpos, ypos)
       if self.objects[self.active_index].object.slave_type then
-        self.object_slave_anim:draw(canvas, x, y)
+        self.object_slave_anim:draw(canvas, xpos, ypos)
       end
       canvas:scale(1)
     end
@@ -560,12 +552,12 @@ function UIPlaceObjects:draw(canvas, x, y)
 
   for i, o in ipairs(self.objects) do
     local font = self.white_font
-    local y = y + 136 + i * 29
+    local ypos = y + 136 + i * 29
     if i == self.active_index then
       font = self.blue_font
     end
-    font:draw(canvas, o.object.name, x + 15, y, 130, 0)
-    font:draw(canvas, o.qty, x + 151, y, 19, 0)
+    font:draw(canvas, o.object.name, x + 15, ypos, 130, 0)
+    font:draw(canvas, o.qty, x + 151, ypos, 19, 0)
   end
 end
 
@@ -594,7 +586,6 @@ function UIPlaceObjects:setBlueprintCell(x, y)
   if x and y and #self.objects > 0 then
     local object = self.objects[self.active_index].object
     local object_footprint = object.orientations[self.object_orientation].footprint
-    local w, h = self.map.width, self.map.height
     local map = self.map.th
     if #object_footprint ~= #self.object_footprint then
       self.object_footprint = {}
@@ -623,6 +614,8 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       west = { x = -1, y = 0, buildable_flag = "buildableWest", passable_flag = "travelWest", needed_side = "need_west_side"}
       }
 
+    -- The given footprint tile is not usable, update the external 'allgood'
+    -- variable accordingly.
     local function setAllGood(xy)
       if xy.optional then
         opt_tiles_blocked = opt_tiles_blocked + 1
@@ -635,13 +628,13 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     end
 
     for i, tile in ipairs(object_footprint) do
-      local x = x + tile[1]
-      local y = y + tile[2]
+      local xpos = x + tile[1]
+      local ypos = y + tile[2]
       -- Check 1: Does the tile have valid map coordinates?:
-      if not world:isOnMap(x, y) then
+      if not world:isOnMap(xpos, ypos) then
         setAllGood(tile)
-        x = 0
-        y = 0
+        xpos = 0
+        ypos = 0
       else
         local flag = "buildable"
         local good_tile = 24 + flag_alpha75
@@ -658,31 +651,31 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         end
 
         -- Check 2: Is the tile in the object's allowed room?:
-        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, object, roomId)
+        local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(xpos, ypos, object, roomId)
         local is_object_allowed = result.within_room
         roomId = result.roomId
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         if not tile.only_side and is_object_allowed then
-           is_object_allowed = world:isFootprintTileBuildableOrPassable(x, y, tile, object_footprint, flag, player_id)
+           is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
         elseif is_object_allowed then
-          is_object_allowed = map:getCellFlags(x, y, flags)[flag] and (player_id == 0 or flags.owner == player_id)
+          is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then
-            map:setCell(x, y, 4, good_tile)
+            map:setCell(xpos, ypos, 4, good_tile)
           end
         else
           if not tile.invisible then
-            map:setCell(x, y, 4, bad_tile)
+            map:setCell(xpos, ypos, 4, bad_tile)
           end
           setAllGood(tile)
         end
       end
-      self.object_footprint[i][1] = x
-      self.object_footprint[i][2] = y
+      self.object_footprint[i][1] = xpos
+      self.object_footprint[i][2] = ypos
     end
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
@@ -754,7 +747,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
   local object = self.objects[self.active_index].object
   local room = self.room
   local wx, wy = self.ui:ScreenToWorld(self.x + x, self.y + y)
-  local bestd
+  local bestd = nil
   local bestx, besty = wx, wy
   local besto = self.object_orientation
   if room and object.locked_to_wall then
@@ -771,7 +764,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
         room.x + 0.5, room.y + room.height - 0.5, wx, wy)
       local d = ((px - wx)^2 + (py - wy)^2)^0.5
       if not bestd or d < bestd then
-        bestd, bestx, besty, besto = d, px, py, object.locked_to_wall.west
+        bestx, besty, besto = px, py, object.locked_to_wall.west
       end
     end
     -- TODO: East, South
@@ -779,7 +772,7 @@ function UIPlaceObjects:calculateBestPlacementPosition(x, y)
   bestx, besty = math_floor(bestx), math_floor(besty)
   if bestx < 1 or besty < 1 or
       bestx > self.map.width or besty > self.map.height then
-    bestx, besty = nil
+    bestx, besty = nil, nil
   end
   return bestx, besty, besto
 end
