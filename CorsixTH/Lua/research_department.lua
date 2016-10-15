@@ -343,7 +343,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
   ---------------------- An autopsy has been done ---------------------------
   if autopsy_room then
     -- Do something only if the room is among those not yet discovered.
-    for room, value in pairs(self.hospital.undiscovered_rooms) do
+    for room, _ in pairs(self.hospital.undiscovered_rooms) do
       if room.id == autopsy_room then
         -- Find an object within this room that needs research points.
         for object, _ in pairs(room.objects_needed) do
@@ -375,7 +375,7 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
     -- Divide the points into the different categories and check if
     -- it is time to discover something
     local areas = self.research_policy
-    for name, info in pairs(areas) do
+    for _, info in pairs(areas) do
       -- Don't touch the value "global".
       if type(info) == "table" then
         -- Some categories may be finished
@@ -531,12 +531,12 @@ function ResearchDepartment:discoverObject(object, automatic)
       -- If we're not researching any improvement right now, and the newest discovery was
       -- a machine that requires an improvement, switch the current policy.
       if (not current_improvement_research or current_improvement_research.dummy) then
-        for object, progress in pairs(self.research_progress) do
-          if object.default_strength then
-          -- Don't improve those that already have the max strength
+        for research_object, progress in pairs(self.research_progress) do
+          if research_object.default_strength then
+            -- Don't improve those that already have the max strength
             if progress.start_strength < max_strength then
               if progress.discovered and progress.start_strength < min_strength then
-                self.research_policy["improvements"].current = object
+                self.research_policy["improvements"].current = research_object
                 min_strength = progress.start_strength
               end
             end
