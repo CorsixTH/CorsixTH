@@ -232,7 +232,8 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     m_pWindow = SDL_CreateWindow("CorsixTH",
                                  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                 pParams->iWidth, pParams->iHeight, SDL_WINDOW_OPENGL);
+                                 pParams->iWidth, pParams->iHeight,
+                                 SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
     if (!m_pWindow)
     {
         return false;

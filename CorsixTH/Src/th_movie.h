@@ -224,10 +224,8 @@ public:
 
     //! Play the currently loaded movie
     //!
-    //! \param destination_rect The location and dimensions in the renderer on
-    //! which to draw the movie
     //! \param iChannel The audio channel to use
-    void play(const SDL_Rect &destination_rect, int iChannel);
+    void play(int iChannel);
 
     //! Stop the currently playing movie
     void stop();
@@ -249,7 +247,10 @@ public:
     void clearLastError();
 
     //! Draw the next frame if it is time to do so
-    void refresh();
+    //!
+    //! \param destination_rect The location and dimensions in the renderer on
+    //! which to draw the movie
+    void refresh(const SDL_Rect &destination_rect);
 
     //! Deallocate the picture buffer and free any resources associated with it.
     //!
@@ -309,9 +310,6 @@ private:
     bool m_fAborting; ///< Indicate that we are in process of aborting playback
 
     SDL_mutex *m_pDecodingAudioMutex; ///< Synchronize access to #m_pAudioBuffer
-
-    //! Current movie dimensions and placement in the renderer
-    SDL_Rect m_destination_rect;
 
     AVFormatContext* m_pFormatContext; ///< Information related to the loaded movie and all of its streams
     int m_iVideoStream; ///< The index of the video stream
