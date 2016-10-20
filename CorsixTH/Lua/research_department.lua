@@ -603,7 +603,7 @@ function ResearchDepartment:researchCost()
   -- Find out how many doctors are currently doing research
   local doctors = 0
   for _, room in pairs(self.world.rooms) do
-    if room.room_info.id == "research" then
+    if room.data.id == "research" then
       for _, _ in pairs(room.staff_member_set) do
         doctors = doctors + 1
       end

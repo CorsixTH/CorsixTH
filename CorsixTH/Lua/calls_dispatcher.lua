@@ -59,7 +59,7 @@ function CallsDispatcher:callForStaff(room)
       self:callForStaffEachRoom(room, attribute, attribute .. i)
     end
   end
-  local sound = room.room_info.call_sound
+  local sound = room.data.call_sound
   if anyone_missed and sound and not room.sound_played then
     room.world.ui:playAnnouncement(sound)
     room.sound_played = true
@@ -73,7 +73,7 @@ function CallsDispatcher:callForStaffEachRoom(room, attribute, key)
   local new_call = self:enqueue(
     room,
     key,
-    _S.calls_dispatcher.staff:format(room.room_info.name, attribute),
+    _S.calls_dispatcher.staff:format(room.data.name, attribute),
     --[[persistable:call_dispatcher_staff_verification]] function(staff)
       return CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
     end,
@@ -118,7 +118,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
 
   if not manual and urgent then
     local room = object:getRoom()
-    local sound = room.room_info.handyman_call_sound
+    local sound = room.data.handyman_call_sound
     if sound then
       ui:playAnnouncement(sound)
       ui:playSound("machwarn.wav")
@@ -407,7 +407,7 @@ function CallsDispatcher.dumpCall(call, message)
   if(class.is(call_obj,Humanoid)) then
     print(call.key .. '@' .. position .. message)
   else
-    print((call_obj.room_info and call_obj.room_info.id or call_obj.object_type.id) ..
+    print((call_obj.data and call_obj.data.id or call_obj.object_type.id) ..
         '-' .. call.key .. '@' .. position .. message)
   end
 end
@@ -543,7 +543,7 @@ function CallsDispatcher.sendStaffToRoom(room, staff)
     staff:setNextAction(room:createEnterAction(staff))
     CallsDispatcher.queueCallCheckpointAction(staff, CallsDispatcher.staffActionInterruptHandler)
   end
-  staff:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+  staff:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.data.name))
 end
 
 function CallsDispatcher.staffActionInterruptHandler(action, humanoid, high_priority)

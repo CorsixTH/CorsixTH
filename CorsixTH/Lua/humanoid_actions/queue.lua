@@ -372,7 +372,7 @@ local function action_queue_start(action, humanoid)
   if door then
     door:updateDynamicInfo()
     if class.is(humanoid, Patient) then
-      humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.room_info.name))
+      humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.queueing_for:format(door.room.data.name))
     end
   end
   humanoid:queueAction(IdleAction():setMustHappen(true):setIsLeaving(humanoid:isLeaving()), 0)

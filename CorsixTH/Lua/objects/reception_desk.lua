@@ -101,7 +101,7 @@ function ReceptionDesk:tick()
       if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
         if queue_front.next_room_to_visit then
-          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
+          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.data.id))
         else
           if class.is(queue_front, Inspector) then
             local inspector = queue_front

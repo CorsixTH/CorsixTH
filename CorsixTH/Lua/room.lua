@@ -25,12 +25,12 @@ class "Room"
 ---@type Room
 local Room = _G["Room"]
 
-function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
+function Room:Room(x, y, w, h, id, data, world, hospital, door, door2)
   self.id = id
   self.world = world
   self.hospital = hospital
 
-  self.room_info = room_info
+  self.data = data
   self:initRoom(x, y, w, h, door, door2)
 end
 
@@ -46,11 +46,11 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.door2 = door2
   if not self:hasQueueDialog() then
     door:setDynamicInfo('text', {
-      self.room_info.name
+      self.data.name
     })
   else
     door:setDynamicInfo('text', {
-      self.room_info.name,
+      self.data.name,
       _S.dynamic_info.object.queue_size:format(0),
       _S.dynamic_info.object.queue_expected:format(0)
     })
@@ -58,7 +58,7 @@ function Room:initRoom(x, y, w, h, door, door2)
   self.built = false
   self.crashed = false
 
-  self.world.map.th:markRoom(x, y, w, h, self.room_info.floor_tile, self.id)
+  self.world.map.th:markRoom(x, y, w, h, self.data.floor_tile, self.id)
 
   self.humanoids = {--[[a set rather than a list]]}
   self.objects = {--[[a set rather than a list]]}
@@ -96,7 +96,7 @@ function Room:createEnterAction(humanoid_entering, callback)
   if not callback then
     if class.is(humanoid_entering, Patient) then
       callback = --[[persistable:room_patient_enroute_cancel]] function()
-        humanoid_entering:setNextAction(SeekRoomAction(self.room_info.id))
+        humanoid_entering:setNextAction(SeekRoomAction(self.data.id))
       end
     elseif class.is(humanoid_entering, Vip) then
       callback = --[[persistable:room_vip_enroute_cancel]] function()
@@ -157,7 +157,7 @@ function Room:dealtWithPatient(patient)
     return
   end
   patient:setNextAction(self:createLeaveAction())
-  patient:addToTreatmentHistory(self.room_info)
+  patient:addToTreatmentHistory(self.data)
   if self.staff_member then
     self:setStaffMembersAttribute("dealing_with_patient", false)
   end
@@ -274,13 +274,13 @@ local no_staff = {} -- Constant denoting 'no staff at all' in a room.
 function Room:getMaximumStaffCriteria()
   -- Some rooms have dynamic criteria (i.e. dependent upon the number of items
   -- in the room), so this method is provided for such rooms to override it.
-  return self.room_info.maximum_staff or self.room_info.required_staff or no_staff
+  return self.data.maximum_staff or self.data.required_staff or no_staff
 end
 
 --! Get the type and number of required staff for the room.
 --!return (table) Type and number of required staff.
 function Room:getRequiredStaffCriteria()
-  return self.room_info.required_staff or no_staff
+  return self.data.required_staff or no_staff
 end
 
 function Room:onHumanoidEnter(humanoid)
@@ -302,7 +302,7 @@ function Room:onHumanoidEnter(humanoid)
     self.humanoids[humanoid] = true
     if class.is(humanoid, Patient) then
       self:makeHumanoidLeave(humanoid)
-      humanoid:queueAction(SeekRoomAction(self.room_info.id))
+      humanoid:queueAction(SeekRoomAction(self.data.id))
     else
       humanoid:setNextAction(self:createLeaveAction())
       humanoid:queueAction(MeanderAction())
@@ -338,10 +338,10 @@ function Room:onHumanoidEnter(humanoid)
       if self:getStaffMember() and self:staffMeetsRoomRequirements(humanoid) then
         local staff_member = self:getStaffMember()
         self.humanoids[humanoid] = true
-          if staff_member.profile.is_researcher and self.room_info.id == "research" then
+          if staff_member.profile.is_researcher and self.data.id == "research" then
             self.world.ui.adviser:say(msg[math.random(1, #msg)])
           end
-          if staff_member.humanoid_class == "Nurse" and self.room_info.id == "ward" then
+          if staff_member.humanoid_class == "Nurse" and self.data.id == "ward" then
             self.world.ui.adviser:say(msg_nurse[math.random(1, #msg_nurse)])
           end
         if not staff_member.dealing_with_patient then
@@ -656,9 +656,9 @@ function Room:roomFinished()
   -- Show information about the room if not already shown.
   -- Also only show them if the player is playing the original campaign.
   if tonumber(self.world.map.level_number) and not self.world.room_information_dialogs_off then
-    if not self.world.room_built[self.room_info.id] then
-      self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
-      self.world.room_built[self.room_info.id] = true
+    if not self.world.room_built[self.data.id] then
+      self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.data.id]))
+      self.world.room_built[self.data.id] = true
     end
   end
   self:tryToFindNearbyPatients()
@@ -740,7 +740,7 @@ function Room:tryToFindNearbyPatients()
 
   for _, old_room in pairs(self.world.rooms) do
     if old_room.hospital == self.hospital and old_room ~= self and
-        old_room.room_info == self.room_info and old_room.door.queue and
+        old_room.data == self.data and old_room.door.queue and
         old_room.door.queue:reportedSize() >= 2 then
       local old_queue = old_room.door.queue
       local pat_number = old_queue:reportedSize()
@@ -769,7 +769,7 @@ function Room:crashRoom()
       if class.is(person, Patient) then
         --Delay so that room is destroyed before the SeekRoom search.
         person:queueAction(IdleAction():setCount(1))
-        person:queueAction(SeekRoomAction(self.room_info.id))
+        person:queueAction(SeekRoomAction(self.data.id))
       end
     end
     person:finishAction()
@@ -929,7 +929,7 @@ function Room:tryToEdit()
     if not humanoid:isLeaving() then
       if class.is(humanoid, Patient) then
         self:makeHumanoidLeave(humanoid)
-        humanoid:queueAction(SeekRoomAction(self.room_info.id))
+        humanoid:queueAction(SeekRoomAction(self.data.id))
       else
         humanoid:setNextAction(self:createLeaveAction())
         humanoid:queueAction(MeanderAction())
@@ -946,7 +946,7 @@ function Room:tryToEdit()
 end
 
 function Room:hasQueueDialog()
-  return not self.room_info.has_no_queue_dialog
+  return not self.data.has_no_queue_dialog
 end
 
 --! Stub to be extended in subclasses, if needed.
@@ -962,9 +962,9 @@ end
 -- @param patient (Patient) patient to verify if treatment room ]]
 -- @return result (boolean) true if is suitable diagnosis room, false otherwise
 function Room:isDiagnosisRoomForPatient(patient)
-  if self.room_info.id ~= "gp" then
+  if self.data.id ~= "gp" then
     for _, room_name in ipairs(patient.disease.diagnosis_rooms) do
-      if self.room_info.id == room_name then
+      if self.data.id == room_name then
         return true
       end
     end

@@ -321,7 +321,7 @@ function Map:setPlotOwner(plot_number, new_owner)
       if dir.layer == 0 and dir.room_cell_flags.roomId ~= 0 and
           dir.room_cell_flags.parcelId ~= dir.adj_cell_flags.parcelId then
         local room = self.app.world.rooms[dir.room_cell_flags.roomId]
-        local wall_type = self.app.walls[room.room_info.wall_type][dir.tile_cat][dir.wall_dir]
+        local wall_type = self.app.walls[room.data.wall_type][dir.tile_cat][dir.wall_dir]
         self.th:setCell(x, y, dir.block_id, wall_type)
       end
     end

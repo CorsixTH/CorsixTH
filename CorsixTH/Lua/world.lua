@@ -776,13 +776,13 @@ function World:unregisterRoomRemoveCallback(callback)
   self.room_remove_callbacks[callback] = nil
 end
 
-function World:newRoom(x, y, w, h, room_info, ...)
+function World:newRoom(x, y, w, h, data, ...)
   local id = #self.rooms + 1
   -- Note: Room IDs will be unique, but they may not form continuous values
   -- from 1, as IDs of deleted rooms may not be re-issued for a while
-  local class = room_info.class and _G[room_info.class] or Room
+  local class = data.class and _G[data.class] or Room
   local hospital = self:getHospital(x, y)
-  local room = class(x, y, w, h, id, room_info, self, hospital, ...)
+  local room = class(x, y, w, h, id, data, self, hospital, ...)
 
   self.rooms[id] = room
   self:clearCaches()
@@ -793,9 +793,9 @@ end
 --!param room (Room) The new room.
 function World:markRoomAsBuilt(room)
   room:roomFinished()
-  local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.room_info.id]
+  local diag_disease = self.hospitals[1].disease_casebook["diag_" .. room.data.id]
   if diag_disease and not diag_disease.discovered then
-    self.hospitals[1].disease_casebook["diag_" .. room.room_info.id].discovered = true
+    self.hospitals[1].disease_casebook["diag_" .. room.data.id].discovered = true
   end
   for _, entity in ipairs(self.entities) do
     if entity.notifyNewRoom then
@@ -1819,7 +1819,7 @@ function World:findRoomNear(humanoid, room_type_id, distance, mode)
     distance = 2^30
   end
   for _, r in pairs(self.rooms) do repeat
-    if r.built and (not room_type_id or r.room_info.id == room_type_id) and r.is_active and r.door.queue.max_size ~= 0 then
+    if r.built and (not room_type_id or r.data.id == room_type_id) and r.is_active and r.door.queue.max_size ~= 0 then
       local x, y = r:getEntranceXY(false)
       local d = self:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
       if not d or d > distance then
@@ -1951,12 +1951,12 @@ function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(x, y, o
   elseif xy_rooms_id == 0 then
     return {within_room = object.corridor_object ~= nil, roomId = xy_rooms_id}
   else
-    for _, additional_objects_name in pairs(self.rooms[xy_rooms_id].room_info.objects_additional) do
+    for _, additional_objects_name in pairs(self.rooms[xy_rooms_id].data.objects_additional) do
       if TheApp.objects[additional_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
     end
-    for needed_objects_name, _ in pairs(self.rooms[xy_rooms_id].room_info.objects_needed) do
+    for needed_objects_name, _ in pairs(self.rooms[xy_rooms_id].data.objects_needed) do
       if TheApp.objects[needed_objects_name].thob == object.thob then
         return {within_room = true, roomId = xy_rooms_id}
       end
@@ -2389,10 +2389,10 @@ function World:afterLoad(old, new)
 
     -- Add room values
     for _, room in pairs(self.rooms) do
-      local valueChange = room.room_info.build_cost
+      local valueChange = room.data.build_cost
 
       -- Subtract values of objects in rooms to avoid calculating those object values twice
-      for obj, num in pairs(room.room_info.objects_needed) do
+      for obj, num in pairs(room.data.objects_needed) do
         valueChange = valueChange - num * TheApp.objects[obj].build_cost
       end
       value = value + valueChange
@@ -2577,7 +2577,7 @@ function World:afterLoad(old, new)
     -- Unreserve objects which are not actually reserved for real in the staff room.
     -- This is a special case where reserved_for could be set just as a staff member was leaving
     for _, room in pairs(self.rooms) do
-      if room.room_info.id == "staff_room" then
+      if room.data.id == "staff_room" then
         -- Find all objects in the room
         local fx, fy = room:getEntranceXY(true)
         for obj, _ in pairs(self:findAllObjectsNear(fx, fy)) do
