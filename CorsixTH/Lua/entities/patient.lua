@@ -199,7 +199,7 @@ function Patient:completeDiagnosticStep(room)
     local divisor = math.random(1, 3)
     local attn_detail = room.staff_member.profile.attention_to_detail / divisor
     local skill = room.staff_member.profile.skill / divisor
-    diagnosis_bonus = (attn_detail + 0.4) * skill
+    local diagnosis_bonus = (attn_detail + 0.4) * skill
   end
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
