@@ -721,7 +721,7 @@ function UIBottomPanel:addDialog(dialog_class, extra_function)
         self.ui:setEditRoom(false)
         local dialog = _G[dialog_class](self.ui)
         if extra_function then
-          _G[dialog_class][extra_function](dialog)
+          _G[dialog_class][extra_function](d)
         end
         self.ui:addWindow(dialog)
         self:updateButtonStates()
