@@ -95,27 +95,21 @@ int l_load_music_async_callback(lua_State *L)
     lua_pushnil(L);
     lua_settable(L, LUA_REGISTRYINDEX);
 
-    // Get CB state and function
+    // Get CB function
     lua_pushvalue(L, 1);
     lua_gettable(L, LUA_REGISTRYINDEX);
     lua_rawgeti(L, -1, 1);
-    lua_State *cbL = lua_tothread(L, -1);
-    // NB: cbL may equal L, or it may not
-    lua_pop(L, 1);
-    lua_rawgeti(L, -1, 2);
-    if(L != cbL)
-        lua_xmove(L, cbL, 1);
 
-    // Push CB arg
+    // Push CB arguments
     int nargs = 1;
     if(async->music == nullptr)
     {
-        lua_pushnil(cbL);
+        lua_pushnil(L);
         if(async->err)
         {
             if(*async->err)
             {
-                lua_pushstring(cbL, async->err);
+                lua_pushstring(L, async->err);
                 nargs = 2;
             }
             free(async->err);
@@ -123,10 +117,8 @@ int l_load_music_async_callback(lua_State *L)
     }
     else
     {
-        lua_rawgeti(L, 2, 3);
-        if(L != cbL)
-            lua_xmove(L, cbL, 1);
-        music_t* pLMusic = (music_t*)lua_touserdata(cbL, -1);
+        lua_rawgeti(L, 2, 2);
+        music_t* pLMusic = (music_t*)lua_touserdata(L, -1);
         pLMusic->pMusic = async->music;
         async->music = nullptr;
     }
@@ -137,19 +129,8 @@ int l_load_music_async_callback(lua_State *L)
     lua_settable(L, LUA_REGISTRYINDEX);
 
     // Callback
-    if(cbL == L)
-    {
-        lua_call(cbL, nargs, 0);
-        return 0;
-    }
-    if(lua_pcall(cbL, nargs, 0, 0) != 0)
-    {
-        lua_pushliteral(L, "Error in async music load callback: ");
-        lua_xmove(cbL, L, 1);
-        lua_tostring(L, -1);
-        lua_concat(L, 2);
-        lua_error(L);
-    }
+    lua_call(L, nargs, 0);
+
     return 0;
 }
 
@@ -188,23 +169,20 @@ static int l_load_music_async(lua_State *L)
     async->rwop = rwop;
     async->err = nullptr;
     lua_createtable(L, 2, 0);
-    lua_pushthread(L);
-    lua_rawseti(L, -2, 1);
     lua_pushvalue(L, 2);
-    lua_rawseti(L, -2, 2);
+    lua_rawseti(L, -2, 1);
     luaT_stdnew<music_t>(L, luaT_environindex, true);
     lua_pushvalue(L, 1);
     luaT_setenvfield(L, -2, "data");
-    lua_rawseti(L, -2, 3);
+    lua_rawseti(L, -2, 2);
     lua_settable(L, LUA_REGISTRYINDEX);
 
     /*
         In registry:
           [light userdata async] -> [full userdata async]
           [full userdata async] -> {
-            [1] = callback_thread,
-            [2] = callback_function,
-            [3] = empty music_t userdata,
+            [1] = callback_function,
+            [2] = empty music_t userdata,
           }
 
         New thread will load music, and inform the main loop, which will then
