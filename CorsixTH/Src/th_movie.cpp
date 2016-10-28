@@ -602,10 +602,8 @@ void THMovie::unload()
     }
 }
 
-void THMovie::play(const SDL_Rect &destination_rect, int iChannel)
+void THMovie::play(int iChannel)
 {
-    m_destination_rect = SDL_Rect{ destination_rect.x, destination_rect.y, destination_rect.w, destination_rect.h };
-
     if(!m_pRenderer)
     {
         m_sLastError = std::string("Cannot play before setting the renderer");
@@ -713,8 +711,12 @@ void THMovie::clearLastError()
     m_sLastError.clear();
 }
 
-void THMovie::refresh()
+void THMovie::refresh(const SDL_Rect &destination_rect)
 {
+    SDL_Rect dest_rect;
+
+    dest_rect = SDL_Rect{ destination_rect.x, destination_rect.y, destination_rect.w, destination_rect.h };
+
     if(!m_pMoviePictureBuffer->empty())
     {
         double dCurTime = SDL_GetTicks() - m_iCurSyncPtsSystemTime + m_iCurSyncPts * 1000.0;
@@ -725,12 +727,16 @@ void THMovie::refresh()
             m_pMoviePictureBuffer->advance();
         }
 
-        m_pMoviePictureBuffer->draw(m_pRenderer, m_destination_rect);
+        m_pMoviePictureBuffer->draw(m_pRenderer, dest_rect);
     }
 }
 
 void THMovie::allocatePictureBuffer()
 {
+    if(!m_pVideoCodecContext)
+    {
+        return;
+    }
     m_pMoviePictureBuffer->allocate(m_pRenderer, getNativeWidth(), getNativeHeight());
 }
 

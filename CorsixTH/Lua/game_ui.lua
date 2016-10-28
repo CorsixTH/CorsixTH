@@ -126,6 +126,27 @@ function GameUI:makeVisibleDiamond(scr_w, scr_h)
   }
 end
 
+--! Calculate the minimum valid zoom value
+--!
+--! Zooming out too much would cause negative width/height to be returned from
+--! makeVisibleDiamond. This function calculates the minimum zoom_factor that
+--! would be allowed.
+function GameUI:calculateMinimumZoom()
+  local scr_w = self.app.config.width
+  local scr_h = self.app.config.height
+  local map_h = self.app.map.height
+
+  -- Minimum width:  0 = 32 * map_h - (scr_h/factor) - (scr_w/factor) / 2,
+  -- Minimum height: 0 = 16 * map_h - (scr_h/factor) / 2 - (scr_w/factor) / 4
+  -- Both rearrange to:
+  local factor = (scr_w + 2 * scr_h) / (64 * map_h)
+
+  -- Due to precision issues a tolerance is needed otherwise setZoom might fail
+  factor = factor + 0.001
+
+  return factor
+end
+
 function GameUI:setZoom(factor)
   if factor <= 0 then
     return false
@@ -179,6 +200,11 @@ function GameUI:draw(canvas)
 end
 
 function GameUI:onChangeResolution()
+  -- Calculate and enforce minimum zoom
+  local minimum_zoom = self:calculateMinimumZoom()
+  if self.zoom_factor < minimum_zoom then
+    self:setZoom(minimum_zoom)
+  end
   -- Recalculate scrolling bounds
   local scr_w = self.app.config.width
   local scr_h = self.app.config.height

@@ -220,6 +220,12 @@ static int l_mainloop(lua_State *L)
                         lua_pushinteger(dispatcher, 0);
                         nargs = 2;
                         break;
+                    case SDL_WINDOWEVENT_SIZE_CHANGED:
+                        lua_pushliteral(dispatcher, "window_resize");
+                        lua_pushinteger(dispatcher, e.window.data1);
+                        lua_pushinteger(dispatcher, e.window.data2);
+                        nargs = 3;
+                        break;
                     default:
                         nargs = 0;
                         break;

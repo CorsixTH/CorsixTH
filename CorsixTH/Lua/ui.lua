@@ -411,6 +411,9 @@ function UI:onChangeResolution()
     self:setMenuBackground()
   end
   -- Inform windows of resolution change
+  if not self.windows then
+    return
+  end
   for _, window in ipairs(self.windows) do
     window:onChangeResolution()
   end
@@ -430,8 +433,6 @@ function UI:unregisterTextBox(box)
 end
 
 function UI:changeResolution(width, height)
-  local old_width, old_height = self.app.config.width, self.app.config.height
-
   self.app:prepareVideoUpdate()
   local error_message = self.app.video:update(width, height, unpack(self.app.modes))
   self.app:finishVideoUpdate()
@@ -708,6 +709,15 @@ local UpdateCursorPosition = TH.cursor.setPosition
 
 --! Called when the mouse enters or leaves the game window.
 function UI:onWindowActive(gain)
+end
+
+--! Window has been resized by the user
+--!param width (integer) New window width
+--!param height (integer) New window height
+function UI:onWindowResize(width, height)
+  if not self.app.config.fullscreen then
+    self:changeResolution(width, height)
+  end
 end
 
 function UI:onMouseMove(x, y, dx, dy)
