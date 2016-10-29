@@ -1041,7 +1041,7 @@ void THMovie::setRenderer(SDL_Renderer *pRenderer) {}
 bool THMovie::moviesEnabled() const { return false; }
 bool THMovie::load(const char* filepath) { return true; }
 void THMovie::unload() {}
-void THMovie::play(const SDL_Rect &destination_rect, int iChannel)
+void THMovie::play(int iChannel)
 {
     SDL_Event endEvent;
     endEvent.type = SDL_USEREVENT_MOVIE_OVER;
@@ -1053,7 +1053,7 @@ int THMovie::getNativeWidth() const  { return 0; }
 bool THMovie::hasAudioTrack() const  { return false; }
 const char* THMovie::getLastError() const { return nullptr; }
 void THMovie::clearLastError() {}
-void THMovie::refresh() {}
+void THMovie::refresh(const SDL_Rect &destination_rect) {}
 void THMovie::allocatePictureBuffer() {}
 void THMovie::deallocatePictureBuffer() {}
 void THMovie::readStreams() {}
