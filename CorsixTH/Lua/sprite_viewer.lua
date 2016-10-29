@@ -22,9 +22,7 @@ SOFTWARE. --]]
 -- when you don't have a copy of AnimView, or the means to compile it, then a
 -- crude sprite viewer is better than no sprite viewer.
 
-local app = TheApp
-local lfs = require"lfs"
-local gfx = app.gfx
+local gfx = TheApp.gfx
 gfx.cache.tabled = {}
 local font = gfx:loadFont("QData", "Font00V")
 local need_draw = true
@@ -38,7 +36,7 @@ local y_off
 local old_event_handlers
 
 for _, dir in ipairs({"Data", "QData", "DataM", "QDataM"}) do
-  for item in pairs(app.fs:listFiles(dir) or {}) do
+  for item in pairs(TheApp.fs:listFiles(dir) or {}) do
     if item:match"%.TAB$" then
       sprite_table_paths[#sprite_table_paths + 1] = {dir, item:sub(1, -5)}
     end
@@ -53,7 +51,7 @@ local function LoadTable(n, complex)
   is_complex = complex
   local path = sprite_table_paths[n]
   local pal
-  if app.fs:readContents(path[1], path[2] .. ".PAL") then
+  if TheApp.fs:readContents(path[1], path[2] .. ".PAL") then
     pal = gfx:loadPalette(path[1], path[2] .. ".PAL")
   end
   sprite_table = gfx:loadSpriteTable(path[1], path[2], complex, pal)
@@ -82,7 +80,7 @@ local function DoKey(self, rawchar, modifiers, is_repeat)
     sdown = true
     need_draw = true
   elseif key == "q" then
-    app.eventHandlers = old_event_handlers
+    TheApp.eventHandlers = old_event_handlers
     need_draw = false
   end
   return need_draw
@@ -109,7 +107,7 @@ local function Render(canvas)
   font:draw(canvas, msg, 0, y)
   y = y + fonth + sep
   local x = 0
-  local sw, sh = app.config.width, app.config.height
+  local sw, sh = TheApp.config.width, TheApp.config.height
   local tallest = 0
   for i = 0, #sprite_table - 1 do
     local w, h = sprite_table:size(i)
@@ -154,8 +152,8 @@ local function DoTimer(app)
   return need_draw
 end
 
-old_event_handlers = app.eventHandlers
-app.eventHandlers = {
+old_event_handlers = TheApp.eventHandlers
+TheApp.eventHandlers = {
   frame = DoFrame,
   keydown = DoKey,
   keyup = DoKeyUp,
