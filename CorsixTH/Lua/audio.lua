@@ -587,12 +587,6 @@ function Audio:playBackgroundTrack(index)
           error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'" ..
               (e and (" (" .. e .. ")" or "")))
         else
-          if _DECODA then
-            debug.getmetatable(music_data).__tostring = function(ud)
-              return debug.getfenv(ud).tostring
-            end
-            debug.getfenv(music_data).tostring = "Music <".. info.filename .. ">"
-          end
           info.music = music_data
           -- Do we still want it to play?
           if self.load_music then
