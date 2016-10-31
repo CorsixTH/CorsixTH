@@ -180,7 +180,7 @@ function UIPolicy:onMouseUp(code, x, y)
 end
 
 function UIPolicy:panelHit(x, y)
-  for name, panel in pairs(self.sliders) do
+  for _, panel in pairs(self.sliders) do
     if x > panel.x and y > panel.y and x < panel.x + panel.w and y < panel.y + panel.h then
       return panel
     end
