@@ -62,15 +62,15 @@ function UIMessage:UIMessage(ui, x, stop_x, onClose, type, message, owner, timeo
   self.type = type
 
   local types = { emergency = 43, epidemy = 45, strike = 47, personality = 49, information = 51, disease = 53, report = 55 }
-  local type = types[type]
+  local kind = types[type]
 
   self.can_dismiss = self.type ~= "strike" and #self.message.choices == 1
 
-  self.button = self:addPanel(type, 0, 0)
+  self.button = self:addPanel(kind, 0, 0)
     :setTooltip(self.can_dismiss and _S.tooltip.message.button_dismiss or _S.tooltip.message.button) -- FIXME: tooltip doesn't work very well here
-    :makeToggleButton(0, 0, 30, 28, type + 1, self.openMessage, nil, self.dismissMessage)
+    :makeToggleButton(0, 0, 30, 28, kind + 1, self.openMessage, nil, self.dismissMessage)
   -- The emergency has a rotating siren
-  if type == 43 then
+  if kind == 43 then
     self.rotator = {}
     for i = 57, 60 do
       self.rotator[i] = self:addPanel(i, 10, 8)
