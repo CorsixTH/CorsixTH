@@ -28,8 +28,6 @@ class "DirTreeNode" (FileTreeNode)
 ---@type DirTreeNode
 local DirTreeNode = _G["DirTreeNode"]
 
-local pathsep = package.config:sub(1, 1)
-
 function DirTreeNode:DirTreeNode(path)
   self:FileTreeNode(path)
 end
@@ -39,7 +37,7 @@ function DirTreeNode:isValidFile(name)
   if FileTreeNode.isValidFile(self, name) and
       lfs.attributes(self:childPath(name), "mode") == "directory" then
     -- Make sure that we are allowed to read the directory.
-    local status, result = pcall(lfs.dir, self:childPath(name))
+    local status, _ = pcall(lfs.dir, self:childPath(name))
     return status
   end
 end
