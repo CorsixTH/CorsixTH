@@ -30,12 +30,6 @@ local col_bg = {
   blue = 198,
 }
 
-local col_button = {
-  red = 84,
-  green = 200,
-  blue = 84,
-}
-
 local col_textbox = {
   red = 0,
   green = 0,

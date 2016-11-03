@@ -217,12 +217,8 @@ function Machine:createHandymanActions(handyman)
 
   local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
 
-  local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
-    action_use.prolonged_usage = false
-  end
-
   local repair_action = UseObjectAction(self):setProlongedUsage(false)
-      :setLoopCallback(repair_loop_callback):setAfterUse(repair_after_use)
+      :setAfterUse(repair_after_use)
   repair_action.min_length = 20
 
   if handyman_room and handyman_room ~= this_room then
@@ -410,5 +406,6 @@ function Machine:tick()
   return Object.tick(self)
 end
 
--- Dummy callback for savegame compatibility
+-- Dummy callbacks for savegame compatibility
 local callbackNewRoom = --[[persistable:machine_build_callback]] function(room) end
+local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function() end
