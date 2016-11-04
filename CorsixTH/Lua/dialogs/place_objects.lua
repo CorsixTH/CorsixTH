@@ -659,16 +659,16 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         flags = map:getCellFlags(xpos, ypos)
         if not tile.only_side and is_object_allowed then
-          is_object_allowed = is_object_allowed and (world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id) or tile.invisible)
+          is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id) or tile.invisible
         elseif is_object_allowed then
-          is_object_allowed = is_object_allowed and flags[flag] and (player_id == 0 or flags.owner == player_id)
+          is_object_allowed = flags[flag] and (player_id == 0 or flags.owner == player_id)
         end
         -- Check if tile is in the hospital building footprint
         is_object_allowed = is_object_allowed and flags["hospital"]
 
         -- Check 4: Are you placing next to a door?:
         if not(tile.invisible) then
-		  is_object_allowed = is_object_allowed and not(flags["doorNorth"] or flags["doorWest"])
+         is_object_allowed = is_object_allowed and not(flags["doorNorth"] or flags["doorWest"])
         end
         -- Check 5: Object in the way still?:
         is_object_allowed = is_object_allowed and ((flags["thob"] == 0 and flags["buildable"]) or tile.invisible)
