@@ -552,7 +552,7 @@ function Hospital:afterLoad(old, new)
       local build_cost = rooms[room.level_config_id].Cost
       for name, no in pairs(room.objects_needed) do
         -- Add cost for this object.
-        build_cost = build_cost + config[TheApp.objects[name].thob].StartCost * no
+        build_cost = build_cost + cfg_objects[TheApp.objects[name].thob].StartCost * no
       end
       -- Now define the total build cost for the room.
       room.build_cost = build_cost
