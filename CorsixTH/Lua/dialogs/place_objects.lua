@@ -659,7 +659,7 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         flags = map:getCellFlags(xpos, ypos)
         if not tile.only_side and is_object_allowed then
-            is_object_allowed = is_object_allowed and (world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id) or tile.invisible)
+          is_object_allowed = is_object_allowed and (world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id) or tile.invisible)
         elseif is_object_allowed then
           is_object_allowed = is_object_allowed and flags[flag] and (player_id == 0 or flags.owner == player_id)
         end
