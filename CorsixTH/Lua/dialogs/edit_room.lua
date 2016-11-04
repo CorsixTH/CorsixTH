@@ -1105,7 +1105,7 @@ end
 --!param xpos (int) X position of the tile.
 --!param ypos (int) Y position of the tile.
 --!param player_id (int) Player id owning the hospital.
---!param flag_names (array) If set, array with four additional required properties.
+--!param flag_names (array) If set, array with arbitrary additional required properties.
 --!return Whether the tile is considered to be valid.
 local function validDoorTile(xpos, ypos, player_id, flag_names)
   local th = TheApp.map.th
@@ -1113,7 +1113,11 @@ local function validDoorTile(xpos, ypos, player_id, flag_names)
   local tile_flags = th:getCellFlags(xpos, ypos)
   if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
   if not flag_names then return true end
-  return tile_flags[flag_names[1]] and tile_flags[flag_names[2]] and tile_flags[flag_names[3]] and tile_flags[flag_names[4]]
+  local accumulate_flags = true
+  for i,flagtype in ipairs(flag_names) do
+    accumulate_flags = accumulate_flags and tile_flags[flagtype]
+  end
+  return accumulate_flags
 end
 
 function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
