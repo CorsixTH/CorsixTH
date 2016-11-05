@@ -1113,11 +1113,10 @@ local function validDoorTile(xpos, ypos, player_id, flag_names)
   local tile_flags = th:getCellFlags(xpos, ypos)
   if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
   if not flag_names then return true end
-  local accumulate_flags = true
-  for i,flagtype in ipairs(flag_names) do
-    accumulate_flags = accumulate_flags and tile_flags[flagtype]
+  for _,flagtype in ipairs(flag_names) do
+    if not tile_flags[flagtype] then return false end
   end
-  return accumulate_flags
+  return true
 end
 
 function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
