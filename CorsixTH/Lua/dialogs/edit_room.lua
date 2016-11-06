@@ -1124,7 +1124,7 @@ end
 --!param xpos (int) X position of the tile.
 --!param ypos (int) Y position of the tile.
 --!param player_id (int) Player id owning the hospital.
---!param flag_names (array) If set, array with four additional required properties.
+--!param flag_names (array) If set, array with arbitrary additional required properties.
 --!return Whether the tile is considered to be valid.
 local function validDoorTile(xpos, ypos, player_id, flag_names)
   local th = TheApp.map.th
