@@ -587,8 +587,6 @@ function GameUI:onMouseUp(code, x, y)
   -- During vaccination mode you can only interact with
   -- infected patients
   local epidemic = self.hospital.epidemic
-  -- infected patients
-  local epidemic = self.hospital.epidemic
   if epidemic and epidemic.vaccination_mode_active then
     if button == "left" then
       if self.cursor_entity then
