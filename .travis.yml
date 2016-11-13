@@ -19,7 +19,7 @@ before_install:
   - luarocks --local install luafilesystem
   - luarocks --local install luasocket
   # Required for lua unit tests
-  - luarocks --local install luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
+  - luarocks --local install --server=http://luarocks.org luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
   - luarocks --local install busted
   - git clone --depth=1 https://github.com/CorsixTH/deps.git $HOME/deps
   - mkdir libs
