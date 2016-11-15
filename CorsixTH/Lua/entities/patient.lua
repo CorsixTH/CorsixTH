@@ -199,7 +199,7 @@ function Patient:completeDiagnosticStep(room)
     local divisor = math.random(1, 3)
     local attn_detail = room.staff_member.profile.attention_to_detail / divisor
     local skill = room.staff_member.profile.skill / divisor
-    local diagnosis_bonus = (attn_detail + 0.4) *  skill
+    diagnosis_bonus = (attn_detail + 0.4) * skill
   end
   self:modifyDiagnosisProgress(diagnosis_base + (diagnosis_bonus * multiplier))
 end
@@ -483,7 +483,7 @@ function Patient:pee()
       self:finishAction()
     end
     self:setMood("poo", "deactivate")
-    self:changeAttribute("happiness", -0.02)  -- not being able to find a loo and doing it in the corridor will make you sad too
+    self:changeAttribute("happiness", -0.02) -- not being able to find a loo and doing it in the corridor will make you sad too
     if not self.hospital.did_it_on_floor then
       self.hospital.did_it_on_floor = true
       self.world.ui.adviser:say(_A.warnings.people_did_it_on_the_floor)
@@ -631,12 +631,12 @@ function Patient:tickDay()
   -- patient has been in the hospital for over 6 months and is still not well, so will become sad and will either get fed up and leave
   -- or stay in the hope that you will cure them before they die
   -- strange, but in TH happiness does not go down, even when close to death IMO that is wrong as you would be unhappy if you waited too long.
-  -- TODO death animation for slack female is missing its head.  For now the only option is for her to get fed up and leave
+  -- TODO death animation for slack female is missing its head. For now the only option is for her to get fed up and leave
   -- this can be changed when the animation thing is resolved
   -- TODO clean up this block, nonmagical numbers
   if self.attributes["health"] >= 0.18 and self.attributes["health"] < 0.22 then
     self:setMood("sad2", "activate")
-    self:changeAttribute("happiness", -0.0002)   -- waiting too long will make you sad
+    self:changeAttribute("happiness", -0.0002) -- waiting too long will make you sad
     -- There is a 1/3 chance that the patient will get fed up and leave
     -- note, this is potentially run 10 ((0.22-0.18)/0.004) times, hence the 1/30 chance.
     if math.random(1,30) == 1 then
@@ -703,8 +703,8 @@ function Patient:tickDay()
   if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
     --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
-    local initialVomitMult = 0.002   --The initial chance of vomiting.
-    local proximityVomitMult = 1.5  --The multiplier used when in proximity to vomit.
+    local initialVomitMult = 0.002 --The initial chance of vomiting.
+    local proximityVomitMult = 1.5 --The multiplier used when in proximity to vomit.
     local nausea = (1.0 - self.attributes["health"]) * initialVomitMult
     local foundVomit = {}
     local numVomit = 0
@@ -736,7 +736,7 @@ function Patient:tickDay()
       end
     end) -- End of findObjectNear
     -- As we don't yet have rats, ratholes and dead rats the chances of vomitting are slim
-    -- as a temp  fix for this I have added 0.5 to the < nausea equation,
+    -- as a temp fix for this I have added 0.5 to the < nausea equation,
     -- this may want adjusting or removing when the other factors are in the game MarkL
     if self.attributes["health"] <= 0.8 or numVomit > 0 or self.attributes["happiness"] < 0.6 then
       nausea = nausea * ((numVomit+1) * proximityVomitMult)
@@ -763,7 +763,7 @@ function Patient:tickDay()
     self:changeAttribute("happiness", 0.0002)
   end)
   -- sitting makes you happy whilst standing and walking does not
-  if self:goingToUseObject("bench")  then
+  if self:goingToUseObject("bench") then
     self:changeAttribute("happiness", 0.00002)
   else
     self:changeAttribute("happiness", -0.00002)
@@ -852,7 +852,7 @@ function Patient:tickDay()
       end
 
       -- If we are queueing, let the queue handle the situation.
-      for i, current_action in ipairs(self.action_queue) do
+      for _, current_action in ipairs(self.action_queue) do
         if current_action.name == "queue" then
           local callbacks = current_action.queue.callbacks[self]
           if callbacks then
@@ -989,7 +989,7 @@ function Patient:notifyNewObject(id)
   assert(id == "bench", "Can only handle benches at the moment")
   -- Look for a queue action and tell this patient to look for a bench
   -- if currently standing up.
-  for i, action in ipairs(self.action_queue) do
+  for _, action in ipairs(self.action_queue) do
     if action.name == "queue" then
       local callbacks = action.queue.callbacks[self]
       if callbacks then

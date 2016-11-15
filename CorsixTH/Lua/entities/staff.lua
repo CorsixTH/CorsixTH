@@ -573,9 +573,8 @@ function Staff:checkIfNeedRest()
     -- If above the policy threshold, go to the staff room.
     if self.attributes["fatigue"] >= self.hospital.policies["goto_staffroom"] and
         not class.is(self:getRoom(), StaffRoom) then
-      local profile = self.profile
-      if self.waiting_for_staffroom then
       -- The staff will get unhappy if there is no staffroom to rest in.
+      if self.waiting_for_staffroom then
         self:changeAttribute("happiness", -0.001)
       end
       local room = self:getRoom()
@@ -599,7 +598,6 @@ function Staff:checkIfNeedRest()
         return
       end
 
-      local room = self:getRoom()
       if self.humanoid_class ~= "Handyman" and room and room:getPatient() then
         -- If occupied by patient, staff will go to the staffroom after the patient left.
         self.staffroom_needed = true
@@ -952,7 +950,7 @@ function Staff:searchForHandymanTask()
   end
   if assignedTask == false then
     -- Make sure that the handyman isn't meandering already.
-    for i, action in ipairs(self.action_queue) do
+    for _, action in ipairs(self.action_queue) do
       if action.name == "meander" then
         return false
       end
