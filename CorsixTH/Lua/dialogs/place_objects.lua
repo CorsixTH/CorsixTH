@@ -662,6 +662,20 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
         end
 
+        -- Check 4: only one object per tile allowed original TH
+        is_object_allowed = is_object_allowed and map:getCellFlags(xpos, ypos, flags)["thob"] == 0 and (player_id == 0 or flags.owner == player_id)
+        
+        -- Check 5: only placeable if not on another objects passable footprint unless that is the invisible tile of a bench
+        if is_object_allowed and object.id ~= "bench" then
+          for o in pairs(world:findAllObjectsNear(xpos, ypos, 10)) do
+            if o.object_type.id ~= "bench" then
+              for _, xy in ipairs(o:getWalkableTiles()) do
+                if xy[1] == xpos and xy[2] == ypos then is_object_allowed = false end
+              end
+            end
+          end
+        end
+
         -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then
