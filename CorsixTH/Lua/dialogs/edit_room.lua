@@ -1122,10 +1122,10 @@ local function checkDoorWalls(x, y, wall, has_swingdoor)
   -- If it is a swing door there are two more locations to check.
   if has_swingdoor then
     if th:getCell(x - dx, y - dy, wall_num) % 0x100 ~= 0 then
-      invalid_tile = invalid_tile | 2
+      invalid_tile = invalid_tile + 2
     end
     if th:getCell(x + dx, y + dy, wall_num) % 0x100 ~= 0 then
-      invalid_tile = invalid_tile | 8
+      invalid_tile = invalid_tile + 8
     end
   end
   return invalid_tile
@@ -1273,12 +1273,12 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
       if not validDoorTile(x + dx, y + dy, player_id, orig_wall, world) or
           not validDoorTile(x2 + dx, y2 + dy, player_id, orig_wall, world) then
         self.blueprint_door.valid = false
-        invalid_tile = invalid_tile | 8
+        invalid_tile = invalid_tile + 8
       end
       if not validDoorTile(x - dx, y - dy, player_id, orig_wall, world) or
           not validDoorTile(x2 - dx, y2 - dy, player_id, orig_wall, world) then
         self.blueprint_door.valid = false
-        invalid_tile = invalid_tile | 2
+        invalid_tile = invalid_tile + 2
       end
     end
   end
