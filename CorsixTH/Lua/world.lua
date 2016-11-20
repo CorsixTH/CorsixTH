@@ -2697,3 +2697,32 @@ function World:resetSideObjects()
     end
   end
 end
+
+--[[ When placing doors and objects the passable tiles need to be checked for overlapping
+passable tiles. This presents problems with objects like Bench where the passable tile
+is not for exclusive use of the Bench (another object can share that same tile)
+the footprint.shareable differentiates shareable passable tiles, and exclusive use
+passable tiles (the norm for most objects)]]
+--!param x (int) x map tile position
+--!param y (int) y map tile position
+--!param distance (int) searchable distance for nearby objects
+--!return (boolean) indicating if exclusively passable or not
+function World:isTileExclusivelyPassable(x, y, distance)
+  for o in pairs(self:findAllObjectsNear(x, y, distance)) do
+    if o and o.footprint then
+      for _, footprint in pairs(o.footprint) do
+        if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
+          return false
+        end
+      end
+    else
+      -- doors don't have a footprint but objects can't be built blocking them either
+      for _, footprint in pairs(o:getWalkableTiles()) do
+        if footprint[1] == x and footprint[2] == y then
+          return false
+        end
+      end
+    end
+  end
+  return true
+end

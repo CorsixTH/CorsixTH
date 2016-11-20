@@ -293,3 +293,22 @@ function rangeMapLookup(number, buckets)
   end
   assert(false) -- Should never get here.
 end
+
+-- this is a pseudo bitwise OR operation
+-- assumes value2 is always a power of 2 (limits carry errors in the addition)
+-- mimics the logic of hasBit with the addition if bit not set
+--!param value1 (int) value to check set bit of
+--!param value2 (int) power of 2 value - bit enumeration
+--!return (int) value1 and value2 'bitwise' or.
+function bitOr(value1, value2)
+  return value1 % (value2 + value2) >= value2 and value1 or value1 + value2
+end
+
+--! Check bit is set
+--!param value (int) value to check set bit of
+--!param bit (int) 0-base index of bit to check
+--!return (boolean) true if bit is set.
+function hasBit(value, bit)
+  local p = 2 ^ bit
+  return value % (p + p) >= p
+end
