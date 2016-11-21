@@ -155,7 +155,7 @@ local function action_queue_finish_standing(action, humanoid)
   end
   interrupt_head(humanoid, index)
   index = index + 1
-  while true do
+  while index >= 1 do
     local current_action = humanoid.action_queue[index]
     if current_action == action then
       return index - 1
@@ -186,7 +186,7 @@ local function action_queue_leave_bench(action, humanoid)
     end
   end
   index = index + 1
-  while true do
+  while index >= 1 do
     local current_action = humanoid.action_queue[index]
     if current_action == action then
       return index - 1
