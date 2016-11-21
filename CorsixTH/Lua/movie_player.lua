@@ -49,17 +49,15 @@ function MoviePlayer:init()
   self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
-  local num
-  local movie
   local movies = self.app.fs:listFiles("Anims")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
       end
       --advance level movies
-      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
+      local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
         self.advance_movies[tonumber(num, 10)] = movie
       end
@@ -73,7 +71,7 @@ function MoviePlayer:init()
   --find intro
   movies = self.app.fs:listFiles("Intro")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       if movie:upper():match(pathsep .. "INTRO%.SM4$") then
         self.intro_movie = movie
       end
@@ -121,19 +119,18 @@ end
 --! Returns x and y position and width and height for the movie to be displayed
 --! based on the native size of the movie and the current screen dimensions
 function MoviePlayer:calculateSize()
-  local x, y, w, h = 0
-  local screen_w, screen_h = self.app.config.width, self.app.config.height
-
   -- calculate target dimensions
+  local x, y, w, h
+  local screen_w, screen_h = self.app.config.width, self.app.config.height
   local native_w = self.moviePlayer:getNativeWidth()
   local native_h = self.moviePlayer:getNativeHeight()
-  if(native_w ~= 0 and native_h ~= 0) then
+  if native_w ~= 0 and native_h ~= 0 then
     local ar = native_w / native_h
-    if(math.abs((screen_w / screen_h) - ar) < 0.001) then
+    if math.abs((screen_w / screen_h) - ar) < 0.001 then
       x, y = 0, 0
       w, h = screen_w, screen_h
     else
-      if(screen_w > screen_h / native_h * native_w) then
+      if screen_w > screen_h / native_h * native_w then
         w = math.floor(screen_h / native_h * native_w)
         h = screen_h
         x = math.floor((screen_w - w) / 2)

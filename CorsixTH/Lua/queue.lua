@@ -117,7 +117,7 @@ end
 --! Check if the queue has an emergency patient.
 --!return (boolean) Whether an emergency patient was found in the queue.
 function Queue:hasEmergencyPatient()
-  for i, humanoid in ipairs(self) do
+  for _, humanoid in ipairs(self) do
     if humanoid.is_emergency then
       return true
     end
@@ -188,10 +188,10 @@ function Queue:push(humanoid, callbacks_on)
   self.callbacks[humanoid] = callbacks_on
   table.insert(self, index, humanoid)
   for i = index + 1, #self do
-    local humanoid = self[i]
-    local callbacks = self.callbacks[humanoid]
+    local queued_humanoid = self[i]
+    local callbacks = self.callbacks[queued_humanoid]
     if callbacks then
-      callbacks:onChangeQueuePosition(humanoid)
+      callbacks:onChangeQueuePosition(queued_humanoid)
     end
   end
 end
@@ -225,7 +225,7 @@ function Queue:pop()
   end
   self.callbacks[oldfront] = nil
   for _, humanoid in ipairs(self) do
-    local callbacks = self.callbacks[humanoid]
+    callbacks = self.callbacks[humanoid]
     if callbacks then
       callbacks:onChangeQueuePosition(humanoid)
     end
@@ -296,7 +296,7 @@ end
 
 --! Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
-  for i, humanoid in ipairs(self) do
+  for _, humanoid in ipairs(self) do
     -- slight delay so the desk is really destroyed before rerouting
     humanoid:setNextAction(IdleAction():setCount(1))
     -- Don't queue the same action table, but clone it for each patient.
