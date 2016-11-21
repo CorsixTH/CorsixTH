@@ -90,8 +90,15 @@ local function use_staffroom_action_start(action, humanoid)
       action.target_obj.reserved_for = humanoid
     end
   else
-    action.target_obj, action.ox, action.oy, action.target_type = action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type
-    action.next_target_obj, action.next_ox, action.next_oy, action.next_target_type = nil
+    action.target_obj = action.next_target_obj
+    action.ox = action.next_ox
+    action.oy = action.next_oy
+    action.target_type = action.next_target_type
+
+    action.next_target_obj = nil
+    action.next_ox = nil
+    action.next_oy = nil
+    action.next_target_type = nil
   end
 
   -- If no target was found, then walk around for a bit and try again later

@@ -53,7 +53,6 @@ end
 function SlackTongueRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local slicer, pat_x, pat_y = self.world:findObjectNear(patient, "slicer")
-  local orientation = slicer.object_type.orientations[slicer.direction]
   local stf_x, stf_y = slicer:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))

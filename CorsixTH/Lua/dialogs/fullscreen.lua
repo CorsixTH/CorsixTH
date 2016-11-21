@@ -27,7 +27,6 @@ local UIFullscreen = _G["UIFullscreen"]
 function UIFullscreen:UIFullscreen(ui)
   self:Window()
 
-  local app = ui.app
   self.esc_closes = true
   self.ui = ui
   self.modal_class = "fullscreen"
@@ -79,20 +78,20 @@ function UIFullscreen:draw(canvas, x, y)
   local sprites = self.border_sprites
   if sprites then
     local draw = sprites.draw
-    local x = self.x + x
-    local y = self.y + y
+    local scr_x = self.x + x
+    local scr_y = self.y + y
     canvas:nonOverlapping(true)
-    draw(sprites, canvas, 10, x - 9, y - 9)
-    draw(sprites, canvas, 12, x + 600, y - 9)
-    draw(sprites, canvas, 15, x - 9, y + 440)
-    draw(sprites, canvas, 17, x + 600, y + 440)
-    for x = x + 40, x + 560, 40 do
-      draw(sprites, canvas, 11, x, y - 9)
-      draw(sprites, canvas, 16, x, y + 480)
+    draw(sprites, canvas, 10, scr_x - 9, scr_y - 9)
+    draw(sprites, canvas, 12, scr_x + 600, scr_y - 9)
+    draw(sprites, canvas, 15, scr_x - 9, scr_y + 440)
+    draw(sprites, canvas, 17, scr_x + 600, scr_y + 440)
+    for loop_x = scr_x + 40, scr_x + 560, 40 do
+      draw(sprites, canvas, 11, loop_x, scr_y - 9)
+      draw(sprites, canvas, 16, loop_x, scr_y + 480)
     end
-    for y = y + 40, y + 400, 40 do
-      draw(sprites, canvas, 13, x - 9, y)
-      draw(sprites, canvas, 14, x + 640, y)
+    for loop_y = scr_y + 40, scr_y + 400, 40 do
+      draw(sprites, canvas, 13, scr_x - 9, loop_y)
+      draw(sprites, canvas, 14, scr_x + 640, loop_y)
     end
     canvas:nonOverlapping(false)
   end
@@ -102,7 +101,7 @@ end
 function UIFullscreen:onMouseDown(button, x, y)
   local repaint = Window.onMouseDown(self, button, x, y)
   if button == "left" and not repaint and not (x >= 0 and y >= 0 and
-  x < self.width and y < self.height) and self:hitTest(x, y) then
+      x < self.width and y < self.height) and self:hitTest(x, y) then
     return self:beginDrag(x, y)
   end
   return repaint

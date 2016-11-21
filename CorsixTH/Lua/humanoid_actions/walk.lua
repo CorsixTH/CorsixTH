@@ -112,7 +112,6 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
 end)
 
 local flag_list_bottom = 2048
-local flag_early_list = 1024
 local flag_flip_h = 1
 
 local navigateDoor
@@ -375,13 +374,13 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if action.on_next_tile_set == on_next_tile_set then
       action.on_next_tile_set = nil
     end
-    local room = humanoid.world:getRoom(x1, y1)
-    if room then
-      room:onHumanoidLeave(humanoid)
+    local rm = humanoid.world:getRoom(x1, y1)
+    if rm then
+      rm:onHumanoidLeave(humanoid)
     end
-    room = humanoid.world:getRoom(to_x, to_y)
-    if room then
-      room:onHumanoidEnter(humanoid)
+    rm = humanoid.world:getRoom(to_x, to_y)
+    if rm then
+      rm:onHumanoidEnter(humanoid)
     end
   end
   action.on_next_tile_set = on_next_tile_set

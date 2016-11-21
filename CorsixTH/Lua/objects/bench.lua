@@ -157,7 +157,7 @@ end
 function Bench:removeUser(user)
   if user then
     local has_idle = false
-    for i, action in pairs(user.action_queue) do
+    for _, action in pairs(user.action_queue) do
       if action.name == "idle" then
         has_idle = true
       end

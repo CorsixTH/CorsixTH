@@ -53,7 +53,6 @@ end
 function InflationRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local inflator, pat_x, pat_y = self.world:findObjectNear(patient, "inflator")
-  local orientation = inflator.object_type.orientations[inflator.direction]
   local stf_x, stf_y = inflator:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))
