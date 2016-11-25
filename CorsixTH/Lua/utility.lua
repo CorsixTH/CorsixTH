@@ -311,3 +311,14 @@ function rangeMapLookup(number, buckets)
   end
   assert(false) -- Should never get here.
 end
+
+-- work around for bitwise operators
+-- see http://lua-users.org/wiki/BitwiseOperators
+function bit(p)
+  return 2 ^ (p - 1)  -- 1-based indexing
+end
+
+-- Typical call:  if hasbit(x, bit(3)) then ...
+function hasbit(x, p)
+  return x % (p + p) >= p       
+end

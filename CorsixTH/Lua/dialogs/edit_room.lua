@@ -1181,17 +1181,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
     end
     return x, y, x_mod, y_mod, wall
   end
-  
-  local function BitAND(a,b)--Bitwise and
-    local p,c=1,0
-    while a>0 and b>0 do
-      local ra,rb=a%2,b%2
-      if ra+rb>1 then c=c+p end
-      a,b,p=(a-ra)/2,(b-rb)/2,p*2
-    end
-    return c
-  end
-  
+
   local x, y, x_mod, y_mod, wall = doorWallOffsetCalculations(orig_x, orig_y, orig_wall)
   local map = TheApp.map.th
 
@@ -1295,7 +1285,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   if self.room_type.swing_doors then
     for i, animation in ipairs(anim) do
     -- calculation here to flag blocked blueprint tiles
-      animation:setAnimation(self.anims, 126, flags + (BitAND(invalid_tile,2^i)>0 and 1 or 0)*16)
+      animation:setAnimation(self.anims, 126, flags + (hasbit(invalid_tile,bit(i+1)) and 1 or 0)*16)
     end
   else
     anim:setAnimation(self.anims, 126, flags + (invalid_tile ~= 0 and 1 or 0)*16)
