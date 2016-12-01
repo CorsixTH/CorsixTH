@@ -662,6 +662,14 @@ function UIPlaceObjects:setBlueprintCell(x, y)
           is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
         end
 
+        -- ignore placed object tile if it is passthrough
+        if not(tile.passthrough) then
+          -- Check 4: only one object per tile allowed original TH
+          is_object_allowed = is_object_allowed and map:getCellFlags(xpos, ypos, flags)["thob"] == 0 and (player_id == 0 or flags.owner == player_id)
+          -- Check 5: only placeable if not on another objects passable footprint unless that too is a passthrough tile
+          is_object_allowed = is_object_allowed and world:isTileExclusivelyPassable(xpos, ypos, 10)
+        end
+
         -- Having checked if the tile is good set its blueprint appearance flag:
         if is_object_allowed then
           if not tile.invisible then

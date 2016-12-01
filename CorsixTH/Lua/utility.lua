@@ -312,13 +312,10 @@ function rangeMapLookup(number, buckets)
   assert(false) -- Should never get here.
 end
 
--- work around for bitwise operators
--- see http://lua-users.org/wiki/BitwiseOperators
-function bit(p)
-  return 2 ^ (p - 1)  -- 1-based indexing
-end
-
--- Typical call:  if hasbit(x, bit(3)) then ...
-function hasbit(x, p)
-  return x % (p + p) >= p       
+--! Check bit is set
+--! param value - value to check set bit of
+--! param bit - 0-base index of bit to set 0 - being LSB
+function hasBit(value, bit)
+  local p = 2 ^ bit
+  return value % (p + p) >= p       
 end
