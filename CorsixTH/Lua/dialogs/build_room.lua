@@ -44,16 +44,16 @@ function UIBuildRoom:UIBuildRoom(ui)
   self.default_button_sound = "selectx.wav"
 
   local function cat(n)
-    return --[[persistable:build_room_set_category]] function(self)
-      return self:setCategory(n)
+    return --[[persistable:build_room_set_category]] function(window)
+      return window:setCategory(n)
     end
   end
   local room_n = 1
   local function rm()
     local n = room_n
     room_n = room_n + 1
-    return --[[persistable:build_room_build_room]] function(self)
-      return self:buildRoom(n)
+    return --[[persistable:build_room_build_room]] function(window)
+      return window:buildRoom(n)
     end
   end
 

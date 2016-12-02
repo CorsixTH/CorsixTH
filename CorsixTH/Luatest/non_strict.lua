@@ -23,8 +23,6 @@ SOFTWARE. --]]
 -- We still need to mimic the possibility to call the functions available
 -- in strict.lua though.
 
-local rawset, error, tostring
-    = rawset, error, tostring
 local strict_mt = {}
 local allowed_globals = setmetatable({}, {__mode = "k"})
 
@@ -54,7 +52,7 @@ restrict(newindex, index)
 function destrict(fn)
   return function(...)
     local ni, i = strict_mt.__newindex, strict_mt.__index
-    strict_mt.__newindex, strict_mt.__index = nil
+    strict_mt.__newindex, strict_mt.__index = nil, nil
     return restrict(ni, i, fn(...))
   end
 end
