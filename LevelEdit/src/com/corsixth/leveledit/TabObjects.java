@@ -83,6 +83,7 @@ public class TabObjects extends JScrollPane {
         objects.add(new JLabel("Check all"));
         objects.add(checkAllAvailableCB);
         checkAllAvailableCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     objectsAvailCB[8].setSelected(true);
@@ -135,6 +136,7 @@ public class TabObjects extends JScrollPane {
         });
         objects.add(checkAllStartCB);
         checkAllStartCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     objectsStartAvailCB[8].setSelected(true);
@@ -209,6 +211,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[8]);
         objects.next();
         objectsAvailCB[8].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[8] = 1;
@@ -217,6 +220,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[8].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[8] = 1;
@@ -225,11 +229,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[8].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[8].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[8].getText());
@@ -253,6 +259,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[20]);
         objects.next();
         objectsAvailCB[20].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[20] = 1;
@@ -261,6 +268,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[20].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[20] = 1;
@@ -269,11 +277,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[20].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[20].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[20]
@@ -298,6 +308,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[18]);
         objects.next();
         objectsAvailCB[18].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[18] = 1;
@@ -306,6 +317,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[18].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[18] = 1;
@@ -314,11 +326,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[18].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[18].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[18]
@@ -343,6 +357,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[39]);
         objects.next();
         objectsAvailCB[39].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[39] = 1;
@@ -351,6 +366,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[39].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[39] = 1;
@@ -359,11 +375,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[39].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[39].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[39]
@@ -389,6 +407,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[9]);
         objects.add(objectsStrengthTF[9]);
         objectsAvailCB[9].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[9] = 1;
@@ -397,6 +416,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[9].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[9] = 1;
@@ -405,11 +425,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[9].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[9].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[9].getText());
@@ -427,11 +449,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[9].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[9].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[9].getText());
@@ -459,6 +483,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[13]);
         objects.add(objectsStrengthTF[13]);
         objectsAvailCB[13].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[13] = 1;
@@ -467,6 +492,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[13].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[13] = 1;
@@ -475,11 +501,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[13].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[13].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[13]
@@ -498,11 +526,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[13].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[13].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[13]
@@ -531,6 +561,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[26]);
         objects.add(objectsStrengthTF[26]);
         objectsAvailCB[26].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[26] = 1;
@@ -539,6 +570,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[26].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[26] = 1;
@@ -547,11 +579,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[26].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[26].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[26]
@@ -570,11 +604,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[26].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[26].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[26]
@@ -603,6 +639,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[27]);
         objects.add(objectsStrengthTF[27]);
         objectsAvailCB[27].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[27] = 1;
@@ -611,6 +648,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[27].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[27] = 1;
@@ -619,11 +657,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[27].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[27].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[27]
@@ -642,11 +682,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[27].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[27].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[27]
@@ -675,6 +717,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[30]);
         objects.add(objectsStrengthTF[30]);
         objectsAvailCB[30].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[30] = 1;
@@ -683,6 +726,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[30].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[30] = 1;
@@ -691,11 +735,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[30].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[30].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[30]
@@ -714,11 +760,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[30].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[30].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[30]
@@ -747,6 +795,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[24]);
         objects.add(objectsStrengthTF[24]);
         objectsAvailCB[24].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[24] = 1;
@@ -755,6 +804,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[24].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[24] = 1;
@@ -763,11 +813,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[24].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[24].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[24]
@@ -786,11 +838,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[24].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[24].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[24]
@@ -819,6 +873,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[14]);
         objects.add(objectsStrengthTF[14]);
         objectsAvailCB[14].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[14] = 1;
@@ -827,6 +882,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[14].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[14] = 1;
@@ -835,11 +891,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[14].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[14].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[14]
@@ -858,11 +916,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[14].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[14].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[14]
@@ -891,6 +951,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[25]);
         objects.add(objectsStrengthTF[25]);
         objectsAvailCB[25].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[25] = 1;
@@ -899,6 +960,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[25].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[25] = 1;
@@ -907,11 +969,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[25].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[25].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[25]
@@ -930,11 +994,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[25].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[25].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[25]
@@ -963,6 +1029,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[42]);
         objects.add(objectsStrengthTF[42]);
         objectsAvailCB[42].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[42] = 1;
@@ -971,6 +1038,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[42].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[42] = 1;
@@ -979,11 +1047,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[42].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[42].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[42]
@@ -1002,11 +1072,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[42].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[42].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[42]
@@ -1035,6 +1107,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[46]);
         objects.add(objectsStrengthTF[46]);
         objectsAvailCB[46].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[46] = 1;
@@ -1043,6 +1116,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[46].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[46] = 1;
@@ -1051,11 +1125,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[46].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[46].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[46]
@@ -1074,11 +1150,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[46].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[46].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[46]
@@ -1107,6 +1185,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[54]);
         objects.add(objectsStrengthTF[54]);
         objectsAvailCB[54].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[54] = 1;
@@ -1115,6 +1194,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[54].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[54] = 1;
@@ -1123,11 +1203,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[54].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[54].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[54]
@@ -1146,11 +1228,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[54].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[54].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[54]
@@ -1179,6 +1263,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[22]);
         objects.add(objectsStrengthTF[22]);
         objectsAvailCB[22].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[22] = 1;
@@ -1187,6 +1272,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[22].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[22] = 1;
@@ -1195,11 +1281,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[22].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[22].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[22]
@@ -1218,11 +1306,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[22].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[22].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[22]
@@ -1251,6 +1341,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[47]);
         objects.add(objectsStrengthTF[47]);
         objectsAvailCB[47].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[47] = 1;
@@ -1259,6 +1350,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[47].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[47] = 1;
@@ -1267,11 +1359,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[47].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[47].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[47]
@@ -1290,11 +1384,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[47].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[47].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[47]
@@ -1323,6 +1419,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[23]);
         objects.add(objectsStrengthTF[23]);
         objectsAvailCB[23].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[23] = 1;
@@ -1331,6 +1428,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[23].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[23] = 1;
@@ -1339,11 +1437,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[23].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[23].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[23]
@@ -1362,11 +1462,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStrengthTF[23].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsStrengthTF[23].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsStrengthTF[23]
@@ -1396,6 +1498,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[40]);
         objects.next();
         objectsAvailCB[40].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[40] = 1;
@@ -1404,6 +1507,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[40].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[40] = 1;
@@ -1412,11 +1516,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[40].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[40].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[40]
@@ -1441,6 +1547,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsResearchTF[41]);
         objects.next();
         objectsAvailCB[41].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[41] = 1;
@@ -1449,6 +1556,7 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsStartAvailCB[41].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsStartAvail[41] = 1;
@@ -1457,11 +1565,13 @@ public class TabObjects extends JScrollPane {
             }
         });
         objectsResearchTF[41].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = objectsResearchTF[41].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(objectsResearchTF[41]
@@ -1484,6 +1594,7 @@ public class TabObjects extends JScrollPane {
         objects.add(objectsAvailCB[37]);
         objects.next(3);
         objectsAvailCB[37].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[37] = 1;
@@ -1495,6 +1606,7 @@ public class TabObjects extends JScrollPane {
         objects.add(new JLabel("Video Game"));
         objects.add(objectsAvailCB[57]);
         objectsAvailCB[57].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     objectsAvail[57] = 1;

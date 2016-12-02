@@ -87,6 +87,7 @@ public class TabEmergencies extends JScrollPane {
         emergencyMode.setBorder(BorderFactory.createTitledBorder("Mode"));
         emergencyMode.add(randomEmergenciesRB);
         randomEmergenciesRB.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Emergency.emergencyMode = 0;
                 showRandomEmergencies();
@@ -96,6 +97,7 @@ public class TabEmergencies extends JScrollPane {
 
         emergencyMode.add(semiRandomEmergenciesRB);
         semiRandomEmergenciesRB.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Emergency.emergencyMode = 1;
                 showSemiRandomEmergencies();
@@ -105,6 +107,7 @@ public class TabEmergencies extends JScrollPane {
 
         emergencyMode.add(controlledEmergenciesRB);
         controlledEmergenciesRB.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 Emergency.emergencyMode = 2;
                 showControlledEmergencies();
@@ -117,6 +120,7 @@ public class TabEmergencies extends JScrollPane {
         emergencyButtons.add(addEmergencyButt);
         addEmergencyButt.addActionListener(new ActionListener() {
             // on click add button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 addEmergency();
             }
@@ -125,6 +129,7 @@ public class TabEmergencies extends JScrollPane {
         emergencyButtons.add(removeEmergencyButt);
         removeEmergencyButt.addActionListener(new ActionListener() {
             // on click remove button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 removeEmergency();
             }
@@ -135,12 +140,14 @@ public class TabEmergencies extends JScrollPane {
                 .setToolTipText("Days between emergencies = interval +- variance");
         semirandom.add(emergencyIntervalTF);
         emergencyIntervalTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -171,12 +178,14 @@ public class TabEmergencies extends JScrollPane {
                 .setToolTipText("Days between emergencies = interval +- variance");
         semirandom.add(emergencyIntervalVarianceTF);
         emergencyIntervalVarianceTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -330,6 +339,7 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).illnessCombo);
         emergencyList.get(index).illnessCombo
                 .addActionListener(new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
                         JComboBox cb = (JComboBox) e.getSource();
                         for (int i = 2; i < TabDiseases.arDiseases.length; i++) {
@@ -348,12 +358,14 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).startMonthTF);
         emergencyList.get(index).startMonthTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -390,12 +402,14 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).endMonthTF);
         emergencyList.get(index).endMonthTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -432,12 +446,14 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).minPatientsTF);
         emergencyList.get(index).minPatientsTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -474,12 +490,14 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).maxPatientsTF);
         emergencyList.get(index).maxPatientsTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -516,12 +534,14 @@ public class TabEmergencies extends JScrollPane {
                 .add(emergencyList.get(index).percWinTF);
         emergencyList.get(index).percWinTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -553,12 +573,14 @@ public class TabEmergencies extends JScrollPane {
         emergencyList.get(index).emergencyPanel
                 .add(emergencyList.get(index).bonusTF);
         emergencyList.get(index).bonusTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -599,9 +621,8 @@ public class TabEmergencies extends JScrollPane {
 
         // randomize illnesses
         Random rand = new Random();
-        int randomInt = 0;
         // get a random int between 2 and 35, as in: (0 to 33) + 2
-        randomInt = (rand.nextInt(34) + 2);
+        int randomInt = (rand.nextInt(34) + 2);
         emergencyList.get(index).illness = randomInt;
         emergencyList.get(index).illnessCombo
                 .setSelectedItem(TabDiseases.arDiseases[randomInt].name);

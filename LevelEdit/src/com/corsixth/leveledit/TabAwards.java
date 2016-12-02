@@ -80,6 +80,7 @@ public class TabAwards extends JScrollPane {
                 .setToolTipText("Sell more than this number of cans to win the award");
         awards.add(cansOfCokeTF);
         cansOfCokeTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -87,6 +88,7 @@ public class TabAwards extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -107,6 +109,7 @@ public class TabAwards extends JScrollPane {
         cansOfCokeBonusLabel.setToolTipText("Cash bonus for this award");
         awards.add(cansOfCokeBonusTF);
         cansOfCokeBonusTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -114,6 +117,7 @@ public class TabAwards extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -137,6 +141,7 @@ public class TabAwards extends JScrollPane {
                 .setToolTipText("Reputation that is needed through the whole year to win the award");
         awards.add(reputationTF);
         reputationTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -144,6 +149,7 @@ public class TabAwards extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -166,6 +172,7 @@ public class TabAwards extends JScrollPane {
         reputationBonusLabel.setToolTipText("Cash bonus for this award");
         awards.add(reputationBonusTF);
         reputationBonusTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -173,6 +180,7 @@ public class TabAwards extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -196,6 +204,7 @@ public class TabAwards extends JScrollPane {
                 .setToolTipText("Cash bonus for killing no patients the whole year");
         awards.add(noDeathsBonusTF);
         noDeathsBonusTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -203,6 +212,7 @@ public class TabAwards extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())

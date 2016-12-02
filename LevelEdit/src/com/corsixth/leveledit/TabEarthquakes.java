@@ -63,12 +63,14 @@ public class TabEarthquakes extends JScrollPane {
         earthquakes.add(randomQuakesLabel);
         buttonsPanel.add(addButt);
         addButt.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 addQuake();
             }
         });
         buttonsPanel.add(removeButt);
         removeButt.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 removeQuake();
             }
@@ -87,12 +89,14 @@ public class TabEarthquakes extends JScrollPane {
         quakeList.get(index).quakePanel.add(new JLabel("Start month:"));
         quakeList.get(index).quakePanel.add(quakeList.get(index).startMonthTF);
         quakeList.get(index).startMonthTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -120,12 +124,14 @@ public class TabEarthquakes extends JScrollPane {
         quakeList.get(index).quakePanel.add(new JLabel("End month:"));
         quakeList.get(index).quakePanel.add(quakeList.get(index).endMonthTF);
         quakeList.get(index).endMonthTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -153,12 +159,14 @@ public class TabEarthquakes extends JScrollPane {
         quakeList.get(index).quakePanel.add(new JLabel("Severity:"));
         quakeList.get(index).quakePanel.add(quakeList.get(index).severityTF);
         quakeList.get(index).severityTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -209,7 +217,7 @@ public class TabEarthquakes extends JScrollPane {
             earthquakes.updateUI();
             // remove object from the arraylist
             quakeList.remove(lastIndex);
-            if (quakeList.size() == 0)
+            if (quakeList.isEmpty())
                 earthquakes.add(randomQuakesLabel);
         }
 
