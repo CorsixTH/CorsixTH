@@ -177,6 +177,7 @@ public class TabDiseases extends JScrollPane {
         opRB.setActionCommand("op");
         clinicRB.setActionCommand("clinic");
         ActionListener listener = new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 GridPanel newSelection;
                 switch (e.getActionCommand()) {
@@ -215,6 +216,7 @@ public class TabDiseases extends JScrollPane {
         drug.add(new JLabel("Check all"));
         drug.add(checkAllExistsCB1);
         checkAllExistsCB1.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     visualsCB[3].setSelected(true);
@@ -248,6 +250,7 @@ public class TabDiseases extends JScrollPane {
         });
         drug.add(checkAllKnownCB1);
         checkAllKnownCB1.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     knownCB[5].setSelected(true);
@@ -300,6 +303,7 @@ public class TabDiseases extends JScrollPane {
         drug.add(visualsAvailableTF[3]);
         invisibleLabel.setToolTipText("worth $1400");
         visualsCB[3].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[3] = 1;
@@ -308,6 +312,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[5].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[5] = 1;
@@ -316,11 +321,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[5].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[5].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[5]
@@ -338,11 +345,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[3].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[3].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[3]
@@ -367,6 +376,7 @@ public class TabDiseases extends JScrollPane {
         drug.add(visualsAvailableTF[9]);
         discreteItchingLabel.setToolTipText("worth $700");
         visualsCB[9].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[9] = 1;
@@ -375,6 +385,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[11].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[11] = 1;
@@ -383,11 +394,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[11].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[11].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[11]
@@ -405,11 +418,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[9].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[9].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[9]
@@ -434,6 +449,7 @@ public class TabDiseases extends JScrollPane {
         drug.add(visualsAvailableTF[11]);
         sleepingIllnessLabel.setToolTipText("worth $750");
         visualsCB[11].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[11] = 1;
@@ -442,6 +458,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[13].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[13] = 1;
@@ -450,11 +467,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[13].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[13].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[13]
@@ -472,11 +491,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[11].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[11].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[11]
@@ -501,6 +522,7 @@ public class TabDiseases extends JScrollPane {
         drug.add(visualsAvailableTF[13]);
         transparencyLabel.setToolTipText("worth $800");
         visualsCB[13].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[13] = 1;
@@ -509,6 +531,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[15].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[15] = 1;
@@ -517,11 +540,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[15].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[15].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[15]
@@ -539,11 +564,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[13].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[13].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[13]
@@ -568,6 +595,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         uncommonColdLabel.setToolTipText("worth $300");
         nonVisualsCB[0].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[0] = 1;
@@ -576,6 +604,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[16].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[16] = 1;
@@ -584,11 +613,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[16].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[16].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[16]
@@ -613,6 +644,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         brokenWindLabel.setToolTipText("worth $1300");
         nonVisualsCB[1].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[1] = 1;
@@ -621,6 +653,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[17].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[17] = 1;
@@ -629,11 +662,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[17].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[17].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[17]
@@ -658,6 +693,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         corrugatedAnklesLabel.setToolTipText("worth $800");
         nonVisualsCB[8].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[8] = 1;
@@ -666,6 +702,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[24].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[24] = 1;
@@ -674,11 +711,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[24].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[24].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[24]
@@ -703,6 +742,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         chronicNosehairLabel.setToolTipText("worth $800");
         nonVisualsCB[9].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[9] = 1;
@@ -711,6 +751,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[25].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[25] = 1;
@@ -719,11 +760,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[25].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[25].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[25]
@@ -748,6 +791,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         gastricEjectionsLabel.setToolTipText("worth $650");
         nonVisualsCB[12].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[12] = 1;
@@ -756,6 +800,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[28].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[28] = 1;
@@ -764,11 +809,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[28].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[28].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[28]
@@ -793,6 +840,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         theSquitsLabel.setToolTipText("worth $400");
         nonVisualsCB[13].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[13] = 1;
@@ -801,6 +849,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[29].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[29] = 1;
@@ -809,11 +858,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[29].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[29].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[29]
@@ -838,6 +889,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         heapedPilesLabel.setToolTipText("worth $400");
         nonVisualsCB[16].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[16] = 1;
@@ -846,6 +898,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[32].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[32] = 1;
@@ -854,11 +907,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[32].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[32].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[32]
@@ -883,6 +938,7 @@ public class TabDiseases extends JScrollPane {
         drug.next();
         gutRotLabel.setToolTipText("worth $350");
         nonVisualsCB[17].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[17] = 1;
@@ -891,6 +947,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[33].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[33] = 1;
@@ -899,11 +956,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         expertiseResearchTF[33].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = expertiseResearchTF[33].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(expertiseResearchTF[33]
@@ -925,6 +984,7 @@ public class TabDiseases extends JScrollPane {
         psych.add(new JLabel("Check all"));
         psych.add(checkAllExistsCB2);
         checkAllExistsCB2.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     visualsCB[2].setSelected(true);
@@ -945,6 +1005,7 @@ public class TabDiseases extends JScrollPane {
         });
         psych.add(checkAllKnownCB2);
         checkAllKnownCB2.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     knownCB[4].setSelected(true);
@@ -982,6 +1043,7 @@ public class TabDiseases extends JScrollPane {
         psych.add(visualsAvailableTF[2]);
         elvisLabel.setToolTipText("worth $1600");
         visualsCB[2].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[2] = 1;
@@ -990,6 +1052,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[4].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[4] = 1;
@@ -998,11 +1061,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[2].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[2].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[2]
@@ -1026,6 +1091,7 @@ public class TabDiseases extends JScrollPane {
         psych.next();
         multipleTvPersonalitiesLabel.setToolTipText("worth $800");
         nonVisualsCB[6].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[6] = 1;
@@ -1034,6 +1100,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[22].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[22] = 1;
@@ -1048,6 +1115,7 @@ public class TabDiseases extends JScrollPane {
         psych.next();
         infectiousLaughterLabel.setToolTipText("worth $1500");
         nonVisualsCB[7].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[7] = 1;
@@ -1056,6 +1124,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[23].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[23] = 1;
@@ -1070,6 +1139,7 @@ public class TabDiseases extends JScrollPane {
         psych.next();
         thirdDegreeSideburnsLabel.setToolTipText("worth $550");
         nonVisualsCB[10].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[10] = 1;
@@ -1078,6 +1148,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[26].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[26] = 1;
@@ -1092,6 +1163,7 @@ public class TabDiseases extends JScrollPane {
         psych.next();
         fakeBloodLabel.setToolTipText("worth $800");
         nonVisualsCB[11].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[11] = 1;
@@ -1100,6 +1172,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[27].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[27] = 1;
@@ -1114,6 +1187,7 @@ public class TabDiseases extends JScrollPane {
         psych.next();
         sweatyPalmsLabel.setToolTipText("worth $600");
         nonVisualsCB[15].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[15] = 1;
@@ -1122,6 +1196,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[31].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[31] = 1;
@@ -1134,6 +1209,7 @@ public class TabDiseases extends JScrollPane {
         op.add(new JLabel("Check all"));
         op.add(checkAllExistsCB3);
         checkAllExistsCB3.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     visualsCB[12].setSelected(true);
@@ -1158,6 +1234,7 @@ public class TabDiseases extends JScrollPane {
         });
         op.add(checkAllKnownCB3);
         checkAllKnownCB3.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     knownCB[14].setSelected(true);
@@ -1200,6 +1277,7 @@ public class TabDiseases extends JScrollPane {
         op.add(visualsAvailableTF[12]);
         pregnantLabel.setToolTipText("not implemented!");
         visualsCB[12].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[12] = 1;
@@ -1208,6 +1286,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[14].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[14] = 1;
@@ -1216,11 +1295,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[12].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[13].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[12]
@@ -1244,6 +1325,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         spareRibsLabel.setToolTipText("worth $1100");
         nonVisualsCB[2].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[2] = 1;
@@ -1252,6 +1334,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[18].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[18] = 1;
@@ -1266,6 +1349,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         kidneyBeansLabel.setToolTipText("worth $1050");
         nonVisualsCB[3].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[3] = 1;
@@ -1274,6 +1358,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[19].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[19] = 1;
@@ -1288,6 +1373,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         brokenHeartLabel.setToolTipText("worth $1950");
         nonVisualsCB[4].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[4] = 1;
@@ -1296,6 +1382,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[20].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[20] = 1;
@@ -1310,6 +1397,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         rupturedNodulesLabel.setToolTipText("worth $1600");
         nonVisualsCB[5].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[5] = 1;
@@ -1318,6 +1406,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[21].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[21] = 1;
@@ -1332,6 +1421,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         ironLungsLabel.setToolTipText("worth $1700");
         nonVisualsCB[14].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[14] = 1;
@@ -1340,6 +1430,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[30].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[30] = 1;
@@ -1354,6 +1445,7 @@ public class TabDiseases extends JScrollPane {
         op.next();
         golfStonesLabel.setToolTipText("worth $1600");
         nonVisualsCB[18].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[18] = 1;
@@ -1362,6 +1454,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[34].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[34] = 1;
@@ -1375,6 +1468,7 @@ public class TabDiseases extends JScrollPane {
         op.add(knownCB[35]);
         unexpectedSwellingLabel.setToolTipText("worth $500");
         nonVisualsCB[19].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     nonVisuals[19] = 1;
@@ -1383,6 +1477,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[35].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[35] = 1;
@@ -1395,6 +1490,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(new JLabel("Check all"));
         clinic.add(checkAllExistsCB4);
         checkAllExistsCB4.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     visualsCB[0].setSelected(true);
@@ -1419,6 +1515,7 @@ public class TabDiseases extends JScrollPane {
         });
         clinic.add(checkAllKnownCB4);
         checkAllKnownCB4.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     knownCB[2].setSelected(true);
@@ -1460,6 +1557,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[4]);
         radiationLabel.setToolTipText("worth $1800");
         visualsCB[4].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[4] = 1;
@@ -1468,6 +1566,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[6].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[6] = 1;
@@ -1476,11 +1575,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[4].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[4].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[4]
@@ -1504,6 +1605,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[5]);
         slackTongueLabel.setToolTipText("worth $900");
         visualsCB[5].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[5] = 1;
@@ -1512,6 +1614,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[7].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[7] = 1;
@@ -1520,11 +1623,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[5].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[5].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[5]
@@ -1548,6 +1653,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[6]);
         alienLabel.setToolTipText("worth $2000");
         visualsCB[6].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[6] = 1;
@@ -1556,6 +1662,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[8].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[8] = 1;
@@ -1564,11 +1671,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[6].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[6].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[6]
@@ -1592,6 +1701,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[7]);
         brokenBonesLabel.setToolTipText("worth $450");
         visualsCB[7].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[7] = 1;
@@ -1600,6 +1710,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[9].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[9] = 1;
@@ -1608,11 +1719,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[7].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[7].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[7]
@@ -1636,6 +1749,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[8]);
         baldnessLabel.setToolTipText("worth $950");
         visualsCB[8].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[8] = 1;
@@ -1644,6 +1758,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[10].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[10] = 1;
@@ -1652,11 +1767,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[8].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[8].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[8]
@@ -1680,6 +1797,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[10]);
         jellyitusLabel.setToolTipText("worth $1000");
         visualsCB[10].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[10] = 1;
@@ -1688,6 +1806,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[12].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[12] = 1;
@@ -1696,11 +1815,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[10].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[10].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[10]
@@ -1724,6 +1845,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[0]);
         bloatyHeadLabel.setToolTipText("worth $850");
         visualsCB[0].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[0] = 1;
@@ -1732,6 +1854,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[2].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[2] = 1;
@@ -1740,11 +1863,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[0].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[0].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[0]
@@ -1768,6 +1893,7 @@ public class TabDiseases extends JScrollPane {
         clinic.add(visualsAvailableTF[1]);
         hairyitusLabel.setToolTipText("worth $1150");
         visualsCB[1].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     visuals[1] = 1;
@@ -1776,6 +1902,7 @@ public class TabDiseases extends JScrollPane {
             }
         });
         knownCB[3].addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     known[3] = 1;
@@ -1784,11 +1911,13 @@ public class TabDiseases extends JScrollPane {
             }
         });
         visualsAvailableTF[1].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = visualsAvailableTF[1].getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(visualsAvailableTF[1]

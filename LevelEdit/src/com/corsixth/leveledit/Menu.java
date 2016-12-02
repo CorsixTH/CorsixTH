@@ -67,6 +67,7 @@ public class Menu extends JMenuBar {
 
         // new
         fileNew.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 var.setDefault();
                 var.setAllDiseasesAvailable();
@@ -75,6 +76,7 @@ public class Menu extends JMenuBar {
 
         // open
         fileOpen.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
 
                 File file = (fileChooser.open());
@@ -103,6 +105,7 @@ public class Menu extends JMenuBar {
 
         // save as
         fileSaveAs.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 try {
                     File file = (fileChooser.saveAs());
@@ -116,6 +119,7 @@ public class Menu extends JMenuBar {
         });
 
         about.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 JOptionPane aboutPane = new JOptionPane("Version: "
                         + Main.VERSION + "\n\n"

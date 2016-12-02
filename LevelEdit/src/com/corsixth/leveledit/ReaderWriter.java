@@ -425,34 +425,39 @@ public class ReaderWriter {
                 write.write("----------------------- Emergency Control --------------------------");
                 write.newLine();
                 write.newLine();
-                if (Emergency.emergencyMode == 0) {
-                    write.write("#emergency_control[0].Random 0");
-                    write.newLine();
-                } else if (Emergency.emergencyMode == 1) {
-                    write.write("#emergency_control[0].Mean.Variance "
-                            + TabEmergencies.emergencyInterval + " "
-                            + TabEmergencies.emergencyIntervalVariance);
-                    write.newLine();
-                } else if (Emergency.emergencyMode == 2) {
-                    for (int i = 0; i < TabEmergencies.emergencyList.size(); i++) {
-                        write.write("#emergency_control["
-                                + i
-                                + "].StartMonth.EndMonth.Min.Max.Illness.PercWin.Bonus "
-                                + TabEmergencies.emergencyList.get(i).startMonth
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).endMonth
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).minPatients
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).maxPatients
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).illness
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).percWin
-                                + " "
-                                + TabEmergencies.emergencyList.get(i).bonus);
+                switch (Emergency.emergencyMode) {
+                    case 0:
+                        write.write("#emergency_control[0].Random 0");
                         write.newLine();
-                    }
+                        break;
+                    case 1:
+                        write.write("#emergency_control[0].Mean.Variance "
+                                + TabEmergencies.emergencyInterval + " "
+                                + TabEmergencies.emergencyIntervalVariance);
+                        write.newLine();
+                        break;
+                    case 2:
+                        for (int i = 0; i < TabEmergencies.emergencyList.size(); i++) {
+                            write.write("#emergency_control["
+                                    + i
+                                    + "].StartMonth.EndMonth.Min.Max.Illness.PercWin.Bonus "
+                                    + TabEmergencies.emergencyList.get(i).startMonth
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).endMonth
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).minPatients
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).maxPatients
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).illness
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).percWin
+                                    + " "
+                                    + TabEmergencies.emergencyList.get(i).bonus);
+                            write.newLine();
+                        }   break;
+                    default:
+                        break;
                 }
                 write.newLine();
                 write.newLine();
@@ -625,7 +630,7 @@ public class ReaderWriter {
             // we check the position of each parameter, so we know which value
             // belongs to which parameter.
             if ((line.split("[\\.\\s+]")[i]).matches(parameter))
-                if (variable != "interest") {
+                if (!"interest".equals(variable)) {
 
                     // to get only the actual value, split along "\\s+"
                     // whitespaces.
@@ -682,7 +687,7 @@ public class ReaderWriter {
             for (int i = 1; i < (parameterCount); i++) {
                 // gbv.SalaryAdd[] has its parameter (SalaryAdd) before the
                 // brackets
-                if (parameter == "SalaryAdd") {
+                if ("SalaryAdd".equals(parameter)) {
                     if ((line.split("[\\.\\s+]")[i]).matches(parameter
                             + "\\[\\d\\]")) {
                         // split the line to get the value inside [ ] (the

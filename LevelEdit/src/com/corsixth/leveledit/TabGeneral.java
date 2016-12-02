@@ -128,10 +128,12 @@ public class TabGeneral extends JScrollPane {
         // leaves the textfield,
         // perform an action as specified in the TabItem class.
         nameTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 name = nameTF.getText();
             }
@@ -143,10 +145,12 @@ public class TabGeneral extends JScrollPane {
                 .setToolTipText("Must be a .map file or one of the original levels (Level.L1 - Level.L44). "
                         + "If a custom map is used, it must be in the levels directory of CorsixTH.");
         mapFileTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 String input = mapFileTF.getText();
                 // if the input is not a .map file or one of the original
@@ -171,12 +175,14 @@ public class TabGeneral extends JScrollPane {
         // the document filter restricts newline characters.
         ((AbstractDocument) briefingTA.getDocument())
                 .setDocumentFilter(new DocumentFilter() {
+                    @Override
                     public void insertString(DocumentFilter.FilterBypass fb,
                             int offset, String text, AttributeSet attr)
                             throws BadLocationException {
                         fb.insertString(offset, text.replaceAll("\n", ""), attr);
                     }
 
+                    @Override
                     public void replace(DocumentFilter.FilterBypass fb,
                             int offset, int length, String text,
                             AttributeSet attr) throws BadLocationException {
@@ -185,9 +191,11 @@ public class TabGeneral extends JScrollPane {
                     }
                 });
         briefingTA.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 briefing = briefingTA.getText();
             }
@@ -197,11 +205,13 @@ public class TabGeneral extends JScrollPane {
         general.add(startCashTF);
         startCashLabel.setToolTipText("Cash at the start of the level");
         startCashTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = startCashTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(startCashTF.getText());
@@ -217,11 +227,13 @@ public class TabGeneral extends JScrollPane {
         general.add(interestTF);
         interestRateLabel.setToolTipText("Interest payment per year");
         interestTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = interestTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     String inputString = interestTF.getText().replaceAll(",",
@@ -248,11 +260,13 @@ public class TabGeneral extends JScrollPane {
         drugStartRatingLabel
                 .setToolTipText("Drug effectiveness in % to start with");
         drugStartRatingTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = drugStartRatingTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(drugStartRatingTF.getText());
@@ -279,11 +293,13 @@ public class TabGeneral extends JScrollPane {
                 .setToolTipText("When a drug is improved by research, "
                         + "increase its effectiveness by this amount");
         drugImproveRateTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = drugImproveRateTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(drugImproveRateTF.getText());
@@ -309,11 +325,13 @@ public class TabGeneral extends JScrollPane {
         drugStartCostLabel
                 .setToolTipText("How much it costs each time a drug is used");
         drugStartCostTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = drugStartCostTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(drugStartCostTF.getText());
@@ -341,11 +359,13 @@ public class TabGeneral extends JScrollPane {
         drugMinCostLabel
                 .setToolTipText("The lowest drug cost you can get by researching");
         drugMinCostTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = drugMinCostTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(drugMinCostTF.getText());
@@ -370,11 +390,13 @@ public class TabGeneral extends JScrollPane {
         landCostPerTileLabel
                 .setToolTipText("Cost for purchasing a single square tile of land");
         landCostPerTileTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = landCostPerTileTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(landCostPerTileTF.getText());
@@ -400,11 +422,13 @@ public class TabGeneral extends JScrollPane {
         autopsyResearchPercentLabel
                 .setToolTipText("% of research completed for an autopsy");
         autopsyResearchPercentTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = autopsyResearchPercentTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(autopsyResearchPercentTF
@@ -432,11 +456,13 @@ public class TabGeneral extends JScrollPane {
         autopsyRepHitPercentLabel
                 .setToolTipText("% reputation hit for discovered autopsy");
         autopsyRepHitPercentTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = autopsyRepHitPercentTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(autopsyRepHitPercentTF
@@ -464,11 +490,13 @@ public class TabGeneral extends JScrollPane {
         researchUpgradeCostLabel
                 .setToolTipText("How many percent of the original research points of a machine are required to improve it.");
         researchUpgradeCostTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = researchUpgradeCostTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(researchUpgradeCostTF
@@ -496,11 +524,13 @@ public class TabGeneral extends JScrollPane {
         researchUpgradeIncrementCostLabel
                 .setToolTipText("How many additional percentage points are added to the above value for each upgrade.");
         researchUpgradeIncrementCostTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = researchUpgradeIncrementCostTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(researchUpgradeIncrementCostTF
@@ -529,11 +559,13 @@ public class TabGeneral extends JScrollPane {
         strengthIncrementLabel
                 .setToolTipText("Increase object strength by this amount when researching");
         strengthIncrementTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = strengthIncrementTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(strengthIncrementTF.getText());
@@ -560,11 +592,13 @@ public class TabGeneral extends JScrollPane {
         maxStrengthLabel
                 .setToolTipText("Maximum strength value an object can be improved to (by research)");
         maxStrengthTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 ((JTextField) e.getComponent()).selectAll();
                 Gui.tempValue = maxStrengthTF.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(maxStrengthTF.getText());
