@@ -1,7 +1,7 @@
 ---
 -- This script is responsible for starting a DBGp client for CorsixTH's
 -- Lua scripts and then connecting this to a running DBGp server.
--- 
+--
 -- It does this in the function it returns.
 ---
 local function run()

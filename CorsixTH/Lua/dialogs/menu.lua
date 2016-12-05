@@ -132,7 +132,7 @@ end
 --!param menu Menu to add.
 function UIMenuBar:addMenu(title, menu)
   assign_menu_levels(menu, 1)
-  local menu = {
+  local menu_item = {
     title = title,
     menu = menu,
     x = 0,
@@ -140,10 +140,10 @@ function UIMenuBar:addMenu(title, menu)
     height = 16,
   }
   if self.menus[1] then
-    menu.x = self.menus[#self.menus].x + self.menus[#self.menus].width
+    menu_item.x = self.menus[#self.menus].x + self.menus[#self.menus].width
   end
-  menu.width = self.white_font:sizeOf(title) + 32
-  self.menus[#self.menus + 1] = menu
+  menu_item.width = self.white_font:sizeOf(title) + 32
+  self.menus[#self.menus + 1] = menu_item
 end
 
 function UIMenuBar:draw(canvas)
@@ -195,8 +195,8 @@ function UIMenuBar:drawMenu(menu, canvas)
   canvas:nonOverlapping(false)
   local btmy = y + h - 6
   panel_sprites_draw(panel_sprites, canvas, 3, x + w - 10, y)
-  for y = y + 6, y + h - 6, 4 do
-    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, y)
+  for ypos = y + 6, y + h - 6, 4 do
+    panel_sprites_draw(panel_sprites, canvas, 6, x + w - 10, ypos)
   end
   panel_sprites_draw(panel_sprites, canvas, 9, x + w - 10, btmy)
 
@@ -580,11 +580,11 @@ function UIMenuBar:makeGameMenu(app)
     end
 
     local function appendVolume(setting)
-      local menu = UIMenu() -- The three Volume menus
+      local volume_menu = UIMenu() -- The three Volume menus
       for level = 10, 100, 10 do
-        menu:appendCheckItem(_S.menu_options_volume[level],  vol(level / 100, setting))
+        volume_menu:appendCheckItem(_S.menu_options_volume[level], vol(level / 100, setting))
       end
-      return menu
+      return volume_menu
     end
 
   options:appendCheckItem(_S.menu_options.sound,
@@ -610,10 +610,6 @@ function UIMenuBar:makeGameMenu(app)
       return app.config.play_announcements
     end)
 
-  local function musicStatus(item)
-    return not not app.audio.background_music and not app.audio.background_paused
-  end
-
  options:appendCheckItem(_S.menu_options.music,
     app.config.play_music,
     function(item)
@@ -626,7 +622,7 @@ function UIMenuBar:makeGameMenu(app)
       return app.config.play_music
     end)
 
-    options
+  options
     :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
     :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
     :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
@@ -732,7 +728,7 @@ function UIMenuBar:makeGameMenu(app)
   end
   local function overlay(...)
     local args = {n = select('#', ...), ...}
-    return function(item, menu)
+    return function(item, m)
       if args.n > 0 then
         app.map:loadDebugText(unpack(args, 1, args.n))
       else
