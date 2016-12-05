@@ -314,6 +314,7 @@ function Graphics:hasLanguageFont(font)
   end
 end
 
+--! Font proxy meta table wrapping the C++ class.
 local font_proxy_mt = {
   __index = {
     sizeOf = function(self, ...)
