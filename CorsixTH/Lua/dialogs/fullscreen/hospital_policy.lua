@@ -62,9 +62,16 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   end
 
   -- Buttons
-  self:addPanel(0, 607, 447):makeButton(0, 0, 26, 26, 6, self.close):setTooltip(_S.tooltip.policy.close)
-  self.allow_button = self:addPanel(0, 348, 379):makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow"):setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
-  self.prohibit_button = self:addPanel(0, 395, 379):makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit"):setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
+  self:addPanel(0, 607, 447):makeButton(0, 0, 26, 26, 6, self.close)
+      :setTooltip(_S.tooltip.policy.close)
+
+  self.allow_button = self:addPanel(0, 348, 379)
+      :makeToggleButton(0, 0, 48, 17, 4, allowStaff, "Allow")
+      :setTooltip(_S.tooltip.policy.staff_leave) -- Allow staff to move
+
+  self.prohibit_button = self:addPanel(0, 395, 379)
+      :makeToggleButton(0, 0, 48, 17, 5, allowStaff, "Prohibit")
+      :setTooltip(_S.tooltip.policy.staff_stay) -- Prohibit staff to move
 
   if self.hospital.policies["staff_allowed_to_move"] then
     self.allow_button:toggle()
@@ -73,10 +80,10 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   end
 
   -- Slider positions
-  local guess = 129 + math.floor(hosp.policies["guess_cure"]*299)
-  local home = 129 + math.floor(hosp.policies["send_home"]*299)
-  local stop = 124 + math.floor((hosp.policies["stop_procedure"] - 1)*299)
-  local staffroom = 149 + math.floor(hosp.policies["goto_staffroom"]*250)
+  local guess     = 129 + math.floor(hosp.policies["guess_cure"] * 299)
+  local home      = 129 + math.floor(hosp.policies["send_home"] * 299)
+  local stop      = 124 + math.floor((hosp.policies["stop_procedure"] - 1) * 299)
+  local staffroom = 149 + math.floor(hosp.policies["goto_staffroom"] * 250)
 
   -- Sliders
   self.sliders = {}
@@ -84,9 +91,9 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["send_home"] = self:addPanel(1, home, 135, 82, 28)
   self.sliders["stop_procedure"] = self:addPanel(3, stop, 210, 92, 28)
   self.sliders["goto_staffroom"] = self:addPanel(3, staffroom, 285, 92, 28)
+
   self.sliders["guess_cure"].min_x = home
-  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set when
-  -- windows is closed.
+  self.sliders["guess_cure"].total_min_x = 129 -- Needed to get the correct value set when windows is closed.
   self.sliders["guess_cure"].max_x = 428
   self.sliders["send_home"].min_x = 129
   self.sliders["send_home"].max_x = guess
@@ -96,6 +103,13 @@ function UIPolicy:UIPolicy(ui, disease_selection)
   self.sliders["stop_procedure"].addition = true -- This value goes from 1 to 2.
   self.sliders["goto_staffroom"].min_x = 149
   self.sliders["goto_staffroom"].max_x = 399
+
+  -- Z order of the sliders.
+  -- The small 'send_home' slider must be tested first in 'self:panelHit',
+  -- to ensure it can always be moved, even if the big 'guess_cure' is at the
+  -- same position.
+  self.sliders_z = {self.sliders["send_home"], self.sliders["guess_cure"],
+      self.sliders["stop_procedure"], self.sliders["goto_staffroom"]}
 
   -- Tooltips for slider bars
   self:makeTooltip(_S.tooltip.policy.diag_procedure,   161, 119, 479, 174)
@@ -112,13 +126,20 @@ function UIPolicy:draw(canvas, x, y)
   local label = self.label_font
 
   -- Labels on the panels
-  local added_x, added_y = self.sliders["send_home"].x, self.sliders["send_home"].y
+  local added_x = self.sliders["send_home"].x
+  local added_y = self.sliders["send_home"].y
   label:draw(canvas, _S.policy.sliders.send_home, x + added_x, y + added_y + 2, 82, 0)
-  added_x, added_y = self.sliders["guess_cure"].x, self.sliders["guess_cure"].y
+
+  added_x = self.sliders["guess_cure"].x
+  added_y = self.sliders["guess_cure"].y
   label:draw(canvas, _S.policy.sliders.guess, x + added_x, y + added_y + 2, 82, 0)
-  added_x, added_y = self.sliders["stop_procedure"].x, self.sliders["stop_procedure"].y
+
+  added_x = self.sliders["stop_procedure"].x
+  added_y = self.sliders["stop_procedure"].y
   label:draw(canvas, _S.policy.sliders.stop, x + added_x, y + added_y + 2, 92, 0)
-  added_x, added_y = self.sliders["goto_staffroom"].x, self.sliders["goto_staffroom"].y
+
+  added_x = self.sliders["goto_staffroom"].x
+  added_y = self.sliders["goto_staffroom"].y
   label:draw(canvas, _S.policy.sliders.staff_room, x + added_x, y + added_y + 2, 92, 0)
 
   -- All other text
@@ -127,7 +148,6 @@ function UIPolicy:draw(canvas, x, y)
   text:draw(canvas, _S.policy.diag_termination,  x + 161, y + 181)
   text:draw(canvas, _S.policy.staff_rest,        x + 161, y + 262)
   text:draw(canvas, _S.policy.staff_leave_rooms, x + 161, y + 374)
-
 end
 
 function UIPolicy:onMouseMove(x, y, dx, dy)
@@ -179,15 +199,22 @@ function UIPolicy:onMouseUp(code, x, y)
   return UIFullscreen.onMouseUp(self, code, x, y)
 end
 
+--! Detect which slider is clicked by the mouse.
+--!param x (int) X position of the mouse.
+--!param y (int) Y position of the mouse.
+--!return Slider that was detected at the given position, or nil
 function UIPolicy:panelHit(x, y)
-  for _, panel in pairs(self.sliders) do
+  for _, panel in ipairs(self.sliders_z) do
     if x > panel.x and y > panel.y and x < panel.x + panel.w and y < panel.y + panel.h then
       return panel
     end
   end
+  return nil
 end
 
+--! Close the window.
 function UIPolicy:close()
+  -- Save new slider positions in the hospital policies again for the next use.
   for key, s in pairs(self.sliders or {}) do
     local divider = (s.total_max_x or s.max_x) - (s.total_min_x or s.min_x)
     local number = (s.addition and 1 or 0)
@@ -197,3 +224,11 @@ function UIPolicy:close()
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
 end
 
+function UIPolicy:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
+
+  if old < 116 then -- Ensure panelHit tests the sliders in the right order.
+    self.sliders_z = {self.sliders["send_home"], self.sliders["guess_cure"],
+        self.sliders["stop_procedure"], self.sliders["goto_staffroom"]}
+  end
+end
