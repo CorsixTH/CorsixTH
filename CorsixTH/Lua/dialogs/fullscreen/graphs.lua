@@ -95,6 +95,7 @@ local TOP_Y = 85 -- Top of the graph area
 local BOTTOM_Y = 353 -- Bottom of the graph area
 local RIGHT_X = 346 -- Right side of the graph area
 local VERT_DX = 25 -- Spacing between the vertical lines in the graph
+local VERT_COUNT = 12 -- Number of vertical lines in the graph
 local GRAPH_HEIGHT = BOTTOM_Y - TOP_Y
 
 --! Compute the vertical position of a value in the graph given the line extremes
@@ -110,7 +111,38 @@ local function computeVerticalValuePosition(graph_line, value)
   return BOTTOM_Y - math.floor(((value - graph_line.minimum) / range) * GRAPH_HEIGHT)
 end
 
+--! Convert graph scale to a stepsize in months.
+--!param graph_scale (int, 1 to 3) Graph scale to display.
+--!return Number of months to jump between statistics values in the hospital statistics data.
+local function getStatisticsStepsize(graph_scale)
+  local stepsize = 4 * 12 -- Four years
+  if graph_scale == 2 then
+    stepsize = 12 -- One year
+  elseif graph_scale == 3 then
+    stepsize = 1 -- A month
+  end
+  return stepsize
+end
+
+--! Get the statistics from the hospital that should be displayed.
+--! Selection starts at the last (=newest) entry, and goes back in time.
+--!return The values of all statistics to plot in the graph display.
+function UIGraphs:getHospitalStatistics()
+  local statistics = self.hospital.statistics
+
+  local values = {}
+  local i = #statistics -- Picking hospital statistics from right to left (recent to old).
+  local stats_stepsize = getStatisticsStepsize(self.graph_scale)
+  while #values < VERT_COUNT and i >= 1 do
+    values[#values + 1] = statistics[i]
+    i = i - stats_stepsize
+  end
+  return values
+end
+
 function UIGraphs:updateLines()
+  local values = self:getHospitalStatistics()
+  self.values = values
 
   local statistics = self.hospital.statistics
   -- Make one line for each graph
@@ -123,22 +155,6 @@ function UIGraphs:updateLines()
     lines[stat] = {line = line, maximum = 0, minimum = 0}
   end
   self.lines = lines
-
-  -- Pick the relevant values starting from the end of the statistics table
-  local values = {}
-  local decrements = -4 * 12 -- Four years
-  if self.graph_scale == 2 then
-    decrements = -12 -- One year
-  elseif self.graph_scale == 3 then
-    decrements = -1 -- A month
-  end
-  for i = #statistics, #statistics + decrements*11, decrements do
-    if i < 1 then
-      break
-    end
-    values[#values + 1] = statistics[i]
-  end
-  self.values = values
 
   -- Decide maximum and minimum for normalisation of each line
   for _, part in ipairs(values) do
@@ -236,15 +252,17 @@ function UIGraphs:draw(canvas, x, y)
   end
 
 
-  local number = math.floor(#self.hospital.statistics / 12)
 
-  local decrements = -4 -- Four years
-  if self.graph_scale == 2 then
-    decrements = -1 -- One year
-  elseif self.graph_scale == 3 then
-    decrements = -1 -- A month
-    number = #self.hospital.statistics - number * 12
+  local decrements, number
+  local stats_stepsize = getStatisticsStepsize(self.graph_scale)
+  if stats_stepsize >= 12 then
+    decrements = -math.floor(stats_stepsize / 12)
+    number = math.floor(#self.hospital.statistics / 12)
+  else
+    decrements = -stats_stepsize
+    number = #self.hospital.statistics - math.floor(#self.hospital.statistics / 12) * 12
   end
+
   local no = 1
 
   -- Draw numbers (or month names) below the graph
