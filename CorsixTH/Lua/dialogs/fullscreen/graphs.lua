@@ -91,6 +91,23 @@ function UIGraphs:UIGraphs(ui)
   self:updateLines()
 end
 
+local TOP_Y = 85 -- Top of the graph area
+local BOTTOM_Y = 353 -- Bottom of the graph area
+local GRAPH_HEIGHT = BOTTOM_Y - TOP_Y
+
+--! Compute the vertical position of a value in the graph given the line extremes
+--!param graph_line (table) Meta data of the line, including extreme values.
+--!param value (number) Value to position vertically in the graph.
+--!return Y position in the graph of the value.
+local function computeVerticalValuePosition(graph_line, value)
+  -- 0 is always included in the range.
+  assert(graph_line.maximum >= 0 and graph_line.minimum <= 0)
+  local range = graph_line.maximum - graph_line.minimum
+  if range == 0 then return BOTTOM_Y end
+
+  return BOTTOM_Y - math.floor(((value - graph_line.minimum) / range) * GRAPH_HEIGHT)
+end
+
 function UIGraphs:updateLines()
 
   local statistics = self.hospital.statistics
@@ -136,7 +153,6 @@ function UIGraphs:updateLines()
   end
 
   -- Start from the right part of the graph window
-  local top_y = 85
   local bottom_y = 353
   local first_x = 346
   local dx = -25
@@ -145,13 +161,9 @@ function UIGraphs:updateLines()
   -- First start at the correct place
   local part = values[1]
   for stat, value in pairs(part) do
-    -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
-    local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-    local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
-    -- Save the starting point for text drawing purposes.
-    local start = math.floor(top_y + (bottom_y - top_y) - normalized_value + zero_point)
-    text[#text + 1] = {stat = stat, start_y = start, value = value}
-    lines[stat].line:moveTo(first_x, start)
+    local ypos = computeVerticalValuePosition(lines[stat], value)
+    text[#text + 1] = {stat = stat, start_y = ypos, value = value}
+    lines[stat].line:moveTo(first_x, ypos)
   end
 
   -- Sort the y positions where to put text to draw the top text first.
@@ -166,10 +178,8 @@ function UIGraphs:updateLines()
   -- Then add all the nodes available for each graph
   for _, parts in ipairs(values) do
     for stat, value in pairs(parts) do
-      -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
-      local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-      local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
-      lines[stat].line:lineTo(first_x, top_y + (bottom_y - top_y) - normalized_value + zero_point)
+      local ypos = computeVerticalValuePosition(lines[stat], value)
+      lines[stat].line:lineTo(first_x, ypos)
     end
     -- Also add a small line going from the number of month name to the actual graph.
     local line = TH.line()
