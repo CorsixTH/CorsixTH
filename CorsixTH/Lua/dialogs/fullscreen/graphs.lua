@@ -93,6 +93,8 @@ end
 
 local TOP_Y = 85 -- Top of the graph area
 local BOTTOM_Y = 353 -- Bottom of the graph area
+local RIGHT_X = 346 -- Right side of the graph area
+local VERT_DX = 25 -- Spacing between the vertical lines in the graph
 local GRAPH_HEIGHT = BOTTOM_Y - TOP_Y
 
 --! Compute the vertical position of a value in the graph given the line extremes
@@ -153,17 +155,24 @@ function UIGraphs:updateLines()
   end
 
   -- Start from the right part of the graph window
-  local bottom_y = 353
-  local first_x = 346
-  local dx = -25
-  local text = {}
+  local first_x = RIGHT_X
+  for stat, value in pairs(values[1]) do
+    local ypos = computeVerticalValuePosition(lines[stat], value)
+    lines[stat].line:moveTo(first_x, ypos)
+  end
+  -- Then add all the nodes available for each graph
+  for _, parts in ipairs(values) do
+    for stat, value in pairs(parts) do
+      local ypos = computeVerticalValuePosition(lines[stat], value)
+      lines[stat].line:lineTo(first_x, ypos)
+    end
+    first_x = first_x - VERT_DX
+  end
 
-  -- First start at the correct place
-  local part = values[1]
-  for stat, value in pairs(part) do
+  local text = {}
+  for stat, value in pairs(values[1]) do
     local ypos = computeVerticalValuePosition(lines[stat], value)
     text[#text + 1] = {stat = stat, start_y = ypos, value = value}
-    lines[stat].line:moveTo(first_x, ypos)
   end
 
   -- Sort the y positions where to put text to draw the top text first.
@@ -176,23 +185,17 @@ function UIGraphs:updateLines()
 
   local aux_lines = {}
   -- Then add all the nodes available for each graph
+  first_x = RIGHT_X
   for _, parts in ipairs(values) do
-    for stat, value in pairs(parts) do
-      local ypos = computeVerticalValuePosition(lines[stat], value)
-      lines[stat].line:lineTo(first_x, ypos)
-    end
     -- Also add a small line going from the number of month name to the actual graph.
     local line = TH.line()
     line:setWidth(1)
-    --local hue = colours[stat]
-    --line:setColour(hue[1], hue[2], hue[3], 255)
-    line:moveTo(first_x, bottom_y + 2)
-    line:lineTo(first_x, bottom_y + 8)
+    line:moveTo(first_x, BOTTOM_Y + 2)
+    line:lineTo(first_x, BOTTOM_Y + 8)
     aux_lines[#aux_lines + 1] = line
-    first_x = first_x + dx
+    first_x = first_x - VERT_DX
   end
   self.aux_lines = aux_lines
-
 end
 
 function UIGraphs:draw(canvas, x, y)
@@ -216,7 +219,7 @@ function UIGraphs:draw(canvas, x, y)
     end
   end
 
-  local first_x = 334
+  local first_x = RIGHT_X - 12
 
   -- Draw strings showing what values each entry has at the moment just to the right of the graph.
   -- TODO: These should be coloured according to the colour of the corresponding line.
@@ -233,7 +236,6 @@ function UIGraphs:draw(canvas, x, y)
   end
 
 
-  local dx = -25
   local number = math.floor(#self.hospital.statistics / 12)
 
   local decrements = -4 -- Four years
@@ -248,7 +250,7 @@ function UIGraphs:draw(canvas, x, y)
   -- Draw numbers (or month names) below the graph
   for _, _ in ipairs(self.values) do
     self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")
-    first_x = first_x + dx
+    first_x = first_x - VERT_DX
     number = number + decrements
     -- And the small black line
     self.aux_lines[no]:draw(canvas, x, y)
