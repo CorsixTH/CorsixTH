@@ -55,8 +55,7 @@ function UIGraphs:UIGraphs(ui)
     return
   end
 
-  local hosp = ui.hospital
-  self.hospital = hosp
+  self.hospital = ui.hospital
 
   -- Buttons
   self:addPanel(0, 63, 384):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.graphs.close)
@@ -141,53 +140,56 @@ function UIGraphs:getHospitalStatistics()
 end
 
 function UIGraphs:updateLines()
-  local values = self:getHospitalStatistics()
-  self.values = values
+  self.values = self:getHospitalStatistics()
 
-  local statistics = self.hospital.statistics
-  -- Make one line for each graph
-  local lines = {}
-  for stat, _ in pairs(statistics[1]) do
-    local line = TH.line()
-    line:setWidth(2)
-    local hue = colours[stat]
-    line:setColour(hue[1], hue[2], hue[3], 255)
-    lines[stat] = {line = line, maximum = 0, minimum = 0}
+  -- Construct meta data about each graph line.
+  local graph_datas = {} -- Table ordered by statistics name.
+  self.graph_datas = graph_datas
+  for stat, _ in pairs(self.values[1]) do
+    graph_datas[stat] = {line = nil, maximum = 0, minimum = 0}
   end
-  self.lines = lines
 
-  -- Decide maximum and minimum for normalisation of each line
-  for _, part in ipairs(values) do
-    if type(part) == "table" then
-      for stat, value in pairs(part) do
-        if value < lines[stat].minimum then
-          lines[stat].minimum = value
-        end
-        if value > lines[stat].maximum then
-          lines[stat].maximum = value
-        end
+  -- Decide maximum and minimum for normalisation of each line.
+  -- 0 is always included in the computed range.
+  for _, stats in ipairs(self.values) do
+    for stat, value in pairs(stats) do
+      if value < graph_datas[stat].minimum then
+        graph_datas[stat].minimum = value
+      end
+      if value > graph_datas[stat].maximum then
+        graph_datas[stat].maximum = value
       end
     end
   end
 
-  -- Start from the right part of the graph window
-  local first_x = RIGHT_X
-  for stat, value in pairs(values[1]) do
-    local ypos = computeVerticalValuePosition(lines[stat], value)
-    lines[stat].line:moveTo(first_x, ypos)
+  -- Add the line objects of the graph.
+  for stat, graph_data in pairs(self.graph_datas) do
+    local line = TH.line()
+    line:setWidth(2)
+    local hue = colours[stat]
+    line:setColour(hue[1], hue[2], hue[3], 255)
+    graph_data.line = line
   end
-  -- Then add all the nodes available for each graph
-  for _, parts in ipairs(values) do
-    for stat, value in pairs(parts) do
-      local ypos = computeVerticalValuePosition(lines[stat], value)
-      lines[stat].line:lineTo(first_x, ypos)
+
+  -- Add the graph line pieces. Doing this separately is more efficient as all
+  -- graph lines can be extended to the left in the same iteration.
+  local xpos = RIGHT_X
+  for i, stats in ipairs(self.values) do
+    for stat, value in pairs(stats) do
+      local line = graph_datas[stat].line
+      local ypos = computeVerticalValuePosition(graph_datas[stat], value)
+      if i == 1 then
+        line:moveTo(xpos, ypos)
+      else
+        line:lineTo(xpos, ypos)
+      end
     end
-    first_x = first_x - VERT_DX
+    xpos = xpos - VERT_DX
   end
 
   local text = {}
-  for stat, value in pairs(values[1]) do
-    local ypos = computeVerticalValuePosition(lines[stat], value)
+  for stat, value in pairs(self.values[1]) do
+    local ypos = computeVerticalValuePosition(graph_datas[stat], value)
     text[#text + 1] = {stat = stat, start_y = ypos, value = value}
   end
 
@@ -202,7 +204,7 @@ function UIGraphs:updateLines()
   local aux_lines = {}
   -- Then add all the nodes available for each graph
   first_x = RIGHT_X
-  for _, parts in ipairs(values) do
+  for _, parts in ipairs(self.values) do
     -- Also add a small line going from the number of month name to the actual graph.
     local line = TH.line()
     line:setWidth(1)
@@ -229,9 +231,9 @@ function UIGraphs:draw(canvas, x, y)
   self.white_font:draw(canvas, _S.graphs.reputation, x + 502, y + 405, 80, 27)
 
   -- Draw the different lines
-  for stat, values in pairs(self.lines) do
+  for stat, graph in pairs(self.graph_datas) do
     if not self.hide_graph[stat] then
-      values.line:draw(canvas, x, y)
+      graph.line:draw(canvas, x, y)
     end
   end
 
