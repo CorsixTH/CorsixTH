@@ -139,6 +139,59 @@ function UIGraphs:getHospitalStatistics()
   return values
 end
 
+--! Reposition the given sequence of text entries vertically such that the maximum
+--  absolute deviation from the ideal position is minimized.
+--!param label_datas (array) Text entries
+--!param start_index (int) First entry to move.
+--!param last_index (int) Last entry to move.
+local function moveSequence(label_datas, start_index, last_index)
+  -- min_y, max_y Smallest and biggest vertical position of the labels. Since
+  --    they are sorted on y, it's the position of the first and last visible entry.
+  -- min_y_shift, max_y_shift Vertical movement of the label of the first and
+  --    last visible entry for vertically centering the text.
+  -- min_dev, max_dev Smallest and biggest deviation from the optimal position,
+  --    for all visible labels.
+  local min_y = nil
+  local max_y, min_y_shift, max_y_shift, min_dev, max_dev
+  for i = start_index, last_index do
+    local label = label_datas[i]
+    if label.pos_y then -- Label is visible
+      local deviation = label.pos_y - label.ideal_y -- Positive if moved down
+      if min_y then -- Updating the max y, and deviations
+        max_y = label.pos_y
+        max_y_shift = label.shift_y
+        min_dev = math.min(min_dev, deviation)
+        max_dev = math.max(max_dev, deviation)
+      else -- First time entering the loop
+        min_y = label.pos_y
+        max_y = label.pos_y
+        min_y_shift = label.shift_y
+        max_y_shift = label.shift_y
+        min_dev = deviation
+        max_dev = deviation
+      end
+    end
+  end
+
+  -- There should be at least one visible entry in the provided range.
+  assert(min_y ~= nil)
+
+  local move = -math.floor((max_dev + min_dev) / 2) -- Suggested movement of the sequence.
+
+  -- Verify the sequence will stay inside graph upper and lower limits, adjust otherwise.
+  if min_y + min_y_shift + move < TOP_Y then
+    move = TOP_Y - min_y - min_y_shift
+  elseif max_y + max_y_shift + move > BOTTOM_Y then
+    move = BOTTOM_Y - max_y - max_y_shift
+  end
+
+  -- And update the positions.
+  for i = start_index, last_index do
+    local label = label_datas[i]
+    if label.pos_y then label.pos_y = label.pos_y + move end
+  end
+end
+
 --! Compute new actual position of the labels.
 --!param graph (UIGraphs) Graph window object
 local function updateTextPositions(graph)
@@ -152,14 +205,60 @@ local function updateTextPositions(graph)
     end
   end
 
-  local bottom_prev = TOP_Y
-  for _, label in pairs(graph.label_datas) do
-    if label.pos_y then
-      local top_current = label.pos_y + label.shift_y
-      if top_current < bottom_prev then
-        label.pos_y = bottom_prev - label.shift_y
+  -- Move labels of the graphs such that they stay at the right of the graph
+  -- between their upper and lower boundaries.
+  local sequence_moved = true
+  local collision_count = 8 -- In theory the loop should terminate, but better safe than sorry.
+  while sequence_moved and collision_count > 0 do
+    collision_count = collision_count - 1
+    sequence_moved = false
+
+    -- Find sequences of text entries that partly overlap or have no vertical
+    -- space between them. Entries in such a sequence cannot be moved
+    -- individually, the sequence as a whole must move.
+    local start_index, last_index = nil, nil -- Start and end of the sequence.
+    local collision = false -- True collision detected in the sequence
+    local prev_index, prev_label = nil, nil
+    for i, label in ipairs(graph.label_datas) do
+      if label.pos_y then -- Label is visible
+        if prev_label then
+          -- Bottom y of previous label, top of current label
+          local bottom_prev = prev_label.pos_y + prev_label.shift_y + prev_label.size_y
+          local top_current = label.pos_y + label.shift_y
+
+          if top_current < bottom_prev then
+            -- True collision, text has to move
+            collision = true
+            sequence_moved = true
+            label.pos_y = bottom_prev - label.shift_y
+            if not start_index then start_index = prev_index end
+            last_index = i
+
+          elseif top_current == bottom_prev then
+            -- Entry is concatenated to the sequence, position is fine.
+            if not start_index then start_index = prev_index end
+            last_index = i
+          else
+            -- Entry is not part of the sequence, move previous sequence to its
+            -- optimal spot if required
+            if collision then
+              moveSequence(graph.label_datas, start_index, last_index)
+            end
+
+            collision = false
+            start_index = nil
+            last_index = nil
+            -- Do not consider the current text in this round. The next entry may
+            -- see it as the start of a next sequence.
+          end
+        end
+        prev_label = label
+        prev_index = i
       end
-      bottom_prev = label.pos_y + label.shift_y + label.size_y
+    end
+
+    if collision then
+      moveSequence(graph.label_datas, start_index, last_index)
     end
   end
 end
