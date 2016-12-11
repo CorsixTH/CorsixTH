@@ -187,33 +187,40 @@ function UIGraphs:updateLines()
     xpos = xpos - VERT_DX
   end
 
-  local text = {}
+  -- Compute label data for each statistic, and order by vertical position.
+  -- The newest statistic values are displayed at the right edge of the graph,
+  -- which decides the optimal position of the graph label text and value.
+  local label_datas = {}
+  self.label_datas = label_datas
+
   for stat, value in pairs(self.values[1]) do
-    local ypos = computeVerticalValuePosition(graph_datas[stat], value)
-    text[#text + 1] = {stat = stat, start_y = ypos, value = value}
+    local ideal_y = computeVerticalValuePosition(graph_datas[stat], value)
+    label_datas[#label_datas + 1] = {
+        stat = stat, -- Name of the statistic it belongs to.
+        ideal_y = ideal_y, -- Ideal vertical position.
+        value = value} -- Numeric value to display.
   end
 
-  -- Sort the y positions where to put text to draw the top text first.
+  -- Sort the labels of the graph on ideal y position.
   local function compare(a,b)
-    return a.start_y < b.start_y
+    return a.ideal_y < b.ideal_y
   end
-  table.sort(text, compare)
-  self.text_positions = text
+  table.sort(label_datas, compare)
 
-
+  -- Create small lines going from the number of month name to the actual graph.
+  -- Like the lines, index runs from right to left at the screen.
   local aux_lines = {}
-  -- Then add all the nodes available for each graph
-  first_x = RIGHT_X
-  for _, parts in ipairs(self.values) do
-    -- Also add a small line going from the number of month name to the actual graph.
+  self.aux_lines = aux_lines
+
+  xpos = RIGHT_X
+  for _ = 1, #self.values do
     local line = TH.line()
     line:setWidth(1)
-    line:moveTo(first_x, BOTTOM_Y + 2)
-    line:lineTo(first_x, BOTTOM_Y + 8)
+    line:moveTo(xpos, BOTTOM_Y + 2)
+    line:lineTo(xpos, BOTTOM_Y + 8)
     aux_lines[#aux_lines + 1] = line
-    first_x = first_x - VERT_DX
+    xpos = xpos - VERT_DX
   end
-  self.aux_lines = aux_lines
 end
 
 function UIGraphs:draw(canvas, x, y)
@@ -237,44 +244,47 @@ function UIGraphs:draw(canvas, x, y)
     end
   end
 
-  local first_x = RIGHT_X - 12
-
   -- Draw strings showing what values each entry has at the moment just to the right of the graph.
   -- TODO: These should be coloured according to the colour of the corresponding line.
   local cur_y = 85
-  for _, values in pairs(self.text_positions) do
-    if not self.hide_graph[values.stat] then
+  for _, label in pairs(self.label_datas) do
+    if not self.hide_graph[label.stat] then
       -- -5 makes the text appear just to the right of the line instead of just beneath it.
-      cur_y = (cur_y > values.start_y and cur_y or values.start_y - 5)
+      cur_y = (cur_y > label.ideal_y and cur_y or label.ideal_y - 5)
       -- The last y compensates that draw returns the last y position relative to the top of the window, not the dialog.
       -- To get all values in the same "column", draw them separately.
-      self.black_font:draw(canvas, _S.graphs[values.stat] .. ":", x + first_x + 15, y + cur_y)
-      cur_y = self.black_font:draw(canvas, values.value, x + first_x + 72, y + cur_y) - y
+      self.black_font:draw(canvas, _S.graphs[label.stat] .. ":", x + RIGHT_X + 3, y + cur_y)
+      cur_y = self.black_font:draw(canvas, label.value, x + RIGHT_X + 60, y + cur_y) - y
     end
   end
 
-
-
-  local decrements, number
   local stats_stepsize = getStatisticsStepsize(self.graph_scale)
-  if stats_stepsize >= 12 then
-    decrements = -math.floor(stats_stepsize / 12)
-    number = math.floor(#self.hospital.statistics / 12)
-  else
-    decrements = -stats_stepsize
-    number = #self.hospital.statistics - math.floor(#self.hospital.statistics / 12) * 12
-  end
-
-  local no = 1
+  local xpos = x + RIGHT_X
 
   -- Draw numbers (or month names) below the graph
-  for _, _ in ipairs(self.values) do
-    self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")
-    first_x = first_x - VERT_DX
-    number = number + decrements
-    -- And the small black line
-    self.aux_lines[no]:draw(canvas, x, y)
-    no = no + 1
+  if stats_stepsize >= 12 then
+    -- Display years
+    local year_number = math.floor(#self.hospital.statistics / 12)
+    for i = 1, #self.values do
+      self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
+      xpos = xpos - VERT_DX
+      year_number = year_number - math.floor(stats_stepsize / 12)
+
+      -- And the small black line
+      self.aux_lines[i]:draw(canvas, x, y)
+    end
+  else
+    -- Display months
+    local month_number = #self.hospital.statistics - math.floor(#self.hospital.statistics / 12) * 12
+    for i = 1, #self.values do
+      self.black_font:drawWrapped(canvas, _S.months[month_number], xpos, y + BOTTOM_Y + 10, 25, "center")
+      xpos = xpos - VERT_DX
+      month_number = month_number - stats_stepsize
+      if month_number < 1 then month_number = month_number + 12 end
+
+      -- And the small black line
+      self.aux_lines[i]:draw(canvas, x, y)
+    end
   end
 end
 
