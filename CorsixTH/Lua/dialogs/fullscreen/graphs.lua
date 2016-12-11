@@ -139,6 +139,31 @@ function UIGraphs:getHospitalStatistics()
   return values
 end
 
+--! Compute new actual position of the labels.
+--!param graph (UIGraphs) Graph window object
+local function updateTextPositions(graph)
+  -- Reset vertical position of the text back to its ideal position.
+  -- Disable computations on invisible graphs by removing the actual y position of it.
+  for _, label in ipairs(graph.label_datas) do
+    if graph.hide_graph[label.stat] then
+      label.pos_y = nil
+    else
+      label.pos_y = label.ideal_y
+    end
+  end
+
+  local bottom_prev = TOP_Y
+  for _, label in pairs(graph.label_datas) do
+    if label.pos_y then
+      local top_current = label.pos_y + label.shift_y
+      if top_current < bottom_prev then
+        label.pos_y = bottom_prev - label.shift_y
+      end
+      bottom_prev = label.pos_y + label.shift_y + label.size_y
+    end
+  end
+end
+
 function UIGraphs:updateLines()
   self.values = self:getHospitalStatistics()
 
@@ -195,17 +220,24 @@ function UIGraphs:updateLines()
 
   for stat, value in pairs(self.values[1]) do
     local ideal_y = computeVerticalValuePosition(graph_datas[stat], value)
+    local text = _S.graphs[stat] .. ":"
+    local _, size_y, _ = self.black_font:sizeOf(text)
     label_datas[#label_datas + 1] = {
         stat = stat, -- Name of the statistic it belongs to.
+        text = text, -- Translated label text.
         ideal_y = ideal_y, -- Ideal vertical position.
+        pos_y = nil, -- Actual position for drawing.
+        size_y = size_y, -- Vertical size of the text.
+        shift_y = -math.floor(size_y / 2), -- Amount of shift to center the text.
         value = value} -- Numeric value to display.
   end
 
-  -- Sort the labels of the graph on ideal y position.
+  -- Sort the labels of the graph on ideal y position, and compute actual position.
   local function compare(a,b)
     return a.ideal_y < b.ideal_y
   end
   table.sort(label_datas, compare)
+  updateTextPositions(self)
 
   -- Create small lines going from the number of month name to the actual graph.
   -- Like the lines, index runs from right to left at the screen.
@@ -246,15 +278,11 @@ function UIGraphs:draw(canvas, x, y)
 
   -- Draw strings showing what values each entry has at the moment just to the right of the graph.
   -- TODO: These should be coloured according to the colour of the corresponding line.
-  local cur_y = 85
   for _, label in pairs(self.label_datas) do
-    if not self.hide_graph[label.stat] then
-      -- -5 makes the text appear just to the right of the line instead of just beneath it.
-      cur_y = (cur_y > label.ideal_y and cur_y or label.ideal_y - 5)
-      -- The last y compensates that draw returns the last y position relative to the top of the window, not the dialog.
-      -- To get all values in the same "column", draw them separately.
-      self.black_font:draw(canvas, _S.graphs[label.stat] .. ":", x + RIGHT_X + 3, y + cur_y)
-      cur_y = self.black_font:draw(canvas, label.value, x + RIGHT_X + 60, y + cur_y) - y
+    if label.pos_y then
+      local ypos = label.pos_y + label.shift_y
+      self.black_font:draw(canvas, label.text, x + RIGHT_X + 3, y + ypos)
+      self.black_font:draw(canvas, label.value, x + RIGHT_X + 60, y + ypos)
     end
   end
 
@@ -298,6 +326,7 @@ end
 function UIGraphs:toggleGraph(name)
   self.hide_graph[name] = not self.hide_graph[name]
   self.ui:playSound("selectx.wav")
+  updateTextPositions(self)
 end
 
 function UIGraphs:close()
