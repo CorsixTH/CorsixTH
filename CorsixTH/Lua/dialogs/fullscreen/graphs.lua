@@ -434,7 +434,7 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
-  if old < 60 then
+  if old < 117 then
     self:close()
   end
 end
