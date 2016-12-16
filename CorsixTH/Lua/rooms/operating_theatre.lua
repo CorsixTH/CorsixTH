@@ -108,9 +108,11 @@ end
 --! see the back). Called either when the operation starts or when the
 --! operation is resumed after interruption caused by the picking up of
 --! the second surgeon.
+--! Note: Must be part of OperatingTheatreRoom and not a local function
+--! because of the use in the persisted callback function operation_standby.
 --!param multi_use (action): the first operation action (built with via buildTableAction1()).
 --!param operation_table_b (OperatingTable): slave object representing the operation table.
-local function buildTableAction2(multi_use, operation_table_b)
+function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
   local num_loops = math.random(2, 5)
 
   local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
@@ -144,7 +146,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
     self:queueWashHands(staff)
     staff:queueAction(WalkAction(table_x, table_y))
-    staff:queueAction(buildTableAction2(ongoing_action, table))
+    staff:queueAction(self._buildTableAction2(ongoing_action, table))
   end
 
   self.staff_member_set[staff] = true
@@ -297,7 +299,7 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
       surgeon1:queueAction(table_action1, 1)
 
       obj, _, _ = self.world:findObjectNear(surgeon2, "operating_table_b")
-      surgeon2:queueAction(buildTableAction2(table_action1, obj), 1)
+      surgeon2:queueAction(self._buildTableAction2(table_action1, obj), 1)
 
       -- Kick off
       surgeon1:finishAction()
