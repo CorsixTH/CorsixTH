@@ -85,8 +85,8 @@ tooltip.research_policy.research_progress = "Progresso para a próxima descobert
 menu["player_count"] = "QUANTIDADE DE JOGADORES"
 
 menu_file = {
-  load =    " SALVAR (SHIFT+S)   ",
-  save =    " CARREGAR (SHIFT+L)   ",
+  load =    " CARREGAR (SHIFT+L)   ",
+  save =    " SALVAR (SHIFT+S)   ",
   restart = " REINICIAR (SHIFT+R)",
   quit =    " SAIR (SHIFT+Q)   ",
 }
