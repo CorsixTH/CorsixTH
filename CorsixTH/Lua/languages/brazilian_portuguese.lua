@@ -28,6 +28,7 @@ Encoding(utf8)
 adviser.warnings.money_low = "Você está ficando sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
 -- TODO: tooltip.status.close -- it's called status window, not overview window.
+
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Mostrar a página seguinte"
 tooltip.staff_list.prev_person = "Mostrar a página anterior"
@@ -98,7 +99,7 @@ menu_options = {
   jukebox = "  MAQUINA DE DISCOS (J)  ",
   lock_windows = "  TRAVAR JANELAS  ",
   edge_scrolling = "  ROLAR MARGEM  ",
-  adviser_disabled = "  (SHIFT+A) CONSELHEIRO  ",
+  adviser_disabled = "  CONSELHEIRO (SHIFT+A)  ",
   warmth_colors = "  CORES QUENTES  ",
   wage_increase = "  EXIGENCIAS SALARIAS",
   twentyfour_hour_clock = "  RELOGIO DE 24 HORAS  ",
@@ -475,12 +476,12 @@ new_game_window = {
 
 tooltip.new_game_window = {
   player_name = "Digite no nome que você deseja ser chamado no jogo",
-  difficulty = "Selecione o nível de dificuldade do jogo.",
+  difficulty = "Selecione o nível de dificuldade do jogo",
   easy = "Se você é novo em jogos de simulaçäo esta é a opçäo para você",
   medium = "Este é o meio do campinho se você está inseguro do que deve escolher",
   hard = "Se você está acostumado com este tipo de jogo e quer mais desafios, escolha esta opçäo",
   tutorial = "Se você precisa de ajuda para começar a jogar, escolha esta opçäo",
-  start = "Iniciar o jogo com a configuraçäo selecionada.",
+  start = "Iniciar o jogo com a configuraçäo selecionada",
   cancel = "Ah, eu näo queria começar um novo jogo!",
 }
 
