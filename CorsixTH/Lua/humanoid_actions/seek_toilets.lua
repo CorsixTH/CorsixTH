@@ -19,6 +19,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "SeekToiletsAction" (HumanoidAction)
+
+---@type SeekToiletsAction
+local SeekToiletsAction = _G["SeekToiletsAction"]
+
+function SeekToiletsAction:SeekToiletsAction()
+  self:HumanoidAction("seek_toilets")
+end
+
 local function seek_toilets_action_start(action, humanoid)
   -- Mechanism for clearing the going_to_toilets flag when this action is
   -- interrupted.
@@ -33,9 +42,7 @@ local function seek_toilets_action_start(action, humanoid)
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
   if room then
-    local task = room:createEnterAction(humanoid)
-    task.must_happen = true
-    humanoid:setNextAction(task)
+    humanoid:setNextAction(room:createEnterAction(humanoid):setMustHappen(true))
     -- Unexpect the patient from a possible destination room.
     if humanoid.next_room_to_visit then
       local queue = humanoid.next_room_to_visit.door.queue
@@ -50,9 +57,9 @@ local function seek_toilets_action_start(action, humanoid)
     -- removed while heading there and none other exists. In that case, go back
     -- to the previous room or go to the reception.
     if humanoid.next_room_to_visit then
-      humanoid:setNextAction{name = "seek_room", room_type = humanoid.next_room_to_visit.room_info.id}
+      humanoid:setNextAction(SeekRoomAction(humanoid.next_room_to_visit.room_info.id))
     else
-      humanoid:queueAction{name = "seek_reception"}
+      humanoid:queueAction(SeekReceptionAction())
     end
     humanoid.going_to_toilet = "no"
     humanoid:finishAction()

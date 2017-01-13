@@ -14,12 +14,13 @@ addons:
       - sshpass
 
 before_install:
+  - luarocks --local install --server=http://luarocks.org luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
   # Required for LDocGen
   - luarocks --local install lpeg
   - luarocks --local install luafilesystem
-  - luarocks --local install luasocket  
+  - luarocks --local install luasocket
+  - luarocks --local install luacheck
   # Required for lua unit tests
-  - luarocks --local install luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
   - luarocks --local install busted
   - git clone --depth=1 https://github.com/CorsixTH/deps.git $HOME/deps
   - mkdir libs
@@ -48,7 +49,9 @@ script:
   # Build CorsixTH
   - make VERBOSE=1
   # Validate lua files
-  - (LUA_FAILURE=0; for file in `find CorsixTH -name '*.lua' -not -path "CorsixTH/Lua/languages/*"`; do luac -p $file; if [ $? != 0 ]; then LUA_FAILURE=1; fi; done; exit $LUA_FAILURE)
+  - find $TRAVIS_BUILD_DIR -path $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages -prune -o -name '*.lua' -print0 | xargs -0 luac -p --
+  - cd $TRAVIS_BUILD_DIR
+  - /home/travis/.luarocks/bin/luacheck -q .
   # Run lua unit tests
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
   - eval `luarocks --local path`

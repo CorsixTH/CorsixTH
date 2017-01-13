@@ -97,12 +97,14 @@ public class TabStaff extends JScrollPane {
         minSalary.add(new JLabel("Nurse:"));
         minSalary.add(staffSalaryTF[0]);
         staffSalaryTF[0].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -122,12 +124,14 @@ public class TabStaff extends JScrollPane {
         minSalary.add(new JLabel("Doctor:"));
         minSalary.add(staffSalaryTF[1]);
         staffSalaryTF[1].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -147,12 +151,14 @@ public class TabStaff extends JScrollPane {
         minSalary.add(new JLabel("Handyman:"));
         minSalary.add(staffSalaryTF[2]);
         staffSalaryTF[2].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -173,12 +179,14 @@ public class TabStaff extends JScrollPane {
         minSalary.add(staffSalaryTF[3]);
         salary.add(minSalary);
         staffSalaryTF[3].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -203,12 +211,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(new JLabel("Junior:"));
         addSalary.add(salaryAddTF[3]);
         salaryAddTF[3].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -223,12 +233,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(new JLabel("Doctor:"));
         addSalary.add(salaryAddTF[4]);
         salaryAddTF[4].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -243,12 +255,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(new JLabel("Consultant:"));
         addSalary.add(salaryAddTF[7]);
         salaryAddTF[7].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -263,12 +277,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(new JLabel("Surgeon:"));
         addSalary.add(salaryAddTF[5]);
         salaryAddTF[5].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -283,12 +299,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(new JLabel("Psychiatrist:"));
         addSalary.add(salaryAddTF[6]);
         salaryAddTF[6].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -304,12 +322,14 @@ public class TabStaff extends JScrollPane {
         addSalary.add(salaryAddTF[8]);
         salary.add(addSalary);
         salaryAddTF[8].addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -329,6 +349,7 @@ public class TabStaff extends JScrollPane {
         levelsButtons.add(addLevelsButt);
         addLevelsButt.addActionListener(new ActionListener() {
             // on click add button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 addStaffLevels();
             }
@@ -337,6 +358,7 @@ public class TabStaff extends JScrollPane {
         levelsButtons.add(removeLevelsButt);
         removeLevelsButt.addActionListener(new ActionListener() {
             // on click remove button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 removeStaffLevels();
             }
@@ -350,6 +372,7 @@ public class TabStaff extends JScrollPane {
         startButtons.add(addStartButt);
         addStartButt.addActionListener(new ActionListener() {
             // on click add button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 addStartStaff();
             }
@@ -358,6 +381,7 @@ public class TabStaff extends JScrollPane {
         startButtons.add(removeStartButt);
         removeStartButt.addActionListener(new ActionListener() {
             // on click remove button
+            @Override
             public void actionPerformed(ActionEvent e) {
                 removeStartStaff();
             }
@@ -377,6 +401,7 @@ public class TabStaff extends JScrollPane {
         // when staff member selection changes
         startStaffList.get(index).staffMemberCombo
                 .addActionListener(new ActionListener() {
+                    @Override
                     public void actionPerformed(ActionEvent e) {
 
                         JComboBox cb = (JComboBox) e.getSource();
@@ -451,6 +476,7 @@ public class TabStaff extends JScrollPane {
         startStaffList.get(index).startStaffPanel
                 .add(startStaffList.get(index).shrinkCB);
         startStaffList.get(index).shrinkCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     startStaffList.get(index).shrink = 1;
@@ -463,6 +489,7 @@ public class TabStaff extends JScrollPane {
         startStaffList.get(index).startStaffPanel
                 .add(startStaffList.get(index).surgeonCB);
         startStaffList.get(index).surgeonCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED)
                     startStaffList.get(index).surgeon = 1;
@@ -476,6 +503,7 @@ public class TabStaff extends JScrollPane {
                 .add(startStaffList.get(index).researcherCB);
         startStaffList.get(index).researcherCB
                 .addItemListener(new ItemListener() {
+                    @Override
                     public void itemStateChanged(ItemEvent e) {
                         if (e.getStateChange() == ItemEvent.SELECTED)
                             startStaffList.get(index).researcher = 1;
@@ -490,6 +518,7 @@ public class TabStaff extends JScrollPane {
         startStaffList.get(index).startStaffPanel.add(
                 startStaffList.get(index).skillTF);
         startStaffList.get(index).skillTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
@@ -497,6 +526,7 @@ public class TabStaff extends JScrollPane {
 
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -549,6 +579,7 @@ public class TabStaff extends JScrollPane {
                 .get(index).monthTF);
         staffLevelsList.get(index).monthTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
@@ -556,6 +587,7 @@ public class TabStaff extends JScrollPane {
 
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -606,6 +638,7 @@ public class TabStaff extends JScrollPane {
                 .get(index).doctorsTF);
         staffLevelsList.get(index).doctorsTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
@@ -613,6 +646,7 @@ public class TabStaff extends JScrollPane {
 
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -637,6 +671,7 @@ public class TabStaff extends JScrollPane {
                 .get(index).nursesTF);
         staffLevelsList.get(index).nursesTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
@@ -644,6 +679,7 @@ public class TabStaff extends JScrollPane {
 
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -668,12 +704,14 @@ public class TabStaff extends JScrollPane {
                 .get(index).handymenTF);
         staffLevelsList.get(index).handymenTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -698,6 +736,7 @@ public class TabStaff extends JScrollPane {
                 staffLevelsList.get(index).receptionistsTF);
         staffLevelsList.get(index).receptionistsTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
@@ -705,6 +744,7 @@ public class TabStaff extends JScrollPane {
 
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -730,12 +770,14 @@ public class TabStaff extends JScrollPane {
                 .get(index).shrinkRateTF);
         staffLevelsList.get(index).shrinkRateTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -774,12 +816,14 @@ public class TabStaff extends JScrollPane {
                 .get(index).surgeonRateTF);
         staffLevelsList.get(index).surgeonRateTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -819,12 +863,14 @@ public class TabStaff extends JScrollPane {
                 .get(index).researcherRateTF);
         staffLevelsList.get(index).researcherRateTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -864,12 +910,14 @@ public class TabStaff extends JScrollPane {
                 .get(index).consultantRateTF);
         staffLevelsList.get(index).consultantRateTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -909,12 +957,14 @@ public class TabStaff extends JScrollPane {
                 staffLevelsList.get(index).juniorRateTF);
         staffLevelsList.get(index).juniorRateTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {

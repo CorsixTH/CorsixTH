@@ -23,18 +23,16 @@ class "GrimReaper" (Humanoid)
 ---@type GrimReaper
 local GrimReaper = _G["GrimReaper"]
 
-local TH = require "TH"
-
 function GrimReaper:GrimReaper(...)
   self:Humanoid(...)
   self.attributes = {}
   self.hover_cursor = TheApp.gfx:loadMainCursor("default")
   self.walk_anims = {
-    	walk_east = 996,
-    	walk_north = 994,
-    	idle_east = 1004,
-    	idle_north = 1002,
-  	}
+    walk_east = 996,
+    walk_north = 994,
+    idle_east = 1004,
+    idle_north = 1002,
+  }
 end
 
 function GrimReaper:tickDay()

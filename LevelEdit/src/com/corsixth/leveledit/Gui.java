@@ -54,7 +54,7 @@ public class Gui extends JFrame {
     FileChooser fileChooser = new FileChooser(this);
 
     public Gui() {
-        List<Image> icons = new ArrayList<Image>();
+        List<Image> icons = new ArrayList<>();
         icons.add(Toolkit.getDefaultToolkit().getImage(
                 ClassLoader.getSystemResource("icon256.png")));
         icons.add(Toolkit.getDefaultToolkit().getImage(
@@ -76,6 +76,7 @@ public class Gui extends JFrame {
         setSize(800, 600);
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
+            @Override
             public void windowClosing(WindowEvent event) {
                 onExit();
             }

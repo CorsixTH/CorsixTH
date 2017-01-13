@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local pathsep = package.config:sub(1, 1)
-
 --! Custom Game Window
 class "UICustomGame" (UIMenuList)
 
@@ -34,15 +32,10 @@ local col_scrollbar = {
 
 local details_width = 280
 
-function UICustomGame:UICustomGame(ui)
-
-  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
-
-  -- Supply the required list of items to UIMenuList
-  local path = ui.app.level_dir
-
-  -- Create the actual list
-  local items = {}
+--! Compile metainfo for all of the levels in the given path.
+--!param path (string) The path that should contain level files.
+--!param items (table) Table to insert the level metadata into.
+local findLevelsInDir = function(path, items)
   for file in lfs.dir(path) do
     if file:match"%.level$" then
       local level_info = TheApp:readLevelFile(file)
@@ -58,6 +51,16 @@ function UICustomGame:UICustomGame(ui)
       end
     end
   end
+end
+
+function UICustomGame:UICustomGame(ui)
+  self.label_font = TheApp.gfx:loadFont("QData", "Font01V")
+
+  -- Supply the required list of items to UIMenuList
+  -- Create the actual list
+  local items = {}
+  findLevelsInDir(TheApp.level_dir, items)
+  findLevelsInDir(TheApp.user_level_dir, items)
   self:UIMenuList(ui, "menu", _S.custom_game_window.caption, items, 10, details_width + 40)
 
   -- Create a toolbar ready to be used if the description for a level is
@@ -105,9 +108,8 @@ function UICustomGame:buttonClicked(num)
   self.chosen_index = num
   self.chosen_level_name = item.name
   self.chosen_level_description = item.intro
-  local filename = item.path
   if self.chosen_level_description then
-    local x, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
+    local _, y, rows = self.label_font:sizeOf(self.chosen_level_description, details_width)
     local row_height = y / rows
     self.max_rows_shown = math.floor(self.num_rows*17 / row_height)
     self.details_scrollbar:setRange(1, rows, math.min(rows, self.max_rows_shown), 1)

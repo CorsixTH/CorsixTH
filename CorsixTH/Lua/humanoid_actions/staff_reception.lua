@@ -18,6 +18,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "StaffReceptionAction" (HumanoidAction)
+
+---@type StaffReceptionAction
+local StaffReceptionAction = _G["StaffReceptionAction"]
+
+-- Action class for the "staff reception desk" action.
+--!param desk (object) Desk to staff.
+function StaffReceptionAction:StaffReceptionAction(desk)
+  assert(class.is(desk, ReceptionDesk), "Invalid value for parameter 'desk'")
+
+  self:HumanoidAction("staff_reception")
+  self.object = desk -- Reception desk object.
+  self:setMustHappen(true)
+end
+
 local action_staff_reception_interrupt = permanent"action_staff_reception_interrupt"( function(action, humanoid, high_priority)
   local object = action.object
   object.receptionist = nil

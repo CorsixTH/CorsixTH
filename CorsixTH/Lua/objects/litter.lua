@@ -62,11 +62,9 @@ function Litter:Litter(world, object_type, x, y, direction, etc)
 end
 
 function Litter:setTile(x, y)
-  local map = self.world.map.th
   Entity.setTile(self, x, y)
   if x then
     self.world:addObjectToTile(self, x, y)
-    map:setCellFlags(x, y, {buildable = false})
   end
 end
 -- Litter is an Entity and not an Object so it does not inherit this method
@@ -87,10 +85,23 @@ function Litter:setLitterType(anim_type, mirrorFlag)
       error("Unknown litter type")
     end
     if self:isCleanable() then
-      local hospital = self.world:getLocalPlayerHospital()
+      local hospital = self.world:getHospital(self.tile_x, self.tile_y)
       hospital:addHandymanTask(self, "cleaning", 1, self.tile_x, self.tile_y)
     end
   end
+end
+
+--! Remove the litter from the world.
+function Litter:remove()
+  assert(self:isCleanable())
+
+  self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+
+  local hospital = self.world:getHospital(self.tile_x, self.tile_y)
+  local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
+  hospital:removeHandymanTask(taskIndex, "cleaning")
+
+  self.world:destroyEntity(self)
 end
 
 function Litter:getDrawingLayer()
@@ -133,8 +144,8 @@ function Litter:afterLoad(old, new)
   end
   if old < 54 then
     if not self:isCleanable() then
-      local hospital = self.world:getLocalPlayerHospital()
-      local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning")
+      local hospital = self.world:getHospital(self.tile_x, self.tile_y)
+      local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
       hospital:removeHandymanTask(taskIndex, "cleaning")
     end
   end

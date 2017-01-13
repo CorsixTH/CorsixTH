@@ -72,12 +72,7 @@ static int l_movie_play(lua_State *L)
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
     pMovie->clearLastError();
     pMovie->play(
-        SDL_Rect{
-            static_cast<int>(luaL_checkinteger(L, 2)),
-            static_cast<int>(luaL_checkinteger(L, 3)),
-            static_cast<int>(luaL_checkinteger(L, 4)),
-            static_cast<int>(luaL_checkinteger(L, 5)) },
-        static_cast<int>(luaL_checkinteger(L, 6)));
+        static_cast<int>(luaL_checkinteger(L, 2)));
     warning = pMovie->getLastError();
     lua_pushstring(L, warning);
     return 1;
@@ -114,7 +109,11 @@ static int l_movie_has_audio_track(lua_State *L)
 static int l_movie_refresh(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->refresh();
+    pMovie->refresh(SDL_Rect{
+            static_cast<int>(luaL_checkinteger(L, 2)),
+            static_cast<int>(luaL_checkinteger(L, 3)),
+            static_cast<int>(luaL_checkinteger(L, 4)),
+            static_cast<int>(luaL_checkinteger(L, 5)) });
     return 0;
 }
 

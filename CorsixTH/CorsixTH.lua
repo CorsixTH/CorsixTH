@@ -93,22 +93,9 @@ if _VERSION ~= "Lua 5.1" then
     error "Please recompile CorsixTH and link against Lua version 5.1, 5.2 or 5.3"
   end
 end
-
--- If being debugged in Decoda, turn off JIT compilation (as it cannot debug
--- machine code). Note that Decoda can't debug this file but it can debug all
--- other files. See http://www.unknownworlds.com/decoda/ for Decoda info.
 --
 -- A DBGp debugger can debug this file if you start a CorsixTH DBGp client & connect
 -- it to a running server, using this CorsixTH startup arg: -debugger
-if decoda_output then
-  _DECODA = true
-  if jit then
-    jit.off()
-    decoda_output "JIT compilation disabled"
-  end
-else
-  _DECODA = false
-end
 
 -- Enable strict mode
 dofile "strict"

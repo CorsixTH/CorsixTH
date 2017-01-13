@@ -25,7 +25,7 @@ object.name = _S.object.plant
 object.class = "Plant"
 object.tooltip = _S.tooltip.objects.plant
 object.ticks = false
-object.corridor_object = 6
+object.corridor_object = 7
 object.build_preview_animation = 934
 
 object.idle_animations = {
@@ -70,11 +70,13 @@ object.orientations = {
 -- For litter: put broom back 356
 -- take broom out: 1874
 -- swoop: 1878
--- For plant: droop down: 1950
--- back up again: 1952
+-- Frames for plant states are
+-- * healthy: 1950
+-- * drooping1: 1951
+-- * drooping2: 1952
+-- * dying: 1953
+-- * dead: 1954
 
--- The states specify which frame to show
-local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
 
 local days_between_states = 75
 
@@ -208,28 +210,23 @@ function Plant:createHandymanActions(handyman)
     handyman:setCallCompleted()
     if handyman_room then
       handyman:setNextAction(handyman_room:createLeaveAction())
-      handyman:queueAction{name = "meander"}
+      handyman:queueAction(MeanderAction())
     else
-      handyman:setNextAction{name = "meander"}
+      handyman:setNextAction(MeanderAction())
     end
     return
   end
   self.reserved_for = handyman
-  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
-  local water_action = {
-    name = "use_object",
-    object = self,
-    watering_plant = true,
-  }
+  local walk_action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
-    handyman:queueAction(action)
+    handyman:queueAction(walk_action)
   else
-    handyman:setNextAction(action)
+    handyman:setNextAction(walk_action)
   end
-  handyman:queueAction(water_action)
+  handyman:queueAction(UseObjectAction(self):enableWateringPlant())
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}
+  handyman:queueAction(AnswerCallAction())
 end
 
 --! When a handyman should go to the plant he should approach it from the closest reachable tile.

@@ -24,8 +24,6 @@ class "UISaveMap" (UIFileBrowser)
 ---@type UISaveMap
 local UISaveMap = _G["UISaveMap"]
 
-local pathsep = package.config:sub(1, 1)
-
 local col_textbox = {
   red = 0,
   green = 0,
@@ -45,7 +43,7 @@ local col_shadow = {
 }
 
 function UISaveMap:UISaveMap(ui)
-  local treenode = FilteredFileTreeNode(ui.app.level_dir, ".map")
+  local treenode = FilteredFileTreeNode(ui.app.user_level_dir, ".map")
   treenode.label = "Maps"
   self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265, treenode, true)
   -- The most probable preference of sorting is by date - what you played last
@@ -73,7 +71,7 @@ function UISaveMap:confirmName()
     self:abortName()
     return
   end
-  self:trySave(app.level_dir .. filename .. ".map")
+  self:trySave(app.user_level_dir .. filename .. ".map")
 end
 
 --! Function called by clicking button of existing save #num

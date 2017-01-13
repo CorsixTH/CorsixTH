@@ -68,58 +68,47 @@ function ScannerRoom:commandEnteringPatient(patient)
   end
 
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "west" or "north",
-    loop_callback = loop_callback,
-    scanner_ready = true,
-  }
-  staff:queueAction{
-    name = "use_object",
-    object = console,
-  }
+  local idle_action = IdleAction():setDirection(console.direction == "north" and "west" or "north")
+      :setLoopCallback(loop_callback)
+  idle_action.scanner_ready = true
+  staff:queueAction(idle_action)
+
+  staff:queueAction(UseObjectAction(console))
 
   if do_change then
     patient:walkTo(sx, sy)
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-    }
-    patient:queueAction{
-      name = "walk",
-      x = pat_x,
-      y = pat_y,
-    }
+    patient:queueAction(UseScreenAction(screen))
+    patient:queueAction(WalkAction(pat_x, pat_y))
   else
     patient:walkTo(pat_x, pat_y)
   end
-  patient:queueAction{
-    name = "idle",
-    direction = scanner.direction == "north" and "east" or "south",
-    loop_callback = loop_callback,
-    scanner_ready = true,
-  }
+
+  idle_action = IdleAction():setDirection(scanner.direction == "north" and "east" or "south")
+      :setLoopCallback(loop_callback)
+  idle_action.scanner_ready = true
+  patient:queueAction(idle_action)
+
   local length = math.random(10, 20) * (2 - staff.profile.skill)
-  patient:queueAction{
-    name = "use_object",
-    object = scanner,
-    loop_callback = --[[persistable:scanner_loop_callback]] function(action)
-      if length <= 0 then
-        action.prolonged_usage = false
-      end
-      length = length - 1
-    end,
-    after_use = --[[persistable:scanner_after_use]] function()
-      if not self.staff_member or patient.going_home then
-        -- If we aborted somehow, don't do anything here.
-        -- The patient already has orders to change back if necessary and leave.
-        -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
-        return
-      end
-      self.staff_member:setNextAction{name = "meander"}
-      self:dealtWithPatient(patient)
-    end,
-  }
+  local loop_callback_scan = --[[persistable:scanner_loop_callback]] function(action)
+    if length <= 0 then
+      action.prolonged_usage = false
+    end
+    length = length - 1
+  end
+
+  local after_use_scan = --[[persistable:scanner_after_use]] function()
+    if not self.staff_member or patient.going_home then
+      -- If we aborted somehow, don't do anything here.
+      -- The patient already has orders to change back if necessary and leave.
+      -- makeHumanoidLeave() will make this function nil when it aborts the scanner's use.
+      return
+    end
+    self.staff_member:setNextAction(MeanderAction())
+    self:dealtWithPatient(patient)
+  end
+
+  patient:queueAction(UseObjectAction(scanner):setLoopCallback(loop_callback_scan)
+      :setAfterUse(after_use_scan))
   return Room.commandEnteringPatient(self, patient)
 end
 
@@ -142,21 +131,15 @@ end
 function ScannerRoom:dealtWithPatient(patient)
   if string.find(patient.humanoid_class, "Stripped") then
     local screen, sx, sy = self.world:findObjectNear(patient, "screen")
-    patient:setNextAction{
-      name = "walk",
-      x = sx,
-      y = sy,
-      must_happen = true,
-      no_truncate = true,
-      is_leaving = true,
-    }
-    patient:queueAction{
-      name = "use_screen",
-      object = screen,
-      must_happen = true,
-      is_leaving = true,
-      after_use = --[[persistable:scanner_exit]] function() Room.dealtWithPatient(self, patient) end,
-    }
+    patient:setNextAction(WalkAction(sx, sy):setMustHappen(true):setIsLeaving(true)
+        :disableTruncate())
+
+    local after_use_patient = --[[persistable:scanner_exit]] function()
+      Room.dealtWithPatient(self, patient)
+    end
+
+    patient:queueAction(UseScreenAction(screen):setMustHappen(true):setIsLeaving(true)
+        :setAfterUse(after_use_patient))
     patient:queueAction(self:createLeaveAction())
   else
     Room.dealtWithPatient(self, patient)

@@ -24,6 +24,7 @@ object.thob = 50
 object.name = _S.object.bin
 object.tooltip = _S.tooltip.objects.bin
 object.ticks = false
+object.corridor_object = 6
 object.class = "SideObject"
 object.build_preview_animation = 5096
 object.idle_animations = {
@@ -65,7 +66,7 @@ function SideObject:getDrawingLayer()
         return 8
       end
     else --south
-      return 9;
+      return 9
     end
   end
 end

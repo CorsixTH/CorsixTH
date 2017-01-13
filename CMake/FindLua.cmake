@@ -26,8 +26,8 @@ IF (WITH_LUAJIT)
     SET (LUA_INCLUDE_DIRS include/luajit-2.0 include)
 ELSE (WITH_LUAJIT)
     SET (LUA_INTERPRETER_TYPE "Lua")
-    SET (LUA_LIBRARY_NAME lua53 lua52 lua5.1 lua51 lua lua-5.1 liblua liblua.5.3.dylib)
-    SET (LUA_INCLUDE_DIRS include include/lua include/lua5.1 include/lua51 include/lua-5.1 include/lua5.3 include/lua-5.3)
+    SET (LUA_LIBRARY_NAME lua53 lua5.3 lua-5.3 liblua.5.3.dylib lua52 lua5.2 lua-5.2 liblua.5.2.dylib lua51 lua5.1 lua-5.1 liblua.5.1.dylib lua liblua)
+    SET (LUA_INCLUDE_DIRS include/lua53 include/lua5.3 include/lua-5.3 include/lua52 include/lua5.2 include/lua-5.2 include/lua51 include/lua5.1 include/lua-5.1 include/lua include)
 ENDIF(WITH_LUAJIT)
 
 FIND_PATH (LUA_INCLUDE_DIR lua.h

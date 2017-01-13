@@ -117,7 +117,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
 
   if not manual and urgent then
-    local room = object:getRoom();
+    local room = object:getRoom()
     local sound = room.room_info.handyman_call_sound
     if sound then
       ui:playAnnouncement(sound)
@@ -228,13 +228,13 @@ function CallsDispatcher.getPriorityForVaccination(patient, nurse)
   --Lower the priority "score" the more urgent it is
   --The closest nurse to the patient has the highest priority for vaccination
   --Any nurse who cannot reach the paitient suffers a priority penalty
-  local score = 0;
+  local score = 0
   local nil_penalty = 10000
   local x, y = patient.tile_x, patient.tile_y
 
   -- Nurses prefer to vaccinate the closest patient
   local distance =
-    patient.world:getPathDistance(nurse.tile_x, nurse.tile_y, x, y);
+    patient.world:getPathDistance(nurse.tile_x, nurse.tile_y, x, y)
   if distance then
     score = score + distance
   else
@@ -258,7 +258,7 @@ function CallsDispatcher.sendNurseToVaccinate(patient, nurse)
     -- The epidemic may have ended before the call can be executed
     -- so just finish the call immediately
     CallsDispatcher.queueCallCheckpointAction(nurse)
-    nurse:queueAction{name = "answer_call"}
+    nurse:queueAction(AnswerCallAction())
     nurse:finishAction()
     patient.reserved_for = nil
   end
@@ -335,9 +335,8 @@ end
 function CallsDispatcher:answerCall(staff)
   local min_score = 2^30
   local min_call = nil
-  local min_key = nil
   assert(not staff.on_call, "Staff should be idea before he can answer another call")
-  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call");
+  assert(staff.hospital, "Staff should still be a member of the hospital to answer a call")
 
   if staff.humanoid_class == "Handyman" then
    staff:searchForHandymanTask()
@@ -345,8 +344,8 @@ function CallsDispatcher:answerCall(staff)
   end
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
-  for object, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.call_queue) do
+    for _, call in pairs(queue) do
       local score = call.verification(staff) and call.priority(staff) or nil
       if score ~= nil then
         if call.assigned then -- already being assigned? Can it be preempted?
@@ -358,7 +357,6 @@ function CallsDispatcher:answerCall(staff)
         if score ~= nil and score < min_score then
           min_score = score
           min_call = call
-          min_key = key
         end
       end
     end
@@ -380,8 +378,8 @@ end
 -- Dump the current call table for debugging
 function CallsDispatcher:dump()
   print("--- Queue ---")
-  for object, queue in pairs(self.call_queue) do
-    for key, call in pairs(queue) do
+  for _, queue in pairs(self.call_queue) do
+    for _, call in pairs(queue) do
       CallsDispatcher.dumpCall(call, (call.assigned and 'assigned' or 'unassigned'))
     end
   end
@@ -418,11 +416,8 @@ end
 -- A interrupt handler could be supplied if special handling is needed.
 -- If not, the default would be reinsert the call into the queue
 function CallsDispatcher.queueCallCheckpointAction(humanoid, interrupt_handler)
-  return humanoid:queueAction{
-    name = "call_checkpoint",
-    call = humanoid.on_call,
-    on_remove = interrupt_handler or CallsDispatcher.actionInterruptHandler
-  }
+  interrupt_handler = interrupt_handler or CallsDispatcher.actionInterruptHandler
+  return humanoid:queueAction(CallCheckPointAction(humanoid.on_call, interrupt_handler))
 end
 
 -- Default checkpoint interrupt handler
@@ -472,7 +467,7 @@ function CallsDispatcher:dropFromQueue(object, key)
       self.call_queue[object][key] = nil
     end
   elseif self.call_queue[object] then
-    for key, call in pairs(self.call_queue[object]) do
+    for _, call in pairs(self.call_queue[object]) do
       call.dropped = true
       if call.assigned then
         CallsDispatcher.unassignCall(call)
@@ -488,7 +483,7 @@ function CallsDispatcher.unassignCall(call)
   assert(assigned.on_call == call, "Unassigning call but the staff was not on call or a different call")
   call.assigned = nil
   assigned.on_call = nil
-  assigned:setNextAction{name = "answer_call"}
+  assigned:setNextAction(AnswerCallAction())
 end
 
 function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
@@ -507,11 +502,11 @@ function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
 end
 
 function CallsDispatcher.getPriorityForRoom(room, attribute, staff)
-  local score = 0;
+  local score = 0
   local x, y = room:getEntranceXY()
 
   -- Doctor prefer serving nearby rooms
-  local distance = room.world:getPathDistance(staff.tile_x, staff.tile_y, x, y);
+  local distance = room.world:getPathDistance(staff.tile_x, staff.tile_y, x, y)
   if distance then
     score = score + distance
   end

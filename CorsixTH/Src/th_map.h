@@ -95,7 +95,10 @@ enum class THObjectType : uint8_t
     entrance_right_door = 59,
     skeleton = 60,
     comfy_chair = 61,
-    // 62 through 255 are unused
+    litter = 62,
+    helicopter = 63,
+    rathole = 64,
+    // 65 through 255 are unused
 };
 
 //! Map flags and object type
@@ -293,8 +296,10 @@ public:
             the outside, and should never have its ownership changed).
         \param iOwner The number of the player who should own the parcel, or
             zero if no player should own the parcel.
+        \return vSplitTiles A vector that contains tile coordinates where
+            iParcelId is adjacent to another part of the hospital.
     */
-    void setParcelOwner(int iParcelId, int iOwner);
+    std::vector<std::pair<int, int>> setParcelOwner(int iParcelId, int iOwner);
 
     //! Get the owner of a particular parcel of land
     /*!

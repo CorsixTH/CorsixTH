@@ -20,6 +20,41 @@ SOFTWARE. --]]
 
 local TH = require "TH"
 
+
+class "UseObjectAction" (HumanoidAction)
+
+---@type UseObjectAction
+local UseObjectAction = _G["UseObjectAction"]
+
+--! Construct a 'use object' action.
+--!param object (Object) Object to use.
+function UseObjectAction:UseObjectAction(object)
+  assert(class.is(object, Object), "Invalid value for parameter 'object'")
+
+  self:HumanoidAction("use_object")
+  self.object = object
+  self.watering_plant = false -- Whether the action is watering the plant.
+  self.prolonged_usage = nil -- If true, the usage is prolonged.
+end
+
+--! Set the 'watering plant' flag.
+--!return (action) self, for daisy chaining.
+function UseObjectAction:enableWateringPlant()
+  self.watering_plant = true
+  return self
+end
+
+--! Set prolonged usage of the object.
+--!param prolonged (bool or nil) If set, enable prolonged usage of the object.
+--!return (action) self, for daisy-chaining.
+function UseObjectAction:setProlongedUsage(prolonged)
+  assert(prolonged == nil or type(prolonged) == "boolean",
+      "Invalid value for parameter 'prolonged'")
+
+  self.prolonged_usage = prolonged
+  return self
+end
+
 local orient_mirror = {
   north = "west",
   west = "north",

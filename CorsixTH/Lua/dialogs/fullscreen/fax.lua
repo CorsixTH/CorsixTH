@@ -100,7 +100,7 @@ function UIFax:draw(canvas, x, y)
 
   if self.message then
     local last_y = y + 40
-    for i, message in ipairs(self.message) do
+    for _, message in ipairs(self.message) do
       last_y = self.fax_font:drawWrapped(canvas, message.text, x + 190,
                                          last_y + (message.offset or 0), 330,
                                          "center")
@@ -109,7 +109,7 @@ function UIFax:draw(canvas, x, y)
     if choices then
       local orig_y = y + 190
       for i = 1, #choices do
-        local last_y = orig_y + ((i-1) + (3-#choices)) * 48
+        last_y = orig_y + ((i - 1) + (3 - #choices)) * 48
         self.fax_font:drawWrapped(canvas, choices[i].text, x + 190,
                                   last_y + (choices[i].offset or 0), 300)
       end
@@ -155,22 +155,15 @@ function UIFax:choice(choice_number)
         owner:updateDynamicInfo(_S.dynamic_info.patient.actions.waiting_for_diagnosis_rooms)
       end
     elseif choice == "guess_cure" then
-      owner:setDiagnosed(true)
+      owner:setDiagnosed()
       if owner:agreesToPay(owner.disease.id) then
-        owner:setNextAction{
-          name = "seek_room",
-          room_type = owner.disease.treatment_rooms[1],
-          treatment_room = true,
-        }
+        owner:setNextAction(SeekRoomAction(owner.disease.treatment_rooms[1]):enableTreatmentRoom())
       else
         owner:goHome("over_priced", owner.disease.id)
       end
     elseif choice == "research" then
       owner:setMood("idea", "activate")
-      owner:setNextAction {
-        name = "seek_room",
-        room_type = "research",
-      }
+      owner:setNextAction(SeekRoomAction("research"))
     end
   end
   local vip_ignores_refusal = math.random(1, 2)
@@ -211,7 +204,7 @@ function UIFax:choice(choice_number)
       for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
         if self.ui.app.world.map.level_number == level then
           local next_level = self.ui.app.world.campaign_info.levels[i + 1]
-          local level_info, err = self.ui.app:readLevelFile(next_level)
+          local level_info, _ = self.ui.app:readLevelFile(next_level)
           if level_info then
             self.ui.app:loadLevel(next_level, nil, level_info.name,
                      level_info.map_file, level_info.briefing)

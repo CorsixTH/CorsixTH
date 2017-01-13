@@ -269,6 +269,9 @@ Section "MainSection" SEC01
   SetOutPath "$INSTDIR\Levels"
   File /r /x .svn ..\CorsixTH\Levels\*.*
 
+  SetOutPath "$INSTDIR\Campaigns"
+  File /r /x .svn ..\CorsixTH\Campaigns\*.*
+
 ; Shortcuts and final files
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
@@ -278,6 +281,17 @@ Section "MainSection" SEC01
 
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
+
+  ${If} ${RunningX64}
+    ReadRegStr $1 HKLM "SOFTWARE\Microsoft\DevDiv\vc\Servicing\$(vc_redist_version)\RuntimeMinimum" "Install"
+    StrCmp $1 1 installed
+  ${Else}
+    ReadRegStr $1 HKLM "SOFTWARE\Microsoft\DevDiv\vc\Servicing\$(vc_redist_version)\RuntimeMinimum" "Install"
+    StrCmp $1 1 installed
+  ${EndIf}
+  MessageBox MB_YESNO "$(no_vc_redist)" IDNO +2
+  ExecShell open "$(vc_redist_url)"
+  installed:
 
 SectionEnd
 

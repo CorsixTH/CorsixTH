@@ -29,9 +29,8 @@ local UITownMap = _G["UITownMap"]
 function UITownMap:UITownMap(ui)
   self:UIFullscreen(ui)
 
-  local app      = self.ui.app
-  local hospital = self.ui.hospital
-  local gfx      = app.gfx
+  local app = self.ui.app
+  local gfx = app.gfx
   self.app = app
 
   if not pcall(function()
@@ -210,7 +209,7 @@ function UITownMap:draw(canvas, x, y)
 
   -- Draw entities
   local function draw_entities(list, color, size)
-    for i, ent in ipairs(list) do
+    for _, ent in ipairs(list) do
       -- 3 is the number of pixel that are used to represent one world tile in the map
       canvas:drawRect(color, town_map_offset_x + ent.tile_x * 3 - 2,
         town_map_offset_y + ent.tile_y * 3 + 1, size, size)
@@ -218,7 +217,7 @@ function UITownMap:draw(canvas, x, y)
   end
 
   local function draw_entities_in_hospital(list, color, size)
-    for i, ent in ipairs(list) do
+    for _, ent in ipairs(list) do
       local tile_x, tile_y = ent.tile_x, ent.tile_y
       if tile_x and hospital:isInHospital(tile_x, tile_y) then
         -- 3 is the number of pixel that are used to represent one world tile in the map

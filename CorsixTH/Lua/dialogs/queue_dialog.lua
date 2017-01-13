@@ -19,8 +19,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local math_floor
-    = math.floor
 
 --! Room / door / reception desk queue visualisation dialog.
 class "UIQueue" (Window)
@@ -114,7 +112,7 @@ function UIQueue:draw(canvas, x, y)
   end
 end
 
-function UIQueue:isInsideQueueBoundingBox(x, y)
+local function isInsideQueueBoundingBox(x, y)
   local x_min = 219
   local x_max = 534
   local y_min = 15
@@ -124,7 +122,7 @@ end
 
 function UIQueue:onMouseDown(button, x, y)
   -- Allow normal window operations if the mouse is outside the listing of patients
-  if not self:isInsideQueueBoundingBox(x, y) then
+  if not isInsideQueueBoundingBox(x, y) then
     return Window.onMouseDown(self, button, x, y)
   end
   local x_min = 219
@@ -182,7 +180,7 @@ function UIQueue:onMouseUp(button, x, y)
       queue:move(index, 1) -- move to front
     elseif x > 542 and x < 585 and y > 50 and y < 105 then -- Inside exit sign bounding box
       queue:move(index, num_patients) -- move to back
-    elseif self:isInsideQueueBoundingBox(x, y) then -- Inside queue bounding box
+    elseif isInsideQueueBoundingBox(x, y) then
       local dx = 1
       if num_patients ~= 1 then
         dx = math.floor(width / (num_patients - 1))
@@ -229,7 +227,7 @@ function UIQueue:onMouseMove(x, y, dx, dy)
       self.ui:setCursor(self.ui.app.gfx:loadMainCursor("queue_drag"))
     end
   end
-  if not self:isInsideQueueBoundingBox(x, y) then
+  if not isInsideQueueBoundingBox(x, y) then
     self.hovered = nil
     Window:onMouseMove(x, y, dx, dy)
     return
@@ -360,27 +358,10 @@ function UIQueuePopup:UIQueuePopup(ui, x, y, patient)
   -- Background sprites
   self:addPanel(375, 0, 0)
 
-  local function send_to_hospital(i)
-    return --[[persistable:queue_dialog_popup_hospital_button]] function()
-      -- TODO: Actually send to another hospital (when they exist)
-      self.patient:goHome("kicked")
-      local str = _S.dynamic_info.patient.actions.sent_to_other_hospital
-      self.patient:updateDynamicInfo(str)
-      self:close()
-    end
-  end
-
   -- Buttons
   self:addPanel(0, 12, 12):makeButton(0, 0, 81, 54, 378, self.sendToReception)
   self:addPanel(0, 95, 12):makeButton(0, 0, 81, 54, 379, self.sendHome)
-  local bottom = 58
-  -- TODO: Add this when there are other hospitals to send patients to.
-  --[[for i, hospital in ipairs(ui.app.world.hospitals) do
-    self:addPanel(376, 0, 68 + (i-1)*34)
-    self:addPanel(0, 12, 34 + i*34):makeButton(0, 0, 164, 32, 380, send_to_hospital(i))
-    bottom = bottom + 34
-  end]]
-  self:addPanel(377, 0, bottom)
+  self:addPanel(377, 0, 58)
 
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req06V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
@@ -388,15 +369,15 @@ end
 
 function UIQueuePopup:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y
   -- TODO: Same as above.
+  -- x, y = self.x + x, self.y + y
   --[[for i, hospital in ipairs(self.ui.app.world.hospitals) do
     self.white_font:draw(canvas, hospital.name:upper() , x + 74, y + 78 + (i-1)*34, 92, 0)
   end]]
 end
 
 function UIQueuePopup:sendToReception()
-  self.patient:setNextAction{name = "seek_reception"}
+  self.patient:setNextAction(SeekReceptionAction())
   self:close()
 end
 

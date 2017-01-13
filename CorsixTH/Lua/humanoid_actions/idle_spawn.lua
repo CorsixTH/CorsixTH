@@ -17,6 +17,25 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+
+class "IdleSpawnAction" (HumanoidAction)
+
+---@type IdleSpawnAction
+local IdleSpawnAction = _G["IdleSpawnAction"]
+
+function IdleSpawnAction:IdleSpawnAction(anim, point_dir)
+  assert(type(anim) == "number", "Invalid value for parameter 'anim'")
+  assert(type(point_dir) == "table" and
+      type(point_dir.x) == "number" and type(point_dir.y) == "number" and
+      point_dir.direction == "north" or point_dir.direction == "south" or
+      point_dir.direction == "east" or point_dir.direction == "west",
+      "Invalid value for parameter 'point_dir'")
+
+  self:HumanoidAction("idle_spawn")
+  self.spawn_animation = anim
+  self.point = point_dir -- x, y, direction of the spawn animation
+end
+
 local function action_idle_spawn_start(action, humanoid)
   action.must_happen = true
 
@@ -24,16 +43,19 @@ local function action_idle_spawn_start(action, humanoid)
   humanoid:setTilePositionSpeed(action.point.x,action.point.y)
 
   if action.spawn_animation then
-    humanoid:queueAction({name="idle",count = humanoid.world:getAnimLength(action.spawn_animation),
-                                      loop_callback=--[[persistable:idle_spawn_animation]] function()
-                                        if action.spawn_sound then humanoid:playSound(action.spawn_sound) end
-                                        humanoid:setAnimation(action.spawn_animation)
-                                      end})
+    local loop_callback_spawn =--[[persistable:idle_spawn_animation]] function()
+      if action.spawn_sound then humanoid:playSound(action.spawn_sound) end
+      humanoid:setAnimation(action.spawn_animation)
+    end
+
+    humanoid:queueAction(IdleAction():setCount(humanoid.world:getAnimLength(action.spawn_animation))
+        :setLoopCallback(loop_callback_spawn))
+
   elseif action.spawn_sound then
     humanoid:playSound(action.spawn_sound)
   end
 
-  humanoid:queueAction({name="idle",count = action.count,loop_callback = action.loop_callback})
+  humanoid:queueAction(IdleAction():setCount(action.count):setLoopCallback(action.loop_callback))
   humanoid:finishAction()
 end
 

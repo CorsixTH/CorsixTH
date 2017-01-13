@@ -128,11 +128,11 @@ end
 --!param t Array to sum.
 --!return (int) The sum of all values from the t array.
 local function sum(t)
-  local sum = 0
+  local total = 0
   for _, entry in ipairs(t) do
-    sum = sum + entry
+    total = total + entry
   end
-  return sum
+  return total
 end
 
 --! Animation function.

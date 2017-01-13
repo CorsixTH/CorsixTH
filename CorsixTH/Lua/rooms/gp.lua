@@ -52,40 +52,42 @@ end
 function GPRoom:doStaffUseCycle(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "cabinet")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
+
   obj, ox, oy = self.world:findObjectNear(humanoid, "desk")
-  humanoid:queueAction{name = "walk", x = ox, y = oy}
+  humanoid:queueAction(WalkAction(ox, oy))
+
   -- A skilled doctor requires less time at the desk to diagnose the patient
   local inv_skill = 1 - humanoid.profile.skill
   local desk_use_time = math.random(math.floor(3 +  5 * inv_skill),
                                     math.ceil (8 + 10 * inv_skill))
-  humanoid:queueAction{name = "use_object",
-    object = obj,
-    loop_callback = --[[persistable:gp_loop_callback]] function()
-      desk_use_time = desk_use_time - 1
-      if desk_use_time == 0 then
-        -- Consultants who aren't tired might not need to stretch their legs
-        -- to remain alert, so might just remain at the desk and deal with the
-        -- next patient quicker.
-        if humanoid.profile.is_consultant
-        and math.random() >= humanoid.attributes.fatigue then
-          desk_use_time = math.random(7, 14)
-        else
-          self:doStaffUseCycle(humanoid)
-        end
-        local patient = self:getPatient()
-        if patient then
-          if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
-            if patient.user_of and not class.is(patient.user_of, Door) then
-              self:dealtWithPatient(patient)
-            end
-          else
-            self.max_times = self.max_times - 1
+  local gp_loop_callback = --[[persistable:gp_loop_callback]] function()
+    desk_use_time = desk_use_time - 1
+    if desk_use_time == 0 then
+      -- Consultants who aren't tired might not need to stretch their legs
+      -- to remain alert, so might just remain at the desk and deal with the
+      -- next patient quicker.
+      if humanoid.profile.is_consultant and
+          math.random() >= humanoid.attributes.fatigue then
+        desk_use_time = math.random(7, 14)
+      else
+        self:doStaffUseCycle(humanoid)
+      end
+
+      local patient = self:getPatient()
+      if patient then
+        if math.random() <= (0.7 + 0.3 * humanoid.profile.skill) or self.max_times <= 0 then
+          if patient.user_of and not class.is(patient.user_of, Door) then
+            self:dealtWithPatient(patient)
           end
+        else
+          self.max_times = self.max_times - 1
         end
       end
-    end,
-  }
+    end
+  end
+
+  humanoid:queueAction(UseObjectAction(obj):setLoopCallback(gp_loop_callback))
 end
 
 function GPRoom:commandEnteringStaff(humanoid)
@@ -97,7 +99,7 @@ end
 function GPRoom:commandEnteringPatient(humanoid)
   local obj, ox, oy = self.world:findObjectNear(humanoid, "chair")
   humanoid:walkTo(ox, oy)
-  humanoid:queueAction{name = "use_object", object = obj}
+  humanoid:queueAction(UseObjectAction(obj))
   self.max_times = 3
   return Room.commandEnteringPatient(self, humanoid)
 end
@@ -132,9 +134,9 @@ function GPRoom:dealtWithPatient(patient)
     self.hospital:receiveMoneyForTreatment(patient)
     patient:completeDiagnosticStep(self)
     if patient.diagnosis_progress >= self.hospital.policies["stop_procedure"] then
-      patient:setDiagnosed(true)
+      patient:setDiagnosed()
       if patient:agreesToPay(patient.disease.id) then
-        patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[1], treatment_room = true}
+        patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[1]):enableTreatmentRoom())
       else
         patient:goHome("over_priced", patient.disease.id)
       end
@@ -148,8 +150,8 @@ function GPRoom:dealtWithPatient(patient)
       self:sendPatientToNextDiagnosisRoom(patient)
     end
   else
-    patient:queueAction{name = "meander", count = 2}
-    patient:queueAction{name = "idle"}
+    patient:queueAction(MeanderAction():setCount(2))
+    patient:queueAction(IdleAction())
   end
 
   if self.dealt_patient_callback then
@@ -173,11 +175,7 @@ function GPRoom:sendPatientToNextDiagnosisRoom(patient)
     local next_room_id = math.random(1, #patient.available_diagnosis_rooms)
     local next_room = patient.available_diagnosis_rooms[next_room_id]
     if patient:agreesToPay("diag_" .. next_room) then
-      patient:queueAction{
-        name = "seek_room",
-        room_type = next_room,
-        diagnosis_room = next_room_id,
-      }
+      patient:queueAction(SeekRoomAction(next_room):setDiagnosisRoom(next_room_id))
     else
       patient:goHome("over_priced", "diag_" .. next_room)
     end
@@ -186,9 +184,11 @@ end
 
 function GPRoom:onHumanoidLeave(humanoid)
   -- Reset moods when either the patient or the doctor leaves the room.
-  if self.staff_member then
-    self.staff_member:setMood("idea3", "deactivate")
-    self.staff_member:setMood("reflexion", "deactivate")
+  if humanoid.humanoid_class ~= "Handyman" then
+    for staff, _ in pairs(self.humanoids) do
+      staff:setMood("idea3", "deactivate")
+      staff:setMood("reflexion", "deactivate")
+    end
   end
   if self.staff_member == humanoid then
     self.staff_member = nil
@@ -200,8 +200,8 @@ function GPRoom:onHumanoidLeave(humanoid)
 end
 
 function GPRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Doctor")
-  and not self.world.ui.start_tutorial then
+  if not self.hospital:hasStaffOfCategory("Doctor") and
+      not self.world.ui.start_tutorial then
     self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
   end
   return Room.roomFinished(self)

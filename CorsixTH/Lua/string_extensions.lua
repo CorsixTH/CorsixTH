@@ -20,7 +20,6 @@ SOFTWARE. --]]
 
 local TH = require "TH"
 local lpeg = require "lpeg"
-local type = type
 local _unwrap = TH.stringProxy._unwrap
 
 function TH.stringProxy.gsub(str, patt, repl)

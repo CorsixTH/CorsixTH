@@ -438,7 +438,7 @@ bool THMap::loadFromTHFile(const uint8_t* pData, size_t iDataLength,
             if(!(pData[5] & 1))
             {
                 pNode->flags.passable = true;
-                if(*pParcel && !(pData[7] & 16))
+                if(!(pData[7] & 16))
                 {
                     pNode->flags.hospital = true;
                     if(!(pData[5] & 2)) {
@@ -581,14 +581,46 @@ void THMap::save(std::string filename)
     os.close();
 }
 
-void THMap::setParcelOwner(int iParcelId, int iOwner)
+//! Add or remove divider wall for the given node
+/*!
+   If the given 'pNode' has an indoor border to another parcel in the 'delta' direction:
+   * A divider wall is added in the layer specified by 'block' if the owners
+     of the two parcels are not the same, or
+   * A divider wall is removed if the owners are the same and 'iParcelId' is involved.
+   \return True if a border was removed, false otherwise
+*/
+static bool addRemoveDividerWalls(THMap* pMap, THMapNode* pNode, const THMapNode* pOriginalNode,
+                                  int iXY, int delta, int block, int iParcelId)
 {
+    if (iXY > 0 && pOriginalNode->flags.hospital &&
+        pOriginalNode[-delta].flags.hospital &&
+        pNode->iParcelId != pNode[-delta].iParcelId)
+    {
+        int iOwner = pMap->getParcelOwner(pNode->iParcelId);
+        int iOtherOwner = pMap->getParcelOwner(pNode[-delta].iParcelId);
+        if (iOwner != iOtherOwner)
+        {
+            pNode->iBlock[block] = block + (iOwner ? 143 : 141);
+        }
+        else if (pNode->iParcelId == iParcelId || pNode[-delta].iParcelId == iParcelId)
+        {
+            pNode->iBlock[block] = 0;
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<std::pair<int, int>> THMap::setParcelOwner(int iParcelId, int iOwner)
+{
+    std::vector<std::pair<int, int>> vSplitTiles;
     if(iParcelId <= 0 || m_iParcelCount <= iParcelId || iOwner < 0)
-        return;
+        return vSplitTiles;
     m_pPlotOwner[iParcelId] = iOwner;
 
     THMapNode *pNode = m_pCells;
     const THMapNode *pOriginalNode = m_pOriginalCells;
+    
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
@@ -619,30 +651,21 @@ void THMap::setParcelOwner(int iParcelId, int iOwner)
                     }
                 }
             }
-
-#define IsDividerWall(x) (142 <= (x) && (x) <= 145)
-#define CheckDividers(xy, delta, block) \
-            if(xy > 0 && pOriginalNode->flags.hospital && \
-                pOriginalNode[-delta].flags.hospital && \
-                pNode->iParcelId != pNode[-delta].iParcelId) \
-            { \
-                int iOwner = m_pPlotOwner[pNode->iParcelId]; \
-                int iOtherOwner = m_pPlotOwner[pNode[-delta].iParcelId]; \
-                if(iOwner != iOtherOwner) \
-                    pNode->iBlock[block] = block + (iOwner ? 143 : 141); \
-                else if(IsDividerWall(pNode->iBlock[block])) \
-                    pNode->iBlock[block] = 0; \
+            if (addRemoveDividerWalls(this, pNode, pOriginalNode, iX, 1, 2, iParcelId))
+            {
+                vSplitTiles.push_back(std::make_pair(iX, iY));
             }
-            CheckDividers(iX,   1, 2);
-            CheckDividers(iY, 128, 1);
-#undef CheckDividers
-#undef IsDividerWall
+            if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, 128, 1, iParcelId))
+            {
+                vSplitTiles.push_back(std::make_pair(iX, iY));
+            }
         }
     }
 
     updatePathfinding();
     updateShadows();
     _updatePurchaseMatrix();
+    return vSplitTiles;
 }
 
 void THMap::_makeAdjacencyMatrix()

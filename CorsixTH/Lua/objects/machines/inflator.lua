@@ -77,7 +77,7 @@ object.orientations = {
 local anim_mgr = TheApp.animation_manager
 local kf1, kf2 = {0, 1}, {0, 0}
 anim_mgr:setMarker(object.multi_usage_animations["Standard Male Patient - Doctor"].north.begin_use, 0, kf1, 5, kf2)
-local kf1, kf2 = {0, 0}, {1, 0}
+kf1, kf2 = {0, 0}, {1, 0}
 anim_mgr:setMarker(object.multi_usage_animations["Standard Male Patient - Doctor"].north.finish_use, 1, kf1, 11, kf2)
 anim_mgr:setMarker(object.idle_animations.north, {-0.9, -1.0})
 

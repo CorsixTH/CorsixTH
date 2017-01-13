@@ -49,17 +49,15 @@ function MoviePlayer:init()
   self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
-  local num
-  local movie
-  local movies = self.app.fs:listFiles("Anims");
+  local movies = self.app.fs:listFiles("Anims")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
       end
       --advance level movies
-      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
+      local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
         self.advance_movies[tonumber(num, 10)] = movie
       end
@@ -73,7 +71,7 @@ function MoviePlayer:init()
   --find intro
   movies = self.app.fs:listFiles("Intro")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       if movie:upper():match(pathsep .. "INTRO%.SM4$") then
         self.intro_movie = movie
       end
@@ -116,10 +114,43 @@ function MoviePlayer:playLoseMovie()
   end
 end
 
-function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
-  local x, y, w, h = 0
+--! Calculate the position and size for a movie
+--!
+--! Returns x and y position and width and height for the movie to be displayed
+--! based on the native size of the movie and the current screen dimensions
+function MoviePlayer:calculateSize()
+  -- calculate target dimensions
+  local x, y, w, h
   local screen_w, screen_h = self.app.config.width, self.app.config.height
-  local ar
+  local native_w = self.moviePlayer:getNativeWidth()
+  local native_h = self.moviePlayer:getNativeHeight()
+  if native_w ~= 0 and native_h ~= 0 then
+    local ar = native_w / native_h
+    if math.abs((screen_w / screen_h) - ar) < 0.001 then
+      x, y = 0, 0
+      w, h = screen_w, screen_h
+    else
+      if screen_w > screen_h / native_h * native_w then
+        w = math.floor(screen_h / native_h * native_w)
+        h = screen_h
+        x = math.floor((screen_w - w) / 2)
+        y = 0
+      else
+        w = screen_w
+        h = math.floor(screen_w / native_w * native_h)
+        x = 0
+        y = math.floor((screen_h - h) / 2)
+      end
+    end
+  else
+    x, y = 0, 0
+    w, h = screen_w, screen_h
+  end
+
+  return x, y, w, h
+end
+
+function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   local success, warning
 
   if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
@@ -154,32 +185,6 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
     end
   end
 
-  -- calculate target dimensions
-  local native_w = self.moviePlayer:getNativeWidth()
-  local native_h = self.moviePlayer:getNativeHeight()
-  if(native_w ~= 0 and native_h ~= 0) then
-    ar = native_w / native_h
-    if(math.abs((screen_w / screen_h) - ar) < 0.001) then
-      x, y = 0, 0
-      w, h = screen_w, screen_h
-    else
-      if(screen_w > screen_h / native_h * native_w) then
-        w = math.floor(screen_h / native_h * native_w)
-        h = screen_h
-        x = math.floor((screen_w - w) / 2)
-        y = 0
-      else
-        w = screen_w
-        h = math.floor(screen_w / native_w * native_h)
-        x = 0
-        y = math.floor((screen_h - h) / 2)
-      end
-    end
-  else
-    x, y = 0, 0
-    w, h = screen_w, screen_h
-  end
-
   self.video:startFrame()
   self.video:fillBlack()
   self.video:endFrame()
@@ -201,7 +206,7 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   end
 
   --TODO: Add text e.g. for newspaper headlines
-  warning = self.moviePlayer:play(x, y, w, h, self.channel)
+  warning = self.moviePlayer:play(self.channel)
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
     if self.app.world then
@@ -263,7 +268,8 @@ function MoviePlayer:_destroyMovie()
 end
 
 function MoviePlayer:refresh()
-  self.moviePlayer:refresh()
+  local x, y, w, h = self:calculateSize()
+  self.moviePlayer:refresh(x, y, w, h)
 end
 
 function MoviePlayer:updateRenderer()

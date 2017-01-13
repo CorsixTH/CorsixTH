@@ -26,7 +26,7 @@ class "UIStaffManagement" (UIFullscreen)
 ---@type UIStaffManagement
 local UIStaffManagement = _G["UIStaffManagement"]
 
-function UIStaffManagement:UIStaffManagement(ui, disease_selection)
+function UIStaffManagement:UIStaffManagement(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
@@ -96,7 +96,6 @@ function UIStaffManagement:UIStaffManagement(ui, disease_selection)
 
   -- Blankers for each row
   local row_blankers = {}
-  local i
   for i = 1, 10 do
     row_blankers[i] = self:addColourPanel(50, 55 + i*27, 580, 27, 60, 174, 203)
   end
@@ -196,7 +195,7 @@ function UIStaffManagement:setCategory(name)
   self.skill_blanker.visible = name ~= "Doctor"
   self.title_blanker.visible = name ~= "Doctor"
   self.category = name
-  for i, btn in ipairs(self.categories) do
+  for _, btn in ipairs(self.categories) do
     local should_be_toggled = btn.on_click_self == name
     if btn.toggled ~= should_be_toggled then
       btn:toggle()

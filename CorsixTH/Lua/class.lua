@@ -62,8 +62,6 @@ local setmetatable, getmetatable, type
 
 local function define_class(name, super, adopts_self)
   local mt = {}
-  local methods = {}
-  local methods_mt = {}
 
   local function new_class(methods, ...)
     local constructor = methods[name]
@@ -77,6 +75,9 @@ local function define_class(name, super, adopts_self)
     end
     return self
   end
+
+  local methods = {}
+  local methods_mt = {}
 
   mt.__index = methods
   setmetatable(methods, methods_mt)

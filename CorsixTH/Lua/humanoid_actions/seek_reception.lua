@@ -18,16 +18,28 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local function can_join_queue_at(humanoid, x, y, use_x, use_y)
+class "SeekReceptionAction" (HumanoidAction)
+
+---@type SeekReceptionAction
+local SeekReceptionAction = _G["SeekReceptionAction"]
+
+function SeekReceptionAction:SeekReceptionAction()
+  self:HumanoidAction("seek_reception")
+end
+
+local function can_join_queue_at(humanoid, x, y)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
-  return flag_cache.hospital and not flag_cache.room
+  return flag_cache.hospital and not flag_cache.room and
+      humanoid.hospital and
+      flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
 local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
-
   local best_desk
   local score
+
+  assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
   -- Go through all receptions desks.
   for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
@@ -63,24 +75,17 @@ local function action_seek_reception_start(action, humanoid)
 
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
-    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, x, y) then
+    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
-      humanoid:setNextAction{
-        name = "queue",
-        x = x,
-        y = y,
-        queue = best_desk.queue,
-        face_x = face_x,
-        face_y = face_y,
-        must_happen = action.must_happen,
-      }
+      humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
+          :setFaceDirection(face_x, face_y))
     else
-      local walk = {name = "walk", x = x, y = y, must_happen = action.must_happen}
+      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
       humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
       for i = #walk.path_x, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], x, y) then
+        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i]) then
           walk.path_x[i + 1] = nil
           walk.path_y[i + 1] = nil
         else
@@ -92,17 +97,16 @@ local function action_seek_reception_start(action, humanoid)
     -- No reception desk found. One will probably be built soon, somewhere in
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
-    if world.map.th:getCellFlags(humanoid.tile_x, humanoid.tile_y).hospital then
-      procrastination = {name = "meander", count = 1}
+    if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
+      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
       if not humanoid.waiting then
         -- Eventually people are going to get bored and leave.
         humanoid.waiting = 5
       end
     else
       local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-      procrastination = {name = "walk", x = hosp_x, y = hosp_y}
+      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen)
     end
-    procrastination.must_happen = action.must_happen
     humanoid:queueAction(procrastination, 0)
   end
 end

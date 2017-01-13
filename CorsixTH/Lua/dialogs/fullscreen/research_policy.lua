@@ -98,8 +98,8 @@ function UIResearch:updateCategories()
   local c2 = 450
 
   local function handler_factory(area, mode)
-    return --[[persistable:research_policy_adjust_handler]] function(self)
-      self:adjustResearch(area, mode)
+    return --[[persistable:research_policy_adjust_handler]] function(window)
+      window:adjustResearch(area, mode)
     end
   end
 
@@ -207,16 +207,16 @@ function UIResearch:draw(canvas, x, y)
   local research = self.research.research_policy
 
   for i, category in ipairs(research_categories) do
-    local y = y + ytop + i * spacing
-    lbl_font:draw(canvas, _S.research.categories[category], x + 170, y)
+    local ypos = y + ytop + i * spacing
+    lbl_font:draw(canvas, _S.research.categories[category], x + 170, ypos)
     if not research[category].current then
-      num_font:draw(canvas, _S.misc.done, x + 270, y, 300, 0)
+      num_font:draw(canvas, _S.misc.done, x + 270, ypos, 300, 0)
     else
-      num_font:draw(canvas, research[category].frac, x + 270, y, 300, 0)
+      num_font:draw(canvas, research[category].frac, x + 270, ypos, 300, 0)
     end
     -- Display research progress.
     if research[category].current and not research[category].current.dummy then
-      local ly = y + 26
+      local ly = ypos + 26
       local lx = x + 172
       local required = self.research:getResearchRequired(research[category].current)
       local available = self.research.research_progress[research[category].current].points

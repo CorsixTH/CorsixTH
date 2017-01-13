@@ -18,10 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-local math_floor
-    = math.floor
-
 -- Test for hit within the view circle
 local --[[persistable:staff_dialog_is_in_view_circle]] function is_in_view_circle(x, y, is_handyman)
   local circle_center_y = is_handyman and 276 or 248
@@ -97,9 +93,9 @@ function UIStaff:UIStaff(ui, staff)
     end
     self:addPanel(302,   5, 205) -- View circle top/Wage
     self:addPanel(313,  15, 189) -- Tasks bottom
-    self:addPanel(314,  37, 145):makeButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
-    self:addPanel(316,  92, 145):makeButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
-    self:addPanel(318, 148, 145):makeButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
+    self:addPanel(314,  37, 145):makeRepeatButton(0, 0, 49, 48, 315, self.doMoreCleaning):setTooltip(_S.tooltip.handyman_window.prio_litter)
+    self:addPanel(316,  92, 145):makeRepeatButton(0, 0, 49, 48, 317, self.doMoreWatering):setTooltip(_S.tooltip.handyman_window.prio_plants)
+    self:addPanel(318, 148, 145):makeRepeatButton(0, 0, 49, 48, 319, self.doMoreRepairing):setTooltip(_S.tooltip.handyman_window.prio_machines)
     self:addPanel(240,  21, 210):makeButton(0, 0, 73, 30, 240, self.changeParcel):setTooltip(_S.tooltip.handyman_window.parcel_select)
   self:addPanel(303,   0, 253) -- View circle midpiece
     self:addPanel(304,   6, 302) -- View circle bottom
@@ -180,11 +176,10 @@ function UIStaff:draw(canvas, x_, y_)
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
     font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)
     -- The concentration areas
-    local cleaning_width, watering_width, repairing_width = 0, 0, 0
     if self.staff.attributes["cleaning"] then -- Backwards compatibility
-      cleaning_width = math_floor(self.staff.attributes["cleaning"] * 40 + 0.5)
-      watering_width = math_floor(self.staff.attributes["watering"] * 40 + 0.5)
-      repairing_width = math_floor(self.staff.attributes["repairing"] * 40 + 0.5)
+      local cleaning_width = math.floor(self.staff.attributes["cleaning"] * 40 + 0.5)
+      local watering_width = math.floor(self.staff.attributes["watering"] * 40 + 0.5)
+      local repairing_width = math.floor(self.staff.attributes["repairing"] * 40 + 0.5)
       if cleaning_width ~= 0 then
         for dx = 0, cleaning_width - 1 do
           self.panel_sprites:draw(canvas, 351, x + 43 + dx, y + 200)
@@ -206,7 +201,7 @@ function UIStaff:draw(canvas, x_, y_)
   end
 
   if self.staff.attributes["happiness"] then
-    local happiness_bar_width = math_floor(self.staff.attributes["happiness"] * 40 + 0.5)
+    local happiness_bar_width = math.floor(self.staff.attributes["happiness"] * 40 + 0.5)
     if happiness_bar_width ~= 0 then
       for dx = 0, happiness_bar_width - 1 do
         self.panel_sprites:draw(canvas, 348, x + 139 + dx, y + 56)
@@ -216,7 +211,7 @@ function UIStaff:draw(canvas, x_, y_)
 
   local fatigue_bar_width = 40.5
   if self.staff.attributes["fatigue"] then
-    fatigue_bar_width = math_floor((1 - self.staff.attributes["fatigue"]) * 40 + 0.5)
+    fatigue_bar_width = math.floor((1 - self.staff.attributes["fatigue"]) * 40 + 0.5)
   end
   if fatigue_bar_width ~= 0 then
     for dx = 0, fatigue_bar_width - 1 do
@@ -224,7 +219,7 @@ function UIStaff:draw(canvas, x_, y_)
     end
   end
 
-  local skill_bar_width = math_floor(profile.skill * 40 + 0.5)
+  local skill_bar_width = math.floor(profile.skill * 40 + 0.5)
   if skill_bar_width ~= 0 then
     for dx = 0, skill_bar_width - 1 do
       self.panel_sprites:draw(canvas, 350, x + 139 + dx, y + 120)
@@ -314,12 +309,7 @@ end
 
 function UIStaff:placeStaff()
   self.staff.pickup = true
-  self.staff:setNextAction({
-    name = "pickup",
-    ui = self.ui,
-    todo_close = self,
-    must_happen = true,
-  }, true)
+  self.staff:setNextAction(PickupAction(self.ui):setTodoClose(self), true)
 end
 
 function UIStaff:fireStaff()

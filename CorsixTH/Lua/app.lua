@@ -23,14 +23,12 @@ local rnc = require "rnc"
 local lfs = require "lfs"
 local TH = require "TH"
 local SDL = require "sdl"
-local assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
-    = assert, io, type, dofile, loadfile, pcall, tonumber, print, setmetatable
 local runDebugger = dofile "run_debugger"
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 111
+local SAVEGAME_VERSION = 117
 
 class "App"
 
@@ -57,6 +55,7 @@ function App:App()
     mousewheel = self.onMouseWheel,
     motion = self.onMouseMove,
     active = self.onWindowActive,
+    window_resize = self.onWindowResize,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
     sound_over = self.onSoundOver
@@ -74,7 +73,7 @@ end
 
 function App:setCommandLine(...)
   self.command_line = {...}
-  for i, arg in ipairs(self.command_line) do
+  for _, arg in ipairs(self.command_line) do
     local setting, value = arg:match("^%-%-([^=]*)=(.*)$") --setting=value
     if value then
       self.command_line[setting] = value
@@ -115,9 +114,8 @@ function App:init()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
-
+  self:initUserLevelDir()
   self:initSavegameDir()
-
   self:initScreenshotsDir()
 
   -- Create the window
@@ -262,7 +260,10 @@ function App:init()
 
     dofile "room"
     self.rooms = self:loadLuaFolder("rooms")
+
+    dofile "humanoid_action"
     self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
+
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
 
@@ -279,11 +280,10 @@ function App:init()
     self.ui = UI(self, true)
     self.ui:setMenuBackground()
     local function callback(path)
-      local app = TheApp
-      app.config.theme_hospital_install = path
-      app:saveConfig()
+      TheApp.config.theme_hospital_install = path
+      TheApp:saveConfig()
       debug.getregistry()._RESTART = true
-      app.running = false
+      TheApp.running = false
     end
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
@@ -320,6 +320,28 @@ function App:init()
     self.moviePlayer:playIntro(callback_after_movie)
   else
     callback_after_movie()
+  end
+  return true
+end
+
+--! Tries to initialize the user and built in level directories, returns true on
+--! success and false on failure.
+function App:initUserLevelDir()
+  local conf_path = self.command_line["config-file"] or "config.txt"
+  self.user_level_dir = self.config.levels or
+      conf_path:match("^(.-)[^" .. pathsep .. "]*$") .. "Levels"
+
+  if self.user_level_dir:sub(-1, -1) == pathsep then
+    self.user_level_dir = self.user_level_dir:sub(1, -2)
+  end
+  if lfs.attributes(self.user_level_dir, "mode") ~= "directory" then
+    if not lfs.mkdir(self.user_level_dir) then
+       print("Notice: Level directory does not exist and could not be created.")
+       return false
+    end
+  end
+  if self.user_level_dir:sub(-1, -1) ~= pathsep then
+    self.user_level_dir = self.user_level_dir .. pathsep
   end
   return true
 end
@@ -451,25 +473,30 @@ end
 --! to be able to progress through that campaign.
 --!param campaign_file (string) Name of a CorsixTH Campaign definition Lua file.
 function App:loadCampaign(campaign_file)
-  local campaign_info, errors = self:readCampaignFile(campaign_file)
+  local campaign_info, level_info, errors, _
+
+  campaign_info, errors = self:readCampaignFile(campaign_file)
   if not campaign_info then
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_load_campaign:format(errors)}))
-  else
-    local level_info, err = self:readLevelFile(campaign_info.levels[1])
-    if level_info then
-      local _, errors = self:readMapDataFile(level_info.map_file)
-      if errors then
-        self.ui:addWindow(UIInformation(self.ui, {errors}))
-        return
-      end
-      self:loadLevel(campaign_info.levels[1], nil, level_info.name,
-                     level_info.map_file, level_info.briefing)
-      -- The new world needs to know which campaign to continue on.
-      self.world.campaign_info = campaign_info
-    else
-      self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_find_first_campaign_level:format(err)}))
-    end
+    return
   end
+
+  level_info, errors = self:readLevelFile(campaign_info.levels[1])
+  if not level_info then
+    self.ui:addWindow(UIInformation(self.ui, {_S.errors.could_not_find_first_campaign_level:format(errors)}))
+    return
+  end
+
+  _, errors = self:readMapDataFile(level_info.map_file)
+  if errors then
+    self.ui:addWindow(UIInformation(self.ui, {errors}))
+    return
+  end
+
+  self:loadLevel(campaign_info.levels[1], nil, level_info.name,
+                 level_info.map_file, level_info.briefing)
+  -- The new world needs to know which campaign to continue on.
+  self.world.campaign_info = campaign_info
 end
 
 --! Reads the given file name as a Lua chunk from the Campaigns folder in the CorsixTH install directory.
@@ -530,10 +557,10 @@ end
 function App:getAbsolutePathToLevelFile(level)
   local path = debug.getinfo(1, "S").source:sub(2, -12)
   -- First look in Campaigns. If not found there, fall back to Levels.
-  local list_of_possible_paths = {path .. "Campaigns", path .. "Levels"}
-  for _, path in ipairs(list_of_possible_paths) do
-    local check_path = path .. pathsep .. level
-    local file, err = io.open(check_path, "rb")
+  local list_of_possible_paths = {self.user_level_dir, path .. "Campaigns", self.level_dir}
+  for _, parent_path in ipairs(list_of_possible_paths) do
+    local check_path = parent_path .. pathsep .. level
+    local file, _ = io.open(check_path, "rb")
     if file then
       file:close()
       return check_path
@@ -815,27 +842,26 @@ function App:saveConfig()
         -- Look for identifiers we want to save
         local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
         if identifier then
+          local _, temp
           -- Trim possible trailing comment from value
-          local _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
+          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
           value = temp or value
           -- Remove enclosing [[]], if necessary
-          local _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
           value = temp or value
 
           -- If identifier also exists in runtime options, compare their values and
           -- replace the line, if needed
-          --if self.config[identifier] ~= nil then
-            handled_ids[identifier] = true
-            if value ~= tostring(self.config[identifier]) then
-              local new_value = self.config[identifier]
-              if type(new_value) == "string" then
-                new_value = string.format("[[%s]]", new_value)
-              else
-                new_value = tostring(new_value)
-              end
-              lines[#lines] = string.format("%s = %s", identifier, new_value)
+          handled_ids[identifier] = true
+          if value ~= tostring(self.config[identifier]) then
+            local new_value = self.config[identifier]
+            if type(new_value) == "string" then
+              new_value = string.format("[[%s]]", new_value)
+            else
+              new_value = tostring(new_value)
             end
-          --end
+            lines[#lines] = string.format("%s = %s", identifier, new_value)
+          end
         end
       end
     end
@@ -872,12 +898,12 @@ function App:run()
   --  2) If an error occurs, the call stack is preserved in the coroutine, so
   --     Lua can query or print the call stack as required, rather than
   --     hardcoding error behaviour in C.
-  local co = coroutine.create(function(self)
+  local co = coroutine.create(function(app)
     local yield = coroutine.yield
-    local dispatch = self.dispatch
+    local dispatch = app.dispatch
     local repaint = true
-    while self.running do
-      repaint = dispatch(self, yield(repaint))
+    while app.running do
+      repaint = dispatch(app, yield(repaint))
     end
   end)
 
@@ -1049,6 +1075,12 @@ function App:onWindowActive(...)
   return self.ui:onWindowActive(...)
 end
 
+--! Window has been resized by the user
+--! Call the UI to handle the new window size
+function App:onWindowResize(...)
+  return self.ui:onWindowResize(...)
+end
+
 function App:onMusicOver(...)
   return self.audio:onMusicOver(...)
 end
@@ -1063,9 +1095,9 @@ end
 
 function App:checkInstallFolder()
   self.fs = FileSystem()
-  local status, err
+  local status, _
   if self.config.theme_hospital_install then
-    status, err = self.fs:setRoot(self.config.theme_hospital_install)
+    status, _ = self.fs:setRoot(self.config.theme_hospital_install)
   end
   local message = "Please make sure that you point the game to" ..
       " a valid copy of the data files from the original game," ..
@@ -1252,10 +1284,10 @@ end
 -- a specific savegame verion is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 110 then
+  if ver > 111 then
     return "Trunk"
   elseif ver > 105 then
-    return "v0.60-beta1"
+    return "v0.60"
   elseif ver > 91 then
     return "0.50"
   elseif ver > 78 then
@@ -1333,7 +1365,7 @@ end
 
 --! Begin the map editor
 function App:mapEdit()
-  self:loadLevel("", nil, nil, nil, nil, true);
+  self:loadLevel("", nil, nil, nil, nil, true)
 end
 
 --! Exits the game completely (no confirmation window)
@@ -1387,6 +1419,13 @@ function App:afterLoad()
     self.world:newObjectType(new_object)
   end
 
+  if old < 114 then
+    local rathole_type = dofile "objects/rathole"
+    Object.processTypeDefinition(rathole_type)
+    self.objects[rathole_type.id] = rathole_type
+    self.world:newObjectType(rathole_type)
+  end
+
   self.map:afterLoad(old, new)
   self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
@@ -1411,7 +1450,7 @@ function App:checkForUpdates()
     return
   end
 
-  local success, socket = pcall(require, "socket")
+  local success, _ = pcall(require, "socket")
 
   if not success then
     -- LuaSocket is not available, just return
@@ -1424,7 +1463,7 @@ function App:checkForUpdates()
   local url = require "socket.url"
 
   print("Checking for CorsixTH updates...")
-  local update_body, status, headers = http.request(update_url)
+  local update_body, status, _ = http.request(update_url)
 
   if not update_body or not (status == 200) then
     print("Couldn't check for updates. Server returned code: " .. status)
@@ -1457,7 +1496,7 @@ function App:checkForUpdates()
 
   -- Check to see if there's a changelog in the user's language
   local current_langs = self.strings:getLanguageNames(self.config.language)
-  for _,v in ipairs(current_langs) do
+  for _, v in ipairs(current_langs) do
     if (update_table["changelog_" .. v]) then
       changelog = update_table["changelog_" .. v]
       break

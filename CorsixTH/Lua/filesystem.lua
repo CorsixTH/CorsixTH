@@ -18,9 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local LFS = require "lfs"
 local pathsep = package.config:sub(1, 1)
 local part_pattern = "[^" .. pathsep .. "]+"
+
 local ISO_FS = require "ISO_FS"
 
 --! Layer for abstracting away differences in file systems

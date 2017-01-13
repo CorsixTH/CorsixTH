@@ -18,6 +18,16 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+class "FallingAction" (HumanoidAction)
+
+---@type FallingAction
+local FallingAction = _G["FallingAction"]
+
+function FallingAction:FallingAction()
+  self:HumanoidAction("falling")
+  self.setMustHappen(true)
+end
+
 local action_falling_end = permanent"action_falling_end"( function(humanoid)
   humanoid:finishAction()
 end)

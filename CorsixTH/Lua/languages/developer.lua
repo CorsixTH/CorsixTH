@@ -26,9 +26,10 @@ SOFTWARE. --]]
 
 Inherit("english")
 
-local function fixup(t, name)
+--! Construct a 'translation' with the string names as text value.
+local function fixup(t, str_name)
   for k, v in pairs(t) do
-    local name = name .. "." .. k
+    local name = str_name .. "." .. k
     if type(v) == "string" then
       t[k] = name
     else

@@ -27,8 +27,6 @@ class "FilteredFileTreeNode" (FileTreeNode)
 ---@type FilteredFileTreeNode
 local FilteredFileTreeNode = _G["FilteredFileTreeNode"]
 
-local pathsep = package.config:sub(1, 1)
-
 function FilteredFileTreeNode:FilteredFileTreeNode(path, filter)
   self:FileTreeNode(path)
   self.filter_by = filter
@@ -161,12 +159,6 @@ local col_caption = {
   blue = 218,
 }
 
-local col_scrollbar = {
-  red = 164,
-  green = 156,
-  blue = 208,
-}
-
 --[[ Constructs the dialog.
 !param ui (UI) The active ui.
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
@@ -188,7 +180,6 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
 
   self.default_button_sound = "selectx.wav"
 
-  local app = ui.app
   self.mode = mode
   self.modal_class = mode == "menu" and "main menu" or "saveload"
   self.on_top = mode == "menu"

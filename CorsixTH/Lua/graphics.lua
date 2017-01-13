@@ -19,11 +19,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local TH = require "TH"
-local SDL = require "sdl"
+
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
-local assert, string_char, table_concat, unpack, type, pairs, ipairs
-    = assert, string.char, table.concat, unpack, type, pairs, ipairs
 
 --! Layer for loading (and subsequently caching) graphical resources.
 --! The Graphics class handles loading and caching of graphics resources.
@@ -171,10 +169,10 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
         end,
       }
     else
-      local function reloader(res)
+      local function cursor_reloader(res)
         assert(res:load(sheet, index, hot_x, hot_y))
       end
-      self.reload_functions_last[cursor] = reloader
+      self.reload_functions_last[cursor] = cursor_reloader
     end
     sheet_cache[index] = cursor
     self.load_info[cursor] = {self.loadCursor, self, sheet, index, hot_x, hot_y}
@@ -182,7 +180,7 @@ function Graphics:loadCursor(sheet, index, hot_x, hot_y)
   return cursor
 end
 
-function Graphics:makeGreyscaleGhost(pal)
+local function makeGreyscaleGhost(pal)
   local remap = {}
   -- Convert pal from a string to an array of palette entries
   local entries = {}
@@ -194,22 +192,24 @@ function Graphics:makeGreyscaleGhost(pal)
   -- entry in the palette to that grey.
   for i = 0, #entries do
     local entry = entries[i]
-    -- NB: g is for grey, not green
-    local g = entry[1] * 0.299 + entry[2] * 0.587 + entry[3] * 0.114
-    local g_index = 0
-    local g_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
+    local grey = entry[1] * 0.299 + entry[2] * 0.587 + entry[3] * 0.114
+    local grey_index = 0
+    local grey_diff = 100000 -- greater than 3*63^2 (TH uses 6 bit colour channels)
     for j = 0, #entries do
-      local entry = entries[j]
-      local diff = (entry[1] - g)^2 + (entry[2] - g)^2  + (entry[3] - g)^2
-      if diff < g_diff then
-        g_diff = diff
-        g_index = j
+      local replace_entry = entries[j]
+      local diff_r = replace_entry[1] - grey
+      local diff_g = replace_entry[2] - grey
+      local diff_b = replace_entry[3] - grey
+      local diff = diff_r * diff_r + diff_g * diff_g + diff_b * diff_b
+      if diff < grey_diff then
+        grey_diff = diff
+        grey_index = j
       end
     end
-    remap[i] = string_char(g_index)
+    remap[i] = string.char(grey_index)
   end
   -- Convert remap from an array to a string
-  return table_concat(remap, "", 0, 255)
+  return table.concat(remap, "", 0, 255)
 end
 
 function Graphics:loadPalette(dir, name)
@@ -222,7 +222,7 @@ function Graphics:loadPalette(dir, name)
   local data = self.app:readDataFile(dir or "Data", name)
   local palette = TH.palette()
   palette:load(data)
-  self.cache.palette_greyscale_ghost[name] = self:makeGreyscaleGhost(data)
+  self.cache.palette_greyscale_ghost[name] = makeGreyscaleGhost(data)
   self.cache.palette[name] = palette
   self.load_info[palette] = {self.loadPalette, self, dir, name}
   return palette, self.cache.palette_greyscale_ghost[name]
@@ -258,13 +258,14 @@ function Graphics:loadRaw(name, width, height, dir, paldir, pal)
   end
   bitmap:setPalette(palette)
   assert(bitmap:load(data, width, self.target))
-  local function reloader(bitmap)
-    bitmap:setPalette(palette)
-    local data = self.app:readDataFile(dir, name .. ".dat")
-    data = data:sub(1, width * height)
-    assert(bitmap:load(data, width, self.target))
+
+  local function bitmap_reloader(bm)
+    bm:setPalette(palette)
+    local bitmap_data = self.app:readDataFile(dir, name .. ".dat")
+    bitmap_data = bitmap_data:sub(1, width * height)
+    assert(bm:load(bitmap_data, width, self.target))
   end
-  self.reload_functions[bitmap] = reloader
+  self.reload_functions[bitmap] = bitmap_reloader
 
   self.cache.raw[name] = bitmap
   self.load_info[bitmap] = {self.loadRaw, self, name, width, height, dir, paldir, pal}
@@ -313,6 +314,7 @@ function Graphics:hasLanguageFont(font)
   end
 end
 
+--! Font proxy meta table wrapping the C++ class.
 local font_proxy_mt = {
   __index = {
     sizeOf = function(self, ...)
@@ -336,14 +338,20 @@ function Graphics:onChangeLanguage()
   self.load_info = {} -- Any newly made objects are temporary, and shouldn't
                       -- remember reload information (also avoids insertions
                       -- into a table being iterated over).
-  for object, load_info in pairs(load_info) do
+  for object, info in pairs(load_info) do
     if object._proxy then
-      local fn = load_info[1]
-      local new_object = fn(unpack(load_info, 2))
+      local fn = info[1]
+      local new_object = fn(unpack(info, 2))
       object._proxy = new_object._proxy
     end
   end
   self.load_info = load_info
+end
+
+--! Font reload function.
+--!param font The font to (force) reloading.
+local function font_reloader(font)
+  font:clearCache()
 end
 
 function Graphics:loadLanguageFont(name, sprite_table, ...)
@@ -358,10 +366,7 @@ function Graphics:loadLanguageFont(name, sprite_table, ...)
       -- TODO: Choose face based on "name" rather than always using same face.
       font:setFace(self.ttf_font_data)
       font:setSheet(sprite_table)
-      local function reloader(font)
-        font:clearCache()
-      end
-      self.reload_functions_last[font] = reloader
+      self.reload_functions_last[font] = font_reloader
 
       if not cache then
         cache = {}
@@ -390,14 +395,13 @@ function Graphics:loadFont(sprite_table, x_sep, y_sep, ...)
     if n_pass_on_args < #arg then
       x_sep, y_sep = unpack(arg, n_pass_on_args + 1, #arg)
     else
-      x_sep, y_sep = nil
+      x_sep, y_sep = nil, nil
     end
   end
 
-  local font
   local use_bitmap_font = true
   if not sprite_table:isVisible(46) then -- uppercase M
-    -- The font doesn't contain an uppercase M, so (in all liklihood) is used
+    -- The font doesn't contain an uppercase M, so (in all likelihood) is used
     -- for drawing special symbols rather than text, so the original bitmap
     -- font should be used.
   elseif self.language_font then
@@ -471,8 +475,7 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
     return cached
   end
 
-  local sheet = TH.sheet()
-  local function reloader(sheet)
+  local function sheet_reloader(sheet)
     sheet:setPalette(palette or self:loadPalette())
     local data_tab, data_dat
     data_tab = self.app:readDataFile(dir, name .. ".tab")
@@ -481,8 +484,9 @@ function Graphics:loadSpriteTable(dir, name, complex, palette)
       error("Cannot load sprite sheet " .. dir .. ":" .. name)
     end
   end
-  self.reload_functions[sheet] = reloader
-  reloader(sheet)
+  local sheet = TH.sheet()
+  self.reload_functions[sheet] = sheet_reloader
+  sheet_reloader(sheet)
 
   if name ~= "SPointer" then
     self.cache.tabled[name] = sheet
@@ -573,11 +577,11 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     end
     return
   end
-  local type = type(arg1)
+  local tp_arg1 = type(arg1)
   local anim_length = self:getAnimLength(anim)
   local anims = self.anims
   local frame = anims:getFirstFrame(anim)
-  if type == "table" then
+  if tp_arg1 == "table" then
     if arg2 then
       -- Linear-interpolation positions
       local x1, y1 = TableToPixels(arg1)
@@ -590,12 +594,12 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     else
       -- Static position
       local x, y = TableToPixels(arg1)
-      for i = 1, anim_length do
+      for _ = 1, anim_length do
         anims[fn](anims, frame, x, y)
         frame = anims:getNextFrame(frame)
       end
     end
-  elseif type == "number" then
+  elseif tp_arg1 == "number" then
     -- Keyframe positions
     local f1, x1, y1 = 0, 0, 0
     local args
@@ -610,7 +614,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
     for f = 0, anim_length - 1 do
       if f2 and f == f2 then
         f1, x1, y1 = f2, x2, y2
-        f2, x2, y2 = nil
+        f2, x2, y2 = nil, nil, nil
       end
       if not f2 then
         f2 = args[args_i]
@@ -627,7 +631,7 @@ function AnimationManager:setMarkerRaw(anim, fn, arg1, arg2, ...)
       end
       frame = anims:getNextFrame(frame)
     end
-  elseif type == "string" then
+  elseif tp_arg1 == "string" then
     error("TODO")
   else
     error("Invalid arguments to setMarker", 2)

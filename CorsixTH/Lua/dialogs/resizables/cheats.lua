@@ -80,7 +80,6 @@ function UICheats:UICheats(ui)
 
   self.default_button_sound = "selectx.wav"
 
-  local app = ui.app
   self.modal_class = "cheats"
   self.esc_closes = true
   self.resizable = false
@@ -97,8 +96,8 @@ function UICheats:UICheats(ui)
   self.cheated_panel = self:addBevelPanel(20, y, 260, 18, col_cheated_no, col_border, col_border)
 
   local function button_clicked(num)
-    return --[[persistable:cheats_button]] function(self)
-      self:buttonClicked(num)
+    return --[[persistable:cheats_button]] function(window)
+      window:buttonClicked(num)
     end
   end
 

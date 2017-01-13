@@ -883,6 +883,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Font
+    // Also adapt the font proxy meta table (font_proxy_mt) in graphics.lua.
     luaT_class(THFont, l_font_new, "font", MT_Font);
     luaT_setfunction(l_font_get_size, "sizeOf");
     luaT_setfunction(l_font_draw, "draw", MT_Surface);

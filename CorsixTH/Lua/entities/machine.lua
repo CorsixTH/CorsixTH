@@ -161,7 +161,7 @@ function Machine:machineUsed(room)
       self.hospital:addHandymanTask(self, "repairing", 1, self.tile_x, self.tile_y, call)
     end
   end
-  
+
   -- Update whether smoke gets displayed for this machine (and if so, how much)
   self:calculateSmoke(room)
 end
@@ -172,10 +172,10 @@ function Machine:calculateSmoke(room)
   if room.crashed then
     return
   end
-  
+
   -- How many uses this machine has left until it explodes
   local threshold = self:getRemainingUses()
-  
+
   -- If now exploding, clear any smoke
   if threshold < 1 then
     setSmoke(self, false)
@@ -209,50 +209,68 @@ function Machine:createHandymanActions(handyman)
   self.repairing = handyman
   self:setRepairingMode()
 
-  local --[[persistable:handyman_repair_after_use]] function after_use()
+  local --[[persistable:handyman_repair_after_use]] function repair_after_use()
     handyman:setCallCompleted()
     handyman:setDynamicInfoText("")
     self:machineRepaired(self:getRoom())
   end
-  local action = {name = "walk", x = ux, y = uy, is_entering = this_room and true or false}
-  local repair_action = {
-    name = "use_object",
-    object = self,
-    prolonged_usage = false,
-    loop_callback = --[[persistable:handyman_repair_loop_callback]] function()
-      action_use.prolonged_usage = false
-    end,
-    after_use = after_use,
-    min_length = 20,
-  }
+
+  local action = WalkAction(ux, uy):setIsEntering(this_room and true or false)
+
+  local repair_action = UseObjectAction(self):setProlongedUsage(false)
+      :setAfterUse(repair_after_use)
+  repair_action.min_length = 20
+
   if handyman_room and handyman_room ~= this_room then
     handyman:setNextAction(handyman_room:createLeaveAction())
     handyman:queueAction(action)
   else
     handyman:setNextAction(action)
   end
+
+  local meander_loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
+    if not self.user then
+      -- The machine is ready to be repaired.
+      -- The following statement will finish the meander action in the handyman's
+      -- action queue.
+      handyman:finishAction()
+    end
+    -- Otherwise do nothing and let the meandering continue.
+  end
+
   -- Before the actual repair action, insert a meander action to wait for the machine
   -- to become free for use.
-  handyman:queueAction({
-    name = "meander",
-    loop_callback = --[[persistable:handyman_meander_repair_loop_callback]] function()
-      if not self.user then
-        -- The machine is ready to be repaired.
-        -- The following statement will finish the meander action in the handyman's
-        -- action queue.
-        handyman:finishAction()
-      end
-      -- Otherwise do nothing and let the meandering continue.
-    end,
-  })
-  -- The last one is another walk action to the repair tile. If the handymand goes directly
+  handyman:queueAction(MeanderAction():setLoopCallback(meander_loop_callback))
+
+  -- The last one is another walk action to the repair tile. If the handyman goes directly
   -- to repair it will simply complete in an instant.
   handyman:queueAction(action)
   handyman:queueAction(repair_action)
   CallsDispatcher.queueCallCheckpointAction(handyman)
-  handyman:queueAction{name = "answer_call"}
+  handyman:queueAction(AnswerCallAction())
   handyman:setDynamicInfoText(_S.dynamic_info.staff.actions.going_to_repair
     :format(self.object_type.name))
+end
+
+--! Replace this machine (make it pretend it's brand new)
+function Machine:machineReplaced()
+  -- Reset usage stats
+  self.total_usage = 0
+  self.times_used = 0
+
+  -- Update strength to match the current level of research for it
+  self.strength = self.hospital.research.research_progress[self.object_type].start_strength
+
+  -- Remove any queued repair jobs
+  local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
+  if index ~= -1 then
+    self.hospital:removeHandymanTask(index, "repairing")
+  end
+
+  -- Clear icon showing handyman is coming to repair the machine
+  self:setRepairing(nil)
+  -- Clear smoke
+  setSmoke(self, false)
 end
 
 function Machine:machineRepaired(room)
@@ -353,10 +371,10 @@ function Machine:onDestroy()
   if index ~= -1 then
     self.hospital:removeHandymanTask(index, "repairing")
   end
-  
+
   -- Stop this machine from smoking
   setSmoke(self, false)
-  
+
   Object.onDestroy(self)
 end
 
@@ -388,5 +406,6 @@ function Machine:tick()
   return Object.tick(self)
 end
 
--- Dummy callback for savegame compatibility
+-- Dummy callbacks for savegame compatibility
 local callbackNewRoom = --[[persistable:machine_build_callback]] function(room) end
+local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function() end

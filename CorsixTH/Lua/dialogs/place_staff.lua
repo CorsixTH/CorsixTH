@@ -57,7 +57,7 @@ function UIPlaceStaff:close()
     self.staff.pickup = false
     self.staff.going_to_staffroom = nil
     self.staff.action_queue[1].window = nil
-    self.staff:setNextAction{name = "meander"}
+    self.staff:setNextAction(MeanderAction())
   elseif self.profile then
     self.ui:tutorialStep(2, {6, 7}, 1)
     self.ui:tutorialStep(4, {4, 5}, 1)
@@ -81,9 +81,11 @@ function UIPlaceStaff:draw(canvas)
   if self.world.user_actions_allowed then
     self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
     local room = self.world:getRoom(self.tile_x, self.tile_y)
+    local player_id = self.ui.hospital:getPlayerIndex()
     local valid = flag_cache.hospital and flag_cache.passable and
-      (self.allow_in_rooms or flag_cache.roomId == 0) and
-      (not room and true or not room.crashed)
+        (self.allow_in_rooms or flag_cache.roomId == 0) and
+        (not room and true or not room.crashed) and
+        flag_cache.owner == player_id
     self.anim:setFlag(valid and 0 or flag_altpal)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
@@ -107,8 +109,11 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       self:onMouseMove(x, y)
       self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
       local room = self.world:getRoom(self.tile_x, self.tile_y)
+      local player_id = self.ui.hospital:getPlayerIndex()
       if flag_cache.hospital and flag_cache.passable and
-          (self.allow_in_rooms or flag_cache.roomId == 0) and (not room or not room.crashed) then
+          (self.allow_in_rooms or flag_cache.roomId == 0) and
+          (not room or not room.crashed) and
+          flag_cache.owner == player_id then
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else
@@ -118,9 +123,9 @@ function UIPlaceStaff:onMouseUp(button, x, y)
           entity:setTile(self.tile_x, self.tile_y)
           self.ui.hospital:addStaff(entity)
           entity:setHospital(self.ui.hospital)
-          local room = entity:getRoom()
-          if room then
-            room:onHumanoidEnter(entity)
+          local entity_room = entity:getRoom()
+          if entity_room then
+            entity_room:onHumanoidEnter(entity)
           else
             entity:onPlaceInCorridor()
           end

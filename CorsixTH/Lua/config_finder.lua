@@ -135,7 +135,7 @@ local config_defaults = {
   use_new_graphics = false,
   check_for_updates = true
 }
-local fi = io.open(config_filename, "r")
+fi = io.open(config_filename, "r")
 local config_values = {}
 local needs_rewrite = false
 for key, value in pairs(config_defaults) do
@@ -375,6 +375,14 @@ unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 -- is more suitable.
 --
 savegames = nil -- [[X:\ThemeHospital\Saves]]
+
+-------------------------------------------------------------------------------------------------------------------------
+-- Levels. By default, the "Levels" directory alongside this config file will
+-- be used for storing new maps / levels in. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+--
+levels = nil -- [[X:\ThemeHospital\Levels]]
 
  ------------------------------------------------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital

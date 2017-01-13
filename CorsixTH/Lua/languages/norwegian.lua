@@ -1,4 +1,4 @@
---[[ Copyright (c) 2016 Erlend Mongstad, Ola Skogrand
+﻿--[[ Copyright (c) 2016 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -104,7 +104,6 @@ tooltip.message.button_dismiss = "Venstreklikk for å åpne faksen, höyreklikk 
 menu_options = {
   lock_windows = "  LÅS VINDUER  ",
   edge_scrolling = "  KANTSCROLLING  ",
-  settings = "  INNSTILLINGER  ",
   adviser_disabled = "  RÅDGIVER  ",
   warmth_colors = "  VARMEFARGER", --Todo: Open for suggestions for a better word for it (warmth colours).
 }
@@ -206,7 +205,6 @@ custom_game_window = {
   load_selected_level = "Start",
 }
 tooltip.custom_game_window = {
-  start_game_with_name = "Last brett %s",
   free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
   load_selected_level = "Last og spill valgt brett",
   choose_game = "Klikk på et brett for å lese mer om det",
@@ -235,17 +233,13 @@ options_window = {
   height = "Höyde",
   change_resolution = "Endre opplösning",
   back = "Tilbake",
-  browse = "Bla gjennom...",
   cancel = "Avbryt",
-  new_th_directory = "Her kan du spesifisere en annen installasjonsmappe for Theme Hospital. Så fort du velger en ny mappe vil spillet starte på nytt.",  --kalle det "corsixth" isteden for "theme hospital"?
   custom_resolution = "Egendefinert...",
   option_on = "På",
   option_off = "Av",
   caption = "Innstillinger",
   language = "Språk",
   apply = "Bruk",
-  data_location = "Data-beliggenhet",
-  font_location = "Font-beliggenhet",
   resolution = "Opplösning",
   folder = "Mapper",
   audio = "Global lyd",
@@ -258,16 +252,10 @@ tooltip.options_window = {
   change_resolution = "Endre opplösningen til dimensjonene du har angitt til venstre.",
   language = "Velg %s som språk",
   back = "Lukk vinduet med innstillinger",
-  original_path = "Valgt mappe for Theme Hospital installasjonen",
-  browse = "Bla gjennom mappene for å finne et annet sted for Theme Hospital-installasjonen. %1%",
   fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
   cancel = "Returner uten å endre opplösning",
-  font_location = "Beliggenhet av en font-fil som klarer å vise Unicode-bokstaver som brukes i det valgte språket. Om dette ikke er spesifisert, så vil ikke ha mulighet til å velge språk som krever andre bokstaver enn i originalspillet. For eksempel: Russisk eller Kinesisk",
   apply = "Bruk den innskrevne opplösningen",
-  browse_font = "Se etter en annen font-fil (nåværende beliggenhet: %1%)",
-  data_location = "Beliggenheten av den originale Theme Hospital installasjonen, som trengs for å kjöre CorsixTH",
   language_dropdown_item = "Velg %s som språk",
-  no_font_specified = "Ingen beliggenhet spesifisert!",
   select_language = "Velg språk",
   select_resolution = "Velg en ny opplösning",
   resolution = "Opplösningen spillet skal kjöres i.",
@@ -354,6 +342,8 @@ cheats_window = {
   },
 
   cheats = {
+    decrease_prices = "Senk prisene",
+    increase_prices = "Hev prisene",
     end_month = "Slutten av måneden",
     emergency = "Lag nödstilfelle",
     win_level = "Vinn nivå",
@@ -372,6 +362,8 @@ cheats_window = {
 tooltip.cheats_window = {
   close = "Lukk juksekodevinduet",
   cheats = {
+  decrease_prices = "Senk alle priser med 50 % (min. 50 %)",
+  increase_prices = "Hev alle priser med 50 % (maks. 200 %)",
   end_month = "Gå til slutten av denne måneden.",
   emergency = "Lag en nödssituasjon.",
   win_level = "Vinn dette nivået.",
@@ -416,20 +408,13 @@ customise_window = {
 }
 
 tooltip.customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
-intro_button = "Klikk for å slå av eller på",
 movies = "Slår av alle videoer i spillet",
-aliens = "På grunn av manglende standardanimasjoner ble pasienter med utenomjordisk DNA satt til å kun komme gjennom nödstilfeller. For å la pasienter med denne sykdommen komme til sykehuset på vanlig måte, så må du slå denne av.",
-volume_button = "Klikk for å endre hurtigtast. Benyttes hvis volumsenkings-knappen på tastaturet åpner en meny i spillet.",
 paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
-average_contents_button = "Lar deg få de mest brukte gjenstandene (gjennomsnittlig) inn i rombyggeren automatisk.",
 back = "Gå tilbake",
-movies_button = "Slå av eller på filmsnutter i spillet",
-paused_button = "Tillat bevegelser når spillet er satt til pause",
 intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
 volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
-fractured_bones_button = "Slå denne innstillingen på eller av",
-fractured_bones = "På grunn av mangelfulle animasjoner har vi gjort stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
-aliens_button = "Slå denne innstillingen på eller av",
+fractured_bones = "På grunn av mangelfulle animasjoner har vi stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
+aliens = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
 average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
 }
 
@@ -462,7 +447,6 @@ errors = {
   load_quick_save = "Spillet kunne ikke laste inn sist hurtiglagring, siden den ikke eksisterer. Vi har ikke tenkt til å lage en for deg!",
   map_file_missing = "Kunne ikke finne kartfilen %s for dette nivået!",
   minimum_screen_size = "Vennligst sett opplösningen til minst 640x480.",
-  maximum_screen_size = "Vennligst velg en skjermopplösning ikke större enn 3000x2000.",
   unavailable_screen_size = "Skjermopplösningen du valgte er ikke tilgjengelig i fullskjermmodus.",
   alien_dna = "Merk: Det er ingen originale animasjoner for utenomjordiske pasienter som sitter, åpner eller banker på dörer osv. Utenomjordiske vil bare komme på besök om det er slått på i levelfila", --todo: bedre beskrivelse? levelfila? var "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. So, like with Theme Hospital to do these things they will appear to change to normal looking and then change back.  Patients with Alien DNA will only appear if they are set to in the level file"
   fractured_bones = "Merk: De originale animasjonene for kvinnelige personer med benbrudd er ikke perfekte",
@@ -2145,14 +2129,8 @@ adviser = {
   -- Cheats
   cheats = {
     th_cheat = "Gratulerer du har låst opp juksekodene!",
-    hairyitis_cheat = "Pelssyndom-kode aktivert!",
-    hairyitis_off_cheat = "Pelssyndom-kode deaktivert.",
     roujin_on_cheat = "Roujins utfordring aktivert! Lykke til...",
     roujin_off_cheat = "Roujins utfordring deaktivert.",
-    crazy_on_cheat = "Å nei! Alle Legene har blitt gale!",
-    crazy_off_cheat = "Puh... Legene har fått tilbake forstanden.",
-    bloaty_cheat = "Ballonghode-kode aktivert!",
-    bloaty_off_cheat = "Ballonghode-kode deaktivert.",
   },
 
   -- Epidemic
@@ -2292,8 +2270,12 @@ adviser = {
 
   -- Warnings
   warnings = {
-    charges_too_low       = "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre pr. pasient.",
-    charges_too_high       = "Dine priser er for höye. Dette gir deg god profitt på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
+    low_prices = "Du tar deg for lite betalt for %s. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre på hver pasient.",
+    fair_prices = "Prisene dine for %s virker rettferdige og balanserte.",
+    high_prices = "Prisene for %s er for høye. Dette gir deg god avkastning på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
+    patient_not_paying = "En pasient har dratt uten å betale for %s fordi det var for dyrt!",
+    charges_too_low       = "Du tar deg for lite betalt. Dette vil tiltrekke mange syke mennesker til sykehuset ditt, men du tjener mindre på hver pasient",
+    charges_too_high       = "Dine priser er for höye. Dette gir deg god avkastning på kort sikt, men på lengre sikt vil de höye prisene skremme bort pasientene.",
     plants_thirsty         = "Du må huske på plantene dine. De er törste.",
     staff_overworked       = "Personalet ditt er meget overarbeidet. De blir ineffektive og gjör fatale feil når de er trötte.",
     queue_too_long_at_reception = "Du har for mange pasienter som venter ved Resepsjonen. Plasser ut flere Resepsjoner og ansett en Resepsjonist til.",

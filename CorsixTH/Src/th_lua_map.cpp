@@ -123,7 +123,7 @@ static int l_map_save(lua_State *L)
 static THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 {
     THAnimation *pAnim;
-    lua_rawgeti(L, 10, iIndex);
+    lua_rawgeti(L, 11, iIndex);
     if(lua_type(L, -1) == LUA_TNIL)
     {
         lua_pop(L, 1);
@@ -133,10 +133,10 @@ static THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
         lua_createtable(L, 0, 2);
         lua_pushvalue(L, 1);
         lua_setfield(L, -2, "map");
-        lua_pushvalue(L, 11);
+        lua_pushvalue(L, 12);
         lua_setfield(L, -2, "animator");
         lua_setfenv(L, -2);
-        lua_rawseti(L, 10, iIndex);
+        lua_rawseti(L, 11, iIndex);
     }
     else
     {
@@ -189,11 +189,16 @@ static int l_map_gettemperature(lua_State *L)
  * Is the node position valid for a new room?
  * @param entire_invalid Entire blueprint is invalid (eg wrong position or too small).
  * @param pNode Node to examine.
+ * @param pMap The world map.
+ * @param player_id The player to check for.
  * @return Whether the node position is valid for a new room.
  */
-static inline bool is_valid(bool entire_invalid, const THMapNode *pNode)
+static inline bool is_valid(
+    bool entire_invalid, const THMapNode *pNode,
+    const THMap *pMap, int player_id)
 {
-    return !entire_invalid && !pNode->flags.room && pNode->flags.buildable;
+    return !entire_invalid && !pNode->flags.room && pNode->flags.buildable &&
+        (player_id == 0 || pMap->getNodeOwner(pNode) == player_id);
 }
 
 static int l_map_updateblueprint(lua_State *L)
@@ -215,9 +220,11 @@ static int l_map_updateblueprint(lua_State *L)
     int iNewY = static_cast<int>(luaL_checkinteger(L, 7)) - 1;
     int iNewW = static_cast<int>(luaL_checkinteger(L, 8));
     int iNewH = static_cast<int>(luaL_checkinteger(L, 9));
-    luaL_checktype(L, 10, LUA_TTABLE); // Animation list
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 11, luaT_upvalueindex(1));
-    bool entire_invalid = lua_toboolean(L, 12) != 0;
+    int player_id = static_cast<int>(luaL_checkinteger(L, 10));
+
+    luaL_checktype(L, 11, LUA_TTABLE); // Animation list
+    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 12, luaT_upvalueindex(1));
+    bool entire_invalid = lua_toboolean(L, 13) != 0;
     bool valid = !entire_invalid;
 
     if(iOldX < 0 || iOldY < 0 || (iOldX + iOldW) > pMap->getWidth() || (iOldY + iOldH) > pMap->getHeight())
@@ -243,7 +250,7 @@ static int l_map_updateblueprint(lua_State *L)
         for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
         {
             THMapNode *pNode = pMap->getNodeUnchecked(iX, iY);
-            if(is_valid(entire_invalid, pNode))
+            if(is_valid(entire_invalid, pNode, pMap, player_id))
                 pNode->iBlock[3] = iFloorTileGood;
             else
             {
@@ -282,7 +289,7 @@ static int l_map_updateblueprint(lua_State *L)
     THAnimation *pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     THMapNode *pNode = pMap->getNodeUnchecked(iNewX, iNewY);
     pAnim->setAnimation(pAnims, iWallAnimTopCorner);
-    pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
+    pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
     pAnim->attachToTile(pNode, 0);
 
     for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
@@ -292,14 +299,14 @@ static int l_map_updateblueprint(lua_State *L)
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iX, iNewY);
             pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
+            pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
             pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(0, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH - 1);
         pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
+        pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH);
         pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(0, -1);
@@ -311,21 +318,21 @@ static int l_map_updateblueprint(lua_State *L)
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iNewX, iY);
             pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
+            pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
             pAnim->attachToTile(pNode, 0);
             pAnim->setPosition(2, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iNewX + iNewW - 1, iY);
         pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode) ? 0 : THDF_AltPalette));
+        pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
         pNode = pMap->getNodeUnchecked(iNewX + iNewW, iY);
         pAnim->attachToTile(pNode, 0);
         pAnim->setPosition(2, -1);
     }
 
     // Clear away extra animations
-    int iAnimCount = (int)lua_objlen(L, 10);
+    int iAnimCount = (int)lua_objlen(L, 11);
     if(iAnimCount >= iNextAnim)
     {
         for(int i = iNextAnim; i <= iAnimCount; ++i)
@@ -333,7 +340,7 @@ static int l_map_updateblueprint(lua_State *L)
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pAnim->removeFromTile();
             lua_pushnil(L);
-            lua_rawseti(L, 10, i);
+            lua_rawseti(L, 11, i);
         }
     }
 
@@ -535,10 +542,10 @@ static int l_map_getcellflags(lua_State *L)
     }
     add_cellint(L, pNode->iRoomId, "roomId");
     add_cellint(L, pNode->iParcelId, "parcelId");
+    add_cellint(L, pMap->getNodeOwner(pNode), "owner");
     add_cellint(L, static_cast<int>(pNode->objects.empty() ? THObjectType::no_object : pNode->objects.front()), "thob");
     return 1;
 }
-
 
 /* because all the thobs are not retrieved when the map is loaded in c
   lua objects use the afterLoad function to be registered after a load,
@@ -670,6 +677,14 @@ static int l_map_updateshadows(lua_State *L)
     return 1;
 }
 
+static int l_map_updatepathfinding(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    pMap->updatePathfinding();
+    lua_settop(L, 1);
+    return 1;
+}
+
 static int l_map_mark_room(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
@@ -775,8 +790,30 @@ static int l_map_get_parcel_count(lua_State *L)
 static int l_map_set_parcel_owner(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    pMap->setParcelOwner(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
-    lua_settop(L, 1);
+    int parcelId = static_cast<int>(luaL_checkinteger(L, 2));
+    int player = static_cast<int>(luaL_checkinteger(L, 3));
+    if(lua_type(L, 4) != LUA_TTABLE)
+    {
+        lua_settop(L, 3);
+        lua_newtable(L);
+    }
+    else
+    {
+        lua_settop(L, 4);
+    }
+    std::vector<std::pair<int, int>> vSplitTiles = pMap->setParcelOwner(parcelId, player);
+    for (std::vector<std::pair<int, int>>::size_type i = 0; i != vSplitTiles.size(); i++)
+    {
+      lua_pushinteger(L, i + 1);
+      lua_createtable(L, 0, 2);
+      lua_pushinteger(L, 1);
+      lua_pushinteger(L, vSplitTiles[i].first + 1);
+      lua_settable(L, 6);
+      lua_pushinteger(L, 2);
+      lua_pushinteger(L, vSplitTiles[i].second + 1);
+      lua_settable(L, 6);
+      lua_settable(L, 4);
+    }
     return 1;
 }
 
@@ -792,6 +829,47 @@ static int l_map_is_parcel_purchasable(lua_State *L)
     THMap* pMap = luaT_testuserdata<THMap>(L);
     lua_pushboolean(L, pMap->isParcelPurchasable(static_cast<int>(luaL_checkinteger(L, 2)),
         static_cast<int>(luaL_checkinteger(L, 3))) ? 1 : 0);
+    return 1;
+}
+
+/* Compute the fraction of corridor tiles with litter, of the parcels owned by the given player. */
+static int l_map_get_litter_fraction(lua_State *L)
+{
+    THMap* pMap = luaT_testuserdata<THMap>(L);
+    int owner = static_cast<int>(luaL_checkinteger(L, 2));
+    if (owner == 0)
+    {
+        lua_pushnumber(L, 0.0); // Outside has no litter.
+        return 1;
+    }
+
+    double tile_count = 0;
+    double litter_count = 0;
+    for (int x = 0; x < pMap->getWidth(); x++)
+    {
+        for (int y = 0; y < pMap->getHeight(); y++)
+        {
+            const THMapNode* pNode = pMap->getNodeUnchecked(x, y);
+            if (pNode->iParcelId == 0 || owner != pMap->getParcelOwner(pNode->iParcelId) ||
+                pNode->iRoomId != 0)
+            {
+                continue;
+            }
+
+            tile_count++;
+            for(auto iter = pNode->objects.begin(); iter != pNode->objects.end(); iter++)
+            {
+                if(*iter == THObjectType::litter)
+                {
+                    litter_count++;
+                    break;
+                }
+            }
+        }
+    }
+
+    double fraction = (tile_count == 0) ? 0.0 : litter_count / tile_count;
+    lua_pushnumber(L, fraction);
     return 1;
 }
 
@@ -929,6 +1007,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
     luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", MT_Anims, MT_Anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
+    luaT_setfunction(l_map_updatepathfinding, "updatePathfinding");
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_unmark_room, "unmarkRoom");
     luaT_setfunction(l_map_set_sheet, "setSheet", MT_Sheet);
@@ -941,6 +1020,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_is_parcel_purchasable, "isParcelPurchasable");
     luaT_setfunction(l_map_erase_thobs, "eraseObjectTypes");
     luaT_setfunction(l_map_remove_cell_thob, "removeObjectType");
+    luaT_setfunction(l_map_get_litter_fraction, "getLitterFraction");
     luaT_endclass();
 
     // Pathfinder

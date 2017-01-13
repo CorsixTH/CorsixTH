@@ -557,6 +557,35 @@ function UIMapEditor:setPlayerCount(count)
 end
 
 -- {{{ function UIMapEditor:pageClicked(name)
+
+--! Update how the button is displayed based on the provided new state.
+--!param button (Panel) to update.
+--!param action (str) New state of the button.
+local function updateToggleButton(button, action)
+  if action == "raised" then
+    button:enable(true)
+    button:setVisible(true)
+    button:setToggleState(false)
+
+  elseif action == "lowered" then
+    button:enable(true)
+    button:setVisible(true)
+    button:setToggleState(true)
+
+  elseif action == "invisible" then
+    button:enable(false)
+    button:setVisible(false)
+
+  elseif action == "disabled" then
+    button:enable(false)
+    button:setVisible(true)
+    button:setToggleState(false)
+
+  else
+    assert(false) -- Should never arrive here
+  end
+end
+
 --! Callback function of the page select buttons.
 --!param name (string) Name of the clicked page.
 function UIMapEditor:pageClicked(name)
@@ -572,7 +601,7 @@ function UIMapEditor:pageClicked(name)
     if pb.name == name then
       map:clearDebugText()
       self.cursor.state = name == "paste" and "paste" or "disabled"
-      self:updateToggleButton(pb.button, "lowered")
+      updateToggleButton(pb.button, "lowered")
       if pb.sprite_buttons then
         -- 'sprite' button, display sprites to select from, by the user.
         self:buildSpriteButtons(pb.sprite_buttons)
@@ -615,9 +644,9 @@ function UIMapEditor:pageClicked(name)
       end
 
     elseif pb.name == "paste" and not self.cursor.copy_data then
-      self:updateToggleButton(pb.button, "disabled")
+      updateToggleButton(pb.button, "disabled")
     else
-      self:updateToggleButton(pb.button, "raised")
+      updateToggleButton(pb.button, "raised")
     end
   end
 end
@@ -641,7 +670,7 @@ function UIMapEditor:buildSpriteButtons(buttons)
       local bbutton = self:addBevelPanel(xpos, ypos, width, height, col_bg)
       bbutton = bbutton:makeToggleButton(0, 0, width, height, nil,
           --[[persistable:map_editor_block_clicked]] function() self:blockClicked(bbutton_number) end)
-      self:updateToggleButton(bbutton, "raised")
+      updateToggleButton(bbutton, "raised")
 
       local bpanel = self:addPanel(number, xpos+1, ypos+1, width-2, height-2)
       bpanel.visible = true
@@ -663,7 +692,7 @@ function UIMapEditor:buildSpriteButtons(buttons)
       local bbutton = pb.button
       bbutton:setPosition(xpos, ypos)
       bbutton:setSize(width, height)
-      self:updateToggleButton(bbutton, "raised")
+      updateToggleButton(bbutton, "raised")
 
       local bpanel = pb.panel
       bpanel.editor_button = button
@@ -680,7 +709,7 @@ function UIMapEditor:buildSpriteButtons(buttons)
     local pb = self.block_buttons[number]
     if pb == nil then break end
 
-    self:updateToggleButton(pb.button, "invisible")
+    updateToggleButton(pb.button, "invisible")
     pb.panel.visible = false
     number = number + 1
   end
@@ -850,8 +879,7 @@ end
 --!param ysize (int) Vertical size in tiles.
 function UIMapEditor:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
   local ui = self.ui
-  local zoom = self.ui.zoom_factor
-  local scaled = canvas:scale(zoom)
+  local zoom = ui.zoom_factor
 
   for x = 0, xsize - 1 do
     for y = 0, ysize - 1 do
@@ -859,16 +887,12 @@ function UIMapEditor:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
       self.cell_outline:draw(canvas, 2, math.floor(xcoord / zoom) - 32, math.floor(ycoord / zoom))
     end
   end
-  if scaled then
-    canvas:scale(1)
-  end
 end
 
 --! Draw the display (map editor window, and main world display)
 --!param canvas (draw object) Canvas to draw on.
 function UIMapEditor:draw(canvas, ...)
   local ui = self.ui
-  local map = self.ui.app.map
 
   -- Draw the red grid for the selected tile.
   local coords = self:getDrawPoints()
@@ -886,9 +910,13 @@ function UIMapEditor:draw(canvas, ...)
       xsize, ysize = self.cursor.sprite.xsize, self.cursor.sprite.ysize
     end
     -- Draw cursors.
+    local scaled = canvas:scale(ui.zoom_factor)
     for _, coord in ipairs(coords) do
       local xpos, ypos = coord.xpos, coord.ypos
       self:fillCursorArea(canvas, xpos, ypos, xsize, ysize)
+    end
+    if scaled then
+      canvas:scale(1)
     end
   end
 
@@ -896,31 +924,6 @@ function UIMapEditor:draw(canvas, ...)
 end
 
 -- {{{ several useful functions
-function UIMapEditor:updateToggleButton(button, action)
-  if action == "raised" then
-    button:enable(true)
-    button:setVisible(true)
-    button:setToggleState(false)
-
-  elseif action == "lowered" then
-    button:enable(true)
-    button:setVisible(true)
-    button:setToggleState(true)
-
-  elseif action == "invisible" then
-    button:enable(false)
-    button:setVisible(false)
-
-  elseif action == "disabled" then
-    button:enable(false)
-    button:setVisible(true)
-    button:setToggleState(false)
-
-  else
-    assert(false) -- Should never arrive here
-  end
-end
-
 --! User clicked at a block (a button with a sprite).
 --!param num Index block number.
 function UIMapEditor:blockClicked(num)
@@ -943,25 +946,12 @@ function UIMapEditor:blockClicked(num)
   end
 end
 
---! Convert two values on the same axis into a base and a length relative to the base.
---!param v (int) First number
---!param w (int) Second number
---!return (int ,int) Smallest value, and offset relative to the smallest value.
-local function makeBaseLength(v, w)
-  if v < w then
-    return v, w - v + 1
-  else
-    return w, v - w + 1
-  end
-end
-
 --! Convert mouse coordinates to tile coordinates in the world.
 --!param mx (int) Mouse X screen coordinate.
 --!param my (int) Mouse y screen coordinate.
 --!return (int, int) Tile x,y coordinates, limited to the map.
 function UIMapEditor:mouseToWorld(mx, my)
   local ui = self.ui
-  local map = self.ui.app.map
 
   local wxr, wyr = ui:ScreenToWorld(self.x + mx, self.y + my)
   local wx = math.floor(wxr)
@@ -1514,7 +1504,7 @@ function UIMapEditor:onMouseUp(button, x, y)
 
   elseif self.cursor.state == "camera" then
     if button == "left" then
-      local dp = self:getDrawPoints();
+      local dp = self:getDrawPoints()
       map:setCameraTile(dp[1].xpos, dp[1].ypos, self.cursor.camera)
       map:updateDebugOverlay()
       repaint = true

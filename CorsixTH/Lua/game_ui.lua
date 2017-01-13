@@ -27,10 +27,10 @@ class "GameUI" (UI)
 local GameUI = _G["GameUI"]
 
 local TH = require "TH"
-local SDL = require "sdl"
-local WM = SDL.wm
-local lfs = require "lfs"
-local pathsep = package.config:sub(1, 1)
+
+-- The maximum distance to shake the screen from the origin during an
+-- earthquake with full intensity.
+local shake_screen_max_movement = 50 --pixels
 
 --! Game UI constructor.
 --!param app (Application) Application object.
@@ -80,6 +80,11 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
 
   self.speed_up_key_pressed = false
+
+  -- The currently specified intensity value for earthquakes. To abstract
+  -- the effect from the implementation this value is a number between 0
+  -- and 1.
+  self.shake_screen_intensity = 0
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -117,6 +122,27 @@ function GameUI:makeVisibleDiamond(scr_w, scr_h)
   }
 end
 
+--! Calculate the minimum valid zoom value
+--!
+--! Zooming out too much would cause negative width/height to be returned from
+--! makeVisibleDiamond. This function calculates the minimum zoom_factor that
+--! would be allowed.
+function GameUI:calculateMinimumZoom()
+  local scr_w = self.app.config.width
+  local scr_h = self.app.config.height
+  local map_h = self.app.map.height
+
+  -- Minimum width:  0 = 32 * map_h - (scr_h/factor) - (scr_w/factor) / 2,
+  -- Minimum height: 0 = 16 * map_h - (scr_h/factor) / 2 - (scr_w/factor) / 4
+  -- Both rearrange to:
+  local factor = (scr_w + 2 * scr_h) / (64 * map_h)
+
+  -- Due to precision issues a tolerance is needed otherwise setZoom might fail
+  factor = factor + 0.001
+
+  return factor
+end
+
 function GameUI:setZoom(factor)
   if factor <= 0 then
     return false
@@ -151,12 +177,16 @@ function GameUI:draw(canvas)
     canvas:fillBlack()
   end
   local zoom = self.zoom_factor
+  local dx = self.screen_offset_x +
+      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
+  local dy = self.screen_offset_y +
+      math.floor((0.5 - math.random()) * self.shake_screen_intensity * shake_screen_max_movement * 2)
   if canvas:scale(zoom) then
-    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
+    app.map:draw(canvas, dx, dy, math.floor(config.width / zoom), math.floor(config.height / zoom), 0, 0)
     canvas:scale(1)
   else
     self:setZoom(1)
-    app.map:draw(canvas, self.screen_offset_x, self.screen_offset_y, config.width, config.height, 0, 0)
+    app.map:draw(canvas, dx, dy, config.width, config.height, 0, 0)
   end
   Window.draw(self, canvas, 0, 0) -- NB: not calling UI.draw on purpose
   self:drawTooltip(canvas)
@@ -166,6 +196,11 @@ function GameUI:draw(canvas)
 end
 
 function GameUI:onChangeResolution()
+  -- Calculate and enforce minimum zoom
+  local minimum_zoom = self:calculateMinimumZoom()
+  if self.zoom_factor < minimum_zoom then
+    self:setZoom(minimum_zoom)
+  end
   -- Recalculate scrolling bounds
   local scr_w = self.app.config.width
   local scr_h = self.app.config.height
@@ -395,7 +430,7 @@ function GameUI:onCursorWorldPositionChange()
 
   -- Any hoverable mood should be displayed on the new entity
   if class.is(entity, Humanoid) then
-    for key, value in pairs(entity.active_moods) do
+    for _, value in pairs(entity.active_moods) do
       if value.on_hover then
         entity:setMoodInfo(value)
         break
@@ -461,25 +496,25 @@ function GameUI:onMouseMove(x, y, dx, dy)
       (x < scroll_region_size or y < scroll_region_size or
        x >= self.app.config.width - scroll_region_size or
        y >= self.app.config.height - scroll_region_size) then
-    local dx = 0
-    local dy = 0
+    local scroll_dx = 0
+    local scroll_dy = 0
     local scroll_power = 7
     if x < scroll_region_size then
-      dx = -scroll_power
+      scroll_dx = -scroll_power
     elseif x >= self.app.config.width - scroll_region_size then
-      dx = scroll_power
+      scroll_dx = scroll_power
     end
     if y < scroll_region_size then
-      dy = -scroll_power
+      scroll_dy = -scroll_power
     elseif y >= self.app.config.height - scroll_region_size then
-      dy = scroll_power
+      scroll_dy = scroll_power
     end
 
     if not self.tick_scroll_amount_mouse then
-      self.tick_scroll_amount_mouse = {x = dx, y = dy}
+      self.tick_scroll_amount_mouse = {x = scroll_dx, y = scroll_dy}
     else
-      self.tick_scroll_amount_mouse.x = dx
-      self.tick_scroll_amount_mouse.y = dy
+      self.tick_scroll_amount_mouse.x = scroll_dx
+      self.tick_scroll_amount_mouse.y = scroll_dy
     end
   else
     self.tick_scroll_amount_mouse = false
@@ -521,7 +556,7 @@ function GameUI:onMouseUp(code, x, y)
     local patient = (window and window.patient.is_debug and window.patient) or self.hospital:getDebugPatient()
     if patient then
       patient:walkTo(highlight_x, highlight_y)
-      patient:queueAction{name = "idle"}
+      patient:queueAction(IdleAction())
     end
   end
 
@@ -545,10 +580,7 @@ function GameUI:onMouseUp(code, x, y)
     end
   end
 
-  -- During vaccination mode you can only interact with
-  -- infected patients
-  local epidemic = self.hospital.epidemic
-  -- infected patients
+  -- During vaccination mode you can only interact with infected patients
   local epidemic = self.hospital.epidemic
   if epidemic and epidemic.vaccination_mode_active then
     if button == "left" then
@@ -747,6 +779,18 @@ function GameUI:scrollMap(dx, dy)
 
   self.screen_offset_x = floor(dx + 0.5)
   self.screen_offset_y = floor(dy + 0.5)
+end
+
+--! Start shaking the screen, e.g. an earthquake effect
+--!param intensity (number) The magnitude of the effect, between 0 for no
+-- movement to 1 for significant shaking.
+function GameUI:beginShakeScreen(intensity)
+  self.shake_screen_intensity = intensity
+end
+
+--! Stop the screen from shaking after beginShakeScreen is called.
+function GameUI:endShakeScreen()
+  self.shake_screen_intensity = 0
 end
 
 function GameUI:limitCamera(mode)
@@ -1045,6 +1089,9 @@ function GameUI:afterLoad(old, new)
     self:removeKeyHandler("x", self, self.toggleWallsTransparent)
     self:addKeyHandler("z", self, self.keySpeedUp)
     self:addKeyHandler("x", self, self.keyTransparent)
+  end
+  if old < 115 then
+    self.shake_screen_intensity = 0
   end
   return UI.afterLoad(self, old, new)
 end

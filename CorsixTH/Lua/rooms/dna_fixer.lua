@@ -62,35 +62,25 @@ function DNAFixerRoom:commandEnteringPatient(patient)
       -- We need to change to another type before starting, to be able
       -- to have different animations depending on gender.
       patient:setType(patient.change_into)
-      patient:setNextAction{
-        name = "use_object",
-        object = dna_fixer,
-        prolonged_usage = false,
-        after_use = --[[persistable:dna_fixer_after_use]] function()
-          self:dealtWithPatient(patient)
-          staff:setNextAction{name = "meander"}
-        end,
-      }
 
-      staff:setNextAction{
-        name = "use_object",
-        object = console,
-      }
+      local fixer_after_use = --[[persistable:dna_fixer_after_use]] function()
+        self:dealtWithPatient(patient)
+        staff:setNextAction(MeanderAction())
+      end
+
+      patient:setNextAction(UseObjectAction(dna_fixer):setProlongedUsage(false)
+          :setAfterUse(fixer_after_use))
+      staff:setNextAction(UseObjectAction(console))
     end
   end
   -- As soon as one starts to idle the callback is called to see if the other one is already idling.
   patient:walkTo(pat_x, pat_y)
-  patient:queueAction{
-    name = "idle",
-    direction = dna_fixer.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-  }
+  patient:queueAction(IdleAction():setDirection(dna_fixer.direction == "north" and "north" or "west")
+      :setLoopCallback(loop_callback))
+
   staff:walkTo(stf_x, stf_y)
-  staff:queueAction{
-    name = "idle",
-    direction = console.direction == "north" and "north" or "west",
-    loop_callback = loop_callback,
-  }
+  staff:queueAction(IdleAction():setDirection(console.direction == "north" and "north" or "west")
+      :setLoopCallback(loop_callback))
 
   return Room.commandEnteringPatient(self, patient)
 end

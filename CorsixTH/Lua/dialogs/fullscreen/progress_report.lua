@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require "TH"
-
 --! Progress Report fullscreen window (check level goals, competitors and alerts).
 class "UIProgressReport" (UIFullscreen)
 
@@ -57,7 +55,7 @@ function UIProgressReport:UIProgressReport(ui)
   -- Add the icons for the criteria
   local x = 263
   local world_goals = world.goals
-  for i, tab in ipairs(world_goals) do
+  for _, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
     local res_value = world_goals[crit_name].win_value
     world_goals[crit_name].visible = true
@@ -141,28 +139,16 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   local x_min = 455
   local x_max = 551
   local width = x_max - x_min
-  local happiness = self.ui.hospital:getAveragePatientAttribute("happiness")
-  local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst")
-  local warmth = self.ui.hospital:getAveragePatientAttribute("warmth")
-  local world = self.ui.app.world
-
-  -- in lua, NaN value comparisons always return false
-  local function isnan(val)
-    return val ~= 0 and not (val < 0 or val > 0)
-  end
-
-  if isnan(happiness) then happiness = 0.5 end
-  if isnan(thirst) then thirst = 0.5 end
-  if isnan(warmth) then
-    warmth = 0.5
-  else
-    warmth = UIPatient.normaliseWarmth(warmth)
-  end
+  local happiness = self.ui.hospital:getAveragePatientAttribute("happiness", 0.5)
+  local thirst = 1 - self.ui.hospital:getAveragePatientAttribute("thirst", 0.5)
+  local warmth = self.ui.hospital:getAveragePatientAttribute("warmth", nil)
+  warmth = UIPatient.normaliseWarmth(warmth)
 
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * happiness), y + 193)
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * thirst), y + 223)
   self.panel_sprites:draw(canvas, 5, math.floor(x + x_min + width * warmth), y + 254)
 
+  local world = self.ui.app.world
   if world.free_build_mode then
     self.normal_font:drawWrapped(canvas, _S.progress_report.free_build, x + 265, y + 194, 150, "center")
   end
@@ -196,7 +182,6 @@ function UIProgressReport:draw(canvas, x, y)
   UIFullscreen.draw(self, canvas, x, y)
 
   x, y = self.x + x, self.y + y
-  local app      = self.ui.app
   local hospital = self.ui.hospital
   local world    = hospital.world
   local world_goals = world.goals
@@ -211,7 +196,7 @@ function UIProgressReport:draw(canvas, x, y)
 
   -- Draw the vertical bars for the winning conditions
   local lx = 270
-  for i, tab in ipairs(world_goals) do
+  for _, tab in ipairs(world_goals) do
     local crit_name = world.level_criteria[tab.criterion].name
     if world_goals[crit_name].visible then
       local sprite_offset = world_goals[crit_name].red and 2 or 0

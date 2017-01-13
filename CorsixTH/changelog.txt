@@ -1,37 +1,51 @@
 -------------------------------------------------------------------------------
-Version 0.60 - beta1 - released March 2016
+Version 0.60 - released May 2016
 -------------------------------------------------------------------------------
 
 --- Highlights from this release ---
 
 * User campaigns - It is now possible to create a series of levels that play
   together just like the original game.
-* In game map editor - A new map editor is available, directly from within the
-  game menu.
+* In game map editor - A new map editor is available directly from the game
+  menu.
 * Drug price impact - Patients will now react to the price you set for
   treatments. If treatments cost too much patients will opt to go home instead
   and this can affect your reputation.
 * Variable spawn rate - The spawn rate will now take into account your
-  hospitals reputation (after a date set in the level file.)
-* Machines smoke is now visible when machines are close to worn out.
-* Right clicking the timer is now supported like in the original game for moving
-  to affected patients - See issue #882 for details.
+  hospital's reputation (after a date set in the level file.)
+* Machine smoke is now visible when machines are close to worn out.
+* Right clicking the timer is now supported like in the original game for
+  moving to affected patients - See issue #882 for details.
 * Numpad support - The number pad can now be used to move around the map when
   numlock is off, or to type numbers when numlock is on, without side effects.
 * The MP3 folder can now be unset from within the game. Previously after
   setting an mp3 folder it could only be removed by editing the config file by
   hand.
-* Uses the proper cursor for resizing rooms
+* Uses the proper cursor for resizing rooms.
+* Bins can now be placed in the hallways.
+* Temperature impact has been tweaked. The initial grace period has been
+  removed and the overall impact has been softened.
+* Custom maps can now be stored in a user directory separate from levels
+  shipped with the game.
 
---- Notable bug fixes: ---
+--- Notable bug fixes ---
 
-* Free build mode is now truly free - rooms use to cost money in this mode.
+* Free build mode is now truly free - rooms used to cost money in this mode.
 * In game movies will now work correctly on more hardware.
 * Sound effects are no longer played when sound is disabled.
 * VIP rewards have been tweaked to closer match expectations when the
   impression is mediocre.
 * Crash when a patient is selected while they walk off the map is fixed.
-
+* A room built next to an unowned parcel no longer loses its wall when the
+  parcel is bought.
+* Beta 1 regression that caused fired staff to continue to be paid has been
+  patched.
+* Beta 1 regression that caused the last cured emergency patient not to count
+  has been patched.
+* King complex patients only pay for their cure once.
+* Patients will notice when a room they are waiting for becomes available.
+* Properly load saves with more than one object on a tile.
+* Do not get stuck in an infinite loop when no disease is available to spawn.
 
 -------------------------------------------------------------------------------
 Version 0.50 - released July 2015

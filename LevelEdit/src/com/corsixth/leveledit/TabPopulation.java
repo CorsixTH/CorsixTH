@@ -61,6 +61,7 @@ public class TabPopulation extends JScrollPane {
 
         buttonsPanel.add(addButt);
         addButt.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 addPopulation();
             }
@@ -68,6 +69,7 @@ public class TabPopulation extends JScrollPane {
 
         buttonsPanel.add(removeButt);
         removeButt.addActionListener(new ActionListener() {
+            @Override
             public void actionPerformed(ActionEvent e) {
                 removePopulation();
             }
@@ -91,12 +93,14 @@ public class TabPopulation extends JScrollPane {
         populationList.get(index).populationPanel
                 .add(populationList.get(index).monthTF);
         populationList.get(index).monthTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 try {
@@ -149,12 +153,14 @@ public class TabPopulation extends JScrollPane {
                 .add(populationList.get(index).changeTF);
         populationList.get(index).changeTF
                 .addFocusListener(new FocusListener() {
+                    @Override
                     public void focusGained(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         tf.selectAll();
                         Gui.tempValue = tf.getText();
                     }
 
+                    @Override
                     public void focusLost(FocusEvent e) {
                         JTextField tf = (JTextField) e.getComponent();
                         try {
@@ -190,9 +196,7 @@ public class TabPopulation extends JScrollPane {
         // increase month with each new add
         if (populationList.size() > 1) {
             int lastMonth = populationList.get(index - 1).month;
-            int month = populationList.get(index).month;
-
-            month = lastMonth + 1;
+            int month = lastMonth + 1;
             populationList.get(index).month = month;
             populationList.get(index).monthTF.setText(Integer.toString(month));
         }

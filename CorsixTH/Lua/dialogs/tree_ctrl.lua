@@ -212,7 +212,6 @@ end
 function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
   self:checkForChildren()
   self:reSortChildren("date", "descending")
-  local current_child_dir_file = nil
   local most_recently_mod_child_dir_file = nil
   local root_child = nil
   --A. Search for files matching the file name filter in the root directory and its child directories:
@@ -220,7 +219,7 @@ function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
     root_child = self:getChildByIndex(i)
     -- 1. Get the most recently modified child directory file which matches the name filter:
     if root_child:isDirectory() then
-      current_child_dir_file = root_child:getMostRecentlyModifiedChildFile(file_name_filter)
+      local current_child_dir_file = root_child:getMostRecentlyModifiedChildFile(file_name_filter)
       if current_child_dir_file ~= nil then
         if most_recently_mod_child_dir_file == nil then
           most_recently_mod_child_dir_file = current_child_dir_file
@@ -229,8 +228,8 @@ function FileTreeNode:getMostRecentlyModifiedChildFile(file_name_filter)
         end
       end
 
-	-- Sort always puts directories first so when this else closure is reached in this iterative for loop
-	-- all the sub directories will have been checked:
+    -- Sort always puts directories first so when this else closure is reached in this iterative for loop
+    -- all the sub directories will have been checked:
     else
       -- 2. Get the most recently modified root directory file which matches the name filter:
       local matches_filter = true
@@ -339,7 +338,7 @@ end
 --!param sort_by What to sort by. Either "name" or "date".
 --!param order If the ordering should be "ascending" or "descending".
 function FileTreeNode:reSortChildren(sort_by, order)
-  for i, child in ipairs(self.children) do
+  for _, child in ipairs(self.children) do
     if sort_by == "date" then
       child.sort_key = lfs.attributes(child.path, "modification")
       child.sort_by = sort_by
@@ -640,11 +639,11 @@ end
 
 function TreeControl:onScroll()
   if self.scrollbar.value > self.first_visible_ordinal then
-    for i = 1, self.scrollbar.value - self.first_visible_ordinal do
+    for _ = 1, self.scrollbar.value - self.first_visible_ordinal do
       self.first_visible_node = self.first_visible_node:getNextVisible()
     end
   elseif self.scrollbar.value < self.first_visible_ordinal then
-    for i = 1, self.first_visible_ordinal - self.scrollbar.value do
+    for _ = 1, self.first_visible_ordinal - self.scrollbar.value do
       self.first_visible_node = self.first_visible_node:getPrevVisible()
     end
   end
@@ -658,12 +657,11 @@ end
 
 function TreeControl:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
-  x, y = self.x + x, self.y + y + self.y_offset
+  x = x + self.x + self.tree_rect.x
+  y = y + self.y + self.tree_rect.y + self.y_offset
 
   local node = self.first_visible_node
   local num_nodes_drawn = 0
-  local y = y + self.tree_rect.y
-  local x = x + self.tree_rect.x
   while node and num_nodes_drawn < self.num_rows do
     local level = node:getLevel()
     for i = 0, level - 1 do

@@ -82,22 +82,17 @@ function Helicopter:spawnPatient()
   local patient = self.world:newEntity("Patient", 2)
   patient:setDisease(hospital.emergency.disease)
   patient.diagnosis_progress = 1
-  patient:setDiagnosed(true)
+  patient:setDiagnosed()
   patient:setMood("emergency", "activate")
   patient.is_emergency = self.spawned_patients
   hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
   local x, y = hospital:getHeliportSpawnPosition()
-  patient:setNextAction{
-    name = "spawn",
-    mode = "spawn",
-    point = {x = x, y = y},
-    offset = {y = 1},
-  }
+  patient:setNextAction(SpawnAction("spawn", {x = x, y = y}):setOffset({y = 1}))
   patient:setHospital(hospital)
-  -- TODO: If new combinated diseases are added this will not work correctly anymore.
+  -- TODO: If new combined diseases are added this will not work correctly anymore.
   patient.cure_rooms_visited = #patient.disease.treatment_rooms - 1
   local no_of_rooms = #patient.disease.treatment_rooms
-  patient:queueAction{name = "seek_room", room_type = patient.disease.treatment_rooms[no_of_rooms]}
+  patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[no_of_rooms]))
 end
 
 return object

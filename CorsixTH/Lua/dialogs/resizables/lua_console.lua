@@ -96,7 +96,7 @@ end
 
 function UILuaConsole:buttonExecute()
   print("Loading UserFunction...")
-  local func, err
+  local func, err, s
 
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
 
@@ -113,13 +113,14 @@ function UILuaConsole:buttonExecute()
   if not func then
     print("Error while loading UserFunction:")
     print(err)
-  else
-    print("Executing UserFunction...")
-    local s, err = pcall(func)
-    if not s then
-      print("Error while executing UserFunction:")
-      print(err)
-    end
+    return
+  end
+
+  print("Executing UserFunction...")
+  s, err = pcall(func)
+  if not s then
+    print("Error while executing UserFunction:")
+    print(err)
   end
 end
 

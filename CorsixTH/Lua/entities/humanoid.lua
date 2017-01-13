@@ -24,8 +24,6 @@ class "Humanoid" (Entity)
 ---@type Humanoid
 local Humanoid = _G["Humanoid"]
 
-local TH = require "TH"
-
 local walk_animations = permanent"humanoid_walk_animations"({})
 local door_animations = permanent"humanoid_door_animations"({})
 local die_animations = permanent"humanoid_die_animations"({})
@@ -339,6 +337,11 @@ function Humanoid:afterLoad(old, new)
   if old < 83 and self.humanoid_class == "Chewbacca Patient" then
     self.die_anims.extra_east = 1682
   end
+
+  for _, action in pairs(self.action_queue) do
+    -- Sometimes actions not actual instances of HumanoidAction
+    HumanoidAction.afterLoad(action, old, new)
+  end
   Entity.afterLoad(self, old, new)
 end
 
@@ -437,13 +440,8 @@ end
 
 --! Despawn the humanoid.
 function Humanoid:despawn()
-  local spawn_points = self.world.spawn_points
-  self:setNextAction{
-    name = "spawn",
-    mode = "despawn",
-    point = spawn_points[math.random(1, #spawn_points)],
-    must_happen = true,
-  }
+  local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+  self:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
 end
 
 -- Function to activate/deactivate moods of a humanoid.
@@ -464,7 +462,7 @@ function Humanoid:setMood(mood_name, activate)
   end
   local new_mood = nil
   -- TODO: Make equal priorities cycle, or make all moods unique
-  for key, value in pairs(self.active_moods) do
+  for _, value in pairs(self.active_moods) do
     if new_mood then -- There is a mood, check priorities.
       if new_mood.priority < value.priority then
         new_mood = value
@@ -523,11 +521,11 @@ local function Humanoid_startAction(self)
     end
     -- Is it a member of staff, grim or a patient?
     if class.is(self, Staff) then
-      self:queueAction({name = "meander"})
+      self:queueAction(MeanderAction())
     elseif class.is(self,GrimReaper) then
-      self:queueAction({name = "idle"})
+      self:queueAction(IdleAction())
     else
-      self:queueAction({name = "seek_reception"})
+      self:queueAction(SeekReceptionAction())
     end
     -- Open the dialog of the humanoid.
     local ui = self.world.ui
@@ -563,8 +561,8 @@ local function Humanoid_startAction(self)
           self:goHome("kicked")
         end
         if TheApp.world:isCurrentSpeed("Pause") then
-        TheApp.world:setSpeed(TheApp.world.prev_speed)
-      end
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
       end,
       --[[persistable:humanoid_stay_in_hospital]] function()
         if TheApp.world:isCurrentSpeed("Pause") then
@@ -674,7 +672,7 @@ end
 
 -- Check if the humanoid is running actions intended to leave the room, as indicated by the flag
 function Humanoid:isLeaving()
-  return self.action_queue[1].is_leaving
+  return self.action_queue[1].is_leaving and true or false
 end
 
 -- Check if there is "is_leaving" action in the action queue
@@ -703,7 +701,7 @@ function Humanoid:setType(humanoid_class)
   self.pee_anim = pee_animations[humanoid_class]
   self.humanoid_class = humanoid_class
   if #self.action_queue == 0 then
-    self:setNextAction {name = "idle"}
+    self:setNextAction(IdleAction())
   end
 
   self.th:setPartialFlag(self.permanent_flags or 0, false)
@@ -726,12 +724,8 @@ end
 --!param must_happen (boolean, nil) If true, then the walk action will not be
 -- interrupted.
 function Humanoid:walkTo(tile_x, tile_y, must_happen)
-  self:setNextAction {
-    name = "walk",
-    x = tile_x,
-    y = tile_y,
-    must_happen = must_happen,
-  }
+  self:setNextAction(WalkAction(tile_x, tile_y)
+      :setMustHappen(not not must_happen))
 end
 
 -- Stub functions for handling fatigue. These are overridden by the staff subclass,
@@ -749,9 +743,9 @@ end
 function Humanoid:handleRemovedObject(object)
   local replacement_action
   if self.humanoid_class and self.humanoid_class == "Receptionist" then
-    replacement_action = {name = "meander"}
+    replacement_action = MeanderAction()
   elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
-    replacement_action = {name = "idle", must_happen = true}
+    replacement_action = IdleAction():setMustHappen(true)
   end
 
   for i, action in ipairs(self.action_queue) do
@@ -785,7 +779,7 @@ end
 function Humanoid:changeAttribute(attribute, amount)
   -- Receptionist is always 100% happy
   if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
-    self.attributes[attribute] = 1;
+    self.attributes[attribute] = 1
     return true
   end
 
@@ -812,19 +806,23 @@ function Humanoid:tickDay()
 
   -- If it is too hot or too cold, start to decrease happiness and
   -- show the corresponding icon. Otherwise we could get happier instead.
-  -- Let the player get into the level first though, don't decrease happiness the first year.
-  if self.attributes["warmth"] and self.hospital and not self.hospital.initial_grace then
-    -- Cold: less than 11 degrees C
-    if self.attributes["warmth"] < 0.22 then
-      self:changeAttribute("happiness", -0.02 * (0.22 - self.attributes["warmth"]) / 0.14)
+  local min_comfort_temp = 0.22 -- 11 degrees Celcius.
+  local max_comfort_temp = 0.36 -- 18 degrees Celcius.
+  local decrease_factor = 0.10
+  local increase_happiness = 0.005
+
+  if self.attributes["warmth"] and self.hospital then
+    -- Cold: less than comfortable.
+    if self.attributes["warmth"] < min_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (min_comfort_temp - self.attributes["warmth"]))
       self:setMood("cold", "activate")
-    -- Hot: More than 18 degrees C
-    elseif self.attributes["warmth"] > 0.36 then
-      self:changeAttribute("happiness", -0.02 * (self.attributes["warmth"] - 0.36) / 0.14)
+    -- Hot: More than comfortable.
+    elseif self.attributes["warmth"] > max_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (self.attributes["warmth"] - max_comfort_temp))
       self:setMood("hot", "activate")
-    -- Ideal: Between 11 and 18
+    -- Ideal: Not too cold or too warm.
     else
-      self:changeAttribute("happiness", 0.005)
+      self:changeAttribute("happiness", increase_happiness)
       self:setMood("cold", "deactivate")
       self:setMood("hot", "deactivate")
     end
@@ -834,7 +832,7 @@ end
 
 -- Helper function that finds out if there is an action queued to use the specified object
 function Humanoid:goingToUseObject(object_type)
-  for i, action in ipairs(self.action_queue) do
+  for _, action in ipairs(self.action_queue) do
     if action.object and action.object.object_type.id == object_type then
       return true
     end
