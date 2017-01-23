@@ -60,7 +60,7 @@ vip_names = {
 -- A small error in the introduction text of level 2
 introduction_texts.level2 = "Há uma grande variedade de indisposiçöes nesta área. Prepare o seu hospital para tratar mais pacientes " ..
                             "e para a construçäo de um Centro de Pesquisa. Lembre-se que deve manter limpo o hospital e procurar atingir a " ..
-                            "sua mais alta reputaçäo possível.  Tratará doenças como a língua comprida, entäo necessitará de uma sala de " ..
+                            "sua mais alta reputaçäo possível. Tratará doenças como a língua comprida, entäo necessitará de uma sala de " ..
                             "laringologia. Também pode construir uma cardiologia para diagnosticar novas doenças. Estas duas consultas deveräo " ..
                             "ser investigadas antes de as construir. Também pode comprar mais terreno para aumentar o seu hospital. " ..
                             "Para isso, utilize o mapa da cidade. Consiga uma reputaçäo de 300 um saldo de bancário de $10,000 e 40 pessoas curadas. "
@@ -170,10 +170,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 menu_player_count = {
-	players_1 = "  1 JOGADOR  ",
-	players_2 = "  2 JOGADORES  ",
-	players_3 = "  3 JOGADORES  ",
-	players_4 = "  4 JOGADORES  ",
+  players_1 = "  1 JOGADOR  ",
+  players_2 = "  2 JOGADORES  ",
+  players_3 = "  3 JOGADORES  ",
+  players_4 = "  4 JOGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Construir a sala neste local resultará em alas do hospital que näo poderäo ser acessadas.",
@@ -545,25 +545,25 @@ tooltip.information = {
 
 totd_window = {
   tips = {
-	"Todo hospital precisa de uma Recepçäo e um Consultório Geral para começar. Depois disso, dependerá do tipo de pacientes que visitará seu hospital. Entretanto ter uma farmácia é sempre uma boa ideia.",
-	"Máquinas como o Inflador precisam de constante manutençäo. Contrate um ou dois Faz-tudo para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
-	"Depois de um certo período de trabalho, seus funcionários ficaräo cansados. Certifique-se de construir uma Sala de Descanso, para que posam relaxar.",
-	"Instale Radiadores suficientes para manter seus funcionários e pacientes aquecidos, do contrário ficaräo infelizes. Use o Mapa da Cidade para localizar pontos do hospital que precisem ser aquecidos.",
-	"O nível de habilidade de um médico reflete na qualidade e velocidade dos diagnósticos. Coloque um médico experiente no Consultório Geral, assim näo precisará de muitas salas de diagnósticos adicionais.",
-	"Médicos de níveis 'Residente' e 'Médico' podem melhorar suas habilidades aprendendo com um Consultor na Sala de Treinamento. Se o Consultor possuir alguma especializaçäo (Cirurgiäo, Psiquiatra ou Pesquisador), ele irá passar este conhecido aos) seus) alunos.",
-	"Você já tentou digitar o número europeu de emergência (112) no aparelho de fax? Certifique-se que o seu som esteja ligado!",
-	"Você pode alterar algumas configuraçöes como a resoluçäo da tela e o idioma na janela de opçöes que pode ser acessar no menu inicial e dentro do jogo.",
-	"Você selecionou um idioma que näo é o inglês, mas continua vendo textos em inglês por todos os lugares? Ajude-nos a traduzir os textos restantes para o seu idioma!",
-	"A comunidade do CorsixTH está precisando de reforços em sua equipe! Você está interessado em codificar, traduzir ou criar gráficos para o CorsixTH? Entre em contato conosco pelo nosso Fórum, Lista de Discussäo ou canal de IRC (#corsix-th no freenode).",
-	"Se localizar um bug, por favor reporte-o em nosso bugtracker: th-issues.corsix.org",
-	"Cada fase possui certas metas a serem atingidas antes de passar para a próxima fase. Cheque a janela de situaçäo para acompanhar seu progresso a fim de atingir seus objetivos.",
-	"Se você deseja editar ou remover uma sala existente, pode fazê-lo com o botäo de ediçäo de sala na barra inferior.",
-	"Caso haja uma multidäo de pacientes esperando, você deve descobrir rapidamente quais deles estäo aguardando por uma sala em particular passando o ponteiro do mouse por cima desta sala.",
-	"Clique nas portas das salas para ver sua fila. Isso pode ser muito útil, já que pode reordenar a fila ou encaminhar um paciente para outra sala.",
-	"Funcionários infelizes iräo pedir aumentos de salários com mais frequência. Certifique-se que sua equipe esteja trabalho em um ambiente de trabalho confortável para mantê-los felizes.",
-	"Pacientes podem ficar com sede enquanto esperam em seu hospital, ainda mais se ligar o aquecimento! Instale máquinas de venda de refrigerantes em pontos estratégicos para um ganho extra.",
-	"Você pode abortar o processo de diagnóstico prematuramente e pressupor a cura, se você já tiver descoberto a doença. Atente-se que desta maneira aumenta-se o risco de um tratamento errado, resultando na morte do paciente.",
-	"Emergências podem ser uma boa fonte de grana extra, desde que você possua plena capacidade e recursos de lidar com os pacientes à tempo.",
+  "Todo hospital precisa de uma Recepçäo e um Consultório Geral para começar. Depois disso, dependerá do tipo de pacientes que visitará seu hospital. Entretanto ter uma farmácia é sempre uma boa ideia.",
+  "Máquinas como o Inflador precisam de constante manutençäo. Contrate um ou dois Faz-tudo para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
+  "Depois de um certo período de trabalho, seus funcionários ficaräo cansados. Certifique-se de construir uma Sala de Descanso, para que posam relaxar.",
+  "Instale Radiadores suficientes para manter seus funcionários e pacientes aquecidos, do contrário ficaräo infelizes. Use o Mapa da Cidade para localizar pontos do hospital que precisem ser aquecidos.",
+  "O nível de habilidade de um médico reflete na qualidade e velocidade dos diagnósticos. Coloque um médico experiente no Consultório Geral, assim näo precisará de muitas salas de diagnósticos adicionais.",
+  "Médicos de níveis 'Residente' e 'Médico' podem melhorar suas habilidades aprendendo com um Consultor na Sala de Treinamento. Se o Consultor possuir alguma especializaçäo (Cirurgiäo, Psiquiatra ou Pesquisador), ele irá passar este conhecido aos) seus) alunos.",
+  "Você já tentou digitar o número europeu de emergência (112) no aparelho de fax? Certifique-se que o seu som esteja ligado!",
+  "Você pode alterar algumas configuraçöes como a resoluçäo da tela e o idioma na janela de opçöes que pode ser acessar no menu inicial e dentro do jogo.",
+  "Você selecionou um idioma que näo é o inglês, mas continua vendo textos em inglês por todos os lugares? Ajude-nos a traduzir os textos restantes para o seu idioma!",
+  "A comunidade do CorsixTH está precisando de reforços em sua equipe! Você está interessado em codificar, traduzir ou criar gráficos para o CorsixTH? Entre em contato conosco pelo nosso Fórum, Lista de Discussäo ou canal de IRC (#corsix-th no freenode).",
+  "Se localizar um bug, por favor reporte-o em nosso bugtracker: th-issues.corsix.org",
+  "Cada fase possui certas metas a serem atingidas antes de passar para a próxima fase. Cheque a janela de situaçäo para acompanhar seu progresso a fim de atingir seus objetivos.",
+  "Se você deseja editar ou remover uma sala existente, pode fazê-lo com o botäo de ediçäo de sala na barra inferior.",
+  "Caso haja uma multidäo de pacientes esperando, você deve descobrir rapidamente quais deles estäo aguardando por uma sala em particular passando o ponteiro do mouse por cima desta sala.",
+  "Clique nas portas das salas para ver sua fila. Isso pode ser muito útil, já que pode reordenar a fila ou encaminhar um paciente para outra sala.",
+  "Funcionários infelizes iräo pedir aumentos de salários com mais frequência. Certifique-se que sua equipe esteja trabalho em um ambiente de trabalho confortável para mantê-los felizes.",
+  "Pacientes podem ficar com sede enquanto esperam em seu hospital, ainda mais se ligar o aquecimento! Instale máquinas de venda de refrigerantes em pontos estratégicos para um ganho extra.",
+  "Você pode abortar o processo de diagnóstico prematuramente e pressupor a cura, se você já tiver descoberto a doença. Atente-se que desta maneira aumenta-se o risco de um tratamento errado, resultando na morte do paciente.",
+  "Emergências podem ser uma boa fonte de grana extra, desde que você possua plena capacidade e recursos de lidar com os pacientes à tempo.",
   },
   previous = "Dica anterior",
   next = "Próxima dica",
@@ -1248,7 +1248,7 @@ newspaper[4][3] = "OPERAÇAO DE DESVIO DE FUNDOS"
 newspaper[4][4] = "FECHAMENTO SEM REMUNERAÇAO"
 newspaper[5][1] = "ASSALTO EM UM HOSPITAL"
 newspaper[5][2] = "MÉDICO RETIRA CADAVERES"
-newspaper[5][3] = "CAPTURADO COM  O CORPO"
+newspaper[5][3] = "CAPTURADO COM O CORPO"
 newspaper[5][4] = "AJUSTE DE CONTAS DO DR MORTE"
 newspaper[5][5] = "ROUBO NO DEPOSITO"
 newspaper[5][6] = "DENOMINADO DR CAVATUMBAS"
@@ -1610,8 +1610,8 @@ diseases.diag_scanner.name = "Diag: Scanner"
 diseases.uncommon_cold.cause = "Causa - Pequenas partículas de muco no ar."
 diseases.uncommon_cold.name = "Catarro atípico"
 diseases.uncommon_cold.symptoms = "Sintomas - Mucosidade, espirros e pulmöes descoloridos."
-diseases.uncommon_cold.cure = "Cura - Beber um grande gole de um xarope estranho para  tosse fabricado na farmácia com ingredientes especiais."
-diseases.broken_heart.cause = "Causa - Alguém mais rico, mais jovem e mais magro  que o paciente."
+diseases.uncommon_cold.cure = "Cura - Beber um grande gole de um xarope estranho para tosse fabricado na farmácia com ingredientes especiais."
+diseases.broken_heart.cause = "Causa - Alguém mais rico, mais jovem e mais magro que o paciente."
 diseases.broken_heart.name = "Infelicidade"
 diseases.broken_heart.symptoms = "Sintomas - Chorar e rir depois de passar horas a rasgar as fotos das férias."
 diseases.broken_heart.cure = "Cura - Dois cirurgiöes abrem o peito e arrumam com delicadeza o coraçäo enquanto contêm a respiraçäo."
@@ -1850,7 +1850,7 @@ trophy_room.emergencies.regional_bad[1] = "O seu hospital é o pior da regiäo p
 trophy_room.curesvdeaths.awards[1] = "As minhas mais sinceras felicitaçöes. O ano passado, o número de curas foi superior ao de falecimentos no seu hospital."
 trophy_room.curesvdeaths.penalty[1] = "A sua proporçäo entre curas e mortes é extremamente baixa. Deveria assegurar de que cura mais pessoas do que mata. Näo deixe o seu pessoal em mau lugar."
 trophy_room.wait_times.award[1] = "Parabéns! No seu hospital a gente fez fila durante muito pouco tempo. Este é um acontecimento importante."
-trophy_room.wait_times.penalty[1] = "No seu hospital, os pacientes esperam muito tempo.  Há sempre filas inaceitáveis. Poderia tratar os seus pacientes com mais eficácia se quisesse."
+trophy_room.wait_times.penalty[1] = "No seu hospital, os pacientes esperam muito tempo. Há sempre filas inaceitáveis. Poderia tratar os seus pacientes com mais eficácia se quisesse."
 trophy_room.happy_patients.awards[1] = "Pode estar orgulhoso de que, no ano passado, as pessoas estivesse muito contente no seu hospital."
 trophy_room.happy_patients.awards[2] = "Os pacientes que visitaram o seu hospital sentiram-se mais contentes com o seu tratamento, que no resto dos hospitais."
 trophy_room.happy_patients.penalty[1] = "As pessoas que väo para o hospital tem uma experiência terrível. Terá que fazê-lo muito melhor se quiser ganhar o respeito do Ministério."
@@ -2474,23 +2474,23 @@ adviser.room_requirements.op_need_another_surgeon = "Tem que contratar um outro 
 adviser.room_requirements.gps_office_need_doctor = "Contrate um médico para atender a consulta."
 adviser.room_requirements.ward_need_nurse = "Contrate uma enfermeira para que trabalhe na enfermaria."
 adviser.room_requirements.psychiatry_need_psychiatrist = "Agora que construiu uma sala de psiquiatria, precisará de um psiquiatra."
-introduction_texts.level15 = "Bem, estes säo os mecanismos básicos para pôr em funcionamento um hospital.// Os seus Médicos väo precisar de toda a ajuda que possam obter para diagnosticar alguns dos pacientes.  Pode ajudá-los construindo outros equipamentos de diagnóstico como a sala de Diagnóstico Geral."
-introduction_texts.level6 = "Utilize toda a sua capacidade para conseguir um hospital que funcione bem e consiga curar muitos pacientes e que possa tratar qualquer caso que pressentem os doentes.// Está avisado de que o ambiente, aqui, é especialmente propenso a germes e infecçöes.  A menos que mantenha uma escrupulosa limpeza na sua instituiçäo, terá que fazer frente a uma série de epidemias entre os pacientes.  Procure obter um lucro de $20.000 e fazer o valor do seu hospital superar os $140.000. "
-introduction_texts.level3 = "Desta vez colocará o seu hospital em uma área rica// O Ministério da Saúde espera que consiga curar muitos pacientes.  Terá que ganhar uma boa reputaçäo para começar, mas uma vez que o hospital comece a funcionar, concentre-se em ganhar todo o dinheiro que puder.  Também pode haver urgências.  Produzem-se quando chega muita gente que sofre da mesma doença.  Se os curar dentro de um prazo determinado, conseguirá aumentar a sua reputaçäo e ganhar um grande extra.  Haverá doenças, como o complexo de rei, e deverá ter orçamento para construir uma sala de operaçöes e junto a ela, uma enfermaria.  Tem que ganhar $20.000 para superar este nível."
-introduction_texts.level12 = "Agora enfrenta o maior dos desafios.  Impressionado com os seus lucros, o Ministério tem uma elevada tarefa para ti; querem que construa outro magnífico hospital, que tenha um excelente lucro e uma reputaçäo incrível.  Também espera-se que compre todo o terreno que puder, cure tudo (e queremos dizer todas as doenças) e ganhe todos os prêmios.  Acha que irá conseguir?  Ganhe $650.000, cure 750 pessoas e consiga uma reputaçäo de 800 para ganhar este nível. "
-introduction_texts.level9 = "Depois de ingressar dinheiro na conta bancária do Ministério e pagar uma nova limusine para o Ministro, agora pode dedicar a criar um bom hospital para cuidar dos doentes e necessitados.  Aqui terá um montäo de problemas diferentes.  Se o seu pessoal tiver uma boa formaçäo e suficientes consultas, poderá resolver qualquer situaçäo.  O seu hospital terá que valer $200.000 e precisará ter $400.000 no banco.  Se näo o conseguir näo poderá terminar o nível."
-introduction_texts.level11 = "Tem a oportunidade de construir o hospitai definitivo.  Esta é uma área de enorme prestígio e o Ministério gostaria que este seja o melhor hospital.  Esperamos que ganhe muito dinheiro, alcance uma excelente reputaçäo e que se encarregue de todos os casos que sejam apresentados.  Este é um trabalho importante.  Terá que ser muito hábil para completá-lo.  Também deve ter em conta que foram vistos OVNIs na área. Assegure-se de que o seu pessoal esteja preparado para receber algumas visitas inesperadas.  O seu hospital terá que alcançar um valor de $240.000, precisará ter $500.000 no banco e uma reputaçäo de 700."
-introduction_texts.level14 = "Ainda tem mais um desafio: o hospital surpresa totalmente imprevisível.  Se conseguir ter êxito, será o vencedor dos vencedores.  E näo espere que seja fácil, porque é a tarefa mais difícil que confrontará.  Boa sorte!"
-introduction_texts.level10 = "Além de dever curar todas as doenças que possa haver, o Ministério pede que empregue um pouco de tempo em aumentar a eficácia dos seus remédios.// Houve algumas queixas por parte do D. Salutíssimo, o Cachorro Guardiäo da Saúde, assim deve procurar com que todos os seus remédios sejam extremamente eficazes para ficar bem.  Também, assegure-se de que o seu hospital tenha uma reputaçäo irrepreensível. Procure deixar morrer poucos pacientes.  Como sugestäo, deveria deixar espaço para um banho gelatinoso.  Para ganhar, os seus remédios deveräo ter uma eficácia de, pelo menos, 80%, tem que conseguir uma reputaçäo de 650 e guardar $500.000 no banco."
-introduction_texts.level5 = "Este será um hospital concorrido, que tratará casos muito variados.// Os seus médicos acabam de sair da faculdade, por isso é fundamental que construa uma sala de formaçäo para que alcancem o nível de formaçäo necessário.  Só tem três especialistas para ensinar os seus funcionários inexperientes, entäo faça com que estejam contentes.  Tem que ter em conta que o hospital está localizado em cima de uma falha geológica de San Android.  Sempre hß risco de terremoto.  Os terremotos provocaräo danos importantes nas suas máquinas e alteraräo o bom funcionamento do seu hospital.  Aumente a sua reputaçäo até 400 e consegue ganhos de $50.000 para triunfar. Também, cure 200 pacientes. "
-introduction_texts.level1 = "Bem-vindo ao seu primeiro hospital!// Para pô-lo para funcionar, coloque uma Recepçäo, construa um Consultório e contrate uma recepcionista e um médico.  Em seguida espere que cheguem os pacientes.  Seria uma boa ideia construir uma consulta de psiquiatria e contratar um psiquiatra.  Uma farmácia e uma enfermeira säo fundamentais para curar os seus pacientes.  Cuidado com os casos malignos de cabeça inflada; solucionam-se na sala de inflatoterapia.  Terá que curar 10 pessoas e assegurar de que a sua reputaçäo näo seja inferior a 200."
-introduction_texts.level17 = "Um último aviso. Mantenha o olho sobre a sua Reputaçäo, é o que atrairá pacientes ao seu estabelecimento.  Se näo matar muitas pessoas e os mantiver razoavelmente felizes näo deverá ter muitos problemas com este nível!// Agora é com você, boa sorte."
-introduction_texts.level7 = "Aqui, estará sob a estrita vigilância do Ministério da Saúde, assim procura que as suas contas reflitam uns excelentes ganhos e que aumente a sua reputaçäo.// Näo podemos permitir que haja mortes desnecessárias; Näo beneficiam nada o negócio.  Assegure de que o seu pessoal está em plena forma e de que tem todos os equipamentos necessários.  Consegue uma reputaçäo de 600, e um saldo bancário de $200.000."
-introduction_texts.level4 = "Faça com que todos os seus pacientes estejam contentes, trate-os com a maior eficácia e tente deixar que morram o menos possíveis.// A sua reputaçäo está em jogo entäo, procure aumentá-la o máximo que puder.  Näo se preocupe muito com o dinheiro; Irá ganhando à medida que cresce a sua reputaçäo.  Também poderá formar os seus médicos para ampliar os seus conhecimentos.  Eles poderäo curar os pacientes mais difíceis.  Alcance uma reputaçäo acima de 500."
+introduction_texts.level15 = "Bem, estes säo os mecanismos básicos para pôr em funcionamento um hospital.//Os seus Médicos väo precisar de toda a ajuda que possam obter para diagnosticar alguns dos pacientes. Pode ajudá-los construindo outros equipamentos de diagnóstico como a sala de Diagnóstico Geral."
+introduction_texts.level6 = "Utilize toda a sua capacidade para conseguir um hospital que funcione bem e consiga curar muitos pacientes e que possa tratar qualquer caso que pressentem os doentes.//Está avisado de que o ambiente, aqui, é especialmente propenso a germes e infecçöes. A menos que mantenha uma escrupulosa limpeza na sua instituiçäo, terá que fazer frente a uma série de epidemias entre os pacientes. Procure obter um lucro de $20.000 e fazer o valor do seu hospital superar os $140.000. "
+introduction_texts.level3 = "Desta vez colocará o seu hospital em uma área rica//O Ministério da Saúde espera que consiga curar muitos pacientes. Terá que ganhar uma boa reputaçäo para começar, mas uma vez que o hospital comece a funcionar, concentre-se em ganhar todo o dinheiro que puder. Também pode haver urgências. Produzem-se quando chega muita gente que sofre da mesma doença. Se os curar dentro de um prazo determinado, conseguirá aumentar a sua reputaçäo e ganhar um grande extra. Haverá doenças, como o complexo de rei, e deverá ter orçamento para construir uma sala de operaçöes e junto a ela, uma enfermaria. Tem que ganhar $20.000 para superar este nível."
+introduction_texts.level12 = "Agora irá enfrentar o maior dos desafios. Impressionado com os seus lucros, o Ministério tem uma grande tarefa para você; querem que construa outro magnífico hospital, que tenha um excelente lucro e uma reputaçäo incrível. Também querem que compre todo o terreno que puder, cure tudo (e queremos dizer todas as doenças) e ganhe todos os prêmios. Acha que irá conseguir? Ganhe $650.000, cure 750 pessoas e consiga uma reputaçäo de 800 para ganhar este nível. "
+introduction_texts.level9 = "Depois de ingressar dinheiro na conta bancária do Ministério e pagar uma nova limusine para o Ministro, agora pode dedicar a criar um bom hospital para cuidar dos doentes e necessitados. Aqui terá um montäo de problemas diferentes. Se o seu pessoal tiver uma boa formaçäo e suficientes consultas, poderá resolver qualquer situaçäo. O seu hospital terá que valer $200.000 e precisará ter $400.000 no banco. Se näo o conseguir näo poderá terminar o nível."
+introduction_texts.level11 = "Tem a oportunidade de construir o hospitai definitivo. Esta é uma área de enorme prestígio e o Ministério quer que este seja o melhor hospital. Esperamos que ganhe muito dinheiro, alcance uma excelente reputaçäo e que se encarregue de todos os casos que sejam apresentados. Este é um trabalho importante. Terá que ser muito hábil para completá-lo. Também deve ter em conta que foram vistos OVNIs na área. Assegure-se de que o seu pessoal esteja preparado para receber algumas visitas inesperadas. O seu hospital terá que alcançar um valor de $240.000, precisará ter $500.000 no banco e uma reputaçäo de 700."
+introduction_texts.level14 = "Ainda tem mais um desafio: um hospital surpresa totalmente imprevisível. Se conseguir ter êxito, será o vencedor dos vencedores. E näo espere que seja fácil, porque é a tarefa mais difícil que confrontará. Boa sorte!"
+introduction_texts.level10 = "Além de dever curar todas as doenças que possa haver, o Ministério pede que empregue um pouco de tempo em aumentar a eficácia dos seus remédios.//Houve algumas queixas por parte do D. Salutíssimo, o Cachorro Guardiäo da Saúde, assim deve procurar com que todos os seus remédios sejam extremamente eficazes para ficar bem. Também, assegure-se de que o seu hospital tenha uma reputaçäo irrepreensível. Procure deixar morrer poucos pacientes. Como sugestäo, deveria deixar espaço para um banho gelatinoso. Para ganhar, os seus remédios deveräo ter uma eficácia de, pelo menos, 80%, tem que conseguir uma reputaçäo de 650 e guardar $500.000 no banco."
+introduction_texts.level5 = "Este será um hospital concorrido, que tratará casos muito variados.//Os seus médicos acabam de sair da faculdade, por isso é fundamental que construa uma sala de formaçäo para que alcancem o nível de formaçäo necessário. Só tem três especialistas para ensinar os seus funcionários inexperientes, entäo faça com que estejam contentes. Tem que ter em conta que o hospital está localizado em cima de uma falha geológica de San Android. Sempre hß risco de terremoto. Os terremotos provocaräo danos importantes nas suas máquinas e alteraräo o bom funcionamento do seu hospital. Aumente a sua reputaçäo até 400 e consegue ganhos de $50.000 para triunfar. Também, cure 200 pacientes. "
+introduction_texts.level1 = "Bem-vindo ao seu primeiro hospital!//Para pô-lo para funcionar, coloque uma Recepçäo, construa um Consultório e contrate uma recepcionista e um médico. Em seguida espere que cheguem os pacientes. Seria uma boa ideia construir uma consulta de psiquiatria e contratar um psiquiatra. Uma farmácia e uma enfermeira säo fundamentais para curar os seus pacientes. Cuidado com os casos malignos de cabeça inflada; solucionam-se na sala de inflatoterapia. Terá que curar 10 pessoas e assegurar de que a sua reputaçäo näo seja inferior a 200."
+introduction_texts.level17 = "Um último aviso. Mantenha o olho sobre a sua Reputaçäo, é o que atrairá pacientes ao seu estabelecimento. Se näo matar muitas pessoas e os mantiver razoavelmente felizes näo deverá ter muitos problemas com este nível!//Agora é com você, boa sorte."
+introduction_texts.level7 = "Aqui, estará sob a estrita vigilância do Ministério da Saúde, assim procura que as suas contas reflitam uns excelentes ganhos e que aumente a sua reputaçäo.//Näo podemos permitir que haja mortes desnecessárias; Näo beneficiam nada o negócio. Assegure de que o seu pessoal está em plena forma e de que tem todos os equipamentos necessários. Consegue uma reputaçäo de 600, e um saldo bancário de $200.000."
+introduction_texts.level4 = "Faça com que todos os seus pacientes estejam contentes, trate-os com a maior eficácia e tente deixar que morram o menos possíveis.//A sua reputaçäo está em jogo entäo, procure aumentá-la o máximo que puder. Näo se preocupe muito com o dinheiro; Irá ganhando à medida que cresce a sua reputaçäo. Também poderá formar os seus médicos para ampliar os seus conhecimentos. Eles poderäo curar os pacientes mais difíceis. Alcance uma reputaçäo acima de 500."
 introduction_texts.level18 = ""
-introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes precisará construir salas de tratamento e clínicas para curá-los.  Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
-introduction_texts.level13 = "A sua incrível habilidade como diretor do hospital atraiu a atençäo da Divisäo Secreta Especial do Serviço Secreto Especial.  Têm um trabalho especial para si. Há um hospital infestado de ratos que precisa de um exterminador eficiente.  Tem que matar todos os ratos que puder antes de que o pessoal de Manutençäo limpe toda a sujeira.  Acha que é apto para esta missäo?"
-introduction_texts.level8 = "De si depende que possa construir o hospital mais eficiente e rentável possível.// As pessoas, por aqui, säo bastante enriquecidas, assim dá-lhes tudo o que possa dar.  Lembre-se que curar as pessoas está muito certo, mas o que de verdade PRECISA é do dinheiro que lhe proporcionam.  Leve a estes doentes à tinturaria.  Acumule uma enorme quantia de $300.000 para completar este nível. "
+introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes precisará construir salas de tratamento e clínicas para curá-los. Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
+introduction_texts.level13 = "A sua incrível habilidade como diretor do hospital atraiu a atençäo da Divisäo Secreta Especial do Serviço Secreto Especial. Têm um trabalho especial para si. Há um hospital infestado de ratos que precisa de um exterminador eficiente. Tem que matar todos os ratos que puder antes de que o pessoal de Manutençäo limpe toda a sujeira. Acha que é apto para esta missäo?"
+introduction_texts.level8 = "De si depende que possa construir o hospital mais eficiente e rentável possível.//As pessoas, por aqui, säo bastante enriquecidas, assim dá-lhes tudo o que possa dar. Lembre-se que curar as pessoas está muito certo, mas o que de verdade PRECISA é do dinheiro que lhe proporcionam. Leve a estes doentes à tinturaria. Acumule uma enorme quantia de $300.000 para completar este nível. "
 humanoid_name_starts[1] = "GOLD"
 humanoid_name_starts[2] = "HIGH"
 humanoid_name_starts[3] = "AND"
@@ -2566,17 +2566,17 @@ menu_file_save[5] = "  JOGO 5 "
 menu_file_save[6] = "  JOGO 6 "
 menu_file_save[7] = "  JOGO 7 "
 menu_file_save[8] = "  JOGO 8 "
-insurance_companies[1] = "Folha de Cisne Ltda."
-insurance_companies[2] = "Cebola Norfolk"
-insurance_companies[3] = "Krista da Onda Mútua"
-insurance_companies[4] = "Cicatriz de Bigle Ltda."
-insurance_companies[5] = "Bexiga Natatória Ltda."
-insurance_companies[6] = "Terry Honesto plc."
-insurance_companies[7] = "Holdings Sr. Gorducho"
-insurance_companies[8] = "Leon Katz Corp."
-insurance_companies[9] = "Prigg e Bong Ltda."
-insurance_companies[10] = "Cia. de Seguro Feliz"
-insurance_companies[11] = "Seguro do Sindicato"
+insurance_companies[1] = "Seguros Estrelinha"
+insurance_companies[2] = "Seguros Nacional"
+insurance_companies[3] = "Mútua Seguril"
+insurance_companies[4] = "Seguros Ponderoso"
+insurance_companies[5] = "Geral Seguro"
+insurance_companies[6] = "Seguro Fiel"
+insurance_companies[7] = "Holding de Seguros"
+insurance_companies[8] = "Seguros Leon"
+insurance_companies[9] = "Joäo e Maria Ltda."
+insurance_companies[10] = "Seguro Feliz"
+insurance_companies[11] = "Seguros Sindicato"
 insurance_companies.out_of_business = "FECHADO"
 room_descriptions.ward[1] = "Enfermaria//"
 room_descriptions.ward[2] = "Os pacientes ficam aqui para serem atendidos por uma enfermeira enquanto säo diagnosticados. Permanecem aqui antes de serem operados.//"
