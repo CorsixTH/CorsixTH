@@ -582,8 +582,8 @@ cheats_window = {
   caption = "Trapaças",
   warning = "Atençäo: Você näo conseguirá quaisquer pontos de bonificaçöes no fim do nível se você trapacear!",
   cheated = {
-    no = "Trapaças usadas: Sim",
-    yes = "Trapaças usadas: Näo",
+    no = "Trapaças usadas: Näo",
+    yes = "Trapaças usadas: Sim",
   },
   cheats = {
     money = "Trapaça de Dinheiro",
