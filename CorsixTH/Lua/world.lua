@@ -2668,6 +2668,10 @@ function World:afterLoad(old, new)
       self.next_earthquake.remaining_damage = rd
       self.next_earthquake.damage_timer = earthquake_damage_time
       self.next_earthquake.warning_timer = 0
+    else
+      self.next_earthquake.remaining_damage = self.next_earthquake.size
+      self.next_earthquake.damage_timer = earthquake_damage_time
+      self.next_earthquake.warning_timer = earthquake_warning_period
     end
   end
 
