@@ -19,7 +19,7 @@ before_install:
   - luarocks --local install lpeg
   - luarocks --local install luafilesystem
   - luarocks --local install luasocket
-  - luarocks --local install luacheck
+  - luarocks --local install luacheck 0.19.1
   # Required for lua unit tests
   - luarocks --local install busted
   - git clone --depth=1 https://github.com/CorsixTH/deps.git $HOME/deps

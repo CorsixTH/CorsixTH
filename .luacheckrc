@@ -65,15 +65,18 @@ globals = { -- Globals
             "ShakeFistAction", "SpawnAction", "StaffReceptionAction",
             "SweepFloorAction", "TapFootAction", "UseObjectAction",
             "UseScreenAction", "UseStaffRoomAction", "VaccinateAction",
-            "VipGoToNextRoomAction", "VomitAction", "WalkAction", "YawnAction"
+            "VipGoToNextRoomAction", "VomitAction", "WalkAction", "YawnAction",
+
+            -- Math extensions
+            "math.n_random", "math.round", "math.randomdump"
           }
 
 -- Set standard globals
 std = "lua51+lua52+lua53+luajit"
 files["CorsixTH/Luatest"] = {std = "+busted"}
 
--- Show warning codes
-codes = true
+codes = true            -- Show warning codes
+max_line_length = false -- No maximum line length
 
 -- Exclude files and directories
 exclude_files = {"CorsixTH/Bitmap", "CorsixTH/Lua/api_version.lua", "LDocGen"}
