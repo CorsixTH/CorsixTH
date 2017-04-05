@@ -389,9 +389,10 @@ function UIGraphs:draw(canvas, x, y)
   local xpos = x + RIGHT_X
 
   -- Draw numbers (or month names) below the graph
+  assert(#self.hospital.statistics > 0) -- Avoid negative months and years.
   if stats_stepsize >= 12 then
     -- Display years
-    local year_number = math.floor(#self.hospital.statistics / 12)
+    local year_number = math.floor((#self.hospital.statistics - 1) / 12)
     for i = 1, #self.values do
       self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
       xpos = xpos - VERT_DX
@@ -402,7 +403,7 @@ function UIGraphs:draw(canvas, x, y)
     end
   else
     -- Display months
-    local month_number = #self.hospital.statistics - math.floor(#self.hospital.statistics / 12) * 12
+    local month_number = #self.hospital.statistics - math.floor((#self.hospital.statistics - 1) / 12) * 12
     for i = 1, #self.values do
       self.black_font:drawWrapped(canvas, _S.months[month_number], xpos, y + BOTTOM_Y + 10, 25, "center")
       xpos = xpos - VERT_DX
