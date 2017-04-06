@@ -617,6 +617,13 @@ menu_debug_overlay = {
   parcel                      = "  PARCELLE  ",
 }
 
+menu_player_count = {
+	players_1 = "  1 PLAYER  ",
+	players_2 = "  2 PLAYERS  ",
+	players_3 = "  3 PLAYERS  ",
+	players_4 = "  4 PLAYERS  ",
+}
+
 -- Adviser
 adviser = {
   room_forbidden_non_reachable_parts = "Placer la pièce à cet endroit rendrait inaccessibles certaines parties de l'hôpital",
@@ -687,6 +694,9 @@ letter = {
   dear_player = "Cher %s",
   custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
   return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
+  campaign_completed = "Incredible! You managed to finish all the levels. You can now relax and enjoy filling forums across the Internet of your achievements. Good luck!"
+  campaign_level_missing = "Sorry, but the next level of this campaign seems to be missing. (Name: %s)"
+  campaign_level_completed = "Good job! You beat the level. But it's not over yet!\n Would you like a position at %s Hospital?"
 }
 
 -- Installation
@@ -712,6 +722,8 @@ main_menu = {
   savegame_version = "Version de la sauvegarde : ",
   version = "Version : ",
   exit = "Quitter",
+  map_edit = "Map Editor",
+  custom_campaign = "Custom Campaign",
 }
 
 tooltip.main_menu = {
@@ -721,6 +733,8 @@ tooltip.main_menu = {
   load_game = "Charger une partie sauvegardée",
   options = "Modifier quelques paramètres",
   exit = "Non, non, SVP, ne quittez pas !",
+  map_edit = "Create a custom map",
+  custom_campaign = "Play a campaign created by the community",
 }
 
 -- Load game window
@@ -740,7 +754,23 @@ custom_game_window = {
   free_build = "Construction libre",
 }
 
-tooltip.custom_game_window.free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaite"
+tooltip.custom_game_window = {
+  free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaite",
+  choose_game = "Click a level to read more about it",
+  load_selected_level = "Load and play the selected level",
+}
+
+-- Custom campaign window
+custom_campaign_window = {
+  caption = "Custom Campaign",
+  start_selected_campaign = "Start campaign",
+  selected_level = "",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Choose a campaign to read more about it",
+  start_selected_campaign = "Load the first level of this campaign",
+}
 
 -- Save game window
 save_game_window = {
@@ -751,6 +781,16 @@ save_game_window = {
 tooltip.save_game_window = {
   save_game = "Écraser la sauvegarde %s",
   new_save_game = "Entrez un nom pour la sauvegarde",
+}
+
+save_map_window = {
+  caption = "Save Map (%1%)",
+  new_map = "New Map",
+}
+
+tooltip.save_map_window = {
+  map = "Overwrite map %s",
+  new_map = "Enter name for a map savegame",
 }
 
 -- Menu list window
@@ -937,6 +977,8 @@ confirmation = {
   abort_edit_room = "Vous êtes actuellement en train de construire ou d'éditer une pièce. Si tous les objets requis sont placés, elle sera validée, mais sinon elle sera détruite. Continuer ?",
   maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
   music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Voulez-vous continuer?",
+  could_not_load_campaign = "Failed to load the campaign: %s",
+  could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s"
 }
 
 -- Information dialog
@@ -1018,6 +1060,8 @@ cheats_window = {
     win_level = "Gagner le niveau",
     epidemic = "Reproduire des patients contagieux",
     toggle_infected = "Faire apparaître des patients contagieux.",
+    increase_prices = "",
+    decrease_prices = "",
   },
   close = "Fermer",
 }
@@ -1037,6 +1081,8 @@ tooltip.cheats_window = {
     win_level = "Vous fait gagner le niveau actuel.",
     epidemic = "Crée un patient contagieux qui peut causer une épidémie.",
     toggle_infected = "Bascule les icônes infectés pour l'épidémie, découverte active.",
+    increase_prices = "Increase all prices by 50% (max. 200%)",
+    decrease_prices = "Decrease all prices by 50% (min. 50%)",
   }
 }
 
@@ -1108,3 +1154,39 @@ tooltip.update_window = {
   ignore = "Ignorer cette mise à jour pour l'instant. Vous serez averti à nouveau lorsque vous ouvrez CorsixTH de nouveau",
 }
 
+map_editor_window = {
+  pages = {
+    inside = "Inside",
+    outside = "Outside",
+    foliage = "Foliage",
+    hedgerow = "Hedgerow",
+    pond = "Pond",
+    road = "Road",
+    north_wall = "North wall",
+    west_wall = "West wall",
+    helipad = "Helipad",
+    delete_wall = "Delete walls",
+    parcel_0 = "Parcel 0",
+    parcel_1 = "Parcel 1",
+    parcel_2 = "Parcel 2",
+    parcel_3 = "Parcel 3",
+    parcel_4 = "Parcel 4",
+    parcel_5 = "Parcel 5",
+    parcel_6 = "Parcel 6",
+    parcel_7 = "Parcel 7",
+    parcel_8 = "Parcel 8",
+    parcel_9 = "Parcel 9",
+    camera_1 = "Camera 1",
+    camera_2 = "Camera 2",
+    camera_3 = "Camera 3",
+    camera_4 = "Camera 4",
+    heliport_1 = "Heliport 1",
+    heliport_2 = "Heliport 2",
+    heliport_3 = "Heliport 3",
+    heliport_4 = "Heliport 4",
+    paste = "Paste area",
+  }
+}
+
+menu.player_count = "PLAYER COUNT"
+warnings.levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file.'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level."
