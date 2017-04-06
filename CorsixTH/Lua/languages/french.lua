@@ -740,10 +740,7 @@ custom_game_window = {
   free_build = "Construction libre",
 }
 
-tooltip.custom_game_window = {
-  start_game_with_name = "Charger le niveau %s",
-  free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaite",
-}
+tooltip.custom_game_window.free_build = "Cochez cette case si vous souhaitez jouer sans limite d'argent et sans conditions de victoire ou de défaite"
 
 -- Save game window
 save_game_window = {
