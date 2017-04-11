@@ -695,8 +695,8 @@ letter = {
   custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
   return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
   campaign_completed = "Incroyable ! Vous avez réussi à terminer tous les niveaux. Vous pouvez maintenant vous détendre et profiter de remplir des forums sur Internet de vos réalisations. Bonne chance !"
-  campaign_level_missing = "Désolé, mais le prochain niveau de cette campagne semble manquer. (Nom: %s)"
-  campaign_level_completed = "Bon travail ! Vous avez battu le niveau. Mais ce n'est pas fini!\n Aimeriez-vous un poste à l'hôpital %s ?"
+  campaign_level_missing = "Désolé, mais le prochain niveau de cette campagne semble manquer. (Nom: %s)",
+  campaign_level_completed = "Bon travail ! Vous avez battu le niveau. Mais ce n'est pas fini!\n Aimeriez-vous un poste à l'hôpital %s ?",
 }
 
 -- Installation
@@ -977,7 +977,7 @@ confirmation = {
   maximum_screen_size = "La taille de l'écran que vous avez entrée est supérieure à 3000 x 2000. Des plus hautes résolutions sont possibles, mais il faudra un meilleur matériel afin de maintenir un taux de trame jouable. Êtes-vous sûr de vouloir continuer?",
   music_warning = "Avant de choisir d'utiliser des MP3 pour votre musique dans le jeu, vous aurez besoin d'avoir smpeg.dll ou l'équivalent pour votre système d'exploitation, sinon vous n'aurez pas de musique dans le jeu. Voulez-vous continuer?",
   could_not_load_campaign = "Impossible de charger la campagne : %s",
-  could_not_find_first_campaign_level = "Impossible de trouver le premier niveau de cette campagne : %s"
+  could_not_find_first_campaign_level = "Impossible de trouver le premier niveau de cette campagne : %s",
 }
 
 -- Information dialog
