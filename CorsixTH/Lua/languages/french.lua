@@ -1187,5 +1187,5 @@ map_editor_window = {
   }
 }
 
-menu.player_count = "PLAYER COUNT"
-warnings.levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file.'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level."
+menu.player_count = "COMPTE DE JOUEURS"
+warnings.levelfile_variable_is_deprecated = "Remarque: Le niveau '%s' contient une définition de variable obsolète dans le fichier de niveau. '%LevelFile' a été renommé '%MapFile'. Veuillez aviser le créateur de la carte pour mettre à jour le niveau."
