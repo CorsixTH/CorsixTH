@@ -694,7 +694,7 @@ letter = {
   dear_player = "Cher %s",
   custom_level_completed = "Félicitations ! Vous avez réussi tous les objectifs de ce niveau personnalisé !",
   return_to_main_menu = "Voulez-vous retourner au menu principal ou continuer la partie ?",
-  campaign_completed = "Incroyable ! Vous avez réussi à terminer tous les niveaux. Vous pouvez maintenant vous détendre et profiter de remplir des forums sur Internet de vos réalisations. Bonne chance !"
+  campaign_completed = "Incroyable ! Vous avez réussi à terminer tous les niveaux. Vous pouvez maintenant vous détendre et profiter de remplir des forums sur Internet de vos réalisations. Bonne chance !",
   campaign_level_missing = "Désolé, mais le prochain niveau de cette campagne semble manquer. (Nom: %s)",
   campaign_level_completed = "Bon travail ! Vous avez battu le niveau. Mais ce n'est pas fini!\n Aimeriez-vous un poste à l'hôpital %s ?",
 }
