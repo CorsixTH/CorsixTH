@@ -1,6 +1,7 @@
 --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 Copyright (c) 2012 Henrique Poyatos
 Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
+Copyright (c) 2017 Altieres Lima da Silva
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,66 +19,323 @@ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
- --]]
+SOFTWARE. --]]
 
-Language("Português do Brasil", "Brazilian Portuguese", "pt_br", "br")
+Language("Português Brasileiro", "Brazilian Portuguese", "pt_br", "br")
 Inherit("English")
 Encoding(utf8)
+-------------------------------  OVERRIDE  ----------------------------------
+adviser.warnings.money_low = "Você está ficando sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
+-- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
+-- TODO: tooltip.status.close -- it's called status window, not overview window.
+
+-- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
+tooltip.staff_list.next_person = "Mostrar a página seguinte"
+tooltip.staff_list.prev_person = "Mostrar a página anterior"
+tooltip.status.reputation = "Sua reputaçäo näo deve estar abaixo de %d. Atualmente tem %d"
+tooltip.status.balance = "Näo deve ter menos de %d $ no banco. Atualmente tem %d"
+
+-- The originals of these two contain one space too much
+fax.emergency.cure_not_possible_build = "Você precisará construir um(a) %s"
+fax.emergency.cure_not_possible_build_and_employ = "Você precisará construir um(a) %s e contratar um(a)"
+fax.emergency.num_disease = "Existem %d pessoas com %s e precisam ser atendidas imediatamente."
+adviser.goals.lose.kill = "Mate mais %d pacientes para perder o nível!"
+
+-- Improve tooltips in staff window to mention hidden features
+tooltip.staff_window.face = "Rosto da pessoa - clique para abrir a tela de gerenciamento."
+tooltip.staff_window.center_view = "Clique esquerdo para fixar-se na pessoa, botäo direito para rodar entre os funcionários."
+
+-- These strings are missing in some versions of TH (unpatched?)
+confirmation.restart_level = "Você tem certeza de que deseja reiniciar o nível?"
+-- TODO adviser.multiplayer.objective_completed
+-- TODO adviser.multiplayer.objective_failed
+
+-- Replace Billy Savile
+-- this is only relevant to the English game so does not need adding
+-- in other language files
+vip_names = {
+ [6] = "Presidente da Cruz Vermelha",
+}
+
+-- A small error in the introduction text of level 2
+introduction_texts.level2 = "Há uma grande variedade de indisposiçöes nesta área. Prepare o seu hospital para tratar mais pacientes " ..
+                            "e para a construçäo de um Centro de Pesquisa. Lembre-se que deve manter limpo o hospital e procurar atingir a " ..
+                            "sua mais alta reputaçäo possível. Tratará doenças como a língua comprida, entäo necessitará de uma sala de " ..
+                            "laringologia. Também pode construir uma cardiologia para diagnosticar novas doenças. Estas duas consultas deveräo " ..
+                            "ser investigadas antes de as construir. Também pode comprar mais terreno para aumentar o seu hospital. " ..
+                            "Para isso, utilize o mapa da cidade. Consiga uma reputaçäo de 300 um saldo de bancário de $10,000 e 40 pessoas curadas. "
+
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = "Seu Centro de Pesquisa melhorou o medicamento para a %s"
+-------------------------------  NEW STRINGS  -------------------------------
+date_format = {
+  daymonth = "%1% %2:months%",
+}
+
+object.litter = "Lixo"
+tooltip.objects.litter = "Lixo: Um paciente jogou porque näo encontrou um cesto de lixo."
+
+tooltip.fax.close = "Fecha esta janela sem apagar a mensagem."
+tooltip.message.button = "Clique com o botäo esquerdo para abrir a mensagem"
+tooltip.message.button_dismiss = "Clique com o botäo esquerdo para abrir a mensagem e botäo direto para recusá-la"
+tooltip.casebook.cure_requirement.hire_staff = "Você precisa contratar empregados para realizar este tratamento."
+tooltip.casebook.cure_type.unknown = "Você ainda näo sabe como tratar esta doença"
+tooltip.research_policy.no_research = "Nenhuma pesquisa está sendo feita nesta categoria no momento."
+tooltip.research_policy.research_progress = "Progresso para a próxima descoberta nesta categoria: %1%/%2%"
+
+menu["player_count"] = "QUANTIDADE DE JOGADORES"
+
+menu_file = {
+  load =    " CARREGAR (SHIFT+L)   ",
+  save =    " SALVAR (SHIFT+S)   ",
+  restart = " REINICIAR (SHIFT+R)",
+  quit =    " SAIR (SHIFT+Q)   ",
+}
+
+menu_options = {
+  sound = "  SOM (ALT+S)  ",
+  announcements = "  ANUNCIOS (ALT+A)   ",
+  music = "  MUSICA (ALT+M)   ",
+  jukebox = "  MAQUINA DE DISCOS (J)  ",
+  lock_windows = "  TRAVAR JANELAS  ",
+  edge_scrolling = "  ROLAR MARGEM  ",
+  adviser_disabled = "  CONSELHEIRO (SHIFT+A)  ",
+  warmth_colors = "  CORES QUENTES  ",
+  wage_increase = "  EXIGENCIAS SALARIAS",
+  twentyfour_hour_clock = "  RELOGIO DE 24 HORAS  ",
+}
+
+menu_options_game_speed = {
+  pause               = "  PAUSAR (P)  ",
+  slowest             = "  MUITO LENTO (1)  ",
+  slower             = "  LENTO (2)  ",
+  normal              = "  NORMAL (3)  ",
+  max_speed           = "  RAPIDO (4)  ",
+  and_then_some_more   = "  MUITO RAPIDO (5)  ",
+}
+
+menu_options_warmth_colors = {
+  choice_1 = "  VERMELHO  ",
+  choice_2 = "  AZUL VERDE VERMELHO  ",
+  choice_3 = "  AMARELO LARANJA VERMELHO  ",
+}
+
+menu_options_wage_increase = {
+  grant = "    PERMITIR ",
+  deny = "    NEGAR ",
+}
+
+-- Add F-keys to entries in charts menu (except briefing), also town_map was added.
+menu_charts = {
+  bank_manager = "  GERENTE DO BANCO (F1)  ",
+  statement = "  ESTADO DA CONTA (F2)   ",
+  staff_listing = "  LISTA DOS FUNCIONARIOS (F3)  ",
+  town_map = "  MAPA DA CIDADE (F4)  ",
+  casebook = "  FICHA CLINICA (F5)  ",
+  research = "  PESQUISA (F6)  ",
+  status = "  ESTADO (F7)  ",
+  graphs = "  GRAFICO (F8)  ",
+  policy = "  NORMAS (F9)  ",
+}
+
+menu_debug = {
+  jump_to_level               = "  SALTAR PARA NIVEL  ",
+  connect_debugger            = "  CONECTAR SERVIDOR LUA DBGp (CTRL + C)  ",
+  transparent_walls           = "  PAREDES TRANSPARENTES (X)  ",
+  limit_camera                = "  LIMITAR CAMERA  ",
+  disable_salary_raise        = "  DESATIVAR AUMENTO DE SALARIO  ",
+  make_debug_fax              = "  FAZER DEBUG DO FAX  ",
+  make_debug_patient          = "  FAZER DEBUG DO PACIENTE  ",
+  cheats                      = "  TRAPAÇAS (F11)  ",
+  lua_console                 = "  CONSOLE LUA (F12)  ",
+  debug_script                = "  RODAR SCRIPT DE DEBUG (SHIFT + D)  ",
+  calls_dispatcher            = "  CHAMAR CONTROLADOR  ",
+  dump_strings                = "  DUMPAR TEXTOS DO JOGO  ",
+  dump_gamelog                = "  DUMPAR LOG DO JOGO (CTRL + D)  ",
+  map_overlay                 = "  SOBREPOR MAPA   ",
+  sprite_viewer               = "  VISUALIZADOR DE SPRITE  ",
+}
+menu_debug_overlay = {
+  none                        = "  NADA  ",
+  flags                       = "  MARCAS  ",
+  positions                   = "  POSIÇOES  ",
+  heat                        = "  TEMPERATURA  ",
+  byte_0_1                    = "  BYTE 0 Y 1  ",
+  byte_floor                  = "  BYTE SOLO  ",
+  byte_n_wall                 = "  BYTE PAREDE NORTE  ",
+  byte_w_wall                 = "  BYTE PAREDE OESTE  ",
+  byte_5                      = "  BYTE 5  ",
+  byte_6                      = "  BYTE 6  ",
+  byte_7                      = "  BYTE 7  ",
+  parcel                      = "  PARCELA  ",
+}
+menu_player_count = {
+  players_1 = "  1 JOGADOR  ",
+  players_2 = "  2 JOGADORES  ",
+  players_3 = "  3 JOGADORES  ",
+  players_4 = "  4 JOGADORES  ",
+}
+adviser = {
+  room_forbidden_non_reachable_parts = "Construir a sala neste local resultará em alas do hospital que näo poderäo ser acessadas.",
+  warnings = {
+    no_desk = "Você precisa comprar um balcäo de recepçäo e contratar uma recepcionista em algum momento!",
+    no_desk_1 = "Se você quer que os pacientes venham ao seu hospital, você precisa contratar uma recepcionista e comprar um balcäo para recepcioná-los!",
+    no_desk_2 = "Excelente, isso provavelmente é um recorde mundial - quase um ano e nenhum paciente! Se você deseja continuar administrando este hospital, você precisa urgente contratar uma recepcionista e comprar um balcäo para que ela possa trabalhar!",
+    no_desk_3 = "Brilhante, se passou quase um ano e ainda näo tem uma recepcionistas! Como quer que os pacientes apareçam? Arrume uma recepcionista e deixe de perder tempo!",
+    no_desk_4 = "Uma recepcionista necessita de uma mesa para atender os pacientes que aparecem.",
+    no_desk_5 = "Já era hora! Os pacientes começaräo a chegar logo.",
+    no_desk_6 = "Você tem uma recepcionista, que tal se construir uma mesa de recepçäo para que possa trabalhar?",
+    no_desk_7 = "Você construiu a mesa da recepçäo, entäo que tal contratar um recepcionista?  Você näo receberá nenhum paciente até que contrate uma.",
+    cannot_afford = "Seu saldo bancário é insuficiente para contratar esta pessoa!",
+    cannot_afford_2 = "Näo tem dinheiro para comprar isso!",
+    falling_1 = "Ei! Isso näo é engraçado, cuidado onde aponta este mouse; alguém pode se machucar!",
+    falling_2 = "Gostou da queda? Pare de bagunçar!",
+    falling_3 = "Ai, isso dói, alguém chame um médico!",
+    falling_4 = "Isto é um Hospital, näo um parque de diversöes!",
+    falling_5 = "Este näo é o local para empurrar as pessoas, elas estäo doentes sabia?!",
+    falling_6 = "Aqui näo é uma pista de boliche, pessoas doentes näo deveriam ser tratadas desta forma!",
+    research_screen_open_1 = "Para acessar a tela de pesquisa, tem que construir um Centro de Pesquisa.",
+    research_screen_open_2 = "Näo é possível realizar pesquisas nessa fase.",
+    researcher_needs_desk_1 = "Uma pesquisa necessita de uma mesa para trabalhar.",
+    researcher_needs_desk_2 = "Seu pesquisador agradece que lhe tenha dado um descanso. Se pretende ter mais pessoas pesquisando, deve dar a cada um uma mesa para trabalhar.",
+    researcher_needs_desk_3 = "Cada pesquisa necessita de uma mesa para trabalhar.",
+    nurse_needs_desk_1 = "Cada enfermeira necessita de uma mesa para trabalhar.",
+    nurse_needs_desk_2 = "Sua enfermeira agradece que lhe tenha dado um descanso. Se pretende ter mais pessoas trabalhando na enfermaria, tem que dar a cada uma delas uma mesa para trabalhar.",
+    low_prices = "Você esta cobrando muito pouco pelo uso de %s. Isto trará pessoas para o seu hospital, mas você näo fará muito lucro com cada uma delas.",
+    high_prices = "Você esta cobrando muito pelo uso de %s. Isto trará grande lucro a curto prazo, mas no final das contas você começará a afugentar as pessoas para longe do seu hospital.",
+    fair_prices = "O preço de %s parece justo.",
+    patient_not_paying = "Um paciente se foi sem pagar por %s porque é muito caro!",
+  },
+  cheats = {
+    th_cheat = "Parabéns, você habilitou os códigos de trapaça!",
+    roujin_on_cheat = "Desafio Roujin ativado! Boa sorte...",
+    roujin_off_cheat = "Desafio Roujin desativado.",
+  },
+}
+
+dynamic_info.patient.actions.no_gp_available = "Esperando que construa uma consulta"
+dynamic_info.staff.actions.heading_for = "Dirigindo-se para %s"
+dynamic_info.staff.actions.fired = "Despedido"
+dynamic_info.patient.actions.epidemic_vaccinated = "Eu näo sou mais contagioso"
+
+progress_report.free_build = "CONSTRUÇAO LIVRE"
+
+fax = {
+  choices = {
+    return_to_main_menu = "Voltar para menu principal",
+    accept_new_level = "Ir para o próximo nível",
+    decline_new_level = "Continuar jogando um pouco mais",
+  },
+  emergency = {
+    num_disease_singular = "Existe uma pessoa com %s que precisa urgente de sua atençäo.",
+    free_build = "Se você for bem sucedido sua reputaçäo aumentará, mas se você falhar sua reputaçäo será bastante prejudicada.",
+  },
+  vip_visit_result = {
+    remarks = {
+      free_build = {
+        "Seu hospital é muito bom! Näo é difícil mantê-lo sem limitaçöes econômicas, né?",
+        "Näo sou economista, mas até eu poderia dirigir este hospital, se é que você me entende...",
+        "Um hospital muito bem cuidado. Mas tome cuidado a crise financeira! Certo... você näo tem que se preocupar com isso.",
+      }
+    }
+  }
+}
+
+letter = {
+  dear_player = "Prezado(a) %s\n",
+  custom_level_completed = "Parabéns! Você completou todos os objetivos desta fase personalizada!",
+  return_to_main_menu = "Deseja retornar ao menu principal ou continuar jogando?",
+  campaign_level_completed = "Bom trabalho! Você superou este nível, mas ainda näo acabou!\n Você se interessaria em aceitar um posto no hospital %s?",
+  campaign_completed = "Incrível! Você conseguiu superar todos os níveis. Já pode relaxar e desfrutar enquanto fala das suas realizaçöes nos fóruns de toda a Internet. Boa sorte!",
+  campaign_level_missing = "Desculpe, parece que o próximo nível desta campanha está faltando. (Nome: %s)",
+}
+
+install = {
+  title = "----------------------- Configuraçäo do CorsixTH -----------------------",
+  th_directory = "O CorsixTH precisa de uma cópia dos arquivos de dados do Theme Hospital original (ou a demo) para executar. Utilize o seletor abaixo para localizar o diretório onde o jogo Theme Hospital está instalado.",
+  ok = "OK",
+  exit = "Sair",
+  cancel = "Cancelar",
+}
+
+misc.not_yet_implemented = "(ainda näo implementado)"
+misc.no_heliport = "Uma das doença ainda näo foi descoberta, ou näo existe um heliporto neste mapa.  Talvez precise comprar uma mesa de recepçäo e contratar a uma recepcionista."
 
 main_menu = {
-  new_game = "Novo Jogo",
-  custom_level = "Fase Personalizada",
+  new_game = "Campanha",
+  custom_campaign = "Campanha Personalizada",
+  custom_level = "Cenário Personalizado",
+  continue = "Continuar Jogo",
   load_game = "Carregar Jogo",
-  options = "Opções",
-  savegame_version = "versão de jogo salvo: ",
-  version = "Versão: ",
+  options = "Configuraçöes",
+  map_edit = "Editor de Mapa",
+  savegame_version = "Versäo do jogo salvo: ",
+  version = "Versäo: ",
   exit = "Sair",
 }
 
 tooltip.main_menu = {
-  new_game = "Iniciar na primeira fase do jogo",
-  custom_level = "Construir seu hospital para uma única fase",
-  load_game = "Carregar um jogo salvo anteriormente",
-  options = "Modifique várias configurações",
-  exit = "Não se vá!",
-}
-
-new_game_window = {
-  easy = "Júnior (Fácil)",
-  medium = "Pleno (Médio)",
-  hard = "Sênior (Difícil)",
-  tutorial = "Tutorial",
-  cancel = "Cancelar",
-}
-
-tooltip.new_game_window = {
-  easy = "Se você é novo em jogos de simulação esta é a opção para você",
-  medium = "Este é o meio do campinho se você está inseguro do que deve escolher",
-  hard = "Se você está acostumado com este tipo de jogo e quer mais desafios, escolha esta opção",
-  tutorial = "Se você precisa de ajuda para começar a jogar, escolha esta opção",
-  tutorial = "Tutorial",
-  cancel = "Ah, eu não queria começar um novo jogo !",
-}
-
-custom_game_window = {
-  caption = "Jogo Customizado",
-  free_build = "Construção Livre",
-}
-
-tooltip.custom_game_window = {
-  start_game_with_name = "Carregando fase %s",
-  free_build = "Escolha esta opção se você quer jogar sem dinheiro ou objetivos de jogo",
+  new_game = "Começar o primeiro nível da campanha",
+  custom_campaign = "Jogar uma campanha criada pela comunidade.",
+  custom_level = "Construir seu hospital em um cenário único",
+  continue = "Continuar seu último jogo salvo.",
+  load_game = "Carregar um jogo salvo",
+  options = "Ajustar várias configuraçöes",
+  map_edit = "Criar um mapa personalizado",
+  exit = "Näo, näo, por favor, näo vá",
+  quit = "Você deseja realmente sair do CorsixTH?",
 }
 
 load_game_window = {
-  caption = "Carregar Jogo",
+  caption = "Carregar Jogo (%1%)",
 }
 
 tooltip.load_game_window = {
   load_game = "Carregar jogo %s",
   load_game_number = "Carregar jogo %d",
   load_autosave = "Carregar jogo salvo automaticamente",
+}
+
+custom_game_window = {
+  caption = "Jogo Personalizado",
+  free_build = "Construçäo Livre",
+  load_selected_level = "Iniciar",
+}
+
+tooltip.custom_game_window = {
+  choose_game = "Clique em um nível para ver mais informaçäo sobre o mesmo.",
+  free_build = "Marque esta opçäo se quiser jogar sem dinheiro nem condiçöes de vitória ou derrota.",
+  load_selected_level = "Carregar e jogar o nível selecionado",
+}
+
+custom_campaign_window = {
+  caption = "Campanha Personalizada",
+  start_selected_campaign = "Iniciar Campanha",
+}
+
+tooltip.custom_campaign_window = {
+  choose_campaign = "Selecione uma campanha para ver mais informaçäo sobre a mesma.",
+  start_selected_campaign = "Carregar o primeiro nível desta campanha",
+}
+
+save_game_window = {
+  caption = "Salvar Jogo (%1%)",
+  new_save_game = "Novo jogo salvo",
+}
+
+tooltip.save_game_window = {
+  save_game = "Substituir jogo salvo %s",
+  new_save_game = "Digite um nome para o jogo salvo.",
+}
+
+save_map_window = {
+  caption = "Salvar Mapa (%1%)",
+  new_map = "Novo Mapa",
+}
+
+tooltip.save_map_window = {
+  map = "Substituir mapa %s",
+  new_map = "Digite um nome para o novo mapa salvo",
 }
 
 menu_list_window = {
@@ -87,31 +345,144 @@ menu_list_window = {
 }
 
 tooltip.menu_list_window = {
-  name = "Clique aqui para ordenar por nome",
-  save_date = "Clique aqui para ordenar por data de última modificação",
-  back = "Fechar esta janela",
+  name = "Aperte aqui para ordenar a lista por nomes",
+  save_date = "Aperte aqui para ordenar a lista pela última data de modificaçäo",
+  back = "Fechar esta janela.",
 }
 
 options_window = {
-  fullscreen = "Tela cheia",
+  caption = "Configuraçöes",
+  option_on = "Ligar",
+  option_off = "Desligar",
+  fullscreen = "Tela Cheia",
+  resolution = "Resoluçäo",
+  custom_resolution = "Personalizar...",
   width = "Largura",
   height = "Altura",
-  change_resolution = "Mudar resolução de tela",
-  browse = "Procurar",
-  new_th_directory = "Aqui você pode indicar outro diretório onde o jogo Theme Hospital está instalado, entretando se mudar o diretório o jogo será reiniciado.",
+  audio = "Audio Geral",
+  customise = "Personalizar",
+  folder = "Pastas",
+  language = "Idioma do Jogo",
+  apply = "Aplicar",
   cancel = "Cancelar",
   back = "Voltar",
 }
 
 tooltip.options_window = {
+  fullscreen = "Se o jogo deve ser executado em tela cheia ou modo janela",
   fullscreen_button = "Clique para mudar para tela cheia",
+  resolution = "A resoluçäo que o jogo deve ser executado",
+  select_resolution = "Selecionar uma nova resoluçäo",
   width = "Digite a largura desejada",
   height = "Digite a altura desejada",
-  change_resolution = "Mude a resolução da janela para os valores inseridos à esquerda",
-  language = "Selecionar '%s' como linguagem",
-  original_path = "Diretório informado como sendo da instalação do Theme Hospital original",
-  browse = "Procurar outro diretório de instalação do Theme Hospital. %1%",
-  back = "Fechar a janela de opções",
+  apply = "Aplicar a resoluçäo digitada",
+  cancel = "Voltar sem mudar a resoluçäo",
+  audio_button = "Ligar ou desligar o áudio de todo o jogo",
+  audio_toggle = "Alternar entre ligado e desligado",
+  customise_button = "Você pode alterar mais configuraçöes para personalizar sua experiência de jogo",
+  folder_button = "Opçöes de pasta",
+  language = "O idioma em que os textos do jogo apareceräo",
+  select_language = "Selecione o idioma do jogo",
+  language_dropdown_item = "Selecionar %s como idioma",
+  back = "Fechar a janela de Configuraçöes",
+}
+
+customise_window = {
+  caption = "Config. Personalizadas",
+  option_on = "Ligado",
+  option_off = "Desligado",
+  back = "Voltar",
+  movies = "Vídeo Geral",
+  intro = "Vídeo de Introduçäo",
+  paused = "Construir em Pausa",
+  volume = "Tecla de Volume",
+  aliens = "Pacientes Alienígenas",
+  fractured_bones = "Ossos Fraturados",
+  average_contents = "Conteúdos Habituais",
+}
+
+tooltip.customise_window = {
+  movies = "Controle geral de vídeos, que permitirá a você desativar todos os vídeos",
+  intro = "Desligar ou ligar o vídeo de introduçäo, vídeos gerais precisaräo estar ligados se você quiser o vídeo de introduçäo rode quando você carregar o CorsixTH",
+  paused = "No Theme Hospital o jogador só teria permissäo para utilizar o menu superior se o jogo estivesse pausado. Esta é também a configuraçäo padräo no CorsixTH, mas habilitando isso você tem permissäo para acessar tudo enquanto o jogo está pausado",
+  volume = "Se a tecla de baixar volume abrir também a ficha clínica, utilize esta opçäo para mudar  o atalho para direto a ficha clínica para Shift + C.",
+  aliens = "Devido à falta de animaçöes decentes disponíveis, fizemos com que os pacientes com DNA alienígena só apareçam em uma emergência. Para permitir que os pacientes com DNA alienígena possam visitar seu hospital, desative esta opçäo.",
+  fractured_bones = "Devido a uma animaçäo deficiente, fizemos que näo existam pacientes com Fraturas ósseas femininas. Para permitir que as pacientes com Fraturas ósseas visitem seu hospital, desative esta opçäo.",
+  average_contents = "Se você quiser que o jogo lembre que objetos extras você normalmente adiciona quando constrói salas, entäo ligue esta opçäo",
+  back = "Fecha este menu e volta para o Menu de Configuraçöes",
+}
+
+folders_window = {
+  caption = "Localizaçäo de Pastas",
+  data_label = "Dados do TH",
+  font_label = "Fonte",
+  music_label = "MP3",
+  savegames_label = "Jogos Salvos",
+  screenshots_label = "Capturas de Tela",
+  -- next four are the captions for the browser window, which are called from the folder setting menu
+  new_th_location = "Aqui pode especificar uma nova pasta de instalaçäo do Theme Hospital. O jogo será reiniciado assim que selecionar a nova pasta.",
+  savegames_location = "Selecione a pasta que quer utilizar para seus jogos salvos.",
+  music_location = "Selecione a pasta que quer utilizar para sua música.",
+  screenshots_location = "Selecione a pasta que quer utilizar para suas capturas de tela.",
+  back  = "Voltar",
+}
+
+tooltip.folders_window = {
+  browse = "Procurar a localizaçäo da pasta",
+  data_location = "A pasta com a instalaçäo do Theme Hospital original, necessário para executar o CorsixTH",
+  font_location = "A localizaçäo de uma fonte de letra capaz de mostrar caracteres Unicode necessários para seu idioma. Se näo for indicado, näo poderá selecionar idiomas que tenham mais caracteres dos que o jogo original tem, por exemplo, russo e chinês.",
+  savegames_location = "A pasta de jogos salvos é localizada por padräo junto com o arquivo de configuraçäo e é utilizado para armazenar os jogos salvo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
+  screenshots_location = "As capturas de tela säo guardadas por padräo em uma pasta junto com o arquivo de configuraçäo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
+  music_location = "Selecione uma pasta com seus arquivos de música em formato MP3. Necessita uma pasta já existente, entäo poderá procurá-la.",
+  browse_data = "Procurar outra localizaçäo com uma instalaçäo do Theme Hospital. (Localizaçäo atual: %1%)",
+  browse_font = "Procurar outro arquivo de fonte de letra. (Localizaçäo atual: %1%)",
+  browse_saves = "Procurar outra localizaçäo para sua pasta de jogos salvos. (Localizaçäo atual: %1%) ",
+  browse_screenshots = "Procurar outra localizaçäo para sua pasta de capturas de tela. (Localizaçäo atual: %1%) ",
+  browse_music = "Procurar outra localizaçäo para sua pasta de música. (Localizaçäo atual: %1%) ",
+  no_font_specified = "Pasta de fontes näo especificada!",
+  not_specified = "Pasta näo especificada!",
+  default = "Localizaçäo padräo",
+  reset_to_default = "Volta a atribuir a pasta a sua localizaçäo padräo",
+ -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
+  back  = "Fechar este menu e voltar para menu de Configuraçöes",
+}
+
+font_location_window = {
+  caption = "Selecionar fonte (%1%)",
+}
+
+handyman_window = {
+  all_parcels = "Todas as parcelas",
+  parcel = "Parcela"
+}
+
+tooltip.handyman_window = {
+  parcel_select = "Parcela onde o faz-tudo aceita tarefas, clique para alterar o configuraçäo"
+}
+
+new_game_window = {
+  caption = "Campanha",
+  player_name = "Nome",
+  option_on = "Ligado",
+  option_off = "Desligado",
+  difficulty = "Dificuldade",
+  easy = "Residente (Fácil)",
+  medium = "Médico (Normal)",
+  hard = "Consultor (Difícil)",
+  tutorial = "Tutorial",
+  start = "Iniciar",
+  cancel = "Cancelar",
+}
+
+tooltip.new_game_window = {
+  player_name = "Digite no nome que você deseja ser chamado no jogo",
+  difficulty = "Selecione o nível de dificuldade do jogo",
+  easy = "Se você näo conhecer jogos de simulaçäo, esta dificuldade é para você.",
+  medium = "Esta é a dificuldade intermediária, se você está inseguro do que deve escolher.",
+  hard = "Se você está acostumado com este tipo de jogo e quer um bom desafio, escolha esta opçäo",
+  tutorial = "Se você precisa de ajuda para começar a jogar, escolha esta opçäo",
+  start = "Iniciar o jogo com a configuraçäo selecionada",
+  cancel = "Ah, eu näo queria começar um novo jogo!",
 }
 
 lua_console = {
@@ -120,1078 +491,147 @@ lua_console = {
 }
 
 tooltip.lua_console = {
-  textbox = "Digite um código Lua para rodar aqui",
-  execute_code = "Run the code you have entered",
+  textbox = "Digite aqui o código Lua que deseja executar",
+  execute_code = "Executar o código Lua que digitou",
   close = "Fechar o console",
 }
 
-save_game_window = {
-  caption = "Salvar Jogo",
-  new_save_game = "Novo Jogo Salvo",
+errors = {
+  dialog_missing_graphics = "Desculpe, os arquivos de dados da demo näo contém este diálogo.",
+  save_prefix = "Erro ao salvar o jogo: ",
+  load_prefix = "Erro ao carregar a jogo: ",
+  no_games_to_contine = "Näo há jogos salvos.",
+  load_quick_save = "Erro, näo foi possível carregar o carregamento rápido já que ele näo existe, näo se preocupe nós criamos um agora para você!",
+  map_file_missing = "Näo foi possível encontrar o arquivo de mapa %s para esta fase!",
+  minimum_screen_size = "Por favor, digite dimensöes de tela de pelo menos 640x480.",
+  unavailable_screen_size = "O tamanho da tela que você digitou näo está disponível em tela cheia.",
+  alien_dna = "NOTA: Os pacientes alienígenas näo têm animaçöes para se sentar, abrir portas, bater nas portas, etc. portanto, assim como no Theme Hospital original, para fazer estas coisas aparentaräo mudar para uma imagem normal e logo voltaräo para o seu estado.  Os pacientes com DNA alienígena só apareceräo se o arquivo de fase o indicar",
+  fractured_bones = "NOTA: A animaçäo das pacientes femininas com Fraturas ósseas näo é perfeita",
+  could_not_load_campaign = "Falha ao carregar a campanha: %s",
+  could_not_find_first_campaign_level = "Näo foi possível encontrar o primeiro nível desta campanha: %s",
 }
 
-tooltip.save_game_window = {
-  save_game = "Sobrescrevendo jogo salvo %s",
-  new_save_game = "Digite o nome para este jogo salvo",
+warnings = {
+  levelfile_variable_is_deprecated = "Aviso: O nível '%s ' contém uma definiçäo variável obsoleta no arquivo de nível." ..
+                                     " '%LevelFile' foi renomeado para '%MapFile '. Por favor, informe ao criador do mapa para atualizar o nível.",
+}
+
+confirmation = {
+  needs_restart = "Para alterar esta configuraçäo é necessário reiniciar o CorsixTH. Qualquer alteraçäo näo salva será perdida. Tem certeza que deseja fazer isso?",
+  abort_edit_room = "Você está editando uma sala. Se todos os objetos necessários estiverem colocados ela será completada, caso contrário ela será removida. Continuar?",
+  maximum_screen_size = "O tamanho de tela que digitou é maior que 3000 x 2000.  É possível utilizar uma resoluçäo maior, mas necessitará de um computador melhor para que a velocidade de quadros por segundo seja aceitável. Tem certeza de que quer continuar?",
+  music_warning = "Antes de selecionar o uso de MP3 para sua música dentro do jogo, precisará ter o arquivo smpeg.dll, ou o equivalente para seu sistema operacional, ou do contrário näo terá música no jogo.  Atualmente näo existe um arquivo equivalente para sistemas de 64 bits. Deseja continuar?",
+}
+
+information = {
+  custom_game = "Bem-vindo ao CorsixTH. Divirta-se com esse mapa personalizado!",
+  no_custom_game_in_demo = "Desculpe, mas a versäo de demonstraçäo näo pode jogar mapas personalizados.",
+  cannot_restart = "Infelizmente este mapa personalizado foi salvo antes que a funcionalidade de reiniciaçäo fosse implementada.",
+  very_old_save = "Houveram muitas mudanças no jogo desde que você começou a jogar este mapa. Para ter certeza que todas as funcionalidades estäo funcionando considere recomeçar o mapa.",
+  level_lost = {
+    "Que pena! Você fracassou. Mais sorte na próxima vez!",
+    "Você perdeu porque",
+    reputation = "Sua reputaçäo caiu abaixo de %d.",
+    balance = "Seu saldo no banco caiu abaixo de %d.",
+    percentage_killed = "Você matou mais de %d porcento dos pacientes.",
+    cheat = "Foi escolha sua ou você se enganou de botäo? Näo sabe nem trapacear direito?",
+  },
+  cheat_not_possible = "Näo pode usar essa trapaça nesta fase. Näo sabe nem trapacear direito?",
+}
+
+tooltip.information = {
+  close = "Fechar a janela de informaçäo",
 }
 
 totd_window = {
   tips = {
-    "Todo hospital precisa de um balção de recepção e uma Sala de Clínica Geral para começar. Depois disso, dependará do tipo de pacientes que visitará seu hospital. Ter uma farmácia é sempre uma boa idéia, entretanto.",
-    "Máquina como o Inflador precisam de constante manutenção. Contrate um ou dois funcionários da Manutenção para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
-    "Depois de um certo período de trabalho, seus funcionários ficarão cansados. Certifique-se de construir uma Sala de Relaxamento, para que posam descansar.",
-    "Instale radiadores o suficiente para manter seus funcionários e pacientes aquecidos, do contrário ficarão infelizes. Use o Mapa da Cidade para localizar pontos do hospital que precisem ser aquecidos.",
-    "O nível de habilidade de um médico reflexe na qualidade e velocidade dos diagnósticos. Coloque um médico experiente na Sala de Clínica Geral, assim não precisará de muitas salas de diagnósticos adicionais.",
-    "Médicos de níveis 'Junior' e 'Pleno' podem melhorar suas habilidades aprendendo com um Sênior na Sala de Treinamento. Se o Sênior possuir alguma qualificação especial (Cirurgião, Psiquiatra ou Pesquisador), ele irá passar este conhecido ao(s) seu(s) pupilo(s).",
-    "Você já tentou digitar o numéro europeu de emergência (112) no aparelho de fax ? Certifique-se que o seu som esteja ligado !",
-    "Você pode ajustar algumas configurações como a resolução de tela e linguagem na janela de opções que pode ser acessar no menu inicial e dentro do jogo.",
-    "Você selecionou uma linguagem que não o inglês, mas existem textos em inglês por todos os lugares? Ajude-nos a traduzir os textos restantes para sua língua !",
-    "A comunidade do Jogo CorsixTH está precisando de reforços em sua equipe ! Você está interessado em codificar, traduzir ou criar gráficos para o CorsixTH? Entre em contato conosco pelo nosso Fórum, Lista de Discussão ou canal de IRC (#corsix-th no freenode).",
-    "Se localizar um bug, por favor reporte-o em nosso bugtracker: th-issues.corsix.org",
-    "Cada fase possui certas metas a serem atingidas antes de passar para a próxima fase. Cheque a janela de situação para acompanhar seu progresso a fim de atingir seus objetivos.",
-    "Se você deseja editar ou remover um sala existente, pode fazê-lo com o botão de edição de sala na barra inferior.",
-    "Caso haja uma multidão de pacientes esperando, você deve descobrir rapidamente quais deles estão aguardando por uma sala em particular passando o ponteiro do mouse por cima desta sala.",
-    "Clique nas portas das salas para ver sua fila. Isso pode ser muito útil, já que pode reordenar a fila ou encaminhar um paciente para outra sala.",
-    "Funcionários infelizes irão pedir aumentos de salários com mais frequência. Certifique-se que sua equipe esteja trabalho em um ambiente de trabalho confortável para mantê-los felizes.",
-    "Pacientes podem ficar com sede enquanto esperam em seu hospital, ainda mais se ligar o aquecimento! Instale máquinas de venda de refrigerantes em pontos estratégicos para um ganho extra.",
-    "Você pode abortar o processo de diagnóstico prematuramente e presupor a cura, se você já tiver descoberto a doença. Atente-se que desta maneira aumenta-se o risco de um tratamento errado, resultando na morte do paciente.",
-    "Emergências podem ser uma boa fonte de grana extra, desde que você possua plena capacidade e recursos de lidar com os pacientes à tempo.",
+  "Todo hospital precisa de uma Recepçäo e um Consultório Geral para começar. Depois disso, dependerá do tipo de pacientes que visitará seu hospital. Entretanto ter uma farmácia é sempre uma boa ideia.",
+  "Máquinas como o Inflador precisam de constante manutençäo. Contrate um ou dois Faz-tudo para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
+  "Depois de um certo período de trabalho, seus funcionários ficaräo cansados. Certifique-se de construir uma Sala de Descanso, para que posam relaxar.",
+  "Instale Radiadores suficientes para manter seus funcionários e pacientes aquecidos, do contrário ficaräo infelizes. Use o Mapa da Cidade para localizar pontos do hospital que precisem ser aquecidos.",
+  "O nível de habilidade de um médico reflete na qualidade e velocidade dos diagnósticos. Coloque um médico experiente no Consultório Geral, assim näo precisará de muitas salas de diagnósticos adicionais.",
+  "Médicos de níveis 'Residente' e 'Médico' podem melhorar suas habilidades aprendendo com um Consultor na Sala de Treinamento. Se o Consultor possuir alguma especializaçäo (Cirurgiäo, Psiquiatra ou Pesquisador), ele irá passar este conhecimento aos seus alunos.",
+  "Você já tentou digitar o número europeu de emergência (112) no aparelho de fax? Certifique-se que o seu som esteja ligado!",
+  "Você pode alterar algumas configuraçöes como a resoluçäo da tela e o idioma na janela de opçöes que pode ser acessar no menu inicial e dentro do jogo.",
+  "Você selecionou um idioma que näo é o inglês, mas continua vendo textos em inglês por todos os lugares? Ajude-nos a traduzir os textos restantes para o seu idioma!",
+  "A comunidade do CorsixTH está precisando de reforços em sua equipe! Você está interessado em codificar, traduzir ou criar gráficos para o CorsixTH? Entre em contato conosco pelo nosso Fórum, Lista de Discussäo ou canal de IRC (#corsix-th no freenode).",
+  "Se localizar um bug, por favor reporte-o em nosso bugtracker: th-issues.corsix.org",
+  "Cada fase possui certas metas a serem atingidas antes de passar para a próxima fase. Cheque a janela de situaçäo para acompanhar seu progresso a fim de atingir seus objetivos.",
+  "Se você deseja editar ou remover uma sala existente, pode fazê-lo com o botäo de ediçäo de sala na barra inferior.",
+  "Caso haja uma multidäo de pacientes esperando, você deve descobrir rapidamente quais deles estäo aguardando por uma sala em particular passando o ponteiro do mouse por cima desta sala.",
+  "Clique nas portas das salas para ver sua fila. Isso pode ser muito útil, já que pode reordenar a fila ou encaminhar um paciente para outra sala.",
+  "Funcionários infelizes iräo pedir aumentos de salários com mais frequência. Certifique-se que sua equipe esteja trabalho em um ambiente de trabalho confortável para mantê-los felizes.",
+  "Pacientes podem ficar com sede enquanto esperam em seu hospital, ainda mais se ligar o aquecimento! Instale máquinas de venda de refrigerantes em pontos estratégicos para um ganho extra.",
+  "Você pode abortar o processo de diagnóstico prematuramente e pressupor a cura, se você já tiver descoberto a doença. Atente-se que desta maneira aumenta-se o risco de um tratamento errado, resultando na morte do paciente.",
+  "Emergências podem ser uma boa fonte de grana extra, desde que você possua plena capacidade e recursos de lidar com os pacientes à tempo.",
   },
   previous = "Dica anterior",
-  next = "Próxima Dica",
+  next = "Próxima dica",
 }
 
 tooltip.totd_window = {
-  previous = "Mostrar a dica anterior",
-  next = "Mostrar a próxima dica",
+  previous = "Mostra a dica anterior",
+  next = "Mostra a próxima dica",
 }
-
--- 2. Menu Superior
-
-menu = {
-  file                  = "  ARQUIVO  ",
-  options               = "  OPÇÕES  ",
-  display               = "  DISPLAY",
-  charts                = "  GRÁFICOS ",
-  debug                 = "  DEBUG  ",
-}
-
--- Menu File
-menu_file = {
-  load                  = "  CARREGAR JOGO  ",
-  save                  = "  SALVAR JOGO  ",
-  restart               = "  REINICIAR  ",
-  quit                  = "  SAIR  ",
-}
-
-
--- Menu Options
-menu_options = {
-  sound               = "  SOM  ",
-  announcements       = "  ANÚNCIOS  ",
-  music               = "  MÚSICA  ",
-  sound_vol           = "  VOLUME DOS SONS  ",
-  announcements_vol   = "  SOM DOS ANÚNCIOS  ",
-  music_vol           = "  VOLUME DA MUSICA  ",
-  autosave            = "  AUTOSALVAR  ",
-  game_speed          = "  VELOCIDADE DO JOGO  ",
-  jukebox             = "  JUKEBOX  ",
-}
-
-
--- Menu Display
-menu_display = {
-  high_res            = "  ALTA RESOLUÇÃO  ",
-  mcga_lo_res         = "  BAIXA RESOLUÇÃO  ",
-  shadows             = "  SOMBRAS  ",
-}
-
--- Menu Charts
-menu_charts = {
-  statement           = "  EXTRATO BANCÁRIO  ",
-  casebook            = "  PRONTUÁRIO DE DOENÇAS  ",
-  policy              = "  POLÍTICAS DO HOSPITAL  ",
-  research            = "  PESQUISA  ",
-  graphs              = "  GRÁFICOS  ",
-  staff_listing       = "  QUADRO DE FUNCIONÁRIOS  ",
-  bank_manager        = "  GERENTE DO BANCO  ",
-  status              = "  STATUS  ",
-  briefing            = "  OBJETIVO DESTA FASE  ",
-}
-
--- Menu Options Volume
-menu_options_volume = {
-  [10] = "  10%  ",
-  [20] = "  20%  ",
-  [30] = "  30%  ",
-  [40] = "  40%  ",
-  [50] = "  50%  ",
-  [60] = "  60%  ",
-  [70] = "  70%  ",
-  [80] = "  80%  ",
-  [90] = "  90%  ",
-  [100] = "  100%  ",
-}
-
- menu_options = {
-  lock_windows = "  TRAVAR JANELAS  ",
-  edge_scrolling = "  EDGE SCROLLING  ",
-  settings = "  CONFIGURAÇÕES  ",
-  adviser_disabled = "  NOTIFICAÇÕES  ",
-  warmth_colors = "  WARMTH COLOURS",
-}
-
-menu_options_game_speed = {
-  pause               = "  (P) PAUSADO ",
-  slowest             = "  (1) MUITO LENTO ",
-  slower              = "  (2) LENTO  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) RÁPIDO  ",
-  and_then_some_more  = "  (5) AINDA MAIS RÁPIDO  ",
-}
-
-menu_options_warmth_colors = {
-  choice_1 = "   Vermelho ",
-  choice_2 = "   Azul Verde Vermelho ",
-  choice_3 = "   Amarelo Laranja Vermelho ",
-}
-
--- The demo does not contain this string
-menu_file.restart = "  REINICIAR  "
-
-menu_debug = {
-  jump_to_level               = "  IR PARA A FASE  ",
-  transparent_walls           = "  (X) PAREDES TRANSPARENTES  ",
-  limit_camera                = "  LIMIT CAMERA  ",
-  disable_salary_raise        = "  DESABILITAR AUMENTOS DE SALÁRIO  ",
-  make_debug_fax              = "  (F8) MAKE DEBUG FAX  ",
-  make_debug_patient          = "  (F9) MAKE DEBUG PATIENT  ",
-  cheats                      = "  (F11) CHEATS  ",
-  lua_console                 = "  (F12) CONSOLE LUA  ",
-  calls_dispatcher            = "  CALLS DISPATCHER  ",
-  dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
-  map_overlay                 = "  MAP OVERLAY  ",
-  sprite_viewer               = "  SPRITE VIEWER  ",
-}
-menu_debug_overlay = {
-  none                        = "  NENHUM  ",
-  flags                       = "  FLAGS  ",
-  positions                   = "  POSIÇÕES  ",
-  heat                        = "  TEMPERATURA  ",
-  byte_0_1                    = "  BYTE 0 & 1  ",
-  byte_floor                  = "  BYTE FLOOR  ",
-  byte_n_wall                 = "  BYTE N WALL  ",
-  byte_w_wall                 = "  BYTE W WALL  ",
-  byte_5                      = "  BYTE 5  ",
-  byte_6                      = "  BYTE 6  ",
-  byte_7                      = "  BYTE 7  ",
-  parcel                      = "  PARCEL  ",
-}
-
-dynamic_info = {
-  patient = {
---    emergency = "Чрезвычайная ситуация: %s",
---    guessed_diagnosis = "Диагноз навскидку: %s ",
-    diagnosis_progress = "Diagnóstico em:",
-    actions = {
---      sent_to_other_hospital = "Отправлен в другую больницу",
---      prices_too_high = "У вас слишком дорого, - я иду домой",
---      no_gp_available = "Ждет постройки кабинета терапевта",
---      waiting_for_treatment_rooms = "Ждет постройки кабинета для лечения",
---      dying = "Умирает!",
-      no_diagnoses_available = "Sem diagnóstico - Indo para a casa",
---      epidemic_sent_home = "Отправлен домой инспектором",
-      cured = "Curado !",
-      waiting_for_diagnosis_rooms = "Esperando você construir novas salas de diagnóstico",
---      epidemic_contagious = "Заразный",
-      awaiting_decision = "Esperando por sua decisão",
-      sent_home = "Alta - Indo para casa",
---      fed_up = "Сыт по горло и уходит",
-      no_treatment_available = "Sem tratamento - Indo para a casa",
-      on_my_way_to = "À caminho do %s",
-      queueing_for = "Na fila de espera do(a) %s",
-    },
-    diagnosed = "Diagnóstico: %s ",
-  },
---  health_inspector = "Инспектор",
---  vip = "Шишка",
-  object = {
-    times_used = "Vezes que foi usado(a): %d",
-    queue_size = "Tamanho da fila: %d",
---    strength = "Прочность: %d",
-    queue_expected = "Tamanho esperado da fila: %d",
-  },
-  staff = {
-    actions = {
-      going_to_repair = "Indo reparar %s",
-      fired = "Demitido",
-      waiting_for_patient = "Esperando por um paciente",
-      wandering = "Andando sem rumo",
-      heading_for = "Indo para %s",
-    },
-    tiredness = "Nível de Stress: ",
-  },
-}
-
--- 3. Staff?
-
--- Staff titles
--- these are titles used e.g. in the dynamic info bar
-staff_title = {
-  receptionist          = "Recepcionista",
-  general               = "General", -- unused?
-  nurse                 = "Enfermeira",
-  junior                = "Júnior",
-  doctor                = "Doutor",
-  surgeon               = "Cirurgião",
-  psychiatrist          = "Psiquiatra",
-  consultant            = "Doutor Sênior",
-  researcher            = "Pesquisador",
-}
-
-staff_list = {
-  morale       = "MORAL",
-  tiredness    = "CANSAÇO",
-  skill        = "QUALIFICAÇÕES",
-  total_wages  = "SALÁRIO",
-}
-
-
-
-bank_manager = {
-  current_loan = "Empréstimo atual",
-  balance = "Balanço",
-  interest_payment = "Pagamento de Juros",
-  hospital_value = "Valor do Hospital",
-  interest_rate = "Taxa de Juros",
-  inflation_rate = "Taxa Inflação",
-  insurance_owed = "Seguro Inadimplência",
-  statistics_page = {
-    balance = "Saldo",
-    details = "Detalhe",
-    date = "Data",
-    current_balance = "Saldo Atual",
-    money_in = "Entrada",
-    money_out = "Saída",
-  },
-}
-
-
-transactions = {
-  severance = "Demissão",
-  research = "Custos de Pesquisa",
---  eoy_trophy_bonus = "Bonificação VIP", // VIP cash award
-  buy_object = "Compra",
-  cure_colon = "Cura:",
-  wages = "Custos com Folha de Pagamento",
-  personal_bonus = "Pagamento de Bonificação Pessoal",
-  drug_cost = "Medicação",
-  heating = "Custos de Aquecimento",
-  treat_colon = "Tratamento:",
-  hire_staff = "Contratação",
-  bank_loan = "Empréstimo Bancário",
-  insurance_colon = "Seguro:",
-  sell_object = "Venda",
---  loan_interest = "Выплата процента по займу",
---  loan_repayment = "Возврат по займу",
-  buy_land = "Compra de Terreno",
---  machine_replacement = "Замена машины",
-  build_room = "Construção",
-  drinks = "Receita: Máq. de Refrigerante",
---  "vip_cash_award"?
-}
-
-town_map = {
-  number = "Número",
-  not_for_sale = "Não está à venda",
-  price = "Preço",
-  for_sale = "À Venda",
-  owner = "Dono",
-  area = "Área",
-}
-
-high_score = {
-  categories = {
---    deaths = "Óbitos",
---    total_value = "Общая стоимость",
---    money = "Самый богатый",
---    cures = "Пациентов вылечено",
---    visitors = "Количество посетителей",
---    salary = "",
-  },
-}
-
-research = {
---  allocated_amount = "Распределенное количество",
---  funds_allocation = "Распределение финасирования",
-  categories = {
-    improvements = "Melhorias",
-    drugs = "Novos Medicamentos",
-    diagnosis = "Equip. para Diagnóstico",
-    cure = "Equip. para Tratamento",
-    specialisation = "Especializações",
-  },
-}
-
-policy = {
-  header = "POLÍTICA DO HOSPITAL",
-  diag_termination = "Finalização de Diagnóstico",
-  sliders = {
-    guess = "Determinar Cura",
-    send_home = "Mandar p/ casa",
-    stop = "Parar",
-    staff_room = "Ir descansar",
-  },
-  diag_procedure = "Procedimento de Diagnóstico",
-  staff_rest = "Descanso dos Funcionários",
-  staff_leave_rooms = "Funcionário deixar sala",
-}
-
-casebook = {
-  sent_home = "enviados para casa",
-  deaths = "óbitos",
-  treatment_charge = "custo do tratamento",
-  reputation = "reputação",
---  research = "Сосредоточить исследования",
-  cure = "curas",
-  cured = "curados",
-  earned_money = "valor do tratamento",
-}
-
---[[
-progress_report = {
-  quite_unhappy = "Люди вами недовольны",
-  header = "Отчет об успехах",
-  very_unhappy = "Люди вас не любят. Уделяйте им больше внимания",
-  more_drinks_machines = "Пациенты умирают от жажды. Поставьте автоматы с напитками",
-  too_cold = "У вас слишком холодно, поставьте еще батарей",
-  too_hot = "Настройте систему отопления, у вас слишком жарко",
-  percentage_pop = "Доля клиентов",
-  win_criteria = "Условия для победы",
-}
-]]
-tooltip = {
---[[
-  staff_list = {
-        = "Предыдущая страница",
-    next_person = "Следующая страница",
-    detail = "Внимание к деталям",
-    happiness = "Насколько ваши сотрудники довольны своей работой в целом",
-    tiredness = "Показывает сколько ваши сотрудники еще смогут поработать без отдыха",
-    ability = "Квалификация ваших сотрудников в среднем по больнице",
-    happiness_2 = "Моральное состояние",
-    ability_2 = "Профессиональные навыки",
-    tiredness_2 = "Запас сил",
-    researcher_train = "На %d%% готов к получению диплома исследователя",
-    surgeon_train = "На %d%% готов к получению диплома хирурга",
-    psychiatrist_train = "На %d%% готов к получению диплома психиатра",
-    researcher = "Дипломированый исследователь",
-    psychiatrist = "Дипломированый психиатр",
-    surgeon = "Дипломированый хирург",
-    handymen = "Показать список всех рабочих вашей больницы",
-    nurses = "Показать список всех медсестер вашей больницы",
-    doctors = "Показать список всех докторов вашей больницы",
-    receptionists = "Показать список всех регистраторов вашей больницы",
-    pay_rise = "Поднять оклад на 10%",
-    bonus = "Выплатить премию в размере 10% от оклада",
-    salary = "Текущая зарплата",
-    close = "Назад к игре",
-    sack = "Вышвырнуть на улицу",
-    doctor_seniority = "Авторитет доктора",
-    view_staff = "Наблюдать за работой",
-    skills = "Дополнительные умения",
-    total_wages = "Общая зарплата",
-  },]]
-  town_map = {
-    close = "Fechar",
-    plants = "Exibir plantas",
-    fire_extinguishers = "Exibir plantas",
-    people = "Exibir pessoas",
-    balance = "Saldo",
-    heat_dec = "Diminuir aquecimento",
-    heating_bill = "Preço do aquecimento",
-    radiators = "Exibir radiadores",
-    objects = "Exibir objetos",
-    heat_level = "Temperatura do aquecimento",
-    heat_inc = "Aumentar aquecimento",
-  },
---[[
-  policy = {
-    diag_termination = "Обследование пациента будет продолжаться, пока доктора не будут на столько процентов уверены в диагнозе или пока у них не закончатся средства диагностики",
-    close = "Закрыть окно политики",
-    staff_leave = "Нажмите здесь чтобы разрешить сотрудникам покидать кабинеты и идти туда где нужна их помощь",
-    diag_procedure = "Если доктор уверен в своем диагнозе менее, чем значение «Отправить домой», пациент будет отправлен домой. Если же шансы выше чем «Диагноз наугад», он будет отправлен на лечение. В остальных случаях потребуется ваше решение",
-    staff_rest = "Насколько усталым должен быть сотрудник, чтобы получить право на отдых",
-    staff_stay = "Нажмите здесь чтобы сотрудники оставались в тех кабинетах, где вы их поставили",
-  },
-  bank_manager = {
-    graph = "График ожидаемых выплат от %s",
-    close = "Закрыть окно",
-    hospital_value = "Текущая стоимость госпиталя вместе со всем оборудованием",
-    graph_return = "Вернуться назад",
-    current_loan = "Размер текущего займа",
-    borrow_5000 = "Занять у банка 5000$",
-    balance = "Ваш баланс",
-    interest_payment = "Ежемесячные выплаты по займу",
-    inflation_rate = "Размер инфляции за год",
-    interest_rate = "Годовой процент по займу",
-    repay_5000 = "Отдать банку 5000$",
-    show_graph = "Показать график ожидаемых выплат от %s",
-    insurance_owed = "Сколько денег вам должны %s",
-  },
-  casebook = {
-    sent_home = "Количество пациентов, которым было отказано в лечении",
-    increase = "Поднять стоимость",
-    decrease = "Снизить стоимость",
-    up = "Вверх",
-    down = "Вниз",
-    reputation = "Общая репутация этой практики",
-    research = "Нажмите чтобы сосредоточить бюджет специальных исследований на этой проблеме",
-    close = "Закрыть",
-    earned_money = "Всего заработано на этом",
-    deaths = "Количество летальных исходов",
-    cured = "Количество вылеченных",
-    treatment_charge = " Стоимость для пациентов",
-    cure_type = {
-      psychiatrist = "Это лечит психиатр",
-      drug_percentage = "От этого есть лекарство. Ваше эффективно на %d%",
-      machine = "Для лечения нужно специальное оборудование",
-      surgery = "Cura требует операции",
-    },
-    cure_requirement = {
-      possible = "Вы можете это вылечить",
-      build_room = "Вам нужно построить специальный кабинет для лечения",
-      research_machine = "Для лечения нужно изобрести машину",
-      hire_staff = "Вам нужно нанять специалиста для лечения",
-    },
-  },
-  status = {
-    population_chart = "Показывает соотношение числа посетителей в разных больницах",
-    percentage_cured = "Вам нужно вылечить %d% всех посетителей. На данный момент вам удалось вылечить %d%",
-    num_cured = "Вам нужно вылечить %d людей. Пока вам удалось исцелить %d",
-    thirst = "Средний уровень жажды людей в больнице",
-    close = "Закрыть окно",
-    win_progress_own = "Показать успехи вашей больницы",
-    reputation = "Ваша репутация должна достигать %d. Сейчас она составляет %d",
-    population = "Добейтесь чтобы к вам приходили лечиться %d%% всех пациентов",
-    warmth = "Средняя температура по больнице",
-    percentage_killed = "Постарайтесь не убивать более чем %d%% посетителей. На данный момент вы угробили %d%%",
-    balance = "На вашем счету должно быть не менее %d$. Сейчас у вас %d$",
-    value = "Ваша больница должна стоить %d$. Сейчас она стоит %d$",
-    win_progress_other = "Показать как идут дела у %s",
-    happiness = "Общее состояние пациентов в вашей больнице",
-  },
---]]
-  buy_objects_window = {
-    price = "Preço",
-    cancel = "Cancelar",
-    confirm = "Comprar itens",
-    total_value = "Total",
-    decrease = "Comprar menos",
-    increase = "Comprar mais",
-  },
-  hire_staff_window = {
-    doctors             = "Ver Doutores disponíveis para contratação",
-    nurses              = "Ver Enfermeiras disponíveis para contratação",
-    handymen            = "Ver Zeladores disponíveis para contratação",
-    receptionists       = "Ver Recepcionistas disponíveis para contratação",
-    prev_person         = "Próxima pessoa",
-    next_person         = "Pessoa anterior",
-    hire                = "Contratar",
-    cancel              = "Cancelar",
-    doctor_seniority    = "Experiência (Júnior, Pleno, Sênior)",
-    staff_ability       = "Habilidade",
-    salary              = "Salário",
-    qualifications      = "Qualificações extras",
-    surgeon             = "Cirurgião",
-    psychiatrist        = "Psiquiatra",
-    researcher          = "Pesquisador",
-  },
-}
-
--- 5. Doenças
-
-diseases = {
-  general_practice = {
-    name = "Prática geral",
-  },
-  diag_ward = {
-    name = "Diag: Enfermaria",
-  },
-  diag_ultrascan = {
-    name = "Diag: Ultrasom",
-  },
-  diag_blood_machine = {
-    name = "Diag: Análise Sanguinea",
-  },
-  diag_x_ray = {
-    name = "Diag: Raio-X",
-  },
-  diag_psych = {
-    name = "Diag: Psiquiatria",
-  },
-  diag_general_diag = {
-    name = "Diag: Diagnóstico Geral",
-  },
-  diag_cardiogram = {
-    name = "Diag: Eletrocardiograma",
-  },
-  diag_scanner = {
-    name = "Diag: Scanner",
-  },
-  autopsy = {
-    name = "Autópsia",
-  },
-  third_degree_sideburns = {
---    cause = "Causa - непреодолимая тоска по семидесятым.",
---    cure = "Cura - психиатр должен, используя самые современные методы, убедить пациента, что чрезмерная волосатость уже не в моде.",
-    name = "Queimaduras de Terceiro Grau",
---    symptoms = "Sintomas - длинные волосы, смешные штаны, обувь на платформе и сверкающий макияж.",
-  },
-  discrete_itching = {
---    cause = "Causa - крошечные насекомые с очень острыми зубами.",
---    cure = "Cura - пациент выпивает липкий фармацевтический сироп, который защищает кожу.",
-    name = "Coceira Discreta",
---    symptoms = "Sintomas - интенсивное чесание вплоть до воспламенения.",
-  },
-  the_squits = {
-    cause = "Causa - Comer um pedaço de pizza encontrada embaixo do fogão.",
-    cure = "Cura - Uma mistura glutinoso de químicos farmacêuticos pegajosos solidificará as entranhas do paciente.",
-    name = "Disenteria",
-    symptoms = "Sintomas - Argh, tenho certeza que você pode imaginar.",
-  },
-  spare_ribs = {
---    cause = "Causa - сидение на холодном каменном полу.",
---    cure = "Cura - два хирурга должны удалить лишние ребра и завернуть их пациенту с собой.",
-    name = "Rim Extra",
---    symptoms = "Sintomas - неприятные ощущения от массивной груди.",
-  },
-  king_complex = {
---    cause = "Causa - дух Короля, который захватил контроль над разумом пациента.",
---    cure = "Cura - психиатр рассказывает пациенту как нелепо тот выглядит.",
-    name = "Complexo de Rei",
---    symptoms = "Sintomas - слабость к цветастой замшевой обуви и чизбургерам.",
-  },
-  fake_blood = {
---    cause = "Causa - скорее всего, пациент стал жертвой розыгрыша.",
---    cure = "Cura - психиатр должен помочь пациенту успокоиться.",
-    name = "Sangue falso",
---    symptoms = "Sintomas - красная жидкость в венах, которая испаряется при контакте с одеждой.",
-  },
-  invisibility = {
---    cause = "Causa - укус радиоактивного (и, само собой, невидимого) муравья.",
---    cure = "Cura - напиток насыщенного цвета, приготовленный в аптеке, восстанавливает видимость пациента.",
-    name = "Invisibilidade",
---    symptoms = "Sintomas - пациент чувствует себя нормально и даже может использовать болезнь чтобы разыгрывать близких.",
-  },
-  golf_stones = {
---    cause = "Causa - вдыхание ядовитого газа, содержащегося в мячиках для гольфа.",
---    cure = "Cura - образования удаляются хирургами в операционной.",
-    name = "Pedras de Golf",
---    symptoms = "Sintomas - бред и чувство стыда.",
-  },
-  infectious_laughter = {
-  --  cause = "Causa - просмотр классических комедий.",
-  --  cure = "Cura - квалифицированный психиатр должен напомнить пациенту, что не все в этой жизни смешно.",
-    name = "Risada contagiosa",
-  --  symptoms = "Sintomas - непроизвольное фырканье и повторение несмешных шуток.",
-  },
-  baldness = {
-  --  cause = "Causa - вранье и придумавание небылиц с целью привлечения внимания.",
-  --  cure = "Cura - в ходе болезненной процедуры специальная машина плавно восстанавливает волосяной покров.",
-    name = "Calvíce",
-  --  symptoms = "Sintomas - блестящесть и смущение.",
-  },
-  heaped_piles = {
-    cause = "Causa - Ficar muito perto de refrigeradores de água.",
-    cure = "Cura - Um agradável porém poderoso acído dissolverá as hemorróidas por dentro.",
-    name = "Hemorróidas",
-    symptoms = "Sintomas - Paciente tem a sensação de estar sentado em um saco de bolinhas de gude.",
-  },
-  unexpected_swelling = {
-  --  cause = "Causa - все внезапное.",
-  --  cure = "Cura - возбухание может быть уменьшено хирургами при помощи автогена.",
-    name = "Inchaço inesperado",
-  --  symptoms = "Симптом - возбухание.",
-  },
-  jellyitis = {
-  --  cause = "Causa - пища, богатая желатином и избыток физической активности.",
-  --  cure = "Cura - пациента помещают в разжелетиватель в специальном кабинете.",
-    name = "Gelatinite",
-  --  symptoms = "Sintomas - пациент чрезмерно трясется и часто падает.",
-  },
-  hairyitis = {
-  --  cause = "Causa - длительные прогулки в свете луны.",
-  --  cure = "Cura - электролизатор удаляет волосы и запаивает поры.",
-    name = "Cabelulite",
-  --  symptoms = "Sintomas - обостренное обоняние.",
-  },
-  alien_dna = {
-  --  cause = "Causa - прыгающие личинки разумных видов пришельцев.",
-  --  cure = "Cura - в специальной машине ДНК извлекается, очищается от фрагментов пришельцев и быстро вставляется на место.",
-    name = "DNA alienígena",
-  --  symptoms = "Sintomas - постепенное превращение в пришельца и стремление уничтожить человечество.",
-  },
-  bloaty_head = {
-    cause = "Causa - Cheirar queijo e beber água de chuva não purificada.",
-    cure = "Cura - A cabeça inchada é estourada e reinflada no PSI correto usando uma máquina inteligente.",
-    name = "Cabeça inchada",
-    symptoms = "Sintomas - Muito desconforto para o sofredor.",
-  },
-  gastric_ejections = {
-  --  cause = "Causa - острая мексиканская и индийская пища.",
-  --  cure = "Cura - выпивание специального связующего состава предотвращает какие бы то ни было извержения.",
-    name = "Vômitos",
-  --  symptoms = "Sintomas - полупереваренная пища извергается из пациента в случайных местах.",
-  },
-  uncommon_cold = {
-    cause = "Causa - pequenas partículas de muco no ar.",
-    cure = "Cura - Um bom gole de um xarope incomum feito a partir de ingredientes especiais na Farmária poderá curar isso.",
-    name = "Frio incomum",
-    symptoms = "Sintomas - Barulho constante, espirros e pulmões descolorados.",
-  },
-  corrugated_ankles = {
-  --  cause = "Causa - езда через асфальтовые гребни на дорогах.",
-  --  cure = "Cura - слегка токсичная смесь трав и специй позволяет пациенту выпрямить лодыжки.",
-    name = "Tornozelos tortos",
-  --  symptoms = "Sintomas - привычная обувь больше не подходит пациенту.",
-  },
-  sleeping_illness = {
-    cause = "Causa - Superatividade da glândula de sono localizada no céu da boca.",
-    cure = "Cura - Uma alta dosagem de um poderoso estimulante será administrado pela Enfermeira.",
-    name = "Encefalite letárgica",
-    symptoms = "Sintomas - Vontade incontrolável de desabar e dormir em qualquer lugar.",
-  },
-  sweaty_palms = {
-  --  cause = "Causa - боязнь собеседований.",
-  --  cure = "Cura - психиатр должен уговорить пациента избавиться от этой выдуманной болезни.",
-    name = "Mãos suadas",
-  --  symptoms = "Sintomas - рукопожатие пациента напоминает сжимание мокрой губки.",
-  },
-  serious_radiation = {
-  --  cause = "Causa - жевание изотопов плутония.",
-  --  cure = "Cura - пациента нужно как следует промыть под обеззараживающим душем.",
-    name = "Radiação severa",
-  --  symptoms = "Sintomas - пациент себя очень, очень плохо чувствует.",
-  },
-  gut_rot = {
-    cause = "Causa - Mistura de Whisky 12 anos Mrs. O'Mallley's com xarope.",
-    cure = "Cura - A Enfermeira pode administrar uma seleção de químicos dissolventes que podem revestir o estômago.",
-    name = "Intestino podre",
-    symptoms = "Sintomas - sem tosse mas sem parede do estômago também.",
-  },
-  iron_lungs = {
-  --  cause = "Causa - городской смог и дым от шашлыков.",
-  --  cure = "Cura - два хирурга проводят операцию чтобы удалить затвердевшие легкие.",
-    name = "Pulmões de Aço",
-  --  symptoms = "Sintomas - способность выдыхать огонь и громко кричать под водой.",
-  },
-  broken_wind = {
-  --  cause = "Causa - упражнения на беговой дорожке после еды.",
-  --  cure = "Cura - насыщенная особыми водянистыми атомами микстура выпивается залпом.",
-    name = "Vento quebrado",
-  --  symptoms = "Sintomas - представляют опасность для находящих позади пациента.",
-  },
-  kidney_beans = {
-  --  cause = "Causa - разгрызание ледяных кубиков в напитках.",
-  --  cure = "Cura - два хирурга должны удалить бобы, не прикасаясь к почкам.",
-    name = "Pedras no rim",
-  --  symptoms = "Sintomas - боль и частые визиты в туалет.",
-  },
-  transparency = {
-  --  cause = "Causa - слизывание йогурта с крышечек упаковок.",
-  --  cure = "Cura - специально охлажденная и подкрашенная в аптеке вода вылечит эту болезнь.",
-    name = "Transparência",
-  --  symptoms = "Sintomas - плоть становится прозрачной и ужасно выглядит.",
-  },
-  broken_heart = {
-  --  cause = "Causa - кто-нибудь более молодой, богатый и стройный чем пациент.",
-  --  cure = "Cura - два хирурга вскрывают грудную клетку и, затаив дыхание, аккуратно собирают сердце.",
-    name = "Coração partido",
-  --  symptoms = "Sintomas - плач и боли в мышцах от разрывания праздничных фотографий.",
-  },
-  slack_tongue = {
-  --  cause = "Causa - хроническое обсуждение мыльных опер.",
-  --  cure = "Cura - язык помещается в языкорезку и укорачивается быстро, точно, безжалостно.",
-    name = "Língua negligente",
-  --  symptoms = "Sintomas - язык примерно в пять раз увеличен в размерах.",
-  },
-  tv_personalities = {
-    cause = "Causa - Assistar à televisão o dia todo.",
-    cure = "Cura - Um psiquiatra bem treinado deverá convencer o paciente à vender a TV e comprar um rádio.",
-    name = "Personalidade da TV",
-    symptoms = "Sintomas - Ilusões sobre ser capaz de apresentar um programa de variedades matinal.",
-  },
-  ruptured_nodules = {
-  --  cause = "Causa - прыжки с тарзанкой в холодную погоду.",
-  --  cure = "Cura - хирург удаляет грыжу твердой, уверенной рукой.",
-    name = "Ruptura de Nódulos",
-  --  symptoms = "Sintomas - невозможность сидеть с комфортом.",
-  },
-  fractured_bones = {
-  --  cause = "Causa - падение с большой высоты на бетонные поверхности.",
-  --  cure = "Cura - сперва накладывается гипс, затем он удаляется при помощи устройства с лазером.",
-    name = "Fratura nos ossos",
-  --  symptoms = "Sintomas - громкий треск и неспособность использовать поврежденные конечности.",
-  },
-  chronic_nosehair = {
-  --  cause = "Causa - высокомерное фыркание в присутствии менее успешных людей.",
-  --  cure = "Cura - отвратительное противоволосяное зелье приготавливается в аптеке.",
-    name = "Pêlos no nariz crônicos",
-  --  symptoms = "Sintomas - нособорода, в которой можно свить гнездо.",
-  },
-}
-
-
--- 6. Faxes
-
-  --[[
-  epidemic = {
-    cover_up_explanation_1 = "Или вы можете попытаться вылечить всех зараженных, пока про это не узнали в министерстве здравоохранения.",
-    cover_up_explanation_2 = "Если к приезду инспектора эпидемия все еще будет бушевать, приготовьтесь к неприятностям.",
-    choices = {
-      cover_up = "Попытаться вылечить всех зараженных пациентов пока есть время и пока он еще в больнице.",
-      declare = "Объявить об эпидемии. Признать свою вину и заплатить штраф.",
-    },
-    disease_name = "Ваши доктора обнаружили особо заразный подвид %s.",
-    declare_explanation_fine = "Вы можете объявить об эпидемии, заплатить штраф в %d$, тогда вам немедленно окажут помощь в вакцинации. Ваша репутация несколько пострадает.",
-  },
-  epidemic_result = {
-    fine_amount = "Правительство объявило чрезвычайное положение, а вас оштрафовали на %d$.",
-    close_text = "Ура!",
-    hospital_evacuated = "У комиссии не осталось другого выбора, кроме как объявить эвакуацию.",
-    succeeded = {
-      part_1_name = "До департамента здоровья дошли слухи, что в вашей больнице бушует эпидемия %s.",
-      part_2 = "Однако, инспектору не удалось найти им подтверждение.",
-    },
-    compensation_amount = "Правительство решило компенсировать ущерб, который эти враки нанесли репутации вашей больницы, в сумме %d$.",
-    failed = {
-      part_1_name = "В попытке скрыть наличие заразной инфекции %s,",
-      part_2 = "ваши сотрудники вызвали распространение болезни по округе.",
-    },
-    rep_loss_fine_amount = "Журналисты уже заточили карандаши. Ваша репутация серьезно пострадает. К тому же, вас оштрафовали на %d$.",
-  },
-  --]]
-
-fax = {
-  --  VIP
-  vip_visit_query = {
-    choices = {
-      invite = "Enviar um convite oficial ao V.I.P.",
-      refuse = "Despiste o V.I.P. com desculpas.",
-    },
-    vip_name = "%s expressou a vontade de visitar seu hospital",
-  },
-  vip_visit_result = {
-    --telegram = "Телеграмма!",
-    remarks = {
-      --good = {
-      --  [1] = "Какая хорошая больница! Спасибо за приглашение.",
-      --  [2] = "Хмм... Определенно, неплохое медицинское учреждение.",
-      --  [3] = "Мне очень понравилась ваша милая больничка. Ну, кто со мной в ресторан?",
-      --},
-      super = {
-        [1] = "É um super hospital! Eu deveria saber, já estive aqui algumas vezes.",
-      },
-      --[[
-      bad = {
-        [1] = "Не надо было мне приходить. Лучше бы я просидел четырехчасовую оперу!",
-        [2] = "Мне до сих пор не по себе. Они правда называют свое заведение больницей? Больше похоже на свинарник!",
-        [3] = "Я сыт по горло визитами в подобные выгребные ямы и постоянным вниманием прессы! Я подаю в отставку.",
-      },
-      mediocre = {
-        [1] = "Что ж, я видал и похуже. Им есть куда расти.",
-        [2] = "Не знаю, стоит ли туда обращаться, если почувствуете себя неважно.",
-        [3] = "Что я могу сказать, больница как больница. Я ожидал большего.",
-      },
-      very_bad = {
-        [1] = "Ну и свалка! Я приложу все усилия чтобы ее закрыли.",
-        [2] = "Никогда не видел больницы хуже. Какой позор!",
-        [3] = "Я потрясен. Это нельзя назвать больницей! Мне надо выпить.",
-      },
-
-      --]]
-      -- tem good? Recebi um 'Now that's what I call a hospital'
-    },
-    rep_boost = "Sua reputação na comunidade acaba de aumentar.",
-    vip_remarked_name = "Após visitar seu hospital, %s declarou:",
-    cash_grant = "Você foi recompensado com uma quantia de $ %d.",
-    --rep_loss = "Ваша репутация пострадала.",
-    close_text = "Obrigado por visitar o hospital.",
-
-  },
-  --  Descoberta de Nova Doença
-  disease_discovered = {
-    discovered_name = "Sua equipe descobriu uma nova condição : %s",
-  },
-
-  disease_discovered_patient_choice = {
-    need_to_build = "Você precisa construir um %s para lidar com ela.",
-    --need_to_employ = "Наймите %s чтобы вылечить это.",
-    what_to_do_question = "O que deve ser feito com o paciente ?",
-    --guessed_percentage_name = "Мы не совсем уверены, что с этим пациентом. Существует вероятность в %d% что это %s",
-    choices = {
-      send_home = "Mandar o paciente para casa",
-      research = "Encaminhar o paciente ao Departamento de Pesquisas.",
-      wait = "Pedir ao paciente esperar um pouco no Hospital.",
-    },
-    disease_name = "Sua equipe descobriu uma nova condição: %s",
-    --need_to_build_and_employ = "Можно будет попробовать, если вы построите %s и наймете %s .",
-    can_not_cure = "Você não pode curar esta doença.",
-  },
-  diagnosis_failed = {
-    choices = {
-      send_home = "Enviar o Paciente para casa.",
-      take_chance = "Dar ao Paciente um possibilidade de cura.",
-      wait = "Pedir ao Paciente aguardar enquanto você construir mais salas de diagnóstico.",
-    },
-    situation = "Nós esgotamos todas as possibilidades de diagnóstico e ainda não temos certeza do que há de errado com o paciente.",
-    what_to_do_question = "O que deve ser feito com o paciente ?",
-    partial_diagnosis_percentage_name = "Existe, entretanto, uma possibilidade de %d% de termos identificado que tipo de %s o paciente contraiu.",
-  },
-  --[[
-  emergency = {
-  locations = {
-    [1] = "Новоуренгойский химзавод",
-    [2] = "Фальшивый Университет",
-    [3] = "Центр Принудительного Озеленения",
-    [4] = "Институт Разработки Опасных Штук",
-    [5] = "Клуб Хороших Танцоров",
-    [6] = "Издательство «МакулатураПресс»",
-    [7] = "Похоронное бюро «Безенчук и нимфы»",
-    [8] = "Китайский ресторанчик дяди Вонга",
-    [9] = "ГлавХимСбытСтыдЗагранПоставка",
-  },
-    num_disease = "У нас тут %d человек с диагнозом %s и им требуется немедленное лечение.",
-    cure_possible_drug_name_efficiency = "У вас есть все необходимое оборудование и специалисты. У вас есть нужное лекарство. Это %s и оно эффективно на %d%",
-    cure_not_possible_employ = "Вам потребуется нанять %s",
-    cure_not_possible = "Сейчас вы не можете это вылечить.",
-    cure_possible = "У вас есть все необходимое оборудование и специалисты, так что вы, наверное, справитесь.",
-    choices = {
-      accept = "Да. Я разберусь с этой ситуацией.",
-      refuse = "Нет. Я отказываюсь в этом участвовать.",
-    },
-    location = "На предприятии %s чрезвычайная ситуация.",
-    cure_not_possible_build = "Вам надо будет построить %s",
-    cure_not_possible_build_and_employ = "Вам надо будет построить %s и нанять %s",
-    bonus = "Вознаграждение за помощь составит %d. Если вы не справитесь, ваша репутация серьезно пострадает.",
-  },
-  --]]
-  emergency_result = {
-    earned_money = "De um bônus total de $ %d, você ganhou $ %d.",
-    close_text = "Clique para sair.",
-    saved_people = "Você salvou %d de um total de %d pacientes.",
-  },
-}
-
--------------------------------  OVERRIDE  ----------------------------------
-adviser.warnings.money_low = "Você está ficando sem dinheiro!" -- Funny. Exists in German translation, but not existent in english?
--- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
--- TODO: tooltip.status.close -- it's called status window, not overview window.
-
--- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
-tooltip.staff_list.next_person = "Próxima página"
-tooltip.staff_list.prev_person = "Página anterior"
-tooltip.status.reputation = "Sua reputação não deve ficar abaixo de %d. Atualmente é de %d"
-tooltip.status.balance = "Seu saldo bancário não deve vicar abaixo de %d. Atualmente é de %d"
-
--- The originals of these two contain one space too much
-fax.emergency.cure_not_possible_build = "Você precisará construir um(a) %s"
-fax.emergency.cure_not_possible_build_and_employ = "Você precisará construir um(a) %s e empregar um(a) %s"
-fax.emergency.num_disease = "Existem %d pessoas com %s e eles precisam urgente de sua atenção."
-adviser.goals.lose.kill = "Se matar mais %d pacientes perderá esta fase!"
-
--- Improve tooltips in staff window to mention hidden features
-tooltip.staff_window.face = "This person's face - click to open management screen"
-tooltip.staff_window.center_view = "Clique com o botão esquerdo para dar um zoom no quadro de funcionários e botão direito para circular membros da equipe"
-
--- These strings are missing in some versions of TH (unpatched?)
-confirmation.restart_level = "Tem certeza que deseja reiniciar esta fase?"
--- TODO adviser.multiplayer.objective_completed
--- TODO adviser.multiplayer.objective_failed
-
--------------------------------  NEW STRINGS  -------------------------------
-date_format = {
-  daymonth = "%1% %2:months%",
-}
-
-object.litter = "Lixo"
-tooltip.objects.litter = "Lixo: Um paciente jogou no chão porque não achou uma lixeira próxima."
-
-tooltip.fax.close = "Fechar esta janela sem apagar a mensagem"
-tooltip.message.button = "Clique com o botão esquerdo para abrir a mensagem"
-tooltip.message.button_dismiss = "Clique com o botão esquerdo para abrir a mensagem, e com o botão direito para descartá-la"
-tooltip.casebook.cure_requirement.hire_staff = "Você precisa contratar funcionários para administrar este tratamento"
-tooltip.casebook.cure_type.unknown = "Você ainda não sabe como tratar esta doença"
-tooltip.research_policy.no_research = "Nenhuma pesquisa desta categoria está sendo conduzida neste momento"
-tooltip.research_policy.research_progress = "Progresso para uma nova descoberta nesta categoria: %1%/%2%"
-
-
-adviser = {
-  room_forbidden_non_reachable_parts = "Construir a sala neste local resultará em alas do hospital que não poderão ser acessadas.",
-  warnings = {
-    no_desk = "Você precisa comprar um balcão de recepção e contratar uma recepcionista em algum momento!",
-    no_desk_1 = "Se você quer que os pacientes venham ao seu hospital, você precisa contratar uma recepcionista e comprar um balcão para recepcioná-los!",
-    no_desk_2 = "Excelente, isso provavelmente é um recorde mundial - quase um ano e nenhum paciente! Se você deseja continuar administrando este hospital, você precisa urgente contratar uma recepcionista e comprar um balcão para que ela possa trabalhar!",
-    no_desk_3 = "That's just brilliant, nearly a year and you don't have a staffed reception! How do you expect to get any patients, now get it sorted out and stop messing around!",
-    cannot_afford = "Seu saldo bancário é insuficiente para contratar esta pessoa!", -- I can't see anything like this in the original strings
-    falling_1 = "Hey! Isso não é engraçado, cuidado onde aponta este mouse; alguém pode se machucar!",
-    falling_2 = "Gostou da queda? Pare de bagunçar!",
-    falling_3 = "Ai, isso dói, alguém chame um médico!",
-    falling_4 = "Isto é um Hospital, não um parque de diversões!",
-    falling_5 = "Este não é o local para empurar as pessoas, elas estão doentes sabia?!",
-    falling_6 = "Aqui não é uma pista de boliche, pessoas doentes não deveriam ser tratadas desta forma!",
-    research_screen_open_1 = "Você precisa construir um Departamento de Pesquisas antes de acessar a tela de Pesquisas.",
-    research_screen_open_2 = "Pesquisas estão desabilitadas nesta fase.",
-  },
-  cheats = {
-    th_cheat = "Parabéns, você habilitou os códigos de trapaça!",
-    crazy_on_cheat = "Oh não! Todos os médicos ficaram malucos!",
-    crazy_off_cheat = "Ufa… o médicos recobraram sua sanidade.",
-    roujin_on_cheat = "Desafio Roujin ativado! Boa sorte...",
-    roujin_off_cheat = "Desafio Roujin desativado.",
-    hairyitis_cheat = "Trapaça de Cabelulite ativada!",
-    hairyitis_off_cheat = "Trapaça de Cabelulite desativada.",
-    bloaty_cheat = "Bloaty Head cheat activated!",
-    bloaty_off_cheat = "Bloaty Head cheat deactivated.",
-  },
-}
-
-dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
-dynamic_info.staff.actions.heading_for = "Indo para %s"
-dynamic_info.staff.actions.fired = "Demitido"
-
-progress_report.free_build = "CONSTRUÇÃO LIVRE"
-
-fax = {
-  choices = {
-    return_to_main_menu = "Retornar ao menu principal",
-    accept_new_level = "Ir para a próxima fase",
-    decline_new_level = "Continuar jogando nesta fase um pouco mais",
-  },
-  emergency = {
-    num_disease_singular = "Existe uma pessoa com %s que precisa urgente de sua atenção.",
-    free_build = "Se você for bem sucedido sua reputação aumentará, mas se você falhar sua reputação será bastante prejudicada.",
-  },
-  vip_visit_result = {
-    remarks = {
-      free_build = {
-        "Que hospital maravilhoso! Não é tão difícil manter tudo funcionando com dinheiro ilimitado, não é mesmo?",
-        "Eu não sou economista, mas acho que eu também conseguiria administrar esse hospital, se é que você me entende...",
-        "Um hospital em ótimo funcionamento. Mas cuidado com a recessão! Ah, me esqueci... você não teve que se preocupar com isso.",
-      }
-    }
-  }
-}
-
-letter = {
-  dear_player = "Prezado(a) %s",
-  custom_level_completed = "Parabéns! Você completou todos os objetivos desta fase customizada!",
-  return_to_main_menu = "Deseja retornar ao menu principal ou continuar jogando?",
-}
-
-install = {
-  title = "--------------------------------- CorsixTH Setup ---------------------------------",
-  th_directory = "CorsixTH precisa de uma cópia dos arquivos de dados do jogo original - Theme Hospital (ou demo) para executar. Utilize o seletor abaixo para localizar o diretório onde o jogo Theme Hospital está instalado.",
-  exit = "Sair",
-}
-
-misc.not_yet_implemented = "(não foi implementado ainda)"
-misc.no_heliport = "Ou você ainda não descobriu nenhuma doença ou este hospital não possui heliporto. Você pode também necessitar construir uma recepção e contratar uma recepcionista."
-
-
-
-
-
-
-tooltip.handyman_window = {
-  parcel_select = "O prédio no qual este funcionário executará suas tarefas, clique para mudar"
-}
-
-handyman_window = {
-  all_parcels = "Todos os prédios",
-  parcel = "Prédio"
-}
-
-
-
-errors = {
-  dialog_missing_graphics = "Desculpe, os arquivos de dados da demo não contém este diálogo.",
-  save_prefix = "Erro ao salvar jogo: ",
-  load_prefix = "Erro ao carregar jogo: ",
-  map_file_missing = "Não foi possível encontrar o arquivo de mapa %s para esta fase!",
-  minimum_screen_size = "Favor digitar dimensões de tela de pelo menos 640x480.",
-  maximum_screen_size = "Favor digitar dimensões de tela de no máximo 3000x2000.",
-  unavailable_screen_size = "O tamanho da tela que você digitou não está disponível em tela cheia.",
-}
-
-confirmation = {
-  needs_restart = "Para alterar esta configuração é necessário reiniciar o CorsixTH. Qualquer alteração não salva será perdida. Tem certeza que deseja fazer isso?",
-  abort_edit_room = "Você está editando uma sala. Se todos os objetos necessário estiverem colocados ela será completada, caso contrário ela será removida. Continuar?",
-}
-
-information = {
-  custom_game = "Bem-vindo ao CorsixTH. Se divirta neste mapa personalizado!",
-  no_custom_game_in_demo = "Desculpe, mas a versão de demonstração não pode jogar mapas pesonalizados.",
-  cannot_restart = "Infelizmente este mapa personalizado foi salvo antes que a funcionalidade de reiniciação fosse implementada.",
-  very_old_save = "Houveram muitas mudanças no jogo desde que você começou a jogar este mapa. Para ter certeza que todas as funcionalidades estão funcionando considere recomeçar o mapa.",
-  level_lost = {
-    "Parabéns! Você perdeu a fase. Mais sorte na próxima vez!",
-    "Você perdeu porque:",
-    reputation = "Sua reputação caiu abaixo de %d.",
-    balance = "Seu saldo no banco caiu abaixo de %d.",
-    percentage_killed = "Você matou mais de %d porcento dos pacientes.",
-  },
-  cheat_not_possible = "Você não pode usar esta trapaça nesta fase. Até na hora de trapacear você falha, irônico não?",
-}
-
-tooltip.information = {
-  close = "Fechar a janela de informações",
-}
-
-
 
 debug_patient_window = {
   caption = "Depurar Paciente",
 }
 
 cheats_window = {
-  caption = "Cheats/Trapaças",
-  warning = "Aviso: você não ganhará nenhum ponto bônus no final desta fase se você trapacear!",
+  caption = "Trapaças",
+  warning = "Atençäo: Você näo conseguirá quaisquer pontos de bonificaçöes no fim do nível se você trapacear!",
   cheated = {
-    no = "Trapaças usadas: Não",
+    no = "Trapaças usadas: Näo",
     yes = "Trapaças usadas: Sim",
   },
   cheats = {
-    money = "Trapaça Financeira",
+    money = "Trapaça de Dinheiro",
     all_research = "Trapaça Todas as Pesquisas Realizadas",
     emergency = "Criar Emergência",
-    vip = "Criar visitante VIP",
+    vip = "Criar VIP",
     earthquake = "Criar Terremoto",
+    epidemic = "Gerar um paciente contagioso",
+    toggle_infected = "Alternar ícones de infectados",
     create_patient = "Criar Paciente",
-    end_month = "Final de Mês",
-    end_year = "Final de Ano",
+    end_month = "Fim do Mês",
+    end_year = "Fim do ano",
     lose_level = "Perder a Fase",
     win_level = "Ganhar a Fase",
+    increase_prices = "Aumentar Preços",
+    decrease_prices = "Reduzir Preços",
   },
   close = "Fechar",
 }
 
 tooltip.cheats_window = {
-  close = "Fechar a janela de trapaças",
+  close = "Fecha a janela de trapaças",
   cheats = {
-    money = "Adicionar 10.000 no saldo bancário.",
-    all_research = "Completar todas as pesquisas.",
-    emergency = "Criar uma emergência.",
-    vip = "Criar um visitante VIP.",
-    earthquake = "Criar um terremoto.",
-    create_patient = "Criar um Paciente na borda do mapa.",
-    end_month = "Pular para o final do mês.",
-    end_year = "Pular para o final do ano.",
-    lose_level = "Perder esta fase.",
-    win_level = "Ganhar esta fase.",
+    money = "Adiciona 10.000 no saldo bancário.",
+    all_research = "Completa todas as pesquisas.",
+    emergency = "Cria uma emergência.",
+    vip = "Cria um visitante VIP.",
+    earthquake = "Cria um Terremoto.",
+    epidemic = "Cria um paciente contagioso",
+    toggle_infected = "Mostra/oculta os ícones de infecçäo",
+    create_patient = "Cria um Paciente no canto de mapa.",
+    end_month = "Pula para o final do mês.",
+    end_year = "Pula para o final do ano.",
+    lose_level = "Perde esta fase.",
+    win_level = "Ganha esta fase.",
+    increase_prices = "Aumenta todos os preços em 50% (200% máximo).",
+    decrease_prices = "Reduz todos os preços em 50% (50% mínimo).",
   }
+}
+
+introduction_texts = {
+  demo =
+    "Bem-vindo ao hospital de demonstraçäo! " ..
+    "Infelizmente esta versäo de demonstraçäo só possui esta fase. Entretanto, teremos aqui o suficiente para mantê-lo ocupado por enquanto! " ..
+    "Você encontrará várias doenças que necessitaräo de salas diferentes para cura. De tempos em tempos, emergências ocorreräo. E você precisará pesquisar por salas adicionais usando o Departamento de Pesquisas. " ..
+    "Seu objetivo é ter um saldo bancário de $100.000,00, o valor do hospital em $ 70.000,00 e uma reputaçäo de 700, enquanto você cura pelo menos 75% de seus pacientes. " ..
+    "Certifique-se que sua reputaçäo näo fique abaixo de 300 e você näo mate mais de 40% dos seus pacientes, senäo você perde. " ..
+    "Boa sorte!",
 }
 
 calls_dispatcher = {
@@ -1199,564 +639,2024 @@ calls_dispatcher = {
   summary = "%d chamadas; %d assinaladas",
   staff = "%s - %s",
   watering = "Regando @ %d,%d",
-  repair = "Consertar %s",
+  repair = "Reparar %s",
   close = "Fechar",
 }
 
 tooltip.calls_dispatcher = {
   task = "Lista de tarefas - clique na tarefa para abrir a janela do funcionário responsável e ir para o local da tarefa.",
   assigned = "Esta janela será marcada se alguém for designado para a tarefa correspondente.",
-  close = "Fechar a janela de calls dispatcher",
+  close = "Fechar a janela de chamadas de controle",
 }
 
-
-
-staff_class = {
-  nurse                 = "Enfermeira",
-  doctor                = "Doutor",
-  handyman              = "Funcionário da Manutenção",
-  receptionist          = "Recepcionista",
-  surgeon               = "Cirurgião",
+update_window = {
+  caption = "Atualizaçäo Disponível!",
+  new_version = "Nova Versäo:",
+  current_version = "Versäo Atual:",
+  download = "Ir para página de download",
+  ignore = "Pular e ir para o menu principal",
 }
 
-
-
-
--- Objects
-object = {
-  desk                  = "Secretária",
-  cabinet               = "Arquivo",
-  door                  = "Porta",
-  bench                 = "Banco",
-  table1                = "Mesa", -- unused object
-  chair                 = "Cadeira",
-  drinks_machine        = "Máquina de Bebidas",
-  bed                   = "Cama",
-  inflator              = "Inflador",
-  pool_table            = "Mesa de Bilhar",
-  reception_desk        = "Recepção",
-  table2                = "Mesa", -- unused object & duplicate
-  cardio                = "Máquina de Eletrocardiograma",
-  scanner               = "Scanner",
-  console               = "Console",
-  screen                = "Tela",
-  litter_bomb           = "Bomba de lixo",
-  couch                 = "Sofá",
-  sofa                  = "Sofá",
-  crash_trolley         = "Trolley",
-  tv                    = "TV",
-  ultrascanner          = "Ultrasom",
-  dna_fixer             = "Fixador de DNA",
-  cast_remover          = "Removedor de Gesso",
-  hair_restorer         = "Restaurador de Cabelo",
-  slicer                = "Fatiador",
-  x_ray                 = "Raio-X",
-  radiation_shield      = "Escudo de Radiação",
-  x_ray_viewer          = "Visualizador de Raio-X",
-  operating_table       = "Mesa de Operação",
-  lamp                  = "Lampâda", -- unused object
-  toilet_sink           = "Pia",
-  op_sink1              = "Pia",
-  op_sink2              = "Pia",
-  surgeon_screen        = "Tela de Operação",
-  lecture_chair         = "Cadeira de aluno",
-  projector             = "Projetor",
-  bed2                  = "Cama", -- unused duplicate
-  pharmacy_cabinet      = "Gabinete de Farmácia",
-  computer              = "Computador",
-  atom_analyser         = "Analisador de Átomos",
-  blood_machine         = "Máquina de Análise Sanguínea",
-  fire_extinguisher     = "Extintor",
-  radiator              = "Radiador",
-  plant                 = "Planta",
-  electrolyser          = "Electrolisador",
-  jelly_moulder         = "Moldador gelatinoso",
-  gates_of_hell         = "Portões do Inferno",
-  bed3                  = "Cama", -- unused duplicate
-  bin                   = "Lixeira",
-  toilet                = "Cabine de Toalete",
-  swing_door1           = "Porta",
-  swing_door2           = "Porta",
-  shower                = "Chuveiro",
-  auto_autopsy          = "Auto-Autópsia",
-  bookcase              = "Estante de Livros",
-  video_game            = "Fliperama",
-  entrance_left         = "Entrada esquerda",
-  entrance_right        = "Entrada direita",
-  skeleton              = "Esqueleto",
-  comfortable_chair     = "Cadeira de conforto",
+tooltip.update_window = {
+  download = "Vai para a página de downloads para obter a última versäo do CorsixTH",
+  ignore = "Ignora esta atualizaçäo no momento. Você será notificado da próxima vez que abrir o CorsixTH",
 }
 
-
--- Months
-months = {
-  "Jan",
-  "Fev",
-  "Mar",
-  "Abr",
-  "Mai",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Set",
-  "Out",
-  "Nov",
-  "Dez",
-}
-
--- Rooms short
--- NB: includes some special "rooms"
--- reception, destroyed room and "corridor objects"
-rooms_short = {
-  reception         = "Recepção",
-  destroyed         = "Destruído",
-  corridor_objects  = "Objetos de Corredor",
-  gps_office        = "Clínica Geral",
-  psychiatric       = "Psiquiatria",
-  ward              = "Enfermaria",
-  operating_theatre = "Sala de Operações",
-  pharmacy          = "Farmácia",
-  cardiogram        = "Máq. de Eletrocardiograma",
-  scanner           = "Scanner",
-  ultrascan         = "Ultrasom",
-  blood_machine     = "Sala de Análises Sanguíneas",
-  x_ray             = "Raio-X",
-  inflation         = "Inflador",
-  dna_fixer         = "Fixador de DNA",
-  hair_restoration  = "Recuperador de Cabelo",
-  tongue_clinic     = "Fatiador",
-  fracture_clinic   = "Clínica de Fraturas",
-  training_room     = "Sala de Aula",
-  electrolysis      = "Sala de Electrolisador",
-  jelly_vat         = "Moldador Gelatinoso",
-  staffroom         = "Sala de Relaxamento",
-  -- rehabilitation = "Reabilitação", -- unused
-  general_diag      = "Diagnóstico Geral",
-  research_room     = "Departamento de Pesquisas",
-  toilets           = "Toaletes",
-  decontamination   = "Descontaminação",
-}
-
-
-
--- 8.  Objetivos da Fase
-introduction_texts = {
-  demo =
-    "Bem-vindo ao hospital de demonstração!" ..
-    "Infelizmente esta versão demo são possui esta fase. Entretanto, teremos aqui o suficiente para mantê-lo ocupado por enquanto !" ..
-    "Você encontrará várias doenças que necessitarão de salas diferentes para cura. De tempos em tempos, emergências ocorrerão. E você precisará pesquisar por salas adicionais usando o Departamento de Pesquisas." ..
-    "Seu objetivo é ter um saldo bancário de $100.000,00, o valor do hospital em $ 70.000,00 e uma reputação de 700, enquanto você cura pelo menos 75% de seus pacientes." ..
-    "Certifique-se que sua reputação não fique abaixo de 300 e você não mate mais de 40% dos seus pacientes, senão você perde." ..
-    "Boa sorte!",
-  level1 =
-    "Bem-vindo(a) ao seu primeiro hospital !//" ..
-    "Tenha-o pronto e rodando colocando um balcão de recepção, construindo um consultório de clínica geral e contratando uma recepcionista e médico. " ..
-    "Então espere os negócios prosperarem." ..
-    "É uma boa idéia construir um departamento de psiquiatria e contratar um médico psiquiatra, além de uma farmácia e enfermeira que também serão essenciais para curar seus pacientes. " ..
-    "Cuidado com os casos de 'Cabeça inchada' - Uma sala com um Inflador resolverá os casos rapidamente." ..
-    "Seu objetivo será curar 10 pessoas e garantir que sua reputação não fique abaixo de 200.",
-  level2 =
-    "Há uma grande variedade de doenças nesta área, sendo assim planeje seu hospital para lidar com mais pacientes, além de construir um Departamento de Pesquisas. " ..
-    "Lembre-se de manter o estabelecimento limpo e procure manter sua reputação a mais alta possível - você estará lidando com doenças como Língua negligente, então precisará de um Fatiador. Adicionalmente, poderá construir uma máquina de Eletrocardiograma para ajudá-lo a diagnosticar novas doenças" ..
-    "Ambas precisarão ser pesquisadas antes de serem construídas. Agora você poderá comprar lotes de terreno extras para expandir seu hospital - use o Mapa da Cidade para fazê-lo." ..
-    "Tenha como objetivo uma reputação de 300, um saldo bancário de $10.000,00 e 40 pessoas curadas.",
-  level3 =
-    "Desta vez, você irá construir seu hospital em uma área nobre da cidade." ..
-    "O Ministro da Saúde está contando com você para manter os níveis da saúde por aqui." ..
-    "Você precisa ganhar uma boa reputação para começar, mas uma vez que seu hospital esteja estabelecido, concentre-se em lucrar a maior quantidade de dinheiro que puder." ..
-    "Há uma grande possibilidade de ter de lidar com Emergências - isso acontece quando um grande número de pessoas chega de uma só vez, na mesma condição clínica - Curando-as à tempo você ganhará uma boa reputação e um grande bônus." ..
-    "Doenças como o Complexo de Rei podem ocorrer, e você deverá planejar seu orçamento para construir uma Sala de Operações com uma Enfermaria ao lado. " ..
-    "Consiga $ 20.000,00 em dinheiro para vencer a fase.",
-  level4 =
-    "Mantenha seus pacientes felizes, lide com eles da forma mais eficiente que puder e mantenha o número de óbitos no mínimo." ..
-    "Sua reputação está em jogo, portanto mantenha-a a mais alta que conseguir." ..
-    "Não se preocupe tanto com dinheiro - ele virá a medida que sua reputação cresce." ..
-    "Você terá a possibilidade de treinar seus médicos para ampliar suas habilidades também, pois ele poderão ter que lidar com pacientes mais opacos que a maioria." ..
-    "Consiga uma reputação acima de 500 para vencer a fase.",
-  level5 =
-    "Você administrará agora um hospital ocupado, lidando com um grande variedade de casos." ..
-    "Seus médicos são todos calouros da escola de medicina, portanto será de vital importância construir um sala de treinamento e treiná-los até um nível aceitável." ..
-    "Você possui apenas três médicos sêniores para ajudá-lo a ensinar sua inexperiente equipe, portanto mantenha-os felizes." ..
-    "Note, também, que as fundações deste hospital ficam no centro da falha geológica de São Android - existe um risco eminente de terremotos. que causarão um estrago significativo em seus equipamentos, atrapalhando uma calma administração de seu hospital." ..
-    "Sua reputação deve ultrapassar a marca de 400, e um saldo bancário de $ 50.000,00 para ter sucesso - além de curar pelo menos 200 pacientes.",
-  level6 =
-    "Utilize todo seu know-how para montar um hospital eficiente que gere lucro e possa lidar com qualquer coisa que o público doente colocar em suas mãos." ..
-    "Você deve estar ciente que a atmosfera do local é propícia para alastrar germes e infecções - Mantenha a instituição espetacularmente limpa se não quiser enfrentar uma série de epidemias envolvendo os pacientes." ..
-    "Suas metas são fazer $ 150.000,00 em dinheiro e o valor do hospital deve valer pelo menos   $140.000,00",
-  level7 =
-    "Você está sendo observado de perto pelo Ministro de Saúde, então certifique-se que seus números indiquem que você está ganhando muito dinheiro e reputação crescente." ..
-    "Não se dê ao luxo de mortes desnecessárias - elas são ruins para os negócios" ..
-    "Certifique-se que seu quadro de funcionários seja hábil e que você possua todos os equipamentos que precisa." ..
-    "Obtenha uma reputação de 600 e $ 200.000,00 de saldo bancário.",
-  level8 =
-    "Só depende de você construir o hospital mais rentável e eficiente possível." ..
-    "As pessoas por aqui são bem afortunadas, portanto 'enfie a faca' como puder. " ..
-    "Lembre-se, curar pessoas é uma coisa muito legal, mas do que você realmente PRECISA é da grana que elas trarão." ..
-    "Limpe estas pessoas doentes, consiga incríveis $ 300.000,00 para vencer esta fase.",
-  level9 =
-    "Tendo enchido os bolsos e custeado a nova limousine do Ministro da Saúde, finalmente você pode voltar a criar um hospital modelo em benefício dos mais necessitados. " ..
-    "Você pode esperar muitos e diversos problemas por aqui - Treine muito bem seus funcionários, tenha boas salas para cobrir todas as possibilidades." ..
-    "Seu hospital precisa valer $200.000,00 e precisará de $400.000,00 no balco - qualquer coisa menos do que isso você não poderá terminar esta fase.",
-  level10 =
-    "Assim que você cuidar de todas as doenças que surgirem por estas bandas, o Ministro solicitou que você se concentre na eficiência de seus medicamentos. " ..
-    "Existem algumas queixas feitas no 'SemDoenças' - que faz Auditorias na área da Saúde - então para ficar bonito na foto certifique-se que seus medicamentos sejam extremamente eficientes. Portanto, o hospital precisar ficar ótimo. Mantenha os óbitos em níveis baixos." ..
-    "Fica a dica, deixe espaço livre para o Moldador Gelatinoso." ..
-    "Pesquise e crie todos os medicamento com pelo menos 80% de eficiência, obtenha uma reputação de 650 e um saldo bancário de $500.000,00 para vencer!",
-  level11 =
-    "Você está tendo a oportunidade de construir a última palavra em hospitais. Está em uma área extremamente privilegiada, e o ministro gostaria de ver o melhor hospital possível." ..
-    "A expectativa é que você faça muito dinheiro, tenha uma reputação soberba e esteja preparado para qualquer eventualidade." ..
-    "É um trabalho importante este. " ..
-    "Você precisa ser especial para conseguir se dar bem nessa fase." ..
-    "Existem vários relatos de OVNIs nessa área. Certifique-se que seus funcionários estejam preparados para um eventual contato imediato." ..
-    "Seu hospital precisa valer $240,000, você precisará de $500,000 no banco e uma reputação de 700.",
-  level12 = "",
-  level13 = "",
-  level14 = "",
-  level15 = "",
-  level16 = "",
-  level17 = "",
-  level18 = "",
-}
-
-graphs = {
-  money_in   = "Receitas",
-  money_out  = "Despesas",
-  wages      = "Salários",
-  balance    = "Balanço",
-  visitors   = "Visitantes",
-  cures      = "Curas",
-  deaths     = "Óbitos",
-  reputation = "Reputação",
-
-  time_spans = {
-    S[7][12],
-    S[7][13],
-    S[7][14],
+map_editor_window = {
+  pages = {
+    inside = "Interior",
+    outside = "Exterior",
+    foliage = "Folhagem",
+    hedgerow = "Cerca viva",
+    pond = "Lagoa",
+    road = "Estrada",
+    north_wall = "Parede norte",
+    west_wall = "Parede oeste",
+    helipad = "Heliporto",
+    delete_wall = "Excluir paredes",
+    parcel_0 = "Parcela 0",
+    parcel_1 = "Parcela 1",
+    parcel_2 = "Parcela 2",
+    parcel_3 = "Parcela 3",
+    parcel_4 = "Parcela 4",
+    parcel_5 = "Parcela 5",
+    parcel_6 = "Parcela 6",
+    parcel_7 = "Parcela 7",
+    parcel_8 = "Parcela 8",
+    parcel_9 = "Parcela 9",
+    camera_1 = "Câmera 1",
+    camera_2 = "Câmera 2",
+    camera_3 = "Câmera 3",
+    camera_4 = "Câmera 4",
+    heliport_1 = "Heliporto 1",
+    heliport_2 = "Heliporto 2",
+    heliport_3 = "Heliporto 3",
+    heliport_4 = "Heliporto 4",
+    paste = "Colar área",
   }
 }
 
-tooltip = {
-  toolbar = {
-    bank_button = "Clique com o botão esquerdo para consultar o Gerente do Banco, botão direito para extrato bancário",
-    balance = "Seu saldo bancário",
-    reputation = "Sua reputação",
-    date = "Calendário",
-    rooms = "Construir Salas",
-    objects = "Оbjetos de corredor",
-    edit = "Editar Salas",
-    hire = "Contratação de Pessoal",
-    staff_list = "Quadro de Funcionários",
-    town_map = "Mapa de Cidade",
-    casebook = "Livro de Diagnósticos",
-    research = "Pesquisa",
-    status = "Situação",
-    charts = "Gráficos",
-    policy = "Políticas",
-  },
-}
+--------------------------------  UNUSED  -----------------------------------
+------------------- (kept for backwards compatibility) ----------------------
 
--- Rooms
-room_classes = {
-  -- S[19][2] -- "corridors" - unused for now
-  diagnosis  = "Diagnóstico",
-  treatment  = "Tratamento",
-  clinics    = "Clínicas",
-  facilities = "Acomodações",
-}
+options_window.change_resolution = "Alterar resoluçäo"
+tooltip.options_window.change_resolution = "Altera a resoluçäo de janela para as dimensöes digitadas na esquerda"
 
---]]
-confirmation = {
-  abort_edit_room = "Está construindo ou editando uma sala. Se todos os objectos necessários estiverem colocados a sala estará terminada, caso contrário será eliminada. Continuar?",
-  return_to_blueprint = "Voltar ao modo de desenho?",
-  restart_level = "Deseja realmente reiniciar esta fase?",
-  delete_room = "Deseja realmente remover esta sala?",
-  quit = "Sair do jogo?",
-  needs_restart = "Estas alterações requerem reiniciar o jogo, todo progresso não gravado será perdido. Continuar?",
-  overwrite_save = "Já existe uma gravação neste arquivo. Gravar por cima?",
-  sack_staff = "Demitir este funcionário ?",
-  replace_machine = "Quer substituir %s por $%d?",
-}
-
-
-vip_names = {
-  [1] = "Presidente da Cruz Vermelha",
-  [2] = "Ricardo Araújo Pereira",
-  [3] = "D. Duarte Pio de Bragança",
-  [4] = "Joe Berardo",
-  [5] = "José Mourinho",
-  [6] = "Alberto João Jardim",
-  [7] = "Marcelo Rebelo de Sousa",
-  [8] = "Cavaco Silva",
-  [9] = "Cristiano Ronaldo",
-  [10] = "Tradutor Filipe Carvalho",
-  health_minister = "Ministro da Saúde",
-}
-
-room_descriptions = {
-  ultrascan = {
-    [1] = "Ultrasom//",
-    [2] = "O ultrasom é a última palavra em equipamento de diagnóstico. Custa caro, mais vale a pena se deseja um diagnóstico soberbo em seu hospital.//",
-    [3] = "The Ultrasom precisa de manutenção e um médico (qualquer nível) para funcionamento. ",
-  },
-  gp = {
-    [1] = "Clínica Geral//",
-    [2] = "Esta é a sala de diagnósticos primordial de um hospital. Novos pacientes sentarão aqui para descobrir o que há de errado com eles. Serão enviados posteriormente para outras salas de dianóstico ou para serem curados. Você poderá construir outra Sala de Clínica Geral se esta ficar muito ocupada. Quanto maior a sala for, mais objetos adicionais podem ser colocados nela, e maior o prestígio do médico. Isso vale igualmente para todas as outras salas.//",
-    [3] = "A Sala de Clínica Geral precisa de um médico de qualquer nível. ",
-  },
-  fracture_clinic = {
-    [1] = "Clínica de Fraturas//",
-    [2] = "Aqueles pacientes azarados o bastante por terem seus ossos quebrados vem aqui. A máquina de remover gesso irá empregar lasers industriais para partir o mais duro gesso, causando apenas um ligeira agonia ao paciente.//",
-    [3] = "A Clínica de Fraturas precisa de uma Enfermeira para funcionamento e contínua manutenção. ",
-  },
-  tv_room = {
-    [1] = "TV ROOM NOT USED",
-  },
-  inflation = {
-    [1] = "Inflador//",
-    [2] = "Pacientes que sofrerem da dolorosa-porém-engraçada condição de 'Cabeça Inchada' devem vir ao Inflador, onde seu avantajado crânico será estourado e reinflado instantaneamente na pressão correta.//",
-    [3] = "O Inflador precisa de um médico de qualquer nível, além de cuidados constantes de um Funcionário da Manutenção. ",
-  },
-  jelly_vat = {
-    [1] = "Clínica de Geléia//",
-    [2] = "Pacientes amaldiçoados com a rídicula Geléite devem ser encaminhados para a Clínica de Geléia, e colocados no tanque de Geléia, sendo curados de uma maneira até então não compreendida totalmente pela medicina.//",
-    [3] = "A Clínica de Geléia precisa de um médico de qualquer nível, e de cuidados dos funcionários da manutenção. ",
-  },
-  scanner = {
-    [1] = "Ressonância Magnética//",
-    [2] = "Os pacientes são diagnosticados de forma precisa usando esta máquina de Ressonância Magnética. Eles irão então ver um médico na Clínica Geral para tratamento posterior.//",
-    [3] = "A máquina de Ressonância Magnética precisa de um médico de qualquer nível, além de manutenção. ",
-  },
-  blood_machine = {
-    [1] = "Máquina de Sangue//",
-    [2] = "A Máquina de Sangue é uma parte do arsenal de diagnósticos que verifica as células no sangue do paciente para descobrir o que há de errado com ele.//",
-    [3] = "A Máquina de Sangue precisa de um médico de qualquer nível, além de manutenção. ",
-  },
-  pharmacy = {
-    [1] = "Farmácia//",
-    [2] = "Pacientes que tenham sido diagnosticados e seu tratamento prevê algum medicamento devem visitar a Farmácia para tomá-lo. Conforme novos medicamentos vão sendo pesquisados e disponibilizados, a sala vai ficando movimentada, portanto você pode ter a necessidade de construir outra no futuro.//",
-    [3] = "A Farmácia precisa de uma Enfermeira. ",
-  },
-  cardiogram = {
-    [1] = "Eletrocardiograma//",
-    [2] = "Pacientes são diagnosticados e checados aqui, antes de voltarem à Sala de Clínica Geral para um diagnóstico final.//",
-    [3] = "O Eletrocardiograma precisa de um médico de qualquer nível, além de manutenção. ",
-  },
-  ward = {
-    [1] = "Enfermaria//",
-    [2] = "Pacientes que forem mantidos aqui sob observação de uma Enfermeira durante diagnóstico. Eles permanecem aqui antes de serem operados.//",
-    [3] = "A Enfermaria precisa de uma Enfermeira. ",
-  },
-  psych = {
-    [1] = "Psiquiatria//",
-    [2] = "Pacientes diagnosticados com males psiquiátricos devem visitar o Departamento de Psiquiatria para receber aconselhamento. Psiquiatras podem ainda fazer diagnósticos, descobrindo que tipo de mal o paciente possui, se há origem mental, tratando-se no divã.//",
-    [3] = "O Departamento de Psiquiatria precisa de um Psiquiatra. ",
-  },
-  staff_room = {
-    [1] = "Sala de Relaxamento//",
-    [2] = "Sua equipe fica estressada ao longo de um dia de trabalho. Eles precisam desta sala para relaxar e descansar. Funcionários cansados trabalham em marcha lenta, exigem mais dinheiro e eventualmente pedem demissão, além de cometer mais erros. Construa uma sala de relaxamento com muitas possibilidades de entretenimento é muito interessante. Certifique-se que a sala comporte vários funcionários de uma só vez. ",
-  },
-  operating_theatre = {
-    [1] = "Sala de Operações//",
-    [2] = "Esta importante instalação é onde uma série de condições serão tratadas. Deve ter um bom tamanho, e deve ser ocupado com o equipamento correto. Ele é vital para seu hospital.//",
-    [3] = "A Sala de Operações precisa de dois Cirurgiões. ",
-  },
-  training = {
-    [1] = "Sala de Treinamento//",
-    [2] = "Seus médicos de nível junior e pleno podem adquirir qualificações extras estudando nesta sala. Um Cirurgião, Pesquisador e/ou Psiquiatra Sênior pode passar este conhecimento para quaisquer médicos sendo treinados, e aqueles que já possuírem estas habilidades poderão aprimorá-las aqui.//",
-    [3] = "A Sala de Treinamento precisa de um Doutor Sênior. ",
-  },
-  dna_fixer = {
-    [1] = "Clínica de DNA//",
-    [2] = "Pacientes que foram abduzidos por alienígenas de outro mundo deve ter seu DNA substituído nesta sala. A máquina de fixação de DNA é um equipamento complexo e pode ser sensato manter um extintor de incêndio dentro da sala, por via das dúvidas.//",
-    [3] = "A máquina de fixação de DNA deverá ter manutenção constante de um funcionário, precisando de um Pesquisador para operá-la. ",
-  },
-  research = {
-    [1] = "Departamento de Pesquisas//",
-    [2] = "Novos medicamentos e cruas são inventados e aprimorados no Departamento de Pesquisas. Vital para seu hospital, fará maravilhas em seu percentual de curas.//",
-    [3] = "A Departamento de Pesquisas precisa de um Pesquisador. ",
-  },
-  hair_restoration = {
-    [1] = "Clínica de Restauração de Cabelos//",
-    [2] = "Pacientes que sofrem de uma condição de calvície extrema serão encaminhados para a máquina de restauração de cabelos desta Clínica. Um médico irá operar a máquina, que irá fazer crescer quase instantaneamente um cabelo novo.//",
-    [3] = "A Clínica de Restauração de Cabelos precisa de um médico de qualquer nível, além de cuidados de um funcionário da manutenção. ",
-  },
-  general_diag = {
-    [1] = "Diagnósticos Gerais//",
-    [2] = "Pacientes que necessitem de uma investigação mais profunda são analisados aqui. Se a Clínica Geral não encontrar o que há de errado com eles, Diagnósticos Gerais geralmente irá. Daqui ele é enviado de volta à Clínica Geral para análise dos resultados produzidos aqui.//",
-    [3] = "O Diagnósticos Gerais precisa de um médico de qualquer nível.",
-  },
-  electrolysis = {
-    [1] = "Sala de Eletrólise//",
-    [2] = "Pacientes com Pelulite são encaminhados para esta sala, onde uma máquina especial chamada Eletrolizador arranca os pêlos e esteriliza os poros eletricamente usando um composto similar à uma argamassa.//",
-    [3] = "A Sala de Eletrólise precisa de um médico de qualquer nível, além de cuidados de um funcionário da manutenção. ",
-  },
-  slack_tongue = {
-    [1] = "Clínica de Língua Negligente//",
-    [2] = "Paciente diagnosticados na Clínica Geral com Língua Negligente serão enviados para esta clínica para tratamento. O médico irá usando um maquinário de última geração para extender a língua e cortá-la fora, restaurando a saúde do paciente.//",
-    [3] = "A Clínica de Língua Negligente precisa de um médico de qualquer nível, e manutenção frequente. ",
-  },
-  toilets = {
-    [1] = "Toalete//",
-    [2] = "Pacientes que ouvirem o chamado da natureza irão se aliviar no conforto deste toalete. Você poderá construir baias e lavatórios extras se houver a expectativa de muitos visitantes. Em alguns casos, considere construir toaletes em outros pontos do hospital. ",
-  },
-  no_room = {
-    [1] = "",
-  },
-  x_ray = {
-    [1] = "Raio-X//",
-    [2] = "A máquina de Raio-X fotografa as pessoas por dentro usando radiação especial, fornecendo à equipe uma boa idéia do que há de errado com elas.//",
-    [3] = "O Raio-X precisa de um médico de qualquer nível, além de manutenção.  ",
-  },
-  decontamination = {
-    [1] = "Clínica de Descontaminação//",
-    [2] = "Pacientes que foram expostos à radiação devem ser levados rapidamente à Clínica de Descontaminação. Esta sala contém um chuveiro lavar toda a horrível radiação e.. sujeira.//",
-    [3] = "O chuveiro de descontaminação precisa de um médico de qualquer nível, além de cuidados de um funcionário da manutenção. ",
-  },
-}
-
-pay_rise = {
-  definite_quit = "Nada que você fizer vai me manter aqui, pra mim chega.",
-  regular = {
-    [1] = "Estou em frangalhos. Preciso de um bom descanso, além de um aumento de %d se você não quer me ver por aqui neste trabalho enfadonho.",
-    [2] = "Estou muito cansado. Preciso de um descanso e um aumento de salário de %d, indo para %d. Faça agora, seu tirano!",
-    [3] = "Veja bem, estou trabalhando como uma mula! Quero um bônus de %d para ficar neste hospital.",
-    [4] = "Estou infeliz. Exijo um aumento de %d, aumentando meus honorários para %d, caso contrário estou fora.",
-    [5] = "Meus pais haviam me dito que a área médica pagava bem. Então me dê um aumento de %d ou largo a área para fazer jogos de computador.",
-    [6] = "Estou de saco cheio. Pague-me um salário decente, um aumento de %d deve bastar.",
-  },
-  poached = "Recebi uma proposta de %d feita pelo %s. Pague-me o mesmo ou estou fora.",
-}
-
-level_names = {
-  [1] = "Toxilândia",
-  [2] = "Sleepy Hollow",
-  [3] = "Peito largo",
-  [4] = "Frimpton-on-Sea",
-  [5] = "Simplolândia",
-  [6] = "Festering-on-the-Wold",
-  [7] = "Greenpool",
-  [8] = "Manquay",
-  [9] = "Vila do Leste",
-  [10] = "Eggsenham",
-  [11] = "Croaking",
-  [12] = "Battenburg",
-  [13] = "Chumleigh",
-  [14] = "Sova",
-  [15] = "Enterra Enterra",
-}
-
-staff_descriptions = {
-  good = {
-    [1] = "Trabalha muito rápido e aplicado(a). ",
-    [2] = "Muito consciente. Importa-se profundamente. ",
-    [3] = "Possui várias habilidades. ",
-    [4] = "Amistoso(a) e adora uma gargalhada. ",
-    [5] = "Resistência admirável, trabalha pesado. ",
-    [6] = "Educado(a) e cordial de forma notável. ",
-    [7] = "Incrivelmente talentoso(a) e capaz. ",
-    [8] = "Dedica-se muito ao trabalho designado. ",
-    [9] = "Perfeccionista e persistente. ",
-    [10] = "Dedicado(a) a ajudar pessoas com um sorriso no rosto. ",
-    [11] = "Charmoso(a), educado(a) e prestativo(a). ",
-    [12] = "Frequentemente muito motivado(a) e dedicado(a). ",
-    [13] = "Bem-humorado(a) e muito trabalhador(a). ",
-    [14] = "Leal e amigável. ",
-    [15] = "Cuidadoso(a) e confiável em uma emergência.",
-  },
-  misc = {
-    [1] = "Joga golfe. ",
-    [2] = "Pratica mergulho. ",
-    [3] = "Faz esculturas no gelo. ",
-    [4] = "Bebe vinho. ",
-    [5] = "Participa de rally. ",
-    [6] = "Faz bungee-jump. ",
-    [7] = "Coleciona latas de cerveja. ",
-    [8] = "Gosta de mergulhar no público nos shows. ",
-    [9] = "Jogar de praticar surf. ",
-    [10] = "Jogar de praticar raffiting. ",
-    [11] = "Destila whisky. ",
-    [12] = "Especialista no 'faça-você-mesmo'. ",
-    [13] = "Gosta de filmes de arte franceses. ",
-    [14] = "Joga 'Theme Park' muito. ",
-    [15] = "Possui carteira de habilitação E. ",
-    [16] = "Corre de motocicleta. ",
-    [17] = "Toca violino e violoncelo clássicos. ",
-    [18] = "Adora colisões de trens. ",
-    [19] = "Amante de cães. ",
-    [20] = "Ouve rádio. ",
-    [21] = "Toma banho frequentemente. ",
-    [22] = "Instrutor de tricô. ",
-    [23] = "Tira o miolo dos vegetais para usar como porta sabão. ",
-    [24] = "Policial especial meio-período. ",
-    [25] = "Ex-apresentador de programa de calouros. ",
-    [26] = "Coleciona estilhaços da Segunda Guerra. ",
-    [27] = "Restaurador de mobília. ",
-    [28] = "Ouve rave e trip-hop. ",
-    [29] = "Extermina insetos com desodorante spray. ",
-    [30] = "Ridiculariza comediantes ruins. ",
-    [31] = "Arruma confusão em reunião de condomínio. ",
-    [32] = "Jardineiro incorrigível. ",
-    [33] = "Contrabandeia relógios falsificados. ",
-    [34] = "Vocalista de uma banda de rock and roll. ",
-    [35] = "Adora os programas da televisão vespertina. ",
-    [36] = "Cutuca trutas. ",
-    [37] = "Isca turistas em museus. ",
-  },
-  bad = {
-    [1] = "Lento e inquieto. ",
-    [2] = "Preguiçoso e pouco motivado. ",
-    [3] = "Mal treinado e ineficaz. ",
-    [4] = "Rude e áspero. Afasta as pessoas. ",
-    [5] = "Resistência terrível - tem uma gênio ruim. ",
-    [6] = "Surdo como uma porta. Cheira à repolho. ",
-    [7] = "Péssimo(a) no trabalho, meramente responsável. ",
-    [8] = "Imprudente e distraído. ",
-    [9] = "Estressado com tendência e cometer erros. ",
-    [10] = "Retorcido e ressentido - explodindo de raiva. ",
-    [11] = "Descuidado e propenso à acidentes. ",
-    [12] = "Não se preocupa com o trabalho. Muito preguiçoso. ",
-    [13] = "Tolo que gosta se assumir riscos e não se importa com nada. ",
-    [14] = "Dissimulado, malandro e subversivo. ",
-    [15] = "Arrogante e convencido. ",
-  },
-}
--- ASAP Organize this part of the Language File ;)
-high_score.player = "PLAYER"
-high_score.pos = "POS"
-high_score.best_scores = "HALL DA FAMA"
-high_score.killed = "Óbitos"
-high_score.categories.salary = "MAIOR SALÁRIO"
-high_score.categories.total_value = "VALOR TOTAL"
-high_score.categories.money = "MAIS RICO"
-high_score.categories.clean = "MAIS LIMPO"
-high_score.categories.cures = "NÚMERO DE CURAS"
-high_score.categories.patient_happiness = "SASTISFAÇÃO DOS PACIENTES"
-high_score.categories.deaths = "NÚMERO DE MORTES"
-high_score.categories.cure_death_ratio = "RELAÇÃO DE CURAS/MORTES"
-high_score.categories.staff_happiness = "SASTISFAÇÃO DOS EMPREGADOS"
-high_score.categories.visitors = "MAIS VISITANTES"
-high_score.categories.staff_number = "MAIS EMPREGADOS"
-high_score.worst_scores = "HALL DA VERGONHA"
-high_score.score = "SCORE"
-dynamic_info.object.strength = "Força %d"
-dynamic_info.patient.guessed_diagnosis = "Diagnóstico advinhado: %s "
-dynamic_info.patient.actions.waiting_for_treatment_rooms = "Esperando você para construir uma sala de diagnóstico para mim"
-dynamic_info.patient.actions.fed_up = "Cansado e indo embora"
-dynamic_info.patient.actions.prices_too_high = "Seus preços estão muito alto - Estou indo para casa"
-dynamic_info.patient.actions.dying = "Morrendo!"
-dynamic_info.patient.actions.epidemic_contagious = "Eu sou contagioso"
-dynamic_info.patient.actions.sent_to_other_hospital = "Mandando para outro lugar"
-dynamic_info.patient.actions.epidemic_sent_home = "Mandado para casa pelo o inspetor"
-dynamic_info.patient.emergency = "Emergência: %s"
-dynamic_info.staff.ability = "Habilidade"
-dynamic_info.vip = "Visitante VIP"
-dynamic_info.health_inspector = "Inspetor de Saúde"
-confirmation.maximum_screen_size = "O Tamanho da Tela que você colocou é maior de 3000 x 2000.  Resoluções grandes são possíveis, mais irá requerer um hardware melhor para ter um framerate bom, você deseja continuar?"
-confirmation.music_warning = "Antes de escolher usar os seus mp3's para usar na música do jogo, você precisará ter o smpeg.dll or equivalente para o seu sistema operacional, se não tiver, você não terá música no jogo. Você deseja continuar?"
-menu_options_wage_increase.deny = "    RECUSAR "
-menu_options_wage_increase.grant = "    CONCEDER "
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------------------------  MISSING STRINGS IN LANGUAGE "PORTUGUêS DO BRASIL":  -----------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+rooms_long.ward = "Enfermaria"
+rooms_long.blood_machine = "Sala de Transfusöes"
+rooms_long.emergency = "Sala de Emergências"
+rooms_long.general = "Sala de Clínica Feral"
+rooms_long.cardiogram = "Sala do Cardiograma"
+rooms_long.decontamination = "Sala de Descontaminaçäo"
+rooms_long.jelly_vat = "Banho Gelatinoso"
+rooms_long.staffroom = "Sala de Descanso"
+rooms_long.hair_restoration = "Sala de Peloterapia"
+rooms_long.inflation = "Sala de Inflatoterapia"
+rooms_long.operating_theatre = "Sala de Operaçöes"
+rooms_long.gps_office = "Sala"
+rooms_long.training_room = "Sala de Formaçäo"
+rooms_long.x_ray = "Sala de Raios-X"
+rooms_long.tongue_clinic = "Sala de Laringologia"
+rooms_long.psychiatric = "Sala de Psiquiatria"
+rooms_long.corridors = "Corredores"
+rooms_long.ultrascan = "Sala de Ultra Scanner"
+rooms_long.dna_fixer = "Sala de Genética"
+rooms_long.toilets = "Banheiro"
+rooms_long.fracture_clinic = "Sala de Traumatologia"
+rooms_long.pharmacy = "Farmácia"
+rooms_long.general_diag = "Consulta de Diagnóstico"
+rooms_long.research_room = "Centro de Pesquisa"
+rooms_long.scanner = "Sala de Scanner"
+rooms_long.electrolysis = "Sala de Eletrólise"
+fax.debug_fax.text4 = "FACTORS  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d"
+fax.debug_fax.text2 = "TOTAL PEOPLE IN HOSPITAL %d CHECKING AGAINST %d"
+fax.debug_fax.text9 = "DISASTERS %d ALLOWED (MTHS) %d (%d)REDUCTION %d"
+fax.debug_fax.text3 = "FIGURES  : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d"
+fax.debug_fax.close_text = "Sim, sim, sim!"
+fax.debug_fax.text5 = "CONTRIBN : DOCS %d  NURSES %d  AREA %d  ROOMS %d  PRICING %d PERCENT"
+fax.debug_fax.text1 = "BEST COUNT %d"
+fax.debug_fax.text8 = "AMENITIES %d PEEPS HANDLED %d REDUCTION %d"
+fax.debug_fax.text10 = "KILLS %d ALLOWED (MTHS) %d (%d) REDUCTION %d"
+fax.debug_fax.text7 = "REPUTATION: %d EXPECTED %d REDUCTION %d"
+fax.debug_fax.text11 = "PEOPLE THIS MONTH %d"
+fax.debug_fax.text6 = "THE FOLLOWING FACTORS ARE ALSO APPLIED"
+fax.emergency.choices.accept = "Sim, preparado para confrontar esta emergência."
+fax.emergency.choices.refuse = "Näo. Nego-me a confrontar esta emergência."
+fax.emergency.cure_possible_drug_name_efficiency = "Já dispöe da equipe e do pessoal qualificado. Tem o medicamento necessário. É %s e tem uma efetividade de %d por cento."
+fax.emergency.bonus = "Ganhará um bônus máximo de $%d por cuidar desta emergência. Mas se fracassar, a sua reputaçäo será seriamente danificada."
+fax.emergency.locations[1] = "Planta Química Thatcher"
+fax.emergency.locations[2] = "Universidade Suja"
+fax.emergency.locations[3] = "Centro de Plantas Aquáticas"
+fax.emergency.locations[4] = "Instituto de Pesquisa de Substâncias Perigosas"
+fax.emergency.locations[5] = "Congresso de Bailarinos Russos"
+fax.emergency.locations[6] = "Pub O Touro e A Rä"
+fax.emergency.locations[7] = "Funerária Sem Licença Para Boa Morte"
+fax.emergency.locations[8] = "A Casa do Curry"
+fax.emergency.locations[9] = "Empório Petroquímico Usado"
+fax.emergency.cure_not_possible_employ = "Precisará contratar um(a) %s"
+fax.emergency.location = "Houve um incidente em %s"
+fax.emergency.cure_possible = "Tem a equipe e o pessoal qualificado necessário, poderá confrontar esta emergência."
+fax.emergency.cure_not_possible = "Näo pode curar esta doença no momento."
+fax.epidemic.cover_up_explanation_2 = "Se um Inspetor de Saúde visitar e encontrar uma epidemia encoberta tomará medidas drásticas contra si."
+fax.epidemic.choices.cover_up = "Tratar de ocultá-la. Procurar curar a epidemia antes de que se estenda por todo o país."
+fax.epidemic.choices.declare = "Há uma epidemia"
+fax.epidemic.disease_name = "Os seus Médicos descobriram uma variedade contagiosa de %s."
+fax.epidemic.declare_explanation_fine = "Se declarar uma epidemia, pagará uma multa de %d, danificando a sua reputaçäo e os seus pacientes seräo automaticamente vacinados."
+fax.epidemic.cover_up_explanation_1 = "Se tentar encobri-la, terá um tempo limitado para curar a todos os infectados antes de que as Autoridades da Saúde descubram."
+fax.vip_visit_result.close_text = "Obrigado por visitar o hospital."
+fax.vip_visit_result.telegram = "Telegrama!"
+fax.vip_visit_result.vip_remarked_name = "Depois de visitar o seu hospital, %s declarou:"
+fax.vip_visit_result.remarks.super[1] = "Que hospital eficaz! A próxima vez que esteja gravemente doente, venho aqui."
+fax.vip_visit_result.remarks.super[2] = "É isto o que eu chamo de um hospital."
+fax.vip_visit_result.remarks.super[3] = "É um hospital excelente. E sei o que digo; visito muitos hospitais."
+fax.vip_visit_result.remarks.mediocre[1] = "Bom, já vi piores. Mas deveria fazer algumas melhoras."
+fax.vip_visit_result.remarks.mediocre[2] = "Oh céus! Näo é um lugar agradável para ir se estiver doente."
+fax.vip_visit_result.remarks.mediocre[3] = "Vou ser sincero, é um hospital normal. Francamente, eu esperava mais, "
+fax.vip_visit_result.remarks.very_bad[1] = "Vá tugúrio! Vou tentar o enclausurá-lo."
+fax.vip_visit_result.remarks.very_bad[2] = "Nunca vi um hospital täo espantoso. Que vergonha!"
+fax.vip_visit_result.remarks.very_bad[3] = "Estou horrorizado. Chama a isto de hospital! Vou sair com um cano."
+fax.vip_visit_result.remarks.bad[1] = "Por que me zanguei? Foi pior que ir ver uma ópera de quatro horas!"
+fax.vip_visit_result.remarks.bad[2] = "Estou aborrecido pelo que vi. Chama a isto um hospital? Mais parece uma pocilga!"
+fax.vip_visit_result.remarks.bad[3] = "Estou farto de atrair a atençäo pública e de visitar buracos fedorentos como este! Demito-me."
+fax.vip_visit_result.remarks.good[1] = "Que hospital bem dirigido! Obrigado pelo seu convite."
+fax.vip_visit_result.remarks.good[2] = "Mmmm. Certamente näo é uma má instituiçäo médica."
+fax.vip_visit_result.remarks.good[3] = "Gostei do seu estupendo hospital. Agora, alguém quer um curry da Casa do Curry?"
+fax.vip_visit_result.cash_grant = "Você foi premiado com um prêmio em dinheiro de $%d."
+fax.vip_visit_result.rep_boost = "Sua reputaçäo na comunidade acaba de aumentar."
+fax.vip_visit_result.rep_loss = "A sua reputaçäo foi afetada em consequência"
+fax.disease_discovered.close_text = "Foi encontrada uma nova doença."
+fax.disease_discovered.need_to_build = "Tem que construir um(a) %s para tratar isto."
+fax.disease_discovered.can_cure = "Pode tratar esta doença."
+fax.disease_discovered.need_to_employ = "Contrate um(a) %s que possa solucionar este problema."
+fax.disease_discovered.need_to_build_and_employ = "Se construir uma %s e contratar um(a) %s pode ter êxito."
+fax.disease_discovered.discovered_name = "A sua equipe descobriu uma nova doença. É %s."
+fax.epidemic_result.close_text = "Bem!"
+fax.epidemic_result.compensation_amount = "O Governo decidiu lhe dar uma compensaçäo de %d pelos danos que estes incidente causara ao bom nome do seu hospital."
+fax.epidemic_result.succeeded.part_1_name = "Chegou aos ouvidos do Inspetor de Saúde que na sua instituiçäo estava a tratar um caso maligno de %s."
+fax.epidemic_result.succeeded.part_2 = "Embora, näo fosse possível encontrar provas que comprovassem os ditos rumores..."
+fax.epidemic_result.hospital_evacuated = "O Ministério da Saúde näo tem outra alternativa a näo ser evacuar o seu hospital."
+fax.epidemic_result.failed.part_1_name = "Ao tentar esconder o fato de que enfrentavam um broto contagioso de %s"
+fax.epidemic_result.failed.part_2 = "o pessoal do seu hospital é responsável por que a doença se propagou entre as pessoas que vivem perto do seu hospital."
+fax.epidemic_result.fine_amount = "O Governo declarou uma emergência nacional e multa-o com %d."
+fax.epidemic_result.rep_loss_fine_amount = "Os jornais têm feito um escândalo com isto. A sua reputaçäo será gravemente afetada. Além disso, imporá uma multa de %d."
+fax.emergency_result.close_text = "Aperte para sair"
+fax.emergency_result.saved_people = "Salvou %d pessoas de um total de %d."
+fax.emergency_result.earned_money = "Ganhou %d, de um bônus máximo de %d."
+fax.vip_visit_query.vip_name = "%s expressou o seu desejo de visitar o seu hospital."
+fax.vip_visit_query.choices.refuse = "Dispensar o V.I.P."
+fax.vip_visit_query.choices.invite = "Enviar um convite oficial ao V.I.P."
+fax.diagnosis_failed.what_to_do_question = "O que vamos fazer com o paciente?"
+fax.diagnosis_failed.choices.send_home = "Enviar o paciente para casa."
+fax.diagnosis_failed.choices.take_chance = "Tentar uma possível cura."
+fax.diagnosis_failed.choices.wait = "Fazer o paciente esperar enquanto constrói mais salas de diagnóstico."
+fax.diagnosis_failed.partial_diagnosis_percentage_name = "Existe %d porcento de probabilidades de descobrirmos que tipo de %s sofre o paciente."
+fax.diagnosis_failed.situation = "Fizemos todos os nossos diagnosticadores com este paciente e näo estamos seguros do que se trata."
+fax.disease_discovered_patient_choice.what_to_do_question = "O que quer fazer com o paciente?"
+fax.disease_discovered_patient_choice.choices.send_home = "Enviar o paciente para casa."
+fax.disease_discovered_patient_choice.choices.research = "Enviar o paciente para Pesquisa."
+fax.disease_discovered_patient_choice.choices.wait = "Faça o paciente esperar um momento no hospital."
+fax.disease_discovered_patient_choice.can_not_cure = "Näo pode curar esta doença."
+fax.disease_discovered_patient_choice.need_to_employ = "Contrate um(a) %s para corrigir esta situaçäo."
+fax.disease_discovered_patient_choice.need_to_build = "Tem que construir um(a) %s para poder tratar isto."
+fax.disease_discovered_patient_choice.need_to_build_and_employ = "Pode consegui-lo se construir um(a) %s e contratar um %s."
+fax.disease_discovered_patient_choice.guessed_percentage_name = "A sua equipe tem que averiguar o que tem um paciente. Há %d por cento de probabilidade de que seja %s"
+fax.disease_discovered_patient_choice.disease_name = "A sua equipe descobriu uma nova doença. É %s."
+original_credits[1] = " "
+original_credits[2] = " "
+original_credits[3] = " "
+original_credits[4] = " "
+original_credits[5] = " "
+original_credits[6] = " "
+original_credits[7] = " "
+original_credits[8] = " "
+original_credits[9] = " "
+original_credits[10] = " "
+original_credits[11] = " "
+original_credits[12] = ":Desenvolvido e criado pela"
+original_credits[13] = ":Bullfrog Productions"
+original_credits[14] = " "
+original_credits[15] = ":Equipe de Desenvolvimento Pluto"
+original_credits[16] = ","
+original_credits[17] = "Mark Webley"
+original_credits[18] = "Gary Carr"
+original_credits[19] = "Matt Chilton"
+original_credits[20] = "Matt Sullivan"
+original_credits[21] = "Jo Rider"
+original_credits[22] = "Rajan Tande"
+original_credits[23] = "Wayne Imlach"
+original_credits[24] = "Andy Bass"
+original_credits[25] = "Jon Rennie"
+original_credits[26] = "Adam Coglan"
+original_credits[27] = "Natalie White"
+original_credits[28] = " "
+original_credits[29] = " "
+original_credits[30] = " "
+original_credits[31] = ":Programaçäo"
+original_credits[32] = ","
+original_credits[33] = "Mark Webley"
+original_credits[34] = "Matt Chilton"
+original_credits[35] = "Matt Sullivan"
+original_credits[36] = "Rajan Tande"
+original_credits[37] = " "
+original_credits[38] = "Ben Deane"
+original_credits[39] = "Gary Morgan"
+original_credits[40] = "Jonty Barnes"
+original_credits[41] = " "
+original_credits[42] = " "
+original_credits[43] = " "
+original_credits[44] = ":Arte"
+original_credits[45] = ","
+original_credits[46] = "Gary Carr"
+original_credits[47] = "Jo Rider"
+original_credits[48] = "Andy Bass"
+original_credits[49] = "Adam Coglan"
+original_credits[50] = " "
+original_credits[51] = "Eoin Rogan"
+original_credits[52] = "George Svarovsky"
+original_credits[53] = "Saurev Sarkar"
+original_credits[54] = "Jason Brown"
+original_credits[55] = "John Kershaw"
+original_credits[56] = "Dee Lee"
+original_credits[57] = " "
+original_credits[58] = " "
+original_credits[59] = " "
+original_credits[60] = ":Sequência Introdutória"
+original_credits[61] = ","
+original_credits[62] = "Stuart Black"
+original_credits[63] = " "
+original_credits[64] = " "
+original_credits[65] = " "
+original_credits[66] = ":Música e Efeitos de Som"
+original_credits[67] = ","
+original_credits[68] = "Russell Shaw"
+original_credits[69] = "Adrian Moore"
+original_credits[70] = " "
+original_credits[71] = "Jeremy Longley"
+original_credits[72] = "Andy Wood"
+original_credits[73] = " "
+original_credits[74] = " "
+original_credits[75] = " "
+original_credits[76] = ":Voz da Narradora"
+original_credits[77] = ","
+original_credits[78] = "Rebecca Green"
+original_credits[79] = " "
+original_credits[80] = " "
+original_credits[81] = " "
+original_credits[82] = ":Desenho dos Níveis"
+original_credits[83] = ","
+original_credits[84] = "Wayne Imlach"
+original_credits[85] = "Natalie White"
+original_credits[86] = "Steven Jarrett"
+original_credits[87] = "Shin Kanaoya"
+original_credits[88] = " "
+original_credits[89] = " "
+original_credits[90] = " "
+original_credits[91] = ":Roteiristas"
+original_credits[92] = ","
+original_credits[93] = "James Leach"
+original_credits[94] = "Sean Masterson"
+original_credits[95] = "Neil Cook"
+original_credits[96] = " "
+original_credits[97] = " "
+original_credits[98] = " "
+original_credits[99] = ":Pesquisa e Desenvolvimento"
+original_credits[100] = ","
+original_credits[101] = "Andy Cakebread"
+original_credits[102] = "Richard Reed"
+original_credits[103] = " "
+original_credits[104] = "Glenn Corpes"
+original_credits[105] = "Martin Bell"
+original_credits[106] = "Ian Shaw"
+original_credits[107] = "Jan Svarovsky"
+original_credits[108] = " "
+original_credits[109] = " "
+original_credits[110] = " "
+original_credits[111] = ":Livrarias e Ferramentas"
+original_credits[112] = ","
+original_credits[113] = "Mark Huntley"
+original_credits[114] = "Alex Peters"
+original_credits[115] = "Rik Heywood"
+original_credits[116] = " "
+original_credits[117] = "Ian Shippen"
+original_credits[118] = "Mark Lamport"
+original_credits[119] = " "
+original_credits[120] = "Russell Shaw"
+original_credits[121] = "Tony Cox"
+original_credits[122] = " "
+original_credits[123] = " "
+original_credits[124] = " "
+original_credits[125] = ":Programaçäo do Instalador"
+original_credits[126] = ","
+original_credits[127] = "Andy Nuttall"
+original_credits[128] = "Tony Cox"
+original_credits[129] = "Andy Cakebread"
+original_credits[130] = " "
+original_credits[131] = " "
+original_credits[132] = " "
+original_credits[133] = ":Chefe de Testes"
+original_credits[134] = ","
+original_credits[135] = "Andy Robson"
+original_credits[136] = " "
+original_credits[137] = " "
+original_credits[138] = " "
+original_credits[139] = ":Testadores"
+original_credits[140] = ","
+original_credits[141] = "Wayne Imlach"
+original_credits[142] = "Jon Rennie"
+original_credits[143] = " "
+original_credits[144] = "Jeff Brutus"
+original_credits[145] = "Wayne Frost"
+original_credits[146] = "Steven Lawrie"
+original_credits[147] = "Tristan Paramor"
+original_credits[148] = "Nathan Smethurst"
+original_credits[149] = " "
+original_credits[150] = "Ryan Corkery"
+original_credits[151] = "Simon Doherty"
+original_credits[152] = "James Dormer"
+original_credits[153] = "Martin Gregory"
+original_credits[154] = "Ben Lawley"
+original_credits[155] = "Joel Lewis"
+original_credits[156] = "David Lowe"
+original_credits[157] = "Robert Monczak"
+original_credits[158] = "Dominic Mortoza"
+original_credits[159] = "Karl O'Keeffe"
+original_credits[160] = "Michael Singletary"
+original_credits[161] = "Andrew Skipper"
+original_credits[162] = "Stuart Stephen"
+original_credits[163] = "David Wallington"
+original_credits[164] = " "
+original_credits[165] = " "
+original_credits[166] = " "
+original_credits[167] = ":Suporte Técnico"
+original_credits[168] = ","
+original_credits[169] = "Kevin Donkin"
+original_credits[170] = "Mike Burnham"
+original_credits[171] = "Simon Handby"
+original_credits[172] = " "
+original_credits[173] = " "
+original_credits[174] = " "
+original_credits[175] = ":Marketing"
+original_credits[176] = ","
+original_credits[177] = "Pete Murphy"
+original_credits[178] = "Sean Ratcliffe"
+original_credits[179] = " "
+original_credits[180] = " "
+original_credits[181] = " "
+original_credits[182] = ":Relaçöes Públicas"
+original_credits[183] = ","
+original_credits[184] = "Cathy Campos"
+original_credits[185] = " "
+original_credits[186] = " "
+original_credits[187] = " "
+original_credits[188] = ":Documentaçäo"
+original_credits[189] = ","
+original_credits[190] = "Mark Casey"
+original_credits[191] = "Richard Johnston"
+original_credits[192] = "James Lenoel"
+original_credits[193] = "Jon Rennie"
+original_credits[194] = " "
+original_credits[195] = " "
+original_credits[196] = " "
+original_credits[197] = ":Documentaçäo e Desenho da Caixa"
+original_credits[198] = ","
+original_credits[199] = "Caroline Arthur"
+original_credits[200] = "James Nolan"
+original_credits[201] = " "
+original_credits[202] = " "
+original_credits[203] = " "
+original_credits[204] = ":Chefe do Projeto de Localizaçäo"
+original_credits[205] = ","
+original_credits[206] = "Carol Aggett"
+original_credits[207] = " "
+original_credits[208] = " "
+original_credits[209] = ":Traduçäo para Português"
+original_credits[210] = ","
+original_credits[211] = "Altieres Lima"
+original_credits[212] = "Leonardo Malaman"
+original_credits[213] = "Henrique Poyatos"
+original_credits[214] = " "
+original_credits[215] = " "
+original_credits[216] = ":Produçäo"
+original_credits[217] = ","
+original_credits[218] = "Rachel Holman"
+original_credits[219] = " "
+original_credits[220] = " "
+original_credits[221] = " "
+original_credits[222] = ":Produtor"
+original_credits[223] = ","
+original_credits[224] = "Mark Webley"
+original_credits[225] = " "
+original_credits[226] = " "
+original_credits[227] = " "
+original_credits[228] = ":Produtor Associado"
+original_credits[229] = ","
+original_credits[230] = "Andy Nuttall"
+original_credits[231] = " "
+original_credits[232] = " "
+original_credits[233] = " "
+original_credits[234] = ":Operaçöes"
+original_credits[235] = ","
+original_credits[236] = "Steve Fitton"
+original_credits[237] = " "
+original_credits[238] = " "
+original_credits[239] = " "
+original_credits[240] = ":Administraçäo da Companhia"
+original_credits[241] = ","
+original_credits[242] = "Audrey Adams"
+original_credits[243] = "Annette Dabb"
+original_credits[244] = "Emma Gibbs"
+original_credits[245] = "Lucia Gobbo"
+original_credits[246] = "Jo Goodwin"
+original_credits[247] = "Sian Jones"
+original_credits[248] = "Kathy McEntee"
+original_credits[249] = "Louise Ratcliffe"
+original_credits[250] = " "
+original_credits[251] = " "
+original_credits[252] = " "
+original_credits[253] = ":Direçäo da Companhia"
+original_credits[254] = ","
+original_credits[255] = "Les Edgar"
+original_credits[256] = "Peter Molyneux"
+original_credits[257] = "David Byrne"
+original_credits[258] = " "
+original_credits[259] = " "
+original_credits[260] = " "
+original_credits[261] = ":O nosso agradecimento especial para"
+original_credits[262] = ","
+original_credits[263] = "Peter Molyneux"
+original_credits[264] = " "
+original_credits[265] = "O pessoal do Hospital Frimley Park"
+original_credits[266] = " "
+original_credits[267] = "em particular ao"
+original_credits[268] = ","
+original_credits[269] = "Beverley Cannell"
+original_credits[270] = "Doug Carlisle"
+original_credits[271] = " "
+original_credits[272] = " "
+original_credits[273] = " "
+original_credits[274] = ":Continuem a pensar"
+original_credits[275] = " "
+original_credits[276] = " "
+original_credits[277] = " "
+original_credits[278] = " "
+original_credits[279] = " "
+original_credits[280] = " "
+original_credits[281] = " "
+original_credits[282] = " "
+original_credits[283] = " "
+original_credits[284] = " "
+original_credits[285] = " "
+original_credits[286] = " "
+original_credits[287] = " "
+original_credits[288] = " "
+original_credits[289] = " "
+original_credits[290] = " "
+original_credits[291] = " "
+original_credits[292] = " "
+original_credits[293] = " "
+original_credits[294] = " "
+original_credits[295] = "."
+buy_objects_window.choose_items = "Escolha os objetos"
+buy_objects_window.total = "Total: "
+buy_objects_window.price = "Preço: "
+build_room_window.pick_room_type = "Escolha a sala"
+build_room_window.pick_department = "Departamento"
 build_room_window.cost = "Custo: "
-tooltip.options_window.select_language = "Seleciona a linguagem do jogo"
-tooltip.options_window.select_resolution = "Selecione uma nova resolução"
-tooltip.options_window.language_dropdown_item = "Escolha %s como uma linguagem"
-tooltip.options_window.audio_button = "Liga ou Desliga o som do jogo"
+object.bench = "Banco"
+object.pharmacy_cabinet = "Primeiros-socorros"
+object.console = "Console"
+object.atom_analyser = "Analisador atômico"
+object.fire_extinguisher = "Extintor"
+object.scanner = "Scanner"
+object.bin = "Cesto de papéis"
+object.swing_door1 = "Porta de batente"
+object.pool_table = "Mesa de bilhar"
+object.screen = "Tela"
+object.cabinet = "Arquivo"
+object.sofa = "Sofá"
+object.projector = "Projetor"
+object.table2 = "Mesa"
+object.shower = "Ducha descontaminadora"
+object.comfortable_chair = "Cadeira confortável"
+object.door = "Porta"
+object.computer = "Computador"
+object.litter_bomb = "Caixote do lixo"
+object.entrance_left = "Porta direita de entrada"
+object.dna_fixer = "Reparador DNA"
+object.bed = "Cama"
+object.lamp = "Abajur"
+object.bookcase = "Estante"
+object.desk = "Escritório"
+object.toilet_sink = "Pia"
+object.gates_of_hell = "Portas do Inferno"
+object.swing_door2 = "Porta de batente"
+object.cast_remover = "Removedor de gesso"
+object.plant = "Planta"
+object.blood_machine = "Transfusiômetro"
+object.slicer = "Cortador"
+object.x_ray = "Raios-X"
+object.cardio = "Eletrocardiograma"
+object.crash_trolley = "Carrinho"
+object.bed2 = "Cama"
+object.electrolyser = "Eletrólise"
+object.video_game = "Videogame"
+object.skeleton = "Esqueleto"
+object.ultrascanner = "Ultra Scanner"
+object.op_sink1 = "Pia"
+object.hair_restorer = "Pêlo-restaurador"
+object.reception_desk = "Recepçäo"
+object.radiation_shield = "Painel anti-radiaçäo"
+object.couch = "Poltrona"
+object.inflator = "Inflador"
+object.toilet = "Banheiros"
+object.lecture_chair = "Poltrona"
+object.auto_autopsy = "Máq. autoautópsias"
+object.chair = "Cadeira"
+object.x_ray_viewer = "Máquina de Raios-X"
+object.radiator = "Radiador"
+object.bed3 = "Cama"
+object.surgeon_screen = "Tela de cirurgiäo"
+object.jelly_moulder = "Moldador de gelatina"
+object.drinks_machine = "Máq. de bebidas"
+object.op_sink2 = "Pia"
+object.table1 = "Mesa"
+object.entrance_right = "Porta esquerda de entrada"
+object.operating_table = "Mesa de operaçöes"
+object.tv = "Televisäo"
+transactions.bank_loan = "Empréstimo bancário"
+transactions.buy_object = "Comprou"
+transactions.cure = "Cura"
+transactions.general_bonus = "Pagamento extra geral"
+transactions.treat_colon = "Tratamento:"
+transactions.eoy_bonus_penalty = "Bônus/multa de fim de ano"
+transactions.loan_repayment = "Devoluçäo do empréstimo"
+transactions.research = "Gastos em pesquisa"
+transactions.epidemy_coverup_fine = "Multa por cobertura da epidemia"
+transactions.build_room = "Construiu"
+transactions.sell_object = "Vendeu"
+transactions.vaccination = "Vacinas"
+transactions.personal_bonus = "Pagamento extra individual"
+transactions.drug_cost = "Medicamento"
+transactions.severance = "Inden. demissäo"
+transactions.deposit = "Tratamentos"
+transactions.epidemy_fine = "Multa pela epidemia"
+transactions.buy_land = "Comprou terreno"
+transactions.hire_staff = "Contratou"
+transactions.insurance_colon = "Seguro:"
+transactions.drinks = "Renda: máquinas de bebidas"
+transactions.overdraft = "Juros do saldo devedor"
+transactions.vip_award = "Prêmio VIP"
+transactions.research_bonus = "Bônus de pesquisa"
+transactions.cheat = "Trapaça de dinheiro"
+transactions.compensation = "Indenizaçäo do governo"
+transactions.wages = "Salários"
+transactions.advance_colon = "Avanços:"
+transactions.cure_colon = "Cura:"
+transactions.jukebox = "Renda: máquina de discos"
+transactions.machine_replacement = "Custo por substituiçäo de máquinas"
+transactions.heating = "Gastos de aquecimento"
+transactions.final_treat_colon = "Tratamento final:"
+transactions.emergency_bonus = "Pagamento extra de emergência"
+transactions.eoy_trophy_bonus = "Troféu bônus de fim de ano"
+transactions.loan_interest = "Juros do empréstimo"
+menu_options.game_speed = "  VELOCIDADE DO JOGO  "
+menu_options.sound_vol = "  VOLUME DO SOM  "
+menu_options.music_vol = "  VOLUME DA MUSICA  "
+menu_options.autosave = "  AUTO-SALVAR  "
+menu_options.announcements_vol = "  VOLUME DOS AVISOS  "
+newspaper[1][1] = "TERROR NO HOSPITAL"
+newspaper[1][2] = "O MÉDICO AÇOUGUEIRO"
+newspaper[1][3] = "PANICO GERAL"
+newspaper[1][4] = "O QUE HAVIA NO LABORATORIO?"
+newspaper[1][5] = "DETEVE UMA INVESTIGAÇAO DE RISCO"
+newspaper[2][1] = "DR UNK É UM CANALHA"
+newspaper[2][2] = "CIRURGIAO DESPEDAÇADO"
+newspaper[2][3] = "ESPECIALISTA EM JOGOS"
+newspaper[2][4] = "EMBRIAGADO"
+newspaper[2][5] = "CIRURGIAO CACHACEIRO"
+newspaper[2][6] = "EMBRIAGADO EM CIRURGIA"
+newspaper[3][1] = "CIRURGIAO VICIADO"
+newspaper[3][2] = "MÉDICO SEM CALÇAS"
+newspaper[3][3] = "MÉDICO SEDUTOR"
+newspaper[3][4] = "CIRURGIAO INSACIAVEL"
+newspaper[4][1] = "MÉDICO INVADE HOSPITAL"
+newspaper[4][2] = "CRIME ORGANIZADO"
+newspaper[4][3] = "OPERAÇAO DE DESVIO DE FUNDOS"
+newspaper[4][4] = "FECHAMENTO SEM REMUNERAÇAO"
+newspaper[5][1] = "ASSALTO EM UM HOSPITAL"
+newspaper[5][2] = "MÉDICO RETIRA CADAVERES"
+newspaper[5][3] = "CAPTURADO COM O CORPO"
+newspaper[5][4] = "AJUSTE DE CONTAS DO DR MORTE"
+newspaper[5][5] = "ROUBO NO DEPOSITO"
+newspaper[5][6] = "DENOMINADO DR CAVATUMBAS"
+newspaper[6][1] = "DR COSTURA MAIS UMA VEZ!"
+newspaper[6][2] = "FALSO MÉDICO"
+newspaper[6][3] = "DIAGNOSTICO ERRADO"
+newspaper[6][4] = "CONSULTOR DESAJEITADO"
+newspaper[7][1] = "MÉDICO SE SENTE MARGINALIZADO"
+newspaper[7][2] = "UM CIRURGIAO 'OPERA' A SI MESMO"
+newspaper[7][3] = "DESCONTROLE EM BANHEIROS"
+newspaper[7][4] = "MÉDICO PROTAGONIZA UM ESCANDALO"
+newspaper[7][5] = "MÉDICO 'CRIA UM BARRACO"
+progress_report.too_hot = "Revise o seu sistema de aquecimento. Faz muito calor."
+progress_report.header = "Relatório em curso"
+progress_report.percentage_pop = "% populaçäo"
+progress_report.too_cold = "Faz muito frio. Coloque radiadores."
+progress_report.quite_unhappy = "Os seus pacientes estäo muito contentes."
+progress_report.win_criteria = "CRITÉRIOS PARA GANHAR"
+progress_report.very_unhappy = "Os seus pacientes estäo muito descontentes."
+progress_report.more_drinks_machines = "Coloque mais máquinas de bebidas."
+staff_descriptions.bad[1] = "É uma pessoa lenta e suscetível. "
+staff_descriptions.bad[2] = "Mostra preguiça e falta de motivaçäo. "
+staff_descriptions.bad[3] = "Com uma má formaçäo e pouco eficaz. "
+staff_descriptions.bad[4] = "Pessoa grosseira e brusca. Chateia as pessoas. "
+staff_descriptions.bad[5] = "Tem pouca resistência e má atitude. "
+staff_descriptions.bad[6] = "Pessoa surda como uma porta. Cheira a repolho. "
+staff_descriptions.bad[7] = "Pessoa imunda no serviço. Um estorvo. "
+staff_descriptions.bad[8] = "Imprudente e se distrai com facilidade. "
+staff_descriptions.bad[9] = "Pessoa estressada e confusa. "
+staff_descriptions.bad[10] = "Pessoa desleal e rancorosa. Cheia de ódio. "
+staff_descriptions.bad[11] = "Näo toma cuidado e provoca acidentes. "
+staff_descriptions.bad[12] = "Näo se importa com o trabalho. Perde tempo. "
+staff_descriptions.bad[13] = "Pessoa temerária e sem cuidado. "
+staff_descriptions.bad[14] = "Pessoa ardilosa, matreira e subversiva. "
+staff_descriptions.bad[15] = "Pessoa arrogante e presunçosa. "
+staff_descriptions.misc[1] = "Joga golfe. "
+staff_descriptions.misc[2] = "Pratica mergulho. "
+staff_descriptions.misc[3] = "Faz esculturas de gelo. "
+staff_descriptions.misc[4] = "Bebe vinho. "
+staff_descriptions.misc[5] = "Participa de rally. "
+staff_descriptions.misc[6] = "Faz bungee-jump. "
+staff_descriptions.misc[7] = "Coleciona latas de cerveja. "
+staff_descriptions.misc[8] = "Gosta de mergulhar no público em shows. "
+staff_descriptions.misc[9] = "Gosta de fazer surf. "
+staff_descriptions.misc[10] = "Pratica raffiting. "
+staff_descriptions.misc[11] = "Destila uísque. "
+staff_descriptions.misc[12] = "Especialista em 'faça você mesmo'. "
+staff_descriptions.misc[13] = "Gosta do cinema francês. "
+staff_descriptions.misc[14] = "Joga muito Theme Park. "
+staff_descriptions.misc[15] = "Possui carteira de habilitaçäo E. "
+staff_descriptions.misc[16] = "Corre de motocicleta. "
+staff_descriptions.misc[17] = "Toca violino e violoncelo. "
+staff_descriptions.misc[18] = "Adora andar de trem. "
+staff_descriptions.misc[19] = "Adora cachorros. "
+staff_descriptions.misc[20] = "Ouve rádio. "
+staff_descriptions.misc[21] = "Toma banho com frequência. "
+staff_descriptions.misc[22] = "Instrutor de costura. "
+staff_descriptions.misc[23] = "Tira o miolo dos vegetais para usar como saboneteira. "
+staff_descriptions.misc[24] = "É policial em meio expediente. "
+staff_descriptions.misc[25] = "Ex-convidado de um concurso. "
+staff_descriptions.misc[26] = "Coleciona bombas da Segunda Guerra. "
+staff_descriptions.misc[27] = "Restaura móveis. "
+staff_descriptions.misc[28] = "Escuta rap e hip-pop. "
+staff_descriptions.misc[29] = "Extermina insetos borrifando desodorante. "
+staff_descriptions.misc[30] = "Ridiculariza comediantes ruins. "
+staff_descriptions.misc[31] = "Investiga para a Câmara Municipal. "
+staff_descriptions.misc[32] = "Cuida do jardim às escondidas. "
+staff_descriptions.misc[33] = "Faz contrabando de relógios falsos. "
+staff_descriptions.misc[34] = "Vocalista de uma banda de rock & roll. "
+staff_descriptions.misc[35] = "Adora programas de televisäo vespertinos. "
+staff_descriptions.misc[36] = "Pesca trutas com a mäo. "
+staff_descriptions.misc[37] = "Isca turistas em museus. "
+staff_descriptions.good[1] = "Trabalha de forma rápida e diligente. "
+staff_descriptions.good[2] = "Trabalha com consciência e é sério. "
+staff_descriptions.good[3] = "Sabe fazer muitas coisas. "
+staff_descriptions.good[4] = "Muito agradável e gosta de rir. "
+staff_descriptions.good[5] = "Tem muita energia. Näo para. "
+staff_descriptions.good[6] = "Pessoa educada e de boas maneiras. "
+staff_descriptions.good[7] = "Com talento e capacidade incríveis. "
+staff_descriptions.good[8] = "Preocupa-se muito pelo seu trabalho. "
+staff_descriptions.good[9] = "Procura a perfeiçäo e nunca se rende. "
+staff_descriptions.good[10] = "Ajuda as pessoas com um sorriso. "
+staff_descriptions.good[11] = "Tem encanto, educaçäo e disponibilidade. "
+staff_descriptions.good[12] = "Normalmente tem estímulo e dedicaçäo. "
+staff_descriptions.good[13] = "É boa pessoa e trabalha muito. "
+staff_descriptions.good[14] = "Leal e amigável. "
+staff_descriptions.good[15] = "Pessoa atenta e confiável em caso de emergência. "
+humanoid_name_ends[1] = "SMITH"
+humanoid_name_ends[2] = "WICK"
+humanoid_name_ends[3] = "CLIFFE"
+humanoid_name_ends[4] = "SON"
+humanoid_name_ends[5] = "INGTON"
+humanoid_name_ends[6] = "BURY"
+humanoid_name_ends[7] = "TON"
+humanoid_name_ends[8] = "SON"
+humanoid_name_ends[9] = "LEY"
+humanoid_name_ends[10] = "BERRY"
+humanoid_name_ends[11] = "BAUM"
+humanoid_name_ends[12] = "LAN"
+humanoid_name_ends[13] = "HAM"
+humanoid_name_ends[14] = "SILL"
+humanoid_name_ends[15] = "WIN"
+humanoid_name_ends[16] = "LET"
+humanoid_name_ends[17] = "ERS"
+humanoid_name_ends[18] = "TON"
+humanoid_name_ends[19] = "MOND"
+humanoid_name_ends[20] = "MAN"
+humanoid_name_ends[21] = "ELTON"
+humanoid_name_ends[22] = "E"
+humanoid_name_ends[23] = "MORE"
+humanoid_name_ends[24] = "MOOR"
+humanoid_name_ends[25] = "LET"
+humanoid_name_ends[26] = "LIN"
+menu.options = "  OPÇOES  "
+menu.display = "  TELA  "
+menu.file = "  ARQUIVO  "
+menu.debug = "  DEBUG  "
+menu.charts = "  GRAFICOS  "
+letter[1][1] = "Olá %s!//"
+letter[1][2] = "Fantástico! Dirigiu este hospital de uma maneira excelente. Nós, os peixes gordos do Ministério da Saúde, queríamos saber se estaria interessado em fazer parte de um grande projeto. Há um trabalho, no qual acreditamos que seja a pessoa perfeita. O salário seria de %d. Pense nisto.//"
+letter[1][3] = "Está interessado em trabalhar no Hospital %s?"
+letter[2][1] = "Olá %s!//"
+letter[2][2] = "Parabéns! Realizou notáveis melhorias no seu hospital. Temos outro serviço que poderia se encarregar, se gostar de mudança e novos desafios. Näo tem que aceitar, mas seria bom que o fizesse. O salário é de %d//"
+letter[2][3] = "Quer trabalhar no Hospital %s?"
+letter[3][1] = "Olá %s!//"
+letter[3][2] = "Dirigiu com notável desempenho este hospital durante o seu exercício. Ao chegar este ao seu fim, prevejo um brilhante futuro, e gostaríamos de lhe oferecer um cargo em outro lugar. O salário seria de %d, e acredito que adoraria o desafio que isto criaria.//"
+letter[3][3] = "Gostaria de ter um posto no Hospital %s?"
+letter[4][1] = "Olá %s!//"
+letter[4][2] = "Parabéns! No Ministério estamos muito impressionados pela sua capacidade como diretor do hospital. É sem dúvida, uma pessoa valiosa para o Departamento de Saúde, mas acreditamos que preferiria um trabalho mais qualificado. Receberia um salário de %d, embora a decisäo seja sua.//"
+letter[4][3] = "Está interessado em trabalhar no Hospital %s?"
+letter[5][1] = "Olá %s!//"
+letter[5][2] = "Saúdo-lhe novamente. Respeitamos os seus desejos de näo deslocar do seu estupendo hospital, mas pedimos que o reconsidere. Ofereceremo-lhe um alto salário de %d se decidir ir para o outro hospital e encarregar da sua direçäo.//"
+letter[5][3] = "Gostaria de ir agora para o Hospital %s?"
+letter[6][1] = "Olá %s!//"
+letter[6][2] = "Receba as nossas saudaçöes. Sabemos que desfrutou muito da sua estadia nesta instituiçäo, täo agradável e bem dirigida, mas acreditamos que agora deveria pensar no seu futuro. Naturalmente, teria um salário de %d se decidisse deslocar. Vale a pena pensar.//"
+letter[6][3] = "Gostaria de ter um posto no Hospital %s?"
+letter[7][1] = "Olá %s!//"
+letter[7][2] = "Bom dia! O Ministério da Saúde queria saber se reconsideraria a sua decisäo de ficar no seu hospital. Compreendemos que tenha um estupendo hospital, mas acreditamos que faria muito bem em aceitar um trabalho mais estimulante, com um salário de %d.//"
+letter[7][3] = "Aceitaria um posto no Hospital %s?"
+letter[8][1] = "Olá %s!//"
+letter[8][2] = "Olá, outra vez. Recebemos a sua resposta negativa na nossa última carta, em que oferecíamos um posto de direçäo num outro hospital, e um alto salário de %d. Näo obstante, acreditamos que deveria reconsiderar esta decisäo. Como verá, temos o trabalho perfeito para si.//"
+letter[8][3] = "Aceitaria um posto no Hospital %s, por favor?"
+letter[9][1] = "Olá %s!//"
+letter[9][2] = "Demonstrou ser o melhor diretor de hospital na longa e infeliz história da medicina. O lucro que obteve näo pode ficar sem recompensa, por isso lhe oferecemos o posto de Diretor Chefe de Todos os Hospitais. Terá um salário de %d, uma apresentaçäo com todas as honras e as pessoas demonstraräo o seu reconhecimento esteja onde estiver.//"
+letter[9][3] = "Agradecemos por tudo o que fez e desfrute de uma longa semi-aposentadoria.//"
+letter[9][4] = ""
+letter[10][1] = "Olá %s!//"
+letter[10][2] = "Parabéns por dirigir com êxito todos os hospitais que lhe atribuímos. Esta grande atuaçäo o capacita a viajar livremente por todo mundo. Receberá uma pensäo de %d e uma limusine, para poder viajar de cidade em cidade, saudando o seu incondicional público e fomentando o trabalho que realiza em todos os hospitais.//"
+letter[10][3] = "Estamos orgulhosos e agradecidos pelo seu trabalho ao salvar vidas.//"
+letter[10][4] = ""
+letter[11][1] = "Olá %s!//"
+letter[11][2] = "Sua carreira tem sido exemplar, e você é uma inspiraçäo para todos nós. Obrigado por dirigir täo bem tantos hospitais. Gostaríamos de lhe conceder um salário vitalício de %d, e só lhe pedimos que viaje num carro oficial descoberto de cidade em cidade, dando conferências sobre os seus rápidos lucros.//"
+letter[11][3] = "É um exemplo para todos os homens de bem e uma pessoa de enorme valia.//"
+letter[11][4] = ""
+letter[12][1] = "Olá %s!//"
+letter[12][2] = "A sua bem-sucedida carreira como o melhor diretor de hospital desde Moisés está chegando ao seu fim. Você provocou tal efeito nos círculos médicos, que o Ministério quer lhe oferecer um salário de %s, só para inaugurar festas, navios e organizar entrevistas em nosso nome. Você seria um excelente relaçöes públicas!//"
+letter[12][3] = "Por favor, aceite. Será fácil e irá dispor de um veículo e uma escolta policial.//"
+letter[12][4] = ""
+place_objects_window.place_objects_in_corridor = "Coloque os objetos num corredor."
+place_objects_window.drag_blueprint = "Arraste a marca azul até que consiga o tamanho que deseja."
+place_objects_window.pick_up_object = "Aperte sobre um objeto para selecioná-lo ou escolher outra opçäo do diálogo."
+place_objects_window.place_windows = "Se quiser, coloque algumas janelas. Em seguida, aperte confirmar."
+place_objects_window.place_objects = "Coloque os objetos e mova-os ao seu gosto. Em seguida, confirme."
+place_objects_window.confirm_or_buy_objects = "Pode confirmar o quarto, comprar ou mover alguns objetos."
+place_objects_window.place_door = "Coloque a porta"
+level_names[1] = "Cidade Contaminada"
+level_names[2] = "Cidade do Sonho"
+level_names[3] = "Vila Grande"
+level_names[4] = "Vila Praia"
+level_names[5] = "Vila Simples"
+level_names[6] = "Vilaúlcera"
+level_names[7] = "Cidade Verde"
+level_names[8] = "Cidade do Porto"
+level_names[9] = "Cidade Leste"
+level_names[10] = "Ovovile"
+level_names[11] = "Vila Corvo"
+level_names[12] = "Vila Próspera"
+level_names[13] = "Vila Amistosa"
+level_names[14] = "Vila Pancadaria"
+level_names[15] = "Vila Sepultura"
+pay_rise.definite_quit = "Faça o que fizer, näo ficarei. Estou farto deste local."
+pay_rise.regular[1] = "Estou esgotado. Preciso de umas boas férias, mais um aumento de %d, se näo quiser deixo este maldito emprego."
+pay_rise.regular[2] = "Estou muito cansado. Preciso de umas férias e de um aumento salarial de %d, até um total de %d. E quero já, seu tirano!"
+pay_rise.regular[3] = "Vamos! Trabalho como um escravo. Se me der um bônus de %d, ficarei no seu hospital."
+pay_rise.regular[4] = "Estou muito descontente. Exijo um aumento de %d, e um salário final de %d, caso contrário, vou embora."
+pay_rise.regular[5] = "Os meus pais me disseram que os médicos ganham um bom salário, sendo assim, me da um aumento de %d ou me dedicarei à produçäo de jogos de computador."
+pay_rise.regular[6] = "Estou farto. Pague-me um bom salário. Será suficiente um aumento de %d."
+pay_rise.poached = "%s ofereceu-me um salário de %d. Se näo me pagar o mesmo, vou embora."
+casebook.reputation = "reputaçäo"
+casebook.earned_money = "dinheiro ganho"
+casebook.cure_desc.no_cure_known = "Näo há cura conhecida."
+casebook.cure_desc.hire_doctors = "Você precisa contratar alguns médicos."
+casebook.cure_desc.build_ward = "Ainda tem que construir uma enfermaria."
+casebook.cure_desc.improve_cure = "Melhorar Cura."
+casebook.cure_desc.build_room = "Sugiro que construa %s"
+casebook.cure_desc.hire_surgeons = "Você precisa contratar cirurgiöes."
+casebook.cure_desc.cure_known = "Cura."
+casebook.cure_desc.hire_psychiatrists = "Você tem que contratar psiquiatras."
+casebook.cure_desc.hire_nurses = "Você deve contratar algumas enfermeiras."
+casebook.sent_home = "rejeitados"
+casebook.cured = "recuperaçöes"
+casebook.deaths = "falecimentos"
+casebook.treatment_charge = "custo tratamento"
+casebook.research = "pesquisa intensiva"
+casebook.cure = "cura"
+confirmation.replace_machine = "Quer mesmo substituir esta máquina?"
+confirmation.quit = "Escolheu sair do jogo. Tem certeza de que pretende sair do jogo?"
+confirmation.sack_staff = "Tem certeza de que pretende despedir este funcionário?"
+confirmation.delete_room = "Quer mesmo eliminar esta consulta?"
+confirmation.return_to_blueprint = "Tem certeza de que pretende substituir o(a) %s por $%d?"
+confirmation.overwrite_save = "Já há um jogo salvo nesta caixa. Tem certeza de que pretende substitui-lo?"
+menu_options_volume[80] = "  80%  "
+menu_options_volume[50] = "  50%  "
+menu_options_volume[100] = "  100%  "
+menu_options_volume[70] = "  70%  "
+menu_options_volume[40] = "  40%  "
+menu_options_volume[90] = "  90%  "
+menu_options_volume[60] = "  60%  "
+menu_options_volume[20] = "  20%  "
+menu_options_volume[30] = "  30%  "
+menu_options_volume[10] = "  10%  "
+vip_names[1] = "O Maior dos Ricaços"
+vip_names[2] = "Lawrence Nightingale"
+vip_names[3] = "Rei Bernard da Holanda"
+vip_names[4] = "Aung Sang Su Kyi"
+vip_names[5] = "Sir Reginald Crumbly"
+vip_names[7] = "O Vereador Joäo Precipício"
+vip_names[8] = "O Marquês do Figo de Chumbo"
+vip_names[9] = "Uma estrela do futebol"
+vip_names[10] = "A. Eskoplovitz, II"
+vip_names.health_minister = "O Ministro da Saúde"
+menu_charts.briefing = "  INSTRUÇOES  "
+diseases.kidney_beans.cause = "Causa - Mastigar os cubos de gelo das bebidas."
+diseases.kidney_beans.name = "Incontinência"
+diseases.kidney_beans.symptoms = "Sintomas - Dor e ir com frequência ao banho."
+diseases.kidney_beans.cure = "Cura - Dois cirurgiöes extraem os cálculos sem roçar os borde do rim."
+diseases.ruptured_nodules.cause = "Causa - Atirar-se de cabeça à água fria."
+diseases.ruptured_nodules.name = "Boluditis"
+diseases.ruptured_nodules.symptoms = "Sintomas - Impossibilidade de sentar-se comodamente."
+diseases.ruptured_nodules.cure = "Cura - Dois cirurgiöes qualificados colocam certas partes com mäos firmes."
+diseases.fractured_bones.cause = "Causa - Queda de um lugar alto."
+diseases.fractured_bones.name = "Fraturas ósseas"
+diseases.fractured_bones.symptoms = "Sintomas - Um grande rangido e a impossibilidade de usar os membros afetados."
+diseases.fractured_bones.cure = "Cura - É colocado um molde, depois com uma máquina à laser o remove. "
+diseases.diag_psych.name = "Diag: Psiquiatria"
+diseases.jellyitis.cause = "Causa - Uma dieta rica em gelatina e muito exercício."
+diseases.jellyitis.name = "Gelatinitis"
+diseases.jellyitis.symptoms = "Sintomas - Um tremor excessivo e cair ao chäo muitas vezes."
+diseases.jellyitis.cure = "Cura - Inunda-se o paciente durante um momento no banheiro gelatinoso numa consulta especial."
+diseases.discrete_itching.cause = "Causa - Insetos diminutos com os dentes afiados."
+diseases.discrete_itching.name = "Coceira leve"
+diseases.discrete_itching.symptoms = "Sintomas - Arranhar-se, o que conduz a uma inflamaçäo da parte afetada."
+diseases.discrete_itching.cure = "Cura - O paciente bebe um xarope farmacêutico 6ara evitar a coceira da pele."
+diseases.alien_dna.cause = "Causa - Enfrentara gigantes providos de sangue alienígena inteligente."
+diseases.alien_dna.name = "DNA alienígena"
+diseases.alien_dna.symptoms = "Sintomas - Metamorfose alienígena gradual e desejo de destruir nossas cidades."
+diseases.alien_dna.cure = "Cura - O DNA é mecanicamente removido, limpo de elementos alienígenas e substituídos rapidamente."
+diseases.infectious_laughter.cause = "Causa - Comédia clássica de situaçäo."
+diseases.infectious_laughter.name = "Risada contagiosa"
+diseases.infectious_laughter.symptoms = "Sintomas - Näo poder parar de rir e repetir frases feitas nada divertidas."
+diseases.infectious_laughter.cure = "Cura - Um psiquiatra qualificado deve recordar o paciente que a sua doença é grave."
+diseases.diag_general_diag.name = "Diag: Geral"
+diseases.spare_ribs.cause = "Causa - Sentar-se sobre chäos muito frios."
+diseases.spare_ribs.name = "Costelas de mais"
+diseases.spare_ribs.symptoms = "Sintomas- Um mal-estar no peito."
+diseases.spare_ribs.cure = "Cura - Dois cirurgiöes extraem as costelas e däo ao paciente em uma sacola."
+diseases.transparency.cause = "Causa - Lamber tampa de iogurte já usado."
+diseases.transparency.name = "Transparentitis"
+diseases.transparency.symptoms = "Sintomas - A carne fica transparente e fica horrível."
+diseases.transparency.cure = "Cura - Tomar uma preparaçäo farmacêutica de água esfriada e colorida de modo especial."
+diseases.baldness.cause = "Causa - Contar mentiras e inventar histórias para ser famoso."
+diseases.baldness.name = "Calvície"
+diseases.baldness.symptoms = "Sintomas - Ter a cabeça brilhante e passar vergonha."
+diseases.baldness.cure = "Cura - O cabelo está costurado à cabeça do paciente com uma dolorosa máquina."
+diseases.sleeping_illness.cause = "Causa - Uma glândula do sonho hiperativa no céu da boca."
+diseases.sleeping_illness.name = "Sonolência"
+diseases.sleeping_illness.symptoms = "Sintomas - Um desejo imprescindível de mergulhar no sono."
+diseases.sleeping_illness.cure = "Cura - Uma enfermeira administra uma elevada dose de um capitalista estimulante."
+diseases.pregnancy.cause = "Causa - Cortes de eletricidade em áreas urbanas."
+diseases.pregnancy.name = "Grávida"
+diseases.pregnancy.symptoms = "Sintomas - Comer de capricho com o consequente mal-estar de estômago."
+diseases.pregnancy.cure = "Cura - Extrai-se ao bebé na sala de operaçöes, limpa-se e entrega-se ao paciente."
+diseases.general_practice.name = "Clínica Geral"
+diseases.tv_personalities.cause = "Causa - Ver a televisäo durante o dia."
+diseases.tv_personalities.name = "Personalitis"
+diseases.tv_personalities.symptoms = "Sintomas - Ter a ilusäo de apresentar na televisäo um programa de cozinha."
+diseases.tv_personalities.cure = "Cura - Um psiquiatra perito deve convencer o paciente de que venda o seu televisor e compre uma rádio."
+diseases.broken_wind.cause = "Causa - Usar um aparelho ginástico depois das comidas."
+diseases.broken_wind.name = "Aerofagia"
+diseases.broken_wind.symptoms = "Sintomas - Incomoda as pessoas que estäo mesmo atrás do paciente."
+diseases.broken_wind.cure = "Cura - Na farmácia bebe-se rapidamente uma forte mistura de átomos aquosos."
+diseases.hairyitis.cause = "Causa - Exposiçäo prolongada à lua."
+diseases.hairyitis.name = "Peludismo"
+diseases.hairyitis.symptoms = "Sintomas - Pacientes com olfato mais sensível."
+diseases.hairyitis.cure = "Cura - Uma máquina de eletrólise elimina o pêlo e fecha os poros."
+diseases.diag_ward.name = "Diag: Clínico"
+diseases.third_degree_sideburns.cause = "Causa - Desejar muito os anos 70 ."
+diseases.third_degree_sideburns.name = "Costeletas de terceiro grau"
+diseases.third_degree_sideburns.symptoms = "Sintomas - Corte comprido, roupa larga, plataformas e muita maquilhagem."
+diseases.third_degree_sideburns.cure = "Cura - O pessoal psiquiátrico deve, empregando técnicas atualizadas, convencer o paciente de que esta moda é horrível."
+diseases.gut_rot.cause = "Causa - O Xarope para a tosse, a base de uísque, da Sra. McGuiver."
+diseases.gut_rot.name = "Ulcera gástrica"
+diseases.gut_rot.symptoms = "Sintomas - O paciente näo tosse, mas tampouco tem paredes no estômago."
+diseases.gut_rot.cure = "Cura - Uma enfermeira administra uma variada dissoluçäo de substancias químicas para revestir o estômago."
+diseases.chronic_nosehair.cause = "Causa - Cheirar com desprezo aqueles que estäo pior que o paciente."
+diseases.chronic_nosehair.name = "Nariz peludo"
+diseases.chronic_nosehair.symptoms = "Sintomas - Ter tanto cabelo no nariz para fazer uma peruca."
+diseases.chronic_nosehair.cure = "Cure - Toma por via oral um xarope retira-pêlo, que a enfermeira preparou na farmácia."
+diseases.the_squits.cause = "Causa - Comer pizza que encontrou debaixo da mesa da cozinha."
+diseases.the_squits.name = "Decomposiçäo"
+diseases.the_squits.symptoms = "Sintomas - Agh! Tenho a certeza de que pode imaginar isto."
+diseases.the_squits.cure = "Cura - Uma mistura pegajosa de substâncias viscosas preparada na farmácia solidifica as tripas do paciente."
+diseases.fake_blood.cause = "Causa - O paciente está acostumado a ser o branco das brincadeiras."
+diseases.fake_blood.name = "Sangue falso"
+diseases.fake_blood.symptoms = "Sintomas - Fluido vermelho nas veias que se evapora no contato com a roupa."
+diseases.fake_blood.cure = "Cura - Este problema só se resolve com tratamento psiquiátrico."
+diseases.corrugated_ankles.cause = "Causa - Atropelar sinais de tráfico na estrada."
+diseases.corrugated_ankles.name = "Tornozelo torcido"
+diseases.corrugated_ankles.symptoms = "Sintomas - Os pés näo cabem bem nos sapatos."
+diseases.corrugated_ankles.cure = "Cura - Os tornozelos säo endireitados, bebendo uma infusäo ligeiramente tóxica de ervas e plantas."
+diseases.diag_x_ray.name = "Diag: Raio-X"
+diseases.invisibility.cause = "Causa - A picada de uma formiga radioativa (e invisível)."
+diseases.invisibility.name = "Invisibilidade"
+diseases.invisibility.symptoms = "Sintomas - Os Pacientes näo sofrem, porém, às vezes gostam de pregar peças em seus familiares."
+diseases.invisibility.cure = "Cura - Beber um líquido colorido na farmácia, fazendo completamente visível o paciente."
+diseases.sweaty_palms.cause = "Causa - Temer as entrevistas de trabalho."
+diseases.sweaty_palms.name = "Mäos suadas"
+diseases.sweaty_palms.symptoms = "Sintomas - Dar a mäo ao paciente é como agarrar uma esponja encharcada."
+diseases.sweaty_palms.cure = "Cura - Um psiquiatra deve discutir a fundo com o paciente sobre esta doença inventada."
+diseases.bloaty_head.cause = "Causa - Cheirar queijo e beber água da chuva näo purificada."
+diseases.bloaty_head.name = "Cabeça inchada"
+diseases.bloaty_head.symptoms = "Sintomas - Muito desconforto pelo o que parece."
+diseases.bloaty_head.cure = "Cura - Fura-se a cabeça inflada, em seguida, volta-se a inflar até o tamanho correto com uma máquina inteligente."
+diseases.heaped_piles.cause = "Causa - Permanecer de pé junto a refrigeradores de água."
+diseases.heaped_piles.name = "Hemorroidas"
+diseases.heaped_piles.symptoms = "Sintomas - O paciente sente-se como se estivesse sentado sobre bolas de gude."
+diseases.heaped_piles.cure = "Cura - Uma bebida agradável, embora muito ácida, dissolve as hemorroidas internas."
+diseases.king_complex.cause = "Causa - O espírito do rei se introduz na mente do paciente, e se apodera dela."
+diseases.king_complex.name = "Complexo de rei"
+diseases.king_complex.symptoms = "Sintomas - Calçar sapatos camurça e comer hambúrgueres."
+diseases.king_complex.cure = "Cura - Um Psiquiatra conta ao paciente como ele está ridículo."
+diseases.golf_stones.cause = "Causa - Inalar gás venenoso contendo bolas de golfe."
+diseases.golf_stones.name = "Cálculos de golfe"
+diseases.golf_stones.symptoms = "Sintomas - Delirar e sentir muita vergonha."
+diseases.golf_stones.cure = "Cura - Dois cirurgiöes operam para extrair os cálculos."
+diseases.gastric_ejections.cause = "Causa - Comida mexicana ou da India muito condimentada."
+diseases.gastric_ejections.name = "Vômito"
+diseases.gastric_ejections.symptoms = "Sintomas - O paciente vomita a comida ao meio digerir em qualquer momento."
+diseases.gastric_ejections.cure = "Cura - Beber um preparado adstringente especial para parar os vômitos."
+diseases.unexpected_swelling.cause = "Causa - Algo imprevista."
+diseases.unexpected_swelling.name = "Gasescontençäo"
+diseases.unexpected_swelling.symptoms = "Sintomas - Inflamaçäo."
+diseases.unexpected_swelling.cure = "Cura - Só pode reduzir a inflamaçäo com uma lanceta durante uma operaçäo que requer dois cirurgiöes."
+diseases.slack_tongue.cause = "Causa - Fez muitas fofocas."
+diseases.slack_tongue.name = "Língua comprida"
+diseases.slack_tongue.symptoms = "Sintomas - A língua cresce até cinco vezes o seu tamanho original."
+diseases.slack_tongue.cure = "Cura - Coloca-se a língua no corta-línguas e elimina-se de forma rápida, eficaz e dolorosa."
+diseases.diag_scanner.name = "Diag: Scanner"
+diseases.uncommon_cold.cause = "Causa - Pequenas partículas de muco no ar."
+diseases.uncommon_cold.name = "Catarro atípico"
+diseases.uncommon_cold.symptoms = "Sintomas - Mucosidade, espirros e pulmöes descoloridos."
+diseases.uncommon_cold.cure = "Cura - Beber um grande gole de um xarope estranho para tosse fabricado na farmácia com ingredientes especiais."
+diseases.broken_heart.cause = "Causa - Alguém mais rico, mais jovem e mais magro que o paciente."
+diseases.broken_heart.name = "Infelicidade"
+diseases.broken_heart.symptoms = "Sintomas - Chorar e rir depois de passar horas a rasgar as fotos das férias."
+diseases.broken_heart.cure = "Cura - Dois cirurgiöes abrem o peito e arrumam com delicadeza o coraçäo enquanto contêm a respiraçäo."
+diseases.diag_blood_machine.name = "Diag: Análise Sanguínea"
+diseases.diag_cardiogram.name = "Diag: Cardiologia"
+diseases.serious_radiation.cause = "Causa - Confundir isótopos de plutônio com chiclete."
+diseases.serious_radiation.name = "Radiaçäo Grave"
+diseases.serious_radiation.symptoms = "Sintomas - Os pacientes com essa doença se sentem muito mal."
+diseases.serious_radiation.cure = "Cura - O Paciente deve ir para a Ducha de Descontaminaçäo para se limpar."
+diseases.iron_lungs.cause = "Causa - A contaminaçäo urbana misturada com restos do Kebab."
+diseases.iron_lungs.name = "Pulmäo de aço"
+diseases.iron_lungs.symptoms = "Sintomas - Capacidade para aspirar fogo e gritar debaixo da água."
+diseases.iron_lungs.cure = "Cura - Dois cirurgiöes realizam uma operaçäo para eliminar as partes duras do pulmäo na sala de operaçöes."
+diseases.diag_ultrascan.name = "Diag: Ultra Scanner"
+diseases.autopsy.name = "Autópsia"
+dynamic_info.staff.ability = "Habilidade"
+dynamic_info.staff.psychiatrist_abbrev = "Psiq."
+dynamic_info.staff.actions.waiting_for_patient = "Esperando um paciente"
+dynamic_info.staff.actions.wandering = "Andando por aí"
+dynamic_info.staff.actions.going_to_repair = "Indo reparar %s"
+dynamic_info.staff.tiredness = "Cansaço"
+dynamic_info.vip = "Visitante VIP"
+dynamic_info.patient.diagnosis_progress = "Diagnóstico em curso"
+dynamic_info.patient.emergency = "Emergências: %s"
+dynamic_info.patient.diagnosed = "Diagnósticos: %s "
+dynamic_info.patient.guessed_diagnosis = "Bons diagnósticos: %s"
+dynamic_info.patient.actions.fed_up = "Farto - Indo para a casa"
+dynamic_info.patient.actions.waiting_for_diagnosis_rooms = "Esperando a construçäo da consulta"
+dynamic_info.patient.actions.sent_to_other_hospital = "Enviado para outro local"
+dynamic_info.patient.actions.on_my_way_to = "A caminho de %s"
+dynamic_info.patient.actions.waiting_for_treatment_rooms = "Esperando a construçäo do tratamento"
+dynamic_info.patient.actions.queueing_for = "Na fila de espera do(a) %s"
+dynamic_info.patient.actions.epidemic_contagious = "Tenho uma doença contagiosa"
+dynamic_info.patient.actions.no_diagnoses_available = "Näo há mais diagnósticos, vou embora"
+dynamic_info.patient.actions.awaiting_decision = "Esperando por sua decisäo"
+dynamic_info.patient.actions.sent_home = "Com alta"
+dynamic_info.patient.actions.cured = "Curado!"
+dynamic_info.patient.actions.prices_too_high = "Os seus preços säo muito altos, vou embora"
+dynamic_info.patient.actions.epidemic_sent_home = "Enviado para casa por um Inspetor"
+dynamic_info.patient.actions.no_treatment_available = "Näo há tratamentos, vou para casa"
+dynamic_info.patient.actions.dying = "Morrendo!"
+dynamic_info.object.strength = "Resistência %d"
+dynamic_info.object.queue_expected = "Fila esperada %d"
+dynamic_info.object.times_used = "Utilizado %d vezes"
+dynamic_info.object.queue_size = "Tamanho da fila %d"
+dynamic_info.health_inspector = "Inspetor de Saúde"
+town_map.chat = "Detalhes da cidade"
+town_map.not_for_sale = "Näo vende-se"
+town_map.price = "Preço"
+town_map.number = "Número"
+town_map.owner = "Proprietário"
+town_map.for_sale = "Vende-se"
+town_map.area = "Terreno"
+misc.grade_adverb.mildly = "ligeiramente"
+misc.grade_adverb.moderately = "moderadamente"
+misc.grade_adverb.extremely = "extremamente"
+misc.out_of_sync = "Jogo fora de sincronismo"
+misc.load_failed = "Jogo näo carregado"
+misc.send_message_all = "Enviar mensagem para todos os jogadores"
+misc.hospital_open = "Hospital Aberto"
+misc.save_failed = "ERRO: Näo foi possível salvar o jogo"
+misc.mouse = "Rato"
+misc.pause = "Pausa"
+misc.done = "Concluído"
+misc.send_message = "Enviar mensagem para o jogador %d"
+misc.balance = "Arquivo de Balanço:"
+misc.low_res = "Baixa Resoluçäo"
+misc.force = "Mäo-de-obra"
+misc.save_success = "Jogo salvo com êxito"
+drug_companies[1] = "Laboratórios Joäo"
+drug_companies[2] = "Curatudo S.A."
+drug_companies[3] = "Pequena Pílula Co."
+drug_companies[4] = "Remédios Seguros S.A"
+drug_companies[5] = "Omnipharma Corp."
+high_score.score = "PONTOS"
+high_score.pos = "POS"
+high_score.worst_scores = "GALERIA DA VERGONHA"
+high_score.categories.cures = "NUMERO DE CURAS"
+high_score.categories.cure_death_ratio = "MEDIA DE CURAS E MORTES"
+high_score.categories.total_value = "VALOR TOTAL"
+high_score.categories.visitors = "MAIS VISITANTES"
+high_score.categories.clean = "LIMPEZA"
+high_score.categories.money = "O MAIS RICO"
+high_score.categories.salary = "SALARIO MAIS ALTO"
+high_score.categories.deaths = "NUMERO DE MORTES"
+high_score.categories.patient_happiness = "CLIENTES CONTENTES"
+high_score.categories.staff_number = "FUNCIONARIOS"
+high_score.categories.staff_happiness = "FUNCIONARIOS SATISFEITOS"
+high_score.player = "JOGADOR"
+high_score.best_scores = "GALERIA DA FAMA"
+high_score.killed = "Morto"
+competitor_names[1] = "ORAC"
+competitor_names[2] = "COLOSSUS"
+competitor_names[3] = "HAL"
+competitor_names[4] = "MULTIVAC"
+competitor_names[5] = "HOLLY"
+competitor_names[6] = "DEEP THOUGHT"
+competitor_names[7] = "ZEN"
+competitor_names[8] = "LEON"
+competitor_names[9] = "MARVIN"
+competitor_names[10] = "AKIRA"
+competitor_names[11] = "MOTHER"
+competitor_names[12] = "JAYNE"
+competitor_names[13] = "CORSIX"
+competitor_names[14] = "ROUJIN"
+competitor_names[15] = "EDVIN"
+competitor_names[16] = "SAM"
+competitor_names[17] = "CHARLIE"
+competitor_names[18] = "ARTHUR"
+competitor_names[19] = "MAGNUS"
+competitor_names[20] = "SAL"
+competitor_names[21] = "JOSHUA"
+competitor_names[22] = "DANEEL"
+competitor_names[23] = "OLIVAW"
+competitor_names[24] = "NIC"
+staff_class.handyman = "Faz-Tudo"
+staff_class.nurse = "Enfermeira"
+staff_class.surgeon = "Cirurgiäo"
+staff_class.receptionist = "Recepcionista"
+staff_class.doctor = "Médico"
+menu_debug.display_pager = "  MOSTRAR PAGINADOR            "
+menu_debug.nav_bits = "  NAV BITS                     "
+menu_debug.win_level_anim = "  SUPERAR NIVEL ANIM           "
+menu_debug.plant_pagers = "  PAGINADORES DE PLANTAS       "
+menu_debug.display_room_status = "  MOSTRAR ESTADO DA CONSULTA"
+menu_debug.show_nav_cells = "  MOSTRAR CELAS NAV           "
+menu_debug.entry_cells = "  CELAS DE ENTRADA            "
+menu_debug.object_cells = "  CELAS DE OBJETO             "
+menu_debug.lose_game_anim[1] = "  PERDER JOGO 1 ANIM        "
+menu_debug.lose_game_anim[2] = "  PERDER JOGO 2 ANIM        "
+menu_debug.lose_game_anim[3] = "  PERDER JOGO 3 ANIM        "
+menu_debug.lose_game_anim[4] = "  PERDER JOGO 4 ANIM        "
+menu_debug.lose_game_anim[5] = "  PERDER JOGO 5 ANIM        "
+menu_debug.lose_game_anim[6] = "  PERDER JOGO 6 ANIM        "
+menu_debug.lose_game_anim[7] = "  PERDER JOGO 7 ANIM        "
+menu_debug.show_help_hotspot = "  MOSTRAR AJUDAS               "
+menu_debug.porter_pagers = "  PAGINADORES DE FAZ-TUDO      "
+menu_debug.mapwho_checking = "  VERIFICAR LOCALIZAÇAO       "
+menu_debug.machine_pagers = "  PAGINADORES DE MAQUINA       "
+menu_debug.keep_clear_cells = "  CONSERVAR AS CELAS LIMPAS "
+menu_debug.enter_nav_debug = "  INTRODUZIR NAV DEBUG         "
+menu_debug.win_game_anim = "  GANHAR JOGO ANIM             "
+menu_debug.remove_objects = "  RETIRAR OBJETOS               "
+menu_debug.display_big_cells = "  MOSTRAR CELAS GRANDES       "
+menu_debug.pixbuf_cells = "  CELAS PIXBUF                "
+menu_debug.remove_walls = "  RETIRAR PAREDES               "
+research.categories.drugs = "Pesquisa farmacêutica"
+research.categories.cure = "Material de curas"
+research.categories.improvements = "Melhoras"
+research.categories.specialisation = "Especializaçäo"
+research.categories.diagnosis = "Material de diagnóstico"
+research.funds_allocation = "Atribuiçäo de fundos"
+research.allocated_amount = "Quantidade atribuída"
+months[1] = "Jan"
+months[2] = "Fev"
+months[3] = "Mar"
+months[4] = "Abr"
+months[5] = "Mai"
+months[6] = "Jun"
+months[7] = "Jul"
+months[8] = "Ago"
+months[9] = "Set"
+months[10] = "Out"
+months[11] = "Nov"
+months[12] = "Dez"
+trophy_room.cleanliness.award[1] = "Os Inspetores notaram que o seu hospital está muito limpo. Um hospital limpo é um hospital seguro. Continue assim."
+trophy_room.cleanliness.regional_good[1] = "Seu hospital foi apontado como um dos menos limpos da regiäo. Um hospital sujo, que cheira mal e é perigoso. Deveria se preocupar mais com a limpeza."
+trophy_room.cleanliness.regional_bad[1] = "O seu hospital é o mais sujo da regiäo. Outros diretores conseguiram manter os seus hospitais mais limpos. Você é a vergonha da profissäo médica."
+trophy_room.happy_vips.trophies[1] = "Ganhou o Prêmio Nobel de VIP Exemplares. Todos os que visitaram o seu hospital no ano passado o elogiaram muito."
+trophy_room.happy_vips.trophies[2] = "A Agência de Pessoas Famosas deseja-lhe conceder o Prêmio à Celebridade por ter agradado a todos os VIP que visitaram o seu hospital."
+trophy_room.happy_vips.trophies[3] = "Ganhou a VIAGEM VIP por melhorar a imagem dos trabalhadores aos olhos de todos os que visitaram o seu hospital. Estupendo!"
+trophy_room.gen_repairs.awards[1] = "Foi-lhe concedido um prêmio especial pela diligência dos seus faz-tudo na hora de manter as máquinas do seu hospital em bom estado. Bem feito. Tome umas férias."
+trophy_room.gen_repairs.awards[2] = "Os seus faz-tudo trabalharam melhor que os de qualquer outro hospital. Este é um importante acontecimento de felicidade."
+trophy_room.gen_repairs.awards[3] = "As suas máquinas estäo num magnífico estado. A dedicaçäo dos seus faz-tudo foi extraordinária. Merecem este prestigioso prêmio. Um trabalho estupendo!"
+trophy_room.gen_repairs.penalty[1] = "Os seus faz-tudo näo cuidaram bem das suas máquinas. Deveria fiscalizá-los melhor ou contratar mais para que tirem o trabalho adiante."
+trophy_room.gen_repairs.penalty[2] = "Levou mal a manutençäo. O seu pessoal deveria cuidar melhor dos seus equipamentos."
+trophy_room.many_cured.penalty[1] = "O seu hospital näo cura com eficácia os pacientes que o necessitam. Empresta mais atençäo às curas para que sejam mais eficazes."
+trophy_room.many_cured.penalty[2] = "O seu hospital é o menos eficaz na hora de curar pacientes. Decepcionou o Ministério e defraudou a si mesmo. Näo diremos mais."
+trophy_room.many_cured.trophies[1] = "Parabéns pela concessäo do prêmio Marie Curie por ter curado quase todos os pacientes do seu hospital no ano passado."
+trophy_room.many_cured.trophies[2] = "A Fundaçäo Nacional de Curas deseja premiá-lo por ter curado um grande número de pacientes no ano passado, concedendo o Galardäo ao Maior Curador."
+trophy_room.many_cured.trophies[3] = "Foi-lhe concedido a Medalha do Paciente Säo por ter conseguido curar no seu hospital uma enorme porcentagem de pacientes no ano passado."
+trophy_room.many_cured.awards[1] = "Parabéns por curar um montäo de pessoas no ano passado. Um grande número de pessoas sente-se muito melhor, graças ao seu trabalho."
+trophy_room.many_cured.awards[2] = "Pedimos que aceite este prêmio por ter curado mais pacientes que qualquer outro hospital. Um excelente trabalho."
+trophy_room.many_cured.regional[1] = "Foi-lhe concedido o prêmio a cura total por ter curado mais pessoas que todos os outros hospitais juntos."
+trophy_room.sold_drinks.trophies[1] = "A Associaçäo Odontológica orgulha-se de lhe conceder este troféu e esta placa por vender um montäo de bebidas em lata no seu hospital."
+trophy_room.sold_drinks.trophies[2] = "O seu hospital foi premiado com o prêmio Bizz-Efervescente pela Venda de Refrigerante em reconhecimento ao número de bebidas vendidas em seu hospital no ano passado"
+trophy_room.sold_drinks.trophies[3] = "Em nome de DK Obturaçöes Inc., você recebe o prêmio coberto de chocolate para celebrar a enorme quantidade de refrigerantes que vendeu no seu hospital este ano."
+trophy_room.consistant_rep.trophies[1] = "O Conselho de ministros concedeu-lhe a Mençäo de Honra por ter alcançado o nível máximo de eficácia e reputaçäo durante o ano presente. Bem feito."
+trophy_room.consistant_rep.trophies[2] = "Parabéns pela concessäo do Prêmio Lençóis Limpos por ser o hospital com a melhor reputaçäo do ano. Você mereceu."
+trophy_room.cash = "EFETIVO"
+trophy_room.high_rep.penalty[1] = "Vai ser sancionado pela má reputaçäo que teve no ano passado. Procure melhorar no futuro."
+trophy_room.high_rep.penalty[2] = "A reputaçäo do seu hospital é a pior da área. É uma vergonha. Melhore ou consiga outro emprego."
+trophy_room.high_rep.awards[1] = "Bem feito! Ganhou um pequeno prêmio por alcançar uma impressionante reputaçäo no ano passado."
+trophy_room.high_rep.awards[2] = "Maravilhoso! O seu hospital ganhou um prêmio por conseguir a melhor reputaçäo no ano passado."
+trophy_room.high_rep.regional[1] = "Por favor, aceita o Prêmio Bullfrog por dirigir o melhor hospital do ano. Você mereceu, aproveite."
+trophy_room.high_rep.regional[2] = "Este ano, a reputaçäo do seu hospital superou a do resto dos hospitais. Um estupendo lucro."
+trophy_room.best_value_hosp.trophies[1] = "Parabéns pela concessäo do Prêmio Lençóis Limpos por ser o hospital com a melhor reputaçäo do ano. Você mereceu."
+trophy_room.best_value_hosp.regional[1] = "Parabéns por ter o hospital mais valioso do jogo. Bom trabalho! Por favor, continue assim."
+trophy_room.best_value_hosp.penalty[1] = "Todos os hospitais da área valem mais do que o seu. Faça algo a respeito desta vergonhosa situaçäo. Consiga coisas mais caras!"
+trophy_room.reputation = "REPUTAÇAO"
+trophy_room.happy_staff.regional_good[1] = "O seu pessoal é o mais satisfeito de todos os hospitais. Se o pessoal está contente, há mais ganhos e menos mortes. No Ministério estäo satisfeitos."
+trophy_room.happy_staff.penalty[1] = "O seu pessoal deseja que saiba que estäo muito descontentes. Ter um bom pessoal é algo proveitoso. Faça com que eles estejam mais satisfeitos ou algum dia irá perdê-los."
+trophy_room.happy_staff.trophies[1] = "Ganhou o Prêmio Médico Sorridente por manter o mais contente possível o seu esforçado pessoal."
+trophy_room.happy_staff.trophies[2] = "A Fundaçäo para a Felicidade do Pessoal Sanitário concedeu-lhe este galardäo por näo ter tido trabalhadores descontentes no seu hospital no ano passado."
+trophy_room.happy_staff.trophies[3] = "Concedemos a você o prêmio Monopoliza do Sorriso Radiante por manter contente todo o seu pessoal, mais à frente do cumprimento do dever, durante o ano passado."
+trophy_room.happy_staff.awards[1] = "Sua equipe te concedeu um prêmio. Eles dizem que, em geral, você manda bem."
+trophy_room.happy_staff.awards[2] = "Seus funcionários säo täo felizes trabalhando para você que näo conseguem tirar os sorrisos dos seus rostos. Você é um gerente magnífico."
+trophy_room.happy_staff.regional_bad[1] = "A sua equipe esteve muito infeliz durante o ano passado. Você deveria ter notado. Do jeito que está, as equipes dos outros hospitais estäo muito mais contentes do que a sua."
+trophy_room.hosp_value.penalty[1] = "O seu hospital fracassou em alcançar um valor razoável. Gerenciou mal o dinheiro. Lembre-se, um bom hospital também é um hospital caro."
+trophy_room.hosp_value.awards[1] = "O Ministério da Saúde gostaria de parabenizá-lo pelo impressionante valor alcançado em seu hospital."
+trophy_room.hosp_value.regional[1] = "É uma promessa dos negócios. O hospital é o mais valioso de toda a área."
+trophy_room.healthy_plants.awards[1] = "Parabéns por ganhar o galardäo do Grande Fertilizante por manter as suas plantas vivas durante o ano passado."
+trophy_room.healthy_plants.trophies[1] = "Os Amigos das Plantas de Interior desejam concede-lhe o Prêmio de Saúde Verde por manter vivas as suas plantas durante os últimos doze meses."
+trophy_room.healthy_plants.trophies[2] = "Salvem as Plantas quer concede-lhes o Prêmio do Maior Ecologista por manter vivas as plantas do seu hospital durante o ano passado."
+trophy_room.research.penalty[1] = "Foi pouco eficiente ao investigar curas, máquinas e remédios novos. Isto é fatal, já que o avanço tecnológico é algo fundamental."
+trophy_room.research.regional_good[1] = "As suas investigaçöes conseguiram colocar o seu hospital nos últimos avanços de hoje em dia. Os seus pesquisadores merecem este prêmio. Bem feito!"
+trophy_room.research.awards[1] = "As suas investigaçöes conseguiram colocar o seu hospital nos últimos avanços de hoje em dia. Os seus pesquisadores merecem este prêmio. Bem feito!"
+trophy_room.research.awards[2] = "O ano passado, descobriu mais remédios e máquinas do que se podia esperar. Por favor, aceite este prêmio de todos nós no Ministério."
+trophy_room.research.regional_bad[1] = "Outros hospitais säo melhores que o seu na pesquisa. No Ministério estäo furiosos, seu hospital deveria lhe conceder mais importância."
+trophy_room.no_deaths.penalty[1] = "O número de mortes no seu hospital, no ano passado, foi muito elevado. Empresta mais atençäo ao seu trabalho. Assegure-se de que no futuro sobreviva mais pessoas."
+trophy_room.no_deaths.penalty[2] = "O seu hospital é um risco para os pacientes. Supöe-se que deve curar muitas pessoas, näo deixar morrer."
+trophy_room.no_deaths.trophies[1] = "Ganhou o Galardäo da Queixa Ausente por manter 100%% dos seus pacientes com vida o ano passado."
+trophy_room.no_deaths.trophies[2] = "A Associaçäo A Vida Continua concede-lhe este prêmio pela ausência de falecimentos no seu hospital este ano."
+trophy_room.no_deaths.trophies[3] = "Foi-lhe concedido o Prêmio pela Conservaçäo da Vida por ter conseguido evitar falecimentos no seu hospital durante este ano. Genial!"
+trophy_room.no_deaths.awards[1] = "Ganhou este prêmio como reconhecimento ao sob índice de falecimentos no seu hospital, este ano. É estupendo!"
+trophy_room.no_deaths.awards[2] = "A sua habilidade conseguiu reduzir ao mínimo o número de mortes no seu hospital. Pode estar muito satisfeito deste resultado."
+trophy_room.no_deaths.regional[1] = "No ano passado, a taxa de mortalidade do seu hospital foi inferior a dos outros. Por favor, aceite este prêmio."
+trophy_room.rats_accuracy.trophies[1] = "Foi-lhe concedido o Prêmio de Disparos Certeiros Syndicate Wars por acertar em %d%% ratos no seu hospital no ano passado."
+trophy_room.rats_accuracy.trophies[2] = "Este prêmio é para celebrar a sua incrível pontaria ao eliminar %d%% dos ratos que disparou no seu hospital no ano passado."
+trophy_room.rats_accuracy.trophies[3] = "Para celebrar o fato de que eliminou %d%% dos ratos do seu hospital, foi-lhe concedido o Troféu de Eliminador de Roedores. Parabéns!"
+trophy_room.emergencies.penalty[1] = "Foi muito pouco eficiente nos casos de emergência. Os pacientes de emergência merecem uma atençäo rápida e precisa, que você näo lhes deu."
+trophy_room.emergencies.award[1] = "Parabéns! Ganhou este prêmio pela maneira eficaz e eficiente com a que solucionaste as emergências. Bom trabalho."
+trophy_room.emergencies.award[2] = "Confrontou as emergências de uma maneira extraordinária. Ganhou este prêmio por ser o melhor na hora de lidar com uma grande quantidade de pacientes."
+trophy_room.emergencies.regional_good[1] = "O Ministério reconhece que o ano passado no seu hospital, trataram-se as emergências melhor que em qualquer outro hospital e foi-lhe concedido este prêmio."
+trophy_room.emergencies.regional_bad[1] = "O seu hospital é o pior da regiäo para tratar casos de emergência. Tem a culpa de ocupar o último lugar na Liga Local de Tratamentos de Emergência."
+trophy_room.curesvdeaths.awards[1] = "As minhas mais sinceras felicitaçöes. O ano passado, o número de curas foi superior ao de falecimentos no seu hospital."
+trophy_room.curesvdeaths.penalty[1] = "A sua proporçäo entre curas e mortes é extremamente baixa. Deveria assegurar de que cura mais pessoas do que mata. Näo deixe o seu pessoal em mau lugar."
+trophy_room.wait_times.award[1] = "Parabéns! No seu hospital a gente fez fila durante muito pouco tempo. Este é um acontecimento importante."
+trophy_room.wait_times.penalty[1] = "No seu hospital, os pacientes esperam muito tempo. Há sempre filas inaceitáveis. Poderia tratar os seus pacientes com mais eficácia se quisesse."
+trophy_room.happy_patients.awards[1] = "Pode estar orgulhoso de que, no ano passado, as pessoas estivesse muito contente no seu hospital."
+trophy_room.happy_patients.awards[2] = "Os pacientes que visitaram o seu hospital sentiram-se mais contentes com o seu tratamento, que no resto dos hospitais."
+trophy_room.happy_patients.penalty[1] = "As pessoas que väo para o hospital tem uma experiência terrível. Terá que fazê-lo muito melhor se quiser ganhar o respeito do Ministério."
+trophy_room.happy_patients.penalty[2] = "As pessoas que recebeu tratamento no seu hospital queixaram-se do estado do mesmo. Deveria ter muito mais em conta o bem-estar dos pacientes."
+trophy_room.pop_percentage.awards[1] = "Note, o ano passado curou uma grande parte da populaçäo local no seu hospital. Muito bem."
+trophy_room.pop_percentage.awards[2] = "Parabéns! A maioria da populaçäo local vai ao seu hospital em vez de ir a qualquer outra instituiçäo."
+trophy_room.pop_percentage.awards[3] = "Brilhante! O seu hospital recebeu o maior número de pacientes que todos os outros hospitais juntos."
+trophy_room.pop_percentage.penalty[1] = "Teve muito poucos pacientes este ano. Para ganhar dinheiro, precisa que haja pacientes que paguem."
+trophy_room.pop_percentage.penalty[2] = "Todos os hospitais da área conseguiram mais pacientes do que você. Deveria estar envergonhado."
+trophy_room.rats_killed.trophies[1] = "Foi-lhe concedido o Troféu Raticida por eliminar %s ratos no seu hospital no ano passado."
+trophy_room.rats_killed.trophies[2] = "Merece este prêmio da Federaçäo Anti Ratos, pela sua excepcional habilidade em eliminar ratos, demonstrada ao eliminar %s exemplares."
+trophy_room.rats_killed.trophies[3] = "Concedeu-lhe o Troféu Acaba com Ratos pela sua grande habilidade em eliminar %d ratos no seu hospital no ano passado."
+trophy_room.all_cured.awards[1] = "Parabéns por ter ganho o Prêmio Marie Curie por curar a todos os pacientes do seu hospital no ano passado."
+trophy_room.all_cured.trophies[1] = "A Fundaçäo Curadores Nacionais premia-o por ter curado todos os pacientes do seu hospital no ano passado, concedendo-lhe o Prêmio do Maior Curador."
+trophy_room.all_cured.trophies[2] = "Foi-lhe concedida a Medalha do Paciente Säo por ter conseguido curar todos os pacientes do seu hospital no ano passado."
+graphs.cures = "Curas"
+graphs.reputation = "Reputaçäo"
+graphs.balance = "Balanço"
+graphs.wages = "Salários"
+graphs.visitors = "Visitantes"
+graphs.time_spans[1] = "1 Ano "
+graphs.time_spans[2] = "12 Anos"
+graphs.time_spans[3] = "48 Anos"
+graphs.deaths = "Mortes"
+graphs.money_out = "Pagamento"
+graphs.money_in = "Crédito"
+queue_window.max_queue_size = "Máximo"
+queue_window.num_expected = "Previsto"
+queue_window.num_in_queue = "Tamanho da fila"
+queue_window.num_entered = "Pacientes totais"
+room_classes.clinics = "Clínica"
+room_classes.facilities = "Instalaçöes"
+room_classes.diagnosis = "Diagnóstico"
+room_classes.treatment = "Tratamento"
+rooms_short.ward = "Enfermaria"
+rooms_short.blood_machine = "Transfusöes"
+rooms_short.fracture_clinic = "Traumatologia"
+rooms_short.cardiogram = "Cardiologia"
+rooms_short.decontamination = "Descontaminaçäo"
+rooms_short.jelly_vat = "Banho gelatinoso"
+rooms_short.staffroom = "Sala de Descanso"
+rooms_short.hair_restoration = "Pêloterapia"
+rooms_short.inflation = "Inflatoterapia"
+rooms_short.operating_theatre = "Sala de Operaçöes"
+rooms_short.reception = "Recepçäo"
+rooms_short.gps_office = "Consultório Geral"
+rooms_short.training_room = "Formaçäo"
+rooms_short.x_ray = "Raios-X"
+rooms_short.tongue_clinic = "Laringologia"
+rooms_short.general_diag = "Diagnóstico Geral"
+rooms_short.ultrascan = "Ultra Scanner"
+rooms_short.dna_fixer = "Genética"
+rooms_short.psychiatric = "Psiquiatria"
+rooms_short.toilets = "Banheiro"
+rooms_short.corridor_objects = "Objetos do corredor"
+rooms_short.pharmacy = "Farmácia"
+rooms_short.destroyed = "Destruída"
+rooms_short.research_room = "Pesquisa"
+rooms_short.scanner = "Scanner"
+rooms_short.electrolysis = "Eletrólise"
+tooltip.status.warmth = "Nível global de calor das pessoas no seu hospital"
+tooltip.status.close = "Fechar tela de condiçäo"
+tooltip.status.thirst = "Nível global de sede das pessoas no seu hospital"
+tooltip.status.population = "Você precisa ter %d%% da populaçäo total vindo para o seu hospital"
+tooltip.status.num_cured = "O objetivo é curar %d pessoas. Até agora curou %d"
+tooltip.status.percentage_killed = "O objetivo é matar pelo menos %d%% dos seus pacientes. Até agora morreram %d%%"
+tooltip.status.percentage_cured = "Você precisa tratar %d%% dos visitantes do seu hospital. Até agora tratou %d%%"
+tooltip.status.win_progress_own = "Mostra o progresso para conquistar os critérios do seu próprio hospital"
+tooltip.status.value = "O seu hospital deve valer $%d. Agora vale $%d"
+tooltip.status.happiness = "Nível global de satisfaçäo das pessoas no seu hospital"
+tooltip.status.win_progress_other = "Mostra o progresso para conquistar os critérios de %s"
+tooltip.status.population_chart = "Gráfico que mostra a proporçäo de pacientes de cada hospital da cidade"
+tooltip.objects.bench = "Banco: serve de assento aos pacientes para que esperem com mais conforto."
+tooltip.objects.pharmacy_cabinet = "Farmácia: onde se guardam os remédios"
+tooltip.objects.console = "15 CONSOLES DE SCANNER"
+tooltip.objects.atom_analyser = "Misturador químico: situado no Dept. de Desenvolvimento, esta máquina acelera todo o processo de pesquisa."
+tooltip.objects.fire_extinguisher = "Extintor: reduz o perigo do mau funcionamento das máquinas."
+tooltip.objects.scanner = "14 SCANNER"
+tooltip.objects.bin = "Cesto de papéis: os pacientes atiram aqui os seus desperdícios."
+tooltip.objects.swing_door1 = "52 PORTAS DUPLAS 1"
+tooltip.objects.pool_table = "Mesa de bilhar: ajuda o seu pessoal a relaxar-se."
+tooltip.objects.screen = "16 TELAS"
+tooltip.objects.cabinet = "Armário: contém fichas dos pacientes, notas e documentos sobre pesquisa."
+tooltip.objects.sofa = "Sofá: Os empregados que descansam na sala de descanso sentaräo num sofá, a menos que tenham uma maneira melhor de relaxar-se."
+tooltip.objects.projector = "37 PROJETORES"
+tooltip.objects.table2 = "12 MESAS"
+tooltip.objects.shower = "54 DUCHAS DESCONTAMINADORAS"
+tooltip.objects.comfortable_chair = "61 CADEIRA DE LEITURA"
+tooltip.objects.door = "Porta: as pessoas fecham e abrem um montäo de vezes."
+tooltip.objects.computer = "Computador: componente chave para a pesquisa"
+tooltip.objects.litter_bomb = "Bolsa de Lixo: sabota os hospitais dos oponentes"
+tooltip.objects.entrance_left = "58 PORTAS DIREITAS DE ENTRADA"
+tooltip.objects.dna_fixer = "23 REPARADORES DE DNA"
+tooltip.objects.bed = "Cama: as pessoas que estejam mesmo doentes deitam-se nela."
+tooltip.objects.lamp = "Abajur: ilumina e permite que o pessoal veja."
+tooltip.objects.bookcase = "Livraria: material de consulta para os médicos."
+tooltip.objects.desk = "Escritório: é fundamental para que o médico coloque o seu PC."
+tooltip.objects.toilet_sink = "Pia: os seus pacientes mais limpos lavam as suas mäos sujas aqui. Se näo haver suficientes pias, os pacientes ficam infelizes."
+tooltip.objects.gates_of_hell = "48 PORTAS DO INFERNO"
+tooltip.objects.swing_door2 = "53 PORTAS DUPLAS 2"
+tooltip.objects.cast_remover = "24 REMOVEDOR DE GESSO"
+tooltip.objects.plant = "Planta: alegra os pacientes e desencarde o ar."
+tooltip.objects.blood_machine = "42 TRANSFUSIOMETROS"
+tooltip.objects.slicer = "26 CORTADORES"
+tooltip.objects.x_ray = "27 RAIOS-X"
+tooltip.objects.cardio = "13 ELETROCARDIOGRAMA"
+tooltip.objects.crash_trolley = "20 CARROS"
+tooltip.objects.bed2 = "näo se utiliza"
+tooltip.objects.electrolyser = "46 ELETROLISIS"
+tooltip.objects.video_game = "Videogame: deixe que o seu pessoal se divirta com o Hi-Octane."
+tooltip.objects.skeleton = "Esqueleto: é utilizado para aprender e na Noite do Halloween."
+tooltip.objects.ultrascanner = "22 ULTRA SCANNER"
+tooltip.objects.op_sink1 = "33 PIAS 1 OP"
+tooltip.objects.hair_restorer = "25 PELO-RESTAURADORES"
+tooltip.objects.reception_desk = "Recepçäo: requer uma recepcionista para que envie os pacientes para o médico."
+tooltip.objects.radiation_shield = "28 TELAS ANTI-RADIACAO"
+tooltip.objects.couch = "18 POLTRONAS"
+tooltip.objects.inflator = "Inflador: cura a cabeça inflada."
+tooltip.objects.toilet = "Banheiro: a natureza uma hora chama..."
+tooltip.objects.lecture_chair = "Cadeira de leitura: os médicos que estäo estudando sentam-se aqui para tomar notas, aborrecer-se e rabiscar desnecessariamente. Quantas mais cadeiras ponha, mais compridas seräo as aulas."
+tooltip.objects.auto_autopsy = "Autópsia: uma grande ajuda para descobrir novas curas."
+tooltip.objects.chair = "Cadeira: os pacientes sentam-se sobre ela e falam das suas doenças."
+tooltip.objects.x_ray_viewer = "29 TELAS DE RAIOS-X"
+tooltip.objects.radiator = "Radiador: evita que o seu hospital fique frio."
+tooltip.objects.bed3 = "näo se utiliza"
+tooltip.objects.surgeon_screen = "35 TELAS DE CIRURGIAO"
+tooltip.objects.jelly_moulder = "47 BANHOS GELATINOSOS"
+tooltip.objects.drinks_machine = "Máquina de bebidas: impede que os pacientes tenham sede e contribui com ganhos."
+tooltip.objects.op_sink2 = "34 PIAS 2 OP"
+tooltip.objects.table1 = "Mesa: sobre ela coloca-se um montäo de revistas para que os pacientes esperem contentes."
+tooltip.objects.entrance_right = "59 PORTAS ESQUERDAS DE ENTRADA"
+tooltip.objects.operating_table = "30 MESAS DE OPERACOES"
+tooltip.objects.tv = "TV: assegura de que o seu pessoal näo perca os seus programas favoritos."
+tooltip.watch.hospital_opening = "Cronômetro de construçäo: é o tempo que resta para que o seu hospital seja declarado aberto. Se apertar o botäo IR abrirá o hospital imediatamente."
+tooltip.watch.epidemic = "Epidemia: tempo que resta para encobrir a epidemia. Quando este tempo expire ou um paciente contagioso abandone o seu hospital, um Inspetor de Saúde vem visitar. O botäo liga ou desliga o modo vacina. Aperte em um paciente para que uma Enfermeira o vacine."
+tooltip.watch.emergency = "Emergência: tempo que resta para curar todos os pacientes nas emergências."
+tooltip.buy_objects_window.increase = "Comprar mais um objeto"
+tooltip.buy_objects_window.price = "Preço do objeto"
+tooltip.buy_objects_window.confirm = "Comprar objeto(s)"
+tooltip.buy_objects_window.cancel = "Cancelar"
+tooltip.buy_objects_window.decrease = "Comprar menos um objeto"
+tooltip.buy_objects_window.total_value = "Custo total dos objetos solicitados"
+tooltip.machine_window.status = "Estado das máquinas."
+tooltip.machine_window.close = "Cancelar caixa de diálogo"
+tooltip.machine_window.repair = "Mandar o faz-tudo reparar as máquinas."
+tooltip.machine_window.name = "Nome"
+tooltip.machine_window.times_used = "Número de vezes que reparou as máquinas."
+tooltip.machine_window.replace = "Substituir máquinas"
+tooltip.pay_rise_window.accept = "Satisfazer a sua demanda salarial"
+tooltip.pay_rise_window.decline = "Näo pagar; despedi-los"
+tooltip.staff_window.psychiatrist = "Psiquiatra"
+tooltip.staff_window.close = "Cancelar caixa de diálogo"
+tooltip.staff_window.sack = "Despedir"
+tooltip.staff_window.name = "Nome do empregado"
+tooltip.staff_window.pick_up = "Selecionar"
+tooltip.staff_window.tiredness = "Nível de cansaço"
+tooltip.staff_window.ability = "Nível de qualificaçäo"
+tooltip.staff_window.researcher = "Pesquisador"
+tooltip.staff_window.skills = "Qualificaçöes especiais"
+tooltip.staff_window.salary = "Salário mensal"
+tooltip.staff_window.happiness = "Nível de satisfaçäo"
+tooltip.staff_window.doctor_seniority = "Categoria - Residente, Médico ou Consultor"
+tooltip.staff_window.surgeon = "Cirurgiäo"
+tooltip.research.cure_dec = "Reduzir a porcentagem de Curas"
+tooltip.research.close = "Fechar tela de pesquisa"
+tooltip.research.diagnosis_inc = "Aumentar a porcentagem de Pesquisa de máquinas"
+tooltip.research.cure_inc = "Aumentar a porcentagem de Pesquisa"
+tooltip.research.specialisation_inc = "Aumentar a porcentagem de Pesquisa Especial"
+tooltip.research.diagnosis_dec = "Reduzir a porcentagem de Pesquisa"
+tooltip.research.improvements_inc = "Aumentar a porcentagem de Melhoras"
+tooltip.research.drugs_dec = "Reduzir a porcentagem de Farmácia"
+tooltip.research.specialisation_dec = "Reduzir a porcentagem de Pesquisa Especial"
+tooltip.research.improvements_dec = "Reduzir a porcentagem de Melhoras"
+tooltip.research.drugs_inc = "Aumentar a porcentagem de Pesquisa Farmacológica"
+tooltip.research.allocated_amount = "Quantidade do orçamento atribuído"
+tooltip.statement.close = "Fechar tela do estado das contas"
+tooltip.rooms.ward = "As enfermarias säo úteis tanto para diagnosticar como para tratamento. Envie aqui os pacientes para observaçäo e para recuperar de uma operaçäo sob o cuidado de uma enfermeira."
+tooltip.rooms.blood_machine = "O médico usa o Transfusiômetro para diagnosticar os pacientes"
+tooltip.rooms.fracture_clinic = "A enfermeira utiliza a consulta de traumatologia para arrumar fraturas"
+tooltip.rooms.cardiogram = "O médico usa a cardiologia para diagnosticar os pacientes"
+tooltip.rooms.decontamination = "O médico usa a ducha descontaminadora para curar a radioatividade"
+tooltip.rooms.jelly_vat = "O médico usa o Banho Gelatinoso para curar a gelatinitis"
+tooltip.rooms.staffroom = "Os médicos e as enfermeiras descansam na Sala de Descanso"
+tooltip.rooms.hair_restoration = "O médico usa o Pêlo-restaurador para curar a calvície"
+tooltip.rooms.inflation = "O médico usa a Inflatoterapia para curar a cabeça inflada"
+tooltip.rooms.gps_office = "Os pacientes recebem sua primeira consulta na sala de Consultório Geral"
+tooltip.rooms.training_room = "A sala de formaçäo com um consultor serve para formar outros médicos"
+tooltip.rooms.x_ray = "O médico usa Raios-X para diagnosticar os pacientes"
+tooltip.rooms.general_diag = "O médico utiliza a sala de Diagnóstico Geral para fazer um diagnóstico básico. É barato e frequentemente eficaz"
+tooltip.rooms.operating_theatre = "No sala de operaçöes fazem falta dois cirurgiöes qualificados"
+tooltip.rooms.ultrascan = "O médico usa o Ultra-scanner para diagnosticar os pacientes"
+tooltip.rooms.psychiatry = "A consulta de psiquiatria cura os pacientes loucos e ajuda a diagnosticar outros pacientes, mas requer um médico qualificado em psiquiatria."
+tooltip.rooms.toilets = "Construa banheiros para impedir que os pacientes armem uma confusäo no seu hospital!"
+tooltip.rooms.dna_fixer = "O médico usa o Reparador de DNA para curar os pacientes com DNA alienígena"
+tooltip.rooms.pharmacy = "Na enfermaria, a enfermeira administra remédios para curar os pacientes"
+tooltip.rooms.tongue_clinic = "O médico usa o Laringologia para curar a língua comprida"
+tooltip.rooms.research_room = "Os médicos pesquisadores investigam remédios e máquinas novas na Pesquisa"
+tooltip.rooms.scanner = "O médico usa o Scanner para diagnosticar os pacientes"
+tooltip.rooms.electrolysis = "O médico usa a consulta de eletrólise para curar o peludismo"
+tooltip.policy.diag_procedure = "Se o diagnóstico de um médico é menos seguro que a porcentagem de ENVIAR PARA CASA, o paciente será enviado para casa. Se o diagnóstico for melhor que a porcentagem de TENTAR CURA, será administrado o tratamento adequado ao paciente"
+tooltip.policy.staff_leave = "Aperte aqui para que os funcionários livres ajudem os companheiros que precisem"
+tooltip.policy.close = "Fechar tela de normas"
+tooltip.policy.staff_rest = "Nível de cansaço do pessoal antes de poderem descansar"
+tooltip.policy.diag_termination = "O diagnóstico de um paciente continuará até que os médicos estejam seguros da porcentagem de PARAR PROCESSO, ou até que sejam utilizados todos os diagnosticadores"
+tooltip.policy.staff_stay = "Aperte aqui para assegurar que o funcionário fique nas consultas que foram atribuídas a ele"
+tooltip.main_menu.load_menu.empty_slot = "VAZIO"
+tooltip.main_menu.load_menu.load_slot = "JOGO"
+tooltip.main_menu.network = "Iniciar um jogo em rede"
+tooltip.staff_list.psychiatrist = "Psiquiatra qualificado"
+tooltip.staff_list.close = "Fechar gerenciamento de funcionários"
+tooltip.staff_list.happiness_2 = "Moral do empregado"
+tooltip.staff_list.ability = "Mostra o nível de habilidade destes empregados"
+tooltip.staff_list.tiredness_2 = "Cansaço do empregado"
+tooltip.staff_list.ability_2 = "Nível de habilidade do empregado"
+tooltip.staff_list.salary = "Salário atual pago a esta pessoa"
+tooltip.staff_list.researcher_train = "Formado um %d%% para ser Pesquisador"
+tooltip.staff_list.happiness = "Mostra o quanto contentes estäo estes empregados"
+tooltip.staff_list.sack = "Despedir esta pessoa"
+tooltip.staff_list.surgeon = "Cirurgiäo qualificado"
+tooltip.staff_list.view_staff = "Ver a pessoa trabalhando"
+tooltip.staff_list.surgeon_train = "Formado um %d%% para ser Cirurgiäo"
+tooltip.staff_list.tiredness = "Mostra o quanto cansados estäo estes empregados"
+tooltip.staff_list.receptionists = "Ver a lista das recepcionistas contratadas neste hospital"
+tooltip.staff_list.pay_rise = "Subir o salário desta pessoa em 10%"
+tooltip.staff_list.bonus = "Pagar a esta pessoa um bônus de 10%"
+tooltip.staff_list.doctor_seniority = "Experiência do médico"
+tooltip.staff_list.nurses = "Ver a lista das enfermeiras contratadas neste hospital"
+tooltip.staff_list.skills = "Outras qualificaçöes"
+tooltip.staff_list.detail = "Cuidar os detalhes"
+tooltip.staff_list.doctors = "Ver a lista dos médicos contratados neste hospital"
+tooltip.staff_list.handymen = "Ver a lista dos faz-tudo contratados neste hospital"
+tooltip.staff_list.researcher = "Pesquisador qualificado"
+tooltip.staff_list.psychiatrist_train = "Formado um %d%% para ser Psiquiatra"
+tooltip.place_objects_window.confirm = "Confirmar"
+tooltip.place_objects_window.buy_sell = "Comprar/vender objetos"
+tooltip.place_objects_window.pick_up = "Apanhar objeto"
+tooltip.place_objects_window.cancel = "Cancelar"
+tooltip.casebook.increase = "Aumentar quantidade"
+tooltip.casebook.reputation = "Reputaçäo de curas ou diagnósticos"
+tooltip.casebook.close = "Fechar ficha clínica"
+tooltip.casebook.earned_money = "Ganhos até a data"
+tooltip.casebook.decrease = "Reduzir quantidade"
+tooltip.casebook.up = "Subir"
+tooltip.casebook.research = "Clique aqui para utilizar o orçamento de Pesquisa Especializada para este tratamento"
+tooltip.casebook.down = "Baixar"
+tooltip.casebook.sent_home = "Número de pacientes dados alta"
+tooltip.casebook.cured = "Número de restabelecimentos"
+tooltip.casebook.deaths = "Número de falecimentos"
+tooltip.casebook.treatment_charge = "Preço"
+tooltip.casebook.cure_type.psychiatrist = "Os psiquiatras realizam este tratamento"
+tooltip.casebook.cure_type.drug_percentage = "Este tratamento requer uma remédio. O seu tem uma eficácia de %d%%"
+tooltip.casebook.cure_type.drug = "Este tratamento requer uma remédio"
+tooltip.casebook.cure_type.machine = "É preciso de uma máquina para este tratamento"
+tooltip.casebook.cure_type.surgery = "Esta doença requer cirurgia"
+tooltip.casebook.cure_requirement.hire_staff_old = "Você precisa contratar um %s para este tratamento"
+tooltip.casebook.cure_requirement.not_possible = "Näo pode administrar este tratamento"
+tooltip.casebook.cure_requirement.hire_surgeon = "Você precisa contratar um segundo cirurgiäo para que realize operaçöes"
+tooltip.casebook.cure_requirement.build_ward = "Você precisa construir uma enfermaria para administrar este tratamento"
+tooltip.casebook.cure_requirement.possible = "Pode administrar este tratamento"
+tooltip.casebook.cure_requirement.build_room = "Você precisa construir uma consulta para dar este tratamento"
+tooltip.casebook.cure_requirement.hire_surgeons = "Você precisa contratar dois cirurgiöes para as operaçöes"
+tooltip.casebook.cure_requirement.research_machine = "Tem que inventar alguma máquina para este tratamento."
+tooltip.casebook.cure_requirement.ward_hire_nurse = "Você precisa de uma enfermeira que trabalhe na enfermaria para administrar este tratamento"
+tooltip.patient_window.center_view = "Enfocar a pessoa"
+tooltip.patient_window.warmth = "Quanto calor tem a pessoa"
+tooltip.patient_window.close = "Cancelar caixa de diálogo"
+tooltip.patient_window.send_home = "Dar alta à pessoa"
+tooltip.patient_window.thirst = "Quanta sede tem a pessoa"
+tooltip.patient_window.graph = "Clique para escolher entre o gráfico do estado de saúde da pessoa ou o seu histórico clínico"
+tooltip.patient_window.queue = "Ver detalhes da pessoa que faz fila"
+tooltip.patient_window.happiness = "Satisfaçäo da pessoa"
+tooltip.patient_window.casebook = "Ver detalhes da doença da pessoa"
+tooltip.patient_window.abort_diagnosis = "Colocar a pessoa em tratamento em vez de esperar que complete o diagnóstico"
+tooltip.town_map.fire_extinguishers = "Alterar extintores"
+tooltip.town_map.people = "Alterar pessoas"
+tooltip.town_map.balance = "Saldo"
+tooltip.town_map.objects = "Alterar objetos"
+tooltip.town_map.heat_inc = "Subir aquecimento"
+tooltip.town_map.heating_bill = "Recibo de aquecimento"
+tooltip.town_map.heat_level = "Nível de aquecimento"
+tooltip.town_map.radiators = "Alterar radiadores"
+tooltip.town_map.plants = "Alterar plantas"
+tooltip.town_map.heat_dec = "Baixar aquecimento"
+tooltip.town_map.close = "Fechar mapa da cidade"
+tooltip.graphs.cures = "Alterar curas"
+tooltip.graphs.reputation = "Alterar o valor do hospital"
+tooltip.graphs.close = "Fechar tela de gráficos"
+tooltip.graphs.balance = "Alterar saldo"
+tooltip.graphs.wages = "Alterar salários"
+tooltip.graphs.visitors = "Alterar visitantes"
+tooltip.graphs.money_in = "Alterar crédito"
+tooltip.graphs.deaths = "Alterar mortes"
+tooltip.graphs.scale = "Tabela de Gráficos"
+tooltip.graphs.money_out = "Alterar gastos"
+tooltip.toolbar.policy = "Normas"
+tooltip.toolbar.status = "Condiçäo"
+tooltip.toolbar.research = "Pesquisa"
+tooltip.toolbar.hire = "Contratar funcionários"
+tooltip.toolbar.bank_button = "Aperte o botäo esquerdo para o diretor do banco e o direito para o saldo bancário"
+tooltip.toolbar.charts = "Gráficos"
+tooltip.toolbar.balance = "O seu saldo"
+tooltip.toolbar.edit = "Editar consultas e objetos"
+tooltip.toolbar.date = "A data"
+tooltip.toolbar.rooms = "Construir consultas"
+tooltip.toolbar.staff_list = "Gerenciamento de funcionários"
+tooltip.toolbar.town_map = "Mapa da cidade"
+tooltip.toolbar.casebook = "Ficha Clínica"
+tooltip.toolbar.reputation = "A sua reputaçäo"
+tooltip.toolbar.objects = "Colocar objetos de corredor"
+tooltip.queue_window.patient_dropdown.reception = "Enviar paciente à Recepçäo"
+tooltip.queue_window.patient_dropdown.hospital_1 = "Enviar o paciente para outro hospital"
+tooltip.queue_window.patient_dropdown.send_home = "Dar alta ao paciente"
+tooltip.queue_window.patient_dropdown.hospital_3 = "Enviar o paciente para outro hospital"
+tooltip.queue_window.patient_dropdown.hospital_2 = "Enviar o paciente para outro hospital"
+tooltip.queue_window.close = "Fecha esta caixa de diálogo"
+tooltip.queue_window.num_expected = "Número de pacientes que a recepcionista calcula que logo faräo fila"
+tooltip.queue_window.front_of_queue = "Arraste um paciente para este ícone para colocá-lo no início da fila"
+tooltip.queue_window.dec_queue_size = "Reduzir o máximo do tamanho da fila"
+tooltip.queue_window.num_in_queue = "Número de pacientes em fila"
+tooltip.queue_window.num_entered = "Número de pacientes que foram tratados nesta consulta até agora"
+tooltip.queue_window.max_queue_size = "Tamanho máximo da fila que permite a recepcionista"
+tooltip.queue_window.inc_queue_size = "Aumentar o máximo do tamanho da fila"
+tooltip.queue_window.end_of_queue = "Arraste um paciente para este ícone para colocá-lo no final da fila"
+tooltip.queue_window.patient = "Arraste um paciente para colocá-lo na fila. Aperte o botäo direito sobre um paciente para mandá-lo para a fila ou para um hospital rival"
+tooltip.bank_manager.graph = "Gráfico dos pagamentos esperados de %s"
+tooltip.bank_manager.close = "Fechar tela do gerente do banco"
+tooltip.bank_manager.balance = "O seu saldo bancário"
+tooltip.bank_manager.borrow_5000 = "Pedir $5000 ao banco"
+tooltip.bank_manager.hospital_value = "Valor atual do seu hospital"
+tooltip.bank_manager.insurance_owed = "Quantidade de dinheiro que lhe deve %s"
+tooltip.bank_manager.interest_payment = "Pagamentos dos juros mensais"
+tooltip.bank_manager.repay_5000 = "Devolver $5000 ao banco"
+tooltip.bank_manager.graph_return = "Voltar para a tela anterior"
+tooltip.bank_manager.interest_rate = "Taxa de juro anual"
+tooltip.bank_manager.inflation_rate = "Taxa de inflaçäo anual"
+tooltip.bank_manager.show_graph = "Mostra o gráfico dos pagamentos esperados de %s"
+tooltip.bank_manager.current_loan = "Empréstimos pendentes"
+tooltip.jukebox.play = "Ligar máquina de discos"
+tooltip.jukebox.stop = "Parar máquina de discos"
+tooltip.jukebox.close = "Fechar máquina de discos"
+tooltip.jukebox.fast_forward = "Avançar rápido da máquina de discos"
+tooltip.jukebox.rewind = "Rebobinar máquina de discos"
+tooltip.jukebox.current_title = "Máquina de discos"
+tooltip.jukebox.loop = "Funcionamento contínuo da máquina de discos"
+tooltip.build_room_window.cost = "Preço da consulta selecionada"
+tooltip.build_room_window.room_classes.treatment = "Selecione consultas de clínica geral"
+tooltip.build_room_window.room_classes.facilities = "Selecione consultas especiais"
+tooltip.build_room_window.room_classes.diagnosis = "Selecione consultas de diagnóstico"
+tooltip.build_room_window.room_classes.clinic = "Selecione consultas de especialidade médica"
+tooltip.build_room_window.close = "Sair desta caixa de diálogo e voltar para o jogo"
+tooltip.hire_staff_window.surgeon = "Cirurgiäo"
+tooltip.hire_staff_window.psychiatrist = "Psiquiatra"
+tooltip.hire_staff_window.qualifications = "Outras habilidades do médico"
+tooltip.hire_staff_window.receptionists = "Ver as recepcionistas que pode contratar"
+tooltip.hire_staff_window.hire = "Contratar pessoa"
+tooltip.hire_staff_window.nurses = "Ver as enfermeiras que pode contratar"
+tooltip.hire_staff_window.doctor_seniority = "Experiência médica (Residente, Médico, Consultor)"
+tooltip.hire_staff_window.cancel = "Cancelar"
+tooltip.hire_staff_window.researcher = "Pesquisador"
+tooltip.hire_staff_window.prev_person = "Ver pessoa anterior"
+tooltip.hire_staff_window.salary = "Salário"
+tooltip.hire_staff_window.staff_ability = "Qualificaçäo do pessoal"
+tooltip.hire_staff_window.doctors = "Ver os médicos que pode contratar"
+tooltip.hire_staff_window.next_person = "Ver pessoa seguinte"
+tooltip.hire_staff_window.handymen = "Ver os faz-tudo que pode contratar"
+tooltip.handyman_window.center_view = "Enfocar o faz-tudo"
+tooltip.handyman_window.close = "Cancelar caixa de diálogo"
+tooltip.handyman_window.sack = "Despedir"
+tooltip.handyman_window.name = "Nome do faz-tudo"
+tooltip.handyman_window.pick_up = "Apanhar"
+tooltip.handyman_window.prio_litter = "Aumentar a prioridade do faz-tudo para a limpeza"
+tooltip.handyman_window.ability = "Qualificaçäo"
+tooltip.handyman_window.prio_machines = "Aumentar a prioridade do faz-tudo para reparar as máquinas"
+tooltip.handyman_window.salary = "Salário"
+tooltip.handyman_window.face = "Face do faz-tudo"
+tooltip.handyman_window.happiness = "Satisfaçäo"
+tooltip.handyman_window.tiredness = "Cansaço"
+tooltip.handyman_window.prio_plants = "Aumentar a prioridade do faz-tudo para regar as plantas"
+tooltip.window_general.cancel = "Cancelar"
+tooltip.window_general.confirm = "Confirmar"
+adviser.earthquake.ended = "Vá! Acreditei que ia ser o pior de todos! Alcançou um %d na Escala Richter."
+adviser.earthquake.damage = "Por causa do terremoto há %d máquinas danificadas e %d pessoas feridas no hospital."
+adviser.earthquake.alert = "Perigo de terremoto! As suas máquinas podem danificar-se durante o terremoto se näo tiverem uma boa manutençäo."
+adviser.staff_place_advice.only_psychiatrists = "Os médicos podem trabalhar em uma sala de psiquiatria só se estiverem qualificados para isso."
+adviser.staff_place_advice.doctors_cannot_work_in_room = "Os médicos näo podem trabalhar no(a) %s"
+adviser.staff_place_advice.only_researchers = "Os médicos podem trabalhar em um Centro de Pesquisa só se estiverem qualificados para isso."
+adviser.staff_place_advice.nurses_cannot_work_in_room = "As enfermeiras näo podem trabalhar no(a) %s"
+adviser.staff_place_advice.only_surgeons = "Os médicos podem trabalhar em um sala de operaçöes só se estiverem qualificados para isso."
+adviser.staff_place_advice.receptionists_only_at_desk = "As recepcionistas só podem trabalhar em uma Recepçäo."
+adviser.staff_place_advice.only_doctors_in_room = "Só podem trabalhar os Médicos no(a) %s"
+adviser.staff_place_advice.only_nurses_in_room = "Só podem trabalhar as Enfermeiras no(a) %s"
+adviser.competitors.staff_poached = "Um dos seus funcionários recebeu uma boa oferta de trabalho de um outro hospital."
+adviser.competitors.land_purchased = "%s acaba de comprar terrenos."
+adviser.competitors.hospital_opened = "%s, da concorrência, abriu um hospital na área."
+adviser.epidemic.hurry_up = "Se näo acabar em seguida com esta epidemia, terá muitos problemas. Despacha-se!"
+adviser.epidemic.multiple_epidemies = "Parece que tem mais de uma epidemia de uma vez. Isto poderia ser desastroso, sendo assim faz algo rapidamente."
+adviser.epidemic.serious_warning = "Esta doença contagiosa começa a ser grave. Tem que fazer algo brevemente!"
+adviser.warnings.patients_unhappy = "Os pacientes näo gostam do seu hospital. Deveria fazer algo para melhorá-lo."
+adviser.warnings.too_much_litter = "Há um problema de limpeza. Mais faz-tudo é a soluçäo."
+adviser.warnings.patients_very_thirsty = "Os pacientes têm muita sede. Se näo colocar logo algumas máquinas de bebidas, as pessoas iräo embora do seu hospital para tomar algum refresco."
+adviser.warnings.queue_too_long_at_reception = "Tem muitos pacientes à espera de reservas para as consultas na recepçäo. Coloque outra Recepçäo e contrate outra Recepcionista."
+adviser.warnings.patients_thirsty = "As pessoas começam a ter sede. Talvez deveria colocar máquinas de bebidas."
+adviser.warnings.nurses_tired = "As suas enfermeiras estäo cansadas. Mande-as descansar agora mesmo."
+adviser.warnings.patients_too_hot = "Os pacientes têm muito calor. Retire alguns radiadores, baixa a temperatura ou coloca mais máquinas de bebidas."
+adviser.warnings.patients_thirsty2 = "As pessoas queixam-se de que têm sede. Deveria colocar mais máquinas de bebidas ou colocar mais perto as que já há."
+adviser.warnings.machines_falling_apart = "Suas máquinas estäo caindo aos pedaços. Chame a manutençäo para que as reparem."
+adviser.warnings.financial_trouble3 = "O seu saldo tem um aspecto preocupante. Pensa em fazer algo de efetivo. Está a %d do desastre."
+adviser.warnings.nurses_tired2 = "As suas enfermeiras estäo muito cansadas. Faça descansá-las agora mesmo."
+adviser.warnings.people_have_to_stand = "Há pacientes de pé. Faça-os sentar já!"
+adviser.warnings.handymen_tired = "Os seus faz-tudo estäo muito cansados. Mande-os descansar agora mesmo."
+adviser.warnings.change_priorities_to_plants = "Tem que alterar as prioridades dos seus faz-tudo para que empreguem mais tempo regando as suas plantas."
+adviser.warnings.staff_tired = "O seu pessoal está incrivelmente cansado. Se näo os deixa descansar um momento em uma Sala de Descanso, alguns poderäo cair de esgotamento."
+adviser.warnings.some_litter = "Os faz-tudo podem recolher tudo este lixo antes de que se converta em um grave problema."
+adviser.warnings.cash_low_consider_loan = "As suas finanças andam mal. Já pensou em um empréstimo?"
+adviser.warnings.reduce_staff_rest_threshold = "Tente alterar o Tempo de Descanso dos funcionários no tela de Normas para que possam descansar mais frequentemente. É só uma sugestäo."
+adviser.warnings.build_staffroom = "Construa uma Sala de Descanso o mais rápido possível. Os seus funcionários trabalham muito e estäo à beira do colapso. Vamos, seja razoável!"
+adviser.warnings.many_epidemics = "Parece que tem mais de uma epidemia de uma vez. Isto poderia ser desastroso, sendo assim faz algo rapidamente."
+adviser.warnings.build_toilets = "Construa um banheiro agora mesmo ou verá algo muito desagradável. E pode imaginar como cheirará o seu hospital."
+adviser.warnings.staff_overworked = "Os seus empregados têm muito trabalho. Estäo perdendo eficácia e väo começar a cometer erros desastrosos."
+adviser.warnings.doctors_tired2 = "Os seus médicos estäo cansadíssimos. Precisam descansar imediatamente."
+adviser.warnings.queues_too_long = "Tem muitos pacientes fazendo fila."
+adviser.warnings.staff_unhappy = "O seu pessoal está descontente. Dê-lhes um pagamento extra ou, ainda melhor, construa uma Sala de Descanso para eles. Também poderia alterar o seu tempo de descanso no tela de Normas."
+adviser.warnings.patient_leaving = "Há um paciente que parte. A causa? A má direçäo e a péssima qualidade do seu pessoal e seus equipamentos."
+adviser.warnings.patient_stuck = "Alguém ficou bloqueado. Planeje melhor seu hospital."
+adviser.warnings.receptionists_tired = "As suas recepcionistas estäo extenuadas. Mande-as descansar agora mesmo."
+adviser.warnings.charges_too_low = "Cobra muito pouco. Terá pacientes no seu hospital, mas näo lhe contribuiräo com muitos ganhos."
+adviser.warnings.epidemic_getting_serious = "Esta doença contagiosa começa a ser grave. Tem que fazer algo brevemente!"
+adviser.warnings.patients_really_thirsty = "Os pacientes têm muita sede. Coloque mais máquinas de bebidas ou aproxime as existentes às filas mais compridas."
+adviser.warnings.patients_annoyed = "As pessoas estäo enormemente desagradadas pelo modo que dirige o seu hospital. E näo pode dizer que näo tenham culpa. Solucione o problema ou confronte as consequências!"
+adviser.warnings.place_plants3 = "Os pacientes estäo descontentes. Coloque mais plantas para animá-los."
+adviser.warnings.machinery_deteriorating = "As suas máquinas começam a se deteriorar por uso excessivo. Vigie-as."
+adviser.warnings.place_plants4 = "Alegra aos pacientes colocando mais plantas."
+adviser.warnings.money_very_low_take_loan = "O seu saldo bancário é muito baixo. Poderia pedir um empréstimo."
+adviser.warnings.finanical_trouble2 = "Consiga algum crédito ou estará acabado. Perderá o nível se perder outros %d."
+adviser.warnings.patients_very_cold = "Os pacientes têm muito frio. Suba o aquecimento ou coloque mais radiadores no seu hospital."
+adviser.warnings.deal_with_epidemic_now = "Se näo acabar em seguida com esta epidemia, terá muitos problemas. Despacha-se!"
+adviser.warnings.litter_catastrophy = "O problema da falta de limpeza é grave. Ponha a trabalhar agora mesmo uns quantos faz-tudo!"
+adviser.warnings.litter_everywhere = "Há sujidade por toda parte. Ponha mais faz-tudo a trabalhar."
+adviser.warnings.machinery_slightly_damaged = "A maquinaria do seu hospital está um pouco danificada. Näo se esqueça de as reparar."
+adviser.warnings.patients_getting_hot = "Os pacientes têm muito calor. Baixe o aquecimento ou retire alguns radiadores."
+adviser.warnings.no_patients_last_month = "No último mês, näo vieram novos pacientes ao seu hospital. Horrível!"
+adviser.warnings.many_killed = "Matou %d pacientes. Acho que tem que conseguir melhor, näo?"
+adviser.warnings.build_toilet_now = "Construa já uns banheiros. As pessoas näo aguentam mais. Näo se ria, é grave."
+adviser.warnings.people_freezing = "Que horrível! Nesta era de aquecimento central, alguns dos seus pacientes estäo se congelando. Coloque radiadores para que sejam aquecidos e suba o aquecimento."
+adviser.warnings.place_plants_to_keep_people = "As pessoas estäo indo embora. Se colocasse mais planta poderia convencê-los a ficar."
+adviser.warnings.patients_leaving = "Os pacientes partem. Melhora o seu hospital colocando plantas, bancos, máquinas de bebidas, etc., para os seus visitantes."
+adviser.warnings.doctors_tired = "Os seus médicos estäo esgotados. Mande-os descansar agora mesmo."
+adviser.warnings.charges_too_high = "Os seus preços säo muito altos. Terá grandes benefícios a curto prazo, mas à longo ficará sem pacientes."
+adviser.warnings.financial_trouble = "Tem sérios problemas financeiros. Arranja a sua financia já! Se perder outros %d, terá arruinado este nível!"
+adviser.warnings.reception_bottleneck = "Há um gargalo na Recepçäo. Contrate outra Recepcionista."
+adviser.warnings.pay_back_loan = "Tem dinheiro de sobra. Por que näo pensa em liquidar o empréstimo?"
+adviser.warnings.nobody_cured_last_month = "No mês passado, näo houve nenhuma cura."
+adviser.warnings.queue_too_long_send_doctor = "As filas de %s säo muito longas. Assegure-se de que há um Médico nas consultas."
+adviser.warnings.staff_too_hot = "Os seus empregados têm muito calor. Baixe a temperatura ou retire alguns radiadores das suas consultas."
+adviser.warnings.place_plants2 = "Os pacientes estäo indo. Com mais planta poderia conseguir que ficassem mais tempo."
+adviser.warnings.doctor_crazy_overwork = "Oh, näo! Um dos seus médicos ficou louco pelo excesso de trabalho. Irá se recuperar se descansar agora mesmo."
+adviser.warnings.machinery_damaged = "Repare, o mais brevemente possível, as suas máquinas. Näo falta muito para que comecem a cair aos a pedaços."
+adviser.warnings.more_benches = "Poderia colocar mais bancos. Os doentes protestam por terem que estar de pé."
+adviser.warnings.bankruptcy_imminent = "Ei! Vai ficar sem máquinas. Tome cuidado!"
+adviser.warnings.need_toilets = "Os pacientes precisam de casas de banho. Coloca-as em um lugar acessível."
+adviser.warnings.more_toilets = "Você precisa de mais banheiros. As pessoas näo aguentam mais."
+adviser.warnings.plants_dying = "As suas plantas estäo secando. Precisam de água. Consiga mais faz-tudo para que cuidem disso. Os pacientes näo gostam das plantas mortas."
+adviser.warnings.people_did_it_on_the_floor = "Alguns dos seus pacientes näo podem aguentar mais. Alguém vai ter que limpar sem descanso."
+adviser.warnings.need_staffroom = "Construa uma sala de descanso para que os seus empregados possam descansar."
+adviser.warnings.plants_thirsty = "Tem que cuidar das suas plantas. Estäo secando."
+adviser.warnings.too_many_plants = "Tem muitas plantas. Isto parece uma selva."
+adviser.warnings.receptionists_tired2 = "As suas recepcionistas estäo esgotadas. Deixa que descansem agora mesmo."
+adviser.warnings.machine_severely_damaged = "%s está prestes a se quebrar."
+adviser.warnings.machinery_very_damaged = "É uma emergência! Faça com que que um faz-tudo repare as sas máquinas em seguida. Estäo a ponto de explodir!"
+adviser.warnings.hospital_is_rubbish = "As pessoas näo têm dúvidas em dizer que o seu hospital é uma porcaria. Já sabe que logo iräo queixar-se a outra parte."
+adviser.warnings.handymen_tired2 = "Os seus faz-tudo estäo destroçados. Mande-os descansar imediatamente."
+adviser.warnings.machinery_damaged2 = "Deve contratar um faz-tudo para reparar as suas máquinas rapidamente."
+adviser.warnings.staff_very_cold = "O pessoal reclama do frio. Suba o aquecimento ou coloque mais radiadores."
+adviser.warnings.desperate_need_for_watering = "Necessita desesperadamente contratar um faz-tudo para que cuide das suas plantas."
+adviser.warnings.staff_unhappy2 = "O seu pessoal, no geral, está descontente. Logo, pediräo mais dinheiro."
+adviser.staff_advice.too_many_nurses = "Está contratando muitas enfermeiras."
+adviser.staff_advice.need_handyman_litter = "Os pacientes estäo sujando o seu hospital. Contrate uma faz-tudo para se encarregar da limpeza."
+adviser.staff_advice.need_nurses = "Contrate mais enfermeiras. Na enfermaria e na farmácia fazem falta enfermeiras."
+adviser.staff_advice.need_doctors = "Você precisa de mais médicos. Tente colocar os seus melhores médicos nas consultas com mais pacientes."
+adviser.staff_advice.too_many_doctors = "Tem muitos médicos. Alguns estäo desocupados neste momento."
+adviser.staff_advice.need_handyman_machines = "Terá que contratar um faz-tudo se quiser que as máquinas do seu hospital funcionem."
+adviser.staff_advice.need_handyman_plants = "Contrate um faz-tudo para regar as plantas."
+adviser.praise.few_have_to_stand = "Quase ninguém fica de pé no seu hospital. Os seus pacientes estäo contentes."
+adviser.praise.patients_cured = "%d pacientes curados."
+adviser.praise.plants_are_well = "Muito bem. Está cuidando bem das suas plantas. Estupendo."
+adviser.praise.plenty_of_benches = "Há muitos assentos, assim näo há problema."
+adviser.praise.plants_thriving = "Muito bem. As suas plantas estäo muito viçosas. Têm um aspecto maravilhoso. Mantenha-as assim e poderá ganhar um prêmio por isto."
+adviser.praise.many_benches = "Agora os seus pacientes têm suficientes assentos. Muito bem!"
+adviser.praise.many_plants = "Fantástico! Tem muitas plantas. Os seus pacientes agradeceräo isso."
+adviser.surgery_requirements.need_surgeons_ward_op = "Tem que contratar dois cirurgiöes e construir uma enfermaria e uma sala de operaçöes para realizar operaçöes."
+adviser.surgery_requirements.need_surgeon_ward = "Tem que contratar um outro cirurgiäo e construir uma enfermaria para poder realizar operaçöes."
+adviser.multiplayer.objective_completed = "Completou o objetivo. Felicidades!"
+adviser.multiplayer.objective_failed = "Näo conseguiu completar o objetivo."
+adviser.multiplayer.everyone_failed = "Todos falharam ao satisfazer aquele último objetivo."
+adviser.multiplayer.players_failed = "O(s) seguinte jogador(es) falharam ao alcançar o último objetivo : "
+adviser.multiplayer.poaching.not_interested = "Ha! Näo lhes interessa trabalhar para si. Estäo contentes onde estäo."
+adviser.multiplayer.poaching.already_poached_by_someone = "Nem pensar! Alguém trate de pescar essa pessoa!"
+adviser.multiplayer.poaching.in_progress = "Eu o informarei se esta pessoa deseja trabalhar pra você."
+adviser.research.new_drug_researched = "Está sendo pesquisado um novo medicamento para curar %s."
+adviser.research.new_machine_researched = "Pesquisou com êxito %s."
+adviser.research.drug_fully_researched = "Pesquisou 100%% %s."
+adviser.research.drug_improved = "O seu Departamento de Pesquisa melhorou o medicamento para %s."
+adviser.research.new_available = "Já pode utilizar um novo %s."
+adviser.research.machine_improved = "O Departamento de Pesquisa melhorou o(a) %s."
+adviser.research.autopsy_discovered_rep_loss = "Foi descoberta uma máquina de autoautópsias. Aguarde uma reaçäo desfavorável das pessoas."
+adviser.information.emergency = "Há uma emergência! Mexa-se! Mexa-se! Mexa-se!"
+adviser.information.handyman_adjust = "Pode conseguir que o faz-tudo limpe melhor se estabelecer as suas prioridades."
+adviser.information.promotion_to_specialist = "Um dos seus Médicos foi promovido para %s."
+adviser.information.pay_rise = "Um funcionário ameaça se demitir. Pode atender a sua petiçäo ou despedi-lo. Clique no último ícone da esquerda para ver quem deseja demitir."
+adviser.information.first_death = "Acabou de matar o primeiro paciente. Como se sente?"
+adviser.information.fax_received = "O ícone que acaba de aparecer no canto inferior esquerdo do tela alerta-lhe sobre uma informaçäo importante ou de que tem que tomar uma decisäo."
+adviser.information.promotion_to_consultant = "Um dos seus MEDICOS converteu-se em CONSULTOR."
+adviser.information.patient_abducted = "Os alienígenas raptaram um dos seus pacientes."
+adviser.information.vip_arrived = "Cuidado! %s acaba de chegar para visitar o seu hospital! Faça com que tudo funcione bem para lhe agradar."
+adviser.information.extra_items = "O equipe está mais confortável e melhora o seu rendimento se colocar objetos complementares nas salas."
+adviser.information.epidemic_health_inspector = "O Ministério da Saúde soube de que tem uma epidemia. Prepare-se para receber brevemente a visita de um Inspetor da Saúde."
+adviser.information.first_cure = "Muito bem! Acaba de curar o seu primeiro paciente."
+adviser.information.epidemic = "Há uma doença contagiosa no seu hospital. Tem que solucioná-la em seguida!"
+adviser.information.patient_leaving_too_expensive = "Um paciente está indo embora sem pagar %s. É muito dinheiro."
+adviser.information.place_windows = "Se colocar janelas, as salas teräo mais luz e os seus empregados estaräo mais contentes."
+adviser.information.initial_general_advice.first_patients_thirsty = "No seu hospital as pessoas têm sede. Coloque máquinas de bebidas."
+adviser.information.initial_general_advice.epidemic_spreading = "Há uma doença contagiosa no seu hospital. Tente curar as pessoas infectadas antes que elas possam ir embora."
+adviser.information.initial_general_advice.research_now_available = "Construiu o seu primeiro centro de pesquisa. Agora pode acessar a tela de pesquisa."
+adviser.information.initial_general_advice.autopsy_available = "Foi inventada uma máquina de autoautópsias. Com ela, poderá se livrar dos pacientes problemáticos e investigar os seus restos. Tome cuidado, o uso desta máquina suscita muita polêmica."
+adviser.information.initial_general_advice.rats_have_arrived = "Os ratos invadiram o seu hospital. Tente eliminá-los com o mouse."
+adviser.information.initial_general_advice.surgeon_symbol = "Os médicos especializados em cirurgia levam o símbolo: {"
+adviser.information.initial_general_advice.machine_needs_repair = "Há uma máquina que precisa ser reparada. Encontre a máquina e aperte sobre ela. Em seguida, aperte no botäo do faz-tudo."
+adviser.information.initial_general_advice.research_symbol = "Os médicos pesquisadores levam o símbolo: }"
+adviser.information.initial_general_advice.decrease_heating = "As pessoas têm muito calor no seu hospital. Baixe o aquecimento. Isto é feito na tela de mapa da cidade."
+adviser.information.initial_general_advice.taking_your_staff = "Alguém está subornando a sua equipe. Terá que discutir com eles para que fiquem."
+adviser.information.initial_general_advice.first_VIP = "Vai receber o seu primeiro visitante VIP. Assegure-se de que o VIP näo veja nada sujo nem nenhum paciente descontente."
+adviser.information.initial_general_advice.increase_heating = "As pessoas têm frio. Ligue o aquecimento na tela de mapa da cidade."
+adviser.information.initial_general_advice.psychiatric_symbol = "Os médicos especializados em psiquiatria levam o símbolo: |"
+adviser.information.initial_general_advice.first_epidemic = "Há uma epidemia no seu hospital! Decida se quer tratá-la ou liberar ela."
+adviser.information.initial_general_advice.place_radiators = "As pessoas têm frio no seu hospital. Pode colocar mais radiadores selecionando-os no menu de mobiliário do corredor."
+adviser.information.initial_general_advice.first_emergency = "Os pacientes de emergência têm uma luz azul que pisca sobre a sua cabeça. Cure eles antes de que morram ou de que o tempo limite se esgote."
+adviser.information.promotion_to_doctor = "Um dos seus RESIDENTES converteu-se em um MEDICO."
+adviser.information.larger_rooms = "Se fizer salas espaçosas, os seus funcionários se sentiräo mais importantes e melhoraräo o seu rendimento."
+adviser.goals.win.value = "AUMENTE O VALOR DO SEU HOSPITAL EM %d"
+adviser.goals.win.reputation = "AUMENTE A SUA REPUTAÇAO EM %d PARA SATISFAZER O NIVEL DO CRITÉRIO PARA GANHAR"
+adviser.goals.win.cure = "Cure mais %d paciente(s) e terá curado os suficientes para ganhar este nível."
+adviser.goals.win.money = "Você precisa de outros %d para alcançar o critério financeiro deste nível."
+adviser.build_advice.door_not_reachable = "As pessoas näo poderäo passar por essa porta. Pense sobre isto."
+adviser.build_advice.blueprint_would_block = "Essa marca azul tapará outras consultas. Tente alterar o tamanho ou coloque em outro local!"
+adviser.build_advice.placing_object_blocks_door = "Se colocar este objeto aí, impedirá que se possa acessar alguma porta."
+adviser.build_advice.blueprint_invalid = "Esta marca azul näo é válida."
+adviser.level_progress.three_quarters_won = "Falta 75%% para superar este nível."
+adviser.level_progress.reputation_good_enough = "De acordo, a sua reputaçäo é muito boa para ganhar este nível, mantenha acima de %d e resolva outros problemas para terminar."
+adviser.level_progress.nearly_won = "Falta muito pouco para superar este nível."
+adviser.level_progress.hospital_value_enough = "Mantenha o valor do seu hospital acima de %d e atenda os seus outros problemas para ganhar o nível."
+adviser.level_progress.improve_reputation = "Você precisa melhorar a sua reputaçäo em %d para ter uma oportunidade de ganhar o nível."
+adviser.level_progress.halfway_won = "Falta 50%% para superar este nível."
+adviser.level_progress.close_to_win_increase_value = "Está próximo da vitória. Aumente o valor do seu hospital em $%d."
+adviser.level_progress.another_patient_cured = "Muito bem! Outro paciente curado. Isto faz um total de %d curados."
+adviser.level_progress.nearly_lost = "Falta muito pouco para perder este nível."
+adviser.level_progress.three_quarters_lost = "Falta 75%% para perder este nível."
+adviser.level_progress.dont_kill_more_patients = "Näo pode permitir deixar que morram mais pacientes!"
+adviser.level_progress.cured_enough_patients = "Curou muitos pacientes, mas precisa manter o seu hospital em melhor estado para ganhar o nível."
+adviser.level_progress.financial_criteria_met = "Tem satisfeito o critério financeiro deste nível. Agora mantenha o seu saldo acima de %d, enquanto assegura de que o hospital funciona eficazmente."
+adviser.level_progress.halfway_lost = "Falta 50%% para perder este nível."
+adviser.level_progress.another_patient_killed = "Oh, näo! Matou outro paciente. Agora há um total de %d mortes."
+adviser.vomit_wave.started = "Parece que tem um vírus de vômitos no seu hospital. Isto näo teria acontecido se o tivesse mantido limpo. Talvez devesse contratar um faz-tudo."
+adviser.vomit_wave.ended = "Ufa! Parece que o vírus que causou essa epidemia de vômitos está controlado. No futuro, mantenha o seu hospital limpo."
+adviser.placement_info.staff_cannot_place = "Näo pode colocar este funcionário aqui. Desculpe."
+adviser.placement_info.room_cannot_place_2 = "Näo pode colocar a consulta aqui."
+adviser.placement_info.object_cannot_place = "Eh! Näo pode colocar aqui este objeto."
+adviser.placement_info.object_can_place = "Pode colocar este objeto aqui."
+adviser.placement_info.door_can_place = "Se quiser, pode colocar a porta aqui."
+adviser.placement_info.reception_cannot_place = "Näo pode colocar a Recepçäo aqui."
+adviser.placement_info.door_cannot_place = "Desculpe, mas näo pode colocar aqui a porta."
+adviser.placement_info.window_cannot_place = "Ah! Näo pode colocar a janela aqui."
+adviser.placement_info.staff_can_place = "Pode colocar este funcionário aqui."
+adviser.placement_info.window_can_place = "Pode colocar a janela aqui. Está bem."
+adviser.placement_info.reception_can_place = "Näo pode colocar aqui a Recepçäo."
+adviser.placement_info.room_cannot_place = "Näo pode colocar aqui a consulta."
+adviser.boiler_issue.maximum_heat = "A caldeira do poräo ficou danificada. Os radiadores estäo no máximo. As pessoas väo derreter! Seria bom que colocasse mais máquinas de bebidas."
+adviser.boiler_issue.minimum_heat = "Ah, aí está! A caldeira do poräo ficou danificada. Parece que dentro de pouco tempo as pessoas väo congelar no seu hospital!"
+adviser.boiler_issue.resolved = "Boas notícias. A caldeira e os radiadores voltaram a funcionar corretamente. Os seus pacientes e o seu pessoal desfrutaräo de uma boa temperatura."
+adviser.tutorial.build_reception = "Você precisa de uma Recepçäo no seu hospital. Escolha uma do menu de mobiliário do corredor."
+adviser.tutorial.click_and_drag_to_build = "Aperte o botäo esquerdo e arraste para desenhar a sala."
+adviser.tutorial.window_in_invalid_position = "Esta janela está mal colocada. Tente colocá-la em outro lugar da parede."
+adviser.tutorial.room_in_invalid_position = "Esta marca azul näo é válida. As áreas vermelhas assinalam onde ocupou parte de outro quarto ou das paredes do hospital."
+adviser.tutorial.choose_receptionist = "Clique no ícone que pisca para contratar a recepcionista que escolheu."
+adviser.tutorial.place_doctor = "Coloque o médico na consulta."
+adviser.tutorial.build_gps_office = "É imprescindível um médico para diagnosticar os doentes."
+adviser.tutorial.select_doctors = "Clique no ícone que pisca para ver os médicos que pode contratar."
+adviser.tutorial.click_gps_office = "Clique na linha que pisca para escolher uma consulta."
+adviser.tutorial.prev_receptionist = "Clique no ícone que pisca para ver a recepcionista disponível anterior."
+adviser.tutorial.information_window = "A funçäo de ajuda proporciona toda a informaçäo sobre a consulta que acaba de construir."
+adviser.tutorial.place_receptionist = "Mova a recepcionista e coloque-a no seu lugar."
+adviser.tutorial.confirm_room = "Clique no ícone que pisca para abrir a consulta ou cancelar para voltar para passo anterior."
+adviser.tutorial.doctor_in_invalid_position = "Näo pode colocar o médico aqui."
+adviser.tutorial.place_objects = "Aperte o botäo esquerdo para colocar os objetos, e o direito para fazê-los girar."
+adviser.tutorial.hire_receptionist = "Agora você precisa de uma recepcionista para atender os seus pacientes."
+adviser.tutorial.hire_doctor = "Você precisa de um médico para diagnosticar e atender os seus pacientes."
+adviser.tutorial.room_too_small_and_invalid = "A marca azul é muito pequena e está mal colocada."
+adviser.tutorial.receptionist_invalid_position = "Näo pode colocar a sua recepcionista aqui."
+adviser.tutorial.door_in_invalid_position = "Tentou colocar a porta em um lugar incorreto. Tente em outro lugar da grade azul."
+adviser.tutorial.next_receptionist = "Clique no ícone que pisca para ver a seguinte recepcionista disponível."
+adviser.tutorial.object_in_invalid_position = "Este objeto está mal colocado. Por favor, coloque em outro lugar ou tente girar."
+adviser.tutorial.choose_doctor = "Veja as habilidades de cada médico antes de escolher um."
+adviser.tutorial.rotate_and_place_reception = "Coloque a Recepçäo e aperte o botäo direito do mouse para girá-la."
+adviser.tutorial.accept_purchase = "Clique com o botäo esquerdo no ícone que pisca para colocá-lo."
+adviser.tutorial.room_too_small = "A marca azul desta sala é muito pequena. Arraste-a ou aumente o seu tamanho."
+adviser.tutorial.room_big_enough = "A marca azul é agora suficientemente grande. Se quiser, pode movê-la ou colocá-la."
+adviser.tutorial.start_tutorial = "Leia as instruçöes. Quando terminar, aperte o botäo esquerdo do mouse para começar o tutorial."
+adviser.tutorial.place_door = "Mova o mouse ao redor das paredes marcadas de azul para colocar a porta."
+adviser.tutorial.select_receptionists = "Clique no ícone que pisca para ver os recepcionistas que estäo disponíveis."
+adviser.tutorial.order_one_reception = "Clique na linha que pisca com o botäo esquerdo do mouse para comprar uma Recepçäo."
+adviser.tutorial.place_windows = "Coloque as janelas da mesma forma que a porta. Se näo quiser janelas, näo tem que as colocar."
+adviser.tutorial.select_diagnosis_rooms = "Clique com o botäo esquerdo no ícone que pisca para ver a lista de salas de diagnóstico."
+adviser.tutorial.reception_invalid_position = "A Recepçäo ficou cinzenta porque näo é possível colocar a¡. Mover ou girá-la."
+adviser.tutorial.build_pharmacy = "Parabéns! Agora, construa uma farmácia e contrate uma enfermeira para fazer o seu hospital funcionar."
+adviser.room_requirements.pharmacy_need_nurse = "Contrate uma enfermeira para a Farmácia."
+adviser.room_requirements.op_need_two_surgeons = "Contrate dois cirurgiöes para que operem na sala de operaçöes."
+adviser.room_requirements.training_room_need_consultant = "Terá que contratar um especialista para que de conferências nesta sala de formaçäo."
+adviser.room_requirements.research_room_need_researcher = "Terá que contratar um médico pesquisador para que utilize o centro de pesquisa."
+adviser.room_requirements.op_need_ward = "Tem que construir uma enfermaria para os pacientes que väo ser operados."
+adviser.room_requirements.reception_need_receptionist = "Tem que contratar uma recepcionista para atender os seus pacientes."
+adviser.room_requirements.op_need_another_surgeon = "Tem que contratar um outro cirurgiäo para poder usar o sala de operaçöes."
+adviser.room_requirements.gps_office_need_doctor = "Contrate um médico para atender a consulta."
+adviser.room_requirements.ward_need_nurse = "Contrate uma enfermeira para que trabalhe na enfermaria."
+adviser.room_requirements.psychiatry_need_psychiatrist = "Agora que construiu uma sala de psiquiatria, precisará de um psiquiatra."
+introduction_texts.level15 = "Bem, estes säo os mecanismos básicos para pôr em funcionamento um hospital.//Os seus Médicos väo precisar de toda a ajuda que possam obter para diagnosticar alguns dos pacientes. Pode ajudá-los construindo outros equipamentos de diagnóstico como a sala de Diagnóstico Geral."
+introduction_texts.level6 = "Utilize toda a sua capacidade para conseguir um hospital que funcione bem e consiga curar muitos pacientes e que possa tratar qualquer caso que pressentem os doentes.//Está avisado de que o ambiente, aqui, é especialmente propenso a germes e infecçöes. A menos que mantenha uma escrupulosa limpeza na sua instituiçäo, terá que fazer frente a uma série de epidemias entre os pacientes. Procure obter um lucro de $20.000 e fazer o valor do seu hospital superar os $140.000. "
+introduction_texts.level3 = "Desta vez colocará o seu hospital em uma área rica//O Ministério da Saúde espera que consiga curar muitos pacientes. Terá que ganhar uma boa reputaçäo para começar, mas uma vez que o hospital comece a funcionar, concentre-se em ganhar todo o dinheiro que puder. Também pode haver emergências. Produzem-se quando chega muita gente que sofre da mesma doença. Se os curar dentro de um prazo determinado, conseguirá aumentar a sua reputaçäo e ganhar um grande extra. Haverá doenças, como o complexo de rei, e deverá ter orçamento para construir uma sala de operaçöes e junto a ela, uma enfermaria. Tem que ganhar $20.000 para superar este nível."
+introduction_texts.level12 = "Agora irá enfrentar o maior dos desafios. Impressionado com os seus lucros, o Ministério tem uma grande tarefa para você; querem que construa outro magnífico hospital, que tenha um excelente lucro e uma reputaçäo incrível. Também querem que compre todo o terreno que puder, cure tudo (e queremos dizer todas as doenças) e ganhe todos os prêmios. Acha que irá conseguir? Ganhe $650.000, cure 750 pessoas e consiga uma reputaçäo de 800 para ganhar este nível. "
+introduction_texts.level9 = "Depois de ingressar dinheiro na conta bancária do Ministério e pagar uma nova limusine para o Ministro, agora pode dedicar a criar um bom hospital para cuidar dos doentes e necessitados. Aqui terá um montäo de problemas diferentes. Se o seu pessoal tiver uma boa formaçäo e suficientes consultas, poderá resolver qualquer situaçäo. O seu hospital terá que valer $200.000 e precisará ter $400.000 no banco. Se näo o conseguir näo poderá terminar o nível."
+introduction_texts.level11 = "Tem a oportunidade de construir o hospital definitivo. Esta é uma área de enorme prestígio e o Ministério quer que este seja o melhor hospital. Esperamos que ganhe muito dinheiro, alcance uma excelente reputaçäo e que se encarregue de todos os casos que sejam apresentados. Este é um trabalho importante. Terá que ser muito hábil para completá-lo. Também deve ter em conta que foram vistos OVNIs na área. Assegure-se de que o seu pessoal esteja preparado para receber algumas visitas inesperadas. O seu hospital terá que alcançar um valor de $240.000, precisará ter $500.000 no banco e uma reputaçäo de 700."
+introduction_texts.level14 = "Ainda tem mais um desafio: um hospital surpresa totalmente imprevisível. Se conseguir ter êxito, será o vencedor dos vencedores. E näo espere que seja fácil, porque é a tarefa mais difícil que confrontará. Boa sorte!"
+introduction_texts.level10 = "Além de dever curar todas as doenças que possa haver, o Ministério pede que empregue um pouco de tempo em aumentar a eficácia dos seus remédios.//Houve algumas queixas por parte do D. Salutíssimo, o Cachorro Guardiäo da Saúde, assim deve procurar com que todos os seus remédios sejam extremamente eficazes para ficar bem. Também, assegure-se de que o seu hospital tenha uma reputaçäo irrepreensível. Procure deixar morrer poucos pacientes. Como sugestäo, deveria deixar espaço para um banho gelatinoso. Para ganhar, os seus remédios deveräo ter uma eficácia de, pelo menos, 80%, tem que conseguir uma reputaçäo de 650 e guardar $500.000 no banco."
+introduction_texts.level5 = "Este será um hospital concorrido, que tratará casos muito variados.//Os seus médicos acabam de sair da faculdade, por isso é fundamental que construa uma sala de formaçäo para que alcancem o nível de formaçäo necessário. Só tem três especialistas para ensinar os seus funcionários inexperientes, entäo faça com que estejam contentes. Tem que ter em conta que o hospital está localizado em cima de uma falha geológica de San Android. Sempre hß risco de terremoto. Os terremotos provocaräo danos importantes nas suas máquinas e alteraräo o bom funcionamento do seu hospital. Aumente a sua reputaçäo até 400 e consegue ganhos de $50.000 para triunfar. Também, cure 200 pacientes. "
+introduction_texts.level1 = "Bem-vindo ao seu primeiro hospital!//Para pô-lo para funcionar, coloque uma Recepçäo, construa um Consultório e contrate uma recepcionista e um médico. Em seguida espere que cheguem os pacientes. Seria uma boa ideia construir uma consulta de psiquiatria e contratar um psiquiatra. Uma farmácia e uma enfermeira säo fundamentais para curar os seus pacientes. Cuidado com os casos malignos de cabeça inflada; solucionam-se na sala de inflatoterapia. Terá que curar 10 pessoas e assegurar de que a sua reputaçäo näo seja inferior a 200."
+introduction_texts.level17 = "Um último aviso. Mantenha o olho sobre a sua Reputaçäo, é o que atrairá pacientes ao seu estabelecimento. Se näo matar muitas pessoas e os mantiver razoavelmente felizes näo deverá ter muitos problemas com este nível!//Agora é com você, boa sorte."
+introduction_texts.level7 = "Aqui, estará sob a estrita vigilância do Ministério da Saúde, assim procura que as suas contas reflitam uns excelentes ganhos e que aumente a sua reputaçäo.//Näo podemos permitir que haja mortes desnecessárias; Näo beneficiam nada o negócio. Assegure de que o seu pessoal está em plena forma e de que tem todos os equipamentos necessários. Consegue uma reputaçäo de 600, e um saldo bancário de $200.000."
+introduction_texts.level4 = "Faça com que todos os seus pacientes estejam contentes, trate-os com a maior eficácia e tente deixar que morram o menos possíveis.//A sua reputaçäo está em jogo entäo, procure aumentá-la o máximo que puder. Näo se preocupe muito com o dinheiro; Irá ganhando à medida que cresce a sua reputaçäo. Também poderá formar os seus médicos para ampliar os seus conhecimentos. Eles poderäo curar os pacientes mais difíceis. Alcance uma reputaçäo acima de 500."
+introduction_texts.level18 = ""
+introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes precisará construir salas de tratamento e clínicas para curá-los. Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
+introduction_texts.level13 = "A sua incrível habilidade como diretor do hospital atraiu a atençäo da Divisäo Secreta Especial do Serviço Secreto Especial. Têm um trabalho especial para si. Há um hospital infestado de ratos que precisa de um exterminador eficiente. Tem que matar todos os ratos que puder antes de que o pessoal de Manutençäo limpe toda a sujeira. Acha que é apto para esta missäo?"
+introduction_texts.level8 = "De si depende que possa construir o hospital mais eficiente e rentável possível.//As pessoas, por aqui, säo bastante enriquecidas, assim dá-lhes tudo o que possa dar. Lembre-se que curar as pessoas está muito certo, mas o que de verdade PRECISA é do dinheiro que lhe proporcionam. Leve a estes doentes à tinturaria. Acumule uma enorme quantia de $300.000 para completar este nível. "
+humanoid_name_starts[1] = "GOLD"
+humanoid_name_starts[2] = "HIGH"
+humanoid_name_starts[3] = "AND"
+humanoid_name_starts[4] = "BEN"
+humanoid_name_starts[5] = "BAN"
+humanoid_name_starts[6] = "BILL"
+humanoid_name_starts[7] = "WY"
+humanoid_name_starts[8] = "WAT"
+humanoid_name_starts[9] = "POD"
+humanoid_name_starts[10] = "KING"
+humanoid_name_starts[11] = "BAR"
+humanoid_name_starts[12] = "PET"
+humanoid_name_starts[13] = "MAN"
+humanoid_name_starts[14] = "BOY"
+humanoid_name_starts[15] = "WAR"
+humanoid_name_starts[16] = "JACK"
+humanoid_name_starts[17] = "CRAB"
+humanoid_name_starts[18] = "FISH"
+humanoid_name_starts[19] = "WATER"
+humanoid_name_starts[20] = "MIL"
+humanoid_name_starts[21] = "BY"
+humanoid_name_starts[22] = "FEN"
+humanoid_name_starts[23] = "RICH"
+humanoid_name_starts[24] = "SCOT"
+humanoid_name_starts[25] = "BUR"
+humanoid_name_starts[26] = "PIKE"
+humanoid_name_starts[27] = "CUR"
+humanoid_name_starts[28] = "WHIT"
+humanoid_name_starts[29] = "BINN"
+humanoid_name_starts[30] = "BONN"
+humanoid_name_starts[31] = "POG"
+humanoid_name_starts[32] = "WRIGHT"
+humanoid_name_starts[33] = "KER"
+policy.diag_procedure = "Procedimento de diagnóstico"
+policy.header = "NORMAS DO HOSPITAL"
+policy.staff_leave_rooms = "Abandonar as consultas"
+policy.staff_rest = "Enviar os funcionários para descansar"
+policy.diag_termination = "Conclusäo do diagnóstico"
+policy.sliders.send_home = "ENVIA PARA CASA"
+policy.sliders.guess = "TENTAR CURA"
+policy.sliders.stop = "PARAR PROCESSO"
+policy.sliders.staff_room = "IR DESCANSAR"
+menu_display.mcga_lo_res = "  BAIXA RESOLUÇAO MCGA  "
+menu_display.shadows = "  SOMBRAS  "
+menu_display.high_res = "  ALTA RESOLUÇAO  "
+staff_title.surgeon = "Cirurgiäo"
+staff_title.psychiatrist = "Psiquiatra"
+staff_title.general = "Geral"
+staff_title.junior = "Residente"
+staff_title.researcher = "Pesquisador"
+staff_title.consultant = "Consultor"
+staff_title.nurse = "Enfermeira"
+staff_title.doctor = "Médico"
+staff_title.receptionist = "Recepcionista"
+bank_manager.insurance_owed = "Dívida do seguro"
+bank_manager.interest_rate = "Juros"
+bank_manager.interest_payment = "Pagamento de juros"
+bank_manager.statistics_page.date = "Data"
+bank_manager.statistics_page.money_out = "Débito"
+bank_manager.statistics_page.money_in = "Crédito"
+bank_manager.statistics_page.balance = "Saldo"
+bank_manager.statistics_page.current_balance = "Saldo atual"
+bank_manager.statistics_page.details = "Detalhes"
+bank_manager.balance = "Saldo"
+bank_manager.inflation_rate = "Inflaçäo"
+bank_manager.hospital_value = "Valor do hospital"
+bank_manager.current_loan = "Empréstimo pendente"
+menu_file_save[1] = "  JOGO 1 "
+menu_file_save[2] = "  JOGO 2 "
+menu_file_save[3] = "  JOGO 3 "
+menu_file_save[4] = "  JOGO 4 "
+menu_file_save[5] = "  JOGO 5 "
+menu_file_save[6] = "  JOGO 6 "
+menu_file_save[7] = "  JOGO 7 "
+menu_file_save[8] = "  JOGO 8 "
+insurance_companies[1] = "Seguros Estrelinha"
+insurance_companies[2] = "Seguros Nacional"
+insurance_companies[3] = "Mútua Seguril"
+insurance_companies[4] = "Seguros Ponderoso"
+insurance_companies[5] = "Geral Seguro"
+insurance_companies[6] = "Seguro Fiel"
+insurance_companies[7] = "Holding de Seguros"
+insurance_companies[8] = "Seguros Leon"
+insurance_companies[9] = "Joäo e Maria Ltda."
+insurance_companies[10] = "Seguro Feliz"
+insurance_companies[11] = "Seguros Sindicato"
+insurance_companies.out_of_business = "FECHADO"
+room_descriptions.ward[1] = "Enfermaria//"
+room_descriptions.ward[2] = "Os pacientes ficam aqui para serem atendidos por uma enfermeira enquanto säo diagnosticados. Permanecem aqui antes de serem operados.//"
+room_descriptions.ward[3] = "A enfermaria requer uma enfermeira. "
+room_descriptions.blood_machine[1] = "Sala de Transfusöes//"
+room_descriptions.blood_machine[2] = "O transfusiômetro é um elemento do equipamento de diagnóstico que revisa as células do sangue do paciente para descobrir do que sofrem.//"
+room_descriptions.blood_machine[3] = "A sala de transfusöes requer um médico. Também precisa de manutençäo. "
+room_descriptions.fracture_clinic[1] = "Traumatologia//"
+room_descriptions.fracture_clinic[2] = "Os pacientes que têm a desgraça de ter fraturas vêm aqui. O removedor de gesso emprega poderosos laser industriais para cortar os gessos mais duros, causando ao paciente só uma pequena dor.//"
+room_descriptions.fracture_clinic[3] = "A sala de traumatologia requer uma enfermeira. Também precisa de uma manutençäo muito frequente. "
+room_descriptions.cardiogram[1] = "Sala de Cardiologia//"
+room_descriptions.cardiogram[2] = "Aqui é diagnosticado e examinado os pacientes antes que voltem para a consulta, onde porá o tratamento.//"
+room_descriptions.cardiogram[3] = "A sala de cardiologia requer um médico. Também precisa de manutençäo. "
+room_descriptions.decontamination[1] = "Descontaminaçäo//"
+room_descriptions.decontamination[2] = "Os pacientes que estiveram expostos à radiaçäo säo enviados rapidamente à consulta de descontaminaçäo. Esta consulta dispöe de uma ducha que os purifica de toda a horrível radioatividade e sujeira.//"
+room_descriptions.decontamination[3] = "A ducha descontaminadora requer um médico. Também precisa de um faz-tudo que se ocupe da sua manutençäo. "
+room_descriptions.jelly_vat[1] = "Banho Gelatinoso//"
+room_descriptions.jelly_vat[2] = "Os pacientes que sofrem da risível doença da gelatinitis devem ir a cambalear-se para a consulta de gelatinitis e ser inundados no banheiro gelatinoso. Isto faz com que se curem de um modo que näo resulta de tudo compreensível para a profissäo médica.//"
+room_descriptions.jelly_vat[3] = "O banho gelatinoso requer um médico. Também precisa de uma faz-tudo para a sua manutençäo. "
+room_descriptions.gp[1] = "Sala de Consultório Geral//"
+room_descriptions.gp[2] = "Esta é a consulta mais importante do seu hospital. Os novos pacientes säo enviados aqui para averiguar o que é que eles têm. Entäo, ou fazem outro diagnóstico ou mandam para uma consulta onde possam ser curados. Possivelmente queira construir outra consulta se a primeira tiver muito trabalho. Quanto maior for a consulta e quanto mais objetos colocar nela, maior prestígio terá o médico. O mesmo acontece com todas as consultas abertas.//"
+room_descriptions.gp[3] = "O consultório geral requer um médico. "
+room_descriptions.hair_restoration[1] = "Peloterapia//"
+room_descriptions.hair_restoration[2] = "Os pacientes que sofrem de calvície seräo enviados ao pêlo-restaurador desta sala. Um médico ligará o pêlo-restaurador, que, rapidamente, implantará na cabeça do paciente ar puro.//"
+room_descriptions.hair_restoration[3] = "A consulta de peloterapia requer um médico. Também precisa de manutençäo periódica. "
+room_descriptions.inflation[1] = "Inflatoterapia//"
+room_descriptions.inflation[2] = "Os pacientes que sofrem a dolorosa doença de terem a cabeça inflada devem ir à sala de inflatoterapia, será desinflada sua cabeça e em seguida vota a ser inflada à pressäo correta.//"
+room_descriptions.inflation[3] = "A Inflatoterapia requer um médico. Também precisa de um faz-tudo que se ocupe do seu bom funcionamento. "
+room_descriptions.psych[1] = "Sala de Psiquiatria//"
+room_descriptions.psych[2] = "Os pacientes que säo diagnosticados com uma doença psiquiátrica têm que ir a uma consulta de psiquiatria para receber o tratamento. Os psiquiatras também podem realizar diagnósticos para saber que tipo de doença que sofrem os pacientes, e se estas säo do tipo mental, podem tratá-los deitando-os no divä.//"
+room_descriptions.psych[3] = "A sala de psiquiatria requer um médico especializado em psiquiatria. "
+room_descriptions.operating_theatre[1] = "Sala de Operaçöes//"
+room_descriptions.operating_theatre[2] = "Esta importante instalaçäo serve para curar um grande número de doenças. A sala de operaçöes tem que ser espaçosa e deve estar bem equipada. É uma parte essencial do seu hospital.//"
+room_descriptions.operating_theatre[3] = "A sala de operaçöes requer dois médicos especializados em cirurgia. "
+room_descriptions.no_room[1] = ""
+room_descriptions.x_ray[1] = "Sala de Raios X//"
+room_descriptions.x_ray[2] = "Os Raios X fotografam o interior do paciente empregando uma radiaçäo especial para ajudar o pessoal a descobrir o que lhe passa.//"
+room_descriptions.x_ray[3] = "A sala de Raios X requer um médico. Também precisa de manutençäo. "
+room_descriptions.tv_room[1] = "TV ROOM NOT USED"
+room_descriptions.staff_room[1] = "Sala de Descanso//"
+room_descriptions.staff_room[2] = "Os seus funcionários se cansam quando realizam o seu trabalho. Precisam desta sala para descansar e se refrescar. Os funcionários cansados säo mais lentos, pedem mais dinheiro e por fim väo embora. Também cometem mais erros. Vale a pena construir uma sala que tenham muitos passatempos. Assegure-se de que há lugar para vários funcionários ao mesmo tempo. "
+room_descriptions.slack_tongue[1] = "Laringologia//"
+room_descriptions.slack_tongue[2] = "Os pacientes que sejam diagnosticados com língua comprida na consulta seräo enviados aqui para receber tratamento. O médico utilizará uma máquina de alta tecnologia para estirar a língua e cortá-la e, com o que o paciente voltará a estar säo.//"
+room_descriptions.slack_tongue[3] = "A sala de laringologia requer um médico. Também precisa de uma manutençäo muito frequente. "
+room_descriptions.dna_fixer[1] = "Genética//"
+room_descriptions.dna_fixer[2] = "Os pacientes que foram manipulados por alienígenas de outro mundo, deve ser substituído o seu DNA nesta sala. O reparador de DNA é um máquina complexa e seria sensato ter um extintor na sala, só por acaso.//"
+room_descriptions.dna_fixer[3] = "O reparador de DNA requer que um faz-tudo o revise de vez em quando. Também requer um médico especializado em pesquisa para poder empregá-lo. "
+room_descriptions.training[1] = "Sala de Formaçäo//"
+room_descriptions.training[2] = "Os seus residentes e médicos podem obter uma valiosa qualificaçäo extra aprendendo nesta sala. Um especialista em cirurgia, pesquisa ou psiquiatria ensinará a sua especialidade aos médicos que recebem formaçäo. Os médicos que já possuem estas especialidades veräo a sua habilidade aumentar enquanto estäo aqui.//"
+room_descriptions.training[3] = "A sala de formaçäo requer um especialista. "
+room_descriptions.toilets[1] = "Banheiro//"
+room_descriptions.toilets[2] = "Os pacientes estäo sentindo um chamado da natureza e precisam se aliviar no conforto de suas instalaçöes de banheiro. Pode construir mais banheiros e pias se esperar muitos visitantes. Em alguns casos, terá que pôr mais banheiros em outras partes do hospital. "
+room_descriptions.ultrascan[1] = "Ultra Scanner//"
+room_descriptions.ultrascan[2] = "O ultra scanner é, virtualmente, o mais avançado em equipamentos de diagnóstico. Tem um preço alto mas merece a pena se quiser que o seu hospital realize diagnósticos excelentes.//"
+room_descriptions.ultrascan[3] = "O ultra scanner requer um médico. Também precisa de manutençäo. "
+room_descriptions.pharmacy[1] = "Farmácia//"
+room_descriptions.pharmacy[2] = "Os pacientes que foram diagnosticados e que devem tomar um medicamento devem visitar a farmácia para tomá-lo. Quantos mais remédios forem descobertos e estejam disponíveis, mais concorrida estará a farmácia. Possivelmente queira construir outra farmácia mais para frente.//"
+room_descriptions.pharmacy[3] = "A farmácia requer uma enfermeira. "
+room_descriptions.research[1] = "Centro de Pesquisa//"
+room_descriptions.research[2] = "No centro de pesquisa säo inventados ou melhoram novos remédios e curas. É uma parte essencial do seu hospital, e fará maravilhas para elevar a sua porcentagem de curas.//"
+room_descriptions.research[3] = "O Centro de Pesquisa requer um médico especializado em pesquisa. "
+room_descriptions.general_diag[1] = "Sala de Diagnóstico Geral//"
+room_descriptions.general_diag[2] = "Aqui säo examinados os pacientes que precisam de outro diagnóstico. Se em uma consulta näo descobrir os seus problemas, o diagnosticador geral normalmente consegue. Em seguida, volta a enviar os pacientes para a consulta para analisar os resultados obtidos aqui.//"
+room_descriptions.general_diag[3] = "A sala de diagnóstico geral requer um médico. "
+room_descriptions.scanner[1] = "Scanner//"
+room_descriptions.scanner[2] = "É diagnosticado com precisäo os pacientes empregando um sofisticado scanner. Em seguida, väo para a consulta para que o médico veja o tratamento posterior.//"
+room_descriptions.scanner[3] = "O scanner requer um médico. Também precisa de manutençäo. "
+room_descriptions.electrolysis[1] = "Eletrólise//"
+room_descriptions.electrolysis[2] = "Os pacientes com peludismo säo enviados para esta consulta, onde uma máquina especial de eletrólise elimina os pelos e fecha os poros com eletricidade empregando um composto parecido ao cal.//"
+room_descriptions.electrolysis[3] = "A sala de eletrólise requer um médico. Também precisa que um faz-tudo faça a sua manutençäo. "
+staff_list.skill = "NIVEL"
+staff_list.morale = "MORAL"
+staff_list.tiredness = "CANSAÇO"
+staff_list.total_wages = "SALARIOS TOTAIS"
+menu_file_load[1] = "  JOGO 1 "
+menu_file_load[2] = "  JOGO 2 "
+menu_file_load[3] = "  JOGO 3 "
+menu_file_load[4] = "  JOGO 4 "
+menu_file_load[5] = "  JOGO 5 "
+menu_file_load[6] = "  JOGO 6 "
+menu_file_load[7] = "  JOGO 7 "
+menu_file_load[8] = "  JOGO 8 "
+
