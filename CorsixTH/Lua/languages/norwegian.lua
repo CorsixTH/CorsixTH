@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2016 Erlend Mongstad, Ola Skogrand
+﻿--[[ Copyright (c) 2017 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -94,6 +94,7 @@ install = {
 -- 3. Objects
 object = {
   litter               = "Söppel",
+  rathole              = "Rottehull",
 }
 
 tooltip.fax.close = "Lukk dette vinduet uten å slette meldingen"
@@ -161,7 +162,12 @@ dynamic_info.staff.actions.heading_for       = "På vei til %s"
 dynamic_info.staff.actions.fired = "Sparket"
 
 -- 7. Tooltip
-tooltip.objects.litter     = "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i."
+tooltip = {
+  objects = {
+    litter     = "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i.",
+    rathole    = "Hjemmet til en rottefamilie som syns sykehuset ditt er mökkete nok til å bo i.",
+  },
+}
 
 -- Misc
 misc.not_yet_implemented   = "(ikke implementert enda)"
@@ -174,7 +180,7 @@ main_menu = {
   load_game   = "Last inn",
   options     = "Innstillinger",
   version = "Versjon: ",
-  continue = "Fortsett spill",
+  continue = "Fortsett siste spill",
   savegame_version = "Lagringsversjon: ", --todo: en bedre oversettelse eller omskriving?
   custom_campaign = "Brukerskapt karriere", -- todo: en bedre oversettelse eller omskriving?
   map_edit = "Brettkonstruksjon",
@@ -205,7 +211,7 @@ custom_game_window = {
   load_selected_level = "Start",
 }
 tooltip.custom_game_window = {
-  free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
+  free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for å vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
   load_selected_level = "Last og spill valgt brett",
   choose_game = "Klikk på et brett for å lese mer om det",
 }
