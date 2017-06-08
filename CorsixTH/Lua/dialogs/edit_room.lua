@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+local TH = require "TH"
+local math_floor
+    = math.floor
+
 dofile "dialogs/place_objects"
 
 class "UIEditRoom" (UIPlaceObjects)
@@ -251,14 +255,13 @@ function UIEditRoom:confirm(force)
   end
 end
 
-local function isHumanoidObscuringArea(humanoid, x1, x2, y1, y2)
-  if humanoid.tile_x then
-    if x1 <= humanoid.tile_x and humanoid.tile_x <= x2 and
-        y1 <= humanoid.tile_y and humanoid.tile_y <= y2 then
-      if (x1 == humanoid.tile_x or x2 == humanoid.tile_x) or
-          (y1 == humanoid.tile_y or y2 == humanoid.tile_y) then
+function UIEditRoom:isHumanoidObscuringArea(entity, x1, x2, y1, y2)
+  if entity.tile_x then
+    if x1 <= entity.tile_x and entity.tile_x <= x2 and
+        y1 <= entity.tile_y and entity.tile_y <= y2 then
+      if (x1 == entity.tile_x or x2 == entity.tile_x) or (y1 == entity.tile_y or y2 == entity.tile_y) then
         -- Humanoid not in the rectangle, but might be walking into it
-        local action = humanoid.action_queue[1]
+        local action = entity.action_queue[1]
         if action.name ~= "walk" then
           return false
         end
@@ -289,7 +292,7 @@ function UIEditRoom:clearArea()
     local y2 = rect.y + rect.h
     for _, entity in ipairs(world.entities) do
       if class.is(entity, Humanoid) and
-          isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
+          self:isHumanoidObscuringArea(entity, x1, x2, y1, y2) then
         humanoids_to_watch[entity] = true
 
         -- Try to make the humanoid leave the area
@@ -306,14 +309,14 @@ function UIEditRoom:clearArea()
         elseif entity.action_queue[1].name == "seek_room" or (meander and meander.name == "seek_room") then
           -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
           if entity.action_queue[1].name == "seek_room" then
-            entity:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
+            entity:queueAction({name = "meander", count = 1, must_happen = true}, 0)
           else
             meander.done_walk = false
           end
         else
           -- Look for a queue action and re-arrange the people in it, which
           -- should cause anyone queueing within the blueprint to move
-          for _, action in ipairs(entity.action_queue) do
+          for i, action in ipairs(entity.action_queue) do
             if action.name == "queue" then
               for _, humanoid in ipairs(action.queue) do
                 local callbacks = action.queue.callbacks[humanoid]
@@ -339,7 +342,7 @@ function UIEditRoom:clearArea()
 
   self.check_for_clear_area_timer = 10
   self.humanoids_to_watch = humanoids_to_watch
-  self.ui:setCursor(self.ui.waiting_cursor)
+  self.ui:setDefaultCursor "sleep"
 end
 
 function UIEditRoom:onTick()
@@ -360,7 +363,7 @@ function UIEditRoom:onTick()
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end
-        elseif not isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
+        elseif not self:isHumanoidObscuringArea(humanoid, x1, x2, y1, y2) then
           self.humanoids_to_watch[humanoid] = nil
         end
       end
@@ -520,7 +523,7 @@ function UIEditRoom:purchaseItems()
         research.research_progress[object].discovered) then
       -- look up current quantity
       local cur_qty = 0
-      for _, p in ipairs(self.objects) do
+      for j, p in ipairs(self.objects) do
         if p.object.id == o then
           cur_qty = p.qty
         end
@@ -592,10 +595,11 @@ end
 function UIEditRoom:returnToDoorPhase()
   self.ui:tutorialStep(3, {13, 14, 15}, 9)
   local map = self.ui.app.map.th
+  local rect = self.blueprint_rect
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
-    room.door.queue:rerouteAllPatients(SeekRoomAction(room.room_info.id))
+    room.door.queue:rerouteAllPatients({name = "seek_room", room_type = room.room_info.id})
   end
 
   self.purchase_button:enable(false)
@@ -610,7 +614,7 @@ function UIEditRoom:returnToDoorPhase()
           break
         end
         if obj.object_type.id == "litter" then -- Silently remove litter from the world.
-          obj.remove()
+          self.world:removeLitter(obj, x, y)
           break
         end
         self.world:destroyEntity(obj)
@@ -638,7 +642,7 @@ function UIEditRoom:returnToDoorPhase()
 
   -- Remove walls
   local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
-    for _ = 1, n_steps do
+    for i = 1, n_steps do
       local existing = map:getCell(x, y, layer)
       -- Possibly add transparency.
       local flag = 0
@@ -686,8 +690,8 @@ end
 
 function UIEditRoom:screenToWall(x, y)
   local cellx, celly = self.ui:ScreenToWorld(x, y)
-  cellx = math.floor(cellx)
-  celly = math.floor(celly)
+  cellx = math_floor(cellx)
+  celly = math_floor(celly)
   local rect = self.blueprint_rect
 
   if cellx == rect.x or cellx == rect.x - 1 or cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1 or
@@ -709,7 +713,7 @@ function UIEditRoom:screenToWall(x, y)
   end
   if cellx == rect.x and celly == rect.y then
     -- top corner
-    local x_, _ = self.ui:WorldToScreen(cellx, celly)
+    local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
       return cellx + 1 + modifier, celly, "north"
     else
@@ -717,7 +721,7 @@ function UIEditRoom:screenToWall(x, y)
     end
   elseif cellx == rect.x + rect.w - 1 and celly == rect.y + rect.h - 1 then
     -- bottom corner
-    local x_, _ = self.ui:WorldToScreen(cellx, celly)
+    local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
       return cellx, celly - 1, "east"
     else
@@ -725,7 +729,7 @@ function UIEditRoom:screenToWall(x, y)
     end
   elseif cellx == rect.x and celly == rect.y + rect.h - 1 then
     -- left corner
-    local _, y_ = self.ui:WorldToScreen(cellx, celly)
+    local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
       return cellx + 1, celly, "south"
     else
@@ -733,7 +737,7 @@ function UIEditRoom:screenToWall(x, y)
     end
   elseif cellx == rect.x + rect.w - 1 and celly == rect.y then
     -- right corner
-    local _, y_ = self.ui:WorldToScreen(cellx, celly)
+    local x_, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
       return cellx, celly + 1, "east"
     else
@@ -859,7 +863,7 @@ function UIEditRoom:enterDoorPhase()
   -- Re-organise wall anims to index by x and y
   local walls = {}
   for _, wall in ipairs(self.blueprint_wall_anims) do
-    local _, x, y = wall:getTile()
+    local map, x, y = wall:getTile()
     if not walls[x] then
       walls[x] = {}
     end
@@ -892,7 +896,7 @@ function UIEditRoom:enterObjectsPhase()
   if self.objects_backup then
     self:addObjects(self.objects_backup, true)
   else
-    local room_objects = self.room.room_info.objects_needed
+    local room_objects = self.room.room_info.objects_needed;
     if TheApp.config.enable_avg_contents then
       room_objects = self:computeAverageContents()
     end
@@ -963,9 +967,9 @@ function UIEditRoom:onMouseDown(button, x, y)
       if self.phase == "walls" then
         if 0 <= x and x < self.width and 0 <= y and y < self.height then
         else
-          local mouse_x, mouse_y = self.ui:ScreenToWorld(self.x + x, self.y + y)
-          self.mouse_down_x = math.floor(mouse_x)
-          self.mouse_down_y = math.floor(mouse_y)
+          local x, y = self.ui:ScreenToWorld(self.x + x, self.y + y)
+          self.mouse_down_x = math_floor(x)
+          self.mouse_down_y = math_floor(y)
           if self.move_rect then
             self.move_rect_x = self.mouse_down_x - self.blueprint_rect.x
             self.move_rect_y = self.mouse_down_y - self.blueprint_rect.y
@@ -1024,13 +1028,12 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   end
 
   local too_small = w < self.room_type.minimum_size or h < self.room_type.minimum_size
-  local player_id = self.ui.hospital:getPlayerIndex()
 
   -- Entire update of floor tiles and wall animations done in C to replace
   -- several hundred calls into C with just a single call. The price for this
   -- is reduced flexibility. See l_map_updateblueprint in th_lua.cpp for code.
   local is_valid = map.th:updateRoomBlueprint(rect.x, rect.y, rect.w, rect.h,
-    x, y, w, h, player_id, self.blueprint_wall_anims, self.anims, too_small)
+    x, y, w, h, self.blueprint_wall_anims, self.anims, too_small)
 
   -- NB: due to the unflexibility, tutorial step "too small AND invalid position" (3.7)
   --     is currently unusable, as it's not possible to determine if the position would
@@ -1067,59 +1070,10 @@ local window_floor_blueprint_markers = {
   west = 36,
 }
 
---! Check walls for having room for the door
---!param x (int) X tile position of the door.
---!param y (int) Y tile position of the door.
---!param wall (string) Name of the wall (either 'north' or 'west').
---!param has_swingdoor Whether the room has a normal door (false) or a swing door (true) as entrance.
---!return whether the door can be placed at the given position and orientation.
-local function checkDoorWalls(x, y, wall, has_swingdoor)
-  local th = TheApp.map.th
-
-  local dx, dy, wall_num
-  if wall == "west" then
-    wall_num = 3
-    dx = 0
-    dy = 1
-  else
-    wall_num = 2
-    dx = 1
-    dy = 0
-  end
-
-  if th:getCell(x, y, wall_num) % 0x100 ~= 0 then
-    return false
-  end
-
-  -- If it is a swing door there are two more locations to check.
-  if has_swingdoor then
-    if th:getCell(x - dx, y - dy, wall_num) % 0x100 ~= 0 or
-        th:getCell(x + dx, y + dy, wall_num) % 0x100 ~= 0 then
-      return false
-    end
-  end
-  return true
-end
-
---! Check whether the given tile can function as a door entry/exit tile.
---!param xpos (int) X position of the tile.
---!param ypos (int) Y position of the tile.
---!param player_id (int) Player id owning the hospital.
---!param flag_names (array) If set, array with two additional required properties.
---!return Whether the tile is considered to be valid.
-local function validDoorTile(xpos, ypos, player_id, flag_names)
-  local th = TheApp.map.th
-
-  local tile_flags = th:getCellFlags(xpos, ypos)
-  if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
-  if not flag_names then return true end
-  return tile_flags[flag_names[1]] and tile_flags[flag_names[2]]
-end
-
-function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
-  local x = orig_x
-  local y = orig_y
-  local wall = orig_wall
+function UIEditRoom:setDoorBlueprint(x, y, wall)
+  local orig_x = x
+  local orig_y = y
+  local orig_wall = wall
 
   -- Used to get the adjacent tiles when placing swing doors.
   local x_mod
@@ -1137,7 +1091,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   else
     y_mod = 2
   end
-  local map = TheApp.map.th
+  local map = self.ui.app.map.th
 
   if self.blueprint_door.anim then
     if self.room_type.swing_doors then
@@ -1192,42 +1146,68 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
       self.blueprint_door.old_flags = anim:getFlag()
     end
   end
-
+  self.blueprint_door.valid = true
   local flags
   local x2, y2 = x, y
   if wall == "west" then
     flags = 1
     x2 = x2 - 1
+    -- Check for a wall to the west, and prevent placing a door on top of an
+    -- existing wall.
+    if map:getCell(x, y, 3) % 0x100 ~= 0 then
+      self.blueprint_door.valid = false
+    end
+    -- If it is a swing door there are two more locations to check.
+    if self.room_type.swing_doors then
+      if map:getCell(x, y - 1, 3) % 0x100 ~= 0 or
+          map:getCell(x, y + 1, 3) % 0x100 ~= 0 then
+        self.blueprint_door.valid = false
+      end
+    end
   else--if wall == "north" then
     flags = 0
     y2 = y2 - 1
+    if map:getCell(x, y, 2) % 0x100 ~= 0 then
+      self.blueprint_door.valid = false
+    end
+    -- If it is a swing door there are two more locations to check.
+    if self.room_type.swing_doors then
+      if map:getCell(x - 1, y, 2) % 0x100 ~= 0 or
+          map:getCell(x + 1, y, 2) % 0x100 ~= 0 then
+        self.blueprint_door.valid = false
+      end
+    end
   end
-
-  self.blueprint_door.valid = checkDoorWalls(x, y, wall, self.room_type.swing_doors)
   if self.blueprint_door.valid then
     -- Ensure that the door isn't being built on top of an object
+    local flags = {}
     local flag_names
     if wall == "west" then
-      flag_names = {"buildableNorth", "buildableSouth"}
+      flag_names = {"buildableNorth", "buildableSouth", "travelEast", "travelWest"}
     else
-      flag_names = {"buildableWest", "buildableEast"}
+      flag_names = {"buildableWest", "buildableEast", "travelSouth", "travelNorth"}
     end
-    local player_id = self.ui.hospital:getPlayerIndex()
-
-    if not validDoorTile(x, y, player_id, flag_names) or
-        not validDoorTile(x2, y2, player_id, flag_names) then
+    if not (map:getCellFlags(x , y , flags).buildable or flags.passable) or
+        not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]]) or
+        not (map:getCellFlags(x2, y2, flags).buildable or flags.passable) or
+        not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]])
+    then
       self.blueprint_door.valid = false
     end
     -- If we're making swing doors two more tiles need to be checked.
     if self.room_type.swing_doors then
-      local dx = x_mod and 1 or 0
-      local dy = y_mod and 1 or 0
-      if not validDoorTile(x + dx, y + dy, player_id, nil) or
-          not validDoorTile(x2 + dx, y2 + dy, player_id, nil) then
+      if not (map:getCellFlags(x + (x_mod and 1 or 0), y + (y_mod and 1 or 0), flags).buildable or flags.passable) or
+		  not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]]) or
+          not (map:getCellFlags(x2 + (x_mod and 1 or 0), y2 + (y_mod and 1 or 0), flags).buildable or flags.passable) or
+		  not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]])
+	  then
         self.blueprint_door.valid = false
       end
-      if not validDoorTile(x - dx, y - dy, player_id, nil) or
-          not validDoorTile(x2 - dx, y2 - dy, player_id, nil) then
+      if not (map:getCellFlags(x - (x_mod and 1 or 0), y - (y_mod and 1 or 0), flags).buildable or flags.passable) or
+	      not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]]) or
+          not (map:getCellFlags(x2 - (x_mod and 1 or 0), y2 - (y_mod and 1 or 0), flags).buildable or flags.passable) or
+		  not (flags[flag_names[1]] and flags[flag_names[2]] and flags[flag_names[3]] and flags[flag_names[4]])
+	  then
         self.blueprint_door.valid = false
       end
     end
@@ -1236,8 +1216,8 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
     flags = flags + 16 -- Use red palette rather than normal palette
   end
   if self.room_type.swing_doors then
-    for _, animation in ipairs(anim) do
-      animation:setAnimation(self.anims, 126, flags)
+    for i, anim in ipairs(anim) do
+      anim:setAnimation(self.anims, 126, flags)
     end
   else
     anim:setAnimation(self.anims, 126, flags)
@@ -1257,10 +1237,10 @@ function UIEditRoom:placeWindowBlueprint()
   end
 end
 
-function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
-  local x = orig_x
-  local y = orig_y
-  local wall = orig_wall
+function UIEditRoom:setWindowBlueprint(x, y, wall)
+  local orig_x = x
+  local orig_y = y
+  local orig_wall = wall
 
   if wall == "south" then
     y = y + 1
@@ -1283,8 +1263,7 @@ function UIEditRoom:setWindowBlueprint(orig_x, orig_y, orig_wall)
 
   local anim = x and self.blueprint_wall_anims[x][y]
   if anim and anim:getTag() then
-    x, y, wall = nil, nil, nil
-    orig_x, orig_y, orig_wall = nil, nil, nil
+    x, y, wall, orig_x, orig_y, orig_wall = nil
   end
 
   self.blueprint_window.x = x
@@ -1336,8 +1315,8 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
     return
   end
   local wx, wy = ui:ScreenToWorld(self.x + x, self.y + y)
-  wx = math.floor(wx)
-  wy = math.floor(wy)
+  wx = math_floor(wx)
+  wy = math_floor(wy)
 
   if self.phase == "walls" then
     local rect = self.blueprint_rect
@@ -1372,7 +1351,7 @@ function UIEditRoom:onCursorWorldPositionChange(x, y)
       end
     end
   else
-    if self.phase ~= "clear_area" and self.phase ~= "objects" then
+    if self.phase ~= "objects" then
       ui:setCursor(ui.app.gfx:loadMainCursor("resize_room"))
     end
     local cell_x, cell_y, wall = self:screenToWall(self.x + x, self.y + y)
