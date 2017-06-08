@@ -627,6 +627,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
       end
     end
 
+    local is_object_allowed = true
+    local good_tile = 24 + flag_alpha75
+    local bad_tile = 67 + flag_alpha75
     for i, tile in ipairs(object_footprint) do
       local xpos = x + tile[1]
       local ypos = y + tile[2]
@@ -637,8 +640,6 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         ypos = 0
       else
         local flag = "buildable"
-        local good_tile = 24 + flag_alpha75
-        local bad_tile = 67 + flag_alpha75
         if tile.only_passable then
           flag = "passable"
         end
@@ -652,30 +653,41 @@ function UIPlaceObjects:setBlueprintCell(x, y)
 
         -- Check 2: Is the tile in the object's allowed room?:
         local result = world:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(xpos, ypos, object, roomId)
-        local is_object_allowed = result.within_room
+        is_object_allowed = is_object_allowed and result.within_room
         roomId = result.roomId
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
+        flags = map:getCellFlags(xpos, ypos)
         if not tile.only_side and is_object_allowed then
-           is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
+          is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id) or tile.invisible
         elseif is_object_allowed then
-          is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
+          is_object_allowed = flags[flag] and (player_id == 0 or flags.owner == player_id)
         end
 
-        -- Having checked if the tile is good set its blueprint appearance flag:
-        if is_object_allowed then
-          if not tile.invisible then
-            map:setCell(xpos, ypos, 4, good_tile)
-          end
-        else
-          if not tile.invisible then
-            map:setCell(xpos, ypos, 4, bad_tile)
-          end
-          setAllGood(tile)
+        -- Check 4: Are you placing next to a door?:
+        if not(tile.invisible) then
+          is_object_allowed = is_object_allowed and not(flags["doorNorth"] or flags["doorWest"])
         end
+        -- Check 5: Object in the way still?:
+        is_object_allowed = is_object_allowed and ((flags["thob"] == 0 and flags["buildable"]) or tile.invisible)
       end
       self.object_footprint[i][1] = xpos
       self.object_footprint[i][2] = ypos
+    end
+    for i, tile in ipairs(object_footprint) do
+      local xpos = x + tile[1]
+      local ypos = y + tile[2]
+      -- Having checked if the tile is good set its blueprint appearance flag:
+      if is_object_allowed then
+        if not tile.invisible then
+          map:setCell(xpos, ypos, 4, good_tile)
+        end
+      else
+        if not tile.invisible then
+          map:setCell(xpos, ypos, 4, bad_tile)
+        end
+        setAllGood(tile)
+      end
     end
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
