@@ -386,6 +386,7 @@ tooltip = {
   },
   main_menu = {
     exit = "Nie, nie, proszę nie odchodź!",
+    custom_campaign = "Rozegraj kampanię stworzoną przez społeczność",
     custom_level = "Zbuduj swój szpital na dodatkowych poziomach",
     network = "Rozpocznij grę sieciową",
     quit = "Wyjdź",
@@ -397,6 +398,7 @@ tooltip = {
     },
     new_game = "Zacznij grę od samego początku‏",
     load_game = "Wczytaj zapisaną grę",
+    map_edit = "Stwórz własną mapę",
   },
   patient_window = {
     graph = "Kliknij, aby przełączyć się pomiędzy wykresem zdrowia osób a ich historią leczenia",
@@ -595,6 +597,9 @@ tooltip = {
     fullscreen_button = "Kliknij aby włączyć tryb pełnoekranowy",
     resolution = "Rozdzielczość w jakiej powinna działać gra",
     select_resolution = "Wybierz nową rozdzielczość",
+    audio_toggle = "Włącz/wyłącz",
+    folder_button = "Opcje folderów",
+    customise_button = "Dodatkowe ustawienia modifikujące twoją rozgrywkę",
     width = "Wpisz żądaną szerokość ekranu",
     height = "Wpisz żądaną wysokość ekranu",
     apply = "Zatwierdź wybraną rozdzielczość",
@@ -823,10 +828,12 @@ main_menu = {
   custom_level = "Gra niestandardowa",
   version = "Wersja: ",
   new_game = "Nowa gra",
+  custom_campaign = "Własna kampania",
   continue = "Powrót do gry",
   load_game = "Wczytaj grę",
   options = "Ustawienia",
   savegame_version = "Wersja zapisu: ",
+  map_edit = "Edytor map"
 }
 date_format = {
   daymonth = "%1% %2:months%",
@@ -1269,17 +1276,23 @@ menu_options = {
   game_speed = "  SZYBKOŚĆ GRY ",
   music_vol = "  GŁOŚNOŚĆ MUZYKI ",
   sound_vol = "  GŁOŚNOŚĆ DŹWIĘKU ",
-  adviser_disabled = "  DORADCA  ",
+  adviser_disabled = " (SHIFT+A) DORADCA  ",
   warmth_colors = "  CIEPŁOŚĆ BARW  ",
+  wage_increase = "  ŻĄDANIA PODWYŻKI",
+  twentyfour_hour_clock = "  ZEGAR 24 GODZINNY  ",
   edge_scrolling = "  PRZEWIJANIE PRZY KRAWĘDZIACH  ",
-  announcements = "  POWIADOMIENIA   ",
+  announcements = " (ALT+A) POWIADOMIENIA   ",
   lock_windows = "  ZABLOKUJ OKNA  ",
   settings = "  USTAWIENIA  ",
-  sound = "  DŹWIĘK   ",
+  sound = " (ALT+S) DŹWIĘK   ",
   announcements_vol = "  GŁOŚNOŚĆ POWIADOMIEŃ  ",
-  music = "  MUZYKA  ",
+  music = " (ALT+M) MUZYKA  ",
   autosave = "  AUTOZAPIS ",
   jukebox = "  SZAFA GRAJĄCA ",
+}
+menu_options_wage_increase = {
+  grant = "    PRZYZNAWAJ ",
+  deny =  "    ODMAWIAJ ",
 }
 menu_options_warmth_colors = {
   choice_1 = "  CZERWONY  ",
@@ -2196,9 +2209,67 @@ options_window = {
   cancel = "Anuluj",
   data_location = "Lokalizacja danych",
   font_location = "Lokalizacja czcionki",
-  language = "Game language",
+  language = "Język gry",
   cancel = "Anuluj",
   back = "Wróć",
+  audio = "Dźwięk",
+  customise = "Modyfikuj",
+  folder = "Foldery",
+}
+folders_window = {
+  caption = "Ścieżki folderów",
+  data_label = "Dane TH",
+  font_label = "Czcionka",
+  music_label = "MP3",
+  savegames_label = "Zapisane stany gry",
+  screenshots_label = "Zrzuty ekranu",
+  new_th_location = "Tutaj możesz na nowo wybrać folder, w którym zainstalowana jest gra Theme Hospital. Po wybraniu folderu gra zostanie uruchomiona ponownie.",
+  savegames_location = "Wybierz folder, w którym chcesz zapisywać stany gry",
+  music_location = "Wybierz folder z muzyką, której chcesz użyć",
+  screenshots_location = "Wybierz folder, w którym chcesz zapisywać zrzuty ekranu",
+  back  = "Wstecz",
+}
+tooltip.folders_window = {
+  browse = "Przeglądaj foldery",
+  data_location = "Folder z orginalną grą Theme Hospital, wymagany do uruchomienia CorsixTH",
+  font_location = "Ścieżka do pliku czcionki będącej w stanie wyświetlić znaki Unicode wymagane przez twój język. Bez podania czcionki nie będzie możliwe wybrania języka, który używa znaki niewspierane przez orginalną grę. Przykład: Rosujski, Chinski, Polski.",
+  savegames_location = "Domyślnie folder 'Saves', w którym umieszczane są stany gry, leży obok pliku konfiguracyjnego. Jeśli to Ci nie odpowiada możesz wybrać swój własny folder.",
+  screenshots_location = "Domyślnie folder 'Screenshots', w którym umieszczane są zrzuty ekranu, leży obok pliku konfiguracyjnego. Jeśli to Ci nie odpowiada możesz wybrać swój własny folder.",
+  music_location = "Wybierz folder z plikami MP3. Folder musi już być stworzony.",
+  browse_data = "Wskaż inną ścieżkę instalacji Theme Hospital (aktualnie: %1%)",
+  browse_font = "Wskaż inny plik czcionki ( aktualnie: %1% )",
+  browse_saves = "Wskaż inną ścieżkę folderu ze stanami gry ( aktualnie: %1% ) ",
+  browse_screenshots = "Wskaż inną ścieżkę folderu ze zrzutami ekranu ( aktualnie: %1% ) ",
+  browse_music = "Wskaż inną ścieżkę folderu z twoją muzyką ( aktualnie: %1% ) ",
+  no_font_specified = "Nie podano jeszcze pliku czcionki!",
+  not_specified = "Nie podano jeszcze ścieżki folderu!",
+  default = "Domyślna ścieżka",
+  reset_to_default = "Przywróć domyślną ścieżkę dla folderu",
+  back  = "Zamknij to menu i wróć do ustawień",
+}
+customise_window = {
+  caption = "Własne ustawienia",
+  option_on = "Wł",
+  option_off = "Wył",
+  back = "Wróć",
+  movies = "Zarządzanie filmami",
+  intro = "Odtwórz intro",
+  paused = "Budoowanie w czasie pauzy",
+  volume = "Skrót ściszania",
+  aliens = "Pacjenci Obcy",
+  fractured_bones = "Pogruchotane kości",
+  average_contents = "Standardowe wyposarzenie",
+}
+
+tooltip.customise_window = {
+  movies = "Globalne zarządzanie filmami pozwoli Tobie na wyłączenie wszystkich filmików",
+  intro = "Włącz lub wyłącz intro. Filmiki muszą być globalnie włączone jeśli chcesz oglądać intro przy każdym uruchomieniu CorsixTH",
+  paused = "W grze Theme Hospital gracz mógł jedynie używać górnego menu podczas pauzy. Jest to również domyślne ustawianie CorsixTH, ale przez włączenie tej opcji wszystko jest dozwolone podczas pauzy",
+  volume = "Jeśli przycisk ściszania otwiera również 'Teczkę z lekami' , włącz tę opcję aby zmienić skrót do 'Teczki...' na Shift + C",
+  aliens = "Z powodu braku dobrych animacji dokonaliśmy zmian aby pacjęci z DNA Obcego domyślnie przybywali tylko z nagłych wypadków. Jeśli chcesz aby pacjensi z DNA Obcego mogli odwiedzać twój szpital nie tylko po nagłym wypadku wyłącz tę opcję",
+  fractured_bones = "Z powodu kiepskich animacji domyślnie wyłączyliśmy damskie modele pacjętów ze Zgruchotanymi Koścmi. Aby zezwolić, żeby pacjentki ze Zgruchotanymi koścmi odwiedzały twój szpital, wyłącz tę opcję",
+  average_contents = "Jeśli chcesz, żeby gra zapamiętała jakie dodatkowe wyposarzenie używasz zazwyczaj budując dany typ pomieszczenia, włącz tę opcję",
+  back = "Zamknij to menu i wróć do ustawień",
 }
 buy_objects_window = {
   price = "Cena: ",
@@ -2490,10 +2561,10 @@ menu_file_load = {
   [8] = "  GRA 8  ",
 }
 menu_file = {
-  quit = "  WYJDŹ ",
-  save = "  ZAPISZ ",
-  load = "  WCZYTAJ ",
-  restart = "  RESTART  ",
+  quit = " (SHIFT+Q) WYJDŹ ",
+  save = " (SHIFT+S) ZAPISZ ",
+  load = " (SHIFT+L) WCZYTAJ ",
+  restart = " (SHIFT+R) ZACZNIJ OD NOWA  ",
 }
 rooms_long = {
   ultrascan = "Ultraskaner",
@@ -3165,6 +3236,46 @@ menu = {
   file = "  PLIK  ",
   options = "  OPCJE  ",
   charts = "  STATYSTYKI ",
+}
+map_editor_window = {
+  pages = {
+    inside = "Wnętrze",
+    outside = "Na zewnątrz",
+    foliage = "Ulistowienie",
+    hedgerow = "Żywopłot",
+    pond = "Sadzawka",
+    road = "Droga",
+    north_wall = "Ściana północna",
+    west_wall = "Ściana zachodnia",
+    helipad = "Lądowisko",
+    delete_wall = "Usuń ściany",
+    parcel_0 = "Parcela 0",
+    parcel_1 = "Parcela 1",
+    parcel_2 = "Parcela 2",
+    parcel_3 = "Parcela 3",
+    parcel_4 = "Parcela 4",
+    parcel_5 = "Parcela 5",
+    parcel_6 = "Parcela 6",
+    parcel_7 = "Parcela 7",
+    parcel_8 = "Parcela 8",
+    parcel_9 = "Parcela 9",
+    camera_1 = "Kamera 1",
+    camera_2 = "Kamera 2",
+    camera_3 = "Kamera 3",
+    camera_4 = "Kamera 4",
+    heliport_1 = "Lądowisko 1",
+    heliport_2 = "Lądowisko 2",
+    heliport_3 = "Lądowisko 3",
+    heliport_4 = "Lądowisko 4",
+    paste = "Wklej obszar",
+  }
+}
+menu["player_count"] = "LICZBA GRACZY"
+menu_player_count = {
+	players_1 = "  1 GRACZ  ",
+	players_2 = "  2 GRACZY  ",
+	players_3 = "  3 GRACZY  ",
+	players_4 = "  4 GRACZY  ",
 }
 
 
