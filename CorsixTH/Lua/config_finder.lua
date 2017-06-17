@@ -169,16 +169,17 @@ if needs_rewrite then
   fi = io.open(config_filename, "w")
   if fi then
     fi:write([=[
------------------------------------------ CorsixTH configuration file -------------------------------------------
+------------------------ CorsixTH configuration file --------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
 --  setting = [[value]]
 -- Number settings should not have anything around their value,
 -- e.g. setting = 42
 --
---------------------------------------------  SETTINGS MENU ---------------------------------------------
--- These settings can also be changed from within the game from the settings menu
--------------------------------------------------------------------------------------------------------------------------
+------------------------------  SETTINGS MENU ---------------------------------
+-- These settings can also be changed from within the game from the settings
+-- menu
+-------------------------------------------------------------------------------
 -- The fullscreen setting can be true or false, and the game will run windowed
 -- if not fullscreen.
 --
@@ -200,7 +201,7 @@ if needs_rewrite then
 'height = ' .. tostring(config_values.height) .. '\n' ..
 'window_scale = ' .. tostring(config_values.window_scale) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Brazilian Portuguese  / pt_br / br
 --  Chinese (simplified)  / zh(s) / chi(s)
@@ -225,16 +226,17 @@ if needs_rewrite then
 
 'language = [['.. config_values.language ..']]' .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Audio global on/off switch.
 -- Note that audio will also be disabled if CorsixTH was compiled without the
 -- SDL_mixer library.
 -- ]=] .. '\n' ..
 'audio = '.. tostring(config_values.audio) .. '\n' .. [=[
 
---------------------------------------------- CUSTOM GAME MENU ----------------------------------------------
--- These settings can also be changed from the opening menu screen in the custom games menu
--------------------------------------------------------------------------------------------------------------------------
+------------------------------- CUSTOM GAME MENU ------------------------------
+-- These settings can also be changed from the opening menu screen in the
+-- custom games menu
+-------------------------------------------------------------------------------
 -- Free Build or Sandbox mode
 -- You cannot win or lose custom made maps if this is set to true.
 -- You also don't have to worry about money.
@@ -242,66 +244,66 @@ if needs_rewrite then
 -- ]=] .. '\n' ..
 'free_build_mode = ' .. tostring(config_values.free_build_mode) .. '\n' .. [=[
 
------------------------------------------------ OPTIONS MENU ---------------------------------------------------
+--------------------------------- OPTIONS MENU --------------------------------
 --These settings can also be changed from within the game from the options menu
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Sounds: By default enabled and set at level 0.5
 -- ]=] .. '\n' ..
 'play_sounds = ' .. tostring(config_values.play_sounds) .. '\n' ..
 'sound_volume = ' .. tostring(config_values.sound_volume) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Announcements: By default set at level 0.5
 -- ]=] .. '\n' ..
 'play_announcements = ' .. tostring(config_values.play_announcements) .. '\n' ..
 'announcement_volume = ' .. tostring(config_values.announcement_volume) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Background music: By default enabled and set at level 0.5
 -- ]=] .. '\n' ..
 'play_music = ' .. tostring(config_values.play_music) .. '\n' ..
 'music_volume = ' .. tostring(config_values.music_volume) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 -- ]=] .. '\n' ..
 'prevent_edge_scrolling = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
 -- pop up.
 -- ]=] .. '\n' ..
 'adviser_disabled = ' .. tostring(config_values.adviser_disabled) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Scrolling Momentum.
 -- Determines the amount of momentum when scrolling the map with the mouse.
 -- This should be a value between 0 and 1 where 0 is no momentum
 -- ]=] .. '\n' ..
 'scrolling_momentum = ' .. tostring(config_values.scrolling_momentum) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Top menu clock is by default is always on
 -- setting to true will give you a twentyfour hours display
 -- change to false if you want AM / PM time displayed.
 -- ]=] .. '\n' ..
 'twentyfour_hour_clock = ' .. tostring(config_values.twentyfour_hour_clock) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Automatically check for updates.
 -- If set to true, CorsixTH will automatically check for and alert you to newer
 -- versions on startup.
 -- ]=] .. '\n' ..
 'check_for_updates = ' .. tostring(config_values.check_for_updates) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Warmth Colors display settings.
 -- This specifies which display method is set for warmth colours by default.
 -- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
 -- ]=] .. '\n' ..
 'warmth_colors_display_default = ' .. tostring(config_values.warmth_colors_display_default) .. '\n' .. [=[
 
---------------------------------------------- CUSTOMISE SETTINGS --------------------------------------------
+----------------------------- CUSTOMISE SETTINGS ------------------------------
 -- These settings can also be changed from the Customise Menu
 
 -------------------------------------------------------------------------------
@@ -311,7 +313,7 @@ if needs_rewrite then
 -- ]=] .. '\n' ..
 'grant_wage_increase = ' .. tostring(config_values.grant_wage_increase) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Movie global on/off switch.
 -- Note that movies will also be disabled if CorsixTH was compiled without the
 -- FFMPEG library.
@@ -322,7 +324,7 @@ if needs_rewrite then
 -- ]=] .. '\n' ..
 'play_intro = ' .. tostring(config_values.play_intro) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Allow user actions while game is paused
 -- In Theme Hospital the player would only be allowed to use the top menu if
 -- the game was paused. That is the default setting in CorsixTH too, but by
@@ -330,42 +332,44 @@ if needs_rewrite then
 -- ]=] .. '\n' ..
 'allow_user_actions_while_paused = ' .. tostring(config_defaults.allow_user_actions_while_paused) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
 
 -- If your keyboard volume control opens the Drug Casebook at the same time
--- then change this to true.  From then on you will have to use Shift + C to open
--- the Casebook and volume down will not open it.
--- For example for shift + C to open casebook change the setting below to = true
+-- then change this to true.  From then on you will have to use Shift + C to
+-- open the Casebook and volume down will not open it.
+-- For example for shift + C to open casebook change the setting below
+-- to = true
 -- ]=] .. '\n' ..
 'volume_opens_casebook = ' .. tostring(config_values.volume_opens_casebook) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
--- To allow patients with Alien DNA to visit your hospital other than by an emergency change
--- the settings below.  Understand that there are no animations for sitting down, opening
--- or knocking on doors etc.
--- So, like with Theme Hospital to do these things they will appear to change to normal
--- looking and then change back.
+-------------------------------------------------------------------------------
+-- To allow patients with Alien DNA to visit your hospital other than by an
+-- emergency change the settings below.  Understand that there are no
+-- animations for sitting down, opening or knocking on doors etc.
+-- So, like with Theme Hospital to do these things they will appear to change
+-- to normal looking and then change back.
 -- ]=] .. '\n' ..
 'alien_dna_only_by_emergency = ' .. tostring(config_values.alien_dna_only_by_emergency) .. '\n' ..
 'alien_dna_must_stand = ' .. tostring(config_values.alien_dna_must_stand) .. '\n' ..
 'alien_dna_can_knock_on_doors = ' .. tostring(config_values.alien_dna_can_knock_on_doors) .. '\n' .. [=[
 
--- To allow female patients with fractured bones, which are by default disabled due to poor
--- animation that skips and jumps a bit
+-- To allow female patients with fractured bones, which are by default disabled
+-- due to poor animation that skips and jumps a bit
 -- ]=] .. '\n' ..
 'disable_fractured_bones_females = ' .. tostring(config_values.disable_fractured_bones_females) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
--- By default the player selects any extra objects they want for each room they build.
--- If you would like the game to remember what you usually add, then change this option to true.
+-------------------------------------------------------------------------------
+-- By default the player selects any extra objects they want for each room they
+-- build. If you would like the game to remember what you usually add, then
+-- change this option to true.
 -- ]=] .. '\n' ..
 'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
 
------------------------------------------------ FOLDER SETTINGS ----------------------------------------------
+------------------------------ FOLDER SETTINGS --------------------------------
 -- These settings can also be changed from the Folders Menu
--------------------------------------------------------------------------------------------------------------------------
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Theme hospital install folder: original game data files are loaded from this
 -- folder. Between the square braces should be the folder which contains the
 -- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
@@ -374,14 +378,14 @@ if needs_rewrite then
 -- ]=] .. '\n' ..
 'theme_hospital_install = [[' .. config_values.theme_hospital_install ..']]' .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
--- Font file setting. Can be changed from main game menu
+-------------------------------------------------------------------------------
+-- Font file setting. Can be changed from main game menu.
 -- Specify a font file here if you wish to play the game in a language not
 -- present in the original game. Examples include Russian, Chinese and Polish.
 --
 unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
@@ -389,7 +393,7 @@ unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 --
 savegames = nil -- [[X:\ThemeHospital\Saves]]
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Levels. By default, the "Levels" directory alongside this config file will
 -- be used for storing new maps / levels in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
@@ -397,21 +401,21 @@ savegames = nil -- [[X:\ThemeHospital\Saves]]
 --
 levels = nil -- [[X:\ThemeHospital\Levels]]
 
- ------------------------------------------------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
 -- Use new graphics. Whether to use the original graphics from Theme Hospital
 -- or use new graphics created by the CorsixTH project.
 use_new_graphics = false
 
--------------------------------------------------------------------------------------------------------------------------
--- Graphics folder. All graphics are initially taken from the original Theme Hospital,
--- but the game can also try to find new graphics in the specified folder below.
--- Some graphics are shipped with CorsixTH, and they will be used if you just switch
--- on new graphics. If you however have acquired graphics from somewhere else, then
--- uncomment the following line and point it to the directory which contains the new
--- graphics.
+-------------------------------------------------------------------------------
+-- Graphics folder. All graphics are initially taken from the original Theme
+-- Hospital, but the game can also try to find new graphics in the specified
+-- folder below. Some graphics are shipped with CorsixTH, and they will be used
+-- if you just switch on new graphics. If you however have acquired graphics
+-- from somewhere else, then uncomment the following line and point it to the
+-- directory which contains the new graphics.
 new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
 -- file will be used for saving screenshots. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
@@ -419,7 +423,7 @@ new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 --
 screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- High quality (MP3 rather than MIDI) audio replacements.
 -- If you want to listen to high quality MP3 audio rather than the original XMI
 -- (MIDI) audio, then follow these steps:
@@ -434,9 +438,9 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --
 audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 
- ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
+ --------------------------- SPECIAL SETTINGS ---------------------------------
 -- These settings can only be changed here
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Audio playback settings.
 -- These can be commented out to use the default values from the game binary.
 -- Note: On some platforms, these settings may not effect MIDI playback - only
@@ -447,7 +451,7 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 'audio_channels = ' .. tostring(config_values.audio_channels) .. '\n' ..
 'audio_buffer_size = ' .. tostring(config_values.audio_buffer_size) .. '\n' .. [=[
 
- ------------------------------------------------------------------------------------------------------------------------
+ ------------------------------------------------------------------------------
 
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
@@ -455,9 +459,10 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 -- ]=] .. '\n' ..
 'debug = ' .. tostring(config_values.debug) .. '\n' .. [=[
 
---Optional settings for CorsixTH's Lua DBGp client.
---Default settings are nil values, platform & workingdir will be autodected if nil.
---https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
+-- Optional settings for CorsixTH's Lua DBGp client.
+-- Default settings are nil values, platform & workingdir will be autodected if
+-- nil.
+-- https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
 -- ]=] .. '\n' ..
 'idehost = ' .. tostring(config_values.DBGp_client_idehost) .. '\n' ..
 'ideport = ' .. tostring(config_values.DBGp_client_ideport) .. '\n' ..
@@ -473,30 +478,32 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 -- ]=] .. '\n' ..
 'track_fps = ' .. tostring(config_values.track_fps) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Zoom Speed: By default this is set at 80
 -- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
 -- ]=] .. '\n' ..
 'zoom_speed = ' .. tostring(config_values.zoom_speed) .. '\n' .. [=[
 
--------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------
 -- Scroll Speeds: The speed of scrolling with and without shift being held.
 -- Any number value between 1 and 10, 1 is very slow and 10 is fast!
 -- ]=] .. '\n' ..
 'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
 'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
------------------------------------------------- CAMPAIGN MENU -----------------------------------------------
--- By default your computer log in will be your name in the game.  You can change it in the
--- campaign menu or between the brace brackets below [[YOUR NAME]].
+--------------------------------- CAMPAIGN MENU -------------------------------
+-- By default your computer log in will be your name in the game.  You can
+-- change it in the campaign menu or between the brace brackets below
+-- [[YOUR NAME]].
 -- Note: space is limited in the game, so don't enter a name that is too long!
 --
--- If you have specified any other locations for things like saves, music or screenshots you will find these below.  If
--- you change your mind and wish to go back to the default folders, just delete the relevant line.
+-- If you have specified any other locations for things like saves, music or
+-- screenshots you will find these below. If you change your mind and wish to
+-- go back to the default folders, just delete the relevant line.
 --
--- If you wish to go back to the default settings for everything, you can delete this text file and it will be re-created
--- you play the game.
--------------------------------------------------------------------------------------------------------------------------
+-- If you wish to go back to the default settings for everything, you can
+-- delete this text file and it will be re-created you play the game.
+-------------------------------------------------------------------------------
 
 ]=])
   end
