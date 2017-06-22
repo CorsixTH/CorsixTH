@@ -484,17 +484,29 @@ bool THMovie::load(const char* szFilepath)
     }
 
     m_iVideoStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &m_pVideoCodec, 0);
-    m_pVideoCodecContext = m_pFormatContext->streams[m_iVideoStream]->codec;
+    m_pVideoCodecContext = getCodecContextForStream(m_pVideoCodec, m_pFormatContext->streams[m_iVideoStream]);
     avcodec_open2(m_pVideoCodecContext, m_pVideoCodec, nullptr);
 
     m_iAudioStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_AUDIO, -1, -1, &m_pAudioCodec, 0);
     if(m_iAudioStream >= 0)
     {
-        m_pAudioCodecContext = m_pFormatContext->streams[m_iAudioStream]->codec;
+        m_pAudioCodecContext = getCodecContextForStream(m_pAudioCodec, m_pFormatContext->streams[m_iAudioStream]);
         avcodec_open2(m_pAudioCodecContext, m_pAudioCodec, nullptr);
     }
 
     return true;
+}
+
+AVCodecContext* THMovie::getCodecContextForStream(AVCodec* codec, AVStream* stream) const
+{
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
+    AVCodecContext* ctx = avcodec_alloc_context3(codec);
+    avcodec_parameters_to_context(ctx, stream->codecpar);
+    return ctx;
+#else
+    return stream->codec;
+#endif
 }
 
 void THMovie::unload()

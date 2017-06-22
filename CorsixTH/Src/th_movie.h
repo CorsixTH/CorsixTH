@@ -288,6 +288,9 @@ private:
     static const size_t ms_movieErrorBufferSize = 128; ///< Buffer to hold last error description
     static const size_t ms_audioBufferSize = 1024; ///< Buffer for audio playback
 
+    //! Get the AVCodecContext associated with a given stream
+    AVCodecContext* getCodecContextForStream(AVCodec* codec, AVStream* stream) const;
+
     //! Decode audio from the movie into a format suitable for playback
     int decodeAudioFrame(bool fFirst);
 
