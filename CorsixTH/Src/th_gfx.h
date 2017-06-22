@@ -101,6 +101,7 @@ struct THRenderTargetCreationParams
     int iWidth;             ///< Expected width of the render target.
     int iHeight;            ///< Expected height of the render target.
     int iBPP;               ///< Expected colour depth of the render target.
+    float fWindowScale;     ///< Scaling factor (e.g. for Hi-DPI)
     bool bFullscreen;       ///< Run full-screen.
     bool bPresentImmediate; ///< Whether to present immediately to the user (else wait for Vsync).
 };

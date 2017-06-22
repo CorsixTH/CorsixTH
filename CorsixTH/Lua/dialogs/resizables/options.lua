@@ -55,7 +55,7 @@ local col_caption = {
 }
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 240, col_bg)
+  self:UIResizable(ui, 320, 265, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -108,6 +108,21 @@ function UIOptions:UIOptions(ui, mode)
   self.resolution_panel = self:addBevelPanel(165, 70, 135, 20, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
   self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
 
+  -- Window scale
+  self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
+      :setLabel(_S.options_window.window_scale):setTooltip(_S.tooltip.options_window.window_scale).lowered = true
+  self.window_scale_panel = self:addBevelPanel(165, 95, 135, 20, col_bg)
+
+  self.original_window_scale = app.config.window_scale;
+  local setWindowScale = function()
+    if not self.ui:changeResolution(app.config.width, app.config.height, self.window_scale_textbox.text) then
+      local err = {_S.errors.unavailable_screen_size}
+      self.ui:addWindow(UIInformation(self.ui, err))
+    end
+  end
+
+  self.window_scale_textbox = self.window_scale_panel:makeTextbox(setWindowScale):allowedInput("numbers"):characterLimit(3):setText(tostring(app.config.window_scale))
+
   -- Language
   -- Get language name in the language to normalize display.
   -- If it doesn't exist, display the current config option.
@@ -117,30 +132,30 @@ function UIOptions:UIOptions(ui, mode)
   else
     lang = app.config.language
   end
-  self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 120, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
-  self.language_panel = self:addBevelPanel(165, 95, 135, 20, col_bg):setLabel(lang)
+  self.language_panel = self:addBevelPanel(165, 120, 135, 20, col_bg):setLabel(lang)
   self.language_button = self.language_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
   -- add the Audio global switch.
-  self:addBevelPanel(20, 120, 135, 20, col_shadow, col_bg, col_bg)
+  self:addBevelPanel(20, 145, 135, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
   self.volume_panel =
-    self:addBevelPanel(165, 120, 135, 20, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(165, 145, 135, 20, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, 135, 20, nil, self.buttonAudioGlobal)
     :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
 
   -- "Customise" button
-  self:addBevelPanel(20, 150, 135, 30, col_bg):setLabel(_S.options_window.customise)
+  self:addBevelPanel(20, 175, 135, 30, col_bg):setLabel(_S.options_window.customise)
     :makeButton(0, 0, 135, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
 
   -- "Folders" button
-  self:addBevelPanel(165, 150, 135, 30, col_bg):setLabel(_S.options_window.folder)
+  self:addBevelPanel(165, 175, 135, 30, col_bg):setLabel(_S.options_window.folder)
     :makeButton(0, 0, 135, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
 
 
   -- "Back" button
-  self:addBevelPanel(20, 190, 280, 40, col_bg):setLabel(_S.options_window.back)
+  self:addBevelPanel(20, 215, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
@@ -202,7 +217,7 @@ function UIOptions:selectResolution(number)
   local res = self.available_resolutions[number]
 
   local callback = --[[persistable:options_resolution_callback]] function(width, height)
-    if not self.ui:changeResolution(width, height) then
+    if not self.ui:changeResolution(width, height, self.ui.app.config.window_scale) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
     end

@@ -92,6 +92,7 @@ local config_defaults = {
   fullscreen = false,
   width = 800,
   height = 600,
+  window_scale = 1,
   language = [[English]],
   audio = true,
   free_build_mode = false,
@@ -178,14 +179,26 @@ if needs_rewrite then
 --------------------------------------------  SETTINGS MENU ---------------------------------------------
 -- These settings can also be changed from within the game from the settings menu
 -------------------------------------------------------------------------------------------------------------------------
--- Screen size. Must be at least 640x480. Larger sizes will require better
--- hardware in order to maintain a playable framerate. The fullscreen setting
--- can be true or false, and the game will run windowed if not fullscreen.
+-- The fullscreen setting can be true or false, and the game will run windowed
+-- if not fullscreen.
+--
+-- Width and height control the number of virtual pixels used to display the
+-- game. Width must be at least 640, and height to at least 480. 640x480 was
+-- the size used by Theme Hospital. Larger sizes will require better hardware
+-- in order to maintain a playable framerate.
+--
+-- The window_scale indicates how big a virtual pixel is in terms of pixels
+-- reported by the operating system, so a window_scale of 2 will make the game
+-- window and all in game controls twice as big as a setting of 1. In
+-- fullscreen mode window_scale has no effect, to get larger virtual pixels in
+-- fullscreen mode set the width and height to less than your display
+-- resolution.
 -- ]=] .. '\n' ..
 'fullscreen = ' .. tostring(config_values.fullscreen) .. '\n' ..
 '\n' ..
 'width = ' .. tostring(config_values.width) .. '\n' ..
-'height = ' .. tostring(config_values.height) .. '\n' .. [=[
+'height = ' .. tostring(config_values.height) .. '\n' ..
+'window_scale = ' .. tostring(config_values.window_scale) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:

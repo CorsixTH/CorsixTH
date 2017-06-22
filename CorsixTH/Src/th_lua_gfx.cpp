@@ -566,12 +566,13 @@ static THRenderTargetCreationParams l_surface_creation_params(lua_State *L, int 
     THRenderTargetCreationParams oParams;
     oParams.iWidth = static_cast<int>(luaL_checkinteger(L, iArgStart));
     oParams.iHeight = static_cast<int>(luaL_checkinteger(L, iArgStart + 1));
+    oParams.fWindowScale = static_cast<float>(luaL_checknumber(L, iArgStart + 2));
 
     oParams.bFullscreen = false;
     oParams.bPresentImmediate = false;
 
     // Parse string arguments, looking for matching parameter names.
-    for(int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount; ++iArg)
+    for(int iArg = iArgStart + 3, iArgCount = lua_gettop(L); iArg <= iArgCount; ++iArg)
     {
         const char* sOption = luaL_checkstring(L, iArg);
         if(sOption[0] == 0)
