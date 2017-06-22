@@ -229,6 +229,7 @@ private:
     double m_fBitmapScaleFactor; ///< Bitmap scale factor.
     int m_iWidth;
     int m_iHeight;
+    float m_fWindowScale;
     int m_iCursorX;
     int m_iCursorY;
     bool m_bShouldScaleBitmaps; ///< Whether bitmaps should be scaled.

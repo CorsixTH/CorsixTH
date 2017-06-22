@@ -204,19 +204,19 @@ void WxStoring::storeARGB(uint32_t pixel)
     *m_pAData++ = THPalette::getA(pixel);
 }
 
-THRenderTarget::THRenderTarget()
-{
-    m_pWindow = nullptr;
-    m_pRenderer = nullptr;
-    m_pFormat = nullptr;
-    m_pCursor = nullptr;
-    m_pZoomTexture = nullptr;
-    m_bShouldScaleBitmaps = false;
-    m_bBlueFilterActive = false;
-    m_bApplyOpenGlClipFix = false;
-    m_iWidth = -1;
-    m_iHeight = -1;
-}
+THRenderTarget::THRenderTarget() :
+    m_pWindow(nullptr),
+    m_pRenderer(nullptr),
+    m_pFormat(nullptr),
+    m_pCursor(nullptr),
+    m_pZoomTexture(nullptr),
+    m_bShouldScaleBitmaps(false),
+    m_bBlueFilterActive(false),
+    m_bApplyOpenGlClipFix(false),
+    m_iWidth(-1),
+    m_iHeight(-1),
+    m_fWindowScale(1)
+{}
 
 THRenderTarget::~THRenderTarget()
 {
@@ -232,7 +232,7 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
     m_pFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     m_pWindow = SDL_CreateWindow("CorsixTH",
                                  SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                 pParams->iWidth, pParams->iHeight,
+                                 pParams->iWidth * pParams ->fWindowScale, pParams->iHeight * pParams->fWindowScale,
                                  SDL_WINDOW_OPENGL|SDL_WINDOW_RESIZABLE);
     if (!m_pWindow)
     {
@@ -249,9 +249,12 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
-    bool bUpdateSize = (m_iWidth != pParams->iWidth) || (m_iHeight != pParams->iHeight);
+    bool bUpdateSize = (m_iWidth != pParams->iWidth) ||
+                       (m_iHeight != pParams->iHeight) ||
+                       (m_fWindowScale != pParams->fWindowScale);
     m_iWidth = pParams->iWidth;
     m_iHeight = pParams->iHeight;
+    m_fWindowScale = pParams->fWindowScale;
 
     bool bIsFullscreen = ((SDL_GetWindowFlags(m_pWindow) & SDL_WINDOW_FULLSCREEN_DESKTOP) == SDL_WINDOW_FULLSCREEN_DESKTOP);
     if (bIsFullscreen != pParams->bFullscreen)
@@ -261,7 +264,7 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
 
     if (bUpdateSize || bIsFullscreen != pParams->bFullscreen)
     {
-        SDL_SetWindowSize(m_pWindow, m_iWidth, m_iHeight);
+        SDL_SetWindowSize(m_pWindow, m_iWidth * pParams->fWindowScale, m_iHeight * pParams->fWindowScale);
     }
 
     Uint32 iRendererFlags = (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC);

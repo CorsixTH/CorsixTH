@@ -430,9 +430,9 @@ function UI:unregisterTextBox(box)
   end
 end
 
-function UI:changeResolution(width, height)
+function UI:changeResolution(width, height, window_scale)
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(width, height, unpack(self.app.modes))
+  local error_message = self.app.video:update(width, height, window_scale, unpack(self.app.modes))
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -444,6 +444,7 @@ function UI:changeResolution(width, height)
 
   self.app.config.width = width
   self.app.config.height = height
+  self.app.config.window_scale = window_scale
 
   -- Redraw cursor
   local cursor = self.cursor
@@ -484,7 +485,11 @@ function UI:toggleFullscreen()
 
   local success = true
   self.app:prepareVideoUpdate()
-  local error_message = self.app.video:update(self.app.config.width, self.app.config.height, unpack(modes))
+  local error_message = self.app.video:update(
+      self.app.config.width * self.app.config.window_scale,
+      self.app.config.height * self.app.config.window_scale,
+      self.app.config.window_scale,
+      unpack(modes))
   self.app:finishVideoUpdate()
 
   if error_message then
@@ -714,7 +719,10 @@ end
 --!param height (integer) New window height
 function UI:onWindowResize(width, height)
   if not self.app.config.fullscreen then
-    self:changeResolution(width, height)
+    self:changeResolution(
+        math.floor(width / self.app.config.window_scale),
+        math.floor(height / self.app.config.window_scale),
+        self.app.config.window_scale)
   end
 end
 
