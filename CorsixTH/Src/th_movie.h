@@ -53,6 +53,12 @@ extern "C"
 #define AV_PIX_FMT_RBG24 PIX_FMT_RGB24
 #endif
 
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 16, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 37, 100))
+#define CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+#endif
+
+
 //! \brief A picture in THMoviePictureBuffer
 //!
 //! Stores the picture from a frame in the movie from the time that it is
@@ -291,16 +297,31 @@ private:
     //! Get the AVCodecContext associated with a given stream
     AVCodecContext* getCodecContextForStream(AVCodec* codec, AVStream* stream) const;
 
+    //! Get the time the given frame should be played (from the start of the stream)
+    //!
+    //! \param frame The video or audio frame
+    //! \param streamIndex The position of the stream in m_pFormatContexts streams array
+    double getPresentationTimeForFrame(AVFrame* frame, int streamIndex) const;
+
     //! Decode audio from the movie into a format suitable for playback
     int decodeAudioFrame(bool fFirst);
 
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+    //! Convert packet data into frames
+    //!
+    //! \param stream The index of the stream to get the frame for
+    //! \param pFrame An empty frame which gets populated by the data in the
+    //! packet queue.
+    //! \returns FFMPEG result of avcodec_recieve_frame
+    int getFrame(int stream, AVFrame* pFrame);
+#else
     //! Convert video packet data into a frame.
     //!
     //! \param pFrame An empty frame which gets populated by the data in the
     //! video packet queue.
-    //! \param piPts A reference to be populated with the presentation
-    //! timestamp of the frame.
-    int getVideoFrame(AVFrame *pFrame, int64_t *piPts);
+    //! \returns 1 if the frame was received, 0 if it was not, and < 0 on error
+    int getVideoFrame(AVFrame *pFrame);
+#endif
 
     SDL_Renderer *m_pRenderer; ///< The renderer to draw to
 

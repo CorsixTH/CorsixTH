@@ -807,7 +807,6 @@ void THMovie::readStreams()
 void THMovie::runVideo()
 {
     AVFrame *pFrame = av_frame_alloc();
-    int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
 
@@ -815,7 +814,20 @@ void THMovie::runVideo()
     {
         av_frame_unref(pFrame);
 
-        iError = getVideoFrame(pFrame, &iStreamPts);
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+        iError = getFrame(m_iVideoStream, pFrame);
+
+        if (iError == AVERROR_EOF)
+        {
+            break;
+        }
+        else if (iError < 0)
+        {
+            std::cerr << "Unexpected error " << iError << " while decoding video packet" << std::endl;
+            break;
+        }
+#else
+        iError = getVideoFrame(pFrame);
         if(iError < 0)
         {
             break;
@@ -824,8 +836,9 @@ void THMovie::runVideo()
         {
             continue;
         }
+#endif
 
-        dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iVideoStream]->time_base);
+        dClockPts = getPresentationTimeForFrame(pFrame, m_iVideoStream);
         iError = m_pMoviePictureBuffer->write(pFrame, dClockPts);
 
         if(iError < 0)
@@ -838,7 +851,74 @@ void THMovie::runVideo()
     av_frame_free(&pFrame);
 }
 
-int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
+double THMovie::getPresentationTimeForFrame(AVFrame* frame, int streamIndex) const
+{
+    int64_t pts;
+#ifdef CORSIX_TH_USE_LIBAV
+    pts = frame->pts;
+    if (pts == AV_NOPTS_VALUE)
+    {
+        pts = frame->pkt_dts;
+    }
+#else
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
+    pts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), frame, "best_effort_timestamp");
+#else
+    pts = av_frame_get_best_effort_timestamp(frame);
+#endif //LIBAVCODEC_VERSION_INT
+#endif //CORSIX_T_USE_LIBAV
+
+    if (pts == AV_NOPTS_VALUE)
+    {
+        pts = 0;
+    }
+
+    return pts * av_q2d(m_pFormatContext->streams[streamIndex]->time_base);
+}
+
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+int THMovie::getFrame(int stream, AVFrame* pFrame)
+{
+    int iError = AVERROR(EAGAIN);
+    AVCodecContext* ctx;
+    THAVPacketQueue* pq;
+
+    if (stream == m_iVideoStream)
+    {
+        ctx = m_pVideoCodecContext;
+        pq = m_pVideoQueue;
+    }
+    else if (stream == m_iAudioStream)
+    {
+        ctx = m_pAudioCodecContext;
+        pq = m_pAudioQueue;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid value provided for stream");
+    }
+
+    while (iError == AVERROR(EAGAIN))
+    {
+        iError = avcodec_receive_frame(ctx, pFrame);
+
+        if (iError == AVERROR(EAGAIN))
+        {
+            AVPacket* pkt = pq->pull(true);
+            int res = avcodec_send_packet(ctx, pkt);
+
+            if (res == AVERROR(EAGAIN))
+            {
+                throw std::exception("avcodec_receive_frame and avcodec_send_packet should not return EAGAIN at the same time");
+            }
+        }
+    }
+
+    return iError;
+}
+
+#else
+int THMovie::getVideoFrame(AVFrame *pFrame)
 {
     int iGotPicture = 0;
     int iError;
@@ -868,29 +948,12 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     if(iGotPicture)
     {
         iError = 1;
-
-#ifdef CORSIX_TH_USE_LIBAV
-        *piPts = pFrame->pts;
-        if (*piPts == AV_NOPTS_VALUE)
-        {
-            *piPts = pFrame->pkt_dts;
-        }
-#else
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
-        *piPts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), pFrame, "best_effort_timestamp");
-#else
-        *piPts = av_frame_get_best_effort_timestamp(pFrame);
-#endif //LIBAVCODEC_VERSION_INT
-#endif //CORSIX_T_USE_LIBAV
-
-        if(*piPts == AV_NOPTS_VALUE)
-        {
-            *piPts = 0;
-        }
         return iError;
     }
+
     return 0;
 }
+#endif
 
 void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 {
