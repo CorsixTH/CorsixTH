@@ -993,14 +993,35 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 
 int THMovie::decodeAudioFrame(bool fFirst)
 {
-    int iBytesConsumed = 0;
-    int iSampleSize = 0;
-    int iOutSamples;
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+    if (!m_audio_frame)
+    {
+        m_audio_frame = av_frame_alloc();
+    }
+    else
+    {
+        av_frame_unref(m_audio_frame);
+    }
+
+    int iError = getFrame(m_iAudioStream, m_audio_frame);
+
+    if (iError == AVERROR_EOF)
+    {
+        return 0;
+    }
+    else if (iError < 0)
+    {
+        std::cerr << "Unexpected error " << iError << " while decoding audio packet" << std::endl;
+        return 0;
+    }
+
+    double dClockPts = getPresentationTimeForFrame(m_audio_frame, m_iAudioStream);
+    m_iCurSyncPts = dClockPts;
+    m_iCurSyncPtsSystemTime = SDL_GetTicks();
+#else
     int iGotFrame = 0;
     bool fNewPacket = false;
     bool fFlushComplete = false;
-    double dClockPts;
-    int64_t iStreamPts;
 
     while(!iGotFrame && !m_fAborting)
     {
@@ -1039,11 +1060,11 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
         if(fFirst)
         {
-            iStreamPts = m_pAudioPacket->pts;
+            int64_t iStreamPts = m_pAudioPacket->pts;
             if(iStreamPts != AV_NOPTS_VALUE)
             {
                 //There is a time_base in m_pAudioCodecContext too, but that one is wrong.
-                dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iAudioStream]->time_base);
+                double dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iAudioStream]->time_base);
                 m_iCurSyncPts = dClockPts;
                 m_iCurSyncPtsSystemTime = SDL_GetTicks();
             }
@@ -1068,7 +1089,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
             fNewPacket = false;
 
-            iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_audio_frame, &iGotFrame, m_pAudioPacket);
+            int iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_audio_frame, &iGotFrame, m_pAudioPacket);
 
             if(iBytesConsumed < 0)
             {
@@ -1087,10 +1108,10 @@ int THMovie::decodeAudioFrame(bool fFirst)
             }
         }
     }
-
+#endif
     //over-estimate output samples
-    iOutSamples = (int)av_rescale_rnd(m_audio_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
-    iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
+    int iOutSamples = (int)av_rescale_rnd(m_audio_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
+    int iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
 
     if(iSampleSize > m_iAudioBufferMaxSize)
     {
