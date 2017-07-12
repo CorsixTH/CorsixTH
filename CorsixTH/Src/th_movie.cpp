@@ -909,7 +909,7 @@ int THMovie::getFrame(int stream, AVFrame* pFrame)
 
             if (res == AVERROR(EAGAIN))
             {
-                throw std::exception("avcodec_receive_frame and avcodec_send_packet should not return EAGAIN at the same time");
+                throw std::runtime_error("avcodec_receive_frame and avcodec_send_packet should not return EAGAIN at the same time");
             }
         }
     }
