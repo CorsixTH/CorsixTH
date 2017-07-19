@@ -25,6 +25,10 @@ SOFTWARE.
 
 #include <string>
 #include <queue>
+#include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
 #include "SDL.h"
 #include "config.h"
 
@@ -80,8 +84,7 @@ public:
     int m_iWidth; ///< Picture width
     int m_iHeight; ///< Picture height
     double m_dPts; ///< Presentation time stamp
-    SDL_mutex *m_pMutex; ///< Mutex protecting this picture
-    SDL_cond *m_pCond; ///< Condition for signaling this picture
+    std::mutex m_mutex; ///< Mutex protecting this picture
 };
 
 //! A buffer for holding movie pictures and drawing them to the renderer
@@ -149,16 +152,21 @@ public:
     //! \retval 1 An error writing the frame
     int write(AVFrame* pFrame, double dPts);
 private:
+    //! Return whether there is space to add any more frame data to the queue
+    //!
+    //! \remark Requires external locking
+    bool unsafeFull();
+
     static const size_t ms_pictureBufferSize = 4; ///< The number of elements to allocate in the picture queue
-    bool m_fAborting; ///< Whether we are in the process of aborting
+    std::atomic<bool> m_aborting; ///< Whether we are in the process of aborting
     bool m_fAllocated; ///< Whether the picture buffer has been allocated (and hasn't since been deallocated)
     int m_iCount; ///< The number of elements currently written to the picture queue
     int m_iReadIndex; ///< The position in the picture queue to be read next
     int m_iWriteIndex; ///< The position in the picture queue to be written to next
     SwsContext* m_pSwsContext; ///< The context for software scaling and pixel conversion when writing to the picture queue
     SDL_Texture *m_pTexture; ///< The (potentially hardware) texture to draw the picture to. In OpenGL this should only be accessed on the main thread
-    SDL_mutex *m_pMutex; ///< A mutex for restricting access to the picture buffer to a single thread
-    SDL_cond *m_pCond; ///< A condition for indicating access to the picture buffer
+    std::mutex m_mutex; ///< A mutex for restricting access to the picture buffer to a single thread
+    std::condition_variable m_cond; ///< A condition for indicating access to the picture buffer
     THMoviePicture m_aPictureQueue[ms_pictureBufferSize]; ///< The picture queue, a looping FIFO queue of THMoviePictures
 };
 
@@ -193,8 +201,8 @@ private:
     AVPacketList *m_pFirstPacket; ///< The packet at the front of the queue
     AVPacketList *m_pLastPacket; ///< The packet at the end of the queue
     int iCount; ///< The number of packets in the queue
-    SDL_mutex *m_pMutex; ///< A mutex restricting access to the packet queue to a single thread
-    SDL_cond *m_pCond; ///< A condition to wait on for signaling the packet queue
+    std::mutex m_mutex; ///< A mutex restricting access to the packet queue to a single thread
+    std::condition_variable m_cond; ///< A condition to wait on for signaling the packet queue
 };
 #endif //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 
@@ -333,7 +341,7 @@ private:
 
     bool m_fAborting; ///< Indicate that we are in process of aborting playback
 
-    SDL_mutex *m_pDecodingAudioMutex; ///< Synchronize access to #m_pAudioBuffer
+    std::mutex m_decodingAudioMutex; ///< Synchronize access to #m_pAudioBuffer
 
     AVFormatContext* m_pFormatContext; ///< Information related to the loaded movie and all of its streams
     int m_iVideoStream; ///< The index of the video stream
@@ -375,8 +383,8 @@ private:
 
     AVPacket* m_flushPacket; ///< A representative packet indicating a flush is required.
 
-    SDL_Thread* m_pStreamThread; ///< The thread responsible for reading the movie streams
-    SDL_Thread* m_pVideoThread; ///< The thread responsible for decoding the video stream
+    std::thread m_streamThread; ///< The thread responsible for reading the movie streams
+    std::thread m_videoThread; ///< The thread responsible for decoding the video stream
 #endif //CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 };
 
