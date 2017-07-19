@@ -91,7 +91,7 @@ void THMoviePicture::deallocate()
 }
 
 THMoviePictureBuffer::THMoviePictureBuffer():
-    m_fAborting(false),
+    m_aborting(false),
     m_fAllocated(false),
     m_iCount(0),
     m_iReadIndex(0),
@@ -115,14 +115,14 @@ THMoviePictureBuffer::~THMoviePictureBuffer()
 
 void THMoviePictureBuffer::abort()
 {
-    m_fAborting = true;
+    m_aborting = true;
     std::lock_guard<std::mutex> lock(m_mutex);
     m_cond.notify_all();
 }
 
 void THMoviePictureBuffer::reset()
 {
-    m_fAborting = false;
+    m_aborting = false;
 }
 
 void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iWidth, int iHeight)
@@ -244,13 +244,13 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 {
     THMoviePicture* pMoviePicture = nullptr;
     std::unique_lock<std::mutex> picBufLock(m_mutex);
-    while(unsafeFull() && !m_fAborting)
+    while(unsafeFull() && !m_aborting)
     {
         m_cond.wait(picBufLock);
     }
     picBufLock.unlock();
 
-    if(m_fAborting) { return -1; }
+    if(m_aborting) { return -1; }
 
     pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
     std::unique_lock<std::mutex> pictureLock(pMoviePicture->m_mutex);

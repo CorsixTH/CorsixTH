@@ -28,6 +28,7 @@ SOFTWARE.
 #include <thread>
 #include <mutex>
 #include <condition_variable>
+#include <atomic>
 #include "SDL.h"
 #include "config.h"
 
@@ -157,7 +158,7 @@ private:
     bool unsafeFull();
 
     static const size_t ms_pictureBufferSize = 4; ///< The number of elements to allocate in the picture queue
-    bool m_fAborting; ///< Whether we are in the process of aborting
+    std::atomic<bool> m_aborting; ///< Whether we are in the process of aborting
     bool m_fAllocated; ///< Whether the picture buffer has been allocated (and hasn't since been deallocated)
     int m_iCount; ///< The number of elements currently written to the picture queue
     int m_iReadIndex; ///< The position in the picture queue to be read next
