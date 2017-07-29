@@ -58,11 +58,11 @@ vip_names = {
 }
 
 -- A small error in the introduction text of level 2
-introduction_texts.level2 = "Há uma grande variedade de indisposiçöes nesta área. Prepare o seu hospital para tratar mais pacientes " ..
+introduction_texts.level2 = "Há uma grande variedade de doenças nesta área. Prepare o seu hospital para tratar mais pacientes " ..
                             "e para a construçäo de um Centro de Pesquisa. Lembre-se que deve manter limpo o hospital e procurar atingir a " ..
                             "sua mais alta reputaçäo possível. Tratará doenças como a língua comprida, entäo necessitará de uma sala de " ..
                             "laringologia. Também pode construir uma cardiologia para diagnosticar novas doenças. Estas duas consultas deveräo " ..
-                            "ser investigadas antes de as construir. Também pode comprar mais terreno para aumentar o seu hospital. " ..
+                            "ser pesquisadas antes de as construir. Também pode comprar mais terreno para aumentar o seu hospital. " ..
                             "Para isso, utilize o mapa da cidade. Consiga uma reputaçäo de 300 um saldo de bancário de $10,000 e 40 pessoas curadas. "
 
 -- An override for the squits becoming the the squits see issue 1646
@@ -1532,7 +1532,7 @@ diseases.sleeping_illness.symptoms = "Sintomas - Um desejo imprescindível de me
 diseases.sleeping_illness.cure = "Cura - Uma enfermeira administra uma elevada dose de um capitalista estimulante."
 diseases.pregnancy.cause = "Causa - Cortes de eletricidade em áreas urbanas."
 diseases.pregnancy.name = "Grávida"
-diseases.pregnancy.symptoms = "Sintomas - Comer de capricho com o consequente mal-estar de estômago."
+diseases.pregnancy.symptoms = "Sintomas - Muita vontade de comer e um mal-estar no estômago."
 diseases.pregnancy.cure = "Cura - Extrai-se ao bebé na sala de operaçöes, limpa-se e entrega-se ao paciente."
 diseases.general_practice.name = "Clínica Geral"
 diseases.tv_personalities.cause = "Causa - Ver a televisäo durante o dia."
@@ -1583,7 +1583,7 @@ diseases.sweaty_palms.symptoms = "Sintomas - Dar a mäo ao paciente é como agar
 diseases.sweaty_palms.cure = "Cura - Um psiquiatra deve discutir a fundo com o paciente sobre esta doença inventada."
 diseases.bloaty_head.cause = "Causa - Cheirar queijo e beber água da chuva näo purificada."
 diseases.bloaty_head.name = "Cabeça inchada"
-diseases.bloaty_head.symptoms = "Sintomas - Muito desconforto pelo o que parece."
+diseases.bloaty_head.symptoms = "Sintomas - Muito desconforto pelo que parece."
 diseases.bloaty_head.cure = "Cura - Fura-se a cabeça inflada, em seguida, volta-se a inflar até o tamanho correto com uma máquina inteligente."
 diseases.heaped_piles.cause = "Causa - Permanecer de pé junto a refrigeradores de água."
 diseases.heaped_piles.name = "Hemorroidas"
@@ -2304,7 +2304,7 @@ adviser.warnings.doctors_tired = "Os seus médicos estäo esgotados. Mande-os de
 adviser.warnings.charges_too_high = "Os seus preços säo muito altos. Terá grandes benefícios a curto prazo, mas à longo ficará sem pacientes."
 adviser.warnings.financial_trouble = "Tem sérios problemas financeiros. Arranja a sua financia já! Se perder outros %d, terá arruinado este nível!"
 adviser.warnings.reception_bottleneck = "Há um gargalo na Recepçäo. Contrate outra Recepcionista."
-adviser.warnings.pay_back_loan = "Tem dinheiro de sobra. Por que näo pensa em liquidar o empréstimo?"
+adviser.warnings.pay_back_loan = "Tem dinheiro de sobra. Por que você näo liquida o seu empréstimo?"
 adviser.warnings.nobody_cured_last_month = "No mês passado, näo houve nenhuma cura."
 adviser.warnings.queue_too_long_send_doctor = "As filas de %s säo muito longas. Assegure-se de que há um Médico nas consultas."
 adviser.warnings.staff_too_hot = "Os seus empregados têm muito calor. Baixe a temperatura ou retire alguns radiadores das suas consultas."
@@ -2328,7 +2328,7 @@ adviser.warnings.handymen_tired2 = "Os seus faz-tudo estäo destroçados. Mande-
 adviser.warnings.machinery_damaged2 = "Deve contratar um faz-tudo para reparar as suas máquinas rapidamente."
 adviser.warnings.staff_very_cold = "O pessoal reclama do frio. Suba o aquecimento ou coloque mais radiadores."
 adviser.warnings.desperate_need_for_watering = "Necessita desesperadamente contratar um faz-tudo para que cuide das suas plantas."
-adviser.warnings.staff_unhappy2 = "O seu pessoal, no geral, está descontente. Logo, pediräo mais dinheiro."
+adviser.warnings.staff_unhappy2 = "Os seus funcionários, no geral, estäo descontentes. Logo, pediräo mais dinheiro."
 adviser.staff_advice.too_many_nurses = "Está contratando muitas enfermeiras."
 adviser.staff_advice.need_handyman_litter = "Os pacientes estäo sujando o seu hospital. Contrate uma faz-tudo para se encarregar da limpeza."
 adviser.staff_advice.need_nurses = "Contrate mais enfermeiras. Na enfermaria e na farmácia fazem falta enfermeiras."
@@ -2493,7 +2493,7 @@ introduction_texts.level4 = "Faça com que todos os seus pacientes estejam conte
 introduction_texts.level18 = ""
 introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes, precisará construir salas de tratamento e clínicas para curá-los. Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
 introduction_texts.level13 = "A sua incrível habilidade como diretor do hospital atraiu a atençäo da Divisäo Secreta Especial do Serviço Secreto Especial. Tenho um trabalho especial para você. Há um hospital infestado de ratos que precisa de um exterminador eficiente. Você deve matar todos os ratos que puder antes de que o pessoal de Manutençäo limpe toda a sujeira. Acha que é apto para esta missäo?"
-introduction_texts.level8 = "Só depende de você construir o hospital mais rentável e eficiente possível.//As pessoas, por aqui säo bastante ricas, entäo pode cobrar caro. Lembre-se que curar as pessoas é uma coisa muito bonita, mas o que PRECISAMOS de verdade é do dinheiro delas. Arranque todo o dinheiro destes doentes. Acumule a enorme quantia de $300.000 para completar este nível. "
+introduction_texts.level8 = "Só depende de você construir o hospital mais rentável e eficiente possível.//As pessoas, por aqui säo bastante ricas, entäo tente arrecadar o máximo possível. Lembre-se que curar as pessoas é uma coisa muito bonita, mas o que PRECISAMOS de verdade é do dinheiro delas. Arranque todo o dinheiro destes doentes. Acumule a enorme quantia de $300.000 para completar este nível. "
 humanoid_name_starts[1] = "GOLD"
 humanoid_name_starts[2] = "HIGH"
 humanoid_name_starts[3] = "AND"
