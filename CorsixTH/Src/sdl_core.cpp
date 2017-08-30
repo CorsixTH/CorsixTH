@@ -357,10 +357,24 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
+static int l_start_text_input(lua_State *L)
+{
+    SDL_StartTextInput();
+    return 0;
+}
+
+static int l_stop_text_input(lua_State *L)
+{
+    SDL_StopTextInput();
+    return 0;
+}
+
 static const std::vector<luaL_Reg> sdllib = {
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
+    {"startTextInput", l_start_text_input},
+    {"stopTextInput", l_stop_text_input},
     {nullptr, nullptr}
 };
 static const std::vector<luaL_Reg> sdllib_with_upvalue = {

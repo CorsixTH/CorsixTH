@@ -26,6 +26,8 @@ class "Window"
 ---@type Window
 local Window = _G["Window"]
 
+local sdl = require("sdl")
+
 -- NB: pressed mouse buttons are denoted with a "mouse_" prefix in buttons_down,
 -- i.e. mouse_left, mouse_middle, mouse_right
 Window.buttons_down = permanent"Window.buttons_down" {}
@@ -973,9 +975,11 @@ function Textbox:setActive(active)
     self.cursor_state = true
     self.cursor_pos[1] = type(self.text) == "table" and #self.text or 1
     self.cursor_pos[2] = type(self.text) == "table" and string.len(self.text[#self.text]) or string.len(self.text)
+    sdl.startTextInput()
     -- Update text
     self.panel:setLabel(self.text)
   else
+    sdl.stopTextInput()
     self.cursor_state = false
   end
 
