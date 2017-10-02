@@ -2711,18 +2711,18 @@ end
 
 --[[ When placing doors and objects the passable tiles need to be checked for overlapping
 passable tiles. This presents problems with objects like Bench where the passable tile
-is not for exclusive use of the Bench (other objects can share that same tile)
-the footprint.passthrough differentiates shareable passable tiles, and exclusive use
+is not for exclusive use of the Bench (another object can share that same tile)
+the footprint.shareable differentiates shareable passable tiles, and exclusive use
 passable tiles (the norm for most objects)]]
 --! param x - x map tile position
 --! param y - y map tile position
 --! param distance - searchable distance for nearby objects
---! returns noolean indicating if exclusively passable or not
+--! returns boolean indicating if exclusively passable or not
 function World:isTileExclusivelyPassable(x, y, distance)
   for o in pairs(self:findAllObjectsNear(x, y, distance)) do
     if o and o.footprint then
       for _, footprint in pairs(o.footprint) do
-        if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.passthrough then
+        if footprint[1] + o.tile_x == x and footprint[2] + o.tile_y == y and footprint.only_passable and not footprint.shareable then
           return false
         end
       end
