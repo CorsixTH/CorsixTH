@@ -312,14 +312,12 @@ function rangeMapLookup(number, buckets)
   assert(false) -- Should never get here.
 end
 
-
-
 if _G._VERSION == "Lua 5.3" then
   -- use builtins 5.3
   function bitOr(value1, value2)
     return value1 | value2
   end
-  
+
   function hasBit(value, bit)
     return (value & 2^bit) ~= 0
   end
@@ -328,7 +326,7 @@ elseif _G._VERSION == "Lua 5.2" then
   function bitOr(value1, value2)
     return bit32.bor(value1, value2)
   end
-  
+
   function hasBit(value, bit)
     return bit32.btest(value, 2^bit)
   end
@@ -344,6 +342,6 @@ else
   --! param bit - 0-base index of bit to set 0 - being LSB
   function hasBit(value, bit)
     local p = 2 ^ bit
-    return value % (p + p) >= p       
+    return value % (p + p) >= p
   end
 end

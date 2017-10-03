@@ -1145,7 +1145,7 @@ local function validDoorTile(xpos, ypos, player_id, world)
   local th = TheApp.map.th
   local tile_flags = th:getCellFlags(xpos, ypos)
   -- check builable and own it
-  if not tile_flags.buildable and tile_flags.owner ~= player_id then return false end
+  if not tile_flags.buildable or tile_flags.owner ~= player_id then return false end
   -- any object will cause it to be blocked (ignore litter)
   if tile_flags.thob ~= 0 and tile_flags.thob ~= 62 then return false end
   -- check if its passable that no object footprint blocks it
@@ -1180,7 +1180,7 @@ local function doorWallOffsetCalculations(x, y, wall)
   end
   return x, y, x_mod, y_mod, wall
 end
-  
+
 function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   local x, y, x_mod, y_mod, wall = doorWallOffsetCalculations(orig_x, orig_y, orig_wall)
   local map = TheApp.map.th
@@ -1275,9 +1275,9 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
       invalid_tile = bitOr(invalid_tile, 2)
     end
   end
-  
+
   self.blueprint_door.valid = (invalid_tile == 0)
-  
+
   if self.room_type.swing_doors then
     for i, animation in ipairs(anim) do
       -- calculation here to flag blocked blueprint tiles on swing doors for each door tile
@@ -1300,7 +1300,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
           map:setCell(x1, y1, 4, i < 2 and flags or flags - 1)
         else
           map:setCell(x1, y1, 4, i > 2 and flags or flags - 1)
-        end 
+        end
       end
     end
   else
