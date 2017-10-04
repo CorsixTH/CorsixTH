@@ -1144,8 +1144,8 @@ end
 local function validDoorTile(xpos, ypos, player_id, world)
   local th = TheApp.map.th
   local tile_flags = th:getCellFlags(xpos, ypos)
-  -- check builable and own it
-  if not tile_flags.buildable or tile_flags.owner ~= player_id then return false end
+  -- check own it
+  if tile_flags.owner ~= player_id then return false end
   -- any object will cause it to be blocked (ignore litter)
   if tile_flags.thob ~= 0 and tile_flags.thob ~= 62 then return false end
   -- check if its passable that no object footprint blocks it
