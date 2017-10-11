@@ -1226,6 +1226,43 @@ void THMap::setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay)
     if (eTempDisplay < THMT_Count) m_eTempDisplay = eTempDisplay;
 }
 
+uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, uint32_t relative_idx, THMapNode* pNode, int prevTemp) const
+{
+    int iNeighbourCount = 0;
+
+    THMapNode* pNeighbour = pNode + relative_idx;
+
+    // Ensure the neighbour is within the map bounds
+    THMapNode* pLastNode = m_pCells + m_iWidth * m_iHeight;
+    if (pNeighbour < m_pCells || pNeighbour >= pLastNode) {
+        return 0;
+    }
+
+    if (canTravel) {
+        iNeighbourCount += 4;
+        iNeighbourSum += pNeighbour->aiTemperature[prevTemp] * 4;
+    } else {
+        bool bObjectPresent = false;
+        int iHospital1 = pNeighbour->flags.hospital;
+        int iHospital2 = pNode->flags.hospital;
+        if (iHospital1 == iHospital2) {
+            if (pNeighbour->flags.room == pNode->flags.room) {
+                bObjectPresent = true;
+            }
+        }
+        if (bObjectPresent) {
+            iNeighbourCount += 4;
+            iNeighbourSum += pNeighbour->aiTemperature[prevTemp] * 4;
+        } else {
+            iNeighbourCount += 1;
+            iNeighbourSum += pNeighbour->aiTemperature[prevTemp];
+        }
+    }
+
+    return iNeighbourCount;
+}
+
+
 void THMap::updateTemperatures(uint16_t iAirTemperature,
                                uint16_t iRadiatorTemperature)
 {
@@ -1241,41 +1278,12 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         // Get average temperature of neighbour cells
         uint32_t iNeighbourSum = 0;
         uint32_t iNeighbourCount = 0;
-#define NEIGHBOUR(flag, idx, pNeighbour) \
-        if(flag) \
-        { \
-            iNeighbourCount += 4; \
-            iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
-        } \
-        else \
-        {  \
-            bool bObjectPresent = false; \
-            if(pNeighbour && pNeighbour < pLastNode && pNeighbour > m_pCells) \
-            { \
-                int iHospital1 = ((THMapNode * )pNeighbour)->flags.hospital; \
-                int iHospital2 = pNode->flags.hospital; \
-                if (iHospital1 == iHospital2) \
-                    if ((((THMapNode * )pNeighbour)->flags.room) == (pNode->flags.room)) \
-                        bObjectPresent = true; \
-            } \
-            if (bObjectPresent) \
-            { \
-                iNeighbourCount += 4; \
-                iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp] * 4; \
-            } \
-            else if(m_pCells <= pNode + (idx) && pNode + (idx) < pLastNode) \
-            { \
-                iNeighbourCount += 1; \
-                iNeighbourSum += pNode[idx].aiTemperature[iPrevTemp]; \
-            } \
-        }
 
-        NEIGHBOUR(pNode->flags.can_travel_n, -m_iWidth, pNode - m_iWidth);
-        NEIGHBOUR(pNode->flags.can_travel_s,  m_iWidth, pNode + m_iWidth);
-        NEIGHBOUR(pNode->flags.can_travel_e,  1, pNode + 1);
-        NEIGHBOUR(pNode->flags.can_travel_w, -1, pNode - 1);
+        iNeighbourCount += thermalNeighbour(iNeighbourSum, pNode->flags.can_travel_n, -m_iWidth, pNode, iPrevTemp);
+        iNeighbourCount += thermalNeighbour(iNeighbourSum, pNode->flags.can_travel_s,  m_iWidth, pNode, iPrevTemp);
+        iNeighbourCount += thermalNeighbour(iNeighbourSum, pNode->flags.can_travel_e,  1, pNode, iPrevTemp);
+        iNeighbourCount += thermalNeighbour(iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
 
-#undef NEIGHBOUR
 #define MERGE2(src, other, ratio) (src) = static_cast<uint16_t>( \
     (static_cast<uint32_t>(src) * ((ratio) - 1) + (other)) / (ratio))
 #define MERGE(other, ratio) \
