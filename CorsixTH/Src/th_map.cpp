@@ -506,8 +506,8 @@ void THMap::save(std::string filename)
     }
     aReverseBlockLUT[0] = 0;
 
-    for(THMapNode *pNode = m_pCells, *pLastNode = pNode + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pCells, *pLimitNode = pNode + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         // TODO: Nicer system for saving object data
         aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
@@ -547,8 +547,8 @@ void THMap::save(std::string filename)
             iBufferNext = 0;
         }
     }
-    for(THMapNode *pNode = m_pCells, *pLastNode = pNode + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pCells, *pLimitNode = pNode + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId & 0xFF);
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
@@ -1233,8 +1233,8 @@ uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, uint32
     THMapNode* pNeighbour = pNode + relative_idx;
 
     // Ensure the neighbour is within the map bounds
-    THMapNode* pLastNode = m_pCells + m_iWidth * m_iHeight;
-    if (pNeighbour < m_pCells || pNeighbour >= pLastNode) {
+    THMapNode* pLimitNode = m_pCells + m_iWidth * m_iHeight;
+    if (pNeighbour < m_pCells || pNeighbour >= pLimitNode) {
         return 0;
     }
 
@@ -1272,8 +1272,8 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
     m_iCurrentTemperatureIndex ^= 1;
     const int iNewTemp = m_iCurrentTemperatureIndex;
 
-    THMapNode* pLastNode = m_pCells + m_iWidth * m_iHeight;
-    for(THMapNode *pNode = m_pCells; pNode != pLastNode; ++pNode)
+    THMapNode* pLimitNode = m_pCells + m_iWidth * m_iHeight;
+    for(THMapNode *pNode = m_pCells; pNode != pLimitNode; ++pNode)
     {
         // Get average temperature of neighbour cells
         uint32_t iNeighbourSum = 0;
@@ -1437,8 +1437,8 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVUInt(m_iHeight);
     pWriter->writeVUInt(m_iCurrentTemperatureIndex);
     oEncoder.initialise(6);
-    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pCells, *pLimitNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         oEncoder.write(pNode->iBlock[0]);
         oEncoder.write(pNode->iBlock[1]);
@@ -1466,8 +1466,8 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     oEncoder.pumpOutput(pWriter);
 
     oEncoder.initialise(5);
-    for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pOriginalCells, *pLimitNode = m_pOriginalCells + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         oEncoder.write(pNode->iBlock[0]);
         oEncoder.write(pNode->iBlock[1]);
@@ -1540,8 +1540,8 @@ void THMap::depersist(LuaPersistReader *pReader)
         if(!pReader->readVUInt(m_iCurrentTemperatureIndex))
             return;
     }
-    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pCells, *pLimitNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         uint32_t f;
         if(!pReader->readVUInt(f)) return;
@@ -1573,8 +1573,8 @@ void THMap::depersist(LuaPersistReader *pReader)
         lua_pop(L, 1);
     }
     oDecoder.initialise(6, pReader);
-    for(THMapNode *pNode = m_pCells, *pLastNode = m_pCells + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pCells, *pLimitNode = m_pCells + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
@@ -1584,8 +1584,8 @@ void THMap::depersist(LuaPersistReader *pReader)
         pNode->iRoomId   = static_cast<uint16_t>(oDecoder.read());
     }
     oDecoder.initialise(5, pReader);
-    for(THMapNode *pNode = m_pOriginalCells, *pLastNode = m_pOriginalCells + m_iWidth * m_iHeight;
-        pNode != pLastNode; ++pNode)
+    for(THMapNode *pNode = m_pOriginalCells, *pLimitNode = m_pOriginalCells + m_iWidth * m_iHeight;
+        pNode != pLimitNode; ++pNode)
     {
         pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
