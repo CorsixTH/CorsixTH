@@ -203,7 +203,7 @@ public:
     path.
 
     Internally, the A* search algorithm is used. The open set is implemented as
-    a heap in m_ppOpenHeap, and there is no explicit closed set. For each cell
+    a heap in m_openHeap, and there is no explicit closed set. For each cell
     of the map, a node_t structure is created (and cached between searches if
     the map size is constant), which holds information about said map cell in
     the current search. The algorithm is implemented in such a way that most
@@ -278,18 +278,13 @@ public:
           value(i) <= value(i * 2 + 1)
           value(i) <= value(i * 2 + 2)
         This causes the array to be a minimum binary heap.
-
-        Note that unlike the dirty list, there is only space for #m_iOpenSize
-        items (with #m_iOpenCount being the current number of items).
     */
-    node_t **m_ppOpenHeap;
+    std::vector<node_t*> m_openHeap;
 
     node_t *m_pDestination;
     int m_iNodeCacheWidth;
     int m_iNodeCacheHeight;
     int m_iDirtyCount;
-    int m_iOpenCount;
-    int m_iOpenSize;
 
 private:
     PathFinder m_oPathFinder;
