@@ -27,6 +27,9 @@ Release/
 MinSizeRel/
 RelWithDebInfo/
 
+# Ignore the folder where libraries are pre-compiled
+vcpkg/
+
 # Build folders
 /build*/
 

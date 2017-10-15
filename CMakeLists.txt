@@ -12,8 +12,20 @@
 #   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
-PROJECT(CorsixTH_Top_Level)
+
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+
+IF(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
+  OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
+ENDIF()
+
+if(USE_VCPKG_DEPS)
+  message("Note: Using locally built vcpkg dependencies.")
+  include(VcpkgDeps)
+endif()
+
+PROJECT(CorsixTH_Top_Level)
+
 INCLUDE(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -28,13 +40,13 @@ ENDIF(MINGW)
 INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
-# Define our options
-if ( MSVC )
-  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" ON) # On for MSVC
-elseif ( UNIX AND CMAKE_COMPILER_IS_GNU)
+
+# Dependency management
+if ( UNIX AND CMAKE_COMPILER_IS_GNU)
   OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
 endif()
 
+# Define our options
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
@@ -98,8 +110,8 @@ ENDIF(MSVC)
 
 # Get precompiled dependencies before running the various find modules
 if ( USE_PRECOMPILED_DEPS )
-message("Note: Using Precompiled Dependencies.")
-include(PrecompiledDeps)
+  message("Note: Using precompiled dependencies.")
+  include( PrecompiledDeps )
 endif()
 
 # Environment handling
