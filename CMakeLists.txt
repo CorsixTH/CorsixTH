@@ -29,10 +29,12 @@ INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
 # Define our options
-OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" ON) # On for MSVC
-if ( NOT MSVC )
-  set(USE_PRECOMPILED_DEPS cache BOOL OFF) # Make *nix systems opt in
+if ( MSVC )
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" ON) # On for MSVC
+elseif ( UNIX AND CMAKE_COMPILER_IS_GNU)
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
 endif()
+
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)

@@ -80,7 +80,7 @@ unset( _DEPS_TMP_PATH )
 unset( _DEPS_MODULES_TEMPLATE_NAME )
 
 # Determine the appropriate libs to use for this compiler
-if (UNIX AND CMAKE_COMPILER_IS_GNUCC)
+if (UNIX AND CMAKE_COMPILER_IS_GNU)
     # We need user to choose which arch they are intending to compile for
     set(DEPS_ARCH "x86" CACHE STRING "Architecture of precompiled dependencies to use.")
     set_property(CACHE DEPS_ARCH
