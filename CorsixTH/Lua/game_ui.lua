@@ -78,6 +78,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
+  self.multigesturemove = {x = 0.0, y = 0.0}
 
   self.speed_up_key_pressed = false
 
@@ -600,6 +601,38 @@ function GameUI:onMouseUp(code, x, y)
   return UI.onMouseUp(self, code, x, y)
 end
 
+function GameUI:onMultiGesture(numfingers, dTheta, dDist, x, y)
+  -- only deal with 2 finger events for now
+  if numfingers == 2 then
+    -- calculate magnitude of pinch
+    local mag = math.abs(dDist)
+    if mag > 0.002 then
+      -- pinch action - constant needs to be tweaked
+      self.current_momentum.z = self.current_momentum.z + dDist * 100
+      return true
+    else
+      -- scroll map
+      local normx = self.app.config.width * x
+      local normy = self.app.config.height * y
+
+      if self.multigesturemove.x == 0.0 then
+        self.multigesturemove.x = normx
+        self.multigesturemove.y = normy
+        return true
+      else
+        local dx = normx - self.multigesturemove.x
+        local dy = normy - self.multigesturemove.y
+        self.current_momentum.x = self.current_momentum.x - dx
+        self.current_momentum.y = self.current_momentum.y - dy
+        self.multigesturemove.x = normx
+        self.multigesturemove.y = normy
+        return true
+      end
+    end
+  end
+  return false
+end
+
 function GameUI:onMouseWheel(x, y)
   local inside_window = false
   if self.windows then
@@ -648,6 +681,10 @@ function GameUI:onTick()
     else
       self.current_momentum.z = self.current_momentum.z * self.momentum
       self.app.world:adjustZoom(self.current_momentum.z)
+    end
+    if self.multigesturemove.x ~= 0.0 then
+      self.multigesturemove.x = 0.0
+      self.multigesturemove.y = 0.0
     end
   end
   if not self.app.world:isCurrentSpeed("Pause") then

@@ -208,6 +208,15 @@ static int l_mainloop(lua_State *L)
                 lua_pushinteger(dispatcher, e.motion.yrel);
                 nargs = 5;
                 break;
+            case SDL_MULTIGESTURE:
+                lua_pushliteral(dispatcher, "multigesture");
+                lua_pushinteger(dispatcher, e.mgesture.numFingers);
+                lua_pushnumber(dispatcher, e.mgesture.dTheta);
+                lua_pushnumber(dispatcher, e.mgesture.dDist);
+                lua_pushnumber(dispatcher, e.mgesture.x);
+                lua_pushnumber(dispatcher, e.mgesture.y);
+                nargs = 6;
+                break;
             case SDL_WINDOWEVENT:
                 switch (e.window.event) {
                     case SDL_WINDOWEVENT_FOCUS_GAINED:
