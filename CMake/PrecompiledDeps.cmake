@@ -90,9 +90,9 @@ if (UNIX AND CMAKE_COMPILER_IS_GNUCC)
 elseif(MSVC)
     # First determine arch user has selected then version
     if( CMAKE_CL_64 )
-        set(DEPS_ARCH "x86")
-    else()
         set(DEPS_ARCH "x64")
+    else()
+        set(DEPS_ARCH "x86")
     endif()
 
     if (MSVC12)
