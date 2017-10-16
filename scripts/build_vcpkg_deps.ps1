@@ -67,7 +67,7 @@ function run_script {
         throw "Error git was not found. Is it installed, added to your path 
                and have you restarted your Powershell session since?"
     }
-    
+
     # Check we have the latest copy of vcpkg
     if ((Test-Path $dest_folder_path) -eq $false){
         # If vcpkg does not exist clone it
@@ -78,7 +78,7 @@ function run_script {
         Set-Location -Path $dest_folder_path
         run_command "git reset --hard; git fetch origin; git checkout $VcpkgCommitSha"
     }
-    
+
     $commit_id_filename = "commit_id.txt"
     if ((Test-Path $commit_id_filename) -eq $false -or
         (Get-Content $commit_id_filename | Where-Object {$_ -NotContains $VcpkgCommitSha})){
@@ -86,40 +86,42 @@ function run_script {
         run_command ".\bootstrap-vcpkg.bat"
         Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
     }
-    
+
     # Build the triplet flag e.g. --triplet "x64-windows"
     $triplet = "--triplet `""
     if ($IsX64Build) {$triplet += $x64_triplet_name} else {$triplet += $x86_triplet_name}
     $triplet += '"'
-    
+
     $libs_list = ""
     # Build our libs list
     foreach ($library in $corsixth_libs){
         $libs_list += $library + ' '
     }
-    
+
     if ($BuildAnimView){
         foreach ($library in $anim_view_libs){
             $libs_list += $library + ' '
         }
     }
-    
+
     # Compile them locally
     $install_command = ".\vcpkg install " + $triplet + $libs_list
     run_command -command $install_command
-    
+
     # Copy various files from bin to tools 
     $vcpkg_installed_path = ".\installed\"
     if ($IsX64Build) {$vcpkg_installed_path += $x64_triplet_name}
         else {$vcpkg_installed_path += $x86_triplet_name}
-    
+
     Set-Location $vcpkg_installed_path
-    
+
+    Write-Output "Copying files from bin to tools"
     $files_to_copy_from_bin = "lfs.dll", "lpeg.dll"
     foreach ($file in $files_to_copy_from_bin){
         Copy-Item -Path ".\bin\$file" -Destination ".\tools"
     }
-
+    
+    Write-Output "Finished building libraries"
 }
 
 # Run the script
