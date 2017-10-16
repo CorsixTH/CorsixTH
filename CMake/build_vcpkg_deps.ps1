@@ -21,115 +21,113 @@
 # Requirements:
 
 # git - Installed and added to path
-# cmake - Installed and added to path
 
-$corsixth_libs = "ffmpeg", "freetype", "lua", "sdl2", "sdl2-mixer", "wxwidgets"
+# Parameters
+Param(
+    [Parameter(Mandatory=$true)][bool]$BuildAnimView,
+    [Parameter(Mandatory=$true)][bool]$IsX64Build,
+    [Parameter(Mandatory=$true)][string]$VcpkgCommitSha
+)
+
+################
+# Variables
+################
+
+$anim_view_libs = "wxwidgets"
+$corsixth_libs = "ffmpeg", "freetype", "lua", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer"
 
 $vcpkg_git_url = "https://github.com/Microsoft/vcpkg"
 
 $dest_folder_name = "vcpkg"
 $dest_folder_path = ".\vcpkg"
 
+$x86_triplet_name = "x86-windows"
+$x64_triplet_name = "x64-windows"
 
 ###################
 # Functions
 ###################
 
-function install_libs($install_command){
-    Invoke-Expression $install_command
+function run_command($command){
+    Invoke-Expression $command
     if ($LASTEXITCODE -ne 0){
-        throw "Failed to install libs. Command was: $install_command \nExiting"
+        throw "Failed to run command :`n $command `nExiting."
     }
 }
-
-function export_libs ($export_command, $arch){
-    Invoke-Expression $export_command
-    if ($LASTEXITCODE -ne 0){
-        throw "Failed to export libs. Command was: $export_command \nExiting"
-    }
-
-    # Rename to something more useful
-    $file = Get-Item -Path "vcpkg-export*"
-    $new_name = "CorsixTH-Win-Deps-$arch-$(get-date -f MM-dd-yyyy_HH_mm_ss).7z"
-    Rename-Item -Path $file -NewName $new_name
-}
-
 
 ##################
 # Main script
 ##################
 
-# Test the required files are in the path
-if ((Get-Command "git.exe") -eq $null) {
-    throw "Error git was not found. Is it installed, added to your path 
-           and have you restarted your Powershell session since?"
-}
+# Wrap in func so we can try-finally
+function run_script {
 
-# Test the required files are in the path
-if ((Get-Command "cmake.exe") -eq $null) {
-    throw "Error cmake was not found. Is it installed, added to your path 
-           and have you restarted your Powershell session since?"
-}
-
-
-# Check we have the latest copy of vcpkg
-if ((Test-Path $dest_folder_path) -eq $false){
-    # If vcpkg does not exist clone it
-    $command = "git clone $vcpkg_git_url $dest_folder_name"
-    Invoke-Expression $command
-    if ($LASTEXITCODE -ne 0 -or (Test-Path $dest_folder_path) -eq $false){
-        throw "Failed to clone to vcpkg. Exiting."
+    # Test the required files are in the path
+    if ((Get-Command "git.exe") -eq $null) {
+        throw "Error git was not found. Is it installed, added to your path 
+               and have you restarted your Powershell session since?"
     }
-    Set-Location -Path $dest_folder_path
-} else {
-    # Move into vcpkg folder and update to latest version
-    Set-Location -Path $dest_folder_path
-
-    $command = "git reset --hard; git pull origin master"
-    Invoke-Expression $command
-    if ($LASTEXITCODE -ne 0){
-        throw "Failed to update vcpkg. Exiting."
+    
+    # Check we have the latest copy of vcpkg
+    if ((Test-Path $dest_folder_path) -eq $false){
+        # If vcpkg does not exist clone it
+        run_command -command "git clone $vcpkg_git_url $dest_folder_name"
+        Set-Location -Path $dest_folder_path
+    } else {
+        # Move into vcpkg folder and update to latest version
+        Set-Location -Path $dest_folder_path
+        run_command "git reset --hard; git fetch origin; git checkout $VcpkgCommitSha"
     }
+    
+    $commit_id_filename = "commit_id.txt"
+    if ((Test-Path $commit_id_filename) -eq $false -or
+        (Get-Content $commit_id_filename | Where-Object {$_ -NotContains $VcpkgCommitSha})){
+            # Commit we point to has updated, bootstrap any changes.
+        run_command ".\bootstrap-vcpkg.bat"
+        Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
+    }
+    
+    # Build the triplet flag e.g. --triplet "x64-windows"
+    $triplet = "--triplet `""
+    if ($IsX64Build) {$triplet += $x64_triplet_name} else {$triplet += $x86_triplet_name}
+    $triplet += '"'
+    
+    $libs_list = ""
+    # Build our libs list
+    foreach ($library in $corsixth_libs){
+        $libs_list += $library + ' '
+    }
+    
+    if ($BuildAnimView){
+        foreach ($library in $anim_view_libs){
+            $libs_list += $library + ' '
+        }
+    }
+    
+    # Compile them locally
+    $install_command = ".\vcpkg install " + $triplet + $libs_list
+    run_command -command $install_command
+    
+    # Copy various files from bin to tools 
+    $vcpkg_installed_path = ".\installed\"
+    if ($IsX64Build) {$vcpkg_installed_path += $x64_triplet_name}
+        else {$vcpkg_installed_path += $x86_triplet_name}
+    
+    Set-Location $vcpkg_installed_path
+    
+    $files_to_copy_from_bin = "lfs.dll", "lpeg.dll"
+    foreach ($file in $files_to_copy_from_bin){
+        Copy-Item -Path ".\bin\$file" -Destination ".\tools"
+    }
+
 }
 
-# We should now be in the vcpkg folder as both if blocks have moved us in there.
-# Next bootstrap it
-Invoke-Expression ".\bootstrap-vcpkg.bat"
-
-$libs_list = ""
-$x86_triplet = '--triplet "x64-windows"'
-$x64_triplet = '--triplet "x86-windows"'
-
-# Build our libs list
-foreach ($library in $corsixth_libs){
-    $libs_list += $library + ' '
+# Run the script
+$starting_dir = Convert-Path .
+try{
+    run_script
+    # Move back up a dir to return user to original location
+    Set-Location -Path $starting_dir
+} finally{
+    Set-Location -Path $starting_dir
 }
-
-$install_command = ".\vcpkg install "
-$install_command_64 = $install_command + $x64_triplet + $libs_list
-$install_command_86 = $install_command + $x86_triplet + $libs_list
-
-# Compile them locally
-install_libs -install_command $install_command_64
-install_libs -install_command $install_command_86
-
-# Construct our export command
-$export_command = ".\vcpkg export "
-$export_command_64 = $export_command + $x64_triplet + $libs_list
-$export_command_86 = $export_command + $x86_triplet + $libs_list
-
-# Ask for 7zip format as that works best with CMake
-$export_command_64 += "--7zip"
-$export_command_86 += "--7zip"
-
-# Before we start remove any existing exported files so we can identify the created files
-Remove-Item -Path "vcpkg-export*" -Recurse -Force
-
-export_libs -export_command $export_command_64 -arch "x64"
-export_libs -export_command $export_command_86 -arch "x86"
-
-# Move created 7zip files up to parent dir
-Move-Item *.7z ..
-
-# Move back up a dir to return user to original location
-Set-Location -Path ..
