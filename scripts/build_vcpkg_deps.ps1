@@ -87,6 +87,9 @@ function run_script {
         Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
     }
 
+    # Always make sure we are using the latest files
+    run_command ".\vcpkg update"
+
     # Build the triplet flag e.g. --triplet "x64-windows"
     $triplet = "--triplet `""
     if ($IsX64Build) {$triplet += $x64_triplet_name} else {$triplet += $x86_triplet_name}
@@ -130,6 +133,7 @@ try{
     run_script
     # Move back up a dir to return user to original location
     Set-Location -Path $starting_dir
-} finally{
+} catch{
     Set-Location -Path $starting_dir
+    Exit -1
 }
