@@ -29,6 +29,12 @@ INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
 # Define our options
+if ( MSVC )
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" ON) # On for MSVC
+elseif ( UNIX AND CMAKE_COMPILER_IS_GNU)
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
+endif()
+
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
 OPTION(WITH_AUDIO "Activate Sound" ON) # enabled by default
 OPTION(WITH_MOVIES "Activate in game movies" ON)
@@ -90,8 +96,13 @@ ELSE()
   SET(CORSIX_TH_USE_VLD OFF)
 ENDIF(MSVC)
 
-# Environment handling
+# Get precompiled dependencies before running the various find modules
+if ( USE_PRECOMPILED_DEPS )
+message("Note: Using Precompiled Dependencies.")
+include(PrecompiledDeps)
+endif()
 
+# Environment handling
 CHECK_INCLUDE_FILES(inttypes.h CORSIX_TH_HAS_INTTYPES_H)
 
 # Include individual projects
