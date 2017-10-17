@@ -25,6 +25,7 @@
 # Parameters
 Param(
     [Parameter(Mandatory=$true)][bool]$BuildAnimView,
+    [Parameter(Mandatory=$true)][string]$BuildFolderAbsPath,
     [Parameter(Mandatory=$true)][bool]$IsX64Build,
     [Parameter(Mandatory=$true)][string]$VcpkgCommitSha
 )
@@ -59,7 +60,7 @@ function run_command($command){
 # Main script
 ##################
 
-# Wrap in func so we can try-finally
+# Wrap in function so we can try-catch
 function run_script {
 
     # Test the required files are in the path
@@ -69,7 +70,7 @@ function run_script {
     }
 
     # Check we have the latest copy of vcpkg
-    if ((Test-Path $dest_folder_path) -eq $false){
+    if (-Not (Test-Path $dest_folder_path)){
         # If vcpkg does not exist clone it
         run_command -command "git clone $vcpkg_git_url $dest_folder_name"
         Set-Location -Path $dest_folder_path
@@ -97,11 +98,14 @@ function run_script {
     $triplet += '"'
 
     $libs_list = ""
+
+
     # Build our libs list
     foreach ($library in $corsixth_libs){
         $libs_list += $library + ' '
     }
 
+    # If we are building the animation viewer be sure to include those libs
     if ($BuildAnimView){
         foreach ($library in $anim_view_libs){
             $libs_list += $library + ' '
@@ -125,6 +129,32 @@ function run_script {
         Copy-Item -Path ".\bin\$file" -Destination ".\tools"
     }
     
+    Write-Output "Copying files to build folder"
+
+    # Create the Debug and Release folder if they do not exist (fresh folder)
+    # We expect it to be built to *BuildFolder*\CorsixTH\(Debug|Release)
+    $debug_build_path = $BuildFolderAbsPath + "\CorsixTH\Debug"
+    $release_build_path = $BuildFolderAbsPath + "\CorsixTH\Release"
+
+    # Create the destination folders if they do not exist
+    # Have to pipe to Out-Null as they print the result which adds noise to
+    # the CMake console
+    if (-Not (Test-Path -Path $debug_build_path)){
+        New-Item -ItemType Directory -Force -Path $debug_build_path | Out-Null
+    }
+    if (-Not (Test-Path -Path $release_build_path)){
+        New-Item -ItemType Directory -Force -Path $release_build_path | Out-Null
+    }
+
+    # Copy all tools to the output folders
+    Copy-Item -Force -Path ".\tools\*" -Destination $debug_build_path
+    Copy-Item -Force -Path ".\tools\*" -Destination $release_build_path
+
+    # Copy the DLLs over
+    Copy-Item -Force -Path ".\debug\bin\*.dll" -Destination $debug_build_path
+    Copy-Item -Force -Path ".\bin\*.dll" -Destination $release_build_path
+
+
     Write-Output "Finished building libraries"
 }
 

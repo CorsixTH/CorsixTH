@@ -40,7 +40,8 @@ if ( MSVC )
         string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-BuildAnimView $False ")
     endif()
 
-    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-VcpkgCommitSha " ${_VCPKG_COMMIT_SHA})
+    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-BuildFolderAbsPath " ${CMAKE_BINARY_DIR} " ")
+    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-VcpkgCommitSha " ${_VCPKG_COMMIT_SHA} " ")
 
     # Run the build script
     set ( _SCRIPT_COMMAND  powershell ${_SCRIPT_DIR}/${_VCPKG_SCRIPT_NAME})
