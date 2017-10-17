@@ -31,9 +31,9 @@ SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
 # Dependency management
 if ( MSVC )
-OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" ON)
+  OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" ON)
 elseif ( UNIX AND CMAKE_COMPILER_IS_GNU)
-OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
 endif()
 
 # Define our options
@@ -103,7 +103,7 @@ if ( USE_PRECOMPILED_DEPS )
   message("Note: Using precompiled dependencies.")
   include( PrecompiledDeps )
 elseif ( USE_VCPKG_DEPS)
-  message("Note: Using locally build vcpkg dependencies.")
+  message("Note: Using locally built vcpkg dependencies.")
   include( VcpkgDeps )
 endif()
 

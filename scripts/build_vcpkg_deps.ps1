@@ -36,7 +36,7 @@ Param(
 $anim_view_libs = "wxwidgets"
 $corsixth_libs = "ffmpeg", "freetype", "lua", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer"
 
-$vcpkg_git_url = "https://github.com/Microsoft/vcpkg"
+$vcpkg_git_url = "https://github.com/CorsixTH/vcpkg"
 
 $dest_folder_name = "vcpkg"
 $dest_folder_path = ".\vcpkg"
@@ -65,7 +65,7 @@ function run_script {
     # Test the required files are in the path
     if ((Get-Command "git.exe") -eq $null) {
         throw "Error git was not found. Is it installed, added to your path 
-               and have you restarted your Powershell session since?"
+               and have you restarted since?"
     }
 
     # Check we have the latest copy of vcpkg
@@ -82,7 +82,8 @@ function run_script {
     $commit_id_filename = "commit_id.txt"
     if ((Test-Path $commit_id_filename) -eq $false -or
         (Get-Content $commit_id_filename | Where-Object {$_ -NotContains $VcpkgCommitSha})){
-            # Commit we point to has updated, bootstrap any changes.
+
+        # Commit we point to has updated, bootstrap any changes.
         run_command ".\bootstrap-vcpkg.bat"
         Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
     }

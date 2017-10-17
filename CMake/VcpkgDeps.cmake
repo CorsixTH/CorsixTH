@@ -53,13 +53,13 @@ if ( MSVC )
     endif()
 
     # We cannot use a toolchain file at this point despite it being recommended by MS.
-    # The arch is determined by the generator in use on Windows such as 
-    # Visual Studio xx Win64 <= 64 bit build. If we use a toolchain this
+    # The arch is determined by the generator in use on Windows. For example
+    # Visual Studio xx Win64 <= implies 64 bit build. If we use a toolchain this
     # always defaults to a 32 bit build.
     
-    # Also we would need to restart the build at this point, delete the 
-    # cache and invoke cmake again with the toolchain set if the user
-    # specified their own generator as it is too late at this point.
+    # If the user specified their own generator it is too late at this point.
+    # We would need to restart CMake at this point, delete the
+    # cache and invoke CMake again with the toolchain set.
     
     # For both of these reasons we will use CMAKE_PREFIX_PATH
 
