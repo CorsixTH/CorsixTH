@@ -61,7 +61,7 @@ function UIFolder:UIFolder(ui, mode)
     .lowered = true
 
   -- Location of original game
-  local built_in = app.gfx:loadBuiltinFont()
+  local built_in = app.gfx:loadMenuFont()
 
   self:addBevelPanel(20, 50, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.data_label):setTooltip(_S.tooltip.folders_window.data_location)
