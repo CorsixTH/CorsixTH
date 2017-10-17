@@ -124,6 +124,7 @@ function run_script {
     Set-Location $vcpkg_installed_path
 
     Write-Output "Copying files from bin to tools"
+
     $files_to_copy_from_bin = "lfs.dll", "lpeg.dll"
     foreach ($file in $files_to_copy_from_bin){
         Copy-Item -Path ".\bin\$file" -Destination ".\tools"
@@ -146,14 +147,9 @@ function run_script {
         New-Item -ItemType Directory -Force -Path $release_build_path | Out-Null
     }
 
-    # Copy all tools to the output folders
-    Copy-Item -Force -Path ".\tools\*" -Destination $debug_build_path
-    Copy-Item -Force -Path ".\tools\*" -Destination $release_build_path
-
     # Copy the DLLs over
     Copy-Item -Force -Path ".\debug\bin\*.dll" -Destination $debug_build_path
     Copy-Item -Force -Path ".\bin\*.dll" -Destination $release_build_path
-
 
     Write-Output "Finished building libraries"
 }
