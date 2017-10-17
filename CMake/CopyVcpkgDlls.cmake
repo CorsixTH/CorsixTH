@@ -1,16 +1,12 @@
 # Add an extra step to copy built DLLs on MSVC
 IF (MSVC AND USE_VCPKG_DEPS)
-# Have to do this in two custom steps as we have some DLLs in a top level
-# and some in a debug folder so the $<CONFIGURATION> flag won't help
 
-    add_custom_command(TARGET Copy_Release_DLLS CorsixTH 
+    # Copy the DLLs from vcpkg into the resulting build folder
+    # The DLLs are either in bin/ or debug/bin/ depending on
+    # build configuration
+    add_custom_command(TARGET CorsixTH POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${VCPKG_INSTALLED_PATH}/bin"
-        $<TARGET_FILE_DIR:CorsixTH>)
-
-    add_custom_command(TARGET Copy_Debug_DLLS CorsixTH 
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        "${VCPKG_INSTALLED_PATH}/debug/bin"
+        "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin"
         $<TARGET_FILE_DIR:CorsixTH>)
 
 ENDIF()
