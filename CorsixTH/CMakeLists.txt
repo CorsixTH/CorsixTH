@@ -85,6 +85,11 @@ ELSE()
   add_executable(CorsixTH ${corsixth_source_files})
 ENDIF()
 
+# Add an extra step to copy built DLLs on MSVC
+IF (MSVC AND USE_VCPKG_DEPS)
+  include(CopyVcpkgDlls)
+ENDIF()
+
 # Finding libraries
 
 # Find SDL
