@@ -40,7 +40,6 @@ if ( MSVC AND USE_VCPKG_DEPS)
         string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-BuildAnimView $False ")
     endif()
 
-    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-BuildFolderAbsPath " ${CMAKE_BINARY_DIR} " ")
     string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-VcpkgCommitSha " ${_VCPKG_COMMIT_SHA} " ")
 
     # Run the build script

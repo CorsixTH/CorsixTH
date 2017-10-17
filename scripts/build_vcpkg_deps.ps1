@@ -25,7 +25,6 @@
 # Parameters
 Param(
     [Parameter(Mandatory=$true)][bool]$BuildAnimView,
-    [Parameter(Mandatory=$true)][string]$BuildFolderAbsPath,
     [Parameter(Mandatory=$true)][bool]$IsX64Build,
     [Parameter(Mandatory=$true)][string]$VcpkgCommitSha
 )
