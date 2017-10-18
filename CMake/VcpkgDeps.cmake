@@ -70,7 +70,12 @@ if ( MSVC AND USE_VCPKG_DEPS)
         string(CONCAT VCPKG_INSTALLED_PATH ${VCPKG_INSTALLED_PATH} "x86-windows")
     endif()
 
-    set (CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_PATH} CACHE 
-         PATH "Base directory with include and lib directories")
+    if(CMAKE_BUILD_TYPE MATCHES "^Debug$" OR NOT DEFINED CMAKE_BUILD_TYPE)
+        list(APPEND CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_PATH}/debug)
+        list(APPEND CMAKE_LIBRARY_PATH ${VCPKG_INSTALLED_PATH}/debug/lib/manual-link)
+    endif()
+
+    list(APPEND CMAKE_PREFIX_PATH ${VCPKG_INSTALLED_PATH})
+    list(APPEND CMAKE_LIBRARY_PATH ${_VCPKG_INSTALLED_DIR}/lib/manual-link)
 
 endif()
