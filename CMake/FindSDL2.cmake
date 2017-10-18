@@ -68,6 +68,11 @@ HINTS
 PATH_SUFFIXES lib
 )
 
+if (SDL_LIBRARY_TEMP_D)
+  set (_FOUND_SDL_D_LIBRARY TRUE)
+endif()
+
+
 if(NOT SDL_BUILDING_LIBRARY)
   if(NOT ${SDL_INCLUDE_DIR} MATCHES ".framework")
     # Non-OS X framework versions expect you to also dynamically link to
@@ -173,7 +178,7 @@ include(FindPackageHandleStandardArgs)
 
 
 # Combine the debug and optimized paths if we have found both
-if (SDL_LIBRARY_D AND NOT (SDL_LIBRARY_D STREQUAL "SDL_LIBRARY_TEMP_D-NOT-FOUND"))
+if (_FOUND_SDL_D_LIBRARY AND SDL_LIBRARY_D)
   set(SDL_LIBRARY "optimized" ${SDL_LIBRARY} "debug" ${SDL_LIBRARY_D})
 endif()
 
