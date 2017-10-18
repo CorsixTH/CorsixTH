@@ -85,29 +85,16 @@ function run_script {
         run_command "git clean -fx"
         Write-Output "Previous sha not found, cleaning and bootstrapping vcpkg."
         run_command ".\bootstrap-vcpkg.bat"
-        Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
-    }
+    } else {
+        # File exists so check the SHA we last saw
+        $previous_sha = Get-Content $commit_id_filename
 
-    # File exists so check the SHA we last saw
-    $previous_sha = Get-Content $commit_id_filename
-    if ($previous_sha -ne $VcpkgCommitSha){
-        # SHA has changed
-
-        # Check if we have gone back in time first by checking if
-        # previous sha was known at this point
-        $commit_history_command = "git merge-base --is-ancestor $previous_sha $VcpkgCommitSha "
-        Invoke-Expression -command $commit_history_command
-
-        if ($LASTEXITCODE -ne 0){
-            # Git did not recognise this commit id. We have gone backwards
-            # completely clean before continuing
-            Write-Output "Dependencies has been rolled back. Cleaning for safety."
+        if ($previous_sha -ne $VcpkgCommitSha){
+            # SHA has changed, clean and rebuild dependencies
+            Write-Output "Dependencies have changed. Rebuilding..."
             run_command "git clean -fx"
             # Bootstrap again
             run_command ".\bootstrap-vcpkg.bat"
-        } else {
-            # We have moved forwards, we can use normal mechanism
-            Write-Output "Dependencies have been updated."
             run_command ".\vcpkg update"
         }
     }
@@ -115,16 +102,12 @@ function run_script {
     # Update the SHA we last saw
     Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
 
-    # Always make sure we are using the latest files
-    run_command ".\vcpkg update"
-
     # Build the triplet flag e.g. --triplet "x64-windows"
     $triplet = "--triplet `""
     if ($IsX64Build) {$triplet += $x64_triplet_name} else {$triplet += $x86_triplet_name}
     $triplet += '"'
 
     $libs_list = ""
-
 
     # Build our libs list
     foreach ($library in $corsixth_libs){
