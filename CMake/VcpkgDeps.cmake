@@ -19,7 +19,9 @@
 # SOFTWARE.
 
 if ( MSVC AND USE_VCPKG_DEPS)
-    set ( _VCPKG_COMMIT_SHA "01f47f5823b0c0db4a7e3e5b690dbc809429da56")
+    set ( VCPKG_COMMIT_SHA "01f47f5823b0c0db4a7e3e5b690dbc809429da56" CACHE 
+           STRING "The vcpkg commit to build dependencies from")
+    mark_as_advanced(FORCE VCPKG_COMMIT_SHA)
 
     # Setup the various paths we are using
     set ( _VCPKG_SCRIPT_NAME "build_vcpkg_deps.ps1")
@@ -40,7 +42,7 @@ if ( MSVC AND USE_VCPKG_DEPS)
         string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-BuildAnimView $False ")
     endif()
 
-    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-VcpkgCommitSha " ${_VCPKG_COMMIT_SHA} " ")
+    string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} "-VcpkgCommitSha " ${VCPKG_COMMIT_SHA} " ")
 
     # Run the build script
     set ( _SCRIPT_COMMAND  powershell ${_SCRIPT_DIR}/${_VCPKG_SCRIPT_NAME})

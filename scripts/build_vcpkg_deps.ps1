@@ -80,13 +80,40 @@ function run_script {
     }
 
     $commit_id_filename = "commit_id.txt"
-    if ((Test-Path $commit_id_filename) -eq $false -or
-        (Get-Content $commit_id_filename | Where-Object {$_ -NotContains $VcpkgCommitSha})){
-
-        # Commit we point to has updated, bootstrap any changes.
+    if (-Not (Test-Path $commit_id_filename)){
+        # Assume we have not build this dir before, bootstrap to start.
+        run_command "git clean -fx"
+        Write-Output "Previous sha not found, cleaning and bootstrapping vcpkg."
         run_command ".\bootstrap-vcpkg.bat"
         Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
     }
+
+    # File exists so check the SHA we last saw
+    $previous_sha = Get-Content $commit_id_filename
+    if ($previous_sha -ne $VcpkgCommitSha){
+        # SHA has changed
+
+        # Check if we have gone back in time first by checking if
+        # previous sha was known at this point
+        $commit_history_command = "git merge-base --is-ancestor $previous_sha $VcpkgCommitSha "
+        Invoke-Expression -command $commit_history_command
+
+        if ($LASTEXITCODE -ne 0){
+            # Git did not recognise this commit id. We have gone backwards
+            # completely clean before continuing
+            Write-Output "Dependencies has been rolled back. Cleaning for safety."
+            run_command "git clean -fx"
+            # Bootstrap again
+            run_command ".\bootstrap-vcpkg.bat"
+        } else {
+            # We have moved forwards, we can use normal mechanism
+            Write-Output "Dependencies have been updated."
+            run_command ".\vcpkg update"
+        }
+    }
+
+    # Update the SHA we last saw
+    Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
 
     # Always make sure we are using the latest files
     run_command ".\vcpkg update"
@@ -138,7 +165,9 @@ try{
     run_script
     # Move back up a dir to return user to original location
     Set-Location -Path $starting_dir
-} catch{
+} catch [Exception]{
     Set-Location -Path $starting_dir
+    # Echo the exception back out
+    $_
     Exit -1
 }
