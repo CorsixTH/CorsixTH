@@ -91,12 +91,13 @@ if(NOT SDL_BUILDING_LIBRARY)
       /opt
     )
 
-    find_library(SDLMAIN_LIBRARY_D
-      NAMES SDL2maind
-      HINTS
-        ENV SDLDIR
-      PATH_SUFFIXES lib
-    )
+    if (_FOUND_SDL_D_LIBRARY)
+      find_library(SDLMAIN_LIBRARY_D
+        NAMES SDL2maind
+        HINTS
+          ENV SDLDIR
+        PATH_SUFFIXES lib)
+    endif()
   endif()
 endif()
 
@@ -121,7 +122,9 @@ if(SDL_LIBRARY_TEMP)
     list(FIND SDL_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" _SDL_MAIN_INDEX)
     if(_SDL_MAIN_INDEX EQUAL -1)
       set(SDL_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" ${SDL_LIBRARY_TEMP})
-      set(SDL_LIBRARY_TEMP_D "${SDLMAIN_LIBRARY_D}" ${SDL_LIBRARY_TEMP_D})
+      if (_FOUND_SDL_D_LIBRARY)
+        set(SDL_LIBRARY_TEMP_D "${SDLMAIN_LIBRARY_D}" ${SDL_LIBRARY_TEMP_D})
+      endif()
     endif()
     unset(_SDL_MAIN_INDEX)
   endif()
@@ -141,7 +144,9 @@ if(SDL_LIBRARY_TEMP)
   # and try using this line, so I'm just skipping it entirely for OS X.
   if(NOT APPLE)
     set(SDL_LIBRARY_TEMP ${SDL_LIBRARY_TEMP} ${CMAKE_THREAD_LIBS_INIT})
-    set(SDL_LIBRARY_TEMP_D ${SDL_LIBRARY_TEMP_D} ${CMAKE_THREAD_LIBS_INIT})
+    if (_FOUND_SDL_D_LIBRARY)
+      set(SDL_LIBRARY_TEMP_D ${SDL_LIBRARY_TEMP_D} ${CMAKE_THREAD_LIBS_INIT})
+    endif()
   endif()
 
   # For MinGW library
