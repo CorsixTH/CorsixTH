@@ -173,7 +173,7 @@ include(FindPackageHandleStandardArgs)
 
 
 # Combine the debug and optimized paths if we have found both
-if (SDL_LIBRARY_D)
+if (SDL_LIBRARY_D AND NOT (SDL_LIBRARY_D STREQUAL "SDL_LIBRARY_TEMP_D-NOT-FOUND"))
   set(SDL_LIBRARY "optimized" ${SDL_LIBRARY} "debug" ${SDL_LIBRARY_D})
 endif()
 
