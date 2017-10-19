@@ -80,27 +80,18 @@ function run_script {
     }
 
     $commit_id_filename = "commit_id.txt"
-    if (-Not (Test-Path $commit_id_filename)){
-        # Assume we have not build this dir before, bootstrap to start.
-        run_command "git clean -fx"
-        Write-Output "Previous sha not found, cleaning and bootstrapping vcpkg."
+    if (-Not (Test-Path $commit_id_filename) -or
+        (Get-Content $commit_id_filename | Where-Object {$_ -ne $VcpkgCommitSha })){
+        # Sha does not match or does not exist.
+        Write-Output "Dependencies have changed. Bootstrapping and updating vcpkg."
         run_command ".\bootstrap-vcpkg.bat"
-    } else {
-        # File exists so check the SHA we last saw
-        $previous_sha = Get-Content $commit_id_filename
 
-        if ($previous_sha -ne $VcpkgCommitSha){
-            # SHA has changed, clean and rebuild dependencies
-            Write-Output "Dependencies have changed. Rebuilding..."
-            run_command "git clean -fx"
-            # Bootstrap again
-            run_command ".\bootstrap-vcpkg.bat"
-            run_command ".\vcpkg update"
-        }
+        # Remove any outdated libraries before installing
+        run_command ".\vcpkg remove --outdated --recurse"
+
+        # Update the SHA we last saw
+        Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
     }
-
-    # Update the SHA we last saw
-    Set-Content -Path $commit_id_filename -Value $VcpkgCommitSha
 
     # Build the triplet flag e.g. --triplet "x64-windows"
     $triplet = "--triplet `""
