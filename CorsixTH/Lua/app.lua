@@ -28,7 +28,7 @@ local runDebugger = dofile "run_debugger"
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 117
+local SAVEGAME_VERSION = 118
 
 class "App"
 
@@ -151,6 +151,9 @@ function App:init()
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
+
+  self.capturemouse = false
+  self.video:setCaptureMouse(self.capturemouse)
 
   local caption_descs = {self.video:getRendererDetails()}
   if compile_opts.jit then
