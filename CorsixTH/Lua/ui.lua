@@ -252,6 +252,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
   self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
   self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
+  self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
 end
@@ -455,6 +456,11 @@ function UI:changeResolution(width, height)
   self:onChangeResolution()
 
   return true
+end
+
+function UI:toggleCaptureMouse()
+  self.app.capturemouse = not self.app.capturemouse
+  self.app.video:setCaptureMouse(self.app.capturemouse)
 end
 
 function UI:toggleFullscreen()
