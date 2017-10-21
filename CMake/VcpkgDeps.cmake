@@ -19,9 +19,7 @@
 # SOFTWARE.
 
 if ( MSVC AND USE_VCPKG_DEPS)
-    set ( VCPKG_COMMIT_SHA "01f47f5823b0c0db4a7e3e5b690dbc809429da56" CACHE 
-           STRING "The vcpkg commit to build dependencies from")
-    mark_as_advanced(FORCE VCPKG_COMMIT_SHA)
+    set ( VCPKG_COMMIT_SHA "7fb0342b8a16b43ce9887fcc879a2321954646be")
 
     # Setup the various paths we are using
     set ( _VCPKG_SCRIPT_NAME "build_vcpkg_deps.ps1")
