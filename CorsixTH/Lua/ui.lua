@@ -850,6 +850,10 @@ function UI:afterLoad(old, new)
     self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
   end
 
+  if old < 118 then
+    self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
+  end
+
   Window.afterLoad(self, old, new)
 end
 

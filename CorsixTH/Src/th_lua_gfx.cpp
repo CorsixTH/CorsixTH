@@ -786,7 +786,7 @@ static int l_surface_set_capture_mouse(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
     pCanvas->setWindowGrab((lua_isnoneornil(L, 2) != 0) ? false : (lua_toboolean(L, 2) != 0));
-    return 1;
+    return 0;
 }
 
 static int l_line_new(lua_State *L)
@@ -950,7 +950,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_surface_scale, "scale");
     luaT_setfunction(l_surface_set_caption, "setCaption");
     luaT_setfunction(l_surface_get_renderer_details, "getRendererDetails");
-	luaT_setfunction(l_surface_set_capture_mouse, "setCaptureMouse");
+    luaT_setfunction(l_surface_set_capture_mouse, "setCaptureMouse");
     luaT_endclass();
 
     // Line

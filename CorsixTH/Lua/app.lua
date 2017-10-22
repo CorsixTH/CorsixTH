@@ -28,7 +28,7 @@ local runDebugger = dofile "run_debugger"
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 117
+local SAVEGAME_VERSION = 118
 
 class "App"
 

@@ -195,7 +195,7 @@ public: // External API
     //! Set the window caption
     void setCaption(const char* sCaption);
 	
-	//! Toggle mouse capture on the window.
+    //! Toggle mouse capture on the window.
     void setWindowGrab(bool bActivate);
 
     //! Get any user-displayable information to describe the renderer path used

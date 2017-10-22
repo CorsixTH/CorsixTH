@@ -446,7 +446,7 @@ void THRenderTarget::setBlueFilterActive(bool bActivate)
 // Actiate and Deactivate SDL function to capture mouse to window
 void THRenderTarget::setWindowGrab(bool bActivate)
 {
-    SDL_SetWindowGrab(m_pWindow, (SDL_bool)(bActivate ? 1: 0));
+    SDL_SetWindowGrab(m_pWindow, bActivate ? SDL_TRUE : SDL_FALSE);
 }
 
 uint32_t THRenderTarget::mapColour(uint8_t iR, uint8_t iG, uint8_t iB)
