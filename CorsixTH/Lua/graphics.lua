@@ -513,8 +513,6 @@ function Graphics:updateTarget(target)
       reloader(resource)
     end
   end
-  -- Fix here for #1263
-  self.builtin_font = nil
 end
 
 --! Utility class for setting animation markers and querying animation length.
