@@ -1535,7 +1535,7 @@ void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
 {
     if(pCacheEntry->pTexture != nullptr)
     {
-        SDL_DestroyTexture(reinterpret_cast<SDL_Texture*>(pCacheEntry->pTexture));
+        SDL_DestroyTexture(pCacheEntry->pTexture);
         pCacheEntry->pTexture = nullptr;
     }
 }
@@ -1567,7 +1567,7 @@ void THFreeTypeFont::_drawTexture(THRenderTarget* pCanvas, cached_text_t* pCache
         return;
 
     SDL_Rect rcDest = { iX, iY, pCacheEntry->iWidth, pCacheEntry->iHeight };
-    pCanvas->draw(static_cast<SDL_Texture*>(pCacheEntry->pTexture), nullptr, &rcDest, 0);
+    pCanvas->draw(pCacheEntry->pTexture, nullptr, &rcDest, 0);
 }
 
 #endif // CORSIX_TH_USE_FREETYPE2
