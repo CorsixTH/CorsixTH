@@ -238,7 +238,7 @@ private:
         uint8_t* pData;
 
         //! Generated texture ready to be rendered
-        void* pTexture;
+        SDL_Texture* pTexture;
 
         //! The length of sMessage
         size_t iMessageLength;
