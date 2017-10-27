@@ -239,6 +239,17 @@ bool THRenderTarget::create(const THRenderTargetCreationParams* pParams)
         return false;
     }
 
+    Uint32 iRendererFlags = (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+    m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, iRendererFlags);
+
+    SDL_RendererInfo info;
+    SDL_GetRendererInfo(m_pRenderer, &info);
+    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
+
+    SDL_version sdlVersion;
+    SDL_GetVersion(&sdlVersion);
+    m_bApplyOpenGlClipFix = std::strncmp(info.name, "opengl", 6) == 0 && sdlVersion.major == 2 && sdlVersion.minor == 0 && sdlVersion.patch < 4;
+
     return update(pParams);
 }
 
@@ -264,37 +275,7 @@ bool THRenderTarget::update(const THRenderTargetCreationParams* pParams)
         SDL_SetWindowSize(m_pWindow, m_iWidth, m_iHeight);
     }
 
-    Uint32 iRendererFlags = (pParams->bPresentImmediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
-
-    bool bCreateRenderer = false;
-    SDL_RendererInfo info;
-    if (!m_pRenderer)
-    {
-        bCreateRenderer = true;
-    }
-    else
-    {
-        SDL_GetRendererInfo(m_pRenderer, &info);
-        if (info.flags != iRendererFlags)
-        {
-            SDL_DestroyRenderer(m_pRenderer);
-            bCreateRenderer = true;
-        }
-    }
-
-    if (bCreateRenderer)
-    {
-        m_pRenderer = SDL_CreateRenderer(m_pWindow, -1, iRendererFlags);
-        SDL_GetRendererInfo(m_pRenderer, &info);
-    }
-
-    m_bSupportsTargetTextures = (info.flags & SDL_RENDERER_TARGETTEXTURE) != 0;
-
-    SDL_version sdlVersion;
-    SDL_GetVersion(&sdlVersion);
-    m_bApplyOpenGlClipFix = std::strncmp(info.name, "opengl", 6) == 0 && sdlVersion.major == 2 && sdlVersion.minor == 0 && sdlVersion.patch < 4;
-
-    if (bCreateRenderer || bUpdateSize)
+    if (bUpdateSize)
     {
         SDL_RenderSetLogicalSize(m_pRenderer, m_iWidth, m_iHeight);
     }
