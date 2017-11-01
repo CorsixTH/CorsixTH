@@ -354,6 +354,17 @@ local function font_reloader(font)
   font:clearCache()
 end
 
+--! Utility function to return preferred font for main menu ui
+function Graphics:loadMenuFont()
+  local font
+  if self.language_font then
+    font = self:loadFont("QData", "Font01V")
+  else
+    font = self:loadBuiltinFont()
+  end
+  return font
+end
+
 function Graphics:loadLanguageFont(name, sprite_table, ...)
   local font
   if name == nil then
