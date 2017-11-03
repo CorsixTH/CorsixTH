@@ -196,7 +196,7 @@ end
 
 --! This function is automatically called after loading a game and serves for compatibility.
 function Bench:afterLoad(old, new)
-  if old < 118 then
+  if old < 119 then
     self.footprint = object.orientations[self.direction].footprint
   end
   Object.afterLoad(self, old, new)
