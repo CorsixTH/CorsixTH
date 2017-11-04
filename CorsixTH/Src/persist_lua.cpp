@@ -27,6 +27,7 @@ SOFTWARE.
 #include <cstdio>
 #include <vector>
 #include <cstdlib>
+#include <string>
 #ifdef _MSC_VER
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
@@ -126,16 +127,12 @@ class LuaPersistBasicWriter : public LuaPersistWriter
 {
 public:
     LuaPersistBasicWriter(lua_State *L)
-        : m_L(L)
-    {
-        m_iDataBufferLength = 1024;
-        m_pData = static_cast<uint8_t*>(std::malloc(m_iDataBufferLength));
-    }
+        : m_L(L),
+        m_data()
+    { }
 
     ~LuaPersistBasicWriter()
-    {
-        free(m_pData);
-    }
+    { }
 
     lua_State* getStack() override
     {
@@ -180,7 +177,7 @@ public:
         }
         else
         {
-            lua_pushlstring(m_L, (const char*)m_pData, m_iDataLength);
+            lua_pushlstring(m_L, m_data.c_str(), m_data.length());
             return 1;
         }
     }
@@ -657,27 +654,19 @@ public:
             return;
         }
 
-        while(m_iDataLength + iCount > m_iDataBufferLength)
-        {
-            m_iDataBufferLength *= 2;
-            m_pData = (uint8_t*)realloc(m_pData, m_iDataBufferLength);
-        }
-        std::memcpy(m_pData + m_iDataLength, pBytes, iCount);
-        m_iDataLength += iCount;
+        m_data.append(reinterpret_cast<const char*>(pBytes), iCount);
     }
 
     void setError(const char *sError) override
     {
         // If multiple errors occur, only record the first.
-        if(m_bHadError)
+        if (m_bHadError) {
             return;
+        }
         m_bHadError = true;
 
         // Use the written data buffer to store the error message
-        m_iDataLength = std::strlen(sError) + 1;
-        if(m_iDataBufferLength < m_iDataLength)
-            m_pData = (uint8_t*)realloc(m_pData, m_iDataBufferLength);
-        std::strcpy((char*)m_pData, sError);
+        m_data.assign(sError);
     }
 
     void setErrorObject(int iStackObject)
@@ -696,7 +685,7 @@ public:
     const char* getError()
     {
         if(m_bHadError)
-            return reinterpret_cast<char*>(m_pData);
+            return m_data.c_str();
         else
             return nullptr;
     }
@@ -704,9 +693,8 @@ public:
 private:
     lua_State *m_L;
     uint64_t m_iNextIndex;
-    uint8_t* m_pData;
+    std::string m_data;
     size_t m_iDataLength;
-    size_t m_iDataBufferLength;
     bool m_bHadError;
 };
 
@@ -735,16 +723,12 @@ class LuaPersistBasicReader : public LuaPersistReader
 {
 public:
     LuaPersistBasicReader(lua_State *L)
-        : m_L(L)
-    {
-        m_iStringBufferLength = 32;
-        m_sStringBuffer = static_cast<char*>(std::malloc(m_iStringBufferLength));
-    }
+        : m_L(L),
+        m_stringBuffer()
+    { }
 
     ~LuaPersistBasicReader()
-    {
-        free(m_sStringBuffer);
-    }
+    { }
 
     lua_State* getStack() override
     {
@@ -754,13 +738,7 @@ public:
     void setError(const char *sError) override
     {
         m_bHadError = true;
-        size_t iErrLength = std::strlen(sError) + 1;
-        if(iErrLength > m_iStringBufferLength)
-        {
-            m_sStringBuffer = (char*)realloc(m_sStringBuffer, iErrLength);
-            m_iStringBufferLength = iErrLength;
-        }
-        std::strcpy(m_sStringBuffer, sError);
+        m_stringBuffer.assign(sError);
     }
 
     void init(const uint8_t *pData, size_t iLength)
@@ -849,14 +827,9 @@ public:
                 size_t iLength;
                 if(!readVUInt(iLength))
                     return false;
-                while(iLength > m_iStringBufferLength)
-                {
-                    m_iStringBufferLength *= 2;
-                    m_sStringBuffer = (char*)realloc(m_sStringBuffer, m_iStringBufferLength);
-                }
-                if(!readByteStream((uint8_t*)m_sStringBuffer, iLength))
+                if(!readByteStream(m_stringBuffer, iLength))
                     return false;
-                lua_pushlstring(L, m_sStringBuffer, iLength);
+                lua_pushlstring(L, m_stringBuffer.c_str(), m_stringBuffer.length());
                 saveStackObject();
                 break; }
             case LUA_TTABLE:
@@ -1194,8 +1167,27 @@ public:
             lua_pop(m_L, 1);
             return false;
         }
+
         if(pBytes != nullptr)
             std::memcpy(pBytes, m_pData, iCount);
+
+        m_pData += iCount;
+        m_iDataBufferLength -= iCount;
+        return true;
+    }
+
+    bool readByteStream(std::string& bytes, size_t iCount)
+    {
+        if(iCount > m_iDataBufferLength) {
+            setError(lua_pushfstring(m_L,
+                "End of input reached while attempting to read %d byte%s",
+                (int)iCount, iCount == 1 ? "" : "s"));
+            lua_pop(m_L, 1);
+            return false;
+        }
+
+        bytes.assign(reinterpret_cast<const char*>(m_pData), iCount);
+
         m_pData += iCount;
         m_iDataBufferLength -= iCount;
         return true;
@@ -1207,7 +1199,7 @@ public:
     const char* getError()
     {
         if(m_bHadError)
-            return m_sStringBuffer;
+            return m_stringBuffer.c_str();
         else
             return nullptr;
     }
@@ -1216,9 +1208,8 @@ private:
     lua_State *m_L;
     uint64_t m_iNextIndex;
     const uint8_t* m_pData;
-    char* m_sStringBuffer;
     size_t m_iDataBufferLength;
-    size_t m_iStringBufferLength;
+    std::string m_stringBuffer;
     bool m_bHadError;
 };
 

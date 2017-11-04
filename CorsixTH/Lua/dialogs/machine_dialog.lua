@@ -114,7 +114,7 @@ function UIMachine:replaceMachine()
     --[[persistable:replace_machine_confirm_dialog]]function()
       -- Charge for new machine
       hosp:spendMoney(cost, _S.transactions.machine_replacement)
-      
+
       -- Tell the machine to pretend it's a shiny new one
       machine:machineReplaced()
     end

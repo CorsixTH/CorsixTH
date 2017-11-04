@@ -493,7 +493,7 @@ confirmation = {
   abort_edit_room = "Stai attualmente costruendo o modificando una stanza. Se tutti gli oggetti richiesti sono stati posizionati sarà completata, altrimenti sarà cancellata. Continuare?",
   maximum_screen_size = "La risoluzione che hai inserito è superiore a 3000x2000. Risoluzioni maggiori sono supportate, ma richiederanno un hardware migliore per mantenere un livello di frame rate giocabile. Sei sicuro di voler continuare?",
   music_warning = "Nota: E' necessario avere la libreria smpeg.dll o equivalente nel tuo sistema operativo, altrimenti non sentirai alcuna musica nel gioco. Vuoi continuare?",
- --This next line isn't in the english.lua, but when strings are dump it is reported missing 
+ --This next line isn't in the english.lua, but when strings are dump it is reported missing
   restart_level = "Sei sicuro di voler riavviare il livello?",
 }
 

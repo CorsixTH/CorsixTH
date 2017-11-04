@@ -267,6 +267,10 @@ adviser = {
     researcher_needs_desk_3 = "Jeder Forscher braucht einen eigenen Schreibtisch, an dem er arbeiten kann.",
     nurse_needs_desk_1 = "Jede Krankenschwester braucht ihren eignen Schreibtisch, an dem sie arbeiten kann.",
     nurse_needs_desk_2 = "Ihre Krankenschwester ist froh darüber, dass Sie ihr eine Pause gegönnt haben. Falls Sie vorhatten, dass mehr als nur eine Krankenschwester in der Station arbeitet, dann müssen Sie jeder Krankenschwester einen eigenen Schreibtisch zur Verfügung stellen.",
+    low_prices = "Sie berechnen zu wenig für %s. Dadurch bekommen Sie viele Patienten, verdienen aber wenig an jedem einzelnen von ihnen.",
+    high_prices = "Sie berechnen zu viel für %s. Dadurch verdienen Sie kurzfristig viel Geld, aber langfristig vertreiben Sie die damit Patienten aus ihrem Krankenhaus.",
+    fair_prices = "Die Beandlungskosten für %s sind fair und angemessen.",
+    patient_not_paying = "Ein Patient ist gegangen ohne für %s zu bezahlen weil es zu teuer ist!",
   },
   research = {
     drug_improved = "Die Effektivität Ihres %s-Medikaments wurde von Ihrer Forschungsabteilung verbessert.",

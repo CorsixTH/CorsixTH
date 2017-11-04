@@ -55,8 +55,7 @@ function UIGraphs:UIGraphs(ui)
     return
   end
 
-  local hosp = ui.hospital
-  self.hospital = hosp
+  self.hospital = ui.hospital
 
   -- Buttons
   self:addPanel(0, 63, 384):makeButton(0, 0, 26, 26, 3, self.close):setTooltip(_S.tooltip.graphs.close)
@@ -91,98 +90,268 @@ function UIGraphs:UIGraphs(ui)
   self:updateLines()
 end
 
-function UIGraphs:updateLines()
+local TOP_Y = 85 -- Top of the graph area
+local BOTTOM_Y = 353 -- Bottom of the graph area
+local RIGHT_X = 346 -- Right side of the graph area
+local VERT_DX = 25 -- Spacing between the vertical lines in the graph
+local VERT_COUNT = 12 -- Number of vertical lines in the graph
+local GRAPH_HEIGHT = BOTTOM_Y - TOP_Y
 
+--! Compute the vertical position of a value in the graph given the line extremes
+--!param graph_line (table) Meta data of the line, including extreme values.
+--!param value (number) Value to position vertically in the graph.
+--!return Y position in the graph of the value.
+local function computeVerticalValuePosition(graph_line, value)
+  -- 0 is always included in the range.
+  assert(graph_line.maximum >= 0 and graph_line.minimum <= 0)
+  local range = graph_line.maximum - graph_line.minimum
+  if range == 0 then return BOTTOM_Y end
+
+  return BOTTOM_Y - math.floor(((value - graph_line.minimum) / range) * GRAPH_HEIGHT)
+end
+
+--! Convert graph scale to a stepsize in months.
+--!param graph_scale (int, 1 to 3) Graph scale to display.
+--!return Number of months to jump between statistics values in the hospital statistics data.
+local function getStatisticsStepsize(graph_scale)
+  local stepsize = 4 * 12 -- Four years
+  if graph_scale == 2 then
+    stepsize = 12 -- One year
+  elseif graph_scale == 3 then
+    stepsize = 1 -- A month
+  end
+  return stepsize
+end
+
+--! Get the statistics from the hospital that should be displayed.
+--! Selection starts at the last (=newest) entry, and goes back in time.
+--!return The values of all statistics to plot in the graph display.
+function UIGraphs:getHospitalStatistics()
   local statistics = self.hospital.statistics
-  -- Make one line for each graph
-  local lines = {}
-  for stat, _ in pairs(statistics[1]) do
-    local line = TH.line()
-    line:setWidth(2)
-    local hue = colours[stat]
-    line:setColour(hue[1], hue[2], hue[3], 255)
-    lines[stat] = {line = line, maximum = 0, minimum = 0}
-  end
-  self.lines = lines
 
-  -- Pick the relevant values starting from the end of the statistics table
   local values = {}
-  local decrements = -4 * 12 -- Four years
-  if self.graph_scale == 2 then
-    decrements = -12 -- One year
-  elseif self.graph_scale == 3 then
-    decrements = -1 -- A month
-  end
-  for i = #statistics, #statistics + decrements*11, decrements do
-    if i < 1 then
-      break
-    end
+  local i = #statistics -- Picking hospital statistics from right to left (recent to old).
+  local stats_stepsize = getStatisticsStepsize(self.graph_scale)
+  while #values < VERT_COUNT and i >= 1 do
     values[#values + 1] = statistics[i]
+    i = i - stats_stepsize
   end
-  self.values = values
+  return values
+end
 
-  -- Decide maximum and minimum for normalisation of each line
-  for _, part in ipairs(values) do
-    if type(part) == "table" then
-      for stat, value in pairs(part) do
-        if value < lines[stat].minimum then
-          lines[stat].minimum = value
-        end
-        if value > lines[stat].maximum then
-          lines[stat].maximum = value
-        end
+--! Reposition the given sequence of text entries vertically such that the maximum
+--  absolute deviation from the ideal position is minimized.
+--!param label_datas (array) Text entries
+--!param start_index (int) First entry to move.
+--!param last_index (int) Last entry to move.
+local function moveSequence(label_datas, start_index, last_index)
+  -- min_y, max_y Smallest and biggest vertical position of the labels. Since
+  --    they are sorted on y, it's the position of the first and last visible entry.
+  -- min_y_shift, max_y_shift Vertical movement of the label of the first and
+  --    last visible entry for vertically centering the text.
+  -- min_dev, max_dev Smallest and biggest deviation from the optimal position,
+  --    for all visible labels.
+  local min_y = nil
+  local max_y, min_y_shift, max_y_shift, min_dev, max_dev
+  for i = start_index, last_index do
+    local label = label_datas[i]
+    if label.pos_y then -- Label is visible
+      local deviation = label.pos_y - label.ideal_y -- Positive if moved down
+      if min_y then -- Updating the max y, and deviations
+        max_y = label.pos_y
+        max_y_shift = label.shift_y
+        min_dev = math.min(min_dev, deviation)
+        max_dev = math.max(max_dev, deviation)
+      else -- First time entering the loop
+        min_y = label.pos_y
+        max_y = label.pos_y
+        min_y_shift = label.shift_y
+        max_y_shift = label.shift_y
+        min_dev = deviation
+        max_dev = deviation
       end
     end
   end
 
-  -- Start from the right part of the graph window
-  local top_y = 85
-  local bottom_y = 353
-  local first_x = 346
-  local dx = -25
-  local text = {}
+  -- There should be at least one visible entry in the provided range.
+  assert(min_y ~= nil)
 
-  -- First start at the correct place
-  local part = values[1]
-  for stat, value in pairs(part) do
-    -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
-    local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-    local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
-    -- Save the starting point for text drawing purposes.
-    local start = math.floor(top_y + (bottom_y - top_y) - normalized_value + zero_point)
-    text[#text + 1] = {stat = stat, start_y = start, value = value}
-    lines[stat].line:moveTo(first_x, start)
+  local move = -math.floor((max_dev + min_dev) / 2) -- Suggested movement of the sequence.
+
+  -- Verify the sequence will stay inside graph upper and lower limits, adjust otherwise.
+  if min_y + min_y_shift + move < TOP_Y then
+    move = TOP_Y - min_y - min_y_shift
+  elseif max_y + max_y_shift + move > BOTTOM_Y then
+    move = BOTTOM_Y - max_y - max_y_shift
   end
 
-  -- Sort the y positions where to put text to draw the top text first.
-  local function compare(a,b)
-    return a.start_y < b.start_y
+  -- And update the positions.
+  for i = start_index, last_index do
+    local label = label_datas[i]
+    if label.pos_y then label.pos_y = label.pos_y + move end
   end
-  table.sort(text, compare)
-  self.text_positions = text
+end
 
-
-  local aux_lines = {}
-  -- Then add all the nodes available for each graph
-  for _, parts in ipairs(values) do
-    for stat, value in pairs(parts) do
-      -- The zero point may not be at the bottom of the graph for e.g. balance when it has been negative
-      local zero_point = lines[stat].minimum < 0 and lines[stat].minimum*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum) or 0
-      local normalized_value = value == 0 and 0 or value*(bottom_y-top_y)/(lines[stat].maximum - lines[stat].minimum)
-      lines[stat].line:lineTo(first_x, top_y + (bottom_y - top_y) - normalized_value + zero_point)
+--! Compute new actual position of the labels.
+--!param graph (UIGraphs) Graph window object
+local function updateTextPositions(graph)
+  -- Reset vertical position of the text back to its ideal position.
+  -- Disable computations on invisible graphs by removing the actual y position of it.
+  for _, label in ipairs(graph.label_datas) do
+    if graph.hide_graph[label.stat] then
+      label.pos_y = nil
+    else
+      label.pos_y = label.ideal_y
     end
-    -- Also add a small line going from the number of month name to the actual graph.
-    local line = TH.line()
-    line:setWidth(1)
-    --local hue = colours[stat]
-    --line:setColour(hue[1], hue[2], hue[3], 255)
-    line:moveTo(first_x, bottom_y + 2)
-    line:lineTo(first_x, bottom_y + 8)
-    aux_lines[#aux_lines + 1] = line
-    first_x = first_x + dx
   end
+
+  -- Move labels of the graphs such that they stay at the right of the graph
+  -- between their upper and lower boundaries.
+  local sequence_moved = true
+  local collision_count = 8 -- In theory the loop should terminate, but better safe than sorry.
+  while sequence_moved and collision_count > 0 do
+    collision_count = collision_count - 1
+    sequence_moved = false
+
+    -- Find sequences of text entries that partly overlap or have no vertical
+    -- space between them. Entries in such a sequence cannot be moved
+    -- individually, the sequence as a whole must move.
+    local start_index, last_index = nil, nil -- Start and end of the sequence.
+    local collision = false -- True collision detected in the sequence
+    local prev_index, prev_label = nil, nil
+    for i, label in ipairs(graph.label_datas) do
+      if label.pos_y then -- Label is visible
+        if prev_label then
+          -- Bottom y of previous label, top of current label
+          local bottom_prev = prev_label.pos_y + prev_label.shift_y + prev_label.size_y
+          local top_current = label.pos_y + label.shift_y
+
+          if top_current < bottom_prev then
+            -- True collision, text has to move
+            collision = true
+            sequence_moved = true
+            label.pos_y = bottom_prev - label.shift_y
+            if not start_index then start_index = prev_index end
+            last_index = i
+
+          elseif top_current == bottom_prev then
+            -- Entry is concatenated to the sequence, position is fine.
+            if not start_index then start_index = prev_index end
+            last_index = i
+          else
+            -- Entry is not part of the sequence, move previous sequence to its
+            -- optimal spot if required
+            if collision then
+              moveSequence(graph.label_datas, start_index, last_index)
+            end
+
+            collision = false
+            start_index = nil
+            last_index = nil
+            -- Do not consider the current text in this round. The next entry may
+            -- see it as the start of a next sequence.
+          end
+        end
+        prev_label = label
+        prev_index = i
+      end
+    end
+
+    if collision then
+      moveSequence(graph.label_datas, start_index, last_index)
+    end
+  end
+end
+
+function UIGraphs:updateLines()
+  self.values = self:getHospitalStatistics()
+
+  -- Construct meta data about each graph line.
+  local graph_datas = {} -- Table ordered by statistics name.
+  self.graph_datas = graph_datas
+  for stat, _ in pairs(self.values[1]) do
+    graph_datas[stat] = {line = nil, maximum = 0, minimum = 0}
+  end
+
+  -- Decide maximum and minimum for normalisation of each line.
+  -- 0 is always included in the computed range.
+  for _, stats in ipairs(self.values) do
+    for stat, value in pairs(stats) do
+      if value < graph_datas[stat].minimum then
+        graph_datas[stat].minimum = value
+      end
+      if value > graph_datas[stat].maximum then
+        graph_datas[stat].maximum = value
+      end
+    end
+  end
+
+  -- Add the line objects of the graph.
+  for stat, graph_data in pairs(self.graph_datas) do
+    local line = TH.line()
+    line:setWidth(2)
+    local hue = colours[stat]
+    line:setColour(hue[1], hue[2], hue[3], 255)
+    graph_data.line = line
+  end
+
+  -- Add the graph line pieces. Doing this separately is more efficient as all
+  -- graph lines can be extended to the left in the same iteration.
+  local xpos = RIGHT_X
+  for i, stats in ipairs(self.values) do
+    for stat, value in pairs(stats) do
+      local line = graph_datas[stat].line
+      local ypos = computeVerticalValuePosition(graph_datas[stat], value)
+      if i == 1 then
+        line:moveTo(xpos, ypos)
+      else
+        line:lineTo(xpos, ypos)
+      end
+    end
+    xpos = xpos - VERT_DX
+  end
+
+  -- Compute label data for each statistic, and order by vertical position.
+  -- The newest statistic values are displayed at the right edge of the graph,
+  -- which decides the optimal position of the graph label text and value.
+  local label_datas = {}
+  self.label_datas = label_datas
+
+  for stat, value in pairs(self.values[1]) do
+    local ideal_y = computeVerticalValuePosition(graph_datas[stat], value)
+    local text = _S.graphs[stat] .. ":"
+    local _, size_y, _ = self.black_font:sizeOf(text)
+    label_datas[#label_datas + 1] = {
+        stat = stat, -- Name of the statistic it belongs to.
+        text = text, -- Translated label text.
+        ideal_y = ideal_y, -- Ideal vertical position.
+        pos_y = nil, -- Actual position for drawing.
+        size_y = size_y, -- Vertical size of the text.
+        shift_y = -math.floor(size_y / 2), -- Amount of shift to center the text.
+        value = value} -- Numeric value to display.
+  end
+
+  -- Sort the labels of the graph on ideal y position, and compute actual position.
+  local function compare(a,b)
+    return a.ideal_y < b.ideal_y
+  end
+  table.sort(label_datas, compare)
+  updateTextPositions(self)
+
+  -- Create small lines going from the number of month name to the actual graph.
+  -- Like the lines, index runs from right to left at the screen.
+  local aux_lines = {}
   self.aux_lines = aux_lines
 
+  xpos = RIGHT_X
+  for _ = 1, #self.values do
+    local line = TH.line()
+    line:setWidth(1)
+    line:moveTo(xpos, BOTTOM_Y + 2)
+    line:lineTo(xpos, BOTTOM_Y + 8)
+    aux_lines[#aux_lines + 1] = line
+    xpos = xpos - VERT_DX
+  end
 end
 
 function UIGraphs:draw(canvas, x, y)
@@ -200,49 +369,50 @@ function UIGraphs:draw(canvas, x, y)
   self.white_font:draw(canvas, _S.graphs.reputation, x + 502, y + 405, 80, 27)
 
   -- Draw the different lines
-  for stat, values in pairs(self.lines) do
+  for stat, graph in pairs(self.graph_datas) do
     if not self.hide_graph[stat] then
-      values.line:draw(canvas, x, y)
+      graph.line:draw(canvas, x, y)
     end
   end
-
-  local first_x = 334
 
   -- Draw strings showing what values each entry has at the moment just to the right of the graph.
   -- TODO: These should be coloured according to the colour of the corresponding line.
-  local cur_y = 85
-  for _, values in pairs(self.text_positions) do
-    if not self.hide_graph[values.stat] then
-      -- -5 makes the text appear just to the right of the line instead of just beneath it.
-      cur_y = (cur_y > values.start_y and cur_y or values.start_y - 5)
-      -- The last y compensates that draw returns the last y position relative to the top of the window, not the dialog.
-      -- To get all values in the same "column", draw them separately.
-      self.black_font:draw(canvas, _S.graphs[values.stat] .. ":", x + first_x + 15, y + cur_y)
-      cur_y = self.black_font:draw(canvas, values.value, x + first_x + 72, y + cur_y) - y
+  for _, label in pairs(self.label_datas) do
+    if label.pos_y then
+      local ypos = label.pos_y + label.shift_y
+      self.black_font:draw(canvas, label.text, x + RIGHT_X + 3, y + ypos)
+      self.black_font:draw(canvas, label.value, x + RIGHT_X + 60, y + ypos)
     end
   end
 
-
-  local dx = -25
-  local number = math.floor(#self.hospital.statistics / 12)
-
-  local decrements = -4 -- Four years
-  if self.graph_scale == 2 then
-    decrements = -1 -- One year
-  elseif self.graph_scale == 3 then
-    decrements = -1 -- A month
-    number = #self.hospital.statistics - number * 12
-  end
-  local no = 1
+  local stats_stepsize = getStatisticsStepsize(self.graph_scale)
+  local xpos = x + RIGHT_X
 
   -- Draw numbers (or month names) below the graph
-  for _, _ in ipairs(self.values) do
-    self.black_font:drawWrapped(canvas, self.graph_scale == 3 and _S.months[(number - 1) % 12 + 1] or number, x + first_x, y + 363, 25, "center")
-    first_x = first_x + dx
-    number = number + decrements
-    -- And the small black line
-    self.aux_lines[no]:draw(canvas, x, y)
-    no = no + 1
+  assert(#self.hospital.statistics > 0) -- Avoid negative months and years.
+  if stats_stepsize >= 12 then
+    -- Display years
+    local year_number = math.floor((#self.hospital.statistics - 1) / 12)
+    for i = 1, #self.values do
+      self.black_font:drawWrapped(canvas, year_number, xpos, y + BOTTOM_Y + 10, 25, "center")
+      xpos = xpos - VERT_DX
+      year_number = year_number - math.floor(stats_stepsize / 12)
+
+      -- And the small black line
+      self.aux_lines[i]:draw(canvas, x, y)
+    end
+  else
+    -- Display months
+    local month_number = #self.hospital.statistics - math.floor((#self.hospital.statistics - 1) / 12) * 12
+    for i = 1, #self.values do
+      self.black_font:drawWrapped(canvas, _S.months[month_number], xpos, y + BOTTOM_Y + 10, 25, "center")
+      xpos = xpos - VERT_DX
+      month_number = month_number - stats_stepsize
+      if month_number < 1 then month_number = month_number + 12 end
+
+      -- And the small black line
+      self.aux_lines[i]:draw(canvas, x, y)
+    end
   end
 end
 
@@ -256,6 +426,7 @@ end
 function UIGraphs:toggleGraph(name)
   self.hide_graph[name] = not self.hide_graph[name]
   self.ui:playSound("selectx.wav")
+  updateTextPositions(self)
 end
 
 function UIGraphs:close()
@@ -264,7 +435,7 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
-  if old < 60 then
+  if old < 117 then
     self:close()
   end
 end

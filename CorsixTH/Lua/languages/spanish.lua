@@ -629,6 +629,9 @@ date_format = {
 object.litter = "Basura"
 tooltip.objects.litter = "Basura: Un paciente la ha tirado porque no ha encontrado una papelera."
 
+object.rathole = "Ratonera"
+tooltip.objects.rathole = "El hogar de una familia de ratas a la que le ha gustado la suciedad de tu hospital."
+
 tooltip.fax.close = "Cierra esta ventana sin borrar el mensaje."
 tooltip.message.button = "Haz clic izquierdo para abrir el mensaje."
 tooltip.message.button_dismiss = "Haz clic izquierdo para abrir el mensaje, clic derecho para rechazarlo."

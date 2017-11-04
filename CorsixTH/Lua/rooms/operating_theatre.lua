@@ -95,13 +95,39 @@ end
 
 --! Returns true if an operation is ongoing
 function OperatingTheatreRoom:isOperating()
-  for k, v in pairs(self.staff_member_set) do
+  for k, _ in pairs(self.staff_member_set) do
     if k.action_queue[1].name == "multi_use_object" then
       return true
     end
   end
 
   return false
+end
+
+--! Builds the second operation action (i.e. with the surgeon whose we
+--! see the back). Called either when the operation starts or when the
+--! operation is resumed after interruption caused by the picking up of
+--! the second surgeon.
+--! Note: Must be part of OperatingTheatreRoom and not a local function
+--! because of the use in the persisted callback function operation_standby.
+--!param multi_use (action): the first operation action (built with via buildTableAction1()).
+--!param operation_table_b (OperatingTable): slave object representing the operation table.
+function OperatingTheatreRoom._buildTableAction2(multi_use, operation_table_b)
+  local num_loops = math.random(2, 5)
+
+  local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
+    num_loops = num_loops - 1
+    if num_loops <= 0 then
+      action.prolonged_usage = false
+    end
+  end
+
+  local after_use_use_object = --[[persistable:operatring_theatre_after_use]] function()
+    multi_use.prolonged_usage = false
+  end
+
+  return UseObjectAction(operation_table_b):setLoopCallback(loop_callback_use_object)
+      :setAfterUse(after_use_use_object):setMustHappen(true):disableTruncate()
 end
 
 function OperatingTheatreRoom:commandEnteringStaff(staff)
@@ -120,7 +146,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
     local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
     self:queueWashHands(staff)
     staff:queueAction(WalkAction(table_x, table_y))
-    staff:queueAction(self:buildTableAction2(ongoing_action, table))
+    staff:queueAction(self._buildTableAction2(ongoing_action, table))
   end
 
   self.staff_member_set[staff] = true
@@ -169,15 +195,13 @@ end
 --!param operation_table (OperatingTable): master object representing
 --! the operation table.
 function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_table)
-  local room = self
-
-  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(action)
+  local loop_callback_multi_use = --[[persistable:operatring_theatre_multi_use_callback]] function(_)
     -- dirty hack to make the truncated animation work
     surgeon1.animation_idx = nil
   end
 
   local after_use_table = --[[persistable:operatring_theatre_table_after_use]] function()
-    room:dealtWithPatient(patient)
+    self:dealtWithPatient(patient)
     -- Tell the patient that it's time to leave, but only if the first action
     -- is really an idle action.
     if patient.action_queue[1].name == "idle" then
@@ -188,30 +212,6 @@ function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_tab
   return MultiUseObjectAction(operation_table, patient):setProlongedUsage(true)
       :setLoopCallback(loop_callback_multi_use):setAfterUse(after_use_table)
       :setMustHappen(true):disableTruncate()
-end
-
---! Builds the second operation action (i.e. with the surgeon whose we
---! see the back). Called either when the operation starts or when the
---! operation is resumed after interruption caused by the picking up of
---! the second surgeon.
---!param multi_use (action): the first operation action (built with via buildTableAction1()).
---!param operation_table_b (OperatingTable): slave object representing the operation table.
-function OperatingTheatreRoom:buildTableAction2(multi_use, operation_table_b)
-  local num_loops = math.random(2, 5)
-
-  local loop_callback_use_object = --[[persistable:operatring_theatre_use_callback]] function(action)
-    num_loops = num_loops - 1
-    if num_loops <= 0 then
-      action.prolonged_usage = false
-    end
-  end
-
-  local after_use_use_object = --[[persistable:operatring_theatre_after_use]] function()
-    multi_use.prolonged_usage = false
-  end
-
-  return UseObjectAction(operation_table_b):setLoopCallback(loop_callback_use_object)
-      :setAfterUse(after_use_use_object):setMustHappen(true):disableTruncate()
 end
 
 --! Sends the surgeon to the nearest operation sink ("op_sink1")
@@ -283,24 +283,23 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   end
   ----- END Save game compatibility -----
 
-  local room = self
   local --[[persistable:operatring_theatre_operation_standby]] function operation_standby(action, humanoid)
     action.on_interrupt = nil
     if not action.done_ready then
       num_ready[1] = num_ready[1] + 1
       action.done_ready = true
     end
-    if room.staff_member_set[humanoid] and room.staff_member_set[humanoid] == "abort" then
+    if self.staff_member_set[humanoid] and self.staff_member_set[humanoid] == "abort" then
       humanoid:finishAction()
     elseif num_ready[1] == 3 then
       -- Only if everyone (2 Surgeons and Patient) ready, we schedule the operation action
-      local obj, ox, oy = room.world:findObjectNear(surgeon1, "operating_table")
+      local obj, _, _ = self.world:findObjectNear(surgeon1, "operating_table")
 
       local table_action1 = self:buildTableAction1(surgeon1, patient, obj)
       surgeon1:queueAction(table_action1, 1)
 
-      obj, ox, oy = self.world:findObjectNear(surgeon2, "operating_table_b")
-      surgeon2:queueAction(self:buildTableAction2(table_action1, obj), 1)
+      obj, _, _ = self.world:findObjectNear(surgeon2, "operating_table_b")
+      surgeon2:queueAction(self._buildTableAction2(table_action1, obj), 1)
 
       -- Kick off
       surgeon1:finishAction()
@@ -325,7 +324,8 @@ function OperatingTheatreRoom:commandEnteringPatient(patient)
   patient:queueAction(UseScreenAction(screen):setMustHappen(true))
 
   -- Meanwhile, second surgeon walks over to other side of operating table
-  obj, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
+  local _
+  _, ox, oy = self.world:findObjectNear(surgeon1, "operating_table_b")
   surgeon2:queueAction(WalkAction(ox, oy):setMustHappen(true):disableTruncate(), 4)
   surgeon2:queueAction(IdleAction():setLoopCallback(operation_standby):setMustHappen(true), 5)
 

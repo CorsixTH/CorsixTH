@@ -31,95 +31,95 @@ public class VarManipulator {
     // variable,
     // instead of using a string which can cause errors.
     public void setValue(String variable, String value) {
-        if (variable == "name") {
+        if ("name".equals(variable)) {
             TabGeneral.name = value;
             TabGeneral.nameTF.setText(value);
         }
 
-        else if (variable == "mapFile") {
+        else if ("mapFile".equals(variable)) {
             TabGeneral.mapFile = value;
             TabGeneral.mapFileTF.setText(value);
         }
 
-        else if (variable == "briefing") {
+        else if ("briefing".equals(variable)) {
             TabGeneral.briefing = value;
             TabGeneral.briefingTA.setText(value);
         }
 
-        else if (variable == "startCash") {
+        else if ("startCash".equals(variable)) {
             TabGeneral.startCash = Integer.parseInt(value);
             TabGeneral.startCashTF.setText(value);
         }
 
-        else if (variable == "interest") {
+        else if ("interest".equals(variable)) {
             TabGeneral.interest = Double.parseDouble(value);
             TabGeneral.interestTF.setText(value);
         }
 
-        else if (variable == "drugStartRating") {
+        else if ("drugStartRating".equals(variable)) {
             TabGeneral.drugStartRating = Integer.parseInt(value);
             TabGeneral.drugStartRatingTF.setText(value);
-        } else if (variable == "drugImproveRate") {
+        } else if ("drugImproveRate".equals(variable)) {
             TabGeneral.drugImproveRate = Integer.parseInt(value);
             TabGeneral.drugImproveRateTF.setText(value);
         }
 
-        else if (variable == "drugStartCost") {
+        else if ("drugStartCost".equals(variable)) {
             TabGeneral.drugStartCost = Integer.parseInt(value);
             TabGeneral.drugStartCostTF.setText(value);
         }
 
-        else if (variable == "drugMinCost") {
+        else if ("drugMinCost".equals(variable)) {
             TabGeneral.drugMinCost = Integer.parseInt(value);
             TabGeneral.drugMinCostTF.setText(value);
         }
 
-        else if (variable == "landCostPerTile") {
+        else if ("landCostPerTile".equals(variable)) {
             TabGeneral.landCostPerTile = Integer.parseInt(value);
             TabGeneral.landCostPerTileTF.setText(value);
         }
 
-        else if (variable == "autopsyResearchPercent") {
+        else if ("autopsyResearchPercent".equals(variable)) {
             TabGeneral.autopsyResearchPercent = Integer.parseInt(value);
             TabGeneral.autopsyResearchPercentTF.setText(value);
         }
 
-        else if (variable == "autopsyRepHitPercent") {
+        else if ("autopsyRepHitPercent".equals(variable)) {
             TabGeneral.autopsyRepHitPercent = Integer.parseInt(value);
             TabGeneral.autopsyRepHitPercentTF.setText(value);
         }
 
-        else if (variable == "researchUpgradeCost") {
+        else if ("researchUpgradeCost".equals(variable)) {
             TabGeneral.researchUpgradeCost = Integer.parseInt(value);
             TabGeneral.researchUpgradeCostTF.setText(value);
         }
 
-        else if (variable == "researchUpgradeIncrementCost") {
+        else if ("researchUpgradeIncrementCost".equals(variable)) {
             TabGeneral.researchUpgradeIncrementCost = Integer.parseInt(value);
             TabGeneral.researchUpgradeIncrementCostTF.setText(value);
         }
 
-        else if (variable == "strengthIncrement") {
+        else if ("strengthIncrement".equals(variable)) {
             TabGeneral.strengthIncrement = Integer.parseInt(value);
             TabGeneral.strengthIncrementTF.setText(value);
         }
 
-        else if (variable == "maxStrength") {
+        else if ("maxStrength".equals(variable)) {
             TabGeneral.maxStrength = Integer.parseInt(value);
             TabGeneral.maxStrengthTF.setText(value);
-        } else if (variable == "cansOfCoke") {
+        } else if ("cansOfCoke".equals(variable)) {
             TabAwards.cansOfCoke = Integer.parseInt(value);
             TabAwards.cansOfCokeTF.setText(value);
-        } else if (variable == "cansOfCokeBonus") {
+        } else if ("cansOfCokeBonus".equals(variable)) {
             TabAwards.cansOfCokeBonus = Integer.parseInt(value);
             TabAwards.cansOfCokeBonusTF.setText(value);
-        } else if (variable == "reputation") {
+        } else if ("reputation".equals(variable)) {
             TabAwards.reputation = Integer.parseInt(value);
             TabAwards.reputationTF.setText(value);
-        } else if (variable == "reputationBonus") {
+        } else if ("reputationBonus".equals(variable)) {
             TabAwards.reputationBonus = Integer.parseInt(value);
             TabAwards.reputationBonusTF.setText(value);
-        } else if (variable == "noDeathsBonus") {
+        } else if ("noDeathsBonus".equals(variable)) {
             TabAwards.noDeathsBonus = Integer.parseInt(value);
             TabAwards.noDeathsBonusTF.setText(value);
         }
@@ -128,7 +128,7 @@ public class VarManipulator {
     // set value on a certain index of an array
     // same as above with the string arguments.
     public void setValueForTable(String variable, int index, int value) {
-        if (variable == "visuals") {
+        if ("visuals".equals(variable)) {
             TabDiseases.visuals[index] = value;
             if (value == 0) {
                 TabDiseases.visualsCB[index].setSelected(false);
@@ -137,7 +137,7 @@ public class VarManipulator {
                 TabDiseases.visualsCB[index].setSelected(true);
                 TabDiseases.visuals[index] = 1;
             }
-        } else if (variable == "nonVisuals") {
+        } else if ("nonVisuals".equals(variable)) {
             if (value == 0) {
                 TabDiseases.nonVisualsCB[index].setSelected(false);
                 TabDiseases.nonVisuals[index] = 0;
@@ -145,7 +145,7 @@ public class VarManipulator {
                 TabDiseases.nonVisualsCB[index].setSelected(true);
                 TabDiseases.nonVisuals[index] = 1;
             }
-        } else if (variable == "known") {
+        } else if ("known".equals(variable)) {
             if (value == 1) {
                 TabDiseases.knownCB[index].setSelected(true);
                 TabDiseases.known[index] = 1;
@@ -153,23 +153,23 @@ public class VarManipulator {
                 TabDiseases.knownCB[index].setSelected(false);
                 TabDiseases.known[index] = 0;
             }
-        } else if (variable == "visualsAvailable") {
+        } else if ("visualsAvailable".equals(variable)) {
             TabDiseases.visualsAvailableTF[index].setText(Integer
                     .toString(value));
             TabDiseases.visualsAvailable[index] = value;
-        } else if (variable == "expertiseResearch") {
+        } else if ("expertiseResearch".equals(variable)) {
             TabDiseases.expertiseResearchTF[index].setText(Integer
                     .toString(value));
             TabDiseases.expertiseResearch[index] = value;
-        } else if (variable == "objectsStrength") {
+        } else if ("objectsStrength".equals(variable)) {
             TabObjects.objectsStrengthTF[index]
                     .setText(Integer.toString(value));
             TabObjects.objectsStrength[index] = value;
-        } else if (variable == "objectsResearch") {
+        } else if ("objectsResearch".equals(variable)) {
             TabObjects.objectsResearchTF[index]
                     .setText(Integer.toString(value));
             TabObjects.objectsResearch[index] = value;
-        } else if (variable == "objectsAvail") {
+        } else if ("objectsAvail".equals(variable)) {
             if (value == 1) {
                 TabObjects.objectsAvailCB[index].setSelected(true);
                 TabObjects.objectsAvail[index] = 1;
@@ -177,7 +177,7 @@ public class VarManipulator {
                 TabObjects.objectsAvailCB[index].setSelected(false);
                 TabObjects.objectsAvail[index] = 0;
             }
-        } else if (variable == "objectsStartAvail") {
+        } else if ("objectsStartAvail".equals(variable)) {
             if (value == 1) {
                 TabObjects.objectsStartAvailCB[index].setSelected(true);
                 TabObjects.objectsStartAvail[index] = 1;
@@ -185,7 +185,7 @@ public class VarManipulator {
                 TabObjects.objectsStartAvailCB[index].setSelected(false);
                 TabObjects.objectsStartAvail[index] = 0;
             }
-        } else if (variable == "startStaff.doctor") {
+        } else if ("startStaff.doctor".equals(variable)) {
             if (value == 1) {
                 // make sure that only as many objects as needed are created
                 if (index - 1 == TabStaff.startStaffList.size())
@@ -194,7 +194,7 @@ public class VarManipulator {
                 TabStaff.startStaffList.get(index - 1).staffMemberCombo
                         .setSelectedItem("Doctor");
             }
-        } else if (variable == "startStaff.nurse") {
+        } else if ("startStaff.nurse".equals(variable)) {
             if (value == 1) {
                 // make sure that only as many objects as needed are created
                 if (index - 1 == TabStaff.startStaffList.size())
@@ -203,7 +203,7 @@ public class VarManipulator {
                 TabStaff.startStaffList.get(index - 1).staffMemberCombo
                         .setSelectedItem("Nurse");
             }
-        } else if (variable == "startStaff.handyman") {
+        } else if ("startStaff.handyman".equals(variable)) {
             if (value == 1) {
                 // make sure that only as many objects as needed are created
                 if (index - 1 == TabStaff.startStaffList.size())
@@ -212,7 +212,7 @@ public class VarManipulator {
                 TabStaff.startStaffList.get(index - 1).staffMemberCombo
                         .setSelectedItem("Handyman");
             }
-        } else if (variable == "startStaff.receptionist") {
+        } else if ("startStaff.receptionist".equals(variable)) {
             if (value == 1) {
                 // make sure that only as many objects as needed are created
                 if (index - 1 == TabStaff.startStaffList.size())
@@ -221,11 +221,11 @@ public class VarManipulator {
                 TabStaff.startStaffList.get(index - 1).staffMemberCombo
                         .setSelectedItem("Receptionist");
             }
-        } else if (variable == "startStaff.skill") {
+        } else if ("startStaff.skill".equals(variable)) {
             TabStaff.startStaffList.get(index - 1).skill = value;
             TabStaff.startStaffList.get(index - 1).skillTF.setText(Integer
                     .toString(value));
-        } else if (variable == "startStaff.shrink") {
+        } else if ("startStaff.shrink".equals(variable)) {
             // making sure that the staff member has been created
             if (TabStaff.startStaffList.size() > index - 1) {
                 // making sure that the staff member is a doctor before adding
@@ -241,7 +241,7 @@ public class VarManipulator {
                             .setSelected(false);
                 }
             }
-        } else if (variable == "startStaff.surgeon") {
+        } else if ("startStaff.surgeon".equals(variable)) {
             // making sure that the staff member has been created
             if (TabStaff.startStaffList.size() > index - 1) {
                 // making sure that the staff member is a doctor before adding
@@ -257,7 +257,7 @@ public class VarManipulator {
                             .setSelected(false);
                 }
             }
-        } else if (variable == "startStaff.researcher") {
+        } else if ("startStaff.researcher".equals(variable)) {
             // making sure that the staff member has been created
             if (TabStaff.startStaffList.size() > index - 1) {
                 // making sure that the staff member is a doctor before adding
@@ -272,121 +272,121 @@ public class VarManipulator {
                             .setSelected(false);
                 }
             }
-        } else if (variable == "staffSalary") {
+        } else if ("staffSalary".equals(variable)) {
             TabStaff.staffSalary[index] = value;
             TabStaff.staffSalaryTF[index].setText(Integer.toString(value));
-        } else if (variable == "salaryAdd") {
+        } else if ("salaryAdd".equals(variable)) {
             TabStaff.salaryAdd[index] = value;
             TabStaff.salaryAddTF[index].setText(Integer.toString(value));
-        } else if (variable == "staffLevels.month") {
+        } else if ("staffLevels.month".equals(variable)) {
             // make sure that only as many objects as needed are created
             if (index == TabStaff.staffLevelsList.size())
                 TabStaff.addStaffLevels();
             TabStaff.staffLevelsList.get(index).month = value;
             TabStaff.staffLevelsList.get(index).monthTF.setText(Integer
                     .toString(value));
-        } else if (variable == "staffLevels.nurses") {
+        } else if ("staffLevels.nurses".equals(variable)) {
             TabStaff.staffLevelsList.get(index).nurses = value;
             TabStaff.staffLevelsList.get(index).nursesTF.setText(Integer
                     .toString(value));
-        } else if (variable == "staffLevels.doctors") {
+        } else if ("staffLevels.doctors".equals(variable)) {
             TabStaff.staffLevelsList.get(index).doctors = value;
             TabStaff.staffLevelsList.get(index).doctorsTF.setText(Integer
                     .toString(value));
-        } else if (variable == "staffLevels.handymen") {
+        } else if ("staffLevels.handymen".equals(variable)) {
             TabStaff.staffLevelsList.get(index).handymen = value;
             TabStaff.staffLevelsList.get(index).handymenTF.setText(Integer
                     .toString(value));
-        } else if (variable == "staffLevels.receptionists") {
+        } else if ("staffLevels.receptionists".equals(variable)) {
             TabStaff.staffLevelsList.get(index).receptionists = value;
             TabStaff.staffLevelsList.get(index).receptionistsTF.setText(Integer
                     .toString(value));
-        } else if (variable == "staffLevels.shrinkRate") {
+        } else if ("staffLevels.shrinkRate".equals(variable)) {
             TabStaff.staffLevelsList.get(index).shrinkRate = value;
             TabStaff.staffLevelsList.get(index).shrinkRateTF.setText("1/"
                     + Integer.toString(value));
-        } else if (variable == "staffLevels.surgeonRate") {
+        } else if ("staffLevels.surgeonRate".equals(variable)) {
             TabStaff.staffLevelsList.get(index).surgeonRate = value;
             TabStaff.staffLevelsList.get(index).surgeonRateTF.setText("1/"
                     + Integer.toString(value));
-        } else if (variable == "staffLevels.researcherRate") {
+        } else if ("staffLevels.researcherRate".equals(variable)) {
             TabStaff.staffLevelsList.get(index).researcherRate = value;
             TabStaff.staffLevelsList.get(index).researcherRateTF.setText("1/"
                     + Integer.toString(value));
-        } else if (variable == "staffLevels.consultantRate") {
+        } else if ("staffLevels.consultantRate".equals(variable)) {
             TabStaff.staffLevelsList.get(index).consultantRate = value;
             TabStaff.staffLevelsList.get(index).consultantRateTF.setText("1/"
                     + Integer.toString(value));
-        } else if (variable == "staffLevels.juniorRate") {
+        } else if ("staffLevels.juniorRate".equals(variable)) {
             TabStaff.staffLevelsList.get(index).juniorRate = value;
             TabStaff.staffLevelsList.get(index).juniorRateTF.setText("1/"
                     + Integer.toString(value));
-        } else if (variable == "emergency.Random")
+        } else if ("emergency.Random".equals(variable))
             TabEmergencies.randomEmergenciesRB.doClick();
-        else if (variable == "emergencyInterval") {
+        else if ("emergencyInterval".equals(variable)) {
             TabEmergencies.semiRandomEmergenciesRB.doClick();
             TabEmergencies.emergencyInterval = value;
             TabEmergencies.emergencyIntervalTF.setText(Integer.toString(value));
-        } else if (variable == "emergencyIntervalVariance") {
+        } else if ("emergencyIntervalVariance".equals(variable)) {
             TabEmergencies.emergencyIntervalVariance = value;
             TabEmergencies.emergencyIntervalVarianceTF.setText(Integer
                     .toString(value));
-        } else if (variable == "emergency.startMonth") {
+        } else if ("emergency.startMonth".equals(variable)) {
             // make sure that only as many objects as needed are created
             if (index == TabEmergencies.emergencyList.size())
                 TabEmergencies.addEmergency();
             TabEmergencies.emergencyList.get(index).startMonth = value;
             TabEmergencies.emergencyList.get(index).startMonthTF
                     .setText(Integer.toString(value));
-        } else if (variable == "emergency.endMonth") {
+        } else if ("emergency.endMonth".equals(variable)) {
             TabEmergencies.emergencyList.get(index).endMonth = value;
             TabEmergencies.emergencyList.get(index).endMonthTF.setText(Integer
                     .toString(value));
-        } else if (variable == "emergency.minPatients") {
+        } else if ("emergency.minPatients".equals(variable)) {
             TabEmergencies.emergencyList.get(index).minPatients = value;
             TabEmergencies.emergencyList.get(index).minPatientsTF
                     .setText(Integer.toString(value));
-        } else if (variable == "emergency.maxPatients") {
+        } else if ("emergency.maxPatients".equals(variable)) {
             TabEmergencies.emergencyList.get(index).maxPatients = value;
             TabEmergencies.emergencyList.get(index).maxPatientsTF
                     .setText(Integer.toString(value));
-        } else if (variable == "emergency.illness") {
+        } else if ("emergency.illness".equals(variable)) {
             if (value != 0) {
                 TabEmergencies.emergencyList.get(index).illness = value;
                 TabEmergencies.emergencyList.get(index).illnessCombo
                         .setSelectedItem(TabDiseases.arDiseases[value].name);
             }
-        } else if (variable == "emergency.percWin") {
+        } else if ("emergency.percWin".equals(variable)) {
             TabEmergencies.emergencyList.get(index).percWin = value;
             TabEmergencies.emergencyList.get(index).percWinTF.setText(Integer
                     .toString(value));
-        } else if (variable == "emergency.bonus") {
+        } else if ("emergency.bonus".equals(variable)) {
             TabEmergencies.emergencyList.get(index).bonus = value;
             TabEmergencies.emergencyList.get(index).bonusTF.setText(Integer
                     .toString(value));
-        } else if (variable == "quake.startMonth") {
+        } else if ("quake.startMonth".equals(variable)) {
             // make sure that only as many objects as needed are created
             if (index == TabEarthquakes.quakeList.size())
                 TabEarthquakes.addQuake();
             TabEarthquakes.quakeList.get(index).startMonth = value;
             TabEarthquakes.quakeList.get(index).startMonthTF.setText(Integer
                     .toString(value));
-        } else if (variable == "quake.endMonth") {
+        } else if ("quake.endMonth".equals(variable)) {
             TabEarthquakes.quakeList.get(index).endMonth = value;
             TabEarthquakes.quakeList.get(index).endMonthTF.setText(Integer
                     .toString(value));
-        } else if (variable == "quake.severity") {
+        } else if ("quake.severity".equals(variable)) {
             TabEarthquakes.quakeList.get(index).severity = value;
             TabEarthquakes.quakeList.get(index).severityTF.setText(Integer
                     .toString(value));
-        } else if (variable == "population.month") {
+        } else if ("population.month".equals(variable)) {
             // make sure that only as many objects as needed are created
             if (index == TabPopulation.populationList.size())
                 TabPopulation.addPopulation();
             TabPopulation.populationList.get(index).month = value;
             TabPopulation.populationList.get(index).monthTF.setText(Integer
                     .toString(value));
-        } else if (variable == "population.change") {
+        } else if ("population.change".equals(variable)) {
             TabPopulation.populationList.get(index).change = value;
             TabPopulation.populationList.get(index).changeTF.setText(Integer
                     .toString(value));
@@ -398,7 +398,7 @@ public class VarManipulator {
     // same as above with the string arguments.
     public void setCriteria(String variable, boolean exists, int value,
             int value2) {
-        if (variable == "winCriteria.value") {
+        if ("winCriteria.value".equals(variable)) {
             if (value == 1) {
                 TabGoals.winReputation = exists;
                 TabGoals.minReputation = value2;
@@ -429,7 +429,7 @@ public class VarManipulator {
                 TabGoals.winValueCB.setSelected(exists);
                 TabGoals.minValueTF.setText(Integer.toString(value2));
             }
-        } else if (variable == "loseCriteria.value") {
+        } else if ("loseCriteria.value".equals(variable)) {
             if (value == 1) {
                 TabGoals.loseReputation = exists;
                 TabGoals.maxReputation = value2;
@@ -449,7 +449,7 @@ public class VarManipulator {
                 TabGoals.minPercentageKilledTF
                         .setText(Integer.toString(value2));
             }
-        } else if (variable == "loseCriteria.bound") {
+        } else if ("loseCriteria.bound".equals(variable)) {
             if (value == 1 && TabGoals.loseReputation == true) {
                 TabGoals.warnReputation = value2;
                 TabGoals.warnReputationTF.setText(Integer.toString(value2));
@@ -530,26 +530,36 @@ public class VarManipulator {
         TabStaff.addStaffLevels();
         TabPopulation.addPopulation();
         TabPopulation.addPopulation();
-        for (int i = 0; i < TabDiseases.visualsAvailableTF.length; i++)
-            setDefaultTF(TabDiseases.visualsAvailableTF[i]);
-        for (int i = 0; i < TabDiseases.visualsCB.length; i++)
-            setDefaultCB(TabDiseases.visualsCB[i]);
-        for (int i = 0; i < TabDiseases.nonVisualsCB.length; i++)
-            setDefaultCB(TabDiseases.nonVisualsCB[i]);
-        for (int i = 0; i < TabDiseases.knownCB.length; i++)
-            setDefaultCB(TabDiseases.knownCB[i]);
-        for (int i = 0; i < TabDiseases.expertiseResearchTF.length; i++)
-            setDefaultTF(TabDiseases.expertiseResearchTF[i]);
-        for (int i = 0; i < TabObjects.objectsAvailCB.length; i++)
-            setDefaultCB(TabObjects.objectsAvailCB[i]);
-        for (int i = 0; i < TabObjects.objectsStartAvailCB.length; i++)
-            setDefaultCB(TabObjects.objectsStartAvailCB[i]);
-        for (int i = 0; i < TabObjects.objectsResearchTF.length; i++)
-            setDefaultTF(TabObjects.objectsResearchTF[i]);
-        for (int i = 0; i < TabObjects.objectsStrengthTF.length; i++)
-            setDefaultTF(TabObjects.objectsStrengthTF[i]);
-        for (int i = 0; i < TabStaff.staffSalaryTF.length; i++)
-            setDefaultTF(TabStaff.staffSalaryTF[i]);
+        for (JTextField visualsAvailableTF : TabDiseases.visualsAvailableTF) {
+            setDefaultTF(visualsAvailableTF);
+        }
+        for (JCheckBox visualsCB : TabDiseases.visualsCB) {
+            setDefaultCB(visualsCB);
+        }
+        for (JCheckBox nonVisualsCB : TabDiseases.nonVisualsCB) {
+            setDefaultCB(nonVisualsCB);
+        }
+        for (JCheckBox knownCB : TabDiseases.knownCB) {
+            setDefaultCB(knownCB);
+        }
+        for (JTextField expertiseResearchTF : TabDiseases.expertiseResearchTF) {
+            setDefaultTF(expertiseResearchTF);
+        }
+        for (JCheckBox objectsAvailCB : TabObjects.objectsAvailCB) {
+            setDefaultCB(objectsAvailCB);
+        }
+        for (JCheckBox objectsStartAvailCB : TabObjects.objectsStartAvailCB) {
+            setDefaultCB(objectsStartAvailCB);
+        }
+        for (JTextField objectsResearchTF : TabObjects.objectsResearchTF) {
+            setDefaultTF(objectsResearchTF);
+        }
+        for (JTextField objectsStrengthTF : TabObjects.objectsStrengthTF) {
+            setDefaultTF(objectsStrengthTF);
+        }
+        for (JTextField staffSalaryTF : TabStaff.staffSalaryTF) {
+            setDefaultTF(staffSalaryTF);
+        }
         // index 0,1,2 are not used. start from 3
         for (int i = 3; i < TabStaff.salaryAddTF.length; i++)
             setDefaultTF(TabStaff.salaryAddTF[i]);
@@ -769,84 +779,125 @@ public class VarManipulator {
         else {
             for (int i = 0; i < TabObjects.objectsStrength.length; i++) {
                 if (tf == TabObjects.objectsStrengthTF[i]) {
-                    if (i == 9)
-                        setValueForTable("objectsStrength", i, 8);
-                    else if (i == 13)
-                        setValueForTable("objectsStrength", i, 13);
-                    else if (i == 14)
-                        setValueForTable("objectsStrength", i, 12);
-                    else if (i == 22)
-                        setValueForTable("objectsStrength", i, 9);
-                    else if (i == 23)
-                        setValueForTable("objectsStrength", i, 7);
-                    else if (i == 24)
-                        setValueForTable("objectsStrength", i, 11);
-                    else if (i == 25)
-                        setValueForTable("objectsStrength", i, 8);
-                    else if (i == 26)
-                        setValueForTable("objectsStrength", i, 10);
-                    else if (i == 27)
-                        setValueForTable("objectsStrength", i, 12);
-                    else if (i == 30)
-                        setValueForTable("objectsStrength", i, 12);
-                    else if (i == 42)
-                        setValueForTable("objectsStrength", i, 10);
-                    else if (i == 46)
-                        setValueForTable("objectsStrength", i, 8);
-                    else if (i == 47)
-                        setValueForTable("objectsStrength", i, 7);
-                    else if (i == 54)
-                        setValueForTable("objectsStrength", i, 10);
-                    else
-                        setValueForTable("objectsStrength", i, 10);
+                    switch (i) {
+                        case 9:
+                            setValueForTable("objectsStrength", i, 8);
+                            break;
+                        case 13:
+                            setValueForTable("objectsStrength", i, 13);
+                            break;
+                        case 14:
+                            setValueForTable("objectsStrength", i, 12);
+                            break;
+                        case 22:
+                            setValueForTable("objectsStrength", i, 9);
+                            break;
+                        case 23:
+                            setValueForTable("objectsStrength", i, 7);
+                            break;
+                        case 24:
+                            setValueForTable("objectsStrength", i, 11);
+                            break;
+                        case 25:
+                            setValueForTable("objectsStrength", i, 8);
+                            break;
+                        case 26:
+                            setValueForTable("objectsStrength", i, 10);
+                            break;
+                        case 27:
+                            setValueForTable("objectsStrength", i, 12);
+                            break;
+                        case 30:
+                            setValueForTable("objectsStrength", i, 12);
+                            break;
+                        case 42:
+                            setValueForTable("objectsStrength", i, 10);
+                            break;
+                        case 46:
+                            setValueForTable("objectsStrength", i, 8);
+                            break;
+                        case 47:
+                            setValueForTable("objectsStrength", i, 7);
+                            break;
+                        case 54:
+                            setValueForTable("objectsStrength", i, 10);
+                            break;
+                        default:
+                            setValueForTable("objectsStrength", i, 10);
+                            break;
+                    }
                 }
             }
             for (int i = 0; i < TabObjects.objectsResearch.length; i++) {
                 if (tf == TabObjects.objectsResearchTF[i]) {
-                    if (i == 8)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 9)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 13)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 14)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 18)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 20)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 22)
-                        setValueForTable("objectsResearch", i, 60000);
-                    else if (i == 23)
-                        setValueForTable("objectsResearch", i, 60000);
-                    else if (i == 24)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 25)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 26)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 27)
-                        setValueForTable("objectsResearch", i, 30000);
-                    else if (i == 30)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 37)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 39)
-                        setValueForTable("objectsResearch", i, 20000);
-                    else if (i == 40)
-                        setValueForTable("objectsResearch", i, 30000);
-                    else if (i == 41)
-                        setValueForTable("objectsResearch", i, 30000);
-                    else if (i == 42)
-                        setValueForTable("objectsResearch", i, 50000);
-                    else if (i == 46)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 47)
-                        setValueForTable("objectsResearch", i, 40000);
-                    else if (i == 54)
-                        setValueForTable("objectsResearch", i, 60000);
-                    else
-                        setValueForTable("objectsResearch", i, 0);
+                    switch (i) {
+                        case 8:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 9:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 13:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 14:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 18:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 20:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 22:
+                            setValueForTable("objectsResearch", i, 60000);
+                            break;
+                        case 23:
+                            setValueForTable("objectsResearch", i, 60000);
+                            break;
+                        case 24:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 25:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 26:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 27:
+                            setValueForTable("objectsResearch", i, 30000);
+                            break;
+                        case 30:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 37:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 39:
+                            setValueForTable("objectsResearch", i, 20000);
+                            break;
+                        case 40:
+                            setValueForTable("objectsResearch", i, 30000);
+                            break;
+                        case 41:
+                            setValueForTable("objectsResearch", i, 30000);
+                            break;
+                        case 42:
+                            setValueForTable("objectsResearch", i, 50000);
+                            break;
+                        case 46:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 47:
+                            setValueForTable("objectsResearch", i, 40000);
+                            break;
+                        case 54:
+                            setValueForTable("objectsResearch", i, 60000);
+                            break;
+                        default:
+                            setValueForTable("objectsResearch", i, 0);
+                            break;
+                    }
                 }
             }
         }

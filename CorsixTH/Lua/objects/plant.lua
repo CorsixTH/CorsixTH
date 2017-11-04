@@ -70,11 +70,13 @@ object.orientations = {
 -- For litter: put broom back 356
 -- take broom out: 1874
 -- swoop: 1878
--- For plant: droop down: 1950
--- back up again: 1952
+-- Frames for plant states are
+-- * healthy: 1950
+-- * drooping1: 1951
+-- * drooping2: 1952
+-- * dying: 1953
+-- * dead: 1954
 
--- The states specify which frame to show
-local states = {"healthy", "drooping1", "drooping2", "dying", "dead"}
 
 local days_between_states = 75
 

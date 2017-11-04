@@ -314,6 +314,7 @@ function Graphics:hasLanguageFont(font)
   end
 end
 
+--! Font proxy meta table wrapping the C++ class.
 local font_proxy_mt = {
   __index = {
     sizeOf = function(self, ...)
@@ -351,6 +352,17 @@ end
 --!param font The font to (force) reloading.
 local function font_reloader(font)
   font:clearCache()
+end
+
+--! Utility function to return preferred font for main menu ui
+function Graphics:loadMenuFont()
+  local font
+  if self.language_font then
+    font = self:loadFont("QData", "Font01V")
+  else
+    font = self:loadBuiltinFont()
+  end
+  return font
 end
 
 function Graphics:loadLanguageFont(name, sprite_table, ...)

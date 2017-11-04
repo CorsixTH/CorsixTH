@@ -1048,7 +1048,7 @@ function Patient:updateDynamicInfo(action_string)
       divider = self.hospital.policies["stop_procedure"]
     end
     if self.diagnosis_progress then
-      self:setDynamicInfo('progress', self.diagnosis_progress*(1/divider))
+      self:setDynamicInfo('progress', math.min(1.0, self.diagnosis_progress / divider))
     end
   end
   -- Set the centre line of dynamic info based on contagiousness, if appropriate

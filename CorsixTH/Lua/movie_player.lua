@@ -28,6 +28,64 @@ class "MoviePlayer"
 ---@type MoviePlayer
 local MoviePlayer = _G["MoviePlayer"]
 
+--! Calculate the position and size for a movie
+--!
+--! Returns x and y position and width and height for the movie to be displayed
+--! based on the native size of the movie and the current screen dimensions
+local calculateSize = function(me)
+  -- calculate target dimensions
+  local x, y, w, h
+  local screen_w, screen_h = me.app.config.width, me.app.config.height
+  local native_w = me.moviePlayer:getNativeWidth()
+  local native_h = me.moviePlayer:getNativeHeight()
+  if native_w ~= 0 and native_h ~= 0 then
+    local ar = native_w / native_h
+    if math.abs((screen_w / screen_h) - ar) < 0.001 then
+      x, y = 0, 0
+      w, h = screen_w, screen_h
+    else
+      if screen_w > screen_h / native_h * native_w then
+        w = math.floor(screen_h / native_h * native_w)
+        h = screen_h
+        x = math.floor((screen_w - w) / 2)
+        y = 0
+      else
+        w = screen_w
+        h = math.floor(screen_w / native_w * native_h)
+        x = 0
+        y = math.floor((screen_h - h) / 2)
+      end
+    end
+  else
+    x, y = 0, 0
+    w, h = screen_w, screen_h
+  end
+
+  return x, y, w, h
+end
+
+local destroyMovie = function(me)
+  me.moviePlayer:unload()
+  if me.opengl_mode_index then
+    me.app.modes[me.opengl_mode_index] = "opengl"
+  end
+  if me.channel >= 0 then
+    me.audio:releaseChannel(me.channel)
+    me.channel = -1
+  end
+  if me.holding_bg_music then
+    -- If possible we want to continue playing music where we were
+    me.audio:pauseBackgroundTrack()
+  else
+    me.audio:playRandomBackgroundTrack()
+  end
+  me.playing = false
+  if me.callback_on_destroy_movie then
+    me.callback_on_destroy_movie()
+    me.callback_on_destroy_movie = nil
+  end
+end
+
 function MoviePlayer:MoviePlayer(app, audio, video)
   self.app = app
   self.audio = audio
@@ -49,17 +107,15 @@ function MoviePlayer:init()
   self.moviePlayer:setRenderer(self.video)
 
   --find movies in Anims folder
-  local num
-  local movie
   local movies = self.app.fs:listFiles("Anims")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       --lose level movies
       if movie:upper():match(pathsep .. "LOSE%d+%.[^" .. pathsep .. "]+$") then
         table.insert(self.lose_movies, movie)
       end
       --advance level movies
-      num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
+      local num = movie:upper():match(pathsep .. "AREA(%d+)V%.[^" .. pathsep .. "]+$")
       if num ~= nil and tonumber(num, 10) ~= nil then
         self.advance_movies[tonumber(num, 10)] = movie
       end
@@ -73,7 +129,7 @@ function MoviePlayer:init()
   --find intro
   movies = self.app.fs:listFiles("Intro")
   if movies then
-    for _,movie in pairs(movies) do
+    for _, movie in pairs(movies) do
       if movie:upper():match(pathsep .. "INTRO%.SM4$") then
         self.intro_movie = movie
       end
@@ -92,8 +148,9 @@ end
 function MoviePlayer:playAdvanceMovie(level)
   local filename = self.advance_movies[level]
 
-  if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
-      return
+  if self.moviePlayer == nil or not self.moviePlayer:getEnabled() or
+      not self.app.config.movies or filename == nil then
+    return
   end
 
   if self.audio.background_music then
@@ -116,47 +173,11 @@ function MoviePlayer:playLoseMovie()
   end
 end
 
---! Calculate the position and size for a movie
---!
---! Returns x and y position and width and height for the movie to be displayed
---! based on the native size of the movie and the current screen dimensions
-function MoviePlayer:calculateSize()
-  local x, y, w, h = 0
-  local screen_w, screen_h = self.app.config.width, self.app.config.height
-
-  -- calculate target dimensions
-  local native_w = self.moviePlayer:getNativeWidth()
-  local native_h = self.moviePlayer:getNativeHeight()
-  if(native_w ~= 0 and native_h ~= 0) then
-    local ar = native_w / native_h
-    if(math.abs((screen_w / screen_h) - ar) < 0.001) then
-      x, y = 0, 0
-      w, h = screen_w, screen_h
-    else
-      if(screen_w > screen_h / native_h * native_w) then
-        w = math.floor(screen_h / native_h * native_w)
-        h = screen_h
-        x = math.floor((screen_w - w) / 2)
-        y = 0
-      else
-        w = screen_w
-        h = math.floor(screen_w / native_w * native_h)
-        x = 0
-        y = math.floor((screen_h - h) / 2)
-      end
-    end
-  else
-    x, y = 0, 0
-    w, h = screen_w, screen_h
-  end
-
-  return x, y, w, h
-end
-
 function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   local success, warning
 
-  if(not self.moviePlayer:getEnabled() or not self.app.config.movies or filename == nil) then
+  if self.moviePlayer == nil or not self.moviePlayer:getEnabled() or
+      not self.app.config.movies or filename == nil then
     if callback then
       callback()
     end
@@ -223,58 +244,48 @@ end
 
 --NB: Call after any changes to TH.surface
 function MoviePlayer:allocatePictureBuffer()
+  if self.moviePlayer == nil then return end
+
   self.moviePlayer:allocatePictureBuffer()
 end
 
 --NB: Call before any changes to TH.surface
 function MoviePlayer:deallocatePictureBuffer()
+  if self.moviePlayer == nil then return end
+
   self.moviePlayer:deallocatePictureBuffer()
 end
 
 function MoviePlayer:onMovieOver()
+  if self.moviePlayer == nil then return end
+
   self.wait_for_over = false
   if not self.wait_for_stop then
-    self:_destroyMovie()
+    destroyMovie(self)
   end
 end
 
 function MoviePlayer:stop()
+  if self.moviePlayer == nil then return end
+
   if self.can_skip then
     self.moviePlayer:stop()
   end
   self.wait_for_stop = false
   if not self.wait_for_over then
-    self:_destroyMovie()
-  end
-end
-
-function MoviePlayer:_destroyMovie()
-  self.moviePlayer:unload()
-  if self.opengl_mode_index then
-    self.app.modes[self.opengl_mode_index] = "opengl"
-  end
-  if self.channel >= 0 then
-    self.audio:releaseChannel(self.channel)
-    self.channel = -1
-  end
-  if self.holding_bg_music then
-    -- If possible we want to continue playing music where we were
-    self.audio:pauseBackgroundTrack()
-  else
-    self.audio:playRandomBackgroundTrack()
-  end
-  self.playing = false
-  if self.callback_on_destroy_movie then
-    self.callback_on_destroy_movie()
-    self.callback_on_destroy_movie = nil
+    destroyMovie(self)
   end
 end
 
 function MoviePlayer:refresh()
-  local x, y, w, h = self:calculateSize()
+  if self.moviePlayer == nil then return end
+
+  local x, y, w, h = calculateSize(self)
   self.moviePlayer:refresh(x, y, w, h)
 end
 
 function MoviePlayer:updateRenderer()
+  if self.moviePlayer == nil then return end
+
   self.moviePlayer:setRenderer(self.video)
 end

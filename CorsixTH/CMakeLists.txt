@@ -118,6 +118,10 @@ ELSE(Lua_FOUND)
   message(FATAL_ERROR "Error: Lua library not found, it is required to build")
 ENDIF(Lua_FOUND)
 
+# Add threading library
+find_package(Threads)
+target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+
 # Find SDL_mixer
 IF(CORSIX_TH_USE_SDL_MIXER)
   FIND_PACKAGE(SDL2_mixer REQUIRED)

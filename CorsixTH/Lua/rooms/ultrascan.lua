@@ -53,7 +53,6 @@ end
 function UltrascanRoom:commandEnteringPatient(patient)
   local staff = self.staff_member
   local ultrascan, pat_x, pat_y = self.world:findObjectNear(patient, "ultrascanner")
-  local orientation = ultrascan.object_type.orientations[ultrascan.direction]
   local stf_x, stf_y = ultrascan:getSecondaryUsageTile()
 
   staff:setNextAction(WalkAction(stf_x, stf_y))

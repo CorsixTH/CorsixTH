@@ -25,6 +25,7 @@ SOFTWARE.
 #include <wx/toplevel.h>
 #include <wx/filename.h>
 #include <map>
+#include <vector>
 
 static const unsigned char palette_upscale_map[0x40] = {
     0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
@@ -368,7 +369,7 @@ bool THAnimations::loadXMLFile(TiXmlDocument* xmlDocument)
     m_pFrames = new th_frame_t[m_iFrameCount];
     m_pElementList = new uint16_t[m_iElementListCount];
     m_pElements = new th_element_t[m_iElementCount];
-    uint16_t* tmp_pElementMap = new uint16_t[m_iElementListCount];
+    std::vector<uint16_t> tmp_elementMap(m_iElementListCount, 0);
     m_pSprites = new th_sprite_t[m_iSpriteCount];
     m_pSpriteImages = new wxImage[m_iSpriteCount];
     m_pSpriteScaleFactors = new uint8_t[m_iSpriteCount];
@@ -419,11 +420,11 @@ bool THAnimations::loadXMLFile(TiXmlDocument* xmlDocument)
                     if(iOldElement < iOldElementCount) {
                         //this is a re-used element id from the old numbering system, so look up the new element id
                         //in the new numbering system.
-                        iNewElement = tmp_pElementMap[iOldElement];
+                        iNewElement = tmp_elementMap.at(iOldElement);
                     } else {
                         if( iNewElementCount < m_iElementCount )
                         {
-                            tmp_pElementMap[iOldElement]=iNewElementCount;
+                            tmp_elementMap[iOldElement] = iNewElementCount;
                             iOldElementCount = iOldElement + 1;
                             iNewElement = iNewElementCount;
                             iNewElementCount++;

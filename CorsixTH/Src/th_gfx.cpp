@@ -632,10 +632,13 @@ bool THAnimationManager::loadCustomAnimations(const uint8_t* pData, size_t iData
 
             // Load data.
             uint8_t *pData = new (std::nothrow) uint8_t[iSize];
-            if (pData == nullptr)
+            if (pData == nullptr) {
                 return false;
-            if (!input.Available(iSize))
+            }
+            if (!input.Available(iSize)) {
+                delete[] pData;
                 return false;
+            }
             for (uint32_t i = 0; i < iSize; i++)
                 pData[i] = input.Uint8();
 

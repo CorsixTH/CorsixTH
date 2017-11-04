@@ -135,6 +135,7 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minReputationLabel);
         winCriteria.add(winReputationCB);
         winReputationCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     winReputation = true;
@@ -148,12 +149,14 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minReputationTF);
         minReputationTF.setEditable(false);
         minReputationTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -176,6 +179,7 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minBalanceLabel);
         winCriteria.add(winBalanceCB);
         winBalanceCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     winBalance = true;
@@ -189,12 +193,14 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minBalanceTF);
         minBalanceTF.setEditable(false);
         minBalanceTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -214,6 +220,7 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minPercentageLabel);
         winCriteria.add(winPercentageCB);
         winPercentageCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     winPercentage = true;
@@ -227,12 +234,14 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minPercentageTF);
         minPercentageTF.setEditable(false);
         minPercentageTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -255,6 +264,7 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minCureCountLabel);
         winCriteria.add(winCureCountCB);
         winCureCountCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     winCureCount = true;
@@ -268,12 +278,14 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minCureCountTF);
         minCureCountTF.setEditable(false);
         minCureCountTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -293,6 +305,7 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minValueLabel);
         winCriteria.add(winValueCB);
         winValueCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     winValue = true;
@@ -306,12 +319,14 @@ public class TabGoals extends JScrollPane {
         winCriteria.add(minValueTF);
         minValueTF.setEditable(false);
         minValueTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -335,6 +350,7 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(maxReputationLabel);
         loseCriteria.add(loseReputationCB);
         loseReputationCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     loseReputation = true;
@@ -350,12 +366,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(maxReputationTF);
         maxReputationTF.setEditable(false);
         maxReputationTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -386,12 +404,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(warnReputationTF);
         warnReputationTF.setEditable(false);
         warnReputationTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -420,6 +440,7 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(maxBalanceLabel);
         loseCriteria.add(loseBalanceCB);
         loseBalanceCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     loseBalance = true;
@@ -435,12 +456,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(maxBalanceTF);
         maxBalanceTF.setEditable(false);
         maxBalanceTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -463,12 +486,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(warnBalanceTF);
         warnBalanceTF.setEditable(false);
         warnBalanceTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -488,6 +513,7 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(minPercentageKilledLabel);
         loseCriteria.add(losePercentageKilledCB);
         losePercentageKilledCB.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
                     losePercentageKilled = true;
@@ -503,12 +529,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(minPercentageKilledTF);
         minPercentageKilledTF.setEditable(false);
         minPercentageKilledTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())
@@ -541,12 +569,14 @@ public class TabGoals extends JScrollPane {
         loseCriteria.add(warnPercentageKilledTF);
         warnPercentageKilledTF.setEditable(false);
         warnPercentageKilledTF.addFocusListener(new FocusListener() {
+            @Override
             public void focusGained(FocusEvent e) {
                 JTextField tf = (JTextField) e.getComponent();
                 tf.selectAll();
                 Gui.tempValue = tf.getText();
             }
 
+            @Override
             public void focusLost(FocusEvent e) {
                 try {
                     int input = Integer.parseInt(((JTextField) e.getComponent())

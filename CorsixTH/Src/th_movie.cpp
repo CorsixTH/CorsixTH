@@ -54,20 +54,6 @@ extern "C"
 #define av_frame_free avcodec_free_frame
 #endif
 
-static int th_movie_stream_reader_thread(void* pState)
-{
-    THMovie *pMovie = (THMovie *)pState;
-    pMovie->readStreams();
-    return 0;
-}
-
-static int th_movie_video_thread(void* pState)
-{
-    THMovie *pMovie = (THMovie *)pState;
-    pMovie->runVideo();
-    return 0;
-}
-
 static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
 {
     THMovie *pMovie = (THMovie *)pUserData;
@@ -76,17 +62,13 @@ static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize
 
 THMoviePicture::THMoviePicture():
     m_pBuffer(nullptr),
-    m_pixelFormat(AV_PIX_FMT_RGB24)
-{
-    m_pMutex = SDL_CreateMutex();
-    m_pCond = SDL_CreateCond();
-}
+    m_pixelFormat(AV_PIX_FMT_RGB24),
+    m_mutex{}
+{}
 
 THMoviePicture::~THMoviePicture()
 {
     av_freep(&m_pBuffer);
-    SDL_DestroyMutex(m_pMutex);
-    SDL_DestroyCond(m_pCond);
 }
 
 void THMoviePicture::allocate(int iWidth, int iHeight)
@@ -109,22 +91,20 @@ void THMoviePicture::deallocate()
 }
 
 THMoviePictureBuffer::THMoviePictureBuffer():
-    m_fAborting(false),
+    m_aborting(false),
     m_fAllocated(false),
     m_iCount(0),
     m_iReadIndex(0),
     m_iWriteIndex(0),
     m_pSwsContext(nullptr),
-    m_pTexture(nullptr)
+    m_pTexture(nullptr),
+    m_mutex{},
+    m_cond{}
 {
-    m_pMutex = SDL_CreateMutex();
-    m_pCond = SDL_CreateCond();
 }
 
 THMoviePictureBuffer::~THMoviePictureBuffer()
 {
-    SDL_DestroyCond(m_pCond);
-    SDL_DestroyMutex(m_pMutex);
     sws_freeContext(m_pSwsContext);
     if (m_pTexture)
     {
@@ -135,15 +115,14 @@ THMoviePictureBuffer::~THMoviePictureBuffer()
 
 void THMoviePictureBuffer::abort()
 {
-    m_fAborting = true;
-    SDL_LockMutex(m_pMutex);
-    SDL_CondSignal(m_pCond);
-    SDL_UnlockMutex(m_pMutex);
+    m_aborting = true;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_cond.notify_all();
 }
 
 void THMoviePictureBuffer::reset()
 {
-    m_fAborting = false;
+    m_aborting = false;
 }
 
 void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iWidth, int iHeight)
@@ -166,24 +145,26 @@ void THMoviePictureBuffer::allocate(SDL_Renderer *pRenderer, int iWidth, int iHe
     //Do not change m_iWriteIndex, it's used by the other thread.
     //m_iReadIndex is only used in this thread.
     m_iReadIndex = m_iWriteIndex;
-    SDL_LockMutex(m_pMutex);
+
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_iCount = 0;
     m_fAllocated = true;
-    SDL_CondSignal(m_pCond);
-    SDL_UnlockMutex(m_pMutex);
+    m_cond.notify_one();
 }
 
 void THMoviePictureBuffer::deallocate()
 {
-    SDL_LockMutex(m_pMutex);
-    m_fAllocated = false;
-    SDL_UnlockMutex(m_pMutex);
+    {
+        std::lock_guard<std::mutex> lock(m_mutex);
+        m_fAllocated = false;
+    }
+
     for(int i = 0; i < ms_pictureBufferSize; i++)
     {
-        SDL_LockMutex(m_aPictureQueue[i].m_pMutex);
+        std::lock_guard<std::mutex> pictureLock(m_aPictureQueue[i].m_mutex);
         m_aPictureQueue[i].deallocate();
-        SDL_UnlockMutex(m_aPictureQueue[i].m_pMutex);
     }
+
     if (m_pTexture)
     {
         SDL_DestroyTexture(m_pTexture);
@@ -200,10 +181,10 @@ bool THMoviePictureBuffer::advance()
     {
         m_iReadIndex = 0;
     }
-    SDL_LockMutex(m_pMutex);
+
+    std::lock_guard<std::mutex> lock(m_mutex);
     m_iCount--;
-    SDL_CondSignal(m_pCond);
-    SDL_UnlockMutex(m_pMutex);
+    m_cond.notify_one();
 
     return true;
 }
@@ -213,8 +194,8 @@ void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer, const SDL_Rect &dstrect
     if(!empty())
     {
         auto cur_pic = &(m_aPictureQueue[m_iReadIndex]);
-        SDL_LockMutex(cur_pic->m_pMutex);
 
+        std::lock_guard<std::mutex> pictureLock(cur_pic->m_mutex);
         if (cur_pic->m_pBuffer)
         {
             SDL_UpdateTexture(m_pTexture, nullptr, cur_pic->m_pBuffer, cur_pic->m_iWidth * 3);
@@ -224,15 +205,13 @@ void THMoviePictureBuffer::draw(SDL_Renderer *pRenderer, const SDL_Rect &dstrect
                 std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
             }
         }
-
-        SDL_UnlockMutex(cur_pic->m_pMutex);
     }
 }
 
 double THMoviePictureBuffer::getNextPts()
 {
     double nextPts;
-    SDL_LockMutex(m_pMutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
     if(!m_fAllocated || m_iCount < 2)
     {
         nextPts = 0;
@@ -241,48 +220,46 @@ double THMoviePictureBuffer::getNextPts()
     {
         nextPts = m_aPictureQueue[(m_iReadIndex + 1) % ms_pictureBufferSize].m_dPts;
     }
-    SDL_UnlockMutex(m_pMutex);
     return nextPts;
 }
 
 bool THMoviePictureBuffer::empty()
 {
-    bool empty;
-    SDL_LockMutex(m_pMutex);
-    empty = (!m_fAllocated || m_iCount == 0);
-    SDL_UnlockMutex(m_pMutex);
-    return empty;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return (!m_fAllocated || m_iCount == 0);
 }
 
 bool THMoviePictureBuffer::full()
 {
-    bool full;
-    SDL_LockMutex(m_pMutex);
-    full = (!m_fAllocated || m_iCount == ms_pictureBufferSize);
-    SDL_UnlockMutex(m_pMutex);
-    return full;
+    std::lock_guard<std::mutex> lock(m_mutex);
+    return unsafeFull();
+}
+
+bool THMoviePictureBuffer::unsafeFull()
+{
+    return (!m_fAllocated || m_iCount == ms_pictureBufferSize);
 }
 
 int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 {
     THMoviePicture* pMoviePicture = nullptr;
-    SDL_LockMutex(m_pMutex);
-    while(full() && !m_fAborting)
+    std::unique_lock<std::mutex> picBufLock(m_mutex);
+    while(unsafeFull() && !m_aborting)
     {
-        SDL_CondWait(m_pCond, m_pMutex);
+        m_cond.wait(picBufLock);
     }
-    SDL_UnlockMutex(m_pMutex);
-    if(m_fAborting) { return -1; }
+    picBufLock.unlock();
+
+    if(m_aborting) { return -1; }
 
     pMoviePicture = &m_aPictureQueue[m_iWriteIndex];
-    SDL_LockMutex(pMoviePicture->m_pMutex);
+    std::unique_lock<std::mutex> pictureLock(pMoviePicture->m_mutex);
 
     if(pMoviePicture->m_pBuffer)
     {
         m_pSwsContext = sws_getCachedContext(m_pSwsContext, pFrame->width, pFrame->height, (AVPixelFormat)pFrame->format, pMoviePicture->m_iWidth, pMoviePicture->m_iHeight, pMoviePicture->m_pixelFormat, SWS_BICUBIC, nullptr, nullptr, nullptr);
         if(m_pSwsContext == nullptr)
         {
-            SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
             std::cerr << "Failed to initialize SwsContext\n";
             return 1;
         }
@@ -303,15 +280,15 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 
         pMoviePicture->m_dPts = dPts;
 
-        SDL_UnlockMutex(m_aPictureQueue[m_iWriteIndex].m_pMutex);
+        pictureLock.unlock();
         m_iWriteIndex++;
         if(m_iWriteIndex == ms_pictureBufferSize)
         {
             m_iWriteIndex = 0;
         }
-        SDL_LockMutex(m_pMutex);
+        picBufLock.lock();
         m_iCount++;
-        SDL_UnlockMutex(m_pMutex);
+        picBufLock.unlock();
     }
 
     return 0;
@@ -320,16 +297,14 @@ int THMoviePictureBuffer::write(AVFrame* pFrame, double dPts)
 THAVPacketQueue::THAVPacketQueue():
     m_pFirstPacket(nullptr),
     m_pLastPacket(nullptr),
-    iCount(0)
+    iCount(0),
+    m_mutex{},
+    m_cond{}
 {
-    m_pMutex = SDL_CreateMutex();
-    m_pCond = SDL_CreateCond();
 }
 
 THAVPacketQueue::~THAVPacketQueue()
 {
-    SDL_DestroyCond(m_pCond);
-    SDL_DestroyMutex(m_pMutex);
 }
 
 int THAVPacketQueue::getCount() const
@@ -348,7 +323,7 @@ void THAVPacketQueue::push(AVPacket *pPacket)
     pNode->pkt = *pPacket;
     pNode->next = nullptr;
 
-    SDL_LockMutex(m_pMutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
 
     if(m_pLastPacket == nullptr)
     {
@@ -361,24 +336,21 @@ void THAVPacketQueue::push(AVPacket *pPacket)
     m_pLastPacket = pNode;
     iCount++;
 
-    SDL_CondSignal(m_pCond);
-    SDL_UnlockMutex(m_pMutex);
+    m_cond.notify_one();
 }
 
 AVPacket* THAVPacketQueue::pull(bool fBlock)
 {
-    AVPacketList *pNode;
-    AVPacket *pPacket;
+    std::unique_lock<std::mutex> lock(m_mutex);
 
-    SDL_LockMutex(m_pMutex);
-
-    pNode = m_pFirstPacket;
+    AVPacketList* pNode = m_pFirstPacket;
     if(pNode == nullptr && fBlock)
     {
-        SDL_CondWait(m_pCond, m_pMutex);
+        m_cond.wait(lock);
         pNode = m_pFirstPacket;
     }
 
+    AVPacket *pPacket;
     if(pNode == nullptr)
     {
         pPacket = nullptr;
@@ -394,16 +366,13 @@ AVPacket* THAVPacketQueue::pull(bool fBlock)
         av_free(pNode);
     }
 
-    SDL_UnlockMutex(m_pMutex);
-
     return pPacket;
 }
 
 void THAVPacketQueue::release()
 {
-    SDL_LockMutex(m_pMutex);
-    SDL_CondSignal(m_pCond);
-    SDL_UnlockMutex(m_pMutex);
+    std::lock_guard<std::mutex> lock(m_mutex);
+    m_cond.notify_all();
 }
 
 THMovie::THMovie():
@@ -422,8 +391,9 @@ THMovie::THMovie():
     m_audio_frame(nullptr),
     m_pChunk(nullptr),
     m_iChannel(-1),
-    m_pStreamThread(nullptr),
-    m_pVideoThread(nullptr)
+    m_streamThread{},
+    m_videoThread{},
+    m_decodingAudioMutex{}
 {
     av_register_all();
 
@@ -433,8 +403,6 @@ THMovie::THMovie():
     m_flushPacket->size = 5;
 
     m_pbChunkBuffer = (uint8_t*)std::calloc(ms_audioBufferSize, sizeof(uint8_t));
-
-    m_pDecodingAudioMutex = SDL_CreateMutex();
 }
 
 THMovie::~THMovie()
@@ -444,8 +412,6 @@ THMovie::~THMovie()
     av_packet_unref(m_flushPacket);
     av_free(m_flushPacket);
     free(m_pbChunkBuffer);
-
-    SDL_DestroyMutex(m_pDecodingAudioMutex);
 }
 
 void THMovie::setRenderer(SDL_Renderer *pRenderer)
@@ -484,17 +450,29 @@ bool THMovie::load(const char* szFilepath)
     }
 
     m_iVideoStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_VIDEO, -1, -1, &m_pVideoCodec, 0);
-    m_pVideoCodecContext = m_pFormatContext->streams[m_iVideoStream]->codec;
+    m_pVideoCodecContext = getCodecContextForStream(m_pVideoCodec, m_pFormatContext->streams[m_iVideoStream]);
     avcodec_open2(m_pVideoCodecContext, m_pVideoCodec, nullptr);
 
     m_iAudioStream = av_find_best_stream(m_pFormatContext, AVMEDIA_TYPE_AUDIO, -1, -1, &m_pAudioCodec, 0);
     if(m_iAudioStream >= 0)
     {
-        m_pAudioCodecContext = m_pFormatContext->streams[m_iAudioStream]->codec;
+        m_pAudioCodecContext = getCodecContextForStream(m_pAudioCodec, m_pFormatContext->streams[m_iAudioStream]);
         avcodec_open2(m_pAudioCodecContext, m_pAudioCodec, nullptr);
     }
 
     return true;
+}
+
+AVCodecContext* THMovie::getCodecContextForStream(AVCodec* codec, AVStream* stream) const
+{
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
+    AVCodecContext* ctx = avcodec_alloc_context3(codec);
+    avcodec_parameters_to_context(ctx, stream->codecpar);
+    return ctx;
+#else
+    return stream->codec;
+#endif
 }
 
 void THMovie::unload()
@@ -511,15 +489,13 @@ void THMovie::unload()
     }
     m_pMoviePictureBuffer->abort();
 
-    if(m_pStreamThread)
+    if(m_streamThread.joinable())
     {
-        SDL_WaitThread(m_pStreamThread, nullptr);
-        m_pStreamThread = nullptr;
+        m_streamThread.join();
     }
-    if(m_pVideoThread)
+    if(m_videoThread.joinable())
     {
-        SDL_WaitThread(m_pVideoThread, nullptr);
-        m_pVideoThread = nullptr;
+        m_videoThread.join();
     }
 
     //wait until after other threads are closed to clear the packet queues
@@ -560,7 +536,8 @@ void THMovie::unload()
         m_iChannel = -1;
     }
 
-    SDL_LockMutex(m_pDecodingAudioMutex);
+    std::lock_guard<std::mutex> audioLock(m_decodingAudioMutex);
+
     if(m_iAudioBufferMaxSize > 0)
     {
         av_free(m_pbAudioBuffer);
@@ -594,7 +571,6 @@ void THMovie::unload()
         m_pbAudioPacketData = nullptr;
         m_iAudioPacketSize = 0;
     }
-    SDL_UnlockMutex(m_pDecodingAudioMutex);
 
     if(m_pFormatContext)
     {
@@ -665,8 +641,8 @@ void THMovie::play(int iChannel)
         }
     }
 
-    m_pStreamThread = SDL_CreateThread(th_movie_stream_reader_thread, "Stream", this);
-    m_pVideoThread = SDL_CreateThread(th_movie_video_thread, "Video", this);
+    m_streamThread = std::thread(&THMovie::readStreams, this);
+    m_videoThread = std::thread(&THMovie::runVideo, this);
 }
 
 void THMovie::stop()
@@ -795,7 +771,6 @@ void THMovie::readStreams()
 void THMovie::runVideo()
 {
     AVFrame *pFrame = av_frame_alloc();
-    int64_t iStreamPts = AV_NOPTS_VALUE;
     double dClockPts;
     int iError;
 
@@ -803,7 +778,20 @@ void THMovie::runVideo()
     {
         av_frame_unref(pFrame);
 
-        iError = getVideoFrame(pFrame, &iStreamPts);
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+        iError = getFrame(m_iVideoStream, pFrame);
+
+        if (iError == AVERROR_EOF)
+        {
+            break;
+        }
+        else if (iError < 0)
+        {
+            std::cerr << "Unexpected error " << iError << " while decoding video packet" << std::endl;
+            break;
+        }
+#else
+        iError = getVideoFrame(pFrame);
         if(iError < 0)
         {
             break;
@@ -812,8 +800,9 @@ void THMovie::runVideo()
         {
             continue;
         }
+#endif
 
-        dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iVideoStream]->time_base);
+        dClockPts = getPresentationTimeForFrame(pFrame, m_iVideoStream);
         iError = m_pMoviePictureBuffer->write(pFrame, dClockPts);
 
         if(iError < 0)
@@ -826,7 +815,74 @@ void THMovie::runVideo()
     av_frame_free(&pFrame);
 }
 
-int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
+double THMovie::getPresentationTimeForFrame(AVFrame* frame, int streamIndex) const
+{
+    int64_t pts;
+#ifdef CORSIX_TH_USE_LIBAV
+    pts = frame->pts;
+    if (pts == AV_NOPTS_VALUE)
+    {
+        pts = frame->pkt_dts;
+    }
+#else
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
+    pts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), frame, "best_effort_timestamp");
+#else
+    pts = av_frame_get_best_effort_timestamp(frame);
+#endif //LIBAVCODEC_VERSION_INT
+#endif //CORSIX_T_USE_LIBAV
+
+    if (pts == AV_NOPTS_VALUE)
+    {
+        pts = 0;
+    }
+
+    return pts * av_q2d(m_pFormatContext->streams[streamIndex]->time_base);
+}
+
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+int THMovie::getFrame(int stream, AVFrame* pFrame)
+{
+    int iError = AVERROR(EAGAIN);
+    AVCodecContext* ctx;
+    THAVPacketQueue* pq;
+
+    if (stream == m_iVideoStream)
+    {
+        ctx = m_pVideoCodecContext;
+        pq = m_pVideoQueue;
+    }
+    else if (stream == m_iAudioStream)
+    {
+        ctx = m_pAudioCodecContext;
+        pq = m_pAudioQueue;
+    }
+    else
+    {
+        throw std::invalid_argument("Invalid value provided for stream");
+    }
+
+    while (iError == AVERROR(EAGAIN))
+    {
+        iError = avcodec_receive_frame(ctx, pFrame);
+
+        if (iError == AVERROR(EAGAIN))
+        {
+            AVPacket* pkt = pq->pull(true);
+            int res = avcodec_send_packet(ctx, pkt);
+
+            if (res == AVERROR(EAGAIN))
+            {
+                throw std::runtime_error("avcodec_receive_frame and avcodec_send_packet should not return EAGAIN at the same time");
+            }
+        }
+    }
+
+    return iError;
+}
+
+#else
+int THMovie::getVideoFrame(AVFrame *pFrame)
 {
     int iGotPicture = 0;
     int iError;
@@ -856,42 +912,23 @@ int THMovie::getVideoFrame(AVFrame *pFrame, int64_t *piPts)
     if(iGotPicture)
     {
         iError = 1;
-
-#ifdef CORSIX_TH_USE_LIBAV
-        *piPts = pFrame->pts;
-        if (*piPts == AV_NOPTS_VALUE)
-        {
-            *piPts = pFrame->pkt_dts;
-        }
-#else
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
-        *piPts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), pFrame, "best_effort_timestamp");
-#else
-        *piPts = av_frame_get_best_effort_timestamp(pFrame);
-#endif //LIBAVCODEC_VERSION_INT
-#endif //CORSIX_T_USE_LIBAV
-
-        if(*piPts == AV_NOPTS_VALUE)
-        {
-            *piPts = 0;
-        }
         return iError;
     }
+
     return 0;
 }
+#endif
 
 void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
 {
-    int iAudioSize;
-    int iCopyLength;
-    bool fFirst = true;
-    SDL_LockMutex(m_pDecodingAudioMutex);
+    std::lock_guard<std::mutex> audioLock(m_decodingAudioMutex);
 
+    bool fFirst = true;
     while(iStreamSize > 0  && !m_fAborting)
     {
         if(m_iAudioBufferIndex >= m_iAudioBufferSize)
         {
-            iAudioSize = decodeAudioFrame(fFirst);
+            int iAudioSize = decodeAudioFrame(fFirst);
             fFirst = false;
 
             if(iAudioSize <= 0)
@@ -905,27 +942,46 @@ void THMovie::copyAudioToStream(uint8_t *pbStream, int iStreamSize)
             m_iAudioBufferIndex = 0;
         }
 
-        iCopyLength = m_iAudioBufferSize - m_iAudioBufferIndex;
+        int iCopyLength = m_iAudioBufferSize - m_iAudioBufferIndex;
         if(iCopyLength > iStreamSize) { iCopyLength = iStreamSize; }
         std::memcpy(pbStream, (uint8_t *)m_pbAudioBuffer + m_iAudioBufferIndex, iCopyLength);
         iStreamSize -= iCopyLength;
         pbStream += iCopyLength;
         m_iAudioBufferIndex += iCopyLength;
     }
-
-    SDL_UnlockMutex(m_pDecodingAudioMutex);
 }
 
 int THMovie::decodeAudioFrame(bool fFirst)
 {
-    int iBytesConsumed = 0;
-    int iSampleSize = 0;
-    int iOutSamples;
+#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
+    if (!m_audio_frame)
+    {
+        m_audio_frame = av_frame_alloc();
+    }
+    else
+    {
+        av_frame_unref(m_audio_frame);
+    }
+
+    int iError = getFrame(m_iAudioStream, m_audio_frame);
+
+    if (iError == AVERROR_EOF)
+    {
+        return 0;
+    }
+    else if (iError < 0)
+    {
+        std::cerr << "Unexpected error " << iError << " while decoding audio packet" << std::endl;
+        return 0;
+    }
+
+    double dClockPts = getPresentationTimeForFrame(m_audio_frame, m_iAudioStream);
+    m_iCurSyncPts = dClockPts;
+    m_iCurSyncPtsSystemTime = SDL_GetTicks();
+#else
     int iGotFrame = 0;
     bool fNewPacket = false;
     bool fFlushComplete = false;
-    double dClockPts;
-    int64_t iStreamPts;
 
     while(!iGotFrame && !m_fAborting)
     {
@@ -964,11 +1020,11 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
         if(fFirst)
         {
-            iStreamPts = m_pAudioPacket->pts;
+            int64_t iStreamPts = m_pAudioPacket->pts;
             if(iStreamPts != AV_NOPTS_VALUE)
             {
                 //There is a time_base in m_pAudioCodecContext too, but that one is wrong.
-                dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iAudioStream]->time_base);
+                double dClockPts = iStreamPts * av_q2d(m_pFormatContext->streams[m_iAudioStream]->time_base);
                 m_iCurSyncPts = dClockPts;
                 m_iCurSyncPtsSystemTime = SDL_GetTicks();
             }
@@ -993,7 +1049,7 @@ int THMovie::decodeAudioFrame(bool fFirst)
 
             fNewPacket = false;
 
-            iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_audio_frame, &iGotFrame, m_pAudioPacket);
+            int iBytesConsumed = avcodec_decode_audio4(m_pAudioCodecContext, m_audio_frame, &iGotFrame, m_pAudioPacket);
 
             if(iBytesConsumed < 0)
             {
@@ -1012,10 +1068,10 @@ int THMovie::decodeAudioFrame(bool fFirst)
             }
         }
     }
-
+#endif
     //over-estimate output samples
-    iOutSamples = (int)av_rescale_rnd(m_audio_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
-    iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
+    int iOutSamples = (int)av_rescale_rnd(m_audio_frame->nb_samples, m_iMixerFrequency, m_pAudioCodecContext->sample_rate, AV_ROUND_UP);
+    int iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * m_iMixerChannels;
 
     if(iSampleSize > m_iAudioBufferMaxSize)
     {

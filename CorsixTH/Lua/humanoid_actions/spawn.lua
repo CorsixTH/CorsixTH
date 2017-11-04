@@ -48,7 +48,7 @@ end
 --!param offset (table x, y) Position offset.
 --!return (action) Return self for daisy chaining.
 function SpawnAction:setOffset(offset)
-  assert(type(offset) == "table" and 
+  assert(type(offset) == "table" and
       (offset.x == nil or (type(offset.x) == "number" and offset.x > 0)) and
       (offset.y == nil or (type(offset.y) == "number" and offset.y > 0)),
       "Invalid value for parameter 'offset'")

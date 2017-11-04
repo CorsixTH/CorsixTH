@@ -255,8 +255,8 @@ local function action_seek_room_start(action, humanoid)
       action.done_init = true
       action.must_happen = true
 
-      local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(room)
-        if room.room_info.id == "research" then
+      local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(rm)
+        if rm.room_info.id == "research" then
           humanoid:updateMessage("research")
         end
       end -- End of remove_callback function
@@ -264,16 +264,16 @@ local function action_seek_room_start(action, humanoid)
       humanoid:registerRoomRemoveCallback(remove_callback)
 
       local build_callback
-      build_callback = --[[persistable:action_seek_room_build_callback]] function(room)
+      build_callback = --[[persistable:action_seek_room_build_callback]] function(rm)
         -- if research room was built, message may need to be updated
-        if room.room_info.id == "research" then
+        if rm.room_info.id == "research" then
           humanoid:updateMessage("research")
         end
 
         local found = false
-        if room.room_info.id == action.room_type then
+        if rm.room_info.id == action.room_type then
           found = true
-        elseif room.room_info.id == action.room_type_needed then
+        elseif rm.room_info.id == action.room_type_needed then
           -- So the room that we're going to is not actually the room we waited for to be built.
           -- Example: Will go to ward, but is waiting for the operating theatre.
           -- Clean up and start over to find the room we actually want to go to.
@@ -286,7 +286,7 @@ local function action_seek_room_start(action, humanoid)
           -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
           if action.room_type ~= "gp" then
             for i = 1, #humanoid.available_diagnosis_rooms do
-              if humanoid.available_diagnosis_rooms[i].id == room.room_info.id then
+              if humanoid.available_diagnosis_rooms[i].id == rm.room_info.id then
                 found = true
               end
             end
@@ -296,8 +296,10 @@ local function action_seek_room_start(action, humanoid)
           -- Don't add a "go to room" action to the patient's queue if the
           -- autopsy machine is about to kill them:
           local current_room = humanoid:getRoom()
-          if not current_room or not (current_room.room_info.id == "research" and current_room:getStaffMember() and current_room:getStaffMember().action_queue[1].name == "multi_use_object") then
-            action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+          if not current_room or not (current_room.room_info.id == "research" and
+              current_room:getStaffMember() and
+              current_room:getStaffMember().action_queue[1].name == "multi_use_object") then
+            action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
           end
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)

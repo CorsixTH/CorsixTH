@@ -46,12 +46,12 @@ local function meander_action_start(action, humanoid)
     else
       -- Nowhere to go, start going to the old room if it's still in
       -- need of staff.
-      local room = humanoid.last_room
-      if room and room.is_active and
-          room:testStaffCriteria(room:getMaximumStaffCriteria(), humanoid) then
-        humanoid:queueAction(room:createEnterAction(humanoid))
+      local last_room = humanoid.last_room
+      if last_room and last_room.is_active and
+          last_room:testStaffCriteria(last_room:getMaximumStaffCriteria(), humanoid) then
+        humanoid:queueAction(last_room:createEnterAction(humanoid))
         humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for
-            :format(room.room_info.name))
+            :format(last_room.room_info.name))
         humanoid:finishAction()
         return
       end

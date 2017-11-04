@@ -27,10 +27,10 @@ SOFTWARE.
 #include <cstdlib>
 #include <queue>
 #include <cmath>
+#include <vector>
 
 BasePathing::BasePathing(THPathfinder *pf) : m_pPf(pf)
-{
-}
+{ }
 
 node_t *BasePathing::pathingInit(const THMap *pMap, int iStartX, int iStartY)
 {
@@ -43,7 +43,7 @@ node_t *BasePathing::pathingInit(const THMap *pMap, int iStartX, int iStartY)
     pNode->guess = makeGuess(pNode);
     m_pPf->m_ppDirtyList[0] = pNode;
     m_pPf->m_iDirtyCount = 1;
-    m_pPf->m_iOpenCount = 0;
+    m_pPf->m_openHeap.clear();
     return pNode;
 }
 
@@ -135,13 +135,12 @@ bool PathFinder::findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX
         th_map_node_flags flags = pMap->getNodeUnchecked(pNode->x, pNode->y)->flags;
         if (pathingNeighbours(pNode, flags, iWidth)) return true;
 
-        if(m_pPf->m_iOpenCount == 0)
-        {
+        if (m_pPf->m_openHeap.empty()) {
             m_pPf->m_pDestination = nullptr;
             break;
-        }
-        else
+        } else {
             pNode = m_pPf->_openHeapPop();
+        }
     }
     return false;
 }
@@ -187,13 +186,12 @@ bool HospitalFinder::findPathToHospital(const THMap *pMap, int iStartX, int iSta
 
         if (pathingNeighbours(pNode, flags, iWidth)) return true;
 
-        if(m_pPf->m_iOpenCount == 0)
-        {
+        if (m_pPf->m_openHeap.empty()) {
             m_pPf->m_pDestination = nullptr;
             break;
-        }
-        else
+        } else {
             pNode = m_pPf->_openHeapPop();
+        }
     }
     return false;
 }
@@ -287,11 +285,11 @@ bool IdleTileFinder::findIdleTile(const THMap *pMap, int iStartX, int iStartY, i
 
         if (pathingNeighbours(pNode, flags, iWidth)) return true;
 
-        if(m_pPf->m_iOpenCount == 0)
-        {
+        if (m_pPf->m_openHeap.empty()) {
             m_pPf->m_pDestination = nullptr;
             break;
         }
+
         if(m_pBestNext)
         {
             // Promote the best neighbour to the front of the open list
@@ -404,35 +402,31 @@ bool Objectsvisitor::visitObjects(const THMap *pMap, int iStartX, int iStartY,
         th_map_node_flags flags = pMap->getNodeUnchecked(pNode->x, pNode->y)->flags;
         if (pathingNeighbours(pNode, flags, iWidth)) return true;
 
-        if(m_pPf->m_iOpenCount == 0)
-        {
+        if (m_pPf->m_openHeap.empty()) {
             m_pPf->m_pDestination = nullptr;
             break;
-        }
-        else
+        } else {
             pNode = m_pPf->_openHeapPop();
+        }
     }
     return false;
 }
 
 THPathfinder::THPathfinder() : m_oPathFinder(this), m_oHospitalFinder(this),
-                               m_oIdleTileFinder(this), m_oObjectsvisitor(this)
+                               m_oIdleTileFinder(this), m_oObjectsvisitor(this),
+                               m_openHeap()
 {
     m_pNodes = nullptr;
     m_ppDirtyList = nullptr;
-    m_ppOpenHeap = (node_t**)malloc(sizeof(node_t*) * 8);
     m_pDestination = nullptr;
     m_pDefaultMap = nullptr;
     m_iNodeCacheWidth = 0;
     m_iNodeCacheHeight = 0;
     m_iDirtyCount = 0;
-    m_iOpenCount = 0;
-    m_iOpenSize = 8;
 }
 
 THPathfinder::~THPathfinder()
 {
-    free(m_ppOpenHeap);
     delete[] m_pNodes;
     delete[] m_ppDirtyList;
 }
@@ -530,14 +524,8 @@ void THPathfinder::pushResult(lua_State *L) const
 
 void THPathfinder::_openHeapPush(node_t* pNode)
 {
-    if(m_iOpenCount == m_iOpenSize)
-    {
-        m_iOpenSize = (m_iOpenSize + 1) * 2;
-        m_ppOpenHeap = (node_t**)realloc(m_ppOpenHeap, sizeof(node_t*) * m_iOpenSize);
-    }
-    int i = m_iOpenCount++;
-    m_ppOpenHeap[i] = pNode;
-    pNode->open_idx = i;
+    pNode->open_idx = m_openHeap.size();
+    m_openHeap.push_back(pNode);
     _openHeapPromote(pNode);
 }
 
@@ -547,12 +535,12 @@ void THPathfinder::_openHeapPromote(node_t* pNode)
     while(i > 0)
     {
         int parent = (i - 1) / 2;
-        node_t *pParent = m_ppOpenHeap[parent];
+        node_t *pParent = m_openHeap[parent];
         if(pParent->value() <= pNode->value())
             break;
         pParent->open_idx = i;
-        m_ppOpenHeap[i] = pParent;
-        m_ppOpenHeap[parent] = pNode;
+        m_openHeap[i] = pParent;
+        m_openHeap[parent] = pNode;
         i = parent;
     }
     pNode->open_idx = i;
@@ -560,25 +548,26 @@ void THPathfinder::_openHeapPromote(node_t* pNode)
 
 node_t* THPathfinder::_openHeapPop()
 {
-    node_t *pResult = m_ppOpenHeap[0];
-    node_t *pNode = m_ppOpenHeap[--m_iOpenCount];
-    m_ppOpenHeap[0] = pNode;
+    node_t *pResult = m_openHeap[0];
+    node_t *pNode = m_openHeap.back();
+    m_openHeap.pop_back();
+    m_openHeap[0] = pNode;
     int i = 0;
     int min = 0;
     int left = i * 2 + 1;
     const int value = pNode->value();
-    while(left < m_iOpenCount)
+    while(left < m_openHeap.size())
     {
         min = i;
         const int right = (i + 1) * 2;
         int minvalue = value;
         node_t *pSwap = nullptr;
-        node_t *pTest = m_ppOpenHeap[left];
+        node_t *pTest = m_openHeap[left];
         if(pTest->value() < minvalue)
             min = left, minvalue = pTest->value(), pSwap = pTest;
-        if(right < m_iOpenCount)
+        if(right < m_openHeap.size())
         {
-            pTest = m_ppOpenHeap[right];
+            pTest = m_openHeap[right];
             if(pTest->value() < minvalue)
                 min = right, pSwap = pTest;
         }
@@ -586,8 +575,8 @@ node_t* THPathfinder::_openHeapPop()
             break;
 
         pSwap->open_idx = i;
-        m_ppOpenHeap[i] = pSwap;
-        m_ppOpenHeap[min] = pNode;
+        m_openHeap[i] = pSwap;
+        m_openHeap[min] = pNode;
         i = min;
         left = i * 2 + 1;
     }
