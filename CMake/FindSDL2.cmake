@@ -60,6 +60,19 @@ find_library(SDL_LIBRARY_TEMP
   PATH_SUFFIXES lib
 )
 
+# Find debug library
+find_library(SDL_LIBRARY_TEMP_D
+NAMES SDL2d
+HINTS
+  ENV SDLDIR
+PATH_SUFFIXES lib
+)
+
+if (SDL_LIBRARY_TEMP_D)
+  set (_FOUND_SDL_D_LIBRARY TRUE)
+endif()
+
+
 if(NOT SDL_BUILDING_LIBRARY)
   if(NOT ${SDL_INCLUDE_DIR} MATCHES ".framework")
     # Non-OS X framework versions expect you to also dynamically link to
@@ -77,6 +90,14 @@ if(NOT SDL_BUILDING_LIBRARY)
       /opt/csw
       /opt
     )
+
+    if (_FOUND_SDL_D_LIBRARY)
+      find_library(SDLMAIN_LIBRARY_D
+        NAMES SDL2maind
+        HINTS
+          ENV SDLDIR
+        PATH_SUFFIXES lib)
+    endif()
   endif()
 endif()
 
@@ -101,6 +122,9 @@ if(SDL_LIBRARY_TEMP)
     list(FIND SDL_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" _SDL_MAIN_INDEX)
     if(_SDL_MAIN_INDEX EQUAL -1)
       set(SDL_LIBRARY_TEMP "${SDLMAIN_LIBRARY}" ${SDL_LIBRARY_TEMP})
+      if (_FOUND_SDL_D_LIBRARY)
+        set(SDL_LIBRARY_TEMP_D "${SDLMAIN_LIBRARY_D}" ${SDL_LIBRARY_TEMP_D})
+      endif()
     endif()
     unset(_SDL_MAIN_INDEX)
   endif()
@@ -120,6 +144,9 @@ if(SDL_LIBRARY_TEMP)
   # and try using this line, so I'm just skipping it entirely for OS X.
   if(NOT APPLE)
     set(SDL_LIBRARY_TEMP ${SDL_LIBRARY_TEMP} ${CMAKE_THREAD_LIBS_INIT})
+    if (_FOUND_SDL_D_LIBRARY)
+      set(SDL_LIBRARY_TEMP_D ${SDL_LIBRARY_TEMP_D} ${CMAKE_THREAD_LIBS_INIT})
+    endif()
   endif()
 
   # For MinGW library
@@ -129,8 +156,10 @@ if(SDL_LIBRARY_TEMP)
 
   # Set the final string here so the GUI reflects the final state.
   set(SDL_LIBRARY ${SDL_LIBRARY_TEMP} CACHE STRING "Where the SDL Library can be found")
+  set(SDL_LIBRARY_D ${SDL_LIBRARY_TEMP_D} CACHE STRING "Where the SDL Debug Library can be found")
   # Set the temp variable to INTERNAL so it is not seen in the CMake GUI
   set(SDL_LIBRARY_TEMP "${SDL_LIBRARY_TEMP}" CACHE INTERNAL "")
+  set(SDL_LIBRARY_TEMP_D "${SDL_LIBRARY_TEMP_D}" CACHE INTERNAL "")
 endif()
 
 if(SDL_INCLUDE_DIR AND EXISTS "${SDL_INCLUDE_DIR}/SDL_version.h")
@@ -152,6 +181,11 @@ endif()
 #include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
 include(FindPackageHandleStandardArgs)
 
+
+# Combine the debug and optimized paths if we have found both
+if (_FOUND_SDL_D_LIBRARY AND SDL_LIBRARY_D)
+  set(SDL_LIBRARY "optimized" ${SDL_LIBRARY} "debug" ${SDL_LIBRARY_D})
+endif()
 
 FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL
                                   REQUIRED_VARS SDL_LIBRARY SDL_INCLUDE_DIR
