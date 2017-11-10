@@ -711,7 +711,13 @@ function UIEditRoom:screenToWall(x, y)
     -- top corner
     local x_, _ = self.ui:WorldToScreen(cellx, celly)
     if x >= x_ then
-      return cellx + 1 + modifier, celly, "north"
+      -- correctly reflects (at least origin version) of TH.
+      -- Swing doors in top corner to the east, actually skip another tile
+      if swinging then
+        return cellx + 2 + modifier, celly, "north"
+      else
+        return cellx + 1 + modifier, celly, "north"
+      end
     else
       return cellx, celly + 1 + modifier, "west"
     end
@@ -727,7 +733,11 @@ function UIEditRoom:screenToWall(x, y)
     -- left corner
     local _, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
-      return cellx + 1, celly, "south"
+      if swinging and cellx <= rect.x + 2 then
+        return cellx + 1 + modifier, celly, "south"
+      else
+        return cellx + 1, celly, "south"
+      end
     else
       return cellx, celly - 1, "west"
     end
@@ -735,7 +745,11 @@ function UIEditRoom:screenToWall(x, y)
     -- right corner
     local _, y_ = self.ui:WorldToScreen(cellx, celly)
     if y >= y_ + 16 then
-      return cellx, celly + 1, "east"
+      if swinging and celly <= rect.y + 2 then
+        return cellx, celly + 1 + modifier, "east"
+      else
+        return cellx, celly + 1, "east"
+      end
     else
       return cellx - 1, celly, "north"
     end
@@ -752,19 +766,22 @@ function UIEditRoom:screenToWall(x, y)
     return rect.x, celly, "west"
   elseif (celly == rect.y - 1 or celly == rect.y) and rect.x <= cellx and cellx < rect.x + rect.w then
     -- north edge
-    if cellx == rect.x then
-      cellx = rect.x + 1
+    -- correctly reflects (at least origin version) of TH.
+    -- Swing doors in top corner to the east, actually skip another tile
+    if swinging and cellx <= rect.x + 2 then
+      cellx = rect.x + 3
+    elseif cellx == rect.x then
+      cellx = rect.x + 1 + modifier
     elseif cellx == rect.x + rect.w - 1 then
       cellx = rect.x + rect.w - 2
-    end
-    if swinging and cellx <= rect.x + 1 then
-      cellx = cellx + 1
     end
     return cellx, rect.y, "north"
   elseif (cellx == rect.x + rect.w or cellx == rect.x + rect.w - 1) and
       rect.y <= celly and celly < rect.y + rect.h then
-    -- east edge
-    if celly == rect.y then
+      -- east edge
+    if swinging and celly <= rect.y + 1 then
+      celly = rect.y + 2
+    elseif celly == rect.y then
       celly = rect.y + 1
     elseif celly == rect.y + rect.h - 1 then
       celly = rect.y + rect.h - 2
@@ -773,7 +790,9 @@ function UIEditRoom:screenToWall(x, y)
   elseif (celly == rect.y + rect.h or celly == rect.y + rect.h - 1) and
       rect.x <= cellx and cellx < rect.x + rect.w then
     -- south edge
-    if cellx == rect.x then
+    if swinging and cellx <= rect.x + 1 then
+      cellx = rect.x + 2
+    elseif cellx == rect.x then
       cellx = rect.x + 1
     elseif cellx == rect.x + rect.w - 1 then
       cellx = rect.x + rect.w - 2
@@ -1053,11 +1072,20 @@ function UIEditRoom:setBlueprintRect(x, y, w, h)
   rect.h = h
 end
 
+--25 north wall, west
+--26 north wall, east
+--27 east wall, south
+--28 east wall, north
+--29 south wall, west
+--30 south wall, east
+--31 west wall, south
+--32 west wall, north
+-- single door blue print values matching TH
 local door_floor_blueprint_markers = {
-  north = 25,
-  east = 28,
-  south = 29,
-  west = 32,
+  north = 26,
+  east = 27,
+  south = 30,
+  west = 31
 }
 
 local window_floor_blueprint_markers = {
@@ -1071,8 +1099,12 @@ local window_floor_blueprint_markers = {
 --!param x (int) X tile position of the door.
 --!param y (int) Y tile position of the door.
 --!param wall (string) Name of the wall (either 'north' or 'west').
---!param has_swingdoor Whether the room has a normal door (false) or a swing door (true) as entrance.
---!return whether the door can be placed at the given position and orientation.
+--!param has_swingdoor (boolean) Whether the room has a normal door (false) or a swing door (true) as entrance.
+--!return (int) bit flags indicating invalid tile position using 1 based power of 2 as this works with ipairs
+--!  values returned are the enumeration of
+--!  4 = centre door in swing door or for single door the value can just be non-zero but uses the same bit of code
+--!  2 (door section closer to top of screen) - smaller x or y
+--!  8 (door section closer to bottom of screen) - larger x or y
 local function checkDoorWalls(x, y, wall, has_swingdoor)
   local th = TheApp.map.th
 
@@ -1086,42 +1118,51 @@ local function checkDoorWalls(x, y, wall, has_swingdoor)
     dx = 1
     dy = 0
   end
-
+  local invalid_tile = 0
   if th:getCell(x, y, wall_num) % 0x100 ~= 0 then
-    return false
+    invalid_tile = 4
   end
 
   -- If it is a swing door there are two more locations to check.
   if has_swingdoor then
-    if th:getCell(x - dx, y - dy, wall_num) % 0x100 ~= 0 or
-        th:getCell(x + dx, y + dy, wall_num) % 0x100 ~= 0 then
-      return false
+    if th:getCell(x - dx, y - dy, wall_num) % 0x100 ~= 0 then
+      invalid_tile = invalid_tile + 2
+    end
+    if th:getCell(x + dx, y + dy, wall_num) % 0x100 ~= 0 then
+      invalid_tile = invalid_tile + 8
     end
   end
-  return true
+  return invalid_tile
 end
 
 --! Check whether the given tile can function as a door entry/exit tile.
 --!param xpos (int) X position of the tile.
 --!param ypos (int) Y position of the tile.
 --!param player_id (int) Player id owning the hospital.
---!param flag_names (array) If set, array with two additional required properties.
---!return Whether the tile is considered to be valid.
-local function validDoorTile(xpos, ypos, player_id, flag_names)
+--!param world - reference to world object instance
+--!return (boolean) whether the tile is considered to be valid.
+local function validDoorTile(xpos, ypos, player_id, world)
   local th = TheApp.map.th
-
   local tile_flags = th:getCellFlags(xpos, ypos)
-  if not (tile_flags.buildable or tile_flags.passable or tile_flags.owner == player_id) then return false end
-  if not flag_names then return true end
-  return tile_flags[flag_names[1]] and tile_flags[flag_names[2]]
+  -- check own it
+  if tile_flags.owner ~= player_id then return false end
+  -- any object will cause it to be blocked (ignore litter)
+  if tile_flags.thob ~= 0 and tile_flags.thob ~= 62 then return false end
+  -- check if its passable that no object footprint blocks it
+  if tile_flags.passable then return world:isTileExclusivelyPassable(xpos, ypos, 1) end
+  return true
 end
 
-function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
-  local x = orig_x
-  local y = orig_y
-  local wall = orig_wall
-
-  -- Used to get the adjacent tiles when placing swing doors.
+--! Calculate position offsets and door blueprint wall values
+--! param x (int) doors blueprint x value
+--! param y (int) doors blueprint y value
+--! param wall (string) original wall orientation
+--! return x (int) updated x value
+--! return y (int) updated y value
+--! return x_mod (int) offest value to apply to tile count to determine relative position
+--! return y_mod (int) offset value to apply to tile count to determine relatitve position
+--! return wall (string) wall orientation style (only 2 styles)
+local function doorWallOffsetCalculations(x, y, wall)
   local x_mod
   local y_mod
   if wall == "south" then
@@ -1137,11 +1178,20 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
   else
     y_mod = 2
   end
+  return x, y, x_mod, y_mod, wall
+end
+
+function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
+  local x, y, x_mod, y_mod, wall = doorWallOffsetCalculations(orig_x, orig_y, orig_wall)
   local map = TheApp.map.th
 
   if self.blueprint_door.anim then
     if self.room_type.swing_doors then
       if self.blueprint_door.anim[1] then
+        -- retrieve the old door position details to reset the blue print
+        local oldx, oldy
+		local _, _, oldx_mod, oldy_mod, _ = doorWallOffsetCalculations(self.blueprint_door.floor_x,
+          self.blueprint_door.floor_y, self.blueprint_door.wall)
         -- If we're dealing with swing doors the anim variable is actually a table with three
         -- identical "doors".
         for i, anim in ipairs(self.blueprint_door.anim) do
@@ -1149,8 +1199,10 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
             self.blueprint_door.old_flags[i])
           anim:setTag(nil)
           self.blueprint_door.anim[i] = nil
+          oldx = oldx_mod and self.blueprint_door.floor_x + (i - oldx_mod) or self.blueprint_door.floor_x
+          oldy = oldy_mod and self.blueprint_door.floor_y + (i - oldy_mod) or self.blueprint_door.floor_y
+          map:setCell(oldx, oldy, 4, 24)
         end
-        map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4, 24)
       end
     else
       self.blueprint_door.anim:setAnimation(self.anims, self.blueprint_door.old_anim,
@@ -1202,49 +1254,59 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
     flags = 0
     y2 = y2 - 1
   end
-
-  self.blueprint_door.valid = checkDoorWalls(x, y, wall, self.room_type.swing_doors)
-  if self.blueprint_door.valid then
-    -- Ensure that the door isn't being built on top of an object
-    local flag_names
-    if wall == "west" then
-      flag_names = {"buildableNorth", "buildableSouth"}
-    else
-      flag_names = {"buildableWest", "buildableEast"}
-    end
-    local player_id = self.ui.hospital:getPlayerIndex()
-
-    if not validDoorTile(x, y, player_id, flag_names) or
-        not validDoorTile(x2, y2, player_id, flag_names) then
-      self.blueprint_door.valid = false
-    end
-    -- If we're making swing doors two more tiles need to be checked.
-    if self.room_type.swing_doors then
-      local dx = x_mod and 1 or 0
-      local dy = y_mod and 1 or 0
-      if not validDoorTile(x + dx, y + dy, player_id, nil) or
-          not validDoorTile(x2 + dx, y2 + dy, player_id, nil) then
-        self.blueprint_door.valid = false
-      end
-      if not validDoorTile(x - dx, y - dy, player_id, nil) or
-          not validDoorTile(x2 - dx, y2 - dy, player_id, nil) then
-        self.blueprint_door.valid = false
-      end
-    end
+  local world = self.ui.app.world
+  -- invalid_tile used to select the individual blueprint that is blocked
+  local invalid_tile = checkDoorWalls(x, y, wall, self.room_type.swing_doors)
+  -- Ensure that the door isn't being built on top of an object
+  local player_id = self.ui.hospital:getPlayerIndex()
+  if not validDoorTile(x, y, player_id, world) or
+      not validDoorTile(x2, y2, player_id, world) then
+    invalid_tile = bitOr(invalid_tile, 4)
   end
-  if not self.blueprint_door.valid then
-    flags = flags + 16 -- Use red palette rather than normal palette
-  end
+  -- If we're making swing doors two more tiles need to be checked.
   if self.room_type.swing_doors then
-    for _, animation in ipairs(anim) do
-      animation:setAnimation(self.anims, 126, flags)
+    local dx = x_mod and 1 or 0
+    local dy = y_mod and 1 or 0
+    if not validDoorTile(x + dx, y + dy, player_id, world) or
+        not validDoorTile(x2 + dx, y2 + dy, player_id, world) then
+      invalid_tile = bitOr(invalid_tile, 8)
+    end
+    if not validDoorTile(x - dx, y - dy, player_id, world) or
+        not validDoorTile(x2 - dx, y2 - dy, player_id, world) then
+      invalid_tile = bitOr(invalid_tile, 2)
+    end
+  end
+
+  self.blueprint_door.valid = (invalid_tile == 0)
+
+  if self.room_type.swing_doors then
+    for i, animation in ipairs(anim) do
+      -- calculation here to flag blocked blueprint tiles on swing doors for each door tile
+      animation:setAnimation(self.anims, 126, flags + (hasBit(invalid_tile, i) and 1 or 0) * 16)
     end
   else
-    anim:setAnimation(self.anims, 126, flags)
+    anim:setAnimation(self.anims, 126, flags + (invalid_tile ~= 0 and 1 or 0) * 16)
   end
-  if self.blueprint_door.valid then
+  if self.room_type.swing_doors then
+    flags = door_floor_blueprint_markers[orig_wall]
+    local dirfix = orig_wall == "east"
+    flags = dirfix and flags + 1 or flags
+    for i = 1, 3 do
+      local x1 = x_mod and orig_x + i - x_mod or orig_x
+      local y1 = y_mod and orig_y + i - y_mod or orig_y
+      if (i == 2) then
+        map:setCell(x1, y1, 4, 24)
+      else
+        if dirfix then
+          map:setCell(x1, y1, 4, i < 2 and flags or flags - 1)
+        else
+          map:setCell(x1, y1, 4, i > 2 and flags or flags - 1)
+        end
+      end
+    end
+  else
     map:setCell(self.blueprint_door.floor_x, self.blueprint_door.floor_y, 4,
-        door_floor_blueprint_markers[orig_wall])
+      door_floor_blueprint_markers[orig_wall])
   end
 end
 

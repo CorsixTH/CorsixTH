@@ -657,9 +657,16 @@ function UIPlaceObjects:setBlueprintCell(x, y)
 
         -- Check 3: The footprint tile should either be buildable or passable, is it?:
         if not tile.only_side and is_object_allowed then
-           is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
+          is_object_allowed = world:isFootprintTileBuildableOrPassable(xpos, ypos, tile, object_footprint, flag, player_id)
         elseif is_object_allowed then
           is_object_allowed = map:getCellFlags(xpos, ypos, flags)[flag] and (player_id == 0 or flags.owner == player_id)
+        end
+
+        -- ignore placed object tile if it is shareable
+        if not tile.shareable and is_object_allowed then
+          -- Check 4: only one object per tile allowed original TH
+          -- can build on litter and unoccupied tiles and only placeable if not on another objects passable footprint unless that too is a shareable tile
+          is_object_allowed = world:isTileExclusivelyPassable(xpos, ypos, 10)
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:

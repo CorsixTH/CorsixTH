@@ -136,21 +136,38 @@ object.usage_animations = {
 }
 object.orientations = {
   north = {
-    footprint = { {0, 0, complete_cell = true}, {0, -1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, -1, only_passable = true, invisible = true, shareable = true} },
     use_position = "passable",
   },
   east = {
-    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {1, 0, only_passable = true, invisible = true,  shareable = true} },
     use_position = "passable",
   },
   south = {
-    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {0, 1, only_passable = true, invisible = true,  shareable = true} },
     use_position = "passable",
   },
   west = {
-    footprint = { {0, 0, complete_cell = true}, {-1, 0, only_passable = true} },
+    footprint = { {0, 0, complete_cell = true}, {-1, 0, only_passable = true, invisible = true,  shareable = true} },
     use_position = "passable",
   },
 }
+
+class "Chair" (Object)
+
+---@type Chair
+local Chair = _G["Chair"]
+
+function Chair:Chair(...)
+  self:Object(...)
+end
+
+--! This function is automatically called after loading a game and serves for compatibility.
+function Chair:afterLoad(old, new)
+  if old < 119 then
+    self.footprint = object.orientations[self.direction].footprint
+  end
+  Object.afterLoad(self, old, new)
+end
 
 return object

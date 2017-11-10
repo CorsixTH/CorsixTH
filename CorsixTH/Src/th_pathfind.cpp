@@ -551,6 +551,11 @@ node_t* THPathfinder::_openHeapPop()
     node_t *pResult = m_openHeap[0];
     node_t *pNode = m_openHeap.back();
     m_openHeap.pop_back();
+
+    if (m_openHeap.empty()) {
+        return pResult;
+    }
+
     m_openHeap[0] = pNode;
     int i = 0;
     int min = 0;
