@@ -2,22 +2,30 @@ version: '{build}'
 pull_requests:
   do_not_increment_build_number: true
 init:
-- git clone --depth=1 https://github.com/CorsixTH/deps.git c:/deps
+- git clone --depth=1 -b lua_lib https://github.com/TheCycoONE/vcpkg.git C:\vcpkg
 environment:
   matrix:
   - GENERATOR: Visual Studio 14 2015 Win64
-    CMAKE_LIBRARY_PATH: c:/deps/win_x64_msvc14/lib
-    CMAKE_INCLUDE_PATH: c:/deps/win_x64_msvc14
+    VCPKG_TRIPLET: x64-windows
 configuration: Release
 before_build:
-- cmake -G "%GENERATOR%" -DCMAKE_LIBRARY_PATH="%CMAKE_LIBRARY_PATH%" -DCMAKE_INCLUDE_PATH="%CMAKE_INCLUDE_PATH%"
+- cd C:\vcpkg
+- .\bootstrap-vcpkg.bat
+- .\vcpkg install --triplet %VCPKG_TRIPLET% ffmpeg freetype lua luafilesystem lpeg sdl2 sdl2-mixer
+- cd %APPVEYOR_BUILD_FOLDER%
+- mkdir C:\lua
+- cp C:\vcpkg\installed\%VCPKG_TRIPLET%\tools\lua.exe C:\lua\
+- cp C:\vcpkg\installed\%VCPKG_TRIPLET%\bin\lfs.dll C:\lua\
+- cp C:\vcpkg\installed\%VCPKG_TRIPLET%\bin\lpeg.dll C:\lua\
+- cp C:\vcpkg\installed\%VCPKG_TRIPLET%\bin\lua.dll C:\lua\
+- cp C:\vcpkg\installed\%VCPKG_TRIPLET%\share\lua\re.lua C:\lua\
+- cmake -G "%GENERATOR%" -DVCPKG_TARGET_TRIPLET=%VCPKG_TRIPLET% -DCMAKE_TOOLCHAIN_FILE=C:\vcpkg\scripts\buildsystems\vcpkg.cmake -DCMAKE_BUILD_TYPE=Release -DLUA_PROGRAM_PATH=C:\lua\lua.exe
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal
 after_build:
-- cp %CMAKE_LIBRARY_PATH%/*.dll %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/
-- cp -R %CMAKE_LIBRARY_PATH%/mime %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/mime
-- cp -R %CMAKE_LIBRARY_PATH%/socket %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/socket
+- cp C:\Lua\lfs.dll %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release
+- cp C:\Lua\lpeg.dll %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Lua
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Bitmap
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Levels
@@ -25,4 +33,4 @@ after_build:
 - cp %APPVEYOR_BUILD_FOLDER%/CorsixTH/CorsixTH.lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/
 artifacts:
 - path: CorsixTH/Release/
-  name: CorsixTH
+  name: CorsixTH-%VCPKG_TRIPLET%
