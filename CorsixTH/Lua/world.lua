@@ -2674,7 +2674,7 @@ function World:afterLoad(old, new)
       self.next_earthquake.warning_timer = earthquake_warning_period
     end
   end
-  if old < 118 then
+  if old < 120 then
     -- Issue #1105 updates to fix any broken saves with travel<dir> flags for side objects
     self:resetSideObjects()
   end
