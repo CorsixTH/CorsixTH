@@ -102,6 +102,7 @@ local config_defaults = {
   play_music = true,
   music_volume = 0.5,
   prevent_edge_scrolling = false,
+  capture_mouse = true,
   adviser_disabled = false,
   scrolling_momentum = 0.8,
   twentyfour_hour_clock = true,
@@ -253,6 +254,11 @@ if needs_rewrite then
 -- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 -- ]=] .. '\n' ..
 'prevent_edge_scrolling = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
+
+-------------------------------------------------------------------------------------------------------------------------
+-- Capture mouse: By default enabled (capture mouse = true).
+-- ]=] .. '\n' ..
+'capture_mouse = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
