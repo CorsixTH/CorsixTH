@@ -258,7 +258,7 @@ if needs_rewrite then
 -------------------------------------------------------------------------------------------------------------------------
 -- Capture mouse: By default enabled (capture mouse = true).
 -- ]=] .. '\n' ..
-'capture_mouse = ' .. tostring(config_values.prevent_edge_scrolling) .. '\n' .. [=[
+'capture_mouse = ' .. tostring(config_values.capture_mouse) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
 -- Adviser on/off: If you set this to true the adviser will no longer
