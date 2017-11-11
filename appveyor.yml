@@ -1,23 +1,20 @@
 version: '{build}'
+image: Visual Studio 2017
 pull_requests:
   do_not_increment_build_number: true
 init:
-- git clone --depth=1 https://github.com/CorsixTH/deps.git c:/deps
 environment:
   matrix:
-  - GENERATOR: Visual Studio 14 2015 Win64
-    CMAKE_LIBRARY_PATH: c:/deps/win_x64_msvc14/lib
-    CMAKE_INCLUDE_PATH: c:/deps/win_x64_msvc14
+  - GENERATOR: Visual Studio 15 2017 Win64
+cache:
+  - vcpkg -> CMake/VcpkgDeps.cmake, scripts/build_vcpkg_deps.ps1
 configuration: Release
 before_build:
-- cmake -G "%GENERATOR%" -DCMAKE_LIBRARY_PATH="%CMAKE_LIBRARY_PATH%" -DCMAKE_INCLUDE_PATH="%CMAKE_INCLUDE_PATH%"
+  - cmd: cmake -G "%GENERATOR%" -DUSE_VCPKG_DEPS=ON
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal
 after_build:
-- cp %CMAKE_LIBRARY_PATH%/*.dll %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/
-- cp -R %CMAKE_LIBRARY_PATH%/mime %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/mime
-- cp -R %CMAKE_LIBRARY_PATH%/socket %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/socket
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Lua
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Bitmap
 - cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Levels

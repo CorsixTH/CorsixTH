@@ -11,9 +11,21 @@
 #   - WITH_LIBAV   : Whether to use LibAV (as opposed to FFMEPG) when building movies
 #   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
 
-PROJECT(CorsixTH_Top_Level)
-CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
+
 SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+
+IF(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
+  OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
+ENDIF()
+
+if(USE_VCPKG_DEPS)
+  message("Note: Using locally built vcpkg dependencies.")
+  include(VcpkgDeps)
+endif()
+
+PROJECT(CorsixTH_Top_Level)
+
 INCLUDE(CheckCXXCompilerFlag)
 CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
 CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
@@ -27,6 +39,12 @@ IF (MINGW)
 ENDIF(MINGW)
 INCLUDE(CheckIncludeFiles)
 SET(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
+
+
+# Dependency management
+if ( UNIX AND CMAKE_COMPILER_IS_GNU)
+  OPTION(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
+endif()
 
 # Define our options
 OPTION(WITH_SDL "Activate SDL Renderer" ON) # our default option
@@ -90,8 +108,13 @@ ELSE()
   SET(CORSIX_TH_USE_VLD OFF)
 ENDIF(MSVC)
 
-# Environment handling
+# Get precompiled dependencies before running the various find modules
+if ( USE_PRECOMPILED_DEPS )
+  message("Note: Using precompiled dependencies.")
+  include( PrecompiledDeps )
+endif()
 
+# Environment handling
 CHECK_INCLUDE_FILES(inttypes.h CORSIX_TH_HAS_INTTYPES_H)
 
 # Include individual projects

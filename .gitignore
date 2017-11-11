@@ -11,6 +11,7 @@ CorsixTH/config.txt
 /Makefile
 /SDL
 /SDL_mixer-1.2.8
+/PrecompiledDeps
 /doc
 
 # For CorsixTH directory and Windows
@@ -25,6 +26,9 @@ Debug/
 Release/
 MinSizeRel/
 RelWithDebInfo/
+
+# Ignore the folder where libraries are pre-compiled
+vcpkg/
 
 # Build folders
 /build*/

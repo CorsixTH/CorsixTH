@@ -85,23 +85,33 @@ ELSE()
   add_executable(CorsixTH ${corsixth_source_files})
 ENDIF()
 
+# Add an extra step to copy built DLLs on MSVC
+IF(USE_VCPKG_DEPS)
+  INCLUDE(CopyVcpkgLua)
+ENDIF()
+
 # Finding libraries
 
 # Find SDL
-FIND_PACKAGE(SDL2 REQUIRED)
-IF(SDL_FOUND)
-  INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
-  IF(SDLMAIN_LIBRARY STREQUAL "")
-    message(FATAL_ERROR "Error: SDL was found but SDLmain was not")
-    message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
-  ENDIF(SDLMAIN_LIBRARY STREQUAL "")
-  # No need to specify sdlmain separately, the FindSDL.cmake file will take care of that. If not we get an error about it
-  TARGET_LINK_LIBRARIES(CorsixTH ${SDL_LIBRARY})
-  message("  SDL found")
-ELSE(SDL_FOUND)
-  message(FATAL_ERROR "Error: SDL library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
-ENDIF(SDL_FOUND)
-
+IF (MSVC AND USE_VCPKG_DEPS)
+  FIND_PACKAGE(SDL2 CONFIG REQUIRED)
+  TARGET_LINK_LIBRARIES(CorsixTH SDL2::SDL2)
+  TARGET_LINK_LIBRARIES(CorsixTH SDL2::SDL2main)
+ELSE()
+  FIND_PACKAGE(SDL2 REQUIRED)
+  IF(SDL_FOUND)
+    INCLUDE_DIRECTORIES(${SDL_INCLUDE_DIR})
+    IF(SDLMAIN_LIBRARY STREQUAL "")
+      message(FATAL_ERROR "Error: SDL was found but SDLmain was not")
+      message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
+    ENDIF(SDLMAIN_LIBRARY STREQUAL "")
+    # No need to specify sdlmain separately, the FindSDL.cmake file will take care of that. If not we get an error about it
+    TARGET_LINK_LIBRARIES(CorsixTH ${SDL_LIBRARY})
+    message("  SDL found")
+  ELSE(SDL_FOUND)
+    message(FATAL_ERROR "Error: SDL library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
+  ENDIF(SDL_FOUND)
+ENDIF()
 # Find Lua
 FIND_PACKAGE(Lua REQUIRED)
 IF(Lua_FOUND)
