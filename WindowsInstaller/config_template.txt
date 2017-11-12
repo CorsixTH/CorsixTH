@@ -20,6 +20,9 @@ theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
 -- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
 prevent_edge_scrolling = false 
 --
+-- Capture mouse: By default enabled (capture_mouse = true).
+capture_mouse = true
+--
 -- Background music: By default disabled at level 0.5
 play_music = true 
 music_volume = 0.5 

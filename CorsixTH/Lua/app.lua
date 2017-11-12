@@ -152,8 +152,7 @@ function App:init()
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
-  self.capturemouse = false
-  self.video:setCaptureMouse(self.capturemouse)
+  self.video:setCaptureMouse(self.config.capture_mouse)
 
   local caption_descs = {self.video:getRendererDetails()}
   if compile_opts.jit then
