@@ -105,7 +105,7 @@ LangString save_in_appdata    ${LANG_FRENCH} "Enregistrer les données de jeu et
 LangString remove_saves       ${LANG_FRENCH} "Voulez-vous conserver vos parties sauvegardées ?"
 LangString overwrite_install  ${LANG_FRENCH} "Il semble que vous installez par dessus une installation existante de CorsixTH. Tous les changements faits aux fichiers pourraient être perdus. Voulez-vous continuer ?"
 LangString no_vc_redist       ${LANG_FRENCH} "CorsixTH exige le '$(vc_redist_string)' pour fonctionner, mais il n'a pas été trouvé sur cet ordinateur. Voulez-vous le télécharger ?"
-LangString vc_redist_string   ${LANG_FRENCH} "Visual C++ Redistributable For Visual Studio 2017"
+LangString vc_redist_string   ${LANG_FRENCH} "Redistribuable Visual C++ pour Visual Studio 2017"
 LangString vc_redist_url      ${LANG_FRENCH} "https://go.microsoft.com/fwlink/?LinkId=746572"
 
 LangString install_language   ${LANG_GERMAN} "German"
