@@ -44,12 +44,16 @@ InstallDir "$PROGRAMFILES\${PRODUCT_NAME}"
 !include "FileFunc.nsh"
 !insertmacro GetParent
 
+; Include Word Functions for VersionCompare
+!include "WordFunc.nsh"
+
 ; This is needed to be able to install into the program files directory
 RequestExecutionLevel admin
 
+!define VC_REDIST_PATH_VER "14.0"
+!define VC_REDIST_MIN_VER "14.10"
 
 ; -------------------- Definitions and macros that create the graphical interface -----------------
-
 
 ; MUI Settings
 !define MUI_ABORTWARNING
@@ -282,13 +286,16 @@ Section "MainSection" SEC01
   !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
   !insertmacro MUI_STARTMENU_WRITE_END
 
-  ${If} ${RunningX64}
-    ReadRegStr $1 HKLM "SOFTWARE\Microsoft\DevDiv\vc\Servicing\$(vc_redist_version)\RuntimeMinimum" "Install"
-    StrCmp $1 1 installed
-  ${Else}
-    ReadRegStr $1 HKLM "SOFTWARE\Microsoft\DevDiv\vc\Servicing\$(vc_redist_version)\RuntimeMinimum" "Install"
-    StrCmp $1 1 installed
+  ReadRegStr $1 HKLM "SOFTWARE\Microsoft\DevDiv\vc\Servicing\${VC_REDIST_PATH_VER}\RuntimeMinimum" "Version"
+  ${If} $1 == ""
+    goto prompt_install
   ${EndIf}
+  ${VersionCompare} $1 ${VC_REDIST_MIN_VER} $2
+  ${If} $2 < 2
+    goto installed
+  ${EndIf}
+
+  prompt_install:
   MessageBox MB_YESNO "$(no_vc_redist)" IDNO +2
   ExecShell open "$(vc_redist_url)"
   installed:
