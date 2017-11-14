@@ -666,7 +666,9 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         if not tile.shareable and is_object_allowed then
           -- Check 4: only one object per tile allowed original TH
           -- can build on litter and unoccupied tiles and only placeable if not on another objects passable footprint unless that too is a shareable tile
-          is_object_allowed = world:isTileExclusivelyPassable(xpos, ypos, 10)
+          local objchk = map:getCellFlags(xpos, ypos, flags)["thob"]
+          is_object_allowed = objchk == 0 or objchk == 62 or objchk == 64 -- no object, litter/puke, ratholes
+          is_object_allowed = is_object_allowed and world:isTileExclusivelyPassable(xpos, ypos, 10)
         end
 
         -- Having checked if the tile is good set its blueprint appearance flag:
