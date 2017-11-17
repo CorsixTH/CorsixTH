@@ -32,6 +32,12 @@ local TH = require "TH"
 -- earthquake with full intensity.
 local shake_screen_max_movement = 50 --pixels
 
+-- 0.002 is about 5 pixels on a 1920 pixel display
+local multigesture_pinch_sensitivity_factor = 0.002
+-- combined with the above, multiplying by 100 means minimum current_momentum.z for any detected pinch
+-- will result in a call to adjustZoom in the onTick method
+local multigesture_pinch_amplification_factor = 100
+
 --! Game UI constructor.
 --!param app (Application) Application object.
 --!param local_hospital Hospital to display
@@ -78,6 +84,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
+  self.multigesturemove = {x = 0.0, y = 0.0}
 
   self.speed_up_key_pressed = false
 
@@ -600,6 +607,45 @@ function GameUI:onMouseUp(code, x, y)
   return UI.onMouseUp(self, code, x, y)
 end
 
+--! Process SDL_MULTIGESTURE events for zoom and map move functionality
+--!param numfingers (integer) number of touch points, received from the SDL event
+--!  This is still more info about param x.
+--!param dTheta (float) rotation in radians of the gesture from the SDL event
+--!param dDist (float) magnitude of pinch from the SDL event
+--!param x (float) normalised x value of the gesture
+--!param y (float) normalised y value of the gesture
+--!return (boolean) event processed indicator
+function GameUI:onMultiGesture(numfingers, dTheta, dDist, x, y)
+  -- only deal with 2 finger events for now
+  if numfingers == 2 then
+    -- calculate magnitude of pinch
+    local mag = math.abs(dDist)
+    if mag > multigesture_pinch_sensitivity_factor then
+      -- pinch action - constant needs to be tweaked
+      self.current_momentum.z = self.current_momentum.z + dDist * multigesture_pinch_amplification_factor
+      return true
+    else
+      -- scroll map
+      local normx = self.app.config.width * x
+      local normy = self.app.config.height * y
+
+      if self.multigesturemove.x == 0.0 then
+        self.multigesturemove.x = normx
+        self.multigesturemove.y = normy
+      else
+        local dx = normx - self.multigesturemove.x
+        local dy = normy - self.multigesturemove.y
+        self.current_momentum.x = self.current_momentum.x - dx
+        self.current_momentum.y = self.current_momentum.y - dy
+        self.multigesturemove.x = normx
+        self.multigesturemove.y = normy
+      end
+      return true
+    end
+  end
+  return false
+end
+
 function GameUI:onMouseWheel(x, y)
   local inside_window = false
   if self.windows then
@@ -649,6 +695,8 @@ function GameUI:onTick()
       self.current_momentum.z = self.current_momentum.z * self.momentum
       self.app.world:adjustZoom(self.current_momentum.z)
     end
+    self.multigesturemove.x = 0.0
+    self.multigesturemove.y = 0.0
   end
   if not self.app.world:isCurrentSpeed("Pause") then
     local ticks_since_last_announcement = self.ticks_since_last_announcement
@@ -1092,6 +1140,9 @@ function GameUI:afterLoad(old, new)
   end
   if old < 115 then
     self.shake_screen_intensity = 0
+  end
+  if old < 118 then
+    self.multigesturemove = {x = 0.0, y = 0.0}
   end
   return UI.afterLoad(self, old, new)
 end

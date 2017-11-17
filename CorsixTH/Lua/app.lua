@@ -58,7 +58,8 @@ function App:App()
     window_resize = self.onWindowResize,
     music_over = self.onMusicOver,
     movie_over = self.onMovieOver,
-    sound_over = self.onSoundOver
+    sound_over = self.onSoundOver,
+    multigesture = self.onMultiGesture
   }
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
@@ -1093,6 +1094,10 @@ end
 
 function App:onSoundOver(...)
   return self.audio:onSoundPlayed(...)
+end
+
+function App:onMultiGesture(...)
+  return self.ui:onMultiGesture(...)
 end
 
 function App:checkInstallFolder()
