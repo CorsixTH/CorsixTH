@@ -774,4 +774,8 @@ function Map:afterLoad(old, new)
       end
     end
   end
+  if old < 120 then
+    -- Issue #1105 update pathfinding (rebuild walls) potentially broken by side object placement
+    self.th:updatePathfinding()
+  end
 end
