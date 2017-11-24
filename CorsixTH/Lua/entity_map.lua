@@ -186,8 +186,8 @@ function EntityMap:getAdjacentFreeTiles(x, y)
     local x_coord = coord['x']
     local y_coord = coord['y']
     -- If no object or humanoid occupy the til_coorde
-    if self:getHumanoidsAtCoordinate(x_coord, y_coord) == nil and
-      self:getObjectsAtCoordinate(x_coord, y_coord) == nil then
+    if #self:getHumanoidsAtCoordinate(x_coord, y_coord) == 0 and
+        #self:getObjectsAtCoordinate(x_coord, y_coord) == 0 then
       adjacent_free_tiles[#adjacent_free_tiles+1] = coord
     end
   end
