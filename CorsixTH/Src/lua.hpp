@@ -51,7 +51,7 @@ inline int lua_equal(lua_State *L, int idx1, int idx2)
 #ifndef lua_lessthan
 inline int lua_lessthan(lua_State *L, int idx1, int idx2)
 {
-    return lua_compare(L, idx1, idx1, LUA_OPLT);
+    return lua_compare(L, idx1, idx2, LUA_OPLT);
 }
 #endif
 

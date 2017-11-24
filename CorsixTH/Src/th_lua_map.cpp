@@ -412,7 +412,6 @@ static int l_map_get_player_heliport(lua_State *L)
     int iX, iY;
     int iPlayer = static_cast<int>(luaL_optinteger(L, 2, 1));
     bool bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
-    bGood = pMap->getPlayerHeliportTile(iPlayer - 1, &iX, &iY);
     if(!bGood)
         return luaL_error(L, "Player index out of range: %d", iPlayer);
     lua_pushinteger(L, iX + 1);
