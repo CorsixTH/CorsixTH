@@ -56,6 +56,7 @@ local Litter = _G["Litter"]
 function Litter:Litter(world, object_type, x, y, direction, etc)
   local th = TH.animation()
   self:Entity(th)
+  self.ticks = object_type.ticks
   self.object_type = object_type
   self.world = world
   self:setTile(x, y)
@@ -148,6 +149,10 @@ function Litter:afterLoad(old, new)
       local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
       hospital:removeHandymanTask(taskIndex, "cleaning")
     end
+  end
+
+  if old < 121 then
+    self.ticks = object.ticks
   end
 end
 

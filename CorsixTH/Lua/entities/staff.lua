@@ -900,6 +900,15 @@ function Staff:afterLoad(old, new)
     end
   end
 
+  if old < 121 then
+    if self.humanoid_class == "Handyman" and self.user_of and self.user_of.object_type.class == "Litter" then
+      local litter = self.user_of
+      local hospital = self.world:getHospital(litter.tile_x, litter.tile_y)
+      local taskIndex = hospital:getIndexOfTask(litter.tile_x, litter.tile_y, "cleaning", litter)
+      hospital:removeHandymanTask(taskIndex, "cleaning")
+    end
+  end
+
   Humanoid.afterLoad(self, old, new)
 end
 
