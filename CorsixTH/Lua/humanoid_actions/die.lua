@@ -264,42 +264,8 @@ local function action_die_start(action, humanoid)
   --If this isn't done their bald head will become bloated instead of suddenly having hair:
   if humanoid.disease.id == "baldness" then humanoid:setLayer(0,2) end
 
-  --[[Make the patient fall over: because this animation requires two tiles make sure there's
-  enough space for this animation--]]
-  local mirror_fall
-  local east_tile_usable = humanoid.world:isTileEmpty(humanoid.tile_x + 1, humanoid.tile_y, true)
-  local south_tile_usable = humanoid.world:isTileEmpty(humanoid.tile_x, humanoid.tile_y + 1, true)
-  --Are the preferred fall directions usable?
-  if preferred_fall_direction == "east" and east_tile_usable then
-    humanoid.last_move_direction = "east"
-    mirror_fall = 0
-  elseif preferred_fall_direction == "south" and south_tile_usable then
-    humanoid.last_move_direction = "south"
-    mirror_fall = 1
-  else
-    --If the preferred direction isn't usable try the other direction:
-    if east_tile_usable then
-      humanoid.last_move_direction = "east"
-      mirror_fall = 0
-    elseif south_tile_usable then
-      humanoid.last_move_direction = "south"
-      mirror_fall = 1
-    --[[If the patient's last move direction was east or south then there could be no fall space available so this else
-      closure makes them walk to an accessible adjacent tile so that they can then fall on to their current tile:]]--
-    else
-      -- Either the west or north tile will be accessible because this else closure can only be reached if the tiles adjacent to
-      -- the patient east and south are blocked and this game doesn't allow patients to become stuck by having all the tiles
-      -- adjacent to them become obstructed by objects and/or rooms:
-      if humanoid.world:isTileEmpty(humanoid.tile_x - 1, humanoid.tile_y, true) then
-        humanoid:walkTo(humanoid.tile_x - 1, humanoid.tile_y)
-      else
-        humanoid:walkTo(humanoid.tile_x, humanoid.tile_y - 1)
-      end
-      humanoid:queueAction(DieAction())
-      humanoid:finishAction()
-      return
-    end
-  end
+  local mirror_fall = preferred_fall_direction == "east" and 0 or 1
+  humanoid.last_move_direction = preferred_fall_direction
 
   humanoid:setAnimation(anims.fall_east, mirror_fall)
 
