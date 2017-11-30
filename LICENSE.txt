@@ -27,14 +27,14 @@ Copyright (C) 2011 Chris James
 Copyright (C) 2011 John Pirie
 Copyright (C) 2011-2015 Mark Lawlor
 Copyright (C) 2011-2016 William "Sadger" Gatens
-Copyright (C) 2011-2016 Ola Skogrand
+Copyright (C) 2011-2017 Ola "Grimdoc" Skogrand
 Copyright (C) 2011-2015 Jørgen P. Tjernø
 Copyright (C) 2011-2012 Zbyněk "teh dude :D" Schwarz
 Copyright (C) 2011 Rene "Kleeze" Bergfort
 Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
-Copyright (C) 2012-2016 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2017 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013 Luis "Driver" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -47,12 +47,24 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2016 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2017 Albert "Alberth" Hofkamp
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
+Copyright (C) 2015 Josh Keegan
 Copyright (C) 2016 Toby Lane
+Copyright (C) 2016 Phil Morrell
+Copyright (C) 2017 Arne Zelasko
+Copyright (C) 2017 Víctor "IlDucci"
+Copyright (C) 2017 "wolfy1339"
+Copyright (C) 2017 Fang Xianfu
+Copyright (C) 2017 Steven Price
+Copyright (C) 2017 Radomir Wojtera
+Copyright (C) 2017 David Fairbrother
+Copyright (C) 2017 Altieres Lima
+Copyright (C) 2017 Justin "mugmuggy" Mugford
+
 et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
