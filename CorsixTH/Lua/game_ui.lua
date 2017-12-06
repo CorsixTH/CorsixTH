@@ -1141,7 +1141,7 @@ function GameUI:afterLoad(old, new)
   if old < 115 then
     self.shake_screen_intensity = 0
   end
-  if old < 118 then
+  if old < 122 then
     self.multigesturemove = {x = 0.0, y = 0.0}
   end
   return UI.afterLoad(self, old, new)
