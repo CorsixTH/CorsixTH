@@ -357,7 +357,8 @@ function GameUI:onCursorWorldPositionChange()
   local x = math.floor(self.screen_offset_x + self.cursor_x / zoom)
   local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
-  if self.do_world_hit_test and not self:hitTest(self.cursor_x, self.cursor_y) then
+  local overwindow = self:hitTest(self.cursor_x, self.cursor_y)
+  if self.do_world_hit_test and not overwindow then
     entity = self.app.map.th:hitTestObjects(x, y)
     if self.do_world_hit_test ~= true then
       -- limit to non-door objects in room
@@ -410,7 +411,7 @@ function GameUI:onCursorWorldPositionChange()
   wx = math.floor(wx)
   wy = math.floor(wy)
   local room
-  if wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
+  if not overwindow and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
   if room ~= self.cursor_room then
