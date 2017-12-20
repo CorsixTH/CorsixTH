@@ -69,9 +69,26 @@ CorsixTH/CorsixTH.sln
 *.class
 LevelEdit/bin/
 
+# Debugging related files
 CorsixTH/Lua/debug_script.lua
 CorsixTH/Lua/debugger.lua
+mobdebug.lua
 
 # For AnimView output
 VSPR-0.xml
 *export.log
+
+# CMake related files
+CMakeDoxyfile.in
+CMakeDoxygenDefaults.cmake
+
+# Eclipse related files
+.buildpath
+.project
+.settings/
+
+# VS Code files
+.project/
+.cproject/
+.vscode/
+.cproject
