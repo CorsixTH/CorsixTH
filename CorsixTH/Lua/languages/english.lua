@@ -99,6 +99,7 @@ menu_options = {
   jukebox = "  (J) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
+  capture_mouse = "  CAPTURE MOUSE  ",
   adviser_disabled = "  (SHIFT+A) ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
   wage_increase = "  WAGE REQUESTS",

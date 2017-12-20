@@ -636,11 +636,20 @@ function UIMenuBar:makeGameMenu(app)
   end
   options:appendCheckItem(_S.menu_options.lock_windows, boolean_runtime_config"lock_windows")
 
+  -- Edge Scrolling
   options:appendCheckItem(_S.menu_options.edge_scrolling,
     not app.config.prevent_edge_scrolling,
     function(item) app.config.prevent_edge_scrolling = not item.checked end,
     nil,
     function() return not app.config.prevent_edge_scrolling end)
+
+  -- Mouse Capture
+  options:appendCheckItem(_S.menu_options.capture_mouse,
+    app.config.capture_mouse,
+    function(item) app.config.capture_mouse = item.checked
+      app:saveConfig()
+      app:setCaptureMouse()
+    end)
 
   options:appendCheckItem(_S.menu_options.adviser_disabled,
     not app.config.adviser_disabled,

@@ -19,6 +19,9 @@ CorsixTH/config.txt
 *.exe
 Thumbs.db
 
+# For built binary
+CorsixTH/CorsixTH
+
 # This is for the CMake-generated XCode project and output
 /build/
 *.xcodeproj/
