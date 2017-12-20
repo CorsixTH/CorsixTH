@@ -153,7 +153,7 @@ function App:init()
   self.video:setBlueFilterActive(false)
   SDL.wm.setIconWin32()
 
-  self.video:setCaptureMouse(self.config.capture_mouse)
+  self:setCaptureMouse()
 
   local caption_descs = {self.video:getRendererDetails()}
   if compile_opts.jit then
@@ -471,6 +471,13 @@ function App:loadMainMenu(message)
     self.ui:addWindow(UIInformation(self.ui, message))
   end
 end
+
+--! Sets the mouse capture to the state set within
+--! app.config.capture_mouse
+function App:setCaptureMouse()
+  self.video:setCaptureMouse(self.config.capture_mouse)
+end
+
 
 --! Loads the first level of the specified campaign and prepares the world
 --! to be able to progress through that campaign.
