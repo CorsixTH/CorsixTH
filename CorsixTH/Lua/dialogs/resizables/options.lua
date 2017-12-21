@@ -281,7 +281,6 @@ function UIOptions:buttonMouseCapture(checked)
   self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
 end
 
-
 function UIOptions:buttonCustomise()
   local window = UICustomise(self.ui, "menu")
   self.ui:addWindow(window)

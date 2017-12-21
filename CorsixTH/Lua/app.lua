@@ -478,7 +478,6 @@ function App:setCaptureMouse()
   self.video:setCaptureMouse(self.config.capture_mouse)
 end
 
-
 --! Loads the first level of the specified campaign and prepares the world
 --! to be able to progress through that campaign.
 --!param campaign_file (string) Name of a CorsixTH Campaign definition Lua file.
