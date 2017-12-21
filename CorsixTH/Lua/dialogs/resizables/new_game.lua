@@ -195,8 +195,8 @@ end
 function UINewGame:startGame(difficulty)
   self.ui.app:loadLevel(1, difficulty)
   -- Initiate campaign progression. The UI above may now have changed.
-  if TheApp.world and not TheApp.using_demo_files then
-    TheApp.world.campaign = "TH.campaign"
+  if not TheApp.using_demo_files then
+    TheApp.world.campaign_info = "TH.campaign"
   end
   if self.start_tutorial then
     TheApp.ui.start_tutorial = true
