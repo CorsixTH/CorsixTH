@@ -54,8 +54,27 @@ local col_caption = {
   blue = 218,
 }
 
+-- Private functions
+
+--- Calculates the Y position for the dialog box in the option menu
+-- and increments along the current position for the next element
+-- @return The Y position to place the element at
+
+function UIOptions:_getOptionYPos()
+  -- Offset from top of options box
+  local STARTING_Y_POS = 15
+  -- Y Height is 20 for panel size + 10 for spacing
+  local Y_HEIGHT = 30
+
+  -- Multiply by the index so that index=1 is at STARTING_Y_POS
+  local calculated_pos = STARTING_Y_POS + Y_HEIGHT * (self._current_option_index - 1)
+  self._current_option_index = self._current_option_index + 1
+  return calculated_pos
+end
+
+
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 240, col_bg)
+  self:UIResizable(ui, 320, 300, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -66,6 +85,13 @@ function UIOptions:UIOptions(ui, mode)
   self:setDefaultPosition(0.5, 0.25)
   self.default_button_sound = "selectx.wav"
   self.app = app
+
+  -- Tracks the current position of the object
+  self._current_option_index = 1
+
+  -- Constants for most button's width and height
+  local BTN_WIDTH = 135
+  local BTN_HEIGHT = 20
 
   self:checkForAvailableLanguages()
 
@@ -90,23 +116,38 @@ function UIOptions:UIOptions(ui, mode)
 
   -- Window parts definition
   -- Title
-  self:addBevelPanel(80, 10, 165, 20, col_caption):setLabel(_S.options_window.caption)
+  local title_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(80, title_y_pos, 165, 20, col_caption):setLabel(_S.options_window.caption)
     .lowered = true
 
   -- Fullscreen
-  self:addBevelPanel(20, 45, 135, 20, col_shadow, col_bg, col_bg)
+  local fullscreen_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, fullscreen_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen).lowered = true
   self.fullscreen_panel =
-    self:addBevelPanel(165, 45, 135, 20, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
-  self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, 20, nil, self.buttonFullscreen)
+    self:addBevelPanel(165, fullscreen_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  self.fullscreen_button = self.fullscreen_panel:makeToggleButton(0, 0, 140, BTN_HEIGHT, nil, self.buttonFullscreen)
     :setToggleState(app.fullscreen):setTooltip(_S.tooltip.options_window.fullscreen_button)
 
   -- Screen resolution
-  self:addBevelPanel(20, 70, 135, 20, col_shadow, col_bg, col_bg)
+  local screen_res_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.resolution):setTooltip(_S.tooltip.options_window.resolution).lowered = true
+  self.resolution_panel = self:addBevelPanel(165, screen_res_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
 
-  self.resolution_panel = self:addBevelPanel(165, 70, 135, 20, col_bg):setLabel(app.config.width .. "x" .. app.config.height)
-  self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
+  self.resolution_button = self.resolution_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownResolution):setTooltip(_S.tooltip.options_window.select_resolution)
+
+  -- Mouse capture
+  local capture_mouse_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, capture_mouse_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
+    :setLabel(_S.options_window.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse).lowered = true
+
+  self.mouse_capture_panel =
+    self:addBevelPanel(165, capture_mouse_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
+
+  self.mouse_capture_button = self.mouse_capture_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonMouseCapture)
+    :setToggleState(app.config.capture_mouse):setTooltip(_S.tooltip.options_window.capture_mouse)
+
 
   -- Language
   -- Get language name in the language to normalize display.
@@ -117,30 +158,36 @@ function UIOptions:UIOptions(ui, mode)
   else
     lang = app.config.language
   end
-  self:addBevelPanel(20, 95, 135, 20, col_shadow, col_bg, col_bg)
+
+  local lang_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.language):setTooltip(_S.tooltip.options_window.language).lowered = true
-  self.language_panel = self:addBevelPanel(165, 95, 135, 20, col_bg):setLabel(lang)
-  self.language_button = self.language_panel:makeToggleButton(0, 0, 135, 20, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
+  self.language_panel = self:addBevelPanel(165, lang_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(lang)
+  self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
   -- add the Audio global switch.
-  self:addBevelPanel(20, 120, 135, 20, col_shadow, col_bg, col_bg)
+  local audio_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
   self.volume_panel =
-    self:addBevelPanel(165, 120, 135, 20, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
-  self.volume_button = self.volume_panel:makeToggleButton(0, 0, 135, 20, nil, self.buttonAudioGlobal)
+    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+  self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
     :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
 
   -- "Customise" button
-  self:addBevelPanel(20, 150, 135, 30, col_bg):setLabel(_S.options_window.customise)
-    :makeButton(0, 0, 135, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
+  local customise_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonCustomise):setTooltip(_S.tooltip.options_window.customise_button)
 
   -- "Folders" button
-  self:addBevelPanel(165, 150, 135, 30, col_bg):setLabel(_S.options_window.folder)
-    :makeButton(0, 0, 135, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
+  self:addBevelPanel(165, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
 
 
   -- "Back" button
-  self:addBevelPanel(20, 190, 280, 40, col_bg):setLabel(_S.options_window.back)
+  -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
+  local back_button_y_pos = self:_getOptionYPos() + 15
+  self:addBevelPanel(20, back_button_y_pos, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end
 
@@ -226,6 +273,13 @@ function UIOptions:buttonFullscreen(checked)
   self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
+function UIOptions:buttonMouseCapture(checked)
+  local app = self.ui.app
+  app.config.capture_mouse = not app.config.capture_mouse
+  app:saveConfig()
+  app:setCaptureMouse()
+  self.mouse_capture_button:setLabel(app.config.capture_mouse and _S.options_window.option_on or _S.options_window.option_off)
+end
 
 function UIOptions:buttonCustomise()
   local window = UICustomise(self.ui, "menu")
@@ -346,3 +400,4 @@ function UIResolution:close(ok)
     self.callback(tonumber(self.width_textbox.text) or 0, tonumber(self.height_textbox.text) or 0)
   end
 end
+
