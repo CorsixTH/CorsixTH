@@ -34,8 +34,9 @@ ELSE()
 ENDIF(UNIX)
 
 # Modify the config.h based upon our selection of options
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
-INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/CorsixTH/inc/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/inc/config.h)
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/inc/)
+INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/CorsixTH/inc/)
 
 # Generate source files list
 # Note: Done after generating config.h
@@ -44,16 +45,20 @@ FILE(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.hpp
+
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
-  ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
+
+  ${CMAKE_SOURCE_DIR}/CorsixTH/inc/*.hpp
+  ${CMAKE_SOURCE_DIR}/CorsixTH/inc/*.h
+
   ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
   ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
   ${CMAKE_SOURCE_DIR}/LFS/*.c
   ${CMAKE_SOURCE_DIR}/LPEG/*.c
+  
+  ${CMAKE_BINARY_DIR}/CorsixTH/inc/config.h
 )
 
 # Declaration of the executable
