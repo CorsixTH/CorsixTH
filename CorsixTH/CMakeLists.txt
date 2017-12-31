@@ -95,6 +95,9 @@ IF(USE_VCPKG_DEPS)
   INCLUDE(CopyVcpkgLua)
 ENDIF()
 
+# Also copy required files into binary folder
+INCLUDE(CopyFilesToBuild)
+
 # Finding libraries
 
 # Find SDL
