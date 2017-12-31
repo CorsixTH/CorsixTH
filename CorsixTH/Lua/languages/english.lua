@@ -549,7 +549,7 @@ tooltip.information = {
 totd_window = {
   tips = {
     "Every hospital needs a reception desk and a GP's office to get going. After that, it depends on what kind of patients are visiting your hospital. A pharmacy is always a good choice, though.",
-    "Machines such as the Inflation need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
+    "Machines such as the Inflator need maintenance. Employ a handyman or two to repair your machines, or you'll risk your staff and patients getting hurt.",
     "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
     "Place enough radiators to keep your staff and patients warm, or they will become unhappy. Use the town map to locate any spots in your hospital that need more heating.",
     "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
