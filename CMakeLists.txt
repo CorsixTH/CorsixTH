@@ -15,15 +15,23 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
+<<<<<<< HEAD
 if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
+=======
+IF(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
+  OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" ON)
+ENDIF()
+>>>>>>> Add Google Testing Framework
 
 if(USE_VCPKG_DEPS)
+  # This must be before the project call for tool-chain to work correctly
   message("Note: Using locally built vcpkg dependencies.")
   include(VcpkgDeps)
 endif()
 
+<<<<<<< HEAD
 project(CorsixTH_Top_Level)
 
 include(CheckCXXCompilerFlag)
@@ -36,6 +44,19 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 endif()
 
 if(MINGW)
+=======
+PROJECT(CorsixTH_Top_Level)
+
+# Allow CMake to use folders in IDEs which support it
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# C++14 Required
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+IF (MINGW)
+>>>>>>> Add Google Testing Framework
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
 
@@ -121,6 +142,10 @@ message("")
 # We always build CorsixTH otherwise we would miss the generated header
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
+
+# Adding testing files
+message("Building Unit Tests")
+add_subdirectory(${PROJECT_SOURCE_DIR}/CorsixTH/CppTest)
 
 if(BUILD_ANIMVIEWER)
   message("Building AnimView")
