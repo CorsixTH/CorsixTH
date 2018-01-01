@@ -59,7 +59,7 @@ script:
   - eval `luarocks --local path`
   - LUA_PATH="../Lua/?.lua;$LUA_PATH" /home/travis/.luarocks/bin/busted
   # Run Cpp Unit Tests
-  - cd $TRAVIS_BUILD_DIR
+  - cd $TRAVIS_BUILD_DIR/fresh
   - ctest UnitTests -VV
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
