@@ -15,15 +15,9 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
-<<<<<<< HEAD
 if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
-=======
-IF(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
-  OPTION(USE_VCPKG_DEPS "Build vcpkg dependencies locally" ON)
-ENDIF()
->>>>>>> Add Google Testing Framework
 
 if(USE_VCPKG_DEPS)
   # This must be before the project call for tool-chain to work correctly
@@ -31,21 +25,7 @@ if(USE_VCPKG_DEPS)
   include(VcpkgDeps)
 endif()
 
-<<<<<<< HEAD
 project(CorsixTH_Top_Level)
-
-include(CheckCXXCompilerFlag)
-check_cxx_compiler_flag("-std=c++11" COMPILER_SUPPORTS_CXX11)
-check_cxx_compiler_flag("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX11)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-elseif(COMPILER_SUPPORTS_CXX0X)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-endif()
-
-if(MINGW)
-=======
-PROJECT(CorsixTH_Top_Level)
 
 # Allow CMake to use folders in IDEs which support it
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -55,8 +35,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-IF (MINGW)
->>>>>>> Add Google Testing Framework
+if (MINGW)
   set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
 endif()
 

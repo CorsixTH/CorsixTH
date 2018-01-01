@@ -205,3 +205,6 @@ else()
   )
   install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
 endif()
+
+# Adding testing files
+add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
