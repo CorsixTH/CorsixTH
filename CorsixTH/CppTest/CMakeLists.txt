@@ -22,9 +22,7 @@
 
 set (TESTING_FILES
     example.cpp
-
-
-
+    spriteTest.cpp
 
 )
 
@@ -53,12 +51,44 @@ add_subdirectory("${CMAKE_BINARY_DIR}/googletest-src"
 # Move gtest into its own folder
 set_target_properties(gtest gtest_main PROPERTIES FOLDER UnitTests)
 
-# Link together all the unit test files
-add_executable(exampleTest ${TESTING_FILES})
-target_link_libraries(exampleTest gtest_main)
-add_test(NAME example COMMAND exampleTest)
+# Expose the header files from CorsixTH
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/inc/)
 
-set_target_properties(exampleTest PROPERTIES FOLDER UnitTests)
+# Link together all the unit test files - we should gradually move 
+# CorsixTH to use libraries, instead we recompile and link them together
+
+# Remove main.cpp and main.h from the files we compile in
+set(TEST_SOURCE_FILES ${corsixth_source_files})
+list(REMOVE_ITEM TEST_SOURCE_FILES "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp" "${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp")
+list(REMOVE_ITEM TEST_SOURCE_FILES "${CMAKE_SOURCE_DIR}/CorsixTH/inc/main.h")
+
+add_executable(UnitTests ${TESTING_FILES} ${TEST_SOURCE_FILES})
+target_link_libraries(UnitTests gtest_main)
+
+# XXX: When we move the backend to a library we can avoid 
+# pulling in these deps for testing
+IF (MSVC AND USE_VCPKG_DEPS)
+  TARGET_LINK_LIBRARIES(UnitTests SDL2::SDL2)
+  TARGET_LINK_LIBRARIES(UnitTests SDL2::SDL2main)
+ELSE()
+target_link_libraries(UnitTests ${SDL_LIBRARY})
+ENDIF()
+
+if(CORSIX_TH_USE_FFMPEG)
+  target_link_libraries(UnitTests ${FFMPEG_LIBRARIES})
+endif()
+
+if(CORSIX_TH_USE_LIBAV)
+  target_link_libraries(UnitTests ${LIBAV_LIBRARIES})
+endif()
+
+TARGET_LINK_LIBRARIES(UnitTests ${LUA_LIBRARY} ${SDLMIXER_LIBRARY} ${FREETYPE_LIBRARIES})
+
+# Add the target to CTest
+
+add_test(NAME UnitTests COMMAND UnitTests)
+
+set_target_properties(UnitTests PROPERTIES FOLDER UnitTests)
 
 # Make sure we add it as a dependency to all tests
-add_dependencies(AllTests exampleTest)
+add_dependencies(AllTests UnitTests)

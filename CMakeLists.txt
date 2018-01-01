@@ -124,10 +124,6 @@ message("")
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
 
-# Adding testing files
-add_subdirectory(${PROJECT_SOURCE_DIR}/CorsixTH/CppTest)
-
-
 IF(BUILD_ANIMVIEWER)
   message("Building AnimView")
   add_subdirectory(AnimView)

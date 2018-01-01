@@ -237,3 +237,6 @@ ELSE()
         PATTERN "*.svn" EXCLUDE)
   install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
 ENDIF()
+
+# Adding testing files
+add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
