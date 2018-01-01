@@ -48,6 +48,8 @@ script:
   - python ${TRAVIS_BUILD_DIR}/scripts/check_lua_classes.py
   # Build CorsixTH
   - make VERBOSE=1
+  # Build CorsixTH Unit Tests
+  - make UnitTests VERBOSE=1
   # Validate lua files
   - find $TRAVIS_BUILD_DIR -path $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages -prune -o -name '*.lua' -print0 | xargs -0 luac -p --
   - cd $TRAVIS_BUILD_DIR
@@ -56,6 +58,9 @@ script:
   - cd $TRAVIS_BUILD_DIR/CorsixTH/Luatest
   - eval `luarocks --local path`
   - LUA_PATH="../Lua/?.lua;$LUA_PATH" /home/travis/.luarocks/bin/busted
+  # Run Cpp Unit Tests
+  - cd $TRAVIS_BUILD_DIR/CorsixTH/CppTest
+  - ./UnitTests
   # Build LevelEdit
   - cd $TRAVIS_BUILD_DIR/LevelEdit && ant dist
   # Build documentation

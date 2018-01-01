@@ -14,12 +14,6 @@ before_build:
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal
-after_build:
-- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Lua
-- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Bitmap %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Bitmap
-- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Levels %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Levels
-- cp -R %APPVEYOR_BUILD_FOLDER%/CorsixTH/Campaigns %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/Campaigns
-- cp %APPVEYOR_BUILD_FOLDER%/CorsixTH/CorsixTH.lua %APPVEYOR_BUILD_FOLDER%/CorsixTH/Release/
 artifacts:
 - path: CorsixTH/Release/
   name: CorsixTH
