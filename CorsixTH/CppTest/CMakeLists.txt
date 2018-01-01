@@ -26,8 +26,6 @@ set (TESTING_FILES
 
 )
 
-enable_testing()
-
 add_custom_target(AllTests)
 
 # Download and unpack googletest at configure time
