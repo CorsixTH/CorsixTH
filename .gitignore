@@ -92,3 +92,6 @@ CorsixTH/CorsixTH.sln
 .cproject/
 .vscode/
 .cproject
+
+# Default build path
+CorsixTH/CorsixTH
