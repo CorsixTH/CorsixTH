@@ -1,4 +1,32 @@
 -------------------------------------------------------------------------------
+Version 0.61 - released December 2017
+-------------------------------------------------------------------------------
+* Mouse capture support. Now by default the mouse will be captured in its
+  window. You can use CTRL-F10 to temporarily toggle the mouse capture state,
+  or disable it in the config file.
+* Added multigesture movement and zoom for supported devices.
+* Fix for broken pathfinding involving the removal of side objects such as
+  benches and radiators.
+* Allow objects to be built on top of litter and rat holes.
+* Fix for game error when handymen attempted to clean removed litter.
+* Can now click and hold to quickly change handyman priorities.
+* Significant map editor performance improvement when selecting multiple tiles.
+* If the config option to allow playing while paused is enabled, you can now
+  make use of the bottom panel.
+* Fixed several bugs relating to the mood displays for staff and patients.
+* Rooms can now be built over top of trash.
+* Rat holes will now appear in dirty hospitals. Unfortunately the rats
+  themselves are still hiding away.
+* Earthquakes now behave more like in Theme Hospital. A warning earthquake that
+  does no damage will come first so that you can get ready for the big one. The
+  damage calculations and visual effect have also been redone to be closer to
+  the original game.
+* The game window can now be resized by dragging the edges.
+* We now avoid overlapping graph labels so all labels are readable.
+* Many many many bug fixes.
+
+
+-------------------------------------------------------------------------------
 Version 0.60 - released May 2016
 -------------------------------------------------------------------------------
 
