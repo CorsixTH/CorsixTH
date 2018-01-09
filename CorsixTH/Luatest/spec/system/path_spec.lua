@@ -20,13 +20,11 @@ SOFTWARE. --]]
 
 require("class_test_base")
 
-require("system.path_manager")
+require("system/path")
 
 describe("Path Manager -", function()
-    it("should return right separator", function()
-        local path_manager = PathManager()
-        local expected_separator = package.config:sub(1, 1)
-        assert.equal(expected_separator, path_manager:getSeparator())
-    end)
+  it("should return right separator", function()
+    local expected_separator = package.config:sub(1, 1)
+    assert.equal(expected_separator, Path.getSeparator())
+  end)
 end)
-  

@@ -18,8 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile("system/path")
+
 local config_path, config_name
-local pathsep = package.config:sub(1, 1)
+local pathsep = Path.getSeparator()
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local function pathconcat(a, b)
   if a:sub(-1) == pathsep then

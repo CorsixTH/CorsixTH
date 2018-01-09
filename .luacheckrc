@@ -68,6 +68,9 @@ globals = { -- Globals
             "UseScreenAction", "UseStaffRoomAction", "VaccinateAction",
             "VipGoToNextRoomAction", "VomitAction", "WalkAction", "YawnAction",
 
+            -- System
+            "Path",
+
             -- Math extensions
             "math.n_random", "math.round", "math.randomdump"
           }

@@ -19,19 +19,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 --[[
-    PathManager is meant to unify the logic connected with file path operations.
+  Path is meant to unify the logic connected with file path operations.
 --]]
 
-class "PathManager"
+class "Path"
 
----@type Room
-local PathManager = _G["PathManager"]
+---@type Path
+local Path = _G["Path"]
 
+local _separator = package.config:sub(1, 1)
 
-function PathManager:PathManager()
-    self._separator = package.config:sub(1, 1)
-end
-
-function PathManager:getSeparator()
-    return self._separator
+--[[
+  Returns correct separator for current OS.
+]]
+function Path.getSeparator()
+  return _separator
 end
