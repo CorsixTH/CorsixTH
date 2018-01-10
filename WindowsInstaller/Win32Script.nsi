@@ -279,7 +279,7 @@ Section "MainSection" SEC01
 ; Shortcuts and final files
   SetOutPath "$INSTDIR"
   File ..\CorsixTH\*.lua
-  File ..\CorsixTH\changelog.txt
+  File ..\changelog.txt
   File ..\LICENSE.txt
   File ..\README.txt
 
