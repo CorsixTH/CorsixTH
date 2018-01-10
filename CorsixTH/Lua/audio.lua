@@ -18,7 +18,9 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local pathsep = package.config:sub(1, 1)
+corsixth.require("system.path")
+
+local pathsep = Path.getSeparator()
 local rnc = require("rnc")
 local lfs = require("lfs")
 local SDL = require("sdl")

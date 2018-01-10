@@ -18,6 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("system.path")
 corsixth.require("window")
 
 --! Top-level container for all other user-interface components.
@@ -235,7 +236,7 @@ end
 
 function UI:runDebugScript()
   print("Executing Debug Script...")
-  local path_sep = package.config:sub(1, 1)
+  local path_sep = Path.getSeparator()
   local lua_dir = debug.getinfo(1, "S").source:sub(2, -8)
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
   local script = assert(loadfile(lua_dir .. path_sep .. "debug_script.lua"))

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("system.path")
+
 --! Options window used in the main menu and ingame.
 class "UIUpdate" (UIResizable)
 
@@ -69,7 +71,7 @@ function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, dow
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.download_url = download_url
 
-  local pathsep = package.config:sub(1, 1)
+  local pathsep = Path.getSeparator()
 
   if pathsep == "\\" then
     self.os_is_windows = true

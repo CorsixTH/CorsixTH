@@ -18,13 +18,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("system.path")
+
 --! Lua extensions to the C++ THMap class
 class "Map"
 
 ---@type Map
 local Map = _G["Map"]
 
-local pathsep = package.config:sub(1, 1)
+local pathsep = Path.getSeparator()
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
 local thMap = require("TH").map

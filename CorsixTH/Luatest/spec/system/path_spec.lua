@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 require("class_test_base")
 
-require("system/path")
+require("system.path")
 
 describe("Path Manager -", function()
   it("should return right separator", function()

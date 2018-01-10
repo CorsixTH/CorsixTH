@@ -18,9 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("system.path")
 local TH = require("TH")
 
-local pathsep = package.config:sub(1, 1)
+local pathsep = Path.getSeparator()
 local ourpath = debug.getinfo(1, "S").source:sub(2, -17)
 
 --! Layer for loading (and subsequently caching) graphical resources.

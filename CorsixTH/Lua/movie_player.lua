@@ -20,8 +20,9 @@ SOFTWARE. --]]
 
 --! Layer which handles the Lua-facing side of loading and playing video.
 
+corsixth.require("system.path")
 local TH = require("TH")
-local pathsep = package.config:sub(1, 1)
+local pathsep = Path.getSeparator()
 
 class "MoviePlayer"
 

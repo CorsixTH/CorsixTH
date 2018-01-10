@@ -22,6 +22,8 @@ SOFTWARE. --]]
 -- when you don't have a copy of AnimView, or the means to compile it, then a
 -- crude sprite viewer is better than no sprite viewer.
 
+corsixth.require("system.path")
+
 local gfx = TheApp.gfx
 gfx.cache.tabled = {}
 local font = gfx:loadFont("QData", "Font00V")
@@ -98,7 +100,7 @@ end
 
 local function Render(canvas)
   local encoding = is_complex and " (Complex)" or " (Simple)"
-  local msg = table.concat(sprite_table_paths[sprite_table_index], package.config:sub(1, 1)) .. encoding
+  local msg = table.concat(sprite_table_paths[sprite_table_index], Path.getSeparator()) .. encoding
   local _, fonth = font:sizeOf(msg)
   local sep = 2
   local y = y_off

@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("system.path")
+
 --! Iterface for items within a UI tree control
 class "TreeNode"
 
@@ -187,7 +189,7 @@ class "FileTreeNode" (TreeNode)
 ---@type FileTreeNode
 local FileTreeNode = _G["FileTreeNode"]
 
-local pathsep = package.config:sub(1, 1)
+local pathsep = Path.getSeparator()
 
 function FileTreeNode:FileTreeNode(path)
   self:TreeNode()

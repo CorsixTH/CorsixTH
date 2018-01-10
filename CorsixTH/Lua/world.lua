@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require"TH"
+local TH = require("TH")
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
@@ -34,6 +34,7 @@ corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
 corsixth.require("entity_map")
 corsixth.require("date")
+corsixth.require("system.path")
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -967,7 +968,7 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
-      local pathsep = package.config:sub(1, 1)
+      local pathsep = Path.getSeparator()
       local dir = TheApp.savegame_dir
       if not dir:sub(-1, -1) == pathsep then
         dir = dir .. pathsep
@@ -2288,7 +2289,7 @@ end
 -- This is automatically done on each error.
 function World:dumpGameLog()
   local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
+  local pathsep = Path.getSeparator()
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi, err = io.open(gamelog_path, "w")
@@ -2412,7 +2413,7 @@ function World:afterLoad(old, new)
   end
   if old < 17 then
     -- Added another object
-    local pathsep = package.config:sub(1, 1)
+    local pathsep = Path.getSeparator()
     local _, shield = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield")
     local _, shield_b = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield_b")
     shield.slave_type = shield_b
