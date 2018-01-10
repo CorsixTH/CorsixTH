@@ -51,7 +51,8 @@ string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -VcpkgCommitSha " ${VCPKG_COMMIT_SHA}
 set(_SCRIPT_COMMAND  powershell ${_SCRIPT_DIR}/${_VCPKG_SCRIPT_NAME})
 execute_process(WORKING_DIRECTORY ${VCPKG_PARENT_DIR}
   COMMAND ${_SCRIPT_COMMAND} ${_VCPKG_ARGS}
-  RESULT_VARIABLE err_val)
+  RESULT_VARIABLE err_val
+)
 if(err_val)
   message(FATAL_ERROR "Failed to build vcpkg dependencies. "
     "\nIf this error persists try deleting the 'vcpkg' folder.\n")

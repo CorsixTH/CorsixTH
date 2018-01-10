@@ -38,7 +38,8 @@ ExternalProject_Add(${_DEPS_PROJECT_NAME}
   CONFIGURE_COMMAND ""
   BUILD_COMMAND ""
   INSTALL_COMMAND ""
-  TEST_COMMAND "")
+  TEST_COMMAND ""
+)
 
 unset(_DEPS_GIT_URL)
 unset(_DEPS_GIT_SHA)
@@ -47,7 +48,8 @@ unset(_DEPS_GIT_SHA)
 # the dependencies target
 set_target_properties(${_DEPS_PROJECT_NAME} PROPERTIES
   EXCLUDE_FROM_ALL 1
-  EXCLUDE_FROM_DEFAULT_BUILD 1)
+  EXCLUDE_FROM_DEFAULT_BUILD 1
+)
 
 set(_DEPS_TMP_PATH ${PRECOMPILED_DEPS_BASE_DIR}/tmp)
 set(_DEPS_MODULES_TEMPLATE_NAME ${_DEPS_TMP_PATH}/${_DEPS_PROJECT_NAME})
@@ -57,7 +59,8 @@ if(NOT EXISTS ${PRECOMPILED_DEPS_BASE_DIR}/src/${_DEPS_PROJECT_NAME}/.git)
   message(STATUS "Getting Precompiled Dependencies...")
   execute_process(COMMAND ${CMAKE_COMMAND} ARGS -P
     ${_DEPS_MODULES_TEMPLATE_NAME}-gitclone.cmake
-    RESULT_VARIABLE return_value)
+    RESULT_VARIABLE return_value
+  )
   if(return_value)
     message(FATAL_ERROR "Failed to clone precompiled dependencies.")
   endif()
@@ -67,7 +70,8 @@ else()
   message(STATUS "Checking for Precompiled Dependency Updates...")
   execute_process(COMMAND ${CMAKE_COMMAND} ARGS -P
     ${_DEPS_MODULES_TEMPLATE_NAME}-gitupdate.cmake
-    RESULT_VARIABLE return_value)
+    RESULT_VARIABLE return_value
+  )
   if(return_value)
     message(FATAL_ERROR "Failed to update precompiled dependencies.")
   endif()
@@ -82,7 +86,8 @@ if(UNIX AND CMAKE_COMPILER_IS_GNU)
   # We need user to choose which arch they are intending to compile for
   set(DEPS_ARCH "x86" CACHE STRING "Architecture of precompiled dependencies to use.")
   set_property(CACHE DEPS_ARCH
-    PROPERTY STRINGS "x86" "x64")
+    PROPERTY STRINGS "x86" "x64"
+  )
   # Generate the folder to use
   set(_DEPS_FOLDER_NAME "gnu-linux-" + ${DEPS_ARCH})
 else()

@@ -33,12 +33,12 @@ include(FindPackageHandleStandardArgs)
 include(${CMAKE_CURRENT_LIST_DIR}/CMakeFFmpegLibavMacros.cmake)
 
 # The default components were taken from a survey over other FindFFMPEG.cmake files
-if (NOT FFmpeg_FIND_COMPONENTS)
+if(NOT FFmpeg_FIND_COMPONENTS)
   set(FFmpeg_FIND_COMPONENTS AVCODEC AVFORMAT AVUTIL)
-endif ()
+endif()
 
 # Check for cached results. If there are skip the costly part.
-if (NOT FFMPEG_LIBRARIES)
+if(NOT FFMPEG_LIBRARIES)
 
   # Check for all possible component.
   find_component(AVCODEC  avcodec  libavcodec/avcodec.h   libavcodec/version.h)
@@ -50,40 +50,38 @@ if (NOT FFMPEG_LIBRARIES)
   find_component(SWRESAMPLE swresample libswresample/swresample.h libswresample/version.h)
 
   # Check if the required components were found and add their stuff to the FFMPEG_* vars.
-  foreach (_component ${FFmpeg_FIND_COMPONENTS})
-    if (${_component}_FOUND)
+  foreach(_component ${FFmpeg_FIND_COMPONENTS})
+    if(${_component}_FOUND)
       # message(STATUS "Required component ${_component} present.")
       set(FFMPEG_LIBRARIES   ${FFMPEG_LIBRARIES}   ${${_component}_LIBRARIES})
       list(APPEND FFMPEG_INCLUDE_DIRS ${${_component}_INCLUDE_DIRS})
-    else ()
+    else()
       # message(STATUS "Required component ${_component} missing.")
-    endif ()
-  endforeach ()
+    endif()
+  endforeach()
 
   # Build the include path with duplicates removed.
-  if (FFMPEG_INCLUDE_DIRS)
+  if(FFMPEG_INCLUDE_DIRS)
     list(REMOVE_DUPLICATES FFMPEG_INCLUDE_DIRS)
-  endif ()
+  endif()
 
   # cache the vars.
   set(FFMPEG_INCLUDE_DIRS ${FFMPEG_INCLUDE_DIRS} CACHE STRING "The FFmpeg include directories." FORCE)
   set(FFMPEG_LIBRARIES    ${FFMPEG_LIBRARIES}    CACHE STRING "The FFmpeg libraries." FORCE)
 
-  mark_as_advanced(FFMPEG_INCLUDE_DIRS
-                   FFMPEG_LIBRARIES)
-
-endif ()
+  mark_as_advanced(FFMPEG_INCLUDE_DIRS FFMPEG_LIBRARIES)
+endif()
 
 # Now set the noncached _FOUND vars for the components.
-foreach (_component AVCODEC AVDEVICE AVFORMAT AVUTIL POSTPROCESS SWSCALE SWRESAMPLE)
+foreach(_component AVCODEC AVDEVICE AVFORMAT AVUTIL POSTPROCESS SWSCALE SWRESAMPLE)
   set_component_found(${_component})
-endforeach ()
+endforeach()
 
 # Compile the list of required vars
 set(_FFmpeg_REQUIRED_VARS FFMPEG_LIBRARIES FFMPEG_INCLUDE_DIRS)
-foreach (_component ${FFmpeg_FIND_COMPONENTS})
+foreach(_component ${FFmpeg_FIND_COMPONENTS})
   list(APPEND _FFmpeg_REQUIRED_VARS ${_component}_LIBRARIES ${_component}_INCLUDE_DIRS)
-endforeach ()
+endforeach()
 
 # Give a nice error message if some of the required vars are missing.
 find_package_handle_standard_args(FFmpeg DEFAULT_MSG ${_FFmpeg_REQUIRED_VARS})

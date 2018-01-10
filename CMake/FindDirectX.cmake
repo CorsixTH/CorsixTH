@@ -36,7 +36,7 @@ if(WIN32) # The only platform it makes sense to check for DirectX SDK
     "C:/Program Files (x86)/Microsoft DirectX SDK*"
     "C:/apps/Microsoft DirectX SDK*"
     "C:/Program Files/Microsoft DirectX SDK*"
-	"$ENV{ProgramFiles}/Microsoft DirectX SDK*"
+    "$ENV{ProgramFiles}/Microsoft DirectX SDK*"
   )
 
   # Windows 8 SDK has custom layout
@@ -52,7 +52,7 @@ if(WIN32) # The only platform it makes sense to check for DirectX SDK
   # redo search if prefix path changed
   clear_if_changed(DirectX_PREFIX_PATH
     DirectX_LIBRARY
-	DirectX_INCLUDE_DIR
+    DirectX_INCLUDE_DIR
   )
   
   find_path(DirectX_INCLUDE_DIR NAMES d3d9.h HINTS ${DirectX_INC_SEARCH_PATH})
@@ -60,15 +60,14 @@ if(WIN32) # The only platform it makes sense to check for DirectX SDK
   # lib files are in DirectX_ROOT_DIR/Lib/x64|x86
   if(CMAKE_CL_64)
     set(DirectX_LIBPATH_SUFFIX "x64")
-  else(CMAKE_CL_64)
+  else()
     set(DirectX_LIBPATH_SUFFIX "x86")
-  endif(CMAKE_CL_64)
+  endif()
   find_library(DirectX_LIBRARY NAMES d3d9 HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
   find_library(DirectX_D3DX9_LIBRARY NAMES d3dx9 HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
   find_library(DirectX_DXERR_LIBRARY NAMES DxErr HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
   find_library(DirectX_DXGUID_LIBRARY NAMES dxguid HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
   
-
   # look for dxgi (needed by both 10 and 11)
   find_library(DirectX_DXGI_LIBRARY NAMES dxgi HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
   
@@ -83,33 +82,32 @@ if(WIN32) # The only platform it makes sense to check for DirectX SDK
   )
   
   mark_as_advanced(DirectX_D3DX9_LIBRARY DirectX_DXERR_LIBRARY DirectX_DXGUID_LIBRARY
-    DirectX_DXGI_LIBRARY DirectX_D3DCOMPILER_LIBRARY)
+    DirectX_DXGI_LIBRARY DirectX_D3DCOMPILER_LIBRARY
+  )
   
-
   # look for D3D11 components
-  if (DirectX_FOUND)
+  if(DirectX_FOUND)
     find_path(DirectX_D3D11_INCLUDE_DIR NAMES D3D11Shader.h HINTS ${DirectX_INC_SEARCH_PATH})
-	get_filename_component(DirectX_LIBRARY_DIR "${DirectX_LIBRARY}" PATH)
-	message(STATUS "DX lib dir: ${DirectX_LIBRARY_DIR}")
+    get_filename_component(DirectX_LIBRARY_DIR "${DirectX_LIBRARY}" PATH)
+    message(STATUS "DX lib dir: ${DirectX_LIBRARY_DIR}")
     find_library(DirectX_D3D11_LIBRARY NAMES d3d11 HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})
     find_library(DirectX_D3DX11_LIBRARY NAMES d3dx11 HINTS ${DirectX_LIB_SEARCH_PATH} PATH_SUFFIXES ${DirectX_LIBPATH_SUFFIX})	
-	if (DirectX_D3D11_INCLUDE_DIR AND DirectX_D3D11_LIBRARY)
-	  set(DirectX_D3D11_FOUND TRUE)
-	  set(DirectX_D3D11_INCLUDE_DIR ${DirectX_D3D11_INCLUDE_DIR})
-	  set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES}
-	    ${DirectX_D3D11_LIBRARY}
-	    ${DirectX_DXGI_LIBRARY}
+    if(DirectX_D3D11_INCLUDE_DIR AND DirectX_D3D11_LIBRARY)
+      set(DirectX_D3D11_FOUND TRUE)
+      set(DirectX_D3D11_INCLUDE_DIR ${DirectX_D3D11_INCLUDE_DIR})
+      set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES}
+        ${DirectX_D3D11_LIBRARY}
+        ${DirectX_DXGI_LIBRARY}
         ${DirectX_DXGUID_LIBRARY}
         ${DirectX_D3DCOMPILER_LIBRARY}        	  
       )	
-    endif ()
-    if (DirectX_D3DX11_LIBRARY)
-        set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES} ${DirectX_D3DX11_LIBRARY})
-    endif ()
-    if (DirectX_DXERR_LIBRARY)
-        set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES} ${DirectX_DXERR_LIBRARY})
-    endif ()
-	mark_as_advanced(DirectX_D3D11_INCLUDE_DIR DirectX_D3D11_LIBRARY DirectX_D3DX11_LIBRARY)
-  endif ()
-  
-endif(WIN32)
+    endif()
+    if(DirectX_D3DX11_LIBRARY)
+      set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES} ${DirectX_D3DX11_LIBRARY})
+    endif()
+    if(DirectX_DXERR_LIBRARY)
+      set(DirectX_D3D11_LIBRARIES ${DirectX_D3D11_LIBRARIES} ${DirectX_DXERR_LIBRARY})
+    endif()
+    mark_as_advanced(DirectX_D3D11_INCLUDE_DIR DirectX_D3D11_LIBRARY DirectX_D3DX11_LIBRARY)
+  endif()
+endif()
