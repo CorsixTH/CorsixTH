@@ -226,7 +226,7 @@ function UIProgressReport:draw(canvas, x, y)
   self:drawMarkers(canvas, x, y)
 
   self.normal_font:draw(canvas, _S.progress_report.header .. " " ..
-      (world.year + 1999), x + 227, y + 40, 400, 0)
+      (world:date():year() + 1999), x + 227, y + 40, 400, 0)
   self.small_font:draw(canvas, _S.progress_report.win_criteria:upper(), x + 263, y + 172)
   self.small_font:draw(canvas, _S.progress_report.percentage_pop:upper() .. " " ..
       (hospital.population * 100) .. "%", x + 450, y + 65)

@@ -69,4 +69,8 @@ describe("A class in CorsixTH ", function()
     assert.are.equal("ChildClass", class.type(child_class))
     assert.are.equal("ParentClass", class.type(parent_class))
   end)
+
+  it("should make the metatable available", function()
+    assert.are.equal(getmetatable(parent_class), parent_class._metatable)
+  end)
 end)

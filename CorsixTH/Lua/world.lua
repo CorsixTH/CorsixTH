@@ -33,6 +33,7 @@ dofile "epidemic"
 dofile "calls_dispatcher"
 dofile "research_department"
 dofile "entity_map"
+dofile "date"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -95,10 +96,8 @@ function World:World(app)
   self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
-  self.year = 1
-  self.month = 1 -- January
-  self.day = 1
   self.hour = 0
+  self.game_date = Date()
 
   self.room_information_dialogs_off = app.config.debug
   -- This is false when the game is paused.
@@ -473,8 +472,6 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
   if disease.only_emergency then return false end
   if not disease.visuals_id then return true end
 
-  local current_month = (self.year - 1) * 12 + self.month
-
   -- level files can delay visuals to a given month
   -- and / or until a given number of patients have arrived
   local level_config = self.map.level_config
@@ -482,14 +479,14 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
   local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
 
   -- if the month is greater than either of these values then visuals will not appear in the game
-  if (hold_visual_months and hold_visual_months > current_month) or
+  if (hold_visual_months and hold_visual_months > self.game_date:monthOfGame()) or
       (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
     return false
   end
 
   -- The value against #visuals_available determines from which month a disease can appear.
   -- 0 means it can show up anytime.
-  return level_config.visuals_available[disease.visuals_id].Value < current_month
+  return level_config.visuals_available[disease.visuals_id].Value < self.game_date:monthOfGame()
 end
 
 --! Spawn a patient from a spawn point for the given hospital.
@@ -855,7 +852,7 @@ local month_length = {
 }
 
 function World:getDate()
-  return self.month, self.day
+  return self.game_date:monthOfYear(), self.game_date:dayOfMonth()
 end
 
 -- Game speeds. The second value is the number of world clicks that pass for each
@@ -870,11 +867,6 @@ local tick_rates = {
   ["And then some more"] = {3, 1},
   ["Speed Up"]           = {4, 1},
 }
-
--- Return the length of the current month
-function World:getCurrentMonthLength()
-  return month_length[self.month]
-end
 
 function World:speedUp()
   self:setSpeed("Speed Up")
@@ -984,12 +976,12 @@ function World:onTick()
       if not lfs.attributes(dir .. "Autosaves", "modification") then
         lfs.mkdir(dir .. "Autosaves")
       end
-      local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.month .. ".sav")
+      local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.game_date:monthOfYear() .. ".sav")
       if not status then
         print("Error while autosaving game: " .. err)
       end
     end
-    if self.year == 1 and self.month == 1 and self.day == 1 and self.hour == 0 then
+    if self.game_date == Date() and self.hour == 0 then
       if not self.ui.start_tutorial then
         self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
         self.ui:showBriefing()
@@ -1010,9 +1002,7 @@ function World:onTick()
       end
       self:onEndDay()
       self.hour = self.hour - self.hours_per_day
-      self.day = self.day + 1
-      if self.day > month_length[self.month] then
-        self.day = month_length[self.month]
+      if self.game_date:isLastDayOfMonth() then
         for _, hospital in ipairs(self.hospitals) do
           hospital:onEndMonth()
         end
@@ -1021,18 +1011,15 @@ function World:onTick()
           -- Bail out as the game has already been ended.
           return
         end
-        self.day = 1
-        self.month = self.month + 1
-        if self.month > 12 then
-          self.month = 12
+
+        if self.game_date:isLastDayOfYear() then
           -- It is crucial that the annual report gets to initialize before onEndYear is called.
           -- Yearly statistics are reset there.
           self.ui:addWindow(UIAnnualReport(self.ui, self))
           self:onEndYear()
-          self.year = self.year + 1
-          self.month = 1
         end
       end
+      self.game_date = self.game_date:plusDays(1)
     end
     for i = 1, self.hours_per_tick do
       for _, hospital in ipairs(self.hospitals) do
@@ -1053,7 +1040,7 @@ function World:onTick()
       end
       self.current_tick_entity = nil
       self.map:onTick()
-      self.map.th:updateTemperatures(outside_temperatures[self.month],
+      self.map.th:updateTemperatures(outside_temperatures[self.game_date:monthOfYear()],
           0.25 + self.hospitals[1].radiator_heat * 0.3)
       if self.ui then
         self.ui:onWorldTick()
@@ -1074,12 +1061,12 @@ function World:onTick()
 end
 
 function World:setEndMonth()
-  self.day = month_length[self.month]
+  self.game_date = Date(self.game_date:year(), self.game_date:monthOfYear(), self.game_date:lastDayOfMonth())
   self.hour = self.hours_per_day - 1
 end
 
 function World:setEndYear()
-  self.month = 12
+  self.game_date = Date(self.game_date:year(), 12, self.game_date:dayOfMonth())
   self:setEndMonth()
 end
 
@@ -1096,8 +1083,8 @@ function World:onEndDay()
   self.current_tick_entity = nil
 
   --check if it's time for a VIP visit
-  if (self.year - 1) * 12 + self.month == self.next_vip_month and
-      self.day == self.next_vip_day then
+  if self.game_date:monthOfGame() == self.next_vip_month and
+      self.game_date:dayOfMonth() == self.next_vip_day then
     if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
       self.hospitals[1]:createVip()
     else
@@ -1106,20 +1093,20 @@ function World:onEndDay()
   end
 
   -- check if it's time for an earthquake, and the user is at least on level 5
-  if (self.year - 1) * 12 + self.month == self.next_earthquake.start_month and
-      self.day == self.next_earthquake.start_day then
+  if self.game_date:monthOfGame() == self.next_earthquake.start_month and
+      self.game_date:dayOfMonth() == self.next_earthquake.start_day then
     -- warn the user that an earthquake is on the way
     self.next_earthquake.active = true
   end
 
   -- Maybe it's time for an emergency?
-  if (self.year - 1) * 12 + self.month == self.next_emergency_month and
-      self.day == self.next_emergency_day then
+  if self.game_date:monthOfGame() == self.next_emergency_month and
+      self.game_date:dayOfMonth() == self.next_emergency_day then
     -- Postpone it if anything clock related is already underway.
     if self.ui:getWindow(UIWatch) then
       self.next_emergency_month = self.next_emergency_month + 1
       local month_of_year = 1 + ((self.next_emergency_month - 1) % 12)
-      self.next_emergency_day = math.random(1, month_length[month_of_year])
+      self.next_emergency_day = math.random(1, Date(1, month_of_year):lastDayOfMonth())
     else
       -- Do it only for the player hospital for now. TODO: Multiplayer
       local control = self.map.level_config.emergency_control
@@ -1155,8 +1142,9 @@ function World:onEndDay()
   end
   -- Any patients tomorrow?
   self.spawn_hours = {}
-  if self.spawn_dates[self.day] then
-    for _ = 1, self.spawn_dates[self.day] do
+  local day = self.game_date:dayOfMonth()
+  if self.spawn_dates[day] then
+    for _ = 1, self.spawn_dates[day] do
       local hour = math.random(1, self.hours_per_day)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
@@ -1183,13 +1171,13 @@ function World:onEndMonth()
   -- TODO.... this is a step closer to the way TH would check.
   -- What is missing is that if offer is declined then the next check should be
   -- either 6 months later or at the end of month 12 and then every 6 months
-  if self.month % 3 == 0 and self.month < 12 then
+  if self.game_date:monthOfYear() % 3 == 0 and self.game_date:monthOfYear() < 12 then
     self:checkIfGameWon()
   end
 
   local local_hospital = self:getLocalPlayerHospital()
   local_hospital.population = 0.25
-  if self.month >= self.map.level_config.gbv.AllocDelay then
+  if self.game_date:monthOfYear() >= self.map.level_config.gbv.AllocDelay then
     local_hospital.population = local_hospital.population * self:getReputationImpact(local_hospital)
   end
 
@@ -1197,7 +1185,7 @@ function World:onEndMonth()
   local index = 0
   local popn = self.map.level_config.popn
   while popn[index] do
-    if popn[index].Month == self.month + (self.year - 1)*12 then
+    if popn[index].Month == self.game_date:monthOfGame() then
       self.monthly_spawn_increase = popn[index].Change
       break
     end
@@ -1207,7 +1195,7 @@ function World:onEndMonth()
   self.spawn_rate = self.spawn_rate + self.monthly_spawn_increase
   self:updateSpawnDates()
 
-  self:makeAvailableStaff((self.year - 1) * 12 + self.month)
+  self:makeAvailableStaff(self.game_date:monthOfGame())
   self.autosave_next_tick = true
   for _, entity in ipairs(self.entities) do
     if entity.checkForDeadlock then
@@ -1228,7 +1216,7 @@ function World:updateSpawnDates()
   self.spawn_dates = {}
   for _ = 1, no_of_spawns do
     -- We are interested in the next month, pick days from it at random.
-    local day = math.random(1, month_length[self.month % 12 + 1])
+    local day = math.random(1, self.game_date:lastDayOfMonth())
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
   end
 end
@@ -1259,7 +1247,6 @@ end
 -- next emergency should look like.
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
-  local current_month = (self.year - 1) * 12 + self.month
   -- Does this level use random emergencies?
   if control and (control[0].Random or control[0].Mean) then
     -- Support standard values for mean and variance
@@ -1267,20 +1254,11 @@ function World:nextEmergency()
     local variance = control[0].Variance or 30
     -- How many days until next emergency?
     local days = math.round(math.n_random(mean, variance))
-    local next_month = self.month
+    local emergency_date = self.game_date:plusDays(days)
 
-    -- Walk forward to get the resulting month and day.
-    if days > month_length[next_month] - self.day then
-      days = days - (month_length[next_month] - self.day)
-      next_month = next_month + 1
-    end
-    while days > month_length[(next_month - 1) % 12 + 1] do
-      days = days - month_length[(next_month - 1) % 12 + 1]
-      next_month = next_month + 1
-    end
     -- Make it the same format as for "controlled" emergencies
-    self.next_emergency_month = next_month + (self.year - 1) * 12
-    self.next_emergency_day = days
+    self.next_emergency_month = emergency_date:monthOfGame()
+    self.next_emergency_day = emergency_date:dayOfMonth()
   else
     if not self.next_emergency_no then
       self.next_emergency_no = 0
@@ -1293,7 +1271,7 @@ function World:nextEmergency()
           self.next_emergency_no = self.next_emergency_no + 1
         end
       until not control[self.next_emergency_no] or
-            control[self.next_emergency_no].EndMonth >= current_month
+            control[self.next_emergency_no].EndMonth >= self.game_date:monthOfGame()
     end
 
     local emergency = control[self.next_emergency_no]
@@ -1304,14 +1282,14 @@ function World:nextEmergency()
     else
       -- Generate the next month and day the emergency should occur at.
       -- Make sure it doesn't happen in the past.
-      local start = math.max(emergency.StartMonth, self.month + (self.year - 1) * 12)
+      local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
       local next_month = math.random(start, emergency.EndMonth)
       self.next_emergency_month = next_month
       local day_start = 1
       if start == emergency.EndMonth then
-        day_start = self.day
+        day_start = self.game_date:dayOfMonth()
       end
-      local day_end = month_length[(next_month - 1) % 12 + 1]
+      local day_end = Date(1, next_month):lastDayOfMonth()
       self.next_emergency_day = math.random(day_start, day_end)
     end
   end
@@ -1324,19 +1302,10 @@ function World:nextVip()
   local variance = 30
   -- How many days until next vip?
   local days = math.round(math.n_random(mean, variance))
-  local next_month = self.month
+  local next_vip_date = self.game_date:plusDays(days)
 
-  -- Walk forward to get the resulting month and day.
-  if days > month_length[next_month] - self.day then
-    days = days - (month_length[next_month] - self.day)
-    next_month = next_month + 1
-  end
-  while days > month_length[(next_month - 1) % 12 + 1] do
-    days = days - month_length[(next_month - 1) % 12 + 1]
-    next_month = next_month + 1
-  end
-  self.next_vip_month = next_month + (self.year - 1) * 12
-  self.next_vip_day = days
+  self.next_vip_month = next_vip_date:monthOfGame()
+  self.next_vip_day = next_vip_date:dayOfMonth()
 end
 
 -- Called when it is time to have another earthquake
@@ -2104,7 +2073,7 @@ function World:objectPlaced(entity, id)
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
     elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
         self.object_counts["reception_desk"] == 1 and
-        not self.hospitals[1].receptionist_msg and self.month > 3 then
+        not self.hospitals[1].receptionist_msg and self.game_date:monthOfYear() > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
@@ -2601,6 +2570,9 @@ function World:afterLoad(old, new)
       end
     end
   end
+  if old < 124 then
+    self.game_date = Date(self.year, self.month, self.day)
+  end
 
   -- Now let things inside the world react.
   for _, cat in pairs({self.hospitals, self.entities, self.rooms}) do
@@ -2729,4 +2701,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
     end
   end
   return true
+end
+
+function World:date()
+  return self.game_date:clone()
 end

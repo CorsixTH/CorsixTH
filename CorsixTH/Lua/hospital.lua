@@ -370,7 +370,7 @@ function Hospital:cashLow()
   }
   if hosp.balance < 2000 and hosp.balance >= -500 then
     hosp.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
-  elseif hosp.balance < -2000 and hosp.world.month > 8 then
+  elseif hosp.balance < -2000 and hosp.world:date():monthOfYear() > 8 then
     -- ideally this should be linked to the lose criteria for balance
     hosp.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
   end
@@ -700,20 +700,23 @@ end
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
+  local year = self.world:date():year()
+  local month = self.world:date():monthOfYear()
+  local day = self.world:date():dayOfMonth()
   if self.hospital and self:isPlayerHospital() then
     -- If there is no staff room, remind player of the need to build one
-    if self.world.day == 3 and not self:hasRoomOfType("staff_room") then
-      if self.world.month > 4 and not self.staff_room_msg then
+    if day == 3 and not self:hasRoomOfType("staff_room") then
+      if month > 4 and not self.staff_room_msg then
         self:noStaffroom_msg()
-      elseif self.world.year > 1 then
+      elseif year > 1 then
         self:noStaffroom_msg()
       end
     end
     -- If there is no toilet, remind player of the need to build one
-    if self.world.day == 8 and not self:hasRoomOfType("toilets") then
-      if self.world.month > 4 and not self.toilet_msg then
+    if day == 8 and not self:hasRoomOfType("toilets") then
+      if month > 4 and not self.toilet_msg then
         self:noToilet_msg()
-      elseif self.world.year > 1 then
+      elseif year > 1 then
         self:noToilet_msg()
       end
     end
@@ -741,8 +744,8 @@ function Hospital:checkFacilities()
         self.seating_warning = 0
       end
     end
-    if self.world.day == 12 and show_msg  == 4 and not self.bench_msg and
-        (self.world.year > 1 or (self.world.year == 1 and self.world.month > 4)) then
+    if day == 12 and show_msg  == 4 and not self.bench_msg and
+        (year > 1 or (year == 1 and month > 4)) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -755,41 +758,41 @@ function Hospital:checkFacilities()
 
     -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
     -- If there are no radiators remind the player from May onwards
-    if self.world.object_counts.radiator == 0 and self.world.month > 4 and self.world.day == 15 then
+    if self.world.object_counts.radiator == 0 and month > 4 and day == 15 then
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
     -- Now to check how warm or cold patients and staff are.  So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
     if not self.heating_broke then
-      if not self.warmth_msg and self.world.day == 15 then
+      if not self.warmth_msg and day == 15 then
         local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
-        if (self.world.year > 1 or self.world.month > 4) and warmth < 0.22 then
+        if (year > 1 or month > 4) and warmth < 0.22 then
           self:warningTooCold()
-        elseif self.world.month > 4 and warmth >= 0.36 then
+        elseif month > 4 and warmth >= 0.36 then
           self:warningTooHot()
         end
       end
       -- Are the staff warm enough?
-      if not self.warmth_msg and self.world.day == 20 then
+      if not self.warmth_msg and day == 20 then
         local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
-        if (self.world.year > 1 or self.world.month > 4) and avgWarmth < 0.22 then
+        if (year > 1 or month > 4) and avgWarmth < 0.22 then
           self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-        elseif self.world.month > 4 and avgWarmth >= 0.36 then
+        elseif month > 4 and avgWarmth >= 0.36 then
           self.world.ui.adviser:say(_A.warnings.staff_too_hot)
         end
       end
     end
     -- Are the patients in need of a drink
-    if not self.thirst_msg and self.world.day == 24 then
+    if not self.thirst_msg and day == 24 then
       local thirst = self:getAveragePatientAttribute("thirst", 0) -- Default value does not result in a message.
-      if self.world.year == 1 and self.world.month > 4 then
+      if year == 1 and month > 4 then
         if thirst > 0.8 then
           self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
         elseif thirst > 0.6 then
           self:warningThirst()
         end
-      elseif self.world.year > 1 then
+      elseif year > 1 then
         if thirst > 0.9 then
           self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
         elseif thirst > 0.6 then
@@ -798,7 +801,7 @@ function Hospital:checkFacilities()
       end
     end
     -- reset all the messages on 28th of each month
-    if self.world.day == 28 then
+    if day == 28 then
       self.staff_room_msg = false
       self.toilet_msg = false
       self.bench_msg = false
@@ -1030,7 +1033,7 @@ function Hospital:onEndDay()
   if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
       self.world.object_counts.radiator > 0 then
     if tonumber(self.world.map.level_number) then
-      if self.world.map.level_number == 1 and (self.world.month > 5 or self.world.year > 1) then
+      if self.world.map.level_number == 1 and (self.world:date() >= Date(1,6)) then
         self:boilerBreakdown()
       elseif self.world.map.level_number > 1 then
         self:boilerBreakdown()
@@ -1041,22 +1044,8 @@ function Hospital:onEndDay()
   end
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
-  local month_length = {
-    31, -- Jan
-    28, -- Feb
-    31, -- Mar
-    30, -- Apr
-    31, -- May
-    30, -- Jun
-    31, -- Jul
-    31, -- Aug
-    30, -- Sep
-    31, -- Oct
-    30, -- Nov
-    31, -- Dec
-  }
   local radiators = self.world.object_counts.radiator
-  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / month_length[self.world.month]
+  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
   if self:isPlayerHospital() then dailyUpdateRatholes(self) end
@@ -1066,6 +1055,7 @@ end
 function Hospital:onEndMonth()
   -- Spend wages
   local wages = 0
+  local current_month = self.world:date():monthOfYear()
   for _, staff in ipairs(self.staff) do
     wages = wages + staff.profile.wage
   end
@@ -1130,10 +1120,10 @@ function Hospital:onEndMonth()
   end
 
   -- Check for equipment getting available
-  self.research:checkAutomaticDiscovery(self.world.month + 12 * (self.world.year - 1))
+  self.research:checkAutomaticDiscovery(self.world:date():monthOfGame())
 
   -- Add some interesting statistics.
-  self.statistics[self.world.month + 1 + 12 * (self.world.year - 1)] = {
+  self.statistics[self.world:date():monthOfGame() + 1] = {
     money_in = self.money_in,
     money_out = self.money_out,
     wages = wages,
@@ -1147,18 +1137,18 @@ function Hospital:onEndMonth()
   self.money_out = 0
 
   -- make players aware of the need for a receptionist and desk.
-  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world.year == 1 then
-    if self.receptionist_count ~= 0 and self.world.month > 2 and not self.receptionist_msg then
+  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world:date():year() == 1 then
+    if self.receptionist_count ~= 0 and current_month > 2 and not self.receptionist_msg then
       self.world.ui.adviser:say(_A.warnings.no_desk_6)
       self.receptionist_msg = true
-    elseif self.receptionist_count == 0 and self.world.month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
+    elseif self.receptionist_count == 0 and current_month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
       self.world.ui.adviser:say(_A.warnings.no_desk_7)
     --  self.receptionist_msg = true
-    elseif self.world.month == 3 then
+    elseif current_month == 3 then
       self.world.ui.adviser:say(_A.warnings.no_desk, true)
-    elseif self.world.month == 8 then
+    elseif current_month == 8 then
       self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
-    elseif self.world.month == 11 then
+    elseif current_month == 11 then
       if self.visitors == 0 then
         self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
       else
@@ -1207,7 +1197,7 @@ function Hospital:onEndYear()
   -- this will replicate that. I have still to check other levels above 5 to
   -- see if there are other large increases.
   -- TODO Hall of fame and shame
-  if self.world.year == 3 and self.world.map.level_number == 3 then
+  if self.world:date():year() == 3 and self.world.map.level_number == 3 then
     -- adds the extra to salary in level 3 year 3
     self.player_salary = self.player_salary + math.random(8000,20000)
   end
@@ -1444,7 +1434,7 @@ function Hospital:determineIfContagious(patient)
   -- The patient isn't contagious if these conditions aren't passed
   local reduce_months = level_config.ReduceContMonths or 14
   local reduce_people = level_config.ReduceContPeepCount or 20
-  local date_in_months = self.world.month + (self.world.year - 1)*12
+  local date_in_months = self.world:date():monthOfGame()
 
   if potentially_contagious and date_in_months > reduce_months and
       self.num_visitors > reduce_people then
@@ -1644,8 +1634,8 @@ at least one of the following integer fields: `spend`, `receive`.
 ]]
 function Hospital:logTransaction(transaction)
   transaction.balance = self.balance
-  transaction.day = self.world.day
-  transaction.month = self.world.month
+  transaction.day = self.world:date():dayOfMonth()
+  transaction.month = self.world:date():monthOfYear()
   while #self.transactions > 20 do
     self.transactions[#self.transactions] = nil
   end
