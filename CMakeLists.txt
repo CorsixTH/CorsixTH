@@ -19,9 +19,6 @@ if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
 
-# Need to know whether to pull in GTest with VCPKG too
-OPTION(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
-
 if(USE_VCPKG_DEPS)
   # This must be before the project call for tool-chain to work correctly
   message("Note: Using locally built vcpkg dependencies.")

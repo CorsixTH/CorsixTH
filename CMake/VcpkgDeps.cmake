@@ -45,13 +45,6 @@ else()
   string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildAnimView $False")
 endif()
 
-if (ENABLE_UNIT_TESTS)
-  string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildGTest $True")
-else()
-  string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildGTest $False")
-endif()
-
-# Append the commit SHA we are using
 string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -VcpkgCommitSha " ${VCPKG_COMMIT_SHA} " ")
 
 # Run the build script

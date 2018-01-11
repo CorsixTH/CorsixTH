@@ -28,13 +28,28 @@ set (TESTING_FILES
 
 enable_testing()
 
-
 add_custom_target(AllTests)
-find_package(GTest REQUIRED)
 
+# Download and unpack googletest at configure time
+configure_file(CMakeLists.txt.in ${CMAKE_BINARY_DIR}/googletest-download/CMakeLists.txt)
+execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download" )
+execute_process(COMMAND "${CMAKE_COMMAND}" --build .
+    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download" )
+
+# Prevent GoogleTest from overriding our compiler/linker options
+# when building with Visual Studio
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+# Add googletest directly to our build. This adds
+# the following targets: gtest, gtest_main, gmock
+# and gmock_main
+add_subdirectory("${CMAKE_BINARY_DIR}/googletest-src"
+                 "${CMAKE_BINARY_DIR}/googletest-build"
+                 EXCLUDE_FROM_ALL)
 
 # Move gtest into its own folder
-# set_target_properties(gtest gtest_main PROPERTIES FOLDER UnitTests)
+set_target_properties(gtest gtest_main PROPERTIES FOLDER UnitTests)
 
 # Expose the header files from CorsixTH
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/inc/)
@@ -48,7 +63,7 @@ list(REMOVE_ITEM TEST_SOURCE_FILES "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp" "
 list(REMOVE_ITEM TEST_SOURCE_FILES "${CMAKE_SOURCE_DIR}/CorsixTH/inc/main.h")
 
 add_executable(UnitTests ${TESTING_FILES} ${TEST_SOURCE_FILES})
-target_link_libraries(UnitTests GTest::GTest GTest::Main)
+target_link_libraries(UnitTests gtest_main)
 
 # XXX: When we move the backend to a library we can avoid 
 # pulling in these deps for testing
@@ -72,6 +87,8 @@ TARGET_LINK_LIBRARIES(UnitTests ${LUA_LIBRARY} ${SDLMIXER_LIBRARY} ${FREETYPE_LI
 # Add the target to CTest
 
 add_test(NAME UnitTests COMMAND UnitTests)
+
+set_target_properties(UnitTests PROPERTIES FOLDER UnitTests)
 
 # Make sure we add it as a dependency to all tests
 add_dependencies(AllTests UnitTests)

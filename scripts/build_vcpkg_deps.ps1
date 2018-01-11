@@ -25,7 +25,6 @@
 # Parameters
 Param(
     [Parameter(Mandatory=$true)][bool]$BuildAnimView,
-    [Parameter(Mandatory=$true)][bool]$BuildGTest,
     [Parameter(Mandatory=$true)][string]$VcpkgTriplet,
     [Parameter(Mandatory=$true)][string]$VcpkgCommitSha
 )
@@ -34,11 +33,8 @@ Param(
 # Variables
 ################
 
-$corsixth_libs = "ffmpeg", "freetype", "lua", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer", "luasocket"
-
-# Optional lib names
 $anim_view_libs = "wxwidgets"
-$gtest_libs = "gtest"
+$corsixth_libs = "ffmpeg", "freetype", "lua", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer", "luasocket"
 
 $vcpkg_git_url = "https://github.com/CorsixTH/vcpkg"
 
@@ -110,12 +106,6 @@ function run_script {
     # If we are building the animation viewer be sure to include those libs
     if ($BuildAnimView) {
         foreach ($library in $anim_view_libs) {
-            $libs_list += $library + ' '
-        }
-    }
-
-    if ($BuildGTest){
-        foreach ($library in $gtest_libs) {
             $libs_list += $library + ' '
         }
     }
