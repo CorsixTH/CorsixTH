@@ -29,7 +29,7 @@ SOFTWARE.
 
 namespace {
 
-	// Test helpers
+	// -- Test helpers --
 	std::unique_ptr<uint8_t[]> populateLegacySpriteData(size_t length, uint8_t inputVal) {
 		auto input = std::make_unique<uint8_t[]>(length);
 
@@ -39,6 +39,8 @@ namespace {
 		// Have to force an rValue until we use std c++17.
 		return std::move(input);
 	}
+
+	// -- ConvertLegacySprite Tests --
 
 	TEST(ConvertLegacySprite, ConvertsSingleSprite) {
 		// A single block is 63 pixels

@@ -207,4 +207,6 @@ else()
 endif()
 
 # Adding testing files
-add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
+if(ENABLE_UNIT_TESTS)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
+endif()
