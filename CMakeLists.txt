@@ -116,9 +116,6 @@ if(USE_PRECOMPILED_DEPS)
   include(PrecompiledDeps)
 endif()
 
-# Environment handling
-check_include_files(inttypes.h CORSIX_TH_HAS_INTTYPES_H)
-
 # Include individual projects
 message("")
 # We always build CorsixTH otherwise we would miss the generated header

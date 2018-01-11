@@ -193,14 +193,6 @@ if(CORSIX_TH_USE_FREETYPE2)
   endif()
 endif()
 
-# Find msinttypes for MSVC
-if(MSVC AND NOT CORSIX_TH_HAS_INTTYPES_H)
-  find_path(MSINTTYPES_INCLUDE_DIRS "inttypes.h" NO_DEFAULT_PATH)
-  message(STATUS "Adding include directory: ${MSINTTYPES_INCLUDE_DIRS}")
-  include_directories(${MSINTTYPES_INCLUDE_DIRS})
-  set(CORSIX_TH_HAS_INTTYPES_H 1)
-endif()
-
 if(MSVC AND CORSIX_TH_USE_VLD)
   find_package(VLD REQUIRED)
   if(VLD_FOUND)
