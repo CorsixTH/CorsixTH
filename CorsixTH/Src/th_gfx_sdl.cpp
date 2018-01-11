@@ -23,7 +23,6 @@ SOFTWARE.
 #include "config.h"
 
 #include "th_gfx.h"
-#include "sprite.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif

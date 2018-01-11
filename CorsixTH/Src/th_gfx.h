@@ -43,6 +43,9 @@ enum THScaledItems
 
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
+// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
+
 //! Bitflags for drawing operations
 enum THDrawFlags
 {
