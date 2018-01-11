@@ -7,30 +7,11 @@ endif()
 # Project Declaration
 project(CorsixTH)
 
-# Basic platform dependent stuff
-if(UNIX)
-  if(APPLE)
-    # fruit goes here
-    add_subdirectory(SDLMain)
-  else()
-    # regular unix/linux
-  endif()
-else()
-  if(WIN32)
-    # Win32 specific
-    if(MSVC)
-      # We want to bind against the very latest versions of the MSVC runtimes
-      add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
-    else()
-      if(MSYS)
-        # MSYS stuff
-      else()
-        # What's left? MINGW? CYGWIN? BORLAND?
-      endif()
-    endif()
-  else()
-    # other OS (not UNIX, not 32/64 bit Windows)
-  endif()
+if(APPLE)
+  add_subdirectory(SDLMain)
+elseif(MSVC)
+  # We want to bind against the very latest versions of the MSVC runtimes
+  add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
 
 # Modify the config.h based upon our selection of options

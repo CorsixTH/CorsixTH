@@ -66,29 +66,9 @@ else()
   message("Make sure the path is correctly defined or set the environment variable WXWIN to the correct location")
 endif()
 
-# Basic platform dependant stuff
-if(UNIX)
-  if(APPLE)
-    # fruit goes here
-  else()
-    # regular unix/linux
-  endif()
-else()
-  if(WIN32)
-    # Win32 specific
-    if(MSVC)
-      # We want to bind against the very latest versions of the MSVC runtimes
-      add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
-    else()
-      if(MSYS)
-        # MSYS stuff
-      else()
-        # What's left? MINGW? CYGWIN? BORLAND?
-      endif()
-    endif()
-  else()
-    # other OS (not UNIX, not 32/64 bit Windows)
-  endif()
+if(MSVC)
+  # We want to bind against the very latest versions of the MSVC runtimes
+  add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
 
 if(APPLE)
