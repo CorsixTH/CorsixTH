@@ -20,11 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
 #include "th_gfx.h"
+
+#include "config.h"
 #include "persist_lua.h"
 #include "th_map.h"
 #include "th_sound.h"
+
 #include <new>
 #include <algorithm>
 #include <cstring>
@@ -1015,13 +1017,6 @@ THChunkRenderer::~THChunkRenderer()
     delete[] m_data;
 }
 
-uint8_t* THChunkRenderer::takeData()
-{
-    uint8_t *buffer = m_data;
-    m_data = 0;
-    return buffer;
-}
-
 void THChunkRenderer::chunkFillToEndOfLine(uint8_t value)
 {
     if(m_x != 0 || !m_skip_eol)
@@ -1056,6 +1051,12 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
     }
 }
 
+uint8_t* THChunkRenderer::takeData()
+{
+	uint8_t *buffer = m_data;
+	m_data = nullptr;
+	return buffer;
+}
 
 inline void THChunkRenderer::_fixNpixels(int& npixels) const
 {

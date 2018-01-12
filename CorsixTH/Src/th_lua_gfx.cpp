@@ -22,6 +22,8 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_gfx.h"
+#include "th_map.h"
+
 #include <SDL.h>
 #include <cstring>
 

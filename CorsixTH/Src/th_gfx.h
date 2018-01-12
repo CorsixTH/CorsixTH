@@ -23,6 +23,12 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
+#include "th_gfx_sdl.h"
+#include "th_gfx_font.h"
+
+#include <vector>
+#include <map>
+#include <string>
 
 class LuaPersistReader;
 class LuaPersistWriter;
@@ -34,17 +40,6 @@ enum THScaledItems
     THSI_Bitmaps = 1 << 1,
     THSI_All = 3,
 };
-
-#include "th_gfx_sdl.h"
-#include "th_gfx_font.h"
-#include <vector>
-#include <map>
-#include <string>
-
-void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
-
-// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
-uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
 
 //! Bitflags for drawing operations
 enum THDrawFlags
@@ -137,6 +132,9 @@ struct THDrawable : public THLinkList
     bool (*m_fnIsMultipleFrameAnimation)(THDrawable *pSelf);
 };
 
+// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
+
 /*!
     Utility class for decoding Theme Hospital "chunked" graphics files.
     Generally used internally by THSpriteSheet.
@@ -157,29 +155,6 @@ public:
 
     ~THChunkRenderer();
 
-    //! Convert a stream of chunks into a raw bitmap
-    /*!
-        @param pData Stream data.
-        @param iDataLen Length of \a pData.
-        @param bComplex true if pData is a stream of "complex" chunks, false if
-          pData is a stream of "simple" chunks. Passing the wrong value will
-          usually result in a very visible wrong result.
-
-        Use getData() or takeData() to obtain the resulting bitmap.
-    */
-    void decodeChunks(const uint8_t* pData, int iDataLen, bool bComplex);
-
-    //! Get the result buffer, and take ownership of it
-    /*!
-        This transfers ownership of the buffer to the caller. After calling,
-        the class will not have any buffer, and thus cannot be used for
-        anything.
-    */
-    uint8_t* takeData();
-
-    //! Get the result buffer
-    inline const uint8_t* getData() const {return m_data;}
-
     //! Perform a "copy" chunk (normally called by decodeChunks)
     void chunkCopy(int npixels, const uint8_t* data);
 
@@ -191,6 +166,29 @@ public:
 
     //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
     void chunkFinish(uint8_t value);
+
+	//! Convert a stream of chunks into a raw bitmap
+	/*!
+	@param pData Stream data.
+	@param iDataLen Length of \a pData.
+	@param bComplex true if pData is a stream of "complex" chunks, false if
+	pData is a stream of "simple" chunks. Passing the wrong value will
+	usually result in a very visible wrong result.
+
+	Use getData() or takeData() to obtain the resulting bitmap.
+	*/
+	void decodeChunks(const uint8_t* pData, int iDataLen, bool bComplex);
+
+	//! Get the result buffer
+	inline const uint8_t* getData() const { return m_data; }
+
+	//! Get the result buffer, and take ownership of it
+	/*!
+	This transfers ownership of the buffer to the caller. After calling,
+	the class will not have any buffer, and thus cannot be used for
+	anything.
+	*/
+	uint8_t* takeData();
 
 private:
     inline bool _isDone() {return m_ptr == m_end;}
