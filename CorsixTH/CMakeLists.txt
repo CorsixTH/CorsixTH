@@ -206,7 +206,8 @@ else()
   install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
 endif()
 
-# Adding testing files
+# Adding testing files whilst we also have the list of source files and have found libs
 if(ENABLE_UNIT_TESTS)
+  message("Building Unit Tests")
   add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
 endif()

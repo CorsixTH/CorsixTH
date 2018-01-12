@@ -67,12 +67,12 @@ target_link_libraries(UnitTests gtest_main)
 
 # XXX: When we move the backend to a library we can avoid 
 # pulling in these deps for testing
-IF (MSVC AND USE_VCPKG_DEPS)
-  TARGET_LINK_LIBRARIES(UnitTests SDL2::SDL2)
-  TARGET_LINK_LIBRARIES(UnitTests SDL2::SDL2main)
-ELSE()
-target_link_libraries(UnitTests ${SDL_LIBRARY})
-ENDIF()
+if (MSVC AND USE_VCPKG_DEPS)
+  target_link_libraries(UnitTests SDL2::SDL2)
+  target_link_libraries(UnitTests SDL2::SDL2main)
+else()
+  target_link_libraries(UnitTests ${SDL_LIBRARY})
+endif()
 
 if(CORSIX_TH_USE_FFMPEG)
   target_link_libraries(UnitTests ${FFMPEG_LIBRARIES})
@@ -82,7 +82,7 @@ if(CORSIX_TH_USE_LIBAV)
   target_link_libraries(UnitTests ${LIBAV_LIBRARIES})
 endif()
 
-TARGET_LINK_LIBRARIES(UnitTests ${LUA_LIBRARY} ${SDLMIXER_LIBRARY} ${FREETYPE_LIBRARIES})
+target_link_libraries(UnitTests ${LUA_LIBRARY} ${SDLMIXER_LIBRARY} ${FREETYPE_LIBRARIES})
 
 # Add the target to CTest
 

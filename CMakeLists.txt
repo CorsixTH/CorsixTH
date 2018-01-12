@@ -15,6 +15,9 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
+# Need to know whether to pull in GTest with VCPKG too
+option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
+
 if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
@@ -121,10 +124,6 @@ message("")
 # We always build CorsixTH otherwise we would miss the generated header
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
-
-# Adding testing files
-message("Building Unit Tests")
-add_subdirectory(${PROJECT_SOURCE_DIR}/CorsixTH/CppTest)
 
 if(BUILD_ANIMVIEWER)
   message("Building AnimView")
