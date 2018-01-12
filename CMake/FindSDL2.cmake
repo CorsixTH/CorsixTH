@@ -152,7 +152,7 @@ endif()
 #include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
 include(FindPackageHandleStandardArgs)
 
-
-FIND_PACKAGE_HANDLE_STANDARD_ARGS(SDL
-                                  REQUIRED_VARS SDL_LIBRARY SDL_INCLUDE_DIR
-                                  VERSION_VAR SDL_VERSION_STRING)
+find_package_handle_standard_args(SDL
+  REQUIRED_VARS SDL_LIBRARY SDL_INCLUDE_DIR
+  VERSION_VAR SDL_VERSION_STRING
+)

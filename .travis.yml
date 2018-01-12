@@ -28,7 +28,7 @@ before_install:
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
   - popd
 install:
-  - CMAKE_INCLUDE_PATH=$HOME/deps/gnu-linux-x64/include
+  - CMAKE_INCLUDE_PATH=$HOME/deps/gnu-linux-x64
   - CMAKE_LIBRARY_PATH=$HOME/deps/gnu-linux-x64/lib
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
