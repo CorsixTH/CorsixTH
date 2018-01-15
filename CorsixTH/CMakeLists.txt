@@ -185,6 +185,11 @@ if(MSVC AND CORSIX_TH_USE_VLD)
   endif()
 endif()
 
+# Launch script to facilitate out of source builds on Linux
+if(UNIX)
+  configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/run-corsixth-dev.sh.in ${CMAKE_BINARY_DIR}/CorsixTH/run-corsixth-dev.sh @ONLY)
+endif()
+
 # Declaration of the install process
 if(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
