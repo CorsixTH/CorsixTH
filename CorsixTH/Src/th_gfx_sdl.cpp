@@ -23,7 +23,6 @@ SOFTWARE.
 #include "config.h"
 
 #include "th_gfx.h"
-#include "sprite.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
@@ -592,7 +591,38 @@ void THRenderTarget::_flushZoomBuffer()
     m_pZoomTexture = nullptr;
 }
 
+//! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
+/*!
+    @param pPixelData Legacy 8bpp pixels.
+    @param iPixelDataLength Number of pixels in the \a pPixelData.
+    @return Converted 32bpp pixel data, if succeeded else nullptr is returned. Caller should free the returned memory.
+ */
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
+{
+    // Recolour blocks are 63 pixels long.
+    // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
+    size_t iNumFilled = iPixelDataLength / 63;
+    size_t iRemaining = iPixelDataLength - iNumFilled * 63;
+    size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
 
+    uint8_t *pData = new (std::nothrow) uint8_t[iNewSize];
+    if (pData == nullptr)
+        return nullptr;
+
+    uint8_t *pDest = pData;
+    while (iPixelDataLength > 0)
+    {
+        size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
+        *pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
+        *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
+        *pDest++ = 0xFF; // Non-transparent.
+        std::memcpy(pDest, pPixelData, iLength);
+        pDest += iLength;
+        pPixelData += iLength;
+        iPixelDataLength -= iLength;
+    }
+    return pData;
+}
 
 SDL_Texture* THRenderTarget::createPalettizedTexture(
             int iWidth, int iHeight, const uint8_t* pPixels,

@@ -20,7 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "sprite.h"
+#include "th_gfx.h"
+#include "th_gfx_sdl.h"
 
 #include <cstdint>
 #include <gtest/gtest.h>

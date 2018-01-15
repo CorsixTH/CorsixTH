@@ -22,7 +22,7 @@
 
 set (TESTING_FILES
     example.cpp
-    spriteTest.cpp
+    th_gfx_test.cpp
 
 )
 

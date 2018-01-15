@@ -35,6 +35,9 @@ struct THClipRect : public SDL_Rect
 };
 struct THRenderTargetCreationParams;
 
+// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
+
 /*!
     Utility class for decoding 32bpp images.
 */
