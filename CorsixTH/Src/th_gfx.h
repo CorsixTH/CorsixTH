@@ -155,16 +155,34 @@ public:
 
     ~THChunkRenderer();
 
-    //! Perform a "copy" chunk (normally called by decodeChunks)
+    //! Copies given data into the internal buffer from its internally tracked position.
+	//! Moves the internal position along by n-pixels
+	/*!
+        @param npixels The number of pixels to copy from the input buffer to the internal buffer
+        @param data The source buffer. This must be less than or equal to npixels length
+	*/
     void chunkCopy(int npixels, const uint8_t* data);
 
-    //! Perform a "fill" chunk (normally called by decodeChunks)
+    //! Fills n pixels in the internal position starting at its internally tracked position
+	//! Moves the internal position by n-pixels
+	/*!
+        @param npixels The number of pixels to fill in the internal buffer
+        @param value The value to set these pixels to in the internal buffer
+	*/
     void chunkFill(int npixels, uint8_t value);
 
-    //! Perform a "fill to end of line" chunk (normally called by decodeChunks)
+    //! Fills to the end of the current line which is determined from the width and current pos
+    //! If we are not at the start of the line or skip_eol is set to false
+    //! Then sets skip_eol to false
+    /*! 
+        @param value The value to fill the remainder of the line with
+    */
     void chunkFillToEndOfLine(uint8_t value);
 
-    //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
+    //! Fills to the end of the buffer with the given value from the current internal position
+    /*! 
+        @param value The value to fill the remainder of the buffer with
+    */
     void chunkFinish(uint8_t value);
 
 	//! Convert a stream of chunks into a raw bitmap
@@ -177,7 +195,7 @@ public:
 
 	Use getData() or takeData() to obtain the resulting bitmap.
 	*/
-	void decodeChunks(const uint8_t* pData, int iDataLen, bool bComplex);
+	void decodeChunks(const uint8_t* data, int dataLen, bool bComplex);
 
 	//! Get the result buffer
 	inline const uint8_t* getData() const { return m_data; }
@@ -191,9 +209,12 @@ public:
 	uint8_t* takeData();
 
 private:
-    inline bool _isDone() {return m_ptr == m_end;}
+    inline bool _isEndOfBuffer() {return m_ptr == m_end;}
     inline void _fixNpixels(int& npixels) const;
     inline void _incrementPosition(int npixels);
+
+    void decodeChunksSimple(const uint8_t* inputData, int dataLen);
+    void decodeChunksComplex(const uint8_t* inputData, int dataLen);
 
     uint8_t *m_data, *m_ptr, *m_end;
     int m_x, m_y, m_width, m_height;

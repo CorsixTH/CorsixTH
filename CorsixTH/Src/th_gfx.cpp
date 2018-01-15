@@ -1036,7 +1036,7 @@ void THChunkRenderer::chunkFill(int npixels, uint8_t value)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        std::memset(m_ptr, value, npixels);
+        std::memset(m_ptr, value, sizeof(value) * npixels);
         _incrementPosition(npixels);
     }
 }
@@ -1046,7 +1046,7 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        std::memcpy(m_ptr, data, npixels);
+        std::memcpy(m_ptr, data, sizeof(uint8_t) * npixels);
         _incrementPosition(npixels);
     }
 }
@@ -1075,88 +1075,118 @@ inline void THChunkRenderer::_incrementPosition(int npixels)
     m_skip_eol = true;
 }
 
-void THChunkRenderer::decodeChunks(const uint8_t* data, int datalen, bool complex)
+void THChunkRenderer::decodeChunks(const uint8_t* data, int dataLen, bool complex)
 {
     if(complex)
     {
-        while(!_isDone() && datalen > 0)
-        {
-            uint8_t b = *data;
-            --datalen;
-            ++data;
-            if(b == 0)
-            {
-                chunkFillToEndOfLine(0xFF);
-            }
-            else if(b < 0x40)
-            {
-                int amt = b;
-                if(datalen < amt)
-                    amt = datalen;
-                chunkCopy(amt, data);
-                data += amt;
-                datalen -= amt;
-            }
-            else if((b & 0xC0) == 0x80)
-            {
-                chunkFill(b - 0x80, 0xFF);
-            }
-            else
-            {
-                int amt;
-                uint8_t colour = 0;
-                if(b == 0xFF)
-                {
-                    if(datalen < 2)
-                    {
-                        break;
-                    }
-                    amt = (int)data[0];
-                    colour = data[1];
-                    data += 2;
-                    datalen -= 2;
-                }
-                else
-                {
-                    amt = b - 60 - (b & 0x80) / 2;
-                    if(datalen > 0)
-                    {
-                        colour = *data;
-                        ++data;
-                        --datalen;
-                    }
-                }
-                chunkFill(amt, colour);
-            }
-        }
+        decodeChunksComplex(data, dataLen);
     }
     else
     {
-        while(!_isDone() && datalen > 0)
+        decodeChunksSimple(data, dataLen);
+    }
+    chunkFinish(0xFF);
+}
+
+void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
+{
+    while (!_isEndOfBuffer() && dataLen > 0)
+    {
+        uint8_t b = *inputData;
+        --dataLen;
+        ++inputData;
+        
+        // If the value is 0 fill to EOL with all bits set
+        if (b == 0)
         {
-            uint8_t b = *data;
-            --datalen;
-            ++data;
-            if(b == 0)
+            chunkFillToEndOfLine(0xFF);
+        }
+        // If the value is than 128 (dec)...
+        else if (b < 0x80)
+        {
+            // The value represents the length of the buffer to copy
+            int amt = b;
+            if (dataLen < amt)
+                amt = dataLen;
+            chunkCopy(amt, inputData);
+            inputData += amt;
+            dataLen -= amt;
+        }
+        else
+        {
+            // Fill the next (256 - value) pixels with all bits set
+            // as the value is greater than 128 because of the above check it will
+            // be the next 1-128 pixels
+            chunkFill(0x100 - b, 0xFF);
+        }
+    }
+}
+
+void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen)
+{
+    while (!_isEndOfBuffer() && dataLen > 0)
+    {
+        uint8_t b = *inputData;
+        --dataLen;
+        ++inputData;
+
+        // If the value is 0 fill to the end of the line with all bits set
+        if (b == 0)
+        {
+            chunkFillToEndOfLine(0xFF);
+        }
+        // If the value is less than 64 copy the number of pixels represented by b.
+        else if (b < 0x40)
+        {
+            int amt = b;
+            if (dataLen < amt)
+                amt = dataLen;
+            chunkCopy(amt, inputData);
+            inputData += amt;
+            dataLen -= amt;
+        }
+        // If b is between 128 and 191 we fall into this branch as the 64 bit pixel is not set
+        else if ((b & 0xC0) == 0x80)
+        {
+            chunkFill(b - 0x80, 0xFF);
+        }
+        // B is >= 64 and < 128, or >= 192
+        else
+        {
+            int amt;
+            uint8_t colour = 0;
+            // If b is equal to 255 
+            if (b == 0xFF)
             {
-                chunkFillToEndOfLine(0xFF);
-            }
-            else if(b < 0x80)
-            {
-                int amt = b;
-                if(datalen < amt)
-                    amt = datalen;
-                chunkCopy(amt, data);
-                data += amt;
-                datalen -= amt;
+                if (dataLen < 2)
+                {
+                    break;
+                }
+                // Copy the number of pixels given with the colour. 
+                amt = (int)inputData[0];
+                colour = inputData[1];
+                inputData += 2;
+                dataLen -= 2;
             }
             else
             {
-                chunkFill(0x100 - b, 0xFF);
+                // Bitwise And b with 128, divide this by two
+                // then subtract this from b. Then subtract
+                // 60 from b. This gives the amount of pixels
+                // to copy.
+                amt = b - 60 - (b & 0x80) / 2;
+                if (dataLen > 0)
+                {
+                    // The colour is also determined from the value of b
+                    // which was used to initially calculate the amount of pixels
+                    colour = *inputData;
+                    ++inputData;
+                    --dataLen;
+                }
             }
+            chunkFill(amt, colour);
         }
     }
-    chunkFinish(0xFF);
 }
 
 #define AreFlagsSet(val, flags) (((val) & (flags)) == (flags))
