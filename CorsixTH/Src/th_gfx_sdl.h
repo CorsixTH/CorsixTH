@@ -30,7 +30,7 @@ SOFTWARE.
 
 // Forward declerations
 class THCursor;
-enum THScaledItems;
+enum THScaledItems : char;
 
 struct THClipRect : public SDL_Rect
 {
