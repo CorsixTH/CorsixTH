@@ -26,8 +26,6 @@ set (TESTING_FILES
 
 )
 
-enable_testing()
-
 add_custom_target(AllTests)
 
 # Download and unpack googletest at configure time
@@ -52,7 +50,7 @@ add_subdirectory("${CMAKE_BINARY_DIR}/googletest-src"
 set_target_properties(gtest gtest_main PROPERTIES FOLDER UnitTests)
 
 # Expose the header files from CorsixTH
-INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/CorsixTH/inc/)
+include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 # Link together all the unit test files - we should gradually move 
 # CorsixTH to use libraries, instead we recompile and link them together

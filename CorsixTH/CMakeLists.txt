@@ -209,5 +209,7 @@ endif()
 # Adding testing files whilst we also have the list of source files and have found libs
 if(ENABLE_UNIT_TESTS)
   message("Building Unit Tests")
+  # Enable testing if set at this level so we can use CTest from the root of the build dir
+  enable_testing()
   add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
 endif()

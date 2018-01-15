@@ -27,7 +27,7 @@ SOFTWARE.
 class LuaPersistReader;
 class LuaPersistWriter;
 
-enum THScaledItems
+enum THScaledItems : char
 {
     THSI_None = 0,
     THSI_SpriteSheets = 1 << 0,
