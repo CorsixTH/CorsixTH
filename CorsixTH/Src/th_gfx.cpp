@@ -1161,10 +1161,12 @@ void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, size_t data
             inputData += amt;
             dataLen -= amt;
         }
-        else if (inputVal >= 128 && inputVal <= 191)
+        // If the input has bit 128 set without bit 64
+        // i.e. in the range 128-191 
+        else if ((inputVal & 0xC0) == 0x80)
         {
             // Fill the with 0xFF for the number of pixels - 128
-            chunkFill(inputVal - 128, 0xFF);
+            chunkFill(inputVal - 0x80, 0xFF);
         }
         else
         {
@@ -1172,7 +1174,7 @@ void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, size_t data
             int amt;
             uint8_t colour = 0;
             // If inputVal is equal to 255 (0xFF)
-            if (inputVal == 255)
+            if (inputVal == 0xFF)
             {
                 if (dataLen < 2)
                 {
