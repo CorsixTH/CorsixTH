@@ -23,11 +23,15 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_SDL_H_
 #define CORSIX_TH_TH_GFX_SDL_H_
 #include "config.h"
+#include "th_gfx.h"
 
 #include <SDL.h>
 #include "persist_lua.h"
 
+// Forward declerations
 class THCursor;
+enum THScaledItems : char;
+
 struct THClipRect : public SDL_Rect
 {
     typedef Sint16 xy_t;

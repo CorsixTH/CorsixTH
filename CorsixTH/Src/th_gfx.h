@@ -23,6 +23,12 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
+#include "th_gfx_sdl.h"
+#include "th_gfx_font.h"
+
+#include <vector>
+#include <map>
+#include <string>
 
 class LuaPersistReader;
 class LuaPersistWriter;
@@ -34,14 +40,6 @@ enum THScaledItems : char
     THSI_Bitmaps = 1 << 1,
     THSI_All = 3,
 };
-
-#include "th_gfx_sdl.h"
-#include "th_gfx_font.h"
-#include <vector>
-#include <map>
-#include <string>
-
-void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
 //! Bitflags for drawing operations
 enum THDrawFlags
@@ -134,6 +132,9 @@ struct THDrawable : public THLinkList
     bool (*m_fnIsMultipleFrameAnimation)(THDrawable *pSelf);
 };
 
+// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
+
 /*!
     Utility class for decoding Theme Hospital "chunked" graphics files.
     Generally used internally by THSpriteSheet.
@@ -154,45 +155,66 @@ public:
 
     ~THChunkRenderer();
 
-    //! Convert a stream of chunks into a raw bitmap
-    /*!
-        @param pData Stream data.
-        @param iDataLen Length of \a pData.
-        @param bComplex true if pData is a stream of "complex" chunks, false if
-          pData is a stream of "simple" chunks. Passing the wrong value will
-          usually result in a very visible wrong result.
-
-        Use getData() or takeData() to obtain the resulting bitmap.
-    */
-    void decodeChunks(const uint8_t* pData, int iDataLen, bool bComplex);
-
-    //! Get the result buffer, and take ownership of it
-    /*!
-        This transfers ownership of the buffer to the caller. After calling,
-        the class will not have any buffer, and thus cannot be used for
-        anything.
-    */
-    uint8_t* takeData();
-
-    //! Get the result buffer
-    inline const uint8_t* getData() const {return m_data;}
-
-    //! Perform a "copy" chunk (normally called by decodeChunks)
+    //! Copies given data into the internal buffer from its internally tracked position.
+	//! Moves the internal position along by n-pixels
+	/*!
+        @param npixels The number of pixels to copy from the input buffer to the internal buffer
+        @param data The source buffer. This must be less than or equal to npixels length
+	*/
     void chunkCopy(int npixels, const uint8_t* data);
 
-    //! Perform a "fill" chunk (normally called by decodeChunks)
+    //! Fills n pixels in the internal position starting at its internally tracked position
+	//! Moves the internal position by n-pixels
+	/*!
+        @param npixels The number of pixels to fill in the internal buffer
+        @param value The value to set these pixels to in the internal buffer
+	*/
     void chunkFill(int npixels, uint8_t value);
 
-    //! Perform a "fill to end of line" chunk (normally called by decodeChunks)
+    //! Fills to the end of the current line which is determined from the width and current pos
+    //! If we are not at the start of the line or skip_eol is set to false
+    //! Then sets skip_eol to false
+    /*! 
+        @param value The value to fill the remainder of the line with
+    */
     void chunkFillToEndOfLine(uint8_t value);
 
-    //! Perform a "fill to end of file" chunk (normally called by decodeChunks)
+    //! Fills to the end of the buffer with the given value from the current internal position
+    /*! 
+        @param value The value to fill the remainder of the buffer with
+    */
     void chunkFinish(uint8_t value);
 
+	//! Convert a stream of chunks into a raw bitmap
+	/*!
+	@param pData Stream data.
+	@param iDataLen Length of \a pData.
+	@param bComplex true if pData is a stream of "complex" chunks, false if
+	pData is a stream of "simple" chunks. Passing the wrong value will
+	usually result in a very visible wrong result.
+
+	Use getData() or takeData() to obtain the resulting bitmap.
+	*/
+	void decodeChunks(const uint8_t* data, int dataLen, bool bComplex);
+
+	//! Get the result buffer
+	inline const uint8_t* getData() const { return m_data; }
+
+	//! Get the result buffer, and take ownership of it
+	/*!
+	This transfers ownership of the buffer to the caller. After calling,
+	the class will not have any buffer, and thus cannot be used for
+	anything.
+	*/
+	uint8_t* takeData();
+
 private:
-    inline bool _isDone() {return m_ptr == m_end;}
+    inline bool _isEndOfBuffer() {return m_ptr == m_end;}
     inline void _fixNpixels(int& npixels) const;
     inline void _incrementPosition(int npixels);
+
+    void decodeChunksSimple(const uint8_t* inputData, int dataLen);
+    void decodeChunksComplex(const uint8_t* inputData, int dataLen);
 
     uint8_t *m_data, *m_ptr, *m_end;
     int m_x, m_y, m_width, m_height;

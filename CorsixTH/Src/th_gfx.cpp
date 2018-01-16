@@ -20,11 +20,13 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
 #include "th_gfx.h"
+
+#include "config.h"
 #include "persist_lua.h"
 #include "th_map.h"
 #include "th_sound.h"
+
 #include <new>
 #include <algorithm>
 #include <cstring>
@@ -141,6 +143,47 @@ public:
         return true;
     }
 };
+
+//! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
+/*!
+@param pPixelData Legacy 8bpp pixels.
+@param iPixelDataLength Number of pixels in the \a pPixelData.
+@return Converted 32bpp pixel data, if succeeded else nullptr is returned. Caller should free the returned memory.
+*/
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
+{
+	// Recolour blocks are 63 pixels long.
+	// XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
+	size_t numBlocks = iPixelDataLength / 63;
+	size_t remainingPixels = iPixelDataLength - numBlocks * 63;
+
+	const int blockLength = 63;
+	const int numExtraBlocks = 3;
+
+	size_t iNewSize = numBlocks * (blockLength + numExtraBlocks);
+
+	// If there are remaining pixels add enough space for our extra blocks and those pixels
+	// in the destination buffer
+	iNewSize += (remainingPixels > 0) ? numExtraBlocks + remainingPixels : 0;
+
+	uint8_t *pData = new (std::nothrow) uint8_t[iNewSize];
+	if (pData == nullptr)
+		return nullptr;
+
+	uint8_t *pDest = pData;
+	while (iPixelDataLength > 0)
+	{
+		size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
+		*pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
+		*pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
+		*pDest++ = 0xFF; // Non-transparent.
+		std::memcpy(pDest, pPixelData, iLength);
+		pDest += iLength;
+		pPixelData += iLength;
+		iPixelDataLength -= iLength;
+	}
+	return pData;
+}
 
 THAnimationManager::THAnimationManager()
 {
@@ -974,13 +1017,6 @@ THChunkRenderer::~THChunkRenderer()
     delete[] m_data;
 }
 
-uint8_t* THChunkRenderer::takeData()
-{
-    uint8_t *buffer = m_data;
-    m_data = 0;
-    return buffer;
-}
-
 void THChunkRenderer::chunkFillToEndOfLine(uint8_t value)
 {
     if(m_x != 0 || !m_skip_eol)
@@ -1000,7 +1036,7 @@ void THChunkRenderer::chunkFill(int npixels, uint8_t value)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        std::memset(m_ptr, value, npixels);
+        std::memset(m_ptr, value, sizeof(value) * npixels);
         _incrementPosition(npixels);
     }
 }
@@ -1010,11 +1046,17 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        std::memcpy(m_ptr, data, npixels);
+        std::memcpy(m_ptr, data, sizeof(uint8_t) * npixels);
         _incrementPosition(npixels);
     }
 }
 
+uint8_t* THChunkRenderer::takeData()
+{
+	uint8_t *buffer = m_data;
+	m_data = nullptr;
+	return buffer;
+}
 
 inline void THChunkRenderer::_fixNpixels(int& npixels) const
 {
@@ -1033,88 +1075,118 @@ inline void THChunkRenderer::_incrementPosition(int npixels)
     m_skip_eol = true;
 }
 
-void THChunkRenderer::decodeChunks(const uint8_t* data, int datalen, bool complex)
+void THChunkRenderer::decodeChunks(const uint8_t* data, int dataLen, bool complex)
 {
     if(complex)
     {
-        while(!_isDone() && datalen > 0)
-        {
-            uint8_t b = *data;
-            --datalen;
-            ++data;
-            if(b == 0)
-            {
-                chunkFillToEndOfLine(0xFF);
-            }
-            else if(b < 0x40)
-            {
-                int amt = b;
-                if(datalen < amt)
-                    amt = datalen;
-                chunkCopy(amt, data);
-                data += amt;
-                datalen -= amt;
-            }
-            else if((b & 0xC0) == 0x80)
-            {
-                chunkFill(b - 0x80, 0xFF);
-            }
-            else
-            {
-                int amt;
-                uint8_t colour = 0;
-                if(b == 0xFF)
-                {
-                    if(datalen < 2)
-                    {
-                        break;
-                    }
-                    amt = (int)data[0];
-                    colour = data[1];
-                    data += 2;
-                    datalen -= 2;
-                }
-                else
-                {
-                    amt = b - 60 - (b & 0x80) / 2;
-                    if(datalen > 0)
-                    {
-                        colour = *data;
-                        ++data;
-                        --datalen;
-                    }
-                }
-                chunkFill(amt, colour);
-            }
-        }
+        decodeChunksComplex(data, dataLen);
     }
     else
     {
-        while(!_isDone() && datalen > 0)
+        decodeChunksSimple(data, dataLen);
+    }
+    chunkFinish(0xFF);
+}
+
+void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
+{
+    while (!_isEndOfBuffer() && dataLen > 0)
+    {
+        uint8_t b = *inputData;
+        --dataLen;
+        ++inputData;
+        
+        // If the value is 0 fill to EOL with all bits set
+        if (b == 0)
         {
-            uint8_t b = *data;
-            --datalen;
-            ++data;
-            if(b == 0)
+            chunkFillToEndOfLine(0xFF);
+        }
+        // If the value is than 128 (dec)...
+        else if (b < 0x80)
+        {
+            // The value represents the length of the buffer to copy
+            int amt = b;
+            if (dataLen < amt)
+                amt = dataLen;
+            chunkCopy(amt, inputData);
+            inputData += amt;
+            dataLen -= amt;
+        }
+        else
+        {
+            // Fill the next (256 - value) pixels with all bits set
+            // as the value is greater than 128 because of the above check it will
+            // be the next 1-128 pixels
+            chunkFill(0x100 - b, 0xFF);
+        }
+    }
+}
+
+void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen)
+{
+    while (!_isEndOfBuffer() && dataLen > 0)
+    {
+        uint8_t b = *inputData;
+        --dataLen;
+        ++inputData;
+
+        // If the value is 0 fill to the end of the line with all bits set
+        if (b == 0)
+        {
+            chunkFillToEndOfLine(0xFF);
+        }
+        // If the value is less than 64 copy the number of pixels represented by b.
+        else if (b < 0x40)
+        {
+            int amt = b;
+            if (dataLen < amt)
+                amt = dataLen;
+            chunkCopy(amt, inputData);
+            inputData += amt;
+            dataLen -= amt;
+        }
+        // If b is between 128 and 191 we fall into this branch as the 64 bit pixel is not set
+        else if ((b & 0xC0) == 0x80)
+        {
+            chunkFill(b - 0x80, 0xFF);
+        }
+        // B is >= 64 and < 128, or >= 192
+        else
+        {
+            int amt;
+            uint8_t colour = 0;
+            // If b is equal to 255 
+            if (b == 0xFF)
             {
-                chunkFillToEndOfLine(0xFF);
-            }
-            else if(b < 0x80)
-            {
-                int amt = b;
-                if(datalen < amt)
-                    amt = datalen;
-                chunkCopy(amt, data);
-                data += amt;
-                datalen -= amt;
+                if (dataLen < 2)
+                {
+                    break;
+                }
+                // Copy the number of pixels given with the colour. 
+                amt = (int)inputData[0];
+                colour = inputData[1];
+                inputData += 2;
+                dataLen -= 2;
             }
             else
             {
-                chunkFill(0x100 - b, 0xFF);
+                // Bitwise And b with 128, divide this by two
+                // then subtract this from b. Then subtract
+                // 60 from b. This gives the amount of pixels
+                // to copy.
+                amt = b - 60 - (b & 0x80) / 2;
+                if (dataLen > 0)
+                {
+                    // The colour is also determined from the value of b
+                    // which was used to initially calculate the amount of pixels
+                    colour = *inputData;
+                    ++inputData;
+                    --dataLen;
+                }
             }
+            chunkFill(amt, colour);
         }
     }
-    chunkFinish(0xFF);
 }
 
 #define AreFlagsSet(val, flags) (((val) & (flags)) == (flags))
