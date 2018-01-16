@@ -978,13 +978,12 @@ bool THSpriteSheet::loadFromTHFile(const uint8_t* pTableData, size_t iTableDataL
             continue;
 
         {
-            uint8_t *pData = new uint8_t[pSprite->iWidth * pSprite->iHeight];
-            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
+            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
             if(iDataLen < 0)
                 iDataLen = 0;
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
-            pData = oRenderer.takeData();
+            auto pData = oRenderer.takeData();
             pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
             delete[] pData;
         }

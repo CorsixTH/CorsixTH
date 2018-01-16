@@ -155,13 +155,7 @@ namespace {
 	TEST(THChunkRenderer, ConstructorWithNoBuffer) {
 		const int widthHeight = 10;
 		// If this constructs the test passes
-		THChunkRenderer testInstance(widthHeight, widthHeight, nullptr);
-	}
-
-	TEST(THChunkRenderer, ConstructorWithBuffer) {
-		const int widthHeight = 10;
-		auto data = std::make_unique<uint8_t[]>(widthHeight * widthHeight);
-		THChunkRenderer testInstance(widthHeight, widthHeight, data.release());
+		THChunkRenderer testInstance(widthHeight, widthHeight);
 	}
 
 	TEST(THChunkRenderer, chunkCopy) {
@@ -171,17 +165,17 @@ namespace {
 
 		const int arrayLength = widthHeight * widthHeight;
 		
-		auto data = populateArrayWithVal(arrayLength, knownVal);
 		auto newValues = populateArrayWithVal(arrayLength, newVal);
 
-		THChunkRenderer testInstance(widthHeight, widthHeight, data.release());
+		THChunkRenderer testInstance(widthHeight, widthHeight);
 
         // Copy all but the last pixel to ensure that it respects our pixel length
 		testInstance.chunkCopy((arrayLength - 1), newValues.get());
+        testInstance.chunkFill(1, knownVal);
 
 		auto internalValues = testInstance.getData();
 
-		EXPECT_NE(newValues.get(), internalValues) << "chunkCopy() took ownership of the pointer";
+		EXPECT_NE(newValues.get(), internalValues) << "chunkCopy() took ownership of the pointer instead of copying";
 
 		// Check the first, middle and last values are equal 
 		EXPECT_EQ(internalValues[0], newVal);
@@ -196,10 +190,10 @@ namespace {
         const uint8_t newVal = 11;
 
         const int arrayLength = widthHeight * widthHeight;
-        auto data = populateArrayWithVal(arrayLength, knownVal);
 
-        THChunkRenderer testInstance(widthHeight, widthHeight, data.release());
+        THChunkRenderer testInstance(widthHeight, widthHeight);
         testInstance.chunkFill((arrayLength - 1), newVal);
+        testInstance.chunkFill(1, knownVal);
 
         auto internalValues = testInstance.getData();
         EXPECT_EQ(internalValues[0], newVal);
@@ -213,14 +207,12 @@ namespace {
         const uint8_t knownVal = 55;
         const uint8_t newVal = 11;
 
-        const int arrayLength = widthHeight * widthHeight;
-        auto data = populateArrayWithVal(arrayLength, knownVal);
-
-        THChunkRenderer testInstance(widthHeight, widthHeight, data.release());
+        THChunkRenderer testInstance(widthHeight, widthHeight);
         // Move the internal counter along by using chunk fill as this is skipped at the
         // beginning of a line
         testInstance.chunkFill(1, knownVal);
         testInstance.chunkFillToEndOfLine(newVal);
+        testInstance.chunkFill(1, knownVal);
 
         auto internalVals = testInstance.getData();
         
@@ -240,9 +232,8 @@ namespace {
         const uint8_t newVal = 11;
 
         const int arrayLength = widthHeight * widthHeight;
-        auto data = populateArrayWithVal(arrayLength, knownVal);
 
-        THChunkRenderer testInstance(widthHeight, widthHeight, data.release());
+        THChunkRenderer testInstance(widthHeight, widthHeight);
         // Move the internal counter along by using chunk fill to middle of buffer
         testInstance.chunkFill((arrayLength / 2), knownVal);
         testInstance.chunkFinish(newVal);
@@ -531,25 +522,15 @@ namespace {
     }
 
 	TEST(THChunkRenderer, takeData) {
-		const int widthHeight = 10;
-		const uint8_t knownVal = 55;  //Chosen at random
-		const size_t arrayLength = widthHeight * widthHeight;
-
-		auto data = populateArrayWithVal(arrayLength, knownVal);
-
-		// Get the pointer address to check we get the same pointer back
-		auto dataPtr = data.release();
-		THChunkRenderer testInstance(widthHeight, widthHeight, dataPtr);
+		const int widthHeight = 2;
+		THChunkRenderer testInstance(widthHeight, widthHeight);
 
 		auto returnedPtr = testInstance.takeData();
-		EXPECT_EQ(dataPtr, returnedPtr) << "The returned pointer did not match the passed pointer";
+		EXPECT_NE(nullptr, returnedPtr) << "The returned pointer did not match the passed pointer";
 
 		// If we do this again a nullptr_t should be returned
 		auto secondPtr = testInstance.takeData();
 		EXPECT_EQ(secondPtr, nullptr) << "Expected a null pointer the second time takeData was called";
-
-		// We need to delete the pointer as we called release ourselves
-		delete[] dataPtr;
 	}
 
 } // End of namespace

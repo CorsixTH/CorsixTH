@@ -1000,8 +1000,9 @@ void THAnimationManager::getFrameExtent(size_t iFrame, const THLayers_t& oLayers
         *pMaxY = iMaxY;
 }
 
-THChunkRenderer::THChunkRenderer(int width, int height, uint8_t *buffer)
+THChunkRenderer::THChunkRenderer(int width, int height)
 {
+    auto buffer = nullptr;
     m_data = buffer ? buffer : new uint8_t[width * height];
     m_ptr = m_data;
     m_end = m_data + width * height;
