@@ -147,7 +147,7 @@ public:
         @param width Pixel width of the resulting image
         @param height Pixel height of the resulting image
     */
-    THChunkRenderer(int width, int height);
+    THChunkRenderer(size_t width, size_t height);
 
     ~THChunkRenderer() = default;
 
@@ -157,7 +157,7 @@ public:
         @param npixels The number of pixels to copy from the input buffer to the internal buffer
         @param data The source buffer. This must be less than or equal to npixels length
 	*/
-    void chunkCopy(int npixels, const uint8_t* data);
+    void chunkCopy(size_t npixels, const uint8_t* data);
 
     //! Fills n pixels in the internal position starting at its internally tracked position
 	//! Moves the internal position by n-pixels
@@ -165,7 +165,7 @@ public:
         @param npixels The number of pixels to fill in the internal buffer
         @param value The value to set these pixels to in the internal buffer
 	*/
-    void chunkFill(int npixels, uint8_t value);
+    void chunkFill(size_t npixels, uint8_t value);
 
     //! Fills to the end of the current line which is determined from the width and current pos
     //! If we are not at the start of the line or skip_eol is set to false
@@ -191,7 +191,7 @@ public:
 
 	Use getData() or takeData() to obtain the resulting bitmap.
 	*/
-	void decodeChunks(const uint8_t* data, int dataLen, bool bComplex);
+	void decodeChunks(const uint8_t* data, size_t dataLen, bool bComplex);
 
 	//! Get the result buffer
 	const uint8_t* getData() const { return m_data.data(); }
@@ -206,16 +206,18 @@ public:
 
 private:
     bool isEndOfBuffer() {return m_ptr == m_end;}
-    void fixNumPixels(int& npixels) const;
-    void incrementBufferPosition(int npixels);
+    size_t fixNumPixels(size_t npixels) const;
+    void incrementBufferPosition(size_t npixels);
 
-    void decodeChunksSimple(const uint8_t* inputData, int dataLen);
-    void decodeChunksComplex(const uint8_t* inputData, int dataLen);
+    void decodeChunksSimple(const uint8_t* inputData, size_t dataLen);
+    void decodeChunksComplex(const uint8_t* inputData, size_t dataLen);
 
     std::vector<uint8_t> m_data;
     std::vector<uint8_t>::iterator m_ptr, m_end;
-    int m_x, m_y, m_width, m_height;
-    bool m_skip_eol;
+    size_t m_width, m_height;
+
+    size_t m_x{ 0 }, m_y{ 0 };
+    bool m_skip_eol{ false };
 };
 
 //! Layer information (see THAnimationManager::drawFrame)

@@ -1002,17 +1002,12 @@ void THAnimationManager::getFrameExtent(size_t iFrame, const THLayers_t& oLayers
         *pMaxY = iMaxY;
 }
 
-THChunkRenderer::THChunkRenderer(int width, int height)
-{
-    m_data.resize(width * height);
-    m_ptr = m_data.begin();
-    m_end = m_data.end();
-    m_x = 0;
-    m_y = 0;
-    m_width = width;
-    m_height = height;
-    m_skip_eol = false;
-}
+THChunkRenderer::THChunkRenderer(size_t width, size_t height) :
+    m_data(width * height),
+    m_ptr(m_data.begin()),
+    m_end(m_data.end()),
+    m_width(width),
+    m_height(height) {};
 
 void THChunkRenderer::chunkFillToEndOfLine(uint8_t value)
 {
@@ -1028,9 +1023,9 @@ void THChunkRenderer::chunkFinish(uint8_t value)
     chunkFill(static_cast<int>(m_end - m_ptr), value);
 }
 
-void THChunkRenderer::chunkFill(int npixels, uint8_t value)
+void THChunkRenderer::chunkFill(size_t npixels, uint8_t value)
 {
-    fixNumPixels(npixels);
+    npixels = fixNumPixels(npixels);
     if(npixels > 0)
     {
         std::fill(m_ptr, m_ptr + npixels, value);
@@ -1039,9 +1034,9 @@ void THChunkRenderer::chunkFill(int npixels, uint8_t value)
     }
 }
 
-void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
+void THChunkRenderer::chunkCopy(size_t npixels, const uint8_t* data)
 {
-    fixNumPixels(npixels);
+    npixels = fixNumPixels(npixels);
     if(npixels > 0)
     {   
         // TODO : Replace this with std::copy when we change from a pointer to a std::vector in the interface
@@ -1072,18 +1067,23 @@ uint8_t* THChunkRenderer::takeData()
     }
 }
 
-void THChunkRenderer::fixNumPixels(int& npixels) const
+size_t THChunkRenderer::fixNumPixels(size_t npixels) const
 {
     const auto begin = m_data.begin();
-    // We have can't just add npixels to m_ptr as this runs past
+
+    // We have can't just add number of pixels to m_ptr as this runs past
     // the end of the container and invokes undefined behaviour
     if ((m_ptr - begin) + npixels > (m_end - begin))
     {
-        npixels = static_cast<int>(std::distance(m_end, m_ptr));
+        // Return the maximum number of pixels allowed
+        return std::distance(m_ptr, m_end);
+    }
+    else {
+        return npixels;
     }
 }
 
-void THChunkRenderer::incrementBufferPosition(int npixels)
+void THChunkRenderer::incrementBufferPosition(size_t npixels)
 {
     m_ptr += npixels;
     m_x += npixels;
@@ -1092,7 +1092,7 @@ void THChunkRenderer::incrementBufferPosition(int npixels)
     m_skip_eol = true;
 }
 
-void THChunkRenderer::decodeChunks(const uint8_t* data, int dataLen, bool complex)
+void THChunkRenderer::decodeChunks(const uint8_t* data, size_t dataLen, bool complex)
 {
     if(complex)
     {
@@ -1105,7 +1105,7 @@ void THChunkRenderer::decodeChunks(const uint8_t* data, int dataLen, bool comple
     chunkFinish(0xFF);
 }
 
-void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
+void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, size_t dataLen)
 {
     while (!isEndOfBuffer() && dataLen > 0)
     {
@@ -1121,7 +1121,7 @@ void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
         else if (inputVal < 128)
         {
             // The value represents the length of the buffer to copy
-            int amt = inputVal;
+            size_t amt = inputVal;
             if (dataLen < amt)
                 amt = dataLen;
             chunkCopy(amt, inputData);
@@ -1138,7 +1138,7 @@ void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
     }
 }
 
-void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen)
+void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, size_t dataLen)
 {
     while (!isEndOfBuffer() && dataLen > 0)
     {
@@ -1154,7 +1154,7 @@ void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen
         else if (inputVal < 64)
         {
             // Copy the number of pixels represented by inputVal.
-            int amt = inputVal;
+            size_t amt = inputVal;
             if (dataLen < amt)
                 amt = dataLen;
             chunkCopy(amt, inputData);
