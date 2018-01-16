@@ -1030,18 +1030,18 @@ void THChunkRenderer::chunkFinish(uint8_t value)
 
 void THChunkRenderer::chunkFill(int npixels, uint8_t value)
 {
-    _fixNpixels(npixels);
+    fixNumPixels(npixels);
     if(npixels > 0)
     {
         std::fill(m_ptr, m_ptr + npixels, value);
 
-        _incrementPosition(npixels);
+        incrementBufferPosition(npixels);
     }
 }
 
 void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
 {
-    _fixNpixels(npixels);
+    fixNumPixels(npixels);
     if(npixels > 0)
     {   
         // TODO : Replace this with std::copy when we change from a pointer to a std::vector in the interface
@@ -1050,7 +1050,7 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
             m_ptr[i] = data[i];
         }
 
-        _incrementPosition(npixels);
+        incrementBufferPosition(npixels);
     }
 }
 
@@ -1072,7 +1072,7 @@ uint8_t* THChunkRenderer::takeData()
     }
 }
 
-inline void THChunkRenderer::_fixNpixels(int& npixels) const
+void THChunkRenderer::fixNumPixels(int& npixels) const
 {
     const auto begin = m_data.begin();
     // We have can't just add npixels to m_ptr as this runs past
@@ -1083,7 +1083,7 @@ inline void THChunkRenderer::_fixNpixels(int& npixels) const
     }
 }
 
-inline void THChunkRenderer::_incrementPosition(int npixels)
+void THChunkRenderer::incrementBufferPosition(int npixels)
 {
     m_ptr += npixels;
     m_x += npixels;
@@ -1107,7 +1107,7 @@ void THChunkRenderer::decodeChunks(const uint8_t* data, int dataLen, bool comple
 
 void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
 {
-    while (!_isEndOfBuffer() && dataLen > 0)
+    while (!isEndOfBuffer() && dataLen > 0)
     {
         uint8_t inputVal = *inputData;
         --dataLen;
@@ -1140,7 +1140,7 @@ void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
 
 void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen)
 {
-    while (!_isEndOfBuffer() && dataLen > 0)
+    while (!isEndOfBuffer() && dataLen > 0)
     {
         uint8_t inputVal = *inputData;
         --dataLen;

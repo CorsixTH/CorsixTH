@@ -205,9 +205,9 @@ public:
 	uint8_t* takeData();
 
 private:
-    inline bool _isEndOfBuffer() {return m_ptr == m_end;}
-    inline void _fixNpixels(int& npixels) const;
-    inline void _incrementPosition(int npixels);
+    bool isEndOfBuffer() {return m_ptr == m_end;}
+    void fixNumPixels(int& npixels) const;
+    void incrementBufferPosition(int npixels);
 
     void decodeChunksSimple(const uint8_t* inputData, int dataLen);
     void decodeChunksComplex(const uint8_t* inputData, int dataLen);
