@@ -33,6 +33,7 @@ SOFTWARE.
 #include <cassert>
 #include <memory>
 #include <new>
+#include <iterator>
 
 /** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
 class Input
@@ -1073,9 +1074,12 @@ uint8_t* THChunkRenderer::takeData()
 
 inline void THChunkRenderer::_fixNpixels(int& npixels) const
 {
-    if(m_ptr + npixels > m_end)
+    const auto begin = m_data.begin();
+    // We have can't just add npixels to m_ptr as this runs past
+    // the end of the container and invokes undefined behaviour
+    if ((m_ptr - begin) + npixels > (m_end - begin))
     {
-        npixels = static_cast<int>(m_end - m_ptr);
+        npixels = static_cast<int>(std::distance(m_end, m_ptr));
     }
 }
 
@@ -1105,20 +1109,19 @@ void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
 {
     while (!_isEndOfBuffer() && dataLen > 0)
     {
-        uint8_t b = *inputData;
+        uint8_t inputVal = *inputData;
         --dataLen;
         ++inputData;
         
-        // If the value is 0 fill to EOL with all bits set
-        if (b == 0)
+        if (inputVal == 0)
         {
+            // If the value is 0 fill to EOL with all bits set
             chunkFillToEndOfLine(0xFF);
         }
-        // If the value is than 128 (dec)...
-        else if (b < 0x80)
+        else if (inputVal < 128)
         {
             // The value represents the length of the buffer to copy
-            int amt = b;
+            int amt = inputVal;
             if (dataLen < amt)
                 amt = dataLen;
             chunkCopy(amt, inputData);
@@ -1130,7 +1133,7 @@ void THChunkRenderer::decodeChunksSimple(const uint8_t * inputData, int dataLen)
             // Fill the next (256 - value) pixels with all bits set
             // as the value is greater than 128 because of the above check it will
             // be the next 1-128 pixels
-            chunkFill(0x100 - b, 0xFF);
+            chunkFill(256 - inputVal, 0xFF);
         }
     }
 }
@@ -1139,58 +1142,58 @@ void THChunkRenderer::decodeChunksComplex(const uint8_t * inputData, int dataLen
 {
     while (!_isEndOfBuffer() && dataLen > 0)
     {
-        uint8_t b = *inputData;
+        uint8_t inputVal = *inputData;
         --dataLen;
         ++inputData;
 
-        // If the value is 0 fill to the end of the line with all bits set
-        if (b == 0)
+        if (inputVal == 0)
         {
+            // If the value is 0 fill to the end of the line with all bits set
             chunkFillToEndOfLine(0xFF);
         }
-        // If the value is less than 64 copy the number of pixels represented by b.
-        else if (b < 0x40)
+        else if (inputVal < 64)
         {
-            int amt = b;
+            // Copy the number of pixels represented by inputVal.
+            int amt = inputVal;
             if (dataLen < amt)
                 amt = dataLen;
             chunkCopy(amt, inputData);
             inputData += amt;
             dataLen -= amt;
         }
-        // If b is between 128 and 191 we fall into this branch as the 64 bit pixel is not set
-        else if ((b & 0xC0) == 0x80)
+        else if (inputVal >= 128 && inputVal <= 191)
         {
-            chunkFill(b - 0x80, 0xFF);
+            // Fill the with 0xFF for the number of pixels - 128
+            chunkFill(inputVal - 128, 0xFF);
         }
-        // B is >= 64 and < 128, or >= 192
         else
         {
+            // B is between 64 - 127 or 192 - 255
             int amt;
             uint8_t colour = 0;
-            // If b is equal to 255 
-            if (b == 0xFF)
+            // If inputVal is equal to 255 (0xFF)
+            if (inputVal == 255)
             {
                 if (dataLen < 2)
                 {
                     break;
                 }
                 // Copy the number of pixels given with the colour. 
-                amt = (int)inputData[0];
+                amt = static_cast<int>(inputData[0]);
                 colour = inputData[1];
                 inputData += 2;
                 dataLen -= 2;
             }
             else
             {
-                // Bitwise And b with 128, divide this by two
-                // then subtract this from b. Then subtract
-                // 60 from b. This gives the amount of pixels
+                // Bitwise And inputVal with 128, divide this by two
+                // then subtract this from inputVal. Then subtract
+                // 60 from inputVal. This gives the amount of pixels
                 // to copy.
-                amt = b - 60 - (b & 0x80) / 2;
+                amt = inputVal - 60 - (inputVal & 0x80) / 2;
                 if (dataLen > 0)
                 {
-                    // The colour is also determined from the value of b
+                    // The colour is also determined from the value of inputVal
                     // which was used to initially calculate the amount of pixels
                     colour = *inputData;
                     ++inputData;
