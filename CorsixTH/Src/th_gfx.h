@@ -149,7 +149,7 @@ public:
     */
     THChunkRenderer(int width, int height);
 
-    ~THChunkRenderer();
+    ~THChunkRenderer() = default;
 
     //! Copies given data into the internal buffer from its internally tracked position.
 	//! Moves the internal position along by n-pixels
@@ -194,7 +194,7 @@ public:
 	void decodeChunks(const uint8_t* data, int dataLen, bool bComplex);
 
 	//! Get the result buffer
-	inline const uint8_t* getData() const { return m_data; }
+	const uint8_t* getData() const { return m_data.data(); }
 
 	//! Get the result buffer, and take ownership of it
 	/*!
@@ -212,7 +212,8 @@ private:
     void decodeChunksSimple(const uint8_t* inputData, int dataLen);
     void decodeChunksComplex(const uint8_t* inputData, int dataLen);
 
-    uint8_t *m_data, *m_ptr, *m_end;
+    std::vector<uint8_t> m_data;
+    std::vector<uint8_t>::iterator m_ptr, m_end;
     int m_x, m_y, m_width, m_height;
     bool m_skip_eol;
 };

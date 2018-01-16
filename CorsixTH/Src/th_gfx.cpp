@@ -27,11 +27,12 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_sound.h"
 
-#include <new>
 #include <algorithm>
 #include <cstring>
 #include <climits>
 #include <cassert>
+#include <memory>
+#include <new>
 
 /** Data retrieval class, simulating sequential access to the data, keeping track of available length. */
 class Input
@@ -1002,20 +1003,14 @@ void THAnimationManager::getFrameExtent(size_t iFrame, const THLayers_t& oLayers
 
 THChunkRenderer::THChunkRenderer(int width, int height)
 {
-    auto buffer = nullptr;
-    m_data = buffer ? buffer : new uint8_t[width * height];
-    m_ptr = m_data;
-    m_end = m_data + width * height;
+    m_data.resize(width * height);
+    m_ptr = m_data.begin();
+    m_end = m_data.end();
     m_x = 0;
     m_y = 0;
     m_width = width;
     m_height = height;
     m_skip_eol = false;
-}
-
-THChunkRenderer::~THChunkRenderer()
-{
-    delete[] m_data;
 }
 
 void THChunkRenderer::chunkFillToEndOfLine(uint8_t value)
@@ -1037,7 +1032,8 @@ void THChunkRenderer::chunkFill(int npixels, uint8_t value)
     _fixNpixels(npixels);
     if(npixels > 0)
     {
-        std::memset(m_ptr, value, sizeof(value) * npixels);
+        std::fill(m_ptr, m_ptr + npixels, value);
+
         _incrementPosition(npixels);
     }
 }
@@ -1046,17 +1042,33 @@ void THChunkRenderer::chunkCopy(int npixels, const uint8_t* data)
 {
     _fixNpixels(npixels);
     if(npixels > 0)
-    {
-        std::memcpy(m_ptr, data, sizeof(uint8_t) * npixels);
+    {   
+        // TODO : Replace this with std::copy when we change from a pointer to a std::vector in the interface
+
+        for (size_t i = 0; i < npixels; i++) {
+            m_ptr[i] = data[i];
+        }
+
         _incrementPosition(npixels);
     }
 }
 
 uint8_t* THChunkRenderer::takeData()
 {
-	uint8_t *buffer = m_data;
-	m_data = nullptr;
-	return buffer;
+    // Have to force a copy into a heap allocation from the stack allocation
+    
+
+    if (m_data.size() > 0) {
+        auto outputArray = std::make_unique<uint8_t[]>(m_data.size());
+        
+        // TODO remove this copy when we return a vector instead
+        std::copy(m_data.begin(), m_data.end(), outputArray.get());
+        m_data.resize(0);
+        return outputArray.release();
+    }
+    else {
+        return nullptr;
+    }
 }
 
 inline void THChunkRenderer::_fixNpixels(int& npixels) const
