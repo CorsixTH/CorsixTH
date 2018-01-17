@@ -5,7 +5,7 @@ else()
 endif()
 
 # Project Declaration
-project(CorsixTH)
+project(CorsixTH VERSION 0.61)
 
 if(APPLE)
   add_subdirectory(SDLMain)
@@ -21,21 +21,24 @@ include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 # Generate source files list
 # Note: Done after generating config.h
 file(GLOB_RECURSE corsixth_source_files
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.hpp
+  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
+
   ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
-  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
-  ${CMAKE_SOURCE_DIR}/LFS/*.c
-  ${CMAKE_SOURCE_DIR}/LPEG/*.c
 )
+
+# Files used to create the main CorsixTH executable
+set(corsixth_executable_files
+  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
+  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp
+)
+
+# Declare the library containing the source files
+add_library(CorsixTHLib ${corsixth_source_files})
+set_target_properties(CorsixTHLib PROPERTIES VERSION ${PROJECT_VERSION})
 
 # Declaration of the executable
 if(APPLE)
@@ -49,7 +52,7 @@ if(APPLE)
   )
   set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
 
-  add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_source_files} ${corsixth_icon_file})
+  add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_executable_files} ${corsixth_icon_file})
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
@@ -61,10 +64,11 @@ if(APPLE)
     COMMAND rsync -rv ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources/
   )
 
-  target_link_libraries(CorsixTH SDL2main)
+  target_link_libraries(CorsixTH CorsixTHLib SDL2main)
   include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
-  add_executable(CorsixTH ${corsixth_source_files})
+  add_executable(CorsixTH ${corsixth_executable_files})
+  target_link_libraries(CorsixTH CorsixTHLib)
 endif()
 
 # Add an extra step to copy built DLLs on MSVC
@@ -77,8 +81,8 @@ ENDIF()
 # Find SDL
 if(MSVC AND USE_VCPKG_DEPS)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH SDL2::SDL2)
-  target_link_libraries(CorsixTH SDL2::SDL2main)
+  target_link_libraries(CorsixTHLib SDL2::SDL2)
+  target_link_libraries(CorsixTHLib SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)
   if(SDL_FOUND)
@@ -88,7 +92,7 @@ else()
       message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
     endif()
     # No need to specify sdlmain separately, the FindSDL.cmake file will take care of that. If not we get an error about it
-    target_link_libraries(CorsixTH ${SDL_LIBRARY})
+    target_link_libraries(CorsixTHLib ${SDL_LIBRARY})
     message("  SDL found")
   else()
     message(FATAL_ERROR "Error: SDL library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
@@ -98,13 +102,13 @@ endif()
 # Find Lua
 find_package(Lua REQUIRED)
 if(Lua_FOUND)
-  target_link_libraries(CorsixTH ${LUA_LIBRARY})
+  target_link_libraries(CorsixTHLib ${LUA_LIBRARY})
   include_directories(${LUA_INCLUDE_DIR})
   # Special link flags needed on OSX/64bit, according to: http://luajit.org/install.html
   # If these are not specified, luaL_newstate() returns NULL and we get this:
   #   Fatal error starting CorsixTH: Cannot open Lua state.
   if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND LUA_INTERPRETER_TYPE STREQUAL "LuaJIT" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
-    target_link_libraries(CorsixTH "-pagezero_size 10000" "-image_base 100000000")
+    target_link_libraries(CorsixTHLib "-pagezero_size 10000" "-image_base 100000000")
   endif()
   message("  ${LUA_INTERPRETER_TYPE} found")
 else()
@@ -113,13 +117,13 @@ endif()
 
 # Add threading library
 find_package(Threads)
-target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(CorsixTHLib ${CMAKE_THREAD_LIBS_INIT})
 
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
   find_package(SDL2_mixer REQUIRED)
   if(SDLMIXER_FOUND)
-    target_link_libraries(CorsixTH ${SDLMIXER_LIBRARY})
+    target_link_libraries(CorsixTHLib ${SDLMIXER_LIBRARY})
     include_directories(${SDLMIXER_INCLUDE_DIR})
     message("  SDL_mixer found")
   else()
@@ -133,10 +137,10 @@ message(STATUS "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
 if(CORSIX_TH_USE_FFMPEG)
   find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
   if(FFMPEG_FOUND)
-    target_link_libraries(CorsixTH ${FFMPEG_LIBRARIES})
+    target_link_libraries(CorsixTHLib ${FFMPEG_LIBRARIES})
     include_directories(${FFMPEG_INCLUDE_DIRS})
     if(APPLE)
-      target_link_libraries(CorsixTH libz.dylib)
+      target_link_libraries(CorsixTHLib libz.dylib)
     endif()
     message("  FFmpeg found")
   else()
@@ -147,10 +151,10 @@ endif()
 if(CORSIX_TH_USE_LIBAV)
   find_package(LibAV COMPONENTS AVFORMAT AVCODEC AVRESAMPLE AVUTIL SWSCALE REQUIRED)
   if(LIBAV_FOUND)
-    target_link_libraries(CorsixTH ${LIBAV_LIBRARIES})
+    target_link_libraries(CorsixTHLib ${LIBAV_LIBRARIES})
     include_directories(${LIBAV_INCLUDE_DIRS})
     if(APPLE)
-      target_link_libraries(CorsixTH libz.dylib)
+      target_link_libraries(CorsixTHLib libz.dylib)
     endif()
     message("  LibAV found")
   else()
@@ -162,11 +166,11 @@ endif()
 if(CORSIX_TH_USE_FREETYPE2)
   find_package(Freetype REQUIRED)
   if(FREETYPE_FOUND)
-    target_link_libraries(CorsixTH ${FREETYPE_LIBRARIES})
+    target_link_libraries(CorsixTHLib ${FREETYPE_LIBRARIES})
     include_directories(${FREETYPE_INCLUDE_DIRS})
     if(APPLE)
-      target_link_libraries(CorsixTH libz.dylib)
-      target_link_libraries(CorsixTH libbz2.dylib)
+      target_link_libraries(CorsixTHLib libz.dylib)
+      target_link_libraries(CorsixTHLib libbz2.dylib)
     endif()
     message("  FreeType2 found")
   else()
@@ -177,8 +181,8 @@ endif()
 if(MSVC AND CORSIX_TH_USE_VLD)
   find_package(VLD REQUIRED)
   if(VLD_FOUND)
-    target_link_libraries(CorsixTH ${VLD_LIBRARY})
-    include_directories(CorsixTH ${VLD_INCLUDE_DIR})
+    target_link_libraries(CorsixTHLib ${VLD_LIBRARY})
+    include_directories(CorsixTHLib ${VLD_INCLUDE_DIR})
     message("  VLD found")
   else()
     message(FATAL_ERROR "Error: VLD Library not found, it is required to build when USE_VLD is set")

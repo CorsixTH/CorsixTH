@@ -63,6 +63,12 @@ if(MSVC)
   option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
 endif()
 
+# Build a static library default so we get consistency with and without
+# unit tests enabled. Shared libraries will not work on MSVC without additional code.
+option(BUILD_SHARED_LIBS "Builds CorsixTH as a shared library when enabled" OFF)
+mark_as_advanced(FORCE BUILD_SHARED_LIBS)
+
+# Setup internal variables
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
   message("Note: SDL audio is enabled (default)")

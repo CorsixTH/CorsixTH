@@ -5,7 +5,7 @@
 
 namespace {
 
-	// This file provides a sanity check. If it fails something 
+	// This file provides a sanity check. If it fails something
 	// is wrong with our unit test setup
 
 	TEST(ExampleSuite, ExampleTest) {
