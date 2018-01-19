@@ -14,6 +14,17 @@ elseif(MSVC)
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
 
+if(MSVC)
+  set(CORSIX_TH_DATADIR CorsixTH)
+  set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
+elseif(APPLE)
+  set(CORSIX_TH_DATADIR ${FULL_PRODUCT_NAME}/Contents/Resources/)
+  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/CorsixTH.lua)
+else()
+  set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
+endif()
+
 # Modify the config.h based upon our selection of options
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
@@ -39,8 +50,6 @@ file(GLOB_RECURSE corsixth_source_files
 
 # Declaration of the executable
 if(APPLE)
-  add_definitions(-DIS_CORSIXTH_APP)
-
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
   set_source_files_properties(
     ${corsixth_icon_file}
@@ -57,8 +66,8 @@ if(APPLE)
   #Add an extra step at the end of the build process to copy the resources into the bundle.
   add_custom_command(TARGET CorsixTH
     POST_BUILD
-    COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/MacOS
-    COMMAND rsync -rv ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources/
+    COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${CORSIX_TH_DATADIR}
+    COMMAND rsync -rv ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns \${TARGET_BUILD_DIR}/\${CORSIX_TH_DATADIR}
   )
 
   target_link_libraries(CorsixTH SDL2main)
@@ -192,6 +201,7 @@ elseif(MSVC)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/CorsixTH.vcxproj.user @ONLY)
 endif()
 
+
 # Declaration of the install process
 if(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
@@ -204,11 +214,14 @@ if(APPLE)
     FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
     ")
 else()
-  install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
-  install(DIRECTORY Campaigns Lua Levels DESTINATION CorsixTH)
-  install(DIRECTORY Bitmap DESTINATION CorsixTH
+  if(MSVC)
+    install(TARGETS CorsixTH RUNTIME DESTINATION ${CORSIX_TH_DATADIR})
+  else()
+  install(TARGETS CorsixTH RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
+  install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
+  install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
     FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
-    PATTERN "*.svn" EXCLUDE
   )
-  install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
+  install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
 endif()

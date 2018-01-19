@@ -128,46 +128,14 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
         }
     }
 
-    // Code to try several variations on finding CorsixTH.lua:
-    // CorsixTH.lua
-    // CorsixTH/CorsixTH.lua
-    // ../CorsixTH.lua
-    // ../CorsixTH/CorsixTH.lua
-    // ../../CorsixTH.lua
-    // ../../CorsixTH/CorsixTH.lua
-    // ../../../CorsixTH.lua
-    // ../../../CorsixTH/CorsixTH.lua
-    // It is simpler to write this in Lua than in C.
-    const char sLuaCorsixTHLua[] =
-    "local name, sep, code = \"CorsixTH.lua\", package.config:sub(1, 1)\n"
-    "local root = (... or \"\"):match(\"^(.*[\"..sep..\"])\") or \"\"\n"
-#ifdef __APPLE__ // Darrell: Search inside the bundle first.
-                 // There's probably a better way of doing this.
-#if defined(IS_CORSIXTH_APP)
-    "code = loadfile(\"CorsixTH.app/Contents/Resources/\"..name)\n"
-    "if code then return code end\n"
-#endif
-#endif
-    "for num_dotdot = 0, 3 do\n"
-    "  for num_dir = 0, 1 do\n"
-    "    code = loadfile(root..(\"..\"..sep):rep(num_dotdot)..\n"
-    "                    (\"CorsixTH\"..sep):rep(num_dir)..name)\n"
-    "    if code then return code end \n"
-    "  end \n"
-    "end \n"
-    "return loadfile(name)";
-
-    // return assert(loadfile"CorsixTH.lua")(...)
     if(!bGotScriptFile)
     {
         lua_getglobal(L, "assert");
-        luaL_loadbuffer(L, sLuaCorsixTHLua, std::strlen(sLuaCorsixTHLua),
-            "@main.cpp (l_main bootstrap)");
-        if(lua_gettop(L) == 2)
-            lua_pushnil(L);
-        else
-            lua_pushvalue(L, 1);
+        lua_getglobal(L, "loadfile");
+        lua_pushstring(L, CORSIX_TH_INTERPRETER_PATH);
+        bGotScriptFile = true;
     }
+
     lua_call(L, 1, 2);
     lua_call(L, 2, 1);
     lua_insert(L, 1);

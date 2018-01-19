@@ -116,6 +116,8 @@ if(USE_PRECOMPILED_DEPS)
   include(PrecompiledDeps)
 endif()
 
+include(GNUInstallDirs)
+
 # Include individual projects
 message("")
 # We always build CorsixTH otherwise we would miss the generated header
