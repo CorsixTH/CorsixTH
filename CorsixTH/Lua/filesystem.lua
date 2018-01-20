@@ -21,7 +21,7 @@ SOFTWARE. --]]
 local pathsep = package.config:sub(1, 1)
 local part_pattern = "[^" .. pathsep .. "]+"
 
-local ISO_FS = require "ISO_FS"
+local ISO_FS = destrict(require) "ISO_FS"
 
 --! Layer for abstracting away differences in file systems
 class "FileSystem"

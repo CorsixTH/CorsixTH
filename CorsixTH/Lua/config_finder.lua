@@ -496,4 +496,4 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
   end
 end
 
-return config_filename, config_values
+return {filename =  config_filename, values = config_values}
