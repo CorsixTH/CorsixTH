@@ -32,11 +32,11 @@ package.path = code_dir .. "?" .. pathsep .. "init.lua" .. ";" .. package.path
 package.path = code_dir .. "?.lua" .. ";" .. package.path
 
 -- Load standard library extensions
-require "utility"
+require("utility")
 
 -- If requested run a Lua DBGp Debugger Client
 if run_debugger then
-  require "run_debugger"
+  require("run_debugger")
 end
 
 -- Check Lua version
@@ -72,20 +72,20 @@ end
 -- it to a running server, using this CorsixTH startup arg: -debugger
 
 -- Enable strict mode
-require "strict"
+require("strict")
 
 -- Load the class system (required for App)
-require "class"
+require("class")
 
 -- Load the main App class
-require "app"
+require("app")
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
-  "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..(require"config_finder")["filename"],
+  "--bitmap-dir=" .. base_dir .. "Bitmap",
+  "--config-file=" .. require("config_finder")["filename"],
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...

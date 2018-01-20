@@ -29,7 +29,7 @@ local lua_files = {
   "../CorsixTH/CorsixTH.lua"
 }
 
-local lfs = require "lfs"
+local lfs = require("lfs")
 
 local output_dir = lfs.currentdir() .. "/corsixth_lua/"
 lfs.mkdir(output_dir)
@@ -43,12 +43,12 @@ dofile "../CorsixTH/Lua/strict.lua"
 dofile "../CorsixTH/Lua/class.lua"
 require = destrict(require)
 
-require "helpers"
-require "c_tokenise"
-require "lua_tokenise"
-require "lua_code_model"
-require "lua_scan"
-require "template"
+require("helpers")
+require("c_tokenise")
+require("lua_tokenise")
+require("lua_code_model")
+require("lua_scan")
+require("template")
 
 function string.trim(s, what)
   what = what or "%s"
