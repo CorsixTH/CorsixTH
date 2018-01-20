@@ -23,13 +23,6 @@ corsixth.require("system.path")
 local config_path, config_name
 local pathsep = Path.getSeparator()
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
-local function pathconcat(a, b)
-  if a:sub(-1) == pathsep then
-    return a .. b
-  else
-    return a .. pathsep .. b
-  end
-end
 
 -- Decide on a sensible place to put config.txt, etc.
 if pathsep == "\\" then
@@ -37,15 +30,15 @@ if pathsep == "\\" then
   config_path = os.getenv("AppData") or ourpath
 else
   -- Linux, OS X, etc.
-  config_path = os.getenv("XDG_CONFIG_HOME") or pathconcat(os.getenv("HOME") or "~", ".config")
+  config_path = os.getenv("XDG_CONFIG_HOME") or Path.concat(os.getenv("HOME") or "~", ".config")
 end
 if config_path ~= ourpath then
-  config_path = pathconcat(config_path, "CorsixTH")
+  config_path = Path.concat(config_path, "CorsixTH")
 end
 config_name = "config.txt"
 
 -- Check for config.path.txt
-local fi = io.open(pathconcat(ourpath, "config.path.txt"), "r")
+local fi = io.open(Path.concat(ourpath, "config.path.txt"), "r")
 if fi then
   local contents = fi:read"*a"
   contents = contents:match("^%s*(.-)%s*$")
@@ -80,7 +73,7 @@ if not check_dir_exists(config_path) then
   config_path = ourpath
 end
 
-local config_filename = pathconcat(config_path, config_name)
+local config_filename = Path.concat(config_path, config_name)
 
 -- Create config.txt if it doesn't exist
 local config_defaults = {

@@ -35,3 +35,21 @@ local _separator = package.config:sub(1, 1)
 function Path.getSeparator()
   return _separator
 end
+
+function Path.concat(...)
+  local path = select(1, ...)
+  for i = 2, select("#", ...) do
+    path = Path._concatTwo(path, select(i, ...))
+  end
+  return path
+end
+
+-- PRIVATE
+
+function Path._concatTwo(a, b)
+  if a:sub(-1) == _separator then
+    return a .. b
+  else
+    return a .. _separator .. b
+  end
+end
