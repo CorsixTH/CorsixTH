@@ -1,4 +1,4 @@
---[[ Copyright (c) 2014 Edvin "Lego3" Linge
+--[[ Copyright (c) 2018 Pavel "sofo" Schoffer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,18 +18,35 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- A stub implementation of the TH C++ object, to be able to run
--- unit tests without any backend.
+require("class_test_base")
 
-TheApp = {}
+require("entity")
+require("entities.humanoid")
 
-return {
-  animation = function()
-    return {
-      setHitTestResult = function() end,
-      setAnimation = function() end,
-      setDrawingLayer = function() end,
-      setTile = function() end,
-    }
-    end,
-}
+describe("Humanoid:", function()
+  it("Gets the current action", function()
+    local animation = {setHitTestResult = function() end}
+    local humanoid = Humanoid(animation)
+
+    local action1 = {name = "fake1"}
+    local action2 = {name = "fake2"}
+    humanoid:queueAction(action1)
+    humanoid:queueAction(action2)
+
+    local recievedAction = humanoid:getCurrentAction()
+
+    assert.equal(action1, recievedAction)
+  end)
+  it("Throws error if no action is queued", function()
+    local animation = {setHitTestResult = function() end}
+    local humanoid = Humanoid(animation)
+
+    local state, error = pcall(humanoid.getCurrentAction, humanoid)
+
+    assert.False(state)
+    local expected_message = "Action queue was empty. This should never happen."
+    assert.are.equal(expected_message, error.message)
+    assert.are.equal(humanoid, error.humanoid)
+  end)
+
+end)

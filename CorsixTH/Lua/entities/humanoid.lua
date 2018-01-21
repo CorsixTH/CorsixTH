@@ -909,3 +909,11 @@ end
 function Humanoid:getDrawingLayer()
   return 4
 end
+
+function Humanoid:getCurrentAction()
+  if next(self.action_queue) == nil then
+    error({message = "Action queue was empty. This should never happen.", humanoid = self})
+  end
+
+  return self.action_queue[1]
+end
