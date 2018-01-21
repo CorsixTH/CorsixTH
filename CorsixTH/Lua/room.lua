@@ -149,7 +149,7 @@ function Room:dealtWithPatient(patient)
   -- If the patient was sent home while in the room, don't
   -- do anything apart from removing any leading idle action.
   if not patient.hospital then
-    if patient.action_queue[1].name == "idle" then
+    if patient:getCurrentAction().name == "idle" then
       patient:finishAction()
     end
     return
@@ -720,7 +720,7 @@ local function tryMovePatient(old_room, new_room, patient)
     end
   end
 
-  local interrupted = patient.action_queue[1]
+  local interrupted = patient:getCurrentAction()
   local on_interrupt = interrupted.on_interrupt
   if on_interrupt then
     interrupted.on_interrupt = nil
@@ -888,9 +888,9 @@ function Room:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)
       end
     end
 
-    if humanoid.action_queue[1].name == "use_screen" then
+    if humanoid:getCurrentAction().name == "use_screen" then
       --The humanoid must be using the screen to undress because this isn't a leaving action:
-      humanoid.action_queue[1].after_use = nil
+      humanoid:getCurrentAction().after_use = nil
       humanoid:setNextAction(use_screen)
     else
       humanoid:setNextAction(WalkAction(sx, sy):setMustHappen(true):disableTruncate():setIsLeaving(true))
@@ -919,7 +919,7 @@ function Room:tryToEdit()
   local i = 0
   -- Tell all humanoids that they should leave
   -- If someone is entering the room right now they are also counted.
-  if self.door.user and self.door.user.action_queue[1].is_entering then
+  if self.door.user and self.door.user:getCurrentAction().is_entering then
     i = 1
   end
   for humanoid, _ in pairs(self.humanoids) do

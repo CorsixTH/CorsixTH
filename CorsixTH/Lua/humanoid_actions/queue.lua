@@ -145,7 +145,7 @@ local function action_queue_finish_standing(action, humanoid)
     if index == -1 then
       -- Attempt to recover by assuming the person is sitting down.
       print("Warning: Idle not in action_queue")
-      if humanoid.action_queue[1].name == "use_object" then
+      if humanoid:getCurrentAction().name == "use_object" then
         -- It is likely that the person is sitting down.
         return action_queue_leave_bench(action, humanoid)
       else

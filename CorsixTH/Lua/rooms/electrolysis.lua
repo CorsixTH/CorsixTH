@@ -57,7 +57,7 @@ function ElectrolysisRoom:commandEnteringPatient(patient)
 
   local --[[persistable:electrolysis_shared_loop_callback]] function loop_callback()
     -- If the other humanoid has already started to idle we move on
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+    if staff:getCurrentAction().name == "idle" and patient:getCurrentAction().name == "idle" then
       -- Skilled doctors require less electrocutions
       local num_electrocutions = math.random(1, 5) * (2 - staff.profile.skill)
       -- We need to change to another type before starting, to be able

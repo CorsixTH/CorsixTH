@@ -28,7 +28,7 @@ function DieAction:DieAction()
 end
 
 local action_die_tick; action_die_tick = permanent"action_die_tick"( function(humanoid)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local phase = action.phase
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
   if phase == 0 then
@@ -69,7 +69,7 @@ local action_die_tick; action_die_tick = permanent"action_die_tick"( function(hu
 end)
 
 local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick_reaper"( function(humanoid)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local mirror = humanoid.last_move_direction == "east" and 0 or 1
   local phase = action.phase
 

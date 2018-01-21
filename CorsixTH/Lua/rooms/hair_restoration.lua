@@ -56,7 +56,7 @@ function HairRestorationRoom:commandEnteringPatient(patient)
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "console")
 
   local --[[persistable:hair_restoration_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+    if staff:getCurrentAction().name == "idle" and patient:getCurrentAction().name == "idle" then
       local loop_callback_restore = --[[persistable:hair_restoration_loop_callback]] function(action)
         action.prolonged_usage = false
       end

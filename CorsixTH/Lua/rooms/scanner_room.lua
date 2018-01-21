@@ -61,7 +61,7 @@ function ScannerRoom:commandEnteringPatient(patient)
     (patient.humanoid_class == "Standard Female Patient")
 
   local --[[persistable:scanner_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].scanner_ready and patient.action_queue[1].scanner_ready then
+    if staff:getCurrentAction().scanner_ready and patient:getCurrentAction().scanner_ready then
       staff:finishAction()
       patient:finishAction()
     end
@@ -120,9 +120,9 @@ function ScannerRoom:onHumanoidLeave(humanoid)
 end
 
 function ScannerRoom:makeHumanoidLeave(humanoid)
-  if humanoid.action_queue[1].name == "use_object" and
-      humanoid.action_queue[1].object == self.world:findObjectNear(humanoid, "scanner") then
-    humanoid.action_queue[1].after_use = nil
+  if humanoid:getCurrentAction().name == "use_object" and
+      humanoid:getCurrentAction().object == self.world:findObjectNear(humanoid, "scanner") then
+    humanoid:getCurrentAction().after_use = nil
   end
 
   self:makeHumanoidDressIfNecessaryAndThenLeave(humanoid)

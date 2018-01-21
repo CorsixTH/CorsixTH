@@ -547,7 +547,7 @@ end
   Typically this is used to determine if a patient can be vaccinated
   @param patient (Patient) the patient we wish to determine if they are static.]]
 local function is_static(patient)
-  local action = patient.action_queue[1]
+  local action = patient:getCurrentAction()
   return action.name == "queue" or action.name == "idle" or
       (action.name == "use_object" and action.object.object_type.id == "bench")
 end
@@ -599,7 +599,7 @@ function Epidemic:getBestVaccinationTile(nurse, patient)
   local px, py = patient.tile_x, patient.tile_y
   -- If the patient is using a bench the best tile to use is
   -- directly in front of them
-  local action = patient.action_queue[1]
+  local action = patient:getCurrentAction()
   if action.name == "use_object" then
     local object_in_use = action.object
     if object_in_use.object_type.id == "bench" then

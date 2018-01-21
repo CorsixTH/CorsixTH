@@ -176,7 +176,7 @@ end
 
 local flags_here, flags_there = {}, {}
 local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function(humanoid)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local path_x = action.path_x
   local path_y = action.path_y
   local path_index = action.path_index
@@ -249,7 +249,7 @@ local action_walk_tick_door = permanent"action_walk_tick_door"( function(humanoi
 end)
 
 navigateDoor = function(humanoid, x1, y1, dir)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local duration = 12
   local dx = x1
   local dy = y1

@@ -93,13 +93,13 @@ function Staff:tickDay()
     self:changeAttribute("happiness", 0.0005)
   end)
   -- Being able to rest from work and play the video game or pool will make you happy
-  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "video_game") then
+  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "video_game") then
    self:changeAttribute("happiness", 0.08)
   end
-  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "pool_table") then
+  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "pool_table") then
    self:changeAttribute("happiness", 0.074)
   end
-  if (self.action_queue[1].name == "use_object" and self.action_queue[1].object.object_type.id == "sofa") then
+  if (self:getCurrentAction().name == "use_object" and self:getCurrentAction().object.object_type.id == "sofa") then
    self:changeAttribute("happiness", 0.05)
   end
 
@@ -262,7 +262,7 @@ function Staff:isTiring()
   end
 
   -- Picking staff members up doesn't tire them, it just tires the player.
-  if self.action_queue[1].name == "pickup" then
+  if self:getCurrentAction().name == "pickup" then
     tiring = false
   end
 
@@ -294,8 +294,8 @@ function Staff:isLearning()
 
   -- Staff is in training room, the training room has a consultant, and  is using lecture chair.
   return room and room.room_info.id == "training" and room.staff_member and
-      self.action_queue[1].name == "use_object" and
-      self.action_queue[1].object.object_type.id == "lecture_chair"
+      self:getCurrentAction().name == "use_object" and
+      self:getCurrentAction().object.object_type.id == "lecture_chair"
 end
 
 function Staff:isLearningOnTheJob()
@@ -304,7 +304,7 @@ function Staff:isLearningOnTheJob()
   -- Staff is in room but not training room, staff room, or toilets; is a doctor; and is using something
   return room and room.room_info.id ~= "training" and
       room.room_info.id ~= "staff_room" and room.room_info.id ~= "toilets" and
-      self.humanoid_class == "Doctor" and self.action_queue[1].name == "use_object"
+      self.humanoid_class == "Doctor" and self:getCurrentAction().name == "use_object"
 end
 
 
@@ -580,7 +580,7 @@ function Staff:checkIfNeedRest()
       local room = self:getRoom()
       if (self.staffroom_needed and ((room and not room:getPatient()) or not room)) or
           (room and self.going_to_staffroom) then
-        if self.action_queue[1].name ~= "walk" and self.action_queue[1].name ~= "queue" then
+        if self:getCurrentAction().name ~= "walk" and self:getCurrentAction().name ~= "queue" then
           self.staffroom_needed = nil
           self:goToStaffRoom()
         end
@@ -777,7 +777,7 @@ function Staff:isIdle()
     -- in regular rooms (diagnosis / treatment), if no patient is in sight
     -- or if the only one in sight is actually leaving.
     if self.humanoid_class ~= "Handyman" and room.door.queue:patientSize() == 0 and
-        not self.action_queue[1].is_leaving and
+        not self:getCurrentAction().is_leaving and
         not (room.door.reserved_for and class.is(room.door.reserved_for, Patient)) then
       if room:getPatientCount() == 0 then
         return true
@@ -793,7 +793,7 @@ function Staff:isIdle()
   else
     -- In the corridor and not on_call (watering or going to room), the staff is free
     -- unless going back to the training room or research department.
-    local x, y = self.action_queue[1].x, self.action_queue[1].y
+    local x, y = self:getCurrentAction().x, self:getCurrentAction().y
     if x then
       room = self.world:getRoom(x, y)
       if room and (room.room_info.id == "training" or room.room_info.id == "research") then

@@ -96,7 +96,7 @@ end
 --! Returns true if an operation is ongoing
 function OperatingTheatreRoom:isOperating()
   for k, _ in pairs(self.staff_member_set) do
-    if k.action_queue[1].name == "multi_use_object" then
+    if k:getCurrentAction().name == "multi_use_object" then
       return true
     end
   end
@@ -140,7 +140,7 @@ function OperatingTheatreRoom:commandEnteringStaff(staff)
   -- Resume operation if already ongoing
   if self:isOperating() then
     local surgeon1 = next(self.staff_member_set)
-    local ongoing_action = surgeon1.action_queue[1]
+    local ongoing_action = surgeon1:getCurrentAction()
     assert(ongoing_action.name == "multi_use_object")
 
     local table, table_x, table_y = self.world:findObjectNear(staff, "operating_table_b")
@@ -204,7 +204,7 @@ function OperatingTheatreRoom:buildTableAction1(surgeon1, patient, operation_tab
     self:dealtWithPatient(patient)
     -- Tell the patient that it's time to leave, but only if the first action
     -- is really an idle action.
-    if patient.action_queue[1].name == "idle" then
+    if patient:getCurrentAction().name == "idle" then
       patient:finishAction()
     end
   end
