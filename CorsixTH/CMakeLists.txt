@@ -76,6 +76,10 @@ else()
   add_executable(CorsixTH ${corsixth_source_files})
 endif()
 
+if(UNIX AND NOT APPLE)
+  set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
+endif()
+
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
@@ -196,7 +200,7 @@ endif()
 
 # Launch script to facilitate out of source builds on Linux
 if(UNIX)
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsixth-dev.sh.in ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
 elseif(MSVC)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/CorsixTH.vcxproj.user @ONLY)
 endif()
