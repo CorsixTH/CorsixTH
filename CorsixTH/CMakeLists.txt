@@ -18,8 +18,8 @@ if(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
 elseif(APPLE)
-  set(CORSIX_TH_DATADIR ${FULL_PRODUCT_NAME}/Contents/Resources/)
-  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/CorsixTH.lua)
+  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/CorsixTH.lua)
 else()
   set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
@@ -62,13 +62,6 @@ if(APPLE)
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
-
-  #Add an extra step at the end of the build process to copy the resources into the bundle.
-  add_custom_command(TARGET CorsixTH
-    POST_BUILD
-    COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${CORSIX_TH_DATADIR}
-    COMMAND rsync -rv ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns \${TARGET_BUILD_DIR}/\${CORSIX_TH_DATADIR}
-  )
 
   target_link_libraries(CorsixTH SDL2main)
   include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
@@ -210,22 +203,23 @@ endif()
 if(APPLE)
   #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
   install(TARGETS CorsixTH BUNDLE DESTINATION .)
+elseif(MSVC)
+  install(TARGETS CorsixTH RUNTIME DESTINATION ${CORSIX_TH_DATADIR})
+  install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
+else()
+  install(TARGETS CorsixTH RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+endif()
+install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
+install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
+  FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+)
+install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 
+if(APPLE)
   # Fix the OS X bundle to include required libraries (create a redistributable app)
   install(CODE "
     INCLUDE(BundleUtilities)
     SET(BU_CHMOD_BUNDLE_ITEMS ON)
     FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
     ")
-else()
-  if(MSVC)
-    install(TARGETS CorsixTH RUNTIME DESTINATION ${CORSIX_TH_DATADIR})
-  else()
-  install(TARGETS CorsixTH RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-  endif()
-  install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
-  install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
-    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
-  )
-  install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
 endif()
