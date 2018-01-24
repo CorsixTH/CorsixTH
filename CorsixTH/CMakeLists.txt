@@ -191,8 +191,10 @@ if(MSVC AND CORSIX_TH_USE_VLD)
   endif()
 endif()
 
-# Launch script to facilitate out of source builds on Linux
-if(UNIX)
+# Launch script to facilitate out of source builds
+if(APPLE)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
+elseif(UNIX)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
 elseif(MSVC)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/CorsixTH.vcxproj.user @ONLY)
