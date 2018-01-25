@@ -21,7 +21,7 @@ SOFTWARE. --]]
 require("class_test_base")
 
 require("entity")
-require("entities/object")
+require("entities.object")
 
 describe("object.lua: ", function()
   local stub_world = {map = {}}
