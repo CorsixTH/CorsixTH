@@ -30,7 +30,7 @@ object.idle_animations = {
   west = 106,
 }
 
-require "queue"
+dofile "queue"
 
 class "Door" (Object)
 

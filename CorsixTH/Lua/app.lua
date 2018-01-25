@@ -19,12 +19,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local pathsep = package.config:sub(1, 1)
-local reqiurenonstrict = destrict(require)
-local rnc = reqiurenonstrict "rnc"
-local lfs = reqiurenonstrict "lfs"
-local SDL = reqiurenonstrict "sdl"
+local rnc = require "rnc"
+local lfs = require "lfs"
 local TH = require "TH"
-local runDebugger = require "run_debugger"
+local SDL = require "sdl"
+local runDebugger = dofile "run_debugger"
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -111,7 +110,7 @@ function App:init()
     conf_chunk(self.config)
   end
   self:fixConfig()
-  require "filesystem"
+  dofile "filesystem"
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
@@ -125,7 +124,7 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
-  local api_version = require "api_version"
+  local api_version = dofile "api_version"
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
     compile_opts.api_version = compile_opts.api_version or 0
@@ -169,8 +168,8 @@ function App:init()
   self.video:setCaption(self.caption)
 
   -- Prereq 2: Load and initialise the graphics subsystem
-  require "persistance"
-  require "graphics"
+  dofile "persistance"
+  dofile "graphics"
   self.gfx = Graphics(self)
 
   -- Put up the loading screen
@@ -213,20 +212,20 @@ function App:init()
     return math.floor(input + 0.5)
   end
   -- Load audio
-  require "audio"
+  dofile "audio"
   self.audio = Audio(self)
   self.audio:init()
 
   -- Load movie player
-  require "movie_player"
+  dofile "movie_player"
   self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
     self.moviePlayer:init()
   end
 
   -- Load strings before UI and before additional Lua
-  require "strings"
-  require "string_extensions"
+  dofile "strings"
+  dofile "string_extensions"
   self.strings = Strings(self)
   self.strings:init()
   local language_load_success = self:initLanguage()
@@ -237,17 +236,17 @@ function App:init()
   end
 
   -- Load map before world
-  require "map"
+  dofile "map"
 
   -- Load additional Lua before world
   if good_install_folder then
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
-    require "entity"
-    require "entities.humanoid"
-    require "entities.object"
-    require "entities.machine"
+    dofile "entity"
+    dofile "entities/humanoid"
+    dofile "entities/object"
+    dofile "entities/machine"
 
     local objects = self:loadLuaFolder("objects")
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
@@ -262,23 +261,23 @@ function App:init()
       Object.processTypeDefinition(v)
     end
 
-    require "room"
+    dofile "room"
     self.rooms = self:loadLuaFolder("rooms")
 
-    require "humanoid_action"
+    dofile "humanoid_action"
     self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
 
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
 
     -- Load world before UI
-    require "world"
+    dofile "world"
   end
 
   -- Load UI
-  require "ui"
+  dofile "ui"
   if good_install_folder then
-    require "game_ui"
+    dofile "game_ui"
     self.ui = UI(self, true)
   else
     self.ui = UI(self, true)
@@ -799,8 +798,8 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local config_finder = require "config_finder"
-  for k, v in pairs(config_finder["values"]) do
+  local _, config_defaults = dofile "config_finder"
+  for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
     end
@@ -1261,12 +1260,11 @@ function App:loadLuaFolder(dir, no_results, append_to)
   local results = no_results and "" or (append_to or {})
   for file in lfs.dir(path) do
     if file:match("%.lua$") then
-      local status, result = pcall(require, dir .. file:sub(1, -5))
+      local status, result = pcall(dofile, dir .. file:sub(1, -5))
       if not status then
         print("Error loading " .. dir ..  file .. ":\n" .. tostring(result))
       else
-        -- require returns `true` if nothing is returned by module
-        if result == true then
+        if result == nil then
           if not no_results then
             print("Warning: " .. dir .. file .. " returned no value")
           end
@@ -1430,14 +1428,14 @@ function App:afterLoad()
   self.world.savegame_version = new
 
   if old < 87 then
-    local new_object = require "objects.gates_to_hell"
+    local new_object = dofile "objects/gates_to_hell"
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
   end
 
   if old < 114 then
-    local rathole_type = require "objects.rathole"
+    local rathole_type = dofile "objects/rathole"
     Object.processTypeDefinition(rathole_type)
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)

@@ -66,7 +66,7 @@ object.orientations = {
   },
 }
 
-require "queue"
+dofile "queue"
 
 class "ReceptionDesk" (Object)
 
