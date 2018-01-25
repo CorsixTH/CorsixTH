@@ -14,7 +14,7 @@ local function run()
   end
 
   local _, config = corsixth.require("config_finder")
-  local connect = corsixth.require("debugger")
+  local connect = dofile("debugger")
 
   local successful, error_message = pcall(connect, config.DBGp_client_idehost,
                                                    config.DBGp_client_ideport,
