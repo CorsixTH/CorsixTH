@@ -53,7 +53,7 @@ local action_staff_reception_interrupt = permanent"action_staff_reception_interr
 end)
 
 local action_staff_reception_idle_phase = permanent"action_staff_reception_idle_phase"( function(humanoid)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local direction = humanoid.last_move_direction
   local anims = humanoid.walk_anims
   local object = action.object

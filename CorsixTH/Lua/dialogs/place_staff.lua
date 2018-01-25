@@ -56,7 +56,7 @@ function UIPlaceStaff:close()
   if self.staff then
     self.staff.pickup = false
     self.staff.going_to_staffroom = nil
-    self.staff.action_queue[1].window = nil
+    self.staff:getCurrentAction().window = nil
     self.staff:setNextAction(MeanderAction())
   elseif self.profile then
     self.ui:tutorialStep(2, {6, 7}, 1)

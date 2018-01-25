@@ -355,7 +355,7 @@ end
 
 --! Animations for when there is an earth quake
 function Patient:falling()
-  local current = self.action_queue[1]
+  local current = self:getCurrentAction()
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
     self:setNextAction(FallingAction(), 0)
@@ -422,7 +422,7 @@ function Patient:shakeFist()
 end
 
 function Patient:vomit()
-  local current = self.action_queue[1]
+  local current = self:getCurrentAction()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
   if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
@@ -456,7 +456,7 @@ function Patient:vomit()
 end
 
 function Patient:pee()
-  local current = self.action_queue[1]
+  local current = self:getCurrentAction()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
   if self:canPeeOrPuke(current) then
     self:queueAction(PeeAction(), 1)
@@ -494,20 +494,20 @@ function Patient:pee()
 end
 
 function Patient:checkWatch()
-  if self.check_watch_anim and not self.action_queue[1].is_leaving then
+  if self.check_watch_anim and not self:getCurrentAction().is_leaving then
     self:queueAction(CheckWatchAction(), 0)
   end
 end
 
 function Patient:yawn()
-  local action = self.action_queue[1]
+  local action = self:getCurrentAction()
   if self.yawn_anim and action.name == "idle" then
     self:queueAction(YawnAction(), 0)
   end
 end
 
 function Patient:tapFoot()
-  if self.tap_foot_anim and not self.action_queue[1].is_leaving then
+  if self.tap_foot_anim and not self:getCurrentAction().is_leaving then
     self:queueAction(TapFootAction(), 0)
   end
 end
@@ -668,7 +668,7 @@ function Patient:tickDay()
     -- 1. they are being cured in this moment. dying in the last few seconds
     --    before the cure makes only a subtle difference for gameplay
     -- 2. they will leave the room soon (toilets, diagnostics) and will die then
-    if not self:getRoom() and not self.action_queue[1].is_leaving then
+    if not self:getRoom() and not self:getCurrentAction().is_leaving then
       self:setMood("sad6", "deactivate")
       self:die()
     end
@@ -700,7 +700,7 @@ function Patient:tickDay()
   end
 
   -- Vomitings.
-  if self.vomit_anim and not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].is_entering then
+  if self.vomit_anim and not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().is_entering then
     --Nausea level is based on health then proximity to vomit is used as a multiplier.
     --Only a patient with a health value of less than 0.8 can be the initial vomiter, however :)
     local initialVomitMult = 0.002 --The initial chance of vomiting.
@@ -779,8 +779,8 @@ function Patient:tickDay()
   end
   -- Maybe it's time to visit the loo?
   if self.attributes["toilet_need"] and self.attributes["toilet_need"] > 0.75 then
-    if self.pee_anim and not self.action_queue[1].is_leaving and
-        not self.action_queue[1].is_entering and not self.in_room then
+    if self.pee_anim and not self:getCurrentAction().is_leaving and
+        not self:getCurrentAction().is_entering and not self.in_room then
       if math.random(1, 10) < 5 then
         self:pee()
         self:changeAttribute("toilet_need", -(0.5 + math.random()*0.15))
@@ -794,7 +794,7 @@ function Patient:tickDay()
           if not self.world:findRoomNear(self, "toilets") then
             self.going_to_toilet = "no-toilets" -- Gets reset when a new toilet is built (then, patient will try again).
           -- Otherwise we can queue the action, but only if not in any rooms right now.
-          elseif not self:getRoom() and not self.action_queue[1].is_leaving and not self.action_queue[1].pee then
+          elseif not self:getRoom() and not self:getCurrentAction().is_leaving and not self:getCurrentAction().pee then
             self:setNextAction(SeekToiletsAction():setMustHappen(true))
             self.going_to_toilet = "yes"
           end
@@ -823,7 +823,7 @@ function Patient:tickDay()
     -- The only allowed situations to grab a soda is when queueing
     -- or idling/walking in the corridors
     -- Also make sure the walk action when leaving a room has a chance to finish.
-    if not self:getRoom() and not self.action_queue[1].is_leaving and not self.going_home then
+    if not self:getRoom() and not self:getCurrentAction().is_leaving and not self.going_home then
       local machine, lx, ly = self.world:
           findObjectNear(self, "drinks_machine", 8)
 
@@ -864,7 +864,7 @@ function Patient:tickDay()
 
       -- Or, if walking or idling insert the needed actions in
       -- the beginning of the queue
-      local current = self.action_queue[1]
+      local current = self:getCurrentAction()
       if current.name == "walk" or current.name == "idle" or current.name == "seek_room" then
         -- Go to the machine, use it, and then continue with
         -- whatever he/she was doing.
@@ -910,8 +910,8 @@ function Patient:tickDay()
   -- it may be a situation where he/she is not in the queue
   -- anymore, but should be. If this is the case for more than
   -- 2 ticks, go to reception
-  if #self.action_queue > 1 and (self.action_queue[1].name == "use_object" or
-      self.action_queue[1].name == "idle") and
+  if #self.action_queue > 1 and (self:getCurrentAction().name == "use_object" or
+      self:getCurrentAction().name == "idle") and
       self.action_queue[2].name == "queue" then
     local found = false
     for _, humanoid in ipairs(self.action_queue[2].queue) do

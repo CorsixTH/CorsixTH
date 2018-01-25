@@ -152,8 +152,8 @@ function ToiletRoom:getPatientCount()
     if class.is(humanoid, Patient) then
       number_users = number_users + 1
 
-      if humanoid.action_queue[1].name == "use_object" and
-          humanoid.action_queue[1].object.object_type.id ~= "loo" then
+      if humanoid:getCurrentAction().name == "use_object" and
+          humanoid:getCurrentAction().object.object_type.id ~= "loo" then
         not_using_loo = not_using_loo + 1
       end
     end

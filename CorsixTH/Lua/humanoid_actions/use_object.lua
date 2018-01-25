@@ -306,7 +306,7 @@ local function finish_using(object, humanoid)
 end
 
 action_use_object_tick = permanent"action_use_object_tick"( function(humanoid)
-  local action = humanoid.action_queue[1]
+  local action = humanoid:getCurrentAction()
   local object = action.object
   local phase = action.phase
   local oldphase = phase

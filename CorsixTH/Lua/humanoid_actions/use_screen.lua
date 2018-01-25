@@ -41,7 +41,7 @@ local finish = permanent"action_use_screen_finish"( function(humanoid)
   screen:removeUser(humanoid)
   local offset = screen.object_type.orientations[screen.direction].use_position
   humanoid:setTile(screen.tile_x + offset[1], screen.tile_y + offset[2])
-  local after_use = humanoid.action_queue[1].after_use
+  local after_use = humanoid:getCurrentAction().after_use
   if after_use then
     after_use()
   end

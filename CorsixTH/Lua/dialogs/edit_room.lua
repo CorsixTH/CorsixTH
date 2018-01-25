@@ -258,7 +258,7 @@ local function isHumanoidObscuringArea(humanoid, x1, x2, y1, y2)
       if (x1 == humanoid.tile_x or x2 == humanoid.tile_x) or
           (y1 == humanoid.tile_y or y2 == humanoid.tile_y) then
         -- Humanoid not in the rectangle, but might be walking into it
-        local action = humanoid.action_queue[1]
+        local action = humanoid:getCurrentAction()
         if action.name ~= "walk" then
           return false
         end
@@ -293,19 +293,20 @@ function UIEditRoom:clearArea()
         humanoids_to_watch[entity] = true
 
         -- Try to make the humanoid leave the area
+        local current_action = entity:getCurrentAction()
         local meander = entity.action_queue[2]
         if meander and meander.name == "meander" then
           -- Interrupt the idle or walk, which will cause a new meander target
           -- to be chosen, which will be outside the blueprint rectangle
           meander.can_idle = false
-          local on_interrupt = entity.action_queue[1].on_interrupt
+          local on_interrupt = current_action.on_interrupt
           if on_interrupt then
-            entity.action_queue[1].on_interrupt = nil
-            on_interrupt(entity.action_queue[1], entity)
+            current_action.on_interrupt = nil
+            on_interrupt(current_action, entity)
           end
-        elseif entity.action_queue[1].name == "seek_room" or (meander and meander.name == "seek_room") then
+        elseif current_action.name == "seek_room" or (meander and meander.name == "seek_room") then
           -- Make sure that the humanoid doesn't stand idle waiting within the blueprint
-          if entity.action_queue[1].name == "seek_room" then
+          if current_action.name == "seek_room" then
             entity:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
           else
             meander.done_walk = false
@@ -356,7 +357,7 @@ function UIEditRoom:onTick()
         -- The person might be dying (this check should probably be moved into
         -- isHumanoidObscuringArea, but I don't want to change too much right
         -- before a release).
-        if humanoid.action_queue[1].name == "die" then
+        if humanoid:getCurrentAction().name == "die" then
           if not humanoid.hospital then
             self.humanoids_to_watch[humanoid] = nil
           end

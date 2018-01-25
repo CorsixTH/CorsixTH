@@ -89,7 +89,7 @@ local function meander_action_start(action, humanoid)
     end
   elseif action.loop_callback then
     action.loop_callback()
-    if action ~= humanoid.action_queue[1] then
+    if action ~= humanoid:getCurrentAction() then
       return
     end
   end

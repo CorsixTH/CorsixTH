@@ -56,7 +56,7 @@ function XRayRoom:commandEnteringPatient(patient)
   local console, stf_x, stf_y = self.world:findObjectNear(staff, "radiation_shield")
 
   local --[[persistable:x_ray_shared_loop_callback]] function loop_callback()
-    if staff.action_queue[1].name == "idle" and patient.action_queue[1].name == "idle" then
+    if staff:getCurrentAction().name == "idle" and patient:getCurrentAction().name == "idle" then
 
       local length = math.random(2, 4) * (2 - staff.profile.skill)
       local loop_callback_xray = --[[persistable:x_ray_loop_callback]] function(action)

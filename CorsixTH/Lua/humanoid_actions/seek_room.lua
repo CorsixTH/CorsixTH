@@ -298,7 +298,7 @@ local function action_seek_room_start(action, humanoid)
           local current_room = humanoid:getRoom()
           if not current_room or not (current_room.room_info.id == "research" and
               current_room:getStaffMember() and
-              current_room:getStaffMember().action_queue[1].name == "multi_use_object") then
+              current_room:getStaffMember():getCurrentAction().name == "multi_use_object") then
             action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
           end
           TheApp.ui.bottom_panel:removeMessage(humanoid)

@@ -95,7 +95,7 @@ function ReceptionDesk:tick()
   local queue_front = self.queue:front()
   local reset_timer = true
   if self.receptionist and queue_front then
-    if queue_front.action_queue[1].name == "idle" then
+    if queue_front:getCurrentAction().name == "idle" then
       self.queue_advance_timer = self.queue_advance_timer + 1
       reset_timer = false
       if self.queue_advance_timer >= 4 + self.world.hours_per_day * (1.0 - self.receptionist.profile.skill) then

@@ -25,3 +25,15 @@ require("busted")
 
 require("non_strict")
 require("class")
+
+function permanent()
+  return function()
+    return {}
+  end
+end
+
+function values()
+  return function()
+    return nil
+  end
+end
