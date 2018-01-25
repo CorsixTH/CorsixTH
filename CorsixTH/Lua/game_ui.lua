@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-require("ui")
+require "ui"
 
 --! Variant of UI for running games
 class "GameUI" (UI)
@@ -26,7 +26,7 @@ class "GameUI" (UI)
 ---@type GameUI
 local GameUI = _G["GameUI"]
 
-local TH = require("TH")
+local TH = require "TH"
 
 -- The maximum distance to shake the screen from the origin during an
 -- earthquake with full intensity.

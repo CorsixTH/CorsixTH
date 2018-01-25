@@ -30,7 +30,7 @@ object.idle_animations = {
   west = 106,
 }
 
-require("queue")
+require "queue"
 
 class "Door" (Object)
 

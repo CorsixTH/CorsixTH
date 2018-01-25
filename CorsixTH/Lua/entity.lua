@@ -24,7 +24,7 @@ class "Entity"
 ---@type Entity
 local Entity = _G["Entity"]
 
-local TH = require("TH")
+local TH = require "TH"
 
 function Entity:Entity(animation)
   self.th = animation

@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local TH = require("TH")
+local TH = require "TH"
 
 -- Test for hit within the view circle
 local --[[persistable:patient_window_is_in_view_circle]] function is_in_view_circle(x, y)

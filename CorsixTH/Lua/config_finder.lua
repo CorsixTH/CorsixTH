@@ -58,7 +58,7 @@ if fi then
 end
 
 -- Check / create config_path
-local lfs = require("lfs")
+local lfs = require "lfs"
 local function check_dir_exists(path)
   if path:sub(-1) == pathsep then
     path = path:sub(1, -2)

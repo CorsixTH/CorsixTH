@@ -22,17 +22,17 @@ local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
-require("entities.patient")
-require("entities.staff")
-require("entities.vip")
-require("entities.grim_reaper")
-require("entities.inspector")
-require("staff_profile")
-require("hospital")
-require("epidemic")
-require("calls_dispatcher")
-require("research_department")
-require("entity_map")
+require "entities.patient"
+require "entities.staff"
+require "entities.vip"
+require "entities.grim_reaper"
+require "entities.inspector"
+require "staff_profile"
+require "hospital"
+require "epidemic"
+require "calls_dispatcher"
+require "research_department"
+require "entity_map"
 
 --! Manages entities, rooms, and the date.
 class "World"

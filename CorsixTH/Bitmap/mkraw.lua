@@ -27,7 +27,7 @@ end
 package.path = (debug.getinfo(1, "S").source:match("@(.*[" .. package.config
                :sub(1, 1) .. "])") or "") .. "lib_" .. package.config:sub(5, 5)
                .. ".lua" .. package.config:sub(3, 3) .. package.path
-require("bmp")
+require "bmp"
 
 local filename = ...
 if not filename:match("%.bmp$") then

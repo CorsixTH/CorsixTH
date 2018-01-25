@@ -69,7 +69,7 @@ function MultiUseObjectAction:setLayer3(layer3)
   return self
 end
 
-local TH = require("TH")
+local TH = require "TH"
 
 local orient_mirror = {
   north = "west",

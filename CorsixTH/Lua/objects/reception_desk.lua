@@ -66,7 +66,7 @@ object.orientations = {
   },
 }
 
-require("queue")
+require "queue"
 
 class "ReceptionDesk" (Object)
 
