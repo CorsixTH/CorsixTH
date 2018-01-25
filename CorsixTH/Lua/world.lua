@@ -22,18 +22,18 @@ local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
-dofile "entities/patient"
-dofile "entities/staff"
-dofile "entities/vip"
-dofile "entities/grim_reaper"
-dofile "entities/inspector"
-dofile "staff_profile"
-dofile "hospital"
-dofile "epidemic"
-dofile "calls_dispatcher"
-dofile "research_department"
-dofile "entity_map"
-dofile "date"
+corsixth.require "entities/patient"
+corsixth.require "entities/staff"
+corsixth.require "entities/vip"
+corsixth.require "entities/grim_reaper"
+corsixth.require "entities/inspector"
+corsixth.require "staff_profile"
+corsixth.require "hospital"
+corsixth.require "epidemic"
+corsixth.require "calls_dispatcher"
+corsixth.require "research_department"
+corsixth.require "entity_map"
+corsixth.require "date"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -2413,8 +2413,8 @@ function World:afterLoad(old, new)
   if old < 17 then
     -- Added another object
     local pathsep = package.config:sub(1, 1)
-    local _, shield = pcall(dofile, "objects" .. pathsep .. "radiation_shield")
-    local _, shield_b = pcall(dofile, "objects" .. pathsep .. "radiation_shield_b")
+    local _, shield = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield")
+    local _, shield_b = pcall(corsixth.require, "objects" .. pathsep .. "radiation_shield_b")
     shield.slave_type = shield_b
     shield.slave_type.master_type = shield
     Object.processTypeDefinition(shield)

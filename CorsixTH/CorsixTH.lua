@@ -28,8 +28,11 @@ for _, arg in ipairs{...} do
     code_dir = dir .. pathsep
   end
 end
+
+package.path = code_dir .. "?.lua;" .. code_dir .. "?/init.lua;" .. package.path
+
 local done_files = {}
-local persist = require "persist"
+local persist = require("persist")
 local save_results
 if table.pack then
   -- Lua 5.2
@@ -44,7 +47,10 @@ else
     return ...
   end
 end
-function dofile(name)
+
+_G['corsixth'] = {}
+
+corsixth.require = function(name)
   if pathsep ~= "/" then
     name = name:gsub("/", pathsep)
   end
@@ -57,12 +63,11 @@ function dofile(name)
 end
 
 -- Load standard library extensions
-dofile "utility"
+corsixth.require "utility"
 
 -- If requested run a Lua DBGp Debugger Client:
 if run_debugger then
   dofile("run_debugger")()
-  done_files["run_debugger"] = nil
 end
 
 -- Check Lua version
@@ -98,21 +103,22 @@ end
 -- it to a running server, using this CorsixTH startup arg: -debugger
 
 -- Enable strict mode
-dofile "strict"
+corsixth.require "strict"
 require = destrict(require)
+dofile = destrict(dofile)
 
 -- Load the class system (required for App)
-dofile "class"
+corsixth.require "class"
 
 -- Load the main App class
-dofile "app"
+corsixth.require "app"
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
-  "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..dofile"config_finder",
+  "--bitmap-dir=" ..base_dir.. "Bitmap",
+  "--config-file=" .. corsixth.require("config_finder"),
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...
