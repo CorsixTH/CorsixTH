@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local lfs = require("lfs")
+local lfs = require "lfs"
 
 --! A tree node representing a file (or directory) in the physical file-system
 --  that meets a given file extension criterion.
