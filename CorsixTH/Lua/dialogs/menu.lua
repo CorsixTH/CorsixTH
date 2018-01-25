@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local ipairs, math_floor, unpack, select, assert
     = ipairs, math.floor, unpack, select, assert
-local TH = require "TH"
+local TH = require("TH")
 
 --! The ingame menu bar which sits (nominally hidden) at the top of the screen.
 class "UIMenuBar" (Window)
@@ -784,7 +784,7 @@ function UIMenuBar:makeGameMenu(app)
         :appendCheckItem(_S.menu_debug_overlay.byte_7,      false, overlay(35, 8, 7, 7, true), "")
         :appendCheckItem(_S.menu_debug_overlay.parcel,      false, overlay("parcel"), "")
       )
-      :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require "sprite_viewer" end)
+      :appendItem(_S.menu_debug.sprite_viewer, function() corsixth.require("sprite_viewer") end)
     )
   end
 end

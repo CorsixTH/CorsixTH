@@ -63,7 +63,7 @@ corsixth.require = function(name)
 end
 
 -- Load standard library extensions
-corsixth.require "utility"
+corsixth.require("utility")
 
 -- If requested run a Lua DBGp Debugger Client:
 if run_debugger then
@@ -103,15 +103,15 @@ end
 -- it to a running server, using this CorsixTH startup arg: -debugger
 
 -- Enable strict mode
-corsixth.require "strict"
+corsixth.require("strict")
 require = destrict(require)
 dofile = destrict(dofile)
 
 -- Load the class system (required for App)
-corsixth.require "class"
+corsixth.require("class")
 
 -- Load the main App class
-corsixth.require "app"
+corsixth.require("app")
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"

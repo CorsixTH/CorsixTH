@@ -19,11 +19,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local pathsep = package.config:sub(1, 1)
-local rnc = require "rnc"
-local lfs = require "lfs"
-local TH = require "TH"
-local SDL = require "sdl"
-local runDebugger = corsixth.require "run_debugger"
+local rnc = require("rnc")
+local lfs = require("lfs")
+local TH = require("TH")
+local SDL = require("sdl")
+local runDebugger = corsixth.require("run_debugger")
 
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
@@ -110,7 +110,7 @@ function App:init()
     conf_chunk(self.config)
   end
   self:fixConfig()
-  corsixth.require "filesystem"
+  corsixth.require("filesystem")
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
   -- self:checkLanguageFile()
@@ -124,7 +124,7 @@ function App:init()
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
-  local api_version = corsixth.require "api_version"
+  local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
     compile_opts.api_version = compile_opts.api_version or 0
@@ -168,8 +168,8 @@ function App:init()
   self.video:setCaption(self.caption)
 
   -- Prereq 2: Load and initialise the graphics subsystem
-  corsixth.require "persistance"
-  corsixth.require "graphics"
+  corsixth.require("persistance")
+  corsixth.require("graphics")
   self.gfx = Graphics(self)
 
   -- Put up the loading screen
@@ -212,20 +212,20 @@ function App:init()
     return math.floor(input + 0.5)
   end
   -- Load audio
-  corsixth.require "audio"
+  corsixth.require("audio")
   self.audio = Audio(self)
   self.audio:init()
 
   -- Load movie player
-  corsixth.require "movie_player"
+  corsixth.require("movie_player")
   self.moviePlayer = MoviePlayer(self, self.audio, self.video)
   if good_install_folder then
     self.moviePlayer:init()
   end
 
   -- Load strings before UI and before additional Lua
-  corsixth.require "strings"
-  corsixth.require "string_extensions"
+  corsixth.require("strings")
+  corsixth.require("string_extensions")
   self.strings = Strings(self)
   self.strings:init()
   local language_load_success = self:initLanguage()
@@ -236,17 +236,17 @@ function App:init()
   end
 
   -- Load map before world
-  corsixth.require "map"
+  corsixth.require("map")
 
   -- Load additional Lua before world
   if good_install_folder then
     self.anims = self.gfx:loadAnimations("Data", "V")
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
-    corsixth.require "entity"
-    corsixth.require "entities/humanoid"
-    corsixth.require "entities/object"
-    corsixth.require "entities/machine"
+    corsixth.require("entity")
+    corsixth.require("entities/humanoid")
+    corsixth.require("entities/object")
+    corsixth.require("entities/machine")
 
     local objects = self:loadLuaFolder("objects")
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
@@ -261,23 +261,23 @@ function App:init()
       Object.processTypeDefinition(v)
     end
 
-    corsixth.require "room"
+    corsixth.require("room")
     self.rooms = self:loadLuaFolder("rooms")
 
-    corsixth.require "humanoid_action"
+    corsixth.require("humanoid_action")
     self.humanoid_actions = self:loadLuaFolder("humanoid_actions")
 
     local diseases = self:loadLuaFolder("diseases")
     self.diseases = self:loadLuaFolder("diagnosis", nil, diseases)
 
     -- Load world before UI
-    corsixth.require "world"
+    corsixth.require("world")
   end
 
   -- Load UI
-  corsixth.require "ui"
+  corsixth.require("ui")
   if good_install_folder then
-    corsixth.require "game_ui"
+    corsixth.require("game_ui")
     self.ui = UI(self, true)
   else
     self.ui = UI(self, true)
@@ -798,7 +798,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local _, config_defaults = corsixth.require "config_finder"
+  local _, config_defaults = corsixth.require("config_finder")
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -1428,14 +1428,14 @@ function App:afterLoad()
   self.world.savegame_version = new
 
   if old < 87 then
-    local new_object = corsixth.require "objects/gates_to_hell"
+    local new_object = corsixth.require("objects/gates_to_hell")
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
   end
 
   if old < 114 then
-    local rathole_type = corsixth.require "objects/rathole"
+    local rathole_type = corsixth.require("objects/rathole")
     Object.processTypeDefinition(rathole_type)
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)
@@ -1474,8 +1474,8 @@ function App:checkForUpdates()
   else
     self.lua_socket_available = true
   end
-  local http = require "socket.http"
-  local url = require "socket.url"
+  local http = require("socket.http")
+  local url = require("socket.url")
 
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
