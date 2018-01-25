@@ -19,10 +19,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 local pathsep = package.config:sub(1, 1)
-local rnc = require "rnc"
-local lfs = require "lfs"
-local SDL = require "sdl"
-local TH = require "TH"
+local rnc = require("rnc")
+local lfs = require("lfs")
+local SDL = require("sdl")
+local TH = require("TH")
 local ipairs
     = ipairs
 

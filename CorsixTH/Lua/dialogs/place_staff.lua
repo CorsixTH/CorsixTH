@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local math_floor
     = math.floor
-local TH = require "TH"
+local TH = require("TH")
 
 --! Invisible window which handles placing a `Staff` member in the world.
 class "UIPlaceStaff" (Window)
