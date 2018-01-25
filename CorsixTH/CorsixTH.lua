@@ -17,8 +17,7 @@ for _, arg in ipairs({...}) do
   end
 end
 
--- Redefine dofile such that it adds the direction name and file extension, and
--- won't redo a file which it has previously done.
+-- Finds a code directory so that it can add it to paths to look for modules
 local pathsep = package.config:sub(1, 1)
 local base_dir = debug.getinfo(1, "S").source:sub(2, -13)
 local code_dir = base_dir .. "Lua" .. pathsep
@@ -28,41 +27,16 @@ for _, arg in ipairs{...} do
     code_dir = dir .. pathsep
   end
 end
-local done_files = {}
-local persist = require "persist"
-local save_results
-if table.pack then
-  -- Lua 5.2
-  save_results = function(t, k, ...)
-    t[k] = table.pack(...)
-    return ...
-  end
-else
-  -- Lua 5.1
-  save_results = function(t, k, ...)
-    t[k] = {n = select('#', ...), ...}
-    return ...
-  end
-end
-function dofile(name)
-  if pathsep ~= "/" then
-    name = name:gsub("/", pathsep)
-  end
-  if done_files[name] then
-    local results = done_files[name]
-    return unpack(results, 1, results.n)
-  end
-  done_files[name] = true
-  return save_results(done_files, name, persist.dofile(code_dir .. name .. ".lua"))
-end
+
+package.path = code_dir .. "?" .. pathsep .. "init.lua" .. ";" .. package.path
+package.path = code_dir .. "?.lua" .. ";" .. package.path
 
 -- Load standard library extensions
-dofile "utility"
+require "utility"
 
--- If requested run a Lua DBGp Debugger Client:
+-- If requested run a Lua DBGp Debugger Client
 if run_debugger then
-  dofile("run_debugger")()
-  done_files["run_debugger"] = nil
+  require "run_debugger"
 end
 
 -- Check Lua version
@@ -98,21 +72,20 @@ end
 -- it to a running server, using this CorsixTH startup arg: -debugger
 
 -- Enable strict mode
-dofile "strict"
-require = destrict(require)
+require "strict"
 
 -- Load the class system (required for App)
-dofile "class"
+require "class"
 
 -- Load the main App class
-dofile "app"
+require "app"
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
   "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..dofile"config_finder",
+  "--config-file="..(require"config_finder")["filename"],
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...

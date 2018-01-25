@@ -22,17 +22,17 @@ local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
-dofile "entities/patient"
-dofile "entities/staff"
-dofile "entities/vip"
-dofile "entities/grim_reaper"
-dofile "entities/inspector"
-dofile "staff_profile"
-dofile "hospital"
-dofile "epidemic"
-dofile "calls_dispatcher"
-dofile "research_department"
-dofile "entity_map"
+require "entities.patient"
+require "entities.staff"
+require "entities.vip"
+require "entities.grim_reaper"
+require "entities.inspector"
+require "staff_profile"
+require "hospital"
+require "epidemic"
+require "calls_dispatcher"
+require "research_department"
+require "entity_map"
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -2444,9 +2444,8 @@ function World:afterLoad(old, new)
   end
   if old < 17 then
     -- Added another object
-    local pathsep = package.config:sub(1, 1)
-    local _, shield = pcall(dofile, "objects" .. pathsep .. "radiation_shield")
-    local _, shield_b = pcall(dofile, "objects" .. pathsep .. "radiation_shield_b")
+    local _, shield = pcall(require, "objects.radiation_shield")
+    local _, shield_b = pcall(require, "objects.radiation_shield_b")
     shield.slave_type = shield_b
     shield.slave_type.master_type = shield
     Object.processTypeDefinition(shield)
