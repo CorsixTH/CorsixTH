@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-require "window"
+require("window")
 
 --! Top-level container for all other user-interface components.
 class "UI" (Window)
@@ -26,10 +26,10 @@ class "UI" (Window)
 ---@type UI
 local UI = _G["UI"]
 
-local TH = require "TH"
-local SDL = require "sdl"
+local TH = require("TH")
+local SDL = require("sdl")
 local WM = SDL.wm
-local lfs = require "lfs"
+local lfs = require("lfs")
 
 local function invert(t)
   local r = {}

@@ -18,8 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local lfs = require "lfs"
-local TH = require "TH"
+local lfs = require("lfs")
+local TH = require("TH")
 
 --! Layer which handles the loading of localised text.
 class "Strings"
