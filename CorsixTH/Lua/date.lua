@@ -64,6 +64,11 @@ function Date:plusDays(increment)
   return Date(self._year, self._month, new_day)
 end
 
+function Date:plusYears(increment)
+  local new_year = self._year + increment
+  return Date(new_year, self._month, self._day)
+end
+
 function Date:monthOfYear()
   return self._month
 end
@@ -100,11 +105,11 @@ end
 
 local Date_mt = Date._metatable
 
-function Date_mt.__eq(one, other)
+Date_mt.__eq = --[[persistable:date_eq]] function(one, other)
   return one._year == other._year and one._month == other._month and one._day == other._day
 end
 
-function Date_mt.__lt(one, other)
+Date_mt.__lt = --[[persistable:date_lt]] function(one, other)
   if one._year == other._year then
     if one._month == other._month then
       return one._day < other._day
