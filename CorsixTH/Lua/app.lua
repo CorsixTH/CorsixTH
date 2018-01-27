@@ -244,9 +244,9 @@ function App:init()
     self.animation_manager = AnimationManager(self.anims)
     self.walls = self:loadLuaFolder("walls")
     corsixth.require("entity")
-    corsixth.require("entities/humanoid")
-    corsixth.require("entities/object")
-    corsixth.require("entities/machine")
+    corsixth.require("entities.humanoid")
+    corsixth.require("entities.object")
+    corsixth.require("entities.machine")
 
     local objects = self:loadLuaFolder("objects")
     self.objects = self:loadLuaFolder("objects/machines", nil, objects)
@@ -1428,14 +1428,14 @@ function App:afterLoad()
   self.world.savegame_version = new
 
   if old < 87 then
-    local new_object = corsixth.require("objects/gates_to_hell")
+    local new_object = corsixth.require("objects.gates_to_hell")
     Object.processTypeDefinition(new_object)
     self.objects[new_object.id] = new_object
     self.world:newObjectType(new_object)
   end
 
   if old < 114 then
-    local rathole_type = corsixth.require("objects/rathole")
+    local rathole_type = corsixth.require("objects.rathole")
     Object.processTypeDefinition(rathole_type)
     self.objects[rathole_type.id] = rathole_type
     self.world:newObjectType(rathole_type)

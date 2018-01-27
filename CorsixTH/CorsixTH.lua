@@ -51,9 +51,7 @@ end
 _G['corsixth'] = {}
 
 corsixth.require = function(name)
-  if pathsep ~= "/" then
-    name = name:gsub("/", pathsep)
-  end
+  name = name:gsub("%.", pathsep)
   if done_files[name] then
     local results = done_files[name]
     return unpack(results, 1, results.n)
