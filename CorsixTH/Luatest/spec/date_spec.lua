@@ -87,30 +87,30 @@ describe("Date", function()
 
   it("can handle complex adjustments", function()
     local date = Date(2,2,31,55)
-    assert.are.equal("4/3/2:5", date:tostring())
+    assert.are.equal("2-03-04T05", date:tostring())
 
     date = Date(1,12,31,55)
-    assert.are.equal("1/1/2:5", date:tostring())
+    assert.are.equal("2-01-01T05", date:tostring())
 
     -- 31 - January, 28 - February, 7 - March
     date = Date(1,1,66)
-    assert.are.equal("7/3/1:0", date:tostring())
+    assert.are.equal("1-03-07T00", date:tostring())
   end)
 
   it("can print date", function()
     local date = Date(2,12,1,6)
-    assert.are.equal("1/12/2:6", date:tostring())
+    assert.are.equal("2-12-01T06", date:tostring())
   end)
   it("can add days", function()
     local date = Date(2,12,30)
     -- 1 - December, 29 - January
     date = date:plusDays(30)
-    assert.are.equal("29/1/3:0", date:tostring())
+    assert.are.equal("3-01-29T00", date:tostring())
 
     date = Date(1,3,15)
     -- 16 - March, 30 - April, 31 - June, 13 - July
     date = date:plusDays(90)
-    assert.are.equal("13/6/1:0", date:tostring())
+    assert.are.equal("1-06-13T00", date:tostring())
   end)
   it("can add years", function()
     local date = Date(3, 2, 1, 6)

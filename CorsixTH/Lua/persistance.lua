@@ -103,6 +103,11 @@ local function MakePermanentObjectsTable(inverted)
         permanent[v] = name .. "." .. k
       end
     end
+    for k, v in pairs(class._metatable) do
+      if type(v) == "function" then
+        permanent[v] = name .. "._metatable." .. k
+      end
+    end
   until true end
 
   -- C/class/library methods

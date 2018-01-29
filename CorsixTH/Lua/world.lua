@@ -2434,6 +2434,7 @@ function World:afterLoad(old, new)
     self:nextEmergency()
   end
   if old < 31 then
+    self.hours_per_day = 50
     self:setSpeed("Normal")
   end
   if old < 36 then

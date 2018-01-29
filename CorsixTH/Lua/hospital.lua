@@ -703,6 +703,7 @@ function Hospital:checkFacilities()
   local year = self.world:date():year()
   local month = self.world:date():monthOfYear()
   local day = self.world:date():dayOfMonth()
+  local current_date = self.world:date()
   if self.hospital and self:isPlayerHospital() then
     -- If there is no staff room, remind player of the need to build one
     if day == 3 and not self:hasRoomOfType("staff_room") then
@@ -744,8 +745,7 @@ function Hospital:checkFacilities()
         self.seating_warning = 0
       end
     end
-    if day == 12 and show_msg  == 4 and not self.bench_msg and
-        (year > 1 or (year == 1 and month > 4)) then
+    if day == 12 and show_msg == 4 and not self.bench_msg and current_date >= Date(1,5) then
       -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
       -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
       if self.world.object_counts.bench > self.patientcount then
@@ -767,7 +767,7 @@ function Hospital:checkFacilities()
     if not self.heating_broke then
       if not self.warmth_msg and day == 15 then
         local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
-        if (year > 1 or month > 4) and warmth < 0.22 then
+        if current_date >= Date(1,5) and warmth < 0.22 then
           self:warningTooCold()
         elseif month > 4 and warmth >= 0.36 then
           self:warningTooHot()
@@ -776,7 +776,7 @@ function Hospital:checkFacilities()
       -- Are the staff warm enough?
       if not self.warmth_msg and day == 20 then
         local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
-        if (year > 1 or month > 4) and avgWarmth < 0.22 then
+        if current_date >= Date(1,5) and avgWarmth < 0.22 then
           self.world.ui.adviser:say(_A.warnings.staff_very_cold)
         elseif month > 4 and avgWarmth >= 0.36 then
           self.world.ui.adviser:say(_A.warnings.staff_too_hot)

@@ -102,7 +102,7 @@ function Date:hourOfDay()
 end
 
 function Date:tostring()
-  return self._day .. "/" .. self._month .. "/" .. self._year .. ":" .. self._hour
+  return string.format("%d-%02d-%02dT%02d", self._year, self._month, self._day, self._hour)
 end
 
 function Date:isLastDayOfMonth()
@@ -125,11 +125,11 @@ end
 
 local Date_mt = Date._metatable
 
-Date_mt.__eq = --[[persistable:date_eq]] function(one, other)
+function Date_mt.__eq(one, other)
   return one._year == other._year and one._month == other._month and one._day == other._day and one._hour == other._hour
 end
 
-Date_mt.__lt = --[[persistable:date_lt]] function(one, other)
+function Date_mt.__lt(one, other)
   if one._year == other._year then
     if one._month == other._month then
       if one._day == other._day then
