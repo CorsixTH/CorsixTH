@@ -814,7 +814,7 @@ function Hospital:checkFacilities()
 end
 
 --! Called each tick, also called 'hours'. Check hours_per_day in
---! world.lua to see how many times per day this is.
+--! date.lua to see how many times per day this is.
 function Hospital:tick()
 -- add some random background sounds, ringing phones, coughing, belching etc
   self:countPatients()

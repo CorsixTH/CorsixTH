@@ -95,11 +95,9 @@ function World:World(app)
   self.next_vip_date = nil
 
   -- Time
-  self.hours_per_day = 50
   self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
-  self.hour = 0
   self.game_date = Date()
 
   self.room_information_dialogs_off = app.config.debug
@@ -984,27 +982,24 @@ function World:onTick()
         print("Error while autosaving game: " .. err)
       end
     end
-    if self.game_date == Date() and self.hour == 0 then
-      if not self.ui.start_tutorial then
-        self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
-        self.ui:showBriefing()
-      end
+    if self.game_date == Date() and not self.ui.start_tutorial then
+      self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
+      self.ui:showBriefing()
     end
     self.tick_timer = self.tick_rate
-    self.hour = self.hour + self.hours_per_tick
 
     -- if an earthquake is supposed to be going on, call the earthquake function
     if self.next_earthquake.active then
       self:tickEarthquake()
     end
 
+    local new_game_date = self.game_date:plusHours(self.hours_per_tick)
     -- End of day/month/year
-    if self.hour >= self.hours_per_day then
+    if self.game_date:dayOfMonth() ~= new_game_date:dayOfMonth() then
       for _, hospital in ipairs(self.hospitals) do
         hospital:onEndDay()
       end
       self:onEndDay()
-      self.hour = self.hour - self.hours_per_day
       if self.game_date:isLastDayOfMonth() then
         for _, hospital in ipairs(self.hospitals) do
           hospital:onEndMonth()
@@ -1022,16 +1017,18 @@ function World:onTick()
           self:onEndYear()
         end
       end
-      self.game_date = self.game_date:plusDays(1)
     end
+    self.game_date = new_game_date
+
     for i = 1, self.hours_per_tick do
       for _, hospital in ipairs(self.hospitals) do
         hospital:tick()
       end
       -- A patient might arrive to the player hospital.
       -- TODO: Multiplayer support.
-      if self.spawn_hours[self.hour + i - 1] and self.hospitals[1].opened then
-        for _ = 1, self.spawn_hours[self.hour + i - 1] do
+      local spawn_count = self.spawn_hours[self.game_date:hourOfDay() + i - 1]
+      if spawn_count and self.hospitals[1].opened then
+        for _ = 1, spawn_count do
           self:spawnPatient()
         end
       end
@@ -1064,13 +1061,13 @@ function World:onTick()
 end
 
 function World:setEndMonth()
-  self.game_date = Date(self.game_date:year(), self.game_date:monthOfYear(), self.game_date:lastDayOfMonth())
-  self.hour = self.hours_per_day - 1
+  local first_day_of_next_month = Date(self.game_date:year(), self.game_date:monthOfYear() + 1)
+  self.game_date = first_day_of_next_month:plusHours(-1)
 end
 
 function World:setEndYear()
-  self.game_date = Date(self.game_date:year(), 12, self.game_date:dayOfMonth())
-  self:setEndMonth()
+  local first_day_of_next_year = Date(self.game_date:year() + 1)
+  self.game_date = first_day_of_next_year:plusHours(-1)
 end
 
 -- Called immediately prior to the ingame day changing.
@@ -1147,7 +1144,7 @@ function World:onEndDay()
   local day = self.game_date:dayOfMonth()
   if self.spawn_dates[day] then
     for _ = 1, self.spawn_dates[day] do
-      local hour = math.random(1, self.hours_per_day)
+      local hour = math.random(1, Date.hoursPerDay())
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
@@ -2437,7 +2434,6 @@ function World:afterLoad(old, new)
     self:nextEmergency()
   end
   if old < 31 then
-    self.hours_per_day = 50
     self:setSpeed("Normal")
   end
   if old < 36 then
@@ -2570,7 +2566,7 @@ function World:afterLoad(old, new)
     end
   end
   if old < 124 then
-    self.game_date = Date(self.year, self.month, self.day)
+    self.game_date = Date(self.year, self.month, self.day, self.hour)
     -- self.next_vip_month is number of months since the game start
     self.next_vip_date = Date(1, self.next_vip_month, self.next_vip_day)
   end

@@ -43,10 +43,21 @@ local month_length = {
   31, -- Dec
 }
 
-function Date:Date(year, month, day)
+local hours_per_day = 50
+
+-- STATIC
+
+function Date.hoursPerDay()
+  return hours_per_day
+end
+
+-- PUBLIC
+
+function Date:Date(year, month, day, hour)
   self._year = year or 1
   self._month = month or 1
   self._day = day or 1
+  self._hour = hour or 0
   self:_adjustOverflow()
 end
 
@@ -56,17 +67,22 @@ end
 
 function Date:plusMonths(increment)
   local new_month = self._month + increment
-  return Date(self._year, new_month, self._day)
+  return Date(self._year, new_month, self._day, self._hour)
 end
 
 function Date:plusDays(increment)
   local new_day = self._day + increment
-  return Date(self._year, self._month, new_day)
+  return Date(self._year, self._month, new_day, self._hour)
 end
 
 function Date:plusYears(increment)
   local new_year = self._year + increment
-  return Date(new_year, self._month, self._day)
+  return Date(new_year, self._month, self._day, self._hour)
+end
+
+function Date:plusHours(increment)
+  local new_hour = self._hour + increment
+  return Date(self._year, self._month, self._day, new_hour)
 end
 
 function Date:monthOfYear()
@@ -81,8 +97,12 @@ function Date:year()
   return self._year
 end
 
+function Date:hourOfDay()
+  return self._hour
+end
+
 function Date:tostring()
-  return self._day .. "/" .. self._month .. "/" .. self._year
+  return self._day .. "/" .. self._month .. "/" .. self._year .. ":" .. self._hour
 end
 
 function Date:isLastDayOfMonth()
@@ -98,7 +118,7 @@ function Date:monthOfGame()
 end
 
 function Date:clone()
-  return Date(self._year, self._month, self._day)
+  return Date(self._year, self._month, self._day, self._hour)
 end
 
 -- METAMETHODS
@@ -106,12 +126,15 @@ end
 local Date_mt = Date._metatable
 
 Date_mt.__eq = --[[persistable:date_eq]] function(one, other)
-  return one._year == other._year and one._month == other._month and one._day == other._day
+  return one._year == other._year and one._month == other._month and one._day == other._day and one._hour == other._hour
 end
 
 Date_mt.__lt = --[[persistable:date_lt]] function(one, other)
   if one._year == other._year then
     if one._month == other._month then
+      if one._day == other._day then
+        return one._hour < other._hour
+      end
       return one._day < other._day
     end
     return one._month < other._month
@@ -121,7 +144,24 @@ end
 
 -- PRIVATE
 
+function Date:_adjustHoursOverflow()
+  while self._hour < 0 do
+    self._hour = self._hour + hours_per_day
+    self._day = self._day - 1
+  end
+  while self._hour >= hours_per_day do
+    self._hour = self._hour - hours_per_day
+    self._day = self._day + 1
+  end
+  self:_adjustDayOverflow()
+end
+
 function Date:_adjustDayOverflow()
+  while self._day < 1 do
+    self._month = self._month - 1
+    self:_adjustMonthOverflow()
+    self._day = self._day + self:lastDayOfMonth()
+  end
   while self._day > self:lastDayOfMonth() do
     self._day = self._day - self:lastDayOfMonth()
     self._month = self._month + 1
@@ -138,4 +178,5 @@ end
 function Date:_adjustOverflow()
   self:_adjustMonthOverflow()
   self:_adjustDayOverflow()
+  self:_adjustHoursOverflow()
 end
