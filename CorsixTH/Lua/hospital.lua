@@ -700,106 +700,91 @@ end
 
 -- A range of checks to help a new player. These are set days apart and will show no more than once a month
 function Hospital:checkFacilities()
-  local year = self.world:date():year()
-  local month = self.world:date():monthOfYear()
-  local day = self.world:date():dayOfMonth()
   local current_date = self.world:date()
-  if self.hospital and self:isPlayerHospital() then
+  local day = current_date:dayOfMonth()
+  -- All messages are shown after first 4 months if respective conditions are met
+  if self:isPlayerHospital() and current_date >= Date(1,5) then
     -- If there is no staff room, remind player of the need to build one
-    if day == 3 and not self:hasRoomOfType("staff_room") then
-      if month > 4 and not self.staff_room_msg then
-        self:noStaffroom_msg()
-      elseif year > 1 then
-        self:noStaffroom_msg()
-      end
+    if not self.staff_room_msg and day == 3 and not self:hasRoomOfType("staff_room") then
+      self:noStaffroom_msg()
     end
     -- If there is no toilet, remind player of the need to build one
-    if day == 8 and not self:hasRoomOfType("toilets") then
-      if month > 4 and not self.toilet_msg then
-        self:noToilet_msg()
-      elseif year > 1 then
-        self:noToilet_msg()
-      end
+    if not self.toilet_msg and day == 8 and not self:hasRoomOfType("toilets") then
+      self:noToilet_msg()
     end
-    -- How are we for seating, if there are plenty then praise is due, if not the player is warned
-    -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
-    -- check the seating : standing ratio of waiting patients
-    -- find all the patients who are currently waiting around
-    local show_msg = math.random(1, 4)
-    local numberSitting, numberStanding = self:countSittingStanding()
 
-    -- If there are patients standing then maybe the seating is in the wrong place!
-    -- set to 5% (standing:seated) if there are more than 50 patients or 20% if there are less than 50.
-    -- If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
-    -- So there are now two checks about having enough seating, if either are called then you won't receive praise. (may need balancing)
-    if self.patientcount < 50 then
-      if numberStanding > math.min(numberSitting / 5) then
+    if not self.bench_msg then
+      -- How are we for seating, if there are plenty then praise is due, if not the player is warned
+      -- check the seating : standing ratio of waiting patients
+      -- find all the patients who are currently waiting around
+      local numberSitting, numberStanding = self:countSittingStanding()
+
+      -- If there are patients standing then maybe the seating is in the wrong place!
+      -- set to 5% (standing:seated) if there are more than 50 patients or 20% if there are less than 50.
+      -- If this happens for 10 days in any month you are warned about seating unless you have already been warned that month
+      -- So there are now two checks about having enough seating, if either are called then you won't receive praise. (may need balancing)
+      local number_standing_threshold = numberSitting / (self.patientcount < 50 and 5 or 20)
+      if numberStanding > number_standing_threshold then
         self.seating_warning = self.seating_warning + 1
+        if self.seating_warning >= 10 then
+          self:warningBench()
+        end
       end
-    else
-      if numberStanding > math.min(numberSitting / 20) then
-        self.seating_warning = self.seating_warning + 1
-      end
-      if self.seating_warning >= 10 and not self.bench_msg then
-        self:warningBench()
-        self.seating_warning = 0
-      end
-    end
-    if day == 12 and show_msg == 4 and not self.bench_msg and current_date >= Date(1,5) then
-      -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
-      -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
-      if self.world.object_counts.bench > self.patientcount then
-        self:praiseBench()
-      -- Are there enough benches for the volume of patients in your hospital?
-      elseif self.world.object_counts.bench < self.patientcount then
-        self:warningBench()
+
+      if day == 12 then
+        -- If there are less patients standing than sitting (1:20) and there are more benches than patients in the hospital
+        -- you have plenty of seating.  If you have not been warned of standing patients in the last month, you could be praised.
+
+        -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
+        local show_praise = math.random(1, 4) == 4
+        if self.world.object_counts.bench > self.patientcount and show_praise then
+          self:praiseBench()
+        -- Are there enough benches for the volume of patients in your hospital?
+        elseif self.world.object_counts.bench < self.patientcount then
+          self:warningBench()
+        end
       end
     end
 
-    -- Make players more aware of the need for radiators and how hot or cold the patients and staff are
-    -- If there are no radiators remind the player from May onwards
-    if self.world.object_counts.radiator == 0 and month > 4 and day == 15 then
+    -- Make players more aware of the need for radiators
+    if self.world.object_counts.radiator == 0 then
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
-    -- Now to check how warm or cold patients and staff are.  So that we are not bombarded with warmth
+
+    -- Now to check how warm or cold patients and staff are. So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
-    if not self.heating_broke then
-      if not self.warmth_msg and day == 15 then
+    if not self.warmth_msg and not self.heating_broke then
+      if day == 15 then
         local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
-        if current_date >= Date(1,5) and warmth < 0.22 then
+        if warmth < 0.22 then
           self:warningTooCold()
-        elseif month > 4 and warmth >= 0.36 then
+        elseif warmth >= 0.36 then
           self:warningTooHot()
         end
       end
       -- Are the staff warm enough?
-      if not self.warmth_msg and day == 20 then
+      if day == 20 then
         local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
-        if current_date >= Date(1,5) and avgWarmth < 0.22 then
+        if avgWarmth < 0.22 then
           self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-        elseif month > 4 and avgWarmth >= 0.36 then
+        elseif avgWarmth >= 0.36 then
           self.world.ui.adviser:say(_A.warnings.staff_too_hot)
         end
       end
     end
+
     -- Are the patients in need of a drink
     if not self.thirst_msg and day == 24 then
       local thirst = self:getAveragePatientAttribute("thirst", 0) -- Default value does not result in a message.
-      if year == 1 and month > 4 then
-        if thirst > 0.8 then
-          self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
-        elseif thirst > 0.6 then
-          self:warningThirst()
-        end
-      elseif year > 1 then
-        if thirst > 0.9 then
-          self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
-        elseif thirst > 0.6 then
-          self:warningThirst()
-        end
+      local thirst_threshold = current_date:year() == 1 and 0.8 or 0.9
+      if thirst > thirst_threshold then
+        self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
+      elseif thirst > 0.6 then
+        self:warningThirst()
       end
     end
+
     -- reset all the messages on 28th of each month
     if day == 28 then
       self.staff_room_msg = false
