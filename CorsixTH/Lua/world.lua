@@ -1083,7 +1083,7 @@ function World:onEndDay()
   self.current_tick_entity = nil
 
   --check if it's time for a VIP visit
-  if self.game_date == self.next_vip_date then
+  if self.game_date >= self.next_vip_date then
     if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
       self.hospitals[1]:createVip()
     else
@@ -1176,7 +1176,7 @@ function World:onEndMonth()
 
   local local_hospital = self:getLocalPlayerHospital()
   local_hospital.population = 0.25
-  if self.game_date:monthOfYear() >= self.map.level_config.gbv.AllocDelay then
+  if self.game_date:monthOfGame() >= self.map.level_config.gbv.AllocDelay then
     local_hospital.population = local_hospital.population * self:getReputationImpact(local_hospital)
   end
 
@@ -2069,7 +2069,7 @@ function World:objectPlaced(entity, id)
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
     elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
         self.object_counts["reception_desk"] == 1 and
-        not self.hospitals[1].receptionist_msg and self.game_date:monthOfYear() > 3 then
+        not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
