@@ -91,9 +91,6 @@ function World:World(app)
   -- warning_timer (integer) The number of hours left until the real damaging earthquake begins.
   self.next_earthquake = { active = false }
 
-  -- Next Events dates
-  self.next_vip_date = nil
-
   -- Time
   self.hours_per_tick = 1
   self.tick_rate = 3
@@ -179,8 +176,9 @@ function World:World(app)
   self:makeAvailableStaff(0)
   self:calculateSpawnTiles()
 
+  -- Next Events dates
   self:nextEmergency()
-  self:nextVip()
+  self.next_vip_date = self:_generateNextVipDate()
 
   -- earthquakes
   -- current_map_earthquakes is a counter that tracks which number of earthquake
@@ -1083,11 +1081,11 @@ function World:onEndDay()
   self.current_tick_entity = nil
 
   --check if it's time for a VIP visit
-  if self.game_date >= self.next_vip_date then
+  if self.game_date:isSameDay(self.next_vip_date) then
     if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
       self.hospitals[1]:createVip()
     else
-      self:nextVip()
+      self.next_vip_date = self:_generateNextVipDate()
     end
   end
 
@@ -1296,12 +1294,17 @@ end
 
 -- Called when it is time to have another VIP
 function World:nextVip()
+  self.next_vip_date = self:_generateNextVipDate()
+end
+
+-- PRIVATE method to generate the next VIP date
+function World:_generateNextVipDate()
   -- Support standard values for mean and variance
   local mean = 180
   local variance = 30
   -- How many days until next vip?
   local days = math.round(math.n_random(mean, variance))
-  self.next_vip_date = self.game_date:plusDays(days)
+  return self.game_date:plusDays(days)
 end
 
 -- Called when it is time to have another earthquake

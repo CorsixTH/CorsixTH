@@ -121,12 +121,17 @@ function Date:clone()
   return Date(self._year, self._month, self._day, self._hour)
 end
 
+-- Checks the date but ignores time
+function Date:isSameDay(other)
+  return self._year == other._year and self._month == other._month and self._day == other._day
+end
+
 -- METAMETHODS
 
 local Date_mt = Date._metatable
 
 function Date_mt.__eq(one, other)
-  return one._year == other._year and one._month == other._month and one._day == other._day and one._hour == other._hour
+  return one:isSameDay(other) and one._hour == other._hour
 end
 
 function Date_mt.__lt(one, other)
