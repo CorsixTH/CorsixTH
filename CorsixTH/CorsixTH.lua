@@ -50,6 +50,17 @@ end
 
 _G['corsixth'] = {}
 
+--! Loads and runs a lua file.
+-- Similar to the built in require function with three important differenes:
+--  * This function searches for --[[persistance: comments and maps the
+--    following function into the persistence table.
+--  * This function only searches in the Lua code directory
+--  * This function is only able to load lua source files (not C modules or
+--    compiled lua.
+--!param name (string)
+--   The name of the lua source file to run. Use dots to seperate directories,
+--   and do not include the .lua file extension.
+--!return The return value of whatever source file is opened.
 corsixth.require = function(name)
   name = name:gsub("%.", pathsep)
   if done_files[name] then
