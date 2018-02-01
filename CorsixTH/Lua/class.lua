@@ -87,6 +87,7 @@ local function define_class(name, super, adopts_self)
   methods_mt.__call = new_class
   methods_mt.__class_name = name
 
+  methods._metatable = mt
   _G[name] = methods
 end
 

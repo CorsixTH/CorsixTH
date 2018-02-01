@@ -33,7 +33,7 @@ function UIWatch:UIWatch(ui, count_type)
 
   self.esc_closes = false
   self.modal_class = "open_countdown"
-  self.tick_rate = math.floor((100 * app.world.hours_per_day) / 13)
+  self.tick_rate = math.floor((100 * Date.hoursPerDay()) / 13)
   self.tick_timer = self.tick_rate  -- Initialize tick timer
   self.open_timer = 12
   self.ui = ui
