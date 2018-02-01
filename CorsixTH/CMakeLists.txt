@@ -14,7 +14,10 @@ elseif(MSVC)
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
 
-if(MSVC)
+if(USE_SOURCE_DATADIRS)
+  set(CORSIX_TH_DATADIR ${CMAKE_CURRENT_SOURCE_DIR})
+  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/CorsixTH.lua)
+elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
   set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
 elseif(APPLE)
@@ -192,7 +195,9 @@ if(MSVC AND CORSIX_TH_USE_VLD)
 endif()
 
 # Launch script to facilitate out of source builds
-if(APPLE)
+if(USE_SOURCE_DATADIRS)
+  #do not generate launch script. The default is fine for this case.
+elseif(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
 elseif(UNIX)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
@@ -202,26 +207,28 @@ endif()
 
 
 # Declaration of the install process
-if(APPLE)
-  #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
-  install(TARGETS CorsixTH BUNDLE DESTINATION .)
-elseif(MSVC)
-  install(TARGETS CorsixTH RUNTIME DESTINATION ${CORSIX_TH_DATADIR})
-  install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
-else()
-  install(TARGETS CorsixTH RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-endif()
-install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
-install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
-  FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
-)
-install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
+if(NOT USE_SOURCE_DATADIRS)
+  if(APPLE)
+    #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
+    install(TARGETS CorsixTH BUNDLE DESTINATION .)
+  elseif(MSVC)
+    install(TARGETS CorsixTH RUNTIME DESTINATION ${CORSIX_TH_DATADIR})
+    install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
+  else()
+    install(TARGETS CorsixTH RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+  endif()
+  install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
+  install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
+    FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
+  )
+  install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 
-if(APPLE)
-  # Fix the OS X bundle to include required libraries (create a redistributable app)
-  install(CODE "
-    INCLUDE(BundleUtilities)
-    SET(BU_CHMOD_BUNDLE_ITEMS ON)
-    FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
-    ")
+  if(APPLE)
+    # Fix the OS X bundle to include required libraries (create a redistributable app)
+    install(CODE "
+      INCLUDE(BundleUtilities)
+      SET(BU_CHMOD_BUNDLE_ITEMS ON)
+      FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
+      ")
+  endif()
 endif()
