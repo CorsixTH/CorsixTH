@@ -406,6 +406,31 @@ function Machine:tick()
   return Object.tick(self)
 end
 
+--[[ Gets the state of a machine
+
+! In addition to the object implementation this includes total_usage
+!return (table) state
+]]
+function Machine:getState()
+  local state = Object.getState(self)
+  state.total_usage = self.total_usage
+
+  return state
+end
+
+--[[ Sets the state of a machine
+
+! Adds total_usage
+!param state (table) table holding the state
+!return (void)
+]]
+function Machine:setState(state)
+  Object.setState(self, state)
+  if state then
+    self.total_usage = state.total_usage
+  end
+end
+
 -- Dummy callbacks for savegame compatibility
 local callbackNewRoom = --[[persistable:machine_build_callback]] function(room) end
 local repair_loop_callback = --[[persistable:handyman_repair_loop_callback]] function() end
