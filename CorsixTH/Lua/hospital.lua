@@ -94,6 +94,11 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.over_priced_threshold = 0.3
 
   self.radiator_heat = 0.5
+  
+  --if value = 0 then 66% that boiler will break down
+  --Todo: depends on difficulty 150, 200, 300 days
+  self:resetDisasterCountdown()
+  
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -897,7 +902,7 @@ end
 function Hospital:boilerBreakdown()
   self.curr_setting = self.radiator_heat
   self.radiator_heat = math.random(0, 1)
-  self.boiler_countdown = math.random(7, 25)
+  self.boiler_countdown = math.random(10, 30)
 
   self.heating_broke = true
 
@@ -917,9 +922,17 @@ end
 function Hospital:boilerFixed()
   self.radiator_heat = self.curr_setting
   self.heating_broke = false
+  
+  
+  self:resetDisasterCountdown()
   if self:isPlayerHospital() then
     self.world.ui.adviser:say(_A.boiler_issue.resolved)
   end
+end
+
+function Hospital:resetDisasterCountdown()
+  --Todo: depends on difficulty 150, 200, 300 days
+  self.days_until_disaster = 200
 end
 
 --! Daily update of the ratholes.
@@ -1005,31 +1018,44 @@ function Hospital:onEndDay()
     end
   end
 
+  --variables for heating
+  local handymancount = self:hasStaffOfCategory("Handyman")
+  local radiators = self.world.object_counts.radiator
+  
   -- Countdown for boiler breakdowns
   if self.heating_broke then
-    self.boiler_countdown = self.boiler_countdown - 1
+    if 5*handymancount >= radiators and self.boiler_countdown > 3 then
+      self.boiler_countdown = self.boiler_countdown - 3
+    elseif 8*handymancount >= radiators and self.boiler_countdown > 2 then
+      self.boiler_countdown = self.boiler_countdown - 2
+    else  
+      self.boiler_countdown = self.boiler_countdown - 1
+    end 
     if self.boiler_countdown == 0 then
       self:boilerFixed()
     end
   end
 
+  if self.days_until_disaster == nil then
+    self:resetDisasterCountdown()
+  end
+
   -- Is the boiler working today?
-  local breakdown = math.random(1, 240)
-  if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
-      self.world.object_counts.radiator > 0 then
-    if tonumber(self.world.map.level_number) then
-      if self.world.map.level_number == 1 and (self.world:date() >= Date(1,6)) then
-        self:boilerBreakdown()
-      elseif self.world.map.level_number > 1 then
+  if self.days_until_disaster <= 0 then
+    self:resetDisasterCountdown()
+    --33% chance nothing happen 66% Boiler breakdown
+    --Todo: 50% chance boiler breakdown, 25% chance vomit wave, 25% change nothing happen
+    if math.random(1,3) ~= 1 then
+      --check if boiler can break
+      if not self.heating_broke and self.boiler_can_break and radiators > 0 and 8 * handymancount < radiators then
         self:boilerBreakdown()
       end
-    else
-      self:boilerBreakdown()
     end
+  else
+    self.days_until_disaster = self.days_until_disaster -1
   end
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
-  local radiators = self.world.object_counts.radiator
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
