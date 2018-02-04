@@ -614,10 +614,12 @@ function UIEditRoom:returnToDoorPhase()
           obj.remove()
           break
         end
+        local obj_state = obj:getState()
         self.world:destroyEntity(obj)
         if not obj.master then
           self:addObjects({{
             object = TheApp.objects[obj.object_type.id],
+            state = obj_state,
             qty = 1
           }})
         end
@@ -632,7 +634,7 @@ function UIEditRoom:returnToDoorPhase()
   -- backup list of objects
   self.objects_backup = {}
   for k, o in pairs(self.objects) do
-    self.objects_backup[k] = { object = o.object, qty = o.qty }
+    self.objects_backup[k] = { object = o.object, qty = o.qty, state = o.state }
   end
 
   UIPlaceObjects.removeAllObjects(self, true)

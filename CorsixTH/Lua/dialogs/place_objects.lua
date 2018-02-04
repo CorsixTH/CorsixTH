@@ -510,6 +510,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     self.world:prepareFootprintTilesForBuild(object_footprint, self.object_cell_x, self.object_cell_y)
     real_obj = self.world:newObject(object.object.id,
         self.object_cell_x, self.object_cell_y, self.object_orientation)
+    real_obj:setState(object.state or {})
   end
   if room then
     room.objects[real_obj] = true
