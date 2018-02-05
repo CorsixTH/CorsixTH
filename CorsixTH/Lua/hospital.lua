@@ -95,7 +95,6 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   self.radiator_heat = 0.5
   self:resetDisasterCountdown()
-  
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -919,8 +918,6 @@ end
 function Hospital:boilerFixed()
   self.radiator_heat = self.curr_setting
   self.heating_broke = false
-  
-  
   self:resetDisasterCountdown()
   if self:isPlayerHospital() then
     self.world.ui.adviser:say(_A.boiler_issue.resolved)
@@ -1021,16 +1018,16 @@ function Hospital:onEndDay()
   --variables for heating
   local handymancount = self:hasStaffOfCategory("Handyman")
   local radiators = self.world.object_counts.radiator
-  
+
   -- Countdown for boiler breakdowns
   if self.heating_broke then
     if 5 * handymancount >= radiators and self.boiler_countdown > 3 then
       self.boiler_countdown = self.boiler_countdown - 3
     elseif 8 * handymancount >= radiators and self.boiler_countdown > 2 then
       self.boiler_countdown = self.boiler_countdown - 2
-    else  
+    else
       self.boiler_countdown = self.boiler_countdown - 1
-    end 
+    end
     if self.boiler_countdown == 0 then
       self:boilerFixed()
     end
