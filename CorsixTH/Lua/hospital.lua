@@ -94,9 +94,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.over_priced_threshold = 0.3
 
   self.radiator_heat = 0.5
-  
-  --if value = 0 then 66% that boiler will break down
-  --Todo: depends on difficulty 150, 200, 300 days
   self:resetDisasterCountdown()
   
   self.num_visitors = 0
@@ -931,8 +928,11 @@ function Hospital:boilerFixed()
 end
 
 function Hospital:resetDisasterCountdown()
-  --Todo: depends on difficulty 150, 200, 300 days
-  self.days_until_disaster = 200
+  self.days_until_disaster = self.world.map.level_config.gbv.DisasterLaunch
+  --if disasterLaunch not defined in Levelfile
+  if self.days_until_disaster == nil then
+    self.days_until_disaster = 200
+  end
 end
 
 --! Daily update of the ratholes.
@@ -1024,9 +1024,9 @@ function Hospital:onEndDay()
   
   -- Countdown for boiler breakdowns
   if self.heating_broke then
-    if 5*handymancount >= radiators and self.boiler_countdown > 3 then
+    if 5 * handymancount >= radiators and self.boiler_countdown > 3 then
       self.boiler_countdown = self.boiler_countdown - 3
-    elseif 8*handymancount >= radiators and self.boiler_countdown > 2 then
+    elseif 8 * handymancount >= radiators and self.boiler_countdown > 2 then
       self.boiler_countdown = self.boiler_countdown - 2
     else  
       self.boiler_countdown = self.boiler_countdown - 1
@@ -1054,6 +1054,8 @@ function Hospital:onEndDay()
   else
     self.days_until_disaster = self.days_until_disaster -1
   end
+  
+  print(self.days_until_disaster)
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
