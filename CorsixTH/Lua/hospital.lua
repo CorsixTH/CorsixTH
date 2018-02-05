@@ -1054,8 +1054,6 @@ function Hospital:onEndDay()
   else
     self.days_until_disaster = self.days_until_disaster -1
   end
-  
-  print(self.days_until_disaster)
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
   local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
