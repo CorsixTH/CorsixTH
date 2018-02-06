@@ -66,7 +66,7 @@ object.orientations = {
   },
 }
 
-dofile "queue"
+corsixth.require("queue")
 
 class "ReceptionDesk" (Object)
 
