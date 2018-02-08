@@ -197,6 +197,8 @@ endif()
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
   #do not generate launch script. The default is fine for this case.
+elseif(XCODE)
+  message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with  -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
 elseif(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
 elseif(UNIX)
