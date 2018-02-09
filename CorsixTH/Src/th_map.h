@@ -400,7 +400,7 @@ private:
     //! \param pNode A pointer to the current node being tested.
     //! \param prevTemp The array index into THMapNode::aiTemperature that currently stores the temperature of the node (prior to this calculation).
     //! \return The weight of the connection, 0 if there is no neighbour, 1 through walls, and 4 through air.
-    uint32_t thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, uint32_t relative_idx, THMapNode* pNode, int prevTemp) const;
+    uint32_t thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx, THMapNode* pNode, int prevTemp) const;
 
     //! Create the adjacency matrix if it doesn't already exist
     void _makeAdjacencyMatrix();
