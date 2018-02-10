@@ -192,7 +192,7 @@ if needs_rewrite then
 -- Language to use for ingame text. Between the square braces should be one of:
 --  Brazilian Portuguese  / pt_br / br
 --  Chinese (simplified)  / zh(s) / chi(s)
---  Chinese (traditional) / zh(s) / chi(s)
+--  Chinese (traditional) / zh(t) / chi(t)
 --  Czech                 / cs / cze
 --  Danish                / da / dk
 --  Dutch                 / Nederlands / nl / dut / nld
