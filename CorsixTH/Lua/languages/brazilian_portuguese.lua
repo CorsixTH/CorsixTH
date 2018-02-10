@@ -629,11 +629,11 @@ tooltip.cheats_window = {
 
 introduction_texts = {
   demo =
-    "Bem-vindo ao hospital de demonstraçäo! " ..
+    "Bem-vindo ao hospital de demonstraçäo!\\" ..
     "Infelizmente esta versäo de demonstraçäo só possui esta fase. Entretanto, teremos aqui o suficiente para mantê-lo ocupado por enquanto! " ..
     "Você encontrará várias doenças que necessitaräo de salas diferentes para cura. De tempos em tempos, emergências ocorreräo. E você precisará pesquisar por salas adicionais usando o Centro de Pesquisas. " ..
     "Seu objetivo é ter um saldo bancário de $100.000,00, o valor do hospital em $ 70.000,00 e uma reputaçäo de 700, enquanto você cura pelo menos 75% de seus pacientes. " ..
-    "Certifique-se que sua reputaçäo näo fique abaixo de 300 e você näo mate mais de 40% dos seus pacientes, senäo você perde. " ..
+    "Certifique-se que sua reputaçäo näo fique abaixo de 300 e você näo mate mais de 40% dos seus pacientes, senäo você perde.\\" ..
     "Boa sorte!",
 }
 

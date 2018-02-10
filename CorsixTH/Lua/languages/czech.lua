@@ -3100,11 +3100,11 @@ introduction_texts = {
     "Vaše nemocnice musí mít hodnotu 200,000€ a budete potřebovat 400,000€ v bance. " ..
     "Cokoliv méně a nebudete moct dokončit úroveň.",
   demo =
-    "Vítejte v demo nemocnici!" ..
-    "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili!" ..
-    "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času se můžou stát havárie. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumného oddělení." ..
-    "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice ve výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% Vašich pacientů." ..
-    "Ujistěte se, že Vaše reputace nespadne 300 a že nezabijete více než 40% Vašich pacientů, nebo prohrajete." ..
+    "Vítejte v demo nemocnici!//" ..
+    "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili! " ..
+    "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času se můžou stát havárie. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumného oddělení. " ..
+    "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice ve výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% Vašich pacientů. " ..
+    "Ujistěte se, že Vaše reputace nespadne 300 a že nezabijete více než 40% Vašich pacientů, nebo prohrajete.//" ..
     "Hodně štěstí!",
   level10 =
     "Stejně jako zvládnutí všech nemocí, které se v této oblasti vyskytují, Ministerstvo žádá, abyste strávil nějaký čas soustředěním se na účinnost Vašich léků. " ..
