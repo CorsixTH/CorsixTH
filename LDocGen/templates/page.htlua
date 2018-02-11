@@ -30,6 +30,5 @@
     <div class="content">
       <!= content !>
     </div>
-    <span class="footer">Page generated on <!= os.date"!%a %b %d, %Y at %H:%M:%S" !> by LDocGen.</span>
   </body>
 </html>
