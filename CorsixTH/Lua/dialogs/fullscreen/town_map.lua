@@ -186,7 +186,7 @@ function UITownMap:draw(canvas, x, y)
   self.info_font:draw(canvas, radiators,    x +  95, y + 265)
 
   -- Heating costs
-  local heating_costs = math.floor(((hospital.radiator_heat *10)* radiators)* 7.5)
+  local heating_costs = math.floor(((hospital.heatingController.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
 
   -- draw money balance
@@ -194,7 +194,7 @@ function UITownMap:draw(canvas, x, y)
 
   -- radiator heat
   local rad_max_width = 60 -- Radiator indicator width
-  local rad_width = rad_max_width * hospital.radiator_heat
+  local rad_width = rad_max_width * hospital.heatingController.radiator_heat
   for dx = 0, rad_width do
     self.panel_sprites:draw(canvas, 9, x + 101 + dx, y + 319)
   end
@@ -313,7 +313,7 @@ function UITownMap:draw(canvas, x, y)
 end
 
 function UITownMap:decreaseHeat()
-  local h = self.ui.hospital
+  local h = self.ui.hospital.heatingController
   local heat = math.floor(h.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
     heat = heat - 1
@@ -325,7 +325,7 @@ function UITownMap:decreaseHeat()
 end
 
 function UITownMap:increaseHeat()
-  local h = self.ui.hospital
+  local h = self.ui.hospital.heatingController
   local heat = math.floor(h.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
     heat = heat + 1

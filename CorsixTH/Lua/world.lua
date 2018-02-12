@@ -1039,7 +1039,7 @@ function World:onTick()
       self.current_tick_entity = nil
       self.map:onTick()
       self.map.th:updateTemperatures(outside_temperatures[self.game_date:monthOfYear()],
-          0.25 + self.hospitals[1].radiator_heat * 0.3)
+          0.25 + self.hospitals[1].heatingController.radiator_heat * 0.3)
       if self.ui then
         self.ui:onWorldTick()
       end

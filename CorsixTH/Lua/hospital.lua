@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+dofile "HeatingController"
+
 class "Hospital"
 
 ---@type Hospital
@@ -46,7 +48,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.acc_loan_interest = 0
   self.acc_research_cost = 0
   self.acc_overdraft = 0
-  self.acc_heating = 0
   self.discover_autopsy_risk = 10
 
   -- The sum of all material values (tiles, rooms, objects).
@@ -93,8 +94,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.over_priced_threshold = 0.3
 
-  self.radiator_heat = 0.5
-  self:resetDisasterCountdown()
+  self.heatingController = HeatingController(self.world)
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -317,32 +317,6 @@ function Hospital:warningBench()
   if bench_msg then
     self.world.ui.adviser:say(bench_msg[math.random(1, #bench_msg)])
     self.bench_msg = true
-  end
-end
-
--- Warn when it is too hot
-function Hospital:warningTooHot()
-  local hot_msg = {
-    (_A.information.initial_general_advice.decrease_heating),
-    (_A.warnings.patients_too_hot),
-    (_A.warnings.patients_getting_hot),
-  }
-  if hot_msg then
-    self.world.ui.adviser:say(hot_msg[math.random(1, #hot_msg)])
-    self.warmth_msg = true
-  end
-end
-
--- Warn when it is too cold
-function Hospital:warningTooCold()
-  local cold_msg = {
-    (_A.information.initial_general_advice.increase_heating),
-    (_A.warnings.patients_very_cold),
-    (_A.warnings.people_freezing),
-  }
-  if cold_msg then
-    self.world.ui.adviser:say(cold_msg[math.random(1, #cold_msg)])
-    self.warmth_msg = true
   end
 end
 
@@ -580,16 +554,11 @@ function Hospital:afterLoad(old, new)
       }
     end
   end
-  if old < 39 then
-    self.acc_heating = 0
-  end
+
   if old < 40 then
     self.statistics = {}
     self.money_in = 0
     self.money_out = 0
-  end
-  if old < 41 then
-    self.boiler_can_break = true
   end
 
   if old < 45 then
@@ -659,12 +628,32 @@ function Hospital:afterLoad(old, new)
     self.ratholes = {}
   end
 
+  if old < 39 then
+    self.acc_heating = 0
+  end
+  if old < 41 then
+    self.boiler_can_break = true
+  end
+
+  --move all heating variables to heatingController
+  if old < 125 then
+    self.heatingController = HeatingController(self.world)
+    self.heatingController.radiator_heat = self.radiator_heat
+    self.heatingController.boiler_countdown = self.boiler_countdown
+    self.heatingController.heating_broke = self.heating_broke
+    self.heatingController.curr_setting = self.curr_setting
+    self.heatingController.acc_heating = self.acc_heating
+    self.heatingController.warmth_msg = self.warmth_msg
+    self.heatingController.boiler_can_break = self.boiler_can_break
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
     future_epidemic.afterLoad(old, new)
   end
   self.research.afterLoad(old, new)
+  self.heatingController:afterLoad(old,new)
 end
 
 --! Update the Hospital.patientcount variable.
@@ -752,28 +741,7 @@ function Hospital:checkFacilities()
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
 
-    -- Now to check how warm or cold patients and staff are. So that we are not bombarded with warmth
-    -- messages if we are told about patients then we won't be told about staff as well in the same month
-    -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
-    if not self.warmth_msg and not self.heating_broke then
-      if day == 15 then
-        local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
-        if warmth < 0.22 then
-          self:warningTooCold()
-        elseif warmth >= 0.36 then
-          self:warningTooHot()
-        end
-      end
-      -- Are the staff warm enough?
-      if day == 20 then
-        local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
-        if avgWarmth < 0.22 then
-          self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-        elseif avgWarmth >= 0.36 then
-          self.world.ui.adviser:say(_A.warnings.staff_too_hot)
-        end
-      end
-    end
+    self.heatingController:checkHeatingFacilities(day,self:getAveragePatientAttribute("warmth", 0.3),self:getAverageStaffAttribute("warmth", 0.25))
 
     -- Are the patients in need of a drink
     if not self.thirst_msg and day == 24 then
@@ -792,7 +760,7 @@ function Hospital:checkFacilities()
       self.toilet_msg = false
       self.bench_msg = false
       self.cash_msg = false
-      self.warmth_msg = false
+      self.heatingController.warmth_msg = false
       self.thirst_msg = false
       self.seating_warning = 0
     end
@@ -876,60 +844,6 @@ end
 function Hospital:isInHospital(x, y)
   local flags = self.world.map.th:getCellFlags(x, y)
   return flags.hospital and flags.owner == self:getPlayerIndex()
-end
-function Hospital:coldWarning()
-  local announcements = {
-    "sorry002.wav", "sorry004.wav",
-  }
-  if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
-  end
-end
-function Hospital:hotWarning()
-  local announcements = {
-    "sorry003.wav", "sorry004.wav",
-  }
-  if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
-  end
-end
--- Called when the hospitals's boiler has broken down.
--- It will remain broken for a certain period of time.
-function Hospital:boilerBreakdown()
-  self.curr_setting = self.radiator_heat
-  self.radiator_heat = math.random(0, 1)
-  self.boiler_countdown = math.random(10, 30)
-
-  self.heating_broke = true
-
-  -- Only show the message when relevant to the local player's hospital.
-  if self:isPlayerHospital() then
-    if self.radiator_heat == 0 then
-      self.world.ui.adviser:say(_A.boiler_issue.minimum_heat)
-      self:coldWarning()
-    else
-      self.world.ui.adviser:say(_A.boiler_issue.maximum_heat)
-      self:hotWarning()
-    end
-  end
-end
-
--- When the boiler has been repaired this function is called.
-function Hospital:boilerFixed()
-  self.radiator_heat = self.curr_setting
-  self.heating_broke = false
-  self:resetDisasterCountdown()
-  if self:isPlayerHospital() then
-    self.world.ui.adviser:say(_A.boiler_issue.resolved)
-  end
-end
-
-function Hospital:resetDisasterCountdown()
-  self.days_until_disaster = self.world.map.level_config.gbv.DisasterLaunch
-  --if disasterLaunch not defined in Levelfile
-  if self.days_until_disaster == nil then
-    self.days_until_disaster = 200
-  end
 end
 
 --! Daily update of the ratholes.
@@ -1015,46 +929,7 @@ function Hospital:onEndDay()
     end
   end
 
-  --variables for heating
-  local handymancount = self:hasStaffOfCategory("Handyman")
-  local radiators = self.world.object_counts.radiator
-
-  -- Countdown for boiler breakdowns
-  if self.heating_broke then
-    if 5 * handymancount >= radiators and self.boiler_countdown > 3 then
-      self.boiler_countdown = self.boiler_countdown - 3
-    elseif 8 * handymancount >= radiators and self.boiler_countdown > 2 then
-      self.boiler_countdown = self.boiler_countdown - 2
-    else
-      self.boiler_countdown = self.boiler_countdown - 1
-    end
-    if self.boiler_countdown == 0 then
-      self:boilerFixed()
-    end
-  end
-
-  if self.days_until_disaster == nil then
-    self:resetDisasterCountdown()
-  end
-
-  -- Is the boiler working today?
-  if self.days_until_disaster <= 0 then
-    self:resetDisasterCountdown()
-    --33% chance nothing happen 66% Boiler breakdown
-    --Todo: 50% chance boiler breakdown, 25% chance vomit wave, 25% change nothing happen
-    if math.random(1,3) ~= 1 then
-      --check if boiler can break
-      if not self.heating_broke and self.boiler_can_break and radiators > 0 and 8 * handymancount < radiators then
-        self:boilerBreakdown()
-      end
-    end
-  else
-    self.days_until_disaster = self.days_until_disaster - 1
-  end
-
-  -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
-  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
-  self.acc_heating = self.acc_heating + heating_costs
+  self.heatingController:onEndDay(self:hasStaffOfCategory("Handyman"), self:isPlayerHospital())
 
   if self:isPlayerHospital() then dailyUpdateRatholes(self) end
 end
@@ -1071,9 +946,10 @@ function Hospital:onEndMonth()
     self:spendMoney(wages, _S.transactions.wages)
   end
   -- Pay heating costs
-  if math.round(self.acc_heating) > 0 then
-    self:spendMoney(math.round(self.acc_heating), _S.transactions.heating)
-    self.acc_heating = 0
+  --moved to heatingController
+  local heatingCosts = self.heatingController:getHeatingCostsForActualMonth()
+  if heatingCosts > 0 then
+    self:spendMoney(heatingCosts, _S.transactions.heating)
   end
   -- how is the bank balance
   if self:isPlayerHospital() then
