@@ -78,8 +78,10 @@ Makefile
 CMakeScripts/
 
 # This is for the CMake-generated Visual Studio project
-*.vcxproj*
-CorsixTH_Top_Level*
+*.vcxproj
+*.vcxproj.user
+*.vcxproj.filters
+CorsixTH_Top_Level.sln
 CorsixTH/CorsixTH.sln
 
 # Eclipse related files
@@ -95,3 +97,4 @@ CorsixTH/CorsixTH.sln
 
 # Default build path
 CorsixTH/CorsixTH
+CorsixTH/corsix-th

@@ -23,6 +23,8 @@ SOFTWARE.
 #ifndef CORSIX_TH_CONFIG_H_
 #define CORSIX_TH_CONFIG_H_
 
+#cmakedefine CORSIX_TH_INTERPRETER_PATH "@CORSIX_TH_INTERPRETER_PATH@"
+
 /** Windows Platform SDK usage **/
 // When compiling on Windows, the platform SDK should be used. However, when
 // using the SDL rendering engine, the platform SDK is not used for anything

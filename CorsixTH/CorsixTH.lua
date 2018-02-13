@@ -22,6 +22,7 @@ end
 local pathsep = package.config:sub(1, 1)
 local base_dir = debug.getinfo(1, "S").source:sub(2, -13)
 local code_dir = base_dir .. "Lua" .. pathsep
+package.cpath = base_dir .. '?.so;' .. package.cpath
 for _, arg in ipairs{...} do
   local dir = arg:match"^%-%-lua%-dir=(.*)$"
   if dir then
