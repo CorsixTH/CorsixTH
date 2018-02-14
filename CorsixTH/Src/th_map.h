@@ -175,6 +175,8 @@ enum THMapTemperatureDisplay
     THMT_Count, //!< Number of temperature display values.
 };
 
+void IntersectTHClipRect(THClipRect& rcClip, const THClipRect& rcIntersect);
+
 struct THMapNode : public THLinkList
 {
     THMapNode();

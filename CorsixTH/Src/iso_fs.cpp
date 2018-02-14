@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #include "iso_fs.h"
+
+#include <lua.h>
 #include <cstring>
 #include <cstdarg>
 #include <cstdlib>

@@ -591,39 +591,6 @@ void THRenderTarget::_flushZoomBuffer()
     m_pZoomTexture = nullptr;
 }
 
-//! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
-/*!
-    @param pPixelData Legacy 8bpp pixels.
-    @param iPixelDataLength Number of pixels in the \a pPixelData.
-    @return Converted 32bpp pixel data, if succeeded else nullptr is returned. Caller should free the returned memory.
- */
-static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
-{
-    // Recolour blocks are 63 pixels long.
-    // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
-    size_t iNumFilled = iPixelDataLength / 63;
-    size_t iRemaining = iPixelDataLength - iNumFilled * 63;
-    size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
-
-    uint8_t *pData = new (std::nothrow) uint8_t[iNewSize];
-    if (pData == nullptr)
-        return nullptr;
-
-    uint8_t *pDest = pData;
-    while (iPixelDataLength > 0)
-    {
-        size_t iLength = (iPixelDataLength >= 63) ? 63 : iPixelDataLength;
-        *pDest++ = static_cast<uint8_t>(iLength + 0xC0); // Recolour layer type of block.
-        *pDest++ = 0xFF; // Use special table 0xFF (which uses the palette as table).
-        *pDest++ = 0xFF; // Non-transparent.
-        std::memcpy(pDest, pPixelData, iLength);
-        pDest += iLength;
-        pPixelData += iLength;
-        iPixelDataLength -= iLength;
-    }
-    return pData;
-}
-
 SDL_Texture* THRenderTarget::createPalettizedTexture(
             int iWidth, int iHeight, const uint8_t* pPixels,
             const THPalette* pPalette, uint32_t iSpriteFlags) const
@@ -1011,13 +978,12 @@ bool THSpriteSheet::loadFromTHFile(const uint8_t* pTableData, size_t iTableDataL
             continue;
 
         {
-            uint8_t *pData = new uint8_t[pSprite->iWidth * pSprite->iHeight];
-            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight, pData);
+            THChunkRenderer oRenderer(pSprite->iWidth, pSprite->iHeight);
             int iDataLen = static_cast<int>(iChunkDataLength) - static_cast<int>(pTHSprite->position);
             if(iDataLen < 0)
                 iDataLen = 0;
             oRenderer.decodeChunks(pChunkData + pTHSprite->position, iDataLen, bComplexChunks);
-            pData = oRenderer.takeData();
+            auto pData = oRenderer.takeData();
             pSprite->pData = convertLegacySprite(pData, pSprite->iWidth * pSprite->iHeight);
             delete[] pData;
         }

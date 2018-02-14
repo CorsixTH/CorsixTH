@@ -23,17 +23,24 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_SDL_H_
 #define CORSIX_TH_TH_GFX_SDL_H_
 #include "config.h"
+#include "th_gfx.h"
 
 #include <SDL.h>
 #include "persist_lua.h"
 
+// Forward declerations
 class THCursor;
+enum THScaledItems : char;
+
 struct THClipRect : public SDL_Rect
 {
     typedef Sint16 xy_t;
     typedef Uint16 wh_t;
 };
 struct THRenderTargetCreationParams;
+
+// Converts 8bpp sprite data to recoloured 32bpp using recolour table 0XFF
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength);
 
 /*!
     Utility class for decoding 32bpp images.
