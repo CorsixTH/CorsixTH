@@ -22,14 +22,18 @@ end
 local pathsep = package.config:sub(1, 1)
 local base_dir = debug.getinfo(1, "S").source:sub(2, -13)
 local code_dir = base_dir .. "Lua" .. pathsep
+package.cpath = base_dir .. '?.so;' .. package.cpath
 for _, arg in ipairs{...} do
   local dir = arg:match"^%-%-lua%-dir=(.*)$"
   if dir then
     code_dir = dir .. pathsep
   end
 end
+
+package.path = code_dir .. "?.lua;" .. code_dir .. "?/init.lua;" .. package.path
+
 local done_files = {}
-local persist = require "persist"
+local persist = require("persist")
 local save_results
 if table.pack then
   -- Lua 5.2
@@ -44,10 +48,22 @@ else
     return ...
   end
 end
-function dofile(name)
-  if pathsep ~= "/" then
-    name = name:gsub("/", pathsep)
-  end
+
+_G['corsixth'] = {}
+
+--! Loads and runs a lua file.
+-- Similar to the built in require function with three important differenes:
+--  * This function searches for --[[persistance: comments and maps the
+--    following function into the persistence table.
+--  * This function only searches in the Lua code directory
+--  * This function is only able to load lua source files (not C modules or
+--    compiled lua.
+--!param name (string)
+--   The name of the lua source file to run. Use dots to seperate directories,
+--   and do not include the .lua file extension.
+--!return The return value of whatever source file is opened.
+corsixth.require = function(name)
+  name = name:gsub("%.", pathsep)
   if done_files[name] then
     local results = done_files[name]
     return unpack(results, 1, results.n)
@@ -57,12 +73,11 @@ function dofile(name)
 end
 
 -- Load standard library extensions
-dofile "utility"
+corsixth.require("utility")
 
 -- If requested run a Lua DBGp Debugger Client:
 if run_debugger then
   dofile("run_debugger")()
-  done_files["run_debugger"] = nil
 end
 
 -- Check Lua version
@@ -98,21 +113,22 @@ end
 -- it to a running server, using this CorsixTH startup arg: -debugger
 
 -- Enable strict mode
-dofile "strict"
+corsixth.require("strict")
 require = destrict(require)
+dofile = destrict(dofile)
 
 -- Load the class system (required for App)
-dofile "class"
+corsixth.require("class")
 
 -- Load the main App class
-dofile "app"
+corsixth.require("app")
 
 -- Create an instance of the App class and transfer control to it
 strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
-  "--bitmap-dir="..base_dir.."Bitmap",
-  "--config-file="..dofile"config_finder",
+  "--bitmap-dir=" ..base_dir.. "Bitmap",
+  "--config-file=" .. corsixth.require("config_finder"),
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...
