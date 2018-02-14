@@ -251,12 +251,12 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_
 int luaopen_th(lua_State *L)
 {
     lua_settop(L, 0);
-    lua_checkstack(L, 16 + static_cast<int>(MT_Count));
+    lua_checkstack(L, 16 + static_cast<int>(eTHLuaMetatable::count));
 
     THLuaRegisterState_t oState;
     const THLuaRegisterState_t *pState = &oState;
     oState.L = L;
-    for(int i = 0; i < static_cast<int>(MT_Count); ++i)
+    for(int i = 0; i < static_cast<int>(eTHLuaMetatable::count); ++i)
     {
         lua_createtable(L, 0, 5);
         oState.aiMetatables[i] = lua_gettop(L);

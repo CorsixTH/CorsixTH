@@ -165,7 +165,7 @@ static int l_town_map_draw(lua_State *L)
 void THLuaRegisterUI(const THLuaRegisterState_t *pState)
 {
     // WindowBase
-    luaT_class(THWindowBase_t, l_window_base_new, "windowHelpers", MT_WindowBase);
-    luaT_setfunction(l_town_map_draw, "townMapDraw", MT_Map, MT_Surface);
+    luaT_class(THWindowBase_t, l_window_base_new, "windowHelpers", eTHLuaMetatable::windowBase);
+    luaT_setfunction(l_town_map_draw, "townMapDraw", eTHLuaMetatable::map, eTHLuaMetatable::surface);
     luaT_endclass();
 }
