@@ -704,10 +704,33 @@ size_t THAnimationManager::getFrameCount() const
 
 size_t THAnimationManager::getFirstFrame(size_t iAnimation) const
 {
+    size_t result = getCustomFirstFrame(iAnimation);
+    if (result > 0)
+        return result;
+
+    return getOriginalFirstFrame(iAnimation);
+}
+
+size_t THAnimationManager::getOriginalFirstFrame(size_t iAnimation) const
+{
     if(iAnimation < m_iAnimationCount)
         return m_vFirstFrames[iAnimation];
     else
         return 0;
+}
+
+size_t THAnimationManager::getCustomFirstFrame(size_t iAnimation) const
+{
+    if (iAnimation > 99999) // Number too large to fit, requested animation doesn't exist.
+        return 0;
+
+    std::string name = std::to_string(iAnimation);
+    const AnimationStartFrames &anim_frames = getNamedAnimations(name, 64);
+    if (anim_frames.iNorth > 0) return getOriginalFirstFrame(anim_frames.iNorth);
+    if (anim_frames.iEast > 0)  return getOriginalFirstFrame(anim_frames.iEast);
+    if (anim_frames.iSouth > 0) return getOriginalFirstFrame(anim_frames.iSouth);
+    if (anim_frames.iWest > 0)  return getOriginalFirstFrame(anim_frames.iWest);
+    return 0;
 }
 
 size_t THAnimationManager::getNextFrame(size_t iFrame) const
