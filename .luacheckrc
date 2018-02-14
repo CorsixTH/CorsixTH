@@ -31,7 +31,7 @@ globals = { -- Globals
             "CallsDispatcher", "ChildClass", "Command", "Door", "DrawFlags",
             "DummyRootNode", "Entity", "EntityMap", "Epidemic", "FileSystem",
             "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",
-            "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
+            "GrimReaper", "Hospital","HeatingController", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
             "Patient", "Plant", "Queue", "ResearchDepartment", "Room",
@@ -189,6 +189,7 @@ add_ignore("CorsixTH/Lua/filesystem.lua", "212")
 add_ignore("CorsixTH/Lua/game_ui.lua", "212")
 add_ignore("CorsixTH/Lua/graphics.lua", "542")
 add_ignore("CorsixTH/Lua/hospital.lua", "212")
+add_ignore("CorsixTH/Lua/HeatingController.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_action.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/idle.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/multi_use_object.lua", "212")

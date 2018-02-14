@@ -555,10 +555,18 @@ function Hospital:afterLoad(old, new)
     end
   end
 
+  if old < 39 then
+    self.acc_heating = 0
+  end
+
   if old < 40 then
     self.statistics = {}
     self.money_in = 0
     self.money_out = 0
+  end
+
+  if old < 41 then
+    self.boiler_can_break = true
   end
 
   if old < 45 then
@@ -628,17 +636,10 @@ function Hospital:afterLoad(old, new)
     self.ratholes = {}
   end
 
-  if old < 39 then
-    self.acc_heating = 0
-  end
-  if old < 41 then
-    self.boiler_can_break = true
-  end
-
   --move all heating variables to heatingController
   if old < 125 then
     self.heatingController = HeatingController(self.world)
-    self.heatingController.radiator_heat = self.radiator_heat
+    self.heatingController:setRadiatorHeat(self.radiator_heat)
     self.heatingController.boiler_countdown = self.boiler_countdown
     self.heatingController.heating_broke = self.heating_broke
     self.heatingController.curr_setting = self.curr_setting
@@ -741,7 +742,8 @@ function Hospital:checkFacilities()
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
 
-    self.heatingController:checkHeatingFacilities(day,self:getAveragePatientAttribute("warmth", 0.3),self:getAverageStaffAttribute("warmth", 0.25))
+    self.heatingController:checkHeatingFacilities(self:isPlayerHospital(),day,
+      self:getAveragePatientAttribute("warmth", 0.3),self:getAverageStaffAttribute("warmth", 0.25))
 
     -- Are the patients in need of a drink
     if not self.thirst_msg and day == 24 then
@@ -760,7 +762,7 @@ function Hospital:checkFacilities()
       self.toilet_msg = false
       self.bench_msg = false
       self.cash_msg = false
-      self.heatingController.warmth_msg = false
+      self.heatingController:resetWarmthMsgFlag()
       self.thirst_msg = false
       self.seating_warning = 0
     end
@@ -946,8 +948,8 @@ function Hospital:onEndMonth()
     self:spendMoney(wages, _S.transactions.wages)
   end
   -- Pay heating costs
-  --moved to heatingController
   local heatingCosts = self.heatingController:getHeatingCostsForActualMonth()
+  self.heatingController:resetHeatingCostsForActualMonth()
   if heatingCosts > 0 then
     self:spendMoney(heatingCosts, _S.transactions.heating)
   end
