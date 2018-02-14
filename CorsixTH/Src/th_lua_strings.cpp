@@ -745,11 +745,11 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     luaT_setmetamethod(l_str_ipairs, "ipairs");
     luaT_setmetamethod(l_str_next, "next");
     luaT_setmetamethod(l_str_inext, "inext");
-    luaT_setfunction(l_str_func, "format" , MT_DummyString, "format");
-    luaT_setfunction(l_str_func, "lower"  , MT_DummyString, "lower");
-    luaT_setfunction(l_str_func, "rep"    , MT_DummyString, "rep");
-    luaT_setfunction(l_str_func, "reverse", MT_DummyString, "reverse");
-    luaT_setfunction(l_str_func, "upper"  , MT_DummyString, "upper");
+    luaT_setfunction(l_str_func, "format", "format");
+    luaT_setfunction(l_str_func, "lower", "lower");
+    luaT_setfunction(l_str_func, "rep", "rep");
+    luaT_setfunction(l_str_func, "reverse", "reverse");
+    luaT_setfunction(l_str_func, "upper", "upper");
     luaT_setfunction(l_str_unwrap, "_unwrap");
     luaT_setfunction(l_str_reload, "reload");
     luaT_endclass();

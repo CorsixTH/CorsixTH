@@ -244,23 +244,8 @@ static int l_get_compile_options(lua_State *L)
     return 1;
 }
 
-void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
-                     eTHLuaMetatable eMetatable1, ...)
-{
-    int iUpCount = 0;
-    va_list args;
-    for(va_start(args, eMetatable1);
-        eMetatable1 != MT_Count;
-        eMetatable1 = static_cast<eTHLuaMetatable>(va_arg(args, int)))
-    {
-        if(eMetatable1 == MT_DummyString)
-            lua_pushstring(pState->L, va_arg(args, char*));
-        else
-            lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
-        ++iUpCount;
-    }
-    va_end(args);
-    luaT_pushcclosure(pState->L, fn, iUpCount);
+void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps) {
+    luaT_pushcclosure(pState->L, fn, iUps);
 }
 
 int luaopen_th(lua_State *L)
