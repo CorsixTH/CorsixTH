@@ -39,7 +39,7 @@ function FakeWorld:FakeWorld(nbRadiators,disasterLaunch)
     general = 0,
   }
   self.map = {
-    level_config = 
+    level_config =
     {
       gbv = {DisasterLaunch = disasterLaunch}
     }
@@ -54,45 +54,45 @@ end
 describe("HeatingController:", function()
   it("check monthly heating costs", function()
     local heatingController = HeatingController(FakeWorld(10,100))
-    
+
     assert.equal(375,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
     heatingController:setRadiatorHeat(1)
     assert.equal(750,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
     heatingController:setRadiatorHeat(0)
     assert.equal(0,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
     heatingController:setRadiatorHeat(2)
     assert.equal(750,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
     heatingController:setRadiatorHeat(-1)
     assert.equal(0,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
     heatingController:setRadiatorHeat(0.5)
     heatingController:increaseHeat()
     assert.equal(450,heatingController:calculateExpectedMonthlyHeatingCosts())
     heatingController:decreaseHeat()
     assert.equal(375,heatingController:calculateExpectedMonthlyHeatingCosts())
-    
+
   end)
-  
+
   it("check increase / decrease heating", function()
     local heatingController = HeatingController(FakeWorld(10,100))
     --start with heating 0.5
-    
+
     heatingController:increaseHeat()
     assert.equal(0.6,heatingController:getRadiatorHeat())
     heatingController:decreaseHeat()
     assert.equal(0.5,heatingController:getRadiatorHeat())
-    
+
     --set maximum heat and try to increase
     heatingController:setRadiatorHeat(1)
     heatingController:increaseHeat()
     assert.equal(1,heatingController:getRadiatorHeat())
     heatingController:decreaseHeat()
     assert.equal(0.9,heatingController:getRadiatorHeat())
-    
+
     --set minimum heat and try to decrease
     heatingController:setRadiatorHeat(0.1)
     heatingController:decreaseHeat()
@@ -100,7 +100,7 @@ describe("HeatingController:", function()
     heatingController:increaseHeat()
     assert.equal(0.2,heatingController:getRadiatorHeat())
   end)
-  
+
   it("check accumulated heatingcosts", function()
     local heatingController = HeatingController(FakeWorld(10,100))
     -- January 1st year
@@ -118,12 +118,12 @@ describe("HeatingController:", function()
     heatingController:onEndDay(100,true)
     -- round up after 6 days
     assert.equal(73,heatingController:getHeatingCostsForActualMonth())
-    
+
     --check if 0 after reset
     heatingController:resetHeatingCostsForActualMonth()
     assert.equal(0,heatingController:getHeatingCostsForActualMonth())
   end)
-  
+
   it("check Boiler Breakdown counter", function()
     -- 66% chance for boiler breakdown every 2nd day
     local heatingController = HeatingController(FakeWorld(10,3))
@@ -157,7 +157,7 @@ describe("HeatingController:", function()
     assert.equal(0.5,heatingController:getRadiatorHeat())
 
   end)
-  
+
   it("check staff and patients warmth ", function()
     -- 66% chance for boiler breakdown every 2nd day
     local heatingController = HeatingController(FakeWorld(10,3))
@@ -166,11 +166,11 @@ describe("HeatingController:", function()
     local COLD_VALUE = 0.21
 
     assert.equal(false,heatingController.warmth_msg)
-    
+
     --check if patiens feel ok
     heatingController:checkHeatingFacilities(false,15,OK_VALUE, OK_VALUE)
     assert.equal(false,heatingController.warmth_msg)
-    
+
     --check if patiens feel too hot
     heatingController:checkHeatingFacilities(false,15,HOT_VALUE, HOT_VALUE)
     assert.equal(true,heatingController.warmth_msg)
@@ -184,7 +184,7 @@ describe("HeatingController:", function()
     --check if staff feel ok
     heatingController:checkHeatingFacilities(false,20,OK_VALUE, OK_VALUE)
     assert.equal(false,heatingController.warmth_msg)
-    
+
     --check if staff feel too hot
     heatingController:checkHeatingFacilities(false,20,HOT_VALUE, HOT_VALUE)
     assert.equal(true,heatingController.warmth_msg)
