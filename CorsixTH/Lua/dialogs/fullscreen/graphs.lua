@@ -25,7 +25,7 @@ class "UIGraphs" (UIFullscreen)
 ---@type UIGraphs
 local UIGraphs = _G["UIGraphs"]
 
-local TH = require "TH"
+local TH = require("TH")
 
 -- These values are based on the background colours of the pen symbols
 local colours = {

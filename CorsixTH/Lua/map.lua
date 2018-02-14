@@ -27,7 +27,7 @@ local Map = _G["Map"]
 local pathsep = package.config:sub(1, 1)
 local math_floor, tostring, table_concat
     = math.floor, tostring, table.concat
-local thMap = require"TH".map
+local thMap = require("TH").map
 
 function Map:Map(app)
   self.width = false

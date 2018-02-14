@@ -1226,7 +1226,7 @@ void THMap::setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay)
     if (eTempDisplay < THMT_Count) m_eTempDisplay = eTempDisplay;
 }
 
-uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, uint32_t relative_idx, THMapNode* pNode, int prevTemp) const
+uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx, THMapNode* pNode, int prevTemp) const
 {
     int iNeighbourCount = 0;
 
@@ -1266,15 +1266,15 @@ uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, uint32
 void THMap::updateTemperatures(uint16_t iAirTemperature,
                                uint16_t iRadiatorTemperature)
 {
-    if(iRadiatorTemperature < iAirTemperature)
+    if(iRadiatorTemperature < iAirTemperature) {
         iRadiatorTemperature = iAirTemperature;
+    }
     const int iPrevTemp = m_iCurrentTemperatureIndex;
     m_iCurrentTemperatureIndex ^= 1;
     const int iNewTemp = m_iCurrentTemperatureIndex;
 
     THMapNode* pLimitNode = m_pCells + m_iWidth * m_iHeight;
-    for(THMapNode *pNode = m_pCells; pNode != pLimitNode; ++pNode)
-    {
+    for(THMapNode *pNode = m_pCells; pNode != pLimitNode; ++pNode) {
         // Get average temperature of neighbour cells
         uint32_t iNeighbourSum = 0;
         uint32_t iNeighbourCount = 0;
@@ -1294,28 +1294,27 @@ void THMap::updateTemperatures(uint16_t iAirTemperature,
         // or generally dissipate 0.1% of temperature.
         uint32_t iMergeTemp = 0;
         double iMergeRatio = 100;
-        if(pNode->flags.hospital)
-        {
-            for(auto thob : pNode->objects)
-            {
-                if(thob == THObjectType::radiator)
+        if(pNode->flags.hospital) {
+            for(auto thob : pNode->objects) {
+                if(thob == THObjectType::radiator) {
                     iRadiatorNumber++;
+                }
             }
-            if(iRadiatorNumber > 0)
-            {
+            if(iRadiatorNumber > 0) {
                 iMergeTemp = iRadiatorTemperature;
                 iMergeRatio = 2 - (iRadiatorNumber - 1) * 0.5;
-            }
-            else
+            } else {
                 iMergeRatio = 1000;
-        }
-        else
+            }
+        } else {
             iMergeTemp = iAirTemperature;
+        }
 
         // Diffuse 25% with neighbours
         pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
-        if(iNeighbourCount != 0)
+        if(iNeighbourCount != 0) {
             MERGE(iNeighbourSum / iNeighbourCount, 4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
+        }
 
         MERGE(iMergeTemp, iMergeRatio);
 #undef MERGE

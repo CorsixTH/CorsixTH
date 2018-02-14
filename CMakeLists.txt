@@ -49,6 +49,7 @@ if(UNIX AND CMAKE_COMPILER_IS_GNU)
 endif()
 
 # Define our options
+option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
 option(WITH_SDL "Activate SDL Renderer" ON) # our default option
 option(WITH_AUDIO "Activate Sound" ON) # enabled by default
 option(WITH_MOVIES "Activate in game movies" ON)
@@ -115,6 +116,8 @@ if(USE_PRECOMPILED_DEPS)
   message("Note: Using precompiled dependencies.")
   include(PrecompiledDeps)
 endif()
+
+include(GNUInstallDirs)
 
 # Include individual projects
 message("")

@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 globals = { -- Globals
             "_A", "_S",
+            "corsixth",
             "action_queue_leave_bench", "class", "compare_tables",
             "destrict", "flag_clear", "flag_isset", "flag_set", "flag_toggle",
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",

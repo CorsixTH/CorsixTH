@@ -14,6 +14,20 @@ elseif(MSVC)
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
 
+if(USE_SOURCE_DATADIRS)
+  set(CORSIX_TH_DATADIR ${CMAKE_CURRENT_SOURCE_DIR})
+  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/CorsixTH.lua)
+elseif(MSVC)
+  set(CORSIX_TH_DATADIR CorsixTH)
+  set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
+elseif(APPLE)
+  set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/CorsixTH.lua)
+else()
+  set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
+endif()
+
 # Modify the config.h based upon our selection of options
 configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
 include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
@@ -39,8 +53,6 @@ file(GLOB_RECURSE corsixth_source_files
 
 # Declaration of the executable
 if(APPLE)
-  add_definitions(-DIS_CORSIXTH_APP)
-
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
   set_source_files_properties(
     ${corsixth_icon_file}
@@ -54,17 +66,14 @@ if(APPLE)
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 
-  #Add an extra step at the end of the build process to copy the resources into the bundle.
-  add_custom_command(TARGET CorsixTH
-    POST_BUILD
-    COMMAND rsync -rv --include-from ${CMAKE_SOURCE_DIR}/CorsixTH/RequiredResources.txt ${CMAKE_SOURCE_DIR}/CorsixTH/ \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/MacOS
-    COMMAND rsync -rv ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns \${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/Contents/Resources/
-  )
-
   target_link_libraries(CorsixTH SDL2main)
   include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
   add_executable(CorsixTH ${corsixth_source_files})
+endif()
+
+if(UNIX AND NOT APPLE)
+  set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
 endif()
 
 # Add an extra step to copy built DLLs on MSVC
@@ -185,23 +194,60 @@ if(MSVC AND CORSIX_TH_USE_VLD)
   endif()
 endif()
 
-# Declaration of the install process
-if(APPLE)
-  #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
-  install(TARGETS CorsixTH BUNDLE DESTINATION .)
+# Launch script to facilitate out of source builds
+if(USE_SOURCE_DATADIRS)
+  #do not generate launch script. The default is fine for this case.
+elseif(XCODE)
+  message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with  -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
+elseif(APPLE)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
+elseif(UNIX)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
+elseif(MSVC)
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/CorsixTH.vcxproj.user @ONLY)
+endif()
 
-  # Fix the OS X bundle to include required libraries (create a redistributable app)
-  install(CODE "
-    INCLUDE(BundleUtilities)
-    SET(BU_CHMOD_BUNDLE_ITEMS ON)
-    FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
-    ")
-else()
-  install(TARGETS CorsixTH RUNTIME DESTINATION CorsixTH)
-  install(DIRECTORY Campaigns Lua Levels DESTINATION CorsixTH)
-  install(DIRECTORY Bitmap DESTINATION CorsixTH
+
+# Declaration of the install process
+if(NOT USE_SOURCE_DATADIRS)
+  if(APPLE)
+    #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
+    install(TARGETS CorsixTH BUNDLE DESTINATION .)
+  elseif(MSVC)
+    install(TARGETS CorsixTH
+      RUNTIME DESTINATION ${CORSIX_TH_DATADIR}
+      LIBRARY DESTINATION ${CORSIX_TH_DATADIR}
+      ARCHIVE DESTINATION ${CORSIX_TH_DATADIR}
+    )
+    install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
+
+    # install dependencies
+    file(GLOB DLL_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.dll")
+    install(FILES ${DLL_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
+    file(GLOB LUA_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.lua")
+    install(FILES ${LUA_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
+    if(EXISTS "${CMAKE_CURRENT_BINARY_DIR}/mime")
+      install(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/mime" "${CMAKE_CURRENT_BINARY_DIR}/socket" DESTINATION ${CORSIX_TH_DATADIR})
+    endif()
+  else()
+    install(TARGETS CorsixTH
+      RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+      LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+      ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+  endif()
+  install(DIRECTORY Campaigns Lua Levels DESTINATION ${CORSIX_TH_DATADIR})
+  install(DIRECTORY Bitmap DESTINATION ${CORSIX_TH_DATADIR}
     FILES_MATCHING REGEX ".*\\.(tab|pal|dat|png)$"
-    PATTERN "*.svn" EXCLUDE
   )
-  install(FILES CorsixTH.lua ../LICENSE.txt CorsixTH.ico DESTINATION CorsixTH )
+  install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
+
+  if(APPLE)
+    # Fix the OS X bundle to include required libraries (create a redistributable app)
+    install(CODE "
+      INCLUDE(BundleUtilities)
+      SET(BU_CHMOD_BUNDLE_ITEMS ON)
+      FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
+      ")
+  endif()
 endif()
