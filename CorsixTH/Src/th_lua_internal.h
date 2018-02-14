@@ -52,9 +52,7 @@ enum eTHLuaMetatable
     MT_StringProxy,
     MT_Line,
 
-    MT_Count,
-
-    MT_DummyString,
+    MT_Count
 };
 
 struct THLuaRegisterState_t
@@ -65,8 +63,21 @@ struct THLuaRegisterState_t
     int iTop;
 };
 
-void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
-                     eTHLuaMetatable eMetatable1, ...);
+void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps);
+
+template<typename... Args>
+void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps,
+        eTHLuaMetatable eMetatable1, Args... args) {
+    lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
+    luaT_setclosure(pState, fn, iUps + 1, args...);
+}
+
+template<typename... Args>
+void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps,
+        const char* str, Args... args) {
+    lua_pushstring(pState->L, str);
+    luaT_setclosure(pState, fn, iUps + 1, args...);
+}
 
 #define luaT_class(typnam, new_fn, name, mt) { \
     const char * sCurrentClassName = name; \
@@ -106,11 +117,11 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn,
     lua_setfield(pState->L, pState->iMainTable, sCurrentClassName); }
 
 #define luaT_setmetamethod(fn, name, ...) \
-    luaT_setclosure(pState, fn, ## __VA_ARGS__, MT_Count); \
+    luaT_setclosure(pState, fn, 0, ## __VA_ARGS__); \
     lua_setfield(pState->L, iCurrentClassMT, "__" name)
 
 #define luaT_setfunction(fn, name, ...) \
-    luaT_setclosure(pState, fn, ## __VA_ARGS__, MT_Count); \
+    luaT_setclosure(pState, fn, 0, ## __VA_ARGS__); \
     lua_setfield(pState->L, -2, name)
 
 /**
