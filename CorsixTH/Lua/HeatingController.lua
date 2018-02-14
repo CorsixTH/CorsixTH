@@ -20,12 +20,12 @@ SOFTWARE. --]]
 
 class "HeatingController"
 
+---@type HeatingController
+local HeatingController = _G["HeatingController"]
+
 local COLD_TOLERANCE_TEMP = 0.22
 local HOT_TOLERANCE_TEMP = 0.36
 local DEFAULT_DAYS_UNTIL_BOILER_BREAKDOWN = 200
-
----@type HeatingController
-local HeatingController = _G["HeatingController"]
 
 function HeatingController:HeatingController(world)
   self.world = world
