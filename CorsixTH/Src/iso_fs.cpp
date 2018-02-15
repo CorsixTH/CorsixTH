@@ -63,7 +63,7 @@ void IsoFilesystem::setPathSeparator(char cSeparator)
     m_cPathSeparator = cSeparator;
 }
 
-enum IsoVolumeDescriptorType
+enum IsoVolumeDescriptorType : uint8_t
 {
     VDT_PRIVARY_VOLUME = 0x01,
     // Other type numbers are either reserved for future use, or are not
@@ -71,7 +71,7 @@ enum IsoVolumeDescriptorType
     VDT_TERMINATOR = 0xFF,
 };
 
-enum IsoDirEntFlag
+enum IsoDirEntFlag : uint8_t
 {
     DEF_HIDDEN = 0x01,
     DEF_DIRECTORY = 0x02,
