@@ -158,9 +158,25 @@ static uint16_t l_check_temp(lua_State *L, int iArg)
 static int l_map_settemperaturedisplay(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    lua_Integer iTD = luaL_checkinteger(L, 2) - 1;
-    if (iTD >= THMT_Count) iTD = THMT_Red;
-    pMap->setTemperatureDisplay(static_cast<THMapTemperatureDisplay>(iTD));
+    lua_Integer iTD = luaL_checkinteger(L, 2);
+
+    THMapTemperatureDisplay temperatureDisplay;
+    switch(iTD) {
+        case 1:
+            temperatureDisplay = THMapTemperatureDisplay::red;
+            break;
+        case 2:
+            temperatureDisplay = THMapTemperatureDisplay::multiColour;
+            break;
+        case 3:
+            temperatureDisplay = THMapTemperatureDisplay::yellowRed;
+            break;
+        default:
+            return luaL_argerror(L, 2, "TemperatureDisplay index out of bounds");
+    }
+
+    pMap->setTemperatureDisplay(temperatureDisplay);
+
     return 1;
 }
 

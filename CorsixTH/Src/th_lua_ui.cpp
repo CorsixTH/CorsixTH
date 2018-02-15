@@ -85,42 +85,38 @@ static int l_town_map_draw(lua_State *L)
                     const uint16_t minOkTemp = 140;
                     const uint16_t maxOkTemp = 180;
 
+                    uint8_t iR = 0;
+                    uint8_t iG = 0;
+                    uint8_t iB = 0;
                     switch(pMap->getTemperatureDisplay())
                     {
-                    case THMT_MultiColour:
-                    {
-                        uint8_t iR = 0;
-                        uint8_t iG = 0;
-                        uint8_t iB = 70;
-                        if(iTemp < minOkTemp)
+                    case THMapTemperatureDisplay::multiColour:
+                        iB = 70;
+                        if(iTemp < minOkTemp) {
                             iB = range_scale(0, minOkTemp - 1, iTemp, 200, 60);
-                        else if(iTemp < maxOkTemp)
+                        } else if(iTemp < maxOkTemp) {
                             iG = range_scale(minOkTemp, maxOkTemp - 1, iTemp, 140, 224);
-                        else
+                        } else {
                             iR = range_scale(maxOkTemp, 255, iTemp, 224, 255);
-                        iColour = pCanvas->mapColour(iR, iG, iB);
-                        break;
-                    }
-                    case THMT_YellowRed:
-                        if(iTemp < minOkTemp) // Below 11 degrees
-                        {
-                            uint8_t iR = range_scale(0, minOkTemp - 1, iTemp, 100, 213);
-                            uint8_t iG = range_scale(0, minOkTemp - 1, iTemp, 80, 180);
-                            iColour = pCanvas->mapColour(iR, iG, 0);
-                        }
-                        else
-                        {
-                            uint8_t iR = range_scale(minOkTemp, 255, iTemp, 223, 235);
-                            uint8_t iG = range_scale(minOkTemp, 255, iTemp, 184, 104);
-                            uint8_t iB = range_scale(minOkTemp, 255, iTemp, 0, 53);
-                            iColour = pCanvas->mapColour(iR, iG, iB);
                         }
                         break;
-                    default:
-                    case THMT_Red:
-                        iColour = pCanvas->mapColour(static_cast<uint8_t>(iTemp), 0, 70);
+                    case THMapTemperatureDisplay::yellowRed:
+                        if(iTemp < minOkTemp) { // Below 11 degrees
+                            iR = range_scale(0, minOkTemp - 1, iTemp, 100, 213);
+                            iG = range_scale(0, minOkTemp - 1, iTemp, 80, 180);
+                        } else {
+                            iR = range_scale(minOkTemp, 255, iTemp, 223, 235);
+                            iG = range_scale(minOkTemp, 255, iTemp, 184, 104);
+                            iB = range_scale(minOkTemp, 255, iTemp, 0, 53);
+                        }
+                        break;
+                    case THMapTemperatureDisplay::red:
+                        iR = static_cast<uint8_t>(iTemp);
+                        iB = 70;
                         break;
                     }
+
+                    iColour = pCanvas->mapColour(iR, iG, iB);
                 }
                 pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
             }

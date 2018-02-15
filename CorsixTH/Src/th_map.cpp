@@ -214,7 +214,7 @@ THMap::THMap()
     m_iHeight = 0;
     m_iPlayerCount = 0;
     m_iCurrentTemperatureIndex = 0;
-    m_eTempDisplay = THMT_Red;
+    m_eTempDisplay = THMapTemperatureDisplay::red;
     m_iParcelCount = 0;
     m_pCells = nullptr;
     m_pOriginalCells = nullptr;
@@ -1223,7 +1223,7 @@ uint16_t THMap::getNodeTemperature(const THMapNode* pNode) const
 
 void THMap::setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay)
 {
-    if (eTempDisplay < THMT_Count) m_eTempDisplay = eTempDisplay;
+    m_eTempDisplay = eTempDisplay;
 }
 
 uint32_t THMap::thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx, THMapNode* pNode, int prevTemp) const

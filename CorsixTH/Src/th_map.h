@@ -166,13 +166,10 @@ struct th_map_node_flags
     operator uint32_t() const;
 };
 
-enum THMapTemperatureDisplay
-{
-    THMT_Red,         //!< Default warmth colouring (red gradients)
-    THMT_MultiColour, //!< Different colours (blue, green, red)
-    THMT_YellowRed,   //!< Gradients of yellow, orange, and red
-
-    THMT_Count, //!< Number of temperature display values.
+enum class THMapTemperatureDisplay {
+    red,         //!< Default warmth colouring (red gradients)
+    multiColour, //!< Different colours (blue, green, red)
+    yellowRed    //!< Gradients of yellow, orange, and red
 };
 
 struct THMapNode : public THLinkList
