@@ -27,12 +27,11 @@ SOFTWARE.
 class LuaPersistReader;
 class LuaPersistWriter;
 
-enum THScaledItems
-{
-    THSI_None = 0,
-    THSI_SpriteSheets = 1 << 0,
-    THSI_Bitmaps = 1 << 1,
-    THSI_All = 3,
+enum class THScaledItems {
+    none,
+    spriteSheets,
+    bitmaps,
+    all
 };
 
 #include "th_gfx_sdl.h"

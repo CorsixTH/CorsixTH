@@ -744,10 +744,10 @@ static int l_surface_set_clip(lua_State *L)
 static int l_surface_scale(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
-    THScaledItems eToScale = THSI_None;
+    THScaledItems eToScale = THScaledItems::none;
     if(lua_isnoneornil(L, 3))
     {
-        eToScale = THSI_All;
+        eToScale = THScaledItems::all;
     }
     else
     {
@@ -755,7 +755,7 @@ static int l_surface_scale(lua_State *L)
         const char* sOption = lua_tolstring(L, 3, &iLength);
         if(sOption && iLength >= 6 && std::memcmp(sOption, "bitmap", 6) == 0)
         {
-            eToScale = THSI_Bitmaps;
+            eToScale = THScaledItems::bitmaps;
         }
         else
             luaL_error(L, "Expected \"bitmap\" as 2nd argument");

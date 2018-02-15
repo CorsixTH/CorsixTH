@@ -319,7 +319,7 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
     {
         return false;
     }
-    else if(eWhatToScale == THSI_All && m_bSupportsTargetTextures)
+    else if(eWhatToScale == THScaledItems::all && m_bSupportsTargetTextures)
     {
         //Draw everything from now until the next scale to m_pZoomTexture
         //with the appropriate virtual size, which will be copied scaled to
@@ -355,7 +355,7 @@ bool THRenderTarget::setScaleFactor(double fScale, THScaledItems eWhatToScale)
     {
         return true;
     }
-    else if(eWhatToScale == THSI_Bitmaps)
+    else if(eWhatToScale == THScaledItems::bitmaps)
     {
         m_bShouldScaleBitmaps = true;
         m_fBitmapScaleFactor = fScale;
