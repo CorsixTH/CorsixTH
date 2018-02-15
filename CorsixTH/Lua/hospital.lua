@@ -18,12 +18,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-dofile "HeatingController"
-
 class "Hospital"
 
 ---@type Hospital
 local Hospital = _G["Hospital"]
+
+corsixth.require("HeatingController")
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world

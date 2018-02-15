@@ -154,6 +154,10 @@ function HeatingController:onEndDay(nbHandyman, isPlayerHospital)
   --variables for heating
   local radiators = self.world.object_counts.radiator
 
+  if nbHandyman == false then
+    nbHandyman = 0
+  end
+
   -- Countdown for boiler breakdowns
   if self.heating_broke then
     if 5 * nbHandyman >= radiators and self.boiler_countdown > 3 then
