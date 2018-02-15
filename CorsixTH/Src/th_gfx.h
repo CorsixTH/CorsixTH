@@ -43,7 +43,7 @@ enum class THScaledItems {
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
 //! Bitflags for drawing operations
-enum THDrawFlags
+enum THDrawFlags : uint32_t
 {
     /** Sprite drawing flags **/
     /* Where possible, designed to be the same values used by TH data files */
