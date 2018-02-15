@@ -690,7 +690,7 @@ void THRenderTarget::drawLine(THLine *pLine, int iX, int iY)
 
     THLine::THLineOperation* op = (THLine::THLineOperation*)(pLine->m_pFirstOp->m_pNext);
     while (op) {
-        if (op->type == THLine::THLOP_LINE) {
+        if (op->type == THLine::THLineOpType::line) {
             SDL_RenderDrawLine(m_pRenderer, static_cast<int>(lastX + iX),
                                             static_cast<int>(lastY + iY),
                                             static_cast<int>(op->m_fX + iX),
@@ -1423,21 +1423,21 @@ void THLine::initialize()
     m_iA = 255;
 
     // We start at 0,0
-    m_pFirstOp = new THLineOperation(THLOP_MOVE, 0, 0);
+    m_pFirstOp = new THLineOperation(THLineOpType::move, 0, 0);
     m_pCurrentOp = m_pFirstOp;
 }
 
 void THLine::moveTo(double fX, double fY)
 {
     THLineOperation* previous = m_pCurrentOp;
-    m_pCurrentOp = new THLineOperation(THLOP_MOVE, fX, fY);
+    m_pCurrentOp = new THLineOperation(THLineOpType::move, fX, fY);
     previous->m_pNext = m_pCurrentOp;
 }
 
 void THLine::lineTo(double fX, double fY)
 {
     THLineOperation* previous = m_pCurrentOp;
-    m_pCurrentOp = new THLineOperation(THLOP_LINE, fX, fY);
+    m_pCurrentOp = new THLineOperation(THLineOpType::line, fX, fY);
     previous->m_pNext = m_pCurrentOp;
 }
 
@@ -1504,9 +1504,9 @@ void THLine::depersist(LuaPersistReader *pReader)
         pReader->readVFloat(fX);
         pReader->readVFloat(fY);
 
-        if (type == THLOP_MOVE) {
+        if (type == THLineOpType::move) {
             moveTo(fX, fY);
-        } else if (type == THLOP_LINE) {
+        } else if (type == THLineOpType::line) {
             lineTo(fX, fY);
         }
     }
