@@ -330,22 +330,21 @@ static int l_font_draw(lua_State *L)
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
-    eTHAlign eAlign = Align_Center;
-    if(!lua_isnoneornil(L, 8))
-    {
+
+    eTHAlign eAlign = eTHAlign::center;
+    if(!lua_isnoneornil(L, 8)) {
         const char* sAlign = luaL_checkstring(L, 8);
-        if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
-        else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
-        else if(std::strcmp(sAlign, "center") == 0
-             || std::strcmp(sAlign, "centre") == 0
-             || std::strcmp(sAlign, "middle") == 0)
-        {
-            eAlign = Align_Center;
-        }
-        else
+        if(std::strcmp(sAlign, "right") == 0) {
+            eAlign = eTHAlign::right;
+        } else if(std::strcmp(sAlign, "left") == 0) {
+            eAlign = eTHAlign::left;
+        } else if(std::strcmp(sAlign, "center") == 0 ||
+                std::strcmp(sAlign, "centre") == 0 ||
+                std::strcmp(sAlign, "middle") == 0) {
+            eAlign = eTHAlign::center;
+        } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+        }
     }
 
     THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen);
@@ -353,10 +352,12 @@ static int l_font_draw(lua_State *L)
     {
         int iW = static_cast<int>(luaL_checkinteger(L, 6));
         int iH = static_cast<int>(luaL_checkinteger(L, 7));
-        if(iW > oDrawArea.iEndX && eAlign != Align_Left)
-            iX += (iW - oDrawArea.iEndX) / ((eAlign == Align_Center) ? 2 : 1);
-        if(iH > oDrawArea.iEndY)
+        if(iW > oDrawArea.iEndX && eAlign != eTHAlign::left) {
+            iX += (iW - oDrawArea.iEndX) / ((eAlign == eTHAlign::center) ? 2 : 1);
+        }
+        if(iH > oDrawArea.iEndY) {
             iY += (iH - oDrawArea.iEndY) / 2;
+        }
     }
     if(pCanvas != nullptr)
     {
@@ -381,23 +382,23 @@ static int l_font_draw_wrapped(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
     int iW = static_cast<int>(luaL_checkinteger(L, 6));
-    eTHAlign eAlign = Align_Left;
-    if(!lua_isnoneornil(L, 7))
-    {
+
+    eTHAlign eAlign = eTHAlign::left;
+    if(!lua_isnoneornil(L, 7)) {
         const char* sAlign = luaL_checkstring(L, 7);
-        if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
-        else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
-        else if(std::strcmp(sAlign, "center") == 0
-             || std::strcmp(sAlign, "centre") == 0
-             || std::strcmp(sAlign, "middle") == 0)
-        {
-            eAlign = Align_Center;
-        }
-        else
+        if(std::strcmp(sAlign, "right") == 0) {
+            eAlign = eTHAlign::right;
+        } else if(std::strcmp(sAlign, "left") == 0) {
+            eAlign = eTHAlign::left;
+        } else if(std::strcmp(sAlign, "center") == 0 ||
+                std::strcmp(sAlign, "centre") == 0 ||
+                std::strcmp(sAlign, "middle") == 0) {
+            eAlign = eTHAlign::center;
+        } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+        }
     }
+
     int iMaxRows = INT_MAX;
     if(!lua_isnoneornil(L, 8))
     {

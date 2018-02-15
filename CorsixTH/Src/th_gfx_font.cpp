@@ -321,7 +321,7 @@ THFreeTypeFont::THFreeTypeFont()
         pEntry->sMessage = nullptr;
         pEntry->iMessageLength = 0;
         pEntry->iMessageBufferLength = 0;
-        pEntry->eAlign = Align_Left;
+        pEntry->eAlign = eTHAlign::left;
         pEntry->iWidth = 0;
         pEntry->iHeight = 0;
         pEntry->iWidestLine = 0;
