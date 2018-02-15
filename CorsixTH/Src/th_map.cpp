@@ -973,7 +973,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         if(!itrNode2.isLastOnScanline())
             continue;
 
-        for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward, iCanvasX, iCanvasY); itrNode; ++itrNode)
+        for(THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::backward, iCanvasX, iCanvasY); itrNode; ++itrNode)
         {
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[1];
@@ -1005,7 +1005,7 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             }
         }
 
-        THMapScanlineIterator itrNode(itrNode2, ScanlineForward, iCanvasX, iCanvasY);
+        THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::forward, iCanvasX, iCanvasY);
         if(!bFirst) {
             //since the scanline count from one THMapScanlineIterator to another can differ
             //synchronization between the current iterator and the former one is neeeded
@@ -1152,12 +1152,12 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
     if(m_pBlocks == nullptr || m_pCells == nullptr)
         return nullptr;
 
-    for(THMapNodeIterator itrNode2(this, iTestX, iTestY, 1, 1, ScanlineBackward); itrNode2; ++itrNode2)
+    for(THMapNodeIterator itrNode2(this, iTestX, iTestY, 1, 1, eTHMapScanlineIteratorDirection::backward); itrNode2; ++itrNode2)
     {
         if(!itrNode2.isLastOnScanline())
             continue;
 
-        for(THMapScanlineIterator itrNode(itrNode2, ScanlineBackward); itrNode; ++itrNode)
+        for(THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::backward); itrNode; ++itrNode)
         {
             if(itrNode->m_pNext != nullptr)
             {
@@ -1167,7 +1167,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
                     return pResult;
             }
         }
-        for(THMapScanlineIterator itrNode(itrNode2, ScanlineForward); itrNode; ++itrNode)
+        for(THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::forward); itrNode; ++itrNode)
         {
             if(itrNode->oEarlyEntities.m_pNext != nullptr)
             {
@@ -1621,7 +1621,7 @@ THMapNodeIterator::THMapNodeIterator(const THMap *pMap, int iScreenX, int iScree
     , m_iScanlineCount(0)
     , m_eDirection(eScanlineDirection)
 {
-    if(m_eDirection == ScanlineForward)
+    if(m_eDirection == eTHMapScanlineIteratorDirection::forward)
     {
         m_iBaseX = 0;
         m_iBaseY = (iScreenY - 32) / 16;
@@ -1664,13 +1664,13 @@ void THMapNodeIterator::_advanceUntilVisible()
         m_pMap->worldToScreen(m_iXs, m_iYs);
         m_iXs -= m_iScreenX;
         m_iYs -= m_iScreenY;
-        if(m_eDirection == ScanlineForward ?
+        if(m_eDirection == eTHMapScanlineIteratorDirection::forward ?
             m_iYs >= m_iScreenHeight + ms_iMarginBottom :
             m_iYs < -ms_iMarginTop)
         {
                 return;
         }
-        if(m_eDirection == ScanlineForward ?
+        if(m_eDirection == eTHMapScanlineIteratorDirection::forward ?
             (m_iYs > -ms_iMarginTop) :
             (m_iYs < m_iScreenHeight + ms_iMarginBottom))
         {
@@ -1694,7 +1694,7 @@ void THMapNodeIterator::_advanceUntilVisible()
             }
         }
         m_iScanlineCount = 0;
-        if(m_eDirection == ScanlineForward)
+        if(m_eDirection == eTHMapScanlineIteratorDirection::forward)
         {
             if(m_iBaseY == m_pMap->getHeight() - 1)
             {
@@ -1741,7 +1741,7 @@ THMapScanlineIterator::THMapScanlineIterator(const THMapNodeIterator& itrNodes,
     , m_iXStep((static_cast<int>(eDirection) - 1) * 64)
     , m_takenSteps(0)
 {
-    if(eDirection == ScanlineBackward)
+    if(eDirection == eTHMapScanlineIteratorDirection::backward)
     {
         m_pNode = itrNodes.m_pNode;
         m_iXs = itrNodes.x();
