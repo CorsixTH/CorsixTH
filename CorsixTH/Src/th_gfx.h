@@ -87,13 +87,6 @@ enum THDrawFlags : uint32_t
     THDF_Crop           = 1 << 13,
 };
 
-//! Bitflags for animation frames
-enum THFrameFlags
-{
-    //! First frame of an animation
-    THFF_AnimationStart = 1 << 0,
-};
-
 /** Helper structure with parameters to create a #THRenderTarget. */
 struct THRenderTargetCreationParams
 {
