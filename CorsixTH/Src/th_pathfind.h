@@ -29,12 +29,11 @@ class LuaPersistWriter;
 class THPathfinder;
 
 /** Directions of movement. */
-enum TravelDirections
-{
-    THTD_North = 0, ///< Move to the north.
-    THTD_East  = 1, ///< Move to the east.
-    THTD_South = 2, ///< Move to the south.
-    THTD_West  = 3, ///< Move to the west.
+enum class TravelDirection {
+    north = 0, ///< Move to the north.
+    east = 1, ///< Move to the east.
+    south = 2, ///< Move to the south.
+    west = 3 ///< Move to the west.
 };
 
 /** Node in the path finder routines. */
@@ -123,7 +122,7 @@ public:
         @return Whether the search is done.
      */
     virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction) = 0;
+            node_t *pNeighbour, TravelDirection direction) = 0;
 
 protected:
     THPathfinder *m_pPf; ///< Path finder parent object, containing shared data.
@@ -137,7 +136,7 @@ public:
 
     int makeGuess(node_t *pNode) override;
     bool tryNode(node_t *pNode, th_map_node_flags flags,
-                 node_t *pNeighbour, int direction) override;
+            node_t *pNeighbour, TravelDirection direction) override;
 
     bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
 
@@ -152,7 +151,7 @@ public:
 
     int makeGuess(node_t *pNode) override;
     bool tryNode(node_t *pNode, th_map_node_flags flags,
-                 node_t *pNeighbour, int direction) override;
+            node_t *pNeighbour, TravelDirection direction) override;
 
     bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
 };
@@ -164,7 +163,7 @@ public:
 
     int makeGuess(node_t *pNode) override;
     bool tryNode(node_t *pNode, th_map_node_flags flags,
-                 node_t *pNeighbour, int direction) override;
+            node_t *pNeighbour, TravelDirection direction) override;
 
     bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
 
@@ -181,7 +180,7 @@ public:
 
     int makeGuess(node_t *pNode) override;
     bool tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction) override;
+            node_t *pNeighbour, TravelDirection direction) override;
 
     bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
                       THObjectType eTHOB, int iMaxDistance,
