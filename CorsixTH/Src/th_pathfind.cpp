@@ -54,16 +54,16 @@ node_t *BasePathing::pathingInit(const THMap *pMap, int iStartX, int iStartY)
 bool BasePathing::pathingNeighbours(node_t *pNode, th_map_node_flags flags, int iWidth)
 {
     if(flags.can_travel_w)
-        if(tryNode(pNode, flags, pNode - 1, THTD_West)) return true;
+        if(tryNode(pNode, flags, pNode - 1, TravelDirection::west)) return true;
 
     if(flags.can_travel_e)
-        if (tryNode(pNode, flags, pNode + 1, THTD_East)) return true;
+        if (tryNode(pNode, flags, pNode + 1, TravelDirection::east)) return true;
 
     if(flags.can_travel_n)
-        if (tryNode(pNode, flags, pNode - iWidth, THTD_North)) return true;
+        if (tryNode(pNode, flags, pNode - iWidth, TravelDirection::north)) return true;
 
     if(flags.can_travel_s)
-        if (tryNode(pNode, flags, pNode + iWidth, THTD_South)) return true;
+        if (tryNode(pNode, flags, pNode + iWidth, TravelDirection::south)) return true;
 
     return false;
 }
@@ -98,7 +98,7 @@ int PathFinder::makeGuess(node_t *pNode)
 }
 
 bool PathFinder::tryNode(node_t *pNode, th_map_node_flags flags,
-                         node_t *pNeighbour, int direction)
+                         node_t *pNeighbour, TravelDirection direction)
 {
     th_map_node_flags neighbour_flags = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->flags;
     pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
@@ -151,7 +151,7 @@ int HospitalFinder::makeGuess(node_t *pNode)
 }
 
 bool HospitalFinder::tryNode(node_t *pNode, th_map_node_flags flags,
-                             node_t *pNeighbour, int direction)
+                             node_t *pNeighbour, TravelDirection direction)
 {
     th_map_node_flags neighbour_flags = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->flags;
     pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
@@ -202,28 +202,28 @@ int IdleTileFinder::makeGuess(node_t *pNode)
 }
 
 bool IdleTileFinder::tryNode(node_t *pNode, th_map_node_flags flags,
-                             node_t *pNeighbour, int direction)
+                             node_t *pNeighbour, TravelDirection direction)
 {
     th_map_node_flags neighbour_flags = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y)->flags;
     /* When finding an idle tile, do not navigate through doors */
     switch(direction)
     {
-    case THTD_North:
+    case TravelDirection::north:
         if(!flags.door_north)
             pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
         break;
 
-    case THTD_East:
+    case TravelDirection::east:
         if(!neighbour_flags.door_west)
             pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
         break;
 
-    case THTD_South:
+    case TravelDirection::south:
         if(!neighbour_flags.door_north)
             pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
         break;
 
-    case THTD_West:
+    case TravelDirection::west:
         if(!flags.door_west)
             pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
         break;
@@ -312,7 +312,7 @@ int Objectsvisitor::makeGuess(node_t *pNode)
     return 0;
 }
 
-bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNeighbour, int direction)
+bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNeighbour, TravelDirection direction)
 {
     int iObjectNumber = 0;
     const THMapNode *pMapNode = m_pMap->getNodeUnchecked(pNeighbour->x, pNeighbour->y);
@@ -335,7 +335,7 @@ bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNe
         lua_pushvalue(m_pL, m_iVisitFunction);
         lua_pushinteger(m_pL, pNeighbour->x + 1);
         lua_pushinteger(m_pL, pNeighbour->y + 1);
-        lua_pushinteger(m_pL, direction);
+        lua_pushinteger(m_pL, static_cast<int>(direction));
         lua_pushinteger(m_pL, pNode->distance);
         lua_call(m_pL, 4, 1);
         if(lua_toboolean(m_pL, -1) != 0)
@@ -351,22 +351,22 @@ bool Objectsvisitor::tryNode(node_t *pNode, th_map_node_flags flags, node_t *pNe
     {
         switch(direction)
         {
-        case THTD_North:
+        case TravelDirection::north:
             if(!flags.door_north)
                 pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
             break;
 
-        case THTD_East:
+        case TravelDirection::east:
             if(!neighbour_flags.door_west)
                 pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
             break;
 
-        case THTD_South:
+        case TravelDirection::south:
             if(!neighbour_flags.door_north)
                 pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
             break;
 
-        case THTD_West:
+        case TravelDirection::west:
             if(!flags.door_west)
                 pathingTryNode(pNode, neighbour_flags, flags.passable, pNeighbour);
             break;

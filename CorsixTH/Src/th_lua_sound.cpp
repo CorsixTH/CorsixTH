@@ -296,7 +296,7 @@ static int l_soundfx_release_channel(lua_State *L)
 void THLuaRegisterSound(const THLuaRegisterState_t *pState)
 {
     // Sound Archive
-    luaT_class(THSoundArchive, l_soundarc_new, "soundArchive", MT_SoundArc);
+    luaT_class(THSoundArchive, l_soundarc_new, "soundArchive", eTHLuaMetatable::soundArc);
     luaT_setmetamethod(l_soundarc_count, "len");
     luaT_setfunction(l_soundarc_load, "load");
     luaT_setfunction(l_soundarc_filename, "getFilename");
@@ -306,8 +306,8 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Sound Effects
-    luaT_class(THSoundEffects, l_soundfx_new, "soundEffects", MT_SoundFx);
-    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", MT_SoundArc);
+    luaT_class(THSoundEffects, l_soundfx_new, "soundEffects", eTHLuaMetatable::soundFx);
+    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", eTHLuaMetatable::soundArc);
     luaT_setfunction(l_soundfx_play, "play");
     luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
     luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");

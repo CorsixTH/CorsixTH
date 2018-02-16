@@ -25,40 +25,39 @@ SOFTWARE.
 #include "config.h"
 #include "th_lua.h"
 
-enum eTHLuaMetatable
-{
-    MT_Map,
-    MT_Palette,
-    MT_Sheet,
-    MT_Font,
-    MT_BitmapFont,
+enum class eTHLuaMetatable {
+    map,
+    palette,
+    sheet,
+    font,
+    bitmapFont,
 #ifdef CORSIX_TH_USE_FREETYPE2
-    MT_FreeTypeFont,
+    freeTypeFont,
 #endif
-    MT_Layers,
-    MT_Anims,
-    MT_Anim,
-    MT_Path,
-    MT_Surface,
-    MT_Bitmap,
-    MT_Cursor,
-    MT_LfsExt,
-    MT_SoundArc,
-    MT_SoundFx,
-    MT_Movie,
-    MT_String,
-    MT_WindowBase,
-    MT_SpriteList,
-    MT_StringProxy,
-    MT_Line,
+    layers,
+    anims,
+    anim,
+    path,
+    surface,
+    bitmap,
+    cursor,
+    lfsExt,
+    soundArc,
+    soundFx,
+    movie,
+    string,
+    windowBase,
+    spriteList,
+    stringProxy,
+    line,
 
-    MT_Count
+    count
 };
 
 struct THLuaRegisterState_t
 {
     lua_State *L;
-    int aiMetatables[MT_Count];
+    int aiMetatables[static_cast<size_t>(eTHLuaMetatable::count)];
     int iMainTable;
     int iTop;
 };
@@ -68,7 +67,7 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_
 template<typename... Args>
 void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps,
         eTHLuaMetatable eMetatable1, Args... args) {
-    lua_pushvalue(pState->L, pState->aiMetatables[eMetatable1]);
+    lua_pushvalue(pState->L, pState->aiMetatables[static_cast<size_t>(eMetatable1)]);
     luaT_setclosure(pState, fn, iUps + 1, args...);
 }
 
@@ -81,7 +80,7 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_
 
 #define luaT_class(typnam, new_fn, name, mt) { \
     const char * sCurrentClassName = name; \
-    int iCurrentClassMT = pState->aiMetatables[mt]; \
+    int iCurrentClassMT = pState->aiMetatables[static_cast<size_t>(mt)]; \
     lua_settop(pState->L, pState->iTop); \
     /* Make metatable the environment for registered functions */ \
     lua_pushvalue(pState->L, iCurrentClassMT); \
@@ -106,11 +105,11 @@ void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_
 #define luaT_superclass(super_mt) \
     /* Set __index on the methods metatable to the superclass methods */ \
     lua_getmetatable(pState->L, -1); \
-    lua_getfield(pState->L, pState->aiMetatables[super_mt], "__index"); \
+    lua_getfield(pState->L, pState->aiMetatables[static_cast<size_t>(super_mt)], "__index"); \
     lua_setfield(pState->L, -2, "__index"); \
     lua_pop(pState->L, 1); \
     /* Set metatable[1] to super_mt */ \
-    lua_pushvalue(pState->L, pState->aiMetatables[super_mt]); \
+    lua_pushvalue(pState->L, pState->aiMetatables[static_cast<size_t>(super_mt)]); \
     lua_rawseti(pState->L, iCurrentClassMT, 1)
 
 #define luaT_endclass() \

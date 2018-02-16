@@ -28,11 +28,10 @@ SOFTWARE.
 #include FT_FREETYPE_H
 #endif
 
-enum eTHAlign
-{
-    Align_Left = 0,
-    Align_Center = 1,
-    Align_Right = 2,
+enum class eTHAlign {
+    left = 0,
+    center = 1,
+    right = 2,
 };
 
 /** Structure for the bounds of a text string that is rendered to the screen. */
@@ -110,9 +109,9 @@ public:
           of text is smaller than iWidth.
     */
     virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                           size_t iMessageLength, int iX, int iY,
-                                           int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                           eTHAlign eAlign = Align_Left) const = 0;
+            size_t iMessageLength, int iX, int iY,
+            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+            eTHAlign eAlign = eTHAlign::left) const = 0;
 };
 
 class THBitmapFont final : public THFont
@@ -144,9 +143,9 @@ public:
                   size_t iMessageLength, int iX, int iY) const override;
 
     THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                   size_t iMessageLength, int iX, int iY,
-                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                   eTHAlign eAlign = Align_Left) const override;
+            size_t iMessageLength, int iX, int iY,
+            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+            eTHAlign eAlign = eTHAlign::left) const override;
 
 private:
     THSpriteSheet* m_pSpriteSheet;
@@ -224,9 +223,9 @@ public:
                   size_t iMessageLength, int iX, int iY) const override;
 
     THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
-                                   size_t iMessageLength, int iX, int iY,
-                                   int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-                                   eTHAlign eAlign = Align_Left) const override;
+            size_t iMessageLength, int iX, int iY,
+            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+            eTHAlign eAlign = eTHAlign::left) const override;
 
 private:
     struct cached_text_t

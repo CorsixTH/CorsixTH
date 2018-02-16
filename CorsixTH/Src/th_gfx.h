@@ -27,12 +27,11 @@ SOFTWARE.
 class LuaPersistReader;
 class LuaPersistWriter;
 
-enum THScaledItems
-{
-    THSI_None = 0,
-    THSI_SpriteSheets = 1 << 0,
-    THSI_Bitmaps = 1 << 1,
-    THSI_All = 3,
+enum class THScaledItems {
+    none,
+    spriteSheets,
+    bitmaps,
+    all
 };
 
 #include "th_gfx_sdl.h"
@@ -44,7 +43,7 @@ enum THScaledItems
 void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect);
 
 //! Bitflags for drawing operations
-enum THDrawFlags
+enum THDrawFlags : uint32_t
 {
     /** Sprite drawing flags **/
     /* Where possible, designed to be the same values used by TH data files */
@@ -86,13 +85,6 @@ enum THDrawFlags
     THDF_BoundBoxHitTest= 1 << 12,
     //! Apply a cropping operation prior to drawing
     THDF_Crop           = 1 << 13,
-};
-
-//! Bitflags for animation frames
-enum THFrameFlags
-{
-    //! First frame of an animation
-    THFF_AnimationStart = 1 << 0,
 };
 
 /** Helper structure with parameters to create a #THRenderTarget. */

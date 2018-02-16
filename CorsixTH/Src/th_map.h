@@ -166,13 +166,10 @@ struct th_map_node_flags
     operator uint32_t() const;
 };
 
-enum THMapTemperatureDisplay
-{
-    THMT_Red,         //!< Default warmth colouring (red gradients)
-    THMT_MultiColour, //!< Different colours (blue, green, red)
-    THMT_YellowRed,   //!< Gradients of yellow, orange, and red
-
-    THMT_Count, //!< Number of temperature display values.
+enum class THMapTemperatureDisplay {
+    red,         //!< Default warmth colouring (red gradients)
+    multiColour, //!< Different colours (blue, green, red)
+    yellowRed    //!< Gradients of yellow, orange, and red
 };
 
 struct THMapNode : public THLinkList
@@ -437,10 +434,9 @@ private:
     bool* m_pPurchasableMatrix;
 };
 
-enum eTHMapScanlineIteratorDirection
-{
-    ScanlineForward = 2,
-    ScanlineBackward = 0,
+enum class eTHMapScanlineIteratorDirection {
+    forward = 2,
+    backward = 0,
 };
 
 //! Utility class for iterating over map nodes within a screen rectangle
@@ -468,11 +464,11 @@ public:
         @arg iWidth The width of the screen-space rectangle to iterate.
         @arg iHeight The width of the screen-space rectangle to iterate.
         @arg eScanlineDirection The direction in which to iterate scanlines;
-            ScanlineForward for top-to-bottom, ScanlineBackward for bottom-to-top.
+            forward for top-to-bottom, backward for bottom-to-top.
     */
     THMapNodeIterator(const THMap *pMap, int iScreenX, int iScreenY,
-                      int iWidth, int iHeight,
-                      eTHMapScanlineIteratorDirection eScanlineDirection = ScanlineForward);
+        int iWidth, int iHeight,
+        eTHMapScanlineIteratorDirection eScanlineDirection = eTHMapScanlineIteratorDirection::forward);
 
     //! Returns false iff the iterator has exhausted its nodes
     inline operator bool () const {return m_pNode != nullptr;}
@@ -543,7 +539,7 @@ public:
     /*!
         @arg itrNodes A node iterator which has reached the end of a scanline
         @arg eDirection The direction in which to iterate the scanline;
-            ScanlineForward for left-to-right, ScanlineBackward for right-to-left.
+            forward for left-to-right, backward for right-to-left.
         @arg iXOffset If given, values returned by x() will be offset by this.
         @arg iYOffset If given, values returned by y() will be offset by this.
     */

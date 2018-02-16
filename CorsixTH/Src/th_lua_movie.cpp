@@ -133,8 +133,8 @@ static int l_movie_deallocate_picture_buffer(lua_State *L)
 
 void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
 {
-    luaT_class(THMovie, l_movie_new, "moviePlayer", MT_Movie);
-    luaT_setfunction(l_movie_set_renderer, "setRenderer", MT_Surface);
+    luaT_class(THMovie, l_movie_new, "moviePlayer", eTHLuaMetatable::movie);
+    luaT_setfunction(l_movie_set_renderer, "setRenderer", eTHLuaMetatable::surface);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");

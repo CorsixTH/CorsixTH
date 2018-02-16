@@ -158,9 +158,25 @@ static uint16_t l_check_temp(lua_State *L, int iArg)
 static int l_map_settemperaturedisplay(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    lua_Integer iTD = luaL_checkinteger(L, 2) - 1;
-    if (iTD >= THMT_Count) iTD = THMT_Red;
-    pMap->setTemperatureDisplay(static_cast<THMapTemperatureDisplay>(iTD));
+    lua_Integer iTD = luaL_checkinteger(L, 2);
+
+    THMapTemperatureDisplay temperatureDisplay;
+    switch(iTD) {
+        case 1:
+            temperatureDisplay = THMapTemperatureDisplay::red;
+            break;
+        case 2:
+            temperatureDisplay = THMapTemperatureDisplay::multiColour;
+            break;
+        case 3:
+            temperatureDisplay = THMapTemperatureDisplay::yellowRed;
+            break;
+        default:
+            return luaL_argerror(L, 2, "TemperatureDisplay index out of bounds");
+    }
+
+    pMap->setTemperatureDisplay(temperatureDisplay);
+
     return 1;
 }
 
@@ -983,9 +999,9 @@ static int l_path_visit(lua_State *L)
 void THLuaRegisterMap(const THLuaRegisterState_t *pState)
 {
     // Map
-    luaT_class(THMap, l_map_new, "map", MT_Map);
-    luaT_setmetamethod(l_map_persist, "persist", MT_Anim);
-    luaT_setmetamethod(l_map_depersist, "depersist", MT_Anim);
+    luaT_class(THMap, l_map_new, "map", eTHLuaMetatable::map);
+    luaT_setmetamethod(l_map_persist, "persist", eTHLuaMetatable::anim);
+    luaT_setmetamethod(l_map_depersist, "depersist", eTHLuaMetatable::anim);
     luaT_setfunction(l_map_load, "load");
     luaT_setfunction(l_map_loadblank, "loadBlank");
     luaT_setfunction(l_map_save, "save");
@@ -1004,14 +1020,14 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
     luaT_setfunction(l_map_settemperaturedisplay, "setTemperatureDisplay");
     luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
-    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", MT_Anims, MT_Anim);
+    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", eTHLuaMetatable::anims, eTHLuaMetatable::anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
     luaT_setfunction(l_map_updatepathfinding, "updatePathfinding");
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_unmark_room, "unmarkRoom");
-    luaT_setfunction(l_map_set_sheet, "setSheet", MT_Sheet);
-    luaT_setfunction(l_map_draw, "draw", MT_Surface);
-    luaT_setfunction(l_map_hittest, "hitTestObjects", MT_Anim);
+    luaT_setfunction(l_map_set_sheet, "setSheet", eTHLuaMetatable::sheet);
+    luaT_setfunction(l_map_draw, "draw", eTHLuaMetatable::surface);
+    luaT_setfunction(l_map_hittest, "hitTestObjects", eTHLuaMetatable::anim);
     luaT_setfunction(l_map_get_parcel_tilecount, "getParcelTileCount");
     luaT_setfunction(l_map_get_parcel_count, "getPlotCount");
     luaT_setfunction(l_map_set_parcel_owner, "setPlotOwner");
@@ -1023,7 +1039,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Pathfinder
-    luaT_class(THPathfinder, l_path_new, "pathfinder", MT_Path);
+    luaT_class(THPathfinder, l_path_new, "pathfinder", eTHLuaMetatable::path);
     luaT_setmetamethod(l_path_persist, "persist");
     luaT_setmetamethod(l_path_depersist, "depersist");
     luaT_setfunction(l_path_distance, "findDistance");
@@ -1031,6 +1047,6 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_path_path, "findPath");
     luaT_setfunction(l_path_idle, "findIdleTile");
     luaT_setfunction(l_path_visit, "findObject");
-    luaT_setfunction(l_path_set_map, "setMap", MT_Map);
+    luaT_setfunction(l_path_set_map, "setMap", eTHLuaMetatable::map);
     luaT_endclass();
 }

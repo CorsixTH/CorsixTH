@@ -98,7 +98,7 @@ static int l_volume_list(lua_State *L)
 
 void THLuaRegisterLfsExt(const THLuaRegisterState_t *pState)
 {
-    luaT_class(THLfsExt, l_lfs_ext_new, "lfsExt", MT_LfsExt);
+    luaT_class(THLfsExt, l_lfs_ext_new, "lfsExt", eTHLuaMetatable::lfsExt);
     luaT_setfunction(l_volume_list, "volumes");
     luaT_endclass();
 }

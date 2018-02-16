@@ -330,22 +330,21 @@ static int l_font_draw(lua_State *L)
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
-    eTHAlign eAlign = Align_Center;
-    if(!lua_isnoneornil(L, 8))
-    {
+
+    eTHAlign eAlign = eTHAlign::center;
+    if(!lua_isnoneornil(L, 8)) {
         const char* sAlign = luaL_checkstring(L, 8);
-        if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
-        else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
-        else if(std::strcmp(sAlign, "center") == 0
-             || std::strcmp(sAlign, "centre") == 0
-             || std::strcmp(sAlign, "middle") == 0)
-        {
-            eAlign = Align_Center;
-        }
-        else
+        if(std::strcmp(sAlign, "right") == 0) {
+            eAlign = eTHAlign::right;
+        } else if(std::strcmp(sAlign, "left") == 0) {
+            eAlign = eTHAlign::left;
+        } else if(std::strcmp(sAlign, "center") == 0 ||
+                std::strcmp(sAlign, "centre") == 0 ||
+                std::strcmp(sAlign, "middle") == 0) {
+            eAlign = eTHAlign::center;
+        } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+        }
     }
 
     THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen);
@@ -353,10 +352,12 @@ static int l_font_draw(lua_State *L)
     {
         int iW = static_cast<int>(luaL_checkinteger(L, 6));
         int iH = static_cast<int>(luaL_checkinteger(L, 7));
-        if(iW > oDrawArea.iEndX && eAlign != Align_Left)
-            iX += (iW - oDrawArea.iEndX) / ((eAlign == Align_Center) ? 2 : 1);
-        if(iH > oDrawArea.iEndY)
+        if(iW > oDrawArea.iEndX && eAlign != eTHAlign::left) {
+            iX += (iW - oDrawArea.iEndX) / ((eAlign == eTHAlign::center) ? 2 : 1);
+        }
+        if(iH > oDrawArea.iEndY) {
             iY += (iH - oDrawArea.iEndY) / 2;
+        }
     }
     if(pCanvas != nullptr)
     {
@@ -381,23 +382,23 @@ static int l_font_draw_wrapped(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
     int iW = static_cast<int>(luaL_checkinteger(L, 6));
-    eTHAlign eAlign = Align_Left;
-    if(!lua_isnoneornil(L, 7))
-    {
+
+    eTHAlign eAlign = eTHAlign::left;
+    if(!lua_isnoneornil(L, 7)) {
         const char* sAlign = luaL_checkstring(L, 7);
-        if(std::strcmp(sAlign, "right") == 0)
-            eAlign = Align_Right;
-        else if(std::strcmp(sAlign, "left") == 0)
-            eAlign = Align_Left;
-        else if(std::strcmp(sAlign, "center") == 0
-             || std::strcmp(sAlign, "centre") == 0
-             || std::strcmp(sAlign, "middle") == 0)
-        {
-            eAlign = Align_Center;
-        }
-        else
+        if(std::strcmp(sAlign, "right") == 0) {
+            eAlign = eTHAlign::right;
+        } else if(std::strcmp(sAlign, "left") == 0) {
+            eAlign = eTHAlign::left;
+        } else if(std::strcmp(sAlign, "center") == 0 ||
+                std::strcmp(sAlign, "centre") == 0 ||
+                std::strcmp(sAlign, "middle") == 0) {
+            eAlign = eTHAlign::center;
+        } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
+        }
     }
+
     int iMaxRows = INT_MAX;
     if(!lua_isnoneornil(L, 8))
     {
@@ -744,10 +745,10 @@ static int l_surface_set_clip(lua_State *L)
 static int l_surface_scale(lua_State *L)
 {
     THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L);
-    THScaledItems eToScale = THSI_None;
+    THScaledItems eToScale = THScaledItems::none;
     if(lua_isnoneornil(L, 3))
     {
-        eToScale = THSI_All;
+        eToScale = THScaledItems::all;
     }
     else
     {
@@ -755,7 +756,7 @@ static int l_surface_scale(lua_State *L)
         const char* sOption = lua_tolstring(L, 3, &iLength);
         if(sOption && iLength >= 6 && std::memcmp(sOption, "bitmap", 6) == 0)
         {
-            eToScale = THSI_Bitmaps;
+            eToScale = THScaledItems::bitmaps;
         }
         else
             luaL_error(L, "Expected \"bitmap\" as 2nd argument");
@@ -867,51 +868,51 @@ static int l_line_depersist(lua_State *L)
 void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 {
     // Palette
-    luaT_class(THPalette, l_palette_new, "palette", MT_Palette);
+    luaT_class(THPalette, l_palette_new, "palette", eTHLuaMetatable::palette);
     luaT_setfunction(l_palette_load, "load");
     luaT_setfunction(l_palette_set_entry, "setEntry");
     luaT_endclass();
 
     // Raw bitmap
-    luaT_class(THRawBitmap, l_rawbitmap_new, "bitmap", MT_Bitmap);
-    luaT_setfunction(l_rawbitmap_load, "load", MT_Surface);
-    luaT_setfunction(l_rawbitmap_set_pal, "setPalette", MT_Palette);
-    luaT_setfunction(l_rawbitmap_draw, "draw", MT_Surface);
+    luaT_class(THRawBitmap, l_rawbitmap_new, "bitmap", eTHLuaMetatable::bitmap);
+    luaT_setfunction(l_rawbitmap_load, "load", eTHLuaMetatable::surface);
+    luaT_setfunction(l_rawbitmap_set_pal, "setPalette", eTHLuaMetatable::palette);
+    luaT_setfunction(l_rawbitmap_draw, "draw", eTHLuaMetatable::surface);
     luaT_endclass();
 
     // Sprite sheet
-    luaT_class(THSpriteSheet, l_spritesheet_new, "sheet", MT_Sheet);
+    luaT_class(THSpriteSheet, l_spritesheet_new, "sheet", eTHLuaMetatable::sheet);
     luaT_setmetamethod(l_spritesheet_count, "len");
-    luaT_setfunction(l_spritesheet_load, "load", MT_Surface);
-    luaT_setfunction(l_spritesheet_set_pal, "setPalette", MT_Palette);
+    luaT_setfunction(l_spritesheet_load, "load", eTHLuaMetatable::surface);
+    luaT_setfunction(l_spritesheet_set_pal, "setPalette", eTHLuaMetatable::palette);
     luaT_setfunction(l_spritesheet_size, "size");
-    luaT_setfunction(l_spritesheet_draw, "draw", MT_Surface);
+    luaT_setfunction(l_spritesheet_draw, "draw", eTHLuaMetatable::surface);
     luaT_setfunction(l_spritesheet_hittest, "hitTest");
     luaT_setfunction(l_spritesheet_isvisible, "isVisible");
     luaT_endclass();
 
     // Font
     // Also adapt the font proxy meta table (font_proxy_mt) in graphics.lua.
-    luaT_class(THFont, l_font_new, "font", MT_Font);
+    luaT_class(THFont, l_font_new, "font", eTHLuaMetatable::font);
     luaT_setfunction(l_font_get_size, "sizeOf");
-    luaT_setfunction(l_font_draw, "draw", MT_Surface);
-    luaT_setfunction(l_font_draw_wrapped, "drawWrapped", MT_Surface);
-    luaT_setfunction(l_font_draw_tooltip, "drawTooltip", MT_Surface);
+    luaT_setfunction(l_font_draw, "draw", eTHLuaMetatable::surface);
+    luaT_setfunction(l_font_draw_wrapped, "drawWrapped", eTHLuaMetatable::surface);
+    luaT_setfunction(l_font_draw_tooltip, "drawTooltip", eTHLuaMetatable::surface);
     luaT_endclass();
 
     // BitmapFont
-    luaT_class(THBitmapFont, l_bitmap_font_new, "bitmap_font", MT_BitmapFont);
-    luaT_superclass(MT_Font);
-    luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", MT_Sheet);
-    luaT_setfunction(l_bitmap_font_get_spritesheet, "getSheet", MT_Sheet);
+    luaT_class(THBitmapFont, l_bitmap_font_new, "bitmap_font", eTHLuaMetatable::bitmapFont);
+    luaT_superclass(eTHLuaMetatable::font);
+    luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", eTHLuaMetatable::sheet);
+    luaT_setfunction(l_bitmap_font_get_spritesheet, "getSheet", eTHLuaMetatable::sheet);
     luaT_setfunction(l_bitmap_font_set_sep, "setSeparation");
     luaT_endclass();
 
 #ifdef CORSIX_TH_USE_FREETYPE2
     // FreeTypeFont
-    luaT_class(THFreeTypeFont, l_freetype_font_new, "freetype_font", MT_FreeTypeFont);
-    luaT_superclass(MT_Font);
-    luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", MT_Sheet);
+    luaT_class(THFreeTypeFont, l_freetype_font_new, "freetype_font", eTHLuaMetatable::freeTypeFont);
+    luaT_superclass(eTHLuaMetatable::font);
+    luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", eTHLuaMetatable::sheet);
     luaT_setfunction(l_freetype_font_set_face, "setFace");
     luaT_setfunction(l_freetype_font_get_copyright, "getCopyrightNotice");
     luaT_setfunction(l_freetype_font_clear_cache, "clearCache");
@@ -919,7 +920,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 #endif
 
     // Layers
-    luaT_class(THLayers_t, l_layers_new, "layers", MT_Layers);
+    luaT_class(THLayers_t, l_layers_new, "layers", eTHLuaMetatable::layers);
     luaT_setmetamethod(l_layers_get, "index");
     luaT_setmetamethod(l_layers_set, "newindex");
     luaT_setmetamethod(l_layers_persist, "persist");
@@ -927,14 +928,14 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Cursor
-    luaT_class(THCursor, l_cursor_new, "cursor", MT_Cursor);
-    luaT_setfunction(l_cursor_load, "load", MT_Sheet);
-    luaT_setfunction(l_cursor_use, "use", MT_Surface);
-    luaT_setfunction(l_cursor_position, "setPosition", MT_Surface);
+    luaT_class(THCursor, l_cursor_new, "cursor", eTHLuaMetatable::cursor);
+    luaT_setfunction(l_cursor_load, "load", eTHLuaMetatable::sheet);
+    luaT_setfunction(l_cursor_use, "use", eTHLuaMetatable::surface);
+    luaT_setfunction(l_cursor_position, "setPosition", eTHLuaMetatable::surface);
     luaT_endclass();
 
     // Surface
-    luaT_class(THRenderTarget, l_surface_new, "surface", MT_Surface);
+    luaT_class(THRenderTarget, l_surface_new, "surface", eTHLuaMetatable::surface);
     luaT_setfunction(l_surface_update, "update");
     luaT_setfunction(l_surface_destroy, "destroy");
     luaT_setfunction(l_surface_fill_black, "fillBlack");
@@ -954,12 +955,12 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Line
-    luaT_class(THLine, l_line_new, "line", MT_Line);
+    luaT_class(THLine, l_line_new, "line", eTHLuaMetatable::line);
     luaT_setfunction(l_move_to, "moveTo");
     luaT_setfunction(l_line_to, "lineTo");
     luaT_setfunction(l_set_width, "setWidth");
     luaT_setfunction(l_set_colour, "setColour");
-    luaT_setfunction(l_line_draw, "draw", MT_Surface);
+    luaT_setfunction(l_line_draw, "draw", eTHLuaMetatable::surface);
     luaT_setmetamethod(l_line_persist, "persist");
     luaT_setmetamethod(l_line_depersist, "depersist");
     luaT_endclass();

@@ -659,9 +659,9 @@ private:
     friend class THRenderTarget;
     void initialize();
 
-    enum THLineOpType {
-        THLOP_MOVE,
-        THLOP_LINE
+    enum class THLineOpType {
+        move,
+        line
     };
 
     struct THLineOperation : public THLinkList
