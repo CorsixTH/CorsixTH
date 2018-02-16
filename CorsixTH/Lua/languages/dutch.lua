@@ -1849,16 +1849,16 @@ introduction_texts = {
     "Als je niet teveel mensen doodt en ze redelijk gelukkig houdt, zou je niet al teveel problemen moeten hebben met dit level!//" ..
     "En nu mag je het zelf opknappen. Veel succes ermee!",
   level1 =
-    "Welkom in je eerste ziekenhuis!" ..
+    "Welkom in je eerste ziekenhuis!//" ..
     "Zorg dat de boel op gang komt door een receptie te plaatsen en een spreekkamer te bouwen. Neem ook een receptioniste en een arts in dienst. " ..
-    "Wacht dan tot er mensen langskomen." ..
+    "Wacht dan tot er mensen langskomen. " ..
     "Het is een goed idee om een psychiatrische afdeling te bouwen en een arts in te huren met de benodigde kwalificaties. " ..
     "Een apotheek en een zuster zijn essentieel voor het genezen van je patiënten. " ..
     "Kijk uit voor ernstige gevallen van plofkop. Een inflatiekliniek lost deze probleempjes op. " ..
     "Genees, om de spits af te bijten, 10 mensen en hou je reputatie boven de 200.",
   level9 =
-    "Nu je de kas van het ministerie flink hebt gespekt en de minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke patiënten geeft." ..
-    "Verwacht dat er een boel problemen de kop opsteken." ..
+    "Nu je de kas van het ministerie flink hebt gespekt en de minister dankzij jouw donaties vrolijk in zijn splinternieuwe limousine rondrijdt, kun je nu weer terug naar je echte taak: het bouwen van een ziekenhuis dat niet alleen goed draait maar ook duidelijk om haar arme en zieke patiënten geeft. " ..
+    "Verwacht dat er een boel problemen de kop opsteken. " ..
     "Als je genoeg kamers en een goed getrainde staf hebt, zal je die problemen makkelijk het hoofd moeten kunnen bieden. " ..
     "Je ziekenhuis moet uiteindelijk $200,000 waard zijn. Verzamel ook een comfortabele $400.000 op je bankrekening. " ..
     "Met minder dan dat kun je het level niet uitspelen.",
@@ -1954,11 +1954,11 @@ introduction_texts = {
     "Je ziekenhuis moet $240.000 waard zijn en je moet $500.000 op de bank hebben staan. Ook moet je reputatie minimaal 700 bedragen.",
   level18 = "",
   demo =
-    "Welkom in het demo ziekenhuis!" ..
-    "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, maar er is meer dan genoeg te doen om je voorlopig bezig te houden!" ..
-    "Je zult verschillende kwalen tegenkomen die verschillende ruimtes nodig hebben om genezen te worden, af en toe kunnen zich noodgevallen voordoen, en je zult nieuwe ruimtes uit moeten vinden met het laboratorium" ..
-    "Jouw doel is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patiënten geneest" ..
-    "Zorg er voor dat je reputatie niet lager wordt dan 300 en dat je niet meer dan 40% van je patiënten vermoord, anders zal je ontslagen worden!" ..
+    "Welkom in het demo ziekenhuis!//" ..
+    "Jammer genoeg bevat de demo versie buiten zelfgemaakte levels alleen dit ziekenhuis, maar er is meer dan genoeg te doen om je voorlopig bezig te houden! " ..
+    "Je zult verschillende kwalen tegenkomen die verschillende ruimtes nodig hebben om genezen te worden, af en toe kunnen zich noodgevallen voordoen, en je zult nieuwe ruimtes uit moeten vinden met het laboratorium. " ..
+    "Jouw doel is om $100,000 te verdienen, de waarde van je ziekenhuis te verhogen naar $70,000 en een reputatie van 700 te behalen, terwijl je 75% van je patiënten geneest. " ..
+    "Zorg er voor dat je reputatie niet lager wordt dan 300 en dat je niet meer dan 40% van je patiënten vermoord, anders zal je ontslagen worden!//" ..
     "Succes!",
 }
 humanoid_name_starts = {

@@ -630,12 +630,12 @@ tooltip.folders_window = {
 
 introduction_texts = {
   demo =
-    "Willkommen im Demo-Krankenhaus!" ..
-    "Leider beinhaltet die Demo-Version nur dieses eine Level. Dafür gibt es hier aber mehr als genug zu tun, um Sie eine Weile zu beschäftigen!" ..
+    "Willkommen im Demo-Krankenhaus!//" ..
+    "Leider beinhaltet die Demo-Version nur dieses eine Level. Dafür gibt es hier aber mehr als genug zu tun, um Sie eine Weile zu beschäftigen! " ..
     "Sie werden diversen Krankheiten begegnen, die unterschiedliche Räume zur Behandlung benötigen. Ab und zu können auch Notfälle eintreffen. " ..
-    "Und Sie werden mithilfe einer Forschungsabteilung neue Räume erforschen müssen." ..
-    "Ihr Ziel ist es, 100.000 DM zu verdienen, einen Krankenhauswert von 70.000 DM und einen Ruf von 700 vorzuweisen, und gleichzeitig mindestens 75% der Patienten erfolgreich zu behandeln." ..
-    "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren." ..
+    "Und Sie werden mithilfe einer Forschungsabteilung neue Räume erforschen müssen. " ..
+    "Ihr Ziel ist es, 100.000 DM zu verdienen, einen Krankenhauswert von 70.000 DM und einen Ruf von 700 vorzuweisen, und gleichzeitig mindestens 75% der Patienten erfolgreich zu behandeln. " ..
+    "Stellen Sie sicher, dass Ihr Ruf nicht unter 300 fällt und dass Sie nicht mehr als 40% ihrer Patienten sterben lassen, oder Sie werden verlieren.//" ..
     "Viel Glück!",
 }
 

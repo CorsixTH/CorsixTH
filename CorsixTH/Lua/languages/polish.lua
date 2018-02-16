@@ -2884,14 +2884,14 @@ introduction_texts = {
   level1 =
     "Witaj w swoim pierwszym szpitalu!//" ..
     "Aby rozpocząć działalność, postaw Biurko Recepcji, zbuduj Gabinet Lekarski i zatrudnij Recepcjonistkę oraz Lekarza. " ..
-    "Następnie zaczekaj, aż pojawią się kolejne zadania." ..
+    "Następnie zaczekaj, aż pojawią się kolejne zadania. " ..
     "Dobrym pomysłem jest budowa Gabinetu Psychiatrycznego oraz zatrudnienie Lekarza Psychiatry. " ..
     "Apteka i Pielęgniarka są także niezbędne w leczeniu pacjentów. " ..
     "Zwróć uwagę na ciężkie przypadki Głowowzdęcia - Napowietrzalnia rozwiąże ten problem. " ..
     "Będziesz musiał wyleczyć 10 ludzi i upewnić się, że twoja reputacja nie spadnie poniżej 200.",
   level9 =
     "Skoro już wzbogaciłeś konto Ministerstwa oraz ufundowałeś nową limuzynę samemu Ministrowi, możesz wracać do szpitala i nieść pomoc chorym i potrzebującym. " ..
-    "Tutaj napotkasz wiele różnych trudności." ..
+    "Tutaj napotkasz wiele różnych trudności. " ..
     "Z dobrze wyszkolonym personelem i gabinetami, nie powinieneś się niczego obawiać. " ..
     "Twój szpital musi być wart 200,000 PLN, a na konto ma trafić 400,000 PLN. " ..
     "Ani grosza mniej, bo nie ukończysz poziomu.",
@@ -2943,11 +2943,11 @@ introduction_texts = {
     "Musisz ustrzelić tyle szczurów, ile zdołasz, zanim Dozorcy uprzątną bałagan. " ..
     "Myślisz, że poradzisz sobie z zadaniem?",
   demo =
-    "Witaj w szpitalu demonstracyjnym!" ..
-    "Niestety wersja demo zawiera tylko ten poziom. Jednakże, jest to więcej niż wystarczająco, aby zając ci trochę czasu!" ..
-    "Napotkasz tutaj rozmaite choroby, które będą wymagały różnych gabinetów do ich wyleczenia. Od czasu do czasu moga tu również wystąpić nagłe wypadki. Będziesz musiał równiez wynaleźć nowe pomieszczenia przy użyciu gabinetu badawczego." ..
-    "Twoim celem jest zarobienie 100,000 PLN, mieć szpital warty 70,000 PLN i reputację 700, przy czym musisz wyleczyć co najmniej 75% swoich pacjentów." ..
-    "Upewnij się, że Twoja reputacja nie spadnie poniżej 300 oraz, że nie zabijesz więcej niż 40% pacjentów, albo przegrasz." ..
+    "Witaj w szpitalu demonstracyjnym!//" ..
+    "Niestety wersja demo zawiera tylko ten poziom. Jednakże, jest to więcej niż wystarczająco, aby zając ci trochę czasu! " ..
+    "Napotkasz tutaj rozmaite choroby, które będą wymagały różnych gabinetów do ich wyleczenia. Od czasu do czasu moga tu również wystąpić nagłe wypadki. Będziesz musiał równiez wynaleźć nowe pomieszczenia przy użyciu gabinetu badawczego. " ..
+    "Twoim celem jest zarobienie 100,000 PLN, mieć szpital warty 70,000 PLN i reputację 700, przy czym musisz wyleczyć co najmniej 75% swoich pacjentów. " ..
+    "Upewnij się, że Twoja reputacja nie spadnie poniżej 300 oraz, że nie zabijesz więcej niż 40% pacjentów, albo przegrasz.//" ..
     "Powodzenia!",
   level16 =
     "Kiedy już przebadasz część pacjentów, będziesz musiał zbudować pomieszczenia lecznicze oraz przychodnie, aby ich leczyć - " ..

@@ -383,11 +383,11 @@ install = {
 -- 9. Level introductions
 introduction_texts = {
   demo =
-    "Tervetuloa demosairaalaan!" ..
-    "Valitettavasti demoversio sisältää ainoastaan tämän tason. Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä!" ..
-    "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla." ..
-    "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70 000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi." ..
-    "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason." ..
+    "Tervetuloa demosairaalaan!//" ..
+    "Valitettavasti demoversio sisältää ainoastaan tämän tason. Täällä on kuitenkin enemmän kuin tarpeeksi tekemistä! " ..
+    "Kohtaat erilaisia sairauksia, joiden hoitaminen vaatii erilaisia huoneita. Hätätilanteita saattaa tapahtua ajoittain. Lisäksi sinun pitää kehittää lisää huoneita tutkimusosaston avulla. " ..
+    "Tavoitteesi on ansaita 100 000$, nostaa sairaalan arvo yli 70 000$:n ja maineesi yli 700:n parantaen samalla vähintään 75% potilaistasi. " ..
+    "Pidä huoli, ettei maineesi putoa alle 300:n ja ettei yli 40 prosenttia potilaistasi pääse kuolemaan, tai häviät tason.//" ..
     "Onnea!",
   level1 =
     "Tervetuloa ensimmäiseen sairaalaasi!//" ..

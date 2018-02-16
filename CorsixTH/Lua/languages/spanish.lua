@@ -197,7 +197,7 @@ tooltip.staff_list.ability = "Muestra el nivel de habilidad de estos empleados"
 
 introduction_texts = {
   level1 =
-    "¡Bienvenido a tu primer hospital! " ..
+    "¡Bienvenido a tu primer hospital!//" ..
     "Para hacer que empiece a funcionar, coloca una recepción, construye una consulta y contrata a una recepcionista y a un médico. " ..
     "Luego espera a que lleguen los pacientes. " ..
     "Sería una buena idea que construyeras una consulta de psiquiatría y contrataras a un psiquiatra. " ..
@@ -316,12 +316,12 @@ introduction_texts = {
     "Ahora es cosa tuya, buena suerte y todo eso.",
 
   demo =
-    "¡Bienvenido al hospital de demostración!" ..
-    "Por desgracia, la versión de demostración solo contiene este nivel. Sin embargo, tienes más que suficiente para estar entretenido por un rato." ..
+    "¡Bienvenido al hospital de demostración!//" ..
+    "Por desgracia, la versión de demostración solo contiene este nivel. Sin embargo, tienes más que suficiente para estar entretenido por un rato. " ..
     "Te enfrentarás a varias enfermedades que necesitan de ciertas habitaciones para su cura. De vez en cuando pueden surgir emergencias. Y necesitarás " ..
-    "investigar sobre las enfermedades construyendo un Departamento de investigación." ..
-    "Tu objetivo es ganar 100.000 dólares, que el valor de tu hospital llegue hasta 70.000 dólares y tengas una reputación de 700, con un porcentaje de pacientes curados del 75%." ..
-    "Procura que tu reputación no caiga por debajo de 300 y que no mates a más del 40% de tus pacientes, o fracasarás." ..
+    "investigar sobre las enfermedades construyendo un Departamento de investigación. " ..
+    "Tu objetivo es ganar 100.000 dólares, que el valor de tu hospital llegue hasta 70.000 dólares y tengas una reputación de 700, con un porcentaje de pacientes curados del 75%. " ..
+    "Procura que tu reputación no caiga por debajo de 300 y que no mates a más del 40% de tus pacientes, o fracasarás.//" ..
     "¡Buena suerte!",
 }
 
