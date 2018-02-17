@@ -22,6 +22,7 @@ require("class_test_base")
 
 require("entity")
 require("entities.humanoid")
+require("entities.staff")
 
 
 -- TODO figure out how to move out of this test
@@ -33,51 +34,20 @@ say:set("assertion.matches", "Expected substring fail.\n<String>: %s\n<Pattern>:
 assert:register("assertion", "matches", matches, "assertion.matches")
 
 
-describe("Humanoid:", function()
-  local function getHumanoid()
+describe("Staff:", function()
+  local function getStaff()
     local animation = {setHitTestResult = function() end}
-    return Humanoid(animation)
+    return Staff(animation)
   end
 
-  it("Gets the current action", function()
-    local humanoid = getHumanoid()
+  it("Can represent doctor as a string", function()
+    local doctor = getStaff()
+    doctor.humanoid_class = "Doctor"
+    doctor.profile = {skill = 0.5, is_psychiatrist = 0.5}
 
-    local action1 = {name = "fake1"}
-    local action2 = {name = "fake2"}
-    humanoid:queueAction(action1)
-    humanoid:queueAction(action2)
+    local result = doctor:tostring()
 
-    local recievedAction = humanoid:getCurrentAction()
-
-    assert.equal(action1, recievedAction)
+    assert.matches(result, "humanoid.*class.*Doctor")
+    assert.matches(result, "Skills.*0%.5.*Psych.*0%.5")
   end)
-  it("Throws error if no action is queued", function()
-    local humanoid = getHumanoid()
-
-    local state, error = pcall(humanoid.getCurrentAction, humanoid)
-
-    assert.False(state)
-    local expected_message = "Action queue was empty. This should never happen."
-    assert.matches(error, expected_message)
-    assert.matches(error, "humanoid %-")
-  end)
-  it("Can represent itself as a string", function()
-    local humanoid = getHumanoid()
-    humanoid.humanoid_class = "class"
-
-    local result = humanoid:tostring()
-
-    assert.matches(result, "humanoid.*class.*class")
-    assert.matches(result, "Warmth.*Happiness.*Fatigue")
-    assert.matches(result, "Actions: %[%]")
-  end)
-  it("Can add actions to a representation", function()
-    local humanoid = getHumanoid()
-    humanoid.action_queue = {{name = "A1", room_type = "room"}, {name = "A2"}}
-
-    local result = humanoid:tostring()
-
-    assert.matches(result, "Actions.*%[A1 %- room, A2%]")
-  end)
-
 end)

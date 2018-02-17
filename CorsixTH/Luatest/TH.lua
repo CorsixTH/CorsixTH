@@ -21,7 +21,11 @@ SOFTWARE. --]]
 -- A stub implementation of the TH C++ object, to be able to run
 -- unit tests without any backend.
 
-TheApp = {}
+TheApp = {
+  gfx = {
+    loadMainCursor = function() end
+  }
+}
 
 return {
   animation = function()
