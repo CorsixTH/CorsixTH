@@ -23,16 +23,6 @@ require("class_test_base")
 require("entity")
 require("entities.humanoid")
 
-
--- TODO figure out how to move out of this test
-local say = require("say")
-local function matches(_, arguments)
-  return string.match(arguments[1], arguments[2]) ~= nil
-end
-say:set("assertion.matches", "Expected substring fail.\n<String>: %s\n<Pattern>:%s")
-assert:register("assertion", "matches", matches, "assertion.matches")
-
-
 describe("Humanoid:", function()
   local function getHumanoid()
     local animation = {setHitTestResult = function() end}

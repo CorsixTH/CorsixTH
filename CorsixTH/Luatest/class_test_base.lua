@@ -22,16 +22,11 @@ SOFTWARE. --]]
 -- classes.
 
 require("busted")
--- local say = require("say")
--- print(debug.traceback( ))
--- local function has_substring(state, arguments)
---   return string.match(arguments[2], arguments[1]) ~= nil
--- end
--- say:set("assertion.has_substring", "Expected substring.\n<String>: %s\n<Pattern>:%s")
--- assert:register("assertion", "has_substring", has_substring, "assertion.has_substring")
 
 require("non_strict")
 require("class")
+local say = require("say")
+local assert = require("luassert")
 
 function permanent()
   return function()
@@ -45,5 +40,8 @@ function values()
   end
 end
 
-
-
+function assertion_matches(_, arguments)
+  return string.match(arguments[1], arguments[2]) ~= nil
+end
+say:set("assertion.matches", "Expected substring fail.\n<String>: %s\n<Pattern>:%s")
+assert:register("assertion", "matches", assertion_matches, "assertion.matches")
