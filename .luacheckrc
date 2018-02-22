@@ -28,7 +28,7 @@ globals = { -- Globals
             "strict_declare_global", "table_length", "unpermanent", "values",
 
             -- Game classes
-            "AIHospital", "AnimationManager", "App", "Audio",
+            "AIHospital", "AIPatient", "AnimationManager", "App", "Audio",
             "CallsDispatcher", "ChildClass", "Command", "Door", "DrawFlags",
             "DummyRootNode", "Entity", "EntityMap", "Epidemic", "FileSystem",
             "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",
@@ -141,6 +141,8 @@ add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
 add_ignore("CorsixTH/CorsixTH.lua", "121")
 add_ignore("CorsixTH/Lua/app.lua", "122")
 add_ignore("CorsixTH/Lua/app.lua", "212")
+add_ignore("CorsixTH/Lua/ai/aihospital.lua", "212")
+add_ignore("CorsixTH/Lua/ai/aipatient.lua", "212")
 add_ignore("CorsixTH/Lua/calls_dispatcher.lua", "212")
 add_ignore("CorsixTH/Lua/dialogs/bottom_panel.lua", "212")
 add_ignore("CorsixTH/Lua/dialogs/confirm_dialog.lua", "212")

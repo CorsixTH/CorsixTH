@@ -29,6 +29,8 @@ corsixth.require("entities.grim_reaper")
 corsixth.require("entities.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
+corsixth.require("ai.aihospital")
+corsixth.require("ai.aipatient")
 corsixth.require("epidemic")
 corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
@@ -401,7 +403,7 @@ function World:initCompetitors(avail_rooms)
   local level_config = self.map.level_config
   for key, value in pairs(level_config.computer) do
     if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, value, self, avail_rooms)
     end
   end
 end
@@ -488,26 +490,7 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
   return level_config.visuals_available[disease.visuals_id].Value < self.game_date:monthOfGame()
 end
 
---! Spawn a patient from a spawn point for the given hospital.
---!param hospital (Hospital) Hospital that the new patient should visit.
---!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
-function World:spawnPatient(hospital)
-  if not hospital then
-    hospital = self:getLocalPlayerHospital()
-  end
-
-  -- The level might not contain any diseases
-  if #self.available_diseases < 1 then
-    self.ui:addWindow(UIInformation(self.ui, {"There are no diseases on this level! Please add some to your level."}))
-    return
-  end
-  if #self.spawn_points == 0 then
-    self.ui:addWindow(UIInformation(self.ui, {"Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level."}))
-    return
-  end
-
-  if not hospital:hasStaffedDesk() then return nil end
-
+function World:getNewPatientDisease(hospital)
   -- Construct disease, take a random guess first, as a quick clear-sky attempt.
   local disease = self.available_diseases[math.random(1, #self.available_diseases)]
   if not isDiseaseUsableForNewPatient(self, disease, hospital) then
@@ -523,10 +506,42 @@ function World:spawnPatient(hospital)
 
     disease = usable_diseases[math.random(1, #usable_diseases)]
   end
+  return disease
+end
+
+--! Spawn a patient from a spawn point for the given hospital.
+--!param hospital (Hospital) Hospital that the new patient should visit.
+--!return (Patient entity) The spawned patient, or 'nil' if no patient spawned.
+function World:spawnPatient(disease, hospital)
+  local patient_entity = "Patient"
+  if hospital and hospital ~= self:getLocalPlayerHospital() then
+    patient_entity = "AIPatient"
+  end
+  if not hospital then
+    hospital = self:getLocalPlayerHospital()
+  end
+
+  -- The level might not contain any diseases
+  if #self.available_diseases < 1 then
+    self.ui:addWindow(UIInformation(self.ui, {"There are no diseases on this level! Please add some to your level."}))
+    return
+  end
+  if #self.spawn_points == 0 then
+    self.ui:addWindow(UIInformation(self.ui, {"Could not spawn patient because no spawn points are available. Please place walkable tiles on the edge of your level."}))
+    return
+  end
+
+  -- if timer runs out, you still need to count them even though you haven't got a staffed desk
+  -- and you also don't want to spawn them on the map
+  if not hospital:hasStaffedDesk() then
+    hospital.num_visitors = hospital.num_visitors + 1
+    hospital.num_visitors_ty = hospital.num_visitors_ty + 1
+    return nil
+  end
 
   -- Construct patient.
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
-  local patient = self:newEntity("Patient", 2)
+  local patient = self:newEntity(patient_entity, 2)
   patient:setDisease(disease)
   patient:setNextAction(SpawnAction("spawn", spawn_point))
   patient:setHospital(hospital)
@@ -1024,10 +1039,49 @@ function World:onTick()
       end
       -- A patient might arrive to the player hospital.
       -- TODO: Multiplayer support.
-      local spawn_count = self.spawn_hours[self.game_date:hourOfDay() + i - 1]
-      if spawn_count and self.hospitals[1].opened then
-        for _ = 1, spawn_count do
-          self:spawnPatient()
+      if self.spawn_hours[self.game_date:hourOfDay() + i - 1] then
+        for _ = 1, self.spawn_hours[self.game_date:hourOfDay() + i - 1] do
+          local disease = self:getNewPatientDisease(self.hospitals[1])
+          local hospital_index = 0
+          -- round robin if < than gbvAllocDelay
+          if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() < self.map.level_config.gbv.AllocDelay then
+            self.total_population = self.total_population or 0
+            hospital_index = self.total_population % 4 + 1
+            self.total_population = self.total_population + 1
+          else
+            if math.random(1, self.map.level_config.gbv.AllocRand) == 1 then
+              -- randomly allocate to a hospital
+              hospital_index = math.random(1, 4)
+            else
+              local hosp_patient_value = {}
+              for s, hosp in ipairs(self.hospitals) do
+                hosp_patient_value[s] = {hosp:getTreatmentPrice(disease.id), s}
+              end
+
+              local sort_asc = function(a, b) return a[1] > b[1] end
+              table.sort(hosp_patient_value, sort_asc)
+
+              local sum = 0
+              for j, hosp in ipairs(hosp_patient_value) do
+                sum = sum + hosp[1]
+                if j > 1 then
+                  hosp[1] = hosp[1] + hosp_patient_value[j - 1][1]
+                end
+              end
+
+              local threshold = math.random(0, sum - 1)
+              for _, hosp in pairs(hosp_patient_value) do
+                if threshold < hosp[1] then
+                  hospital_index = hosp[2]
+                  break
+                end
+              end
+            end
+          end
+
+          if self.hospitals[hospital_index].opened then
+            self.hospitals[hospital_index]:spawnPatient(disease)
+          end
         end
       end
       for _, entity in ipairs(self.entities) do
@@ -1142,7 +1196,9 @@ function World:onEndDay()
   local day = self.game_date:dayOfMonth()
   if self.spawn_dates[day] then
     for _ = 1, self.spawn_dates[day] do
-      local hour = math.random(1, Date.hoursPerDay())
+      -- just altered this to be align with Date and the correct range, as hoursPerDay is 50, but hours start at 0
+      -- not really a big deal, but spawns will actually occur the next day otherwise
+      local hour = math.random(0, Date.hoursPerDay() - 1)
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
@@ -1182,7 +1238,10 @@ function World:onEndMonth()
   local index = 0
   local popn = self.map.level_config.popn
   while popn[index] do
-    if popn[index].Month == self.game_date:monthOfGame() then
+    -- apply rate change at the end of the index month, not start
+    -- #popn[0].Month.Change		0		3 - 3 for Jan at start, Add 3 again at end of Jan for Feb - total 6 spawns in Feb
+    -- #popn[1].Month.Change		1		1 - At end of Feb, add 1, so total of 7 spawns for March etc
+    if popn[index].Month == self.game_date:monthOfGame() - 1 then
       self.monthly_spawn_increase = popn[index].Change
       break
     end
@@ -1207,11 +1266,8 @@ end
 -- during the coming month.
 function World:updateSpawnDates()
   -- Set dates when people arrive
-  local no_of_spawns = math.n_random(self.spawn_rate, 2)
-  -- Use ceil so that at least one patient arrives (unless population = 0)
-  no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
-  for _ = 1, no_of_spawns do
+  for _ = 1, self.spawn_rate do
     -- We are interested in the next month, pick days from it at random.
     local day = math.random(1, self.game_date:lastDayOfMonth())
     self.spawn_dates[day] = self.spawn_dates[day] and self.spawn_dates[day] + 1 or 1
@@ -1333,7 +1389,6 @@ function World:nextEarthquake()
     self.current_map_earthquake = self.current_map_earthquake + 1
   end
 end
-
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
@@ -1800,7 +1855,7 @@ function World:newFloatingDollarSign(patient, amount)
   if not self.floating_dollars then
     self.floating_dollars = {}
   end
-  if self.free_build_mode then
+  if self.free_build_mode or patient.hospital ~= self:getLocalPlayerHospital() then
     return
   end
   local spritelist = TH.spriteList()
