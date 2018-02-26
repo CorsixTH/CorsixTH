@@ -295,17 +295,22 @@ function Vip:setVIPRating()
 
   -- check for the average queue length
   local sum_queue = 0
+  local room_count = 0
   for _, room in pairs(self.world.rooms) do
-    -- this can be nil if there has been a room explosion
     if room.door.queue then
       sum_queue = sum_queue + room.door.queue:size()
     end
+    if not room.crashed then
+      room_count = room_count + 1
+    end
   end
 
-  if sum_queue == 0 then
+  if room_count == 0 then
+    self.vip_rating = self.vip_rating - 100
+  elseif sum_queue == 0 then
     self.vip_rating = self.vip_rating + 6
   else
-    local queue_ratio = sum_queue / #self.world.rooms
+    local queue_ratio = sum_queue / room_count
     local queue_ratio_rangemap = {
       {upper = 2, value = 6},
       {upper = 5, value = 3},
