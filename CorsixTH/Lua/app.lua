@@ -1152,31 +1152,35 @@ function App:checkInstallFolder()
   -- Do a few more checks to make sure that commonly corrupted files are OK.
   local corrupt = {}
 
-  if not self.using_demo_files then
-    local function check_corrupt(path, correct_size)
-      local real_path = self.fs:getFilePath(path)
-      -- If the file exists but is smaller than usual it is probably corrupt
-      if real_path then
-        local real_size = lfs.attributes(real_path, "size")
-        if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
-          corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size/1024) .. " kB / Correct: about " .. math.floor(correct_size/1024) .. " kB)"
-        end
-      else
-        corrupt[#corrupt + 1] = path .. " (This file is missing)"
+  local function check_corrupt(path, correct_size)
+    local real_path = self.fs:getFilePath(path)
+    -- If the file exists but is smaller than usual it is probably corrupt
+    if real_path then
+      local real_size = lfs.attributes(real_path, "size")
+      if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
+        corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size/1024) .. " kB / Correct: about " .. math.floor(correct_size/1024) .. " kB)"
       end
+    else
+      corrupt[#corrupt + 1] = path .. " (This file is missing)"
     end
+  end
+  if self.using_demo_files then
+    check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 243188)
+    check_corrupt("LEVELS" .. pathsep .. "LEVEL.L1", 163948)
+    check_corrupt("DATA"  .. pathsep .. "BUTTON01.DAT", 252811)
+  else
     check_corrupt("ANIMS" .. pathsep .. "AREA01V.SMK", 251572)
     check_corrupt("ANIMS" .. pathsep .. "WINGAME.SMK", 2066656)
     check_corrupt("ANIMS" .. pathsep .. "WINLEVEL.SMK", 335220)
     check_corrupt("INTRO" .. pathsep .. "INTRO.SM4", 33616520)
     check_corrupt("QDATA" .. pathsep .. "FONT00V.DAT", 1024)
     check_corrupt("ANIMS" .. pathsep .. "LOSE1.SMK", 1009728)
+  end
 
-    if #corrupt ~= 0 then
-      table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " ..
-      "so don't be surprised if CorsixTH crashes. At least the following files are wrong:")
-      table.insert(corrupt, message)
-    end
+  if #corrupt ~= 0 then
+    table.insert(corrupt, 1, "There appears to be corrupt files in your Theme Hospital folder, " ..
+    "so don't be surprised if CorsixTH crashes. At least the following files are wrong:")
+    table.insert(corrupt, message)
   end
 
   return true, #corrupt ~= 0 and corrupt or nil
