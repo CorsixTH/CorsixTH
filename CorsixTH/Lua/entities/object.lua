@@ -863,3 +863,28 @@ function Object.processTypeDefinition(object_type)
     end
   end
 end
+
+--[[ Gets the state of an object
+
+! The state can be later used to set the state of this object. This is
+useful when we would destroy and create a new object that should represent
+the same object.
+
+!return (table) state
+]]
+function Object:getState()
+  return {times_used = self.times_used}
+end
+
+--[[ Sets the state of an object
+
+! This is a complement to a pair function. IT will use the generated state
+table to update it's state.
+!param state (table) table holding the state
+!return (void)
+]]
+function Object:setState(state)
+  if state then
+    self.times_used = state.times_used
+  end
+end

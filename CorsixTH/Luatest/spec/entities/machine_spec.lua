@@ -1,4 +1,4 @@
---[[ Copyright (c) 2014 Edvin "Lego3" Linge
+--[[ Copyright (c) 2014 Pavel "sofo" Schoffer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,33 +21,44 @@ SOFTWARE. --]]
 require("class_test_base")
 
 require("entity")
-require("entities.object")
+require("entities/object")
+require("entities/machine")
 
 describe("object.lua: ", function()
   local stub_world = {map = {}}
-  local fake_object_type = {ticks = false, idle_animations = {west = true}}
   local tile_x, tile_y, direction = 10, 10, "west"
 
-  local function createObjectWithFakeInput()
+  local function createMachineWithFakeInput()
     stub(stub_world, "getLocalPlayerHospital")
     stub(stub_world, "addObjectToTile")
     stub(stub_world, "clearCaches")
-    return Object(stub_world, fake_object_type, tile_x, tile_y, direction)
+    local offset = {0, 0}
+    local orientation = {
+      render_attach_position = offset,
+      use_position = {0, 0}
+      }
+    local fake_object_type = {
+      ticks = false,
+      idle_animations = {west = true},
+      orientations = {west = orientation}
+      }
+    return Machine(stub_world, fake_object_type, tile_x, tile_y, direction)
   end
 
-  it("can create Object objects", function()
-    local object = createObjectWithFakeInput()
-
-    assert.are.equal(fake_object_type, object.object_type)
-    assert.are.equal(stub_world.map, object.world.map)
+  it("can update dynamic Info", function()
+    local machine = createMachineWithFakeInput()
+    machine:updateDynamicInfo()
+    assert.are.equal(1, machine.times_used)
+    assert.are.equal(1, machine.total_usage)
   end)
   it("can transfer state", function()
-    local object1 = createObjectWithFakeInput()
-    object1.times_used = object1.times_used + 7
-    local object2 = createObjectWithFakeInput()
-    assert.are_not.equal(object1.times_used, object2.times_used)
+    local machine1 = createMachineWithFakeInput()
+    machine1:updateDynamicInfo()
+    local machine2 = createMachineWithFakeInput()
 
-    object2:setState(object1:getState())
-    assert.are.equal(object1.times_used, object2.times_used)
+    machine2:setState(machine1:getState())
+
+    assert.are.equal(machine1.times_used, machine2.times_used)
+    assert.are.equal(machine1.total_usage, machine2.total_usage)
   end)
 end)
