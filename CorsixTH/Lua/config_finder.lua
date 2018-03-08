@@ -413,19 +413,17 @@ new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 
 -------------------------------------------------------------------------------------------------------------------------
--- High quality (MP3 rather than MIDI) audio replacements.
--- If you want to listen to high quality MP3 audio rather than the original XMI
--- (MIDI) audio, then follow these steps:
---  1) Find MP3 versions of the original tracks (for example the remixes by ZR
+-- If you want to listen to non-Theme-Hospital music, then follow these steps:
+--  1) Find updated versions of the original tracks (for example the remixes by ZR
 --     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
 --     other music you want to listen to.
 --  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
---  3) Uncomment the next line and point it to where the mp3s are.
+--  3) Uncomment the next line and point it to where the music files are.
 --  4) If you want to change the names of songs ingame, make a file called
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
 --
-audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
+audio_music = nil -- [[X:\ThemeHospital\Music]]
 
  ----------------------------------------------- SPECIAL SETTINGS ----------------------------------------------
 -- These settings can only be changed here
@@ -433,7 +431,7 @@ audio_mp3 = nil -- [[X:\ThemeHospital\Music]]
 -- Audio playback settings.
 -- These can be commented out to use the default values from the game binary.
 -- Note: On some platforms, these settings may not effect MIDI playback - only
--- sound effects and MP3 audio. If you are experiencing poor audio playback,
+-- sound effects and music audio. If you are experiencing poor audio playback,
 -- then try doubling the buffer size.
 -- ]=] .. '\n' ..
 'audio_frequency = ' .. tostring(config_values.audio_frequency) .. '\n' ..
