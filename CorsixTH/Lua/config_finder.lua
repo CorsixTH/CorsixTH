@@ -417,9 +417,8 @@ screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 --  1) Find updated versions of the original tracks (for example the remixes by ZR
 --     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
 --     other music you want to listen to.
---  2) Ensure that SMPEG.dll (or equivalent for your platform) is present.
---  3) Uncomment the next line and point it to where the music files are.
---  4) If you want to change the names of songs ingame, make a file called
+--  2) Uncomment the next line and point it to where the music files are.
+--  3) If you want to change the names of songs ingame, make a file called
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
 --
