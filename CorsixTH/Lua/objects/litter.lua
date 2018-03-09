@@ -96,12 +96,15 @@ end
 function Litter:remove()
   assert(self:isCleanable())
 
-  self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
+  if self.tile_x then
+    self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
 
-  local hospital = self.world:getHospital(self.tile_x, self.tile_y)
-  local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
-  hospital:removeHandymanTask(taskIndex, "cleaning")
-
+    local hospital = self.world:getHospital(self.tile_x, self.tile_y)
+    local taskIndex = hospital:getIndexOfTask(self.tile_x, self.tile_y, "cleaning", self)
+    hospital:removeHandymanTask(taskIndex, "cleaning")
+  else
+    print("Warning: Removing litter that has already been removed.")
+  end
   self.world:destroyEntity(self)
 end
 
