@@ -57,7 +57,7 @@ describe("Humanoid:", function()
 
     local result = humanoid:tostring()
 
-    assert.matches(result, "humanoid.*class.*class")
+    assert.matches(result, "humanoid[ -]*class.*class")
     assert.matches(result, "Warmth.*Happiness.*Fatigue")
     assert.matches(result, "Actions: %[%]")
   end)

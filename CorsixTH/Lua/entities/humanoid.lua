@@ -865,7 +865,7 @@ end
 
 function Humanoid:getCurrentAction()
   if next(self.action_queue) == nil then
-    error("Action queue was empty. This should never happen. " .. self:tostring())
+    error("Action queue was empty. This should never happen.\n" .. self:tostring())
   end
 
   return self.action_queue[1]
@@ -876,10 +876,14 @@ end
 !return (string)
 ]]
 function Humanoid:tostring()
-  local name = self.profile and self.profile.name or "humanoid"
+  local name = self.profile and self.profile.name or nil
   local class = self.humanoid_class and self.humanoid_class or "N/A"
+  local full_name = "humanoid"
+  if (name) then
+    full_name = full_name .. " (" .. name .. ")"
+  end
 
-  local result = string.format("%s - class: %s", name, class)
+  local result = string.format("%s - class: %s", full_name, class)
 
   result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
     self.attributes["warmth"] or 0,
