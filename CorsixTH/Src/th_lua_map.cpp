@@ -890,24 +890,24 @@ static int l_map_get_litter_fraction(lua_State *L)
 
 static int l_path_new(lua_State *L)
 {
-    luaT_stdnew<THPathfinder>(L, luaT_environindex, true);
+    luaT_stdnew<pathfinder>(L, luaT_environindex, true);
     return 1;
 }
 
 static int l_path_set_map(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
     lua_settop(L, 2);
 
-    pPathfinder->setDefaultMap(pMap);
+    pPathfinder->set_default_map(pMap);
     luaT_setenvfield(L, 1, "map");
     return 1;
 }
 
 static int l_path_persist(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
     pPathfinder->persist((lua_persist_writer*)lua_touserdata(L, 1));
@@ -916,26 +916,26 @@ static int l_path_persist(lua_State *L)
 
 static int l_path_depersist(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
     lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     pPathfinder->depersist(pReader);
     luaT_getenvfield(L, 2, "map");
-    pPathfinder->setDefaultMap(reinterpret_cast<level_map*>(lua_touserdata(L, -1)));
+    pPathfinder->set_default_map(reinterpret_cast<level_map*>(lua_touserdata(L, -1)));
     return 0;
 }
 
 static int l_path_is_reachable_from_hospital(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(pPathfinder->findPathToHospital(nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+    if(pPathfinder->find_path_to_hospital(nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
         static_cast<int>(luaL_checkinteger(L, 3) - 1)))
     {
         lua_pushboolean(L, 1);
         int iX, iY;
-        pPathfinder->getPathEnd(&iX, &iY);
+        pPathfinder->get_path_end(&iX, &iY);
         lua_pushinteger(L, iX + 1);
         lua_pushinteger(L, iY + 1);
         return 3;
@@ -949,11 +949,11 @@ static int l_path_is_reachable_from_hospital(lua_State *L)
 
 static int l_path_distance(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(pPathfinder->findPath(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+    if(pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
         static_cast<int>(luaL_checkinteger(L, 4)) - 1, static_cast<int>(luaL_checkinteger(L, 5)) - 1))
     {
-        lua_pushinteger(L, pPathfinder->getPathLength());
+        lua_pushinteger(L, pPathfinder->get_path_length());
     }
     else
     {
@@ -964,23 +964,23 @@ static int l_path_distance(lua_State *L)
 
 static int l_path_path(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    pPathfinder->findPath(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+    pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
         static_cast<int>(luaL_checkinteger(L, 4)) - 1, static_cast<int>(luaL_checkinteger(L, 5)) - 1);
-    pPathfinder->pushResult(L);
+    pPathfinder->push_result(L);
     return 2;
 }
 
 static int l_path_idle(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
-    if(!pPathfinder->findIdleTile(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
+    if(!pPathfinder->find_idle_tile(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
         static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<int>(luaL_optinteger(L, 4, 0))))
     {
         return 0;
     }
     int iX, iY;
-    pPathfinder->getPathEnd(&iX, &iY);
+    pPathfinder->get_path_end(&iX, &iY);
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 1);
     return 2;
@@ -988,9 +988,9 @@ static int l_path_idle(lua_State *L)
 
 static int l_path_visit(lua_State *L)
 {
-    THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
+    pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     luaL_checktype(L, 6, LUA_TFUNCTION);
-    lua_pushboolean(L, pPathfinder->visitObjects(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+    lua_pushboolean(L, pPathfinder->visit_objects(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
         static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<object_type>(luaL_checkinteger(L, 4)),
         static_cast<int>(luaL_checkinteger(L, 5)), L, 6, luaL_checkinteger(L, 4) == 0 ? true : false) ? 1 : 0);
     return 1;
@@ -1039,7 +1039,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Pathfinder
-    luaT_class(THPathfinder, l_path_new, "pathfinder", eTHLuaMetatable::path);
+    luaT_class(pathfinder, l_path_new, "pathfinder", eTHLuaMetatable::path);
     luaT_setmetamethod(l_path_persist, "persist");
     luaT_setmetamethod(l_path_depersist, "depersist");
     luaT_setfunction(l_path_distance, "findDistance");

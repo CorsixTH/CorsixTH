@@ -227,8 +227,8 @@ template <> struct luaT_classinfo<layers> {
     static inline const char* name() {return "Layers";}
 };
 
-class THPathfinder;
-template <> struct luaT_classinfo<THPathfinder> {
+class pathfinder;
+template <> struct luaT_classinfo<pathfinder> {
     static inline const char* name() {return "Pathfinder";}
 };
 
