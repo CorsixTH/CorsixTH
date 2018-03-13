@@ -1128,9 +1128,9 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY)
     iDestY += y_relative_to_tile;
     if(sound_to_play)
     {
-        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        sound_player *pSounds = sound_player::get_singleton();
         if(pSounds)
-            pSounds->playSoundAt(sound_to_play, iDestX, iDestY);
+            pSounds->play_at(sound_to_play, iDestX, iDestY);
         sound_to_play = 0;
     }
     if(manager)
@@ -1167,9 +1167,9 @@ void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY)
     iY += y_relative_to_tile + iDestY;
     if(sound_to_play)
     {
-        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        sound_player *pSounds = sound_player::get_singleton();
         if(pSounds)
-            pSounds->playSoundAt(sound_to_play, iX, iY);
+            pSounds->play_at(sound_to_play, iX, iY);
         sound_to_play = 0;
     }
     if(manager)
@@ -1208,9 +1208,9 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
     iDestY += y_relative_to_tile;
     if(sound_to_play)
     {
-        THSoundEffects *pSounds = THSoundEffects::getSingleton();
+        sound_player *pSounds = sound_player::get_singleton();
         if(pSounds)
-            pSounds->playSoundAt(sound_to_play, iDestX, iDestY);
+            pSounds->play_at(sound_to_play, iDestX, iDestY);
         sound_to_play = 0;
     }
 

@@ -247,13 +247,13 @@ template <> struct luaT_classinfo<music> {
     static inline const char* name() {return "Music";}
 };
 
-class THSoundArchive;
-template <> struct luaT_classinfo<THSoundArchive> {
+class sound_archive;
+template <> struct luaT_classinfo<sound_archive> {
     static inline const char* name() {return "SoundArchive";}
 };
 
-class THSoundEffects;
-template <> struct luaT_classinfo<THSoundEffects> {
+class sound_player;
+template <> struct luaT_classinfo<sound_player> {
     static inline const char* name() {return "SoundEffects";}
 };
 
