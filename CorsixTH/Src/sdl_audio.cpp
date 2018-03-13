@@ -265,7 +265,7 @@ static int l_transcode_xmi(lua_State *L)
     size_t iLength, iMidLength;
     const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
 
-    uint8_t *pMidData = TranscodeXmiToMid(pData, iLength, &iMidLength);
+    uint8_t *pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
     if(pMidData == nullptr)
     {
         lua_pushnil(L);
