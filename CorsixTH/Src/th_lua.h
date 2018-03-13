@@ -282,8 +282,8 @@ template <> struct luaT_classinfo <THLfsExt> {
     static inline const char* name() {return "LfsExt";}
 };
 
-class IsoFilesystem;
-template <> struct luaT_classinfo<IsoFilesystem> {
+class iso_filesystem;
+template <> struct luaT_classinfo<iso_filesystem> {
     static inline const char* name() {return "ISO Filesystem";}
 };
 

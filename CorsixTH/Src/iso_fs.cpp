@@ -27,58 +27,58 @@ SOFTWARE.
 #include <vector>
 #include <algorithm>
 
-IsoFilesystem::IsoFilesystem()
+iso_filesystem::iso_filesystem()
 {
-    m_fRawFile = nullptr;
-    m_sError = nullptr;
-    m_pFiles = nullptr;
-    m_iNumFiles = 0;
-    m_iFileTableSize = 0;
-    m_cPathSeparator = '\\';
+    raw_file = nullptr;
+    error = nullptr;
+    files = nullptr;
+    file_count = 0;
+    file_table_size = 0;
+    path_seperator = '\\';
 }
 
-IsoFilesystem::~IsoFilesystem()
+iso_filesystem::~iso_filesystem()
 {
-    _clear();
+    clear();
 }
 
-void IsoFilesystem::_clear()
+void iso_filesystem::clear()
 {
-    delete[] m_sError;
-    m_sError = nullptr;
+    delete[] error;
+    error = nullptr;
 
-    if(m_pFiles)
+    if(files)
     {
-        for(size_t i = 0; i < m_iNumFiles; ++i)
-            delete[] m_pFiles[i].sPath;
-        delete[] m_pFiles;
-        m_pFiles = nullptr;
-        m_iNumFiles = 0;
-        m_iFileTableSize = 0;
+        for(size_t i = 0; i < file_count; ++i)
+            delete[] files[i].path;
+        delete[] files;
+        files = nullptr;
+        file_count = 0;
+        file_table_size = 0;
     }
 }
 
-void IsoFilesystem::setPathSeparator(char cSeparator)
+void iso_filesystem::set_path_separator(char cSeparator)
 {
-    m_cPathSeparator = cSeparator;
+    path_seperator = cSeparator;
 }
 
-enum IsoVolumeDescriptorType : uint8_t
+enum iso_volume_descriptor_type : uint8_t
 {
-    VDT_PRIVARY_VOLUME = 0x01,
+    vdt_privary_volume = 0x01,
     // Other type numbers are either reserved for future use, or are not
     // interesting to us.
-    VDT_TERMINATOR = 0xFF,
+    vdt_terminator = 0xFF,
 };
 
-enum IsoDirEntFlag : uint8_t
+enum iso_dir_ent_flag : uint8_t
 {
-    DEF_HIDDEN = 0x01,
-    DEF_DIRECTORY = 0x02,
-    DEF_MULTI_EXTENT = 0x80,
+    def_hidden = 0x01,
+    def_directory = 0x02,
+    def_multi_extent = 0x80,
 };
 
-template <class T> static inline T ReadNativeInt(const uint8_t *p)
+template <class T> static inline T read_native_int(const uint8_t *p)
 {
     // ISO 9660 commonly encodes multi-byte integers as little endian followed
     // by big endian. Note that the first byte of iEndianness will be a zero on
@@ -87,31 +87,31 @@ template <class T> static inline T ReadNativeInt(const uint8_t *p)
     return reinterpret_cast<const T*>(p)[*reinterpret_cast<const uint8_t*>(&iEndianness)];
 }
 
-bool IsoFilesystem::initialise(FILE* fRawFile)
+bool iso_filesystem::initialise(FILE* fRawFile)
 {
-    m_fRawFile = fRawFile;
-    _clear();
+    raw_file = fRawFile;
+    clear();
 
     // Until we know better, assume that sectors are 2048 bytes.
-    m_iSectorSize = 2048;
+    sector_size = 2048;
 
     // The first 16 sectors are reserved for bootable media.
     // Volume descriptor records follow this, with one record per sector.
-    for(uint32_t iSector = 16; _seekToSector(iSector); ++iSector)
+    for(uint32_t iSector = 16; seek_to_sector(iSector); ++iSector)
     {
         uint8_t aBuffer[190];
-        if(!_readData(sizeof(aBuffer), aBuffer))
+        if(!read_data(sizeof(aBuffer), aBuffer))
             break;
         // CD001 is a standard identifier, \x01 is a version number
         if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0)
         {
-            if(aBuffer[0] == VDT_PRIVARY_VOLUME)
+            if(aBuffer[0] == vdt_privary_volume)
             {
-                m_iSectorSize = ReadNativeInt<uint16_t>(aBuffer + 128);
-                _findHospDirectory(aBuffer + 156, 34, 0);
-                if(m_iNumFiles == 0)
+                sector_size = read_native_int<uint16_t>(aBuffer + 128);
+                find_hosp_directory(aBuffer + 156, 34, 0);
+                if(file_count == 0)
                 {
-                    _setError("Could not find Theme Hospital data directory.");
+                    set_error("Could not find Theme Hospital data directory.");
                     return false;
                 }
                 else
@@ -119,22 +119,22 @@ bool IsoFilesystem::initialise(FILE* fRawFile)
                     return true;
                 }
             }
-            else if(aBuffer[0] == VDT_TERMINATOR)
+            else if(aBuffer[0] == vdt_terminator)
                 break;
         }
     }
-    _setError("Could not find primary volume descriptor.");
+    set_error("Could not find primary volume descriptor.");
     return false;
 }
 
-int IsoFilesystem::_fileNameComp(const void* lhs, const void* rhs)
+int iso_filesystem::filename_compare(const void* lhs, const void* rhs)
 {
     return std::strcmp(
-        reinterpret_cast<const _file_t*>(lhs)->sPath,
-        reinterpret_cast<const _file_t*>(rhs)->sPath);
+        reinterpret_cast<const file_metadata*>(lhs)->path,
+        reinterpret_cast<const file_metadata*>(rhs)->path);
 }
 
-char IsoFilesystem::_normalise(char c)
+char iso_filesystem::normalise(char c)
 {
     if(c == '_') // underscore to hyphen
         return '-';
@@ -144,7 +144,7 @@ char IsoFilesystem::_normalise(char c)
         return c;
 }
 
-void IsoFilesystem::_trimIdentifierVersion(const uint8_t* sIdent, uint8_t& iLength)
+void iso_filesystem::trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength)
 {
     for(uint8_t i = 0; i < iLength; ++i)
     {
@@ -156,7 +156,7 @@ void IsoFilesystem::_trimIdentifierVersion(const uint8_t* sIdent, uint8_t& iLeng
     }
 }
 
-int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel)
+int iso_filesystem::find_hosp_directory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel)
 {
     // Sanity check
     // Apart from at the root level, directory record arrays must take up whole
@@ -176,12 +176,12 @@ int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, 
             continue;
         }
 
-        uint32_t iDataSector = ReadNativeInt<uint32_t>(pDirEnt + 2);
-        uint32_t iDataLength = ReadNativeInt<uint32_t>(pDirEnt + 10);
+        uint32_t iDataSector = read_native_int<uint32_t>(pDirEnt + 2);
+        uint32_t iDataLength = read_native_int<uint32_t>(pDirEnt + 10);
         uint8_t iFlags = pDirEnt[25];
         uint8_t iIdentLength = pDirEnt[32];
-        _trimIdentifierVersion(pDirEnt + 33, iIdentLength);
-        if(iFlags & DEF_DIRECTORY)
+        trim_identifier_version(pDirEnt + 33, iIdentLength);
+        if(iFlags & def_directory)
         {
             // The names "\x00" and "\x01" are used for the current directory
             // the parent directory respectively. We only want to visit these
@@ -194,13 +194,13 @@ int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, 
                     iBufferSize = iDataLength;
                     pBuffer = new uint8_t[iBufferSize];
                 }
-                if(_seekToSector(iDataSector) && _readData(iDataLength, pBuffer))
+                if(seek_to_sector(iDataSector) && read_data(iDataLength, pBuffer))
                 {
-                    int iFoundLevel = _findHospDirectory(pBuffer, iDataLength, iLevel + 1);
+                    int iFoundLevel = find_hosp_directory(pBuffer, iDataLength, iLevel + 1);
                     if(iFoundLevel != 0)
                     {
                         if(iFoundLevel == 2)
-                            _buildFileLookupTable(iDataSector, iDataLength, "");
+                            build_file_lookup_table(iDataSector, iDataLength, "");
                         delete[] pBuffer;
                         return iFoundLevel + 1;
                     }
@@ -217,7 +217,7 @@ int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, 
                 int i = 0;
                 for(; i < 10; ++i)
                 {
-                    if(_normalise(pDirEnt[33 + i]) != sName[i])
+                    if(normalise(pDirEnt[33 + i]) != sName[i])
                         break;
                 }
                 if(i == 10)
@@ -232,7 +232,7 @@ int IsoFilesystem::_findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, 
     return 0;
 }
 
-void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, const char* sPrefix)
+void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const char* sPrefix)
 {
     // Sanity check
     // Apart from at the root level, directory record arrays must take up whole
@@ -244,7 +244,7 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
         return;
 
     uint8_t *pBuffer = new uint8_t[iDirEntsSize];
-    if(!_seekToSector(iSector) || !_readData(iDirEntsSize, pBuffer))
+    if(!seek_to_sector(iSector) || !read_data(iDirEntsSize, pBuffer))
     {
         delete[] pBuffer;
         return;
@@ -259,11 +259,11 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
             continue;
         }
 
-        uint32_t iDataSector = ReadNativeInt<uint32_t>(pDirEnt + 2);
-        uint32_t iDataLength = ReadNativeInt<uint32_t>(pDirEnt + 10);
+        uint32_t iDataSector = read_native_int<uint32_t>(pDirEnt + 2);
+        uint32_t iDataLength = read_native_int<uint32_t>(pDirEnt + 10);
         uint8_t iFlags = pDirEnt[25];
         uint8_t iIdentLength = pDirEnt[32];
-        _trimIdentifierVersion(pDirEnt + 33, iIdentLength);
+        trim_identifier_version(pDirEnt + 33, iIdentLength);
 
         // Build new path
         char *sPath = new char[iLen + iIdentLength + 2];
@@ -271,29 +271,29 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
 #endif
-        std::transform(pDirEnt + 33, pDirEnt + 33 + iIdentLength, sPath + iLen, _normalise);
+        std::transform(pDirEnt + 33, pDirEnt + 33 + iIdentLength, sPath + iLen, normalise);
 #ifdef _MSC_VER
 #pragma warning(default: 4996)
 #endif
         sPath[iLen + iIdentLength] = 0;
 
-        if(iFlags & DEF_DIRECTORY)
+        if(iFlags & def_directory)
         {
             // None of the directories which we're interested in have length 1.
             // This also avoids the dummy "current" and "parent" directories.
             if(iIdentLength > 1)
             {
-                sPath[iLen + iIdentLength] = m_cPathSeparator;
+                sPath[iLen + iIdentLength] = path_seperator;
                 sPath[iLen + iIdentLength + 1] = 0;
-                _buildFileLookupTable(iDataSector, iDataLength, sPath);
+                build_file_lookup_table(iDataSector, iDataLength, sPath);
             }
         }
         else
         {
-            _file_t *pFile = _allocFileRecord();
-            pFile->sPath = sPath;
-            pFile->iSector = iDataSector;
-            pFile->iSize = iDataLength;
+            file_metadata *file = allocate_file_record();
+            file->path = sPath;
+            file->sector = iDataSector;
+            file->size = iDataLength;
             sPath = nullptr;
         }
         delete[] sPath;
@@ -304,62 +304,62 @@ void IsoFilesystem::_buildFileLookupTable(uint32_t iSector, int iDirEntsSize, co
     {
         // The lookup table will be ordered by the underlying ordering of the
         // disk, which isn't quite the ordering we want.
-        qsort(m_pFiles, m_iNumFiles, sizeof(_file_t), _fileNameComp);
+        qsort(files, file_count, sizeof(file_metadata), filename_compare);
     }
 }
 
-IsoFilesystem::_file_t* IsoFilesystem::_allocFileRecord()
+iso_filesystem::file_metadata* iso_filesystem::allocate_file_record()
 {
-    if(m_iNumFiles == m_iFileTableSize)
+    if(file_count == file_table_size)
     {
-        size_t iNewTableSize = m_iFileTableSize * 2 + 1;
-        _file_t* pNewFiles = new _file_t[iNewTableSize];
-        std::memcpy(pNewFiles, m_pFiles, sizeof(_file_t) * m_iNumFiles);
-        delete[] m_pFiles;
-        m_pFiles = pNewFiles;
-        m_iFileTableSize = iNewTableSize;
+        size_t iNewTableSize = file_table_size * 2 + 1;
+        file_metadata* pNewFiles = new file_metadata[iNewTableSize];
+        std::memcpy(pNewFiles, files, sizeof(file_metadata) * file_count);
+        delete[] files;
+        files = pNewFiles;
+        file_table_size = iNewTableSize;
     }
-    return m_pFiles + m_iNumFiles++;
+    return files + file_count++;
 }
 
-void IsoFilesystem::visitDirectoryFiles(const char* sPath,
+void iso_filesystem::visit_directory_files(const char* sPath,
                              void (*fnCallback)(void*, const char*),
                              void* pCallbackData) const
 {
     size_t iLen = std::strlen(sPath) + 1;
     std::vector<char> sNormedPath(iLen);
     for(size_t i = 0; i < iLen; ++i)
-        sNormedPath[i] = _normalise(sPath[i]);
+        sNormedPath[i] = normalise(sPath[i]);
 
     // Inefficient (better would be to binary search for first and last files
     // which begin with sPath), but who cares - this isn't called often
-    for(size_t i = 0; i < m_iNumFiles; ++i)
+    for(size_t i = 0; i < file_count; ++i)
     {
-        const char *sName = m_pFiles[i].sPath;
+        const char *sName = files[i].path;
         if(std::strlen(sName) >= iLen && std::memcmp(sNormedPath.data(), sName, iLen - 1) == 0)
         {
             sName += iLen - 1;
-            if(*sName == m_cPathSeparator)
+            if(*sName == path_seperator)
                 ++sName;
-            if(std::strchr(sName, m_cPathSeparator) == nullptr)
+            if(std::strchr(sName, path_seperator) == nullptr)
                 fnCallback(pCallbackData, sName);
         }
     }
 }
 
-IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
+iso_filesystem::file_handle iso_filesystem::find_file(const char* sPath) const
 {
     size_t iLen = std::strlen(sPath) + 1;
     std::vector<char> sNormedPath(iLen);
     for(size_t i = 0; i < iLen; ++i)
-        sNormedPath[i] = _normalise(sPath[i]);
+        sNormedPath[i] = normalise(sPath[i]);
 
     // Standard binary search over sorted list of files
-    int iLower = 0, iUpper = static_cast<int>(m_iNumFiles);
+    int iLower = 0, iUpper = static_cast<int>(file_count);
     while(iLower != iUpper)
     {
         int iMid = (iLower + iUpper) / 2;
-        int iComp = std::strcmp(sNormedPath.data(), m_pFiles[iMid].sPath);
+        int iComp = std::strcmp(sNormedPath.data(), files[iMid].path);
         if(iComp == 0)
             return iMid + 1;
         else if(iComp < 0)
@@ -370,78 +370,78 @@ IsoFilesystem::file_handle_t IsoFilesystem::findFile(const char* sPath) const
     return 0;
 }
 
-uint32_t IsoFilesystem::getFileSize(file_handle_t iFile) const
+uint32_t iso_filesystem::get_file_size(file_handle iFile) const
 {
-    if(iFile <= 0 || static_cast<size_t>(iFile) > m_iNumFiles)
+    if(iFile <= 0 || static_cast<size_t>(iFile) > file_count)
         return 0;
     else
-        return m_pFiles[iFile - 1].iSize;
+        return files[iFile - 1].size;
 }
 
-bool IsoFilesystem::getFileData(file_handle_t iFile, uint8_t *pBuffer)
+bool iso_filesystem::get_file_data(file_handle iFile, uint8_t *pBuffer)
 {
-    if(iFile <= 0 || static_cast<size_t>(iFile) > m_iNumFiles)
+    if(iFile <= 0 || static_cast<size_t>(iFile) > file_count)
     {
-        _setError("Invalid file handle.");
+        set_error("Invalid file handle.");
         return false;
     }
     else
     {
-        return _seekToSector(m_pFiles[iFile - 1].iSector) &&
-               _readData(m_pFiles[iFile - 1].iSize, pBuffer);
+        return seek_to_sector(files[iFile - 1].sector) &&
+               read_data(files[iFile - 1].size, pBuffer);
     }
 }
 
-const char* IsoFilesystem::getError() const
+const char* iso_filesystem::get_error() const
 {
-    return m_sError;
+    return error;
 }
 
-bool IsoFilesystem::_seekToSector(uint32_t iSector)
+bool iso_filesystem::seek_to_sector(uint32_t iSector)
 {
-    if(!m_fRawFile)
+    if(!raw_file)
     {
-        _setError("No raw file.");
+        set_error("No raw file.");
         return false;
     }
-    if(std::fseek(m_fRawFile, m_iSectorSize * static_cast<long>(iSector), SEEK_SET) == 0)
+    if(std::fseek(raw_file, sector_size * static_cast<long>(iSector), SEEK_SET) == 0)
         return true;
     else
     {
-        _setError("Unable to seek to sector %i.", static_cast<int>(iSector));
+        set_error("Unable to seek to sector %i.", static_cast<int>(iSector));
         return false;
     }
 }
 
-bool IsoFilesystem::_readData(uint32_t iByteCount, uint8_t *pBuffer)
+bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t *pBuffer)
 {
-    if(!m_fRawFile)
+    if(!raw_file)
     {
-        _setError("No raw file.");
+        set_error("No raw file.");
         return false;
     }
-    if(std::fread(pBuffer, 1, iByteCount, m_fRawFile) == iByteCount)
+    if(std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount)
         return true;
     else
     {
-        _setError("Unable to read %i bytes.", static_cast<int>(iByteCount));
+        set_error("Unable to read %i bytes.", static_cast<int>(iByteCount));
         return false;
     }
 }
 
-void IsoFilesystem::_setError(const char* sFormat, ...)
+void iso_filesystem::set_error(const char* sFormat, ...)
 {
-    if(m_sError == nullptr)
+    if(error == nullptr)
     {
         // None of the errors which we generate will be longer than 1024.
-        m_sError = new char[1024];
+        error = new char[1024];
     }
     va_list a;
     va_start(a, sFormat);
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
 #endif
-    std::vsprintf(m_sError, sFormat, a);
+    std::vsprintf(error, sFormat, a);
 #ifdef _MSC_VER
 #pragma warning(default: 4996)
 #endif
@@ -450,21 +450,21 @@ void IsoFilesystem::_setError(const char* sFormat, ...)
 
 static int l_isofs_new(lua_State *L)
 {
-    luaT_stdnew<IsoFilesystem>(L, luaT_environindex, true);
+    luaT_stdnew<iso_filesystem>(L, luaT_environindex, true);
     return 1;
 }
 
 static int l_isofs_set_path_separator(lua_State *L)
 {
-    IsoFilesystem *pSelf = luaT_testuserdata<IsoFilesystem>(L);
-    pSelf->setPathSeparator(luaL_checkstring(L, 2)[0]);
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
+    pSelf->set_path_separator(luaL_checkstring(L, 2)[0]);
     lua_settop(L, 1);
     return 1;
 }
 
 static int l_isofs_set_root(lua_State *L)
 {
-    IsoFilesystem *pSelf = luaT_testuserdata<IsoFilesystem>(L);
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     FILE *fIso = *luaT_testuserdata<FILE*>(L, 2);
     if(pSelf->initialise(fIso))
     {
@@ -476,30 +476,30 @@ static int l_isofs_set_root(lua_State *L)
     else
     {
         lua_pushnil(L);
-        lua_pushstring(L, pSelf->getError());
+        lua_pushstring(L, pSelf->get_error());
         return 2;
     }
 }
 
 static int l_isofs_read_contents(lua_State *L)
 {
-    IsoFilesystem *pSelf = luaT_testuserdata<IsoFilesystem>(L);
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     const char* sFilename = luaL_checkstring(L, 2);
-    IsoFilesystem::file_handle_t iFile = pSelf->findFile(sFilename);
-    if(!IsoFilesystem::isHandleGood(iFile))
+    iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
+    if(!iso_filesystem::isHandleGood(iFile))
     {
         lua_pushnil(L);
         lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
         return 2;
     }
-    void* pBuffer = lua_newuserdata(L, pSelf->getFileSize(iFile));
-    if(!pSelf->getFileData(iFile, reinterpret_cast<uint8_t*>(pBuffer)))
+    void* pBuffer = lua_newuserdata(L, pSelf->get_file_size(iFile));
+    if(!pSelf->get_file_data(iFile, reinterpret_cast<uint8_t*>(pBuffer)))
     {
         lua_pushnil(L);
-        lua_pushstring(L, pSelf->getError());
+        lua_pushstring(L, pSelf->get_error());
         return 2;
     }
-    lua_pushlstring(L, reinterpret_cast<char*>(pBuffer), pSelf->getFileSize(iFile));
+    lua_pushlstring(L, reinterpret_cast<char*>(pBuffer), pSelf->get_file_size(iFile));
     return 1;
 }
 
@@ -513,11 +513,11 @@ static void l_isofs_list_files_callback(void *p, const char* s)
 
 static int l_isofs_list_files(lua_State *L)
 {
-    IsoFilesystem *pSelf = luaT_testuserdata<IsoFilesystem>(L);
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     const char* sPath = luaL_checkstring(L, 2);
     lua_settop(L, 2);
     lua_newtable(L);
-    pSelf->visitDirectoryFiles(sPath, l_isofs_list_files_callback, L);
+    pSelf->visit_directory_files(sPath, l_isofs_list_files_callback, L);
     return 1;
 }
 
@@ -535,7 +535,7 @@ int luaopen_iso_fs(lua_State *L)
     lua_pushvalue(L, -1);
     lua_replace(L, luaT_environindex);
 
-    luaT_pushcclosure(L, luaT_stdgc<IsoFilesystem, luaT_environindex>, 0);
+    luaT_pushcclosure(L, luaT_stdgc<iso_filesystem, luaT_environindex>, 0);
     lua_setfield(L, -2, "__gc");
 
     // Methods table
