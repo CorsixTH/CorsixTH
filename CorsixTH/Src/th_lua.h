@@ -257,8 +257,8 @@ template <> struct luaT_classinfo<THSoundEffects> {
     static inline const char* name() {return "SoundEffects";}
 };
 
-class THMovie;
-template <> struct luaT_classinfo<THMovie> {
+class movie_player;
+template <> struct luaT_classinfo<movie_player> {
     static inline const char* name() {return "Movie";}
 };
 
