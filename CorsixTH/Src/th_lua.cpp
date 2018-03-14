@@ -269,7 +269,7 @@ int luaopen_th(lua_State *L)
     lua_settop(L, oState.iTop);
     luaT_setfunction(l_load_strings, "LoadStrings");
     luaT_setfunction(l_get_compile_options, "GetCompileOptions");
-    luaT_setfunction(Bootstrap_lua_resources, "GetBuiltinFont");
+    luaT_setfunction(bootstrap_lua_resources, "GetBuiltinFont");
 
     // Classes
     THLuaRegisterMap(pState);
