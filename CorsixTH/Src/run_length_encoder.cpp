@@ -25,79 +25,79 @@ SOFTWARE.
 #include <new>
 #include <algorithm>
 
-IntegerRunLengthEncoder::IntegerRunLengthEncoder()
+integer_run_length_encoder::integer_run_length_encoder()
 {
-    m_pBuffer = nullptr;
-    m_pOutput = nullptr;
-    _clean();
+    buffer = nullptr;
+    output = nullptr;
+    clean();
 }
 
-IntegerRunLengthEncoder::~IntegerRunLengthEncoder()
+integer_run_length_encoder::~integer_run_length_encoder()
 {
-    _clean();
+    clean();
 }
 
-void IntegerRunLengthEncoder::_clean()
+void integer_run_length_encoder::clean()
 {
-    delete[] m_pBuffer;
-    delete[] m_pOutput;
-    m_pBuffer = nullptr;
-    m_pOutput = nullptr;
-    m_iRecordSize = 0;
-    m_iBufferSize = 0;
-    m_iBufferSizeUsed = 0;
-    m_iBufferOffset = 0;
-    m_iOutputSize = 0;
-    m_iOutputSizeUsed = 0;
-    m_iObjectSize = 0;
-    m_iObjectCount = 0;
+    delete[] buffer;
+    delete[] output;
+    buffer = nullptr;
+    output = nullptr;
+    record_size = 0;
+    buffer_capacity = 0;
+    buffer_size = 0;
+    buffer_offset = 0;
+    output_capacity = 0;
+    output_size = 0;
+    object_size = 0;
+    object_copies = 0;
 }
 
-bool IntegerRunLengthEncoder::initialise(size_t iRecordSize)
+bool integer_run_length_encoder::initialise(size_t iRecordSize)
 {
-    _clean();
-    m_iRecordSize = iRecordSize;
+    clean();
+    record_size = iRecordSize;
 
     // Buffer must hold at least 7 + 2 * 8 records, as the maximum object size
     // is 8 records, 2 of which are needed to detect a repeat, and 7 for the
     // offset at which the objects are found.
-    m_iBufferSize = iRecordSize * 8 * 4;
-    m_iBufferSizeUsed = 0;
-    m_iBufferOffset = 0;
-    m_pBuffer = new (std::nothrow) uint32_t[m_iBufferSize];
-    if(!m_pBuffer)
+    buffer_capacity = iRecordSize * 8 * 4;
+    buffer_size = 0;
+    buffer_offset = 0;
+    buffer = new (std::nothrow) uint32_t[buffer_capacity];
+    if(!buffer)
         return false;
 
-    m_iOutputSize = iRecordSize * 32;
-    m_iOutputSizeUsed = 0;
-    m_pOutput = new (std::nothrow) uint32_t[m_iOutputSize];
-    if(!m_pOutput)
+    output_capacity = iRecordSize * 32;
+    output_size = 0;
+    output = new (std::nothrow) uint32_t[output_capacity];
+    if(!output)
         return false;
 
-    m_iObjectSize = 0;
-    m_iObjectCount = 0;
+    object_size = 0;
+    object_copies = 0;
 
     return true;
 }
 
-void IntegerRunLengthEncoder::write(uint32_t iValue)
+void integer_run_length_encoder::write(uint32_t iValue)
 {
-    m_pBuffer[(m_iBufferOffset + m_iBufferSizeUsed) % m_iBufferSize] = iValue;
-    if(++m_iBufferSizeUsed == m_iBufferSize)
-        _flush(false);
+    buffer[(buffer_offset + buffer_size) % buffer_capacity] = iValue;
+    if(++buffer_size == buffer_capacity)
+        flush(false);
 }
 
-void IntegerRunLengthEncoder::finish()
+void integer_run_length_encoder::finish()
 {
-    if(m_iBufferSizeUsed != 0)
-        _flush(true);
+    if(buffer_size != 0)
+        flush(true);
 }
 
-void IntegerRunLengthEncoder::_flush(bool bAll)
+void integer_run_length_encoder::flush(bool bAll)
 {
     do
     {
-        if(m_iObjectSize == 0)
+        if(object_size == 0)
         {
             // Decide on the size of the next object
             // Want the object size which gives most object repeats, then for
@@ -110,9 +110,9 @@ void IntegerRunLengthEncoder::_flush(bool bAll)
                 for(size_t iOffset = 0; iOffset < iNumRecords; ++iOffset)
                 {
                     size_t iNumRepeats = 0;
-                    size_t iObjSize = iNumRecords * m_iRecordSize;
-                    while(iObjSize * (iOffset + iNumRepeats + 1) <= m_iBufferSizeUsed
-                        && _areRangesEqual(0, iNumRepeats, iOffset, iObjSize))
+                    size_t iObjSize = iNumRecords * record_size;
+                    while(iObjSize * (iOffset + iNumRepeats + 1) <= buffer_size
+                        && are_ranges_equal(0, iNumRepeats, iOffset, iObjSize))
                     {
                         ++iNumRepeats;
                     }
@@ -129,52 +129,52 @@ void IntegerRunLengthEncoder::_flush(bool bAll)
             {
                 // No repeats were found, so the best we can do is output
                 // a large non-repeating blob.
-                _output(std::min(m_iBufferSizeUsed, 8 * m_iRecordSize), 1);
+                move_object_to_output(std::min(buffer_size, 8 * record_size), 1);
             }
             else
             {
                 if(iBestOffset != 0)
-                    _output(iBestOffset * m_iRecordSize, 1);
+                    move_object_to_output(iBestOffset * record_size, 1);
                 // Mark the object as the current one, and remove all but the
                 // last instance of it from the buffer. On the next flush, the
                 // new data might continue the same object, hence why the
                 // object isn't output just yet.
-                m_iObjectSize = iBestSize;
-                m_iObjectCount = iBestRepeats - 1;
-                m_iBufferOffset = (m_iBufferOffset + m_iObjectSize * m_iObjectCount) % m_iBufferSize;
-                m_iBufferSizeUsed -= m_iObjectSize * m_iObjectCount;
+                object_size = iBestSize;
+                object_copies = iBestRepeats - 1;
+                buffer_offset = (buffer_offset + object_size * object_copies) % buffer_capacity;
+                buffer_size -= object_size * object_copies;
             }
         }
         else
         {
             // Try to match more of the current object
-            while(m_iObjectSize * 2 <= m_iBufferSizeUsed &&
-                  _areRangesEqual(0, 1, 0, m_iObjectSize))
+            while(object_size * 2 <= buffer_size &&
+                  are_ranges_equal(0, 1, 0, object_size))
             {
-                ++m_iObjectCount;
-                m_iBufferOffset = (m_iBufferOffset + m_iObjectSize) % m_iBufferSize;
-                m_iBufferSizeUsed -= m_iObjectSize;
+                ++object_copies;
+                buffer_offset = (buffer_offset + object_size) % buffer_capacity;
+                buffer_size -= object_size;
             }
             // Write data
-            if(m_iObjectSize * 2 <= m_iBufferSizeUsed || bAll)
+            if(object_size * 2 <= buffer_size || bAll)
             {
-                _output(m_iObjectSize, m_iObjectCount + 1);
-                m_iObjectSize = 0;
-                m_iObjectCount = 0;
+                move_object_to_output(object_size, object_copies + 1);
+                object_size = 0;
+                object_copies = 0;
             }
         }
-    } while(bAll && m_iBufferSizeUsed != 0);
+    } while(bAll && buffer_size != 0);
 }
 
-bool IntegerRunLengthEncoder::_areRangesEqual(size_t iObjIdx1, size_t iObjIdx2,
+bool integer_run_length_encoder::are_ranges_equal(size_t iObjIdx1, size_t iObjIdx2,
                                               size_t iOffset, size_t iObjSize) const
 {
-    iObjIdx1 = m_iBufferOffset + iOffset * m_iRecordSize + iObjIdx1 * iObjSize;
-    iObjIdx2 = m_iBufferOffset + iOffset * m_iRecordSize + iObjIdx2 * iObjSize;
+    iObjIdx1 = buffer_offset + iOffset * record_size + iObjIdx1 * iObjSize;
+    iObjIdx2 = buffer_offset + iOffset * record_size + iObjIdx2 * iObjSize;
     for(size_t i = 0; i < iObjSize; ++i)
     {
-        if(m_pBuffer[(iObjIdx1 + i) % m_iBufferSize]
-        != m_pBuffer[(iObjIdx2 + i) % m_iBufferSize])
+        if(buffer[(iObjIdx1 + i) % buffer_capacity]
+        != buffer[(iObjIdx2 + i) % buffer_capacity])
         {
             return false;
         }
@@ -182,146 +182,146 @@ bool IntegerRunLengthEncoder::_areRangesEqual(size_t iObjIdx1, size_t iObjIdx2,
     return true;
 }
 
-bool IntegerRunLengthEncoder::_output(size_t iObjSize, size_t iObjCount)
+bool integer_run_length_encoder::move_object_to_output(size_t iObjSize, size_t iObjCount)
 {
     // Grow the output array if needed
-    if(m_iOutputSize - m_iOutputSizeUsed <= iObjSize)
+    if(output_capacity - output_size <= iObjSize)
     {
-        size_t iNewSize = (m_iOutputSize + iObjSize) * 2;
+        size_t iNewSize = (output_capacity + iObjSize) * 2;
         uint32_t *pNewOutput = new (std::nothrow) uint32_t[iNewSize];
         if(!pNewOutput)
             return false;
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
 #endif
-        std::copy(m_pOutput, m_pOutput + m_iOutputSizeUsed, pNewOutput);
+        std::copy(output, output + output_size, pNewOutput);
 #ifdef _MSC_VER
 #pragma warning(default: 4996)
 #endif
-        delete[] m_pOutput;
-        m_pOutput = pNewOutput;
-        m_iOutputSize = iNewSize;
+        delete[] output;
+        output = pNewOutput;
+        output_capacity = iNewSize;
     }
-    size_t iHeader = (iObjSize / m_iRecordSize - 1) + 8 * (iObjCount - 1);
-    m_pOutput[m_iOutputSizeUsed++] = static_cast<uint32_t>(iHeader);
+    size_t iHeader = (iObjSize / record_size - 1) + 8 * (iObjCount - 1);
+    output[output_size++] = static_cast<uint32_t>(iHeader);
     // Move the object from the buffer to the output
     for(size_t i = 0; i < iObjSize; ++i)
     {
-        m_pOutput[m_iOutputSizeUsed++] = m_pBuffer[m_iBufferOffset];
-        m_iBufferOffset = (m_iBufferOffset + 1) % m_iBufferSize;
+        output[output_size++] = buffer[buffer_offset];
+        buffer_offset = (buffer_offset + 1) % buffer_capacity;
     }
-    m_iBufferSizeUsed -= iObjSize;
+    buffer_size -= iObjSize;
     return true;
 }
 
-uint32_t* IntegerRunLengthEncoder::getOutput(size_t *pCount) const
+uint32_t* integer_run_length_encoder::get_output(size_t *pCount) const
 {
     if(pCount)
-        *pCount = m_iOutputSizeUsed;
-    return m_pOutput;
+        *pCount = output_size;
+    return output;
 }
 
-void IntegerRunLengthEncoder::pumpOutput(lua_persist_writer *pWriter) const
+void integer_run_length_encoder::pump_output(lua_persist_writer *pWriter) const
 {
-    pWriter->write_uint(m_iOutputSizeUsed);
-    for(size_t i = 0; i < m_iOutputSizeUsed; ++i)
+    pWriter->write_uint(output_size);
+    for(size_t i = 0; i < output_size; ++i)
     {
-        pWriter->write_uint(m_pOutput[i]);
+        pWriter->write_uint(output[i]);
     }
 }
 
-IntegerRunLengthDecoder::IntegerRunLengthDecoder()
+integer_run_length_decoder::integer_run_length_decoder()
 {
-    m_pBuffer = nullptr;
-    _clean();
+    buffer = nullptr;
+    clean();
 }
 
-IntegerRunLengthDecoder::~IntegerRunLengthDecoder()
+integer_run_length_decoder::~integer_run_length_decoder()
 {
-    _clean();
+    clean();
 }
 
-void IntegerRunLengthDecoder::_clean()
+void integer_run_length_decoder::clean()
 {
-    delete[] m_pBuffer;
-    m_pBuffer = nullptr;
-    m_pReader = nullptr;
-    m_pInput = nullptr;
-    m_pInputEnd = nullptr;
-    m_iNumReadsRemaining = 0;
-    m_iRepeatCount = 0;
-    m_iRecordSize = 0;
-    m_iObjectIndex = 0;
-    m_iObjectSize = 0;
+    delete[] buffer;
+    buffer = nullptr;
+    reader = nullptr;
+    input = nullptr;
+    input_end = nullptr;
+    reads_remaining = 0;
+    object_copies = 0;
+    record_size = 0;
+    object_index = 0;
+    object_size = 0;
 }
 
-bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, lua_persist_reader *pReader)
+bool integer_run_length_decoder::initialise(size_t iRecordSize, lua_persist_reader *pReader)
 {
-    _clean();
+    clean();
 
-    m_pBuffer = new (std::nothrow) uint32_t[9 * iRecordSize];
-    if(!m_pBuffer)
+    buffer = new (std::nothrow) uint32_t[9 * iRecordSize];
+    if(!buffer)
         return false;
-    m_pReader = pReader;
-    m_iRecordSize = iRecordSize;
-    return pReader->read_uint(m_iNumReadsRemaining);
+    reader = pReader;
+    record_size = iRecordSize;
+    return pReader->read_uint(reads_remaining);
 }
 
-bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount)
+bool integer_run_length_decoder::initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount)
 {
-    _clean();
+    clean();
 
-    m_pBuffer = new (std::nothrow) uint32_t[9 * iRecordSize];
-    if(!m_pBuffer)
+    buffer = new (std::nothrow) uint32_t[9 * iRecordSize];
+    if(!buffer)
         return false;
-    m_pInput = pInput;
-    m_pInputEnd = pInput + iCount;
-    m_iRecordSize = iRecordSize;
+    input = pInput;
+    input_end = pInput + iCount;
+    record_size = iRecordSize;
     return true;
 }
 
-uint32_t IntegerRunLengthDecoder::read()
+uint32_t integer_run_length_decoder::read()
 {
-    if(m_iRepeatCount == 0)
+    if(object_copies == 0)
     {
         uint32_t iHeader = 0;
-        if(m_pReader)
+        if(reader)
         {
-            m_pReader->read_uint(iHeader);
-            --m_iNumReadsRemaining;
+            reader->read_uint(iHeader);
+            --reads_remaining;
         }
         else
-            iHeader = *(m_pInput++);
-        m_iObjectSize = m_iRecordSize * (1 + (iHeader & 7));
-        m_iRepeatCount = (iHeader / 8) + 1;
-        if(m_pReader)
+            iHeader = *(input++);
+        object_size = record_size * (1 + (iHeader & 7));
+        object_copies = (iHeader / 8) + 1;
+        if(reader)
         {
-            for(size_t i = 0; i < m_iObjectSize; ++i)
+            for(size_t i = 0; i < object_size; ++i)
             {
-                m_pReader->read_uint(m_pBuffer[i]);
-                --m_iNumReadsRemaining;
+                reader->read_uint(buffer[i]);
+                --reads_remaining;
             }
         }
         else
         {
-            for(size_t i = 0; i < m_iObjectSize; ++i)
-                m_pBuffer[i] = *(m_pInput++);
+            for(size_t i = 0; i < object_size; ++i)
+                buffer[i] = *(input++);
         }
     }
 
-    uint32_t iValue = m_pBuffer[m_iObjectIndex];
-    if(++m_iObjectIndex == m_iObjectSize)
+    uint32_t iValue = buffer[object_index];
+    if(++object_index == object_size)
     {
-        m_iObjectIndex = 0;
-        --m_iRepeatCount;
+        object_index = 0;
+        --object_copies;
     }
     return iValue;
 }
 
-bool IntegerRunLengthDecoder::isFinished() const
+bool integer_run_length_decoder::is_finished() const
 {
-    if(m_pReader)
-        return m_iNumReadsRemaining == 0 && m_iRepeatCount == 0;
+    if(reader)
+        return reads_remaining == 0 && object_copies == 0;
     else
-        return m_pInput == m_pInputEnd && m_iRepeatCount == 0;
+        return input == input_end && object_copies == 0;
 }

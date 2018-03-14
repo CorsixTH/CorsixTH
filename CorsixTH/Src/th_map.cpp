@@ -1412,7 +1412,7 @@ void level_map::update_shadows()
 void level_map::persist(lua_persist_writer *pWriter) const
 {
     lua_State *L = pWriter->get_stack();
-    IntegerRunLengthEncoder oEncoder;
+    integer_run_length_encoder oEncoder;
 
     uint32_t iVersion = 4;
     pWriter->write_uint(iVersion);
@@ -1463,7 +1463,7 @@ void level_map::persist(lua_persist_writer *pWriter) const
         lua_pop(L, 2);
     }
     oEncoder.finish();
-    oEncoder.pumpOutput(pWriter);
+    oEncoder.pump_output(pWriter);
 
     oEncoder.initialise(5);
     for(map_tile *pNode = original_cells, *pLimitNode = original_cells + width * height;
@@ -1476,7 +1476,7 @@ void level_map::persist(lua_persist_writer *pWriter) const
         oEncoder.write(static_cast<uint32_t>(pNode->flags));
     }
     oEncoder.finish();
-    oEncoder.pumpOutput(pWriter);
+    oEncoder.pump_output(pWriter);
 }
 
 void level_map::depersist(lua_persist_reader *pReader)
@@ -1485,7 +1485,7 @@ void level_map::depersist(lua_persist_reader *pReader)
 
     lua_State *L = pReader->get_stack();
     int iWidth, iHeight;
-    IntegerRunLengthDecoder oDecoder;
+    integer_run_length_decoder oDecoder;
 
     uint32_t iVersion;
     if(!pReader->read_uint(iVersion)) return;
