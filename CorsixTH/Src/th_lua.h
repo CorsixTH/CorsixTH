@@ -205,19 +205,19 @@ template <> struct luaT_classinfo<raw_bitmap> {
     static inline const char* name() {return "RawBitmap";}
 };
 
-class THFont;
-template <> struct luaT_classinfo<THFont> {
+class font;
+template <> struct luaT_classinfo<font> {
     static inline const char* name() {return "Font";}
 };
 
-class THBitmapFont;
-template <> struct luaT_classinfo<THBitmapFont> {
+class bitmap_font;
+template <> struct luaT_classinfo<bitmap_font> {
     static inline const char* name() {return "BitmapFont";}
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
-class THFreeTypeFont;
-template <> struct luaT_classinfo<THFreeTypeFont> {
+class freetype_font;
+template <> struct luaT_classinfo<freetype_font> {
     static inline const char* name() {return "FreeTypeFont";}
 };
 #endif

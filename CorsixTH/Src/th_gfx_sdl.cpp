@@ -1512,49 +1512,49 @@ void line::depersist(lua_persist_reader *pReader)
     }
 }
 
-// TODO: move to th_gfx_font.cpp
 #ifdef CORSIX_TH_USE_FREETYPE2
-bool THFreeTypeFont::_isMonochrome() const
+bool freetype_font::is_monochrome() const
 {
     return true;
 }
 
-void THFreeTypeFont::_freeTexture(cached_text_t* pCacheEntry) const
+void freetype_font::free_texture(cached_text* pCacheEntry) const
 {
-    if(pCacheEntry->pTexture != nullptr)
+    if(pCacheEntry->texture != nullptr)
     {
-        SDL_DestroyTexture(pCacheEntry->pTexture);
-        pCacheEntry->pTexture = nullptr;
+        SDL_DestroyTexture(pCacheEntry->texture);
+        pCacheEntry->texture = nullptr;
     }
 }
 
-void THFreeTypeFont::_makeTexture(render_target *pEventualCanvas, cached_text_t* pCacheEntry) const
+
+void freetype_font::make_texture(render_target *pEventualCanvas, cached_text* pCacheEntry) const
 {
-    uint32_t* pPixels = new uint32_t[pCacheEntry->iWidth * pCacheEntry->iHeight];
-    std::memset(pPixels, 0, pCacheEntry->iWidth * pCacheEntry->iHeight * sizeof(uint32_t));
-    uint8_t* pInRow = pCacheEntry->pData;
+    uint32_t* pPixels = new uint32_t[pCacheEntry->width * pCacheEntry->height];
+    std::memset(pPixels, 0, pCacheEntry->width * pCacheEntry->height * sizeof(uint32_t));
+    uint8_t* pInRow = pCacheEntry->data;
     uint32_t* pOutRow = pPixels;
-    uint32_t iColBase = m_oColour & 0xFFFFFF;
-    for(int iY = 0; iY < pCacheEntry->iHeight; ++iY, pOutRow += pCacheEntry->iWidth,
-        pInRow += pCacheEntry->iWidth)
+    uint32_t iColBase = colour & 0xFFFFFF;
+    for(int iY = 0; iY < pCacheEntry->height; ++iY, pOutRow += pCacheEntry->width,
+        pInRow += pCacheEntry->width)
     {
-        for(int iX = 0; iX < pCacheEntry->iWidth; ++iX)
+        for(int iX = 0; iX < pCacheEntry->width; ++iX)
         {
             pOutRow[iX] = (static_cast<uint32_t>(pInRow[iX]) << 24) | iColBase;
         }
     }
 
-    pCacheEntry->pTexture = pEventualCanvas->create_texture(pCacheEntry->iWidth, pCacheEntry->iHeight, pPixels);
+    pCacheEntry->texture = pEventualCanvas->create_texture(pCacheEntry->width, pCacheEntry->height, pPixels);
     delete[] pPixels;
 }
 
-void THFreeTypeFont::_drawTexture(render_target* pCanvas, cached_text_t* pCacheEntry, int iX, int iY) const
+void freetype_font::draw_texture(render_target* pCanvas, cached_text* pCacheEntry, int iX, int iY) const
 {
-    if(pCacheEntry->pTexture == nullptr)
+    if(pCacheEntry->texture == nullptr)
         return;
 
-    SDL_Rect rcDest = { iX, iY, pCacheEntry->iWidth, pCacheEntry->iHeight };
-    pCanvas->draw(pCacheEntry->pTexture, nullptr, &rcDest, 0);
+    SDL_Rect rcDest = { iX, iY, pCacheEntry->width, pCacheEntry->height };
+    pCanvas->draw(pCacheEntry->texture, nullptr, &rcDest, 0);
 }
 
 #endif // CORSIX_TH_USE_FREETYPE2

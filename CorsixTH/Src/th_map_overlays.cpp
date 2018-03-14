@@ -188,9 +188,9 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
 void map_typical_overlay::draw_text(render_target* pCanvas, int iX, int iY,
         std::string str)
 {
-    THFontDrawArea oArea = font->getTextSize(str.c_str(), str.length());
-    font->drawText(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.iEndX) / 2,
-        iY + (32 - oArea.iEndY) / 2);
+    text_layout oArea = font->get_text_dimensions(str.c_str(), str.length());
+    font->draw_text(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.end_x) / 2,
+        iY + (32 - oArea.end_y) / 2);
 }
 
 void map_typical_overlay::set_sprites(sprite_sheet* pSheet, bool bTakeOwnership)
@@ -201,7 +201,7 @@ void map_typical_overlay::set_sprites(sprite_sheet* pSheet, bool bTakeOwnership)
     owns_sprites = bTakeOwnership;
 }
 
-void map_typical_overlay::set_font(THFont* font, bool take_ownership)
+void map_typical_overlay::set_font(::font* font, bool take_ownership)
 {
     if(this->font && owns_font)
         delete this->font;

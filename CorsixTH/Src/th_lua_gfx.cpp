@@ -201,33 +201,33 @@ static int l_font_new(lua_State *L)
 
 static int l_bitmap_font_new(lua_State *L)
 {
-    luaT_stdnew<THBitmapFont>(L, luaT_environindex, true);
+    luaT_stdnew<bitmap_font>(L, luaT_environindex, true);
     return 1;
 }
 
 static int l_bitmap_font_set_spritesheet(lua_State *L)
 {
-    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
+    bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
     lua_settop(L, 2);
 
-    pFont->setSpriteSheet(pSheet);
+    pFont->set_sprite_sheet(pSheet);
     luaT_setenvfield(L, 1, "sprites");
     return 1;
 }
 
 static int l_bitmap_font_get_spritesheet(lua_State *L)
 {
-    luaT_testuserdata<THBitmapFont>(L);
+    luaT_testuserdata<bitmap_font>(L);
     luaT_getenvfield(L, 1, "sprites");
     return 1;
 }
 
 static int l_bitmap_font_set_sep(lua_State *L)
 {
-    THBitmapFont* pFont = luaT_testuserdata<THBitmapFont>(L);
+    bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
 
-    pFont->setSeparation(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_optinteger(L, 3, 0)));
+    pFont->set_separation(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_optinteger(L, 3, 0)));
 
     lua_settop(L, 1);
     return 1;
@@ -255,7 +255,7 @@ static void l_freetype_throw_error_code(lua_State *L, FT_Error e)
 
 static int l_freetype_font_new(lua_State *L)
 {
-    THFreeTypeFont *pFont = luaT_stdnew<THFreeTypeFont>(L, luaT_environindex,
+    freetype_font *pFont = luaT_stdnew<freetype_font>(L, luaT_environindex,
         true);
     l_freetype_throw_error_code(L, pFont->initialise());
     return 1;
@@ -263,37 +263,37 @@ static int l_freetype_font_new(lua_State *L)
 
 static int l_freetype_font_set_spritesheet(lua_State *L)
 {
-    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
+    freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
     lua_settop(L, 2);
 
-    l_freetype_throw_error_code(L, pFont->matchBitmapFont(pSheet));
+    l_freetype_throw_error_code(L, pFont->match_bitmap_font(pSheet));
     lua_settop(L, 1);
     return 1;
 }
 
 static int l_freetype_font_get_copyright(lua_State *L)
 {
-    lua_pushstring(L, THFreeTypeFont::getCopyrightNotice());
+    lua_pushstring(L, freetype_font::get_copyright_notice());
     return 1;
 }
 
 static int l_freetype_font_set_face(lua_State *L)
 {
-    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
+    freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
     size_t iLength;
     const uint8_t* pData = luaT_checkfile(L, 2, &iLength);
     lua_settop(L, 2);
 
-    l_freetype_throw_error_code(L, pFont->setFace(pData, iLength));
+    l_freetype_throw_error_code(L, pFont->set_face(pData, iLength));
     luaT_setenvfield(L, 1, "face");
     return 1;
 }
 
 static int l_freetype_font_clear_cache(lua_State *L)
 {
-    THFreeTypeFont* pFont = luaT_testuserdata<THFreeTypeFont>(L);
-    pFont->clearCache();
+    freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
+    pFont->clear_cache();
     return 0;
 }
 
@@ -301,7 +301,7 @@ static int l_freetype_font_clear_cache(lua_State *L)
 
 static int l_font_get_size(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    font* pFont = luaT_testuserdata<font>(L);
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 2, &iMsgLen);
 
@@ -309,18 +309,18 @@ static int l_font_get_size(lua_State *L)
     if(!lua_isnoneornil(L, 3))
         iMaxWidth = static_cast<int>(luaL_checkinteger(L, 3));
 
-    THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen, iMaxWidth);
+    text_layout oDrawArea = pFont->get_text_dimensions(sMsg, iMsgLen, iMaxWidth);
 
-    lua_pushinteger(L, oDrawArea.iEndX);
-    lua_pushinteger(L, oDrawArea.iEndY);
-    lua_pushinteger(L, oDrawArea.iNumRows);
+    lua_pushinteger(L, oDrawArea.end_x);
+    lua_pushinteger(L, oDrawArea.end_y);
+    lua_pushinteger(L, oDrawArea.row_count);
 
     return 3;
 }
 
 static int l_font_draw(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = nullptr;
     if(!lua_isnoneornil(L, 2))
     {
@@ -331,47 +331,47 @@ static int l_font_draw(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 4));
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
 
-    eTHAlign eAlign = eTHAlign::center;
+    text_alignment eAlign = text_alignment::center;
     if(!lua_isnoneornil(L, 8)) {
         const char* sAlign = luaL_checkstring(L, 8);
         if(std::strcmp(sAlign, "right") == 0) {
-            eAlign = eTHAlign::right;
+            eAlign = text_alignment::right;
         } else if(std::strcmp(sAlign, "left") == 0) {
-            eAlign = eTHAlign::left;
+            eAlign = text_alignment::left;
         } else if(std::strcmp(sAlign, "center") == 0 ||
                 std::strcmp(sAlign, "centre") == 0 ||
                 std::strcmp(sAlign, "middle") == 0) {
-            eAlign = eTHAlign::center;
+            eAlign = text_alignment::center;
         } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
         }
     }
 
-    THFontDrawArea oDrawArea = pFont->getTextSize(sMsg, iMsgLen);
+    text_layout oDrawArea = pFont->get_text_dimensions(sMsg, iMsgLen);
     if(!lua_isnoneornil(L, 7))
     {
         int iW = static_cast<int>(luaL_checkinteger(L, 6));
         int iH = static_cast<int>(luaL_checkinteger(L, 7));
-        if(iW > oDrawArea.iEndX && eAlign != eTHAlign::left) {
-            iX += (iW - oDrawArea.iEndX) / ((eAlign == eTHAlign::center) ? 2 : 1);
+        if(iW > oDrawArea.end_x && eAlign != text_alignment::left) {
+            iX += (iW - oDrawArea.end_x) / ((eAlign == text_alignment::center) ? 2 : 1);
         }
-        if(iH > oDrawArea.iEndY) {
-            iY += (iH - oDrawArea.iEndY) / 2;
+        if(iH > oDrawArea.end_y) {
+            iY += (iH - oDrawArea.end_y) / 2;
         }
     }
     if(pCanvas != nullptr)
     {
-        pFont->drawText(pCanvas, sMsg, iMsgLen, iX, iY);
+        pFont->draw_text(pCanvas, sMsg, iMsgLen, iX, iY);
     }
-    lua_pushinteger(L, iY + oDrawArea.iEndY);
-    lua_pushinteger(L, iX + oDrawArea.iEndX);
+    lua_pushinteger(L, iY + oDrawArea.end_y);
+    lua_pushinteger(L, iX + oDrawArea.end_x);
 
     return 2;
 }
 
 static int l_font_draw_wrapped(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = nullptr;
     if(!lua_isnoneornil(L, 2))
     {
@@ -383,17 +383,17 @@ static int l_font_draw_wrapped(lua_State *L)
     int iY = static_cast<int>(luaL_checkinteger(L, 5));
     int iW = static_cast<int>(luaL_checkinteger(L, 6));
 
-    eTHAlign eAlign = eTHAlign::left;
+    text_alignment eAlign = text_alignment::left;
     if(!lua_isnoneornil(L, 7)) {
         const char* sAlign = luaL_checkstring(L, 7);
         if(std::strcmp(sAlign, "right") == 0) {
-            eAlign = eTHAlign::right;
+            eAlign = text_alignment::right;
         } else if(std::strcmp(sAlign, "left") == 0) {
-            eAlign = eTHAlign::left;
+            eAlign = text_alignment::left;
         } else if(std::strcmp(sAlign, "center") == 0 ||
                 std::strcmp(sAlign, "centre") == 0 ||
                 std::strcmp(sAlign, "middle") == 0) {
-            eAlign = eTHAlign::center;
+            eAlign = text_alignment::center;
         } else {
             return luaL_error(L, "Invalid alignment: \"%s\"", sAlign);
         }
@@ -411,18 +411,18 @@ static int l_font_draw_wrapped(lua_State *L)
         iSkipRows = static_cast<int>(luaL_checkinteger(L, 9));
     }
 
-    THFontDrawArea oDrawArea = pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX, iY,
+    text_layout oDrawArea = pFont->draw_text_wrapped(pCanvas, sMsg, iMsgLen, iX, iY,
                                               iW, iMaxRows, iSkipRows, eAlign);
-    lua_pushinteger(L, oDrawArea.iEndY);
-    lua_pushinteger(L, oDrawArea.iEndX);
-    lua_pushinteger(L, oDrawArea.iNumRows);
+    lua_pushinteger(L, oDrawArea.end_y);
+    lua_pushinteger(L, oDrawArea.end_x);
+    lua_pushinteger(L, oDrawArea.row_count);
 
     return 3;
 }
 
 static int l_font_draw_tooltip(lua_State *L)
 {
-    THFont* pFont = luaT_testuserdata<THFont>(L);
+    font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
     size_t iMsgLen;
     const char* sMsg = luaT_checkstring(L, 3, &iMsgLen);
@@ -433,19 +433,19 @@ static int l_font_draw_tooltip(lua_State *L)
     int iW = 200; // (for now) hardcoded width of tooltips
     uint32_t iBlack = pCanvas->map_colour(0x00, 0x00, 0x00);
     uint32_t iWhite = pCanvas->map_colour(0xFF, 0xFF, 0xFF);
-    THFontDrawArea oArea = pFont->drawTextWrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, INT_MAX, 0);
-    int iLastX = iX + oArea.iWidth + 3;
-    int iFirstY = iY - (oArea.iEndY - iY) - 1;
+    text_layout oArea = pFont->draw_text_wrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, INT_MAX, 0);
+    int iLastX = iX + oArea.width + 3;
+    int iFirstY = iY - (oArea.end_y - iY) - 1;
 
     int iXOffset = iLastX > iScreenWidth ? iScreenWidth - iLastX : 0;
     int iYOffset = iFirstY < 0 ? -iFirstY : 0;
 
-    pCanvas->fill_rect(iBlack, iX + iXOffset, iFirstY + iYOffset, oArea.iWidth + 3, oArea.iEndY - iY + 2);
-    pCanvas->fill_rect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, oArea.iWidth + 1, oArea.iEndY - iY);
+    pCanvas->fill_rect(iBlack, iX + iXOffset, iFirstY + iYOffset, oArea.width + 3, oArea.end_y - iY + 2);
+    pCanvas->fill_rect(iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, oArea.width + 1, oArea.end_y - iY);
 
-    pFont->drawTextWrapped(pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset, iFirstY + 1 + iYOffset, iW - 4);
+    pFont->draw_text_wrapped(pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset, iFirstY + 1 + iYOffset, iW - 4);
 
-    lua_pushinteger(L, oArea.iEndY);
+    lua_pushinteger(L, oArea.end_y);
 
     return 1;
 }
@@ -893,7 +893,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 
     // Font
     // Also adapt the font proxy meta table (font_proxy_mt) in graphics.lua.
-    luaT_class(THFont, l_font_new, "font", eTHLuaMetatable::font);
+    luaT_class(font, l_font_new, "font", eTHLuaMetatable::font);
     luaT_setfunction(l_font_get_size, "sizeOf");
     luaT_setfunction(l_font_draw, "draw", eTHLuaMetatable::surface);
     luaT_setfunction(l_font_draw_wrapped, "drawWrapped", eTHLuaMetatable::surface);
@@ -901,7 +901,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // BitmapFont
-    luaT_class(THBitmapFont, l_bitmap_font_new, "bitmap_font", eTHLuaMetatable::bitmapFont);
+    luaT_class(bitmap_font, l_bitmap_font_new, "bitmap_font", eTHLuaMetatable::bitmapFont);
     luaT_superclass(eTHLuaMetatable::font);
     luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", eTHLuaMetatable::sheet);
     luaT_setfunction(l_bitmap_font_get_spritesheet, "getSheet", eTHLuaMetatable::sheet);
@@ -910,7 +910,7 @@ void THLuaRegisterGfx(const THLuaRegisterState_t *pState)
 
 #ifdef CORSIX_TH_USE_FREETYPE2
     // FreeTypeFont
-    luaT_class(THFreeTypeFont, l_freetype_font_new, "freetype_font", eTHLuaMetatable::freeTypeFont);
+    luaT_class(freetype_font, l_freetype_font_new, "freetype_font", eTHLuaMetatable::freeTypeFont);
     luaT_superclass(eTHLuaMetatable::font);
     luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", eTHLuaMetatable::sheet);
     luaT_setfunction(l_freetype_font_set_face, "setFace");

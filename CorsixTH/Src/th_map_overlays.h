@@ -26,7 +26,7 @@ SOFTWARE.
 #include <cstddef>
 #include <string>
 
-class THFont;
+class font;
 class level_map;
 class render_target;
 class sprite_sheet;
@@ -64,13 +64,13 @@ public:
     virtual ~map_typical_overlay();
 
     void set_sprites(sprite_sheet* pSheet, bool bTakeOwnership);
-    void set_font(THFont* font, bool take_ownership);
+    void set_font(::font* font, bool take_ownership);
 
 protected:
     void draw_text(render_target* pCanvas, int iX, int iY, std::string str);
 
     sprite_sheet* sprites;
-    THFont* font;
+    ::font* font;
 
 private:
     bool owns_sprites;
