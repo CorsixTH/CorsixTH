@@ -242,8 +242,8 @@ template <> struct luaT_classinfo<line> {
     static inline const char* name() {return "Line";}
 };
 
-struct music_t;
-template <> struct luaT_classinfo<music_t> {
+class music;
+template <> struct luaT_classinfo<music> {
     static inline const char* name() {return "Music";}
 };
 
