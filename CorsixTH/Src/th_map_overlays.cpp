@@ -25,157 +25,157 @@ SOFTWARE.
 #include "th_map.h"
 #include <sstream>
 
-THMapOverlayPair::THMapOverlayPair()
+map_overlay_pair::map_overlay_pair()
 {
-    m_pFirst = nullptr;
-    m_pSecond = nullptr;
-    m_bOwnFirst = false;
-    m_bOwnSecond = false;
+    first = nullptr;
+    second = nullptr;
+    owns_first = false;
+    owns_second = false;
 }
 
-THMapOverlayPair::~THMapOverlayPair()
+map_overlay_pair::~map_overlay_pair()
 {
-    setFirst(nullptr, false);
-    setSecond(nullptr, false);
+    set_first(nullptr, false);
+    set_second(nullptr, false);
 }
 
-void THMapOverlayPair::setFirst(THMapOverlay* pOverlay, bool bTakeOwnership)
+void map_overlay_pair::set_first(map_overlay* pOverlay, bool bTakeOwnership)
 {
-    if(m_pFirst && m_bOwnFirst)
-        delete m_pFirst;
-    m_pFirst = pOverlay;
-    m_bOwnFirst = bTakeOwnership;
+    if(first && owns_first)
+        delete first;
+    first = pOverlay;
+    owns_first = bTakeOwnership;
 }
 
-void THMapOverlayPair::setSecond(THMapOverlay* pOverlay, bool bTakeOwnership)
+void map_overlay_pair::set_second(map_overlay* pOverlay, bool bTakeOwnership)
 {
-    if(m_pSecond && m_bOwnSecond)
-        delete m_pSecond;
-    m_pSecond = pOverlay;
-    m_bOwnSecond = bTakeOwnership;
+    if(second && owns_second)
+        delete second;
+    second = pOverlay;
+    owns_second = bTakeOwnership;
 }
 
-void THMapOverlayPair::drawCell(render_target* pCanvas, int iCanvasX,
-                                int iCanvasY, const THMap* pMap, int iNodeX,
+void map_overlay_pair::draw_cell(render_target* pCanvas, int iCanvasX,
+                                int iCanvasY, const level_map* pMap, int iNodeX,
                                 int iNodeY)
 {
-    if(m_pFirst)
-        m_pFirst->drawCell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
-    if(m_pSecond)
-        m_pSecond->drawCell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
+    if(first)
+        first->draw_cell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
+    if(second)
+        second->draw_cell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
 }
 
-THMapTextOverlay::THMapTextOverlay()
+map_text_overlay::map_text_overlay()
 {
-    m_iBackgroundSprite = 0;
+    background_sprite = 0;
 }
 
-void THMapTextOverlay::setBackgroundSprite(size_t iSprite)
+void map_text_overlay::set_background_sprite(size_t iSprite)
 {
-    m_iBackgroundSprite = iSprite;
+    background_sprite = iSprite;
 }
 
-void THMapTextOverlay::drawCell(render_target* pCanvas, int iCanvasX,
-                                int iCanvasY, const THMap* pMap, int iNodeX,
+void map_text_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
+                                int iCanvasY, const level_map* pMap, int iNodeX,
                                 int iNodeY)
 {
-    if(m_pSprites && m_iBackgroundSprite)
+    if(sprites && background_sprite)
     {
-        m_pSprites->draw_sprite(pCanvas, m_iBackgroundSprite, iCanvasX,
+        sprites->draw_sprite(pCanvas, background_sprite, iCanvasX,
             iCanvasY, 0);
     }
-    if(m_pFont)
+    if(font)
     {
-        _drawText(pCanvas, iCanvasX, iCanvasY, getText(pMap, iNodeX, iNodeY));
+        draw_text(pCanvas, iCanvasX, iCanvasY, get_text(pMap, iNodeX, iNodeY));
     }
 }
 
-const std::string THMapPositionsOverlay::getText(const THMap* pMap, int iNodeX, int iNodeY)
+const std::string map_positions_overlay::get_text(const level_map* pMap, int iNodeX, int iNodeY)
 {
     std::ostringstream str;
     str << iNodeX + 1 << ',' << iNodeY + 1;
     return str.str();
 }
 
-THMapTypicalOverlay::THMapTypicalOverlay()
+map_typical_overlay::map_typical_overlay()
 {
-    m_pSprites = nullptr;
-    m_pFont = nullptr;
-    m_bOwnsSprites = false;
-    m_bOwnsFont = false;
+    sprites = nullptr;
+    font = nullptr;
+    owns_sprites = false;
+    owns_font = false;
 }
 
-THMapTypicalOverlay::~THMapTypicalOverlay()
+map_typical_overlay::~map_typical_overlay()
 {
-    setSprites(nullptr, false);
-    setFont(nullptr, false);
+    set_sprites(nullptr, false);
+    set_font(nullptr, false);
 }
 
-void THMapFlagsOverlay::drawCell(render_target* pCanvas, int iCanvasX,
-                                 int iCanvasY, const THMap* pMap, int iNodeX,
+void map_flags_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
+                                 int iCanvasY, const level_map* pMap, int iNodeX,
                                  int iNodeY)
 {
-    const THMapNode *pNode = pMap->getNode(iNodeX, iNodeY);
+    const map_tile *pNode = pMap->get_tile(iNodeX, iNodeY);
     if(!pNode)
         return;
-    if(m_pSprites)
+    if(sprites)
     {
         if(pNode->flags.passable)
-            m_pSprites->draw_sprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
         if(pNode->flags.hospital)
-            m_pSprites->draw_sprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
         if(pNode->flags.buildable)
-            m_pSprites->draw_sprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
-        if(pNode->flags.can_travel_n && pMap->getNode(iNodeX, iNodeY - 1)->flags.passable)
+            sprites->draw_sprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
+        if(pNode->flags.can_travel_n && pMap->get_tile(iNodeX, iNodeY - 1)->flags.passable)
         {
-            m_pSprites->draw_sprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_e && pMap->getNode(iNodeX + 1, iNodeY)->flags.passable)
+        if(pNode->flags.can_travel_e && pMap->get_tile(iNodeX + 1, iNodeY)->flags.passable)
         {
-            m_pSprites->draw_sprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_s && pMap->getNode(iNodeX, iNodeY + 1)->flags.passable)
+        if(pNode->flags.can_travel_s && pMap->get_tile(iNodeX, iNodeY + 1)->flags.passable)
         {
-            m_pSprites->draw_sprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_w && pMap->getNode(iNodeX - 1, iNodeY)->flags.passable)
+        if(pNode->flags.can_travel_w && pMap->get_tile(iNodeX - 1, iNodeY)->flags.passable)
         {
-            m_pSprites->draw_sprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
+            sprites->draw_sprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
         }
     }
-    if(m_pFont)
+    if(font)
     {
         if(!pNode->objects.empty())
         {
             std::ostringstream str;
             str << 'T' << static_cast<int>(pNode->objects.front());
-            _drawText(pCanvas, iCanvasX, iCanvasY - 8, str.str());
+            draw_text(pCanvas, iCanvasX, iCanvasY - 8, str.str());
         }
         if(pNode->iRoomId)
         {
             std::ostringstream str;
             str << 'R' << static_cast<int>(pNode->iRoomId);
-            _drawText(pCanvas, iCanvasX, iCanvasY + 8, str.str());
+            draw_text(pCanvas, iCanvasX, iCanvasY + 8, str.str());
         }
     }
 }
 
-void THMapParcelsOverlay::drawCell(render_target* pCanvas, int iCanvasX,
-                                   int iCanvasY, const THMap* pMap, int iNodeX,
+void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
+                                   int iCanvasY, const level_map* pMap, int iNodeX,
                                    int iNodeY)
 {
-    const THMapNode *pNode = pMap->getNode(iNodeX, iNodeY);
+    const map_tile *pNode = pMap->get_tile(iNodeX, iNodeY);
     if(!pNode)
         return;
-    if(m_pFont)
-        _drawText(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
-    if(m_pSprites)
+    if(font)
+        draw_text(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
+    if(sprites)
     {
         uint16_t iParcel = pNode->iParcelId;
 #define DIR(dx, dy, sprite) \
-        pNode = pMap->getNode(iNodeX + dx, iNodeY + dy); \
+        pNode = pMap->get_tile(iNodeX + dx, iNodeY + dy); \
         if(!pNode || pNode->iParcelId != iParcel) \
-            m_pSprites->draw_sprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
+            sprites->draw_sprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
         DIR( 0, -1, 18);
         DIR( 1,  0, 19);
         DIR( 0,  1, 20);
@@ -185,26 +185,26 @@ void THMapParcelsOverlay::drawCell(render_target* pCanvas, int iCanvasX,
 }
 
 
-void THMapTypicalOverlay::_drawText(render_target* pCanvas, int iX, int iY,
+void map_typical_overlay::draw_text(render_target* pCanvas, int iX, int iY,
         std::string str)
 {
-    THFontDrawArea oArea = m_pFont->getTextSize(str.c_str(), str.length());
-    m_pFont->drawText(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.iEndX) / 2,
+    THFontDrawArea oArea = font->getTextSize(str.c_str(), str.length());
+    font->drawText(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.iEndX) / 2,
         iY + (32 - oArea.iEndY) / 2);
 }
 
-void THMapTypicalOverlay::setSprites(sprite_sheet* pSheet, bool bTakeOwnership)
+void map_typical_overlay::set_sprites(sprite_sheet* pSheet, bool bTakeOwnership)
 {
-    if(m_pSprites && m_bOwnsSprites)
-        delete m_pSprites;
-    m_pSprites = pSheet;
-    m_bOwnsSprites = bTakeOwnership;
+    if(sprites && owns_sprites)
+        delete sprites;
+    sprites = pSheet;
+    owns_sprites = bTakeOwnership;
 }
 
-void THMapTypicalOverlay::setFont(THFont* pFont, bool bTakeOwnership)
+void map_typical_overlay::set_font(THFont* font, bool take_ownership)
 {
-    if(m_pFont && m_bOwnsFont)
-        delete m_pFont;
-    m_pFont = pFont;
-    m_bOwnsFont = bTakeOwnership;
+    if(this->font && owns_font)
+        delete this->font;
+    this->font = font;
+    owns_font = take_ownership;
 }

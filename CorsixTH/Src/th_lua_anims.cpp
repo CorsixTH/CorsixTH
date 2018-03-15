@@ -241,7 +241,7 @@ static int l_anim_pre_depersist(lua_State *L)
     // things work nicely, we initialise all the fields of a THAnimation as
     // soon as possible, thus preventing issues like an anim -> map -> anim
     // reference chain whereby l_anim_depersist is called after l_map_depersist
-    // (as anim references map in its environment table) causing the pPrev
+    // (as anim references map in its environment table) causing the prev
     // field to be set during map depersistence, then cleared to nullptr by the
     // constructor during l_anim_depersist.
     T* pAnimation = luaT_testuserdata<T>(L);
@@ -380,8 +380,8 @@ static int l_anim_set_tile(lua_State *L)
     }
     else
     {
-        THMap* pMap = luaT_testuserdata<THMap>(L, 2);
-        THMapNode* pNode = pMap->getNode(static_cast<int>(luaL_checkinteger(L, 3) - 1), static_cast<int>(luaL_checkinteger(L, 4) - 1));
+        level_map* pMap = luaT_testuserdata<level_map>(L, 2);
+        map_tile* pNode = pMap->get_tile(static_cast<int>(luaL_checkinteger(L, 3) - 1), static_cast<int>(luaL_checkinteger(L, 4) - 1));
         if(pNode)
             pAnimation->attach_to_tile(pNode, last_layer);
 
@@ -410,24 +410,24 @@ static int l_anim_get_tile(lua_State *L)
     {
         return 0;
     }
-    THMap* pMap = (THMap*)lua_touserdata(L, 2);
+    level_map* pMap = (level_map*)lua_touserdata(L, 2);
     const link_list* pListNode = pAnimation->get_previous();
     while(pListNode->prev)
     {
         pListNode = pListNode->prev;
     }
-    // Casting pListNode to a THMapNode* is slightly dubious, but it should
-    // work. If on the normal list, then pListNode will be a THMapNode*, and
+    // Casting pListNode to a map_tile* is slightly dubious, but it should
+    // work. If on the normal list, then pListNode will be a map_tile*, and
     // all is fine. However, if on the early list, pListNode will be pointing
-    // to a member of a THMapNode, so we're relying on pointer arithmetic
-    // being a subtract and integer divide by sizeof(THMapNode) to yield the
-    // correct map node.
-    const THMapNode *pRootNode = pMap->getNodeUnchecked(0, 0);
+    // to a member of a map_tile, so we're relying on pointer arithmetic
+    // being a subtract and integer divide by sizeof(map_tile) to yield the
+    // correct map_tile.
+    const map_tile *pRootNode = pMap->get_tile_unchecked(0, 0);
     uintptr_t iDiff = reinterpret_cast<const char*>(pListNode) -
                       reinterpret_cast<const char*>(pRootNode);
-    int iIndex = (int)(iDiff / sizeof(THMapNode));
-    int iY = iIndex / pMap->getWidth();
-    int iX = iIndex - (iY * pMap->getWidth());
+    int iIndex = (int)(iDiff / sizeof(map_tile));
+    int iY = iIndex / pMap->get_width();
+    int iX = iIndex - (iY * pMap->get_width());
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 1);
     return 3; // map, x, y

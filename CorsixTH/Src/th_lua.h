@@ -175,8 +175,8 @@ template <> struct luaT_classinfo<render_target> {
     static inline const char* name() {return "Surface";}
 };
 
-class THMap;
-template <> struct luaT_classinfo<THMap> {
+class level_map;
+template <> struct luaT_classinfo<level_map> {
     static inline const char* name() {return "Map";}
 };
 

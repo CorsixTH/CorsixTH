@@ -1536,7 +1536,7 @@ void animation_base::remove_from_tile()
     link_list::remove_from_list();
 }
 
-void animation_base::attach_to_tile(THMapNode *pMapNode, int layer)
+void animation_base::attach_to_tile(map_tile *pMapNode, int layer)
 {
     remove_from_tile();
     link_list *pList;

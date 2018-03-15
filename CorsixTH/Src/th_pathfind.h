@@ -93,7 +93,7 @@ public:
         @param iStarty Y coordinate of the start position.
         @return The initial node to expand.
      */
-    node_t *pathingInit(const THMap *pMap, int iStartX, int iStarty);
+    node_t *pathingInit(const level_map* pMap, int iStartX, int iStarty);
 
     //! Expand the \a pNode to its neighbours.
     /*!
@@ -102,9 +102,9 @@ public:
         @param iWidth Width of the map.
         @return Whether the search is done.
      */
-    bool pathingNeighbours(node_t *pNode, th_map_node_flags flags, int iWidth);
+    bool pathingNeighbours(node_t *pNode, map_tile_flags flags, int iWidth);
 
-    void pathingTryNode(node_t *pNode, th_map_node_flags neighbour_flags,
+    void pathingTryNode(node_t *pNode, map_tile_flags neighbour_flags,
         bool passable, node_t *pNeighbour);
 
     //! Guess distance to the destination for \a pNode.
@@ -121,12 +121,12 @@ public:
         @param direction Direction of travel.
         @return Whether the search is done.
      */
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
+    virtual bool tryNode(node_t *pNode, map_tile_flags flags,
             node_t *pNeighbour, TravelDirection direction) = 0;
 
 protected:
     THPathfinder *m_pPf; ///< Path finder parent object, containing shared data.
-    const THMap *m_pMap; ///< Map being searched.
+    const level_map* m_pMap; ///< Map being searched.
 };
 
 class PathFinder : public BasePathing
@@ -135,10 +135,10 @@ public:
     PathFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
+    bool tryNode(node_t *pNode, map_tile_flags flags,
             node_t *pNeighbour, TravelDirection direction) override;
 
-    bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
+    bool findPath(const level_map* pMap, int iStartX, int iStartY, int iEndX, int iEndY);
 
     int m_iEndX; ///< X coordinate of the destination of the path.
     int m_iEndY; ///< Y coordinate of the destination of the path.
@@ -150,10 +150,10 @@ public:
     HospitalFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
+    bool tryNode(node_t *pNode, map_tile_flags flags,
             node_t *pNeighbour, TravelDirection direction) override;
 
-    bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
+    bool findPathToHospital(const level_map* pMap, int iStartX, int iStartY);
 };
 
 class IdleTileFinder : public BasePathing
@@ -162,10 +162,10 @@ public:
     IdleTileFinder(THPathfinder *pf) : BasePathing(pf) { }
 
     int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
+    bool tryNode(node_t *pNode, map_tile_flags flags,
             node_t *pNeighbour, TravelDirection direction) override;
 
-    bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
+    bool findIdleTile(const level_map* pMap, int iStartX, int iStartY, int iN);
 
     node_t *m_pBestNext;
     double m_fBestDistance;
@@ -179,18 +179,18 @@ public:
     Objectsvisitor(THPathfinder *pf) : BasePathing(pf) { }
 
     int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
+    bool tryNode(node_t *pNode, map_tile_flags flags,
             node_t *pNeighbour, TravelDirection direction) override;
 
-    bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
-                      THObjectType eTHOB, int iMaxDistance,
+    bool visitObjects(const level_map* pMap, int iStartX, int iStartY,
+                      object_type eTHOB, int iMaxDistance,
                       lua_State *L, int iVisitFunction, bool anyObjectType);
 
     lua_State *m_pL;
     int m_iVisitFunction;
     int m_iMaxDistance;
     bool m_bAnyObjectType;
-    THObjectType m_eTHOB;
+    object_type m_eTHOB;
 };
 
 //! Finds paths through maps
@@ -214,26 +214,26 @@ public:
     THPathfinder();
     ~THPathfinder();
 
-    void setDefaultMap(const THMap *pMap);
+    void setDefaultMap(const level_map* pMap);
 
-    inline bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX,
+    inline bool findPath(const level_map* pMap, int iStartX, int iStartY, int iEndX,
                          int iEndY)
     {
         return m_oPathFinder.findPath(pMap, iStartX, iStartY, iEndX, iEndY);
     }
 
-    inline bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN)
+    inline bool findIdleTile(const level_map* pMap, int iStartX, int iStartY, int iN)
     {
         return m_oIdleTileFinder.findIdleTile(pMap, iStartX, iStartY, iN);
     }
 
-    inline bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY)
+    inline bool findPathToHospital(const level_map* pMap, int iStartX, int iStartY)
     {
         return m_oHospitalFinder.findPathToHospital(pMap, iStartX, iStartY);
     }
 
-    inline bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
-                      THObjectType eTHOB, int iMaxDistance, lua_State *L,
+    inline bool visitObjects(const level_map* pMap, int iStartX, int iStartY,
+                      object_type eTHOB, int iMaxDistance, lua_State *L,
                       int iVisitFunction, bool anyObjectType)
     {
         return m_oObjectsvisitor.visitObjects(
@@ -259,7 +259,7 @@ public:
     void _openHeapPush(node_t* pNode);
     void _openHeapPromote(node_t* pNode);
 
-    const THMap *m_pDefaultMap;
+    const level_map* m_pDefaultMap;
 
     //! 2D array of nodes, one for each map cell
     node_t *m_pNodes;

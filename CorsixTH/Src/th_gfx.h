@@ -492,14 +492,14 @@ private:
     void fix_next_frame(uint32_t iFirst, size_t iLength);
 };
 
-struct THMapNode;
+struct map_tile;
 class animation_base : public drawable
 {
 public:
     animation_base();
 
     void remove_from_tile();
-    void attach_to_tile(THMapNode *pMapNode, int layer);
+    void attach_to_tile(map_tile *pMapNode, int layer);
 
     uint32_t get_flags() const {return flags;}
     int get_x() const {return x_relative_to_tile;}
