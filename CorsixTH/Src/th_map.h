@@ -172,17 +172,17 @@ enum class THMapTemperatureDisplay {
     yellowRed    //!< Gradients of yellow, orange, and red
 };
 
-struct THMapNode : public THLinkList
+struct THMapNode : public link_list
 {
     THMapNode();
     ~THMapNode();
 
     // Linked list for entities rendered at this node
-    // THLinkList::pPrev (will always be nullptr)
-    // THLinkList::pNext
+    // link_list::pPrev (will always be nullptr)
+    // link_list::pNext
 
     //! Linked list for entities rendered in an early (right-to-left) pass
-    THLinkList oEarlyEntities;
+    link_list oEarlyEntities;
 
     //! Block tiles for rendering
     //! For each tile, the lower byte is the index in the sprite sheet, and the
@@ -384,7 +384,7 @@ public:
     void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
 
 private:
-    drawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+    drawable* _hitTestDrawables(link_list* pListStart, int iXs, int iYs,
                                 int iTestX, int iTestY) const;
     void _readTileIndex(const uint8_t* pData, int& iX, int &iY) const;
     void _writeTileIndex(uint8_t* pData, int iX, int iY) const;

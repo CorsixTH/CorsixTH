@@ -411,10 +411,10 @@ static int l_anim_get_tile(lua_State *L)
         return 0;
     }
     THMap* pMap = (THMap*)lua_touserdata(L, 2);
-    const THLinkList* pListNode = pAnimation->get_previous();
-    while(pListNode->m_pPrev)
+    const link_list* pListNode = pAnimation->get_previous();
+    while(pListNode->prev)
     {
-        pListNode = pListNode->m_pPrev;
+        pListNode = pListNode->prev;
     }
     // Casting pListNode to a THMapNode* is slightly dubious, but it should
     // work. If on the normal list, then pListNode will be a THMapNode*, and

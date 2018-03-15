@@ -103,7 +103,7 @@ struct render_target_creation_params
     game objects (though they are the most common thing in drawing lists).
 */
 // TODO: Replace this struct with something cleaner
-struct drawable : public THLinkList
+struct drawable : public link_list
 {
     //! Draw the object at a specific point on a render target
     /*!
@@ -535,7 +535,7 @@ public:
     void draw_child(render_target* pCanvas, int iDestX, int iDestY);
     bool hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY);
 
-    THLinkList* get_previous() {return m_pPrev;}
+    link_list* get_previous() {return prev;}
     size_t get_animation() const {return animation_index;}
     bool get_marker(int* pX, int* pY);
     bool get_secondary_marker(int* pX, int* pY);

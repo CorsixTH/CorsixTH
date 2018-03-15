@@ -663,13 +663,13 @@ private:
         line
     };
 
-    class line_operation : public THLinkList
+    class line_operation : public link_list
     {
     public:
         line_operation_type type;
         double x, y;
         line_operation(line_operation_type type, double x, double y) : type(type), x(x), y(y) {
-            m_pNext = nullptr;
+            next = nullptr;
         }
     };
 

@@ -1328,7 +1328,7 @@ void animation::persist(LuaPersistWriter *pWriter) const
 
     // Write the next chained thing
     lua_rawgeti(L, luaT_environindex, 2);
-    lua_pushlightuserdata(L, m_pNext);
+    lua_pushlightuserdata(L, next);
     lua_rawget(L, -2);
     pWriter->fastWriteStackObject(-1);
     lua_pop(L, 2);
@@ -1403,9 +1403,9 @@ void animation::depersist(LuaPersistReader *pReader)
         // Read the chain
         if(!pReader->readStackObject())
             break;
-        m_pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
-        if(m_pNext)
-            m_pNext->m_pPrev = this;
+        next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
+        if(next)
+            next->prev = this;
         lua_pop(L, 1);
 
         // Read drawable fields
@@ -1533,38 +1533,38 @@ void animation::tick()
 
 void animation_base::remove_from_tile()
 {
-    THLinkList::removeFromList();
+    link_list::remove_from_list();
 }
 
 void animation_base::attach_to_tile(THMapNode *pMapNode, int layer)
 {
     remove_from_tile();
-    THLinkList *pList;
+    link_list *pList;
     if(flags & thdf_early_list)
         pList = &pMapNode->oEarlyEntities;
     else
         pList = pMapNode;
 
-    this->setDrawingLayer(layer);
+    this->set_drawing_layer(layer);
 
 #define GetFlags(x) (reinterpret_cast<drawable*>(x)->m_iFlags)
-    while(pList->m_pNext && pList->m_pNext->getDrawingLayer() < layer)
+    while(pList->next && pList->next->get_drawing_layer() < layer)
     {
-        pList = pList->m_pNext;
+        pList = pList->next;
     }
 #undef GetFlags
 
-    m_pPrev = pList;
-    if(pList->m_pNext != nullptr)
+    prev = pList;
+    if(pList->next != nullptr)
     {
-        pList->m_pNext->m_pPrev = this;
-        this->m_pNext = pList->m_pNext;
+        pList->next->prev = this;
+        this->next = pList->next;
     }
     else
     {
-        m_pNext = nullptr;
+        next = nullptr;
     }
-    pList->m_pNext = this;
+    pList->next = this;
 }
 
 void animation::set_parent(animation *pParent)
@@ -1581,11 +1581,11 @@ void animation::set_parent(animation *pParent)
         draw_fn = THAnimation_draw_child;
         hit_test_fn = THAnimation_hit_test_child;
         parent = pParent;
-        m_pNext = parent->m_pNext;
-        if(m_pNext)
-            m_pNext->m_pPrev = this;
-        m_pPrev = parent;
-        parent->m_pNext = this;
+        next = parent->next;
+        if(next)
+            next->prev = this;
+        prev = parent;
+        parent->next = this;
     }
 }
 
@@ -1848,7 +1848,7 @@ void sprite_render_list::persist(LuaPersistWriter *pWriter) const
 
     // Write the next chained thing
     lua_rawgeti(L, luaT_environindex, 2);
-    lua_pushlightuserdata(L, m_pNext);
+    lua_pushlightuserdata(L, next);
     lua_rawget(L, -2);
     pWriter->fastWriteStackObject(-1);
     lua_pop(L, 2);
@@ -1908,9 +1908,9 @@ void sprite_render_list::depersist(LuaPersistReader *pReader)
     // Read the chain
     if(!pReader->readStackObject())
         return;
-    m_pNext = reinterpret_cast<THLinkList*>(lua_touserdata(L, -1));
-    if(m_pNext)
-        m_pNext->m_pPrev = this;
+    next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
+    if(next)
+        next->prev = this;
     lua_pop(L, 1);
 
     // Fix the sheet field

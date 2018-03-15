@@ -998,11 +998,11 @@ void THMap::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                     pCanvas->set_clip_rect(&rcOldClip);
                 }
             }
-            drawable *pItem = (drawable*)(itrNode->oEarlyEntities.m_pNext);
+            drawable *pItem = (drawable*)(itrNode->oEarlyEntities.next);
             while(pItem)
             {
                 pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
-                pItem = (drawable*)(pItem->m_pNext);
+                pItem = (drawable*)(pItem->next);
             }
         }
 
@@ -1038,20 +1038,20 @@ void THMap::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                 nullptr, &iH) && iH > 0)
                 bNeedsRedraw = true;
-            if(itrNode->oEarlyEntities.m_pNext)
+            if(itrNode->oEarlyEntities.next)
                 bNeedsRedraw = true;
 
             bool bRedrawAnimations = false;
 
-            drawable *pItem = (drawable*)(itrNode->m_pNext);
+            drawable *pItem = (drawable*)(itrNode->next);
             while(pItem)
             {
                 pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
                 if(pItem->is_multiple_frame_animation_fn(pItem))
                     bRedrawAnimations = true;
-                if(pItem->getDrawingLayer() == 1)
+                if(pItem->get_drawing_layer() == 1)
                     bNeedsRedraw = true;
-                pItem = (drawable*)(pItem->m_pNext);
+                pItem = (drawable*)(pItem->next);
             }
 
             //if the current tile contained a multiple frame animation (e.g. a doctor walking)
@@ -1064,25 +1064,25 @@ void THMap::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
                 //check if an object in the adjacent tile to the left of the current tile needs to be redrawn
                 //and if necessary draw it
-                pItem = (drawable*)(formerIterator.getPreviousNode()->m_pNext);
+                pItem = (drawable*)(formerIterator.getPreviousNode()->next);
                 while(pItem)
                 {
-                    if (pItem->getDrawingLayer() == 9)
+                    if (pItem->get_drawing_layer() == 9)
                     {
                         pItem->draw_fn(pItem, pCanvas, formerIterator.x() - 64, formerIterator.y());
                         bTileNeedsRedraw = true;
                     }
-                    pItem = (drawable*)(pItem->m_pNext);
+                    pItem = (drawable*)(pItem->next);
                 }
 
                 //check if an object in the adjacent tile above the current tile needs to be redrawn
                 //and if necessary draw it
-                pItem = formerIterator ? (drawable*)(formerIterator->m_pNext) : nullptr;
+                pItem = formerIterator ? (drawable*)(formerIterator->next) : nullptr;
                 while(pItem)
                 {
-                    if(pItem->getDrawingLayer() == 8)
+                    if(pItem->get_drawing_layer() == 8)
                         pItem->draw_fn(pItem, pCanvas, formerIterator.x(), formerIterator.y());
-                    pItem = (drawable*)(pItem->m_pNext);
+                    pItem = (drawable*)(pItem->next);
                 }
 
 
@@ -1113,15 +1113,15 @@ void THMap::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                             pCanvas->set_clip_rect(&rcOldClip);
                         }
                     }
-                    pItem = (drawable*)(itrNode.getPreviousNode()->oEarlyEntities.m_pNext);
+                    pItem = (drawable*)(itrNode.getPreviousNode()->oEarlyEntities.next);
                     while(pItem)
                     {
                         pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
-                        pItem = (drawable*)(pItem->m_pNext);
+                        pItem = (drawable*)(pItem->next);
                     }
 
-                    pItem = (drawable*)(itrNode.getPreviousNode())->m_pNext;
-                    for(; pItem; pItem = (drawable*)(pItem->m_pNext))
+                    pItem = (drawable*)(itrNode.getPreviousNode())->next;
+                    for(; pItem; pItem = (drawable*)(pItem->next))
                         pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
                 }
             }
@@ -1160,9 +1160,9 @@ drawable* THMap::hitTest(int iTestX, int iTestY) const
 
         for(THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::backward); itrNode; ++itrNode)
         {
-            if(itrNode->m_pNext != nullptr)
+            if(itrNode->next != nullptr)
             {
-                drawable* pResult = _hitTestDrawables(itrNode->m_pNext,
+                drawable* pResult = _hitTestDrawables(itrNode->next,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -1170,9 +1170,9 @@ drawable* THMap::hitTest(int iTestX, int iTestY) const
         }
         for(THMapScanlineIterator itrNode(itrNode2, eTHMapScanlineIteratorDirection::forward); itrNode; ++itrNode)
         {
-            if(itrNode->oEarlyEntities.m_pNext != nullptr)
+            if(itrNode->oEarlyEntities.next != nullptr)
             {
-                drawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.m_pNext,
+                drawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.next,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -1183,12 +1183,12 @@ drawable* THMap::hitTest(int iTestX, int iTestY) const
     return nullptr;
 }
 
-drawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+drawable* THMap::_hitTestDrawables(link_list* pListStart, int iXs, int iYs,
                                    int iTestX, int iTestY) const
 {
-    THLinkList* pListEnd = pListStart;
-    while(pListEnd->m_pNext)
-        pListEnd = pListEnd->m_pNext;
+    link_list* pListEnd = pListStart;
+    while(pListEnd->next)
+        pListEnd = pListEnd->next;
     drawable* pList = (drawable*)pListEnd;
 
     while(true)
@@ -1199,7 +1199,7 @@ drawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
         if(pList == pListStart)
             return nullptr;
         else
-            pList = (drawable*)pList->m_pPrev;
+            pList = (drawable*)pList->prev;
     }
 }
 
@@ -1453,11 +1453,11 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         pWriter->writeVUInt(pNode->aiTemperature[1]);
 
         lua_rawgeti(L, luaT_upvalueindex(1), 2);
-        lua_pushlightuserdata(L, pNode->m_pNext);
+        lua_pushlightuserdata(L, pNode->next);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);
         lua_pop(L, 1);
-        lua_pushlightuserdata(L, pNode->oEarlyEntities.m_pNext);
+        lua_pushlightuserdata(L, pNode->oEarlyEntities.next);
         lua_rawget(L, -2);
         pWriter->writeStackObject(-1);
         lua_pop(L, 2);
@@ -1553,22 +1553,22 @@ void THMap::depersist(LuaPersistReader *pReader)
         }
         if(!pReader->readStackObject())
             return;
-        pNode->m_pNext = (THLinkList*)lua_touserdata(L, -1);
-        if(pNode->m_pNext)
+        pNode->next = (link_list*)lua_touserdata(L, -1);
+        if(pNode->next)
         {
-            if(pNode->m_pNext->m_pPrev != nullptr)
+            if(pNode->next->prev != nullptr)
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
-            pNode->m_pNext->m_pPrev = pNode;
+            pNode->next->prev = pNode;
         }
         lua_pop(L, 1);
         if(!pReader->readStackObject())
             return;
-        pNode->oEarlyEntities.m_pNext = (THLinkList*)lua_touserdata(L, -1);
-        if(pNode->oEarlyEntities.m_pNext)
+        pNode->oEarlyEntities.next = (link_list*)lua_touserdata(L, -1);
+        if(pNode->oEarlyEntities.next)
         {
-            if(pNode->oEarlyEntities.m_pNext->m_pPrev != nullptr)
+            if(pNode->oEarlyEntities.next->prev != nullptr)
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
-            pNode->oEarlyEntities.m_pNext->m_pPrev = &pNode->oEarlyEntities;
+            pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
         }
         lua_pop(L, 1);
     }

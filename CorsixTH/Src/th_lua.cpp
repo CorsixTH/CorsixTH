@@ -175,16 +175,16 @@ static int l_load_strings(lua_State *L)
 
     try
     {
-        THStringList oStrings(pData, iDataLength);
+        th_string_list oStrings(pData, iDataLength);
         lua_settop(L, 0);
-        lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
-        for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
+        lua_createtable(L, static_cast<int>(oStrings.get_section_count()), 0);
+        for(size_t iSec = 0; iSec < oStrings.get_section_count(); ++iSec)
         {
-            size_t iCount = oStrings.getSectionSize(iSec);
+            size_t iCount = oStrings.get_section_size(iSec);
             lua_createtable(L, static_cast<int>(iCount), 0);
             for(size_t iStr = 0; iStr < iCount; ++iStr)
             {
-                lua_pushstring(L, oStrings.getString(iSec, iStr));
+                lua_pushstring(L, oStrings.get_string(iSec, iStr));
                 lua_rawseti(L, 2, static_cast<int>(iStr + 1));
             }
             lua_rawseti(L, 1, static_cast<int>(iSec + 1));

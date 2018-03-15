@@ -688,7 +688,7 @@ void render_target::draw_line(line *pLine, int iX, int iY)
     lastX = pLine->first_operation->x;
     lastY = pLine->first_operation->y;
 
-    line::line_operation* op = (line::line_operation*)(pLine->first_operation->m_pNext);
+    line::line_operation* op = (line::line_operation*)(pLine->first_operation->next);
     while (op) {
         if (op->type == line::line_operation_type::line) {
             SDL_RenderDrawLine(renderer, static_cast<int>(lastX + iX),
@@ -700,7 +700,7 @@ void render_target::draw_line(line *pLine, int iX, int iY)
         lastX = op->x;
         lastY = op->y;
 
-        op = (line::line_operation*)(op->m_pNext);
+        op = (line::line_operation*)(op->next);
     }
 }
 
@@ -1408,7 +1408,7 @@ line::~line()
 {
     line_operation* op = first_operation;
     while (op) {
-        line_operation* next = (line_operation*)(op->m_pNext);
+        line_operation* next = (line_operation*)(op->next);
         delete(op);
         op = next;
     }
@@ -1431,14 +1431,14 @@ void line::move_to(double fX, double fY)
 {
     line_operation* previous = current_operation;
     current_operation = new line_operation(line_operation_type::move, fX, fY);
-    previous->m_pNext = current_operation;
+    previous->next = current_operation;
 }
 
 void line::line_to(double fX, double fY)
 {
     line_operation* previous = current_operation;
     current_operation = new line_operation(line_operation_type::line, fX, fY);
-    previous->m_pNext = current_operation;
+    previous->next = current_operation;
 }
 
 void line::set_width(double pLineWidth)
@@ -1467,21 +1467,21 @@ void line::persist(LuaPersistWriter *pWriter) const
     pWriter->writeVUInt((uint32_t)alpha);
     pWriter->writeVFloat(width);
 
-    line_operation* op = (line_operation*)(first_operation->m_pNext);
+    line_operation* op = (line_operation*)(first_operation->next);
     uint32_t numOps = 0;
     for (; op; numOps++) {
-        op = (line_operation*)(op->m_pNext);
+        op = (line_operation*)(op->next);
     }
 
     pWriter->writeVUInt(numOps);
 
-    op = (line_operation*)(first_operation->m_pNext);
+    op = (line_operation*)(first_operation->next);
     while (op) {
         pWriter->writeVUInt((uint32_t)op->type);
         pWriter->writeVFloat<double>(op->x);
         pWriter->writeVFloat(op->y);
 
-        op = (line_operation*)(op->m_pNext);
+        op = (line_operation*)(op->next);
     }
 }
 
