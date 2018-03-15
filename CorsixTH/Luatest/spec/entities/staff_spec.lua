@@ -1,4 +1,4 @@
---[[ Copyright (c) 2014 Edvin "Lego3" Linge
+--[[ Copyright (c) 2018 Pavel "sofo" Schoffer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,22 +18,27 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- A stub implementation of the TH C++ object, to be able to run
--- unit tests without any backend.
+require("class_test_base")
 
-TheApp = {
-  gfx = {
-    loadMainCursor = function() end
-  }
-}
+require("entity")
+require("entities.humanoid")
+require("entities.staff")
 
-return {
-  animation = function()
-    return {
-      setHitTestResult = function() end,
-      setAnimation = function() end,
-      setDrawingLayer = function() end,
-      setTile = function() end,
-    }
-    end,
-}
+describe("Staff:", function()
+  local function getStaff()
+    local animation = {setHitTestResult = function() end}
+    return Staff(animation)
+  end
+
+  it("Can represent doctor as a string", function()
+    local doctor = getStaff()
+    doctor.humanoid_class = "Doctor"
+    local name = "WHITMAN"
+    doctor.profile = {skill = 0.5, is_psychiatrist = 0.5, name = name}
+
+    local result = doctor:tostring()
+
+    assert.matches(result, "humanoid.*" .. name .. ".*class.*Doctor")
+    assert.matches(result, "Skills.*0%.5.*Psych.*0%.5")
+  end)
+end)

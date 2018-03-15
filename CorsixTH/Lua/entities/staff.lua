@@ -1020,5 +1020,21 @@ function Staff:getServiceQuality()
   return weighted_skill + weighted_fatigue + weighted_happiness
 end
 
+--[[ Return string representation
+! Adds Doctor statistics for a "Doctor" object
+!return (string)
+]]
+function Staff:tostring()
+  local result = Humanoid.tostring(self)
+  if self.humanoid_class == "Doctor" then
+    result = result .. string.format("\nSkills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
+      self.profile.skill or 0,
+      self.profile.is_surgeon or 0,
+      self.profile.is_psychiatrist or 0,
+      self.profile.is_researcher or 0)
+  end
+  return result
+end
+
 -- Dummy callback for savegame compatibility
 local callbackNewRoom = --[[persistable:staff_build_staff_room_callback]] function(room) end

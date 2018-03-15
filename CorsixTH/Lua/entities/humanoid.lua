@@ -359,56 +359,9 @@ function Humanoid:getRoom()
 end
 
 function Humanoid:dump()
-  local name = "humanoid"
-  if self.profile then
-    name = self.profile.name
-  end
-
   print("-----------------------------------")
-  print("Clicked on ".. name, self)
-  print("Class: ", self.humanoid_class)
-  if self.humanoid_class == "Doctor" then
-    print(string.format("Skills: (%.3f)  Surgeon (%.3f)  Psych (%.3f)  Researcher (%.3f)",
-      self.profile.skill or 0,
-      self.profile.is_surgeon or 0,
-      self.profile.is_psychiatrist or 0,
-      self.profile.is_researcher or 0))
-  end
-  print(string.format("Warmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
-    self.attributes["warmth"] or 0,
-    self.attributes["happiness"] or 0,
-    self.attributes["fatigue"] or 0,
-    self.attributes["thirst"] or 0,
-    self.attributes["toilet_need"] or 0,
-    self.attributes["health"] or 0))
-
-  print("")
-  print("Actions:")
-  for i = 1, #self.action_queue do
-    local action = self.action_queue[i]
-    local flag =
-      (action.must_happen and "  must_happen" or "  ") ..
-      (action.todo_interrupt and "  " or "  ")
-    if action.room_type then
-      print(action.name .. " - " .. action.room_type .. flag)
-    elseif action.object then
-      print(action.name .. " - " .. action.object.object_type.id .. flag)
-    elseif action.name == "walk" then
-      print(action.name .. " - going to " .. action.x .. ":" .. action.y .. flag)
-    elseif action.name == "queue" then
-      local distance = action.current_bench_distance
-      if distance == nil then
-        distance = "nil"
-      end
-      local standing = "false"
-      if action:isStanding() then
-        standing = "true"
-      end
-      print(action.name .. " - Bench distance: " .. distance .. " Standing: " .. standing)
-    else
-      print(action.name .. flag)
-    end
-  end
+  print("Clicked on: ")
+  print(self:tostring())
   print("-----------------------------------")
 end
 
@@ -912,8 +865,65 @@ end
 
 function Humanoid:getCurrentAction()
   if next(self.action_queue) == nil then
-    error({message = "Action queue was empty. This should never happen.", humanoid = self})
+    error("Action queue was empty. This should never happen.\n" .. self:tostring())
   end
 
   return self.action_queue[1]
+end
+
+--[[ Return string representation
+! Returns string representation of the humanoid like status and action queue
+!return (string)
+]]
+function Humanoid:tostring()
+  local name = self.profile and self.profile.name or nil
+  local class = self.humanoid_class and self.humanoid_class or "N/A"
+  local full_name = "humanoid"
+  if (name) then
+    full_name = full_name .. " (" .. name .. ")"
+  end
+
+  local result = string.format("%s - class: %s", full_name, class)
+
+  result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
+    self.attributes["warmth"] or 0,
+    self.attributes["happiness"] or 0,
+    self.attributes["fatigue"] or 0,
+    self.attributes["thirst"] or 0,
+    self.attributes["toilet_need"] or 0,
+    self.attributes["health"] or 0)
+
+  result = result .. "\nActions: ["
+  for i = 1, #self.action_queue do
+    local action = self.action_queue[i]
+    local action_string = action.name
+    if action.room_type then
+      action_string = action_string .. " - " .. action.room_type
+    elseif action.object then
+      action_string = action_string .. " - " .. action.object.object_type.id
+    elseif action.name == "walk" then
+      action_string = action_string .. " - going to " .. action.x .. ":" .. action.y
+    elseif action.name == "queue" then
+      local distance = action.current_bench_distance
+      if distance == nil then
+        distance = "nil"
+      end
+      local standing = "false"
+      if action:isStanding() then
+        standing = "true"
+      end
+      action_string = action_string .. " - Bench distance: " .. distance .. " Standing: " .. standing
+    end
+    local flag = action.must_happen and "  must_happen" or ""
+    if flag ~= "" then
+      action_string = action_string .. " " .. flag
+    end
+
+    if i ~= 1 then
+      result = result .. ", "
+    end
+    result = result .. action_string
+  end
+  result = result .. "]"
+  return result
 end

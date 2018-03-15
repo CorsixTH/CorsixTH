@@ -25,6 +25,8 @@ require("busted")
 
 require("non_strict")
 require("class")
+local say = require("say")
+local assert = require("luassert")
 
 function permanent()
   return function()
@@ -37,3 +39,9 @@ function values()
     return nil
   end
 end
+
+function assertion_matches(_, arguments)
+  return string.match(arguments[1], arguments[2]) ~= nil
+end
+say:set("assertion.matches", "Expected substring fail.\n<String>: %s\n<Pattern>:%s")
+assert:register("assertion", "matches", assertion_matches, "assertion.matches")

@@ -69,7 +69,10 @@ globals = { -- Globals
             "VipGoToNextRoomAction", "VomitAction", "WalkAction", "YawnAction",
 
             -- Math extensions
-            "math.n_random", "math.round", "math.randomdump"
+            "math.n_random", "math.round", "math.randomdump",
+
+            -- Unit Tests
+            "assertion_matches"
           }
 
 -- Set standard globals

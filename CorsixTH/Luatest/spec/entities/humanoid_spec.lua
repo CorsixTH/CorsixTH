@@ -24,9 +24,13 @@ require("entity")
 require("entities.humanoid")
 
 describe("Humanoid:", function()
-  it("Gets the current action", function()
+  local function getHumanoid()
     local animation = {setHitTestResult = function() end}
-    local humanoid = Humanoid(animation)
+    return Humanoid(animation)
+  end
+
+  it("Gets the current action", function()
+    local humanoid = getHumanoid()
 
     local action1 = {name = "fake1"}
     local action2 = {name = "fake2"}
@@ -38,15 +42,32 @@ describe("Humanoid:", function()
     assert.equal(action1, recievedAction)
   end)
   it("Throws error if no action is queued", function()
-    local animation = {setHitTestResult = function() end}
-    local humanoid = Humanoid(animation)
+    local humanoid = getHumanoid()
 
     local state, error = pcall(humanoid.getCurrentAction, humanoid)
 
     assert.False(state)
     local expected_message = "Action queue was empty. This should never happen."
-    assert.are.equal(expected_message, error.message)
-    assert.are.equal(humanoid, error.humanoid)
+    assert.matches(error, expected_message)
+    assert.matches(error, "humanoid %-")
+  end)
+  it("Can represent itself as a string", function()
+    local humanoid = getHumanoid()
+    humanoid.humanoid_class = "class"
+
+    local result = humanoid:tostring()
+
+    assert.matches(result, "humanoid[ -]*class.*class")
+    assert.matches(result, "Warmth.*Happiness.*Fatigue")
+    assert.matches(result, "Actions: %[%]")
+  end)
+  it("Can add actions to a representation", function()
+    local humanoid = getHumanoid()
+    humanoid.action_queue = {{name = "A1", room_type = "room"}, {name = "A2"}}
+
+    local result = humanoid:tostring()
+
+    assert.matches(result, "Actions.*%[A1 %- room, A2%]")
   end)
 
 end)
