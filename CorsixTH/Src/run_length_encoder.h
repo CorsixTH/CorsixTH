@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_RLE_H_
 #include "config.h"
 
-class LuaPersistReader;
-class LuaPersistWriter;
+class lua_persist_reader;
+class lua_persist_writer;
 
 //! Encoder for reducing the amount of space to store a sequence of integers
 /*!
@@ -64,7 +64,7 @@ public:
     void finish();
 
     uint32_t* getOutput(size_t *pCount) const;
-    void pumpOutput(LuaPersistWriter *pWriter) const;
+    void pumpOutput(lua_persist_writer *pWriter) const;
 
 private:
     void _clean();
@@ -109,7 +109,7 @@ public:
     IntegerRunLengthDecoder();
     ~IntegerRunLengthDecoder();
 
-    bool initialise(size_t iRecordSize, LuaPersistReader *pReader);
+    bool initialise(size_t iRecordSize, lua_persist_reader *pReader);
     bool initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount);
     uint32_t read();
     bool isFinished() const;
@@ -118,7 +118,7 @@ private:
     void _clean();
 
     uint32_t* m_pBuffer;
-    LuaPersistReader* m_pReader;
+    lua_persist_reader* m_pReader;
     const uint32_t* m_pInput;
     union
     {

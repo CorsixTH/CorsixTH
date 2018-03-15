@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
 
-class LuaPersistReader;
-class LuaPersistWriter;
+class lua_persist_reader;
+class lua_persist_writer;
 
 enum class scaled_items {
     none,
@@ -549,8 +549,8 @@ public:
     void set_speed(int iX, int iY) {speed.dx = iX, speed.dy = iY;}
     void set_crop_column(int iColumn) {crop_column = iColumn;}
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
     animation_manager* get_animation_manager(){ return manager;}
 private:
@@ -590,8 +590,8 @@ public:
     void append_sprite(size_t iSprite, int iX, int iY);
     bool is_dead() const {return lifetime == 0;}
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
 private:
     struct sprite

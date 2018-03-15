@@ -222,13 +222,13 @@ static int l_anim_persist(lua_State *L)
         // Fast __persist call
         pAnimation = (T*)lua_touserdata(L, -1);
     }
-    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
 
     pAnimation->persist(pWriter);
     lua_rawgeti(L, luaT_environindex, 1);
     lua_pushlightuserdata(L, pAnimation);
     lua_gettable(L, -2);
-    pWriter->writeStackObject(-1);
+    pWriter->write_stack_object(-1);
     lua_pop(L, 2);
     return 0;
 }
@@ -255,7 +255,7 @@ static int l_anim_depersist(lua_State *L)
     T* pAnimation = luaT_testuserdata<T>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, pAnimation);
@@ -265,7 +265,7 @@ static int l_anim_depersist(lua_State *L)
     pAnimation->depersist(pReader);
     lua_rawgeti(L, luaT_environindex, 1);
     lua_pushlightuserdata(L, pAnimation);
-    if(!pReader->readStackObject())
+    if(!pReader->read_stack_object())
         return 0;
     lua_settable(L, -3);
     lua_pop(L, 1);

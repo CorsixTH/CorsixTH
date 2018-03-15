@@ -221,12 +221,12 @@ uint32_t* IntegerRunLengthEncoder::getOutput(size_t *pCount) const
     return m_pOutput;
 }
 
-void IntegerRunLengthEncoder::pumpOutput(LuaPersistWriter *pWriter) const
+void IntegerRunLengthEncoder::pumpOutput(lua_persist_writer *pWriter) const
 {
-    pWriter->writeVUInt(m_iOutputSizeUsed);
+    pWriter->write_uint(m_iOutputSizeUsed);
     for(size_t i = 0; i < m_iOutputSizeUsed; ++i)
     {
-        pWriter->writeVUInt(m_pOutput[i]);
+        pWriter->write_uint(m_pOutput[i]);
     }
 }
 
@@ -255,7 +255,7 @@ void IntegerRunLengthDecoder::_clean()
     m_iObjectSize = 0;
 }
 
-bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, LuaPersistReader *pReader)
+bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, lua_persist_reader *pReader)
 {
     _clean();
 
@@ -264,7 +264,7 @@ bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, LuaPersistReader *p
         return false;
     m_pReader = pReader;
     m_iRecordSize = iRecordSize;
-    return pReader->readVUInt(m_iNumReadsRemaining);
+    return pReader->read_uint(m_iNumReadsRemaining);
 }
 
 bool IntegerRunLengthDecoder::initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount)
@@ -287,7 +287,7 @@ uint32_t IntegerRunLengthDecoder::read()
         uint32_t iHeader = 0;
         if(m_pReader)
         {
-            m_pReader->readVUInt(iHeader);
+            m_pReader->read_uint(iHeader);
             --m_iNumReadsRemaining;
         }
         else
@@ -298,7 +298,7 @@ uint32_t IntegerRunLengthDecoder::read()
         {
             for(size_t i = 0; i < m_iObjectSize; ++i)
             {
-                m_pReader->readVUInt(m_pBuffer[i]);
+                m_pReader->read_uint(m_pBuffer[i]);
                 --m_iNumReadsRemaining;
             }
         }

@@ -1322,64 +1322,64 @@ animation::animation():
     is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
 }
 
-void animation::persist(LuaPersistWriter *pWriter) const
+void animation::persist(lua_persist_writer *pWriter) const
 {
-    lua_State *L = pWriter->getStack();
+    lua_State *L = pWriter->get_stack();
 
     // Write the next chained thing
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, next);
     lua_rawget(L, -2);
-    pWriter->fastWriteStackObject(-1);
+    pWriter->fast_write_stack_object(-1);
     lua_pop(L, 2);
 
     // Write the drawable fields
-    pWriter->writeVUInt(flags);
+    pWriter->write_uint(flags);
 #define IS_USING_FUNCTION_SET(d, ht) draw_fn == (THAnimation_ ## d) \
                             && hit_test_fn == (THAnimation_ ## ht)
 
     if(IS_USING_FUNCTION_SET(draw, hit_test))
-        pWriter->writeVUInt(1);
+        pWriter->write_uint(1);
     else if(IS_USING_FUNCTION_SET(draw_child, hit_test_child))
-        pWriter->writeVUInt(2);
+        pWriter->write_uint(2);
     else if(IS_USING_FUNCTION_SET(draw_morph, hit_test_morph))
     {
         // NB: Prior version of code used the number 3 here, and forgot
         // to persist the morph target.
-        pWriter->writeVUInt(4);
+        pWriter->write_uint(4);
         lua_rawgeti(L, luaT_environindex, 2);
         lua_pushlightuserdata(L, morph_target);
         lua_rawget(L, -2);
-        pWriter->writeStackObject(-1);
+        pWriter->write_stack_object(-1);
         lua_pop(L, 2);
     }
     else
-        pWriter->writeVUInt(0);
+        pWriter->write_uint(0);
 
 #undef IS_USING_FUNCTION_SET
 
     // Write the simple fields
-    pWriter->writeVUInt(animation_index);
-    pWriter->writeVUInt(frame_index);
-    pWriter->writeVInt(x_relative_to_tile);
-    pWriter->writeVInt(y_relative_to_tile);
-    pWriter->writeVInt((int)sound_to_play); // Not a VUInt, for compatibility
-    pWriter->writeVInt(0); // For compatibility
+    pWriter->write_uint(animation_index);
+    pWriter->write_uint(frame_index);
+    pWriter->write_int(x_relative_to_tile);
+    pWriter->write_int(y_relative_to_tile);
+    pWriter->write_int((int)sound_to_play); // Not a uint, for compatibility
+    pWriter->write_int(0); // For compatibility
     if(flags & thdf_crop)
-        pWriter->writeVInt(crop_column);
+        pWriter->write_int(crop_column);
 
     // Write the unioned fields
     if(draw_fn != THAnimation_draw_child)
     {
-        pWriter->writeVInt(speed.dx);
-        pWriter->writeVInt(speed.dy);
+        pWriter->write_int(speed.dx);
+        pWriter->write_int(speed.dy);
     }
     else
     {
         lua_rawgeti(L, luaT_environindex, 2);
         lua_pushlightuserdata(L, parent);
         lua_rawget(L, -2);
-        pWriter->writeStackObject(-1);
+        pWriter->write_stack_object(-1);
         lua_pop(L, 2);
     }
 
@@ -1390,18 +1390,18 @@ void animation::persist(LuaPersistWriter *pWriter) const
         if(layers.layer_contents[iNumLayers - 1] != 0)
             break;
     }
-    pWriter->writeVUInt(iNumLayers);
-    pWriter->writeByteStream(layers.layer_contents, iNumLayers);
+    pWriter->write_uint(iNumLayers);
+    pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
 }
 
-void animation::depersist(LuaPersistReader *pReader)
+void animation::depersist(lua_persist_reader *pReader)
 {
-    lua_State *L = pReader->getStack();
+    lua_State *L = pReader->get_stack();
 
     do
     {
         // Read the chain
-        if(!pReader->readStackObject())
+        if(!pReader->read_stack_object())
             break;
         next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
         if(next)
@@ -1409,10 +1409,10 @@ void animation::depersist(LuaPersistReader *pReader)
         lua_pop(L, 1);
 
         // Read drawable fields
-        if(!pReader->readVUInt(flags))
+        if(!pReader->read_uint(flags))
             break;
         int iFunctionSet;
-        if(!pReader->readVUInt(iFunctionSet))
+        if(!pReader->read_uint(iFunctionSet))
             break;
         switch(iFunctionSet)
         {
@@ -1431,34 +1431,34 @@ void animation::depersist(LuaPersistReader *pReader)
         case 4:
             draw_fn = THAnimation_draw_morph;
             hit_test_fn = THAnimation_hit_test_morph;
-            pReader->readStackObject();
+            pReader->read_stack_object();
             morph_target = reinterpret_cast<animation*>(lua_touserdata(L, -1));
             lua_pop(L, 1);
             break;
         default:
-            pReader->setError(lua_pushfstring(L, "Unknown animation function set #%i", iFunctionSet));
+            pReader->set_error(lua_pushfstring(L, "Unknown animation function set #%i", iFunctionSet));
             return;
         }
 
         // Read the simple fields
-        if(!pReader->readVUInt(animation_index))
+        if(!pReader->read_uint(animation_index))
             break;
-        if(!pReader->readVUInt(frame_index))
+        if(!pReader->read_uint(frame_index))
             break;
-        if(!pReader->readVInt(x_relative_to_tile))
+        if(!pReader->read_int(x_relative_to_tile))
             break;
-        if(!pReader->readVInt(y_relative_to_tile))
+        if(!pReader->read_int(y_relative_to_tile))
             break;
         int iDummy;
-        if(!pReader->readVInt(iDummy))
+        if(!pReader->read_int(iDummy))
             break;
         if(iDummy >= 0)
             sound_to_play = (unsigned int)iDummy;
-        if(!pReader->readVInt(iDummy))
+        if(!pReader->read_int(iDummy))
             break;
         if(flags & thdf_crop)
         {
-            if(!pReader->readVInt(crop_column))
+            if(!pReader->read_int(crop_column))
                 break;
         }
         else
@@ -1467,14 +1467,14 @@ void animation::depersist(LuaPersistReader *pReader)
         // Read the unioned fields
         if(draw_fn != THAnimation_draw_child)
         {
-            if(!pReader->readVInt(speed.dx))
+            if(!pReader->read_int(speed.dx))
                 break;
-            if(!pReader->readVInt(speed.dy))
+            if(!pReader->read_int(speed.dy))
                 break;
         }
         else
         {
-            if(!pReader->readStackObject())
+            if(!pReader->read_stack_object())
                 break;
             parent = (animation*)lua_touserdata(L, -1);
             lua_pop(L, 1);
@@ -1483,18 +1483,18 @@ void animation::depersist(LuaPersistReader *pReader)
         // Read the layers
         std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
         int iNumLayers;
-        if(!pReader->readVUInt(iNumLayers))
+        if(!pReader->read_uint(iNumLayers))
             break;
         if(iNumLayers > 13)
         {
-            if(!pReader->readByteStream(layers.layer_contents, 13))
+            if(!pReader->read_byte_stream(layers.layer_contents, 13))
                 break;
-            if(!pReader->readByteStream(nullptr, iNumLayers - 13))
+            if(!pReader->read_byte_stream(nullptr, iNumLayers - 13))
                 break;
         }
         else
         {
-            if(!pReader->readByteStream(layers.layer_contents, iNumLayers))
+            if(!pReader->read_byte_stream(layers.layer_contents, iNumLayers))
                 break;
         }
 
@@ -1506,7 +1506,7 @@ void animation::depersist(LuaPersistReader *pReader)
         return;
     } while(false);
 
-    pReader->setError("Cannot depersist animation instance");
+    pReader->set_error("Cannot depersist animation instance");
 }
 
 void animation::tick()
@@ -1817,23 +1817,23 @@ void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY)
     ++sprite_count;
 }
 
-void sprite_render_list::persist(LuaPersistWriter *pWriter) const
+void sprite_render_list::persist(lua_persist_writer *pWriter) const
 {
-    lua_State *L = pWriter->getStack();
+    lua_State *L = pWriter->get_stack();
 
-    pWriter->writeVUInt(sprite_count);
-    pWriter->writeVUInt(flags);
-    pWriter->writeVInt(x_relative_to_tile);
-    pWriter->writeVInt(y_relative_to_tile);
-    pWriter->writeVInt(dx_per_tick);
-    pWriter->writeVInt(dy_per_tick);
-    pWriter->writeVInt(lifetime);
+    pWriter->write_uint(sprite_count);
+    pWriter->write_uint(flags);
+    pWriter->write_int(x_relative_to_tile);
+    pWriter->write_int(y_relative_to_tile);
+    pWriter->write_int(dx_per_tick);
+    pWriter->write_int(dy_per_tick);
+    pWriter->write_int(lifetime);
     for(sprite *pSprite = sprites, *pLast = sprites + sprite_count;
         pSprite != pLast; ++pSprite)
     {
-        pWriter->writeVUInt(pSprite->index);
-        pWriter->writeVInt(pSprite->x);
-        pWriter->writeVInt(pSprite->y);
+        pWriter->write_uint(pSprite->index);
+        pWriter->write_int(pSprite->x);
+        pWriter->write_int(pSprite->y);
     }
 
     // Write the layers
@@ -1843,70 +1843,70 @@ void sprite_render_list::persist(LuaPersistWriter *pWriter) const
         if(layers.layer_contents[iNumLayers - 1] != 0)
             break;
     }
-    pWriter->writeVUInt(iNumLayers);
-    pWriter->writeByteStream(layers.layer_contents, iNumLayers);
+    pWriter->write_uint(iNumLayers);
+    pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
 
     // Write the next chained thing
     lua_rawgeti(L, luaT_environindex, 2);
     lua_pushlightuserdata(L, next);
     lua_rawget(L, -2);
-    pWriter->fastWriteStackObject(-1);
+    pWriter->fast_write_stack_object(-1);
     lua_pop(L, 2);
 }
 
-void sprite_render_list::depersist(LuaPersistReader *pReader)
+void sprite_render_list::depersist(lua_persist_reader *pReader)
 {
-    lua_State *L = pReader->getStack();
+    lua_State *L = pReader->get_stack();
 
-    if(!pReader->readVUInt(sprite_count))
+    if(!pReader->read_uint(sprite_count))
         return;
     buffer_size = sprite_count;
     delete[] sprites;
     sprites = new sprite[buffer_size];
 
-    if(!pReader->readVUInt(flags))
+    if(!pReader->read_uint(flags))
         return;
-    if(!pReader->readVInt(x_relative_to_tile))
+    if(!pReader->read_int(x_relative_to_tile))
         return;
-    if(!pReader->readVInt(y_relative_to_tile))
+    if(!pReader->read_int(y_relative_to_tile))
         return;
-    if(!pReader->readVInt(dx_per_tick))
+    if(!pReader->read_int(dx_per_tick))
         return;
-    if(!pReader->readVInt(dy_per_tick))
+    if(!pReader->read_int(dy_per_tick))
         return;
-    if(!pReader->readVInt(lifetime))
+    if(!pReader->read_int(lifetime))
         return;
     for(sprite *pSprite = sprites, *pLast = sprites + sprite_count;
         pSprite != pLast; ++pSprite)
     {
-        if(!pReader->readVUInt(pSprite->index))
+        if(!pReader->read_uint(pSprite->index))
             return;
-        if(!pReader->readVInt(pSprite->x))
+        if(!pReader->read_int(pSprite->x))
             return;
-        if(!pReader->readVInt(pSprite->y))
+        if(!pReader->read_int(pSprite->y))
             return;
     }
 
     // Read the layers
     std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
     int iNumLayers;
-    if(!pReader->readVUInt(iNumLayers))
+    if(!pReader->read_uint(iNumLayers))
         return;
     if(iNumLayers > 13)
     {
-        if(!pReader->readByteStream(layers.layer_contents, 13))
+        if(!pReader->read_byte_stream(layers.layer_contents, 13))
             return;
-        if(!pReader->readByteStream(nullptr, iNumLayers - 13))
+        if(!pReader->read_byte_stream(nullptr, iNumLayers - 13))
             return;
     }
     else
     {
-        if(!pReader->readByteStream(layers.layer_contents, iNumLayers))
+        if(!pReader->read_byte_stream(layers.layer_contents, iNumLayers))
             return;
     }
 
     // Read the chain
-    if(!pReader->readStackObject())
+    if(!pReader->read_stack_object())
         return;
     next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
     if(next)

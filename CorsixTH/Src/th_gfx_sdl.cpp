@@ -1459,13 +1459,13 @@ void line::draw(render_target* pCanvas, int iX, int iY)
     pCanvas->draw_line(this, iX, iY);
 }
 
-void line::persist(LuaPersistWriter *pWriter) const
+void line::persist(lua_persist_writer *pWriter) const
 {
-    pWriter->writeVUInt((uint32_t)red);
-    pWriter->writeVUInt((uint32_t)green);
-    pWriter->writeVUInt((uint32_t)blue);
-    pWriter->writeVUInt((uint32_t)alpha);
-    pWriter->writeVFloat(width);
+    pWriter->write_uint((uint32_t)red);
+    pWriter->write_uint((uint32_t)green);
+    pWriter->write_uint((uint32_t)blue);
+    pWriter->write_uint((uint32_t)alpha);
+    pWriter->write_float(width);
 
     line_operation* op = (line_operation*)(first_operation->next);
     uint32_t numOps = 0;
@@ -1473,36 +1473,36 @@ void line::persist(LuaPersistWriter *pWriter) const
         op = (line_operation*)(op->next);
     }
 
-    pWriter->writeVUInt(numOps);
+    pWriter->write_uint(numOps);
 
     op = (line_operation*)(first_operation->next);
     while (op) {
-        pWriter->writeVUInt((uint32_t)op->type);
-        pWriter->writeVFloat<double>(op->x);
-        pWriter->writeVFloat(op->y);
+        pWriter->write_uint((uint32_t)op->type);
+        pWriter->write_float<double>(op->x);
+        pWriter->write_float(op->y);
 
         op = (line_operation*)(op->next);
     }
 }
 
-void line::depersist(LuaPersistReader *pReader)
+void line::depersist(lua_persist_reader *pReader)
 {
     initialize();
 
-    pReader->readVUInt(red);
-    pReader->readVUInt(green);
-    pReader->readVUInt(blue);
-    pReader->readVUInt(alpha);
-    pReader->readVFloat(width);
+    pReader->read_uint(red);
+    pReader->read_uint(green);
+    pReader->read_uint(blue);
+    pReader->read_uint(alpha);
+    pReader->read_float(width);
 
     uint32_t numOps = 0;
-    pReader->readVUInt(numOps);
+    pReader->read_uint(numOps);
     for (uint32_t i = 0; i < numOps; i++) {
         line_operation_type type;
         double fX, fY;
-        pReader->readVUInt((uint32_t&)type);
-        pReader->readVFloat(fX);
-        pReader->readVFloat(fY);
+        pReader->read_uint((uint32_t&)type);
+        pReader->read_float(fX);
+        pReader->read_float(fY);
 
         if (type == line_operation_type::move) {
             move_to(fX, fY);

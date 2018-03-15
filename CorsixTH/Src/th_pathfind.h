@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_TH_PATHFIND_H_
 #include "th_map.h"
 
-class LuaPersistReader;
-class LuaPersistWriter;
+class lua_persist_reader;
+class lua_persist_writer;
 class THPathfinder;
 
 /** Directions of movement. */
@@ -245,8 +245,8 @@ public:
     bool getPathEnd(int* pX, int* pY) const;
     void pushResult(lua_State *L) const;
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
     //! Allocate node cache for all tiles of the map.
     /*!

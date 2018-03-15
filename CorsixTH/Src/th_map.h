@@ -378,8 +378,8 @@ public:
         y = y / (T)32 - x_ / (T)64;
     }
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
     void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
 

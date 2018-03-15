@@ -651,8 +651,8 @@ public:
 
     void set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
 private:
     friend class render_target;

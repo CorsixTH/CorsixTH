@@ -51,7 +51,7 @@ static int l_map_persist(lua_State *L)
     THMap* pMap = luaT_testuserdata<THMap>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    pMap->persist((LuaPersistWriter*)lua_touserdata(L, 1));
+    pMap->persist((lua_persist_writer*)lua_touserdata(L, 1));
     return 0;
 }
 
@@ -60,7 +60,7 @@ static int l_map_depersist(lua_State *L)
     THMap* pMap = luaT_testuserdata<THMap>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     pMap->depersist(pReader);
     luaT_getenvfield(L, 2, "sprites");
@@ -910,7 +910,7 @@ static int l_path_persist(lua_State *L)
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    pPathfinder->persist((LuaPersistWriter*)lua_touserdata(L, 1));
+    pPathfinder->persist((lua_persist_writer*)lua_touserdata(L, 1));
     return 0;
 }
 
@@ -919,7 +919,7 @@ static int l_path_depersist(lua_State *L)
     THPathfinder* pPathfinder = luaT_testuserdata<THPathfinder>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     pPathfinder->depersist(pReader);
     luaT_getenvfield(L, 2, "map");

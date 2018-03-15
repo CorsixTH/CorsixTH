@@ -484,7 +484,7 @@ static int l_layers_persist(lua_State *L)
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
 
     int iNumLayers = 13;
     for( ; iNumLayers >= 1; --iNumLayers)
@@ -492,8 +492,8 @@ static int l_layers_persist(lua_State *L)
         if(pLayers->layer_contents[iNumLayers - 1] != 0)
             break;
     }
-    pWriter->writeVUInt(iNumLayers);
-    pWriter->writeByteStream(pLayers->layer_contents, iNumLayers);
+    pWriter->write_uint(iNumLayers);
+    pWriter->write_byte_stream(pLayers->layer_contents, iNumLayers);
     return 0;
 }
 
@@ -502,22 +502,22 @@ static int l_layers_depersist(lua_State *L)
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     std::memset(pLayers->layer_contents, 0, sizeof(pLayers->layer_contents));
     int iNumLayers;
-    if(!pReader->readVUInt(iNumLayers))
+    if(!pReader->read_uint(iNumLayers))
         return 0;
     if(iNumLayers > 13)
     {
-        if(!pReader->readByteStream(pLayers->layer_contents, 13))
+        if(!pReader->read_byte_stream(pLayers->layer_contents, 13))
             return 0;
-        if(!pReader->readByteStream(nullptr, iNumLayers - 13))
+        if(!pReader->read_byte_stream(nullptr, iNumLayers - 13))
             return 0;
     }
     else
     {
-        if(!pReader->readByteStream(pLayers->layer_contents, iNumLayers))
+        if(!pReader->read_byte_stream(pLayers->layer_contents, iNumLayers))
             return 0;
     }
     return 0;
@@ -850,7 +850,7 @@ static int l_line_persist(lua_State *L)
     line* pLine = luaT_testuserdata<line>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistWriter* pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
     pLine->persist(pWriter);
     return 0;
 }
@@ -860,7 +860,7 @@ static int l_line_depersist(lua_State *L)
     line* pLine = luaT_testuserdata<line>(L);
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader* pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
     pLine->depersist(pReader);
     return 0;
 }

@@ -1409,33 +1409,33 @@ void THMap::updateShadows()
 #undef IsWall
 }
 
-void THMap::persist(LuaPersistWriter *pWriter) const
+void THMap::persist(lua_persist_writer *pWriter) const
 {
-    lua_State *L = pWriter->getStack();
+    lua_State *L = pWriter->get_stack();
     IntegerRunLengthEncoder oEncoder;
 
     uint32_t iVersion = 4;
-    pWriter->writeVUInt(iVersion);
-    pWriter->writeVUInt(m_iPlayerCount);
+    pWriter->write_uint(iVersion);
+    pWriter->write_uint(m_iPlayerCount);
     for(int i = 0; i < m_iPlayerCount; ++i)
     {
-        pWriter->writeVUInt(m_aiInitialCameraX[i]);
-        pWriter->writeVUInt(m_aiInitialCameraY[i]);
-        pWriter->writeVUInt(m_aiHeliportX[i]);
-        pWriter->writeVUInt(m_aiHeliportY[i]);
+        pWriter->write_uint(m_aiInitialCameraX[i]);
+        pWriter->write_uint(m_aiInitialCameraY[i]);
+        pWriter->write_uint(m_aiHeliportX[i]);
+        pWriter->write_uint(m_aiHeliportY[i]);
     }
-    pWriter->writeVUInt(m_iParcelCount);
+    pWriter->write_uint(m_iParcelCount);
     for(int i = 0; i < m_iParcelCount; ++i)
     {
-        pWriter->writeVUInt(m_pPlotOwner[i]);
+        pWriter->write_uint(m_pPlotOwner[i]);
     }
     for(int i = 0; i < m_iParcelCount; ++i)
     {
-        pWriter->writeVUInt(m_pParcelTileCounts[i]);
+        pWriter->write_uint(m_pParcelTileCounts[i]);
     }
-    pWriter->writeVUInt(m_iWidth);
-    pWriter->writeVUInt(m_iHeight);
-    pWriter->writeVUInt(m_iCurrentTemperatureIndex);
+    pWriter->write_uint(m_iWidth);
+    pWriter->write_uint(m_iHeight);
+    pWriter->write_uint(m_iCurrentTemperatureIndex);
     oEncoder.initialise(6);
     for(THMapNode *pNode = m_pCells, *pLimitNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLimitNode; ++pNode)
@@ -1448,18 +1448,18 @@ void THMap::persist(LuaPersistWriter *pWriter) const
         oEncoder.write(pNode->iRoomId);
         // Flags include THOB values, and other things which do not work
         // well with run-length encoding.
-        pWriter->writeVUInt(static_cast<uint32_t>(pNode->flags));
-        pWriter->writeVUInt(pNode->aiTemperature[0]);
-        pWriter->writeVUInt(pNode->aiTemperature[1]);
+        pWriter->write_uint(static_cast<uint32_t>(pNode->flags));
+        pWriter->write_uint(pNode->aiTemperature[0]);
+        pWriter->write_uint(pNode->aiTemperature[1]);
 
         lua_rawgeti(L, luaT_upvalueindex(1), 2);
         lua_pushlightuserdata(L, pNode->next);
         lua_rawget(L, -2);
-        pWriter->writeStackObject(-1);
+        pWriter->write_stack_object(-1);
         lua_pop(L, 1);
         lua_pushlightuserdata(L, pNode->oEarlyEntities.next);
         lua_rawget(L, -2);
-        pWriter->writeStackObject(-1);
+        pWriter->write_stack_object(-1);
         lua_pop(L, 2);
     }
     oEncoder.finish();
@@ -1479,16 +1479,16 @@ void THMap::persist(LuaPersistWriter *pWriter) const
     oEncoder.pumpOutput(pWriter);
 }
 
-void THMap::depersist(LuaPersistReader *pReader)
+void THMap::depersist(lua_persist_reader *pReader)
 {
     new (this) THMap; // Call constructor
 
-    lua_State *L = pReader->getStack();
+    lua_State *L = pReader->get_stack();
     int iWidth, iHeight;
     IntegerRunLengthDecoder oDecoder;
 
     uint32_t iVersion;
-    if(!pReader->readVUInt(iVersion)) return;
+    if(!pReader->read_uint(iVersion)) return;
     if(iVersion != 4)
     {
         if(iVersion < 2 || iVersion == 128)
@@ -1501,20 +1501,20 @@ void THMap::depersist(LuaPersistReader *pReader)
             luaL_error(L, "Cannot load savegame from a newer version.");
         }
     }
-    if(!pReader->readVUInt(m_iPlayerCount)) return;
+    if(!pReader->read_uint(m_iPlayerCount)) return;
     for(int i = 0; i < m_iPlayerCount; ++i)
     {
-        if(!pReader->readVUInt(m_aiInitialCameraX[i])) return;
-        if(!pReader->readVUInt(m_aiInitialCameraY[i])) return;
-        if(!pReader->readVUInt(m_aiHeliportX[i])) return;
-        if(!pReader->readVUInt(m_aiHeliportY[i])) return;
+        if(!pReader->read_uint(m_aiInitialCameraX[i])) return;
+        if(!pReader->read_uint(m_aiInitialCameraY[i])) return;
+        if(!pReader->read_uint(m_aiHeliportX[i])) return;
+        if(!pReader->read_uint(m_aiHeliportY[i])) return;
     }
-    if(!pReader->readVUInt(m_iParcelCount)) return;
+    if(!pReader->read_uint(m_iParcelCount)) return;
     delete[] m_pPlotOwner;
     m_pPlotOwner = new int[m_iParcelCount];
     for(int i = 0; i < m_iParcelCount; ++i)
     {
-        if(!pReader->readVUInt(m_pPlotOwner[i])) return;
+        if(!pReader->read_uint(m_pPlotOwner[i])) return;
     }
     delete[] m_pParcelTileCounts;
     m_pParcelTileCounts = new int[m_iParcelCount];
@@ -1524,34 +1524,34 @@ void THMap::depersist(LuaPersistReader *pReader)
     {
         for(int i = 0; i < m_iParcelCount; ++i)
         {
-            if(!pReader->readVUInt(m_pParcelTileCounts[i])) return;
+            if(!pReader->read_uint(m_pParcelTileCounts[i])) return;
         }
     }
 
-    if(!pReader->readVUInt(iWidth) || !pReader->readVUInt(iHeight))
+    if(!pReader->read_uint(iWidth) || !pReader->read_uint(iHeight))
         return;
     if(!setSize(iWidth, iHeight))
     {
-        pReader->setError("Unable to set size while depersisting map");
+        pReader->set_error("Unable to set size while depersisting map");
         return;
     }
     if(iVersion >= 4)
     {
-        if(!pReader->readVUInt(m_iCurrentTemperatureIndex))
+        if(!pReader->read_uint(m_iCurrentTemperatureIndex))
             return;
     }
     for(THMapNode *pNode = m_pCells, *pLimitNode = m_pCells + m_iWidth * m_iHeight;
         pNode != pLimitNode; ++pNode)
     {
         uint32_t f;
-        if(!pReader->readVUInt(f)) return;
+        if(!pReader->read_uint(f)) return;
         pNode->flags = f;
         if(iVersion >= 4)
         {
-            if(!pReader->readVUInt(pNode->aiTemperature[0])
-            || !pReader->readVUInt(pNode->aiTemperature[1])) return;
+            if(!pReader->read_uint(pNode->aiTemperature[0])
+            || !pReader->read_uint(pNode->aiTemperature[1])) return;
         }
-        if(!pReader->readStackObject())
+        if(!pReader->read_stack_object())
             return;
         pNode->next = (link_list*)lua_touserdata(L, -1);
         if(pNode->next)
@@ -1561,7 +1561,7 @@ void THMap::depersist(LuaPersistReader *pReader)
             pNode->next->prev = pNode;
         }
         lua_pop(L, 1);
-        if(!pReader->readStackObject())
+        if(!pReader->read_stack_object())
             return;
         pNode->oEarlyEntities.next = (link_list*)lua_touserdata(L, -1);
         if(pNode->oEarlyEntities.next)

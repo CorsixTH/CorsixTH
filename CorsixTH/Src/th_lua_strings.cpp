@@ -444,12 +444,12 @@ static int l_str_persist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistWriter *pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    lua_persist_writer *pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
 
     // Recreation instructions are stored in the environment, which is written
     // automatically. For compatibility, we write a simple boolean.
     lua_pushboolean(L, 1);
-    pWriter->writeStackObject(3);
+    pWriter->write_stack_object(3);
     lua_getfenv(L, 2);
 
     // If there were no instructions (i.e. for the root object) then write the
@@ -460,7 +460,7 @@ static int l_str_persist(lua_State *L)
         aux_push_weak_table(L, 0);
         lua_pushvalue(L, 2);
         lua_rawget(L, 3);
-        pWriter->writeStackObject(4);
+        pWriter->write_stack_object(4);
     }
     return 0;
 }
@@ -470,10 +470,10 @@ static int l_str_depersist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader *pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader *pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     // Read the instructions for re-creating the value
-    if(!pReader->readStackObject())
+    if(!pReader->read_stack_object())
         return 0;
     if(lua_type(L, 3) == LUA_TBOOLEAN && lua_toboolean(L, 3) == 1)
     {
@@ -504,7 +504,7 @@ static int l_str_depersist(lua_State *L)
     if(lua_objlen(L, 3) == 0)
     {
         // No instructions provided, so read the value itself
-        if(!pReader->readStackObject())
+        if(!pReader->read_stack_object())
             return 0;
     }
     else
