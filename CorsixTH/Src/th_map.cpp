@@ -874,7 +874,7 @@ const THMapNode* THMap::getOriginalNodeUnchecked(int iX, int iY) const
     return m_pOriginalCells + iY * m_iWidth + iX;
 }
 
-void THMap::setBlockSheet(THSpriteSheet* pSheet)
+void THMap::setBlockSheet(sprite_sheet* pSheet)
 {
     m_pBlocks = pSheet;
 }
@@ -890,11 +890,12 @@ void THMap::setAllWallDrawFlags(uint8_t iFlags)
     }
 }
 
-void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
+// Definition is in th_gfx.h so this should move
+void clip_rect_intersection(clip_rect& rcClip,const clip_rect& rcIntersect)
 {
     // The intersection of the rectangles is the higher of the lower bounds and the lower of the higher bounds, clamped to a zero size.
-    THClipRect::xy_t maxX = static_cast<uint16_t>(std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w));
-    THClipRect::xy_t maxY = static_cast<uint16_t>(std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h));
+    clip_rect::x_y_type maxX = static_cast<uint16_t>(std::min(rcClip.x + rcClip.w, rcIntersect.x + rcIntersect.w));
+    clip_rect::x_y_type maxY = static_cast<uint16_t>(std::min(rcClip.y + rcClip.h, rcIntersect.y + rcIntersect.h));
     rcClip.x = std::max(rcClip.x, rcIntersect.x);
     rcClip.y = std::max(rcClip.y, rcIntersect.y);
     rcClip.w = maxX - rcClip.x;
@@ -911,7 +912,7 @@ void IntersectTHClipRect(THClipRect& rcClip,const THClipRect& rcIntersect)
     }
 }
 
-void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
+void THMap::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                  int iWidth, int iHeight, int iCanvasX, int iCanvasY) const
 {
     /*
@@ -934,25 +935,25 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     if(m_pBlocks == nullptr || m_pCells == nullptr)
         return;
 
-    THClipRect rcClip;
-    rcClip.x = static_cast<THClipRect::xy_t>(iCanvasX);
-    rcClip.y = static_cast<THClipRect::xy_t>(iCanvasY);
-    rcClip.w = static_cast<THClipRect::wh_t>(iWidth);
-    rcClip.h = static_cast<THClipRect::wh_t>(iHeight);
-    pCanvas->setClipRect(&rcClip);
+    clip_rect rcClip;
+    rcClip.x = static_cast<clip_rect::x_y_type>(iCanvasX);
+    rcClip.y = static_cast<clip_rect::x_y_type>(iCanvasY);
+    rcClip.w = static_cast<clip_rect::w_h_type>(iWidth);
+    rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
+    pCanvas->set_clip_rect(&rcClip);
 
     // 1st pass
-    pCanvas->startNonOverlapping();
+    pCanvas->start_nonoverlapping_draws();
     for(THMapNodeIterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight); itrNode1; ++itrNode1)
     {
         unsigned int iH = 32;
         unsigned int iBlock = itrNode1->iBlock[0];
-        m_pBlocks->getSpriteSize(iBlock & 0xFF, nullptr, &iH);
-        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF,
+        m_pBlocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
+        m_pBlocks->draw_sprite(pCanvas, iBlock & 0xFF,
             itrNode1.x() + iCanvasX - 32,
             itrNode1.y() + iCanvasY - iH + 32, iBlock >> 8);
     }
-    pCanvas->finishNonOverlapping();
+    pCanvas->finish_nonoverlapping_draws();
 
     bool bFirst = true;
     THMapScanlineIterator formerIterator;
@@ -961,13 +962,13 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
     {
         if(itrNode2->flags.shadow_full)
         {
-            m_pBlocks->drawSprite(pCanvas, 74, itrNode2.x() + iCanvasX - 32,
-                itrNode2.y() + iCanvasY, THDF_Alpha75);
+            m_pBlocks->draw_sprite(pCanvas, 74, itrNode2.x() + iCanvasX - 32,
+                itrNode2.y() + iCanvasY, thdf_alpha_75);
         }
         else if(itrNode2->flags.shadow_half)
         {
-            m_pBlocks->drawSprite(pCanvas, 75, itrNode2.x() + iCanvasX - 32,
-                itrNode2.y() + iCanvasY, THDF_Alpha75);
+            m_pBlocks->draw_sprite(pCanvas, 75, itrNode2.x() + iCanvasX - 32,
+                itrNode2.y() + iCanvasY, thdf_alpha_75);
         }
 
         if(!itrNode2.isLastOnScanline())
@@ -977,31 +978,31 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         {
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[1];
-            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+            if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                 nullptr, &iH) && iH > 0)
             {
-                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                m_pBlocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
                 if(itrNode->flags.shadow_wall)
                 {
-                    THClipRect rcOldClip, rcNewClip;
-                    pCanvas->getClipRect(&rcOldClip);
-                    rcNewClip.x = static_cast<THClipRect::xy_t>(itrNode.x() - 32);
-                    rcNewClip.y = static_cast<THClipRect::xy_t>(itrNode.y() - iH + 32 + 4);
-                    rcNewClip.w = static_cast<THClipRect::wh_t>(64);
-                    rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
-                    IntersectTHClipRect(rcNewClip, rcOldClip);
-                    pCanvas->setClipRect(&rcNewClip);
-                    m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 32,
-                        itrNode.y() - 56, THDF_Alpha75);
-                    pCanvas->setClipRect(&rcOldClip);
+                    clip_rect rcOldClip, rcNewClip;
+                    pCanvas->get_clip_rect(&rcOldClip);
+                    rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 32);
+                    rcNewClip.y = static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
+                    rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
+                    rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
+                    clip_rect_intersection(rcNewClip, rcOldClip);
+                    pCanvas->set_clip_rect(&rcNewClip);
+                    m_pBlocks->draw_sprite(pCanvas, 156, itrNode.x() - 32,
+                        itrNode.y() - 56, thdf_alpha_75);
+                    pCanvas->set_clip_rect(&rcOldClip);
                 }
             }
-            THDrawable *pItem = (THDrawable*)(itrNode->oEarlyEntities.m_pNext);
+            drawable *pItem = (drawable*)(itrNode->oEarlyEntities.m_pNext);
             while(pItem)
             {
-                pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
-                pItem = (THDrawable*)(pItem->m_pNext);
+                pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
+                pItem = (drawable*)(pItem->m_pNext);
             }
         }
 
@@ -1020,21 +1021,21 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
             bool bNeedsRedraw = false;
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[2];
-            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+            if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                 nullptr, &iH) && iH > 0)
             {
-                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                m_pBlocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[3];
-            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+            if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                 nullptr, &iH) && iH > 0)
             {
-                m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                m_pBlocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[1];
-            if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+            if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                 nullptr, &iH) && iH > 0)
                 bNeedsRedraw = true;
             if(itrNode->oEarlyEntities.m_pNext)
@@ -1042,15 +1043,15 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
             bool bRedrawAnimations = false;
 
-            THDrawable *pItem = (THDrawable*)(itrNode->m_pNext);
+            drawable *pItem = (drawable*)(itrNode->m_pNext);
             while(pItem)
             {
-                pItem->m_fnDraw(pItem, pCanvas, itrNode.x(), itrNode.y());
-                if(pItem->m_fnIsMultipleFrameAnimation(pItem))
+                pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
+                if(pItem->is_multiple_frame_animation_fn(pItem))
                     bRedrawAnimations = true;
                 if(pItem->getDrawingLayer() == 1)
                     bNeedsRedraw = true;
-                pItem = (THDrawable*)(pItem->m_pNext);
+                pItem = (drawable*)(pItem->m_pNext);
             }
 
             //if the current tile contained a multiple frame animation (e.g. a doctor walking)
@@ -1063,25 +1064,25 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
 
                 //check if an object in the adjacent tile to the left of the current tile needs to be redrawn
                 //and if necessary draw it
-                pItem = (THDrawable*)(formerIterator.getPreviousNode()->m_pNext);
+                pItem = (drawable*)(formerIterator.getPreviousNode()->m_pNext);
                 while(pItem)
                 {
                     if (pItem->getDrawingLayer() == 9)
                     {
-                        pItem->m_fnDraw(pItem, pCanvas, formerIterator.x() - 64, formerIterator.y());
+                        pItem->draw_fn(pItem, pCanvas, formerIterator.x() - 64, formerIterator.y());
                         bTileNeedsRedraw = true;
                     }
-                    pItem = (THDrawable*)(pItem->m_pNext);
+                    pItem = (drawable*)(pItem->m_pNext);
                 }
 
                 //check if an object in the adjacent tile above the current tile needs to be redrawn
                 //and if necessary draw it
-                pItem = formerIterator ? (THDrawable*)(formerIterator->m_pNext) : nullptr;
+                pItem = formerIterator ? (drawable*)(formerIterator->m_pNext) : nullptr;
                 while(pItem)
                 {
                     if(pItem->getDrawingLayer() == 8)
-                        pItem->m_fnDraw(pItem, pCanvas, formerIterator.x(), formerIterator.y());
-                    pItem = (THDrawable*)(pItem->m_pNext);
+                        pItem->draw_fn(pItem, pCanvas, formerIterator.x(), formerIterator.y());
+                    pItem = (drawable*)(pItem->m_pNext);
                 }
 
 
@@ -1092,36 +1093,36 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
                 {
                     //redraw the north wall
                     unsigned int iBlock = itrNode.getPreviousNode()->iBlock[1];
-                    if(iBlock != 0 && m_pBlocks->getSpriteSize(iBlock & 0xFF,
+                    if(iBlock != 0 && m_pBlocks->get_sprite_size(iBlock & 0xFF,
                         nullptr, &iH) && iH > 0)
                     {
-                        m_pBlocks->drawSprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
+                        m_pBlocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
                             itrNode.y() - iH + 32, iBlock >> 8);
                         if(itrNode.getPreviousNode()->flags.shadow_wall)
                         {
-                            THClipRect rcOldClip, rcNewClip;
-                            pCanvas->getClipRect(&rcOldClip);
-                            rcNewClip.x = static_cast<THClipRect::xy_t>(itrNode.x() - 96);
-                            rcNewClip.y = static_cast<THClipRect::xy_t>(itrNode.y() - iH + 32 + 4);
-                            rcNewClip.w = static_cast<THClipRect::wh_t>(64);
-                            rcNewClip.h = static_cast<THClipRect::wh_t>(86 - 4);
-                            IntersectTHClipRect(rcNewClip, rcOldClip);
-                            pCanvas->setClipRect(&rcNewClip);
-                            m_pBlocks->drawSprite(pCanvas, 156, itrNode.x() - 96,
-                                itrNode.y() - 56, THDF_Alpha75);
-                            pCanvas->setClipRect(&rcOldClip);
+                            clip_rect rcOldClip, rcNewClip;
+                            pCanvas->get_clip_rect(&rcOldClip);
+                            rcNewClip.x = static_cast<clip_rect::x_y_type>(itrNode.x() - 96);
+                            rcNewClip.y = static_cast<clip_rect::x_y_type>(itrNode.y() - iH + 32 + 4);
+                            rcNewClip.w = static_cast<clip_rect::w_h_type>(64);
+                            rcNewClip.h = static_cast<clip_rect::w_h_type>(86 - 4);
+                            clip_rect_intersection(rcNewClip, rcOldClip);
+                            pCanvas->set_clip_rect(&rcNewClip);
+                            m_pBlocks->draw_sprite(pCanvas, 156, itrNode.x() - 96,
+                                itrNode.y() - 56, thdf_alpha_75);
+                            pCanvas->set_clip_rect(&rcOldClip);
                         }
                     }
-                    pItem = (THDrawable*)(itrNode.getPreviousNode()->oEarlyEntities.m_pNext);
+                    pItem = (drawable*)(itrNode.getPreviousNode()->oEarlyEntities.m_pNext);
                     while(pItem)
                     {
-                        pItem->m_fnDraw(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
-                        pItem = (THDrawable*)(pItem->m_pNext);
+                        pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+                        pItem = (drawable*)(pItem->m_pNext);
                     }
 
-                    pItem = (THDrawable*)(itrNode.getPreviousNode())->m_pNext;
-                    for(; pItem; pItem = (THDrawable*)(pItem->m_pNext))
-                        pItem->m_fnDraw(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+                    pItem = (drawable*)(itrNode.getPreviousNode())->m_pNext;
+                    for(; pItem; pItem = (drawable*)(pItem->m_pNext))
+                        pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
                 }
             }
            bPreviousTileNeedsRedraw = bNeedsRedraw;
@@ -1141,10 +1142,10 @@ void THMap::draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY,
         }
     }
 
-    pCanvas->setClipRect(nullptr);
+    pCanvas->set_clip_rect(nullptr);
 }
 
-THDrawable* THMap::hitTest(int iTestX, int iTestY) const
+drawable* THMap::hitTest(int iTestX, int iTestY) const
 {
     // This function needs to hitTest each drawable object, in the reverse
     // order to that in which they would be drawn.
@@ -1161,7 +1162,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         {
             if(itrNode->m_pNext != nullptr)
             {
-                THDrawable* pResult = _hitTestDrawables(itrNode->m_pNext,
+                drawable* pResult = _hitTestDrawables(itrNode->m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -1171,7 +1172,7 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
         {
             if(itrNode->oEarlyEntities.m_pNext != nullptr)
             {
-                THDrawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.m_pNext,
+                drawable* pResult = _hitTestDrawables(itrNode->oEarlyEntities.m_pNext,
                     itrNode.x(), itrNode.y(), 0, 0);
                 if(pResult)
                     return pResult;
@@ -1182,23 +1183,23 @@ THDrawable* THMap::hitTest(int iTestX, int iTestY) const
     return nullptr;
 }
 
-THDrawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
-                                     int iTestX, int iTestY) const
+drawable* THMap::_hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+                                   int iTestX, int iTestY) const
 {
     THLinkList* pListEnd = pListStart;
     while(pListEnd->m_pNext)
         pListEnd = pListEnd->m_pNext;
-    THDrawable* pList = (THDrawable*)pListEnd;
+    drawable* pList = (drawable*)pListEnd;
 
     while(true)
     {
-        if(pList->m_fnHitTest(pList, iXs, iYs, iTestX, iTestY))
+        if(pList->hit_test_fn(pList, iXs, iYs, iTestX, iTestY))
             return pList;
 
         if(pList == pListStart)
             return nullptr;
         else
-            pList = (THDrawable*)pList->m_pPrev;
+            pList = (drawable*)pList->m_pPrev;
     }
 }
 

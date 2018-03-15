@@ -170,8 +170,8 @@ inline T* luaT_stdnew(lua_State *L, int mt_idx = luaT_environindex, bool env = f
 
 template <typename T> struct luaT_classinfo {};
 
-class THRenderTarget;
-template <> struct luaT_classinfo<THRenderTarget> {
+class render_target;
+template <> struct luaT_classinfo<render_target> {
     static inline const char* name() {return "Surface";}
 };
 
@@ -180,28 +180,28 @@ template <> struct luaT_classinfo<THMap> {
     static inline const char* name() {return "Map";}
 };
 
-class THSpriteSheet;
-template <> struct luaT_classinfo<THSpriteSheet> {
+class sprite_sheet;
+template <> struct luaT_classinfo<sprite_sheet> {
     static inline const char* name() {return "SpriteSheet";}
 };
 
-class THAnimation;
-template <> struct luaT_classinfo<THAnimation> {
+class animation;
+template <> struct luaT_classinfo<animation> {
     static inline const char* name() {return "Animation";}
 };
 
-class THAnimationManager;
-template <> struct luaT_classinfo<THAnimationManager> {
+class animation_manager;
+template <> struct luaT_classinfo<animation_manager> {
     static inline const char* name() {return "Animator";}
 };
 
-class THPalette;
-template <> struct luaT_classinfo<THPalette> {
+class palette;
+template <> struct luaT_classinfo<palette> {
     static inline const char* name() {return "Palette";}
 };
 
-class THRawBitmap;
-template <> struct luaT_classinfo<THRawBitmap> {
+class raw_bitmap;
+template <> struct luaT_classinfo<raw_bitmap> {
     static inline const char* name() {return "RawBitmap";}
 };
 
@@ -222,8 +222,8 @@ template <> struct luaT_classinfo<THFreeTypeFont> {
 };
 #endif
 
-struct THLayers_t;
-template <> struct luaT_classinfo<THLayers_t> {
+struct layers;
+template <> struct luaT_classinfo<layers> {
     static inline const char* name() {return "Layers";}
 };
 
@@ -232,13 +232,13 @@ template <> struct luaT_classinfo<THPathfinder> {
     static inline const char* name() {return "Pathfinder";}
 };
 
-class THCursor;
-template <> struct luaT_classinfo<THCursor> {
+class cursor;
+template <> struct luaT_classinfo<cursor> {
     static inline const char* name() {return "Cursor";}
 };
 
-class THLine;
-template <> struct luaT_classinfo<THLine> {
+class line;
+template <> struct luaT_classinfo<line> {
     static inline const char* name() {return "Line";}
 };
 
@@ -267,8 +267,8 @@ template <> struct luaT_classinfo<THWindowBase_t> {
     static inline const char* name() {return "WindowBase";}
 };
 
-class THSpriteRenderList;
-template <> struct luaT_classinfo<THSpriteRenderList> {
+class sprite_render_list;
+template <> struct luaT_classinfo<sprite_render_list> {
     static inline const char* name() {return "SpriteRenderList";}
 };
 

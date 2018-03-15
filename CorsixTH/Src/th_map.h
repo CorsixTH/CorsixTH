@@ -215,7 +215,7 @@ struct THMapNode : public THLinkList
     std::list<THObjectType> objects;
 };
 
-class THSpriteSheet;
+class sprite_sheet;
 
 //! Prototype for object callbacks from THMap::loadFromTHFile
 /*!
@@ -249,7 +249,7 @@ public:
         The sprites for map floor tiles, wall tiles, and map decorators
         all come from the given sheet.
     */
-    void setBlockSheet(THSpriteSheet* pSheet);
+    void setBlockSheet(sprite_sheet* pSheet);
 
     //! Set the draw flags on all wall blocks
     /*!
@@ -335,7 +335,7 @@ public:
         co-ordinates - they are not world (tile) co-ordinates, nor (relative)
         screen co-ordinates.
     */
-    void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth,
+    void draw(render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
               int iHeight, int iCanvasX, int iCanvasY) const;
 
     //! Perform a hit-test against the animations attached to the map
@@ -346,7 +346,7 @@ public:
         itself and query the top 8 bits of THMapNode::iFlags, or traverse the
         node's animation lists.
     */
-    THDrawable* hitTest(int iTestX, int iTestY) const;
+    drawable* hitTest(int iTestX, int iTestY) const;
 
     // When using the unchecked versions, the map co-ordinates MUST be valid.
     // When using the normal versions, nullptr is returned for invalid co-ords.
@@ -384,8 +384,8 @@ public:
     void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
 
 private:
-    THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
-                                  int iTestX, int iTestY) const;
+    drawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
+                                int iTestX, int iTestY) const;
     void _readTileIndex(const uint8_t* pData, int& iX, int &iY) const;
     void _writeTileIndex(uint8_t* pData, int iX, int iY) const;
     int _getParcelTileCount(int iParcelId) const;
@@ -410,7 +410,7 @@ private:
 
     THMapNode* m_pCells;
     THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
-    THSpriteSheet* m_pBlocks;
+    sprite_sheet* m_pBlocks;
     THMapOverlay* m_pOverlay;
     bool m_bOwnOverlay;
     int* m_pPlotOwner; // 0 for unowned, 1 for player 1, etc.

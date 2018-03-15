@@ -33,8 +33,8 @@ static int l_movie_new(lua_State *L)
 static int l_movie_set_renderer(lua_State *L)
 {
     THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    THRenderTarget *pRenderTarget = luaT_testuserdata<THRenderTarget>(L, 2);
-    pMovie->setRenderer(pRenderTarget->getRenderer());
+    render_target *pRenderTarget = luaT_testuserdata<render_target>(L, 2);
+    pMovie->setRenderer(pRenderTarget->get_renderer());
     return 0;
 }
 

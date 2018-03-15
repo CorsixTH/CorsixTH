@@ -42,15 +42,15 @@ static int l_town_map_draw(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
     THMap *pMap = luaT_testuserdata<THMap>(L, 2);
-    THRenderTarget *pCanvas = luaT_testuserdata<THRenderTarget>(L, 3);
+    render_target *pCanvas = luaT_testuserdata<render_target>(L, 3);
     int iCanvasXBase = static_cast<int>(luaL_checkinteger(L, 4));
     int iCanvasYBase = static_cast<int>(luaL_checkinteger(L, 5));
     bool bShowHeat = lua_toboolean(L, 6) != 0;
 
-    uint32_t iColourMyHosp = pCanvas->mapColour(0, 0, 70);
-    uint32_t iColourWall = pCanvas->mapColour(255, 255, 255);
-    uint32_t iColourDoor = pCanvas->mapColour(200, 200, 200);
-    uint32_t iColourPurchasable = pCanvas->mapColour(255, 0, 0);
+    uint32_t iColourMyHosp = pCanvas->map_colour(0, 0, 70);
+    uint32_t iColourWall = pCanvas->map_colour(255, 255, 255);
+    uint32_t iColourDoor = pCanvas->map_colour(200, 200, 200);
+    uint32_t iColourPurchasable = pCanvas->map_colour(255, 0, 0);
 
     const THMapNode *pNode = pMap->getNodeUnchecked(0, 0);
     const THMapNode *pOriginalNode = pMap->getOriginalNodeUnchecked(0, 0);
@@ -116,37 +116,37 @@ static int l_town_map_draw(lua_State *L)
                         break;
                     }
 
-                    iColour = pCanvas->mapColour(iR, iG, iB);
+                    iColour = pCanvas->map_colour(iR, iG, iB);
                 }
-                pCanvas->fillRect(iColour, iCanvasX, iCanvasY, 3, 3);
+                pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
             }
             dont_paint_tile:
 #define IsWall(blk) ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164))
 #define IsWallDrawn(n) pMap->getNodeOwner(pNode) != 0 ? \
     IsWall(pNode->iBlock[n]) : IsWall(pOriginalNode->iBlock[n])
             if(IsWallDrawn(1)) {
-                pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 3, 1);
+                pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3, 1);
 
                 // Draw entrance door
                 auto l = (pNode - 1)->objects;
                 if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
                     if (pNode->flags.hospital) {
-                        pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY-2, 9, 3);
+                        pCanvas->fill_rect(iColourDoor, iCanvasX-6, iCanvasY-2, 9, 3);
                     } else {
-                        pCanvas->fillRect(iColourDoor, iCanvasX-6, iCanvasY, 9, 3);
+                        pCanvas->fill_rect(iColourDoor, iCanvasX-6, iCanvasY, 9, 3);
                     }
                 }
             }
             if(IsWallDrawn(2)) {
-                pCanvas->fillRect(iColourWall, iCanvasX, iCanvasY, 1, 3);
+                pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 1, 3);
 
                 // Draw entrance door
                 auto l = (pNode - iMapWidth)->objects;
                 if(!l.empty() && l.front() == THObjectType::entrance_right_door) {
                     if (pNode->flags.hospital) {
-                        pCanvas->fillRect(iColourDoor, iCanvasX-2, iCanvasY-6, 3, 9);
+                        pCanvas->fill_rect(iColourDoor, iCanvasX-2, iCanvasY-6, 3, 9);
                     } else {
-                        pCanvas->fillRect(iColourDoor, iCanvasX, iCanvasY-6, 3, 9);
+                        pCanvas->fill_rect(iColourDoor, iCanvasX, iCanvasY-6, 3, 9);
                     }
                 }
             }

@@ -38,7 +38,7 @@ static int l_map_new(lua_State *L)
 static int l_map_set_sheet(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    THSpriteSheet* pSheet = luaT_testuserdata<THSpriteSheet>(L, 2);
+    sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
     lua_settop(L, 2);
 
     pMap->setBlockSheet(pSheet);
@@ -64,7 +64,7 @@ static int l_map_depersist(lua_State *L)
 
     pMap->depersist(pReader);
     luaT_getenvfield(L, 2, "sprites");
-    pMap->setBlockSheet((THSpriteSheet*)lua_touserdata(L, -1));
+    pMap->setBlockSheet((sprite_sheet*)lua_touserdata(L, -1));
     lua_pop(L, 1);
     return 0;
 }
@@ -120,14 +120,14 @@ static int l_map_save(lua_State *L)
     return 0;
 }
 
-static THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
+static animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 {
-    THAnimation *pAnim;
+    animation *pAnim;
     lua_rawgeti(L, 11, iIndex);
     if(lua_type(L, -1) == LUA_TNIL)
     {
         lua_pop(L, 1);
-        pAnim = luaT_new(L, THAnimation);
+        pAnim = luaT_new(L, animation);
         lua_pushvalue(L, luaT_upvalueindex(2));
         lua_setmetatable(L, -2);
         lua_createtable(L, 0, 2);
@@ -140,7 +140,7 @@ static THAnimation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     }
     else
     {
-        pAnim = luaT_testuserdata<THAnimation>(L, -1, luaT_upvalueindex(2));
+        pAnim = luaT_testuserdata<animation>(L, -1, luaT_upvalueindex(2));
         lua_pop(L, 1);
     }
     ++iIndex;
@@ -221,9 +221,9 @@ static int l_map_updateblueprint(lua_State *L)
 {
     // NB: This function can be implemented in Lua, but is implemented in C for
     // efficiency.
-    const unsigned short iFloorTileGood = 24 + (THDF_Alpha50 << 8);
-    const unsigned short iFloorTileGoodCenter = 37 + (THDF_Alpha50 << 8);
-    const unsigned short iFloorTileBad  = 67 + (THDF_Alpha50 << 8);
+    const unsigned short iFloorTileGood = 24 + (thdf_alpha_50 << 8);
+    const unsigned short iFloorTileGoodCenter = 37 + (thdf_alpha_50 << 8);
+    const unsigned short iFloorTileBad  = 67 + (thdf_alpha_50 << 8);
     const unsigned int iWallAnimTopCorner = 124;
     const unsigned int iWallAnim = 120;
 
@@ -239,7 +239,7 @@ static int l_map_updateblueprint(lua_State *L)
     int player_id = static_cast<int>(luaL_checkinteger(L, 10));
 
     luaL_checktype(L, 11, LUA_TTABLE); // Animation list
-    THAnimationManager* pAnims = luaT_testuserdata<THAnimationManager>(L, 12, luaT_upvalueindex(1));
+    animation_manager* pAnims = luaT_testuserdata<animation_manager>(L, 12, luaT_upvalueindex(1));
     bool entire_invalid = lua_toboolean(L, 13) != 0;
     bool valid = !entire_invalid;
 
@@ -302,11 +302,11 @@ static int l_map_updateblueprint(lua_State *L)
 
     // Set wall animations
     int iNextAnim = 1;
-    THAnimation *pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
+    animation *pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
     THMapNode *pNode = pMap->getNodeUnchecked(iNewX, iNewY);
-    pAnim->setAnimation(pAnims, iWallAnimTopCorner);
-    pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
-    pAnim->attachToTile(pNode, 0);
+    pAnim->set_animation(pAnims, iWallAnimTopCorner);
+    pAnim->set_flags(thdf_list_bottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : thdf_alt_palette));
+    pAnim->attach_to_tile(pNode, 0);
 
     for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
     {
@@ -314,18 +314,18 @@ static int l_map_updateblueprint(lua_State *L)
         {
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iX, iNewY);
-            pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
-            pAnim->attachToTile(pNode, 0);
-            pAnim->setPosition(0, 0);
+            pAnim->set_animation(pAnims, iWallAnim);
+            pAnim->set_flags(thdf_list_bottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : thdf_alt_palette));
+            pAnim->attach_to_tile(pNode, 0);
+            pAnim->set_position(0, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH - 1);
-        pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
+        pAnim->set_animation(pAnims, iWallAnim);
+        pAnim->set_flags(thdf_list_bottom | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : thdf_alt_palette));
         pNode = pMap->getNodeUnchecked(iX, iNewY + iNewH);
-        pAnim->attachToTile(pNode, 0);
-        pAnim->setPosition(0, -1);
+        pAnim->attach_to_tile(pNode, 0);
+        pAnim->set_position(0, -1);
     }
     for(int iY = iNewY; iY < iNewY + iNewH; ++iY)
     {
@@ -333,18 +333,18 @@ static int l_map_updateblueprint(lua_State *L)
         {
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
             pNode = pMap->getNodeUnchecked(iNewX, iY);
-            pAnim->setAnimation(pAnims, iWallAnim);
-            pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
-            pAnim->attachToTile(pNode, 0);
-            pAnim->setPosition(2, 0);
+            pAnim->set_animation(pAnims, iWallAnim);
+            pAnim->set_flags(thdf_list_bottom | thdf_flip_horizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : thdf_alt_palette));
+            pAnim->attach_to_tile(pNode, 0);
+            pAnim->set_position(2, 0);
         }
         pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
         pNode = pMap->getNodeUnchecked(iNewX + iNewW - 1, iY);
-        pAnim->setAnimation(pAnims, iWallAnim);
-        pAnim->setFlags(THDF_ListBottom | THDF_FlipHorizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : THDF_AltPalette));
+        pAnim->set_animation(pAnims, iWallAnim);
+        pAnim->set_flags(thdf_list_bottom | thdf_flip_horizontal | (is_valid(entire_invalid, pNode, pMap, player_id) ? 0 : thdf_alt_palette));
         pNode = pMap->getNodeUnchecked(iNewX + iNewW, iY);
-        pAnim->attachToTile(pNode, 0);
-        pAnim->setPosition(2, -1);
+        pAnim->attach_to_tile(pNode, 0);
+        pAnim->set_position(2, -1);
     }
 
     // Clear away extra animations
@@ -354,7 +354,7 @@ static int l_map_updateblueprint(lua_State *L)
         for(int i = iNextAnim; i <= iAnimCount; ++i)
         {
             pAnim = l_map_updateblueprint_getnextanim(L, iNextAnim);
-            pAnim->removeFromTile();
+            pAnim->remove_from_tile();
             lua_pushnil(L);
             lua_rawseti(L, 11, i);
         }
@@ -765,7 +765,7 @@ static int l_map_unmark_room(lua_State *L)
 static int l_map_draw(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    THRenderTarget* pCanvas = luaT_testuserdata<THRenderTarget>(L, 2);
+    render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
 
     pMap->draw(pCanvas, static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)), static_cast<int>(luaL_checkinteger(L, 5)),
         static_cast<int>(luaL_checkinteger(L, 6)), static_cast<int>(luaL_optinteger(L, 7, 0)), static_cast<int>(luaL_optinteger(L, 8, 0)));
@@ -777,7 +777,7 @@ static int l_map_draw(lua_State *L)
 static int l_map_hittest(lua_State *L)
 {
     THMap* pMap = luaT_testuserdata<THMap>(L);
-    THDrawable* pObject = pMap->hitTest(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
+    drawable* pObject = pMap->hitTest(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
     if(pObject == nullptr)
         return 0;
     lua_rawgeti(L, luaT_upvalueindex(1), 1);

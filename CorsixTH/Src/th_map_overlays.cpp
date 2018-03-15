@@ -55,7 +55,7 @@ void THMapOverlayPair::setSecond(THMapOverlay* pOverlay, bool bTakeOwnership)
     m_bOwnSecond = bTakeOwnership;
 }
 
-void THMapOverlayPair::drawCell(THRenderTarget* pCanvas, int iCanvasX,
+void THMapOverlayPair::drawCell(render_target* pCanvas, int iCanvasX,
                                 int iCanvasY, const THMap* pMap, int iNodeX,
                                 int iNodeY)
 {
@@ -75,13 +75,13 @@ void THMapTextOverlay::setBackgroundSprite(size_t iSprite)
     m_iBackgroundSprite = iSprite;
 }
 
-void THMapTextOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
+void THMapTextOverlay::drawCell(render_target* pCanvas, int iCanvasX,
                                 int iCanvasY, const THMap* pMap, int iNodeX,
                                 int iNodeY)
 {
     if(m_pSprites && m_iBackgroundSprite)
     {
-        m_pSprites->drawSprite(pCanvas, m_iBackgroundSprite, iCanvasX,
+        m_pSprites->draw_sprite(pCanvas, m_iBackgroundSprite, iCanvasX,
             iCanvasY, 0);
     }
     if(m_pFont)
@@ -111,7 +111,7 @@ THMapTypicalOverlay::~THMapTypicalOverlay()
     setFont(nullptr, false);
 }
 
-void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
+void THMapFlagsOverlay::drawCell(render_target* pCanvas, int iCanvasX,
                                  int iCanvasY, const THMap* pMap, int iNodeX,
                                  int iNodeY)
 {
@@ -121,26 +121,26 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     if(m_pSprites)
     {
         if(pNode->flags.passable)
-            m_pSprites->drawSprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
         if(pNode->flags.hospital)
-            m_pSprites->drawSprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
         if(pNode->flags.buildable)
-            m_pSprites->drawSprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
         if(pNode->flags.can_travel_n && pMap->getNode(iNodeX, iNodeY - 1)->flags.passable)
         {
-            m_pSprites->drawSprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
         }
         if(pNode->flags.can_travel_e && pMap->getNode(iNodeX + 1, iNodeY)->flags.passable)
         {
-            m_pSprites->drawSprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
         }
         if(pNode->flags.can_travel_s && pMap->getNode(iNodeX, iNodeY + 1)->flags.passable)
         {
-            m_pSprites->drawSprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
         }
         if(pNode->flags.can_travel_w && pMap->getNode(iNodeX - 1, iNodeY)->flags.passable)
         {
-            m_pSprites->drawSprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
+            m_pSprites->draw_sprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
         }
     }
     if(m_pFont)
@@ -160,7 +160,7 @@ void THMapFlagsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
     }
 }
 
-void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
+void THMapParcelsOverlay::drawCell(render_target* pCanvas, int iCanvasX,
                                    int iCanvasY, const THMap* pMap, int iNodeX,
                                    int iNodeY)
 {
@@ -175,7 +175,7 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 #define DIR(dx, dy, sprite) \
         pNode = pMap->getNode(iNodeX + dx, iNodeY + dy); \
         if(!pNode || pNode->iParcelId != iParcel) \
-            m_pSprites->drawSprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
+            m_pSprites->draw_sprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
         DIR( 0, -1, 18);
         DIR( 1,  0, 19);
         DIR( 0,  1, 20);
@@ -185,7 +185,7 @@ void THMapParcelsOverlay::drawCell(THRenderTarget* pCanvas, int iCanvasX,
 }
 
 
-void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
+void THMapTypicalOverlay::_drawText(render_target* pCanvas, int iX, int iY,
         std::string str)
 {
     THFontDrawArea oArea = m_pFont->getTextSize(str.c_str(), str.length());
@@ -193,7 +193,7 @@ void THMapTypicalOverlay::_drawText(THRenderTarget* pCanvas, int iX, int iY,
         iY + (32 - oArea.iEndY) / 2);
 }
 
-void THMapTypicalOverlay::setSprites(THSpriteSheet* pSheet, bool bTakeOwnership)
+void THMapTypicalOverlay::setSprites(sprite_sheet* pSheet, bool bTakeOwnership)
 {
     if(m_pSprites && m_bOwnsSprites)
         delete m_pSprites;

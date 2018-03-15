@@ -104,7 +104,7 @@ THBitmapFont::THBitmapFont()
     m_iLineSep = 0;
 }
 
-void THBitmapFont::setSpriteSheet(THSpriteSheet* pSpriteSheet)
+void THBitmapFont::setSpriteSheet(sprite_sheet* pSpriteSheet)
 {
     m_pSpriteSheet = pSpriteSheet;
 }
@@ -174,13 +174,13 @@ THFontDrawArea THBitmapFont::getTextSize(const char* sMessage, size_t iMessageLe
     return drawTextWrapped(nullptr, sMessage, iMessageLength, 0, 0, iMaxWidth, INT_MAX, 0);
 }
 
-void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const
+void THBitmapFont::drawText(render_target* pCanvas, const char* sMessage, size_t iMessageLength, int iX, int iY) const
 {
-    pCanvas->startNonOverlapping();
+    pCanvas->start_nonoverlapping_draws();
     if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
     {
         const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
+        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->get_sprite_count()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
 
         while(sMessage != sMessageEnd)
@@ -190,16 +190,16 @@ void THBitmapFont::drawText(THRenderTarget* pCanvas, const char* sMessage, size_
             {
                 iChar -= iFirstASCII;
                 unsigned int iWidth, iHeight;
-                m_pSpriteSheet->drawSprite(pCanvas, iChar, iX, iY, 0);
-                m_pSpriteSheet->getSpriteSizeUnchecked(iChar, &iWidth, &iHeight);
+                m_pSpriteSheet->draw_sprite(pCanvas, iChar, iX, iY, 0);
+                m_pSpriteSheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
                 iX += iWidth + m_iCharSep;
             }
         }
     }
-    pCanvas->finishNonOverlapping();
+    pCanvas->finish_nonoverlapping_draws();
 }
 
-THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+THFontDrawArea THBitmapFont::drawTextWrapped(render_target* pCanvas, const char* sMessage,
                         size_t iMessageLength, int iX, int iY, int iWidth,
                         int iMaxRows, int iSkipRows, eTHAlign eAlign) const
 {
@@ -208,7 +208,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
     if(iMessageLength != 0 && m_pSpriteSheet != nullptr)
     {
         const unsigned int iFirstASCII = 31;
-        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->getSpriteCount()) + iFirstASCII;
+        unsigned int iLastASCII = static_cast<unsigned int>(m_pSpriteSheet->get_sprite_count()) + iFirstASCII;
         const char* sMessageEnd = sMessage + iMessageLength;
 
         while(sMessage != sMessageEnd && oDrawArea.iNumRows < iMaxRows)
@@ -237,7 +237,7 @@ THFontDrawArea THBitmapFont::drawTextWrapped(THRenderTarget* pCanvas, const char
                 unsigned int iCharWidth = 0, iCharHeight = 0;
                 if(iFirstASCII <= iChar && iChar <= iLastASCII)
                 {
-                    m_pSpriteSheet->getSpriteSizeUnchecked(iChar - iFirstASCII, &iCharWidth, &iCharHeight);
+                    m_pSpriteSheet->get_sprite_size_unchecked(iChar - iFirstASCII, &iCharWidth, &iCharHeight);
                 }
                 iMsgWidth += m_iCharSep + iCharWidth;
                 if(iChar == ' ')
@@ -402,7 +402,7 @@ FT_Error THFreeTypeFont::setFace(const uint8_t* pData, size_t iLength)
     return iError;
 }
 
-FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
+FT_Error THFreeTypeFont::matchBitmapFont(sprite_sheet* pBitmapFontSpriteSheet)
 {
     if(pBitmapFontSpriteSheet == nullptr)
         return FT_Err_Invalid_Argument;
@@ -414,8 +414,8 @@ FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
     {
         unsigned int iWidth, iHeight;
         unsigned int iSprite = *sCharToTry - 31;
-        if(pBitmapFontSpriteSheet->getSpriteSize(iSprite, &iWidth, &iHeight)
-        && pBitmapFontSpriteSheet->getSpriteAverageColour(iSprite, &m_oColour)
+        if(pBitmapFontSpriteSheet->get_sprite_size(iSprite, &iWidth, &iHeight)
+        && pBitmapFontSpriteSheet->get_sprite_average_colour(iSprite, &m_oColour)
         && iWidth > 1 && iHeight > 1)
         {
             return setPixelSize(iWidth, iHeight);
@@ -424,13 +424,13 @@ FT_Error THFreeTypeFont::matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet)
 
     // Take the average size of all characters, and the colour of one of them.
     unsigned int iWidthSum = 0, iHeightSum = 0, iAverageNum = 0;
-    for(unsigned int i = 0; i < pBitmapFontSpriteSheet->getSpriteCount(); ++i)
+    for(unsigned int i = 0; i < pBitmapFontSpriteSheet->get_sprite_count(); ++i)
     {
         unsigned int iWidth, iHeight;
-        pBitmapFontSpriteSheet->getSpriteSizeUnchecked(i, &iWidth, &iHeight);
+        pBitmapFontSpriteSheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
         if(iWidth <= 1 || iHeight <= 1)
             continue;
-        if(!pBitmapFontSpriteSheet->getSpriteAverageColour(i, &m_oColour))
+        if(!pBitmapFontSpriteSheet->get_sprite_average_colour(i, &m_oColour))
             continue;
         iWidthSum += iWidth;
         iHeightSum += iHeight;
@@ -493,7 +493,7 @@ THFontDrawArea THFreeTypeFont::getTextSize(const char* sMessage, size_t iMessage
     return drawTextWrapped(nullptr, sMessage, iMessageLength, 0, 0, iMaxWidth, INT_MAX, 0);
 }
 
-void THFreeTypeFont::drawText(THRenderTarget* pCanvas, const char* sMessage,
+void THFreeTypeFont::drawText(render_target* pCanvas, const char* sMessage,
                           size_t iMessageLength, int iX, int iY) const
 {
     drawTextWrapped(pCanvas, sMessage, iMessageLength, iX, iY, INT_MAX);
@@ -506,7 +506,7 @@ struct codepoint_glyph_t
     FT_UInt iGlyphIndex;
 };
 
-THFontDrawArea THFreeTypeFont::drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+THFontDrawArea THFreeTypeFont::drawTextWrapped(render_target* pCanvas, const char* sMessage,
                                 size_t iMessageLength, int iX, int iY,
                                 int iWidth, int iMaxRows, int iSkipRows, eTHAlign eAlign) const
 {

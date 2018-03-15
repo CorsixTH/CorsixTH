@@ -87,7 +87,7 @@ public:
         @param iY The Y coordinate of the top-left corner of the bounding
             rectangle for the drawn text.
     */
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
+    virtual void drawText(render_target* pCanvas, const char* sMessage,
                           size_t iMessageLength, int iX, int iY) const = 0;
 
     //! Draw a single line of text, splitting it at word boundaries
@@ -108,7 +108,7 @@ public:
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
     */
-    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    virtual THFontDrawArea drawTextWrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
             eTHAlign eAlign = eTHAlign::left) const = 0;
@@ -125,9 +125,9 @@ public:
         index 1, and other ASCII characters following on in simple order (i.e.
         '!' (ASCII 0x21) at index 2, 'A' (ASCII 0x41) at index 34, etc.)
     */
-    void setSpriteSheet(THSpriteSheet* pSpriteSheet);
+    void setSpriteSheet(sprite_sheet* pSpriteSheet);
 
-    THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
+    sprite_sheet* getSpriteSheet() {return m_pSpriteSheet;}
 
     //! Set the separation between characters and between lines
     /*!
@@ -139,16 +139,16 @@ public:
     THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
                                int iMaxWidth = INT_MAX) const override;
 
-    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+    void drawText(render_target* pCanvas, const char* sMessage,
                   size_t iMessageLength, int iX, int iY) const override;
 
-    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    THFontDrawArea drawTextWrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
             eTHAlign eAlign = eTHAlign::left) const override;
 
 private:
-    THSpriteSheet* m_pSpriteSheet;
+    sprite_sheet* m_pSpriteSheet;
     int m_iCharSep;
     int m_iLineSep;
 };
@@ -206,7 +206,7 @@ public:
 
         @param pBitmapFontSpriteSheet The sprite sheet of the bitmap font.
     */
-    FT_Error matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet);
+    FT_Error matchBitmapFont(sprite_sheet* pBitmapFontSpriteSheet);
 
     //! Set the ideal character size using pixel values.
     /*!
@@ -219,10 +219,10 @@ public:
     THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
                                int iMaxWidth = INT_MAX) const override;
 
-    void drawText(THRenderTarget* pCanvas, const char* sMessage,
+    void drawText(render_target* pCanvas, const char* sMessage,
                   size_t iMessageLength, int iX, int iY) const override;
 
-    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    THFontDrawArea drawTextWrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
             eTHAlign eAlign = eTHAlign::left) const override;
@@ -277,7 +277,7 @@ private:
     static int ms_iFreeTypeInitCount;
     static const int ms_CacheSizeLog2 = 7;
     FT_Face m_pFace;
-    THColour m_oColour;
+    argb_colour m_oColour;
     bool m_bDoneFreeTypeInit;
     mutable cached_text_t m_aCache[1 << ms_CacheSizeLog2];
 
@@ -300,7 +300,7 @@ private:
             an object which can be used by the rendering engine, and store the
             result in the pTexture or iTexture field.
     */
-    void _makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const;
+    void _makeTexture(render_target *pEventualCanvas, cached_text_t* pCacheEntry) const;
 
     //! Free a previously-made texture of a cache entry.
     /*!
@@ -320,7 +320,7 @@ private:
         @param iX The X position at which to draw the texture on the canvas.
         @param iY The Y position at which to draw the texture on the canvas.
     */
-    void _drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry,
+    void _drawTexture(render_target* pCanvas, cached_text_t* pCacheEntry,
                       int iX, int iY) const;
 };
 #endif // CORSIX_TH_USE_FREETYPE2
