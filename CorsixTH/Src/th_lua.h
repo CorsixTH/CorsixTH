@@ -262,8 +262,8 @@ template <> struct luaT_classinfo<movie_player> {
     static inline const char* name() {return "Movie";}
 };
 
-struct THWindowBase_t;
-template <> struct luaT_classinfo<THWindowBase_t> {
+class abstract_window;
+template <> struct luaT_classinfo<abstract_window> {
     static inline const char* name() {return "WindowBase";}
 };
 

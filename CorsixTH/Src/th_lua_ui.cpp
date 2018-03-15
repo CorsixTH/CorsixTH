@@ -25,9 +25,9 @@ SOFTWARE.
 #include "th_map.h"
 #include <algorithm>
 
-struct THWindowBase_t {};
+class abstract_window {};
 
-static int l_window_base_new(lua_State *L)
+static int l_abstract_window_new(lua_State *L)
 {
     return luaL_error(L, "windowBase can only be used a base class - "
         " do not create a windowBase directly.");
@@ -161,7 +161,7 @@ static int l_town_map_draw(lua_State *L)
 void THLuaRegisterUI(const THLuaRegisterState_t *pState)
 {
     // WindowBase
-    luaT_class(THWindowBase_t, l_window_base_new, "windowHelpers", eTHLuaMetatable::windowBase);
+    luaT_class(abstract_window, l_abstract_window_new, "windowHelpers", eTHLuaMetatable::windowBase);
     luaT_setfunction(l_town_map_draw, "townMapDraw", eTHLuaMetatable::map, eTHLuaMetatable::surface);
     luaT_endclass();
 }
