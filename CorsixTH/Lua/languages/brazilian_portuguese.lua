@@ -1,7 +1,7 @@
 --[[ Copyright (c) 2010 Manuel "Roujin" Wolf
 Copyright (c) 2012 Henrique Poyatos
 Copyright (c) 2014 Leonardo Malaman (LeonardoGamer)
-Copyright (c) 2017 Altieres Lima da Silva
+Copyright (c) 2018 Altieres Lima da Silva
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -422,7 +422,7 @@ folders_window = {
   caption = "Localizaçäo de Pastas",
   data_label = "Dados do TH",
   font_label = "Fonte",
-  music_label = "MP3",
+  music_label = "Músicas",
   savegames_label = "Jogos Salvos",
   screenshots_label = "Capturas de Tela",
   -- next four are the captions for the browser window, which are called from the folder setting menu
@@ -439,7 +439,7 @@ tooltip.folders_window = {
   font_location = "A localizaçäo de uma fonte de letra capaz de mostrar caracteres Unicode necessários para seu idioma. Se näo for indicado, näo poderá selecionar idiomas que tenham mais caracteres dos que o jogo original tem, por exemplo, russo e chinês.",
   savegames_location = "A pasta de jogos salvos é localizada por padräo junto com o arquivo de configuraçäo e é utilizado para armazenar os jogos salvo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
   screenshots_location = "As capturas de tela säo guardadas por padräo em uma pasta junto com o arquivo de configuraçäo. Se você näo gostar, pode selecionar outra procurando a pasta que quiser usar.",
-  music_location = "Selecione uma pasta com seus arquivos de música em formato MP3. Necessita uma pasta já existente, entäo poderá procurá-la.",
+  music_location = "Selecione uma pasta com seus arquivos de música. Necessita de uma pasta já existente, entäo poderá procurá-la.",
   browse_data = "Procurar outra localizaçäo com uma instalaçäo do Theme Hospital. (Localizaçäo atual: %1%)",
   browse_font = "Procurar outro arquivo de fonte de letra. (Localizaçäo atual: %1%)",
   browse_saves = "Procurar outra localizaçäo para sua pasta de jogos salvos. (Localizaçäo atual: %1%) ",
@@ -450,7 +450,7 @@ tooltip.folders_window = {
   default = "Localizaçäo padräo",
   reset_to_default = "Volta a atribuir a pasta a sua localizaçäo padräo",
  -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
-  back  = "Fechar este menu e voltar para menu de Configuraçöes",
+  back  = "Fechar este menu e voltar para o menu de Configuraçöes",
 }
 
 font_location_window = {
@@ -481,7 +481,7 @@ new_game_window = {
 }
 
 tooltip.new_game_window = {
-  player_name = "Digite no nome que você deseja ser chamado no jogo",
+  player_name = "Digite o nome que você deseja ser chamado no jogo",
   difficulty = "Selecione o nível de dificuldade do jogo",
   easy = "Se você näo conhecer jogos de simulaçäo, esta dificuldade é para você.",
   medium = "Esta é a dificuldade intermediária, se você está inseguro do que deve escolher.",
@@ -511,7 +511,7 @@ errors = {
   map_file_missing = "Näo foi possível encontrar o arquivo de mapa %s para esta fase!",
   minimum_screen_size = "Por favor, digite dimensöes de tela de pelo menos 640x480.",
   unavailable_screen_size = "O tamanho da tela que você digitou näo está disponível em tela cheia.",
-  alien_dna = "NOTA: Os pacientes alienígenas näo têm animaçöes para se sentar, abrir portas, bater nas portas, etc. portanto, assim como no Theme Hospital original, para fazer estas coisas aparentaräo mudar para uma imagem normal e logo voltaräo para o seu estado.  Os pacientes com DNA alienígena só apareceräo se o arquivo de fase o indicar",
+  alien_dna = "NOTA: Os pacientes alienígenas näo têm animaçöes para se sentar, abrir portas, bater nas portas, etc. portanto, assim como no Theme Hospital original, ao fazer estas coisas aparentaräo mudar para uma imagem normal e logo voltaräo para o seu estado.  Os pacientes com DNA alienígena só apareceräo se o arquivo de fase o indicar",
   fractured_bones = "NOTA: A animaçäo das pacientes femininas com Fraturas ósseas näo é perfeita",
   could_not_load_campaign = "Falha ao carregar a campanha: %s",
   could_not_find_first_campaign_level = "Näo foi possível encontrar o primeiro nível desta campanha: %s",
@@ -536,7 +536,7 @@ information = {
   very_old_save = "Houveram muitas mudanças no jogo desde que você começou a jogar este mapa. Para ter certeza que todas as funcionalidades estäo funcionando considere recomeçar o mapa.",
   level_lost = {
     "Que pena! Você fracassou. Mais sorte na próxima vez!",
-    "Você perdeu porque",
+    "Você perdeu porque:",
     reputation = "Sua reputaçäo caiu abaixo de %d.",
     balance = "Seu saldo no banco caiu abaixo de %d.",
     percentage_killed = "Você matou mais de %d porcento dos pacientes.",
@@ -775,7 +775,7 @@ fax.epidemic.cover_up_explanation_1 = "Se tentar encobri-la, terá um tempo limi
 fax.vip_visit_result.close_text = "Obrigado por visitar o hospital."
 fax.vip_visit_result.telegram = "Telegrama!"
 fax.vip_visit_result.vip_remarked_name = "Depois de visitar o seu hospital, %s declarou:"
-fax.vip_visit_result.remarks.super[1] = "Que hospital eficaz! A próxima vez que esteja gravemente doente, venho aqui."
+fax.vip_visit_result.remarks.super[1] = "Que hospital eficaz! A próxima vez que estiver gravemente doente, eu venho aqui."
 fax.vip_visit_result.remarks.super[2] = "É isto o que eu chamo de um hospital."
 fax.vip_visit_result.remarks.super[3] = "É um hospital excelente. E sei o que digo; visito muitos hospitais."
 fax.vip_visit_result.remarks.mediocre[1] = "Bom, já vi piores. Mas deveria fazer algumas melhoras."
