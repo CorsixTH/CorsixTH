@@ -996,12 +996,12 @@ static int l_path_visit(lua_State *L)
     return 1;
 }
 
-void THLuaRegisterMap(const THLuaRegisterState_t *pState)
+void lua_register_map(const lua_register_state *pState)
 {
     // Map
-    luaT_class(level_map, l_map_new, "map", eTHLuaMetatable::map);
-    luaT_setmetamethod(l_map_persist, "persist", eTHLuaMetatable::anim);
-    luaT_setmetamethod(l_map_depersist, "depersist", eTHLuaMetatable::anim);
+    luaT_class(level_map, l_map_new, "map", lua_metatable::map);
+    luaT_setmetamethod(l_map_persist, "persist", lua_metatable::anim);
+    luaT_setmetamethod(l_map_depersist, "depersist", lua_metatable::anim);
     luaT_setfunction(l_map_load, "load");
     luaT_setfunction(l_map_loadblank, "loadBlank");
     luaT_setfunction(l_map_save, "save");
@@ -1020,14 +1020,14 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
     luaT_setfunction(l_map_settemperaturedisplay, "setTemperatureDisplay");
     luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
-    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", eTHLuaMetatable::anims, eTHLuaMetatable::anim);
+    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", lua_metatable::anims, lua_metatable::anim);
     luaT_setfunction(l_map_updateshadows, "updateShadows");
     luaT_setfunction(l_map_updatepathfinding, "updatePathfinding");
     luaT_setfunction(l_map_mark_room, "markRoom");
     luaT_setfunction(l_map_unmark_room, "unmarkRoom");
-    luaT_setfunction(l_map_set_sheet, "setSheet", eTHLuaMetatable::sheet);
-    luaT_setfunction(l_map_draw, "draw", eTHLuaMetatable::surface);
-    luaT_setfunction(l_map_hittest, "hitTestObjects", eTHLuaMetatable::anim);
+    luaT_setfunction(l_map_set_sheet, "setSheet", lua_metatable::sheet);
+    luaT_setfunction(l_map_draw, "draw", lua_metatable::surface);
+    luaT_setfunction(l_map_hittest, "hitTestObjects", lua_metatable::anim);
     luaT_setfunction(l_map_get_parcel_tilecount, "getParcelTileCount");
     luaT_setfunction(l_map_get_parcel_count, "getPlotCount");
     luaT_setfunction(l_map_set_parcel_owner, "setPlotOwner");
@@ -1039,7 +1039,7 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Pathfinder
-    luaT_class(pathfinder, l_path_new, "pathfinder", eTHLuaMetatable::path);
+    luaT_class(pathfinder, l_path_new, "pathfinder", lua_metatable::pathfinder);
     luaT_setmetamethod(l_path_persist, "persist");
     luaT_setmetamethod(l_path_depersist, "depersist");
     luaT_setfunction(l_path_distance, "findDistance");
@@ -1047,6 +1047,6 @@ void THLuaRegisterMap(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_path_path, "findPath");
     luaT_setfunction(l_path_idle, "findIdleTile");
     luaT_setfunction(l_path_visit, "findObject");
-    luaT_setfunction(l_path_set_map, "setMap", eTHLuaMetatable::map);
+    luaT_setfunction(l_path_set_map, "setMap", lua_metatable::map);
     luaT_endclass();
 }

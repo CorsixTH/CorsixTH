@@ -645,21 +645,21 @@ static int l_srl_is_dead(lua_State *L)
     return 1;
 }
 
-void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
+void lua_register_anims(const lua_register_state *pState)
 {
     // Anims
-    luaT_class(animation_manager, l_anims_new, "anims", eTHLuaMetatable::anims);
+    luaT_class(animation_manager, l_anims_new, "anims", lua_metatable::anims);
     luaT_setfunction(l_anims_load, "load");
     luaT_setfunction(l_anims_loadcustom, "loadCustom");
-    luaT_setfunction(l_anims_set_spritesheet, "setSheet", eTHLuaMetatable::sheet);
-    luaT_setfunction(l_anims_set_canvas, "setCanvas", eTHLuaMetatable::surface);
+    luaT_setfunction(l_anims_set_spritesheet, "setSheet", lua_metatable::sheet);
+    luaT_setfunction(l_anims_set_canvas, "setCanvas", lua_metatable::surface);
     luaT_setfunction(l_anims_getanims, "getAnimations");
     luaT_setfunction(l_anims_getfirst, "getFirstFrame");
     luaT_setfunction(l_anims_getnext, "getNextFrame");
     luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
     luaT_setfunction(l_anims_set_marker, "setFrameMarker");
     luaT_setfunction(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
-    luaT_setfunction(l_anims_draw, "draw", eTHLuaMetatable::surface, eTHLuaMetatable::layers);
+    luaT_setfunction(l_anims_draw, "draw", lua_metatable::surface, lua_metatable::layers);
     luaT_setconstant("Alt32_GreyScale",   thdf_alt32_grey_scale);
     luaT_setconstant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
     luaT_endclass();
@@ -671,7 +671,7 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     lua_pushliteral(pState->L, "v");
     lua_setfield(pState->L, -2, "__mode");
     lua_setmetatable(pState->L, -2);
-    lua_rawseti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::anim)], 1);
+    lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 1);
 
     // Weak table at AnimMetatable[2] for light UD -> full UD lookup
     // For persisting Map
@@ -680,21 +680,21 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     lua_pushliteral(pState->L, "v");
     lua_setfield(pState->L, -2, "__mode");
     lua_setmetatable(pState->L, -2);
-    lua_rawseti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::anim)], 2);
+    lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 2);
 
     // Anim
-    luaT_class(animation, l_anim_new<animation>, "animation", eTHLuaMetatable::anim);
+    luaT_class(animation, l_anim_new<animation>, "animation", lua_metatable::anim);
     luaT_setmetamethod(l_anim_persist<animation>, "persist");
     luaT_setmetamethod(l_anim_pre_depersist<animation>, "pre_depersist");
     luaT_setmetamethod(l_anim_depersist<animation>, "depersist");
-    luaT_setfunction(l_anim_set_anim, "setAnimation", eTHLuaMetatable::anims);
+    luaT_setfunction(l_anim_set_anim, "setAnimation", lua_metatable::anims);
     luaT_setfunction(l_anim_set_crop, "setCrop");
     luaT_setfunction(l_anim_get_crop, "getCrop");
     luaT_setfunction(l_anim_set_morph, "setMorph");
     luaT_setfunction(l_anim_set_frame, "setFrame");
     luaT_setfunction(l_anim_get_frame, "getFrame");
     luaT_setfunction(l_anim_get_anim, "getAnimation");
-    luaT_setfunction(l_anim_set_tile<animation>, "setTile", eTHLuaMetatable::map);
+    luaT_setfunction(l_anim_set_tile<animation>, "setTile", lua_metatable::map);
     luaT_setfunction(l_anim_get_tile, "getTile");
     luaT_setfunction(l_anim_set_parent, "setParent");
     luaT_setfunction(l_anim_set_flag<animation>, "setFlag");
@@ -713,26 +713,26 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anim_get_marker, "getMarker");
     luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");
     luaT_setfunction(l_anim_tick<animation>, "tick");
-    luaT_setfunction(l_anim_draw<animation>, "draw", eTHLuaMetatable::surface);
+    luaT_setfunction(l_anim_draw<animation>, "draw", lua_metatable::surface);
     luaT_setfunction(l_anim_set_drawable_layer, "setDrawingLayer");
     luaT_endclass();
 
     // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
-    lua_rawgeti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::anim)], 1);
-    lua_rawseti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::spriteList)], 1);
-    lua_rawgeti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::anim)], 2);
-    lua_rawseti(pState->L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::spriteList)], 2);
+    lua_rawgeti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 1);
+    lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::sprite_list)], 1);
+    lua_rawgeti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 2);
+    lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::sprite_list)], 2);
 
     // SpriteList
-    luaT_class(sprite_render_list, l_anim_new<sprite_render_list>, "spriteList", eTHLuaMetatable::spriteList);
+    luaT_class(sprite_render_list, l_anim_new<sprite_render_list>, "spriteList", lua_metatable::sprite_list);
     luaT_setmetamethod(l_anim_persist<sprite_render_list>, "persist");
     luaT_setmetamethod(l_anim_pre_depersist<sprite_render_list>, "pre_depersist");
     luaT_setmetamethod(l_anim_depersist<sprite_render_list>, "depersist");
-    luaT_setfunction(l_srl_set_sheet, "setSheet", eTHLuaMetatable::sheet);
+    luaT_setfunction(l_srl_set_sheet, "setSheet", lua_metatable::sheet);
     luaT_setfunction(l_srl_append, "append");
     luaT_setfunction(l_srl_set_lifetime, "setLifetime");
     luaT_setfunction(l_srl_is_dead, "isDead");
-    luaT_setfunction(l_anim_set_tile<sprite_render_list>, "setTile", eTHLuaMetatable::map);
+    luaT_setfunction(l_anim_set_tile<sprite_render_list>, "setTile", lua_metatable::map);
     luaT_setfunction(l_anim_set_flag<sprite_render_list>, "setFlag");
     luaT_setfunction(l_anim_set_flag_partial<sprite_render_list>, "setPartialFlag");
     luaT_setfunction(l_anim_get_flag<sprite_render_list>, "getFlag");
@@ -742,6 +742,6 @@ void THLuaRegisterAnims(const THLuaRegisterState_t *pState)
     luaT_setfunction(l_anim_set_speed<sprite_render_list>, "setSpeed");
     luaT_setfunction(l_anim_set_layer<sprite_render_list>, "setLayer");
     luaT_setfunction(l_anim_tick<sprite_render_list>, "tick");
-    luaT_setfunction(l_anim_draw<sprite_render_list>, "draw", eTHLuaMetatable::surface);
+    luaT_setfunction(l_anim_draw<sprite_render_list>, "draw", lua_metatable::surface);
     luaT_endclass();
 }

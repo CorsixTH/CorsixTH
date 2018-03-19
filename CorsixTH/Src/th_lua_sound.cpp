@@ -293,10 +293,10 @@ static int l_soundfx_release_channel(lua_State *L)
     return 1;
 }
 
-void THLuaRegisterSound(const THLuaRegisterState_t *pState)
+void lua_register_sound(const lua_register_state *pState)
 {
     // Sound Archive
-    luaT_class(sound_archive, l_soundarc_new, "soundArchive", eTHLuaMetatable::soundArc);
+    luaT_class(sound_archive, l_soundarc_new, "soundArchive", lua_metatable::sound_archive);
     luaT_setmetamethod(l_soundarc_count, "len");
     luaT_setfunction(l_soundarc_load, "load");
     luaT_setfunction(l_soundarc_sound_name, "getFilename"); // Bad name, doesn't represent a file
@@ -306,8 +306,8 @@ void THLuaRegisterSound(const THLuaRegisterState_t *pState)
     luaT_endclass();
 
     // Sound Effects
-    luaT_class(sound_player, l_soundfx_new, "soundEffects", eTHLuaMetatable::soundFx);
-    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", eTHLuaMetatable::soundArc);
+    luaT_class(sound_player, l_soundfx_new, "soundEffects", lua_metatable::sound_fx);
+    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", lua_metatable::sound_archive);
     luaT_setfunction(l_soundfx_play, "play");
     luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
     luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");

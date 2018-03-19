@@ -695,7 +695,7 @@ static int l_mk_cache(lua_State *L)
     return 1;
 }
 
-void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
+void lua_register_strings(const lua_register_state *pState)
 {
     lua_State *L = pState->L;
 
@@ -728,10 +728,10 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     lua_rawget(L, LUA_REGISTRYINDEX);
     lua_rawset(L, LUA_REGISTRYINDEX);
 
-    luaT_class(string_proxy, l_str_new, "stringProxy", eTHLuaMetatable::stringProxy);
-    // As we overwrite __index, move methods to eTHLuaMetatable::stringProxy[4]
-    lua_getfield(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], "__index");
-    lua_rawseti(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], 4);
+    luaT_class(string_proxy, l_str_new, "stringProxy", lua_metatable::string_proxy);
+    // As we overwrite __index, move methods to lua_metatable::string_proxy[4]
+    lua_getfield(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], "__index");
+    lua_rawseti(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], 4);
     luaT_setmetamethod(l_str_index, "index");
     luaT_setmetamethod(l_str_newindex, "newindex");
     luaT_setmetamethod(l_str_concat, "concat");

@@ -131,10 +131,10 @@ static int l_movie_deallocate_picture_buffer(lua_State *L)
     return 0;
 }
 
-void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
+void lua_register_movie(const lua_register_state *pState)
 {
-    luaT_class(movie_player, l_movie_new, "moviePlayer", eTHLuaMetatable::movie);
-    luaT_setfunction(l_movie_set_renderer, "setRenderer", eTHLuaMetatable::surface);
+    luaT_class(movie_player, l_movie_new, "moviePlayer", lua_metatable::movie);
+    luaT_setfunction(l_movie_set_renderer, "setRenderer", lua_metatable::surface);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");

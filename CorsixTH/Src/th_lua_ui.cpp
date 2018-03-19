@@ -158,10 +158,10 @@ static int l_town_map_draw(lua_State *L)
     return 0;
 }
 
-void THLuaRegisterUI(const THLuaRegisterState_t *pState)
+void lua_register_ui(const lua_register_state *pState)
 {
     // WindowBase
-    luaT_class(abstract_window, l_abstract_window_new, "windowHelpers", eTHLuaMetatable::windowBase);
-    luaT_setfunction(l_town_map_draw, "townMapDraw", eTHLuaMetatable::map, eTHLuaMetatable::surface);
+    luaT_class(abstract_window, l_abstract_window_new, "windowHelpers", lua_metatable::window_base);
+    luaT_setfunction(l_town_map_draw, "townMapDraw", lua_metatable::map, lua_metatable::surface);
     luaT_endclass();
 }
