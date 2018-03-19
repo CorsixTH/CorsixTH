@@ -272,8 +272,8 @@ template <> struct luaT_classinfo<sprite_render_list> {
     static inline const char* name() {return "SpriteRenderList";}
 };
 
-struct THStringProxy_t;
-template <> struct luaT_classinfo<THStringProxy_t> {
+class string_proxy;
+template <> struct luaT_classinfo<string_proxy> {
     static inline const char* name() {return "StringProxy";}
 };
 

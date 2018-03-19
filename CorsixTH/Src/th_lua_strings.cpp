@@ -51,7 +51,7 @@ SOFTWARE.
     environment.
 */
 
-struct THStringProxy_t {};
+class string_proxy {};
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
@@ -66,7 +66,7 @@ static inline void aux_push_weak_table(lua_State *L, int iIndex)
 // Replace the value at the top of the stack with a userdata proxy
 static int l_str_new_aux(lua_State *L)
 {
-    luaT_stdnew<THStringProxy_t>(L);
+    luaT_stdnew<string_proxy>(L);
     aux_push_weak_table(L, 0);
     lua_pushvalue(L, -2);
     lua_pushvalue(L, -4);
@@ -728,7 +728,7 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     lua_rawget(L, LUA_REGISTRYINDEX);
     lua_rawset(L, LUA_REGISTRYINDEX);
 
-    luaT_class(THStringProxy_t, l_str_new, "stringProxy", eTHLuaMetatable::stringProxy);
+    luaT_class(string_proxy, l_str_new, "stringProxy", eTHLuaMetatable::stringProxy);
     // As we overwrite __index, move methods to eTHLuaMetatable::stringProxy[4]
     lua_getfield(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], "__index");
     lua_rawseti(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], 4);
