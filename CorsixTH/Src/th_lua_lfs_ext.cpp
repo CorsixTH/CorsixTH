@@ -27,11 +27,11 @@ SOFTWARE.
 #include <windows.h>
 #endif
 
-struct THLfsExt {};
+class lfs_ext {};
 
 static int l_lfs_ext_new(lua_State *L)
 {
-    luaT_stdnew<THLfsExt>(L, luaT_environindex, true);
+    luaT_stdnew<lfs_ext>(L, luaT_environindex, true);
     return 1;
 }
 
@@ -98,7 +98,7 @@ static int l_volume_list(lua_State *L)
 
 void lua_register_lfs_ext(const lua_register_state *pState)
 {
-    luaT_class(THLfsExt, l_lfs_ext_new, "lfsExt", lua_metatable::lfs_ext);
+    luaT_class(lfs_ext, l_lfs_ext_new, "lfsExt", lua_metatable::lfs_ext);
     luaT_setfunction(l_volume_list, "volumes");
     luaT_endclass();
 }

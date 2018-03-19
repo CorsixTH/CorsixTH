@@ -277,8 +277,8 @@ template <> struct luaT_classinfo<string_proxy> {
     static inline const char* name() {return "StringProxy";}
 };
 
-struct THLfsExt;
-template <> struct luaT_classinfo <THLfsExt> {
+class lfs_ext;
+template <> struct luaT_classinfo <lfs_ext> {
     static inline const char* name() {return "LfsExt";}
 };
 
