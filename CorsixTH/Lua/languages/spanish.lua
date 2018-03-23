@@ -180,7 +180,7 @@ letter = {
   },
   [10] = {
     [1] = "¡Hola, %s!//",
-    [2] = "Felicidades por dirigir con éxito todos los hospitales que te hemos asignado. Esta soberbia actuación te capacita para viajar libremente por todo el mundo. Recibirás una pensión de %d y una limusina, a cambio de que viajes de ciudad en ciudad, saludando a tu incondicional público y fomentando la labor que se realiza en todos los hospitales.//",
+    [2] = "Enhorabuena, has gestionado tus hospitales satisfactoriamente. Este logro te permitirá viajar dónde quieras, con una paga de %d y una limusina. Aunque por supuesto esperamos que en tus viajes, no defraudes a tu público y sigas promocionando los hospitales.//"
   },
   [11] = {
     [1] = "¡Hola, %s!//",
