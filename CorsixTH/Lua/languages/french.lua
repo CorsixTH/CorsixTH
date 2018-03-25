@@ -207,7 +207,7 @@ adviser.information = {
   patient_leaving_too_expensive = "Un patient part sans payer la facture pour %s. Sacrée perte !",
   vip_arrived = "Attention ! %s arrive pour visiter votre hôpital ! Faites en sorte de lui faire bonne impression.",
   first_death = "Vous venez de tuer votre premier patient. Alors, heureux ?",
-  promotion_to_specialist = "L'un de vos MÉDECIN est devenu un SPÉCIALIST.", -- Fix the famous "Level 5 bug"
+  promotion_to_specialist = "L'un de vos MÉDECINE est devenu un SPÉCIALIST.", -- Fix the famous "Level 5 bug"
 }
 buy_objects_window = {
   price = "Prix : ",
