@@ -75,10 +75,6 @@ fax = {
     return_to_main_menu = "Gå tilbake til hovedmenyen",
     accept_new_level = "Fortsett til neste nivå",
     decline_new_level = "Fortsett å spille litt til",
-  },
-  emergency = {
-    num_disease_singular = "Et är 1 personer vit %s et thär de krever oppmerksomhet",
-    free_build = "Hvis du er vellykket ditt ryktet vil øke. Hvis du ikke klarer ditt ryktet vil minker sterkt!",  
   }
 }
 letter = {
