@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2017 Erlend Mongstad, Ola Skogrand
+﻿--[[ Copyright (c) 2018 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -97,13 +97,9 @@ install = {
 
 -- 3. Objects
 object = {
-  litter               = "Söppel",
-  rathole              = "Rottehull",
+  litter = "Söppel",
+  rathole = "Rottehull",
 }
-
-tooltip.fax.close = "Lukk dette vinduet uten å slette meldingen"
-tooltip.message.button = "Venstreklikk for å lese faksen"
-tooltip.message.button_dismiss = "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den"
 
 -- 4. Menu
 menu_options = {
@@ -161,17 +157,632 @@ adviser = {
 }
 
 -- 6. Dynamic info
-dynamic_info.patient.actions.no_gp_available   = "Venter på at du skal bygge Allmennpraksis"
-dynamic_info.staff.actions.heading_for       = "På vei til %s"
+dynamic_info.patient.actions.no_gp_available = "Venter på at du skal bygge Allmennpraksis"
+dynamic_info.staff.actions.heading_for = "På vei til %s"
 dynamic_info.staff.actions.fired = "Sparket"
 
 -- 7. Tooltip
 tooltip = {
-  objects = {
-    litter     = "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte å kaste det i.",
-    rathole    = "Hjemmet til en rottefamilie som syns sykehuset ditt er mökkete nok til å bo i.",
+  fax = {
+    close = "Lukk dette vinduet uten å slette meldingen",
   },
+  
+  message = {
+    button = "Venstreklikk for å lese faksen",
+    button_dismiss = "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den",
+  },
+
+  options_window = {
+    fullscreen_button = "Klikk for å gå i fullskjermmodus",
+    width = "Skriv inn önsket skjermbredde",
+    height = "Skriv inn önsket skjermhöyde",
+    change_resolution = "Endre opplösningen til dimensjonene du har angitt til venstre.",
+    language = "Velg %s som språk",
+    back = "Lukk vinduet med innstillinger",
+    fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
+    cancel = "Returner uten å endre opplösning",
+    apply = "Bruk den innskrevne opplösningen",
+    language_dropdown_item = "Velg %s som språk",
+    select_language = "Velg språk",
+    select_resolution = "Velg en ny opplösning",
+    resolution = "Opplösningen spillet skal kjöres i.",
+    audio_button = "Slå av eller på all lyd",
+    folder_button = "Mappeinnstillinger",
+    audio_toggle = "Slå av eller på",
+    customise_button = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
+    capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
+  },
+  
+  folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
+    browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
+    screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
+    browse_music = "Se etter en annen lokasjon for musikk ( nåværende beliggenhet: %1% ) ",
+    music_location = "Velg en lokasjon for mp3-musikk. Mappen må være laget på forhånd.",
+    data_location = "Banen til den originale Theme Hospital-installasjonen, som du trenger for å spille CorsixTH",
+    browse_data = "Se etter en annen lokasjon for Theme Hospital-installasjonen ( nåværende beliggenhet: %1%)",
+    savegames_location = "Normalt er de lagrede spillene lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
+    back = "Lukk denne menyen og gå tilbake",
+    browse_saves = "Se etter en annen lokasjon for dine lagrede spill  ( nåværende beliggenhet: %1% ) ",
+    browse = "Se etter mappelokasjon",
+    browse_screenshots = "Se etter en annen lokasjon for skjermdumper  ( nåværende beliggenhet: %1% ) ",
+    not_specified = "Ingen mappe er valgt enda!",
+    font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
+    reset_to_default = "Tilbakestill mappen til standard lokasjon",
+    default = "Standard lokasjon",
+    no_font_specified = "Ingen font-fil er valgt enda!",
+  },
+  
+  update_window = {
+    download = "Gå til nedlastingssiden for den seneste versjonen av CorsixTH",
+    ignore = "Ignorer oppdateringen denne gangen. Du vil få en ny beskjed neste gang du starter CorsixTH",
+  },
+  
+  menu_list_window = {
+    back = "Lukk dette vinduet",
+    name = "Klikk her for å sortere listen etter navn",
+    save_date = "Klikk her for å sortere listen etter siste endringer",
+  },
+  
+  save_game_window = {
+    save_game = "Overskriv spill %s",
+    new_save_game = "Skriv navn på nytt spill",
+  },
+  
+  custom_game_window = {
+    free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for å vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
+    load_selected_level = "Last og spill valgt brett",
+    choose_game = "Klikk på et brett for å lese mer om det",
+  },
+  
+  load_game_window = {
+    load_game = "Last spill %s",
+    load_game_number   = "Last spill %d",
+    load_autosave   = "Last autolagring",
+  },
+  
+  calls_dispatcher = {
+    assigned = "Denne boksen er huket av om noen er tildet oppdraget.",
+    task = "Liste over oppdrag - Klikk på oppdrag for å se lokasjonen",
+    close = "Lukk ekspedisjonsvinduet",
+  },
+  
+  cheats_window = {
+    close = "Lukk juksekodevinduet",
+    cheats = {
+      decrease_prices = "Senk alle priser med 50 % (min. 50 %)",
+      increase_prices = "Hev alle priser med 50 % (maks. 200 %)",
+      end_month = "Gå til slutten av denne måneden.",
+      emergency = "Lag en nödssituasjon.",
+      win_level = "Vinn dette nivået.",
+      create_patient = "Lag en pasient på enden av kartet.",
+      vip = "Lag en VIP.",
+      money = "Sett 10,000 i bankkontoen din.",
+      lose_level = "Tap dette nivået.",
+      all_research = "Fullförer all forskning.",
+      end_year = "Gå til slutten av dette året.",
+      earthquake = "Forårsaker et jordskjelv.",
+      epidemic = "Lager en smittsom pasient som kan forårsake en epidemi",
+      toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
+    }, 
+  },
+  
+  customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
+    movies = "Slår av alle videoer i spillet",
+    paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
+    back = "Gå tilbake",
+    intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
+    volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
+    fractured_bones = "På grunn av mangelfulle animasjoner har vi stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
+    aliens = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
+    average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
+  },
+  
+  new_game_window = {
+    easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
+    medium = "Om du er usikker på hva du skal velge, så er dette mellomtingen",
+    hard = "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
+    tutorial = "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
+    cancel = "Hmm... Det var ikke meningen å starte et nytt spill!",
+    difficulty = "Velg vanskelighetsgrad du vil spille på",
+    start = "Start spillet med de valgte innstillingene",
+    player_name = "Skriv inn hva du vil hete i spillet",
+  },
+  
+  lua_console = {
+    textbox = "Skriv Lua-kode du vil kjöre her",
+    execute_code = "Kjör koden",
+    close = "Lukk konsollen",
+  },
+
+  save_map_window = {
+    map = "Overskriv brett %s", -- Overskriv/lagre?
+    new_map = "Skriv inn navn for nytt brett",
+  },
+  
+  information = {
+    close = "Lukk informasjonsdialogen",
+  },
+
+  totd_window = {
+    previous = "Vis forrige tips",
+    next = "Vis neste tips",
+  },  
+  
+  -- Research policy tooltip
+  research_policy = {
+    research_progress = "Progresjon mot den nesten oppdagelsen i denne kategorien: %1%/%2%",
+    no_research = "Ingen forskning blir utfört i denne kategorien for öyeblikket",
+  },
+  
+  -- Build room window
+  build_room_window = {
+    room_classes = {
+      diagnosis        = "Velg diagnoserom",
+      treatment        = "Velg generelle behandlingsrom",
+      clinic           = "Velg spesielle klinikker",
+      facilities       = "Velg fasiliteter",
+    },
+    cost               = "Kostnad for gjeldende rom",
+    close              = "Avbryt prosessen og returner til spillet",
+  },
+
+  -- Toolbar
+  toolbar = {
+    bank_button        = "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
+    balance            = "Din Balanse",
+    reputation         = "Ditt omdömme: ", -- NB: no %d! Append " ([reputation])".
+    date               = "Dato",
+    rooms              = "Bygg rom",
+    objects            = "Kjöp gjenstander",
+    edit               = "Endre rom/gjenstander",
+    hire               = "Ansett personale",
+    staff_list         = "Personalbehandling",
+    town_map           = "Områdekart",
+    casebook           = "Medisinbok",
+    research           = "Forskning",
+    status             = "Status",
+    charts             = "Diagrammer",
+    policy             = "Sykehuspolicy",
+  },
+
+  -- Hire staff window
+  hire_staff_window = {
+    doctors            = "Vis Leger tilgjengelig på arbeidsmarkedet",
+    nurses             = "Vis Sykepleiere tilgjengelig på arbeidsmarkedet",
+    handymen           = "Vis Vaktmestere tilgjengelig på arbeidsmarkedet",
+    receptionists      = "Vis Resepsjonister tilgjengelig på arbeidsmarkedet",
+    prev_person        = "Vis forrige person",
+    next_person        = "Vis neste person",
+    hire               = "Ansett person",
+    cancel             = "Avbryt",
+    doctor_seniority   = "Legens erfaring (Turnuslege, Doktor, Konsulent)",
+    staff_ability      = "Evner",
+    salary             = "Lönnskrav",
+    qualifications     = "Legens spesialisering",
+    surgeon            = "Kirurg",
+    psychiatrist       = "Psykiater",
+    researcher         = "Forsker",
+  },
+
+  -- Buy objects window
+  buy_objects_window = {
+    price              = "Pris på gjenstand",
+    total_value        = "Total verdi på kjöpte gjenstander",
+    confirm            = "Kjöp gjenstand(er)",
+    cancel             = "Avbryt",
+    increase           = "Kjöp en til av denne gjenstanden",
+    decrease           = "Kjöp en mindre av denne gjenstanden",
+  },
+
+  -- Staff list
+  staff_list = {
+    doctors            = "Se en oversikt over dine Leger",
+    nurses             = "Se en oversikt over dine Sykepleiere",
+    handymen           = "Se en oversikt over dine Vaktmestere",
+    receptionists      = "Se en oversikt over dine Resepsjonister",
+    happiness          = "Viser hvordan humöret på dine ansatte er",
+    tiredness          = "Viser hvor trött dine ansatte er",
+    ability            = "Viser evnene til dine ansatte",
+    salary             = "Den enkeltes gjeldende lönn",
+    happiness_2        = "Den ansattes moral",
+    tiredness_2        = "Den ansattes tretthetsnivå",
+    ability_2          = "Den ansattes evner",
+    prev_person        = "Velg forrige side",
+    next_person        = "Velg neste side",
+    bonus              = "Gi denne ansatte 10% bonus",
+    sack               = "Si opp denne ansatte",
+    pay_rise           = "Hev lönnen til denne ansatte med 10%",
+    close              = "Lukk og returner til spillet",
+    doctor_seniority   = "Legens erfaring",
+    detail             = "Oppmerksom på detaljer",
+    view_staff         = "Vis ansatt på jobb",
+    surgeon            = "Kvalifisert Kirurg",
+    psychiatrist       = "Kvalifisert Psykiater",
+    researcher         = "Kvalifisert Forsker",
+    surgeon_train      = "%d%% ferdig med fordypning innen kirurgi", -- %d (percentage trained)
+    psychiatrist_train = "%d%% ferdig med fordypning innen psykiatri", -- %d (percentage trained)
+    researcher_train   = "%d%% ferdig med fordypning innen forskning", -- %d (percentage trained)
+    skills             = "Ekstra evner",
+  },
+
+  -- Queue window
+  queue_window = {
+    num_in_queue       = "Antall pasienter i köen",
+    num_expected       = "Antall pasienter Resepsjonisten forventer i köen innen kort tid",
+    num_entered        = "Antall pasienter som er behandlet i dette rommet så langt",
+    max_queue_size     = "Maksimal lengde på köen som Resepsjonisten skal etterstrebe",
+    dec_queue_size     = "Senk maksimal kölengde",
+    inc_queue_size     = "Ök maksimal kölengde",
+    front_of_queue     = "Dra en pasient hit for å stille han/henne fremst i köen",
+    end_of_queue       = "Dra en pasient hit for å stille han/henne bakerst i köen",
+    close              = "Lukk vindu",
+    patient            = "Dra en pasient for å flytte han/henne i köen. Höyreklikk på en pasient for å sende han/henne hjem eller til et konkurrerende sykehus",
+    patient_dropdown = {
+      reception        = "Henvis pasient til Resepsjonist",
+      send_home        = "Send pasienten hjem",
+      hospital_1       = "Henvis pasienten til et annet sykehus",
+      hospital_2       = "Henvis pasienten til et annet sykehus",
+      hospital_3       = "Henvis pasienten til et annet sykehus",
+    },
+  },
+
+  -- Main menu
+  main_menu = {
+    new_game           = "Start en ny karriere", -- todo: Nytt ord fore karriere (campaign)?
+    custom_campaign = "Start en ny karriere skapt av andre spillere", -- todo: Nytt ord fore karriere (campaign)?
+    custom_level = "Bygg sykehuset ditt på et brett skapt av andre spillere", -- todo: forbedre tekst?
+    load_game          = "Last inn et lagret spill",
+    continue           = "Fortsett på sist spilte spill",
+    network            = "Start nettverksspill",
+    map_edit = "Lag ditt eget brett",
+    quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?", 
+    options     = "Endre spillets innstillinger",
+    exit       = "Nei, nei, vær så snill, ikke avslutt!",
+	load_menu = {
+      load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
+      empty_slot       = "  TOM  ",
+    },
+  },
+  
+  -- Window general
+  window_general = {
+    cancel             = "Avbryt",
+    confirm            = "Bekreft",
+  },
+  -- Custom campaign
+  custom_campaign_window = {
+    choose_campaign = "Velg en karriere for å lese mer om den",
+    start_selected_campaign = "Last det förste brettet i denne karrieren",
+  },
+
+  -- Patient window
+  patient_window = {
+    close              = "Lukk vindu",
+    graph              = "Klikk for å veksle mellom graf med personens helse og personens behandlingshistorikk",
+    happiness          = "Personens humör",
+    thirst             = "Personens törste",
+    warmth             = "Personens temperatur",
+    casebook           = "Vis detaljer for pasientens sykdom",
+    send_home          = "Send pasienten hjem fra sykehuset",
+    center_view        = "Sentrer personen i skjermbildet",
+    abort_diagnosis    = "Send personen til behandling istedenfor å vente til diagnosen er ferdigstilt",
+    queue              = "Se köen pasienten befinner seg i",
+  },
+  -- window
+  staff_window = {
+    name               = "Den ansattes navn",
+    close              = "Lukk vindu",
+    face               = "Ansiktet til personen - Klikk for å administrere de ansatte",
+    happiness          = "Humörnivå",
+    tiredness          = "Tretthetsnivå",
+    ability            = "Evner",
+    doctor_seniority   = "Stilling (Turnuslege, Doktor, Konsulent)",
+    skills             = "Spesialisering",
+    surgeon            = "Kirurg",
+    psychiatrist       = "Psykiater",
+    researcher         = "Forsker",
+    salary             = "Månedslönn",
+    center_view        = "Venstreklikk for å finne den ansatte, höyreklikk for å bla gjennom de ansatte.",
+    sack               = "Si opp",
+    pick_up            = "Plukk opp",
+  },
+  -- Machine window
+  machine_window = {
+    name               = "Navn",
+    close              = "Lukk vindu",
+    times_used         = "Antall gangen maskinen er brukt",
+    status             = "Maskinstatus",
+    repair             = "Kall på Vaktmester for å fikse maskinen",
+    replace            = "Erstatt maskin",
+  },
+
+
+  -- Handyman window
+  -- Apparently handymen have their own set of strings (partly) containing "handyman".
+  -- We could just get rid of this category and include the three prios into staff_window.
+  handyman_window = {
+    name               = "Vaktmesterens navn", -- contains "handyman"
+    close              = "Lukk vindu",
+    face               = "Vaktmesterens ansikt", -- contains "handyman"
+    happiness          = "Humörnivå",
+    tiredness          = "Tretthetsnivå",
+    ability            = "Evner",
+    prio_litter        = "Be Vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
+    prio_plants        = "Be Vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
+    prio_machines      = "Be Vaktmesteren om å prioritere reparasjon av maskiner höyere", -- contains "handyman"
+    salary             = "Månedslönn",
+    center_view        = "Sentrer i skjermbildet", -- contains "handyman"
+    sack               = "Si opp",
+    pick_up            = "Plukk opp",
+    parcel_select      = "Steder hvor Vaktmesteren utförer oppgaver. Klikk for å endre innstilling.",
+  },
+
+  -- Place objects window
+  place_objects_window = {
+    cancel             = "Avbryt",
+    buy_sell           = "Kjöp/Selg gjenstander",
+    pick_up            = "Plukk opp en gjenstand",
+    confirm            = "Bekreft",
+  },
+
+  -- Casebook
+  casebook = {
+    up                 = "Rull oppover",
+    down               = "Rull nedover",
+    close              = "Lukk medisinbok",
+    reputation         = "Ryktet behandlingen eller diagnosen har i nærområdet",
+    treatment_charge   = "Pris for behandling",
+    earned_money       = "Totalt opptjente penger frem til i dag",
+    cured              = "Antall kurerte pasienter",
+    deaths             = "Antall pasienter drept som fölge av behandlingen",
+    sent_home          = "Antall pasienter som har snudd og gått hjem",
+    decrease           = "Senk pris",
+    increase           = "Ök pris",
+    research           = "Trykk her for å bruke forskingsbudsjettet for spesialisering til å forske på denne behandlingen",
+    cure_type = {
+      drug             = "Denne behandlingen krever medisin",
+      drug_percentage  = "Denne behandlingen krever medisin - din er %d%% effektiv", -- %d (effectiveness percentage)
+      psychiatrist     = "En Psykiater kreves for behandling",
+      surgery          = "Denne sykdommen krever en operasjon",
+      machine          = "Denne sykdommen krever en maskin for behandling",
+      unknown          = "Du vet ikke hvordan du skal behandle denne sykdommen enda",
+    },
+
+    cure_requirement = {
+      possible         = "Du kan gjennomföre behandling",
+      research_machine = "Du må forske på maskiner for å gjennomföre behandlingen",
+      build_room       = "Du må bygge et rom for å gjennomföre behandlingen", -- NB: no %s!
+      hire_surgeons    = "Du trenger to Kirurger for å gjennomföre behandlingen",
+      hire_surgeon     = "Du trenger en Kirurg til for å gjennomföre behandlingen",
+      hire_staff       = "Du må ansette en %s for å gjennomföre behandlingen", -- %s (staff type)
+      hire_staff_old   = "Du må ansette en %s for å gjennomföre behandlingen",
+      build_ward       = "Du må bygge en Sykestue for å kunne gjennomföre behandlingen",
+      ward_hire_nurse  = "Du trenger en Sykepleier på Sengeavdelingen for å gjennomföre behandlingen",
+      not_possible     = "Du kan ikke håndtere denne behandlingen enda",
+    },
+  },
+
+  -- Statement
+  statement = {
+    close              = "Lukk kontoutskriften",
+  },
+
+  -- Research
+  research = {
+    close              = "Gå ut av forskningsavdelingen",
+    cure_dec           = "Senk prioritering av forskning på behandlingsutstyr",
+    diagnosis_dec      = "Senk prioritering av forskning på diagnoseutstyr",
+    drugs_dec          = "Senk prioritering av forskning på medisiner",
+    improvements_dec   = "Senk prioritering av forskning på forbedringer",
+    specialisation_dec = "Senk prioritering av forskning på spesialiseringer",
+    cure_inc           = "Ök prioritering av forskning på behandlingsutstyr",
+    diagnosis_inc      = "Ök prioritering av forskning på diagnoseutstyr",
+    drugs_inc          = "Ök prioritering av forskning på medisiner",
+    improvements_inc   = "Ök prioritering av forskning på forbedringer",
+    specialisation_inc = "Ök prioritering av forskning på spesialiseringer",
+    allocated_amount   = "Penger satt av til forskning",
+  },
+
+  -- Graphs
+  graphs = {
+    close              = "Gå ut av diagramvinduet",
+    scale              = "Skala på diagram",
+    money_in           = "Vis/skjul Inntekter",
+    money_out          = "Vis/skjul Utgifter",
+    wages              = "Vis/skjul Lönninger",
+    balance            = "Vis/skjul Balanse",
+    visitors           = "Vis/skjul Besökende",
+    cures              = "Vis/skjul Kurerte",
+    deaths             = "Vis/skjul Dödsfall",
+    reputation         = "Vis/skjul Omdömme",
+  },
+
+  -- Town map
+  town_map = {
+    people             = "Vis/Skjul mennesker",
+    plants             = "Vis/Skjul planter",
+    fire_extinguishers = "Vis/Skjul brannslukningsapparat",
+    objects            = "Vis/Skjul gjenstander",
+    radiators          = "Vis/Skjul radiatorer",
+    heat_level         = "Temperatur",
+    heat_inc           = "Skru opp temperaturen",
+    heat_dec           = "Skru ned temperaturen",
+    heating_bill       = "Varmekostnader",
+    balance            = "Balanse",
+    close              = "Lukk områdekart",
+  },
+
+  -- Jukebox.
+  jukebox = {
+    current_title      = "Jukebox",
+    close              = "Lukk jukebox",
+    play               = "Spill jukebox",
+    rewind             = "Spol tilbake jukebox",
+    fast_forward       = "Spol fremover jukebox",
+    stop               = "Stopp jukebox",
+    loop               = "Repeter jukebox",
+  },
+
+  -- Bank Manager
+  bank_manager = {
+    hospital_value     = "Nåværende verdi på sykehuset ditt",
+    balance            = "Din balanse i banken",
+    current_loan       = "Gjeldende lån i banken",
+    repay_5000         = "Betal tilbake 5000 til banken",
+    borrow_5000        = "Lån 5000 av banken",
+    interest_payment   = "Månedlige rentekostnader",
+    inflation_rate     = "Årlig inflasjon",
+    interest_rate      = "Årlig rente",
+    close              = "Lukk bankmanageren",
+    insurance_owed     = "Penger %s skylder deg", -- %s (name of debitor)
+    show_graph         = "Vis forventet tilbakebetalingsplan fra %s", -- %s (name of debitor)
+    graph              = "Forventet tilbakebetalingsplan fra %s", -- %s (name of debitor)
+    graph_return       = "Returner til forrige visning",
+  },
+
+  -- Status
+  status = {
+    percentage_cured   = "Du må kurere %d% besökende på sykehuset ditt. Nå har du kurert %d%",
+    thirst             = "Gjennomsnittlig törste på personene på ditt sykehus",
+    close              = "Lukk oversikten",
+    population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
+    win_progress_own   = "Vis progresjon i forhold til kravene for dette nivået",
+    reputation        = "Omdömmet ditt må være minst %d. Nå er det %d",
+    population        = "Du må ha %d%% av befolkningen til å bruke ditt sykehus",
+    warmth             = "Gjennomsnittlig temperatur på personene på ditt sykehus",
+    percentage_killed  = "Du må drepe færre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
+    balance        = "Din bankbalanse må være på minst %d. Nå er den %d",
+    value          = "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
+    win_progress_other = "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
+    num_cured        = "Du må kurere %d mennesker. Så langt har du kurert %d",
+    happiness          = "Gjennomsnittlig humör på personene på ditt sykehus",
+  },
+
+  -- Policy
+  policy = {
+    close              = "Lukk sykehuspolicy",
+    staff_leave        = "Klikk her for å få personale som ikke er opptatt til å hjelpe kollegaer som trenger det",
+    staff_stay         = "Klikk her for å få personale til å bli i rommene du plasserer dem i",
+    diag_procedure     = "Om en Leges stilte diagnose er mindre sikker enn SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
+    diag_termination   = "En pasients diagnostisering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
+    staff_rest         = "Hvor trött personalet må være för de kan hvile",
+  },
+
+  -- Pay rise window
+  pay_rise_window = {
+    accept             = "Imötekom kravene",
+    decline            = "Ikke godta kravene - Si opp istedenfor",
+  },
+
+  -- Watch
+  watch = {
+    hospital_opening   = "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE-knappen, så vil sykehuset åpne umiddelbart.",
+    emergency          = "Nödstilfelle: Tid som gjenstår til å behandle alle akutte pasienter.",
+    epidemic           = "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, så kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en Sykepleier til å vaksinere dem.",
+  },
+
+  -- Rooms
+  rooms = {
+    gps_office         = "Pasientene får sin förste konsultasjon og tilhörende resultater på Allmennpraksisen",
+    psychiatry         = "Psykiatrien kurerer gale pasienter og hjelper til med diagnostiseringen av andre pasienter, men trenger en Lege med spesialisering innenfor Psykiatri",
+    ward               = "Sengeavdelinger er nyttige for både diagnostisering og behandling. Pasienter blir sendt hit for observasjon men også for overvåkning etter operasjoner. Sengeavdelingen krever en Sykepleier",
+    operating_theatre  = "Operasjonssalen krever to Leger med spesialisering innenfor Kirurgi",
+    pharmacy           = "Sykepleieren skriver ut medisiner på apoteket for å kurere pasienter",
+    cardiogram         = "En Lege bruker Kardio for å diagnostisere pasienter",
+    scanner            = "En Lege bruker Skanneren for å diagnostisere pasienter",
+    ultrascan          = "En Lege bruker Ultraskanneren for å diagnostisere pasienter",
+    blood_machine      = "En Lege bruker Blodmaskinen for å diagnostisere pasienter",
+    x_ray              = "En Lege bruker Röntgen for å diagnostisere pasienter",
+    inflation          = "En Lege bruker Pumperommet for å behandle pasienter med Ballonghode",
+    dna_fixer          = "En Lege bruker DNA-maskinen for å behandle pasienter med Utenomjordisk DNA",
+    hair_restoration   = "En Lege bruker Hårklinikken for å behandle pasienter med Flintskalle",
+    tongue_clinic      = "En Lege bruker Tungekutteren for å behandle pasienter med Lös tunge",
+    fracture_clinic    = "En Sykepleier bruker Benbruddsklinikken for å reparere Benbrudd",
+    training_room      = "Et klasserom med en Konsulent kan brukes til å lære opp andre Leger",
+    electrolysis       = "En Lege bruker Elektrolyseklinikken for å behandle pasienter med Pelssyndrom",
+    jelly_vat          = "En Lege bruker Gelétönnen for å behandle pasienter med Gelésyndrom",
+    staffroom          = "Leger, Sykepleiere og Vaktmestre bruker personalrommet for å hvile og heve humöret",
+    -- rehabilitation  = S[33][27], -- unused
+    general_diag       = "En Lege bruker trallen for å stille grunnleggende diagnose på pasienter. Billig og ofte veldig effektivt",
+    research_room      = "Leger med spesialisering innen Forskning kan forske frem nye medisiner og maskiner på Forskningsavdelingen",
+    toilets            = "Bygg toaletter for å få pasientene til å stoppe å skitne til sykehuset!",
+    decontamination    = "En Lege bruker Saneringsdusjen for å behandle pasienter med Alvorlig Stråling",
+  },
+
+  -- Objects
+  objects = {
+    -- NB: most objects do not have a tooltip because they're not (extra-)buyable
+    desk                 = "Pult: en Lege kan bruke pulten til PC-en sin.",
+    cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
+    door                 = "Dör: personer åpner og lukker disse en del.",
+    bench                = "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabel.",
+    table1               = S[40][ 6], -- unused
+    chair                = "Stol: Pasienter sitter her og diskuterer sine problemer.",
+    drinks_machine       = "Brusautomat: hindrer pasientene å bli törste og genererer inntekter.",
+    bed                  = "Seng: virkelig syke pasienter ligger i disse.",
+    inflator             = "Pumpe: Kurerer pasienter med Ballonghode.",
+    pool_table           = "Biljardbord: Hjelper personalet ditt med å slappe av.",
+    reception_desk       = "Resepsjon: trenger en Resepsjonist som kan henvise pasienter videre.",
+    table2               = S[40][13], -- unused & duplicate
+    cardio               = S[40][14], -- no description
+    scanner              = S[40][15], -- no description
+    console              = S[40][16], -- no description
+    screen               = S[40][17], -- no description
+    litter_bomb          = "Söppelbombe: saboterer konkurrenters sykehus",
+    couch                = S[40][19], -- no description
+    sofa                 = "Sofa: ansatte som slapper av på Personalrommet vil sitte stille i en sofa så fremt det ikke er en bedre måte å slappe av på.",
+    crash_trolley        = S[40][21], -- no description
+    tv                   = "TV: sörg for at personalet ditt ikke går glipp av favorittprogrammet sitt.",
+    ultrascanner         = S[40][23], -- no description
+    dna_fixer            = S[40][24], -- no description
+    cast_remover         = S[40][25], -- no description
+    hair_restorer        = S[40][26], -- no description
+    slicer               = S[40][27], -- no description
+    x_ray                = S[40][28], -- no description
+    radiation_shield     = S[40][29], -- no description
+    x_ray_viewer         = S[40][30], -- no description
+    operating_table      = S[40][31], -- no description
+    lamp                 = S[40][32], -- unused
+    toilet_sink          = "Vask: dine hygienebevisste pasienter kan vaske sine tilgrisede hender i disse. Om det ikke er nok vasker, blir pasientene sure.",
+    op_sink1             = S[40][34], -- no description
+    op_sink2             = S[40][35], -- no description
+    surgeon_screen       = S[40][36], -- no description
+    lecture_chair        = "Forelesningsstol: dine Legestudenter sitter her og tar notater, kjeder seg og rabler ivrig. Jo flere stoler du har, jo större kan klassen være.",
+    projector            = S[40][38], -- no description
+    bed2                 = S[40][39], -- unused duplicate
+    pharmacy_cabinet     = "Apotekskap: medisinbeholdningen din finnes her",
+    computer             = "Datamaskin: genialt forskningsverktöy",
+    atom_analyser        = "Atomanalyser: plassert i Forskningsavdelingen, gjör denne gjenstanden hele forskningsprosessen raskere.",
+    blood_machine        = S[40][43], -- no description
+    fire_extinguisher    = "Brannslukningsapparat: minimerer faren for feil i dine maskiner.",
+    radiator             = "Radiator: sörger for at sykehuset ditt ikke blir kaldt.",
+    plant                = "Plante: holder pasientenes humör oppe og renser luften.",
+    electrolyser         = S[40][47], -- no description
+    jelly_moulder        = S[40][48], -- no description
+    gates_of_hell        = S[40][49], -- no description
+    bed3                 = S[40][50], -- unused duplicate
+    bin                  = "Söppelbötte: pasientene kaster söppelet her.",
+    toilet               = "Toalett: pasientene, æh..., bruker dette.",
+    swing_door1          = S[40][53], -- no description
+    swing_door2          = S[40][54], -- no description
+    shower               = S[40][55], -- no description
+    auto_autopsy         = "Obduksjonsautomat: flott hjelpemiddel for å oppdage nye behandlingsmetoder.",
+    bookcase             = "Bokhylle: referansemateriell for Leger.",
+    video_game           = "Videospill: la personalet ditt slappe av med Hi-Octane.",
+    entrance_left        = S[40][59], -- no description
+    entrance_right       = S[40][60], -- no description
+    skeleton             = "Skjelett: brukt til undervisning og Halloween.",
+    comfortable_chair    = S[40][62], -- no description
+    rathole = "Hjemmet til en rottefamilie som syns sykehuset ditt er mökkete nok til å bo i.",
+    litter = "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte i nærheten.",
+  },  
+  
+-- TOOLTIP END
 }
+
+
+-- STRINGS BELOW ARE NOT YET FULLY SORTED
+
 
 -- Misc
 misc.not_yet_implemented   = "(ikke implementert enda)"
@@ -191,52 +802,31 @@ main_menu = {
   exit       = "Avslutt",
 }
 
-tooltip.main_menu = {
-  new_game     = "Start et nytt spill fra begynnelsen",
-  custom_level   = "Bygg sykehuset ditt på et valgfritt område", -- todo: forbedre tekst?
-  load_game   = "Last inn et tidligere spill",
-  options     = "Endre diverse innstillinger",
-  exit       = "Nei, nei, vær så snill å ikke avslutt!",
-}
+
 
 load_game_window = {
   caption = "Last inn spill",
 }
 
-tooltip.load_game_window = {
-  load_game = "Last spill %s",
-  load_game_number   = "Last spill %d",
-  load_autosave   = "Last autolagring",
-}
+
 
 custom_game_window = {
   caption = "Brukerdefinert spill",
   free_build = "Bygg fritt",
   load_selected_level = "Start",
 }
-tooltip.custom_game_window = {
-  free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for å vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
-  load_selected_level = "Last og spill valgt brett",
-  choose_game = "Klikk på et brett for å lese mer om det",
-}
+
 save_game_window = {
   caption = "Lagre spill",
   new_save_game = "Nytt spill",
 }
-tooltip.save_game_window = {
-  save_game = "Overskriv spill %s",
-  new_save_game = "Skriv navn på nytt spill",
-}
+
 menu_list_window = {
   back = "Tilbake",
   name = "Navn",
   save_date = "Endret",
 }
-tooltip.menu_list_window = {
-  back = "Lukk dette vinduet",
-  name = "Klikk her for å sortere listen etter navn",
-  save_date = "Klikk her for å sortere listen etter siste endringer",
-}
+
 options_window = {
   fullscreen = "Fullskjerm",
   width = "Bredde",
@@ -254,26 +844,9 @@ options_window = {
   folder = "Mapper",
   audio = "Global lyd",
   customise = "Tilpass",
+  capture_mouse = "Lås musepeker",
 }
-tooltip.options_window = {
-  fullscreen_button = "Klikk for å gå i fullskjermmodus",
-  width = "Skriv inn önsket skjermbredde",
-  height = "Skriv inn önsket skjermhöyde",
-  change_resolution = "Endre opplösningen til dimensjonene du har angitt til venstre.",
-  language = "Velg %s som språk",
-  back = "Lukk vinduet med innstillinger",
-  fullscreen = "Om spillet skal kjöre i fullskjerm eller vindusmodus",
-  cancel = "Returner uten å endre opplösning",
-  apply = "Bruk den innskrevne opplösningen",
-  language_dropdown_item = "Velg %s som språk",
-  select_language = "Velg språk",
-  select_resolution = "Velg en ny opplösning",
-  resolution = "Opplösningen spillet skal kjöres i.",
-  audio_button = "Slå av eller på all lyd",
-  folder_button = "Mappeinnstillinger",
-  audio_toggle = "Slå av eller på",
-  customise_button = "¨Flere innstillinger", --todo: mer beskrivelse? var "More settings you can change to customise your game play experience"
-}
+
 
 folders_window = {
   screenshots_location = "Velg banen du vil bruke for skjermdumper",
@@ -289,24 +862,7 @@ folders_window = {
   data_label = "TH-data", --todo: annet ordvalg? "TH Data"
 }
 
-tooltip.folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
-  browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
-  screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
-  browse_music = "Se etter en annen lokasjon for musikk ( nåværende beliggenhet: %1% ) ",
-  music_location = "Velg en lokasjon for mp3-musikk. Mappen må være laget på forhånd.",
-  data_location = "Banen til den originale Theme Hospital-installasjonen, som du trenger for å spille CorsixTH",
-  browse_data = "Se etter en annen lokasjon for Theme Hospital-installasjonen ( nåværende beliggenhet: %1%)",
-  savegames_location = "Normalt er de lagrede spillene lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
-  back = "Lukk denne menyen og gå tilbake",
-  browse_saves = "Se etter en annen lokasjon for dine lagrede spill  ( nåværende beliggenhet: %1% ) ",
-  browse = "Se etter mappelokasjon",
-  browse_screenshots = "Se etter en annen lokasjon for skjermdumper  ( nåværende beliggenhet: %1% ) ",
-  not_specified = "Ingen mappe er valgt enda!",
-  font_location = "Lokasjon for en font som kan vise Unicode-bokstaver som er nödvendig for ditt språk. Om denne ikke velges så er bokstavtyåene begrenset til de som er i Theme Hospital.",
-  reset_to_default = "Tilbakestill mappen til standard lokasjon",
-  default = "Standard lokasjon",
-  no_font_specified = "Ingen font-fil er valgt enda!",
-}
+
 
 
 update_window = {
@@ -317,10 +873,7 @@ update_window = {
   download = "Gå til nedlastingsside",
 }
 
-tooltip.update_window = {
-  download = "Gå til nedlastingssiden for den seneste versjonen av CorsixTH",
-  ignore = "Ignorer oppdateringen denne gangen. Du vil få en ny beskjed neste gang du starter CorsixTH",
-}
+
 
 font_location_window = {
   caption = "Velg font (%1%)",
@@ -335,11 +888,6 @@ calls_dispatcher = {
 
 }
 
-tooltip.calls_dispatcher = {
-  assigned = "Denne boksen er huket av om noen er tildet oppdraget.",
-  task = "Liste over oppdrag - Klikk på oppdrag for å se lokasjonen",
-  close = "Lukk ekspedisjonsvinduet",
-}
 
 cheats_window = {
   close = "Lukk",
@@ -366,26 +914,6 @@ cheats_window = {
     earthquake = "Lag jordskjelv",
     epidemic = "Lag smittsom pasient",
     toggle_infected = "Slå av/på smitte-ikoner",
-  },
-}
-
-tooltip.cheats_window = {
-  close = "Lukk juksekodevinduet",
-  cheats = {
-  decrease_prices = "Senk alle priser med 50 % (min. 50 %)",
-  increase_prices = "Hev alle priser med 50 % (maks. 200 %)",
-  end_month = "Gå til slutten av denne måneden.",
-  emergency = "Lag en nödssituasjon.",
-  win_level = "Vinn dette nivået.",
-  create_patient = "Lag en pasient på enden av kartet.",
-  vip = "Lag en VIP.",
-  money = "Sett 10,000 i bankkontoen din.",
-  lose_level = "Tap dette nivået.",
-  all_research = "Fullförer all forskning.",
-  end_year = "Gå til slutten av dette året.",
-  earthquake = "Forårsaker et jordskjelv.",
-  epidemic = "Lager en smittsom pasient som kan forårsake en epidemi",
-  toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
   },
 }
 
@@ -417,37 +945,9 @@ customise_window = {
   aliens = "Utenomjordiske pasienter",
 }
 
-tooltip.customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
-movies = "Slår av alle videoer i spillet",
-paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
-back = "Gå tilbake",
-intro = "Slå av eller på introfilmen. Den andre filminnstillingen må også være på for å spille av introfilmen hver ganger du starter spillet",
-volume = "Om en fysisk volum ned-knapp åpner Medisinboka i spillet, så kan du slå på denne for å endre hurtigtasten til Shift+C",
-fractured_bones = "På grunn av mangelfulle animasjoner har vi stilt standardoppsettet til å slå av kvinnelige benbrudd. For å tillate dette, slå denne av",
-aliens = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
-average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
-}
-
-tooltip.new_game_window = {
-  easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
-  medium = "Om du er usikker på hva du skal velge, så er dette mellomtingen",
-  hard = "Om du er komfortabel med slike spill og önsker utfordring, bör du velge dette.",
-  tutorial = "Om du önsker litt hjelp for å komme i gang må du merke av denne boksen.",
-  cancel = "Hmm... Det var ikke meningen å starte et nytt spill!",
-  difficulty = "Velg vanskelighetsgrad du vil spille på",
-  start = "Start spillet med de valgte innstillingene",
-  player_name = "Skriv inn hva du vil hete i spillet",
-}
-
 lua_console = {
   execute_code = "Kjör",
   close = "Lukk",
-}
-
-tooltip.lua_console = {
-  textbox = "Skriv Lua-kode du vil kjöre her",
-  execute_code = "Kjör koden",
-  close = "Lukk konsollen",
 }
 
 errors = {
@@ -485,9 +985,7 @@ information = {
     cheat = "Dette var ditt eget valg, eller trykket du bare på feil knapp? Du klarer ikke engang å jukse skikkelig. Det var ikke så morsomt likevel?",
   },
 }
-tooltip.information = {
-  close = "Lukk informasjonsdialogen",
-}
+
 -- Tips
 totd_window = {
   tips = {
@@ -515,20 +1013,12 @@ totd_window = {
   next = "Neste tips",
 }
 
-tooltip.totd_window = {
-  previous = "Vis forrige tips",
-  next = "Vis neste tips",
-}
-
 -- Mapmaker?
 save_map_window = { -- Usikker på om denne hörer til her, eller om den skal flyttes?
 caption = "Lagre brett (%1%)",
 new_map = "Nytt brett",
 }
-tooltip.save_map_window = {
-  map = "Overskriv brett %s", -- Overskriv/lagre?
-  new_map = "Skriv inn navn for nytt brett",
-}
+
 
 -- Custom campaign
 custom_campaign_window = {
@@ -1138,12 +1628,6 @@ research = {
   allocated_amount  = "Tildelt belöp",
 }
 
--- Research policy tooltip
-tooltip.research_policy = {
-research_progress = "Progresjon mot den nesten oppdagelsen i denne kategorien: %1%/%2%",
-no_research = "Ingen forskning blir utfört i denne kategorien for öyeblikket",
-}
-
 -- Policy screen
 policy = {
   header            = "SYKEHUSPOLICY",
@@ -1177,7 +1661,7 @@ insurance_companies = {
   "Årlige Forskudd AS",
   "Stygge Arr Co.",
   "Svömmeblære Co.",
-  "Dönn Ærlig AS",
+  "Dönn Ehrlig AS",
   "Sverres Beholdninger",
   "Kate Pus Og Kompani",
   "Larsen Jr. Forsikring",
@@ -1243,6 +1727,7 @@ menu_options = {
   jukebox             = "  JUKEBOX  ",
   twentyfour_hour_clock = "  24 TIMERS KLOKKE  ",
   wage_increase = "  LÖNNSBEGJÆRINGER", --todo: annet ord? "wage requests"
+  capture_mouse = "  LÅS MUSEPEKER  ",
 }
 
 menu_options_wage_increase = {
@@ -1630,467 +2115,6 @@ casebook = {
     no_cure_known      = "Ingen kjente kurer.",
     cure_known         = "Kur.",
     improve_cure       = "Forbedre kur",
-  },
-}
-
--- Tooltips
-tooltip = {
-
-  -- Build room window
-  build_room_window = {
-    room_classes = {
-      diagnosis        = "Velg diagnoserom",
-      treatment        = "Velg generelle behandlingsrom",
-      clinic           = "Velg spesielle klinikker",
-      facilities       = "Velg fasiliteter",
-    },
-    cost               = "Kostnad for gjeldende rom",
-    close              = "Avbryt prosessen og returner til spillet",
-  },
-
-  -- Toolbar
-  toolbar = {
-    bank_button        = "Venstreklikk for Bankmanager, höyreklikk for Kontoutskrift",
-    balance            = "Din Balanse",
-    reputation         = "Ditt omdömme: ", -- NB: no %d! Append " ([reputation])".
-    date               = "Dato",
-    rooms              = "Bygg rom",
-    objects            = "Kjöp gjenstander",
-    edit               = "Endre rom/gjenstander",
-    hire               = "Ansett personale",
-    staff_list         = "Personalbehandling",
-    town_map           = "Områdekart",
-    casebook           = "Medisinbok",
-    research           = "Forskning",
-    status             = "Status",
-    charts             = "Diagrammer",
-    policy             = "Sykehuspolicy",
-  },
-
-  -- Hire staff window
-  hire_staff_window = {
-    doctors            = "Vis Leger tilgjengelig på arbeidsmarkedet",
-    nurses             = "Vis Sykepleiere tilgjengelig på arbeidsmarkedet",
-    handymen           = "Vis Vaktmestere tilgjengelig på arbeidsmarkedet",
-    receptionists      = "Vis Resepsjonister tilgjengelig på arbeidsmarkedet",
-    prev_person        = "Vis forrige person",
-    next_person        = "Vis neste person",
-    hire               = "Ansett person",
-    cancel             = "Avbryt",
-    doctor_seniority   = "Legens erfaring (Turnuslege, Doktor, Konsulent)",
-    staff_ability      = "Evner",
-    salary             = "Lönnskrav",
-    qualifications     = "Legens spesialisering",
-    surgeon            = "Kirurg",
-    psychiatrist       = "Psykiater",
-    researcher         = "Forsker",
-  },
-
-  -- Buy objects window
-  buy_objects_window = {
-    price              = "Pris på gjenstand",
-    total_value        = "Total verdi på kjöpte gjenstander",
-    confirm            = "Kjöp gjenstand(er)",
-    cancel             = "Avbryt",
-    increase           = "Kjöp en til av denne gjenstanden",
-    decrease           = "Kjöp en mindre av denne gjenstanden",
-  },
-
-  -- Staff list
-  staff_list = {
-    doctors            = "Se en oversikt over dine Leger",
-    nurses             = "Se en oversikt over dine Sykepleiere",
-    handymen           = "Se en oversikt over dine Vaktmestere",
-    receptionists      = "Se en oversikt over dine Resepsjonister",
-    happiness          = "Viser hvordan humöret på dine ansatte er",
-    tiredness          = "Viser hvor trött dine ansatte er",
-    ability            = "Viser evnene til dine ansatte",
-    salary             = "Den enkeltes gjeldende lönn",
-    happiness_2        = "Den ansattes moral",
-    tiredness_2        = "Den ansattes tretthetsnivå",
-    ability_2          = "Den ansattes evner",
-    prev_person        = "Velg forrige side",
-    next_person        = "Velg neste side",
-    bonus              = "Gi denne ansatte 10% bonus",
-    sack               = "Si opp denne ansatte",
-    pay_rise           = "Hev lönnen til denne ansatte med 10%",
-    close              = "Lukk og returner til spillet",
-    doctor_seniority   = "Legens erfaring",
-    detail             = "Oppmerksom på detaljer",
-    view_staff         = "Vis ansatt på jobb",
-    surgeon            = "Kvalifisert Kirurg",
-    psychiatrist       = "Kvalifisert Psykiater",
-    researcher         = "Kvalifisert Forsker",
-    surgeon_train      = "%d%% ferdig med fordypning innen kirurgi", -- %d (percentage trained)
-    psychiatrist_train = "%d%% ferdig med fordypning innen psykiatri", -- %d (percentage trained)
-    researcher_train   = "%d%% ferdig med fordypning innen forskning", -- %d (percentage trained)
-    skills             = "Ekstra evner",
-  },
-
-  -- Queue window
-  queue_window = {
-    num_in_queue       = "Antall pasienter i köen",
-    num_expected       = "Antall pasienter Resepsjonisten forventer i köen innen kort tid",
-    num_entered        = "Antall pasienter som er behandlet i dette rommet så langt",
-    max_queue_size     = "Maksimal lengde på köen som Resepsjonisten skal etterstrebe",
-    dec_queue_size     = "Senk maksimal kölengde",
-    inc_queue_size     = "Ök maksimal kölengde",
-    front_of_queue     = "Dra en pasient hit for å stille han/henne fremst i köen",
-    end_of_queue       = "Dra en pasient hit for å stille han/henne bakerst i köen",
-    close              = "Lukk vindu",
-    patient            = "Dra en pasient for å flytte han/henne i köen. Höyreklikk på en pasient for å sende han/henne hjem eller til et konkurrerende sykehus",
-    patient_dropdown = {
-      reception        = "Henvis pasient til Resepsjonist",
-      send_home        = "Send pasienten hjem",
-      hospital_1       = "Henvis pasienten til et annet sykehus",
-      hospital_2       = "Henvis pasienten til et annet sykehus",
-      hospital_3       = "Henvis pasienten til et annet sykehus",
-    },
-  },
-
-  -- Main menu
-  main_menu = {
-    new_game           = "Start en ny karriere",
-    custom_campaign = "Start en ny karriere skapt av andre spillere",
-    load_game          = "Last inn et tidligere spill",
-    continue           = "Fortsett forrige spill",
-    network            = "Start nettverksspill",
-    map_edit = "Lag et eget brett",
-    quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?", --todo: Her tror jeg det er valgt feil navn/sted for "quit". Denne viser til spörsmålet man får ved å trykke på Avslutt i hovedmenyen.
-    load_menu = {
-      load_slot        = "  SPILL [slotnumber]  ", -- NB: no %d! Append " [slotnumber]".
-      empty_slot       = "  TOM  ",
-    },
-  },
-  -- Window general
-  window_general = {
-    cancel             = "Avbryt",
-    confirm            = "Bekreft",
-  },
-  -- Custom campaign
-  custom_campaign_window = {
-    choose_campaign = "Velg en karriere for å lese mer om den",
-    start_selected_campaign = "Last det förste brettet i denne karrieren",
-  },
-
-  -- Patient window
-  patient_window = {
-    close              = "Lukk vindu",
-    graph              = "Klikk for å veksle mellom graf med personens helse og personens behandlingshistorikk",
-    happiness          = "Personens humör",
-    thirst             = "Personens törste",
-    warmth             = "Personens temperatur",
-    casebook           = "Vis detaljer for pasientens sykdom",
-    send_home          = "Send pasienten hjem fra sykehuset",
-    center_view        = "Sentrer personen i skjermbildet",
-    abort_diagnosis    = "Send personen til behandling istedenfor å vente til diagnosen er ferdigstilt",
-    queue              = "Se köen pasienten befinner seg i",
-  },
-  -- window
-  staff_window = {
-    name               = "Den ansattes navn",
-    close              = "Lukk vindu",
-    face               = "Ansiktet til personen - Klikk for å administrere de ansatte",
-    happiness          = "Humörnivå",
-    tiredness          = "Tretthetsnivå",
-    ability            = "Evner",
-    doctor_seniority   = "Stilling (Turnuslege, Doktor, Konsulent)",
-    skills             = "Spesialisering",
-    surgeon            = "Kirurg",
-    psychiatrist       = "Psykiater",
-    researcher         = "Forsker",
-    salary             = "Månedslönn",
-    center_view        = "Venstreklikk for å finne den ansatte, höyreklikk for å bla gjennom de ansatte.",
-    sack               = "Si opp",
-    pick_up            = "Plukk opp",
-  },
-  -- Machine window
-  machine_window = {
-    name               = "Navn",
-    close              = "Lukk vindu",
-    times_used         = "Antall gangen maskinen er brukt",
-    status             = "Maskinstatus",
-    repair             = "Kall på Vaktmester for å fikse maskinen",
-    replace            = "Erstatt maskin",
-  },
-
-
-  -- Handyman window
-  -- Apparently handymen have their own set of strings (partly) containing "handyman".
-  -- We could just get rid of this category and include the three prios into staff_window.
-  handyman_window = {
-    name               = "Vaktmesterens navn", -- contains "handyman"
-    close              = "Lukk vindu",
-    face               = "Vaktmesterens ansikt", -- contains "handyman"
-    happiness          = "Humörnivå",
-    tiredness          = "Tretthetsnivå",
-    ability            = "Evner",
-    prio_litter        = "Be Vaktmesteren om å prioritere rengjöring av gulv höyere", -- contains "handyman"
-    prio_plants        = "Be Vaktmesteren om å prioritere vanning av planter höyere", -- contains "handyman"
-    prio_machines      = "Be Vaktmesteren om å prioritere reparasjon av maskiner höyere", -- contains "handyman"
-    salary             = "Månedslönn",
-    center_view        = "Sentrer i skjermbildet", -- contains "handyman"
-    sack               = "Si opp",
-    pick_up            = "Plukk opp",
-    parcel_select      = "Steder hvor Vaktmesteren utförer oppgaver. Klikk for å endre innstilling.",
-  },
-
-  -- Place objects window
-  place_objects_window = {
-    cancel             = "Avbryt",
-    buy_sell           = "Kjöp/Selg gjenstander",
-    pick_up            = "Plukk opp en gjenstand",
-    confirm            = "Bekreft",
-  },
-
-  -- Casebook
-  casebook = {
-    up                 = "Rull oppover",
-    down               = "Rull nedover",
-    close              = "Lukk medisinbok",
-    reputation         = "Ryktet behandlingen eller diagnosen har i nærområdet",
-    treatment_charge   = "Pris for behandling",
-    earned_money       = "Totalt opptjente penger frem til i dag",
-    cured              = "Antall kurerte pasienter",
-    deaths             = "Antall pasienter drept som fölge av behandlingen",
-    sent_home          = "Antall pasienter som har snudd og gått hjem",
-    decrease           = "Senk pris",
-    increase           = "Ök pris",
-    research           = "Trykk her for å bruke forskingsbudsjettet for spesialisering til å forske på denne behandlingen",
-    cure_type = {
-      drug             = "Denne behandlingen krever medisin",
-      drug_percentage  = "Denne behandlingen krever medisin - din er %d%% effektiv", -- %d (effectiveness percentage)
-      psychiatrist     = "En Psykiater kreves for behandling",
-      surgery          = "Denne sykdommen krever en operasjon",
-      machine          = "Denne sykdommen krever en maskin for behandling",
-      unknown          = "Du vet ikke hvordan du skal behandle denne sykdommen enda",
-    },
-
-    cure_requirement = {
-      possible         = "Du kan gjennomföre behandling",
-      research_machine = "Du må forske på maskiner for å gjennomföre behandlingen",
-      build_room       = "Du må bygge et rom for å gjennomföre behandlingen", -- NB: no %s!
-      hire_surgeons    = "Du trenger to Kirurger for å gjennomföre behandlingen",
-      hire_surgeon     = "Du trenger en Kirurg til for å gjennomföre behandlingen",
-      hire_staff       = "Du må ansette en %s for å gjennomföre behandlingen", -- %s (staff type)
-      hire_staff_old   = "Du må ansette en %s for å gjennomföre behandlingen",
-      build_ward       = "Du må bygge en Sykestue for å kunne gjennomföre behandlingen",
-      ward_hire_nurse  = "Du trenger en Sykepleier på Sengeavdelingen for å gjennomföre behandlingen",
-      not_possible     = "Du kan ikke håndtere denne behandlingen enda",
-    },
-  },
-
-  -- Statement
-  statement = {
-    close              = "Lukk kontoutskriften",
-  },
-
-  -- Research
-  research = {
-    close              = "Gå ut av forskningsavdelingen",
-    cure_dec           = "Senk prioritering av forskning på behandlingsutstyr",
-    diagnosis_dec      = "Senk prioritering av forskning på diagnoseutstyr",
-    drugs_dec          = "Senk prioritering av forskning på medisiner",
-    improvements_dec   = "Senk prioritering av forskning på forbedringer",
-    specialisation_dec = "Senk prioritering av forskning på spesialiseringer",
-    cure_inc           = "Ök prioritering av forskning på behandlingsutstyr",
-    diagnosis_inc      = "Ök prioritering av forskning på diagnoseutstyr",
-    drugs_inc          = "Ök prioritering av forskning på medisiner",
-    improvements_inc   = "Ök prioritering av forskning på forbedringer",
-    specialisation_inc = "Ök prioritering av forskning på spesialiseringer",
-    allocated_amount   = "Penger satt av til forskning",
-  },
-
-  -- Graphs
-  graphs = {
-    close              = "Gå ut av diagramvinduet",
-    scale              = "Skala på diagram",
-    money_in           = "Vis/skjul Inntekter",
-    money_out          = "Vis/skjul Utgifter",
-    wages              = "Vis/skjul Lönninger",
-    balance            = "Vis/skjul Balanse",
-    visitors           = "Vis/skjul Besökende",
-    cures              = "Vis/skjul Kurerte",
-    deaths             = "Vis/skjul Dödsfall",
-    reputation         = "Vis/skjul Omdömme",
-  },
-
-  -- Town map
-  town_map = {
-    people             = "Vis/Skjul mennesker",
-    plants             = "Vis/Skjul planter",
-    fire_extinguishers = "Vis/Skjul brannslukningsapparat",
-    objects            = "Vis/Skjul gjenstander",
-    radiators          = "Vis/Skjul radiatorer",
-    heat_level         = "Temperatur",
-    heat_inc           = "Skru opp temperaturen",
-    heat_dec           = "Skru ned temperaturen",
-    heating_bill       = "Varmekostnader",
-    balance            = "Balanse",
-    close              = "Lukk områdekart",
-  },
-
-  -- Jukebox.
-  jukebox = {
-    current_title      = "Jukebox",
-    close              = "Lukk jukebox",
-    play               = "Spill jukebox",
-    rewind             = "Spol tilbake jukebox",
-    fast_forward       = "Spol fremover jukebox",
-    stop               = "Stopp jukebox",
-    loop               = "Repeter jukebox",
-  },
-
-  -- Bank Manager
-  bank_manager = {
-    hospital_value     = "Nåværende verdi på sykehuset ditt",
-    balance            = "Din balanse i banken",
-    current_loan       = "Gjeldende lån i banken",
-    repay_5000         = "Betal tilbake 5000 til banken",
-    borrow_5000        = "Lån 5000 av banken",
-    interest_payment   = "Månedlige rentekostnader",
-    inflation_rate     = "Årlig inflasjon",
-    interest_rate      = "Årlig rente",
-    close              = "Lukk bankmanageren",
-    insurance_owed     = "Penger %s skylder deg", -- %s (name of debitor)
-    show_graph         = "Vis forventet tilbakebetalingsplan fra %s", -- %s (name of debitor)
-    graph              = "Forventet tilbakebetalingsplan fra %s", -- %s (name of debitor)
-    graph_return       = "Returner til forrige visning",
-  },
-
-  -- Status
-  status = {
-    percentage_cured   = "Du må kurere %d% besökende på sykehuset ditt. Nå har du kurert %d%",
-    thirst             = "Gjennomsnittlig törste på personene på ditt sykehus",
-    close              = "Lukk oversikten",
-    population_chart   = "Figur som viser hvor stor andel av lokalbefolkningen hvert sykehus tiltrekker seg",
-    win_progress_own   = "Vis progresjon i forhold til kravene for dette nivået",
-    reputation        = "Omdömmet ditt må være minst %d. Nå er det %d",
-    population        = "Du må ha %d%% av befolkningen til å bruke ditt sykehus",
-    warmth             = "Gjennomsnittlig temperatur på personene på ditt sykehus",
-    percentage_killed  = "Du må drepe færre enn %d%% av dine besökende. Så langt har du tatt livet av %d%%",
-    balance        = "Din bankbalanse må være på minst %d. Nå er den %d",
-    value          = "Sykehuset ditt må være verdt $%d. Så langt er det verdt $%d",
-    win_progress_other = "Vis progresjon i forhold til kravene for dette nivået for %s", -- %s (name of competitor)
-    num_cured        = "Du må kurere %d mennesker. Så langt har du kurert %d",
-    happiness          = "Gjennomsnittlig humör på personene på ditt sykehus",
-  },
-
-  -- Policy
-  policy = {
-    close              = "Lukk sykehuspolicy",
-    staff_leave        = "Klikk her for å få personale som ikke er opptatt til å hjelpe kollegaer som trenger det",
-    staff_stay         = "Klikk her for å få personale til å bli i rommene du plasserer dem i",
-    diag_procedure     = "Om en Leges stilte diagnose er mindre sikker enn SEND HJEM prosenten, vil pasienten bli sendt hjem. Om diagnosen er sikrere enn GJETT KUR prosenten, vil pasienten sendes til aktuell behandling",
-    diag_termination   = "En pasients diagnostisering vil fortsette helt til Legene er så sikker som AVBRYT PROSESS prosenten, eller til alle diagnosemaskiner er forsökt på pasienten",
-    staff_rest         = "Hvor trött personalet må være för de kan hvile",
-  },
-
-  -- Pay rise window
-  pay_rise_window = {
-    accept             = "Imötekom kravene",
-    decline            = "Ikke godta kravene - Si opp istedenfor",
-  },
-
-  -- Watch
-  watch = {
-    hospital_opening   = "Byggetid: Dette er tiden du har igjen för sykehuset åpner. Klikk på ÅPNE-knappen, så vil sykehuset åpne umiddelbart.",
-    emergency          = "Nödstilfelle: Tid som gjenstår til å behandle alle akutte pasienter.",
-    epidemic           = "Epidemi: Tid som gjenstår til å skjule epidemien. Når tiden er ute ELLER en smittsom pasient forlater sykehuset, så kommer en Helseinspektör på besök. Knappen skrur av og på vaksineringsmodus. Klikk på pasienter for å få en Sykepleier til å vaksinere dem.",
-  },
-
-  -- Rooms
-  rooms = {
-    gps_office         = "Pasientene får sin förste konsultasjon og tilhörende resultater på Allmennpraksisen",
-    psychiatry         = "Psykiatrien kurerer gale pasienter og hjelper til med diagnostiseringen av andre pasienter, men trenger en Lege med spesialisering innenfor Psykiatri",
-    ward               = "Sengeavdelinger er nyttige for både diagnostisering og behandling. Pasienter blir sendt hit for observasjon men også for overvåkning etter operasjoner. Sengeavdelingen krever en Sykepleier",
-    operating_theatre  = "Operasjonssalen krever to Leger med spesialisering innenfor Kirurgi",
-    pharmacy           = "Sykepleieren skriver ut medisiner på apoteket for å kurere pasienter",
-    cardiogram         = "En Lege bruker Kardio for å diagnostisere pasienter",
-    scanner            = "En Lege bruker Skanneren for å diagnostisere pasienter",
-    ultrascan          = "En Lege bruker Ultraskanneren for å diagnostisere pasienter",
-    blood_machine      = "En Lege bruker Blodmaskinen for å diagnostisere pasienter",
-    x_ray              = "En Lege bruker Röntgen for å diagnostisere pasienter",
-    inflation          = "En Lege bruker Pumperommet for å behandle pasienter med Ballonghode",
-    dna_fixer          = "En Lege bruker DNA-maskinen for å behandle pasienter med Utenomjordisk DNA",
-    hair_restoration   = "En Lege bruker Hårklinikken for å behandle pasienter med Flintskalle",
-    tongue_clinic      = "En Lege bruker Tungekutteren for å behandle pasienter med Lös tunge",
-    fracture_clinic    = "En Sykepleier bruker Benbruddsklinikken for å reparere Benbrudd",
-    training_room      = "Et klasserom med en Konsulent kan brukes til å lære opp andre Leger",
-    electrolysis       = "En Lege bruker Elektrolyseklinikken for å behandle pasienter med Pelssyndrom",
-    jelly_vat          = "En Lege bruker Gelétönnen for å behandle pasienter med Gelésyndrom",
-    staffroom          = "Leger, Sykepleiere og Vaktmestre bruker personalrommet for å hvile og heve humöret",
-    -- rehabilitation  = S[33][27], -- unused
-    general_diag       = "En Lege bruker trallen for å stille grunnleggende diagnose på pasienter. Billig og ofte veldig effektivt",
-    research_room      = "Leger med spesialisering innen Forskning kan forske frem nye medisiner og maskiner på Forskningsavdelingen",
-    toilets            = "Bygg toaletter for å få pasientene til å stoppe å skitne til sykehuset!",
-    decontamination    = "En Lege bruker Saneringsdusjen for å behandle pasienter med Alvorlig Stråling",
-  },
-
-  -- Objects
-  objects = {
-    -- NB: most objects do not have a tooltip because they're not (extra-)buyable
-    desk                 = "Pult: en Lege kan bruke pulten til PC-en sin.",
-    cabinet              = "Kabinett: inneholder pasientdata, notater og forskningsdokumenter.",
-    door                 = "Dör: personer åpner og lukker disse en del.",
-    bench                = "Benk: gir pasienter en plass å sitte og gjör ventingen mer komfortabel.",
-    table1               = S[40][ 6], -- unused
-    chair                = "Stol: Pasienter sitter her og diskuterer sine problemer.",
-    drinks_machine       = "Brusautomat: hindrer pasientene å bli törste og genererer inntekter.",
-    bed                  = "Seng: virkelig syke pasienter ligger i disse.",
-    inflator             = "Pumpe: Kurerer pasienter med Ballonghode.",
-    pool_table           = "Biljardbord: Hjelper personalet ditt med å slappe av.",
-    reception_desk       = "Resepsjon: trenger en Resepsjonist som kan henvise pasienter videre.",
-    table2               = S[40][13], -- unused & duplicate
-    cardio               = S[40][14], -- no description
-    scanner              = S[40][15], -- no description
-    console              = S[40][16], -- no description
-    screen               = S[40][17], -- no description
-    litter_bomb          = "Söppelbombe: saboterer konkurrenters sykehus",
-    couch                = S[40][19], -- no description
-    sofa                 = "Sofa: ansatte som slapper av på Personalrommet vil sitte stille i en sofa så fremt det ikke er en bedre måte å slappe av på.",
-    crash_trolley        = S[40][21], -- no description
-    tv                   = "TV: sörg for at personalet ditt ikke går glipp av favorittprogrammet sitt.",
-    ultrascanner         = S[40][23], -- no description
-    dna_fixer            = S[40][24], -- no description
-    cast_remover         = S[40][25], -- no description
-    hair_restorer        = S[40][26], -- no description
-    slicer               = S[40][27], -- no description
-    x_ray                = S[40][28], -- no description
-    radiation_shield     = S[40][29], -- no description
-    x_ray_viewer         = S[40][30], -- no description
-    operating_table      = S[40][31], -- no description
-    lamp                 = S[40][32], -- unused
-    toilet_sink          = "Vask: dine hygienebevisste pasienter kan vaske sine tilgrisede hender i disse. Om det ikke er nok vasker, blir pasientene sure.",
-    op_sink1             = S[40][34], -- no description
-    op_sink2             = S[40][35], -- no description
-    surgeon_screen       = S[40][36], -- no description
-    lecture_chair        = "Forelesningsstol: dine Legestudenter sitter her og tar notater, kjeder seg og rabler ivrig. Jo flere stoler du har, jo större kan klassen være.",
-    projector            = S[40][38], -- no description
-    bed2                 = S[40][39], -- unused duplicate
-    pharmacy_cabinet     = "Apotekskap: medisinbeholdningen din finnes her",
-    computer             = "Datamaskin: genialt forskningsverktöy",
-    atom_analyser        = "Atomanalyser: plassert i Forskningsavdelingen, gjör denne gjenstanden hele forskningsprosessen raskere.",
-    blood_machine        = S[40][43], -- no description
-    fire_extinguisher    = "Brannslukningsapparat: minimerer faren for feil i dine maskiner.",
-    radiator             = "Radiator: sörger for at sykehuset ditt ikke blir kaldt.",
-    plant                = "Plante: holder pasientenes humör oppe og renser luften.",
-    electrolyser         = S[40][47], -- no description
-    jelly_moulder        = S[40][48], -- no description
-    gates_of_hell        = S[40][49], -- no description
-    bed3                 = S[40][50], -- unused duplicate
-    bin                  = "Söppelbötte: pasientene kaster söppelet her.",
-    toilet               = "Toalett: pasientene, æh..., bruker dette.",
-    swing_door1          = S[40][53], -- no description
-    swing_door2          = S[40][54], -- no description
-    shower               = S[40][55], -- no description
-    auto_autopsy         = "Obduksjonsautomat: flott hjelpemiddel for å oppdage nye behandlingsmetoder.",
-    bookcase             = "Bokhylle: referansemateriell for Leger.",
-    video_game           = "Videospill: la personalet ditt slappe av med Hi-Octane.",
-    entrance_left        = S[40][59], -- no description
-    entrance_right       = S[40][60], -- no description
-    skeleton             = "Skjelett: brukt til undervisning og Halloween.",
-    comfortable_chair    = S[40][62], -- no description
   },
 }
 
