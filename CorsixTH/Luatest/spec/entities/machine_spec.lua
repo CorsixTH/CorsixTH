@@ -61,4 +61,16 @@ describe("object.lua: ", function()
     assert.are.equal(machine1.times_used, machine2.times_used)
     assert.are.equal(machine1.total_usage, machine2.total_usage)
   end)
+  it("setting null state doesn't clear values", function()
+    local machine = createMachineWithFakeInput()
+    machine:updateDynamicInfo()
+
+    assert.are.equal(1, machine.times_used)
+    assert.are.equal(1, machine.total_usage)
+
+    machine:setState(nil)
+
+    assert.are.equal(1, machine.times_used)
+    assert.are.equal(1, machine.total_usage)
+  end)
 end)
