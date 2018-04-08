@@ -51,7 +51,7 @@ SOFTWARE.
     environment.
 */
 
-struct THStringProxy_t {};
+class string_proxy {};
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
@@ -66,7 +66,7 @@ static inline void aux_push_weak_table(lua_State *L, int iIndex)
 // Replace the value at the top of the stack with a userdata proxy
 static int l_str_new_aux(lua_State *L)
 {
-    luaT_stdnew<THStringProxy_t>(L);
+    luaT_stdnew<string_proxy>(L);
     aux_push_weak_table(L, 0);
     lua_pushvalue(L, -2);
     lua_pushvalue(L, -4);
@@ -444,12 +444,12 @@ static int l_str_persist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistWriter *pWriter = (LuaPersistWriter*)lua_touserdata(L, 1);
+    lua_persist_writer *pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
 
     // Recreation instructions are stored in the environment, which is written
     // automatically. For compatibility, we write a simple boolean.
     lua_pushboolean(L, 1);
-    pWriter->writeStackObject(3);
+    pWriter->write_stack_object(3);
     lua_getfenv(L, 2);
 
     // If there were no instructions (i.e. for the root object) then write the
@@ -460,7 +460,7 @@ static int l_str_persist(lua_State *L)
         aux_push_weak_table(L, 0);
         lua_pushvalue(L, 2);
         lua_rawget(L, 3);
-        pWriter->writeStackObject(4);
+        pWriter->write_stack_object(4);
     }
     return 0;
 }
@@ -470,10 +470,10 @@ static int l_str_depersist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
-    LuaPersistReader *pReader = (LuaPersistReader*)lua_touserdata(L, 1);
+    lua_persist_reader *pReader = (lua_persist_reader*)lua_touserdata(L, 1);
 
     // Read the instructions for re-creating the value
-    if(!pReader->readStackObject())
+    if(!pReader->read_stack_object())
         return 0;
     if(lua_type(L, 3) == LUA_TBOOLEAN && lua_toboolean(L, 3) == 1)
     {
@@ -504,7 +504,7 @@ static int l_str_depersist(lua_State *L)
     if(lua_objlen(L, 3) == 0)
     {
         // No instructions provided, so read the value itself
-        if(!pReader->readStackObject())
+        if(!pReader->read_stack_object())
             return 0;
     }
     else
@@ -695,7 +695,7 @@ static int l_mk_cache(lua_State *L)
     return 1;
 }
 
-void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
+void lua_register_strings(const lua_register_state *pState)
 {
     lua_State *L = pState->L;
 
@@ -728,10 +728,10 @@ void THLuaRegisterStrings(const THLuaRegisterState_t *pState)
     lua_rawget(L, LUA_REGISTRYINDEX);
     lua_rawset(L, LUA_REGISTRYINDEX);
 
-    luaT_class(THStringProxy_t, l_str_new, "stringProxy", eTHLuaMetatable::stringProxy);
-    // As we overwrite __index, move methods to eTHLuaMetatable::stringProxy[4]
-    lua_getfield(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], "__index");
-    lua_rawseti(L, pState->aiMetatables[static_cast<size_t>(eTHLuaMetatable::stringProxy)], 4);
+    luaT_class(string_proxy, l_str_new, "stringProxy", lua_metatable::string_proxy);
+    // As we overwrite __index, move methods to lua_metatable::string_proxy[4]
+    lua_getfield(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], "__index");
+    lua_rawseti(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], 4);
     luaT_setmetamethod(l_str_index, "index");
     luaT_setmetamethod(l_str_newindex, "newindex");
     luaT_setmetamethod(l_str_concat, "concat");

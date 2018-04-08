@@ -27,14 +27,14 @@ SOFTWARE.
 #include <cstdio>
 #include <stdexcept>
 
-void THLuaRegisterAnims(const THLuaRegisterState_t *pState);
-void THLuaRegisterGfx(const THLuaRegisterState_t *pState);
-void THLuaRegisterMap(const THLuaRegisterState_t *pState);
-void THLuaRegisterSound(const THLuaRegisterState_t *pState);
-void THLuaRegisterMovie(const THLuaRegisterState_t *pState);
-void THLuaRegisterStrings(const THLuaRegisterState_t *pState);
-void THLuaRegisterUI(const THLuaRegisterState_t *pState);
-void THLuaRegisterLfsExt(const THLuaRegisterState_t *pState);
+void lua_register_anims(const lua_register_state *pState);
+void lua_register_gfx(const lua_register_state *pState);
+void lua_register_map(const lua_register_state *pState);
+void lua_register_sound(const lua_register_state *pState);
+void lua_register_movie(const lua_register_state *pState);
+void lua_register_strings(const lua_register_state *pState);
+void lua_register_ui(const lua_register_state *pState);
+void lua_register_lfs_ext(const lua_register_state *pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -175,16 +175,16 @@ static int l_load_strings(lua_State *L)
 
     try
     {
-        THStringList oStrings(pData, iDataLength);
+        th_string_list oStrings(pData, iDataLength);
         lua_settop(L, 0);
-        lua_createtable(L, static_cast<int>(oStrings.getSectionCount()), 0);
-        for(size_t iSec = 0; iSec < oStrings.getSectionCount(); ++iSec)
+        lua_createtable(L, static_cast<int>(oStrings.get_section_count()), 0);
+        for(size_t iSec = 0; iSec < oStrings.get_section_count(); ++iSec)
         {
-            size_t iCount = oStrings.getSectionSize(iSec);
+            size_t iCount = oStrings.get_section_size(iSec);
             lua_createtable(L, static_cast<int>(iCount), 0);
             for(size_t iStr = 0; iStr < iCount; ++iStr)
             {
-                lua_pushstring(L, oStrings.getString(iSec, iStr));
+                lua_pushstring(L, oStrings.get_string(iSec, iStr));
                 lua_rawseti(L, 2, static_cast<int>(iStr + 1));
             }
             lua_rawseti(L, 1, static_cast<int>(iSec + 1));
@@ -244,44 +244,44 @@ static int l_get_compile_options(lua_State *L)
     return 1;
 }
 
-void luaT_setclosure(const THLuaRegisterState_t *pState, lua_CFunction fn, size_t iUps) {
+void luaT_setclosure(const lua_register_state *pState, lua_CFunction fn, size_t iUps) {
     luaT_pushcclosure(pState->L, fn, iUps);
 }
 
 int luaopen_th(lua_State *L)
 {
     lua_settop(L, 0);
-    lua_checkstack(L, 16 + static_cast<int>(eTHLuaMetatable::count));
+    lua_checkstack(L, 16 + static_cast<int>(lua_metatable::count));
 
-    THLuaRegisterState_t oState;
-    const THLuaRegisterState_t *pState = &oState;
+    lua_register_state oState;
+    const lua_register_state *pState = &oState;
     oState.L = L;
-    for(int i = 0; i < static_cast<int>(eTHLuaMetatable::count); ++i)
+    for(int i = 0; i < static_cast<int>(lua_metatable::count); ++i)
     {
         lua_createtable(L, 0, 5);
-        oState.aiMetatables[i] = lua_gettop(L);
+        oState.metatables[i] = lua_gettop(L);
     }
     lua_createtable(L, 0, lua_gettop(L));
-    oState.iMainTable = lua_gettop(L);
-    oState.iTop = lua_gettop(L);
+    oState.main_table = lua_gettop(L);
+    oState.top = lua_gettop(L);
 
     // Misc. functions
-    lua_settop(L, oState.iTop);
+    lua_settop(L, oState.top);
     luaT_setfunction(l_load_strings, "LoadStrings");
     luaT_setfunction(l_get_compile_options, "GetCompileOptions");
-    luaT_setfunction(Bootstrap_lua_resources, "GetBuiltinFont");
+    luaT_setfunction(bootstrap_lua_resources, "GetBuiltinFont");
 
     // Classes
-    THLuaRegisterMap(pState);
-    THLuaRegisterGfx(pState);
-    THLuaRegisterAnims(pState);
-    THLuaRegisterSound(pState);
-    THLuaRegisterMovie(pState);
-    THLuaRegisterStrings(pState);
-    THLuaRegisterUI(pState);
-    THLuaRegisterLfsExt(pState);
+    lua_register_map(pState);
+    lua_register_gfx(pState);
+    lua_register_anims(pState);
+    lua_register_sound(pState);
+    lua_register_movie(pState);
+    lua_register_strings(pState);
+    lua_register_ui(pState);
+    lua_register_lfs_ext(pState);
 
-    lua_settop(L, oState.iMainTable);
+    lua_settop(L, oState.main_table);
     return 1;
 }
 

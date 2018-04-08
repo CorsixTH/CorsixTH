@@ -33,14 +33,14 @@ SOFTWARE.
     searches for the Theme Hospital data files, and can then be used to read
     these data files.
 */
-class IsoFilesystem
+class iso_filesystem
 {
 public:
-    IsoFilesystem();
-    ~IsoFilesystem();
+    iso_filesystem();
+    ~iso_filesystem();
 
     //! Set the character to be used between components in file paths
-    void setPathSeparator(char cSeparator);
+    void set_path_separator(char cSeparator);
 
     //! Load an .iso disk image and search for Theme Hospital data files
     /*!
@@ -55,16 +55,16 @@ public:
     /*!
         Can be called after initialise() or getFileData() return false.
     */
-    const char* getError() const;
+    const char* get_error() const;
 
-    typedef int file_handle_t;
+    using file_handle = int;
 
     //! Find a file in the loaded .iso disk image
     /*!
         If (and only if) the given file could not be found, then isHandleGood()
         will return false on the returned handle.
     */
-    file_handle_t findFile(const char* sPath) const;
+    file_handle find_file(const char* sPath) const;
 
     //! Iterate all files of the .iso disk image within a given directory
     /*!
@@ -74,18 +74,18 @@ public:
           of a file which is in sPath.
         \param pCallbackData Opaque value to be called to fnCallback.
     */
-    void visitDirectoryFiles(const char* sPath,
+    void visit_directory_files(const char* sPath,
                              void (*fnCallback)(void*, const char*),
                              void* pCallbackData) const;
 
     //! Test if a file handle from findFile() is good or is invalid
-    static inline bool isHandleGood(file_handle_t x) {return x != 0;}
+    static inline bool isHandleGood(file_handle x) {return x != 0;}
 
     //! Get the size (in bytes) of a file in the loaded .iso disk image
     /*!
         \param iFile A file handle returned by findFile()
     */
-    uint32_t getFileSize(file_handle_t iFile) const;
+    uint32_t get_file_size(file_handle iFile) const;
 
     //! Get the contents of a file in the loaded .iso disk image
     /*!
@@ -93,35 +93,35 @@ public:
         \param pBuffer The buffer to place the resulting data in
         \return true on success, false on failure - call getError() for reason
     */
-    bool getFileData(file_handle_t iFile, uint8_t *pBuffer);
+    bool get_file_data(file_handle iFile, uint8_t *pBuffer);
 
 private:
-    struct _file_t
+    struct file_metadata
     {
-        char *sPath;
-        uint32_t iSector;
-        uint32_t iSize;
+        char *path;
+        uint32_t sector;
+        uint32_t size;
     };
 
-    FILE* m_fRawFile;
-    char* m_sError;
-    _file_t* m_pFiles;
-    size_t m_iNumFiles;
-    size_t m_iFileTableSize;
-    long m_iSectorSize;
-    char m_cPathSeparator;
+    FILE* raw_file;
+    char* error;
+    file_metadata* files;
+    size_t file_count;
+    size_t file_table_size;
+    long sector_size;
+    char path_seperator;
 
     //! Free any memory in use
-    void _clear();
+    void clear();
 
     //! Set the last error, printf-style
-    void _setError(const char* sFormat, ...);
+    void set_error(const char* sFormat, ...);
 
     //! Seek to a logical sector of the disk image
-    bool _seekToSector(uint32_t iSector);
+    bool seek_to_sector(uint32_t iSector);
 
     //! Read data from the disk image
-    bool _readData(uint32_t iByteCount, uint8_t *pBuffer);
+    bool read_data(uint32_t iByteCount, uint8_t *pBuffer);
 
     //! Scan the given array of directory entries for a Theme Hospital file
     /*!
@@ -133,7 +133,7 @@ private:
           contains a Theme Hospital data file. 2 if the given array is the
           top-level Theme Hospital data directory. Other values otherwise.
     */
-    int _findHospDirectory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel);
+    int find_hosp_directory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel);
 
     //! Build the list of Theme Hospital data files
     /*!
@@ -142,14 +142,14 @@ private:
         \param iDirEntsSize The number of bytes in the directory entry array.
         \param sPrefix The path name to prepend to filenames in the directory.
     */
-    void _buildFileLookupTable(uint32_t iSector, int iDirEntsSize, const char* sPrefix);
+    void build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const char* sPrefix);
 
-    //! Return the next free entry in m_pFiles
-    _file_t* _allocFileRecord();
+    //! Return the next free entry in files
+    file_metadata* allocate_file_record();
 
-    static char _normalise(char c);
-    static int _fileNameComp(const void* lhs, const void* rhs);
-    static void _trimIdentifierVersion(const uint8_t* sIdent, uint8_t& iLength);
+    static char normalise(char c);
+    static int filename_compare(const void* lhs, const void* rhs);
+    static void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength);
 };
 
 int luaopen_iso_fs(lua_State *L);

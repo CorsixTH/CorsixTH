@@ -32,7 +32,7 @@ SOFTWARE.
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
 
-enum PersistTypes
+enum persist_type
 {
     //  LUA_TNIL = 0,
     //  LUA_TBOOLEAN, // Used for false
@@ -70,18 +70,19 @@ template <class T> static int l_crude_gc(lua_State *L)
     can be more efficient to use this structure, which can load them without
     concatenating them. Sample usage is:
 
-    LoadMultiBuffer_t ls;
+    load_multi_buffer ls;
     ls.s[0] = lua_tolstring(L, -2, &ls.i[0]);
     ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
     lua_load(L, LoadMultiBuffer_t::load_fn, &ls, "chunk name");
 */
-struct LoadMultiBuffer_t
+class load_multi_buffer
 {
+public:
     const char *s[3];
     size_t i[3];
     int n;
 
-    LoadMultiBuffer_t()
+    load_multi_buffer()
     {
         s[0] = s[1] = s[2] = nullptr;
         i[0] = i[1] = i[2] = 0;
@@ -90,7 +91,7 @@ struct LoadMultiBuffer_t
 
     static const char* load_fn(lua_State *L, void *ud, size_t *size)
     {
-        LoadMultiBuffer_t *pThis = reinterpret_cast<LoadMultiBuffer_t*>(ud);
+        load_multi_buffer *pThis = reinterpret_cast<load_multi_buffer*>(ud);
 
         for( ; pThis->n < 3; ++pThis->n)
         {
@@ -108,9 +109,9 @@ struct LoadMultiBuffer_t
 
 //! Basic implementation of persistance interface
 /*!
-    self - Instance of LuaPersistBasicWriter allocated as a Lua userdata
+    self - Instance of lua_persist_basic_writer allocated as a Lua userdata
     self metatable:
-      __gc - ~LuaPersistBasicWriter (via l_crude_gc)
+      __gc - ~lua_persist_basic_writer (via l_crude_gc)
       "<file>:<line>" - <index of function prototype in already written data>
       [1] - pre-populated prototype persistance names
         "<file>:<line>" - "<name>"
@@ -123,25 +124,24 @@ struct LoadMultiBuffer_t
         upvalue 1 - permanents table
         upvalue 2 - self
 */
-class LuaPersistBasicWriter : public LuaPersistWriter
+class lua_persist_basic_writer : public lua_persist_writer
 {
 public:
-    LuaPersistBasicWriter(lua_State *L)
-        : m_L(L),
-        m_data()
+    lua_persist_basic_writer(lua_State *L)
+        : L(L),
+        data()
     { }
 
-    ~LuaPersistBasicWriter()
+    ~lua_persist_basic_writer()
     { }
 
-    lua_State* getStack() override
+    lua_State* get_stack() override
     {
-        return m_L;
+        return L;
     }
 
     void init()
     {
-        lua_State *L = m_L;
         lua_createtable(L, 1, 8); // Environment
         lua_pushvalue(L, 2); // Permanent objects
         lua_rawseti(L, -2, 1);
@@ -153,42 +153,40 @@ public:
         lua_setmetatable(L, -2);
         lua_setfenv(L, 1);
         lua_createtable(L, 1, 4); // Metatable
-        luaT_pushcclosure(L, l_crude_gc<LuaPersistBasicWriter>, 0);
+        luaT_pushcclosure(L, l_crude_gc<lua_persist_basic_writer>, 0);
         lua_setfield(L, -2, "__gc");
         lua_pushvalue(L, luaT_upvalueindex(1)); // Prototype persistance names
         lua_rawseti(L, -2, 1);
         lua_setmetatable(L, 1);
 
-        m_iNextIndex = 1;
-        m_iDataLength = 0;
-        m_bHadError = false;
+        next_index = 1;
+        data_size = 0;
+        had_error = false;
     }
 
     int finish()
     {
-        if(getError() != nullptr)
+        if(get_error() != nullptr)
         {
-            lua_pushnil(m_L);
-            lua_pushstring(m_L, getError());
-            lua_getmetatable(m_L, 1);
-            lua_getfield(m_L, -1, "err");
-            lua_replace(m_L, -2);
+            lua_pushnil(L);
+            lua_pushstring(L, get_error());
+            lua_getmetatable(L, 1);
+            lua_getfield(L, -1, "err");
+            lua_replace(L, -2);
             return 3;
         }
         else
         {
-            lua_pushlstring(m_L, m_data.c_str(), m_data.length());
+            lua_pushlstring(L, data.c_str(), data.length());
             return 1;
         }
     }
 
-    void fastWriteStackObject(int iIndex) override
+    void fast_write_stack_object(int iIndex) override
     {
-        lua_State *L = m_L;
-
         if(lua_type(L, iIndex) != LUA_TUSERDATA)
         {
-            writeStackObject(iIndex);
+            write_stack_object(iIndex);
             return;
         }
 
@@ -207,25 +205,25 @@ public:
         if(!lua_isnil(L, -1) || !lua_isnil(L, -2))
         {
             lua_pop(L, 3);
-            writeStackObject(iIndex);
+            write_stack_object(iIndex);
             return;
         }
         lua_pop(L, 2);
 
         // Save the index to the cache
         lua_pushvalue(L, iIndex);
-        lua_pushnumber(L, (lua_Number)(m_iNextIndex++));
+        lua_pushnumber(L, (lua_Number)(next_index++));
         lua_settable(L, -3);
 
-        if(!_checkThatUserdataCanBeDepersisted(iIndex))
+        if(!check_that_userdata_can_be_depersisted(iIndex))
             return;
 
         // Write type, metatable, and then environment
         uint8_t iType = LUA_TUSERDATA;
-        writeByteStream(&iType, 1);
-        writeStackObject(-1);
+        write_byte_stream(&iType, 1);
+        write_stack_object(-1);
         lua_getfenv(L, iIndex);
-        writeStackObject(-1);
+        write_stack_object(-1);
         lua_pop(L, 1);
 
         // Write the raw data
@@ -243,14 +241,12 @@ public:
                 lua_pop(L, 2);
             }
         }
-        writeVUInt((uint64_t)0x42); // sync marker
+        write_uint((uint64_t)0x42); // sync marker
         lua_pop(L, 1);
     }
 
-    void writeStackObject(int iIndex) override
+    void write_stack_object(int iIndex) override
     {
-        lua_State *L = m_L;
-
         // Convert index from relative to absolute
         if(iIndex < 0 && iIndex > LUA_REGISTRYINDEX)
             iIndex = lua_gettop(L) + 1 + iIndex;
@@ -260,7 +256,7 @@ public:
         if(iType == LUA_TNIL || iType == LUA_TNONE)
         {
             uint8_t iByte = LUA_TNIL;
-            writeByteStream(&iByte, 1);
+            write_byte_stream(&iByte, 1);
         }
         else if(iType == LUA_TBOOLEAN)
         {
@@ -269,7 +265,7 @@ public:
                 iByte = PERSIST_TTRUE;
             else
                 iByte = LUA_TBOOLEAN;
-            writeByteStream(&iByte, 1);
+            write_byte_stream(&iByte, 1);
         }
         else if(iType == LUA_TNUMBER)
         {
@@ -280,16 +276,16 @@ public:
                 // NB: 16383 = 2^14-1, which is the maximum value which
                 // can fit into two bytes of VUInt.
                 uint8_t iByte = PERSIST_TINTEGER;
-                writeByteStream(&iByte, 1);
+                write_byte_stream(&iByte, 1);
                 uint16_t iValue = (uint16_t)fValue;
-                writeVUInt(iValue);
+                write_uint(iValue);
             }
             else
             {
                 // Other numbers are written as an 8 byte double
                 uint8_t iByte = LUA_TNUMBER;
-                writeByteStream(&iByte, 1);
-                writeByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double));
+                write_byte_stream(&iByte, 1);
+                write_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double));
             }
         }
         else
@@ -307,19 +303,18 @@ public:
                 // would have been called, and the appropriate data written, and 0
                 // would be returned. Otherwise, the index would be returned, which
                 // we offset by the number of types, and then write.
-                writeVUInt(iValue + PERSIST_TCOUNT - 1);
+                write_uint(iValue + PERSIST_TCOUNT - 1);
             }
         }
     }
 
-    int writeObjectRaw()
+    int write_object_raw()
     {
-        lua_State *L = m_L;
         uint8_t iType;
 
         // Save the index to the cache
         lua_pushvalue(L, 2);
-        lua_pushnumber(L, (lua_Number)(m_iNextIndex++));
+        lua_pushnumber(L, (lua_Number)(next_index++));
         lua_settable(L, 1);
 
         // Lookup the object in the permanents table
@@ -330,14 +325,14 @@ public:
             // Object is in the permanents table.
 
             uint8_t iType = PERSIST_TPERMANENT;
-            writeByteStream(&iType, 1);
+            write_byte_stream(&iType, 1);
 
             // Replace self's environment with self (for call to writeStackObject)
             lua_pushvalue(L, luaT_upvalueindex(2));
             lua_replace(L, 1);
 
             // Write the key corresponding to the permanent object
-            writeStackObject(-1);
+            write_stack_object(-1);
         }
         else
         {
@@ -352,12 +347,12 @@ public:
 
             case LUA_TSTRING: {
                 iType = LUA_TSTRING;
-                writeByteStream(&iType, 1);
+                write_byte_stream(&iType, 1);
                 // Strings are simple: length and then bytes (not null terminated)
                 size_t iLength;
                 const char *sString = lua_tolstring(L, 2, &iLength);
-                writeVUInt(iLength);
-                writeByteStream(reinterpret_cast<const uint8_t*>(sString), iLength);
+                write_uint(iLength);
+                write_byte_stream(reinterpret_cast<const uint8_t*>(sString), iLength);
                 break; }
 
             case LUA_TTABLE: {
@@ -375,21 +370,21 @@ public:
                 if(lua_getmetatable(L, iTable))
                 {
                     iType = PERSIST_TTABLE_WITH_META;
-                    writeByteStream(&iType, 1);
-                    writeStackObject(-1);
+                    write_byte_stream(&iType, 1);
+                    write_stack_object(-1);
                     lua_pop(L, 1);
                 }
                 else
                 {
                     iType = LUA_TTABLE;
-                    writeByteStream(&iType, 1);
+                    write_byte_stream(&iType, 1);
                 }
 
                 // Write the children as key, value pairs
                 lua_pushnil(L);
                 while(lua_next(L, iTable))
                 {
-                    writeStackObject(-2);
+                    write_stack_object(-2);
                     // The naive thing to do now would be writeStackObject(-1)
                     // but this can easily lead to Lua's C call stack limit
                     // being hit. To reduce the likelihood of this happening,
@@ -406,7 +401,7 @@ public:
                             lua_checkstack(L, 10);
                             iTable += 2;
                             lua_pushvalue(L, iTable);
-                            lua_pushnumber(L, (lua_Number)(m_iNextIndex++));
+                            lua_pushnumber(L, (lua_Number)(next_index++));
                             lua_settable(L, 2);
                             goto table_reentry; table_resume:
                             iTable -= 2;
@@ -414,18 +409,18 @@ public:
                         else
                         {
                             lua_pop(L, 2);
-                            writeStackObject(-1);
+                            write_stack_object(-1);
                         }
                     }
                     else
-                        writeStackObject(-1);
+                        write_stack_object(-1);
                     lua_pop(L, 1);
                 }
 
                 // Write a nil to mark the end of the children (as nil is the
                 // only value which cannot be used as a key in a table).
                 iType = LUA_TNIL;
-                writeByteStream(&iType, 1);
+                write_byte_stream(&iType, 1);
                 if(iTable != 3)
                     goto table_resume;
                 break; }
@@ -433,13 +428,13 @@ public:
             case LUA_TFUNCTION:
                 if(lua_iscfunction(L, 2))
                 {
-                    setErrorObject(2);
-                    setError("Cannot persist C functions");
+                    set_error_object(2);
+                    set_error("Cannot persist C functions");
                 }
                 else
                 {
                     iType = LUA_TFUNCTION;
-                    writeByteStream(&iType, 1);
+                    write_byte_stream(&iType, 1);
 
                     // Replace self's environment with self (for calls to writeStackObject)
                     lua_pushvalue(L, luaT_upvalueindex(2));
@@ -450,37 +445,37 @@ public:
                     lua_Debug proto_info;
                     lua_pushvalue(L, 2);
                     lua_getinfo(L, ">Su", &proto_info);
-                    writePrototype(&proto_info, 2);
+                    write_prototype(&proto_info, 2);
 
                     // Write the values of the upvalues
                     // If available, also write the upvalue IDs (so that in
                     // the future, we could hypothetically rejoin shared
                     // upvalues). An ID is just an opaque sequence of bytes.
-                    writeVUInt(proto_info.nups);
+                    write_uint(proto_info.nups);
 #if LUA_VERSION_NUM >= 502
-                    writeVUInt(sizeof(void*));
+                    write_uint(sizeof(void*));
 #else
                     writeVUInt(0);
 #endif
                     for(int i = 1; i <= proto_info.nups; ++i)
                     {
                         lua_getupvalue(L, 2, i);
-                        writeStackObject(-1);
+                        write_stack_object(-1);
 #if LUA_VERSION_NUM >= 502
                         void *pUpvalueID = lua_upvalueid(L, 2, i);
-                        writeByteStream((uint8_t*)&pUpvalueID, sizeof(void*));
+                        write_byte_stream((uint8_t*)&pUpvalueID, sizeof(void*));
 #endif
                     }
 
                     // Write the environment table
                     lua_getfenv(L, 2);
-                    writeStackObject(-1);
+                    write_stack_object(-1);
                     lua_pop(L, 1);
                 }
                 break;
 
             case LUA_TUSERDATA:
-                if(!_checkThatUserdataCanBeDepersisted(2))
+                if(!check_that_userdata_can_be_depersisted(2))
                     break;
 
                 // Replace self's environment with self (for calls to writeStackObject)
@@ -489,10 +484,10 @@ public:
 
                 // Write type, metatable, and then environment
                 iType = LUA_TUSERDATA;
-                writeByteStream(&iType, 1);
-                writeStackObject(-1);
+                write_byte_stream(&iType, 1);
+                write_stack_object(-1);
                 lua_getfenv(L, 2);
-                writeStackObject(-1);
+                write_stack_object(-1);
                 lua_pop(L, 1);
 
                 // Write the raw data
@@ -508,11 +503,11 @@ public:
                         lua_call(L, 2, 0);
                     }
                 }
-                writeVUInt((uint64_t)0x42); // sync marker
+                write_uint((uint64_t)0x42); // sync marker
                 break;
 
             default:
-                setError(lua_pushfstring(L, "Cannot persist %s values", luaL_typename(L, 2)));
+                set_error(lua_pushfstring(L, "Cannot persist %s values", luaL_typename(L, 2)));
                 break;
             }
         }
@@ -520,10 +515,8 @@ public:
         return 1;
     }
 
-    bool _checkThatUserdataCanBeDepersisted(int iIndex)
+    bool check_that_userdata_can_be_depersisted(int iIndex)
     {
-        lua_State *L = m_L;
-
         if(lua_getmetatable(L, iIndex))
         {
             lua_getfield(L, -1, "__depersist_size");
@@ -532,7 +525,7 @@ public:
                 if(static_cast<int>(lua_tointeger(L, -1))
                     != static_cast<int>(lua_objlen(L, iIndex)))
                 {
-                    setError(lua_pushfstring(L, "__depersist_size is "
+                    set_error(lua_pushfstring(L, "__depersist_size is "
                         "incorrect (%d vs. %d)", (int)lua_objlen(L, iIndex),
                         (int)lua_tointeger(L, -1)));
                     return false;
@@ -543,7 +536,7 @@ public:
                     lua_getfield(L, -3, "__depersist");
                     if(lua_isnil(L, -1) || lua_isnil(L, -2))
                     {
-                        setError("Can only persist non-empty userdata"
+                        set_error("Can only persist non-empty userdata"
                             " if they have __persist and __depersist "
                             "metamethods");
                         return false;
@@ -555,7 +548,7 @@ public:
             {
                 if(lua_objlen(L, iIndex) != 0)
                 {
-                    setError("Can only persist non-empty userdata if "
+                    set_error("Can only persist non-empty userdata if "
                         "they have a __depersist_size metafield");
                     return false;
                 }
@@ -566,7 +559,7 @@ public:
         {
             if(lua_objlen(L, iIndex) != 0)
             {
-                setError("Can only persist userdata without a metatable"
+                set_error("Can only persist userdata without a metatable"
                     " if their size is zero");
                 return false;
             }
@@ -575,16 +568,14 @@ public:
         return true;
     }
 
-    void writePrototype(lua_Debug *pProtoInfo, int iInstanceIndex)
+    void write_prototype(lua_Debug *pProtoInfo, int iInstanceIndex)
     {
-        lua_State *L = m_L;
-
         // Sanity checks
         if(pProtoInfo->source[0] != '@')
         {
             // @ denotes that the source was a file
             // (http://www.lua.org/manual/5.1/manual.html#lua_Debug)
-            setError("Can only persist Lua functions defined in source files");
+            set_error("Can only persist Lua functions defined in source files");
             return;
         }
         if(std::strcmp(pProtoInfo->what, "Lua") != 0)
@@ -594,7 +585,7 @@ public:
             // Hence "Lua" and "main" should be the only values seen.
             // NB: Chunks are not functions defined *in* source files, because
             // chunks *are* source files.
-            setError(lua_pushfstring(L, "Cannot persist entire Lua chunks (%s)", pProtoInfo->source + 1));
+            set_error(lua_pushfstring(L, "Cannot persist entire Lua chunks (%s)", pProtoInfo->source + 1));
             lua_pop(L, 1);
             return;
         }
@@ -609,23 +600,23 @@ public:
         {
             uint64_t iValue = (uint64_t)lua_tonumber(L, -1);
             lua_pop(L, 3);
-            writeVUInt(iValue + PERSIST_TCOUNT - 1);
+            write_uint(iValue + PERSIST_TCOUNT - 1);
             return;
         }
         lua_pop(L, 1);
         lua_pushvalue(L, -1);
-        lua_pushnumber(L, (lua_Number)m_iNextIndex++);
+        lua_pushnumber(L, (lua_Number)next_index++);
         lua_rawset(L, -4);
 
         uint8_t iType = PERSIST_TPROTOTYPE;
-        writeByteStream(&iType, 1);
+        write_byte_stream(&iType, 1);
 
         // Write upvalue names
-        writeVUInt(pProtoInfo->nups);
+        write_uint(pProtoInfo->nups);
         for(int i = 1; i <= pProtoInfo->nups; ++i)
         {
             lua_pushstring(L, lua_getupvalue(L, iInstanceIndex, i));
-            writeStackObject(-1);
+            write_stack_object(-1);
             lua_pop(L, 2);
         }
 
@@ -635,45 +626,44 @@ public:
         lua_rawget(L, -2);
         if(lua_isnil(L, -1))
         {
-            setError(lua_pushfstring(L, "Lua functions must be given a unique "
+            set_error(lua_pushfstring(L, "Lua functions must be given a unique "
                 "persistable name in order to be persisted (attempt to persist"
                 " %s:%d)", pProtoInfo->source + 1, pProtoInfo->linedefined));
             lua_pop(L, 2);
             return;
         }
-        writeStackObject(-1);
+        write_stack_object(-1);
         lua_pop(L, 2);
     }
 
-    void writeByteStream(const uint8_t *pBytes, size_t iCount) override
+    void write_byte_stream(const uint8_t *pBytes, size_t iCount) override
     {
-        if(m_bHadError)
+        if(had_error)
         {
             // If an error occurred, then silently fail to write any
             // data.
             return;
         }
 
-        m_data.append(reinterpret_cast<const char*>(pBytes), iCount);
+        data.append(reinterpret_cast<const char*>(pBytes), iCount);
     }
 
-    void setError(const char *sError) override
+    void set_error(const char *sError) override
     {
         // If multiple errors occur, only record the first.
-        if (m_bHadError) {
+        if (had_error) {
             return;
         }
-        m_bHadError = true;
+        had_error = true;
 
         // Use the written data buffer to store the error message
-        m_data.assign(sError);
+        data.assign(sError);
     }
 
-    void setErrorObject(int iStackObject)
+    void set_error_object(int iStackObject)
     {
-        if(m_bHadError)
+        if(had_error)
             return;
-        lua_State *L = m_L;
 
         lua_pushvalue(L, iStackObject);
         lua_getmetatable(L, luaT_upvalueindex(2));
@@ -682,31 +672,31 @@ public:
         lua_pop(L, 1);
     }
 
-    const char* getError()
+    const char* get_error()
     {
-        if(m_bHadError)
-            return m_data.c_str();
+        if(had_error)
+            return data.c_str();
         else
             return nullptr;
     }
 
 private:
-    lua_State *m_L;
-    uint64_t m_iNextIndex;
-    std::string m_data;
-    size_t m_iDataLength;
-    bool m_bHadError;
+    lua_State *L;
+    uint64_t next_index;
+    std::string data;
+    size_t data_size;
+    bool had_error;
 };
 
 static int l_writer_mt_index(lua_State *L)
 {
-    return reinterpret_cast<LuaPersistBasicWriter*>(
-        lua_touserdata(L, luaT_upvalueindex(2)))->writeObjectRaw();
+    return reinterpret_cast<lua_persist_basic_writer*>(
+        lua_touserdata(L, luaT_upvalueindex(2)))->write_object_raw();
 }
 
 //! Basic implementation of depersistance interface
 /*!
-    self - Instance of LuaPersistBasicReader allocated as a Lua userdata
+    self - Instance of lua_persist_basic_reader allocated as a Lua userdata
     self environment:
       [-3] - self
       [-2] - pre-populated prototype persistance code
@@ -716,38 +706,37 @@ static int l_writer_mt_index(lua_State *L)
       [ 0] - permanents table
       <index> - <object already depersisted>
     self metatable:
-      __gc - ~LuaPersistBasicReader (via l_crude_gc)
+      __gc - ~lua_persist_basic_reader (via l_crude_gc)
       <N> - <userdata to have second __depersist call>
 */
-class LuaPersistBasicReader : public LuaPersistReader
+class lua_persist_basic_reader : public lua_persist_reader
 {
 public:
-    LuaPersistBasicReader(lua_State *L)
-        : m_L(L),
-        m_stringBuffer()
+    lua_persist_basic_reader(lua_State *L)
+        : L(L),
+        string_buffer()
     { }
 
-    ~LuaPersistBasicReader()
+    ~lua_persist_basic_reader()
     { }
 
-    lua_State* getStack() override
+    lua_State* get_stack() override
     {
-        return m_L;
+        return L;
     }
 
-    void setError(const char *sError) override
+    void set_error(const char *sError) override
     {
-        m_bHadError = true;
-        m_stringBuffer.assign(sError);
+        had_error = true;
+        string_buffer.assign(sError);
     }
 
     void init(const uint8_t *pData, size_t iLength)
     {
-        lua_State *L = m_L;
-        m_pData = pData;
-        m_iDataBufferLength = iLength;
-        m_iNextIndex = 1;
-        m_bHadError = false;
+        data = pData;
+        data_buffer_size = iLength;
+        next_index = 1;
+        had_error = false;
         lua_createtable(L, 32, 0); // Environment
         lua_pushvalue(L, 2);
         lua_rawseti(L, -2, 0);
@@ -759,20 +748,19 @@ public:
         lua_rawseti(L, -2, -3);
         lua_setfenv(L, 1);
         lua_createtable(L, 0, 1); // Metatable
-        luaT_pushcclosure(L, l_crude_gc<LuaPersistBasicReader>, 0);
+        luaT_pushcclosure(L, l_crude_gc<lua_persist_basic_reader>, 0);
         lua_setfield(L, -2, "__gc");
         lua_setmetatable(L, 1);
     }
 
-    bool readStackObject() override
+    bool read_stack_object() override
     {
         uint64_t iIndex;
-        if(!readVUInt(iIndex))
+        if(!read_uint(iIndex))
         {
-            setError("Expected stack object");
+            set_error("Expected stack object");
             return false;
         }
-        lua_State *L = m_L;
         if(lua_type(L, 1) != LUA_TTABLE)
         {
             // Ensure that index #1 is self environment
@@ -791,7 +779,7 @@ public:
             }
             if(lua_isnil(L, -1))
             {
-                setError("Cycle while depersisting permanent object key or userdata metatable");
+                set_error("Cycle while depersisting permanent object key or userdata metatable");
                 return false;
             }
         }
@@ -804,18 +792,18 @@ public:
                 lua_pushnil(L);
                 break;
             case PERSIST_TPERMANENT: {
-                uint64_t iOldIndex = m_iNextIndex;
-                ++m_iNextIndex; // Temporary marker
+                uint64_t iOldIndex = next_index;
+                ++next_index; // Temporary marker
                 lua_rawgeti(L, 1, 0); // Permanents table
-                if(!readStackObject())
+                if(!read_stack_object())
                     return false;
                 lua_gettable(L, -2);
                 lua_replace(L, -2);
                 // Replace marker with actual object
-                uint64_t iNewIndex = m_iNextIndex;
-                m_iNextIndex = iOldIndex;
-                saveStackObject();
-                m_iNextIndex = iNewIndex;
+                uint64_t iNewIndex = next_index;
+                next_index = iOldIndex;
+                save_stack_object();
+                next_index = iNewIndex;
                 break; }
             case LUA_TBOOLEAN:
                 lua_pushboolean(L, 0);
@@ -825,71 +813,71 @@ public:
                 break;
             case LUA_TSTRING: {
                 size_t iLength;
-                if(!readVUInt(iLength))
+                if(!read_uint(iLength))
                     return false;
-                if(!readByteStream(m_stringBuffer, iLength))
+                if(!read_byte_stream(string_buffer, iLength))
                     return false;
-                lua_pushlstring(L, m_stringBuffer.c_str(), m_stringBuffer.length());
-                saveStackObject();
+                lua_pushlstring(L, string_buffer.c_str(), string_buffer.length());
+                save_stack_object();
                 break; }
             case LUA_TTABLE:
                 lua_newtable(L);
-                saveStackObject();
+                save_stack_object();
                 if(!lua_checkstack(L, 8))
                     return false;
-                if(!readTableContents())
+                if(!read_table_contents())
                     return false;
                 break;
             case PERSIST_TTABLE_WITH_META:
                 lua_newtable(L);
-                saveStackObject();
+                save_stack_object();
                 if(!lua_checkstack(L, 8))
                     return false;
-                if(!readStackObject())
+                if(!read_stack_object())
                     return false;
                 lua_setmetatable(L, -2);
-                if(!readTableContents())
+                if(!read_table_contents())
                     return false;
                 break;
             case LUA_TNUMBER: {
                 double fValue;
-                if(!readByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double)))
+                if(!read_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(double)))
                     return false;
                 lua_pushnumber(L, fValue);
                 break; }
             case LUA_TFUNCTION: {
                 if(!lua_checkstack(L, 8))
                     return false;
-                uint64_t iOldIndex = m_iNextIndex;
-                ++m_iNextIndex; // Temporary marker
-                if(!readStackObject())
+                uint64_t iOldIndex = next_index;
+                ++next_index; // Temporary marker
+                if(!read_stack_object())
                     return false;
                 lua_call(L, 0, 2);
                 // Replace marker with closure
-                uint64_t iNewIndex = m_iNextIndex;
-                m_iNextIndex = iOldIndex;
-                saveStackObject();
-                m_iNextIndex = iNewIndex;
+                uint64_t iNewIndex = next_index;
+                next_index = iOldIndex;
+                save_stack_object();
+                next_index = iNewIndex;
                 // Set upvalues
                 lua_insert(L, -2);
                 int iNups, i;
-                if(!readVUInt(iNups))
+                if(!read_uint(iNups))
                     return false;
                 size_t iIDSize;
-                if(!readVUInt(iIDSize))
+                if(!read_uint(iIDSize))
                     return false;
                 for(i = 0; i < iNups; ++i)
                 {
-                    if(!readStackObject())
+                    if(!read_stack_object())
                         return false;
                     // For now, just skip over the upvalue IDs. In the future,
                     // the ID may be used to rejoin shared upvalues.
-                    if(!readByteStream(nullptr, iIDSize))
+                    if(!read_byte_stream(nullptr, iIDSize))
                         return false;
                 }
                 lua_call(L, iNups, 0);
                 // Read environment
-                if(!readStackObject())
+                if(!read_stack_object())
                         return false;
                 lua_setfenv(L, -2);
                 break; }
@@ -897,10 +885,10 @@ public:
                 if(!lua_checkstack(L, 8))
                     return false;
 
-                uint64_t iOldIndex = m_iNextIndex;
-                ++m_iNextIndex; // Temporary marker
+                uint64_t iOldIndex = next_index;
+                ++next_index; // Temporary marker
                 int iNups;
-                if(!readVUInt(iNups))
+                if(!read_uint(iNups))
                     return false;
                 if(iNups == 0)
                     lua_pushliteral(L, "return function() end,");
@@ -912,11 +900,11 @@ public:
                     {
                         if(i != 0)
                             lua_pushliteral(L, ",");
-                        if(!readStackObject())
+                        if(!read_stack_object())
                             return false;
                         if(lua_type(L, -1) != LUA_TSTRING)
                         {
-                            setError("Upvalue name not a string");
+                            set_error("Upvalue name not a string");
                             return false;
                         }
                     }
@@ -927,7 +915,7 @@ public:
                     lua_concat(L, 5);
                 }
                 // Fetch name and then lookup filename and code
-                if(!readStackObject())
+                if(!read_stack_object())
                     return false;
                 lua_pushliteral(L, "@");
 
@@ -938,7 +926,7 @@ public:
 
                 if(lua_isnil(L, -1))
                 {
-                    setError(lua_pushfstring(L, "Unable to depersist prototype"
+                    set_error(lua_pushfstring(L, "Unable to depersist prototype"
                         " \'%s\'", lua_tostring(L, -3)));
                     return false;
                 }
@@ -950,10 +938,10 @@ public:
                 lua_replace(L, -2);
                 lua_remove(L, -3);
                 // Construct the closure factory
-                LoadMultiBuffer_t ls;
+                load_multi_buffer ls;
                 ls.s[0] = lua_tolstring(L, -3, &ls.i[0]);
                 ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
-                if(luaT_load(L, LoadMultiBuffer_t::load_fn, &ls, lua_tostring(L, -2), "bt") != 0)
+                if(luaT_load(L, load_multi_buffer::load_fn, &ls, lua_tostring(L, -2), "bt") != 0)
                 {
                     // Should never happen
                     lua_error(L);
@@ -962,31 +950,31 @@ public:
                 lua_replace(L, -4);
                 lua_pop(L, 2);
                 // Replace marker with closure factory
-                uint64_t iNewIndex = m_iNextIndex;
-                m_iNextIndex = iOldIndex;
-                saveStackObject();
-                m_iNextIndex = iNewIndex;
+                uint64_t iNewIndex = next_index;
+                next_index = iOldIndex;
+                save_stack_object();
+                next_index = iNewIndex;
                 break; }
             case LUA_TUSERDATA: {
                 bool bHasSetMetatable = false;
-                uint64_t iOldIndex = m_iNextIndex;
-                ++m_iNextIndex; // Temporary marker
+                uint64_t iOldIndex = next_index;
+                ++next_index; // Temporary marker
                 // Read metatable
-                if(!readStackObject())
+                if(!read_stack_object())
                     return false;
                 lua_getfield(L, -1, "__depersist_size");
                 if(!lua_isnumber(L, -1))
                 {
-                    setError("Userdata missing __depersist_size metafield");
+                    set_error("Userdata missing __depersist_size metafield");
                     return false;
                 }
                 lua_newuserdata(L, (size_t)lua_tonumber(L, -1));
                 lua_replace(L, -2);
                 // Replace marker with userdata
-                uint64_t iNewIndex = m_iNextIndex;
-                m_iNextIndex = iOldIndex;
-                saveStackObject();
-                m_iNextIndex = iNewIndex;
+                uint64_t iNewIndex = next_index;
+                next_index = iOldIndex;
+                save_stack_object();
+                next_index = iNewIndex;
                 // Perform immediate initialisation
                 lua_getfield(L, -2, "__pre_depersist");
                 if(lua_isnil(L, -1))
@@ -1006,7 +994,7 @@ public:
                     lua_call(L, 1, 0);
                 }
                 // Read environment
-                if(!readStackObject())
+                if(!read_stack_object())
                     return false;
                 lua_setfenv(L, -2);
                 // Set metatable and read the raw data
@@ -1036,17 +1024,17 @@ public:
                 }
                 lua_replace(L, -2);
                 uint64_t iSyncMarker;
-                if(!readVUInt(iSyncMarker))
+                if(!read_uint(iSyncMarker))
                     return false;
                 if(iSyncMarker != 0x42)
                 {
-                    setError("sync fail");
+                    set_error("sync fail");
                     return false;
                 }
                 break; }
             case PERSIST_TINTEGER: {
                 uint16_t iValue;
-                if(!readVUInt(iValue))
+                if(!read_uint(iValue))
                     return false;
                 lua_pushinteger(L, iValue);
                 break; }
@@ -1076,7 +1064,7 @@ public:
                 }
                 lua_pushliteral(L, "\'");
                 lua_concat(L, 3);
-                setError(lua_tostring(L, -1));
+                set_error(lua_tostring(L, -1));
                 lua_pop(L, 1);
                 return false;
             }
@@ -1084,36 +1072,34 @@ public:
         return true;
     }
 
-    void saveStackObject()
+    void save_stack_object()
     {
-        lua_State *L = m_L;
-        if(m_iNextIndex < (uint64_t)INT_MAX)
+        if(next_index < (uint64_t)INT_MAX)
         {
             lua_pushvalue(L, -1);
-            lua_rawseti(L, 1, (int)m_iNextIndex);
+            lua_rawseti(L, 1, (int)next_index);
         }
         else
         {
-            lua_pushnumber(L, (lua_Number)m_iNextIndex);
+            lua_pushnumber(L, (lua_Number)next_index);
             lua_pushvalue(L, -2);
             lua_rawset(L, 1);
         }
-        ++m_iNextIndex;
+        ++next_index;
     }
 
-    bool readTableContents()
+    bool read_table_contents()
     {
-        lua_State *L = m_L;
         while(true)
         {
-            if(!readStackObject())
+            if(!read_stack_object())
                 return false;
             if(lua_type(L, -1) == LUA_TNIL)
             {
                 lua_pop(L, 1);
                 return true;
             }
-            if(!readStackObject())
+            if(!read_stack_object())
                 return false;
             // NB: lua_rawset used rather than lua_settable to avoid invoking
             // any metamethods, as they may not have been designed to be called
@@ -1124,12 +1110,11 @@ public:
 
     bool finish()
     {
-        lua_State *L = m_L;
 
         // Ensure that all data has been read
-        if(m_iDataBufferLength != 0)
+        if(data_buffer_size != 0)
         {
-            setError(lua_pushfstring(L, "%d bytes of data remain unpersisted", (int)m_iDataBufferLength));
+            set_error(lua_pushfstring(L, "%d bytes of data remain unpersisted", (int)data_buffer_size));
             return false;
         }
 
@@ -1157,60 +1142,60 @@ public:
         return true;
     }
 
-    bool readByteStream(uint8_t *pBytes, size_t iCount) override
+    bool read_byte_stream(uint8_t *pBytes, size_t iCount) override
     {
-        if(iCount > m_iDataBufferLength)
+        if(iCount > data_buffer_size)
         {
-            setError(lua_pushfstring(m_L,
+            set_error(lua_pushfstring(L,
                 "End of input reached while attempting to read %d byte%s",
                 (int)iCount, iCount == 1 ? "" : "s"));
-            lua_pop(m_L, 1);
+            lua_pop(L, 1);
             return false;
         }
 
         if(pBytes != nullptr)
-            std::memcpy(pBytes, m_pData, iCount);
+            std::memcpy(pBytes, data, iCount);
 
-        m_pData += iCount;
-        m_iDataBufferLength -= iCount;
+        data += iCount;
+        data_buffer_size -= iCount;
         return true;
     }
 
-    bool readByteStream(std::string& bytes, size_t iCount)
+    bool read_byte_stream(std::string& bytes, size_t iCount)
     {
-        if(iCount > m_iDataBufferLength) {
-            setError(lua_pushfstring(m_L,
+        if(iCount > data_buffer_size) {
+            set_error(lua_pushfstring(L,
                 "End of input reached while attempting to read %d byte%s",
                 (int)iCount, iCount == 1 ? "" : "s"));
-            lua_pop(m_L, 1);
+            lua_pop(L, 1);
             return false;
         }
 
-        bytes.assign(reinterpret_cast<const char*>(m_pData), iCount);
+        bytes.assign(reinterpret_cast<const char*>(data), iCount);
 
-        m_pData += iCount;
-        m_iDataBufferLength -= iCount;
+        data += iCount;
+        data_buffer_size -= iCount;
         return true;
     }
 
-    const uint8_t* getPointer() {return m_pData;}
-    uint64_t getObjectCount() {return m_iNextIndex;}
+    const uint8_t* get_pointer() {return data;}
+    uint64_t get_object_count() {return next_index;}
 
-    const char* getError()
+    const char* get_error()
     {
-        if(m_bHadError)
-            return m_stringBuffer.c_str();
+        if(had_error)
+            return string_buffer.c_str();
         else
             return nullptr;
     }
 
 private:
-    lua_State *m_L;
-    uint64_t m_iNextIndex;
-    const uint8_t* m_pData;
-    size_t m_iDataBufferLength;
-    std::string m_stringBuffer;
-    bool m_bHadError;
+    lua_State *L;
+    uint64_t next_index;
+    const uint8_t* data;
+    size_t data_buffer_size;
+    std::string string_buffer;
+    bool had_error;
 };
 
 static int l_dump_toplevel(lua_State *L)
@@ -1218,10 +1203,10 @@ static int l_dump_toplevel(lua_State *L)
     luaL_checktype(L, 2, LUA_TTABLE);
     lua_settop(L, 2);
     lua_pushvalue(L, 1);
-    LuaPersistBasicWriter *pWriter = new (lua_newuserdata(L, sizeof(LuaPersistBasicWriter))) LuaPersistBasicWriter(L);
+    lua_persist_basic_writer *pWriter = new (lua_newuserdata(L, sizeof(lua_persist_basic_writer))) lua_persist_basic_writer(L);
     lua_replace(L, 1);
     pWriter->init();
-    pWriter->writeStackObject(3);
+    pWriter->write_stack_object(3);
     return pWriter->finish();
 }
 
@@ -1232,16 +1217,16 @@ static int l_load_toplevel(lua_State *L)
     luaL_checktype(L, 2, LUA_TTABLE);
     lua_settop(L, 2);
     lua_pushvalue(L, 1);
-    LuaPersistBasicReader *pReader = new (lua_newuserdata(L, sizeof(LuaPersistBasicReader))) LuaPersistBasicReader(L);
+    lua_persist_basic_reader *pReader = new (lua_newuserdata(L, sizeof(lua_persist_basic_reader))) lua_persist_basic_reader(L);
     lua_replace(L, 1);
     pReader->init(pData, iDataLength);
-    if(!pReader->readStackObject() || !pReader->finish())
+    if(!pReader->read_stack_object() || !pReader->finish())
     {
-        int iNumObjects = (int)pReader->getObjectCount();
-        int iNumBytes = (int)(pReader->getPointer() - pData);
+        int iNumObjects = (int)pReader->get_object_count();
+        int iNumBytes = (int)(pReader->get_pointer() - pData);
         lua_pushnil(L);
         lua_pushfstring(L, "%s after %d objects (%d bytes)",
-            pReader->getError() ? pReader->getError() : "Error while depersisting",
+            pReader->get_error() ? pReader->get_error() : "Error while depersisting",
             iNumObjects, iNumBytes);
         return 2;
     }
@@ -1251,7 +1236,7 @@ static int l_load_toplevel(lua_State *L)
     }
 }
 
-static int CalculateLineNumber(const char *sStart, const char *sPosition)
+static int calculate_line_number(const char *sStart, const char *sPosition)
 {
     int iLine = 1;
     for(; sStart != sPosition; ++sStart)
@@ -1275,7 +1260,7 @@ static int CalculateLineNumber(const char *sStart, const char *sPosition)
     return iLine;
 }
 
-static const char* FindFunctionEnd(lua_State *L, const char* sStart)
+static const char* find_function_end(lua_State *L, const char* sStart)
 {
     const char* sEnd = sStart;
     while(sEnd)
@@ -1284,12 +1269,12 @@ static const char* FindFunctionEnd(lua_State *L, const char* sStart)
         if(sEnd)
         {
             sEnd += 3;
-            LoadMultiBuffer_t ls;
+            load_multi_buffer ls;
             ls.s[0] =        "return function";
             ls.i[0] = sizeof("return function") - 1;
             ls.s[1] = sStart;
             ls.i[1] = sEnd - sStart;
-            if(luaT_load(L, LoadMultiBuffer_t::load_fn, &ls, "", "bt") == 0)
+            if(luaT_load(L, load_multi_buffer::load_fn, &ls, "", "bt") == 0)
             {
                 lua_pop(L, 1);
                 return sEnd;
@@ -1377,9 +1362,9 @@ static int l_persist_dofile(lua_State *L)
         const char *sNameEnd = std::strstr(sPosition, "]]");
         if(sNameEnd)
         {
-            int iLineNumber = CalculateLineNumber(sFile, sNameEnd);
+            int iLineNumber = calculate_line_number(sFile, sNameEnd);
             const char *sFunctionArgs = std::strchr(sNameEnd + 2, '(');
-            const char *sFunctionEnd = FindFunctionEnd(L, sFunctionArgs);
+            const char *sFunctionEnd = find_function_end(L, sFunctionArgs);
             if((sNameEnd - sPosition) == 1 && *sPosition == ':')
             {
                 // --[[persistable::]] means take the existing name of the function

@@ -31,7 +31,7 @@ SOFTWARE.
     See game string table section 39 for proof. Section 1 also has
     names in this order.
 */
-enum class THObjectType : uint8_t
+enum class object_type : uint8_t
 {
     no_object = 0,
     desk = 1,
@@ -104,7 +104,7 @@ enum class THObjectType : uint8_t
 //! Map flags and object type
 //! The point of storing the object type here is to allow pathfinding code
 //! to use object types as pathfinding goals.
-struct th_map_node_flags
+struct map_tile_flags
 {
     enum class key : uint32_t {
          passable_mask = 1 << 0,
@@ -152,37 +152,37 @@ struct th_map_node_flags
     bool buildable_s; //!< Can build on the south side of the tile
     bool buildable_w; //!< Can build on the west side of the tile
 
-    //! Convert the given uint32_t reprentation of the map node flags
-    //! to a th_map_node_flags instance.
-    th_map_node_flags& operator =(uint32_t raw);
+    //! Convert the given uint32_t reprentation of the map_tile flags
+    //! to a map_tile_flags instance.
+    map_tile_flags& operator =(uint32_t raw);
 
     //! Get/set the flag with the given key
-    bool& operator[] (th_map_node_flags::key key);
+    bool& operator[] (map_tile_flags::key key);
 
     //! Get the flag with the given key
-    const bool& operator[](th_map_node_flags::key key) const;
+    const bool& operator[](map_tile_flags::key key) const;
 
-    //! Convert th_map_node_flags into it's uint32_t representation
+    //! Convert map_tile_flags into it's uint32_t representation
     operator uint32_t() const;
 };
 
-enum class THMapTemperatureDisplay {
+enum class temperature_theme {
     red,         //!< Default warmth colouring (red gradients)
-    multiColour, //!< Different colours (blue, green, red)
-    yellowRed    //!< Gradients of yellow, orange, and red
+    multi_colour, //!< Different colours (blue, green, red)
+    yellow_red    //!< Gradients of yellow, orange, and red
 };
 
-struct THMapNode : public THLinkList
+struct map_tile : public link_list
 {
-    THMapNode();
-    ~THMapNode();
+    map_tile();
+    ~map_tile();
 
-    // Linked list for entities rendered at this node
+    // Linked list for entities rendered at this tile
     // THLinkList::pPrev (will always be nullptr)
     // THLinkList::pNext
 
     //! Linked list for entities rendered in an early (right-to-left) pass
-    THLinkList oEarlyEntities;
+    link_list oEarlyEntities;
 
     //! Block tiles for rendering
     //! For each tile, the lower byte is the index in the sprite sheet, and the
@@ -209,13 +209,13 @@ struct THMapNode : public THLinkList
     uint16_t aiTemperature[2];
 
     //! Flags for information and object type
-    th_map_node_flags flags;
+    map_tile_flags flags;
 
-    //! objects in this node
-    std::list<THObjectType> objects;
+    //! objects in this tile
+    std::list<object_type> objects;
 };
 
-class THSpriteSheet;
+class sprite_sheet;
 
 //! Prototype for object callbacks from THMap::loadFromTHFile
 /*!
@@ -226,20 +226,20 @@ class THSpriteSheet;
       * The object flags present in the map data. The meaning of this
         value is left unspecified.
 */
-typedef void (*THMapLoadObjectCallback_t)(void*, int, int, THObjectType, uint8_t);
+typedef void (*map_load_object_callback_fn)(void*, int, int, object_type, uint8_t);
 
-class THMapOverlay;
+class map_overlay;
 
-class THMap
+class level_map
 {
 public:
-    THMap();
-    ~THMap();
+    level_map();
+    ~level_map();
 
-    bool setSize(int iWidth, int iHeight);
-    bool loadBlank();
-    bool loadFromTHFile(const uint8_t* pData, size_t iDataLength,
-                        THMapLoadObjectCallback_t fnObjectCallback,
+    bool set_size(int iWidth, int iHeight);
+    bool load_blank();
+    bool load_from_th_file(const uint8_t* pData, size_t iDataLength,
+                        map_load_object_callback_fn fnObjectCallback,
                         void* pCallbackToken);
 
     void save(std::string filename);
@@ -249,42 +249,42 @@ public:
         The sprites for map floor tiles, wall tiles, and map decorators
         all come from the given sheet.
     */
-    void setBlockSheet(THSpriteSheet* pSheet);
+    void set_block_sheet(sprite_sheet* pSheet);
 
     //! Set the draw flags on all wall blocks
     /*!
         This is typically called with THDF_Alpha50 to draw walls transparently,
         or with 0 to draw them opaque again.
     */
-    void setAllWallDrawFlags(uint8_t iFlags);
+    void set_all_wall_draw_flags(uint8_t iFlags);
 
-    void updatePathfinding();
-    void updateShadows();
-    void setTemperatureDisplay(THMapTemperatureDisplay eTempDisplay);
-    inline THMapTemperatureDisplay getTemperatureDisplay() const {return m_eTempDisplay;}
-    void updateTemperatures(uint16_t iAirTemperature,
+    void update_pathfinding();
+    void update_shadows();
+    void set_temperature_display(temperature_theme eTempDisplay);
+    inline temperature_theme get_temperature_display() const {return current_temperature_theme;}
+    void update_temperatures(uint16_t iAirTemperature,
                             uint16_t iRadiatorTemperature);
 
     //! Get the map width (in tiles)
-    inline int getWidth()  const {return m_iWidth;}
+    inline int get_width()  const {return width;}
 
     //! Get the map height (in tiles)
-    inline int getHeight() const {return m_iHeight;}
+    inline int get_height() const {return height;}
 
     //! Get the number of plots of land in this map
-    inline int getParcelCount() const {return m_iParcelCount - 1;}
+    inline int get_parcel_count() const {return parcel_count - 1;}
 
-    inline int getPlayerCount() const {return m_iPlayerCount;}
+    inline int get_player_count() const {return player_count;}
 
-    void setPlayerCount(int count);
+    void set_player_count(int count);
 
-    bool getPlayerCameraTile(int iPlayer, int* pX, int* pY) const;
-    bool getPlayerHeliportTile(int iPlayer, int* pX, int* pY) const;
-    void setPlayerCameraTile(int iPlayer, int iX, int iY);
-    void setPlayerHeliportTile(int iPlayer, int iX, int iY);
+    bool get_player_camera_tile(int iPlayer, int* pX, int* pY) const;
+    bool get_player_heliport_tile(int iPlayer, int* pX, int* pY) const;
+    void set_player_camera_tile(int iPlayer, int iX, int iY);
+    void set_player_heliport_tile(int iPlayer, int iX, int iY);
 
     //! Get the number of tiles inside a given parcel
-    int getParcelTileCount(int iParcelId) const;
+    int get_parcel_tile_count(int iParcelId) const;
 
     //! Change the owner of a particular parcel
     /*!
@@ -296,7 +296,7 @@ public:
         \return vSplitTiles A vector that contains tile coordinates where
             iParcelId is adjacent to another part of the hospital.
     */
-    std::vector<std::pair<int, int>> setParcelOwner(int iParcelId, int iOwner);
+    std::vector<std::pair<int, int>> set_parcel_owner(int iParcelId, int iOwner);
 
     //! Get the owner of a particular parcel of land
     /*!
@@ -304,7 +304,7 @@ public:
         \return 0 if the parcel is unowned, otherwise the number of the owning
             player.
     */
-    int getParcelOwner(int iParcelId) const;
+    int get_parcel_owner(int iParcelId) const;
 
     //! Query if two parcels are directly connected
     /*!
@@ -313,7 +313,7 @@ public:
         \return true if there is a path between the two parcels which does not
             go into any other parcels. false otherwise.
     */
-    bool areParcelsAdjacent(int iParcel1, int iParcel2);
+    bool are_parcels_adjacent(int iParcel1, int iParcel2);
 
     //! Query if a given player is in a position to purchase a given parcel
     /*!
@@ -325,7 +325,7 @@ public:
             connected to a parcel already owned by the given player. false
             otherwise.
     */
-    bool isParcelPurchasable(int iParcelId, int iPlayer);
+    bool is_parcel_purchasable(int iParcelId, int iPlayer);
 
     //! Draw the map (and any attached animations)
     /*!
@@ -335,34 +335,34 @@ public:
         co-ordinates - they are not world (tile) co-ordinates, nor (relative)
         screen co-ordinates.
     */
-    void draw(THRenderTarget* pCanvas, int iScreenX, int iScreenY, int iWidth,
+    void draw(render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
               int iHeight, int iCanvasX, int iCanvasY) const;
 
     //! Perform a hit-test against the animations attached to the map
     /*!
         If there is an animation at world pixel co-ordinates (iTestX, iTestY),
         then it is returned. Otherwise nullptr is returned.
-        To perform a hit-test using world (tile) co-ordinates, get the node
-        itself and query the top 8 bits of THMapNode::iFlags, or traverse the
-        node's animation lists.
+        To perform a hit-test using world (tile) co-ordinates, get the tile
+        itself and query the top 8 bits of map_tile::flags, or traverse the
+        tile's animation lists.
     */
-    THDrawable* hitTest(int iTestX, int iTestY) const;
+    drawable* hit_test(int iTestX, int iTestY) const;
 
     // When using the unchecked versions, the map co-ordinates MUST be valid.
     // When using the normal versions, nullptr is returned for invalid co-ords.
-          THMapNode* getNode(int iX, int iY);
-    const THMapNode* getNode(int iX, int iY) const;
-    const THMapNode* getOriginalNode(int iX, int iY) const;
-          THMapNode* getNodeUnchecked(int iX, int iY);
-    const THMapNode* getNodeUnchecked(int iX, int iY) const;
-    const THMapNode* getOriginalNodeUnchecked(int iX, int iY) const;
+          map_tile* get_tile(int iX, int iY);
+    const map_tile* get_tile(int iX, int iY) const;
+    const map_tile* get_original_tile(int iX, int iY) const;
+          map_tile* get_tile_unchecked(int iX, int iY);
+    const map_tile* get_tile_unchecked(int iX, int iY) const;
+    const map_tile* get_original_tile_unchecked(int iX, int iY) const;
 
-    uint16_t getNodeTemperature(const THMapNode* pNode) const;
-    int getNodeOwner(const THMapNode* pNode) const;
+    uint16_t get_tile_temperature(const map_tile* pNode) const;
+    int get_tile_owner(const map_tile* pNode) const;
 
     //! Convert world (tile) co-ordinates to absolute screen co-ordinates
     template <typename T>
-    static inline void worldToScreen(T& x, T& y)
+    static inline void world_to_screen(T& x, T& y)
     {
         T x_(x);
         x = (T)32 * (x_ - y);
@@ -371,92 +371,93 @@ public:
 
     //! Convert absolute screen co-ordinates to world (tile) co-ordinates
     template <typename T>
-    static inline void screenToWorld(T& x, T& y)
+    static inline void screen_to_world(T& x, T& y)
     {
         T x_(x);
         x = y / (T)32 + x_ / (T)64;
         y = y / (T)32 - x_ / (T)64;
     }
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
-    void setOverlay(THMapOverlay *pOverlay, bool bTakeOwnership);
+    void set_overlay(map_overlay *pOverlay, bool bTakeOwnership);
 
 private:
-    THDrawable* _hitTestDrawables(THLinkList* pListStart, int iXs, int iYs,
-                                  int iTestX, int iTestY) const;
-    void _readTileIndex(const uint8_t* pData, int& iX, int &iY) const;
-    void _writeTileIndex(uint8_t* pData, int iX, int iY) const;
-    int _getParcelTileCount(int iParcelId) const;
+    drawable* hit_test_drawables(link_list* pListStart, int iXs, int iYs,
+                                 int iTestX, int iTestY) const;
+    void read_tile_index(const uint8_t* pData, int& iX, int &iY) const;
+    void write_tile_index(uint8_t* pData, int iX, int iY) const;
 
-    //! Calculate a weighted impact of a neighbour node on the temperature of the current node.
-    //! \param iNeighbourSum Incremented by the temperature of the node multiplied by the weight of the connection.
-    //! \param canTravel A node flag indicating whether travel between this node and it's neighbour is allowed.
-    //! \param relative_idx The index of the neighbour node, relative to this node into m_pCells.
-    //! \param pNode A pointer to the current node being tested.
-    //! \param prevTemp The array index into THMapNode::aiTemperature that currently stores the temperature of the node (prior to this calculation).
+    //! Calculate a weighted impact of a neighbour tile on the temperature of the current tile.
+    //! \param iNeighbourSum Incremented by the temperature of the tile multiplied by the weight of the connection.
+    //! \param canTravel A tile flag indicating whether travel between this tile and it's neighbour is allowed.
+    //! \param relative_idx The index of the neighbour tile, relative to this tile into cells.
+    //! \param pNode A pointer to the current tile being tested.
+    //! \param prevTemp The array index into map_tile::temperature that currently stores the temperature of the tile (prior to this calculation).
     //! \return The weight of the connection, 0 if there is no neighbour, 1 through walls, and 4 through air.
-    uint32_t thermalNeighbour(uint32_t &iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx, THMapNode* pNode, int prevTemp) const;
+    uint32_t thermal_neighbour(uint32_t &iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx, map_tile* pNode, int prevTemp) const;
 
     //! Create the adjacency matrix if it doesn't already exist
-    void _makeAdjacencyMatrix();
+    void make_adjacency_matrix();
 
     //! Create the purchasability matrix if it doesn't already exist
-    void _makePurchaseMatrix();
+    void make_purchase_matrix();
 
     //! If it exists, update the purchasability matrix.
-    void _updatePurchaseMatrix();
+    void update_purchase_matrix();
+    
+    int count_parcel_tiles(int iParcelId) const;
 
-    THMapNode* m_pCells;
-    THMapNode* m_pOriginalCells; // Cells at map load time, before any changes
-    THSpriteSheet* m_pBlocks;
-    THMapOverlay* m_pOverlay;
-    bool m_bOwnOverlay;
-    int* m_pPlotOwner; // 0 for unowned, 1 for player 1, etc.
-    int m_iWidth;
-    int m_iHeight;
-    int m_iPlayerCount;
-    int m_aiInitialCameraX[4];
-    int m_aiInitialCameraY[4];
-    int m_aiHeliportX[4];
-    int m_aiHeliportY[4];
-    int m_iParcelCount;
-    int m_iCurrentTemperatureIndex;
-    THMapTemperatureDisplay m_eTempDisplay;
-    int* m_pParcelTileCounts;
+    map_tile* cells;
+    map_tile* original_cells; // Cells at map load time, before any changes
+    sprite_sheet* blocks;
+    map_overlay* overlay;
+    bool owns_overlay;
+    int* plot_owner; // 0 for unowned, 1 for player 1, etc.
+    int width;
+    int height;
+    int player_count;
+    int initial_camera_x[4];
+    int initial_camera_y[4];
+    int heliport_x[4];
+    int heliport_y[4];
+    int parcel_count;
+    int current_temperature_index;
+    temperature_theme current_temperature_theme;
+    int* parcel_tile_counts;
 
     // 2D symmetric array giving true if there is a path between two parcels
     // which doesn't go into any other parcels.
-    bool* m_pParcelAdjacencyMatrix;
+    bool* parcel_adjacency_matrix;
 
     // 4 by N matrix giving true if player can purchase parcel.
-    bool* m_pPurchasableMatrix;
+    bool* purchasable_matrix;
 };
 
-enum class eTHMapScanlineIteratorDirection {
+enum class map_scanline_iterator_direction {
     forward = 2,
     backward = 0,
 };
 
-//! Utility class for iterating over map nodes within a screen rectangle
+//! Utility class for iterating over map tiles within a screen rectangle
 /*!
-    To easily iterate over the map nodes which might draw something within a
+    To easily iterate over the map tiles which might draw something within a
     certain rectangle of screen space, an instance of this class can be used.
 
     By default, it iterates by scanline, top-to-bottom, and then left-to-right
     within each scanline. Alternatively, by passing ScanlineBackward to the
     constructor, it will iterate bottom-to-top. Within a scanline, to visit
-    nodes right-to-left, wait until isLastOnScanline() returns true, then use
+    tiles right-to-left, wait until isLastOnScanline() returns true, then use
     an instance of THMapScanlineIterator.
 */
-class THMapNodeIterator
+class map_tile_iterator
 {
 public:
-    THMapNodeIterator();
+    map_tile_iterator();
 
     /*!
-        @arg pMap The map whose nodes should be iterated
+        @arg pMap The map whose tiles should be iterated
         @arg iScreenX The X co-ordinate of the top-left corner of the
             screen-space rectangle to iterate.
         @arg iScreenY The Y co-ordinate of the top-left corner of the
@@ -466,107 +467,110 @@ public:
         @arg eScanlineDirection The direction in which to iterate scanlines;
             forward for top-to-bottom, backward for bottom-to-top.
     */
-    THMapNodeIterator(const THMap *pMap, int iScreenX, int iScreenY,
+    map_tile_iterator(const level_map*pMap, int iScreenX, int iScreenY,
         int iWidth, int iHeight,
-        eTHMapScanlineIteratorDirection eScanlineDirection = eTHMapScanlineIteratorDirection::forward);
+        map_scanline_iterator_direction eScanlineDirection = map_scanline_iterator_direction::forward);
 
-    //! Returns false iff the iterator has exhausted its nodes
-    inline operator bool () const {return m_pNode != nullptr;}
+    //! Returns false iff the iterator has exhausted its tiles
+    inline operator bool () const {return tile != nullptr;}
 
-    //! Advances the iterator to the next node
-    inline THMapNodeIterator& operator ++ ();
+    //! Advances the iterator to the next tile
+    inline map_tile_iterator& operator ++ ();
 
-    //! Accessor for the current node
-    inline const THMapNode* operator -> () const {return m_pNode;}
+    //! Accessor for the current tile
+    inline const map_tile* operator -> () const {return tile;}
 
-    //! Get the X position of the node relative to the top-left corner of the screen-space rectangle
-    inline int x() const {return m_iXs;}
+    //! Get the X position of the tile relative to the top-left corner of the screen-space rectangle
+    inline int tile_x_position_on_screen() const {return x_relative_to_screen;}
 
-    //! Get the Y position of the node relative to the top-left corner of the screen-space rectangle
-    inline int y() const {return m_iYs;}
+    //! Get the Y position of the tile relative to the top-left corner of the screen-space rectangle
+    inline int tile_y_position_on_screen() const {return y_relative_to_screen;}
 
-    inline int nodeX() const {return m_iX;}
-    inline int nodeY() const {return m_iY;}
+    inline int tile_x() const {return world_x;}
+    inline int tile_y() const {return world_y;}
 
-    inline const THMap *getMap() {return m_pMap;}
-    inline const THMapNode *getMapNode() {return m_pNode;}
-    inline int getScanlineCount() { return m_iScanlineCount;}
-    inline int getNodeStep() {return (static_cast<int>(m_eDirection) - 1) * (1 - m_pMap->getWidth());}
+    inline const level_map *get_map() {return container;}
+    inline const map_tile *get_map_tile() {return tile;}
+    inline int get_scanline_count() { return scanline_count;}
+    inline int get_tile_step() {return (static_cast<int>(direction) - 1) * (1 - container->get_width());}
 
-    //! Returns true iff the next node will be on a different scanline
+    //! Returns true iff the next tile will be on a different scanline
     /*!
         To visit a scanline in right-to-left order, or to revisit a scanline,
         wait until this method returns true, then use a THMapScanlineIterator.
     */
-    inline bool isLastOnScanline() const;
+    inline bool is_last_on_scanline() const;
 
 private:
-    // Maximum extents of the visible parts of a node (pixel distances relative
+    // Maximum extents of the visible parts of a tile (pixel distances relative
     // to the top-most corner of an isometric cell)
     // If set too low, things will disappear when near the screen edge
     // If set too high, rendering will slow down
-    static const int ms_iMarginTop = 150;
-    static const int ms_iMarginLeft = 110;
-    static const int ms_iMarginRight = 110;
-    static const int ms_iMarginBottom = 150;
+    static const int margin_top = 150;
+    static const int margin_left = 110;
+    static const int margin_right = 110;
+    static const int margin_bottom = 150;
 
-    friend class THMapScanlineIterator;
+    friend class map_scanline_iterator;
 
-    const THMapNode* m_pNode;
-    const THMap* m_pMap;
-    int m_iXs;
-    int m_iYs;
-    const int m_iScreenX;
-    const int m_iScreenY;
-    const int m_iScreenWidth;
-    const int m_iScreenHeight;
-    int m_iBaseX;
-    int m_iBaseY;
-    int m_iX;
-    int m_iY;
-    int m_iScanlineCount;
-    eTHMapScanlineIteratorDirection m_eDirection;
+    const map_tile* tile;
+    const level_map* container;
 
-    void _advanceUntilVisible();
+    // TODO: Consider removing these, they are trivial to calculate
+    int x_relative_to_screen;
+    int y_relative_to_screen;
+
+    const int screen_offset_x;
+    const int screen_offset_y;
+    const int screen_width;
+    const int screen_height;
+    int base_x;
+    int base_y;
+    int world_x;
+    int world_y;
+    int scanline_count;
+    map_scanline_iterator_direction direction;
+
+    void advance_until_visible();
 };
 
-//! Utility class for re-iterating a scanline visited by a THMapNodeIterator
-class THMapScanlineIterator
+//! Utility class for re-iterating a scanline visited by a map_tile_iterator
+class map_scanline_iterator
 {
 public:
-    THMapScanlineIterator();
+    map_scanline_iterator();
 
     /*!
-        @arg itrNodes A node iterator which has reached the end of a scanline
+        @arg itrNodes A tile iterator which has reached the end of a scanline
         @arg eDirection The direction in which to iterate the scanline;
             forward for left-to-right, backward for right-to-left.
         @arg iXOffset If given, values returned by x() will be offset by this.
         @arg iYOffset If given, values returned by y() will be offset by this.
     */
-    THMapScanlineIterator(const THMapNodeIterator& itrNodes,
-                          eTHMapScanlineIteratorDirection eDirection,
+    map_scanline_iterator(const map_tile_iterator& itrNodes,
+                          map_scanline_iterator_direction eDirection,
                           int iXOffset = 0, int iYOffset = 0);
 
-    inline operator bool () const {return m_pNode != m_pNodeEnd;}
-    inline THMapScanlineIterator& operator ++ ();
+    inline operator bool () const {return tile != end_tile;}
+    inline map_scanline_iterator& operator ++ ();
 
-    inline const THMapNode* operator -> () const {return m_pNode;}
-    inline int x() const {return m_iXs;}
-    inline int y() const {return m_iYs;}
-    inline const THMapNode* getNextNode()  {return m_pNode + m_iNodeStep;}
-    inline const THMapNode* getPreviousNode() { return m_pNode - m_iNodeStep;}
-    THMapScanlineIterator operator= (const THMapScanlineIterator &iterator);
-    inline const THMapNode* getNode() {return m_pNode;}
+    inline const map_tile* operator -> () const {return tile;}
+    inline int x() const {return x_relative_to_screen;}
+    inline int y() const {return y_relative_to_screen;}
+    inline const map_tile* get_next_tile()  {return tile + tile_step;}
+    inline const map_tile* get_previous_tile() { return tile - tile_step;}
+    map_scanline_iterator operator= (const map_scanline_iterator &iterator);
+    inline const map_tile* get_tile() {return tile;}
 
 private:
-    const THMapNode* m_pNode;
-    const THMapNode* m_pNodeFirst;
-    const THMapNode* m_pNodeEnd;
-    int m_iNodeStep;
-    int m_iXStep;
-    int m_iXs;
-    int m_iYs;
-    int m_takenSteps;
+    const map_tile* tile;
+    const map_tile* first_tile;
+    const map_tile* end_tile;
+    int tile_step;
+    int x_step;
+    int x_relative_to_screen;
+    int y_relative_to_screen;
+    int steps_taken;
 };
 
 #endif // CORSIX_TH_TH_MAP_H_
