@@ -1,4 +1,4 @@
-﻿--[[ Copyright (c) 2018 Erlend Mongstad, Ola Skogrand
+--[[ Copyright (c) 2018 Erlend Mongstad, Ola Skogrand
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -75,7 +75,7 @@ fax = {
     return_to_main_menu = "Gå tilbake til hovedmenyen",
     accept_new_level = "Fortsett til neste nivå",
     decline_new_level = "Fortsett å spille litt til",
-  }
+  },
 }
 letter = {
   dear_player = "Kjære %s",
