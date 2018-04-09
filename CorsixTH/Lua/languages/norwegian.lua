@@ -162,7 +162,7 @@ tooltip = {
   fax = {
     close = "Lukk dette vinduet uten å slette meldingen",
   },
-  
+
   message = {
     button = "Venstreklikk for å lese faksen",
     button_dismiss = "Venstreklikk for å åpne faksen, höyreklikk for å ignorere den",
@@ -188,7 +188,7 @@ tooltip = {
     customise_button = "¨Flere innstillinger", --todo: mer utfyllende beskrivelse? var "More settings you can change to customise your game play experience"
     capture_mouse = "Slå av eller på låsing av musepeker i spillvinduet",
   },
-  
+
   folders_window = { --todo: skrive mer konsekvent på "se etter", "velg" osv.
     browse_font = "Se etter en annen font-fil ( nåværende beliggenhet: %1% )",
     screenshots_location = "Skjermdumper er normalt lagret i en mappe sammen med konfigurasjonsfila. Om du önsker kan du plassere den et annet sted.",
@@ -207,41 +207,41 @@ tooltip = {
     default = "Standard lokasjon",
     no_font_specified = "Ingen font-fil er valgt enda!",
   },
-  
+
   update_window = {
     download = "Gå til nedlastingssiden for den seneste versjonen av CorsixTH",
     ignore = "Ignorer oppdateringen denne gangen. Du vil få en ny beskjed neste gang du starter CorsixTH",
   },
-  
+
   menu_list_window = {
     back = "Lukk dette vinduet",
     name = "Klikk her for å sortere listen etter navn",
     save_date = "Klikk her for å sortere listen etter siste endringer",
   },
-  
+
   save_game_window = {
     save_game = "Overskriv spill %s",
     new_save_game = "Skriv navn på nytt spill",
   },
-  
+
   custom_game_window = {
     free_build = "Huk av denne boksen om du vil spille uten penger og uten bestemte forutsetninger for å vinne eller tape", --todo: finne en bedre oversettelse eller omskrive
     load_selected_level = "Last og spill valgt brett",
     choose_game = "Klikk på et brett for å lese mer om det",
   },
-  
+
   load_game_window = {
     load_game = "Last spill %s",
     load_game_number   = "Last spill %d",
     load_autosave   = "Last autolagring",
   },
-  
+
   calls_dispatcher = {
     assigned = "Denne boksen er huket av om noen er tildet oppdraget.",
     task = "Liste over oppdrag - Klikk på oppdrag for å se lokasjonen",
     close = "Lukk ekspedisjonsvinduet",
   },
-  
+
   cheats_window = {
     close = "Lukk juksekodevinduet",
     cheats = {
@@ -259,9 +259,9 @@ tooltip = {
       earthquake = "Forårsaker et jordskjelv.",
       epidemic = "Lager en smittsom pasient som kan forårsake en epidemi",
       toggle_infected = "Slå av eller på ikoner for smittsomme pasienter for den aktive, oppdagede epidemien",
-    }, 
+    },
   },
-  
+
   customise_window = { --todo kanskje en opprensking her. få det mer konsekvent.
     movies = "Slår av alle videoer i spillet",
     paused = " I Theme Hospital ville spilleren kun få lov til å bruke toppmenyen om spillet var satt til pause. Dette er standard i CorsixTH også, men ved å slå denne på, så er alle bevegelser lov",
@@ -272,7 +272,7 @@ tooltip = {
     aliens = "På grunn av manglende animasjoner har vi slått av pasienter med Utenomjordisk DNA slik at de bare kan komme fra nödstilfeller. For å tillate pasienter med Utenomjordisk DNA å gå til sykehuset, slå denne av.",
     average_contents = "Om du önsker at spillet skal huske hvilke objekter du vanligvis kjöper til hver rom (gjennomsnittlig), så bör du slå på denne",
   },
-  
+
   new_game_window = {
     easy = "Om du ikke har erfaring med simulatorspill er dette tingen for deg",
     medium = "Om du er usikker på hva du skal velge, så er dette mellomtingen",
@@ -283,7 +283,7 @@ tooltip = {
     start = "Start spillet med de valgte innstillingene",
     player_name = "Skriv inn hva du vil hete i spillet",
   },
-  
+
   lua_console = {
     textbox = "Skriv Lua-kode du vil kjöre her",
     execute_code = "Kjör koden",
@@ -294,7 +294,7 @@ tooltip = {
     map = "Overskriv brett %s", -- Overskriv/lagre?
     new_map = "Skriv inn navn for nytt brett",
   },
-  
+
   information = {
     close = "Lukk informasjonsdialogen",
   },
@@ -302,14 +302,14 @@ tooltip = {
   totd_window = {
     previous = "Vis forrige tips",
     next = "Vis neste tips",
-  },  
-  
+  },
+
   -- Research policy tooltip
   research_policy = {
     research_progress = "Progresjon mot den nesten oppdagelsen i denne kategorien: %1%/%2%",
     no_research = "Ingen forskning blir utfört i denne kategorien for öyeblikket",
   },
-  
+
   -- Build room window
   build_room_window = {
     room_classes = {
@@ -431,7 +431,7 @@ tooltip = {
     continue           = "Fortsett på sist spilte spill",
     network            = "Start nettverksspill",
     map_edit = "Lag ditt eget brett",
-    quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?", 
+    quit               = "Du er på vei til å avslutte spillet. Er du sikker på at du vil dette?",
     options     = "Endre spillets innstillinger",
     exit       = "Nei, nei, vær så snill, ikke avslutt!",
 	load_menu = {
@@ -439,7 +439,7 @@ tooltip = {
       empty_slot       = "  TOM  ",
     },
   },
-  
+
   -- Window general
   window_general = {
     cancel             = "Avbryt",
@@ -771,9 +771,9 @@ tooltip = {
     comfortable_chair    = S[40][62], -- no description
     rathole = "Hjemmet til en rottefamilie som syns sykehuset ditt er mökkete nok til å bo i.",
     litter = "Söppel: Slengt på gulvet av en pasient, fordi vedkommende ikke fant en söppelbötte i nærheten.",
-  },  
-  
+  },
 -- TOOLTIP END
+
 }
 
 
