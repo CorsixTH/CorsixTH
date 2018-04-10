@@ -123,11 +123,29 @@ function WardRoom:doStaffUseCycle(humanoid)
   humanoid:queueAction(MeanderAction():setLoopCallback(meanders_loop))
 end
 
+-- This function is called once per tick per ward, unless there's no patient in the ward
+function WardRoom:getHealingAmount()
+  self.patient_idx = 0 -- Will be reset to nil after handling the last patient each tick
+  local nurse_force = 0	-- The total amount of work the nurses do
+  local best_staff = 0 -- Used for diagnosis quality
+  for humanoid in pairs(self.humanoids) do
+    if not humanoid:isLeaving() then
+      if class.is(humanoid, Patient) then
+        self.patient_idx = self.patient_idx + 1 -- Count the number of patients
+      elseif humanoid.humanoid_class == "Nurse" then
+        local nurse_quality = humanoid:getServiceQuality()
+        nurse_force = nurse_force + 1.0 + nurse_quality
+        if nurse_quality > best_staff then
+          best_staff = nurse_quality
+          self.staff_member = humanoid -- Used in \patient.lua\completeDiagnosticStep()
+        end
+      end
+    end
+  end
+  self.healing_amount = nurse_force / (1 + self.patient_idx)
+end
 
--- TODO the nurse should not leave the ward if there are beds in use, therefore prevent her from being picked up
--- and have a system that stops patients entering the ward if she is in need of taking a break or being called elsewhere.
 function WardRoom:commandEnteringPatient(patient)
-  local staff = next(self.staff_member_set) or self.staff_member
   local bed, pat_x, pat_y = self.world:findFreeObjectNearToUse(patient, "bed")
   self:setStaffMembersAttribute("dealing_with_patient", nil)
   if not bed then
@@ -136,14 +154,21 @@ function WardRoom:commandEnteringPatient(patient)
     print("Warning: A patient was called into the ward even though there are no free beds.")
   else
     bed.reserved_for = patient
-    self:countWorkingNurses()
-    local length = (math.random(200, 800) * (1.5 - staff.profile.skill))  / self.nursecount -- reduce time in ward if there is more than one nurse on duty
+    local amount_to_heal = math.random(150, 450)
     local --[[persistable:ward_loop_callback]] function loop_callback(action)
-    -- TODO Perhaps it should take longer if there are more used beds!
-      if length <= 0 then
-        action.prolonged_usage = false
+      if not self.patient_idx then -- This is the first patient for the current tick
+	    self:getHealingAmount() -- Evaluate the workload
       end
-      length = length - 1
+      --print(self.patient_idx, self.healing_amount, amount_to_heal)
+      amount_to_heal = amount_to_heal - self.healing_amount
+      if amount_to_heal < 0 then -- The patient is healed or diagnosed
+	    action.prolonged_usage = false
+      end
+      if self.patient_idx == 1 then -- This was the last patient, set up for the next tick
+	    self.patient_idx = nil -- Erase the temporary field
+      else -- Set up for the next patient
+	    self.patient_idx = self.patient_idx - 1
+      end
     end
     local after_use = --[[persistable:ward_after_use]] function()
       self:dealtWithPatient(patient)
@@ -152,7 +177,6 @@ function WardRoom:commandEnteringPatient(patient)
     patient:queueAction(UseObjectAction(bed):setProlongedUsage(true):setLoopCallback(loop_callback)
         :setAfterUse(after_use))
   end
-
   return Room.commandEnteringPatient(self, patient)
 end
 
