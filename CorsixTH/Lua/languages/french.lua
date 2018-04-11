@@ -207,7 +207,11 @@ adviser.information = {
   patient_leaving_too_expensive = "Un patient part sans payer la facture pour %s. Sacrée perte !",
   vip_arrived = "Attention ! %s arrive pour visiter votre hôpital ! Faites en sorte de lui faire bonne impression.",
   first_death = "Vous venez de tuer votre premier patient. Alors, heureux ?",
+<<<<<<< HEAD
   promotion_to_specialist = "L'un de vos MÉDECIN est devenu un SPÉCIALISTE.", -- Fix the famous "Level 5 bug"
+=======
+  promotion_to_specialist = "L'un de vos INTERNES est devenu MÉDECIN.", -- Fix the famous "Level 5 bug"
+>>>>>>> parent of 870d9432... Translation error #1358 - fixed mistranslation
 }
 buy_objects_window = {
   price = "Prix : ",
