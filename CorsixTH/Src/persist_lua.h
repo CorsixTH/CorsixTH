@@ -27,34 +27,34 @@ SOFTWARE.
 #include <vector>
 #include <cstdlib>
 
-template <class T> struct LuaPersistVInt {};
-template <> struct LuaPersistVInt<int> {typedef unsigned int T;};
+template <class T> struct lua_persist_int {};
+template <> struct lua_persist_int<int> {typedef unsigned int T;};
 
 //! Interface used for persisting Lua objects
 /*!
     When userdata are persisted, they get an instance of this interface for
     writing binary data and other Lua objects.
 */
-class LuaPersistWriter
+class lua_persist_writer
 {
 public:
-    virtual ~LuaPersistWriter() = default;
+    virtual ~lua_persist_writer() = default;
 
-    virtual lua_State* getStack() = 0;
-    virtual void writeStackObject(int iIndex) = 0;
-    virtual void writeByteStream(const uint8_t *pBytes, size_t iCount) = 0;
-    virtual void setError(const char *sError) = 0;
+    virtual lua_State* get_stack() = 0;
+    virtual void write_stack_object(int iIndex) = 0;
+    virtual void write_byte_stream(const uint8_t *pBytes, size_t iCount) = 0;
+    virtual void set_error(const char *sError) = 0;
 
-    // writeStackObject for userdata without growing the Lua call stack
+    // write_stack_object for userdata without growing the Lua call stack
     // The given index should be a userdata whose __persist metamethod supports
     // fast persistance (being called with extra arguments and the wrong
     // environment / upvalues).
-    virtual void fastWriteStackObject(int iIndex) = 0;
+    virtual void fast_write_stack_object(int iIndex) = 0;
 
     // Writes an unsigned integer as a variable number of bytes
     // Endian independant and underlying type size independant
     template <class T>
-    void writeVUInt(T tValue)
+    void write_uint(T tValue)
     {
         T tTemp(tValue);
         int iNumBytes;
@@ -63,7 +63,7 @@ public:
         if(iNumBytes == 1)
         {
             uint8_t iByte = (uint8_t)tValue;
-            writeByteStream(&iByte, 1);
+            write_byte_stream(&iByte, 1);
         }
         else
         {
@@ -74,32 +74,32 @@ public:
                 tValue /= (T)0x80;
                 bytes[iNumBytes - 1 - i] = 0x80 | (0x7F & (uint8_t)tValue);
             }
-            writeByteStream(bytes.data(), iNumBytes);
+            write_byte_stream(bytes.data(), iNumBytes);
         }
     }
 
     template <class T>
-    void writeVInt(T tValue)
+    void write_int(T tValue)
     {
-        typename LuaPersistVInt<T>::T tValueToWrite;
+        typename lua_persist_int<T>::T tValueToWrite;
         if(tValue >= 0)
         {
-            tValueToWrite = (typename LuaPersistVInt<T>::T)tValue;
+            tValueToWrite = (typename lua_persist_int<T>::T)tValue;
             tValueToWrite <<= 1;
         }
         else
         {
-            tValueToWrite = (typename LuaPersistVInt<T>::T)(-(tValue + 1));
+            tValueToWrite = (typename lua_persist_int<T>::T)(-(tValue + 1));
             tValueToWrite <<= 1;
             tValueToWrite |= 1;
         }
-        writeVUInt(tValueToWrite);
+        write_uint(tValueToWrite);
     }
 
     template <class T>
-    void writeVFloat(T fValue)
+    void write_float(T fValue)
     {
-        writeByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T));
+        write_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T));
     }
 };
 
@@ -108,26 +108,26 @@ public:
     When userdata are depersisted, they get an instance of this interface for
     reading binary data and other Lua objects.
 */
-class LuaPersistReader
+class lua_persist_reader
 {
 public:
-    virtual ~LuaPersistReader() = default;
+    virtual ~lua_persist_reader() = default;
 
-    virtual lua_State* getStack() = 0;
-    virtual bool readStackObject() = 0;
-    virtual bool readByteStream(uint8_t *pBytes, size_t iCount) = 0;
-    virtual void setError(const char *sError) = 0;
+    virtual lua_State* get_stack() = 0;
+    virtual bool read_stack_object() = 0;
+    virtual bool read_byte_stream(uint8_t *pBytes, size_t iCount) = 0;
+    virtual void set_error(const char *sError) = 0;
 
-    // Reads an integer previously written by LuaPersistWriter::writeVUInt()
+    // Reads an integer previously written by lua_persist_writer::write_uint()
     template <class T>
-    bool readVUInt(T& tValue)
+    bool read_uint(T& tValue)
     {
         T tTemp(0);
         uint8_t iByte;
 
         while(true)
         {
-            if(!readByteStream(&iByte, 1))
+            if(!read_byte_stream(&iByte, 1))
                 return false;
             if(iByte & 0x80)
             {
@@ -146,10 +146,10 @@ public:
     }
 
     template <class T>
-    bool readVInt(T& tValue)
+    bool read_int(T& tValue)
     {
-        typename LuaPersistVInt<T>::T tWrittenValue;
-        if(!readVUInt(tWrittenValue))
+        typename lua_persist_int<T>::T tWrittenValue;
+        if(!read_uint(tWrittenValue))
             return false;
         if(tWrittenValue & 1)
             tValue = (-(T)(tWrittenValue >> 1)) - 1;
@@ -159,9 +159,9 @@ public:
     }
 
     template <class T>
-    bool readVFloat(T& fValue)
+    bool read_float(T& fValue)
     {
-        if(!readByteStream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T)))
+        if(!read_byte_stream(reinterpret_cast<uint8_t*>(&fValue), sizeof(T)))
             return false;
         return true;
     }

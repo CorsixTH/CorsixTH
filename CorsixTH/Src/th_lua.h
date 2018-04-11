@@ -170,120 +170,120 @@ inline T* luaT_stdnew(lua_State *L, int mt_idx = luaT_environindex, bool env = f
 
 template <typename T> struct luaT_classinfo {};
 
-class THRenderTarget;
-template <> struct luaT_classinfo<THRenderTarget> {
+class render_target;
+template <> struct luaT_classinfo<render_target> {
     static inline const char* name() {return "Surface";}
 };
 
-class THMap;
-template <> struct luaT_classinfo<THMap> {
+class level_map;
+template <> struct luaT_classinfo<level_map> {
     static inline const char* name() {return "Map";}
 };
 
-class THSpriteSheet;
-template <> struct luaT_classinfo<THSpriteSheet> {
+class sprite_sheet;
+template <> struct luaT_classinfo<sprite_sheet> {
     static inline const char* name() {return "SpriteSheet";}
 };
 
-class THAnimation;
-template <> struct luaT_classinfo<THAnimation> {
+class animation;
+template <> struct luaT_classinfo<animation> {
     static inline const char* name() {return "Animation";}
 };
 
-class THAnimationManager;
-template <> struct luaT_classinfo<THAnimationManager> {
+class animation_manager;
+template <> struct luaT_classinfo<animation_manager> {
     static inline const char* name() {return "Animator";}
 };
 
-class THPalette;
-template <> struct luaT_classinfo<THPalette> {
+class palette;
+template <> struct luaT_classinfo<palette> {
     static inline const char* name() {return "Palette";}
 };
 
-class THRawBitmap;
-template <> struct luaT_classinfo<THRawBitmap> {
+class raw_bitmap;
+template <> struct luaT_classinfo<raw_bitmap> {
     static inline const char* name() {return "RawBitmap";}
 };
 
-class THFont;
-template <> struct luaT_classinfo<THFont> {
+class font;
+template <> struct luaT_classinfo<font> {
     static inline const char* name() {return "Font";}
 };
 
-class THBitmapFont;
-template <> struct luaT_classinfo<THBitmapFont> {
+class bitmap_font;
+template <> struct luaT_classinfo<bitmap_font> {
     static inline const char* name() {return "BitmapFont";}
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
-class THFreeTypeFont;
-template <> struct luaT_classinfo<THFreeTypeFont> {
+class freetype_font;
+template <> struct luaT_classinfo<freetype_font> {
     static inline const char* name() {return "FreeTypeFont";}
 };
 #endif
 
-struct THLayers_t;
-template <> struct luaT_classinfo<THLayers_t> {
+struct layers;
+template <> struct luaT_classinfo<layers> {
     static inline const char* name() {return "Layers";}
 };
 
-class THPathfinder;
-template <> struct luaT_classinfo<THPathfinder> {
+class pathfinder;
+template <> struct luaT_classinfo<pathfinder> {
     static inline const char* name() {return "Pathfinder";}
 };
 
-class THCursor;
-template <> struct luaT_classinfo<THCursor> {
+class cursor;
+template <> struct luaT_classinfo<cursor> {
     static inline const char* name() {return "Cursor";}
 };
 
-class THLine;
-template <> struct luaT_classinfo<THLine> {
+class line;
+template <> struct luaT_classinfo<line> {
     static inline const char* name() {return "Line";}
 };
 
-struct music_t;
-template <> struct luaT_classinfo<music_t> {
+class music;
+template <> struct luaT_classinfo<music> {
     static inline const char* name() {return "Music";}
 };
 
-class THSoundArchive;
-template <> struct luaT_classinfo<THSoundArchive> {
+class sound_archive;
+template <> struct luaT_classinfo<sound_archive> {
     static inline const char* name() {return "SoundArchive";}
 };
 
-class THSoundEffects;
-template <> struct luaT_classinfo<THSoundEffects> {
+class sound_player;
+template <> struct luaT_classinfo<sound_player> {
     static inline const char* name() {return "SoundEffects";}
 };
 
-class THMovie;
-template <> struct luaT_classinfo<THMovie> {
+class movie_player;
+template <> struct luaT_classinfo<movie_player> {
     static inline const char* name() {return "Movie";}
 };
 
-struct THWindowBase_t;
-template <> struct luaT_classinfo<THWindowBase_t> {
+class abstract_window;
+template <> struct luaT_classinfo<abstract_window> {
     static inline const char* name() {return "WindowBase";}
 };
 
-class THSpriteRenderList;
-template <> struct luaT_classinfo<THSpriteRenderList> {
+class sprite_render_list;
+template <> struct luaT_classinfo<sprite_render_list> {
     static inline const char* name() {return "SpriteRenderList";}
 };
 
-struct THStringProxy_t;
-template <> struct luaT_classinfo<THStringProxy_t> {
+class string_proxy;
+template <> struct luaT_classinfo<string_proxy> {
     static inline const char* name() {return "StringProxy";}
 };
 
-struct THLfsExt;
-template <> struct luaT_classinfo <THLfsExt> {
+class lfs_ext;
+template <> struct luaT_classinfo <lfs_ext> {
     static inline const char* name() {return "LfsExt";}
 };
 
-class IsoFilesystem;
-template <> struct luaT_classinfo<IsoFilesystem> {
+class iso_filesystem;
+template <> struct luaT_classinfo<iso_filesystem> {
     static inline const char* name() {return "ISO Filesystem";}
 };
 

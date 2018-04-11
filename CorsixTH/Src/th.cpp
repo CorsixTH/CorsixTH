@@ -25,30 +25,30 @@ SOFTWARE.
 #include <cstring>
 #include <stdexcept>
 
-THLinkList::THLinkList()
+link_list::link_list()
 {
-    m_drawingLayer = 0;
-    m_pPrev = nullptr;
-    m_pNext = nullptr;
+    drawing_layer = 0;
+    prev = nullptr;
+    next = nullptr;
 }
 
-THLinkList::~THLinkList()
+link_list::~link_list()
 {
-    removeFromList();
+    remove_from_list();
 }
 
-void THLinkList::removeFromList()
+void link_list::remove_from_list()
 {
-    if(m_pPrev != nullptr)
+    if(prev != nullptr)
     {
-        m_pPrev->m_pNext = m_pNext;
+        prev->next = next;
     }
-    if(m_pNext != nullptr)
+    if(next != nullptr)
     {
-        m_pNext->m_pPrev = m_pPrev;
-        m_pNext = nullptr;
+        next->prev = prev;
+        next = nullptr;
     }
-    m_pPrev = nullptr;
+    prev = nullptr;
 }
 
 #include "cp437_table.h"
@@ -151,7 +151,7 @@ static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
     } while(cChar1 != 0);
 }
 
-THStringList::THStringList(const uint8_t* data, size_t length)
+th_string_list::th_string_list(const uint8_t* data, size_t length)
 {
     if(length < 2)
         throw std::invalid_argument("length must be 2 or larger");
@@ -205,22 +205,22 @@ THStringList::THStringList(const uint8_t* data, size_t length)
     *sDataOut = 0;
 }
 
-THStringList::~THStringList()
+th_string_list::~th_string_list()
 {}
 
-size_t THStringList::getSectionCount()
+size_t th_string_list::get_section_count()
 {
     return sections.size();
 }
 
-size_t THStringList::getSectionSize(size_t section)
+size_t th_string_list::get_section_size(size_t section)
 {
     return section < sections.size() ? sections[section].size() : 0;
 }
 
-const char* THStringList::getString(size_t section, size_t index)
+const char* th_string_list::get_string(size_t section, size_t index)
 {
-    if(index < getSectionSize(section))
+    if(index < get_section_size(section))
     {
         return sections[section][index];
     }

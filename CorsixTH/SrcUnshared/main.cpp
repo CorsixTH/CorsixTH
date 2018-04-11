@@ -52,10 +52,10 @@ static void cleanup()
 
 //! Program entry point
 /*!
-    Prepares a Lua state for, and catches errors from, CorsixTH_lua_main(). By
+    Prepares a Lua state for, and catches errors from, lua_main(). By
     executing in Lua mode as soon as possible, errors can be nicely caught
     sooner, hence this function does as little as possible and leaves the rest
-    for CorsixTH_lua_main().
+    for lua_main().
 */
 int main(int argc, char** argv)
 {
@@ -82,11 +82,11 @@ int main(int argc, char** argv)
                 "Cannot open Lua state.\n");
             return 0;
         }
-        lua_atpanic(L, CorsixTH_lua_panic);
+        lua_atpanic(L, lua_panic);
         luaL_openlibs(L);
         lua_settop(L, 0);
-        lua_pushcfunction(L, CorsixTH_lua_stacktrace);
-        lua_pushcfunction(L, CorsixTH_lua_main);
+        lua_pushcfunction(L, lua_stacktrace);
+        lua_pushcfunction(L, lua_main);
 
         // Move command line parameters onto the Lua stack
         lua_checkstack(L, argc);
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
                 fprintf(stderr, "An error has occurred in CorsixTH:\n"
                     "Uncaught non-string Lua error\n");
             }
-            lua_pushcfunction(L, Bootstrap_lua_error_report);
+            lua_pushcfunction(L, bootstrap_lua_error_report);
             lua_insert(L, -2);
             if(lua_pcall(L, 1, 0, 0) != 0)
             {

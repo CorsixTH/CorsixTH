@@ -40,7 +40,7 @@ int luaopen_random(lua_State *L);
 #endif
 // End of config file checking
 
-int CorsixTH_lua_main_no_eval(lua_State *L)
+int lua_main_no_eval(lua_State *L)
 {
     // assert(_VERSION == LUA_VERSION)
     size_t iLength;
@@ -142,13 +142,13 @@ int CorsixTH_lua_main_no_eval(lua_State *L)
     return lua_gettop(L);
 }
 
-int CorsixTH_lua_main(lua_State *L)
+int lua_main(lua_State *L)
 {
-    lua_call(L, CorsixTH_lua_main_no_eval(L) - 1, LUA_MULTRET);
+    lua_call(L, lua_main_no_eval(L) - 1, LUA_MULTRET);
     return lua_gettop(L);
 }
 
-int CorsixTH_lua_stacktrace(lua_State *L)
+int lua_stacktrace(lua_State *L)
 {
     // err = tostring(err)
     lua_settop(L, 1);
@@ -171,7 +171,7 @@ int CorsixTH_lua_stacktrace(lua_State *L)
     return 1;
 }
 
-int CorsixTH_lua_panic(lua_State *L)
+int lua_panic(lua_State *L)
 {
     std::fprintf(stderr, "A Lua error has occurred in CorsixTH outside of protected "
         "mode!!\n");

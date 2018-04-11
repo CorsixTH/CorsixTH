@@ -26,22 +26,22 @@ SOFTWARE.
 
 static int l_movie_new(lua_State *L)
 {
-    luaT_stdnew<THMovie>(L, luaT_environindex, true);
+    luaT_stdnew<movie_player>(L, luaT_environindex, true);
     return 1;
 }
 
 static int l_movie_set_renderer(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    THRenderTarget *pRenderTarget = luaT_testuserdata<THRenderTarget>(L, 2);
-    pMovie->setRenderer(pRenderTarget->getRenderer());
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    render_target *pRenderTarget = luaT_testuserdata<render_target>(L, 2);
+    pMovie->set_renderer(pRenderTarget->get_renderer());
     return 0;
 }
 
 static int l_movie_enabled(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushboolean(L, pMovie->moviesEnabled());
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    lua_pushboolean(L, pMovie->movies_enabled());
     return 1;
 }
 
@@ -49,11 +49,11 @@ static int l_movie_load(lua_State *L)
 {
     bool loaded;
     const char* warning;
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     const char* filepath = lua_tolstring(L, 2, nullptr);
-    pMovie->clearLastError();
+    pMovie->clear_last_error();
     loaded = pMovie->load(filepath);
-    warning = pMovie->getLastError();
+    warning = pMovie->get_last_error();
     lua_pushboolean(L, loaded);
     lua_pushstring(L, warning);
     return 2;
@@ -61,7 +61,7 @@ static int l_movie_load(lua_State *L)
 
 static int l_movie_unload(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->unload();
     return 0;
 }
@@ -69,46 +69,46 @@ static int l_movie_unload(lua_State *L)
 static int l_movie_play(lua_State *L)
 {
     const char* warning;
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->clearLastError();
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    pMovie->clear_last_error();
     pMovie->play(
         static_cast<int>(luaL_checkinteger(L, 2)));
-    warning = pMovie->getLastError();
+    warning = pMovie->get_last_error();
     lua_pushstring(L, warning);
     return 1;
 }
 
 static int l_movie_stop(lua_State *L)
 {
-    THMovie *pVideo = luaT_testuserdata<THMovie>(L);
+    movie_player *pVideo = luaT_testuserdata<movie_player>(L);
     pVideo->stop();
     return 0;
 }
 
 static int l_movie_get_native_height(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushinteger(L, pMovie->getNativeHeight());
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    lua_pushinteger(L, pMovie->get_native_height());
     return 1;
 }
 
 static int l_movie_get_native_width(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushinteger(L, pMovie->getNativeWidth());
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    lua_pushinteger(L, pMovie->get_native_width());
     return 1;
 }
 
 static int l_movie_has_audio_track(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    lua_pushboolean(L, pMovie->hasAudioTrack());
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    lua_pushboolean(L, pMovie->has_audio_track());
     return 1;
 }
 
 static int l_movie_refresh(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->refresh(SDL_Rect{
             static_cast<int>(luaL_checkinteger(L, 2)),
             static_cast<int>(luaL_checkinteger(L, 3)),
@@ -119,22 +119,22 @@ static int l_movie_refresh(lua_State *L)
 
 static int l_movie_allocate_picture_buffer(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->allocatePictureBuffer();
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    pMovie->allocate_picture_buffer();
     return 0;
 }
 
 static int l_movie_deallocate_picture_buffer(lua_State *L)
 {
-    THMovie *pMovie = luaT_testuserdata<THMovie>(L);
-    pMovie->deallocatePictureBuffer();
+    movie_player *pMovie = luaT_testuserdata<movie_player>(L);
+    pMovie->deallocate_picture_buffer();
     return 0;
 }
 
-void THLuaRegisterMovie(const THLuaRegisterState_t *pState)
+void lua_register_movie(const lua_register_state *pState)
 {
-    luaT_class(THMovie, l_movie_new, "moviePlayer", eTHLuaMetatable::movie);
-    luaT_setfunction(l_movie_set_renderer, "setRenderer", eTHLuaMetatable::surface);
+    luaT_class(movie_player, l_movie_new, "moviePlayer", lua_metatable::movie);
+    luaT_setfunction(l_movie_set_renderer, "setRenderer", lua_metatable::surface);
     luaT_setfunction(l_movie_enabled, "getEnabled");
     luaT_setfunction(l_movie_load, "load");
     luaT_setfunction(l_movie_unload, "unload");

@@ -26,49 +26,49 @@ SOFTWARE.
 #include <new>
 #include <cstring>
 
-THSoundArchive::THSoundArchive()
+sound_archive::sound_archive()
 {
-    m_pFiles = nullptr;
-    m_pData = nullptr;
+    sound_files = nullptr;
+    data = nullptr;
 }
 
-THSoundArchive::~THSoundArchive()
+sound_archive::~sound_archive()
 {
-    delete[] m_pData;
+    delete[] data;
 }
 
-bool THSoundArchive::loadFromTHFile(const uint8_t* pData, size_t iDataLength)
+bool sound_archive::load_from_th_file(const uint8_t* pData, size_t iDataLength)
 {
-    if(iDataLength < sizeof(uint32_t) + sizeof(th_header_t))
+    if(iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header))
         return false;
 
     uint32_t iHeaderPosition = reinterpret_cast<const uint32_t*>(pData + iDataLength)[-1];
-    if(static_cast<size_t>(iHeaderPosition) >= iDataLength - sizeof(th_header_t))
+    if(static_cast<size_t>(iHeaderPosition) >= iDataLength - sizeof(sound_dat_file_header))
         return false;
 
-    m_oHeader = *reinterpret_cast<const th_header_t*>(pData + iHeaderPosition);
+    header = *reinterpret_cast<const sound_dat_file_header*>(pData + iHeaderPosition);
 
-    delete[] m_pData;
-    m_pData = new (std::nothrow) uint8_t[iDataLength];
-    if(m_pData == nullptr)
+    delete[] data;
+    data = new (std::nothrow) uint8_t[iDataLength];
+    if(data == nullptr)
         return false;
-    std::memcpy(m_pData, pData, iDataLength);
+    std::memcpy(data, pData, iDataLength);
 
-    m_pFiles = reinterpret_cast<th_fileinfo_t*>(m_pData + m_oHeader.table_position);
-    m_iFileCount = m_oHeader.table_length / sizeof(th_fileinfo_t);
+    sound_files = reinterpret_cast<sound_dat_sound_info*>(data + header.table_position);
+    sound_file_count = header.table_length / sizeof(sound_dat_sound_info);
     return true;
 }
 
-size_t THSoundArchive::getSoundCount() const
+size_t sound_archive::get_number_of_sounds() const
 {
-    return m_iFileCount;
+    return sound_file_count;
 }
 
-const char* THSoundArchive::getSoundFilename(size_t iIndex) const
+const char* sound_archive::get_sound_name(size_t iIndex) const
 {
-    if(iIndex >= m_iFileCount)
+    if(iIndex >= sound_file_count)
         return nullptr;
-    return m_pFiles[iIndex].filename;
+    return sound_files[iIndex].sound_name;
 }
 
 #define FOURCC(c1, c2, c3, c4) \
@@ -77,9 +77,9 @@ const char* THSoundArchive::getSoundFilename(size_t iIndex) const
     | static_cast<uint32_t>(static_cast<uint8_t>(c3) << 16) \
     | static_cast<uint32_t>(static_cast<uint8_t>(c4) << 24) )
 
-size_t THSoundArchive::getSoundDuration(size_t iIndex)
+size_t sound_archive::get_sound_duration(size_t iIndex)
 {
-    SDL_RWops *pFile = loadSound(iIndex);
+    SDL_RWops *pFile = load_sound(iIndex);
     if(!pFile)
         return 0;
 
@@ -150,179 +150,179 @@ size_t THSoundArchive::getSoundDuration(size_t iIndex)
 
 #undef FOURCC
 
-SDL_RWops* THSoundArchive::loadSound(size_t iIndex)
+SDL_RWops* sound_archive::load_sound(size_t iIndex)
 {
-    if(iIndex >= m_iFileCount)
+    if(iIndex >= sound_file_count)
         return nullptr;
 
-    th_fileinfo_t *pFile = m_pFiles + iIndex;
-    return SDL_RWFromConstMem(m_pData + pFile->position, pFile->length);
+    sound_dat_sound_info *pFile = sound_files + iIndex;
+    return SDL_RWFromConstMem(data + pFile->position, pFile->length);
 }
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
 
-THSoundEffects* THSoundEffects::ms_pSingleton = nullptr;
+sound_player* sound_player::singleton = nullptr;
 
-THSoundEffects::THSoundEffects()
+sound_player::sound_player()
 {
-    m_ppSounds = nullptr;
-    m_iSoundCount = 0;
-    ms_pSingleton = this;
-    m_iCameraX = 0;
-    m_iCameraY = 0;
-    m_fCameraRadius = 1.0;
-    m_fMasterVolume = 1.0;
-    m_fSoundEffectsVolume = 0.5;
-    m_iPostionlessVolume = MIX_MAX_VOLUME;
-    m_bSoundEffectsOn = true;
+    sounds = nullptr;
+    sound_count = 0;
+    singleton = this;
+    camera_x = 0;
+    camera_y = 0;
+    camera_radius = 1.0;
+    master_volume = 1.0;
+    sound_effect_volume = 0.5;
+    positionless_volume = MIX_MAX_VOLUME;
+    sound_effects_enabled = true;
 
 #define NUM_CHANNELS 32
 #if NUM_CHANNELS >= 32
-    m_iChannelStatus = ~0;
+    available_channels_bitmap = ~0;
     Mix_AllocateChannels(32);
 #else
-    m_iChannelStatus = (1 << NUM_CHANNELS) - 1;
+    channels_in_use_bitmap = (1 << NUM_CHANNELS) - 1;
     Mix_AllocateChannels(NUM_CHANNELS);
 #endif
 #undef NUM_CHANNELS
 
-    Mix_ChannelFinished(_onChannelFinish);
+    Mix_ChannelFinished(on_channel_finished);
 }
 
-THSoundEffects::~THSoundEffects()
+sound_player::~sound_player()
 {
-    setSoundArchive(nullptr);
-    if(ms_pSingleton == this)
-        ms_pSingleton = nullptr;
+    populate_from(nullptr);
+    if(singleton == this)
+        singleton = nullptr;
 }
 
-void THSoundEffects::_onChannelFinish(int iChannel)
+void sound_player::on_channel_finished(int iChannel)
 {
-    THSoundEffects *pThis = getSingleton();
+    sound_player *pThis = get_singleton();
     if(pThis == nullptr)
         return;
 
-    pThis->releaseChannel(iChannel);
+    pThis->release_channel(iChannel);
 }
 
-THSoundEffects* THSoundEffects::getSingleton()
+sound_player* sound_player::get_singleton()
 {
-    return ms_pSingleton;
+    return singleton;
 }
 
-void THSoundEffects::setSoundArchive(THSoundArchive *pArchive)
+void sound_player::populate_from(sound_archive *pArchive)
 {
-    for(size_t i = 0; i < m_iSoundCount; ++i)
+    for(size_t i = 0; i < sound_count; ++i)
     {
-        Mix_FreeChunk(m_ppSounds[i]);
+        Mix_FreeChunk(sounds[i]);
     }
-    delete[] m_ppSounds;
-    m_ppSounds = nullptr;
-    m_iSoundCount = 0;
+    delete[] sounds;
+    sounds = nullptr;
+    sound_count = 0;
 
     if(pArchive == nullptr)
         return;
 
-    m_ppSounds = new Mix_Chunk*[pArchive->getSoundCount()];
-    for(; m_iSoundCount < pArchive->getSoundCount(); ++m_iSoundCount)
+    sounds = new Mix_Chunk*[pArchive->get_number_of_sounds()];
+    for(; sound_count < pArchive->get_number_of_sounds(); ++sound_count)
     {
-        m_ppSounds[m_iSoundCount] = nullptr;
-        SDL_RWops *pRwop = pArchive->loadSound(m_iSoundCount);
+        sounds[sound_count] = nullptr;
+        SDL_RWops *pRwop = pArchive->load_sound(sound_count);
         if(pRwop)
         {
-            m_ppSounds[m_iSoundCount] = Mix_LoadWAV_RW(pRwop, 1);
-            if(m_ppSounds[m_iSoundCount])
-                Mix_VolumeChunk(m_ppSounds[m_iSoundCount], MIX_MAX_VOLUME);
+            sounds[sound_count] = Mix_LoadWAV_RW(pRwop, 1);
+            if(sounds[sound_count])
+                Mix_VolumeChunk(sounds[sound_count], MIX_MAX_VOLUME);
         }
     }
 }
 
-void THSoundEffects::playSound(size_t iIndex, double dVolume)
+void sound_player::play(size_t iIndex, double dVolume)
 {
-    if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
+    if(available_channels_bitmap == 0 || iIndex >= sound_count || !sounds[iIndex])
         return;
 
-    _playRaw(iIndex, (int)(m_iPostionlessVolume*dVolume));
+    play_raw(iIndex, (int)(positionless_volume * dVolume));
 }
 
-void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY)
+void sound_player::play_at(size_t iIndex, int iX, int iY)
 {
-    if(m_bSoundEffectsOn)
-        playSoundAt(iIndex, m_fSoundEffectsVolume, iX, iY);
+    if(sound_effects_enabled)
+        play_at(iIndex, sound_effect_volume, iX, iY);
 }
 
-void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY)
+void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY)
 {
-    if(m_iChannelStatus == 0 || iIndex >= m_iSoundCount || !m_ppSounds[iIndex])
+    if(available_channels_bitmap == 0 || iIndex >= sound_count || !sounds[iIndex])
         return;
 
-    double fDX = (double)(iX - m_iCameraX);
-    double fDY = (double)(iY - m_iCameraY);
+    double fDX = (double)(iX - camera_x);
+    double fDY = (double)(iY - camera_y);
     double fDistance = sqrt(fDX * fDX + fDY * fDY);
-    if(fDistance > m_fCameraRadius)
+    if(fDistance > camera_radius)
         return;
-    fDistance = fDistance / m_fCameraRadius;
+    fDistance = fDistance / camera_radius;
 
-    double fVolume = m_fMasterVolume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME * dVolume;
+    double fVolume = master_volume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME * dVolume;
 
-    _playRaw(iIndex, (int)(fVolume + 0.5));
+    play_raw(iIndex, (int)(fVolume + 0.5));
 }
 
-void THSoundEffects::setSoundEffectsVolume(double dVolume)
+void sound_player::set_sound_effect_volume(double dVolume)
 {
-    m_fSoundEffectsVolume = dVolume;
+    sound_effect_volume = dVolume;
 }
 
-void THSoundEffects::setSoundEffectsOn(bool bOn)
+void sound_player::set_sound_effects_enabled(bool bOn)
 {
-    m_bSoundEffectsOn = bOn;
+    sound_effects_enabled = bOn;
 }
 
-int THSoundEffects::reserveChannel()
+int sound_player::reserve_channel()
 {
     // NB: Callers ensure that m_iChannelStatus != 0
     int iChannel = 0;
-    for(; (m_iChannelStatus & (1 << iChannel)) == 0; ++iChannel) {}
-    m_iChannelStatus &=~ (1 << iChannel);
+    for(; (available_channels_bitmap & (1 << iChannel)) == 0; ++iChannel) {}
+    available_channels_bitmap &=~ (1 << iChannel);
 
     return iChannel;
 }
 
-void THSoundEffects::releaseChannel(int iChannel)
+void sound_player::release_channel(int iChannel)
 {
-    m_iChannelStatus |= (1 << iChannel);
+    available_channels_bitmap |= (1 << iChannel);
 }
 
-void THSoundEffects::_playRaw(size_t iIndex, int iVolume)
+void sound_player::play_raw(size_t iIndex, int iVolume)
 {
-    int iChannel = reserveChannel();
+    int iChannel = reserve_channel();
 
     Mix_Volume(iChannel, iVolume);
-    Mix_PlayChannelTimed(iChannel, m_ppSounds[iIndex], 0, -1);
+    Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
 }
 
-void THSoundEffects::setCamera(int iX, int iY, int iRadius)
+void sound_player::set_camera(int iX, int iY, int iRadius)
 {
-    m_iCameraX = iX;
-    m_iCameraY = iY;
-    m_fCameraRadius = (double)iRadius;
-    if(m_fCameraRadius < 0.001)
-        m_fCameraRadius = 0.001;
+    camera_x = iX;
+    camera_y = iY;
+    camera_radius = (double)iRadius;
+    if(camera_radius < 0.001)
+        camera_radius = 0.001;
 }
 
 #else // CORSIX_TH_USE_SDL_MIXER
 
-THSoundEffects::THSoundEffects() {}
-THSoundEffects::~THSoundEffects() {}
-THSoundEffects* THSoundEffects::getSingleton() {return nullptr;}
-void THSoundEffects::setSoundArchive(THSoundArchive *pArchive) {}
-void THSoundEffects::playSound(size_t iIndex, double dVolume) {}
-void THSoundEffects::playSoundAt(size_t iIndex, int iX, int iY) {}
-void THSoundEffects::playSoundAt(size_t iIndex, double dVolume, int iX, int iY) {}
-int THSoundEffects::reserveChannel() { return 0; }
-void THSoundEffects::releaseChannel(int iChannel) {}
-void THSoundEffects::setCamera(int iX, int iY, int iRadius) {}
-void THSoundEffects::setSoundEffectsVolume(double dVolume) {}
-void THSoundEffects::setSoundEffectsOn(bool iOn) {}
+sound_effect_player::sound_effect_player() {}
+sound_effect_player::~sound_effect_player() {}
+sound_effect_player* sound_effect_player::get_singleton() {return nullptr;}
+void sound_effect_player::set_sound_archive(THSoundArchive *pArchive) {}
+void sound_effect_player::play(size_t iIndex, double dVolume) {}
+void sound_effect_player::play_at(size_t iIndex, int iX, int iY) {}
+void sound_effect_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
+int sound_effect_player::reserve_channel() { return 0; }
+void sound_effect_player::release_channel(int iChannel) {}
+void sound_effect_player::set_camera(int iX, int iY, int iRadius) {}
+void sound_effect_player::set_sound_effect_volume(double dVolume) {}
+void sound_effect_player::set_sound_effects_enabled(bool iOn) {}
 
 #endif // CORSIX_TH_USE_SDL_MIXER

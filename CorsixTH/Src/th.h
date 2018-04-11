@@ -26,51 +26,55 @@ SOFTWARE.
 #include <vector>
 
 //! Generic linked list class (for inheriting from)
-struct THLinkList
+class link_list
 {
-    THLinkList() ;
-    ~THLinkList();
+public:
+    link_list() ;
+    ~link_list();
 
-    THLinkList* m_pPrev;
-    THLinkList* m_pNext;
+    link_list* prev;
+    link_list* next;
 
-    void removeFromList();
-    int getDrawingLayer() {return m_drawingLayer;}
-    void setDrawingLayer(int layer) {m_drawingLayer = layer;}
+    void remove_from_list();
 
-    int m_drawingLayer;
+    // TODO: drawing layer doesn't belong in a generic link list.
+    int get_drawing_layer() {return drawing_layer;}
+    void set_drawing_layer(int layer) {drawing_layer = layer;}
+
+private:
+    int drawing_layer;
 };
 
 //! \brief Theme Hospital localised string list
 //!
 //! Presents Theme Hospital strings by section and index.
-class THStringList
+class th_string_list
 {
 public:
-    //! Construct an instance of THStringList from the given data
+    //! Construct an instance of string_list from the given data
     //! from a Theme Hosptial string file. The format of the data is
     //! described at:
     //! https://github.com/alexandergitter/theme-hospital-spec/blob/master/format-specification.md#strings
     //!
     //! \param data A pointer to the raw data
     //! \param length The size of the data
-    THStringList(const uint8_t* data, size_t length);
+    th_string_list(const uint8_t* data, size_t length);
 
     // Delete default constructors and assignment operators. They
     // can be implemented properly later if they are needed but
     // for now they are unneeded so it is safer to remove them.
-    THStringList() = delete;
-    THStringList(const THStringList &) = delete;
-    THStringList(THStringList &&) = delete;
-    THStringList& operator= (const THStringList &) = delete;
-    THStringList&& operator= (THStringList &&) = delete;
-    ~THStringList();
+    th_string_list() = delete;
+    th_string_list(const th_string_list &) = delete;
+    th_string_list(th_string_list &&) = delete;
+    th_string_list& operator= (const th_string_list &) = delete;
+    th_string_list&& operator= (th_string_list &&) = delete;
+    ~th_string_list();
 
     //! Get the number of sections in the string list
-    size_t getSectionCount();
+    size_t get_section_count();
 
     //! Get the number of strings in a section of the string list
-    size_t getSectionSize(size_t section);
+    size_t get_section_size(size_t section);
 
     //! Get a string from the string list
     /*!
@@ -78,7 +82,7 @@ public:
         @param index String index in range [0, getSectionSize(iSection) - 1]
         @return nullptr if the index is invalid, otherwise a UTF-8 encoded string.
     */
-    const char* getString(size_t section, size_t index);
+    const char* get_string(size_t section, size_t index);
 
 private:
     //! Section information
