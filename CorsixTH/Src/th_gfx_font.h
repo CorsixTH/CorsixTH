@@ -28,38 +28,38 @@ SOFTWARE.
 #include FT_FREETYPE_H
 #endif
 
-enum class eTHAlign {
+enum class text_alignment {
     left = 0,
     center = 1,
     right = 2,
 };
 
 /** Structure for the bounds of a text string that is rendered to the screen. */
-struct THFontDrawArea
+struct text_layout
 {
     //! Number of rows the rendered text spans
-    int iNumRows;
+    int row_count;
 
     //! Left X-coordinate for the start of the text
-    int iStartX;
+    int start_x;
 
     //! Right X-coordinate for the right part of the last letter rendered
-    int iEndX;
+    int end_x;
 
     //! Top Y-coordinate for the start of the text
-    int iStartY;
+    int start_y;
 
     //! Bottom Y-coordinate for the end of the text
-    int iEndY;
+    int end_y;
 
     //! Width of the widest line in the text
-    int iWidth;
+    int width;
 };
 
-class THFont
+class font
 {
 public:
-    virtual ~THFont() = default;
+    virtual ~font() = default;
 
     //! Get the size of drawn text.
     /*!
@@ -72,8 +72,8 @@ public:
         @param iMaxWidth The maximum length, in pixels, that the text may
             occupy. Default is INT_MAX.
     */
-    virtual THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                                       int iMaxWidth = INT_MAX) const = 0;
+    virtual text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+            int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
     /*!
@@ -87,8 +87,8 @@ public:
         @param iY The Y coordinate of the top-left corner of the bounding
             rectangle for the drawn text.
     */
-    virtual void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                          size_t iMessageLength, int iX, int iY) const = 0;
+    virtual void draw_text(render_target* pCanvas, const char* sMessage,
+                           size_t iMessageLength, int iX, int iY) const = 0;
 
     //! Draw a single line of text, splitting it at word boundaries
     /*!
@@ -108,16 +108,16 @@ public:
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
     */
-    virtual THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    virtual text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-            eTHAlign eAlign = eTHAlign::left) const = 0;
+            text_alignment eAlign = text_alignment::left) const = 0;
 };
 
-class THBitmapFont final : public THFont
+class bitmap_font final : public font
 {
 public:
-    THBitmapFont();
+    bitmap_font();
 
     //! Set the character glyph sprite sheet
     /*!
@@ -125,32 +125,32 @@ public:
         index 1, and other ASCII characters following on in simple order (i.e.
         '!' (ASCII 0x21) at index 2, 'A' (ASCII 0x41) at index 34, etc.)
     */
-    void setSpriteSheet(THSpriteSheet* pSpriteSheet);
+    void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
-    THSpriteSheet* getSpriteSheet() {return m_pSpriteSheet;}
+    sprite_sheet* get_sprite_sheet() {return sheet;}
 
     //! Set the separation between characters and between lines
     /*!
         Generally, the sprite sheet glyphs will already include separation, and
         thus no extra separation is required (set iCharSep and iLineSep to 0).
     */
-    void setSeparation(int iCharSep, int iLineSep);
+    void set_separation(int iCharSep, int iLineSep);
 
-    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                               int iMaxWidth = INT_MAX) const override;
+    text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+            int iMaxWidth = INT_MAX) const override;
 
-    void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                  size_t iMessageLength, int iX, int iY) const override;
+    void draw_text(render_target* pCanvas, const char* sMessage,
+                   size_t iMessageLength, int iX, int iY) const override;
 
-    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-            eTHAlign eAlign = eTHAlign::left) const override;
+            text_alignment eAlign = text_alignment::left) const override;
 
 private:
-    THSpriteSheet* m_pSpriteSheet;
-    int m_iCharSep;
-    int m_iLineSep;
+    sprite_sheet* sheet;
+    int letter_spacing;
+    int line_spacing;
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
@@ -167,11 +167,11 @@ private:
     THRawBitmap class, but with an alpha channel, and a single colour rather
     than a palette).
 */
-class THFreeTypeFont final : public THFont
+class freetype_font final : public font
 {
 public:
-    THFreeTypeFont();
-    ~THFreeTypeFont();
+    freetype_font();
+    ~freetype_font();
 
     //! Get the copyright notice which should be displayed for FreeType2.
     /*!
@@ -179,7 +179,7 @@ public:
         function needs to be displayed at some point.
         @return A null-terminated UTF-8 encoded string.
     */
-    static const char* getCopyrightNotice();
+    static const char* get_copyright_notice();
 
     //! Initialise the FreeType2 library.
     /*!
@@ -188,7 +188,7 @@ public:
     FT_Error initialise();
 
     //! Remove all cached strings, as our graphics context has changed
-    void clearCache();
+    void clear_cache();
 
     //! Set the font face to be used.
     /*!
@@ -197,7 +197,7 @@ public:
             of the THFreeTypeFont objcect.
         @param iLength The size, in bytes, of the font file at pData.
     */
-    FT_Error setFace(const uint8_t* pData, size_t iLength);
+    FT_Error set_face(const uint8_t* pData, size_t iLength);
 
     //! Set the font size and colour to match that of a bitmap font.
     /*!
@@ -206,7 +206,7 @@ public:
 
         @param pBitmapFontSpriteSheet The sprite sheet of the bitmap font.
     */
-    FT_Error matchBitmapFont(THSpriteSheet* pBitmapFontSpriteSheet);
+    FT_Error match_bitmap_font(sprite_sheet* pBitmapFontSpriteSheet);
 
     //! Set the ideal character size using pixel values.
     /*!
@@ -214,72 +214,72 @@ public:
         would result in a much nicer rendered font. This must be called after
         setFace().
     */
-    FT_Error setPixelSize(int iWidth, int iHeight);
+    FT_Error set_ideal_character_size(int iWidth, int iHeight);
 
-    THFontDrawArea getTextSize(const char* sMessage, size_t iMessageLength,
-                               int iMaxWidth = INT_MAX) const override;
+    text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+            int iMaxWidth = INT_MAX) const override;
 
-    void drawText(THRenderTarget* pCanvas, const char* sMessage,
-                  size_t iMessageLength, int iX, int iY) const override;
+    void draw_text(render_target* pCanvas, const char* sMessage,
+                   size_t iMessageLength, int iX, int iY) const override;
 
-    THFontDrawArea drawTextWrapped(THRenderTarget* pCanvas, const char* sMessage,
+    text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
             size_t iMessageLength, int iX, int iY,
             int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
-            eTHAlign eAlign = eTHAlign::left) const override;
+            text_alignment eAlign = text_alignment::left) const override;
 
 private:
-    struct cached_text_t
+    struct cached_text
     {
         //! The text being converted to pixels
-        char* sMessage;
+        char* message;
 
         //! Raw pixel data in row major 8-bit greyscale
-        uint8_t* pData;
+        uint8_t* data;
 
         //! Generated texture ready to be rendered
-        SDL_Texture* pTexture;
+        SDL_Texture* texture;
 
         //! The length of sMessage
-        size_t iMessageLength;
+        size_t message_length;
 
         //! The size of the buffer allocated to store sMessage
-        size_t iMessageBufferLength;
+        size_t message_buffer_length;
 
         //! Width of the image to draw
-        int iWidth;
+        int width;
 
         //! Height of the image to draw
-        int iHeight;
+        int height;
 
         //! The width of the longest line of text in in the textbox in pixels
-        int iWidestLine;
+        int widest_line_width;
 
         //! X Coordinate trailing the last character in canvas coordinates
-        int iLastX;
+        int last_x;
 
         //! Number of rows required
-        int iNumRows;
+        int row_count;
 
         //! Alignment of the message in the box
-        eTHAlign eAlign;
+        text_alignment alignment;
 
-        //! True when the pData reflects the sMessage given the size constraints
-        bool bIsValid;
+        //! True when the data reflects the message given the size constraints
+        bool is_valid;
     };
 
     //! Render a FreeType2 monochrome bitmap to a cache canvas.
-    void _renderMono(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
+    void render_mono(cached_text *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
 
     //! Render a FreeType2 grayscale bitmap to a cache canvas.
-    void _renderGray(cached_text_t *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
+    void render_gray(cached_text *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
 
-    static FT_Library ms_pFreeType;
-    static int ms_iFreeTypeInitCount;
-    static const int ms_CacheSizeLog2 = 7;
-    FT_Face m_pFace;
-    THColour m_oColour;
-    bool m_bDoneFreeTypeInit;
-    mutable cached_text_t m_aCache[1 << ms_CacheSizeLog2];
+    static FT_Library freetype_library;
+    static int freetype_init_count;
+    static const int cache_size_log2 = 7;
+    FT_Face font_face;
+    argb_colour colour;
+    bool is_done_freetype_init;
+    mutable cached_text cache[1 << cache_size_log2];
 
     // The following five methods are implemented by the rendering engine.
 
@@ -289,7 +289,7 @@ private:
             8-bit grayscale rendering should be used (though in the latter
             case, 1-bit rendering might still get used).
     */
-    bool _isMonochrome() const;
+    bool is_monochrome() const;
 
     //! Convert a cache canvas containing rendered text into a texture.
     /*!
@@ -300,7 +300,7 @@ private:
             an object which can be used by the rendering engine, and store the
             result in the pTexture or iTexture field.
     */
-    void _makeTexture(THRenderTarget *pEventualCanvas, cached_text_t* pCacheEntry) const;
+    void make_texture(render_target *pEventualCanvas, cached_text* pCacheEntry) const;
 
     //! Free a previously-made texture of a cache entry.
     /*!
@@ -309,7 +309,7 @@ private:
 
         @param pCacheEntry A cache entry previously passed to _makeTexture().
     */
-    void _freeTexture(cached_text_t* pCacheEntry) const;
+    void free_texture(cached_text* pCacheEntry) const;
 
     //! Render a previously-made texture of a cache entry.
     /*!
@@ -320,7 +320,7 @@ private:
         @param iX The X position at which to draw the texture on the canvas.
         @param iY The Y position at which to draw the texture on the canvas.
     */
-    void _drawTexture(THRenderTarget* pCanvas, cached_text_t* pCacheEntry,
+    void draw_texture(render_target* pCanvas, cached_text* pCacheEntry,
                       int iX, int iY) const;
 };
 #endif // CORSIX_TH_USE_FREETYPE2

@@ -24,12 +24,12 @@ SOFTWARE.
 #define CORSIX_TH_TH_PATHFIND_H_
 #include "th_map.h"
 
-class LuaPersistReader;
-class LuaPersistWriter;
-class THPathfinder;
+class lua_persist_reader;
+class lua_persist_writer;
+class pathfinder;
 
 /** Directions of movement. */
-enum class TravelDirection {
+enum class travel_direction {
     north = 0, ///< Move to the north.
     east = 1, ///< Move to the east.
     south = 2, ///< Move to the south.
@@ -37,14 +37,14 @@ enum class TravelDirection {
 };
 
 /** Node in the path finder routines. */
-struct node_t
+struct path_node
 {
     //! Pointer to the previous node in the path to this cell.
     /*!
         Points to nullptr if this is the first cell in the path, or points to
         itself if it is not part of a path.
     */
-    const node_t* prev;
+    const path_node* prev;
 
     //! X-position of this cell (constant)
     int x;
@@ -80,11 +80,11 @@ struct node_t
 };
 
 /** Base class of the path finders. */
-class BasePathing
+class abstract_pathfinder
 {
 public:
-    BasePathing(THPathfinder *pf);
-    virtual ~BasePathing() = default;
+    abstract_pathfinder(pathfinder *pf);
+    virtual ~abstract_pathfinder() = default;
 
     //! Initialize the path finder.
     /*!
@@ -93,7 +93,7 @@ public:
         @param iStarty Y coordinate of the start position.
         @return The initial node to expand.
      */
-    node_t *pathingInit(const THMap *pMap, int iStartX, int iStarty);
+    path_node *init(const level_map *pMap, int iStartX, int iStarty);
 
     //! Expand the \a pNode to its neighbours.
     /*!
@@ -102,16 +102,16 @@ public:
         @param iWidth Width of the map.
         @return Whether the search is done.
      */
-    bool pathingNeighbours(node_t *pNode, th_map_node_flags flags, int iWidth);
+    bool search_neighbours(path_node *pNode, map_tile_flags flags, int iWidth);
 
-    void pathingTryNode(node_t *pNode, th_map_node_flags neighbour_flags,
-        bool passable, node_t *pNeighbour);
+    void record_neighbour_if_passable(path_node *pNode, map_tile_flags neighbour_flags,
+        bool passable, path_node *pNeighbour);
 
     //! Guess distance to the destination for \a pNode.
     /*!
         @param pNode Node to fill.
      */
-    virtual int makeGuess(node_t *pNode) = 0;
+    virtual int guess_distance(path_node *pNode) = 0;
 
     //! Try the \a pNeighbour node.
     /*!
@@ -121,155 +121,155 @@ public:
         @param direction Direction of travel.
         @return Whether the search is done.
      */
-    virtual bool tryNode(node_t *pNode, th_map_node_flags flags,
-            node_t *pNeighbour, TravelDirection direction) = 0;
+    virtual bool try_node(path_node *pNode, map_tile_flags flags,
+            path_node *pNeighbour, travel_direction direction) = 0;
 
 protected:
-    THPathfinder *m_pPf; ///< Path finder parent object, containing shared data.
-    const THMap *m_pMap; ///< Map being searched.
+    pathfinder *parent; ///< Path finder parent object, containing shared data.
+    const level_map *map; ///< Map being searched.
 };
 
-class PathFinder : public BasePathing
+class basic_pathfinder : public abstract_pathfinder
 {
 public:
-    PathFinder(THPathfinder *pf) : BasePathing(pf) { }
+    basic_pathfinder(pathfinder *pf) : abstract_pathfinder(pf) { }
 
-    int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
-            node_t *pNeighbour, TravelDirection direction) override;
+    int guess_distance(path_node *pNode) override;
+    bool try_node(path_node *pNode, map_tile_flags flags,
+            path_node *pNeighbour, travel_direction direction) override;
 
-    bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
+    bool find_path(const level_map *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
 
-    int m_iEndX; ///< X coordinate of the destination of the path.
-    int m_iEndY; ///< Y coordinate of the destination of the path.
+    int destination_x; ///< X coordinate of the destination of the path.
+    int destination_y; ///< Y coordinate of the destination of the path.
 };
 
-class HospitalFinder : public BasePathing
+class hospital_finder : public abstract_pathfinder
 {
 public:
-    HospitalFinder(THPathfinder *pf) : BasePathing(pf) { }
+    hospital_finder(pathfinder *pf) : abstract_pathfinder(pf) { }
 
-    int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
-            node_t *pNeighbour, TravelDirection direction) override;
+    int guess_distance(path_node *pNode) override;
+    bool try_node(path_node *pNode, map_tile_flags flags,
+            path_node *pNeighbour, travel_direction direction) override;
 
-    bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY);
+    bool find_path_to_hospital(const level_map *pMap, int iStartX, int iStartY);
 };
 
-class IdleTileFinder : public BasePathing
+class idle_tile_finder : public abstract_pathfinder
 {
 public:
-    IdleTileFinder(THPathfinder *pf) : BasePathing(pf) { }
+    idle_tile_finder(pathfinder *pf) : abstract_pathfinder(pf) { }
 
-    int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
-            node_t *pNeighbour, TravelDirection direction) override;
+    int guess_distance(path_node *pNode) override;
+    bool try_node(path_node *pNode, map_tile_flags flags,
+            path_node *pNeighbour, travel_direction direction) override;
 
-    bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN);
+    bool find_idle_tile(const level_map *pMap, int iStartX, int iStartY, int iN);
 
-    node_t *m_pBestNext;
-    double m_fBestDistance;
-    int m_iStartX;       ///< X coordinate of the start position.
-    int m_iStartY;       ///< Y coordinate of the start position.
+    path_node *best_next_node;
+    double best_distance;
+    int start_x;       ///< X coordinate of the start position.
+    int start_y;       ///< Y coordinate of the start position.
 };
 
-class Objectsvisitor : public BasePathing
+class object_visitor : public abstract_pathfinder
 {
 public:
-    Objectsvisitor(THPathfinder *pf) : BasePathing(pf) { }
+    object_visitor(pathfinder *pf) : abstract_pathfinder(pf) { }
 
-    int makeGuess(node_t *pNode) override;
-    bool tryNode(node_t *pNode, th_map_node_flags flags,
-            node_t *pNeighbour, TravelDirection direction) override;
+    int guess_distance(path_node *pNode) override;
+    bool try_node(path_node *pNode, map_tile_flags flags,
+            path_node *pNeighbour, travel_direction direction) override;
 
-    bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
-                      THObjectType eTHOB, int iMaxDistance,
+    bool visit_objects(const level_map *pMap, int iStartX, int iStartY,
+                      object_type eTHOB, int iMaxDistance,
                       lua_State *L, int iVisitFunction, bool anyObjectType);
 
-    lua_State *m_pL;
-    int m_iVisitFunction;
-    int m_iMaxDistance;
-    bool m_bAnyObjectType;
-    THObjectType m_eTHOB;
+    lua_State *L;
+    int visit_function_index;
+    int max_distance;
+    bool target_any_object_type;
+    object_type target;
 };
 
 //! Finds paths through maps
 /*!
     A pathfinder is used for finding a path through a map. A single pathfinder
     instance is not reentrant, but separate instances are. Users of the class
-    should call findPath() to test if there is a path between two points on a
-    map, and then use getPathLength() and/or pushResult() to get the actual
+    should call find_path() to test if there is a path between two points on a
+    map, and then use get_path_length() and/or push_result() to get the actual
     path.
 
     Internally, the A* search algorithm is used. The open set is implemented as
-    a heap in m_openHeap, and there is no explicit closed set. For each cell
-    of the map, a node_t structure is created (and cached between searches if
+    a heap in open_heap, and there is no explicit closed set. For each cell
+    of the map, a path_node structure is created (and cached between searches if
     the map size is constant), which holds information about said map cell in
     the current search. The algorithm is implemented in such a way that most
     path find operations do not need to allocate (or free) any memory.
 */
-class THPathfinder
+class pathfinder
 {
 public:
-    THPathfinder();
-    ~THPathfinder();
+    pathfinder();
+    ~pathfinder();
 
-    void setDefaultMap(const THMap *pMap);
+    void set_default_map(const level_map *pMap);
 
-    inline bool findPath(const THMap *pMap, int iStartX, int iStartY, int iEndX,
+    inline bool find_path(const level_map *pMap, int iStartX, int iStartY, int iEndX,
                          int iEndY)
     {
-        return m_oPathFinder.findPath(pMap, iStartX, iStartY, iEndX, iEndY);
+        return basic_pathfinder.find_path(pMap, iStartX, iStartY, iEndX, iEndY);
     }
 
-    inline bool findIdleTile(const THMap *pMap, int iStartX, int iStartY, int iN)
+    inline bool find_idle_tile(const level_map *pMap, int iStartX, int iStartY, int iN)
     {
-        return m_oIdleTileFinder.findIdleTile(pMap, iStartX, iStartY, iN);
+        return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN);
     }
 
-    inline bool findPathToHospital(const THMap *pMap, int iStartX, int iStartY)
+    inline bool find_path_to_hospital(const level_map *pMap, int iStartX, int iStartY)
     {
-        return m_oHospitalFinder.findPathToHospital(pMap, iStartX, iStartY);
+        return hospital_finder.find_path_to_hospital(pMap, iStartX, iStartY);
     }
 
-    inline bool visitObjects(const THMap *pMap, int iStartX, int iStartY,
-                      THObjectType eTHOB, int iMaxDistance, lua_State *L,
+    inline bool visit_objects(const level_map *pMap, int iStartX, int iStartY,
+                      object_type eTHOB, int iMaxDistance, lua_State *L,
                       int iVisitFunction, bool anyObjectType)
     {
-        return m_oObjectsvisitor.visitObjects(
+        return object_visitor.visit_objects(
                             pMap, iStartX, iStartY, eTHOB, iMaxDistance,
                             L, iVisitFunction, anyObjectType);
     }
 
-    int getPathLength() const;
-    bool getPathEnd(int* pX, int* pY) const;
-    void pushResult(lua_State *L) const;
+    int get_path_length() const;
+    bool get_path_end(int* pX, int* pY) const;
+    void push_result(lua_State *L) const;
 
-    void persist(LuaPersistWriter *pWriter) const;
-    void depersist(LuaPersistReader *pReader);
+    void persist(lua_persist_writer *pWriter) const;
+    void depersist(lua_persist_reader *pReader);
 
     //! Allocate node cache for all tiles of the map.
     /*!
         @param iWidth Width of the map.
         @param iHeight Height of the map.
      */
-    void _allocNodeCache(int iWidth, int iHeight);
+    void allocate_node_cache(int iWidth, int iHeight);
 
-    node_t* _openHeapPop();
-    void _openHeapPush(node_t* pNode);
-    void _openHeapPromote(node_t* pNode);
+    path_node* pop_from_open_heap();
+    void push_to_open_heap(path_node* pNode);
+    void open_heap_promote(path_node* pNode);
 
-    const THMap *m_pDefaultMap;
+    const level_map *default_map;
 
     //! 2D array of nodes, one for each map cell
-    node_t *m_pNodes;
+    path_node *nodes;
 
     //! Array of "dirty" nodes which need to be reset before the next path find
     /*!
         This array is always large enough to hold every single node, and
-        #m_iDirtyCount holds the number of items currently in the array.
+        #dirty_node_count holds the number of items currently in the array.
     */
-    node_t **m_ppDirtyList;
+    path_node **dirty_node_list;
 
     //! Heap of not yet evaluated nodes as a 0-based array
     /*!
@@ -278,18 +278,18 @@ public:
           value(i) <= value(i * 2 + 2)
         This causes the array to be a minimum binary heap.
     */
-    std::vector<node_t*> m_openHeap;
+    std::vector<path_node*> open_heap;
 
-    node_t *m_pDestination;
-    int m_iNodeCacheWidth;
-    int m_iNodeCacheHeight;
-    int m_iDirtyCount;
+    path_node *destination;
+    int node_cache_width;
+    int node_cache_height;
+    int dirty_node_count;
 
 private:
-    PathFinder m_oPathFinder;
-    HospitalFinder m_oHospitalFinder;
-    IdleTileFinder m_oIdleTileFinder;
-    Objectsvisitor m_oObjectsvisitor;
+    ::basic_pathfinder basic_pathfinder;
+    ::hospital_finder hospital_finder;
+    ::idle_tile_finder idle_tile_finder;
+    ::object_visitor object_visitor;
 };
 
 #endif // CORSIX_TH_TH_PATHFIND_H_

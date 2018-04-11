@@ -293,7 +293,7 @@ static inline void push(lua_State *L, std::vector<uint8_t> data)
     lua_pushlstring(L, reinterpret_cast<const char*>(data.data()), data.size());
 }
 
-int Bootstrap_lua_resources(lua_State *L)
+int bootstrap_lua_resources(lua_State *L)
 {
     push(L, g_aBootstrapFontDat);
     push(L, g_aBootstrapFontTab);
@@ -301,12 +301,12 @@ int Bootstrap_lua_resources(lua_State *L)
     return 3;
 }
 
-int Bootstrap_lua_error_report(lua_State *L)
+int bootstrap_lua_error_report(lua_State *L)
 {
     int iLine = -g_iBootstrapCodeLineNumStart;
     if(luaT_load(L, read_bootstrap_line, &iLine, "@bootstrap.cpp", "t") == 0)
     {
-        Bootstrap_lua_resources(L);
+        bootstrap_lua_resources(L);
         lua_pushvalue(L, 1);
         lua_call(L, 4, 0);
         return 0;

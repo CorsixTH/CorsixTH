@@ -31,16 +31,17 @@ SOFTWARE.
 #endif
 #include <cstring>
 
-struct music_t
+class music
 {
+public:
     Mix_Music* pMusic;
 
-    music_t()
+    music()
     {
         pMusic = nullptr;
     }
 
-    ~music_t()
+    ~music()
     {
         if(pMusic)
         {
@@ -76,7 +77,7 @@ static int l_init(lua_State *L)
     }
 }
 
-struct load_music_async_t
+struct load_music_async_data
 {
     lua_State* L;
     Mix_Music* music;
@@ -86,7 +87,7 @@ struct load_music_async_t
 
 int l_load_music_async_callback(lua_State *L)
 {
-    load_music_async_t *async = (load_music_async_t*)lua_touserdata(L, 1);
+    load_music_async_data *async = (load_music_async_data*)lua_touserdata(L, 1);
 
     // Replace light UD with full UD
     lua_pushvalue(L, 1);
@@ -118,7 +119,7 @@ int l_load_music_async_callback(lua_State *L)
     else
     {
         lua_rawgeti(L, 2, 2);
-        music_t* pLMusic = (music_t*)lua_touserdata(L, -1);
+        music* pLMusic = (music*)lua_touserdata(L, -1);
         pLMusic->pMusic = async->music;
         async->music = nullptr;
     }
@@ -136,7 +137,7 @@ int l_load_music_async_callback(lua_State *L)
 
 static int load_music_async_thread(void* arg)
 {
-    load_music_async_t *async = (load_music_async_t*)arg;
+    load_music_async_data *async = (load_music_async_data*)arg;
     async->music = Mix_LoadMUS_RW(async->rwop, 1);
     async->rwop = nullptr;
     if(async->music == nullptr)
@@ -160,7 +161,7 @@ static int l_load_music_async(lua_State *L)
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
     lua_settop(L, 2);
 
-    load_music_async_t *async = luaT_new(L, load_music_async_t);
+    load_music_async_data *async = luaT_new(L, load_music_async_data);
     lua_pushlightuserdata(L, async);
     lua_pushvalue(L, -2);
     lua_settable(L, LUA_REGISTRYINDEX);
@@ -171,7 +172,7 @@ static int l_load_music_async(lua_State *L)
     lua_createtable(L, 2, 0);
     lua_pushvalue(L, 2);
     lua_rawseti(L, -2, 1);
-    luaT_stdnew<music_t>(L, luaT_environindex, true);
+    luaT_stdnew<music>(L, luaT_environindex, true);
     lua_pushvalue(L, 1);
     luaT_setenvfield(L, -2, "data");
     lua_rawseti(L, -2, 2);
@@ -206,7 +207,7 @@ static int l_load_music(lua_State *L)
         lua_pushstring(L, Mix_GetError());
         return 2;
     }
-    music_t* pLMusic = luaT_stdnew<music_t>(L, luaT_environindex, true);
+    music* pLMusic = luaT_stdnew<music>(L, luaT_environindex, true);
     pLMusic->pMusic = pMusic;
     lua_pushvalue(L, 1);
     luaT_setenvfield(L, -2, "data");
@@ -228,7 +229,7 @@ static int l_music_volume(lua_State *L)
 
 static int l_play_music(lua_State *L)
 {
-    music_t* pLMusic = luaT_testuserdata<music_t>(L, -1);
+    music* pLMusic = luaT_testuserdata<music>(L, -1);
     if(Mix_PlayMusic(pLMusic->pMusic, static_cast<int>(luaL_optinteger(L, 2, 1))) != 0)
     {
         lua_pushnil(L);
@@ -264,7 +265,7 @@ static int l_transcode_xmi(lua_State *L)
     size_t iLength, iMidLength;
     const uint8_t *pData = luaT_checkfile(L, 1, &iLength);
 
-    uint8_t *pMidData = TranscodeXmiToMid(pData, iLength, &iMidLength);
+    uint8_t *pMidData = transcode_xmi_to_midi(pData, iLength, &iMidLength);
     if(pMidData == nullptr)
     {
         lua_pushnil(L);
@@ -305,7 +306,7 @@ int luaopen_sdl_audio(lua_State *L)
     lua_pushvalue(L, -1);
     lua_replace(L, luaT_environindex);
     lua_pushvalue(L, luaT_environindex);
-    luaT_pushcclosure(L, luaT_stdgc<music_t, luaT_environindex>, 1);
+    luaT_pushcclosure(L, luaT_stdgc<music, luaT_environindex>, 1);
     lua_setfield(L, -2, "__gc");
     lua_pushvalue(L, 1);
     lua_setfield(L, -2, "__index");
