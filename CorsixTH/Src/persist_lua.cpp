@@ -455,7 +455,7 @@ public:
 #if LUA_VERSION_NUM >= 502
                     write_uint(sizeof(void*));
 #else
-                    writeVUInt(0);
+                    write_uint(0);
 #endif
                     for(int i = 1; i <= proto_info.nups; ++i)
                     {
