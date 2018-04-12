@@ -110,7 +110,7 @@ static void CopyStringCP437(const uint8_t*& sIn, uint8_t*& sOut)
         }
         else
         {
-            utf8encode(sOut, g_aCP437toUnicode[cChar - 0x80]);
+            utf8encode(sOut, cp437_to_unicode_table[cChar - 0x80]);
         }
     } while(cChar != 0);
 }
@@ -133,7 +133,7 @@ static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
             ++sIn;
             if(0x40 <= cChar2 && cChar2 <= 0xFE)
             {
-                utf8encode(sOut, g_aCP936toUnicode[cChar1-0x81][cChar2-0x40]);
+                utf8encode(sOut, cp936_to_unicode_table[cChar1-0x81][cChar2-0x40]);
                 // The Theme Hospital string tables seem to like following a
                 // multibyte character with a superfluous space.
                 cChar2 = *sIn;

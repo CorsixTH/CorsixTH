@@ -55,11 +55,11 @@ class string_proxy {};
 
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
-static uint8_t g_aStringDummyGlobals[2] = {0};
+static uint8_t weak_table_keys[2] = {0};
 
 static inline void aux_push_weak_table(lua_State *L, int iIndex)
 {
-    lua_pushlightuserdata(L, &g_aStringDummyGlobals[iIndex]);
+    lua_pushlightuserdata(L, &weak_table_keys[iIndex]);
     lua_rawget(L, LUA_REGISTRYINDEX);
 }
 
@@ -702,7 +702,7 @@ void lua_register_strings(const lua_register_state *pState)
     // Create Value, and Cache weak tables for inside-out objects.
     for(int i = 0; i <= 1; ++i)
     {
-        lua_pushlightuserdata(L, &g_aStringDummyGlobals[i]);
+        lua_pushlightuserdata(L, &weak_table_keys[i]);
         lua_newtable(L);
         lua_createtable(L, 0, 1);
         lua_pushliteral(L, "__mode");
@@ -724,7 +724,7 @@ void lua_register_strings(const lua_register_state *pState)
     }
     // Give the Value weak table a friendly name for Lua code to use
     lua_pushliteral(L, "StringProxyValues");
-    lua_pushlightuserdata(L, &g_aStringDummyGlobals[0]);
+    lua_pushlightuserdata(L, &weak_table_keys[0]);
     lua_rawget(L, LUA_REGISTRYINDEX);
     lua_rawset(L, LUA_REGISTRYINDEX);
 
