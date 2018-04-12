@@ -4,7 +4,7 @@
 // 1st byte is between 0x81 and 0xFE (subtract 0x81 for table lookup)
 // 2nd byte is between 0x40 and 0xFE (subtract 0x40 for table lookup)
 // Unspecified codes are mapped to 0x003F
-static const uint16_t g_aCP936toUnicode[126][191] = {
+static const uint16_t cp936_to_unicode_table[126][191] = {
     {
         0x4E02, 0x4E04, 0x4E05, 0x4E06, 0x4E0F, 0x4E12, 0x4E17, 0x4E1F,
         0x4E20, 0x4E21, 0x4E23, 0x4E26, 0x4E29, 0x4E2E, 0x4E2F, 0x4E31,
