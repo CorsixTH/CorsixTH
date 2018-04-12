@@ -28,7 +28,6 @@ int luaopen_random(lua_State *L);
 #include "rnc.h"
 #include "th_lua.h"
 #include "lua_sdl.h"
-#include "jit_opt.h"
 #include "persist_lua.h"
 #include "iso_fs.h"
 #include <cstring>
@@ -57,42 +56,6 @@ int lua_main_no_eval(lua_State *L)
 
     // math.random* = Mersenne twister variant
     luaT_cpcall(L, luaopen_random, nullptr);
-
-    // package.preload["jit.opt"] = load(jit_opt_lua)
-    // package.preload["jit.opt_inline"] = load(jit_opt_inline_lua)
-    lua_getglobal(L, "package");
-    lua_getfield(L, -1, "preload");
-    luaL_loadbuffer(L, (const char*)jit_opt_lua, sizeof(jit_opt_lua),
-        "jit/opt.luac");
-    lua_setfield(L, -2, "jit.opt");
-    luaL_loadbuffer(L, (const char*)jit_opt_inline_lua,
-        sizeof(jit_opt_inline_lua), "jit/opt_inline.luac");
-    lua_setfield(L, -2, "jit.opt_inline");
-    lua_pop(L, 2);
-
-    // if registry._LOADED.jit then
-    // require"jit.opt".start()
-    // else
-    // print "Notice: ..."
-    // end
-    // (this could be done in Lua rather than here, but ideally the optimiser
-    // should be turned on before any Lua code is loaded)
-    lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
-    lua_getfield(L, -1, "jit");
-    if(lua_type(L, -1) == LUA_TNIL)
-    {
-        lua_pop(L, 2);
-    }
-    else
-    {
-        lua_pop(L, 2);
-        lua_getglobal(L, "require");
-        lua_pushliteral(L, "jit.opt");
-        lua_call(L, 1, 1);
-        lua_getfield(L, -1, "start");
-        lua_call(L, 0, 0);
-        lua_pop(L, 1);
-    }
 
     // Fill in package.preload table so that calls to require("X") from Lua
     // will call the appropriate luaopen_X function in C.
