@@ -53,14 +53,6 @@ SOFTWARE.
 // Chinese are desired.
 #cmakedefine CORSIX_TH_USE_FREETYPE2
 
-/** Environment detection **/
-#if defined(__amd64__) || defined(__IA64__) || defined(__x86_64__) || \
-    defined(__x86_64) || defined(_M_IA64) ||  defined(_IA64) || \
-    defined(_M_X64) || defined(_WIN64) || defined(__ia64__) || \
-    defined(__amd64) || defined (_LP64) || defined(__ia64)
-#define CORSIX_TH_64BIT
-#endif
-
 #ifdef _MSC_VER
 #define CORSIX_TH_USE_PACK_PRAGMAS 1
 #define CORSIX_TH_PACKED_FLAGS
@@ -75,6 +67,11 @@ SOFTWARE.
 #endif
 #include <cstddef>
 #include <cstdint>
+
+/** Environment detection **/
+#if UINTPTR_MAX == UINT64_MAX
+#define CORSIX_TH_64BIT
+#endif
 
 // We bring in the most common stddef and stdint types to avoid typing
 using std::size_t;
