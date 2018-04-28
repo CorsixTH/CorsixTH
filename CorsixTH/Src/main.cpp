@@ -25,8 +25,8 @@ SOFTWARE.
 extern "C" {
 int luaopen_random(lua_State *L);
 }
-#include "rnc.h"
 #include "th_lua.h"
+#include "lua_rnc.h"
 #include "lua_sdl.h"
 #include "persist_lua.h"
 #include "iso_fs.h"

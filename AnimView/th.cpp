@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "th.h"
+#include "../common/rnc.h"
 #include <wx/app.h>
 #include <wx/toplevel.h>
 #include <wx/filename.h>
@@ -807,6 +808,25 @@ th_element_t* THAnimations::_getElement(uint32_t iListIndex)
     if(iElementIndex > m_iElementCount)
         return NULL;
     return m_pElements + iElementIndex;
+}
+
+unsigned char* THAnimations::Decompress(unsigned char* pData, size_t& iLength)
+{
+    unsigned long outlen = rnc_output_size(pData);
+    unsigned char* outbuf = new unsigned char[outlen];
+    if(rnc_unpack(pData, outbuf) == rnc_status::ok)
+    {
+        delete[] pData;
+        iLength = outlen;
+        return outbuf;
+    }
+    else
+    {
+        delete[] pData;
+        delete[] outbuf;
+        iLength = 0;
+        return nullptr;
+    }
 }
 
 Bitmap::Bitmap()

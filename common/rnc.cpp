@@ -34,25 +34,14 @@ SOFTWARE.
       * Style changes to conform to CorsixTH
 */
 
-#include "config.h"
 #include "rnc.h"
-#include "th_lua.h"
 #include <vector>
+#include <cstdint>
+#include <cstddef>
 
-/*! Result status values from #rnc_inpack. */
-enum class rnc_status
-{
-    ok, ///< Everything is fine
-    file_is_not_rnc, ///< The file does not begin with an RNC signature
-    huf_decode_error, ///< Error decoding the file
-    file_size_mismatch, ///< The file size does not match the header
-    packed_crc_error, ///< The compressed file does not match its checksum
-    unpacked_crc_error ///< The uncompressed file does not match its checksum
-};
+static const std::uint32_t rnc_signature = 0x524E4301; /*!< "RNC\001" */
 
-static const uint32_t rnc_signature = 0x524E4301; /*!< "RNC\001" */
-
-static const uint16_t rnc_crc_table[256] = {
+static const std::uint16_t rnc_crc_table[256] = {
     0x0000, 0xC0C1, 0xC181, 0x0140, 0xC301, 0x03C0, 0x0280, 0xC241,
     0xC601, 0x06C0, 0x0780, 0xC741, 0x0500, 0xC5C1, 0xC481, 0x0440,
     0xCC01, 0x0CC0, 0x0D80, 0xCD41, 0x0F00, 0xCFC1, 0xCE81, 0x0E40,
@@ -89,10 +78,10 @@ static const uint16_t rnc_crc_table[256] = {
 
 struct bit_stream
 {
-    uint32_t bitbuf;       ///< holds between 16 and 32 bits.
+    std::uint32_t bitbuf;       ///< holds between 16 and 32 bits.
     int bitcount;          ///< how many bits does bitbuf hold?
-    const uint8_t* endpos; ///< final position that can be read.
-    const uint8_t* p;      ///< pointer in data that stream is reading.
+    const std::uint8_t* endpos; ///< final position that can be read.
+    const std::uint8_t* p;      ///< pointer in data that stream is reading.
 };
 
 struct huf_table
@@ -100,7 +89,7 @@ struct huf_table
     int num;               ///< number of nodes in the tree.
     struct
     {
-        uint32_t code;
+        std::uint32_t code;
         int codelen;
         int value;
     } table[32];
@@ -111,14 +100,14 @@ struct huf_table
     @param data data for which to calculate the CRC
     @param len length of the data in bytes
 */
-static uint16_t rnc_crc(const uint8_t* data, size_t len)
+static std::uint16_t rnc_crc(const std::uint8_t* data, std::size_t len)
 {
-    uint16_t val = 0;
+    std::uint16_t val = 0;
 
     while(len--)
     {
-        val = static_cast<uint16_t>(val ^ *data++);
-        val = static_cast<uint16_t>((val >> 8) ^ rnc_crc_table[val & 0xFF]);
+        val = static_cast<std::uint16_t>(val ^ *data++);
+        val = static_cast<std::uint16_t>((val >> 8) ^ rnc_crc_table[val & 0xFF]);
     }
 
     return val;
@@ -129,9 +118,9 @@ static uint16_t rnc_crc(const uint8_t* data, size_t len)
 /*!
     @param p Pointer to data containing the word
 */
-static uint32_t blong (const uint8_t *p)
+static std::uint32_t blong (const std::uint8_t *p)
 {
-    uint32_t n;
+    std::uint32_t n;
     n = p[0];
     n = (n << 8) + p[1];
     n = (n << 8) + p[2];
@@ -143,9 +132,9 @@ static uint32_t blong (const uint8_t *p)
 /*!
     @param p Pointer to data containing the word
 */
-static uint32_t bword (const uint8_t *p)
+static std::uint32_t bword (const std::uint8_t *p)
 {
-    uint32_t n;
+    std::uint32_t n;
     n = p[0];
     n = (n << 8) + p[1];
     return n;
@@ -155,9 +144,9 @@ static uint32_t bword (const uint8_t *p)
 /*!
     @param p Pointer to data containing the word
  */
-static uint32_t lword (const uint8_t *p)
+static std::uint32_t lword (const std::uint8_t *p)
 {
-    uint32_t n;
+    std::uint32_t n;
     n = p[1];
     n = (n << 8) + p[0];
     return n;
@@ -168,13 +157,13 @@ static uint32_t lword (const uint8_t *p)
     @param x
     @param n
 */
-static uint32_t mirror (uint32_t x, int n)
+static std::uint32_t mirror (std::uint32_t x, int n)
 {
-    uint32_t top = 1 << (n-1), bottom = 1;
+    std::uint32_t top = 1 << (n-1), bottom = 1;
     while (top > bottom)
     {
-        uint32_t mask = top | bottom;
-        uint32_t masked = x & mask;
+        std::uint32_t mask = top | bottom;
+        std::uint32_t masked = x & mask;
         if (masked != 0 && masked != mask)
         {
             x ^= mask;
@@ -195,7 +184,7 @@ static uint32_t mirror (uint32_t x, int n)
     @param endpos Pointer to end of memory block the bitstream is
         to traverse
 */
-static void bitread_init (bit_stream *bs, const uint8_t *p, const uint8_t* endpos)
+static void bitread_init (bit_stream *bs, const std::uint8_t *p, const std::uint8_t* endpos)
 {
     bs->bitbuf = lword (p);
     bs->bitcount = 16;
@@ -234,7 +223,7 @@ static void bitread_fix (bit_stream *bs)
     @param bs Bit stream from which to peek
     @param mask A 32 bit bit mask specifying which bits to peek
 */
-static uint32_t bit_peek (bit_stream *bs, const uint32_t mask)
+static std::uint32_t bit_peek (bit_stream *bs, const std::uint32_t mask)
 {
     return bs->bitbuf & mask;
 }
@@ -279,9 +268,9 @@ static void bit_advance (bit_stream *bs, int n)
     @param n Number of bits to advance the stream.  Must be
         between 0 and 16
 */
-static uint32_t bit_read (bit_stream *bs, uint32_t mask, int n)
+static std::uint32_t bit_read (bit_stream *bs, std::uint32_t mask, int n)
 {
-    uint32_t result = bit_peek(bs, mask);
+    std::uint32_t result = bit_peek(bs, mask);
     bit_advance(bs, n);
     return result;
 }
@@ -297,7 +286,7 @@ static void read_huftable(huf_table *h, bit_stream *bs)
     int i, j, k, num;
     int leaflen[32];
     int leafmax;
-    uint32_t codeb;     /* big-endian form of code. */
+    std::uint32_t codeb;     /* big-endian form of code. */
 
     num = bit_read(bs, 0x1F, 5);
 
@@ -343,11 +332,11 @@ static void read_huftable(huf_table *h, bit_stream *bs)
     @param p input data
     @return The value from the table with the matching bits, or -1 if none found.
 */
-static uint32_t huf_read(huf_table *h, bit_stream *bs, const uint8_t **p)
+static std::uint32_t huf_read(huf_table *h, bit_stream *bs, const std::uint8_t **p)
 {
     int i;
-    uint32_t val;
-    uint32_t mask;
+    std::uint32_t val;
+    std::uint32_t mask;
 
     // Find the current bits in the table
     for (i = 0; i < h->num; i++)
@@ -376,6 +365,16 @@ static uint32_t huf_read(huf_table *h, bit_stream *bs, const uint8_t **p)
     return val;
 }
 
+std::size_t rnc_output_size(const std::uint8_t* input)
+{
+    return static_cast<std::size_t>(blong(input + 4));
+}
+
+std::size_t rnc_input_size(const std::uint8_t* input)
+{
+    return static_cast<std::size_t>(blong(input + 8) + rnc_header_size);
+}
+
 //! Decompresses RNC data
 /*!
     @param input Pointer to compressed RNC data
@@ -384,15 +383,15 @@ static uint32_t huf_read(huf_table *h, bit_stream *bs, const uint8_t **p)
         4 byte segment of the input header starting at the 4th byte
         in Big-endian.
 */
-static rnc_status rnc_unpack(const uint8_t* input, uint8_t* output)
+rnc_status rnc_unpack(const std::uint8_t* input, std::uint8_t* output)
 {
-    const uint8_t *inputend;
-    uint8_t *outputend;
+    const std::uint8_t *inputend;
+    std::uint8_t *outputend;
     bit_stream input_bs;
     huf_table raw = {0}, dist = {0}, len = {0};
-    uint32_t ch_count;
-    uint32_t ret_len;
-    uint32_t out_crc;
+    std::uint32_t ch_count;
+    std::uint32_t ret_len;
+    std::uint32_t out_crc;
     if(blong(input) != rnc_signature)
     {
         return rnc_status::file_is_not_rnc;
@@ -486,76 +485,4 @@ static rnc_status rnc_unpack(const uint8_t* input, uint8_t* output)
     }
 
     return rnc_status::ok;
-}
-
-//! Provides lua function to decompress RNC data
-/*!
-    @param L Lua state where the function is called from.  In lua a call
-        to this function has one parameter which is the RNC compressed data.
-        The return value is the decompressed data.
-*/
-static int l_decompress(lua_State *L)
-{
-    size_t inlen;
-    const uint8_t* in = reinterpret_cast<const uint8_t*>(luaL_checklstring(L, 1, &inlen));
-
-    // Verify that the data contains an RNC signature, and that the input
-    // size matches the size specified in the data header.
-    if(inlen < 18 || blong(in) != rnc_signature || blong(in + 8) != (inlen - 18))
-    {
-        lua_pushnil(L);
-        lua_pushliteral(L, "Input is not RNC compressed data");
-        return 2;
-    }
-    uint32_t outlen = blong(in + 4);
-
-    // Allocate scratch area as Lua userdata so that if something horrible
-    // happens, it'll be cleaned up by Lua's GC. Remember that most Lua API
-    // calls can throw errors, so they all have to be wrapped with code to
-    // detect errors and free the buffer if said buffer was not managed by Lua.
-    void* outbuf = lua_newuserdata(L, outlen);
-
-    lua_pushnil(L);
-    switch(rnc_unpack(in, (uint8_t*)outbuf))
-    {
-    case rnc_status::ok:
-        lua_pushlstring(L, (const char*)outbuf, outlen);
-        return 1;
-
-    case rnc_status::file_is_not_rnc:
-        lua_pushliteral(L, "Input is not RNC compressed data");
-        break;
-
-    case rnc_status::huf_decode_error:
-        lua_pushliteral(L, "Invalid Huffman coding");
-        break;
-
-    case rnc_status::file_size_mismatch:
-        lua_pushliteral(L, "Size mismatch");
-        break;
-
-    case rnc_status::packed_crc_error:
-        lua_pushliteral(L, "Incorrect packed CRC");
-        break;
-
-    case rnc_status::unpacked_crc_error:
-        lua_pushliteral(L, "Incorrect unpacked CRC");
-        break;
-
-    default:
-        lua_pushliteral(L, "Unknown error decompressing RNC data");
-        break;
-    }
-    return 2;
-}
-
-static const std::vector<luaL_Reg> rnclib = {
-    {"decompress", l_decompress},
-    {nullptr, nullptr}
-};
-
-int luaopen_rnc(lua_State *L)
-{
-    luaT_register(L, "rnc", rnclib);
-    return 1;
 }

@@ -22,8 +22,27 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_RNC_H_
 #define CORSIX_TH_RNC_H_
-#include "lua.hpp"
 
-int luaopen_rnc(lua_State *L);
+#include <cstddef>
+#include <cstdint>
+
+/*! Result status values from #rnc_inpack. */
+enum class rnc_status
+{
+    ok, ///< Everything is fine
+    file_is_not_rnc, ///< The file does not begin with an RNC signature
+    huf_decode_error, ///< Error decoding the file
+    file_size_mismatch, ///< The file size does not match the header
+    packed_crc_error, ///< The compressed file does not match its checksum
+    unpacked_crc_error ///< The uncompressed file does not match its checksum
+};
+
+const std::size_t rnc_header_size = 18;
+
+std::size_t rnc_output_size(const std::uint8_t* input);
+
+std::size_t rnc_input_size(const std::uint8_t* input);
+
+rnc_status rnc_unpack(const std::uint8_t* input, std::uint8_t* output);
 
 #endif // CORSIX_TH_RNC_H_
