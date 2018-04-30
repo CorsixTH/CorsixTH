@@ -7,7 +7,8 @@ set(animview_source_files
   app.cpp
   frmMain.cpp
   frmSprites.cpp
-  rnc.cpp
+  ${CMAKE_SOURCE_DIR}/common/rnc.h
+  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
   th.cpp
   tinystr.cpp
   tinyxml.cpp

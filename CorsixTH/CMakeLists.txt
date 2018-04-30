@@ -43,6 +43,8 @@ file(GLOB_RECURSE corsixth_source_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
+  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
+  ${CMAKE_SOURCE_DIR}/common/rnc.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
   ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
   ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
