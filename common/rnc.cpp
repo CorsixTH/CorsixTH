@@ -80,7 +80,7 @@ struct bit_stream
 {
     std::uint32_t bitbuf;       ///< holds between 16 and 32 bits.
     int bitcount;          ///< how many bits does bitbuf hold?
-    const std::uint8_t* endpos; ///< final position that can be read.
+    const std::uint8_t* endpos; ///< pointer past the readable data
     const std::uint8_t* p;      ///< pointer in data that stream is reading.
 };
 
@@ -181,12 +181,12 @@ static std::uint32_t mirror (std::uint32_t x, int n)
     @param bs Bit stream to be initialized
     @param p Pointer to start of memory block the bitstream is to
         traverse
-    @param endpos Pointer to end of memory block the bitstream is
+    @param endpos Pointer to byte after the last memory block the bitstream is
         to traverse
 */
 static void bitread_init (bit_stream *bs, const std::uint8_t *p, const std::uint8_t* endpos)
 {
-    bs->bitbuf = lword (p);
+    bs->bitbuf = lword(p);
     bs->bitcount = 16;
     bs->p = p;
     bs->endpos = endpos;
@@ -205,15 +205,13 @@ static void bitread_fix (bit_stream *bs)
 
     // Replace with what is in the new current location
     // in the bit stream
-    if(bs->p < bs->endpos)
+    if(bs->p < bs->endpos - 1)
     {
         bs->bitbuf |= (lword(bs->p)<<bs->bitcount);
         bs->bitcount += 16;
-    }
-    else if(bs->p == bs->endpos)
-    {
+    } else if (bs->p == bs->endpos - 1) {
         bs->bitbuf |= (*(bs->p)<<bs->bitcount);
-        bs->bitcount += 8;
+        bs->bitcount += 16;
     }
 }
 
@@ -247,15 +245,13 @@ static void bit_advance (bit_stream *bs, int n)
         // byte the lword matches what is in that byte.
         bs->p += 2;
 
-        if(bs->p < bs->endpos)
+        if (bs->p < (bs->endpos - 1))
         {
             bs->bitbuf |= (lword(bs->p)<<bs->bitcount);
             bs->bitcount += 16;
-        }
-        else if (bs->p == bs->endpos)
-        {
+        } else if (bs->p < bs->endpos) {
             bs->bitbuf |= (*(bs->p)<<bs->bitcount);
-            bs->bitcount += 8;
+            bs->bitcount += 16;
         }
     }
 }
@@ -405,14 +401,14 @@ rnc_status rnc_unpack(const std::uint8_t* input, std::uint8_t* output)
 
     // Check the packed-data CRC. Also save the unpacked-data CRC
     // for later.
-    if(rnc_crc(input, inputend-input) != bword(input - 4))
+    if (rnc_crc(input, inputend - input) != bword(input - 4))
     {
         return rnc_status::packed_crc_error;
     }
     out_crc = bword(input - 6);
 
     //initialize the bitstream to the input and advance past the
-    //first two bytes as they don't have any understood use.
+    //first two bits as they don't have any understood use.
     bitread_init(&input_bs, input, inputend);
     bit_advance(&input_bs, 2);
 
@@ -465,8 +461,9 @@ rnc_status rnc_unpack(const std::uint8_t* input, std::uint8_t* output)
             length += 2;
 
             // Copy length bytes from output back posn
-            while(length--)
+            while (length > 0)
             {
+                length--;
                 *output = output[-posn];
                 output++;
             }
@@ -479,7 +476,7 @@ rnc_status rnc_unpack(const std::uint8_t* input, std::uint8_t* output)
     }
 
     // Check the unpacked-data CRC.
-    if(rnc_crc(outputend - ret_len, ret_len) != out_crc)
+    if (rnc_crc(outputend - ret_len, ret_len) != out_crc)
     {
         return rnc_status::unpacked_crc_error;
     }
