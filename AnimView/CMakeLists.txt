@@ -10,17 +10,11 @@ set(animview_source_files
   ${CMAKE_SOURCE_DIR}/common/rnc.h
   ${CMAKE_SOURCE_DIR}/common/rnc.cpp
   th.cpp
-  tinystr.cpp
-  tinyxml.cpp
-  tinyxmlerror.cpp
-  tinyxmlparser.cpp
   app.h
   backdrop.h
   frmMain.h
   frmSprites.h
   th.h
-  tinystr.h
-  tinyxml.h
   AnimView.rc
 )
 

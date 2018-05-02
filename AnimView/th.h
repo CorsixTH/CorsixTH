@@ -39,7 +39,6 @@ SOFTWARE.
 #include <wx/file.h>
 #include <wx/image.h>
 #include <wx/txtstrm.h>
-#include "tinyxml.h"
 #include <stdint.h>
 #include <vector>
 
@@ -175,11 +174,6 @@ public:
     }
     bool loadPaletteFile(wxString sFilename);
     bool loadGhostFile(wxString sFilename, int iIndex);
-    bool loadXMLFile(TiXmlDocument* xmlDocument);
-
-    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml,
-        size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int* iListIndex);
-    void writeTableDataHeader(wxTextOutputStream *outputLog);
 
     size_t markDuplicates();
 
@@ -271,6 +265,5 @@ protected:
     size_t m_iSpriteCount;
     size_t m_iChunkCount;
     size_t m_iColourCount;
-    bool m_bXmlLoaded;
     wxString m_sSpritePath;
 };
