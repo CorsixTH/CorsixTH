@@ -25,9 +25,11 @@ SOFTWARE.
 #include <wx/app.h>
 #include <wx/toplevel.h>
 #include <wx/filename.h>
+#include <algorithm>
+#include <array>
 #include <set>
-#include <vector>
 #include <stdexcept>
+#include <vector>
 
 static const unsigned char palette_upscale_map[0x40] = {
     0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
@@ -230,47 +232,33 @@ void THLayerMask::clear()
 
 THAnimations::THAnimations()
 {
-    m_pAnims = NULL;
+    anims = std::vector<th_anim_t>();
     frames = std::vector<th_frame_t>();
-    m_pElementList = NULL;
-    m_pElements = NULL;
-    m_pSprites = NULL;
+    elementList = std::vector<uint16_t>();
+    elements = std::vector<th_element_t>();
+    sprites = std::vector<th_sprite_t>();
     spriteBitmaps = std::vector<Bitmap>();
-    m_pChunks = NULL;
-    m_pColours = NULL;
-    m_pGhostMaps = new unsigned char[256 * 256 * 4];
+    chunks = std::vector<uint8_t>();
+    colours = std::vector<th_colour_t>();
+    ghostMaps = std::array<unsigned char, 256 * 256 * 4>();
     for(int iMap = 0; iMap < 256 * 4; ++iMap)
     {
         for(int iCol = 0; iCol < 256; ++iCol)
         {
-            m_pGhostMaps[iMap * 256 + iCol] = iCol;
+            ghostMaps[iMap * 256 + iCol] = iCol;
         }
     }
     m_iGhostMapOffset = 0;
-    m_iAnimCount = 0;
-    m_iFrameCount = 0;
-    m_iElementListCount = 0;
-    m_iElementCount = 0;
-    m_iSpriteCount = 0;
-    m_iChunkCount = 0;
-    m_iColourCount = 0;
 }
 
 THAnimations::~THAnimations()
 {
-    delete[] m_pAnims;
-    delete[] m_pElementList;
-    delete[] m_pElements;
-    delete[] m_pSprites;
-    delete[] m_pChunks;
-    delete[] m_pColours;
-    delete[] m_pGhostMaps;
 }
 
 bool THAnimations::isAnimationDuplicate(size_t iAnimation)
 {
-    if(iAnimation < m_iAnimCount)
-        return m_pAnims[iAnimation].unknown == 1;
+    if(iAnimation < anims.size())
+        return anims.at(iAnimation).unknown == 1;
     else
         return true;
 }
@@ -280,21 +268,21 @@ size_t THAnimations::markDuplicates()
     size_t iNonDuplicateCount = 0;
 
     std::set<uint16_t> seen;
-    for(size_t i = 0; i < m_iAnimCount; ++i)
+    for(th_anim_t& anim : anims)
     {
-        uint16_t iFrame = m_pAnims[i].frame;
+        uint16_t iFrame = anim.frame;
         uint16_t iFirstFrame = iFrame;
         do
         {
             if(seen.find(iFrame) != seen.end()) {
-                m_pAnims[i].unknown = 1;
+                anim.unknown = 1;
             } else {
                 seen.insert(iFrame);
             }
             iFrame = frames.at(iFrame).next;
         } while(iFrame != iFirstFrame);
 
-        if(m_pAnims[i].unknown == 0)
+        if(anim.unknown == 0)
         {
             ++iNonDuplicateCount;
         }
@@ -305,7 +293,7 @@ size_t THAnimations::markDuplicates()
 
 bool THAnimations::loadFrameFile(wxString sFilename)
 {
-    if(!loadVector(frames, m_iFrameCount, sFilename))
+    if(!loadVector(frames, sFilename))
         return false;
 
     /*
@@ -320,21 +308,21 @@ bool THAnimations::loadFrameFile(wxString sFilename)
 bool THAnimations::loadTableFile(wxString sFilename)
 {
     spriteBitmaps.clear();
-    if(!_loadArray(m_pSprites, m_iSpriteCount, sFilename))
+    if(!loadVector(sprites, sFilename))
         return false;
-    spriteBitmaps.resize(m_iSpriteCount);
+    spriteBitmaps.resize(sprites.size());
     return true;
 }
 
 bool THAnimations::loadPaletteFile(wxString sFilename)
 {
-    if(!_loadArray(m_pColours, m_iColourCount, sFilename))
+    if (!loadVector(colours, sFilename))
         return false;
-    for(size_t i = 0; i < m_iColourCount; ++i)
+    for (th_colour_t& colour : colours)
     {
-        m_pColours[i].r = palette_upscale_map[m_pColours[i].r & 0x3F];
-        m_pColours[i].g = palette_upscale_map[m_pColours[i].g & 0x3F];
-        m_pColours[i].b = palette_upscale_map[m_pColours[i].b & 0x3F];
+        colour.r = palette_upscale_map[colour.r & 0x3F];
+        colour.g = palette_upscale_map[colour.g & 0x3F];
+        colour.b = palette_upscale_map[colour.b & 0x3F];
     }
     return true;
 }
@@ -344,20 +332,16 @@ bool THAnimations::loadGhostFile(wxString sFilename, int iIndex)
     if(iIndex < 0 || iIndex >= 4)
         return false;
 
-    unsigned char *pData = NULL;
-    size_t iDataLen;
+    std::vector<unsigned char> data;
 
-    if(!_loadArray(pData, iDataLen, sFilename))
+    if (!loadVector(data, sFilename))
         return false;
 
-    if(iDataLen != 256 * 256)
-    {
-        delete[] pData;
+    if (data.size() != 256 * 256) {
         return false;
     }
 
-    memcpy(m_pGhostMaps + iIndex * 256 * 256, pData, 256 * 256);
-    delete[] pData;
+    std::copy(data.begin(), data.end(), ghostMaps.begin() + iIndex * 256 * 256);
     return true;
 }
 
@@ -368,12 +352,12 @@ void THAnimations::setGhost(int iFile, int iIndex)
 
 size_t THAnimations::getAnimationCount()
 {
-    return m_iAnimCount;
+    return anims.size();
 }
 
 size_t THAnimations::getSpriteCount()
 {
-    return m_iSpriteCount;
+    return sprites.size();
 }
 
 void THAnimations::setSpritePath(wxString aPath)
@@ -384,11 +368,11 @@ void THAnimations::setSpritePath(wxString aPath)
 void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers)
 {
     mskLayers.clear();
-    if(iAnimation >= m_iAnimCount)
+    if(iAnimation >= anims.size())
         return;
 
-    uint16_t iFrameIndex = m_pAnims[iAnimation].frame;
-    if(iFrameIndex >= m_iFrameCount)
+    uint16_t iFrameIndex = anims.at(iAnimation).frame;
+    if(iFrameIndex >= frames.size())
         return;
     uint16_t iFirstFrameIndex = iFrameIndex;
 
@@ -402,20 +386,20 @@ void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers)
             mskLayers.set(pElement->flags >> 4, pElement->layerid);
         }
         iFrameIndex = frames.at(iFrameIndex).next;
-    } while(iFrameIndex < m_iFrameCount && iFrameIndex != iFirstFrameIndex);
+    } while(iFrameIndex < frames.size() && iFrameIndex != iFirstFrameIndex);
 }
 
 size_t THAnimations::getFrameCount(size_t iAnimation)
 {
-    if(iAnimation >= m_iAnimCount)
+    if(iAnimation >= anims.size())
         return 0;
     size_t iCount = 0;
-    uint16_t iFirstFrame = m_pAnims[iAnimation].frame;
-    if(iFirstFrame < m_iFrameCount)
+    uint16_t iFirstFrame = anims.at(iAnimation).frame;
+    if(iFirstFrame < frames.size())
     {
         ++iCount;
         uint16_t iFrame = frames.at(iFirstFrame).next;
-        while(iFrame != iFirstFrame && iFrame < m_iFrameCount && iCount < 1024)
+        while(iFrame != iFirstFrame && iFrame < frames.size() && iCount < 1024)
         {
             ++iCount;
             iFrame = frames.at(iFrame).next;
@@ -426,13 +410,13 @@ size_t THAnimations::getFrameCount(size_t iAnimation)
 
 bool THAnimations::doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame)
 {
-    if(iAnimation >= m_iAnimCount || iFrame >= m_iFrameCount)
+    if(iAnimation >= anims.size() || iFrame >= frames.size())
         return 0;
-    uint16_t iFirstFrame = m_pAnims[iAnimation].frame;
+    uint16_t iFirstFrame = anims.at(iAnimation).frame;
     uint16_t iFrameNow = iFirstFrame;
     do
     {
-        if(iFrameNow >= m_iFrameCount)
+        if(iFrameNow >= frames.size())
             break;
         if(iFrame == iFrameNow)
             return true;
@@ -443,16 +427,16 @@ bool THAnimations::doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame)
 
 Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex)
 {
-    if(iSprite >= m_iSpriteCount)
+    if(iSprite >= sprites.size())
         return nullptr;
 
     if (!spriteBitmaps.at(iSprite).IsOk())
     {
         wxString spriteFile = m_sSpritePath + wxString::Format(L"a%04ue.png", (int)iSprite);
-        th_sprite_t* pSprite = m_pSprites + iSprite;
+        th_sprite_t* pSprite = &(sprites.at(iSprite));
 
         ChunkRenderer oRenderer(pSprite->width, pSprite->height);
-        (bComplex ? decode_chunks_complex : decode_chunks)(oRenderer, (const unsigned char*)m_pChunks + pSprite->offset, m_iChunkCount - pSprite->offset, 0xFF);
+        (bComplex ? decode_chunks_complex : decode_chunks)(oRenderer, (const unsigned char*)chunks.data() + pSprite->offset, chunks.size() - pSprite->offset, 0xFF);
         spriteBitmaps[iSprite].create(pSprite->width, pSprite->height, oRenderer.getData());
     }
 
@@ -461,9 +445,9 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex)
 
 th_frame_t* THAnimations::getFrameStruct(size_t iAnimation, size_t iFrame)
 {
-    if(iAnimation >= m_iAnimCount)
+    if(iAnimation >= anims.size())
         return 0;
-    uint16_t iFrameIndex = m_pAnims[iAnimation].frame;
+    uint16_t iFrameIndex = anims.at(iAnimation).frame;
     while(iFrame--)
     {
         iFrameIndex = frames.at(iFrameIndex).next;
@@ -473,9 +457,9 @@ th_frame_t* THAnimations::getFrameStruct(size_t iAnimation, size_t iFrame)
 
 void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset, int iYOffset)
 {
-    if(iAnimation >= m_iAnimCount)
+    if(iAnimation >= anims.size())
         return;
-    uint16_t iFrameIndex = m_pAnims[iAnimation].frame;
+    uint16_t iFrameIndex = anims.at(iAnimation).frame;
     while(iFrame--)
     {
         iFrameIndex = frames.at(iFrameIndex).next;
@@ -491,7 +475,7 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFram
         if(pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
             continue;
         uint16_t iSpriteIndex = pElement->table_position / sizeof(th_sprite_t);
-        th_sprite_t* pSprite = m_pSprites + iSpriteIndex;
+        th_sprite_t* pSprite = &(sprites.at(iSpriteIndex));
         int iRight = pElement->offx + pSprite->width;
         int iBottom = pElement->offy + pSprite->height;
         if(iRight > iFarX)
@@ -499,7 +483,7 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFram
         if(iBottom > iFarY)
             iFarY = iBottom;
 
-        getSpriteBitmap(iSpriteIndex)->blit(imgCanvas, pElement->offx + iXOffset, pElement->offy + iYOffset, m_pGhostMaps + m_iGhostMapOffset, m_pColours, pElement->flags & 0xF);
+        getSpriteBitmap(iSpriteIndex)->blit(imgCanvas, pElement->offx + iXOffset, pElement->offy + iYOffset, ghostMaps.data() + m_iGhostMapOffset, colours.data(), pElement->flags & 0xF);
     }
     size.x = iFarX;
     size.y = iFarY;
@@ -507,12 +491,12 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFram
 
 th_element_t* THAnimations::_getElement(uint32_t iListIndex)
 {
-    if(iListIndex >= m_iElementListCount)
-        return NULL;
-    uint16_t iElementIndex = m_pElementList[iListIndex];
-    if(iElementIndex > m_iElementCount)
-        return NULL;
-    return m_pElements + iElementIndex;
+    if(iListIndex >= elementList.size())
+        return nullptr;
+    uint16_t iElementIndex = elementList.at(iListIndex);
+    if(iElementIndex >= elements.size())
+        return nullptr;
+    return &(elements.at(iElementIndex));
 }
 
 unsigned char* THAnimations::Decompress(unsigned char* pData, size_t& iLength)
