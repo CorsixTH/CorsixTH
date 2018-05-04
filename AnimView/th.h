@@ -206,18 +206,13 @@ public:
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
 protected:
     template <class T>
-    bool _loadArray(T*& pArray, size_t& iCount, wxString sFilename)
-    {
-        if(pArray != NULL)
-        {
-            delete[] pArray;
-            pArray = NULL;
-        }
-        iCount = 0;
+    bool loadVector(std::vector<T>& vector, wxString sFilename) {
+        vector.clear();
 
         wxFile oFile(sFilename);
-        if(!oFile.IsOpened())
+        if (!oFile.IsOpened())
             return false;
+
         size_t iLen = oFile.Length();
         unsigned char* pBuffer = new unsigned char[iLen];
         oFile.Read(pBuffer, iLen);
@@ -229,26 +224,10 @@ protected:
                 return false;
             }
         }
-        pArray = (T*)pBuffer;
-        iCount = iLen / sizeof(T);
 
-        return true;
-    }
-
-    template <class T>
-    bool loadVector(std::vector<T>& vector, wxString sFilename) {
-        vector.clear();
-
-        T* tmpArray = nullptr;
-        std::size_t iCount = 0;
-        if (!_loadArray(tmpArray, iCount, sFilename)) {
-            return false;
+        for (int offset = 0; offset < iLen; offset += sizeof(T)) {
+            vector.push_back(*(reinterpret_cast<T*>(pBuffer + offset)));
         }
-
-        for (int i = 0; i < iCount; i++) {
-            vector.push_back(tmpArray[i]);
-        }
-        delete[] tmpArray;
 
         return true;
     }
