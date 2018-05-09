@@ -189,7 +189,7 @@ bool animation_manager::load_from_th_file(
     size_t iListStart      = element_list_count;
     size_t iElementStart   = element_count;
 
-    // Original data file cannot must start at offset 0 due to the hard-coded animation numbers in the Lua code.
+    // Original data file must start at offset 0 due to the hard-coded animation numbers in the Lua code.
     if (iAnimationStart > 0 || iFrameStart > 0 || iListStart > 0 || iElementStart > 0)
         return false;
 

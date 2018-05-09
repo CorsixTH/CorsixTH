@@ -39,17 +39,9 @@ SOFTWARE.
 #include <wx/file.h>
 #include <wx/image.h>
 #include <wx/txtstrm.h>
-#include "tinyxml.h"
-#ifdef _MSC_VER
-typedef signed __int8 int8_t;
-typedef signed __int16 int16_t;
-typedef signed __int32 int32_t;
-typedef unsigned __int8 uint8_t;
-typedef unsigned __int16 uint16_t;
-typedef unsigned __int32 uint32_t;
-#else
+#include <array>
 #include <stdint.h>
-#endif // _MSC_VER
+#include <vector>
 
 #pragma pack(push)
 #pragma pack(1)
@@ -153,7 +145,7 @@ public:
     void blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags = 0) const;
     void blit(wxImage& imgCanvas, int iX, int iY, const unsigned char* pColourTranslate, const th_colour_t* pPalette, int iFlags = 0) const;
 
-    bool IsOk() {return m_pData != NULL;}
+    bool IsOk() {return m_pData != nullptr;}
 
 protected:
     int m_iWidth;
@@ -167,30 +159,37 @@ public:
     THAnimations();
     ~THAnimations();
 
-    bool loadAnimationFile(wxString sFilename) {return _loadArray(m_pAnims, m_iAnimCount, sFilename);}
-    bool loadFrameFile(wxString sFilename);
-    bool loadListFile(wxString sFilename) {return _loadArray(m_pElementList, m_iElementListCount, sFilename);}
-    bool loadElementFile(wxString sFilename) {return _loadArray(m_pElements, m_iElementCount, sFilename);}
-    bool loadTableFile(wxString sFilename);
-    bool loadSpriteFile(wxString sFilename) {return _loadArray(m_pChunks, m_iChunkCount, sFilename);}
-    bool loadPaletteFile(wxString sFilename);
-    bool loadGhostFile(wxString sFilename, int iIndex);
-    bool loadXMLFile(TiXmlDocument* xmlDocument);
+    bool loadAnimationFile(wxString sFilename) {
+        return loadVector(anims, sFilename);
+    }
 
-    void writeElementData(wxString aPath, wxTextOutputStream *outputLog, wxTextOutputStream *outputXml,
-        size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int* iListIndex);
-    void writeTableDataHeader(wxTextOutputStream *outputLog);
+    bool loadFrameFile(wxString sFilename);
+
+    bool loadListFile(wxString sFilename) {
+        return loadVector(elementList, sFilename);
+    }
+
+    bool loadElementFile(wxString sFilename) {
+        return loadVector(elements, sFilename);
+    }
+
+    bool loadTableFile(wxString sFilename);
+
+    bool loadSpriteFile(wxString sFilename) {
+        return loadVector(chunks, sFilename);
+    }
+
+    bool loadPaletteFile(wxString sFilename);
+
+    bool loadGhostFile(wxString sFilename, int iIndex);
 
     size_t markDuplicates();
 
     size_t getAnimationCount();
     size_t getSpriteCount();
     size_t getFrameCount(size_t iAnimation);
-    uint16_t getUnknownField(size_t iAnimation) {return m_pAnims[iAnimation].unknown; }
-    uint16_t getFrameField(size_t iAnimation) {return m_pAnims[iAnimation].frame; }
-    //uint32_t getListIndexField(size_t iFrame) {return m_pFrames[iFrame].list_index; }
-    //uint8_t getFrameWidthField(size_t iFrame) {return m_pFrames[iFrame].width; }
-    //uint8_t getFrameHeightField(size_t iFrame) {return m_pFrames[iFrame].height; }
+    uint16_t getUnknownField(size_t iAnimation) {return anims.at(iAnimation).unknown; }
+    uint16_t getFrameField(size_t iAnimation) {return anims.at(iAnimation).frame; }
     th_frame_t* getFrameStruct(size_t iAnimation, size_t iFrame);
     bool isAnimationDuplicate(size_t iAnimation);
     bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
@@ -198,7 +197,7 @@ public:
     void setSpritePath(wxString aPath);
 
     Bitmap* getSpriteBitmap(size_t iSprite, bool bComplex = false);
-    th_colour_t* getPalette() {return m_pColours;}
+    th_colour_t* getPalette() { return colours.data(); }
 
     void setGhost(int iFile, int iIndex);
     void drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset = 0, int iYOffset = 0);
@@ -207,18 +206,13 @@ public:
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
 protected:
     template <class T>
-    bool _loadArray(T*& pArray, size_t& iCount, wxString sFilename)
-    {
-        if(pArray != NULL)
-        {
-            delete[] pArray;
-            pArray = NULL;
-        }
-        iCount = 0;
+    bool loadVector(std::vector<T>& vector, wxString sFilename) {
+        vector.clear();
 
         wxFile oFile(sFilename);
-        if(!oFile.IsOpened())
+        if (!oFile.IsOpened())
             return false;
+
         size_t iLen = oFile.Length();
         unsigned char* pBuffer = new unsigned char[iLen];
         oFile.Read(pBuffer, iLen);
@@ -230,31 +224,25 @@ protected:
                 return false;
             }
         }
-        pArray = (T*)pBuffer;
-        iCount = iLen / sizeof(T);
+
+        for (int offset = 0; offset < iLen; offset += sizeof(T)) {
+            vector.push_back(*(reinterpret_cast<T*>(pBuffer + offset)));
+        }
+
         return true;
     }
+
     th_element_t* _getElement(uint32_t iListIndex);
 
-    th_anim_t* m_pAnims;
-    th_frame_t* m_pFrames;
-    uint16_t* m_pElementList;
-    th_element_t* m_pElements;
-    th_sprite_t* m_pSprites;
-    Bitmap* m_pSpriteBitmaps;
-    wxImage* m_pSpriteImages;
-    uint8_t* m_pSpriteScaleFactors;
-    uint8_t* m_pChunks;
-    th_colour_t* m_pColours;
-    unsigned char* m_pGhostMaps;
+    std::vector<th_anim_t> anims;
+    std::vector<th_frame_t> frames;
+    std::vector<uint16_t> elementList;
+    std::vector<th_element_t> elements;
+    std::vector<th_sprite_t> sprites;
+    std::vector<Bitmap> spriteBitmaps;
+    std::vector<uint8_t> chunks;
+    std::vector<th_colour_t> colours;
+    std::array<unsigned char, 256 * 256 * 4> ghostMaps;
     size_t m_iGhostMapOffset;
-    size_t m_iAnimCount;
-    size_t m_iFrameCount;
-    size_t m_iElementListCount;
-    size_t m_iElementCount;
-    size_t m_iSpriteCount;
-    size_t m_iChunkCount;
-    size_t m_iColourCount;
-    bool m_bXmlLoaded;
     wxString m_sSpritePath;
 };
