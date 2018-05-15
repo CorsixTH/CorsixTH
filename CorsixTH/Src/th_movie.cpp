@@ -627,7 +627,7 @@ void movie_player::play(int iChannel)
         av_opt_set_int(audio_resample_context, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
         avresample_open(audio_resample_context);
 #endif
-        empty_audio_chunk = Mix_QuickLoad_RAW(audio_chunk_buffer, audio_buffer_size);
+        empty_audio_chunk = Mix_QuickLoad_RAW(audio_chunk_buffer, audio_chunk_buffer_capacity);
 
         audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk, -1);
         if(audio_channel < 0)
