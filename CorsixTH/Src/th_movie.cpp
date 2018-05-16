@@ -39,19 +39,28 @@ extern "C"
 #endif
 }
 #include <SDL_mixer.h>
-#include <iostream>
+#include <chrono>
 #include <cstring>
+#include <iostream>
 
 #if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 7, 0)) || \
     (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
 #define av_packet_unref av_free_packet
 #endif
 
-#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1))
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101))
 #define av_frame_alloc avcodec_alloc_frame
 #define av_frame_unref avcodec_get_frame_defaults
 #define av_frame_free avcodec_free_frame
+#endif
+
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 52, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 63, 100))
+void avcodec_free_context(AVCodecContext** ctx) {
+    avcodec_close(*ctx);
+    av_free(*ctx);
+}
 #endif
 
 static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
@@ -314,8 +323,8 @@ int av_packet_queue::get_count() const
 
 void av_packet_queue::push(AVPacket *pPacket)
 {
-#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 8, 0))
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 8, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
     if(av_dup_packet(pPacket) < 0) { throw -1; }
 #endif
 
@@ -360,7 +369,6 @@ AVPacket* av_packet_queue::pull(bool fBlock)
         first_packet = pNode->next;
         if(first_packet == nullptr) { last_packet = nullptr; }
         count--;
-
         pPacket = (AVPacket*)av_malloc(sizeof(AVPacket));
         *pPacket = pNode->pkt;
         av_free(pNode);
@@ -412,6 +420,7 @@ movie_player::~movie_player()
     av_packet_unref(flush_packet);
     av_free(flush_packet);
     free(audio_chunk_buffer);
+    delete movie_picture_buffer;
 }
 
 void movie_player::set_renderer(SDL_Renderer *pRenderer)
@@ -506,6 +515,7 @@ void movie_player::unload()
         {
             AVPacket* p = audio_queue->pull(false);
             av_packet_unref(p);
+            av_free(p);
         }
         delete audio_queue;
         audio_queue = nullptr;
@@ -516,6 +526,7 @@ void movie_player::unload()
         {
             AVPacket* p = video_queue->pull(false);
             av_packet_unref(p);
+            av_free(p);
         }
         delete video_queue;
         video_queue = nullptr;
@@ -524,7 +535,7 @@ void movie_player::unload()
 
     if(video_codec_context)
     {
-        avcodec_close(video_codec_context);
+        avcodec_free_context(&video_codec_context);
         video_codec_context = nullptr;
     }
 
@@ -545,7 +556,7 @@ void movie_player::unload()
     }
     if(audio_codec_context)
     {
-        avcodec_close(audio_codec_context);
+        avcodec_free_context(&audio_codec_context);
         audio_codec_context = nullptr;
     }
     av_frame_free(&audio_frame);
@@ -634,6 +645,7 @@ void movie_player::play(int iChannel)
         {
             audio_channel = -1;
             last_error = std::string(Mix_GetError());
+            Mix_FreeChunk(empty_audio_chunk);
         }
         else
         {
@@ -759,7 +771,7 @@ void movie_player::read_streams()
         {
             break;
         }
-        SDL_Delay(10);
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
     SDL_Event endEvent;
@@ -870,6 +882,10 @@ int movie_player::get_frame(int stream, AVFrame* pFrame)
         {
             AVPacket* pkt = pq->pull(true);
             int res = avcodec_send_packet(ctx, pkt);
+            if (pkt != nullptr) {
+                av_packet_unref(pkt);
+                av_free(pkt);
+            }
 
             if (res == AVERROR(EAGAIN))
             {

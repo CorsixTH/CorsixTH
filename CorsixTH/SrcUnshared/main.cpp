@@ -39,7 +39,7 @@ struct types_equal<T1, T1>{ enum{
     result = 1,
 }; };
 
-static void cleanup()
+static void cleanup(lua_State* L)
 {
 #ifdef CORSIX_TH_USE_SDL_MIXER
     while(Mix_QuerySpec(nullptr, nullptr, nullptr))
@@ -48,6 +48,8 @@ static void cleanup()
     }
 #endif
     SDL_Quit();
+
+    lua_close(L);
 }
 
 //! Program entry point
@@ -118,7 +120,7 @@ int main(int argc, char** argv)
         lua_getfield(L, LUA_REGISTRYINDEX, "_RESTART");
         bRun = lua_toboolean(L, -1) != 0;
 
-        cleanup();
+        cleanup(L);
 
         if(bRun)
         {
