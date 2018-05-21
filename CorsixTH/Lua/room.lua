@@ -993,3 +993,18 @@ function Room:getStaffServiceQuality()
 
   return quality
 end
+
+--! checks if the room is fully staffed,
+--! even if the staff is not present in the room
+function Room:isFullyStaffed()
+    local missing = self:getMissingStaff(self:getRequiredStaffCriteria())
+    local anyone_missed = next(missing)
+    for _, staff in ipairs(self.hospital.staff) do
+        if staff.humanoid_class ~= "Handyman"
+        and staff.last_room == self
+        and not anyone_missed then
+            return true
+        end
+    end
+    return false
+end
