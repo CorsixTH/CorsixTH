@@ -342,6 +342,15 @@ function CallsDispatcher:answerCall(staff)
    staff:searchForHandymanTask()
    return true
   end
+
+  if not staff.hospital.policies["staff_allowed_to_move"] then
+    local last_room = staff.last_room
+    if last_room and last_room.is_active then
+      -- cannot answer call, I'm not allowed to leave my room
+      return false
+    end
+  end
+
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
   for _, queue in pairs(self.call_queue) do
