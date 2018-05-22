@@ -793,12 +793,14 @@ bool raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
     if(pEventualCanvas == nullptr)
         return false;
 
-    pPixelData = convertLegacySprite(pPixelData, iPixelDataLength);
-    if (pPixelData == nullptr)
+    uint8_t* converted_sprite = convertLegacySprite(pPixelData, iPixelDataLength);
+    if (converted_sprite == nullptr)
         return false;
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
-    texture = pEventualCanvas->create_palettized_texture(iWidth, iHeight, pPixelData, bitmap_palette, thdf_alt32_plain);
+    texture = pEventualCanvas->create_palettized_texture(iWidth, iHeight, converted_sprite, bitmap_palette, thdf_alt32_plain);
+    delete[] converted_sprite;
+
     if(!texture)
         return false;
 
