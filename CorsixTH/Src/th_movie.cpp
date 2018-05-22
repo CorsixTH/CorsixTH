@@ -403,7 +403,10 @@ movie_player::movie_player():
     video_thread{},
     decoding_audio_mutex{}
 {
+#if defined(CORSIX_TH_USE_LIBAV) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100))
     av_register_all();
+#endif
 
     flush_packet = (AVPacket*)av_malloc(sizeof(AVPacket));
     av_init_packet(flush_packet);
@@ -839,8 +842,10 @@ double movie_player::get_presentation_time_for_frame(AVFrame* frame, int streamI
 #else
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
     pts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), frame, "best_effort_timestamp");
-#else
+#elif LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 18, 100)
     pts = av_frame_get_best_effort_timestamp(frame);
+#else
+    pts = frame->best_effort_timestamp;
 #endif //LIBAVCODEC_VERSION_INT
 #endif //CORSIX_T_USE_LIBAV
 
