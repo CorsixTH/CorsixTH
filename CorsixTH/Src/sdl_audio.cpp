@@ -83,11 +83,15 @@ struct load_music_async_data
     Mix_Music* music;
     SDL_RWops* rwop;
     char* err;
+    SDL_Thread* thread;
 };
 
 int l_load_music_async_callback(lua_State *L)
 {
     load_music_async_data *async = (load_music_async_data*)lua_touserdata(L, 1);
+
+    // Frees resources allocated to the thread
+    SDL_WaitThread(async->thread, nullptr);
 
     // Replace light UD with full UD
     lua_pushvalue(L, 1);
@@ -138,6 +142,7 @@ int l_load_music_async_callback(lua_State *L)
 static int load_music_async_thread(void* arg)
 {
     load_music_async_data *async = (load_music_async_data*)arg;
+
     async->music = Mix_LoadMUS_RW(async->rwop, 1);
     async->rwop = nullptr;
     if(async->music == nullptr)
@@ -190,7 +195,7 @@ static int l_load_music_async(lua_State *L)
         call the callback and remove the new entries from the registry.
     */
 
-    SDL_CreateThread(load_music_async_thread, "music_thread", async);
+    async->thread = SDL_CreateThread(load_music_async_thread, "music_thread", async);
 
     return 0;
 }
