@@ -501,13 +501,15 @@ function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
   end
 
   local current_room = staff:getRoom()
+  local last_room = staff.last_room
   if not staff.hospital.policies["staff_allowed_to_move"] then
-    if current_room and current_room ~= room then
-      -- Staff is in another room, not usable.
+    if current_room and current_room ~= room
+    or last_room and last_room ~= room then
+      -- Staff is in another room or heading to their room, not usable.
       return false
     end
     if room:isFullyStaffed() then
-      -- The room is already fully staffed, don't let the staff steal the room.
+      -- The room is already fully staffed, not allowed to steal room.
       return false
     end
   end
