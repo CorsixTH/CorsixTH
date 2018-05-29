@@ -206,29 +206,59 @@ end
 function UIBottomPanel:drawDynamicInfo(canvas, x, y)
   if self.world:isCurrentSpeed("Pause") and not self.world.user_actions_allowed then
     self.pause_font:drawWrapped(canvas, _S.misc.pause, x + 10, y + 14, 255, "center")
-  elseif self.dynamic_info then
-    local info = self.dynamic_info
-    local font = self.white_font
-    for i, text in ipairs(info["text"]) do
-      font:drawWrapped(canvas, text, x + 20, y + 10 * i, 240)
-      if i == #info["text"] and info["progress"] then
-        local white = canvas:mapRGB(255, 255, 255)
-        local black = canvas:mapRGB(0, 0, 0)
-        local orange = canvas:mapRGB(221, 83, 0)
-        canvas:drawRect(white, x + 165, y + 10 * i, 100, 10)
-        canvas:drawRect(black, x + 166, y + 1 + 10 * i, 98, 8)
-        canvas:drawRect(orange, x + 166, y + 1 + 10 * i, math.floor(98 * info["progress"]), 8)
-        if info["dividers"] then
-          for _, value in ipairs(info["dividers"]) do
-            canvas:drawRect(white, x + 165 + math.floor(value * 100), y + 10 * i, 1, 10)
-          end
+    return
+  end
+
+  if not (self.dynamic_info and self.dynamic_info["text"]) then
+    return
+  end
+
+  local info = self.dynamic_info
+  local font = self.white_font
+  for i, text in ipairs(info["text"]) do
+    font:drawWrapped(canvas, text, x + 20, y + 10 * i, 240)
+    if i == #info["text"] and info["progress"] then
+      local white = canvas:mapRGB(255, 255, 255)
+      local black = canvas:mapRGB(0, 0, 0)
+      local orange = canvas:mapRGB(221, 83, 0)
+      canvas:drawRect(white, x + 165, y + 10 * i, 100, 10)
+      canvas:drawRect(black, x + 166, y + 1 + 10 * i, 98, 8)
+      canvas:drawRect(orange, x + 166, y + 1 + 10 * i, math.floor(98 * info["progress"]), 8)
+      if info["dividers"] then
+        for _, value in ipairs(info["dividers"]) do
+          canvas:drawRect(white, x + 165 + math.floor(value * 100), y + 10 * i, 1, 10)
         end
       end
     end
   end
 end
 
+--! Update the information shown in the information box on the panel.
+--!
+--! If the info is nil then a cooldown timer is used before removing the
+--! information from the display.
+--!
+--!param info (table) A table containing the information to display. The text
+--! key is required and contains an array of lines to show. An optional
+--! progress key may be given to draw a progress bar, following the text and
+--! and an array of dividers may be provided to draw extra vertical lines in
+--! the progress bar.
+--!
+--! info = {
+--!   text: { "He's not the saviour", "He's very naughty boy" },
+--!   progress: 50,
+--!   dividers: { 25, 50, 75 }
+--! }
 function UIBottomPanel:setDynamicInfo(info)
+  if info and not info["text"] then
+    self.world:gameLog("")
+    self.world:gameLog("Dynamic info is missing text!")
+    self.world:gameLog("Please report this issue including the call stack below.")
+    self.world:gameLog(debug.traceback())
+
+    return
+  end
+
   if not info then
     self.countdown = 25
   else
@@ -483,9 +513,9 @@ function UIBottomPanel:onTick()
       local fps = self.ui.app:getFPS()
       if fps then
         self.dynamic_info = {text = {
-          ("FPS: %i"):format(math.floor(fps + 0.5)),
-          ("Lua GC: %.1f Kb"):format(collectgarbage"count"),
-          ("Entities: %i"):format(#self.ui.app.world.entities),
+          ("FPS: %i"):format(math.floor(fps + 0.5) or 0),
+          ("Lua GC: %.1f Kb"):format(collectgarbage("count") or 0),
+          ("Entities: %i"):format(#self.ui.app.world.entities or 0),
         }}
         self.countdown = 1
       end

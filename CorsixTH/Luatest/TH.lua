@@ -23,17 +23,54 @@ SOFTWARE. --]]
 
 TheApp = {
   gfx = {
-    loadMainCursor = function() end
-  }
+    loadMainCursor = function() end,
+    loadSpriteTable = function() end,
+    loadFont = function() return {
+      draw = function() end,
+      drawWrapped = function() end,
+    } end,
+  },
+  runtime_config = {},
+  config = {
+    width = 600,
+    height = 800,
+  },
+  world = {
+    speed = "Normal",
+    isCurrentSpeed = function(self, s) return s == self.speed end,
+    gameLog = function() end,
+  },
 }
+
+local sub_S = setmetatable({key = ''}, {
+  __index = function(t, k)
+    t.key = t.key .. '.' .. k
+    return t
+  end,
+
+  __tostring = function(t)
+    return t.key
+  end,
+})
+
+_G['_S'] = setmetatable({key = ''}, {
+  __index = function(_, k)
+    sub_S.key = '_S.' .. k
+    return sub_S
+  end,
+
+  __tostring = function(_)
+    return '_S'
+  end,
+})
 
 return {
   animation = function()
     return {
-      setHitTestResult = function() end,
-      setAnimation = function() end,
-      setDrawingLayer = function() end,
-      setTile = function() end,
-    }
-    end,
+        setHitTestResult = function() end,
+        setAnimation = function() end,
+        setDrawingLayer = function() end,
+        setTile = function() end,
+      }
+    end
 }
