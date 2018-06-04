@@ -258,10 +258,7 @@ function Room:testStaffCriteria(criteria, extra_humanoid)
     end
     return false
   else
-    for _, _ in pairs(missing) do
-      return false
-    end
-    return true
+    return next(missing) == nil
   end
 end
 

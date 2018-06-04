@@ -139,7 +139,6 @@ add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
 -- W211: unused variable XYZ
 -- W212: unused argument XYZ
 -- W231: variable XYZ is never accessed
--- W512: loop is executed at most once
 -- W542: empty if branch
 add_ignore("CorsixTH/CorsixTH.lua", "121")
 add_ignore("CorsixTH/Lua/app.lua", "122")
@@ -182,7 +181,6 @@ add_ignore("CorsixTH/Lua/entities/humanoid.lua", "212")
 add_ignore("CorsixTH/Lua/entities/inspector.lua", "212")
 add_ignore("CorsixTH/Lua/entities/machine.lua", "212")
 add_ignore("CorsixTH/Lua/entities/object.lua", "212")
-add_ignore("CorsixTH/Lua/entities/object.lua", "512")
 add_ignore("CorsixTH/Lua/entities/patient.lua", "212")
 add_ignore("CorsixTH/Lua/entities/patient.lua", "542")
 add_ignore("CorsixTH/Lua/entities/staff.lua", "212")
@@ -213,7 +211,6 @@ add_ignore("CorsixTH/Lua/objects/machines/operating_table.lua", "542")
 add_ignore("CorsixTH/Lua/persistance.lua", "231") -- th_getupvalue assignments in lua5.2/5.3 code
 add_ignore("CorsixTH/Lua/research_department.lua", "212")
 add_ignore("CorsixTH/Lua/room.lua", "212")
-add_ignore("CorsixTH/Lua/room.lua", "512")
 add_ignore("CorsixTH/Lua/rooms/cardiogram.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/general_diag.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/psych.lua", "212")
