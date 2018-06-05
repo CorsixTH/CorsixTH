@@ -296,7 +296,7 @@ end
 function Object:setTile(x, y)
   local function coordinatesAreInFootprint(object_footprint, xpos, ypos)
     for _, xy in ipairs(object_footprint) do
-      if(xy[1] == xpos and xy[2] == ypos) then
+      if xy[1] == xpos and xy[2] == ypos then
         return true
       end
     end
@@ -304,10 +304,7 @@ function Object:setTile(x, y)
   end
 
   local function isEmpty(table)
-    for _, _ in pairs(table) do
-      return false
-    end
-    return true
+    return next(table) == nil
   end
 
   local function getComplementaryPassableFlag(passable_flag)
