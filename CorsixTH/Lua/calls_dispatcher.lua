@@ -342,6 +342,15 @@ function CallsDispatcher:answerCall(staff)
    staff:searchForHandymanTask()
    return true
   end
+
+  if not staff.hospital.policies["staff_allowed_to_move"] then
+    local last_room = staff.last_room
+    if last_room and last_room.is_active then
+      -- cannot answer call, I'm not allowed to leave my room
+      return false
+    end
+  end
+
   -- Find the call with the highest priority (smaller means more urgency)
   --   if the staff satisfy the criteria
   for _, queue in pairs(self.call_queue) do
@@ -491,11 +500,18 @@ function CallsDispatcher.verifyStaffForRoom(room, attribute, staff)
     return false
   end
 
-  -- Staff is in another room, not usable.
   local current_room = staff:getRoom()
-  if not staff.hospital.policies["staff_allowed_to_move"] and
-      current_room and current_room ~= room then
-    return false
+  local last_room = staff.last_room
+  if not staff.hospital.policies["staff_allowed_to_move"] then
+    if current_room and current_room ~= room
+    or last_room and last_room ~= room then
+      -- Staff is in another room or heading to their room, not usable.
+      return false
+    end
+    if room:isFullyStaffed() then
+      -- The room is already fully staffed, not allowed to steal room.
+      return false
+    end
   end
 
   return true
