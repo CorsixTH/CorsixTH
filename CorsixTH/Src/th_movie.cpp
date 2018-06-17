@@ -535,12 +535,14 @@ void movie_player::unload()
         video_queue = nullptr;
     }
     movie_picture_buffer->deallocate();
-
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
     if(video_codec_context)
     {
         avcodec_free_context(&video_codec_context);
         video_codec_context = nullptr;
     }
+#endif
 
     if(audio_channel >= 0)
     {
@@ -557,11 +559,14 @@ void movie_player::unload()
         av_free(audio_buffer);
         audio_buffer_max_size = 0;
     }
+#if (defined(CORSIX_TH_USE_LIBAV) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
+    (defined(CORSIX_TH_USE_FFMPEG) && LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
     if(audio_codec_context)
     {
         avcodec_free_context(&audio_codec_context);
         audio_codec_context = nullptr;
     }
+#endif
     av_frame_free(&audio_frame);
 
 #ifdef CORSIX_TH_USE_FFMPEG
