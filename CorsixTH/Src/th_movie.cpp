@@ -594,6 +594,7 @@ void movie_player::unload()
     if(format_context)
     {
         avformat_close_input(&format_context);
+        format_context = nullptr;
     }
 }
 
