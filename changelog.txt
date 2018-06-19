@@ -1,4 +1,30 @@
 -------------------------------------------------------------------------------
+Version 0.62-beta1 - released June 2018
+-------------------------------------------------------------------------------
+# New Features
+* Player salary is now preserved between campaign levels
+* Mouse capture is now shown on in game options screen
+* Completely out of source builds are now supported on all platforms
+* FHS style file layout (separate bin and share/corsixth directories) support
+  for Linux (and non-Apple Unixes)
+* On Linux (and other non-Apple Unixes) the CorsixTH executable is now called
+  corsix-th
+* LuaJIT 2.x is now supported, if using LuaJIT 1.x JIT is no longer enabled
+* Meandering staff behaviour has been tweaked to look more natural
+
+# Bug Fixes
+* Correctly handle the death of emergency patients
+* VIP and other game event scheduling fixes
+* VIP now works correctly when the hospital has no functional rooms
+* Heat now spreads out from radiators in all directions again
+* Fix for game error that caused the same litter to be cleaned up twice, and
+  resulted in a crash
+* Fix moving machines with no state
+* All known memory leaks caused by our code have been fixed
+* Many text and formatting improvements across languages
+
+
+-------------------------------------------------------------------------------
 Version 0.61 - released December 2017
 -------------------------------------------------------------------------------
 * Mouse capture support. Now by default the mouse will be captured in its
