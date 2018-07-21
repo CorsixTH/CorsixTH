@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.62-beta1 - released June 2018
+Version 0.62 - released July 2018
 -------------------------------------------------------------------------------
 # New Features
 * Player salary is now preserved between campaign levels
@@ -13,6 +13,7 @@ Version 0.62-beta1 - released June 2018
 * Meandering staff behaviour has been tweaked to look more natural
 
 # Bug Fixes
+* Hoppalong map in the included campaign was fixed to not crash
 * Correctly handle the death of emergency patients
 * VIP and other game event scheduling fixes
 * VIP now works correctly when the hospital has no functional rooms
