@@ -4,6 +4,7 @@ import os
 import re
 import sys
 
+
 #This regex can't find all class declaration mistakes and only checks the first few lines:
 #Regex: ^class "(.+)".*\n\n(?!---@type \1\nlocal \1 = _G\["\1"])
 regex = r"^class \"(.+)\".*\n\n(?!---@type \1\nlocal \1 = _G\[\"\1\"])"

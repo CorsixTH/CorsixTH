@@ -28,6 +28,7 @@ SOFTWARE.
 
 from PIL import Image
 
+
 class Infile:
     def __init__(self, fname):
         self.fname = fname
@@ -56,12 +57,14 @@ class Infile:
             data.append(self.getByte())
         return data
 
+
 def decode_xy(pix_idx, w, h):
     y = pix_idx // w
     x = pix_idx - w * y
     assert x >= 0 and x < w
     assert y >= 0 and y < h
     return x, y
+
 
 def get_colour(table, idx):
     if table == 0:
@@ -77,6 +80,7 @@ def get_colour(table, idx):
     if table == 5:
         return (idx, 0, idx, 255)
     assert False
+
 
 class Sprite:
     def __init__(self, infile):

@@ -11,6 +11,7 @@
 import os
 import sys
 
+
 def has_trailing_whitespaces(path):
   """ Returns whether |path| has trailing whitespaces. """
   handle = open(path, 'r')
@@ -24,6 +25,7 @@ def has_trailing_whitespaces(path):
       break
   handle.close()
   return False
+
 
 if (len(sys.argv) > 2):
   sys.exit('Usage: ' + sys.argv[0] + ' [root]')
@@ -41,4 +43,3 @@ for root, dirs, files in os.walk(top):
            sys.exit('Found a file with trailing whitespaces: ' + path)
 
 sys.exit(0)
-

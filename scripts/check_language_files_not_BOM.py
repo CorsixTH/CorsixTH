@@ -12,11 +12,13 @@ import codecs
 import os
 import sys
 
+
 def is_BOM_encoded_file(path):
   """ Returns whether |path| is a file that is encoded in UTF-8 with BOM. """
   with open(path, 'rb') as f:
     raw = f.read(4)
     return raw.startswith(codecs.BOM_UTF8)
+
 
 if (len(sys.argv) > 2):
   sys.exit('Usage: ' + sys.argv[0] + ' [root]')
