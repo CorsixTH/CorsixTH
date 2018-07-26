@@ -101,7 +101,7 @@ class Sprite:
         return self.data[idx], idx + 1
 
     def save(self):
-        im = Image.new("RGBA", (self.width, self.height), (0,0,0,0))
+        im = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
         pix = im.load()
 
         idx = 0
@@ -114,7 +114,7 @@ class Sprite:
                 x, y = decode_xy(pix_idx, self.width, self.height)
                 for i in range(length):
                     d = (self.data[idx], self.data[idx+1], self.data[idx+2], 255)
-                    pix[x,y] = d
+                    pix[x, y] = d
                     idx = idx + 3
                     pix_idx = pix_idx + 1
                     x = x + 1
@@ -129,7 +129,7 @@ class Sprite:
                 x, y = decode_xy(pix_idx, self.width, self.height)
                 for i in range(length):
                     d = (self.data[idx], self.data[idx+1], self.data[idx+2], opacity)
-                    pix[x,y] = d
+                    pix[x, y] = d
                     idx = idx + 3
                     pix_idx = pix_idx + 1
                     x = x + 1
