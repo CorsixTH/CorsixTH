@@ -2,9 +2,9 @@
 
 """
   Usage: check_language_files_not_BOM.py [root]
-  This script will check the presence of language files encoded in UTF-8 with BOM.
-  It will return 0 if none is found. Otherwise, it will print the
-  path of the violating files and return an error code.
+  This script will check the presence of language files encoded in UTF-8 with
+  BOM. It will return 0 if none is found. Otherwise, it will print the path of
+  the violating files and return an error code.
   If root is not specified, it will use the current directory.
 """
 

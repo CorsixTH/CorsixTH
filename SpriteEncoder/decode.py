@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Program to decode the first sprite of a CTHG 2 file.
-Mainly intended as a test for the checking the encoder, but also a demonstration of how to decode.
+Mainly intended as a test for the checking the encoder, but also a
+demonstration of how to decode.
 """
 
 _license = """
