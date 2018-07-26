@@ -8,9 +8,7 @@
   If root is not specified, it will use the current directory.
 """
 
-import fileinput
 import os
-import re
 import sys
 
 def has_trailing_whitespaces(path):

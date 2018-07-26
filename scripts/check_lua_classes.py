@@ -1,6 +1,5 @@
 #!/usr/bin/python
 
-import fileinput
 import os
 import re
 import sys
