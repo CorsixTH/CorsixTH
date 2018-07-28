@@ -36,5 +36,9 @@ for root, dirs, files in os.walk(top):
                 offending_files.append(f)
 
 if offending_files:
-    sys.exit('Found files with UTF-8 with BOM encoding: ' + str(offending_files))
+    print('Found files with UTF-8 with BOM encoding:')
+    for f in offending_files:
+        print(f)
+    sys.exit(1)
+
 sys.exit(0)
