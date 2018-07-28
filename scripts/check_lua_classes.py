@@ -11,13 +11,13 @@ import sys
 regex = r"^class \"(.+)\".*\n\n(?!---@type \1\nlocal \1 = _G\[\"\1\"])"
 
 print_root_regex = re.compile("Lua.*")
-script_dir = os.getcwd() + "/../CorsixTH/Lua"
-ignored = os.listdir(script_dir + "/languages")
+script_dir = os.path.join(os.path.dirname(__file__), "..", "CorsixTH", "Lua")
+ignored = os.listdir(os.path.join(script_dir, "languages"))
 problem_found = False
 for root, _, files in os.walk(script_dir):
   for script in files:
     if script.endswith(".lua") and script not in ignored:
-      script_string = open(root + "/" + script, 'r').read()
+      script_string = open(os.path.join(root, script), 'r').read()
       for found_class in re.findall(regex, script_string, re.MULTILINE):
         if not problem_found:
           print("******* CHECK CLASS DECLARATIONS *******")

@@ -32,12 +32,12 @@ if len(sys.argv) > 2:
 
 top = os.getcwd()
 if len(sys.argv) == 2:
-  top += '/' + sys.argv[1]
+  top = os.path.join(top, sys.argv[1])
 
 for root, dirs, files in os.walk(top):
   for f in files:
     if f.endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
-         path = root + '/' + f
+         path = os.path.join(root, f)
          if has_trailing_whitespaces(path):
            sys.exit('Found a file with trailing whitespaces: ' + path)
 
