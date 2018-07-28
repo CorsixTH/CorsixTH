@@ -24,7 +24,7 @@ for root, _, files in os.walk(script_dir):
           problem_found = True
           print("Invalid/Improper Class Declarations Found:")
         path = print_root_regex.search(root).group(0)
-        print("*" + path + "\\" + script + ":" + found_class)
+        print("*{}:{}".format(os.path.join(path, script), found_class))
 
 if problem_found:
   print("\nReason: The class declaration(s) didn't begin as follows:")

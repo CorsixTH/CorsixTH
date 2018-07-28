@@ -158,7 +158,7 @@ class Sprite:
                         y = y + 1
                 continue
 
-        im.save("sprite_" + str(self.number) + ".png")
+        im.save("sprite_{}.png".format(self.number))
 
 
 inf = Infile("x.out")
