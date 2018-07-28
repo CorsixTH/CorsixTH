@@ -36,8 +36,7 @@ if len(sys.argv) == 2:
 
 for root, dirs, files in os.walk(top):
   for f in files:
-    if f.endswith('.py') or f.endswith('.lua') or f.endswith('.h') or \
-       f.endswith('.cpp') or f.endswith('.cc') or f.endswith('.c'):
+    if f.endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
          path = root + '/' + f
          if has_trailing_whitespaces(path):
            sys.exit('Found a file with trailing whitespaces: ' + path)
