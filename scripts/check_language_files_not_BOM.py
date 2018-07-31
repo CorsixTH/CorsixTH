@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python3
 
 """
   Usage: check_language_files_not_BOM.py [root]
