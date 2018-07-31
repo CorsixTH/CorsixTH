@@ -193,7 +193,7 @@ public: // External API
 
     //! Set the window caption
     void set_caption(const char* sCaption);
-	
+
     //! Toggle mouse capture on the window.
     void set_window_grab(bool bActivate);
 

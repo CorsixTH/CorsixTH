@@ -406,7 +406,7 @@ private:
 
     //! If it exists, update the purchasability matrix.
     void update_purchase_matrix();
-    
+
     int count_parcel_tiles(int iParcelId) const;
 
     map_tile* cells;
