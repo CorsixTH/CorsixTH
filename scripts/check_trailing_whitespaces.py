@@ -34,14 +34,17 @@ top = os.getcwd()
 if len(sys.argv) == 2:
     top = os.path.join(top, sys.argv[1])
 
+count = 0
 offending_files = []
 for root, dirs, files in os.walk(top):
     for f in files:
         if f.endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
+            count += 1
             path = os.path.join(root, f)
             if has_trailing_whitespaces(path):
                 offending_files.append(path)
 
+print('Checked {} files'.format(count))
 if offending_files:
     print('Found files with trailing whitespaces:')
     for path in offending_files:
