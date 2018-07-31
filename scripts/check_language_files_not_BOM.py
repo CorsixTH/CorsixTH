@@ -29,7 +29,7 @@ if len(sys.argv) > 2:
 top = os.getcwd()
 if len(sys.argv) == 2:
     if not os.path.isdir(sys.argv[1]):
-          sys.exit('Error: ' + sys.argv[0] + ' is not a directory')
+        sys.exit('Error: ' + sys.argv[1] + ' is not a directory')
     top = os.path.join(top, sys.argv[1])
 
 count = 0
