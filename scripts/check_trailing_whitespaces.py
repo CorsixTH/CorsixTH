@@ -9,22 +9,22 @@
 """
 
 import os
+import re
 import sys
 
+TRAILING_SEQUENCE = re.compile(r'[ \t][\r\n]')
 
-def has_trailing_whitespaces(path):
-    """ Returns whether |path| has trailing whitespaces. """
-    handle = open(path, 'r')
-    for line in handle:
-        for idx in range(-1, -len(line) - 1, -1):
-            if line[idx] in ('\n', '\r'):
-                continue
-            if line[idx] in (' ', '\t'):
-                handle.close()
-                return True
-            break
-    handle.close()
+def has_trailing_whitespace(path):
+    """ Returns whether |path| has trailing whitespace. """
+    if os.path.isfile(path):
+        with open(path, 'r') as handle:
+            for line in handle:
+                m = TRAILING_SEQUENCE.search(line)
+                if m:
+                    return True
+
     return False
+
 
 
 if len(sys.argv) > 2:
@@ -41,12 +41,12 @@ for root, dirs, files in os.walk(top):
         if f.endswith(('.py', '.lua', '.h', '.cpp', '.cc', '.c')):
             count += 1
             path = os.path.join(root, f)
-            if has_trailing_whitespaces(path):
+            if has_trailing_whitespace(path):
                 offending_files.append(path)
 
 print('Checked {} files'.format(count))
 if offending_files:
-    print('Found files with trailing whitespaces:')
+    print('Found files with trailing whitespace:')
     for path in offending_files:
         print(path)
     sys.exit(1)
