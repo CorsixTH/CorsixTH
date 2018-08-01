@@ -15,7 +15,7 @@ import sys
 
 def is_BOM_encoded_file(path):
     """ Returns whether |path| is a file that is encoded in UTF-8 with BOM. """
-    if  not os.path.isfile(path):
+    if not os.path.isfile(path):
         return False
 
     with open(path, 'rb') as f:

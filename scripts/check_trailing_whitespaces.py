@@ -14,6 +14,7 @@ import sys
 
 TRAILING_SEQUENCE = re.compile(r'[ \t][\r\n]')
 
+
 def has_trailing_whitespace(path):
     """ Returns whether |path| has trailing whitespace. """
     if os.path.isfile(path):
@@ -24,7 +25,6 @@ def has_trailing_whitespace(path):
                     return True
 
     return False
-
 
 
 if len(sys.argv) > 2:
