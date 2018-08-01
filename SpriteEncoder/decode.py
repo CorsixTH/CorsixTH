@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 Program to decode the first sprite of a CTHG 2 file.
-Mainly intended as a test for the checking the encoder, but also a demonstration of how to decode.
+Mainly intended as a test for the checking the encoder, but also a
+demonstration of how to decode.
 """
 
 _license = """
@@ -27,6 +28,7 @@ SOFTWARE.
 """
 
 from PIL import Image
+
 
 class Infile:
     def __init__(self, fname):
@@ -56,12 +58,14 @@ class Infile:
             data.append(self.getByte())
         return data
 
+
 def decode_xy(pix_idx, w, h):
     y = pix_idx // w
     x = pix_idx - w * y
     assert x >= 0 and x < w
     assert y >= 0 and y < h
     return x, y
+
 
 def get_colour(table, idx):
     if table == 0:
@@ -77,6 +81,7 @@ def get_colour(table, idx):
     if table == 5:
         return (idx, 0, idx, 255)
     assert False
+
 
 class Sprite:
     def __init__(self, infile):
@@ -96,7 +101,7 @@ class Sprite:
         return self.data[idx], idx + 1
 
     def save(self):
-        im = Image.new("RGBA", (self.width, self.height), (0,0,0,0))
+        im = Image.new("RGBA", (self.width, self.height), (0, 0, 0, 0))
         pix = im.load()
 
         idx = 0
@@ -109,7 +114,7 @@ class Sprite:
                 x, y = decode_xy(pix_idx, self.width, self.height)
                 for i in range(length):
                     d = (self.data[idx], self.data[idx+1], self.data[idx+2], 255)
-                    pix[x,y] = d
+                    pix[x, y] = d
                     idx = idx + 3
                     pix_idx = pix_idx + 1
                     x = x + 1
@@ -124,7 +129,7 @@ class Sprite:
                 x, y = decode_xy(pix_idx, self.width, self.height)
                 for i in range(length):
                     d = (self.data[idx], self.data[idx+1], self.data[idx+2], opacity)
-                    pix[x,y] = d
+                    pix[x, y] = d
                     idx = idx + 3
                     pix_idx = pix_idx + 1
                     x = x + 1
@@ -153,7 +158,7 @@ class Sprite:
                         y = y + 1
                 continue
 
-        im.save("sprite_" + str(self.number) + ".png")
+        im.save("sprite_{}.png".format(self.number))
 
 
 inf = Infile("x.out")

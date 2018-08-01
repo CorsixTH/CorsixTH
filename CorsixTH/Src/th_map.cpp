@@ -620,7 +620,7 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId, int 
 
     map_tile *pNode = cells;
     const map_tile *pOriginalNode = original_cells;
-    
+
     for(int iY = 0; iY < 128; ++iY)
     {
         for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
@@ -1371,7 +1371,7 @@ static inline bool is_wall(map_tile *tile, size_t block, bool flag)
 }
 
 void level_map::update_shadows()
-{   
+{
     map_tile *pNode = cells;
     for(int iY = 0; iY < 128; ++iY)
     {
