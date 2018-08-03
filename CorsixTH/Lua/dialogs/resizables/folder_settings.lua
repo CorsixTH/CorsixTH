@@ -195,12 +195,7 @@ function UIFolder:buttonBrowseForAudio_music()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
-  self.ui:addWindow(UIConfirmDialog(self.ui,
-    _S.confirmation.music_warning,
-    --[[persistable:mmusic_warning_confirm_dialog]]function()
-    self.ui:addWindow(browser)
-    end
-    ))
+  self.ui:addWindow(browser)
 end
 
 function UIFolder:buttonBack()
