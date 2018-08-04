@@ -505,6 +505,9 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
     if real_obj.strength then
       real_obj:calculateSmoke(room)
     end
+    if class.is(real_obj, Machine) then
+      real_obj:setHandymanRepairPosition(self.object_orientation)
+    end
   else
     local object_footprint = object.object.orientations[self.object_orientation].footprint
     self.world:prepareFootprintTilesForBuild(object_footprint, self.object_cell_x, self.object_cell_y)
@@ -512,6 +515,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
         self.object_cell_x, self.object_cell_y, self.object_orientation)
     real_obj:setState(object.state)
   end
+
   if room then
     room.objects[real_obj] = true
   end
