@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "Hospital"
 
 ---@type Hospital
@@ -881,7 +885,7 @@ function Hospital:coldWarning()
     "sorry002.wav", "sorry004.wav",
   }
   if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Normal)
   end
 end
 function Hospital:hotWarning()
@@ -889,7 +893,7 @@ function Hospital:hotWarning()
     "sorry003.wav", "sorry004.wav",
   }
   if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Normal)
   end
 end
 -- Called when the hospitals's boiler has broken down.

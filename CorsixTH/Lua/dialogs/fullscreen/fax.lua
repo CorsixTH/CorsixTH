@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "UIFax" (UIFullscreen)
 
 ---@type UIFax
@@ -170,7 +174,7 @@ function UIFax:choice(choice_number)
   if choice == "accept_emergency" then
     self.ui.app.world:newObject("helicopter", self.ui.hospital, "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
-    self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound)
+    self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound, AnnouncementPriority.Critical)
     self.ui.adviser:say(_A.information.emergency)
   elseif choice == "refuse_emergency" then
     self.ui.app.world:nextEmergency()
@@ -246,7 +250,8 @@ function UIFax:validate()
     self.ui:addWindow(UICheats(self.ui))
   elseif code == "112" then
     -- simple, unobfuscated cheat for everyone :)
-    self.ui:playAnnouncement("rand*.wav")
+    -- not that critical, but we want to make to make sure it's played fairly soon
+    self.ui:playAnnouncement("rand*.wav", AnnouncementPriority.Critical)
   elseif 27868.3 < x and x < 27868.4 then
     -- Roujin's challenge cheat
     local hosp = self.ui.hospital

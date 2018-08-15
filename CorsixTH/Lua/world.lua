@@ -34,6 +34,9 @@ corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
 corsixth.require("entity_map")
 corsixth.require("date")
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
 
 --! Manages entities, rooms, and the date.
 class "World"
@@ -578,7 +581,7 @@ function World:tickEarthquake()
     -- start of warning quake
     if self.next_earthquake.warning_timer == earthquake_warning_period then
       self.ui:beginShakeScreen(0.2)
-      self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+      self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
     end
 
     -- end of warning quake
@@ -596,7 +599,7 @@ function World:tickEarthquake()
 
       -- start of real earthquake
       if self.next_earthquake.warning_timer <= 0 then
-        self.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+        self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
       end
     end
 

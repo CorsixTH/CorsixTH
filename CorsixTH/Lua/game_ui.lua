@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 corsixth.require("ui")
+corsixth.require("announcer")
 
 --! Variant of UI for running games
 class "GameUI" (UI)
@@ -27,6 +28,8 @@ class "GameUI" (UI)
 local GameUI = _G["GameUI"]
 
 local TH = require("TH")
+
+local Announcer = _G["Announcer"]
 
 -- The maximum distance to shake the screen from the origin during an
 -- earthquake with full intensity.
@@ -79,9 +82,6 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.transparent_walls = false
   self.do_world_hit_test = true
 
-  self:setRandomAnnouncementTarget()
-  self.ticks_since_last_announcement = 0
-
   self.momentum = app.config.scrolling_momentum
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
   self.multigesturemove = {x = 0.0, y = 0.0}
@@ -94,6 +94,8 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   -- the effect from the implementation this value is a number between 0
   -- and 1.
   self.shake_screen_intensity = 0
+
+  self.announcer = Announcer(app)
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -675,16 +677,8 @@ function GameUI:onMouseWheel(x, y)
   return UI.onMouseWheel(self, x, y)
 end
 
-function GameUI:setRandomAnnouncementTarget()
-  -- NB: Every tick is 30ms, so 2000 ticks is 1 minute
-  self.random_announcement_ticks_target = math.random(8000, 12000)
-end
-
-function GameUI:playAnnouncement(name, played_callback, played_callback_delay)
-  self.ticks_since_last_announcement = 0
-  if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
-    UI.playAnnouncement(self, name, played_callback, played_callback_delay)
-  end
+function GameUI:playAnnouncement(name, priority, played_callback, played_callback_delay)
+  self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
 end
 
 function GameUI:onTick()
@@ -707,15 +701,6 @@ function GameUI:onTick()
     end
     self.multigesturemove.x = 0.0
     self.multigesturemove.y = 0.0
-  end
-  if not self.app.world:isCurrentSpeed("Pause") then
-    local ticks_since_last_announcement = self.ticks_since_last_announcement
-    if ticks_since_last_announcement >= self.random_announcement_ticks_target then
-      self:playAnnouncement("rand*.wav")
-      self:setRandomAnnouncementTarget()
-    else
-      self.ticks_since_last_announcement = ticks_since_last_announcement + 1
-    end
   end
   if self.tick_scroll_amount or self.tick_scroll_amount_mouse then
     -- The scroll amount per tick gradually increases as the duration of the
@@ -765,6 +750,9 @@ function GameUI:onTick()
   if self:onCursorWorldPositionChange() then
     repaint = true
   end
+
+  self.announcer:onTick()
+
   return repaint
 end
 
@@ -1140,10 +1128,6 @@ function GameUI:afterLoad(old, new)
   if old < 23 then
     self.do_world_hit_test = not self:getWindow(UIPlaceObjects)
   end
-  if old < 28 then
-    self:setRandomAnnouncementTarget()
-    self.ticks_since_last_announcement = 0
-  end
   if old < 34 then
     self.adviser.queued_messages = {}
     self.adviser.phase = 0
@@ -1180,6 +1164,11 @@ function GameUI:afterLoad(old, new)
       self:addKeyHandler({"ctrl", tostring(i)}, self, self.recallMapPosition, i)
     end
   end
+  if old < 130 then
+    self.ticks_since_last_announcement = nil -- cleanup
+    self.announcer = Announcer(self.app)
+  end
+
   return UI.afterLoad(self, old, new)
 end
 

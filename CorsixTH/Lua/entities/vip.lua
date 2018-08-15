@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)
 
@@ -190,7 +194,7 @@ function Vip:announce()
   local announcements = {
     "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
   }   -- there is also vip008 which announces a man from the ministry
-  self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+  self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.High)
   if self.hospital.num_vips < 1 then
     self.world.ui.adviser:say(_A.information.initial_general_advice.first_VIP)
   else

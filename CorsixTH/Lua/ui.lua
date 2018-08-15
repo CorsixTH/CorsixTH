@@ -272,7 +272,7 @@ function UI:playSound(name, played_callback, played_callback_delay)
 end
 
 -- Used for announcements only
-function UI:playAnnouncement(name, played_callback, played_callback_delay)
+function UI:playAnnouncement(name, priority, played_callback, played_callback_delay)
   if self.app.config.play_announcements then
     self.app.audio:playSound(name, nil, true, played_callback, played_callback_delay)
   end
