@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 require("class_test_base")
+require("corsixth")
 
 require("entity")
 require("entities.humanoid")
