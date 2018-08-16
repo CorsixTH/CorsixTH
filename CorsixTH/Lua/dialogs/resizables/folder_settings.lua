@@ -99,15 +99,15 @@ function UIFolder:UIFolder(ui, mode)
     :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForScreenshots):setTooltip(tooltip_screenshots)
   self:addBevelPanel(320, 125, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetScreenshotDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
 
- -- location for mp3 music files
+ -- location for music files
   self:addBevelPanel(20, 150, 130, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.folders_window.music_label):setTooltip(_S.tooltip.folders_window.music_location)
     .lowered = true
-  local tooltip_audio = app.config.audio_mp3 and _S.tooltip.folders_window.browse_music:format(app.config.audio_mp3) or _S.tooltip.folders_window.not_specified
-  self.mp3_panel = self:addBevelPanel(160, 150, 180, 20, col_bg)
-  self.mp3_panel:setLabel(app.config.audio_mp3 and app.config.audio_mp3 or tooltip_audio, built_in):setAutoClip(true)
-    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_mp3):setTooltip(tooltip_audio)
-  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetMp3Dir):setTooltip(_S.tooltip.folders_window.reset_to_default)
+  local tooltip_audio = app.config.audio_music and _S.tooltip.folders_window.browse_music:format(app.config.audio_music) or _S.tooltip.folders_window.not_specified
+  self.music_panel = self:addBevelPanel(160, 150, 180, 20, col_bg)
+  self.music_panel:setLabel(app.config.audio_music and app.config.audio_music or tooltip_audio, built_in):setAutoClip(true)
+    :makeButton(0, 0, 160, 20, nil, self.buttonBrowseForAudio_music):setTooltip(tooltip_audio)
+  self:addBevelPanel(320, 150, 20, 20, col_bg):setLabel("X"):makeButton(0, 0, 20, 20, nil, self.resetmusicDir):setTooltip(_S.tooltip.folders_window.reset_to_default)
 
   -- "Back" button
   self:addBevelPanel(20, 180, 320, 40, col_bg):setLabel(_S.folders_window.back)
@@ -131,12 +131,12 @@ function UIFolder:resetScreenshotDir()
   self.screenshots_panel:setLabel(_S.tooltip.folders_window.default, self.built_in_font)
 end
 
-function UIFolder:resetMp3Dir()
+function UIFolder:resetmusicDir()
   local app = TheApp
-  app.config.audio_mp3 = nil
+  app.config.audio_music = nil
   app:saveConfig()
   app.audio:init()
-  self.mp3_panel:setLabel(_S.tooltip.folders_window.not_specified, self.built_in_font)
+  self.music_panel:setLabel(_S.tooltip.folders_window.not_specified, self.built_in_font)
 end
 
 function UIFolder:buttonBrowseForFont()
@@ -186,21 +186,16 @@ function UIFolder:buttonBrowseForScreenshots()
   self.ui:addWindow(browser)
 end
 
-function UIFolder:buttonBrowseForAudio_mp3()
+function UIFolder:buttonBrowseForAudio_music()
   local function callback(path)
   local app = TheApp
-    app.config.audio_mp3 = path
+    app.config.audio_music = path
     app:saveConfig()
     app.audio:init()
-    self.mp3_panel:setLabel(app.config.audio_mp3, self.built_in_font)
+    self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
   local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
-  self.ui:addWindow(UIConfirmDialog(self.ui,
-    _S.confirmation.music_warning,
-    --[[persistable:mmusic_warning_confirm_dialog]]function()
-    self.ui:addWindow(browser)
-    end
-    ))
+  self.ui:addWindow(browser)
 end
 
 function UIFolder:buttonBack()

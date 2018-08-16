@@ -70,10 +70,10 @@ function Audio:init()
     self.not_loaded = true
     return
   end
-  local mp3 = self.app.config.audio_mp3
+  local music = self.app.config.audio_music or self.app.config.audio_mp3
   local music_dir
-  if mp3 then
-    music_dir = mp3
+  if music then
+    music_dir = music
     if music_dir:sub(-1) ~= pathsep then
       music_dir = music_dir .. pathsep
     end
@@ -95,11 +95,13 @@ function Audio:init()
     -----------------------------
 
     - Will search through all the files in music_dir.
-    - Adds xmi and mp3 files.
-    - If ATLANTIS.XMI and ATLANTIS.MP3 exists, the MP3 is preferred.
+    - Adds most files supported by SDL2_mixer (regardless of local library's ability)
+    - Prefers waveform audio (eg mp3) over instructional (eg midi)
     - Uses titles from MIDI.TXT if found, else the filename.
   --]]
   local midi_txt -- File name of midi.txt file, if any.
+  local waveform = { MP3=true, OGG=true, WAV=true, AIFF=true, VOC=true, FLAC=true }
+  local instructional = { MID=true, MOD=true, XM=true, XMI=true }
 
   local _f, _s, _v
   if music_dir then
@@ -108,27 +110,22 @@ function Audio:init()
     _f, _s, _v = pairs(self.app.fs:listFiles("Sound", "Midi") or {})
   end
   for file in _f, _s, _v do
-    local filename, ext = file:match"^(.*)%.([^.]+)$"
+    local info
+    local filename, ext = file:match"^(.+)%.([^.]+)$"
     ext = ext and ext:upper()
-    -- Music file found (mp3/xmi).
-    if ext == "MP3" or ext == "XMI" then
-      local info = musicFileTable(filename)
-      info.title = filename
-      if ext == "MP3" then
-        if music_dir then
-          info.filename_mp3 = music_dir .. file
-        else
-          print("Warning: CorsixTH only supports xmi if audio_mp3" ..
-              " is not defined in the config file.")
-            music_array[filename:upper()] = nil
-        end
-         -- Remove the xmi version of this file, if found.
-         info.filename = nil
-      elseif ext == "XMI" and not info.filename_mp3 then
-        -- NB: If the mp3 version exists, this file is ignored
-        info.filename = table.concat({"Sound", "Midi", file}, pathsep)
-      end
+    if waveform[ext] or instructional[ext] then
+      info = musicFileTable(filename)
       -- This title might be replaced later by the midi_txt.
+      info.title = filename
+    end
+    if instructional[ext] and not music_dir then
+       info.filename = table.concat({"Sound", "Midi", file}, pathsep)
+    -- User supplied music file found
+    elseif waveform[ext] then
+      info.filename_music = music_dir .. file
+    -- Waveform can overwrite instructional, but not vice versa
+    elseif instructional[ext] and not info.filename_music then
+      info.filename_music = music_dir .. file
     elseif ext == "TXT" and (file:sub(1, 4):upper() == "MIDI" or
                              file:sub(1, 5):upper() == "NAMES") then
       -- If it Looks like the midi.txt or equiv, then remember it for later.
@@ -558,15 +555,15 @@ function Audio:playBackgroundTrack(index)
     local music = info.music
     if not music then
       local data
-      if info.filename_mp3 then
-        data = assert(GetFileData(info.filename_mp3))
+      if info.filename_music then
+        data = assert(GetFileData(info.filename_music))
       else
         data = assert(self.app.fs:readContents(info.filename))
       end
       if data:sub(1, 3) == "RNC" then
         data = assert(rnc.decompress(data))
       end
-      if not info.filename_mp3 then
+      if not info.filename_music then
         data = SDL.audio.transcodeXmiToMid(data)
       end
       -- Loading of music files can incur a slight pause, which is why it is
@@ -577,7 +574,7 @@ function Audio:playBackgroundTrack(index)
       SDL.audio.loadMusicAsync(data, function(music_data, e)
 
         if music_data == nil then
-          error("Could not load music file \'" .. (info.filename_mp3 or info.filename) .. "\'" ..
+          error("Could not load music file \'" .. (info.filename_music or info.filename) .. "\'" ..
               (e and (" (" .. e .. ")" or "")))
         else
           info.music = music_data
