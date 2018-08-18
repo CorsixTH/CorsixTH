@@ -1,4 +1,13 @@
 -------------------------------------------------------------------------------
+Version next - released ???
+-------------------------------------------------------------------------------
+# New Features
+* Game music now supports ogg, flac, wav, aiff, voc, and mod in addition to
+  mp3 and mid/xmi tracks.
+* No more hunting for that machine that's always breaking down. Save your
+  camera position with ALT+number, and restore with CTRL+number.
+
+-------------------------------------------------------------------------------
 Version 0.62 - released July 2018
 -------------------------------------------------------------------------------
 # New Features
