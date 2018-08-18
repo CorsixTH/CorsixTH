@@ -86,6 +86,8 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.current_momentum = {x = 0.0, y = 0.0, z = 0.0}
   self.multigesturemove = {x = 0.0, y = 0.0}
 
+  self.recallpositions = {}
+
   self.speed_up_key_pressed = false
 
   -- The currently specified intensity value for earthquakes. To abstract
@@ -107,6 +109,13 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler({"alt", "a"}, self, self.togglePlayAnnouncements)
   self:addKeyHandler({"alt", "s"}, self, self.togglePlaySounds)
   self:addKeyHandler({"alt", "m"}, self, self.togglePlayMusic)
+  -- scroll to map position
+  for i = 0, 9 do
+    -- set camera view
+    self:addKeyHandler({"alt", tostring(i)}, self, self.setMapRecallPosition, i)
+    -- recall camera view
+    self:addKeyHandler({"ctrl", tostring(i)}, self, self.recallMapPosition, i)
+  end
 
   if self.app.config.debug then
     self:addKeyHandler("f11", self, self.showCheatsWindow)
@@ -357,7 +366,8 @@ function GameUI:onCursorWorldPositionChange()
   local x = math.floor(self.screen_offset_x + self.cursor_x / zoom)
   local y = math.floor(self.screen_offset_y + self.cursor_y / zoom)
   local entity = nil
-  if self.do_world_hit_test and not self:hitTest(self.cursor_x, self.cursor_y) then
+  local overwindow = self:hitTest(self.cursor_x, self.cursor_y)
+  if self.do_world_hit_test and not overwindow then
     entity = self.app.map.th:hitTestObjects(x, y)
     if self.do_world_hit_test ~= true then
       -- limit to non-door objects in room
@@ -410,7 +420,7 @@ function GameUI:onCursorWorldPositionChange()
   wx = math.floor(wx)
   wy = math.floor(wy)
   local room
-  if wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
+  if not overwindow and wx > 0 and wy > 0 and wx < self.app.map.width and wy < self.app.map.height then
     room = self.app.world:getRoom(wx, wy)
   end
   if room ~= self.cursor_room then
@@ -1078,6 +1088,24 @@ function GameUI:startTutorial(chapter)
   self:tutorialStep(chapter, 0, 1)
 end
 
+--! Converts centre of screen co-ordinates to world tile positions and stores the values for later recall
+-- param index (integer) Postion in recallpositions table
+function GameUI:setMapRecallPosition(index)
+  local cx, cy = self:ScreenToWorld(self.app.config.width / 2, self.app.config.height / 2)
+  self.recallpositions[index] = {x = cx, y = cy, z = self.zoom_factor}
+end
+
+--! Retrives stored recall position and attempts to scroll to that position - will be limited to the bounds of the camera when zoomed out
+-- param index (integer) Postion in recallpositions table
+function GameUI:recallMapPosition(index)
+  if self.recallpositions[index] ~= nil then
+    local sx, sy = self.app.map:WorldToScreen(self.recallpositions[index].x,  self.recallpositions[index].y)
+    local dx, dy = self.app.map:ScreenToWorld(self.app.config.width / 2, self.app.config.height / 2)
+    self:setZoom(self.recallpositions[index].z)
+    self:scrollMapTo(sx + dx, sy + dy)
+  end
+end
+
 function GameUI:setEditRoom(enabled)
   -- TODO: Make the room the cursor is over flash
   if enabled then
@@ -1143,6 +1171,14 @@ function GameUI:afterLoad(old, new)
   end
   if old < 122 then
     self.multigesturemove = {x = 0.0, y = 0.0}
+  end
+  if old < 129 then
+    self.recallpositions = {}
+    -- snap to screen position
+    for i = 0, 9 do
+      self:addKeyHandler({"alt", tostring(i)}, self, self.setMapRecallPosition, i)
+      self:addKeyHandler({"ctrl", tostring(i)}, self, self.recallMapPosition, i)
+    end
   end
   return UI.afterLoad(self, old, new)
 end
