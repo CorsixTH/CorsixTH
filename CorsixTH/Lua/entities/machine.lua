@@ -27,7 +27,6 @@ class "Machine" (Object)
 local Machine = _G["Machine"]
 
 function Machine:Machine(world, object_type, x, y, direction, etc)
-
   self.total_usage = -1 -- Incremented in the constructor of Object.
   self:Object(world, object_type, x, y, direction, etc)
 
@@ -42,29 +41,7 @@ function Machine:Machine(world, object_type, x, y, direction, etc)
   -- Change hover cursor once the room has been finished.
   self.waiting_for_finalize = true -- Waiting until the room is completed (reset by new-room callback).
 
-  local orientation = object_type.orientations[direction]
-  local handyman_position = orientation.handyman_position
-  if handyman_position then
-  -- If there are many possible handyman tiles, choose one that is accessible from the use_position.
-    if type(handyman_position[1]) == "table" then
-      for _, position in ipairs(handyman_position) do
-        local hx, hy = x + position[1], y + position[2]
-        local ux, uy = x + orientation.use_position[1], y + orientation.use_position[2]
-        if world.pathfinder:findDistance(hx, hy, ux, uy) then
-          -- Also make sure the tile is not in another room or in the corridor.
-          local room = world:getRoom(hx, hy)
-          if room and room == self:getRoom() then
-            self.handyman_position = {position[1], position[2]}
-            break
-          end
-        end
-      end
-    else
-      self.handyman_position = {handyman_position[1], handyman_position[2]}
-    end
-  else
-    self.handyman_position = {orientation.use_position[1], orientation.use_position[2]}
-  end
+  self:setHandymanRepairPosition(direction)
 end
 
 function Machine:notifyNewRoom(room)
@@ -428,6 +405,39 @@ function Machine:setState(state)
   Object.setState(self, state)
   if state then
     self.total_usage = state.total_usage
+  end
+end
+
+--[[ Sets the handyman use position of a machine
+
+! Calculate handyman use position based on object orientation
+! or the normal use position if one not available
+!param direction (string) orientation of object
+!return (void)
+]]
+function Machine:setHandymanRepairPosition(direction)
+  local orientation = self.object_type.orientations[direction]
+  local handyman_position = orientation.handyman_position
+  if handyman_position then
+  -- If there are many possible handyman tiles, choose one that is accessible from the use_position.
+    if type(handyman_position[1]) == "table" then
+      for _, position in ipairs(handyman_position) do
+        local hx, hy = self.tile_x + position[1], self.tile_y + position[2]
+        local ux, uy = self.tile_x + orientation.use_position[1], self.tile_y + orientation.use_position[2]
+        if self.world.pathfinder:findDistance(hx, hy, ux, uy) then
+          -- Also make sure the tile is not in another room or in the corridor.
+          local room = self.world:getRoom(hx, hy)
+          if room and room == self:getRoom() then
+            self.handyman_position = {position[1], position[2]}
+            break
+          end
+        end
+      end
+    else
+      self.handyman_position = {handyman_position[1], handyman_position[2]}
+    end
+  else
+    self.handyman_position = {orientation.use_position[1], orientation.use_position[2]}
   end
 end
 
