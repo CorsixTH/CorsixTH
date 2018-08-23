@@ -1,0 +1,94 @@
+.\" Copyright (c) 2018 Stephen "TheCycoONE" Baker
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining a copy of
+.\" this software and associated documentation files (the "Software"), to deal in
+.\" the Software without restriction, including without limitation the rights to
+.\" use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+.\" of the Software, and to permit persons to whom the Software is furnished to do
+.\" so, subject to the following conditions:
+.\" 
+.\" The above copyright notice and this permission notice shall be included in all
+.\" copies or substantial portions of the Software.
+.\" 
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+.\" AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+.\" LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+.\" OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+.\" SOFTWARE.
+.\"
+.\" This manpage is written in mdoc(7).
+.\" Language reference: https://man.openbsd.org/mdoc.7
+.Dd August 22, 2018
+.Dt CORSIX-TH 6
+.Os
+.Sh NAME
+.Nm corsix-th
+.Nd "An" open source implementation "of" Theme Hospital
+.Sh SYNOPSIS
+.Nm
+.Op Fl -bitmap-dir Ns = Ns Ar path
+.Op Fl -config-file Ns = Ns Ar path
+.Op Fl -connect-lua-dbgp
+.Op Fl -dump=strings
+.Op Fl -interpreter Ns = Ns Ar path
+.Op Fl -load Ns = Ns Ar savegame
+.Op Fl -lua-dir Ns = Ns Ar path
+.Sh DESCRIPTION
+CorsixTH is a reimplementation of the 1997 Bullfrog business simulation game Theme Hospital.
+As well as faithfully recreating the original, CorsixTH adds support for modern operating systems, high resolution displays, and much more.
+A purchased copy of Theme Hospital, or the Theme Hospital demo is required to use CorsixTH.
+.Pp
+For more information visit
+.Sm off
+.Lk https://corsixth.com
+\&.
+.Sm on
+.Sh OPTIONS
+.Bl -tag -width 6n
+.It Fl -bitmap-dir Ns = Ns Ar directory
+Use
+.Ar directory
+for loading in game bitmaps.
+.It Fl -config-file Ns = Ns Ar path
+Use the specified config file instead of the default one.
+.It Fl -connect-lua-dbgp
+Connect to a Lua DBGp server.
+.It Fl -dump=strings
+Dumps all of the game strings to the config directory.
+.It Fl -interpreter Ns = Ns Ar path
+Run the lua bootstrap file at
+.Ar path
+\&.
+This is the option you would use to point corsix-th to the CorsixTH.lua in a local git checkout.
+.It Fl -load Ns = Ns Ar savegame
+Load the specified
+.Ar savegame
+file from the Saves folder.
+.Ar savegame
+must include the .sav extension.
+.It Fl -lua-dir Ns = Ns Ar directory
+Use
+.Ar directory
+for loading the game engine lua scripts.
+.El
+.Sh FILES
+.Bl -tag -width 6n
+.It Pa $XDG_CONFIG_HOME/CorsixTH/config.txt
+Configuration file.
+.It Pa $XDG_CONFIG_HOME/CorsixTH/gamelog.txt
+Log of the last run. Necessary for bug reporting.
+.It Pa $XDG_CONFIG_HOME/CorsixTH/Levels/
+Custom levels. The map editor saves maps in this directory.
+.It Pa $XDG_CONFIG_HOME/CorsixTH/Saves/
+Savegame directory.
+.It Pa $XDG_CONFIG_HOME/CorsixTH/Screenshots/
+Screenshot directory.
+.El
+.Sh COPYRIGHT
+Copyright CorsixTH contributors.
+CorsixTH is available under the MIT license.
+.Pp
+For the full license text see:
+.Lk https://raw.githubusercontent.com/CorsixTH/CorsixTH/v0.62/LICENSE.txt
