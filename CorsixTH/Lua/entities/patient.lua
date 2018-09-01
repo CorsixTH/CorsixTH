@@ -372,7 +372,7 @@ function Patient:falling()
         name = current.name,
         x = current.x,
         y = current.y,
-        must_happen = current.must_happen,
+        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
         is_entering = current.is_entering,
       }, 2)
     else
@@ -431,7 +431,7 @@ function Patient:vomit()
         name = current.name,
         x = current.x,
         y = current.y,
-        must_happen = current.must_happen,
+        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
         is_entering = current.is_entering,
       }, 2)
     else
@@ -465,7 +465,7 @@ function Patient:pee()
         name = current.name,
         x = current.x,
         y = current.y,
-        must_happen = current.must_happen,
+        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
         is_entering = current.is_entering,
       }, 2)
     else
@@ -879,7 +879,7 @@ function Patient:tickDay()
             name = current.name,
             x = current.x,
             y = current.y,
-            must_happen = current.must_happen,
+            must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
             is_entering = current.is_entering,
           }, 3)
           -- If we were idling, also go away a little before continuing with
