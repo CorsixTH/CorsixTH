@@ -148,7 +148,7 @@ end
 function Staff:tick()
   Entity.tick(self)
   -- don't do anything if they're fired or picked up or have no hospital
-  if self.fired or self.pickup or not self.hospital then
+  if self.fired or self.pickup or not self.hospital or self.dead then
     return
   end
 
@@ -388,7 +388,6 @@ function Staff:fire()
 end
 
 function Staff:die()
-  self:despawn()
   if self.task then
     -- If the staff member had a task outstanding, unassigning them from that task.
     -- Tasks with no handyman assigned will be eligible for reassignment by the hospital.
@@ -400,8 +399,7 @@ function Staff:die()
   if window then
     window:updateStaffList(self)
   end
-  -- It may be that the staff member was fired just before dying (then self.hospital = nil)
-  self.world.ui.hospital:humanoidDeath(self)
+  self.dead = true
 end
 
 -- Despawns the staff member and removes them from the hospital

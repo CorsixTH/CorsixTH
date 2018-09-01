@@ -779,6 +779,7 @@ function Room:crashRoom()
       table.remove(self.world:getLocalPlayerHospital().emergency_patients, humanoid.is_emergency)
     end
     humanoid:die()
+    humanoid:despawn()
     self.world:destroyEntity(humanoid)
   end
 
@@ -786,6 +787,7 @@ function Room:crashRoom()
   for humanoid, _ in pairs(self.humanoids) do
     remove_humanoid(humanoid)
   end
+  self.humanoids = nil
   -- There might also be someone using the door, even if that person is just about to exit
   -- he/she is killed too.
   local walker = self.door.user
