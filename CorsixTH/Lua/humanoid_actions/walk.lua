@@ -203,13 +203,17 @@ local action_walk_tick; action_walk_tick = permanent"action_walk_tick"( function
   -- Also make sure that a room hasn't unexpectedly been built on top of the
   -- path since the route was calculated.
   if not recalc_route and flags_here.roomId ~= flags_there.roomId then
+    -- if going to the corridor we don't care as we are at the door
+    -- as this will be false we won't bother checking for rerouting
+    recalc_route = flags_there.room
     local door = TheApp.objects.door.thob
     local door2 = TheApp.objects.swing_door_right.thob
-    if flags_here.thob ~= door and flags_here.thob ~= door2 and
-        flags_there.thob ~= door and flags_there.thob ~= door2 and
-        (not flags_there.room or
-          map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId ~= flags_there.roomId) then
-      recalc_route = true
+    -- but we should see if this is the same room id we want to go to and cancel the reroute
+    -- ensure we still have a door on this route
+    if recalc_route and (flags_here.thob == door or flags_here.thob == door2 or --is there any door
+        flags_there.thob == door or flags_there.thob == door2) and -- is there any door
+        map:getCellFlags(path_x[#path_x], path_y[#path_y]).roomId == flags_there.roomId then
+      recalc_route = false
     end
   end
   if recalc_route then
