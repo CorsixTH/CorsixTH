@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "Epidemic"
 
 ---@type Epidemic
@@ -224,7 +228,7 @@ end
 function Epidemic:announceStartOfEpidemic()
   local announcements = {"EPID001.wav", "EPID002.wav", "EPID003.wav", "EPID004.wav"}
   if self.hospital:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
   end
 end
 
@@ -233,7 +237,7 @@ end
 function Epidemic:announceEndOfEpidemic()
   local announcements = {"EPID005.wav", "EPID006.wav", "EPID007.wav", "EPID008.wav"}
   if self.hospital:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)])
+    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
   end
 end
 

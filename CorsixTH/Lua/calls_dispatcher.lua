@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "CallsDispatcher"
 
 ---@type CallsDispatcher
@@ -61,7 +65,7 @@ function CallsDispatcher:callForStaff(room)
   end
   local sound = room.room_info.call_sound
   if anyone_missed and sound and not room.sound_played then
-    room.world.ui:playAnnouncement(sound)
+    room.world.ui:playAnnouncement(sound, AnnouncementPriority.Normal)
     room.sound_played = true
   end
 end
@@ -120,7 +124,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
     local room = object:getRoom()
     local sound = room.room_info.handyman_call_sound
     if sound then
-      ui:playAnnouncement(sound)
+      ui:playAnnouncement(sound, AnnouncementPriority.High)
       ui:playSound("machwarn.wav")
     end
     message = _A.warnings.machines_falling_apart
