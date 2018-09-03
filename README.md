@@ -1,9 +1,9 @@
 ![](http://i.imgur.com/fYp148T.jpg)
-### Latest Release [![Release 0.60](https://img.shields.io/badge/release-0.60-brightgreen.svg)](https://github.com/CorsixTH/CorsixTH/releases) [![Travis Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
+### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Travis Build Status](https://travis-ci.org/CorsixTH/CorsixTH.svg?branch=master)](https://travis-ci.org/CorsixTH/CorsixTH) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
 ##### [Forum](http://forums.corsixth.com) | [IRC Chat](http://webchat.freenode.net/?channels=corsix-th) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new)
 
-A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, Mac OSX and Linux), high resolutions and much more.
+A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
 
 ![](http://i.imgur.com/qHV60Ui.png)
 
@@ -12,7 +12,9 @@ A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as 
 
 You will need the following:
 
-- Grab the latest release for your system [here](https://github.com/CorsixTH/CorsixTH/releases).
+- Grab the latest installer for your system:
+   - Windows and macOS builds can be downloaded directly from [releases](https://github.com/CorsixTH/CorsixTH/releases).
+   - Linux and BSD repositories use either corsixth or corsix-th names [packaged versions](https://repology.org/metapackage/corsixth).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf:smile:
    - A download from [GOG.com](http://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
