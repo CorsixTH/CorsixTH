@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --[[ An `Inspector` is called to the hospital after an epidemic to issue a report]]
 class "Inspector" (Humanoid)
 
@@ -54,5 +58,5 @@ function Inspector:onDestroy()
 end
 
 function Inspector:announce()
-  self.world.ui:playAnnouncement("vip008.wav")
+  self.world.ui:playAnnouncement("vip008.wav", AnnouncementPriority.High)
 end

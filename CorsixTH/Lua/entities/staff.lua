@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
 
@@ -234,17 +238,19 @@ function Staff:checkIfWaitedTooLong()
 end
 
 function Staff:leaveAnnounce()
+  local announcement_priority = AnnouncementPriority.High
+
   if self.humanoid_class == "Nurse" then
     local nurse = {"sack004.wav", "sack005.wav",}
-    self.world.ui:playAnnouncement(nurse[math.random(1, #nurse)])
+    self.world.ui:playAnnouncement(nurse[math.random(1, #nurse)], announcement_priority)
   elseif self.humanoid_class == "Doctor"  then
     local doctor = {"sack001.wav", "sack002.wav", "sack003.wav",}
-    self.world.ui:playAnnouncement(doctor[math.random(1, #doctor)])
+    self.world.ui:playAnnouncement(doctor[math.random(1, #doctor)], announcement_priority)
   elseif self.humanoid_class == "Receptionist" then
     local receptionist = {"sack007.wav", "sack008.wav",}
-    self.world.ui:playAnnouncement(receptionist[math.random(1, #receptionist)])
+    self.world.ui:playAnnouncement(receptionist[math.random(1, #receptionist)], announcement_priority)
   elseif self.humanoid_class == "Handyman" then
-    self.world.ui:playAnnouncement("sack006.wav")
+    self.world.ui:playAnnouncement("sack006.wav", announcement_priority)
   end
 end
 
