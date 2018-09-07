@@ -787,7 +787,7 @@ function Room:crashRoom()
   for humanoid, _ in pairs(self.humanoids) do
     remove_humanoid(humanoid)
   end
-  self.humanoids = nil
+  self.humanoids = {}
   -- There might also be someone using the door, even if that person is just about to exit
   -- he/she is killed too.
   local walker = self.door.user
