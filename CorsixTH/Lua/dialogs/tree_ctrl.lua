@@ -279,16 +279,17 @@ function FileTreeNode:hasChildren()
     if lfs.attributes(self.path, "mode") ~= "directory" then
       return false
     end
-    local status, _f, _s, _v = pcall(lfs.dir, self.path)
+    local status, err, dir_obj = pcall(lfs.dir, self.path)
     if not status then
-      print("Error while fetching children for " .. self.path .. ": " .. _f)
+      print("Error while fetching children for " .. self.path .. ": " .. err)
     else
-      for item in _f, _s, _v do
+      for item in dir_obj.next, dir_obj do
         if self:isValidFile(item) then
           self.has_children = true
           break
         end
       end
+      dir_obj:close()
     end
   end
   return self.has_children
