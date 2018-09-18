@@ -51,6 +51,8 @@ public class ReaderWriter {
                 while ((line = read.readLine()) != null) {
                     if (line.startsWith("%Name"))
                         readFromFile(line, "name");
+                    else if (line.startsWith("%MapFile"))
+                        readFromFile(line, "mapFile");
                     else if (line.startsWith("%LevelFile"))
                         readFromFile(line, "mapFile");
                     else if (line.startsWith("%LevelBriefing"))
@@ -194,7 +196,7 @@ public class ReaderWriter {
                 write.write("- Name: What the level should be called (within quotes)");
                 write.newLine();
                 write.newLine();
-                write.write("- LevelFile: The name of the binary map file to load. ");
+                write.write("- MapFile: The name of the binary map file to load. ");
                 write.write("First the Levels directory of the original game will be "
                         + "searched, and then the Levels directory of CorsixTH.");
                 write.newLine();
@@ -214,7 +216,7 @@ public class ReaderWriter {
                 write.write("%Name = \"" + (TabGeneral.name) + "\"");
                 write.newLine();
 
-                write.write("%LevelFile = \"" + (TabGeneral.mapFile) + "\"");
+                write.write("%MapFile = \"" + (TabGeneral.mapFile) + "\"");
                 write.newLine();
 
                 write.write("%LevelBriefing = \"" + (TabGeneral.briefing)
