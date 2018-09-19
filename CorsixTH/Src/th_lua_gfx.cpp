@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include <SDL.h>
 #include <cstring>
+#include <exception>
 
 static int l_palette_new(lua_State *L)
 {
@@ -80,11 +81,16 @@ static int l_rawbitmap_load(lua_State *L)
     int iWidth = static_cast<int>(luaL_checkinteger(L, 3));
     render_target* pSurface = luaT_testuserdata<render_target>(L, 4, luaT_upvalueindex(1), false);
 
-    if(pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface))
-        lua_pushboolean(L, 1);
-    else
-        lua_pushboolean(L, 0);
+    try {
+        pBitmap->load_from_th_file(pData, iDataLen, iWidth, pSurface);
+    }
+    catch (const std::exception& ex) {
+        lua_pushstring(L, ex.what());
+        lua_error(L);
+        return 1;
+    }
 
+    lua_pushboolean(L, 1);
     return 1;
 }
 

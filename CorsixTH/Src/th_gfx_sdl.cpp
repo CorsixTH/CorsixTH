@@ -32,6 +32,7 @@ SOFTWARE.
 #include <cstring>
 #include <cstdio>
 #include <algorithm>
+#include <stdexcept>
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight) : width(iWidth), height(iHeight)
 {
@@ -81,10 +82,14 @@ static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     return palette::pack_argb(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
 }
 
-bool full_colour_renderer::decode_image(const uint8_t* pImg, const palette *pPalette, uint32_t iSpriteFlags)
+void full_colour_renderer::decode_image(const uint8_t* pImg, const palette *pPalette, uint32_t iSpriteFlags)
 {
-    if (width <= 0 || height <= 0)
-        return false;
+    if (width <= 0) {
+        throw std::logic_error("width cannot be <= 0 when decoding an image");
+    }
+    if (height <= 0) {
+        throw std::logic_error("height cannot be <= 0 when decoding an image");
+    }
 
     iSpriteFlags &= thdf_alt32_mask;
 
@@ -175,7 +180,9 @@ bool full_colour_renderer::decode_image(const uint8_t* pImg, const palette *pPal
         if (y >= height)
             break;
     }
-    return x == 0;
+    if (y != height || x != 0) {
+        throw std::logic_error("Image data does not match given dimensions");
+    }
 }
 
 full_colour_storing::full_colour_storing(uint32_t *pDest, int iWidth, int iHeight) : full_colour_renderer(iWidth, iHeight)
@@ -604,10 +611,7 @@ static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelData
     size_t iNumFilled = iPixelDataLength / 63;
     size_t iRemaining = iPixelDataLength - iNumFilled * 63;
     size_t iNewSize = iNumFilled * (3 + 63) + ((iRemaining > 0) ? 3 + iRemaining : 0);
-
-    uint8_t *pData = new (std::nothrow) uint8_t[iNewSize];
-    if (pData == nullptr)
-        return nullptr;
+    uint8_t *pData = new uint8_t[iNewSize];
 
     uint8_t *pDest = pData;
     while (iPixelDataLength > 0)
@@ -628,14 +632,10 @@ SDL_Texture* render_target::create_palettized_texture(
             int iWidth, int iHeight, const uint8_t* pPixels,
             const palette* pPalette, uint32_t iSpriteFlags) const
 {
-    uint32_t *pARGBPixels = new (std::nothrow) uint32_t[iWidth * iHeight];
-    if(pARGBPixels == nullptr)
-        return 0;
+    uint32_t *pARGBPixels = new uint32_t[iWidth * iHeight];
 
     full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
-    bool bOk = oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
-    if (!bOk)
-        return 0;
+    oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
 
     SDL_Texture *pTexture = create_texture(iWidth, iHeight, pARGBPixels);
     delete [] pARGBPixels;
@@ -646,10 +646,31 @@ SDL_Texture* render_target::create_texture(int iWidth, int iHeight,
                                            const uint32_t* pPixels) const
 {
     SDL_Texture *pTexture = SDL_CreateTexture(renderer, pixel_format->format, SDL_TEXTUREACCESS_STATIC, iWidth, iHeight);
-    SDL_UpdateTexture(pTexture, nullptr, pPixels, static_cast<int>(sizeof(*pPixels) * iWidth));
-    SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
-    SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
-    SDL_SetTextureAlphaMod(pTexture, 0xFF);
+
+    if (pTexture == nullptr) {
+        throw std::runtime_error(SDL_GetError());
+    }
+
+    int err = 0;
+    err = SDL_UpdateTexture(pTexture, nullptr, pPixels, static_cast<int>(sizeof(*pPixels) * iWidth));
+    if (err < 0) {
+        throw std::runtime_error(SDL_GetError());
+    }
+
+    err = SDL_SetTextureBlendMode(pTexture, SDL_BLENDMODE_BLEND);
+    if (err < 0) {
+        throw std::runtime_error(SDL_GetError());
+    }
+
+    err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    if (err < 0) {
+        throw std::runtime_error(SDL_GetError());
+    }
+
+    err = SDL_SetTextureAlphaMod(pTexture, 0xFF);
+    if (err < 0) {
+        throw std::runtime_error(SDL_GetError());
+    }
 
     return pTexture;
 }
@@ -786,28 +807,23 @@ void raw_bitmap::set_palette(const palette* pPalette)
     bitmap_palette = pPalette;
 }
 
-bool raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
-                                 size_t iPixelDataLength, int iWidth,
-                                 render_target *pEventualCanvas)
+void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
+    size_t iPixelDataLength, int iWidth,
+    render_target *pEventualCanvas)
 {
-    if(pEventualCanvas == nullptr)
-        return false;
+    if (pEventualCanvas == nullptr) {
+        throw std::invalid_argument("pEventualCanvas cannot be null");
+    }
 
     uint8_t* converted_sprite = convertLegacySprite(pPixelData, iPixelDataLength);
-    if (converted_sprite == nullptr)
-        return false;
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
     texture = pEventualCanvas->create_palettized_texture(iWidth, iHeight, converted_sprite, bitmap_palette, thdf_alt32_plain);
     delete[] converted_sprite;
 
-    if(!texture)
-        return false;
-
     width = iWidth;
     height = iHeight;
     target = pEventualCanvas;
-    return true;
 }
 
 /**
