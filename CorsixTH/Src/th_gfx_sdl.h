@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <SDL.h>
 #include "persist_lua.h"
+#include <stdexcept>
 
 class cursor;
 struct clip_rect : public SDL_Rect {
@@ -55,7 +56,7 @@ public:
         @param iSpriteFlags Flags how to render the sprite.
         @return Decoding was successful.
     */
-    bool decode_image(const uint8_t* pImg, const ::palette *pPalette, uint32_t iSpriteFlags);
+    void decode_image(const uint8_t* pImg, const ::palette *pPalette, uint32_t iSpriteFlags);
 
 private:
     //! Store a decoded pixel. Use x and y if necessary.
@@ -87,7 +88,7 @@ private:
         }
         else
         {
-            x = 1; // Will return 'failed'.
+            throw std::logic_error("Attempt to push_pixel past the end of the image");
         }
     }
 };
@@ -383,7 +384,7 @@ public:
         @param pEventualCanvas Canvas to render the image to (eventually).
         @return Loading was a success.
     */
-    bool load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
+    void load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
                            int iWidth, render_target *pEventualCanvas);
 
     //! Draw the image at a given position at the given canvas.
