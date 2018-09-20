@@ -244,6 +244,10 @@ if(NOT USE_SOURCE_DATADIRS)
   )
   install(FILES CorsixTH.lua ../LICENSE.txt DESTINATION ${CORSIX_TH_DATADIR})
 
+  if(UNIX AND NOT APPLE)
+    install(FILES corsix-th.6 DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)
+  endif()
+
   if(APPLE)
     # Fix the OS X bundle to include required libraries (create a redistributable app)
     install(CODE "
