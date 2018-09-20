@@ -393,15 +393,34 @@ function UI:removeKeyHandler(keys, window)
   end
 end
 
-local menu_bg_sizes = { -- Available menu background sizes
-  {1920, 1080},
-}
-
+--! Set the menu background image
+--!
+--! The menu size closest to, but no larger than the height of the currently
+--! set game window is selected. If no image fits that criteria the smallest
+--! available image is used.
 function UI:setMenuBackground()
-  local bg_size = menu_bg_sizes[1]
-  self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[2], bg_size[1], bg_size[2], "Bitmap")
+  local screen_h = self.app.config.height
+  local bg_size_idx = 1
+
+  -- Available mainmenu*.bmp sizes
+  local menu_bg_sizes = {
+    {640, 480},
+    {1280, 720},
+    {1920, 1080},
+  }
+
+  for i, bg_size in ipairs(menu_bg_sizes) do
+    if screen_h >= bg_size[2] then
+      bg_size_idx = i
+    else
+      break
+    end
+  end
+
+  local bg_size = menu_bg_sizes[bg_size_idx]
   self.background_width = bg_size[1]
   self.background_height = bg_size[2]
+  self.background = self.app.gfx:loadRaw("mainmenu" .. bg_size[2], bg_size[1], bg_size[2], "Bitmap")
 end
 
 function UI:onChangeResolution()
