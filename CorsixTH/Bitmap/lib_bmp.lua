@@ -45,7 +45,7 @@ function open(filename)
   end
   local bits_offset, header_size = LE(file:read(4)), LE(file:read(4))
   if header_size ~= 40 then
-    return nil, "Expected BITMAPINFOHEADER"
+    return nil, "Expected BITMAPINFOHEADER. Header size was " .. header_size
   end
   local width, height = LE(file:read(4)), LE(file:read(4))
   local planes, bpp = LE(file:read(2)), LE(file:read(2))
