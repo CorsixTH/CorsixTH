@@ -494,20 +494,22 @@ function Patient:pee()
 end
 
 function Patient:checkWatch()
-  if self.check_watch_anim and not self:getCurrentAction().is_leaving then
+  local action = self:getCurrentAction()
+  if self.check_watch_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
     self:queueAction(CheckWatchAction(), 0)
   end
 end
 
 function Patient:yawn()
   local action = self:getCurrentAction()
-  if self.yawn_anim and action.name == "idle" then
+  if self.yawn_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
     self:queueAction(YawnAction(), 0)
   end
 end
 
 function Patient:tapFoot()
-  if self.tap_foot_anim and not self:getCurrentAction().is_leaving then
+  local action = self:getCurrentAction()
+  if self.tap_foot_anim and (action.name == "idle" or action.name == "seek_room") and not action.is_leaving then
     self:queueAction(TapFootAction(), 0)
   end
 end
