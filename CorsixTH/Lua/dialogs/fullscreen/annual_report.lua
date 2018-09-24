@@ -133,39 +133,28 @@ function UIAnnualReport:UIAnnualReport(ui, world)
 
   -- Get and sort values used on the statistics screen.
   -- The six categories. The extra tables are used to be able to sort the values.
-    self.money = {}
     self.money_sort = {}
-    self.visitors = {}
     self.visitors_sort = {}
-    self.salary = {}
     self.salary_sort = {}
-    self.deaths = {}
     self.deaths_sort = {}
-    self.cures = {}
     self.cures_sort = {}
-    self.value = {}
     self.value_sort = {}
 
     -- TODO: Right now there are no real competitors, they all have initial values.
     for i, hospital in ipairs(world.hospitals) do
-      self.money[hospital.name] = hospital.balance - hospital.loan
-      self.money_sort[i] = hospital.balance - hospital.loan
-      self.visitors[hospital.name] = hospital.num_visitors
-      self.visitors_sort[i] = hospital.num_visitors
-      self.deaths[hospital.name] = hospital.num_deaths
-      self.deaths_sort[i] = hospital.num_deaths
-      self.cures[hospital.name] = hospital.num_cured
-      self.cures_sort[i] = hospital.num_cured
-      self.value[hospital.name] = hospital.value
-      self.value_sort[i] = hospital.value
-      self.salary[hospital.name] = hospital.player_salary
-      self.salary_sort[i] = hospital.player_salary
+      self.money_sort[i] = {hospital.balance - hospital.loan, i}
+      self.visitors_sort[i] = {hospital.num_visitors, i}
+      self.deaths_sort[i] = {hospital.num_deaths, i}
+      self.cures_sort[i] = {hospital.num_cured, i}
+      self.value_sort[i] = {hospital.value, i}
+      self.salary_sort[i] = {hospital.player_salary, i}
     end
 
-    local sort_order = function(a,b) return a>b end
+    local sort_order = function(a,b) return a[1] > b[1] or (a[1] == b[1] and a[2] == 1) end
+    local in_order = function(a,b) return a[1] < b[1] or (a[1] == b[1] and a[2] == 1) end
     table.sort(self.money_sort, sort_order)
     table.sort(self.visitors_sort, sort_order)
-    table.sort(self.deaths_sort) -- We want this to be in increasing order
+    table.sort(self.deaths_sort, in_order)
     table.sort(self.cures_sort, sort_order)
     table.sort(self.value_sort, sort_order)
     table.sort(self.salary_sort, sort_order)
@@ -571,7 +560,8 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   local world = self.ui.app.world
 
   -- Draw titles
-  font:draw(canvas, _S.menu.charts .. " " .. (world:date():year() + 1999), x + 210, y + 30, 200, 0)
+  -- world date year is + 1, so adding it to 1998 realigns it
+  font:draw(canvas, _S.menu.charts .. " " .. (world:date():year() + 1998), x + 210, y + 30, 200, 0)
   font:draw(canvas, _S.high_score.categories.money, x + 140, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.salary, x + 328, y + 98, 170, 0)
   font:draw(canvas, _S.high_score.categories.cures, x + 140, y + 205, 170, 0)
@@ -584,82 +574,64 @@ function UIAnnualReport:drawStatisticsScreen(canvas, x, y)
   -- Helper function to find where the person is in the array.
   -- TODO: This whole sorting thing, it should be possible to do it in a better way?
   local getindex = function(tablename, val)
-    local i = 0
-    local index
     for ind, value in ipairs(tablename) do
-      if value == val then
-        if not index then
-          index = ind
-        end
-        i = i + 1
+      if value[2] == val then
+        return ind
       end
     end
-    return index, i
   end
 
   local row_y = 128
   local row_dy = 15
   local col_x = 190
   local row_no_y = 106
-  local dup_money = 0
-  local dup_salary = 0
-  local dup_cures = 0
-  local dup_deaths = 0
-  local dup_visitors = 0
-  local dup_value = 0
-  for _, player in ipairs(world.hospitals) do
+
+  for idx, player in ipairs(world.hospitals) do
     local name = player.name
 
     -- Most Money
-    local index_m, dup_m = getindex(self.money_sort, self.money[name])
+    local index_m = getindex(self.money_sort, idx)
     -- index_* is the returned value of the sorted place for this player.
     -- However there might be many players with the same value, so each iteration a
     -- duplicate has been found, one additional row lower is the right place to be.
     font:draw(canvas, name:upper(), x + 140,
-        y + row_y + row_dy * (index_m - 1) + row_dy * dup_money)
-    font:draw(canvas, self.money[name], x + 240,
-        y + row_y + row_dy * (index_m - 1) + row_dy * dup_money, 70, 0, "right")
+        y + row_y + row_dy * (index_m - 1))
+    font:draw(canvas, self.money_sort[index_m][1], x + 240,
+        y + row_y + row_dy * (index_m - 1), 70, 0, "right")
 
     -- Highest Salary
-    local index_s, dup_s = getindex(self.salary_sort, self.salary[name])
+    local index_s = getindex(self.salary_sort, idx)
     font:draw(canvas, name:upper(), x + 140 + col_x,
-        y + row_y + row_dy * (index_s - 1) + row_dy * dup_salary)
-    font:draw(canvas, self.salary[name], x + 240 + col_x,
-        y + row_y + row_dy * (index_s - 1) + row_dy * dup_salary, 70, 0, "right")
+        y + row_y + row_dy * (index_s - 1))
+    font:draw(canvas, self.salary_sort[index_s][1], x + 240 + col_x,
+        y + row_y + row_dy * (index_s - 1), 70, 0, "right")
 
     -- Most Cures
-    local index_c, dup_c = getindex(self.cures_sort, self.cures[name])
+    local index_c = getindex(self.cures_sort, idx)
     font:draw(canvas, name:upper(), x + 140,
-        y + row_y + row_no_y + row_dy * (index_c - 1) + row_dy * dup_cures)
-    font:draw(canvas, self.cures[name], x + 240,
-        y + row_y + row_no_y + row_dy * (index_c - 1) + row_dy * dup_cures, 70, 0, "right")
+        y + row_y + row_no_y + row_dy * (index_c - 1))
+    font:draw(canvas, self.cures_sort[index_c][1], x + 240,
+        y + row_y + row_no_y + row_dy * (index_c - 1), 70, 0, "right")
 
     -- Most Deaths
-    local index_d, dup_d = getindex(self.deaths_sort, self.deaths[name])
+    local index_d = getindex(self.deaths_sort, idx)
     font:draw(canvas, name:upper(), x + 140 + col_x,
-        y + row_y + row_no_y + row_dy * (index_d - 1) + row_dy * dup_deaths)
-    font:draw(canvas, self.deaths[name], x + 240 + col_x,
-        y + row_y + row_no_y + row_dy * (index_d - 1) + row_dy * dup_deaths, 70, 0, "right")
+        y + row_y + row_no_y + row_dy * (index_d - 1))
+    font:draw(canvas, self.deaths_sort[index_d][1], x + 240 + col_x,
+        y + row_y + row_no_y + row_dy * (index_d - 1), 70, 0, "right")
 
     -- Most Visitors
-    local index_v, dup_v = getindex(self.visitors_sort, self.visitors[name])
+    local index_v = getindex(self.visitors_sort, idx)
     font:draw(canvas, name:upper(), x + 140,
-        y + row_y + row_no_y * 2 + row_dy * (index_v - 1) + row_dy * dup_visitors)
-    font:draw(canvas, self.visitors[name], x + 240,
-        y + row_y + row_no_y * 2 + row_dy * (index_v - 1) + row_dy * dup_visitors, 70, 0, "right")
+        y + row_y + row_no_y * 2 + row_dy * (index_v - 1))
+    font:draw(canvas, self.visitors_sort[index_v][1], x + 240,
+        y + row_y + row_no_y * 2 + row_dy * (index_v - 1), 70, 0, "right")
 
     -- Highest Value
-    local index_v2, dup_v2 = getindex(self.value_sort, self.value[name])
+    local index_v2 = getindex(self.value_sort, idx)
     font:draw(canvas, name:upper(), x + 140 + col_x,
-        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1) + row_dy * dup_value)
-    font:draw(canvas, self.value[name], x + 240 + col_x,
-        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1) + row_dy * dup_value, 70, 0, "right")
-
-    if dup_m > 1 then dup_money = dup_money + 1 else dup_money = 0 end
-    if dup_s > 1 then dup_salary = dup_salary + 1 else dup_salary = 0 end
-    if dup_c > 1 then dup_cures = dup_cures + 1 else dup_cures = 0 end
-    if dup_d > 1 then dup_deaths = dup_deaths + 1 else dup_deaths = 0 end
-    if dup_v > 1 then dup_visitors = dup_visitors + 1 else dup_visitors = 0 end
-    if dup_v2 > 1 then dup_value = dup_value + 1 else dup_value = 0 end
+        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1))
+    font:draw(canvas, self.value_sort[index_v2][1], x + 240 + col_x,
+        y + row_y + row_no_y * 2 + row_dy * (index_v2 - 1), 70, 0, "right")
   end
 end

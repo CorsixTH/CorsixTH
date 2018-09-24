@@ -563,7 +563,9 @@ function ResearchDepartment:discoverDisease(disease)
       {text = _S.fax.disease_discovered.close_text, choice = "close"},
     },
   }
-  self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
+  if self.hospital == self.world.ui.hospital then
+    self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
+  end
   self.hospital.disease_casebook[disease.id].discovered = true
   local index = #self.hospital.discovered_diseases + 1
   self.hospital.discovered_diseases[index] = disease.id
