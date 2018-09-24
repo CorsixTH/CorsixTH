@@ -554,6 +554,11 @@ function Patient:goHome(reason, disease_id)
     self:clearDynamicInfo()
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
 
+  elseif reason == "evacuated" then
+    self:clearDynamicInfo()
+    self:updateDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
+    self:setMood("exit","activate")
+
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end
