@@ -333,9 +333,10 @@ freetype_font::freetype_font()
 
 freetype_font::~freetype_font()
 {
-    for(cached_text* pEntry = cache;
-        pEntry != cache + (1 << cache_size_log2); ++pEntry)
-    {
+    for( cached_text* pEntry = cache;
+            pEntry != cache + (1 << cache_size_log2); ++pEntry) {
+        delete[] pEntry->message;
+        delete[] pEntry->data;
         free_texture(pEntry);
     }
     if(font_face != nullptr)
