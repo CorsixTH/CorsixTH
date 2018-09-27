@@ -506,6 +506,17 @@ struct codepoint_glyph
     FT_UInt index;
 };
 
+// Determine if the character code is a suitable Chinese/Japanese/Korean
+// character for a line break.
+bool isCjkBreakCharacter(int charcode) {
+    return (charcode == 0x3000 || // Ideographic space
+            charcode == 0x3002 || // Ideographic full stop
+            charcode == 0xff0c || // Fullwidth comma
+            charcode == 0xff0d || // Fullwidth hyphen-minus
+            charcode == 0xff1b || // Fullwidth semicolon
+            charcode == 0xff1f); //Fullwidth question mark
+}
+
 text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char* sMessage,
         size_t iMessageLength, int iX, int iY,
         int iWidth, int iMaxRows, int iSkipRows, text_alignment eAlign) const
@@ -653,8 +664,12 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
             }
 
             // Determine if a line can be broken at the current position.
-            if(iCode == ' ')
+            if (iCode == ' ') {
                 sLineBreakPosition = sOldMessage;
+            } else if (isCjkBreakCharacter(iCode)) {
+                // break after this codepoint (cjk codepoints are 3 bytes in utf-8)
+                sLineBreakPosition = sOldMessage + 3;
+            }
 
             // Save (unless we are skipping lines) and advance the pen.
             if(iHandledRows >= iSkipRows)
@@ -702,7 +717,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
             // Calculate the line height and baseline position.
             FT_Pos iLineHeight = 0;
             FT_Pos iBaselinePos = 0;
-            for(const char* s = itr->first; s != itr->second; )
+            for(const char* s = itr->first; s < itr->second; )
             {
                 codepoint_glyph& oGlyph = mapGlyphs[next_utf8_codepoint(s)];
                 FT_Pos iBearingY = oGlyph.metrics.horiBearingY;
@@ -720,7 +735,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
             iNormalLineHeight = std::max(iNormalLineHeight, iLineHeight);
 
             // Apply the character position changes.
-            for(const char* s = itr->first; s != itr->second; next_utf8_codepoint(s))
+            for(const char* s = itr->first; s < itr->second; next_utf8_codepoint(s))
             {
                 FT_Vector& ftvPos = vCharPositions[s - sMessage];
                 ftvPos.x += iAlignDelta;
@@ -767,7 +782,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
             itr != itrEnd && iDrawnLines < iMaxRows + iSkipRows; ++itr)
         {
             iDrawnLines++;
-            for(const char* s = itr->first; s != itr->second; )
+            for(const char* s = itr->first; s < itr->second; )
             {
                 FT_Vector& ftvPos = vCharPositions[s - sMessage];
                 unsigned int iCode = next_utf8_codepoint(s);
