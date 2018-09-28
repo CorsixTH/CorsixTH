@@ -462,6 +462,11 @@ bool movie_player::load(const char* szFilepath)
     }
 
     video_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_VIDEO, -1, -1, &m_pVideoCodec, 0);
+    if (video_stream_index < 0) {
+        av_strerror(video_stream_index, error_buffer, movie_error_buffer_capacity);
+        last_error = std::string(error_buffer);
+        return false;
+    }
     video_codec_context = get_codec_context_for_stream(m_pVideoCodec, format_context->streams[video_stream_index]);
     avcodec_open2(video_codec_context, m_pVideoCodec, nullptr);
 
