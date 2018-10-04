@@ -91,10 +91,10 @@ function PsychRoom:commandEnteringPatient(patient)
     if bookcase == nil then
       bookcase, bx, by = self.world:findObjectNear(staff, "bookcase")
     end
-    if patient and patient.user_of then
+    if patient and patient.user_of and patient.user_of.object_type.id == "couch" then
       duration = duration - 1
     end
-    if duration <= 0 then
+    if duration == 0 then
       if patient.diagnosed and patient.disease.id == "king_complex" then
         -- Diagnosed patients (Elvis) need to change clothes
         local after_use_screen = --[[persistable:psych_screen_after_use]] function()
@@ -114,6 +114,11 @@ function PsychRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
       return
+	else
+      if patient:getRoom() ~= self and self:getStaffMember() then
+        self:getStaffMember():setNextAction(MeanderAction())
+        return
+      end
     end
     if bookcase and (duration % 10) == 0 and math.random(1, 2) == 1 then
       staff:walkTo(bx, by)
