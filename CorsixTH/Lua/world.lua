@@ -2255,7 +2255,7 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   local room_name, required_staff, staff_name
   for _, room in ipairs(TheApp.rooms) do
     if room.id == room_id then
-      room_name = room.name
+      room_name = room.long_name
       required_staff = room.required_staff
     end
   end
