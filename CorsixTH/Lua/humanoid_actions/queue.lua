@@ -275,7 +275,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
       end
     end
     humanoid.action_queue[idle_index].direction = idle_direction
-    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true), idle_index - 1)
+    humanoid:queueAction(WalkAction(ix, iy):setMustHappen(true):setIsLeaving(humanoid:isLeaving()), idle_index - 1)
   else
     action.current_bench_distance = nil
     local num_actions_prior = action_queue_leave_bench(action, humanoid)
