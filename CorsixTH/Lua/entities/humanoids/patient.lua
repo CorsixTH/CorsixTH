@@ -1081,17 +1081,33 @@ function Patient:updateMessage(choice)
     local enabled = false
     if choice == "research" then
       -- enable only if research department is built and a room in the treatment chain is undiscovered
-      if self.hospital:hasRoomOfType("research") then
-        local req = self.hospital:checkDiseaseRequirements(self.disease.id)
-        if req then
-          for _, room_id in ipairs(req.rooms) do
-            local room = self.world.available_rooms[room_id]
-            if room and self.hospital.undiscovered_rooms[room] then
-              enabled = true
-              break
-            end
+      local req = self.hospital:checkDiseaseRequirements(self.disease.id)
+      if req then
+        local strings = _S.fax.disease_discovered_patient_choice
+        enabled = self.hospital:hasRoomOfType("research") and self.hospital:hasStaffOfCategory("Researcher")
+        local output_text = strings.can_not_cure
+        if #req.rooms > 0 then
+          local room_name, _, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[#req.rooms])
+          if next(req.staff) then
+            output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+          else
+            output_text = strings.need_to_build:format(room_name)
           end
+        elseif next(req.staff) then
+          local staffclass_to_string = {
+              Nurse        = _S.staff_title.nurse,
+              Doctor       = _S.staff_title.doctor,
+              Surgeon      = _S.staff_title.surgeon,
+              Psychiatrist = _S.staff_title.psychiatrist,
+          }
+          output_text = strings.need_to_employ:format(staffclass_to_string[next(req.staff)])
+        else
+          enabled = false
         end
+        self.message[3].text = output_text
+      else
+        --no requirements
+        enabled = false
       end
     else -- if choice == "guess_cure" then
       -- TODO: implement
@@ -1128,7 +1144,6 @@ function Patient:removeVaccinationCandidateStatus()
     self.vaccination_candidate = false
   end
 end
-
 
 function Patient:afterLoad(old, new)
   if old < 68 then

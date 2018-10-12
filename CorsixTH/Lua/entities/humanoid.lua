@@ -300,6 +300,7 @@ function Humanoid:Humanoid(...)
 
   self.build_callbacks  = {--[[set]]}
   self.remove_callbacks = {--[[set]]}
+  self.staff_callbacks = {--[[set]]}
 end
 
 -- Save game compatibility
@@ -337,11 +338,15 @@ function Humanoid:afterLoad(old, new)
   if old < 83 and new >= 83 and self.humanoid_class == "Chewbacca Patient" then
     self.die_anims.extra_east = 1682
   end
+  if old < 133 then
+    self.staff_callbacks = {}
+  end
 
   for _, action in pairs(self.action_queue) do
     -- Sometimes actions not actual instances of HumanoidAction
     HumanoidAction.afterLoad(action, old, new)
   end
+
   Entity.afterLoad(self, old, new)
 end
 
@@ -819,6 +824,12 @@ function Humanoid:notifyNewRoom(room)
   end
 end
 
+function Humanoid:notifyOfStaff(staff)
+  for callback, _ in pairs(self.staff_callbacks) do
+    callback(staff)
+  end
+end
+
 -- Registers a new remove callback for this humanoid.
 --!param callback (function) The callback to call when a room has been removed.
 function Humanoid:registerRoomRemoveCallback(callback)
@@ -841,6 +852,29 @@ function Humanoid:unregisterRoomRemoveCallback(callback)
   end
 end
 
+
+-- Registers a new staff callback for this humanoid.
+--!param callback (function) The callback to call when a staff member has been hired or fired
+function Humanoid:registerStaffCallback(callback)
+  if self.staff_callbacks and not self.staff_callbacks[callback] then
+    self.staff_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add staff callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a remove callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterStaffCallback(callback)
+
+  if self.staff_callbacks and self.staff_callbacks[callback] then
+    self.staff_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistant staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+
 -- Function called when a humanoid is sent away from the hospital to prevent
 -- further actions taken as a result of a callback
 function Humanoid:unregisterCallbacks()
@@ -851,6 +885,10 @@ function Humanoid:unregisterCallbacks()
   -- Remove callbacks for removed rooms
   for cb, _ in pairs(self.remove_callbacks) do
     self:unregisterRoomRemoveCallback(cb)
+  end
+  -- Remove callbacks for removed rooms
+  for cb, _ in pairs(self.staff_callbacks) do
+    self:unregisterStaffCallback(cb)
   end
   -- Remove any message related to the humanoid.
   if self.message_callback then

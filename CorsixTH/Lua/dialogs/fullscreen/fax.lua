@@ -166,6 +166,7 @@ function UIFax:choice(choice_number)
         owner:goHome("over_priced", owner.disease.id)
       end
     elseif choice == "research" then
+      owner:unregisterCallbacks()
       owner:setMood("idea", "activate")
       owner:setNextAction(SeekRoomAction("research"))
     end
