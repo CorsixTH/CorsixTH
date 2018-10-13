@@ -1226,9 +1226,11 @@ function Hospital:createEmergency(emergency)
     if self:hasRoomOfType(emergency.disease.treatment_rooms[no_rooms]) then
       room_name = nil
     end
-    local added_info = _S.fax.emergency.cure_possible
-    -- TODO: Differentiate if a drug is needed, add drug effectiveness. Add undiscovered treatment.
-    -- added_info = _S.fax.emergency.cure_not_possible
+
+    local casebook = self.disease_casebook[random_disease.id]
+    local added_info = casebook.drug and
+        _S.fax.emergency.cure_possible_drug_name_efficiency:format(emergency.disease.name, casebook.cure_effectiveness)
+        or _S.fax.emergency.cure_possible
     if room_name then
       if staff_available then
         added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
@@ -1255,7 +1257,7 @@ function Hospital:createEmergency(emergency)
         {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
       },
     }
-    self.world.ui.bottom_panel:queueMessage("emergency", message, nil, 24*20, 2) -- automatically refuse after 20 days
+    self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2) -- automatically refuse after 16 days
     created_one = true
   end
   return created_one
