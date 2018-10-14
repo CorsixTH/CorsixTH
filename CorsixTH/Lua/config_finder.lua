@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+------------------------------------------------------CONFIG------------------------------------------------------
+
 local config_path, config_name
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
@@ -40,6 +42,8 @@ end
 if config_path ~= ourpath then
   config_path = pathconcat(config_path, "CorsixTH")
 end
+
+-- Config filename.
 config_name = "config.txt"
 
 -- Check for config.path.txt
@@ -78,6 +82,7 @@ if not check_dir_exists(config_path) then
   config_path = ourpath
 end
 
+-- Config file with full path as string.
 local config_filename = pathconcat(config_path, config_name)
 
 -- Create config.txt if it doesn't exist
@@ -134,14 +139,17 @@ local config_defaults = {
   shift_scroll_speed = 4,
   new_graphics_folder = nil,
   use_new_graphics = false,
-  check_for_updates = true
+  check_for_updates = true,
 }
+
+
 fi = io.open(config_filename, "r")
 local config_values = {}
 local needs_rewrite = false
 for key, value in pairs(config_defaults) do
   config_values[key] = value
 end
+
 if fi then
   -- Read all the values from the config file and put them in config_values. If at least one value is missing rewrite the configuration file.
   local file_contents = fi:read("*all")
@@ -165,6 +173,7 @@ if fi then
 else
   needs_rewrite = true
 end
+
 if needs_rewrite then
   fi = io.open(config_filename, "w")
   if fi then
@@ -476,6 +485,9 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
 'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
+
+-------------------------------------------------------------------------------------------------------------------------
+
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
 -- By default your computer log in will be your name in the game.  You can change it in the
 -- campaign menu or between the brace brackets below [[YOUR NAME]].
@@ -493,4 +505,81 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
   end
 end
 
-return config_filename, config_values
+------------------------------------------------------------------------HOTKEYS------------------------------------------------------------------------
+
+-- Hotkey filename.
+local hotkeys_name = "hotkeys.txt"
+
+-- Hotkey file with full path as string.
+local hotkeys_filename = pathconcat(config_path, hotkeys_name)
+
+-- Defaults for hotkeys.
+local hotkeys_defaults = {
+  scroll_up = "w",
+  scroll_down = "s",
+  scroll_left = "a",
+  scroll_right = "d",
+}
+
+--
+fi = nil
+fi = io.open(hotkeys_filename, "r")
+local hotkeys_values = {}
+local hotkeys_needs_rewrite = false
+for key, value in pairs(hotkeys_defaults) do
+  hotkeys_values[key] = value
+end
+
+
+if fi then
+  local file_contents = fi:read("*all")
+  fi:close()
+
+  for key, value in pairs(hotkeys_defaults) do
+    local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
+    if not ind then
+      hotkeys_needs_rewrite = true
+    else
+      ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
+      ind = string.find(file_contents, "=", ind) + 1
+      if type(value) ~= "string" then
+        ind = string.find(file_contents, "[%a%d]", ind)
+        config_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
+      else
+        ind = string.find( file_contents, "[", ind + 1, true ) + 1
+        config_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
+      end
+    end
+  end
+else
+  hotkeys_needs_rewrite = true
+end
+
+--
+if hotkeys_needs_rewrite then
+  fi = io.open(hotkeys_filename, "w")
+  if fi then
+    fi:write([=[
+----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
+-- Lines starting with two dashes (like this one) are ignored.
+-- Text settings should have their values between double square braces, e.g.
+--  setting = [[value]]
+-- Number settings should not have anything around their value,
+-- e.g. setting = 42
+--
+--------------------------------------------Scroll Keys------------------------------------------------------
+-- These are the keys to be used to scroll the camera around in-game.
+-- ]=] .. '\n' ..
+'scroll_up = [[' .. tostring(hotkeys_values.scroll_up) .. ']]' .. '\n' ..
+'scroll_down = [[' .. tostring(hotkeys_values.scroll_down) .. ']]' .. '\n' ..
+'scroll_left = [[' .. tostring(hotkeys_values.scroll_left) .. ']]' .. '\n' ..
+'scroll_right = [[' .. tostring(hotkeys_values.scroll_right) .. ']]' .. '\n' .. [=[
+
+]=])
+  fi:close()
+  end
+end
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------
+
+return config_filename, config_values, hotkeys_filename

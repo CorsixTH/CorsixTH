@@ -128,7 +128,8 @@ strict_declare_global "TheApp"
 TheApp = App()
 TheApp:setCommandLine(
   "--bitmap-dir=" ..base_dir.. "Bitmap",
-  "--config-file=" .. corsixth.require("config_finder"),
+  "--config-file=" .. select(1 , corsixth.require("config_finder") ),
+  "--hotkeys-file=" .. select(3 , corsixth.require("config_finder") ),
   -- If a command line option is given twice, the later one is used, hence
   -- if the user gave one of the above, that will be used instead.
   ...
