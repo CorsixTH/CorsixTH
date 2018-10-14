@@ -763,6 +763,13 @@ function UI:onMouseMove(x, y, dx, dy)
   return repaint
 end
 
+--! Process SDL_MULTIGESTURE events.
+--!
+--!return (boolean) event processed indicator
+function UI:onMultiGesture()
+  return false
+end
+
 function UI:onTick()
   Window.onTick(self)
   local repaint = false
