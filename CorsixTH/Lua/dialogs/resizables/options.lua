@@ -74,7 +74,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 300, col_bg)
+  self:UIResizable(ui, 320, 382, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -174,6 +174,24 @@ function UIOptions:UIOptions(ui, mode)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
     :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
 
+  -- Set scroll speed.
+  local scroll_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.scrollspeed):setTooltip(_S.tooltip.options_window.scrollspeed).lowered = true
+  self.scrollspeed_panel = self:addBevelPanel(165, scroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(tostring(self.ui.app.config.scroll_speed))
+  self.scrollspeed_button = self.scrollspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonScrollSpeed) : setTooltip(_S.tooltip.options_window.scrollspeed)
+  
+  -- Set shift scroll speed.
+  local shiftscroll_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.shift_scrollspeed):setTooltip(_S.tooltip.options_window.shift_scrollspeed).lowered = true
+  self.shift_scrollspeed_panel = self:addBevelPanel(165, shiftscroll_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.shift_scroll_speed) )
+  self.shift_scrollspeed_button = self.shift_scrollspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonShiftScrollSpeed) : setTooltip(_S.tooltip.options_window.shift_scrollspeed)  
+  
+  -- Set zoom speed.
+  local zoom_y_pos = self:_getOptionYPos()
+  self:addBevelPanel(20, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg) : setLabel(_S.options_window.zoom_speed):setTooltip(_S.tooltip.options_window.zoom_speed).lowered = true
+  self.zoomspeed_panel = self:addBevelPanel(165, zoom_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel( tostring(self.ui.app.config.zoom_speed) )
+  self.zoomspeed_button = self.zoomspeed_panel : makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonZoomSpeed) : setTooltip(_S.tooltip.options_window.zoom_speed)
+  
   -- "Customise" button
   local customise_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.customise)
@@ -248,7 +266,7 @@ end
 function UIOptions:selectResolution(number)
   local res = self.available_resolutions[number]
 
-  local callback = --[[persistable:options_resolution_callback]] function(width, height)
+  local callback = function(width, height)
     if not self.ui:changeResolution(width, height) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
@@ -317,8 +335,39 @@ function UIOptions:buttonAudioGlobal(checked)
   app:initLanguage()
 end
 
+function UIOptions:buttonScrollSpeed()
+  local callback = function(scrollspeed_number)
+    self.scrollspeed_panel : setLabel(tostring(scrollspeed_number))
+    self.scrollspeed_button : setToggleState(false)
+  end
+
+  self.ui:addWindow(UIScrollSpeed(self.ui, callback))
+end
+
 function UIOptions:buttonBack()
   self:close()
+end
+
+function UIOptions:buttonShiftScrollSpeed()
+  local callback = function(shift_scrollspeed_number)
+    self.shift_scrollspeed_panel : setLabel( tostring(shift_scrollspeed_number) )
+    self.shift_scrollspeed_button : setToggleState(false)
+  end
+
+  self.ui:addWindow(UIShiftScrollSpeed(self.ui, callback))
+end
+
+function UIOptions:buttonBack()
+  self:close()
+end
+
+function UIOptions:buttonZoomSpeed()
+  local callback = function(zoomspeed_number)
+    self.zoomspeed_panel : setLabel( tostring(zoomspeed_number) )
+    self.zoomspeed_button : setToggleState(false)
+  end
+
+  self.ui:addWindow( UIZoomSpeed(self.ui, callback) )
 end
 
 function UIOptions:close()
@@ -327,6 +376,8 @@ function UIOptions:close()
     self.ui:addWindow(UIMainMenu(self.ui))
   end
 end
+
+----------------------------------------------------------------------------------------------------------------------------------
 
 --! A custom resolution selection window
 class "UIResolution" (UIResizable)
@@ -401,3 +452,196 @@ function UIResolution:close(ok)
   end
 end
 
+----------------------------------------------------------------------------------------------------------------------------------
+
+class "UIScrollSpeed" (UIResizable)
+
+local UIScrollSpeed = _G["UIScrollSpeed"]
+
+function UIScrollSpeed:UIScrollSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col_bg)
+  
+  local app = ui.app
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.scrollspeed_temp = 2
+  
+  self.callback = callback
+  
+  self:addBevelPanel(20, 10, 160, 20, col_caption):setLabel(_S.options_window.scrollspeed).lowered = true
+  
+  self:addBevelPanel(20, 50, 90, 20, col_shadow, col_bg, col_bg):setLabel(_S.options_window.scrollspeed)
+  --
+  self.scrollspeed_textbox = self:addBevelPanel(110, 50, 70, 20, col_textbox, col_highlight, col_shadow)
+    :setTooltip(_S.tooltip.options_window.scrollspeed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(self.ui.app.config.scroll_speed))
+  
+  --Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col_bg):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.options_window.apply_scrollspeed)
+  self:addBevelPanel(100, 90, 80, 40, col_bg):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.options_window.cancel_scrollspeed)
+end
+
+function UIScrollSpeed:ok()
+  self.scrollspeed_temp = tonumber(self.scrollspeed_textbox.text) or 2
+  
+  if self.scrollspeed_temp < 1 then
+    self.scrollspeed_temp = 1
+  elseif self.scrollspeed_temp > 10 then
+    self.scrollspeed_temp = 10
+  end
+  
+  self:close(true)
+end
+
+function UIScrollSpeed:cancel()
+  self:close(false)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIScrollSpeed:close(ok)
+  UIResizable.close(self)
+  
+  if ok then
+    self.scrollspeed_textbox.text = self.scrollspeed_temp or 2
+    self.ui.app.config.scroll_speed = self.scrollspeed_textbox.text
+    self.callback(self.scrollspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.scroll_speed)
+  end
+  
+end
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+class "UIShiftScrollSpeed" (UIResizable)
+
+local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"]
+
+function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col_bg)
+  
+  local app = ui.app
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.shift_scrollspeed_temp = 4
+  
+  self.callback = callback
+  
+  self:addBevelPanel(20, 10, 160, 20, col_caption):setLabel(_S.options_window.shift_scrollspeed).lowered = true
+  
+  self:addBevelPanel(20, 50, 120, 20, col_shadow, col_bg, col_bg):setLabel(_S.options_window.shift_scrollspeed)
+  --
+  self.shift_scrollspeed_textbox = self:addBevelPanel(140, 50, 40, 20, col_textbox, col_highlight, col_shadow)
+    :setTooltip(_S.tooltip.options_window.shift_scrollspeed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText(tostring(self.ui.app.config.shift_scroll_speed))
+  
+  --Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col_bg):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.options_window.apply_shift_scrollspeed)
+  self:addBevelPanel(100, 90, 80, 40, col_bg):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.options_window.cancel_shift_scrollspeed)
+end
+
+function UIShiftScrollSpeed:ok()
+  self.shift_scrollspeed_temp = tonumber(self.shift_scrollspeed_textbox.text) or 4
+  
+  if self.shift_scrollspeed_temp < 1 then
+    self.shift_scrollspeed_temp = 1
+  elseif self.shift_scrollspeed_temp > 10 then
+    self.shift_scrollspeed_temp = 10
+  end
+  
+  self:close(true)
+end
+
+function UIShiftScrollSpeed:cancel()
+  self:close(false)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIShiftScrollSpeed:close(ok)
+  UIResizable.close(self)
+  
+  if ok then
+    self.shift_scrollspeed_textbox.text = self.shift_scrollspeed_temp or 4
+    self.ui.app.config.shift_scroll_speed = self.shift_scrollspeed_textbox.text
+    self.callback(self.shift_scrollspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.shift_scroll_speed)
+  end
+  
+end
+----------------------------------------------------------------------------------------------------------------------------------
+
+class "UIZoomSpeed" (UIResizable)
+
+local UIZoomSpeed = _G["UIZoomSpeed"]
+
+function UIZoomSpeed:UIZoomSpeed(ui, callback)
+  self:UIResizable(ui, 200, 140, col_bg)
+  
+  local app = ui.app
+  self.on_top = true
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.5)
+  self.default_button_sound = "selectx.wav"
+  self.zoomspeed_temp = 80
+
+  self.callback = callback
+  
+  --
+  self:addBevelPanel(20, 10, 160, 20, col_caption):setLabel(_S.options_window.zoom_speed).lowered = true
+  
+  --
+  self:addBevelPanel(20, 50, 90, 20, col_shadow, col_bg, col_bg):setLabel(_S.options_window.zoom_speed)
+  
+  --
+  self.zoomspeed_textbox = self:addBevelPanel(110, 50, 70, 20, col_textbox, col_highlight, col_shadow)
+    :setTooltip(_S.tooltip.options_window.zoom_speed)
+    :makeTextbox():allowedInput("numbers"):characterLimit(4):setText( tostring(self.ui.app.config.zoom_speed) )
+  
+  --Apply and cancel.
+  self:addBevelPanel(20, 90, 80, 40, col_bg):setLabel(_S.options_window.apply)
+    :makeButton(0, 0, 80, 40, nil, self.ok):setTooltip(_S.tooltip.options_window.apply_zoomspeed)
+  self:addBevelPanel(100, 90, 80, 40, col_bg):setLabel(_S.options_window.cancel)
+    :makeButton(0, 0, 80, 40, nil, self.cancel):setTooltip(_S.tooltip.options_window.cancel_zoomspeed)
+end
+
+function UIZoomSpeed:ok()
+  self.zoomspeed_temp = tonumber( self.zoomspeed_textbox.text ) or 80
+  
+  if self.zoomspeed_temp < 10 then
+    self.zoomspeed_temp = 10
+  elseif self.zoomspeed_temp > 1000 then
+    self.zoomspeed_temp = 1000
+  end
+  
+  self:close(true)
+end
+
+function UIZoomSpeed:cancel()
+  self:close(false)
+end
+
+--!param ok (boolean or nil) whether the resolution entry was confirmed (true) or aborted (false)
+function UIZoomSpeed:close(ok)
+  UIResizable.close(self)
+  
+  if ok then
+    self.zoomspeed_textbox.text = self.zoomspeed_temp or 2
+    self.ui.app.config.zoom_speed = self.zoomspeed_textbox.text
+    self.callback(self.zoomspeed_textbox.text)
+  else
+    self.callback(self.ui.app.config.zoom_speed)
+  end
+
+end

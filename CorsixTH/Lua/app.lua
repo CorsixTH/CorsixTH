@@ -38,6 +38,7 @@ local App = _G["App"]
 function App:App()
   self.command_line = {}
   self.config = {}
+  self.hotkeys = {}
   self.runtime_config = {}
   self.running = false
   self.key_modifiers = {}
@@ -292,6 +293,15 @@ function App:init()
     return true
   end
 
+  -- Load/setup hotkeys.
+  local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
+  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
+  if not hotkeys_chunk then
+    error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. conf_err )
+  else
+    hotkeys_chunk(self.hotkeys)
+  end
+
   -- Load main menu (which creates UI)
   local function callback_after_movie()
     self:loadMainMenu()
@@ -318,7 +328,7 @@ function App:init()
     if error_message then
       self.ui:addWindow(UIInformation(self.ui, error_message, true))
     end
-  end
+  end  
   if self.config.play_intro then
     self.moviePlayer:playIntro(callback_after_movie)
   else
@@ -836,6 +846,8 @@ function App:fixConfig()
         self.config[key] = 1
       end
     end
+    
+    
   end
 end
 

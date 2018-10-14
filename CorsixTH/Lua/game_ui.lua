@@ -48,6 +48,8 @@ local multigesture_pinch_amplification_factor = 100
 function GameUI:GameUI(app, local_hospital, map_editor)
   self:UI(app)
 
+  self.scroll_keys = {}
+
   self.hospital = local_hospital
   self.tutorial = { chapter = 0, phase = 0 }
   if map_editor then
@@ -96,6 +98,15 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self.shake_screen_intensity = 0
 
   self.announcer = Announcer(app)
+  
+  
+  -- Set the scrolling keys.
+  self.scroll_keys = {
+    [tostring(app.hotkeys["scroll_up"])]   = {x =   0, y = -10},
+    [tostring(app.hotkeys["scroll_down"])] = {x =  0, y =   10},
+    [tostring(app.hotkeys["scroll_left"])]  = {x =   -10, y =  0},
+    [tostring(app.hotkeys["scroll_right"])]  = {x = 10, y =   0},
+  }
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -259,26 +270,22 @@ function GameUI:resync(ui)
   self.key_to_button_remaps = ui.key_to_button_remaps
 end
 
-local scroll_keys = {
-  up    = {x =   0, y = -10},
-  right = {x =  10, y =   0},
-  down  = {x =   0, y =  10},
-  left  = {x = -10, y =   0},
-  ["keypad 8"] = {x =   0, y = -10},
-  ["keypad 6"] = {x =  10, y =   0},
-  ["keypad 2"] = {x =   0, y =  10},
-  ["keypad 4"] = {x = -10, y =   0},
-}
-
 function GameUI:updateKeyScroll()
   local dx, dy = 0, 0
-  for key, scr in pairs(scroll_keys) do
+  for key, scr in pairs(self.scroll_keys) do
     if self.buttons_down[key] then
       dx = dx + scr.x
       dy = dy + scr.y
     end
   end
+  --If there is any movement on the x or y axis...
   if dx ~= 0 or dy ~= 0 then
+    --Get the length of the scrolling vector.
+    local mag = (dx^2 + dy^2) ^ 0.5
+    --Then normalize the scrolling vector, after which multiply it by the scroll speed variable used in self.scroll_keys, which is 10 as of 14/10/18.
+    dx = (dx / mag) * 10
+    dy = (dy / mag) * 10
+    -- Set the scroll amount to be used.
     self.tick_scroll_amount = {x = dx, y = dy}
     return true
   else
@@ -302,7 +309,7 @@ function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
     return true
   end
   local key = rawchar:lower()
-  if scroll_keys[key] then
+  if self.scroll_keys[key] then
     self:updateKeyScroll()
     return
   end
@@ -314,7 +321,7 @@ function GameUI:onKeyUp(rawchar)
   end
 
   local key = rawchar:lower()
-  if scroll_keys[key] then
+  if self.scroll_keys[key] then
     self:updateKeyScroll()
     return
   end

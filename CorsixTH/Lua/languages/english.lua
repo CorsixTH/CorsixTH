@@ -368,6 +368,9 @@ options_window = {
   apply = "Apply",
   cancel = "Cancel",
   back = "Back",
+  scrollspeed = "Scroll Speed",
+  shift_scrollspeed = "Shift Scroll Speed",
+  zoom_speed = "Zoom Speed",
 }
 
 tooltip.options_window = {
@@ -388,6 +391,15 @@ tooltip.options_window = {
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
   back = "Close the Settings window",
+  scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
+  shift_scrollspeed = "Set the speed of scrolling when the shift key is pressed while scrolling. 1 (slowest) to 10 (fastest). Default: 4.",
+  zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
+  apply_scrollspeed = "Apply the entered scroll speed.",
+  cancel_scrollspeed = "Return without changing the scroll speed.",
+  apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
+  cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
+  apply_zoomspeed = "Apply the entered zoom speed.",
+  cancel_zoomspeed = "Return without changing the zoom speed.",
 }
 
 customise_window = {
@@ -696,6 +708,13 @@ map_editor_window = {
     heliport_4 = "Heliport 4",
     paste = "Paste area",
   }
+}
+
+hotkeys_file_err = {
+  file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
+        "has permission to read/write ",
+  file_err_02 = ", or use the --hotkeys-file=filename command line option to specify a writable file. " ..
+        "For reference, the error loading the hotkeys file was: ",
 }
 
 --------------------------------  UNUSED  -----------------------------------
