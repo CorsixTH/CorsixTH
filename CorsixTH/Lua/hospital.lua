@@ -51,7 +51,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.acc_research_cost = 0
   self.acc_overdraft = 0
   self.acc_heating = 0
-  self.discover_autopsy_risk = 10
 
   -- The sum of all material values (tiles, rooms, objects).
   -- Initial value: hospital tile count * tile value + 20000
@@ -660,6 +659,11 @@ function Hospital:afterLoad(old, new)
 
   if old < 114 then
     self.ratholes = {}
+  end
+
+  if old < 131 then
+    self.autopsy_discovered = nil
+    self.discover_autopsy_risk = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
