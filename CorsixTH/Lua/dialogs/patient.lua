@@ -93,7 +93,7 @@ function UIPatient:UIPatient(ui, patient)
   -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
-  self:addKeyHandler("H", self.goHome)
+  self:addKeyHandler(self.ui.app.hotkeys["ingame_patient_gohome"], self.goHome)
 end
 
 --! Normalise warmth of a patient.

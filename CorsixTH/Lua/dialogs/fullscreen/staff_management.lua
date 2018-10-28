@@ -134,10 +134,10 @@ function UIStaffManagement:UIStaffManagement(ui)
   self:setCategory("Doctor")
 
   -- Hotkeys.
-  self:addKeyHandler("left", self.previousCategory)
-  self:addKeyHandler("right", self.nextCategory)
-  self:addKeyHandler("up", self.previousStaff)
-  self:addKeyHandler("down", self.nextStaff)
+  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_left"], self.previousCategory)
+  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_right"], self.nextCategory)
+  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_up"], self.previousStaff)
+  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_down"], self.nextStaff)
 end
 
 function UIStaffManagement:updateTooltips()

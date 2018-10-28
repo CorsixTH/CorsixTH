@@ -30,8 +30,8 @@ function UIEditRoom:UIEditRoom(ui, room_type)
   -- NB: UIEditRoom:onCursorWorldPositionChange is called by the UIPlaceObjects
   -- constructor, hence the initialisation of required fields prior to the call.
   self.UIPlaceObjects(self, ui)
-  self:addKeyHandler("return", self.confirm) -- UIPlaceObjects does not need this
-  self:addKeyHandler("keypad enter", self.confirm)
+  self:addKeyHandler(app.hotkeys["global_confirm"], self.confirm) -- UIPlaceObjects does not need this
+  self:addKeyHandler(app.hotkeys["global_confirm_alt02"], self.confirm)
 
   local app = ui.app
   local blue_red_swap = self.anims.Alt32_BlueRedSwap
@@ -1532,10 +1532,10 @@ end
 
 function UIEditRoom:afterLoad(old, new)
   if old < 101 then
-    self:removeKeyHandler("enter")
-    self:addKeyHandler("return", self.confirm)
+    self:removeKeyHandler(app.hotkeys["global_confirm_alt"])
+    self:addKeyHandler(app.hotkeys["global_confirm"], self.confirm)
   end
   if old < 104 then
-    self:addKeyHandler("keypad enter", self.confirm)
+    self:addKeyHandler(app.hotkeys["global_confirm_alt02"], self.confirm)
   end
 end

@@ -66,8 +66,8 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:onChangeLanguage()
 
   -- Enter closes the window
-  self:addKeyHandler("return", self.close)
-  self:addKeyHandler("keypad enter", self.close)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.close)
 end
 
 function UIInformation:onChangeLanguage()
@@ -130,10 +130,10 @@ end
 
 function UIInformation:afterLoad(old, new)
   if old < 101 then
-    self:removeKeyHandler("enter")
-    self:addKeyHandler("return", self.close)
+    self:removeKeyHandler(self.ui.app.hotkeys["global_confirm_alt"])
+    self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
   end
   if old < 104 then
-    self:addKeyHandler("keypad enter", self.close)
+    self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.close)
   end
 end

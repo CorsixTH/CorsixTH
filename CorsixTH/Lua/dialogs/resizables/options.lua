@@ -266,7 +266,7 @@ end
 function UIOptions:selectResolution(number)
   local res = self.available_resolutions[number]
 
-  local callback = function(width, height)
+  local callback = --[[persistable:options_resolution_callback]] function(width, height)
     if not self.ui:changeResolution(width, height) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))

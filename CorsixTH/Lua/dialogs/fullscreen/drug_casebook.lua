@@ -41,6 +41,7 @@ function UICasebook:UICasebook(ui, disease_selection)
     return
   end
 
+  self.ui = ui
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   self:updateDiseaseList()
@@ -55,10 +56,10 @@ function UICasebook:UICasebook(ui, disease_selection)
     :setTooltip(_S.tooltip.casebook.research)
 
   -- Hotkeys
-  self:addKeyHandler("up", self.scrollUp)
-  self:addKeyHandler("down", self.scrollDown)
-  self:addKeyHandler("right", self.increasePay)
-  self:addKeyHandler("left", self.decreasePay)
+  self:addKeyHandler(self.ui.app.config["ingame_scroll_up"], self.scrollUp)
+  self:addKeyHandler(self.ui.app.config["ingame_scroll_down"], self.scrollDown)
+  self:addKeyHandler(self.ui.app.config["ingame_scroll_left"], self.decreasePay)
+  self:addKeyHandler(self.ui.app.config["ingame_scroll_right"], self.increasePay)
 
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)

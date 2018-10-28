@@ -35,8 +35,8 @@ function UIHireStaff:UIHireStaff(ui)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
-  self:addKeyHandler("return", self.hire)
-  self:addKeyHandler("keypad enter", self.hire)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -269,10 +269,10 @@ end
 
 function UIHireStaff:afterLoad(old, new)
   if old < 101 then
-    self:removeKeyHandler("enter")
-    self:addKeyHandler("return", self.hire)
+    self:removeKeyHandler(self.ui.app.hotkeys["global_confirm_alt"])
+    self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
   end
   if old < 104 then
-    self:addKeyHandler("keypad enter", self.hire)
+    self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
   end
 end

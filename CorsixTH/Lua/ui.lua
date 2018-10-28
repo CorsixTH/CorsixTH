@@ -56,6 +56,7 @@ function UI:initKeyAndButtonCodes()
     k = tostring(k):lower()
     return rawget(t, k) or k
   end})
+  --[===[
   do
     local ourpath = debug.getinfo(1, "S").source:sub(2, -7)
     local result, err = loadfile_envcall(ourpath .. "key_mapping.txt")
@@ -85,6 +86,7 @@ function UI:initKeyAndButtonCodes()
       result(env)
     end
   end
+  ]===]
 
   local keypad = {
     ["Keypad 0"] = "insert",
@@ -166,6 +168,7 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
+  
 
   self.down_count = 0
   if not minimal then
@@ -244,15 +247,14 @@ end
 
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
-  self:addKeyHandler("escape", self, self.closeWindow)
-  self:addKeyHandler("escape", self, self.stopMovie)
-  self:addKeyHandler("space", self, self.stopMovie)
-  self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
-  self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
-  self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
-  self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
-  self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
-  self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
+  self:addKeyHandler(self.app.hotkeys["global_cancel"], self, self.closeWindow)
+  self:addKeyHandler(self.app.hotkeys["global_stop_movie"], self, self.stopMovie)
+  self:addKeyHandler(self.app.hotkeys["global_screenshot"], self, self.makeScreenshot)
+  self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self, self.toggleFullscreen)
+  self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle_alt"], self, self.toggleFullscreen)
+  self:addKeyHandler(self.app.hotkeys["global_exitApp"], self, self.exitApplication)
+  self:addKeyHandler(self.app.hotkeys["global_resetApp"], self, self.resetApp)
+  self:addKeyHandler(self.app.hotkeys["global_CaptureMouse"], self, self.toggleCaptureMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
 end
@@ -830,13 +832,13 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler({"ctrl", "c"}, self)
-  self:removeKeyHandler("f12", self)
-  self:removeKeyHandler({"shift", "d"}, self)
+  self:removeKeyHandler(self.app.hotkeys["global_connectDebugger"], self)
+  self:removeKeyHandler(self.app.hotkeys["global_showLuaConsole"], self)
+  self:removeKeyHandler(self.app.hotkeys["global_runDebugScript"], self)
   if self.app.config.debug then
-    self:addKeyHandler({"ctrl", "c"}, self, self.connectDebugger)
-    self:addKeyHandler("f12", self, self.showLuaConsole)
-    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
+    self:addKeyHandler(self.app.hotkeys["global_connectDebugger"], self, self.connectDebugger)
+    self:addKeyHandler(self.app.hotkeys["global_showLuaConsole"], self, self.showLuaConsole)
+    self:addKeyHandler(self.app.hotkeys["global_runDebugScript"], self, self.runDebugScript)
   end
 end
 
@@ -852,32 +854,32 @@ function UI:afterLoad(old, new)
       end
     end
     -- some global key shortcuts were converted to use keyHandlers
-    self:removeKeyHandler("f12", self)
-    self:removeKeyHandler({"shift", "d"}, self)
+    self:removeKeyHandler(self.app.hotkeys["global_showLuaConsole"], self)
+    self:removeKeyHandler(self.app.hotkeys["global_runDebugScript"], self)
     self:setupGlobalKeyHandlers()
   end
 
   if old < 70 then
     self:removeKeyHandler("f10", self)
-    self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
+    self:addKeyHandler(self.app.hotkeys["global_resetApp"], self, self.resetApp)
     self:removeKeyHandler("a", self)
   end
   -- changing this so that it is quit application and Shift + Q is quit to main menu
   if old < 71 then
-    self:removeKeyHandler({"alt", "f4"}, self, self.quit)
-    self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+    self:removeKeyHandler(self.app.hotkeys["global_exitApp"], self, self.quit)
+    self:addKeyHandler(self.app.hotkeys["global_exitApp"], self, self.exitApplication)
   end
 
   if old < 100 then
-    self:removeKeyHandler({"alt", "enter"}, self)
-    self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
+    self:removeKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self)
+    self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self, self.toggleFullscreen)
   end
   if old < 104 then
-    self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
+    self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle_alt"], self, self.toggleFullscreen)
   end
 
   if old < 118 then
-    self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
+    self:addKeyHandler(self.app.hotkeys["global_CaptureMouse"], self, self.toggleCaptureMouse)
   end
 
   Window.afterLoad(self, old, new)

@@ -312,3 +312,68 @@ function hasBit(value, bit)
   local p = 2 ^ bit
   return value % (p + p) >= p
 end
+
+-- Function to convert table to string. Pretty much just used in "config_finder.lua".
+function Table2String(table, recursive)
+	-- By default this function will not convert any referenced tables inside "table".
+	recursive = recursive or false
+	
+	--
+	local temp_type = nil
+	local result = "{"
+
+	--
+	if recursive == true then
+		for key, value in pairs(table) do
+			temp_type = type(value)
+	
+			-- If type is nil...
+			if temp_type == "nil" then
+				result = result .. "nil"
+			--
+			elseif temp_type == "number" then
+				result = result .. tostring(value)
+			elseif temp_type == "boolean" then
+				result = result .. tostring(value)
+			elseif temp_type == "string" then
+				result = result .. "\"" .. tostring(value) .. "\""
+			elseif temp_type == "table" then
+				result = result .. Table2String(value)
+			end
+	
+			result = result .. ","
+	
+			temp_type = nil
+		end
+	else
+		for key, value in pairs(table) do
+			temp_type = type(value)
+	
+			-- If type is nil...
+			if temp_type == "nil" then
+				result = result .. "nil"
+			--
+			elseif temp_type == "number" then
+				result = result .. tostring(value)
+			elseif temp_type == "boolean" then
+				result = result .. tostring(value)
+			elseif temp_type == "string" then
+				result = result .. "\"" .. tostring(value) .. "\""
+			elseif temp_type == "table" then
+				result = result .. tostring(value)
+			end
+	
+			result = result .. ","
+	
+			temp_type = nil
+		end
+	end
+
+	--
+	if result ~= "" then
+		result = result:sub(1, result:len() - 1)
+	end
+
+	--
+	return result .. "}"	
+end

@@ -236,6 +236,16 @@ function App:init()
     self:dumpStrings()
   end
 
+  -- Load/setup hotkeys.
+  local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
+  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
+  if not hotkeys_chunk then
+    error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. hotkeys_err )
+  else
+    hotkeys_chunk(self.hotkeys)
+  end
+  self:fixHotkeys()
+
   -- Load map before world
   corsixth.require("map")
 
@@ -293,14 +303,6 @@ function App:init()
     return true
   end
 
-  -- Load/setup hotkeys.
-  local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
-  if not hotkeys_chunk then
-    error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. conf_err )
-  else
-    hotkeys_chunk(self.hotkeys)
-  end
 
   -- Load main menu (which creates UI)
   local function callback_after_movie()
@@ -328,7 +330,7 @@ function App:init()
     if error_message then
       self.ui:addWindow(UIInformation(self.ui, error_message, true))
     end
-  end  
+  end
   if self.config.play_intro then
     self.moviePlayer:playIntro(callback_after_movie)
   else
@@ -808,7 +810,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local _, config_defaults = corsixth.require("config_finder")
+  local config_defaults = select(2, corsixth.require("config_finder"))
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -846,8 +848,6 @@ function App:fixConfig()
         self.config[key] = 1
       end
     end
-    
-    
   end
 end
 
@@ -909,6 +909,27 @@ function App:saveConfig()
     fi:write(line .. "\n")
   end
   fi:close()
+end
+
+function App:fixHotkeys()
+  -- Fill in default values for things which don't exist
+  local hotkeys_defaults = select(4, corsixth.require("config_finder"))
+
+  for k, v in pairs(hotkeys_defaults) do
+    if self.hotkeys[k] == nil then
+      self.hotkeys[k] = v
+    end
+  end
+
+  for key, value in pairs(self.hotkeys) do
+    -- Trim whitespace from beginning and end string values - it shouldn't be
+    -- there (at least in any current configuration options).
+    if type(value) == "string" then
+      if value:match("^[%s]") or value:match("[%s]$") then
+        self.hotkeys[key] = value:match("^[%s]*(.-)[%s]*$")
+      end
+    end
+  end
 end
 
 function App:run()

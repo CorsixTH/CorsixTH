@@ -18,8 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-------------------------------------------------------CONFIG------------------------------------------------------
-
 local config_path, config_name
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
@@ -142,7 +140,6 @@ local config_defaults = {
   check_for_updates = true,
 }
 
-
 fi = io.open(config_filename, "r")
 local config_values = {}
 local needs_rewrite = false
@@ -227,7 +224,7 @@ if needs_rewrite then
 -- Note that audio will also be disabled if CorsixTH was compiled without the
 -- SDL_mixer library.
 -- ]=] .. '\n' ..
-'audio = '.. tostring(config_values.audio) .. '\n' .. [=[
+'audio = ' .. tostring(config_values.audio) .. '\n' .. [=[
 
 --------------------------------------------- CUSTOM GAME MENU ----------------------------------------------
 -- These settings can also be changed from the opening menu screen in the custom games menu
@@ -505,8 +502,6 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
   end
 end
 
-------------------------------------------------------------------------HOTKEYS------------------------------------------------------------------------
-
 -- Hotkey filename.
 local hotkeys_name = "hotkeys.txt"
 
@@ -515,13 +510,76 @@ local hotkeys_filename = pathconcat(config_path, hotkeys_name)
 
 -- Defaults for hotkeys.
 local hotkeys_defaults = {
-  scroll_up = "w",
-  scroll_down = "s",
-  scroll_left = "a",
-  scroll_right = "d",
+  global_confirm = "return",
+  global_confirm_alt = "enter",
+  global_confirm_alt02 = "keypad enter",
+  global_cancel = "escape",
+  global_fullscreen_toggle = {"alt", "return"},
+  global_fullscreen_toggle_alt = {"alt", "keypad enter"},
+  global_exitApp = {"alt", "f4"},
+  global_resetApp = {"shift", "f10"},
+  global_CaptureMouse = {"ctrl", "f10"},
+  global_connectDebugger = {"ctrl", "c"},
+  global_showLuaConsole = "f12",
+  global_runDebugScript = {"shift", "d"},
+  global_screenshot = {"ctrl", "s"},
+  global_stop_movie = "escape",
+  global_window_close = "escape",
+  ingame_showmenubar = "escape",
+  ingame_showCheatWindow = "f11",
+  ingame_pause = "p",
+  ingame_gamespeed_slowest = "1",
+  ingame_gamespeed_slower = "2",
+  ingame_gamespeed_normal = "3",
+  ingame_gamespeed_max = "4",
+  ingame_gamespeed_thensome = "5",
+  ingame_gamespeed_speedup = "z",
+  ingame_scroll_up = "w",
+  ingame_scroll_down = "s",
+  ingame_scroll_left = "a",
+  ingame_scroll_right = "d",
+  ingame_zoom_in = "=",
+  ingame_zoom_in_more = {"shift", "="},
+  ingame_zoom_in_alt = "+",
+  ingame_zoom_in_more_alt = {"shift", "+"},
+  ingame_zoom_out = "-",
+  ingame_zoom_out_more = {"shift", "-"},
+  ingame_setTransparent = "x",
+  ingame_toggleAdvisor = {"shift", "a"},
+  ingame_poopLog = {"ctrl", "d"},
+  ingame_poopStrings = {"ctrl", "t"},
+  ingame_toggleAnnouncements = {"alt", "a"},
+  ingame_toggleSounds = {"alt", "s"},
+  ingame_toggleMusic = {"alt", "m"},
+  ingame_storePosition = "alt",
+  ingame_recallPosition = "ctrl",
+  ingame_panel_bankManager = "f1",
+  ingame_panel_bankStats = "f2",
+  ingame_panel_staffManage = "f3",
+  ingame_panel_townMap = "f4",
+  ingame_panel_casebook = "f5",
+  ingame_panel_research = "f6",
+  ingame_panel_status = "f7",
+  ingame_panel_charts = "f8",
+  ingame_panel_policy = "f9",
+  ingame_panel_map_alt = "t",
+  ingame_panel_research_alt = "r",
+  ingame_panel_casebook_alt = "c",
+  ingame_panel_casebook_alt02 = {"shift", "c"},
+  ingame_loadMenu = {"shift", "l"},
+  ingame_saveMenu = {"shift", "s"},
+  ingame_restartLevel = {"shift", "r"},
+  ingame_quitLevel = {"shift", "q"},
+  ingame_quickSave = {"shift", "alt", "s"},
+  ingame_quickLoad = {"shift", "alt", "l"},
+  ingame_openFirstMessage = "m",
+  ingame_toggleInfo = "i",
+  ingame_jukebox = "j",
+  ingame_rotateobject = "space",
+  ingame_patient_gohome = "h",
 }
 
---
+-- Clear the loaded file variable.
 fi = nil
 fi = io.open(hotkeys_filename, "r")
 local hotkeys_values = {}
@@ -530,24 +588,49 @@ for key, value in pairs(hotkeys_defaults) do
   hotkeys_values[key] = value
 end
 
-
+-- If the file opened succesfully...
 if fi then
+
   local file_contents = fi:read("*all")
   fi:close()
+  local temp_string_01 = ""
 
+  -- For every key and value in the hotkeys_default table...
   for key, value in pairs(hotkeys_defaults) do
+    -- Get the index of the key that we are currently working with.
     local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
+	-- If we couldn't find the key in the hotkeys.txt file...
     if not ind then
+      -- Then we need to rewrite the hotkeys.txt file.
       hotkeys_needs_rewrite = true
+	-- Otherwise, if the key was found in the hotkeys.txt file...
     else
+      -- Set a new index to the current index plus the string size of the name of the current key we are working on, so that we can make the index
+      -- be set past the key's name in the text file, i.e. if the key was ingame_showmenubar, we would want the index to be just after the "ingame_showmenubar" in "ingame_showmenubar = [[escape]]"
+      --																																											  ^here
       ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
+	  -- Then we want to set the index to one character after the equals sign, so that we are now on the space right before the value of the key.
       ind = string.find(file_contents, "=", ind) + 1
+      
+      -- If the value of the key we are currently looking at is NOT a string...
       if type(value) ~= "string" then
+		-- Find the beginning index of 
         ind = string.find(file_contents, "[%a%d]", ind)
-        config_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
+
+        -- If the value to we read or written is a table...
+		if type(value) == "table" then
+		  --print("TABLE")
+		  hotkeys_values[key] = value
+      	else
+      	  --print("NOT TABLE")
+          hotkeys_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
+        end
+      -- Otherwise, if the value we are looking for IS a string...
       else
+        --print("STRING")
         ind = string.find( file_contents, "[", ind + 1, true ) + 1
-        config_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
+
+		hotkeys_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
       end
     end
   end
@@ -557,29 +640,138 @@ end
 
 --
 if hotkeys_needs_rewrite then
-  fi = io.open(hotkeys_filename, "w")
-  if fi then
-    fi:write([=[
+  -- The config file that will be written is divided into two seperate strings, which are concatenated when they are written into the file.
+  -- This is done to avoid a "Too many C levels" error.
+  local string_01 = [=[
 ----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
---  setting = [[value]]
 -- Number settings should not have anything around their value,
+--  setting = [[value]]
 -- e.g. setting = 42
---
+
+----------------------------------------Global Keys----------------------------------------
+-- These are global keys to be used at anytime while the application is open.
+--]=] .. '\n' ..
+'global_confirm = [[' .. tostring(hotkeys_defaults.global_confirm) .. ']]' .. '\n' ..
+'global_confirm_alt = [[' .. tostring(hotkeys_defaults.global_confirm_alt) .. ']]' .. '\n' ..
+'global_confirm_alt02 = [[' .. tostring(hotkeys_defaults.global_confirm_alt02) .. ']]' .. '\n' ..
+'global_cancel = [[' .. tostring(hotkeys_defaults.global_cancel) .. ']]' .. '\n' ..
+'global_fullscreen_toggle = [[' .. Table2String(hotkeys_defaults.global_fullscreen_toggle) .. ']]' .. '\n' ..
+'global_fullscreen_toggle_alt = [[' .. Table2String(hotkeys_defaults.global_fullscreen_toggle_alt) .. ']]' .. '\n' ..
+'global_exitApp = [[' .. Table2String(hotkeys_defaults.global_exitApp) .. ']]' .. '\n' ..
+'global_resetApp = [[' .. Table2String(hotkeys_defaults.global_resetApp) .. ']]' .. '\n' ..
+'global_CaptureMouse = [[' .. Table2String(hotkeys_defaults.global_CaptureMouse) .. ']]' .. '\n' ..
+'global_connectDebugger = [[' .. Table2String(hotkeys_defaults.global_connectDebugger) .. ']]' .. '\n' ..
+'global_showLuaConsole = [[' .. tostring(hotkeys_defaults.global_showLuaConsole) .. ']]' .. '\n' ..
+'global_runDebugScript = [[' .. Table2String(hotkeys_defaults.global_runDebugScript) .. ']]' .. '\n' ..
+'global_screenshot = [[' .. Table2String(hotkeys_defaults.global_screenshot) .. ']]' .. '\n' ..
+'global_stop_movie = [[' .. tostring(hotkeys_defaults.global_stop_movie) .. ']]' .. '\n' ..
+'global_window_close = [[' .. tostring(hotkeys_defaults.global_window_close) .. ']]' .. '\n' .. [=[
+
 --------------------------------------------Scroll Keys------------------------------------------------------
 -- These are the keys to be used to scroll the camera around in-game.
 -- ]=] .. '\n' ..
-'scroll_up = [[' .. tostring(hotkeys_values.scroll_up) .. ']]' .. '\n' ..
-'scroll_down = [[' .. tostring(hotkeys_values.scroll_down) .. ']]' .. '\n' ..
-'scroll_left = [[' .. tostring(hotkeys_values.scroll_left) .. ']]' .. '\n' ..
-'scroll_right = [[' .. tostring(hotkeys_values.scroll_right) .. ']]' .. '\n' .. [=[
+'ingame_scroll_up = [[' .. tostring(hotkeys_values.ingame_scroll_up) .. ']]' .. '\n' ..
+'ingame_scroll_down = [[' .. tostring(hotkeys_values.ingame_scroll_down) .. ']]' .. '\n' ..
+'ingame_scroll_left = [[' .. tostring(hotkeys_values.ingame_scroll_left) .. ']]' .. '\n' ..
+'ingame_scroll_right = [[' .. tostring(hotkeys_values.ingame_scroll_right) .. ']]' .. '\n' .. [=[
 
-]=])
+--------------------------------------------Zoom------------------------------------------------------
+-- These are keys used to zoom the camera in and out.
+-- ]=] .. '\n' ..
+'ingame_zoom_in = [['.. tostring(hotkeys_defaults.ingame_zoom_in) .. ']]' .. '\n' ..
+'ingame_zoom_in_more = [[' .. Table2String(hotkeys_defaults.ingame_zoom_in_more) .. ']]' .. '\n' ..
+'ingame_zoom_in_alt = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_alt) .. ']]' .. '\n' ..
+'ingame_zoom_in_more_alt =[['.. tostring(hotkeys_defaults.ingame_zoom_in_more_alt) .. ']]' .. '\n' ..
+'ingame_zoom_out = [[' .. tostring(hotkeys_defaults.ingame_zoom_out) .. ']]' .. '\n' ..
+'ingame_zoom_out_more = [[' .. Table2String(hotkeys_defaults.ingame_zoom_out_more) .. ']]' .. '\n' .. [=[
+
+----------------------------------------In-Game Menus----------------------------------------
+-- These are quick keys to show the in-game menu bar and some other windows.
+-- ]=] .. '\n' ..
+'ingame_showmenubar = [[' .. tostring(hotkeys_defaults.ingame_showmenubar) .. ']]' .. '\n' ..
+'ingame_showCheatWindow = [[' .. tostring(hotkeys_defaults.ingame_showCheatWindow) .. ']]' .. '\n' ..
+'ingame_loadMenu = [[' .. Table2String(hotkeys_defaults.ingame_loadMenu) .. ']]' .. '\n' ..
+'ingame_saveMenu = [[' .. Table2String(hotkeys_defaults.ingame_saveMenu) .. ']]' .. '\n' ..
+'ingame_jukebox = [[' .. tostring(hotkeys_defaults.ingame_jukebox) .. ']]' .. '\n' ..
+'ingame_openFirstMessage = [[' .. tostring(hotkeys_defaults.ingame_openFirstMessage) .. ']]' .. '\n' .. [=[]=]
+
+  local string_02 = [=[
+
+----------------------------------------Speed Control------------------------------------------------------
+-- These pause and control the speed of the game.
+-- ]=] .. '\n' ..
+'ingame_pause = [[' .. tostring(hotkeys_defaults.ingame_pause) .. ']]' .. '\n' ..
+'ingame_gamespeed_slowest = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slowest) .. ']]' .. '\n' ..
+'ingame_gamespeed_slower = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slower) .. ']]' .. '\n' ..
+'ingame_gamespeed_normal = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_normal) .. ']]' .. '\n' ..
+'ingame_gamespeed_max = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_max) .. ']]' .. '\n' ..
+'ingame_gamespeed_thensome = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_thensome) .. ']]' .. '\n' ..
+'ingame_gamespeed_speedup = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_speedup) .. ']]' .. '\n' .. [=[
+
+----------------------------------------In-Game Bottom Panel------------------------------------------------------
+-- These open panel windows.
+-- ]=] .. '\n' ..
+'ingame_panel_bankManager = [[' .. tostring(hotkeys_defaults.ingame_panel_bankManager) .. ']]' .. '\n' ..
+'ingame_panel_bankStats = [[' .. tostring(hotkeys_defaults.ingame_panel_bankStats) .. ']]' .. '\n' ..
+'ingame_panel_staffManage = [[' .. tostring(hotkeys_defaults.ingame_panel_staffManage) .. ']]' .. '\n' ..
+'ingame_panel_townMap = [[' .. tostring(hotkeys_defaults.ingame_panel_townMap) .. ']]' .. '\n' ..
+'ingame_panel_casebook = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook) .. ']]' .. '\n' ..
+'ingame_panel_research = [[' .. tostring(hotkeys_defaults.ingame_panel_research) .. ']]' .. '\n' ..
+'ingame_panel_status = [[' .. tostring(hotkeys_defaults.ingame_panel_status) .. ']]' .. '\n' ..
+'ingame_panel_charts = [[' .. tostring(hotkeys_defaults.ingame_panel_charts) .. ']]' .. '\n' ..
+'ingame_panel_policy = [[' .. tostring(hotkeys_defaults.ingame_panel_policy) .. ']]' .. '\n' ..
+'ingame_panel_map_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_map_alt) .. ']]' .. '\n' ..
+'ingame_panel_research_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_research_alt) .. ']]' .. '\n' ..
+'ingame_panel_casebook_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt) .. ']]' .. '\n' ..
+'ingame_panel_casebook_alt02 = [[' .. Table2String(hotkeys_defaults.ingame_panel_casebook_alt02) .. ']]' .. '\n' .. [=[
+
+----------------------------------------Rotate Object----------------------------------------
+-- PLACEHOLDER TEXT
+-- ]=] .. '\n' ..
+'ingame_rotateobject = [[' .. tostring(hotkeys_defaults.ingame_rotateobject) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+-- PLACEHOLDER TEXT
+-- ]=] .. '\n' ..
+'ingame_quickSave = [[' .. Table2String(hotkeys_defaults.ingame_quickSave) .. ']]' .. '\n' ..
+'ingame_quickLoad = [[' .. Table2String(hotkeys_defaults.ingame_quickLoad) .. ']]' .. '\n' ..
+'ingame_restartLevel = [[' .. Table2String(hotkeys_defaults.ingame_restartLevel) .. ']]' .. '\n' ..
+'ingame_quitLevel = ' .. Table2String(hotkeys_defaults.ingame_quitLevel) .. '\n' .. [=[
+
+----------------------------------------
+-- PLACEHOLDER TEXT
+-- ]=] .. '\n' ..
+'ingame_setTransparent = [[' .. tostring(hotkeys_defaults.ingame_setTransparent) .. ']]' .. '\n' ..
+'ingame_storePosition = [[' .. tostring(hotkeys_defaults.ingame_storePosition) .. ']]' .. '\n' ..
+'ingame_recallPosition = [[' .. tostring(hotkeys_defaults.ingame_recallPosition) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+--PLACEHOLDER TEXT
+-- ]=] .. '\n' ..
+'ingame_toggleAnnouncements = [[' .. Table2String(hotkeys_defaults.ingame_toggleAnnouncements) .. ']]' .. '\n' ..
+'ingame_toggleSounds = [[' .. Table2String(hotkeys_defaults.ingame_toggleSounds) .. ']]' .. '\n' ..
+'ingame_toggleMusic = [[' .. Table2String(hotkeys_defaults.ingame_toggleMusic) .. ']]' .. '\n' ..
+'ingame_toggleAdvisor = [[' .. Table2String(hotkeys_defaults.ingame_toggleAdvisor) .. ']]' .. '\n' ..
+'ingame_toggleInfo = [[' .. tostring(hotkeys_defaults.ingame_toggleInfo) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+-- PLACEHOLDER TEXT
+-- ]=] .. '\n' ..
+'ingame_poopLog = [[' .. Table2String(hotkeys_defaults.ingame_poopLog) .. ']]' .. '\n' ..
+'ingame_poopStrings = [[' .. Table2String(hotkeys_defaults.ingame_poopStrings) .. ']]' .. '\n' .. [=[
+
+----------------------------------------Patient, Go Home!------------------------------------------------------
+-- This sends a patient home.
+-- ]=] .. '\n' ..
+'ingame_patient_gohome = [[' .. tostring(hotkeys_defaults.ingame_patient_gohome) .. ']]' .. '\n' .. [=[
+]=]
+  fi = io.open(hotkeys_filename, "w")  
+  if fi then
+    fi:write(string_01 .. string_02)
   fi:close()
   end
 end
 
---------------------------------------------------------------------------------------------------------------------------------------------------------
-
-return config_filename, config_values, hotkeys_filename
+return config_filename, config_values, hotkeys_filename, hotkeys_values
