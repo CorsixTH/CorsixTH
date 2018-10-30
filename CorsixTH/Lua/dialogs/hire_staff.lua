@@ -35,8 +35,6 @@ function UIHireStaff:UIHireStaff(ui)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -97,6 +95,12 @@ function UIHireStaff:UIHireStaff(ui)
   self:makeTooltip(_S.tooltip.hire_staff_window.researcher, 164, 136, 191, 167)
 
   self:updateTooltips()
+  self:registerKeyHandlers()
+end
+
+function UIHireStaff:registerKeyHandlers()
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
 end
 
 function UIHireStaff:updateTooltips()
@@ -268,11 +272,5 @@ function UIHireStaff:close()
 end
 
 function UIHireStaff:afterLoad(old, new)
-  if old < 101 then
-    self:removeKeyHandler(self.ui.app.hotkeys["global_confirm_alt"])
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
-  end
-  if old < 104 then
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
-  end
+  self:registerKeyHandlers()
 end

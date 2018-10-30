@@ -49,8 +49,6 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   self:UI(app)
   self.app = app
 
-  self.scroll_keys = {}
-
   self.hospital = local_hospital
   self.tutorial = { chapter = 0, phase = 0 }
   if map_editor then
@@ -100,18 +98,18 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.announcer = Announcer(app)
   
-  
-  -- Set the scrolling keys.
-  self.scroll_keys = {
-    [tostring(app.hotkeys["ingame_scroll_up"])]	= {x =   0, y = -10},
-    [tostring(app.hotkeys["ingame_scroll_down"])]	= {x =  0, y =   10},
-    [tostring(app.hotkeys["ingame_scroll_left"])]  = {x =   -10, y =  0},
-    [tostring(app.hotkeys["ingame_scroll_right"])]	= {x = 10, y =   0},
-  }
 end
 
 function GameUI:setupGlobalKeyHandlers()
   UI.setupGlobalKeyHandlers(self)
+
+  -- Set the scrolling keys.
+  self.scroll_keys = {
+    [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
+    [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
+    [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
+    [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+  }
 
   self:addKeyHandler(self.app.hotkeys["global_window_close"], self, self.setEditRoom, false)
   self:addKeyHandler(self.app.hotkeys["ingame_showmenubar"], self, self.showMenuBar)
@@ -1143,20 +1141,12 @@ function GameUI:afterLoad(old, new)
     self.adviser.frame = 1
     self.adviser.number_frames = 4
   end
-  if old < 70 then
-    self:addKeyHandler(app.hotkeys["ingame_toggleAdvisor"], self, self.toggleAdviser)
-  end
   if old < 75 then
     self.current_momentum = { x = 0, y = 0 }
     self.momentum = self.app.config.scrolling_momentum
   end
   if old < 78 then
     self.current_momentum = { x = 0, y = 0, z = 0}
-  end
-  if old < 81 then
-    self:removeKeyHandler(app.hotkeys["ingame_setTransparent"], self, self.toggleWallsTransparent)
-    self:addKeyHandler(app.hotkeys["ingame_gamespeed_speedup"], self, self.keySpeedUp)
-    self:addKeyHandler(app.hotkeys["ingame_setTransparent"], self, self.keyTransparent)
   end
   if old < 115 then
     self.shake_screen_intensity = 0
@@ -1166,11 +1156,6 @@ function GameUI:afterLoad(old, new)
   end
   if old < 129 then
     self.recallpositions = {}
-    -- snap to screen position
-    for i = 0, 9 do
-      self:addKeyHandler({self.app.hotkeys["ingame_storePosition"], tostring(i)}, self, self.setMapRecallPosition, i)
-      self:addKeyHandler({self.app.hotkeys["ingame_recallPosition"], tostring(i)}, self, self.recallMapPosition, i)
-    end
   end
   if old < 130 then
     self.ticks_since_last_announcement = nil -- cleanup

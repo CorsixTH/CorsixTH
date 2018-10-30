@@ -843,45 +843,11 @@ function UI:addOrRemoveDebugModeKeyHandlers()
 end
 
 function UI:afterLoad(old, new)
+  self.key_handlers = {}
   if old < 5 then
     self.editing_allowed = true
   end
-  if old < 63 then
-    -- modifiers have been added to key handlers
-    for _, handlers in pairs(self.key_handlers) do
-      for _, handler in ipairs(handlers) do
-        handler.modifiers = {}
-      end
-    end
-    -- some global key shortcuts were converted to use keyHandlers
-    self:removeKeyHandler(self.app.hotkeys["global_showLuaConsole"], self)
-    self:removeKeyHandler(self.app.hotkeys["global_runDebugScript"], self)
-    self:setupGlobalKeyHandlers()
-  end
-
-  if old < 70 then
-    self:removeKeyHandler("f10", self)
-    self:addKeyHandler(self.app.hotkeys["global_resetApp"], self, self.resetApp)
-    self:removeKeyHandler("a", self)
-  end
-  -- changing this so that it is quit application and Shift + Q is quit to main menu
-  if old < 71 then
-    self:removeKeyHandler(self.app.hotkeys["global_exitApp"], self, self.quit)
-    self:addKeyHandler(self.app.hotkeys["global_exitApp"], self, self.exitApplication)
-  end
-
-  if old < 100 then
-    self:removeKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self)
-    self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self, self.toggleFullscreen)
-  end
-  if old < 104 then
-    self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle_alt"], self, self.toggleFullscreen)
-  end
-
-  if old < 118 then
-    self:addKeyHandler(self.app.hotkeys["global_CaptureMouse"], self, self.toggleCaptureMouse)
-  end
-
+  self:setupGlobalKeyHandlers()
   Window.afterLoad(self, old, new)
 end
 

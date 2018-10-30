@@ -133,6 +133,10 @@ function UIStaffManagement:UIStaffManagement(ui)
 
   self:setCategory("Doctor")
 
+  self:registerKeyHandlers()
+end
+
+function UIStaffManagement:registerKeyHandlers()
   -- Hotkeys.
   self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_left"], self.previousCategory)
   self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_right"], self.nextCategory)
@@ -562,4 +566,8 @@ end
 function UIStaffManagement:close()
   UIFullscreen.close(self)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
+end
+
+function UIStaffManagement:afterLoad(old, new)
+  self:registerKeyHandlers()
 end
