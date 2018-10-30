@@ -66,6 +66,10 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
   self:onChangeLanguage()
 
   -- Enter closes the window
+  self:registerKeyHandlers()
+end
+
+function UIInformation:registerKeyHandlers()
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.close)
 end
@@ -129,11 +133,5 @@ function UIInformation:close()
 end
 
 function UIInformation:afterLoad(old, new)
-  if old < 101 then
-    self:removeKeyHandler(self.ui.app.hotkeys["global_confirm_alt"])
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
-  end
-  if old < 104 then
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.close)
-  end
+  self:registerKeyHandlers()
 end

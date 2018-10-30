@@ -117,6 +117,10 @@ function UIFurnishCorridor:UIFurnishCorridor(ui, objects, edit_dialog)
   self:makeTooltip(_S.tooltip.buy_objects_window.price,       20, 168, 127, 187)
   self:makeTooltip(_S.tooltip.buy_objects_window.total_value, 20, 196, 127, 215)
 
+  self:registerKeyHandlers()
+end
+
+function UIFurnishCorridor:registerKeyHandlers()
   self:addKeyHandler(app.hotkeys["global_confirm"], self.confirm)
   self:addKeyHandler(app.hotkeys["global_confirm_alt02"], self.confirm)
 end
@@ -234,11 +238,5 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
 end
 
 function UIFurnishCorridor:afterLoad(old, new)
-  if old < 101 then
-    self:removeKeyHandler(app.hotkeys["global_confirm_alt"])
-    self:addKeyHandler(app.hotkeys["global_confirm"], self.confirm)
-  end
-  if old < 104 then
-    self:addKeyHandler(app.hotkeys["global_confirm_alt02"], self.confirm)
-  end
+  self:registerKeyHandlers()
 end

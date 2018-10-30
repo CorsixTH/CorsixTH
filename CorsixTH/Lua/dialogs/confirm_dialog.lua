@@ -59,6 +59,10 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
+  self:registerKeyHandlers()
+end
+
+function UIConfirmDialog:registerKeyHandlers()
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.ok)
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.ok)
 end
@@ -95,11 +99,5 @@ function UIConfirmDialog:draw(canvas, x, y)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
-  if old < 101 then
-    self:removeKeyHandler(self.ui.app.hotkeys["global_confirm_alt"])
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.ok)
-  end
-  if old < 104 then
-    self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.ok)
-  end
+  self:registerKeyHandlers()
 end
