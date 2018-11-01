@@ -1,0 +1,10 @@
+Change comments that pertain to keys that have been changed.
+	Example: In menu part that says "Quit (Shift + Q)"
+
+Finish comments in hotkeys.txt
+
+Make other bottom_panel.lua panels available for hotkeys. I.E. build room, etc.
+
+keypad enter doesn't seemt o work at all on anything.
+
+Perhaps have window that tells us the current key mappings?

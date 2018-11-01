@@ -1481,8 +1481,8 @@ function App:afterLoad()
   end
 
   self.map:afterLoad(old, new)
-  self.world:afterLoad(old, new)
   self.ui:afterLoad(old, new)
+  self.world:afterLoad(old, new)
 end
 
 function App:checkForUpdates()

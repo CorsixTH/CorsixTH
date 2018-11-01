@@ -64,7 +64,7 @@ end
 
 function UIConfirmDialog:registerKeyHandlers()
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.ok)
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.ok)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt"], self.ok)
 end
 
 function UIConfirmDialog:cancel()

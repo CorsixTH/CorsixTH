@@ -1,0 +1,121 @@
+fi:write([=[
+----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
+-- Lines starting with two dashes (like this one) are ignored.
+-- Text settings should have their values between double square braces, e.g.
+--  setting = [[value]]
+-- Number settings should not have anything around their value,
+-- e.g. setting = 42
+--
+
+----------------------------------------Global Keys----------------------------------------
+-- These are global keys to be used at anytime while the application is open.
+--]=] .. '\n' ..
+'global_confirm = [[' .. tostring(hotkeys_defaults.global_confirm) .. ']]' .. '\n' ..
+'global_confirm_alt = [[' .. tostring(hotkeys_defaults.global_confirm_alt) .. ']]' .. '\n' ..
+'global_confirm_alt02 = [[' .. tostring(hotkeys_defaults.global_confirm_alt02) .. ']]' .. '\n' ..
+'global_cancel = [[' .. tostring(hotkeys_defaults.global_cancel) .. ']]' .. '\n' ..
+'global_fullscreen_toggle = [[' .. tostring(hotkeys_defaults.global_fullscreen_toggle) .. ']]' .. '\n' ..
+'global_fullscreen_toggle_alt = [[' .. tostring(hotkeys_defaults.global_fullscreen_toggle_alt) .. ']]' .. '\n' ..
+'global_exitApp = [[' .. tostring(hotkeys_defaults.global_exitApp) .. ']]' .. '\n' ..
+'global_resetApp = [[' .. tostring(hotkeys_defaults.global_resetApp) .. ']]' .. '\n' ..
+'global_CaptureMouse = [[' .. tostring(hotkeys_defaults.global_CaptureMouse) .. ']]' .. '\n' ..
+'global_connectDebugger = [[' .. tostring(hotkeys_defaults.global_connectDebugger) .. ']]' .. '\n' ..
+'global_showLuaConsole = [[' .. tostring(hotkeys_defaults.global_showLuaConsole) .. ']]' .. '\n' ..
+'global_runDebugScript = [[' .. tostring(hotkeys_defaults.global_runDebugScript) .. ']]' .. '\n' ..
+'global_screenshot = [[' .. tostring(hotkeys_defaults.global_screenshot) .. ']]' .. '\n' ..
+'global_stop_movie = [[' .. tostring(hotkeys_defaults.global_stop_movie) .. ']]' .. '\n' ..
+'global_window_close = [[' .. tostring(hotkeys_defaults.global_window_close) .. ']]' .. '\n' .. [=[
+
+
+--------------------------------------------Scroll Keys------------------------------------------------------
+-- These are the keys to be used to scroll the camera around in-game.
+-- ]=] .. '\n' ..
+'ingame_scroll_up = [[' .. tostring(hotkeys_values.ingame_scroll_up) .. ']]' .. '\n' ..
+'ingame_scroll_down = [[' .. tostring(hotkeys_values.ingame_scroll_down) .. ']]' .. '\n' ..
+'ingame_scroll_left = [[' .. tostring(hotkeys_values.ingame_scroll_left) .. ']]' .. '\n' ..
+'ingame_scroll_right = [[' .. tostring(hotkeys_values.ingame_scroll_right) .. ']]' .. '\n' .. [=[
+
+--------------------------------------------Zoom------------------------------------------------------
+-- 
+-- ]=] .. '\n' ..
+'ingame_zoom_in = [['.. tostring(hotkeys_defaults.ingame_zoom_in) .. ']]' .. '\n' ..
+'ingame_zoom_in_more = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_more) .. ']]' .. '\n' ..
+'ingame_zoom_in_alt = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_alt) .. ']]' .. '\n' ..
+'ingame_zoom_in_more_alt = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_more_alt) .. ']]' .. '\n' ..
+'ingame_zoom_out = [[' .. tostring(hotkeys_defaults.ingame_zoom_out) .. ']]' .. '\n' ..
+'ingame_zoom_out_more = [[' .. tostring(hotkeys_defaults.ingame_zoom_out_more) .. ']]' .. '\n' .. [=[
+
+----------------------------------------In-Game Menus----------------------------------------
+-- 
+-- ]=] .. '\n' ..
+'ingame_showmenubar = [[' .. tostring(hotkeys_defaults.ingame_showmenubar) .. ']]' .. '\n' ..
+'ingame_showCheatWindow = [[' .. tostring(hotkeys_defaults.ingame_showCheatWindow) .. ']]' .. '\n' ..
+'ingame_loadMenu = [[' .. tostring(hotkeys_defaults.ingame_loadMenu) .. ']]' .. '\n' ..
+'ingame_saveMenu = [[' .. tostring(hotkeys_defaults.ingame_saveMenu) .. ']]' .. '\n' ..
+'ingame_jukebox = [[' .. tostring(hotkeys_defaults.ingame_jukebox) .. ']]' .. '\n' ..
+'ingame_openFirstMessage = [[' .. tostring(hotkeys_defaults.ingame_openFirstMessage) .. ']]' .. '\n' .. [=[
+
+----------------------------------------Speed Control------------------------------------------------------
+-- 
+-- ]=] .. '\n' ..
+'ingame_pause = [[' .. tostring(hotkeys_defaults.ingame_pause) .. ']]' .. '\n' ..
+'ingame_gamespeed_slowest = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slowest) .. ']]' .. '\n' ..
+'ingame_gamespeed_slower = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slower) .. ']]' .. '\n' ..
+'ingame_gamespeed_normal = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_normal) .. ']]' .. '\n' ..
+'ingame_gamespeed_max = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_max) .. ']]' .. '\n' ..
+'ingame_gamespeed_thensome = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_thensome) .. ']]' .. '\n' ..
+'ingame_gamespeed_speedup = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_speedup) .. ']]' .. '\n' .. [=[
+
+----------------------------------------In-Game Bottom Panel------------------------------------------------------
+
+-- ]=] .. '\n' ..
+'ingame_panel_bankManager = [[' .. tostring(hotkeys_defaults.ingame_panel_bankManager) .. ']]' .. '\n' ..
+'ingame_panel_bankStats = [[' .. tostring(hotkeys_defaults.ingame_panel_bankStats) .. ']]' .. '\n' ..
+'ingame_panel_staffManage = [[' .. tostring(hotkeys_defaults.ingame_panel_staffManage) .. ']]' .. '\n' ..
+'ingame_panel_townMap = [[' .. tostring(hotkeys_defaults.ingame_panel_townMap) .. ']]' .. '\n' ..
+'ingame_panel_casebook = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook) .. ']]' .. '\n' ..
+'ingame_panel_research = [[' .. tostring(hotkeys_defaults.ingame_panel_research) .. ']]' .. '\n' ..
+'ingame_panel_status = [[' .. tostring(hotkeys_defaults.ingame_panel_status) .. ']]' .. '\n' ..
+'ingame_panel_charts = [[' .. tostring(hotkeys_defaults.ingame_panel_charts) .. ']]' .. '\n' ..
+'ingame_panel_policy = [[' .. tostring(hotkeys_defaults.ingame_panel_policy) .. ']]' .. '\n' ..
+'ingame_panel_map_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_map_alt) .. ']]' .. '\n' ..
+'ingame_panel_research_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_research_alt) .. ']]' .. '\n' ..
+'ingame_panel_casebook_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt) .. ']]' .. '\n' ..
+'ingame_panel_casebook_alt02 = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt02) .. ']]' .. '\n' .. [=[
+
+----------------------------------------Patient, Go Home!------------------------------------------------------
+--
+-- ]=] .. '\n' ..
+'ingame_patient_gohome = [[' .. tostring(hotkeys_defaults.ingame_patient_gohome) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+--
+-- ]=] .. '\n' ..
+'ingame_quickSave = [[' .. tostring(hotkeys_defaults.ingame_quickSave) .. ']]' .. '\n' ..
+'ingame_quickLoad = [[' .. tostring(hotkeys_defaults.ingame_quickLoad) .. ']]' .. '\n' ..
+'ingame_restartLevel = [[' .. tostring(hotkeys_defaults.ingame_restartLevel) .. ']]' .. '\n' ..
+'ingame_quitLevel = [[' .. tostring(hotkeys_defaults.ingame_quitLevel) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+--
+-- ]=] .. '\n' ..
+'ingame_setTransparent = [[' .. tostring(hotkeys_defaults.ingame_setTransparent) .. ']]' .. '\n' ..
+'ingame_storePosition = [[' .. tostring(hotkeys_defaults.ingame_storePosition) .. ']]' .. '\n' ..
+'ingame_recallPosition = [[' .. tostring(hotkeys_defaults.ingame_recallPosition) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+--
+-- ]=] .. '\n' ..
+'ingame_toggleAnnouncements = [[' .. tostring(hotkeys_defaults.ingame_toggleAnnouncements) .. ']]' .. '\n' ..
+'ingame_toggleSounds = [[' .. tostring(hotkeys_defaults.ingame_toggleSounds) .. ']]' .. '\n' ..
+'ingame_toggleMusic = [[' .. tostring(hotkeys_defaults.ingame_toggleMusic) .. ']]' .. '\n' ..
+'ingame_toggleAdvisor = [[' .. tostring(hotkeys_defaults.ingame_toggleAdvisor) .. ']]' .. '\n' ..
+'ingame_toggleInfo = [[' .. tostring(hotkeys_defaults.ingame_toggleInfo) .. ']]' .. '\n' .. [=[
+
+----------------------------------------
+--
+-- ]=] .. '\n' ..
+'ingame_poopLog = [[' .. tostring(hotkeys_defaults.ingame_poopLog) .. ']]' .. '\n' ..
+'ingame_poopStrings = [[' .. tostring(hotkeys_defaults.ingame_poopStrings) .. ']]' .. '\n' .. [=[
+
+]=])

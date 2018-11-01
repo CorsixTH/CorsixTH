@@ -100,7 +100,7 @@ end
 
 function UIHireStaff:registerKeyHandlers()
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.hire)
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.hire)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt"], self.hire)
 end
 
 function UIHireStaff:updateTooltips()

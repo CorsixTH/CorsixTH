@@ -512,12 +512,13 @@ local hotkeys_filename = pathconcat(config_path, hotkeys_name)
 local hotkeys_defaults = {
   global_confirm = "return",
   global_confirm_alt = "enter",
+  global_confirm_alt02 = "keypad enter",
   global_cancel = "escape",
   global_fullscreen_toggle = {"alt", "return"},
   global_fullscreen_toggle_alt = {"alt", "keypad enter"},
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
-  global_captureMouse = {"ctrl", "f10"},
+  global_CaptureMouse = {"ctrl", "f10"},
   global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
@@ -594,28 +595,39 @@ if fi then
   fi:close()
   local temp_string_01 = ""
 
+  -- For every key and value in the hotkeys_default table...
   for key, value in pairs(hotkeys_defaults) do
+    -- Get the index of the key that we are currently working with.
     local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
 	-- If we couldn't find the key in the hotkeys.txt file...
     if not ind then
+      -- Then we need to rewrite the hotkeys.txt file.
       hotkeys_needs_rewrite = true
 	-- Otherwise, if the key was found in the hotkeys.txt file...
     else
+      -- Set a new index to the current index plus the string size of the name of the current key we are working on, so that we can make the index
+      -- be set past the key's name in the text file, i.e. if the key was ingame_showmenubar, we would want the index to be just after the "ingame_showmenubar" in "ingame_showmenubar = [[escape]]"
+      --																																											  ^here
       ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
+	  -- Then we want to set the index to one character after the equals sign, so that we are now on the space right before the value of the key.
       ind = string.find(file_contents, "=", ind) + 1
       
       -- If the value of the key we are currently looking at is NOT a string...
       if type(value) ~= "string" then
+		-- Find the beginning index of 
         ind = string.find(file_contents, "[%a%d]", ind)
 
         -- If the value to we read or written is a table...
 		if type(value) == "table" then
+		  --print("TABLE")
 		  hotkeys_values[key] = value
       	else
+      	  --print("NOT TABLE")
           hotkeys_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
         end
       -- Otherwise, if the value we are looking for IS a string...
       else
+        --print("STRING")
         ind = string.find( file_contents, "[", ind + 1, true ) + 1
 
 		hotkeys_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
@@ -643,16 +655,17 @@ if hotkeys_needs_rewrite then
 --]=] .. '\n' ..
 'global_confirm = [[' .. tostring(hotkeys_defaults.global_confirm) .. ']]' .. '\n' ..
 'global_confirm_alt = [[' .. tostring(hotkeys_defaults.global_confirm_alt) .. ']]' .. '\n' ..
+'global_confirm_alt02 = [[' .. tostring(hotkeys_defaults.global_confirm_alt02) .. ']]' .. '\n' ..
 'global_cancel = [[' .. tostring(hotkeys_defaults.global_cancel) .. ']]' .. '\n' ..
-'global_fullscreen_toggle = ' .. table_toString(hotkeys_defaults.global_fullscreen_toggle) .. '\n' ..
-'global_fullscreen_toggle_alt = ' .. table_toString(hotkeys_defaults.global_fullscreen_toggle_alt) .. '\n' ..
-'global_exitApp = ' .. table_toString(hotkeys_defaults.global_exitApp) .. '\n' ..
-'global_resetApp = ' .. table_toString(hotkeys_defaults.global_resetApp) .. '\n' ..
-'global_captureMouse = ' .. table_toString(hotkeys_defaults.global_captureMouse) .. '\n' ..
-'global_connectDebugger = ' .. table_toString(hotkeys_defaults.global_connectDebugger) .. '\n' ..
+'global_fullscreen_toggle = [[' .. Table2String(hotkeys_defaults.global_fullscreen_toggle) .. ']]' .. '\n' ..
+'global_fullscreen_toggle_alt = [[' .. Table2String(hotkeys_defaults.global_fullscreen_toggle_alt) .. ']]' .. '\n' ..
+'global_exitApp = [[' .. Table2String(hotkeys_defaults.global_exitApp) .. ']]' .. '\n' ..
+'global_resetApp = [[' .. Table2String(hotkeys_defaults.global_resetApp) .. ']]' .. '\n' ..
+'global_CaptureMouse = [[' .. Table2String(hotkeys_defaults.global_CaptureMouse) .. ']]' .. '\n' ..
+'global_connectDebugger = [[' .. Table2String(hotkeys_defaults.global_connectDebugger) .. ']]' .. '\n' ..
 'global_showLuaConsole = [[' .. tostring(hotkeys_defaults.global_showLuaConsole) .. ']]' .. '\n' ..
-'global_runDebugScript = ' .. table_toString(hotkeys_defaults.global_runDebugScript) .. '\n' ..
-'global_screenshot = ' .. table_toString(hotkeys_defaults.global_screenshot) .. '\n' ..
+'global_runDebugScript = [[' .. Table2String(hotkeys_defaults.global_runDebugScript) .. ']]' .. '\n' ..
+'global_screenshot = [[' .. Table2String(hotkeys_defaults.global_screenshot) .. ']]' .. '\n' ..
 'global_stop_movie = [[' .. tostring(hotkeys_defaults.global_stop_movie) .. ']]' .. '\n' ..
 'global_window_close = [[' .. tostring(hotkeys_defaults.global_window_close) .. ']]' .. '\n' .. [=[
 
@@ -668,19 +681,19 @@ if hotkeys_needs_rewrite then
 -- These are keys used to zoom the camera in and out.
 -- ]=] .. '\n' ..
 'ingame_zoom_in = [['.. tostring(hotkeys_defaults.ingame_zoom_in) .. ']]' .. '\n' ..
-'ingame_zoom_in_more = ' .. table_toString(hotkeys_defaults.ingame_zoom_in_more) .. '\n' ..
+'ingame_zoom_in_more = [[' .. Table2String(hotkeys_defaults.ingame_zoom_in_more) .. ']]' .. '\n' ..
 'ingame_zoom_in_alt = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_alt) .. ']]' .. '\n' ..
-'ingame_zoom_in_more_alt = '.. table_toString(hotkeys_defaults.ingame_zoom_in_more_alt) .. '\n' ..
+'ingame_zoom_in_more_alt =[['.. tostring(hotkeys_defaults.ingame_zoom_in_more_alt) .. ']]' .. '\n' ..
 'ingame_zoom_out = [[' .. tostring(hotkeys_defaults.ingame_zoom_out) .. ']]' .. '\n' ..
-'ingame_zoom_out_more = ' .. table_toString(hotkeys_defaults.ingame_zoom_out_more) .. '\n' .. [=[
+'ingame_zoom_out_more = [[' .. Table2String(hotkeys_defaults.ingame_zoom_out_more) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------In-Game Menus----------------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
 -- ]=] .. '\n' ..
 'ingame_showmenubar = [[' .. tostring(hotkeys_defaults.ingame_showmenubar) .. ']]' .. '\n' ..
 'ingame_showCheatWindow = [[' .. tostring(hotkeys_defaults.ingame_showCheatWindow) .. ']]' .. '\n' ..
-'ingame_loadMenu = ' .. table_toString(hotkeys_defaults.ingame_loadMenu) .. '\n' ..
-'ingame_saveMenu = ' .. table_toString(hotkeys_defaults.ingame_saveMenu) .. '\n' ..
+'ingame_loadMenu = [[' .. Table2String(hotkeys_defaults.ingame_loadMenu) .. ']]' .. '\n' ..
+'ingame_saveMenu = [[' .. Table2String(hotkeys_defaults.ingame_saveMenu) .. ']]' .. '\n' ..
 'ingame_jukebox = [[' .. tostring(hotkeys_defaults.ingame_jukebox) .. ']]' .. '\n' ..
 'ingame_openFirstMessage = [[' .. tostring(hotkeys_defaults.ingame_openFirstMessage) .. ']]' .. '\n' .. [=[]=]
 
@@ -712,7 +725,7 @@ if hotkeys_needs_rewrite then
 'ingame_panel_map_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_map_alt) .. ']]' .. '\n' ..
 'ingame_panel_research_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_research_alt) .. ']]' .. '\n' ..
 'ingame_panel_casebook_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt) .. ']]' .. '\n' ..
-'ingame_panel_casebook_alt02 = ' .. table_toString(hotkeys_defaults.ingame_panel_casebook_alt02) .. '\n' .. [=[
+'ingame_panel_casebook_alt02 = [[' .. Table2String(hotkeys_defaults.ingame_panel_casebook_alt02) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------Rotate Object----------------------------------------
 -- PLACEHOLDER TEXT
@@ -722,10 +735,10 @@ if hotkeys_needs_rewrite then
 ----------------------------------------
 -- PLACEHOLDER TEXT
 -- ]=] .. '\n' ..
-'ingame_quickSave = ' .. table_toString(hotkeys_defaults.ingame_quickSave) .. '\n' ..
-'ingame_quickLoad = ' .. table_toString(hotkeys_defaults.ingame_quickLoad) .. '\n' ..
-'ingame_restartLevel = ' .. table_toString(hotkeys_defaults.ingame_restartLevel) .. '\n' ..
-'ingame_quitLevel = ' .. table_toString(hotkeys_defaults.ingame_quitLevel) .. '\n' .. [=[
+'ingame_quickSave = [[' .. Table2String(hotkeys_defaults.ingame_quickSave) .. ']]' .. '\n' ..
+'ingame_quickLoad = [[' .. Table2String(hotkeys_defaults.ingame_quickLoad) .. ']]' .. '\n' ..
+'ingame_restartLevel = [[' .. Table2String(hotkeys_defaults.ingame_restartLevel) .. ']]' .. '\n' ..
+'ingame_quitLevel = ' .. Table2String(hotkeys_defaults.ingame_quitLevel) .. '\n' .. [=[
 
 ----------------------------------------
 -- PLACEHOLDER TEXT
@@ -737,17 +750,17 @@ if hotkeys_needs_rewrite then
 ----------------------------------------
 --PLACEHOLDER TEXT
 -- ]=] .. '\n' ..
-'ingame_toggleAnnouncements = ' .. table_toString(hotkeys_defaults.ingame_toggleAnnouncements) .. '\n' ..
-'ingame_toggleSounds = ' .. table_toString(hotkeys_defaults.ingame_toggleSounds) .. '\n' ..
-'ingame_toggleMusic = ' .. table_toString(hotkeys_defaults.ingame_toggleMusic) .. '\n' ..
-'ingame_toggleAdvisor = ' .. table_toString(hotkeys_defaults.ingame_toggleAdvisor) .. '\n' ..
+'ingame_toggleAnnouncements = [[' .. Table2String(hotkeys_defaults.ingame_toggleAnnouncements) .. ']]' .. '\n' ..
+'ingame_toggleSounds = [[' .. Table2String(hotkeys_defaults.ingame_toggleSounds) .. ']]' .. '\n' ..
+'ingame_toggleMusic = [[' .. Table2String(hotkeys_defaults.ingame_toggleMusic) .. ']]' .. '\n' ..
+'ingame_toggleAdvisor = [[' .. Table2String(hotkeys_defaults.ingame_toggleAdvisor) .. ']]' .. '\n' ..
 'ingame_toggleInfo = [[' .. tostring(hotkeys_defaults.ingame_toggleInfo) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------
 -- PLACEHOLDER TEXT
 -- ]=] .. '\n' ..
-'ingame_poopLog = ' .. table_toString(hotkeys_defaults.ingame_poopLog) .. '\n' ..
-'ingame_poopStrings = ' .. table_toString(hotkeys_defaults.ingame_poopStrings) .. '\n' .. [=[
+'ingame_poopLog = [[' .. Table2String(hotkeys_defaults.ingame_poopLog) .. ']]' .. '\n' ..
+'ingame_poopStrings = [[' .. Table2String(hotkeys_defaults.ingame_poopStrings) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------Patient, Go Home!------------------------------------------------------
 -- This sends a patient home.

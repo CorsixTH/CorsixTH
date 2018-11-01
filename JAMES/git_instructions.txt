@@ -1,0 +1,8 @@
+git add *
+
+git commit -m "Message"
+
+#If the master has stuff you don't, then use next line.
+git pull
+
+git push

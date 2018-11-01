@@ -1,0 +1,5 @@
+Added scroll speed, shift scroll speed, and zoom speed options to the option menu.
+
+Added ability to change in-game hotkeys.
+
+Made diagonal scrolling the same speed as horizontal or diagonal scrolling speed (it's been normalized).

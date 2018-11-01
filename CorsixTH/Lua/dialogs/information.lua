@@ -71,7 +71,7 @@ end
 
 function UIInformation:registerKeyHandlers()
   self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt02"], self.close)
+  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt"], self.close)
 end
 
 function UIInformation:onChangeLanguage()
