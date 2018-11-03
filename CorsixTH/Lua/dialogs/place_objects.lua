@@ -90,8 +90,8 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
 end
 
 function UIPlaceObjects:registerKeyHandlers()
-  self:addKeyHandler(self.ui.app.hotkeys["global_cancel"], self.cancel)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_rotateobject"], self.tryNextOrientation)
+  self:addKeyHandler("global_cancel", self.cancel)
+  self:addKeyHandler("ingame_rotateobject", self.tryNextOrientation)
 end
 
 -- changes the window size and buttons to num_slots slots

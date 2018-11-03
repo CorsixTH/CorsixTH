@@ -105,36 +105,41 @@ function UIBottomPanel:registerKeyHandlers()
   local buttons = self.additional_buttons
 
   -- original TH F-key shortcuts
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_bankManager"], self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_bankStats"], self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_staffManage"], buttons[1], buttons[1].handleClick, "left")    -- staff management
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_townMap"], buttons[2], buttons[2].handleClick, "left")    -- town map
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_casebook"], buttons[3], buttons[3].handleClick, "left")    -- casebook
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_research"], buttons[4], buttons[4].handleClick, "left")    -- research
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_status"], buttons[5], buttons[5].handleClick, "left")    -- status
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_charts"], buttons[6], buttons[6].handleClick, "left")    -- charts
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_policy"], buttons[7], buttons[7].handleClick, "left")    -- policy
+  ui:addKeyHandler("ingame_panel_bankManager", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
+  ui:addKeyHandler("ingame_panel_bankStats", self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
+  ui:addKeyHandler("ingame_panel_staffManage", buttons[1], buttons[1].handleClick, "left")    -- staff management
+  ui:addKeyHandler("ingame_panel_townMap", buttons[2], buttons[2].handleClick, "left")    -- town map
+  ui:addKeyHandler("ingame_panel_casebook", buttons[3], buttons[3].handleClick, "left")    -- casebook
+  ui:addKeyHandler("ingame_panel_research", buttons[4], buttons[4].handleClick, "left")    -- research
+  ui:addKeyHandler("ingame_panel_status", buttons[5], buttons[5].handleClick, "left")    -- status
+  ui:addKeyHandler("ingame_panel_charts", buttons[6], buttons[6].handleClick, "left")    -- charts
+  ui:addKeyHandler("ingame_panel_policy", buttons[7], buttons[7].handleClick, "left")    -- policy
+  -- New bottom panel hotkeys for the first 4 buttons.
+  ui:addKeyHandler("ingame_panel_buildRoom", self, self.dialogBuildRoom)    -- Build room.
+  ui:addKeyHandler("ingame_panel_furnishCorridor", self, self.dialogFurnishCorridor)    -- Furnish corridor.
+  ui:addKeyHandler("ingame_panel_editRoom", self, self.editRoom)    -- Edit room.
+  ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.  
 
   -- "old" keyboard shortcuts for some of the fullscreen windows
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_map_alt"], buttons[2], buttons[2].handleClick, "left") -- T for town map
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_research_alt"], buttons[4], buttons[4].handleClick, "left") -- R for research
+  ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- T for town map
+  ui:addKeyHandler("ingame_panel_research_alt", buttons[4], buttons[4].handleClick, "left") -- R for research
   local config = ui.app.config
   if not config.volume_opens_casebook then
-    ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_casebook_alt"], buttons[3], buttons[3].handleClick, "left") -- C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt", buttons[3], buttons[3].handleClick, "left") -- C for casebook
   else
-    ui:addKeyHandler(self.ui.app.hotkeys["ingame_panel_casebook_alt02"], buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt02", buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
   end
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_loadMenu"], self, self.openLoad)  -- Shift + L for Load saved game menu
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_saveMenu"], self, self.openSave)  -- Shift + S for Load create save menu
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_restartLevel"], self, self.restart)  -- Shift + R for restart the level
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_quitLevel"], self, self.quit)  -- Shift + Q quit the game and return to main menu
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_quickSave"], self, self.quickSave)  -- Shift+Alt+S quick save
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_quickLoad"], self, self.quickLoad)  -- Shift+Alt+L load last quick save
+  ui:addKeyHandler("ingame_loadMenu", self, self.openLoad)  -- Shift + L for Load saved game menu
+  ui:addKeyHandler("ingame_saveMenu", self, self.openSave)  -- Shift + S for Load create save menu
+  ui:addKeyHandler("ingame_restartLevel", self, self.restart)  -- Shift + R for restart the level
+  ui:addKeyHandler("ingame_quitLevel", self, self.quit)  -- Shift + Q quit the game and return to main menu
+  ui:addKeyHandler("ingame_quickSave", self, self.quickSave)  -- Shift+Alt+S quick save
+  ui:addKeyHandler("ingame_quickLoad", self, self.quickLoad)  -- Shift+Alt+L load last quick save
 
   -- misc. keyhandlers
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_openFirstMessage"], self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_toggleInfo"], self, self.toggleInformation)   -- I for Information when you first build
-  ui:addKeyHandler(self.ui.app.hotkeys["ingame_jukebox"], self, self.openJukebox)   -- open the jukebox
+  ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- M for message
+  ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- I for Information when you first build
+  ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- open the jukebox
 end
 
 function UIBottomPanel:openJukebox()

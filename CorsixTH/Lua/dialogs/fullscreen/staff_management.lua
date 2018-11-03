@@ -138,10 +138,10 @@ end
 
 function UIStaffManagement:registerKeyHandlers()
   -- Hotkeys.
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_left"], self.previousCategory)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_right"], self.nextCategory)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_up"], self.previousStaff)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_down"], self.nextStaff)
+  self:addKeyHandler("ingame_scroll_left", self.previousCategory)
+  self:addKeyHandler("ingame_scroll_right", self.nextCategory)
+  self:addKeyHandler("ingame_scroll_up", self.previousStaff)
+  self:addKeyHandler("ingame_scroll_down", self.nextStaff)
 end
 
 function UIStaffManagement:updateTooltips()

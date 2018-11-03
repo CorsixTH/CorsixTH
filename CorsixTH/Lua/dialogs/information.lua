@@ -70,8 +70,8 @@ function UIInformation:UIInformation(ui, text, use_built_in_font)
 end
 
 function UIInformation:registerKeyHandlers()
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.close)
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt"], self.close)
+  self:addKeyHandler("global_confirm", self.close)
+  self:addKeyHandler("global_confirm_alt", self.close)
 end
 
 function UIInformation:onChangeLanguage()

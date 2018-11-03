@@ -247,14 +247,14 @@ end
 
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
-  self:addKeyHandler(self.app.hotkeys["global_cancel"], self, self.closeWindow)
-  self:addKeyHandler(self.app.hotkeys["global_stop_movie"], self, self.stopMovie)
-  self:addKeyHandler(self.app.hotkeys["global_screenshot"], self, self.makeScreenshot)
-  self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle"], self, self.toggleFullscreen)
-  self:addKeyHandler(self.app.hotkeys["global_fullscreen_toggle_alt"], self, self.toggleFullscreen)
-  self:addKeyHandler(self.app.hotkeys["global_exitApp"], self, self.exitApplication)
-  self:addKeyHandler(self.app.hotkeys["global_resetApp"], self, self.resetApp)
-  self:addKeyHandler(self.app.hotkeys["global_captureMouse"], self, self.toggleCaptureMouse)
+  self:addKeyHandler("global_cancel", self, self.closeWindow)
+  self:addKeyHandler("global_stop_movie", self, self.stopMovie)
+  self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
+  self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
+  self:addKeyHandler("global_fullscreen_toggle_alt", self, self.toggleFullscreen)
+  self:addKeyHandler("global_exitApp", self, self.exitApplication)
+  self:addKeyHandler("global_resetApp", self, self.resetApp)
+  self:addKeyHandler("global_captureMouse", self, self.toggleCaptureMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
 end
@@ -356,30 +356,48 @@ end
 -- pressed.
 --!param ... Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
-  keys = (type(keys) == "table") and keys or {keys}
-
-  -- We need to clone the key table into another temporary table, as if we don't the original table that we take it from will lose 
+  -- It is nessecary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose 
   -- the last key of that table permenently in the next line of code after this one, until the program is restarted.
   -- I.E. if the "ingame_quitLevel" hotkey from the "hotkeys_values" table in "config_finder.lua" is a table that looks like this:
   --   {"shift", "q"}
   -- We would lose the "q" element until we restarted the game and the "hotkey.txt" was read from again, causing the "ingame_quitLevel"
   -- table to be reset back to {"shift, "q"}
-  local temp_keys = table.clone(keys)
+  local temp_keys = nil
 
-  local key = table.remove(temp_keys, #temp_keys):lower()
-  local modifiers = list_to_set(temp_keys) -- SET of modifiers
-  if not self.key_handlers[key] then
-    -- No handlers for this key? Create a new table.
-    self.key_handlers[key] = {}
+  -- Check to see if "keys" key exist in the hotkeys table.
+  if self.app.hotkeys[keys] ~= nil then
+      if type(self.app.hotkeys[keys]) == "table" then
+        temp_keys = table.clone(self.app.hotkeys[keys])
+      elseif type(self.app.hotkeys[keys]) == "string" then
+        temp_keys = table.clone({self.app.hotkeys[keys]})
+      end
+  else
+    if type(keys) == "string" then
+      print(string.format("\"%s\" does not exist in the hotkey table.", keys))
+    else
+      print("Useage of addKeyHandler() requires the first argument to be a string of a key that can be found in \"hotkeys.txt\".")
+    end
   end
-  
-  table.insert(self.key_handlers[key], {
-    modifiers = modifiers,
-    window = window,
-    callback = callback,
-    ...
-  })
+
+  if temp_keys ~= nil then
+    local key = table.remove(temp_keys, #temp_keys):lower()
+    local modifiers = list_to_set(temp_keys) -- SET of modifiers
+    if not self.key_handlers[key] then
+      -- No handlers for this key? Create a new table.
+      self.key_handlers[key] = {}
+    end
+
+    table.insert(self.key_handlers[key], {
+      modifiers = modifiers,
+      window = window,
+      callback = callback,
+      ...
+    })
+  else
+    print("addKeyHandler() failed.")
+  end
 end
+
 --! Unregister a key handler previously registered by `addKeyHandler`.
 --!param keys (string or table) The key or list of modifiers+key of a key / window
 -- pair previously passed to `addKeyHandler`.
@@ -846,9 +864,9 @@ function UI:addOrRemoveDebugModeKeyHandlers()
   self:removeKeyHandler(self.app.hotkeys["global_showLuaConsole"], self)
   self:removeKeyHandler(self.app.hotkeys["global_runDebugScript"], self)
   if self.app.config.debug then
-    self:addKeyHandler(self.app.hotkeys["global_connectDebugger"], self, self.connectDebugger)
-    self:addKeyHandler(self.app.hotkeys["global_showLuaConsole"], self, self.showLuaConsole)
-    self:addKeyHandler(self.app.hotkeys["global_runDebugScript"], self, self.runDebugScript)
+    self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
+    self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
+    self:addKeyHandler("global_runDebugScript", self, self.runDebugScript)
   end
 end
 

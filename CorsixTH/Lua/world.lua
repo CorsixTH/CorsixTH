@@ -210,19 +210,19 @@ end
 function World:setUI(ui)
   self.ui = ui
 
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_pause"], self, self.pauseOrUnpause, "Pause")
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_gamespeed_slowest"], self, self.setSpeed, "Slowest")
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_gamespeed_slower"], self, self.setSpeed, "Slower")
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_gamespeed_normal"], self, self.setSpeed, "Normal")
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_gamespeed_max"], self, self.setSpeed, "Max speed")
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_gamespeed_thensome"], self, self.setSpeed, "And then some more")
+  self.ui:addKeyHandler("ingame_pause", self, self.pauseOrUnpause, "Pause")
+  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setSpeed, "Slowest")
+  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setSpeed, "Slower")
+  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setSpeed, "Normal")
+  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setSpeed, "Max speed")
+  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setSpeed, "And then some more")
 
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_in"], self, self.adjustZoom,  1)
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_in_more"], self, self.adjustZoom, 5)
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_in_alt"], self, self.adjustZoom,  1)
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_in_more_alt"], self, self.adjustZoom, 5)
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_out"], self, self.adjustZoom, -1)
-  self.ui:addKeyHandler(self.ui.app.hotkeys["ingame_zoom_out_more"], self, self.adjustZoom, -5)
+  self.ui:addKeyHandler("ingame_zoom_in", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
+  self.ui:addKeyHandler("ingame_zoom_in_alt", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler("ingame_zoom_in_more_alt", self, self.adjustZoom, 5)
+  self.ui:addKeyHandler("ingame_zoom_out", self, self.adjustZoom, -1)
+  self.ui:addKeyHandler("ingame_zoom_out_more", self, self.adjustZoom, -5)
 end
 
 function World:adjustZoom(delta)

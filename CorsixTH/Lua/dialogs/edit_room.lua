@@ -91,8 +91,8 @@ function UIEditRoom:UIEditRoom(ui, room_type)
 end
 
 function UIEditRoom:registerKeyHandlers()
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm"], self.confirm) -- UIPlaceObjects does not need this
-  self:addKeyHandler(self.ui.app.hotkeys["global_confirm_alt"], self.confirm)
+  self:addKeyHandler("global_confirm", self.confirm) -- UIPlaceObjects does not need this
+  self:addKeyHandler("global_confirm_alt", self.confirm)
 end
 
 function UIEditRoom:close(...)

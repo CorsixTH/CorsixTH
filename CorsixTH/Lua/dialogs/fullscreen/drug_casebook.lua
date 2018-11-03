@@ -96,10 +96,10 @@ end
 
 function UICasebook:registerKeyHandlers()
   -- Hotkeys
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_up"], self.scrollUp)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_down"], self.scrollDown)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_left"], self.decreasePay)
-  self:addKeyHandler(self.ui.app.hotkeys["ingame_scroll_right"], self.increasePay)
+  self:addKeyHandler("ingame_scroll_up", self.scrollUp)
+  self:addKeyHandler("ingame_scroll_down", self.scrollDown)
+  self:addKeyHandler("ingame_scroll_left", self.decreasePay)
+  self:addKeyHandler("ingame_scroll_right", self.increasePay)
 end
 
 function UICasebook:close()

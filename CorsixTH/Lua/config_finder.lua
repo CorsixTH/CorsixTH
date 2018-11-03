@@ -550,8 +550,6 @@ local hotkeys_defaults = {
   ingame_toggleAnnouncements = {"alt", "a"},
   ingame_toggleSounds = {"alt", "s"},
   ingame_toggleMusic = {"alt", "m"},
-  ingame_storePosition = "alt",
-  ingame_recallPosition = "ctrl",
   ingame_panel_bankManager = "f1",
   ingame_panel_bankStats = "f2",
   ingame_panel_staffManage = "f3",
@@ -565,6 +563,10 @@ local hotkeys_defaults = {
   ingame_panel_research_alt = "r",
   ingame_panel_casebook_alt = "c",
   ingame_panel_casebook_alt02 = {"shift", "c"},
+  ingame_panel_buildRoom = "f",
+  ingame_panel_furnishCorridor = "g",
+  ingame_panel_editRoom = "v",
+  ingame_panel_hireStaff = "b",
   ingame_loadMenu = {"shift", "l"},
   ingame_saveMenu = {"shift", "s"},
   ingame_restartLevel = {"shift", "r"},
@@ -576,6 +578,26 @@ local hotkeys_defaults = {
   ingame_jukebox = "j",
   ingame_rotateobject = "space",
   ingame_patient_gohome = "h",
+  ingame_storePosition_1 = {"alt", "1"},
+  ingame_storePosition_2 = {"alt", "2"},
+  ingame_storePosition_3 = {"alt", "3"},
+  ingame_storePosition_4 = {"alt", "4"},
+  ingame_storePosition_5 = {"alt", "5"},
+  ingame_storePosition_6 = {"alt", "6"},
+  ingame_storePosition_7 = {"alt", "7"},
+  ingame_storePosition_8 = {"alt", "8"},
+  ingame_storePosition_9 = {"alt", "9"},
+  ingame_storePosition_0 = {"alt", "0"},
+  ingame_recallPosition_1 = {"ctrl", "1"},
+  ingame_recallPosition_2 = {"ctrl", "2"},
+  ingame_recallPosition_3 = {"ctrl", "3"},
+  ingame_recallPosition_4 = {"ctrl", "4"},
+  ingame_recallPosition_5 = {"ctrl", "5"},
+  ingame_recallPosition_6 = {"ctrl", "6"},
+  ingame_recallPosition_7 = {"ctrl", "7"},
+  ingame_recallPosition_8 = {"ctrl", "8"},
+  ingame_recallPosition_9 = {"ctrl", "9"},
+  ingame_recallPosition_0 = {"ctrl", "0"},
 }
 
 -- Clear the loaded file variable.
@@ -628,7 +650,7 @@ end
 
 --
 if hotkeys_needs_rewrite then
-  -- The config file that will be written is divided into two seperate strings, which are concatenated when they are written into the file.
+  -- The config file that will be written is divided into seperate strings, which are concatenated when they are written into the file.
   -- This is done to avoid a "Too many C levels" error.
   local string_01 = [=[
 ----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
@@ -698,7 +720,7 @@ if hotkeys_needs_rewrite then
 'ingame_gamespeed_speedup = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_speedup) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------In-Game Bottom Panel------------------------------------------------------
--- These open panel windows.
+-- These open in-game panel windows like the town map or the "build room" dialog.
 -- ]=] .. '\n' ..
 'ingame_panel_bankManager = [[' .. tostring(hotkeys_defaults.ingame_panel_bankManager) .. ']]' .. '\n' ..
 'ingame_panel_bankStats = [[' .. tostring(hotkeys_defaults.ingame_panel_bankStats) .. ']]' .. '\n' ..
@@ -712,30 +734,62 @@ if hotkeys_needs_rewrite then
 'ingame_panel_map_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_map_alt) .. ']]' .. '\n' ..
 'ingame_panel_research_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_research_alt) .. ']]' .. '\n' ..
 'ingame_panel_casebook_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt) .. ']]' .. '\n' ..
-'ingame_panel_casebook_alt02 = ' .. table_toString(hotkeys_defaults.ingame_panel_casebook_alt02) .. '\n' .. [=[
+'ingame_panel_casebook_alt02 = ' .. table_toString(hotkeys_defaults.ingame_panel_casebook_alt02) .. '\n' ..
+'ingame_panel_buildRoom = [[' .. tostring(hotkeys_defaults.ingame_panel_buildRoom) .. ']]' .. '\n' ..
+'ingame_panel_furnishCorridor = [[' .. tostring(hotkeys_defaults.ingame_panel_furnishCorridor) .. ']]' .. '\n' ..
+'ingame_panel_editRoom = [[' .. tostring(hotkeys_defaults.ingame_panel_editRoom) .. ']]' .. '\n' ..
+'ingame_panel_hireStaff = [[' .. tostring(hotkeys_defaults.ingame_panel_hireStaff) .. ']]' .. '\n' .. [=[
 
 ----------------------------------------Rotate Object----------------------------------------
--- PLACEHOLDER TEXT
+-- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
 'ingame_rotateobject = [[' .. tostring(hotkeys_defaults.ingame_rotateobject) .. ']]' .. '\n' .. [=[
 
-----------------------------------------
--- PLACEHOLDER TEXT
+----------------------------------------Quick Keys----------------------------------------
+-- These are keys for quick saving and loading, and for quickly restarting and quitting the level.
 -- ]=] .. '\n' ..
 'ingame_quickSave = ' .. table_toString(hotkeys_defaults.ingame_quickSave) .. '\n' ..
 'ingame_quickLoad = ' .. table_toString(hotkeys_defaults.ingame_quickLoad) .. '\n' ..
 'ingame_restartLevel = ' .. table_toString(hotkeys_defaults.ingame_restartLevel) .. '\n' ..
 'ingame_quitLevel = ' .. table_toString(hotkeys_defaults.ingame_quitLevel) .. '\n' .. [=[
 
-----------------------------------------
--- PLACEHOLDER TEXT
+----------------------------------------Set Transparent----------------------------------------
+-- While held down any walls will be transparent, allowing you to see behind them.
 -- ]=] .. '\n' ..
-'ingame_setTransparent = [[' .. tostring(hotkeys_defaults.ingame_setTransparent) .. ']]' .. '\n' ..
-'ingame_storePosition = [[' .. tostring(hotkeys_defaults.ingame_storePosition) .. ']]' .. '\n' ..
-'ingame_recallPosition = [[' .. tostring(hotkeys_defaults.ingame_recallPosition) .. ']]' .. '\n' .. [=[
+'ingame_setTransparent = [[' .. tostring(hotkeys_defaults.ingame_setTransparent) .. ']]' .. '\n' .. [=[
+]=]
 
-----------------------------------------
---PLACEHOLDER TEXT
+local string_03 = [=[
+
+----------------------------------------Store and Recall Position----------------------------------------
+-- These keys store and recall camera positions. If you press the key(s) that correspond to
+-- "ingame_recallPosition_1" while looking over the operating room, for instance, and then
+-- you move the camera away from there, you can press "ingame_recallPosition_1" whenever
+-- you want to go back to the operating room instantly.
+-- ]=] .. '\n' ..
+'ingame_storePosition_1 =' .. table_toString(hotkeys_defaults.ingame_storePosition_1) .. '\n' ..
+'ingame_storePosition_2 =' .. table_toString(hotkeys_defaults.ingame_storePosition_2) .. '\n' ..
+'ingame_storePosition_3 =' .. table_toString(hotkeys_defaults.ingame_storePosition_3) .. '\n' ..
+'ingame_storePosition_4 =' .. table_toString(hotkeys_defaults.ingame_storePosition_4) .. '\n' ..
+'ingame_storePosition_5 =' .. table_toString(hotkeys_defaults.ingame_storePosition_5) .. '\n' ..
+'ingame_storePosition_6 =' .. table_toString(hotkeys_defaults.ingame_storePosition_6) .. '\n' ..
+'ingame_storePosition_7 =' .. table_toString(hotkeys_defaults.ingame_storePosition_7) .. '\n' ..
+'ingame_storePosition_8 =' .. table_toString(hotkeys_defaults.ingame_storePosition_8) .. '\n' ..
+'ingame_storePosition_9 =' .. table_toString(hotkeys_defaults.ingame_storePosition_9) .. '\n' ..
+'ingame_storePosition_0 =' .. table_toString(hotkeys_defaults.ingame_storePosition_0) .. '\n' ..
+'ingame_recallPosition_1 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_1) .. '\n' ..
+'ingame_recallPosition_2 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_2) .. '\n' ..
+'ingame_recallPosition_3 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_3) .. '\n' ..
+'ingame_recallPosition_4 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_4) .. '\n' ..
+'ingame_recallPosition_5 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_5) .. '\n' ..
+'ingame_recallPosition_6 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_6) .. '\n' ..
+'ingame_recallPosition_7 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_7) .. '\n' ..
+'ingame_recallPosition_8 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_8) .. '\n' ..
+'ingame_recallPosition_9 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_9) .. '\n' ..
+'ingame_recallPosition_0 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_0) .. '\n' .. [=[
+
+----------------------------------------Toggle Various----------------------------------------
+-- These toggle various things. The names tell all.
 -- ]=] .. '\n' ..
 'ingame_toggleAnnouncements = ' .. table_toString(hotkeys_defaults.ingame_toggleAnnouncements) .. '\n' ..
 'ingame_toggleSounds = ' .. table_toString(hotkeys_defaults.ingame_toggleSounds) .. '\n' ..
@@ -743,20 +797,20 @@ if hotkeys_needs_rewrite then
 'ingame_toggleAdvisor = ' .. table_toString(hotkeys_defaults.ingame_toggleAdvisor) .. '\n' ..
 'ingame_toggleInfo = [[' .. tostring(hotkeys_defaults.ingame_toggleInfo) .. ']]' .. '\n' .. [=[
 
-----------------------------------------
--- PLACEHOLDER TEXT
+----------------------------------------Dump Log----------------------------------------
+-- These keys dump logs. And strings, if too much fiber was taken.
 -- ]=] .. '\n' ..
 'ingame_poopLog = ' .. table_toString(hotkeys_defaults.ingame_poopLog) .. '\n' ..
 'ingame_poopStrings = ' .. table_toString(hotkeys_defaults.ingame_poopStrings) .. '\n' .. [=[
 
 ----------------------------------------Patient, Go Home!------------------------------------------------------
--- This sends a patient home.
+-- This sends a patient home. Also a good anime episode name.
 -- ]=] .. '\n' ..
 'ingame_patient_gohome = [[' .. tostring(hotkeys_defaults.ingame_patient_gohome) .. ']]' .. '\n' .. [=[
 ]=]
   fi = io.open(hotkeys_filename, "w")  
   if fi then
-    fi:write(string_01 .. string_02)
+    fi:write(string_01 .. string_02 .. string_03)
   fi:close()
   end
 end

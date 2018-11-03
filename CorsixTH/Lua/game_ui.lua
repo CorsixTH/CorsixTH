@@ -111,26 +111,26 @@ function GameUI:setupGlobalKeyHandlers()
     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
   }
 
-  self:addKeyHandler(self.app.hotkeys["global_window_close"], self, self.setEditRoom, false)
-  self:addKeyHandler(self.app.hotkeys["ingame_showmenubar"], self, self.showMenuBar)
-  self:addKeyHandler(self.app.hotkeys["ingame_gamespeed_speedup"], self, self.keySpeedUp)
-  self:addKeyHandler(self.app.hotkeys["ingame_setTransparent"], self, self.keyTransparent)
-  self:addKeyHandler(self.app.hotkeys["ingame_toggleAdvisor"], self, self.toggleAdviser)
-  self:addKeyHandler(self.app.hotkeys["ingame_poopLog"], self.app.world, self.app.world.dumpGameLog)
-  self:addKeyHandler(self.app.hotkeys["ingame_poopStrings"], self.app, self.app.dumpStrings)
-  self:addKeyHandler(self.app.hotkeys["ingame_toggleAnnouncements"], self, self.togglePlayAnnouncements)
-  self:addKeyHandler(self.app.hotkeys["ingame_toggleSounds"], self, self.togglePlaySounds)
-  self:addKeyHandler(self.app.hotkeys["ingame_toggleMusic"], self, self.togglePlayMusic)
+  self:addKeyHandler("global_window_close", self, self.setEditRoom, false)
+  self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
+  self:addKeyHandler("ingame_gamespeed_speedup", self, self.keySpeedUp)
+  self:addKeyHandler("ingame_setTransparent", self, self.keyTransparent)
+  self:addKeyHandler("ingame_toggleAdvisor", self, self.toggleAdviser)
+  self:addKeyHandler("ingame_poopLog", self.app.world, self.app.world.dumpGameLog)
+  self:addKeyHandler("ingame_poopStrings", self.app, self.app.dumpStrings)
+  self:addKeyHandler("ingame_toggleAnnouncements", self, self.togglePlayAnnouncements)
+  self:addKeyHandler("ingame_toggleSounds", self, self.togglePlaySounds)
+  self:addKeyHandler("ingame_toggleMusic", self, self.togglePlayMusic)
   -- scroll to map position
   for i = 0, 9 do
     -- set camera view
-    self:addKeyHandler({self.app.hotkeys["ingame_storePosition"], tostring(i)}, self, self.setMapRecallPosition, i)
+    self:addKeyHandler(string.format("ingame_storePosition_%d", i), self, self.setMapRecallPosition, i)
     -- recall camera view
-    self:addKeyHandler({self.app.hotkeys["ingame_recallPosition"], tostring(i)}, self, self.recallMapPosition, i)
+    self:addKeyHandler(string.format("ingame_recallPosition_%d", i), self, self.recallMapPosition, i)
   end
 
   if self.app.config.debug then
-    self:addKeyHandler(self.app.hotkeys["ingame_showCheatWindow"], self, self.showCheatsWindow)
+    self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
 end
 
