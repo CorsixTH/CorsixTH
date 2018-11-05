@@ -378,7 +378,6 @@ function UI:addKeyHandler(keys, window, callback, ...)
       print("Useage of addKeyHandler() requires the first argument to be a string of a key that can be found in \"hotkeys.txt\".")
     end
   end
-<<<<<<< HEAD
 
   if temp_keys ~= nil then
     local key = table.remove(temp_keys, #temp_keys):lower()
@@ -388,17 +387,6 @@ function UI:addKeyHandler(keys, window, callback, ...)
       self.key_handlers[key] = {}
     end
 
-=======
-
-  if temp_keys ~= nil then
-    local key = table.remove(temp_keys, #temp_keys):lower()
-    local modifiers = list_to_set(temp_keys) -- SET of modifiers
-    if not self.key_handlers[key] then
-      -- No handlers for this key? Create a new table.
-      self.key_handlers[key] = {}
-    end
-
->>>>>>> e34f49466e6a750b930238796aeb6666af1bc061
     table.insert(self.key_handlers[key], {
       modifiers = modifiers,
       window = window,
