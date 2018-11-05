@@ -81,16 +81,16 @@ fax = {
 -- 3. Menu
 menu_debug = {
   jump_to_level         = "  SIIRRY TASOLLE  ",
-  transparent_walls     = "  (X) LÄPINÄKYVÄT SEINÄT  ",
+  transparent_walls     = "  (%1%) LÄPINÄKYVÄT SEINÄT  ",
   limit_camera          = "  RAJOITETTU KAMERA  ",
   disable_salary_raise  = "  ESTÄ PALKAN KOROTTAMINEN  ",
   make_debug_fax        = "  LUO DEBUG-FAKSI  ",
   make_debug_patient    = "  LISÄÄ DEBUG-POTILAS  ",
-  cheats                = "  (F11) HUIJAUKSET  ",
-  lua_console           = "  (F12) LUA-KOMENTORIVI  ",
+  cheats                = "  (%1%) HUIJAUKSET  ",
+  lua_console           = "  (%1%) LUA-KOMENTORIVI  ",
   calls_dispatcher      = "  TEHTÄVIEN VÄLITYS  ",
-  dump_strings          = "  DUMPPAA TEKSTIT  ",
-  dump_gamelog          = "  (CTRL+D) DUMPPAA PELILOGI  ",
+  dump_strings          = "  (%1%) DUMPPAA TEKSTIT  ",
+  dump_gamelog          = "  (%1%) DUMPPAA PELILOGI  ",
   map_overlay           = "  KARTTAKERROKSET  ",
   sprite_viewer         = "  SPRITE-KATSELIN  ",
 }
@@ -111,12 +111,12 @@ menu_debug_overlay = {
 }
 
 menu_options_game_speed = {
-  slowest               = "  (1) HITAIN  ",
-  slower                = "  (2) HITAAMPI  ",
-  normal                = "  (3) NORMAALI  ",
-  max_speed             = "  (4) MAKSIMINOPEUS  ",
-  and_then_some_more    = "  (5) JA VÄHÄN PÄÄLLE  ",
-  pause                 = "  (P) PYSÄYTÄ  "
+  slowest               = "  (%1%) HITAIN  ",
+  slower                = "  (%1%) HITAAMPI  ",
+  normal                = "  (%1%) NORMAALI  ",
+  max_speed             = "  (%1%) MAKSIMINOPEUS  ",
+  and_then_some_more    = "  (%1%) JA VÄHÄN PÄÄLLE  ",
+  pause                 = "  (%1%) PYSÄYTÄ  "
 }
 
 menu_options_volume = {
@@ -1170,10 +1170,10 @@ menu = {
 
 -- Menu File
 menu_file = {
-  load          = "  LATAA  ",
-  save          = "  TALLENNA  ",
-  restart       = "  ALOITA ALUSTA  ",
-  quit          = "  LOPETA  ",
+  load          = "  (%1%) LATAA  ",
+  save          = "  (%1%) TALLENNA  ",
+  restart       = "  (%1%) ALOITA ALUSTA  ",
+  quit          = "  (%1%) LOPETA  ",
 }
 menu_file_load = {
   [1] = "  PELI 1  ",
@@ -1188,18 +1188,18 @@ menu_file_load = {
 
 -- Menu Options
 menu_options = {
-  adviser_disabled  = "  AVUSTAJA  ",
-  announcements     = "  KUULUTUKSET  ",
+  adviser_disabled  = "  (%1%) AVUSTAJA  ",
+  announcements     = "  (%1%) KUULUTUKSET  ",
   announcements_vol = "  KUULUTUSTEN VOIMAKKUUS  ",
   autosave          = "  AUTOMAATTITALLENNUS  ",
   edge_scrolling    = "  REUNAVIERITYS  ",
   game_speed        = "  PELINOPEUS  ",
-  jukebox           = "  JUKEBOKSI  ",
+  jukebox           = "  (%1%) JUKEBOKSI  ",
   lock_windows      = "  LUKITSE IKKUNAT  ",
-  music             = "  MUSIIKKI  ",
+  music             = "  (%1%) MUSIIKKI  ",
   music_vol         = "  MUSIIKIN VOIMAKKUUS  ",
   settings          = "  ASETUKSET  ",
-  sound             = "  ÄÄNI  ",
+  sound             = "  (%1%) ÄÄNI  ",
   sound_vol         = "  ÄÄNENVOIMAKKUUS  ",
 }
 
@@ -1212,14 +1212,14 @@ menu_display = {
 
 -- Menu Charts
 menu_charts = {
-  statement     = "  TILIOTE  ",
-  casebook      = "  TAPAUSKIRJA  ",
-  policy        = "  KÄYTÄNNÖT  ",
-  research      = "  TUTKIMUS  ",
-  graphs        = "  GRAAFIT  ",
-  staff_listing = "  TYÖNTEKIJÄT  ",
-  bank_manager  = "  PANKINJOHTAJA  ",
-  status        = "  TILANNE  ",
+  statement     = "  (%1%) TILIOTE  ",
+  casebook      = "  (%1%) TAPAUSKIRJA  ",
+  policy        = "  (%1%) KÄYTÄNNÖT  ",
+  research      = "  (%1%) TUTKIMUS  ",
+  graphs        = "  (%1%) GRAAFIT  ",
+  staff_listing = "  (%1%) TYÖNTEKIJÄT  ",
+  bank_manager  = "  (%1%) PANKINJOHTAJA  ",
+  status        = "  (%1%) TILANNE  ",
   briefing      = "  TIIVISTELMÄ  ",
 }
 

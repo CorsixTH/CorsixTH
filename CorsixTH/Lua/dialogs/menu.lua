@@ -529,6 +529,7 @@ end
 --!param app Application.
 function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
+
   menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
     :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
     :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
@@ -546,10 +547,27 @@ end
 --!param app Application.
 function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
-  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
-    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveGame(self.ui)) end)
-    :appendItem(_S.menu_file.restart, function() app:restart() end)
-    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
+  local hotkeys = self.ui.app.hotkeys
+  
+  -- A function to set the menu hotkey strings, whether a string or table.
+  -- Usage: stringOrTable(hotkey name as string)
+  -- Ex: stringOrTable("ingame_loadMenu")
+  local function stringOrTable(hotkey_name)
+    if hotkeys[hotkey_name] then
+      if type(hotkeys[hotkey_name]) == "string" then
+        return string.upper(hotkeys[hotkey_name])
+      elseif type(hotkeys[hotkey_name]) == "table" then
+        return table_toString(hotkeys[hotkey_name], false, true)
+      else
+        return nil
+      end
+    end
+  end
+
+  menu:appendItem(_S.menu_file.load:format(stringOrTable("ingame_loadMenu")), function() self.ui:addWindow(UILoadGame(self.ui, "game")) end)
+    :appendItem(_S.menu_file.save:format(stringOrTable("ingame_saveMenu")), function() self.ui:addWindow(UISaveGame(self.ui)) end)
+    :appendItem(_S.menu_file.restart:format(stringOrTable("ingame_restartLevel")), function() app:restart() end)
+    :appendItem(_S.menu_file.quit:format(stringOrTable("ingame_quitLevel")), function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
 
   local options = UIMenu()
@@ -587,7 +605,7 @@ function UIMenuBar:makeGameMenu(app)
       return volume_menu
     end
 
-  options:appendCheckItem(_S.menu_options.sound,
+  options:appendCheckItem(_S.menu_options.sound:format(stringOrTable("ingame_toggleSounds")),
     app.config.play_sounds,
     function(item)
       app.audio:playSoundEffects(item.checked)
@@ -599,7 +617,7 @@ function UIMenuBar:makeGameMenu(app)
     end)
 
 
-  options:appendCheckItem(_S.menu_options.announcements,
+  options:appendCheckItem(_S.menu_options.announcements:format(stringOrTable("ingame_toggleAnnouncements")),
     app.config.play_announcements,
     function(item)
       app.config.play_announcements = item.checked
@@ -610,7 +628,7 @@ function UIMenuBar:makeGameMenu(app)
       return app.config.play_announcements
     end)
 
- options:appendCheckItem(_S.menu_options.music,
+ options:appendCheckItem(_S.menu_options.music:format(stringOrTable("ingame_toggleMusic")),
     app.config.play_music,
     function(item)
       app.config.play_music = item.checked
@@ -626,7 +644,7 @@ function UIMenuBar:makeGameMenu(app)
     :appendMenu(_S.menu_options.sound_vol,         appendVolume("sound"))
     :appendMenu(_S.menu_options.announcements_vol, appendVolume("announcement"))
     :appendMenu(_S.menu_options.music_vol,         appendVolume("music"))
-    :appendItem(_S.menu_options.jukebox, function() self.ui:addWindow(UIJukebox(app)) end)
+    :appendItem(_S.menu_options.jukebox:format(stringOrTable("ingame_jukebox")), function() self.ui:addWindow(UIJukebox(app)) end)
   end
 
   local function boolean_runtime_config(option)
@@ -651,7 +669,7 @@ function UIMenuBar:makeGameMenu(app)
       app:setCaptureMouse()
     end)
 
-  options:appendCheckItem(_S.menu_options.adviser_disabled,
+  options:appendCheckItem(_S.menu_options.adviser_disabled:format(stringOrTable("ingame_toggleAdvisor")),
     not app.config.adviser_disabled,
     function(item)
       app.config.adviser_disabled = not item.checked
@@ -708,26 +726,29 @@ function UIMenuBar:makeGameMenu(app)
   end
 
   options:appendMenu(_S.menu_options.game_speed, UIMenu()
-    :appendCheckItem(_S.menu_options_game_speed.pause,              rate("Pause"))
-    :appendCheckItem(_S.menu_options_game_speed.slowest,            rate("Slowest"))
-    :appendCheckItem(_S.menu_options_game_speed.slower,             rate("Slower"))
-    :appendCheckItem(_S.menu_options_game_speed.normal,             rate("Normal")) -- (default)
-    :appendCheckItem(_S.menu_options_game_speed.max_speed,          rate("Max speed"))
-    :appendCheckItem(_S.menu_options_game_speed.and_then_some_more, rate("And then some more"))
+    :appendCheckItem(_S.menu_options_game_speed.pause:format(stringOrTable("ingame_pause")),                          rate("Pause"))
+    :appendCheckItem(_S.menu_options_game_speed.slowest:format(stringOrTable("ingame_gamespeed_slowest")),             rate("Slowest"))
+    :appendCheckItem(_S.menu_options_game_speed.slower:format(stringOrTable("ingame_gamespeed_slower")),               rate("Slower"))
+    :appendCheckItem(_S.menu_options_game_speed.normal:format(stringOrTable("ingame_gamespeed_normal")),               rate("Normal")) -- (default)
+    :appendCheckItem(_S.menu_options_game_speed.max_speed:format(stringOrTable("ingame_gamespeed_max")),               rate("Max speed"))
+    :appendCheckItem(_S.menu_options_game_speed.and_then_some_more:format(stringOrTable("ingame_gamespeed_thensome")), rate("And then some more"))
   )
+    
   self:addMenu(_S.menu.options, options)
+
   self:addMenu(_S.menu.charts, UIMenu()
-    :appendItem(_S.menu_charts.bank_manager, function() self.ui.bottom_panel:dialogBankManager(true) end)
-    :appendItem(_S.menu_charts.statement, function() self.ui.bottom_panel:dialogBankStats(true) end)
-    :appendItem(_S.menu_charts.staff_listing, function() self.ui.bottom_panel:dialogStaffManagement(true) end)
-    :appendItem(_S.menu_charts.town_map, function() self.ui.bottom_panel:dialogTownMap(true) end)
-    :appendItem(_S.menu_charts.casebook, function() self.ui.bottom_panel:dialogDrugCasebook(true) end)
-    :appendItem(_S.menu_charts.research, function() self.ui.bottom_panel:dialogResearch(true) end)
-    :appendItem(_S.menu_charts.status, function() self.ui.bottom_panel:dialogStatus(true) end)
-    :appendItem(_S.menu_charts.graphs, function() self.ui.bottom_panel:dialogCharts(true) end)
-    :appendItem(_S.menu_charts.policy, function() self.ui.bottom_panel:dialogPolicy(true) end)
+    :appendItem(_S.menu_charts.bank_manager:format(stringOrTable("ingame_panel_bankManager")), function() self.ui.bottom_panel:dialogBankManager(true) end)
+    :appendItem(_S.menu_charts.statement:format(stringOrTable("ingame_panel_bankStats")), function() self.ui.bottom_panel:dialogBankStats(true) end)
+    :appendItem(_S.menu_charts.staff_listing:format(stringOrTable("ingame_panel_staffManage")), function() self.ui.bottom_panel:dialogStaffManagement(true) end)
+    :appendItem(_S.menu_charts.town_map:format(stringOrTable("ingame_panel_townMap")), function() self.ui.bottom_panel:dialogTownMap(true) end)
+    :appendItem(_S.menu_charts.casebook:format(stringOrTable("ingame_panel_casebook")), function() self.ui.bottom_panel:dialogDrugCasebook(true) end)
+    :appendItem(_S.menu_charts.research:format(stringOrTable("ingame_panel_research")), function() self.ui.bottom_panel:dialogResearch(true) end)
+    :appendItem(_S.menu_charts.status:format(stringOrTable("ingame_panel_status")), function() self.ui.bottom_panel:dialogStatus(true) end)
+    :appendItem(_S.menu_charts.graphs:format(stringOrTable("ingame_panel_charts")), function() self.ui.bottom_panel:dialogCharts(true) end)
+    :appendItem(_S.menu_charts.policy:format(stringOrTable("ingame_panel_policy")), function() self.ui.bottom_panel:dialogPolicy(true) end)
     :appendItem(_S.menu_charts.briefing, function() self.ui:showBriefing() end)
   )
+
   local function _(s) return "  " .. s:upper() .. "  " end
   local function limit_camera(item)
     app.ui:limitCamera(item.checked)
@@ -759,17 +780,17 @@ function UIMenuBar:makeGameMenu(app)
   if self.ui.app.config.debug then
     self:addMenu(_S.menu.debug, UIMenu() -- Debug
       :appendMenu(_S.menu_debug.jump_to_level, levels_menu)
-      :appendItem(_S.menu_debug.connect_debugger, function() self.ui:connectDebugger() end)
+      :appendItem(_S.menu_debug.connect_debugger:format(stringOrTable("global_connectDebugger")), function() self.ui:connectDebugger() end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
-      :appendItem(_S.menu_debug.cheats,             function() self.ui:addWindow(UICheats(self.ui)) end)
-      :appendItem(_S.menu_debug.lua_console,        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
-      :appendItem(_S.menu_debug.debug_script,       function() self.ui:runDebugScript() end)
+      :appendItem(_S.menu_debug.cheats:format(stringOrTable("ingame_showCheatWindow")),             function() self.ui:addWindow(UICheats(self.ui)) end)
+      :appendItem(_S.menu_debug.lua_console:format(stringOrTable("global_showLuaConsole")),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)
+      :appendItem(_S.menu_debug.debug_script:format(stringOrTable("global_runDebugScript")),       function() self.ui:runDebugScript() end)
       :appendItem(_S.menu_debug.calls_dispatcher,   function() self.ui:addWindow(UICallsDispatcher(self.ui)) end)
-      :appendItem(_S.menu_debug.dump_strings,       function() self.ui.app:dumpStrings() end)
-      :appendItem(_S.menu_debug.dump_gamelog,       function() self.ui.app.world:dumpGameLog() end)
+      :appendItem(_S.menu_debug.dump_strings:format(stringOrTable("ingame_poopStrings")),       function() self.ui.app:dumpStrings() end)
+      :appendItem(_S.menu_debug.dump_gamelog:format(stringOrTable("ingame_poopLog")),       function() self.ui.app.world:dumpGameLog() end)
       :appendMenu(_S.menu_debug.map_overlay,        UIMenu()
         :appendCheckItem(_S.menu_debug_overlay.none,         true, overlay(), "")
         :appendCheckItem(_S.menu_debug_overlay.flags,       false, overlay("flags"), "")

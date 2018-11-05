@@ -314,63 +314,92 @@ function hasBit(value, bit)
 end
 
 -- Function to convert table to string. Pretty much just used in "config_finder.lua".
-function table_toString(table, recursive)
+function table_toString(table, recursive, forMenu)
 	-- By default this function will not convert any referenced tables inside "table".
 	recursive = recursive or false
+	forMenu = forMenu or false
 	
 	local temp_type = nil
-	local result = "{"
-
-	if recursive == true then
-		for key, value in pairs(table) do
-			temp_type = type(value)
+	local result = ""
 	
-			if temp_type == "nil" then
-				result = result .. "nil"
-			--
-			elseif temp_type == "number" then
-				result = result .. tostring(value)
-			elseif temp_type == "boolean" then
-				result = result .. tostring(value)
-			elseif temp_type == "string" then
-				result = result .. "\"" .. tostring(value) .. "\""
-			elseif temp_type == "table" then
-				result = result .. table_toString(value)
-			end
-	
-			result = result .. ","
-	
-			temp_type = nil
-		end
+	if forMenu then
+    for key, value in pairs(table) do
+      temp_type = type(value)
+          
+      if temp_type == "nil" then
+		    result = result .. "nil"
+		  elseif temp_type == "number" then
+		    result = result .. tostring(value)
+		  elseif temp_type == "boolean" then
+		    result = result .. tostring(value)
+		  elseif temp_type == "string" then
+		    result = result .. tostring(value)
+		  elseif temp_type == "table" then
+		    result = result .. tostring(value)
+		  end
+		  
+		  result = result .. "+"
+		  
+		  temp_type = nil
+    end
+    
+    if result ~= "" then
+      -- Get rid of the space and the "+" at the end of the string.
+  	  result = result:sub(1, result:len() - 1)
+	  end
+    
+    return string.upper(result)
 	else
-		for key, value in pairs(table) do
-			temp_type = type(value)
-	
-			if temp_type == "nil" then
-				result = result .. "nil"
-			elseif temp_type == "number" then
-				result = result .. tostring(value)
-			elseif temp_type == "boolean" then
-				result = result .. tostring(value)
-			elseif temp_type == "string" then
-				result = result .. "\"" .. tostring(value) .. "\""
-			elseif temp_type == "table" then
-				result = result .. tostring(value)
-			end
-	
-			result = result .. ","
-	
-			temp_type = nil
-		end
-	end
+	  result = "{"
 
-	--
-	if result ~= "" then
-		result = result:sub(1, result:len() - 1)
-	end
+	  if recursive == true then
+		  for key, value in pairs(table) do
+			  temp_type = type(value)
+	
+			  if temp_type == "nil" then
+				  result = result .. "nil"
+			  elseif temp_type == "number" then
+				  result = result .. tostring(value)
+			  elseif temp_type == "boolean" then
+				  result = result .. tostring(value)
+			  elseif temp_type == "string" then
+				  result = result .. "\"" .. tostring(value) .. "\""
+			  elseif temp_type == "table" then
+				  result = result .. table_toString(value)
+			  end
+	
+			  result = result .. ","
+	
+			  temp_type = nil
+		  end
+	  else
+		  for key, value in pairs(table) do
+			  temp_type = type(value)
+	
+			  if temp_type == "nil" then
+				  result = result .. "nil"
+			  elseif temp_type == "number" then
+				  result = result .. tostring(value)
+			  elseif temp_type == "boolean" then
+				  result = result .. tostring(value)
+			  elseif temp_type == "string" then
+				  result = result .. "\"" .. tostring(value) .. "\""
+			  elseif temp_type == "table" then
+				  result = result .. tostring(value)
+			  end
+	
+			  result = result .. ","
+	
+			  temp_type = nil
+      end
+	  end
 
-	--
-	return result .. "}"	
+    if result ~= "" then
+  	  result = result:sub(1, result:len() - 1)
+	  end
+
+    return result .. "}"	
+	end
 end
 
 -- Clones a table into another variable.

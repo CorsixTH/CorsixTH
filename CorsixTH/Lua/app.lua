@@ -28,7 +28,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 130
+local SAVEGAME_VERSION = 131
 
 class "App"
 
@@ -1453,7 +1453,6 @@ function App:afterLoad()
     self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
         "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     self.world:playLoadedEntitySounds()
-    return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
                        ") to " .. new .. " (" .. self:getVersion() ..

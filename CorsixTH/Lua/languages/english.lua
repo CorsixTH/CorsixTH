@@ -86,33 +86,33 @@ tooltip.research_policy.research_progress = "Progress towards the next discovery
 menu["player_count"] = "PLAYER COUNT"
 
 menu_file = {
-  load =    " (SHIFT+L) LOAD   ",
-  save =    " (SHIFT+S) SAVE   ",
-  restart = " (SHIFT+R) RESTART",
-  quit =    " (SHIFT+Q) QUIT   "
+  load =    "  (%1%) LOAD  ",
+  save =    "  (%1%) SAVE   ",
+  restart = "  (%1%) RESTART",
+  quit =    "  (%1%) QUIT   "
 }
 
 menu_options = {
-  sound = "  (ALT+S) SOUND   ",
-  announcements = "  (ALT+A) ANNOUNCEMENTS   ",
-  music = "  (ALT+M) MUSIC   ",
-  jukebox = "  (J) JUKEBOX  ",
+  sound = "  (%1%) SOUND   ",
+  announcements = "  (%1%) ANNOUNCEMENTS   ",
+  music = "  (%1%) MUSIC   ",
+  jukebox = "  (%1%) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
   capture_mouse = "  CAPTURE MOUSE  ",
-  adviser_disabled = "  (SHIFT+A) ADVISER  ",
+  adviser_disabled = "  (%1%) ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
-  wage_increase = "  WAGE REQUESTS",
+  wage_increase = "  WAGE REQUESTS  ",
   twentyfour_hour_clock = "  24 HOUR CLOCK  "
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) SLOWEST  ",
-  slower              = "  (2) SLOWER  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) MAX SPEED  ",
-  and_then_some_more  = "  (5) AND THEN SOME MORE  ",
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) SLOWEST  ",
+  slower              = "  (%1%) SLOWER  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAX SPEED  ",
+  and_then_some_more  = "  (%1%) AND THEN SOME MORE  ",
 }
 
 menu_options_warmth_colors = {
@@ -128,31 +128,31 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager  = "  (F1) BANK MANAGER  ",
-  statement     = "  (F2) STATEMENT  ",
-  staff_listing = "  (F3) STAFF LISTING  ",
-  town_map      = "  (F4) TOWN MAP  ",
-  casebook      = "  (F5) CASEBOOK  ",
-  research      = "  (F6) RESEARCH  ",
-  status        = "  (F7) STATUS  ",
-  graphs        = "  (F8) GRAPHS  ",
-  policy        = "  (F9) POLICY  ",
+  bank_manager  = "  (%1%) BANK MANAGER  ",
+  statement     = "  (%1%) STATEMENT  ",
+  staff_listing = "  (%1%) STAFF LISTING  ",
+  town_map      = "  (%1%) TOWN MAP  ",
+  casebook      = "  (%1%) CASEBOOK  ",
+  research      = "  (%1%) RESEARCH  ",
+  status        = "  (%1%) STATUS  ",
+  graphs        = "  (%1%) GRAPHS  ",
+  policy        = "  (%1%) POLICY  ",
 }
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
-  connect_debugger            = "  (CTRL + C) CONNECT LUA DBGp SERVER  ",
-  transparent_walls           = "  (X) TRANSPARENT WALLS  ",
+  connect_debugger            = "  (%1%) CONNECT LUA DBGp SERVER  ",
+  transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
-  cheats                      = "  (F11) CHEATS  ",
-  lua_console                 = "  (F12) LUA CONSOLE  ",
-  debug_script                = "  (SHIFT + D) RUN DEBUG SCRIPT  ",
+  cheats                      = "  (%1%) CHEATS  ",
+  lua_console                 = "  (%1%) LUA CONSOLE  ",
+  debug_script                = "  (%1%) RUN DEBUG SCRIPT  ",
   calls_dispatcher            = "  CALLS DISPATCHER  ",
-  dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
+  dump_strings                = "  (%1%) DUMP STRINGS  ",
+  dump_gamelog                = "  (%1%) DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }

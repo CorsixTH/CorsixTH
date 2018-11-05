@@ -143,7 +143,7 @@ tooltip.research_policy.research_progress = "Fortschritt in dieser Kategorie: %1
 menu_options = {
   lock_windows     = "  FENSTER FESTHALTEN  ",
   edge_scrolling   = "  AM BILDSCHIRMRAND SCROLLEN  ",
-  adviser_disabled = "  BERATER  ",
+  adviser_disabled = "  (%1%) BERATER  ",
   warmth_colors    = "  FARBEN FÜR WÄRMEDARSTELLUNG  ",
   twentyfour_hour_clock = "  24-STUNDEN-UHR  ",
   wage_increase = "  GEHALTSERHÖHUNGEN  ",
@@ -155,12 +155,12 @@ menu_options_wage_increase = {
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) AM LANGSAMSTEN  ",
-  slower              = "  (2) LANGSAM  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) MAXIMALE GESCHWINDIGKEIT  ",
-  and_then_some_more  = "  (5) UND NOCH MEHR  ",
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) AM LANGSAMSTEN  ",
+  slower              = "  (%1%) LANGSAM  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAXIMALE GESCHWINDIGKEIT  ",
+  and_then_some_more  = "  (%1%) UND NOCH MEHR  ",
 }
 
 menu_options_warmth_colors = {
@@ -170,15 +170,15 @@ menu_options_warmth_colors = {
 }
 
 menu_charts = {
-  bank_manager  = "  (F1) BANK-MANAGER  ",
-  statement     = "  (F2) BILANZ  ",
-  staff_listing = "  (F3) PERSONALLISTE  ",
-  town_map      = "  (F4) ÜBERSICHTSKARTE  ",
-  casebook      = "  (F5) BEHANDLUNGSMAPPE  ",
-  research      = "  (F6) FORSCHUNG  ",
-  status        = "  (F7) STATUS  ",
-  graphs        = "  (F8) DIAGRAMME  ",
-  policy        = "  (F9) EINSTELLUNGEN  ",
+  bank_manager  = "  (%1%) BANK-MANAGER  ",
+  statement     = "  (%1%) BILANZ  ",
+  staff_listing = "  (%1%) PERSONALLISTE  ",
+  town_map      = "  (%1%) ÜBERSICHTSKARTE  ",
+  casebook      = "  (%1%) BEHANDLUNGSMAPPE  ",
+  research      = "  (%1%) FORSCHUNG  ",
+  status        = "  (%1%) STATUS  ",
+  graphs        = "  (%1%) DIAGRAMME  ",
+  policy        = "  (%1%) EINSTELLUNGEN  ",
 }
 
 customise_window = {
@@ -211,20 +211,20 @@ menu_file.restart = "  NEUSTART  "
 
 menu_debug = {
   jump_to_level             = "  SPRINGE ZU LEVEL  ",
-  transparent_walls    = "  (X) DURCHSICHTIGE WÄNDE  ",
+  transparent_walls    = "  (%1%) DURCHSICHTIGE WÄNDE  ",
   limit_camera              = "  KAMERA BEGRENZEN  ",
   disable_salary_raise = "  KEINE GEHALTSERHÖHUNGEN  ",
   make_debug_fax            = "  DEBUG-FAX ERSTELLEN  ",
   make_debug_patient        = "  DEBUG-PATIENTEN ERSTELLEN  ",
-  cheats                    = "  (F11) CHEATS  ",
-  lua_console               = "  (F12) LUA-KONSOLE  ",
+  cheats                    = "  (%1%) CHEATS  ",
+  lua_console               = "  (%1%) LUA-KONSOLE  ",
   calls_dispatcher          = "  AUFRUF-VERTEILER  ",
   dump_strings              = "  TEXTE ABSPEICHERN  ",
   dump_gamelog              = "  (STRG+D) SPIELPROTOKOLL ABSPEICHERN  ",
   map_overlay               = "  KARTEN-OVERLAY  ",
   sprite_viewer             = "  SPRITE-BETRACHTER  ",
-  connect_debugger          = "  (STRG + C) ZUM LUA-DEBUG-SERVER VERBINDEN  ",
-  debug_script              = "  (UMSCHALT + D) DEBUG-SKRIPT STARTEN  ",
+  connect_debugger          = "  (%1%) ZUM LUA-DEBUG-SERVER VERBINDEN  ",
+  debug_script              = "  (%1%) DEBUG-SKRIPT STARTEN  ",
 }
 menu_debug_overlay = {
   none                      = "  KEIN  ",

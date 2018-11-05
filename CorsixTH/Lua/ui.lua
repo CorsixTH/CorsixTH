@@ -378,6 +378,7 @@ function UI:addKeyHandler(keys, window, callback, ...)
       print("Useage of addKeyHandler() requires the first argument to be a string of a key that can be found in \"hotkeys.txt\".")
     end
   end
+<<<<<<< HEAD
 
   if temp_keys ~= nil then
     local key = table.remove(temp_keys, #temp_keys):lower()
@@ -387,6 +388,17 @@ function UI:addKeyHandler(keys, window, callback, ...)
       self.key_handlers[key] = {}
     end
 
+=======
+
+  if temp_keys ~= nil then
+    local key = table.remove(temp_keys, #temp_keys):lower()
+    local modifiers = list_to_set(temp_keys) -- SET of modifiers
+    if not self.key_handlers[key] then
+      -- No handlers for this key? Create a new table.
+      self.key_handlers[key] = {}
+    end
+
+>>>>>>> e34f49466e6a750b930238796aeb6666af1bc061
     table.insert(self.key_handlers[key], {
       modifiers = modifiers,
       window = window,
@@ -404,21 +416,36 @@ end
 --!param window (Window) The window of a key / window pair previously passed
 -- to `addKeyHandler`.
 function UI:removeKeyHandler(keys, window)
-  keys = (type(keys) == "table") and keys or {keys}
-  
-  local temp_keys = table.clone(keys)
+  local temp_keys = nil
 
-  local key = table.remove(temp_keys, #temp_keys):lower()
-  local modifiers = list_to_set(temp_keys) -- SET of modifiers
-  if self.key_handlers[key] then
-    for index, info in ipairs(self.key_handlers[key]) do
-      if info.window == window and compare_tables(info.modifiers, modifiers) then
-        table.remove(self.key_handlers[key], index)
+  -- Check to see if "keys" key exist in the hotkeys table.
+  if self.app.hotkeys[keys] ~= nil then
+      if type(self.app.hotkeys[keys]) == "table" then
+        temp_keys = table.clone(self.app.hotkeys[keys])
+      elseif type(self.app.hotkeys[keys]) == "string" then
+        temp_keys = table.clone({self.app.hotkeys[keys]})
       end
+  else
+    if type(keys) == "string" then
+      print(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))
+    else
+      print("Useage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
     end
-    -- If last key handler was removed, delete the (now empty) list.
-    if #self.key_handlers[key] == 0 then
-      self.key_handlers[key] = nil
+  end
+
+  if temp_keys ~= nil then
+    local key = table.remove(temp_keys, #temp_keys):lower()
+    local modifiers = list_to_set(temp_keys) -- SET of modifiers
+    if self.key_handlers[key] then
+      for index, info in ipairs(self.key_handlers[key]) do
+        if info.window == window and compare_tables(info.modifiers, modifiers) then
+          table.remove(self.key_handlers[key], index)
+        end
+      end
+      -- If last key handler was removed, delete the (now empty) list.
+      if #self.key_handlers[key] == 0 then
+        self.key_handlers[key] = nil
+      end
     end
   end
 end
@@ -860,9 +887,9 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler(self.app.hotkeys["global_connectDebugger"], self)
-  self:removeKeyHandler(self.app.hotkeys["global_showLuaConsole"], self)
-  self:removeKeyHandler(self.app.hotkeys["global_runDebugScript"], self)
+  self:removeKeyHandler("global_connectDebugger", self)
+  self:removeKeyHandler("global_showLuaConsole", self)
+  self:removeKeyHandler("global_runDebugScript", self)
   if self.app.config.debug then
     self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
     self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
