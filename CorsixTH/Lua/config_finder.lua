@@ -606,7 +606,7 @@ fi = io.open(hotkeys_filename, "r")
 local hotkeys_values = {}
 local hotkeys_needs_rewrite = false
 for key, value in pairs(hotkeys_defaults) do
-  hotkeys_values[key] = value
+  hotkeys_values[key] = serialize(value)
 end
 
 -- If the file opened succesfully...
@@ -618,30 +618,16 @@ if fi then
 
   for key, value in pairs(hotkeys_defaults) do
     local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
-	-- If we couldn't find the key in the hotkeys.txt file...
+
+    -- If we couldn't find the key in the hotkeys.txt file...
     if not ind then
       hotkeys_needs_rewrite = true
-	-- Otherwise, if the key was found in the hotkeys.txt file...
     else
       ind = ind + (string.find(file_contents, key, ind) - ind) + string.len(key)
       ind = string.find(file_contents, "=", ind) + 1
-      
-      -- If the value of the key we are currently looking at is NOT a string...
-      if type(value) ~= "string" then
-        ind = string.find(file_contents, "[%a%d]", ind)
 
-        -- If the value to we read or written is a table...
-		if type(value) == "table" then
-		  hotkeys_values[key] = value
-      	else
-          hotkeys_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[ \n-]", ind + 1) - 1)
-        end
-      -- Otherwise, if the value we are looking for IS a string...
-      else
-        ind = string.find( file_contents, "[", ind + 1, true ) + 1
-
-		hotkeys_values[key] = string.sub(file_contents, ind + 1, string.find(file_contents, "]", ind, true) - 1)
-      end
+      ind = string.find(file_contents, "[%[{]", ind)
+      hotkeys_values[key] = string.sub(file_contents, ind, string.find(file_contents, "[\n]", ind + 1) - 1)
     end
   end
 else
@@ -656,107 +642,111 @@ if hotkeys_needs_rewrite then
 ----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
--- Number settings should not have anything around their value,
---  setting = [[value]]
--- e.g. setting = 42
+-- Number settings should not have anything around their value, and complex
+-- settings should be surrounded by curly brackets.
+--
+-- EXAMPLES
+--   setting = [[value]]
+--   setting = 42
+--   setting = { 42, [[value]] }
 
 ----------------------------------------Global Keys----------------------------------------
 -- These are global keys to be used at anytime while the application is open.
 --]=] .. '\n' ..
-'global_confirm = [[' .. tostring(hotkeys_defaults.global_confirm) .. ']]' .. '\n' ..
-'global_confirm_alt = [[' .. tostring(hotkeys_defaults.global_confirm_alt) .. ']]' .. '\n' ..
-'global_cancel = [[' .. tostring(hotkeys_defaults.global_cancel) .. ']]' .. '\n' ..
-'global_fullscreen_toggle = ' .. table_toString(hotkeys_defaults.global_fullscreen_toggle) .. '\n' ..
-'global_fullscreen_toggle_alt = ' .. table_toString(hotkeys_defaults.global_fullscreen_toggle_alt) .. '\n' ..
-'global_exitApp = ' .. table_toString(hotkeys_defaults.global_exitApp) .. '\n' ..
-'global_resetApp = ' .. table_toString(hotkeys_defaults.global_resetApp) .. '\n' ..
-'global_captureMouse = ' .. table_toString(hotkeys_defaults.global_captureMouse) .. '\n' ..
-'global_connectDebugger = ' .. table_toString(hotkeys_defaults.global_connectDebugger) .. '\n' ..
-'global_showLuaConsole = [[' .. tostring(hotkeys_defaults.global_showLuaConsole) .. ']]' .. '\n' ..
-'global_runDebugScript = ' .. table_toString(hotkeys_defaults.global_runDebugScript) .. '\n' ..
-'global_screenshot = ' .. table_toString(hotkeys_defaults.global_screenshot) .. '\n' ..
-'global_stop_movie = [[' .. tostring(hotkeys_defaults.global_stop_movie) .. ']]' .. '\n' ..
-'global_window_close = [[' .. tostring(hotkeys_defaults.global_window_close) .. ']]' .. '\n' .. [=[
+'global_confirm = ' .. hotkeys_values.global_confirm .. '\n' ..
+'global_confirm_alt = ' .. hotkeys_values.global_confirm_alt .. '\n' ..
+'global_cancel = ' .. hotkeys_values.global_cancel .. '\n' ..
+'global_fullscreen_toggle = ' .. hotkeys_values.global_fullscreen_toggle .. '\n' ..
+'global_fullscreen_toggle_alt = ' .. hotkeys_values.global_fullscreen_toggle_alt .. '\n' ..
+'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
+'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
+'global_captureMouse = ' .. hotkeys_values.global_captureMouse .. '\n' ..
+'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
+'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
+'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
+'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
+'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
+'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' .. [=[
 
 --------------------------------------------Scroll Keys------------------------------------------------------
 -- These are the keys to be used to scroll the camera around in-game.
 -- ]=] .. '\n' ..
-'ingame_scroll_up = [[' .. tostring(hotkeys_values.ingame_scroll_up) .. ']]' .. '\n' ..
-'ingame_scroll_down = [[' .. tostring(hotkeys_values.ingame_scroll_down) .. ']]' .. '\n' ..
-'ingame_scroll_left = [[' .. tostring(hotkeys_values.ingame_scroll_left) .. ']]' .. '\n' ..
-'ingame_scroll_right = [[' .. tostring(hotkeys_values.ingame_scroll_right) .. ']]' .. '\n' .. [=[
+'ingame_scroll_up = ' .. hotkeys_values.ingame_scroll_up .. '\n' ..
+'ingame_scroll_down = ' .. hotkeys_values.ingame_scroll_down .. '\n' ..
+'ingame_scroll_left = ' .. hotkeys_values.ingame_scroll_left .. '\n' ..
+'ingame_scroll_right = ' .. hotkeys_values.ingame_scroll_right .. '\n' .. [=[
 
 --------------------------------------------Zoom------------------------------------------------------
 -- These are keys used to zoom the camera in and out.
 -- ]=] .. '\n' ..
-'ingame_zoom_in = [['.. tostring(hotkeys_defaults.ingame_zoom_in) .. ']]' .. '\n' ..
-'ingame_zoom_in_more = ' .. table_toString(hotkeys_defaults.ingame_zoom_in_more) .. '\n' ..
-'ingame_zoom_in_alt = [[' .. tostring(hotkeys_defaults.ingame_zoom_in_alt) .. ']]' .. '\n' ..
-'ingame_zoom_in_more_alt = '.. table_toString(hotkeys_defaults.ingame_zoom_in_more_alt) .. '\n' ..
-'ingame_zoom_out = [[' .. tostring(hotkeys_defaults.ingame_zoom_out) .. ']]' .. '\n' ..
-'ingame_zoom_out_more = ' .. table_toString(hotkeys_defaults.ingame_zoom_out_more) .. '\n' .. [=[
+'ingame_zoom_in = '.. hotkeys_values.ingame_zoom_in .. '\n' ..
+'ingame_zoom_in_more = ' .. hotkeys_values.ingame_zoom_in_more .. '\n' ..
+'ingame_zoom_in_alt = ' .. hotkeys_values.ingame_zoom_in_alt .. '\n' ..
+'ingame_zoom_in_more_alt = '.. hotkeys_values.ingame_zoom_in_more_alt .. '\n' ..
+'ingame_zoom_out = ' .. hotkeys_values.ingame_zoom_out .. '\n' ..
+'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' .. [=[
 
 ----------------------------------------In-Game Menus----------------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
 -- ]=] .. '\n' ..
-'ingame_showmenubar = [[' .. tostring(hotkeys_defaults.ingame_showmenubar) .. ']]' .. '\n' ..
-'ingame_showCheatWindow = [[' .. tostring(hotkeys_defaults.ingame_showCheatWindow) .. ']]' .. '\n' ..
-'ingame_loadMenu = ' .. table_toString(hotkeys_defaults.ingame_loadMenu) .. '\n' ..
-'ingame_saveMenu = ' .. table_toString(hotkeys_defaults.ingame_saveMenu) .. '\n' ..
-'ingame_jukebox = [[' .. tostring(hotkeys_defaults.ingame_jukebox) .. ']]' .. '\n' ..
-'ingame_openFirstMessage = [[' .. tostring(hotkeys_defaults.ingame_openFirstMessage) .. ']]' .. '\n' .. [=[]=]
+'ingame_showmenubar = ' .. hotkeys_values.ingame_showmenubar .. '\n' ..
+'ingame_showCheatWindow = ' .. hotkeys_values.ingame_showCheatWindow .. '\n' ..
+'ingame_loadMenu = ' .. hotkeys_values.ingame_loadMenu .. '\n' ..
+'ingame_saveMenu = ' .. hotkeys_values.ingame_saveMenu .. '\n' ..
+'ingame_jukebox = ' .. hotkeys_values.ingame_jukebox .. '\n' ..
+'ingame_openFirstMessage = ' .. hotkeys_values.ingame_openFirstMessage .. '\n' .. [=[]=]
 
   local string_02 = [=[
 
 ----------------------------------------Speed Control------------------------------------------------------
 -- These pause and control the speed of the game.
 -- ]=] .. '\n' ..
-'ingame_pause = [[' .. tostring(hotkeys_defaults.ingame_pause) .. ']]' .. '\n' ..
-'ingame_gamespeed_slowest = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slowest) .. ']]' .. '\n' ..
-'ingame_gamespeed_slower = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_slower) .. ']]' .. '\n' ..
-'ingame_gamespeed_normal = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_normal) .. ']]' .. '\n' ..
-'ingame_gamespeed_max = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_max) .. ']]' .. '\n' ..
-'ingame_gamespeed_thensome = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_thensome) .. ']]' .. '\n' ..
-'ingame_gamespeed_speedup = [[' .. tostring(hotkeys_defaults.ingame_gamespeed_speedup) .. ']]' .. '\n' .. [=[
+'ingame_pause = ' .. hotkeys_values.ingame_pause .. '\n' ..
+'ingame_gamespeed_slowest = ' .. hotkeys_values.ingame_gamespeed_slowest .. '\n' ..
+'ingame_gamespeed_slower = ' .. hotkeys_values.ingame_gamespeed_slower .. '\n' ..
+'ingame_gamespeed_normal = ' .. hotkeys_values.ingame_gamespeed_normal .. '\n' ..
+'ingame_gamespeed_max = ' .. hotkeys_values.ingame_gamespeed_max .. '\n' ..
+'ingame_gamespeed_thensome = ' .. hotkeys_values.ingame_gamespeed_thensome .. '\n' ..
+'ingame_gamespeed_speedup = ' .. hotkeys_values.ingame_gamespeed_speedup .. '\n' .. [=[
 
 ----------------------------------------In-Game Bottom Panel------------------------------------------------------
 -- These open in-game panel windows like the town map or the "build room" dialog.
 -- ]=] .. '\n' ..
-'ingame_panel_bankManager = [[' .. tostring(hotkeys_defaults.ingame_panel_bankManager) .. ']]' .. '\n' ..
-'ingame_panel_bankStats = [[' .. tostring(hotkeys_defaults.ingame_panel_bankStats) .. ']]' .. '\n' ..
-'ingame_panel_staffManage = [[' .. tostring(hotkeys_defaults.ingame_panel_staffManage) .. ']]' .. '\n' ..
-'ingame_panel_townMap = [[' .. tostring(hotkeys_defaults.ingame_panel_townMap) .. ']]' .. '\n' ..
-'ingame_panel_casebook = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook) .. ']]' .. '\n' ..
-'ingame_panel_research = [[' .. tostring(hotkeys_defaults.ingame_panel_research) .. ']]' .. '\n' ..
-'ingame_panel_status = [[' .. tostring(hotkeys_defaults.ingame_panel_status) .. ']]' .. '\n' ..
-'ingame_panel_charts = [[' .. tostring(hotkeys_defaults.ingame_panel_charts) .. ']]' .. '\n' ..
-'ingame_panel_policy = [[' .. tostring(hotkeys_defaults.ingame_panel_policy) .. ']]' .. '\n' ..
-'ingame_panel_map_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_map_alt) .. ']]' .. '\n' ..
-'ingame_panel_research_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_research_alt) .. ']]' .. '\n' ..
-'ingame_panel_casebook_alt = [[' .. tostring(hotkeys_defaults.ingame_panel_casebook_alt) .. ']]' .. '\n' ..
-'ingame_panel_casebook_alt02 = ' .. table_toString(hotkeys_defaults.ingame_panel_casebook_alt02) .. '\n' ..
-'ingame_panel_buildRoom = [[' .. tostring(hotkeys_defaults.ingame_panel_buildRoom) .. ']]' .. '\n' ..
-'ingame_panel_furnishCorridor = [[' .. tostring(hotkeys_defaults.ingame_panel_furnishCorridor) .. ']]' .. '\n' ..
-'ingame_panel_editRoom = [[' .. tostring(hotkeys_defaults.ingame_panel_editRoom) .. ']]' .. '\n' ..
-'ingame_panel_hireStaff = [[' .. tostring(hotkeys_defaults.ingame_panel_hireStaff) .. ']]' .. '\n' .. [=[
+'ingame_panel_bankManager = ' .. hotkeys_values.ingame_panel_bankManager .. '\n' ..
+'ingame_panel_bankStats = ' .. hotkeys_values.ingame_panel_bankStats .. '\n' ..
+'ingame_panel_staffManage = ' .. hotkeys_values.ingame_panel_staffManage .. '\n' ..
+'ingame_panel_townMap = ' .. hotkeys_values.ingame_panel_townMap .. '\n' ..
+'ingame_panel_casebook = ' .. hotkeys_values.ingame_panel_casebook .. '\n' ..
+'ingame_panel_research = ' .. hotkeys_values.ingame_panel_research .. '\n' ..
+'ingame_panel_status = ' .. hotkeys_values.ingame_panel_status .. '\n' ..
+'ingame_panel_charts = ' .. hotkeys_values.ingame_panel_charts .. '\n' ..
+'ingame_panel_policy = ' .. hotkeys_values.ingame_panel_policy .. '\n' ..
+'ingame_panel_map_alt = ' .. hotkeys_values.ingame_panel_map_alt .. '\n' ..
+'ingame_panel_research_alt = ' .. hotkeys_values.ingame_panel_research_alt .. '\n' ..
+'ingame_panel_casebook_alt = ' .. hotkeys_values.ingame_panel_casebook_alt .. '\n' ..
+'ingame_panel_casebook_alt02 = ' .. hotkeys_values.ingame_panel_casebook_alt02 .. '\n' ..
+'ingame_panel_buildRoom = ' .. hotkeys_values.ingame_panel_buildRoom .. '\n' ..
+'ingame_panel_furnishCorridor = ' .. hotkeys_values.ingame_panel_furnishCorridor .. '\n' ..
+'ingame_panel_editRoom = ' .. hotkeys_values.ingame_panel_editRoom .. '\n' ..
+'ingame_panel_hireStaff = ' .. hotkeys_values.ingame_panel_hireStaff .. '\n' .. [=[
 
 ----------------------------------------Rotate Object----------------------------------------
 -- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
-'ingame_rotateobject = [[' .. tostring(hotkeys_defaults.ingame_rotateobject) .. ']]' .. '\n' .. [=[
+'ingame_rotateobject = ' .. hotkeys_values.ingame_rotateobject .. '\n' .. [=[
 
 ----------------------------------------Quick Keys----------------------------------------
 -- These are keys for quick saving and loading, and for quickly restarting and quitting the level.
 -- ]=] .. '\n' ..
-'ingame_quickSave = ' .. table_toString(hotkeys_defaults.ingame_quickSave) .. '\n' ..
-'ingame_quickLoad = ' .. table_toString(hotkeys_defaults.ingame_quickLoad) .. '\n' ..
-'ingame_restartLevel = ' .. table_toString(hotkeys_defaults.ingame_restartLevel) .. '\n' ..
-'ingame_quitLevel = ' .. table_toString(hotkeys_defaults.ingame_quitLevel) .. '\n' .. [=[
+'ingame_quickSave = ' .. hotkeys_values.ingame_quickSave .. '\n' ..
+'ingame_quickLoad = ' .. hotkeys_values.ingame_quickLoad .. '\n' ..
+'ingame_restartLevel = ' .. hotkeys_values.ingame_restartLevel .. '\n' ..
+'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
 
 ----------------------------------------Set Transparent----------------------------------------
 -- While held down any walls will be transparent, allowing you to see behind them.
 -- ]=] .. '\n' ..
-'ingame_setTransparent = [[' .. tostring(hotkeys_defaults.ingame_setTransparent) .. ']]' .. '\n' .. [=[
+'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
 ]=]
 
 local string_03 = [=[
@@ -767,51 +757,58 @@ local string_03 = [=[
 -- you move the camera away from there, you can press "ingame_recallPosition_1" whenever
 -- you want to go back to the operating room instantly.
 -- ]=] .. '\n' ..
-'ingame_storePosition_1 =' .. table_toString(hotkeys_defaults.ingame_storePosition_1) .. '\n' ..
-'ingame_storePosition_2 =' .. table_toString(hotkeys_defaults.ingame_storePosition_2) .. '\n' ..
-'ingame_storePosition_3 =' .. table_toString(hotkeys_defaults.ingame_storePosition_3) .. '\n' ..
-'ingame_storePosition_4 =' .. table_toString(hotkeys_defaults.ingame_storePosition_4) .. '\n' ..
-'ingame_storePosition_5 =' .. table_toString(hotkeys_defaults.ingame_storePosition_5) .. '\n' ..
-'ingame_storePosition_6 =' .. table_toString(hotkeys_defaults.ingame_storePosition_6) .. '\n' ..
-'ingame_storePosition_7 =' .. table_toString(hotkeys_defaults.ingame_storePosition_7) .. '\n' ..
-'ingame_storePosition_8 =' .. table_toString(hotkeys_defaults.ingame_storePosition_8) .. '\n' ..
-'ingame_storePosition_9 =' .. table_toString(hotkeys_defaults.ingame_storePosition_9) .. '\n' ..
-'ingame_storePosition_0 =' .. table_toString(hotkeys_defaults.ingame_storePosition_0) .. '\n' ..
-'ingame_recallPosition_1 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_1) .. '\n' ..
-'ingame_recallPosition_2 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_2) .. '\n' ..
-'ingame_recallPosition_3 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_3) .. '\n' ..
-'ingame_recallPosition_4 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_4) .. '\n' ..
-'ingame_recallPosition_5 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_5) .. '\n' ..
-'ingame_recallPosition_6 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_6) .. '\n' ..
-'ingame_recallPosition_7 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_7) .. '\n' ..
-'ingame_recallPosition_8 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_8) .. '\n' ..
-'ingame_recallPosition_9 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_9) .. '\n' ..
-'ingame_recallPosition_0 =' .. table_toString(hotkeys_defaults.ingame_recallPosition_0) .. '\n' .. [=[
+'ingame_storePosition_1 = ' .. hotkeys_values.ingame_storePosition_1 .. '\n' ..
+'ingame_storePosition_2 = ' .. hotkeys_values.ingame_storePosition_2 .. '\n' ..
+'ingame_storePosition_3 = ' .. hotkeys_values.ingame_storePosition_3 .. '\n' ..
+'ingame_storePosition_4 = ' .. hotkeys_values.ingame_storePosition_4 .. '\n' ..
+'ingame_storePosition_5 = ' .. hotkeys_values.ingame_storePosition_5 .. '\n' ..
+'ingame_storePosition_6 = ' .. hotkeys_values.ingame_storePosition_6 .. '\n' ..
+'ingame_storePosition_7 = ' .. hotkeys_values.ingame_storePosition_7 .. '\n' ..
+'ingame_storePosition_8 = ' .. hotkeys_values.ingame_storePosition_8 .. '\n' ..
+'ingame_storePosition_9 = ' .. hotkeys_values.ingame_storePosition_9 .. '\n' ..
+'ingame_storePosition_0 = ' .. hotkeys_values.ingame_storePosition_0 .. '\n' ..
+'ingame_recallPosition_1 = ' .. hotkeys_values.ingame_recallPosition_1 .. '\n' ..
+'ingame_recallPosition_2 = ' .. hotkeys_values.ingame_recallPosition_2 .. '\n' ..
+'ingame_recallPosition_3 = ' .. hotkeys_values.ingame_recallPosition_3 .. '\n' ..
+'ingame_recallPosition_4 = ' .. hotkeys_values.ingame_recallPosition_4 .. '\n' ..
+'ingame_recallPosition_5 = ' .. hotkeys_values.ingame_recallPosition_5 .. '\n' ..
+'ingame_recallPosition_6 = ' .. hotkeys_values.ingame_recallPosition_6 .. '\n' ..
+'ingame_recallPosition_7 = ' .. hotkeys_values.ingame_recallPosition_7 .. '\n' ..
+'ingame_recallPosition_8 = ' .. hotkeys_values.ingame_recallPosition_8 .. '\n' ..
+'ingame_recallPosition_9 = ' .. hotkeys_values.ingame_recallPosition_9 .. '\n' ..
+'ingame_recallPosition_0 = ' .. hotkeys_values.ingame_recallPosition_0 .. '\n' .. [=[
 
 ----------------------------------------Toggle Various----------------------------------------
 -- These toggle various things. The names tell all.
 -- ]=] .. '\n' ..
-'ingame_toggleAnnouncements = ' .. table_toString(hotkeys_defaults.ingame_toggleAnnouncements) .. '\n' ..
-'ingame_toggleSounds = ' .. table_toString(hotkeys_defaults.ingame_toggleSounds) .. '\n' ..
-'ingame_toggleMusic = ' .. table_toString(hotkeys_defaults.ingame_toggleMusic) .. '\n' ..
-'ingame_toggleAdvisor = ' .. table_toString(hotkeys_defaults.ingame_toggleAdvisor) .. '\n' ..
-'ingame_toggleInfo = [[' .. tostring(hotkeys_defaults.ingame_toggleInfo) .. ']]' .. '\n' .. [=[
+'ingame_toggleAnnouncements = ' .. hotkeys_values.ingame_toggleAnnouncements .. '\n' ..
+'ingame_toggleSounds = ' .. hotkeys_values.ingame_toggleSounds .. '\n' ..
+'ingame_toggleMusic = ' .. hotkeys_values.ingame_toggleMusic .. '\n' ..
+'ingame_toggleAdvisor = ' .. hotkeys_values.ingame_toggleAdvisor .. '\n' ..
+'ingame_toggleInfo = ' .. hotkeys_values.ingame_toggleInfo .. '\n' .. [=[
 
 ----------------------------------------Dump Log----------------------------------------
 -- These keys dump logs. And strings, if too much fiber was taken.
 -- ]=] .. '\n' ..
-'ingame_poopLog = ' .. table_toString(hotkeys_defaults.ingame_poopLog) .. '\n' ..
-'ingame_poopStrings = ' .. table_toString(hotkeys_defaults.ingame_poopStrings) .. '\n' .. [=[
+'ingame_poopLog = ' .. hotkeys_values.ingame_poopLog .. '\n' ..
+'ingame_poopStrings = ' .. hotkeys_values.ingame_poopStrings .. '\n' .. [=[
 
 ----------------------------------------Patient, Go Home!------------------------------------------------------
 -- This sends a patient home. Also a good anime episode name.
 -- ]=] .. '\n' ..
-'ingame_patient_gohome = [[' .. tostring(hotkeys_defaults.ingame_patient_gohome) .. ']]' .. '\n' .. [=[
+'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[
 ]=]
-  fi = io.open(hotkeys_filename, "w")  
+  fi = io.open(hotkeys_filename, "w")
   if fi then
     fi:write(string_01 .. string_02 .. string_03)
   fi:close()
+  end
+end
+
+for k, str_val in pairs(hotkeys_values) do
+  local status, lua_val = pcall(loadstring('return ' .. str_val))
+  if status then
+    hotkeys_values[k] = lua_val
   end
 end
 
