@@ -66,43 +66,6 @@ function values(root_table, wildcard)
   return f
 end
 
--- Used to prevent infinite loops
-local pt_reflist = {}
-
--- Helper function to print the contents of a table. Child tables are printed recursively.
--- Call without specifying level, only obj and (if wished) max_level.
-function print_table(obj, max_level, level)
-  assert(type(obj) == "table", "Tried to print " .. tostring(obj) .. " with print_table.")
-  pt_reflist[#pt_reflist + 1] = obj
-  level = level or 0
-  local spacer = ""
-  for _ = 1, level do
-    spacer = spacer .. " "
-  end
-  for k, v in pairs(obj) do
-    print(spacer .. tostring(k), v)
-    if type(k) == "table" then
-      -- a set, recurse further into k, instead of v
-      v = k
-    end
-    if type(v) == "table" and (not max_level or max_level > level) then
-      -- check for reference loops
-      local found_ref = false
-      for _, ref in ipairs(pt_reflist) do
-        if ref == v then
-          found_ref = true
-        end
-      end
-      if found_ref then
-        print(spacer .. " " .. "<reference loop>")
-      else
-        print_table(v, max_level, level + 1)
-      end
-    end
-  end
-  pt_reflist[#pt_reflist] = nil
-end
-
 -- Can return the length of any table, where as #table_name is only suitable for use with arrays of one contiguous part without nil values.
 function table_length(table)
   local count = 0
@@ -313,93 +276,117 @@ function hasBit(value, bit)
   return value % (p + p) >= p
 end
 
--- Function to convert table to string. Pretty much just used in "config_finder.lua".
-function table_toString(table, recursive, forMenu)
-	-- By default this function will not convert any referenced tables inside "table".
-	recursive = recursive or false
-	forMenu = forMenu or false
-	
-	local temp_type = nil
-	local result = ""
-	
-	if forMenu then
-    for key, value in pairs(table) do
-      temp_type = type(value)
-          
-      if temp_type == "nil" then
-		    result = result .. "nil"
-		  elseif temp_type == "number" then
-		    result = result .. tostring(value)
-		  elseif temp_type == "boolean" then
-		    result = result .. tostring(value)
-		  elseif temp_type == "string" then
-		    result = result .. tostring(value)
-		  elseif temp_type == "table" then
-		    result = result .. tostring(value)
-		  end
-		  
-		  result = result .. "+"
-		  
-		  temp_type = nil
-    end
-    
-    if result ~= "" then
-      -- Get rid of the space and the "+" at the end of the string.
-  	  result = result:sub(1, result:len() - 1)
-	  end
-    
-    return string.upper(result)
-	else
-	  result = "{"
+--! Convert an array table to a string.
+--! Joins each elements by the provided seperator. As a convenience feature
+--! if the input is not an array it will be converted to a string and
+--! returned.
+--!param array (table) array to join.
+--!param seperator (string) seperator between elements.
+--!return (string) The joined string.
+function array_join(array, seperator)
+  seperator = seperator or ","
 
-	  if recursive == true then
-		  for key, value in pairs(table) do
-			  temp_type = type(value)
-	
-			  if temp_type == "nil" then
-				  result = result .. "nil"
-			  elseif temp_type == "number" then
-				  result = result .. tostring(value)
-			  elseif temp_type == "boolean" then
-				  result = result .. tostring(value)
-			  elseif temp_type == "string" then
-				  result = result .. "\"" .. tostring(value) .. "\""
-			  elseif temp_type == "table" then
-				  result = result .. table_toString(value)
-			  end
-	
-			  result = result .. ","
-	
-			  temp_type = nil
-		  end
-	  else
-		  for key, value in pairs(table) do
-			  temp_type = type(value)
-	
-			  if temp_type == "nil" then
-				  result = result .. "nil"
-			  elseif temp_type == "number" then
-				  result = result .. tostring(value)
-			  elseif temp_type == "boolean" then
-				  result = result .. tostring(value)
-			  elseif temp_type == "string" then
-				  result = result .. "\"" .. tostring(value) .. "\""
-			  elseif temp_type == "table" then
-				  result = result .. tostring(value)
-			  end
-	
-			  result = result .. ","
-	
-			  temp_type = nil
+  if type(array) ~= "table" then
+    return tostring(array)
+  end
+
+  if array[1] == nil then
+    return ""
+  end
+
+  local result = tostring(array[1])
+  local i = 2
+  while array[i] ~= nil do
+    result = result .. seperator
+    result = result .. tostring(array[i])
+    i = i + 1
+  end
+
+  return result
+end
+
+local function serialize_string(val)
+  local level = 0
+  while string.find(val, ']' .. string.rep('=', level) .. ']') do
+    level = level + 1
+  end
+
+  return '[' .. string.rep('=', level) .. '[' .. val .. ']' .. string.rep('=', level) .. ']'
+end
+
+-- Helper function to print the contents of a table. Child tables are printed recursively.
+-- Call without specifying depth, only obj and (if wished) max_depth.
+local function serialize_table(obj, options, depth, pt_reflist)
+  -- Used to prevent infinite loops
+  pt_reflist = pt_reflist or {}
+  options = options or {}
+  depth = depth or 1
+
+  if options.max_depth and depth > options.max_depth then
+    return "{...}"
+  end
+
+  for _, ref in ipairs(pt_reflist) do
+    if ref == obj then
+      if options.detect_cycles then
+        return "<reference loop>"
+      elseif not options.max_depth then
+        assert("Infinite loop detected. Specify detect_cycles or max_depth when serializing tables that may contain cycles")
       end
-	  end
+    end
+  end
+  pt_reflist[#pt_reflist + 1] = obj
 
-    if result ~= "" then
-  	  result = result:sub(1, result:len() - 1)
-	  end
+  local first = true
+  local indent = string.rep(" ", depth * 2)
+  local result = "{"
+  local max_array_index = 0
+  for i, v in ipairs(obj) do
+    max_array_index = i
+    if not first then
+      result = result .. ","
+    end
+    first = false
+    if options.pretty then
+      result = result .. "\n" .. indent
+    end
+    result = result .. serialize(v, options, depth + 1, pt_reflist)
+  end
 
-    return result .. "}"	
-	end
+  for k, v in pairs(obj) do
+    if not(type(k) == "number" and k >= 1 and k <= max_array_index) then
+      if not first then
+        result = result .. ','
+      end
+      first = false
+      if options.pretty then
+        result = result .. '\n' .. indent
+      end
+
+      result = result .. "[ "
+      result = result .. serialize(k, options, depth + 1, pt_reflist)
+      result = result .. " ]="
+      result = result .. serialize(v, options, depth + 1, pt_reflist)
+    end
+  end
+  local indent = string.rep(" ", (depth - 1) * 2)
+
+  if options.pretty then
+    result = result .. '\n' .. indent
+  end
+  result = result .. "}"
+
+  return result
+end
+
+function serialize(val, options, depth, pt_reflist)
+  if type(val) == "string" then
+    return serialize_string(val)
+  elseif type(val) == "table" then
+    return serialize_table(val, options, depth, pt_reflist)
+  else
+    return tostring(val)
+  end
 end
 
 -- Clones a table into another variable.
