@@ -371,6 +371,7 @@ options_window = {
   scrollspeed = "Scroll Speed",
   shift_scrollspeed = "Shift Scroll Speed",
   zoom_speed = "Zoom Speed",
+  hotkey = "Hotkeys",
 }
 
 tooltip.options_window = {
@@ -400,6 +401,7 @@ tooltip.options_window = {
   cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
   apply_zoomspeed = "Apply the entered zoom speed.",
   cancel_zoomspeed = "Return without changing the zoom speed.",
+  hotkey = "Change keyboard hotkeys.",
 }
 
 customise_window = {
@@ -460,6 +462,15 @@ tooltip.folders_window = {
   reset_to_default = "Reset the directory to its default location",
  -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back  = "Close this menu and go back to the Settings Menu",
+}
+
+hotkey_window = {
+  caption = "Hotkey Assignment",
+  back = "Back",
+}
+
+tooltip.hotkey_window = {
+  back = "Close this window and go back to the Settings Menu",
 }
 
 font_location_window = {

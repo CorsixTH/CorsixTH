@@ -74,7 +74,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 382, col_bg)
+  self:UIResizable(ui, 320, 412, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -201,6 +201,10 @@ function UIOptions:UIOptions(ui, mode)
   self:addBevelPanel(165, customise_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.folder)
     :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonFolder):setTooltip(_S.tooltip.options_window.folder_button)
 
+  -- "Hotkeys" button
+  local hotkey_y_pos = self:_getOptionYPos() + 10
+  self:addBevelPanel(20, hotkey_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
+    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
 
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
@@ -306,6 +310,11 @@ end
 
 function UIOptions:buttonFolder()
   local window = UIFolder(self.ui, "menu")
+  self.ui:addWindow(window)
+end
+
+function UIOptions:buttonHotkey()
+  local window = UIHotkeyAssign(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
@@ -461,7 +470,6 @@ local UIScrollSpeed = _G["UIScrollSpeed"]
 function UIScrollSpeed:UIScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)
   
-  local app = ui.app
   self.on_top = true
   self.esc_closes = true
   self.resizable = false
@@ -525,7 +533,6 @@ local UIShiftScrollSpeed = _G["UIShiftScrollSpeed"]
 function UIShiftScrollSpeed:UIShiftScrollSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)
   
-  local app = ui.app
   self.on_top = true
   self.esc_closes = true
   self.resizable = false
@@ -588,7 +595,6 @@ local UIZoomSpeed = _G["UIZoomSpeed"]
 function UIZoomSpeed:UIZoomSpeed(ui, callback)
   self:UIResizable(ui, 200, 140, col_bg)
   
-  local app = ui.app
   self.on_top = true
   self.esc_closes = true
   self.resizable = false
@@ -643,5 +649,4 @@ function UIZoomSpeed:close(ok)
   else
     self.callback(self.ui.app.config.zoom_speed)
   end
-
 end

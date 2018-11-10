@@ -168,7 +168,6 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
-  
 
   self.down_count = 0
   if not minimal then
@@ -362,14 +361,14 @@ function UI:addKeyHandler(keys, window, callback, ...)
   --   {"shift", "q"}
   -- We would lose the "q" element until we restarted the game and the "hotkey.txt" was read from again, causing the "ingame_quitLevel"
   -- table to be reset back to {"shift, "q"}
-  local temp_keys = nil
+  local temp_keys = {}
 
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
       if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = table.clone(self.app.hotkeys[keys])
+        temp_keys = {table.unpack(self.app.hotkeys[keys])}
       elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = table.clone({self.app.hotkeys[keys]})
+        temp_keys = {table.unpack({self.app.hotkeys[keys]})}
       end
   else
     if type(keys) == "string" then
@@ -409,9 +408,9 @@ function UI:removeKeyHandler(keys, window)
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
       if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = table.clone(self.app.hotkeys[keys])
+        temp_keys = {table.unpack(self.app.hotkeys[keys])}
       elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = table.clone({self.app.hotkeys[keys]})
+        temp_keys = {table.unpack({self.app.hotkeys[keys]})}
       end
   else
     if type(keys) == "string" then
@@ -490,6 +489,19 @@ function UI:unregisterTextBox(box)
   for num, b in ipairs(self.textboxes) do
     if b == box then
       table.remove(self.textboxes, num)
+      break
+    end
+  end
+end
+
+function UI:registerHotkeyBox(box)
+  self.hotkeyboxes[#self.hotkeyboxes + 1] = box
+end
+
+function UI:unregisterHotkeyBox(box)
+  for num, b in ipairs(self.hotkeyboxes) do
+    if b == box then
+      table.remove(self.hotkeyboxes, num)
       break
     end
   end
@@ -607,6 +619,13 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
       handled = box:keyInput(key, rawchar)
     end
   end
+  
+  -- If there is a hotkey box
+  for _, hotkeybox in ipairs(self.hotkeyboxes) do
+    if hotkeybox.enabled and hotkeybox.active and not handled then
+      handled = hotkeybox:keyInput(key, rawchar)
+    end
+  end
 
   -- Otherwise, if there is a key handler bound to the given key, then it gets
   -- the key.
@@ -637,6 +656,7 @@ function UI:onKeyUp(rawchar)
             string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
             rawchar
   local key = rawchar:lower()
+  --[[ Is this needed anymore? -LEIGET
   do
     local mapped_button = self.key_to_button_remaps[key]
     if mapped_button then
@@ -645,7 +665,44 @@ function UI:onKeyUp(rawchar)
     end
     key = self.key_remaps[key] or key
   end
+  ]]
   self.buttons_down[key] = nil
+
+  
+  local temp_button_down = false
+  -- Go through all the hotkeyboxes.
+  for _, hotkeybox in ipairs(self.hotkeyboxes) do
+
+    -- If one is enabled and active...
+    if hotkeybox.enabled and hotkeybox.active then
+      temp_button_down = false
+
+      -- Go through and check if there are still any buttons pressed. If so...
+      for _, loop_key in pairs(self.buttons_down) do
+        -- Then toggle the corresponding bool.
+        temp_button_down = true
+      end
+      
+      -- If there is still a button down when a button was released...
+      if temp_button_down then
+        -- Go through each key in the temp buttons table, and if the key that has been released ("key") is present, remove it.
+        for k, v in pairs(hotkeybox.temp_keys_down) do
+          if v == key then
+            print(hotkeybox.temp_keys_down[k])
+            --hotkeybox.temp_keys_down[k] = nil
+            local temp = table.remove( hotkeybox.temp_keys_down , k)
+            --print("temp == ", temp)
+            print( hotkeybox.temp_keys_down[k])
+            --for k2, v2 in pairs(hotkeybox.temp_keys_down) do print("k: ", k , "v: ", v) end
+          end
+        end
+      else
+        -- Confirm and deactivate the hotkey box.
+        hotkeybox:confirm()
+      end
+
+    end
+  end
 end
 
 function UI:onEditingText(text, start, length)
@@ -667,6 +724,30 @@ function UI:onTextInput(text)
   -- differing local keyboard layout. Give it another shot.
   if not self.key_press_handled then
     local keyHandlers = self.key_handlers[text]
+    if keyHandlers then
+      -- Iterate over key handlers and call each one whose modifier(s) are pressed
+      -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
+      for _, handler in ipairs(keyHandlers) do
+        if compare_tables(handler.modifiers, self.modifiers_down) then
+          handler.callback(handler.window, unpack(handler))
+        end
+      end
+    end
+  end
+end
+
+function UI:onHotkeyInput(key)
+  -- It's time for any active textbox to get input.
+  for _, box in ipairs(self.hotkeyboxes) do
+    if box.enabled and box.active then
+      box:hotkeyInput(key)
+    end
+  end
+
+  -- Finally it might happen that a hotkey was not recognized because of
+  -- differing local keyboard layout. Give it another shot.
+  if not self.key_press_handled then
+    local keyHandlers = self.key_handlers[key]
     if keyHandlers then
       -- Iterate over key handlers and call each one whose modifier(s) are pressed
       -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.

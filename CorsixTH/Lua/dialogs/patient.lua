@@ -348,6 +348,6 @@ function UIPatient:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y)
 end
 
-function UIPatient:afterLoad(old, new)
+function UIPatient:afterLoad(_, _)
   self:registerKeyHandlers()
 end

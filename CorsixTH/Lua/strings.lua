@@ -294,7 +294,7 @@ end
 function Strings:_loadPrivate(language, env, ...)
   local chunk = self.language_to_chunk[language:lower()]
   if not chunk then -- If selected language could not be found, try to revert to English
-    print(serialize(self.language_to_chunk, {detect_cycles=true, pretty=true})
+    print(serialize(self.language_to_chunk, {detect_cycles=true, pretty=true}))
     print("Language '" .. language .. "' could not be found. Reverting to English.")
     chunk = self.language_to_chunk["english"]
     if not chunk then -- If english could not be found, raise an error

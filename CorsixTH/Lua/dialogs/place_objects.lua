@@ -827,6 +827,6 @@ function UIPlaceObjects:selectObjectType(object_type)
   end
 end
 
-function UIPlaceObjects:afterLoad(old, new)
+function UIPlaceObjects:afterLoad(_, _)
   self:registerKeyHandlers()
 end

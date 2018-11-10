@@ -21,7 +21,6 @@ SOFTWARE. --]]
 --! The multi-purpose panel for launching dialogs / screens and dynamic information.
 class "UIBottomPanel" (Window)
 
-
 ---@type UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
@@ -578,34 +577,74 @@ end
 
 function UIBottomPanel:dialogBuildRoom()
   if self.world.user_actions_allowed then
-    local dlg = UIBuildRoom(self.ui)
-    self.ui:setEditRoom(false)
-    self.ui:addWindow(dlg)
-    self.ui:tutorialStep(3, 1, 2)
+    local w = self.ui:getWindow(UIBuildRoom)
+    local fullscreen = self.ui:getWindow(UIFullscreen)
+
+    if w then
+      if fullscreen then
+        fullscreen:close()
+      else
+        w:close()
+      end
+    else
+      if fullscreen then
+        fullscreen:close()
+      end
+      
+      local dlg = UIBuildRoom(self.ui)
+      self.ui:setEditRoom(false)
+      self.ui:addWindow(dlg)
+      self.ui:tutorialStep(3, 1, 2)
+    end
   end
 end
 
 function UIBottomPanel:dialogFurnishCorridor()
   if self.world.user_actions_allowed then
-    -- Close any fullscreen window
+    local w = self.ui:getWindow(UIFurnishCorridor)
     local fullscreen = self.ui:getWindow(UIFullscreen)
-    if fullscreen then
-      fullscreen:close()
+
+    if w then
+      if fullscreen then
+        fullscreen:close()
+      else
+        w:close()
+      end
+    else
+      if fullscreen then
+        fullscreen:close()
+      end
+
+      local dlg = UIFurnishCorridor(self.ui)
+      self.ui:setEditRoom(false)
+      self.ui:addWindow(dlg)
+      self.ui:tutorialStep(1, 1, 2)
     end
-    local dlg = UIFurnishCorridor(self.ui)
-    self.ui:setEditRoom(false)
-    self.ui:addWindow(dlg)
-    self.ui:tutorialStep(1, 1, 2)
   end
 end
 
 function UIBottomPanel:dialogHireStaff()
   if self.world.user_actions_allowed then
-    local dlg = UIHireStaff(self.ui)
-    self.ui:setEditRoom(false)
-    self.ui:addWindow(dlg)
-    self.ui:tutorialStep(2, 1, 2)
-    self.ui:tutorialStep(4, 1, 2)
+    local w = self.ui:getWindow(UIHireStaff)
+    local fullscreen = self.ui:getWindow(UIFullscreen)
+
+    if w then
+      if fullscreen then
+        fullscreen:close()
+      else
+        w:close()
+      end
+    else
+      if fullscreen then
+        fullscreen:close()
+      end
+
+      local dlg = UIHireStaff(self.ui)
+      self.ui:setEditRoom(false)
+      self.ui:addWindow(dlg)
+      self.ui:tutorialStep(2, 1, 2)
+      self.ui:tutorialStep(4, 1, 2)
+    end
   end
 end
 
