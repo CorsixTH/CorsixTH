@@ -48,7 +48,7 @@ describe("serialize", function()
     local res_tbl = loadstring("return " .. res)()
 
     local found_tbl = false
-    for k, v in pairs(res_tbl) do
+    for k, _ in pairs(res_tbl) do
       if type(k) == 'table' then
         assert.same({hello='world'}, k)
         found_tbl = true
@@ -69,7 +69,7 @@ describe("serialize", function()
 
     assert.has.match('{...}', res, nil, true)
 
-    local res = serialize(test_tbl, {max_depth=2})
+    res = serialize(test_tbl, {max_depth=2})
     assert.has_no.match('{...}', res, nil, true)
   end)
 

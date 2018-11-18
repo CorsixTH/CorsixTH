@@ -1291,10 +1291,6 @@ function Window:makeTextboxOnPanel(panel, confirm_callback, abort_callback)
   return textbox
 end
 
---================================================================================================================
---================================================================================================================
---================================================================================================================
-
 --! A window element used to accept hotkey configurations.
 class "HotkeyBox"
 
@@ -1315,6 +1311,7 @@ function HotkeyBox:HotkeyBox()
   self.active = nil
   self.temp_keys_down = {}
   self.temp_key_processed = false
+  self.noted_keys = {}
 end
 
 local hotkeybox_mt = permanent("Window.<hotkeybox_mt>", getmetatable(HotkeyBox()))
@@ -1326,6 +1323,7 @@ function HotkeyBox:confirm()
     self.confirm_callback()
   end
   self.temp_keys_down = {}
+  self.noted_keys = {}
 end
 
 --! Set the box to not active and run abort callback, if any
@@ -1374,8 +1372,11 @@ function HotkeyBox:clicked()
   end
 end
 
-function HotkeyBox:keyInput(char, rawchar)
+function HotkeyBox:keyInput(char, rawchar, modifiers)
   self.temp_key_processed = false
+
+  -- If ctrl is pressed, do we pass it to this next function, below?
+  --  
 
   -- Find out if the current character has been processed.
   for _, key in pairs(self.temp_keys_down) do
@@ -1459,6 +1460,7 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
     active = false,
     temp_keys_down = {},
     temp_key_processed = false,
+    noted_keys = {},
   }, hotkeybox_mt)
 
   local button = panel:makeToggleButton(0, 0, panel.w, panel.h, nil, hotkeybox.clicked, hotkeybox)
@@ -1468,10 +1470,6 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
   self.ui:registerHotkeyBox(hotkeybox)
   return hotkeybox
 end
-
---================================================================================================================
---================================================================================================================
---================================================================================================================
 
 function Window:draw(canvas, x, y)
   x, y = x + self.x, y + self.y
@@ -1494,7 +1492,7 @@ function Window:draw(canvas, x, y)
     end
   end
   if not class.is(self, UI) then -- prevent UI (sub)class from handling the hotkeyboxes too
-    for _, box in ipairs(self.hotkeyboxes) do
+    for _, _ in ipairs(self.hotkeyboxes) do
       -- Empty right now. Don't know if I need it. -- LEIGET
     end
   end

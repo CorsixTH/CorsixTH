@@ -375,7 +375,7 @@ local function serialize_table(obj, options, depth, pt_reflist)
       result = result .. serialize(v, options, depth + 1, pt_reflist)
     end
   end
-  local indent = string.rep(" ", (depth - 1) * 2)
+  indent = string.rep(" ", (depth - 1) * 2)
 
   if options.pretty then
     result = result .. '\n' .. indent
@@ -393,4 +393,16 @@ function serialize(val, options, depth, pt_reflist)
   else
     return tostring(val)
   end
+end
+
+-- Clones a table, but only the first level.
+function shallow_clone(tbl)
+  if type(tbl) ~= "table" then return tbl end
+  local meta = getmetatable(tbl)
+  local target = {}
+  for k, v in pairs(tbl) do
+    target[k] = v
+  end
+  setmetatable(target, meta)
+  return target
 end

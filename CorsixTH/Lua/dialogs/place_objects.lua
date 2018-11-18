@@ -91,6 +91,7 @@ end
 
 function UIPlaceObjects:registerKeyHandlers()
   self:addKeyHandler("global_cancel", self.cancel)
+  self:addKeyHandler("global_cancel_alt", self.cancel)
   self:addKeyHandler("ingame_rotateobject", self.tryNextOrientation)
 end
 

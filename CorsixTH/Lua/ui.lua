@@ -168,6 +168,10 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
+  -- For use in onKeyUp when assigning hotkeys in the "Assign Hotkeys" window.
+  self.temp_button_down = false
+  -- 
+  self.key_noted = false
 
   self.down_count = 0
   if not minimal then
@@ -247,6 +251,7 @@ end
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
   self:addKeyHandler("global_cancel", self, self.closeWindow)
+  self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
@@ -366,9 +371,9 @@ function UI:addKeyHandler(keys, window, callback, ...)
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
       if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = {table.unpack(self.app.hotkeys[keys])}
+        temp_keys = shallow_clone(self.app.hotkeys[keys])
       elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = {table.unpack({self.app.hotkeys[keys]})}
+        temp_keys = shallow_clone({self.app.hotkeys[keys]})
       end
   else
     if type(keys) == "string" then
@@ -611,6 +616,18 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
 
   -- Remove numlock modifier
   modifiers["numlockactive"] = nil
+  
+  --[[ TEMP LEIGET REFERNCE
+  if modifiers["ctrl"] then
+    print("ctrl == ", modifiers["ctrl"])
+  end
+  if modifiers["alt"] then
+    print("alt == ", modifiers["alt"])
+  end
+  if modifiers["shift"] then
+    print("shift == ", modifiers["shift"])
+  end
+  ]]
 
   -- If there is one, the current textbox gets the key.
   -- It will not process any text at this point though.
@@ -623,7 +640,7 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
   -- If there is a hotkey box
   for _, hotkeybox in ipairs(self.hotkeyboxes) do
     if hotkeybox.enabled and hotkeybox.active and not handled then
-      handled = hotkeybox:keyInput(key, rawchar)
+      handled = hotkeybox:keyInput(key, rawchar, modifiers)
     end
   end
 
@@ -656,49 +673,50 @@ function UI:onKeyUp(rawchar)
             string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
             rawchar
   local key = rawchar:lower()
-  --[[ Is this needed anymore? -LEIGET
-  do
-    local mapped_button = self.key_to_button_remaps[key]
-    if mapped_button then
-      self:onMouseUp(mapped_button, self.cursor_x, self.cursor_y)
-      return true
-    end
-    key = self.key_remaps[key] or key
-  end
-  ]]
-  self.buttons_down[key] = nil
 
+  self.buttons_down[key] = nil
   
-  local temp_button_down = false
   -- Go through all the hotkeyboxes.
   for _, hotkeybox in ipairs(self.hotkeyboxes) do
-
     -- If one is enabled and active...
     if hotkeybox.enabled and hotkeybox.active then
-      temp_button_down = false
-
+      self.temp_button_down = false
       -- Go through and check if there are still any buttons pressed. If so...
-      for _, loop_key in pairs(self.buttons_down) do
+      for _, _ in pairs(self.buttons_down) do
         -- Then toggle the corresponding bool.
-        temp_button_down = true
+        self.temp_button_down = true
       end
       
       -- If there is still a button down when a button was released...
-      if temp_button_down then
-        -- Go through each key in the temp buttons table, and if the key that has been released ("key") is present, remove it.
-        for k, v in pairs(hotkeybox.temp_keys_down) do
-          if v == key then
-            print(hotkeybox.temp_keys_down[k])
-            --hotkeybox.temp_keys_down[k] = nil
-            local temp = table.remove( hotkeybox.temp_keys_down , k)
-            --print("temp == ", temp)
-            print( hotkeybox.temp_keys_down[k])
-            --for k2, v2 in pairs(hotkeybox.temp_keys_down) do print("k: ", k , "v: ", v) end
+      if self.temp_button_down then
+        self.key_noted = false
+        -- Loop through the noted keys table.
+        for _, v2 in pairs(hotkeybox.noted_keys) do
+          -- If the key has been noted already...
+          if v2 == key then
+            -- Say so.
+            self.key_noted = true
           end
+        end
+        
+        -- If the key hasn't been noted yet...
+        if self.key_noted == false then
+          -- Go through the keys that are still down.
+          for k, v in pairs(hotkeybox.temp_keys_down) do
+              -- If the key released still exist in "temp_keys_down"...
+              if v == key then
+                -- Remove it.
+                table.remove(hotkeybox.temp_keys_down , k)
+              end
+          end
+          
+          -- Say that it has now been noted.
+          hotkeybox.noted_keys[#hotkeybox.noted_keys + 1] = key
         end
       else
         -- Confirm and deactivate the hotkey box.
         hotkeybox:confirm()
+        hotkeybox.noted_keys = {}
       end
 
     end
