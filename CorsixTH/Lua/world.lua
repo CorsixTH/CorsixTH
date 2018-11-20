@@ -219,8 +219,6 @@ function World:setUI(ui)
 
   self.ui:addKeyHandler("ingame_zoom_in", self, self.adjustZoom,  1)
   self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
-  self.ui:addKeyHandler("ingame_zoom_in_alt", self, self.adjustZoom,  1)
-  self.ui:addKeyHandler("ingame_zoom_in_more_alt", self, self.adjustZoom, 5)
   self.ui:addKeyHandler("ingame_zoom_out", self, self.adjustZoom, -1)
   self.ui:addKeyHandler("ingame_zoom_out_more", self, self.adjustZoom, -5)
 end

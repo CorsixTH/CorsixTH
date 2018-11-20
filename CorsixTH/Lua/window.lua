@@ -1376,7 +1376,7 @@ function HotkeyBox:keyInput(char, rawchar, modifiers)
   self.temp_key_processed = false
 
   -- If ctrl is pressed, do we pass it to this next function, below?
-  --  
+  --
 
   -- Find out if the current character has been processed.
   for _, key in pairs(self.temp_keys_down) do
@@ -1391,7 +1391,7 @@ function HotkeyBox:keyInput(char, rawchar, modifiers)
   if self.temp_key_processed == false then
     self.temp_keys_down[#self.temp_keys_down+1] = char
   end
-  
+
   return true
 end
 

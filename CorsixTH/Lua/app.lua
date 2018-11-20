@@ -937,7 +937,7 @@ function App:saveHotkeys()
   local fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "r")
   local lines = {}
   local handled_ids = {}
-  
+
   if fi then
     for line in fi:lines() do
       lines[#lines + 1] = line
@@ -992,8 +992,8 @@ function App:saveHotkeys()
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
-  
-  fi:close()  
+
+  fi:close()
 end
 
 function App:run()

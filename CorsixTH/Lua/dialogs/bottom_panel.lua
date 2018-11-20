@@ -117,7 +117,7 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_panel_buildRoom", self, self.dialogBuildRoom)    -- Build room.
   ui:addKeyHandler("ingame_panel_furnishCorridor", self, self.dialogFurnishCorridor)    -- Furnish corridor.
   ui:addKeyHandler("ingame_panel_editRoom", self, self.editRoom)    -- Edit room.
-  ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.  
+  ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.
 
   -- "old" keyboard shortcuts for some of the fullscreen windows
   ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- T for town map
@@ -590,7 +590,7 @@ function UIBottomPanel:dialogBuildRoom()
       if fullscreen then
         fullscreen:close()
       end
-      
+
       local dlg = UIBuildRoom(self.ui)
       self.ui:setEditRoom(false)
       self.ui:addWindow(dlg)

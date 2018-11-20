@@ -548,7 +548,7 @@ end
 function UIMenuBar:makeGameMenu(app)
   local menu = UIMenu()
   local hotkeys = app.hotkeys
-  
+
   -- A function to set the menu hotkey strings, whether a string or table.
   -- Usage: hotkey_value_label(hotkey name as string)
   -- Ex: hotkey_value_label("ingame_loadMenu")
@@ -729,7 +729,7 @@ function UIMenuBar:makeGameMenu(app)
     :appendCheckItem(_S.menu_options_game_speed.max_speed:format(hotkey_value_label("ingame_gamespeed_max")),               rate("Max speed"))
     :appendCheckItem(_S.menu_options_game_speed.and_then_some_more:format(hotkey_value_label("ingame_gamespeed_thensome")), rate("And then some more"))
   )
-    
+
   self:addMenu(_S.menu.options, options)
 
   self:addMenu(_S.menu.charts, UIMenu()
