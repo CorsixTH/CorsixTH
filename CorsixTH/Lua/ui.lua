@@ -389,7 +389,7 @@ function UI:addKeyHandler(keys, window, callback, ...)
     if type(temp_keys) == "table" then
       temp_keys_copy = shallow_clone(temp_keys)
     elseif type(temp_keys) == "string" then
-      temp_keys_copy = shallow_clone({temp_keys})
+      temp_keys_copy[#temp_keys_copy+1] = temp_keys
     end
 
     for _, v in pairs(temp_keys_copy) do

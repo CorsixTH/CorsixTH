@@ -100,7 +100,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   local temp_table = {}
   local shift_scroll_key_index = 1
   if type(self.app.hotkeys["ingame_scroll_shift"]) == "string" then
-    temp_table = shallow_clone({self.app.hotkeys["ingame_scroll_shift"]})
+    temp_table[#temp_table+1] = self.app.hotkeys["ingame_scroll_shift"]
   elseif type(self.app.hotkeys["ingame_scroll_shift"]) == "table" then
     temp_table = shallow_clone(self.app.hotkeys["ingame_scroll_shift"])
   end
@@ -138,10 +138,10 @@ function GameUI:setupGlobalKeyHandlers()
 
   -- Set the scrolling keys.
   self.scroll_keys = {
-    [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
-    [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
-    [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-    [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
+     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
+     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
   }
 
   self:addKeyHandler("global_window_close", self, self.setEditRoom, false)
