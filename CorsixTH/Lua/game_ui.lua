@@ -100,7 +100,7 @@ function GameUI:GameUI(app, local_hospital, map_editor)
   local temp_table = {}
   local shift_scroll_key_index = 1
   if type(self.app.hotkeys["ingame_scroll_shift"]) == "string" then
-    temp_table[#temp_table+1] = self.app.hotkeys["ingame_scroll_shift"]
+    temp_table = {self.app.hotkeys["ingame_scroll_shift"]}
   elseif type(self.app.hotkeys["ingame_scroll_shift"]) == "table" then
     temp_table = shallow_clone(self.app.hotkeys["ingame_scroll_shift"])
   end

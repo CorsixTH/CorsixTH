@@ -529,10 +529,19 @@ end
 --!param app Application.
 function UIMenuBar:makeMapeditorMenu(app)
   local menu = UIMenu()
+  local hotkeys = app.hotkeys
 
-  menu:appendItem(_S.menu_file.load, function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
-    :appendItem(_S.menu_file.save, function() self.ui:addWindow(UISaveMap(self.ui)) end)
-    :appendItem(_S.menu_file.quit, function() self.ui:quit() end)
+  local function hotkey_value_label(hotkey_name)
+    local hotkey_value = hotkeys[hotkey_name]
+    if hotkey_value == nil then
+      return ""
+    end
+    return string.upper(array_join(hotkey_value, "+"))
+  end
+
+  menu:appendItem(_S.menu_file.load:format(hotkey_value_label("ingame_loadMenu")), function() self.ui:addWindow(UILoadMap(self.ui, "map")) end)
+    :appendItem(_S.menu_file.save:format(hotkey_value_label("ingame_saveMenu")), function() self.ui:addWindow(UISaveMap(self.ui)) end)
+    :appendItem(_S.menu_file.quit:format(hotkey_value_label("ingame_quitLevel")), function() self.ui:quit() end)
   self:addMenu(_S.menu.file, menu)
 
   menu = UIMenu()

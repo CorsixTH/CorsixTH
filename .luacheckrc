@@ -56,7 +56,7 @@ globals = { -- Globals
             "UIResolution", "UISaveGame", "UISaveMap", "UIStaff",
             "UIStaffManagement", "UIStaffRise", "UITipOfTheDay", "UITownMap",
             "UIUpdate", "UIWatch", "UIHotkeyAssign", "UIScrollSpeed",
-            "UIShiftScrollSpeed", "UIZoomSpeed", "UIHotkeyAssign_Toggle",
+            "UIShiftScrollSpeed", "UIZoomSpeed", "UIHotkeyAssign_Panels",
             "UIHotkeyAssign_storeRecallPos",
 
             -- Actions

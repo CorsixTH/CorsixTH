@@ -389,7 +389,7 @@ function UI:addKeyHandler(keys, window, callback, ...)
     if type(temp_keys) == "table" then
       temp_keys_copy = shallow_clone(temp_keys)
     elseif type(temp_keys) == "string" then
-      temp_keys_copy[#temp_keys_copy+1] = temp_keys
+      temp_keys_copy = {temp_keys}
     end
 
     for _, v in pairs(temp_keys_copy) do
@@ -772,43 +772,39 @@ function UI:onKeyUp(rawchar)
   for _, hotkeybox in ipairs(self.hotkeyboxes) do
     -- If one is enabled and active...
     if hotkeybox.enabled and hotkeybox.active then
-      self.temp_button_down = false
-      -- Go through and check if there are still any buttons pressed. If so...
-      for _, _ in pairs(self.buttons_down) do
-        -- Then toggle the corresponding bool.
-        self.temp_button_down = true
-      end
-
-      -- If there is still a button down when a button was released...
-      if self.temp_button_down then
+      -- If the key lifted is escape...
+      if(key == "escape") then
+        hotkeybox:abort()
+        hotkeybox.noted_keys = {}
+      else
+        -- Check if the current key lifted has already been noted.
         self.key_noted = false
-        -- Loop through the noted keys table.
-        for _, v2 in pairs(hotkeybox.noted_keys) do
-          -- If the key has been noted already...
-          if v2 == key then
-            -- Say so.
+        for _, v in pairs(hotkeybox.noted_keys) do
+          if v == key then
             self.key_noted = true
           end
         end
 
-        -- If the key hasn't been noted yet...
+        -- If the current key hasn't been noted...
         if self.key_noted == false then
-          -- Go through the keys that are still down.
-          for k, v in pairs(hotkeybox.temp_keys_down) do
-              -- If the key released still exist in "temp_keys_down"...
-              if v == key then
-                -- Remove it.
-                table.remove(hotkeybox.temp_keys_down , k)
-              end
-          end
-
-          -- Say that it has now been noted.
           hotkeybox.noted_keys[#hotkeybox.noted_keys + 1] = key
         end
-      else
-        -- Confirm and deactivate the hotkey box.
-        hotkeybox:confirm()
-        hotkeybox.noted_keys = {}
+
+        -- Says if there is still a button being pressed.
+        self.temp_button_down = false
+
+        -- Go through and check if there are still any buttons pressed. If so...
+        for _, _ in pairs(self.buttons_down) do
+          -- Then toggle the corresponding bool.
+          self.temp_button_down = true
+        end
+
+        --If there ISN'T still a button down when a button was released...
+        if self.temp_button_down == false then
+          -- Activate the confirm function on the hotkey box.
+          hotkeybox:confirm()
+          hotkeybox.noted_keys = {}
+        end
       end
     end
   end
@@ -833,30 +829,6 @@ function UI:onTextInput(text)
   -- differing local keyboard layout. Give it another shot.
   if not self.key_press_handled then
     local keyHandlers = self.key_handlers[text]
-    if keyHandlers then
-      -- Iterate over key handlers and call each one whose modifier(s) are pressed
-      -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
-      for _, handler in ipairs(keyHandlers) do
-        if compare_tables(handler.modifiers, self.modifiers_down) then
-          handler.callback(handler.window, unpack(handler))
-        end
-      end
-    end
-  end
-end
-
-function UI:onHotkeyInput(key)
-  -- It's time for any active textbox to get input.
-  for _, box in ipairs(self.hotkeyboxes) do
-    if box.enabled and box.active then
-      box:hotkeyInput(key)
-    end
-  end
-
-  -- Finally it might happen that a hotkey was not recognized because of
-  -- differing local keyboard layout. Give it another shot.
-  if not self.key_press_handled then
-    local keyHandlers = self.key_handlers[key]
     if keyHandlers then
       -- Iterate over key handlers and call each one whose modifier(s) are pressed
       -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.

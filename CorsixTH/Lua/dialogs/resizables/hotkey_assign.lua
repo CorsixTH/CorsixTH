@@ -56,28 +56,164 @@ local col_caption = {
 
 local hotkey_backup = {}
 local hotkeys_backedUp = false
+local hotkey_buttons = {}
 
-local function hotkey_input(hotkey, hotkey_buttons, app)
+local key_hierarchy = {
+[1] = "return",
+[2] = "enter",
+[3] = "escape",
+[4] = "backspace",
+[5] = "tab",
+[6] = "space",
+[7] = "!",
+[8] = "\"",
+[9] = "#",
+[10] = "%",
+[11] = "$",
+[12] = "&",
+[13] = "\'",
+[14] = "(",
+[15] = ")",
+[16] = "*",
+[17] = "+",
+[18] = ",",
+[19] = "-",
+[20] = ".",
+[21] = "/",
+[22] = "0",
+[23] = "1",
+[24] = "2",
+[25] = "3",
+[26] = "4",
+[27] = "5",
+[28] = "6",
+[29] = "7",
+[30] = "8",
+[31] = "9",
+[32] = ":",
+[33] = ";",
+[34] = "<",
+[35] = "=",
+[36] = ">",
+[37] = "?",
+[38] = "@",
+[39] = "[",
+[40] = "\\",
+[41] = "]",
+[42] = "^",
+[43] = "_",
+[44] = "`",
+[45] = "a",
+[46] = "b",
+[47] = "c",
+[48] = "d",
+[49] = "e",
+[50] = "f",
+[51] = "g",
+[52] = "h",
+[53] = "i",
+[54] = "j",
+[55] = "k",
+[56] = "l",
+[57] = "m",
+[58] = "n",
+[59] = "o",
+[60] = "p",
+[61] = "q",
+[62] = "r",
+[63] = "s",
+[64] = "t",
+[65] = "u",
+[66] = "v",
+[67] = "w",
+[68] = "x",
+[69] = "y",
+[70] = "z",
+[71] = "capslock",
+[72] = "f1",
+[73] = "f2",
+[74] = "f3",
+[75] = "f4",
+[76] = "f5",
+[77] = "f6",
+[78] = "f7",
+[79] = "f8",
+[80] = "f9",
+[81] = "f10",
+[82] = "f11",
+[83] = "f12",
+[84] = "printscreen",
+[85] = "scrolllock",
+[86] = "pause",
+[87] = "insert",
+[88] = "home",
+[89] = "pageup",
+[90] = "delete",
+[91] = "end",
+[92] = "pagedown",
+[93] = "right",
+[94] = "left",
+[95] = "down",
+[96] = "up",
+[97] = "numlock",
+[100] = "f13",
+[101] = "f14",
+[102] = "f15",
+[103] = "f16",
+[104] = "f17",
+[105] = "f18",
+[106] = "f19",
+[107] = "f20",
+[108] = "f21",
+[109] = "f22",
+[110] = "f23",
+[111] = "f24",
+[112] = "keypad 0",
+[113] = "keypad 1",
+[114] = "keypad 2",
+[115] = "keypad 3",
+[116] = "keypad 4",
+[117] = "keypad 6",
+[118] = "keypad 7",
+[119] = "keypad 8",
+[120] = "keypad 9",
+[121] = "keypad .",
+}
+
+local function hotkey_input(hotkey, hotkey_buttons_table, app)
   --[[
   TODO:
-    -- When new hotkey assignment uses assignment to other hotkey, switfch hotkey keys.
+    -- Keypad when numlock is off doesn't work correctly.
+        Seems that keypad input isn't working correctly in ui.lua or something.
+        Left for future patch.
+    -- Disable the "global_exitApp" hotkey while assigning hotkeys?
+        Even when "global_exitApp" isn't added at startup Alt+F4 still abandons program. Why?
+    -- Modifier keys for other languages nessecary?
+        -- Ex: STRG for german's "CTRL".
   ]]
 
-  -- Join temp_keys_down and noted_keys.
-  local table_01 = {}
-  local n = 0
-  for _, v in pairs(hotkey_buttons[hotkey].noted_keys) do
-    n = n+1
-    table_01[n] = v
-  end
-  for _, v in pairs(hotkey_buttons[hotkey].temp_keys_down) do
-    n = n+1
-    table_01[n] = v
+  local table_01 = shallow_clone(hotkey_buttons_table[hotkey].noted_keys)
+
+  -- If the current hotkey being changed is the alternate global confirm key...
+  if hotkey == "global_confirm_alt" then
+    -- If it's the same as the "global_confirm" key...
+    if array_join( app.hotkeys["global_confirm"] ) == array_join(table_01) then
+      return
+    end
   end
 
-  -- Go through the new key table.
+  -- Check if the table even has anything or has too much.
+  local table_length = 0
+  for _, _ in pairs(table_01) do
+    table_length = table_length + 1
+  end
+  if table_length == 0 or table_length > 4 then
+    hotkey_buttons_table[hotkey]:abort()
+    return
+  end
+
+  -- Go through the new key table and remove "left" or "right" from any modifier strings.
   for k, v in pairs(table_01) do
-    -- Remove "left" or "right" from any modifier strings.
     -- Ctrl
     if string.find(v, "ctrl", 1, true) then
       table_01[k] = "ctrl"
@@ -90,38 +226,129 @@ local function hotkey_input(hotkey, hotkey_buttons, app)
     if string.find(v, "shift", 1, true) then
       table_01[k] = "shift"
     end
+    -- GUI
+    if string.find(v, "gui", 1, true) then
+      table_01[k] = "gui"
+    end
+    -- MENU
+    if string.find(v, "menu", 1, true) then
+      table_01[k] = "menu"
+    end
   end
 
-  -- Note the table length of table_01
-  local table_length = 0
-  for _ in pairs(table_01) do
+  -- Go through the table again and organize the modifier keys to have a particluar order.
+  --  Use this hierarcy:
+  --    CTRL, ALT, SHIFT, GUI, MENU
+  local modifier_hierarchy = { [1] = "ctrl", [2] = "alt", [3] = "shift", [4] = "gui", [5] = "menu"}
+  local table_02 = {}
+  -- Go through and get the modifier keys and set them to the correct order.
+  for _, v1 in ipairs(modifier_hierarchy) do
+    for _, v2 in ipairs(table_01) do
+      if v1 == v2 then
+        table_02[#table_02 + 1] = v2
+      end
+    end
+  end
+
+  -- Go through table_01 and only copy the non-modifier keys into table_03.
+  local table_03 = {}
+  local temp_index = 1
+  for _, v in pairs(table_01) do
+    if v ~= "ctrl" and v ~= "alt" and v ~= "shift" and v ~= "gui" and v ~= "menu" then
+      table_03[temp_index] = v
+    end
+    temp_index = temp_index + 1
+  end
+
+  -- Go through the new table_03 and order it according to the key hairarchy.
+  local table_04 = {}
+  for _, v1 in ipairs(key_hierarchy) do
+    for _, v2 in pairs(table_03) do
+      if v1 == v2 then
+        table_04[#table_04 + 1] = v2
+      end
+    end
+  end
+
+  -- Then go through table_02 and table_04 and put it all in table_FIN.
+  local table_FIN = {}
+  for _, v in ipairs(table_02) do
+    table_FIN[#table_FIN + 1] = v
+  end
+  for _, v in ipairs(table_04) do
+    table_FIN[#table_FIN + 1] = v
+  end
+
+  -- Find out if there is another hotkey with the same key assignment.
+  -- Make sure it's not the same key we are currently mapping.
+  local hotkey_used = false
+  local hotkey_used_key = ""
+  local keys_01 = serialize(table_FIN)
+  local keys_02 = ""
+  -- Go through the app.hotkeys table...
+  for k, _ in pairs(app.hotkeys) do
+    if type(app.hotkeys[k]) == "table" then
+      keys_02 = serialize(app.hotkeys[k])
+    elseif type(app.hotkeys[k]) == "string" then
+      keys_02 = serialize({app.hotkeys[k]})
+    end
+
+    -- If the key(s) that were pressed (table_FIN) match the current key in the "app.hotkey" table...
+    if keys_01 == keys_02 then
+      hotkey_used = true
+      hotkey_used_key = k
+    end
+  end
+
+  local clone_key = false
+  if hotkey_used then
+    -- If it is NOT the same key we are currently working with...
+    if hotkey ~= hotkey_used_key then
+      clone_key = true
+    end
+  end
+
+  -- Note the table length of table_FIN.
+  table_length = 0
+  for _ in pairs(table_FIN) do
     table_length = table_length + 1
   end
 
-  -- Apply or abort according to how many keys are pressed.
+  -- Apply according to how many keys are pressed.
   -- If there are multiple keys pressed...
-  if table_length > 1 and table_length <= 4 then
-    app.hotkeys[hotkey] = table_01
+  if table_length > 1 then
+    if clone_key then
+      app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
+      if hotkey_buttons_table[hotkey_used_key] then
+        hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
+      end
+    end
+
+    app.hotkeys[hotkey] = table_FIN
     -- If the key is "global_cancel_alt"...
     if hotkey == "global_cancel_alt" then
-      app.hotkeys["global_stop_movie_alt"] = table_01
-      app.hotkeys["global_window_close_alt"] = table_01
+      app.hotkeys["global_stop_movie_alt"] = table_FIN
+      app.hotkeys["global_window_close_alt"] = table_FIN
     end
   -- If there is only one key pressed...
-  elseif table_length == 1 then
-    app.hotkeys[hotkey] = table_01[1]
+  else
+    if clone_key then
+      app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
+      if hotkey_buttons_table[hotkey_used_key] then
+        hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
+      end
+    end
+
+    app.hotkeys[hotkey] = table_FIN[1]
     -- If the key is "global_cancel_alt"...
     if hotkey == "global_cancel_alt" then
-      app.hotkeys["global_stop_movie_alt"] = table_01[1]
-      app.hotkeys["global_window_close_alt"] = table_01[1]
+      app.hotkeys["global_stop_movie_alt"] = table_FIN[1]
+      app.hotkeys["global_window_close_alt"] = table_FIN[1]
     end
-  -- If too few or too many keys are pressed...
-  elseif table_length == 0 or table_length > 4 then
-    hotkey_buttons[hotkey]:abort_callback()
   end
 
-  -- Set the hotkeybox text.
-  hotkey_buttons[hotkey]:setText( string.upper( array_join(app.hotkeys[hotkey], "+") ) )
+  -- Set the current hotkeybox text.
+  hotkey_buttons_table[hotkey]:setText( string.upper( array_join(app.hotkeys[hotkey], "+") ) )
 end
 
 function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
@@ -174,7 +401,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self:setDefaultPosition(0.5, 0.25)
   self.default_button_sound = "selectx.wav"
   self.app = ui.app
-  self.hotkey_buttons = {}
+  self.hotkey_buttons = hotkey_buttons
 
   if not hotkeys_backedUp then
     hotkey_backup = shallow_clone(self.app.hotkeys)
@@ -450,8 +677,8 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   end
 
   -- Toggle keys assignment window.
-  self:addBevelPanel(self.panel_pos_table_x[1], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.button_toggleKeys)
-    :makeButton(0, 0, 200, 40, nil, self.toggleButton):setTooltip(_S.tooltip.hotkey_window.button_toggleKeys)
+  self:addBevelPanel(self.panel_pos_table_x[1], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.caption_panels)
+    :makeButton(0, 0, 200, 40, nil, self.toggleButton):setTooltip(_S.tooltip.hotkey_window.caption_panels)
   -- Store and recall position assignment window.
   self:addBevelPanel(self.panel_pos_table_x[3], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.button_recallPosKeys)
     :makeButton(0, 0, 200, 40, nil, self.storeRecallPosButton):setTooltip(_S.tooltip.hotkey_window.button_recallPosKeys)
@@ -507,7 +734,7 @@ end
 
 function UIHotkeyAssign:toggleButton()
   self:close()
-  local window = UIHotkeyAssign_Toggle(self.ui, "menu")
+  local window = UIHotkeyAssign_Panels(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
@@ -521,14 +748,14 @@ function UIHotkeyAssign:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, self.app)
 end
 
---! Customise window used in the main menu and ingame.
-class "UIHotkeyAssign_Toggle" (UIResizable)
+--! Assign panel keys window.
+class "UIHotkeyAssign_Panels" (UIResizable)
 
----@type UIHotkeyAssign_Toggle
-local UIHotkeyAssign_Toggle = _G["UIHotkeyAssign_Toggle"]
+---@type UIHotkeyAssign_Panels
+local UIHotkeyAssign_Panels = _G["UIHotkeyAssign_Panels"]
 
-function UIHotkeyAssign_Toggle:UIHotkeyAssign_Toggle(ui, mode)
-  self:UIResizable(ui, 240, 200, col_bg)
+function UIHotkeyAssign_Panels:UIHotkeyAssign_Panels(ui, mode)
+  self:UIResizable(ui, 240, 460, col_bg)
 
   local panel_width = 110
   local panel_height = 20
@@ -548,57 +775,121 @@ function UIHotkeyAssign_Toggle:UIHotkeyAssign_Toggle(ui, mode)
 
   -- Panel y position table.
   self.panel_pos_table_y = {}
-  for i=1, 5, 1 do
+  for i=1, 18, 1 do
     self.panel_pos_table_y[i] = (i*20)+20
   end
 
   -- Title
-  self:addBevelPanel(10, 10, 230, 20, col_caption):setLabel(_S.hotkey_window.caption_toggle)
+  self:addBevelPanel(10, 10, 220, 20, col_caption):setLabel(_S.hotkey_window.caption_panels)
 
   -- "Back" button
-  self:addBevelPanel(10, 150, 220, 40, col_bg):setLabel(_S.hotkey_window.button_back)
-    :makeButton(0, 0, 320, 40, nil, self.buttonBack):setTooltip(_S.tooltip.hotkey_window.button_back_02)
+  self:addBevelPanel(10, 410, 220, 40, col_bg):setLabel(_S.hotkey_window.button_back)
+    :makeButton(0, 0, 220, 40, nil, self.buttonBack):setTooltip(_S.tooltip.hotkey_window.button_back_02)
 
-  -- ingame_toggleAnnouncements
-  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_toggleAnnouncements)
-  self.hotkey_buttons["ingame_toggleAnnouncements"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_toggleAnnouncements") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_toggleAnnouncements"], "+")) )
+  -- ingame_panel_bankManager
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_bankManager)
+  self.hotkey_buttons["ingame_panel_bankManager"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_bankManager") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_bankManager"], "+")) )
   current_pos_y = current_pos_y + 1
-  -- ingame_toggleSounds
-  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_toggleSounds)
-  self.hotkey_buttons["ingame_toggleSounds"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_toggleSounds") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_toggleSounds"], "+")) )
+  -- ingame_panel_bankStats
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_bankStats)
+  self.hotkey_buttons["ingame_panel_bankStats"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_bankStats") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_bankStats"], "+")) )
   current_pos_y = current_pos_y + 1
-  -- ingame_toggleMusic
-  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_toggleMusic)
-  self.hotkey_buttons["ingame_toggleMusic"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_toggleMusic") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_toggleMusic"], "+")) )
+  -- ingame_panel_staffManage
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_staffManage)
+  self.hotkey_buttons["ingame_panel_staffManage"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_staffManage") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_staffManage"], "+")) )
   current_pos_y = current_pos_y + 1
-  -- ingame_toggleAdvisor
-  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_toggleAdvisor)
-  self.hotkey_buttons["ingame_toggleAdvisor"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_toggleAdvisor") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_toggleAdvisor"], "+")) )
+  -- ingame_panel_townMap
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_townMap)
+  self.hotkey_buttons["ingame_panel_townMap"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_townMap") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_townMap"], "+")) )
   current_pos_y = current_pos_y + 1
-  -- ingame_toggleInfo
-  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_toggleInfo)
-  self.hotkey_buttons["ingame_toggleInfo"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_toggleInfo") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_toggleInfo"], "+")) )
+  -- ingame_panel_casebook
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_casebook)
+  self.hotkey_buttons["ingame_panel_casebook"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_casebook") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_casebook"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_research
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_research)
+  self.hotkey_buttons["ingame_panel_research"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_research") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_research"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_status
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_status)
+  self.hotkey_buttons["ingame_panel_status"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_status") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_status"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_charts
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_charts)
+  self.hotkey_buttons["ingame_panel_charts"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_charts") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_charts"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_policy
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_policy)
+  self.hotkey_buttons["ingame_panel_policy"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_policy") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_policy"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_buildRoom
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_buildRoom)
+  self.hotkey_buttons["ingame_panel_buildRoom"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_buildRoom") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_buildRoom"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_furnishCorridor
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_furnishCorridor)
+  self.hotkey_buttons["ingame_panel_furnishCorridor"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_furnishCorridor") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_furnishCorridor"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_editRoom
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_editRoom)
+  self.hotkey_buttons["ingame_panel_editRoom"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_editRoom") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_editRoom"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_hireStaff
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_hireStaff)
+  self.hotkey_buttons["ingame_panel_hireStaff"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_hireStaff") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_hireStaff"], "+")) )
+  current_pos_y = current_pos_y + 1
+
+  --
+  self:addBevelPanel(10, self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_bg):setLabel(_S.hotkey_window.panel_altPanelKeys)
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_map_alt
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_map_alt)
+  self.hotkey_buttons["ingame_panel_map_alt"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_map_alt") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_map_alt"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_research_alt
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_research_alt)
+  self.hotkey_buttons["ingame_panel_research_alt"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_research_alt") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_research_alt"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_casebook_alt
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_casebook_alt)
+  self.hotkey_buttons["ingame_panel_casebook_alt"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_casebook_alt") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_casebook_alt"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_panel_casebook_alt02
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_panel_casebook_alt02)
+  self.hotkey_buttons["ingame_panel_casebook_alt02"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_panel_casebook_alt02") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_panel_casebook_alt02"], "+")) )
 end
 
-function UIHotkeyAssign_Toggle:close()
+function UIHotkeyAssign_Panels:close()
   UIResizable.close(self)
   if self.mode == "menu"  then
     self.ui:addWindow(UIHotkeyAssign(self.ui, "menu"))
   end
 end
 
-function UIHotkeyAssign_Toggle:buttonBack()
+function UIHotkeyAssign_Panels:buttonBack()
   self:close()
   local window = UIHotkeyAssign(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
-function UIHotkeyAssign_Toggle:confirm_func(hotkey)
+function UIHotkeyAssign_Panels:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, self.app)
 end
 
@@ -634,7 +925,11 @@ function UIHotkeyAssign_storeRecallPos:UIHotkeyAssign_storeRecallPos(ui, mode)
   end
 
   -- Title
-  self:addBevelPanel(10, 10, 430, panel_height, col_caption):setLabel(_S.hotkey_window.caption_toggle)
+  self:addBevelPanel(10, 10, 430, panel_height, col_caption):setLabel(_S.hotkey_window.caption_panels)
+
+  -- "Back" button
+  self:addBevelPanel(10, 270, 420, 40, col_bg):setLabel(_S.hotkey_window.button_back)
+    :makeButton(0, 0, 420, 40, nil, self.buttonBack):setTooltip(_S.tooltip.hotkey_window.button_back_02)
 
   -- Store Position Panel
   self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], 200, panel_height, col_caption):setLabel(_S.hotkey_window.panel_storePosKey)
@@ -744,10 +1039,6 @@ function UIHotkeyAssign_storeRecallPos:UIHotkeyAssign_storeRecallPos(ui, mode)
   self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_recallPosition_0)
   self.hotkey_buttons["ingame_recallPosition_0"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
     :makeHotkeyBox(function() self:confirm_func("ingame_recallPosition_0") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_recallPosition_0"], "+")) )
-
-  -- "Back" button
-  self:addBevelPanel(10, 270, 420, 40, col_bg):setLabel(_S.hotkey_window.button_back)
-    :makeButton(0, 0, 320, 40, nil, self.buttonBack):setTooltip(_S.tooltip.hotkey_window.button_back_02)
 end
 
 function UIHotkeyAssign_storeRecallPos:close()
