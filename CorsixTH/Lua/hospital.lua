@@ -1922,8 +1922,9 @@ function Hospital:getAveragePatientAttribute(attribute, default_value)
   local sum = 0
   local count = 0
   for _, patient in ipairs(self.patients) do
+    local tx, ty = patient.tile_x, patient.tile_y
     -- Some patients (i.e. Alien) may not have the attribute in question, so check for that
-    if patient.attributes[attribute] then
+    if tx and ty and self:isInHospital(tx, ty) and patient.attributes[attribute] then
       sum = sum + patient.attributes[attribute]
       count = count + 1
     end
