@@ -59,127 +59,223 @@ local hotkeys_backedUp = false
 local hotkey_buttons = {}
 
 local key_hierarchy = {
-[1] = "return",
-[2] = "enter",
-[3] = "escape",
-[4] = "backspace",
-[5] = "tab",
-[6] = "space",
-[7] = "!",
-[8] = "\"",
-[9] = "#",
-[10] = "%",
-[11] = "$",
-[12] = "&",
-[13] = "\'",
-[14] = "(",
-[15] = ")",
-[16] = "*",
-[17] = "+",
-[18] = ",",
-[19] = "-",
-[20] = ".",
-[21] = "/",
-[22] = "0",
-[23] = "1",
-[24] = "2",
-[25] = "3",
-[26] = "4",
-[27] = "5",
-[28] = "6",
-[29] = "7",
-[30] = "8",
-[31] = "9",
-[32] = ":",
-[33] = ";",
-[34] = "<",
-[35] = "=",
-[36] = ">",
-[37] = "?",
-[38] = "@",
-[39] = "[",
-[40] = "\\",
-[41] = "]",
-[42] = "^",
-[43] = "_",
-[44] = "`",
-[45] = "a",
-[46] = "b",
-[47] = "c",
-[48] = "d",
-[49] = "e",
-[50] = "f",
-[51] = "g",
-[52] = "h",
-[53] = "i",
-[54] = "j",
-[55] = "k",
-[56] = "l",
-[57] = "m",
-[58] = "n",
-[59] = "o",
-[60] = "p",
-[61] = "q",
-[62] = "r",
-[63] = "s",
-[64] = "t",
-[65] = "u",
-[66] = "v",
-[67] = "w",
-[68] = "x",
-[69] = "y",
-[70] = "z",
-[71] = "capslock",
-[72] = "f1",
-[73] = "f2",
-[74] = "f3",
-[75] = "f4",
-[76] = "f5",
-[77] = "f6",
-[78] = "f7",
-[79] = "f8",
-[80] = "f9",
-[81] = "f10",
-[82] = "f11",
-[83] = "f12",
-[84] = "printscreen",
-[85] = "scrolllock",
-[86] = "pause",
-[87] = "insert",
-[88] = "home",
-[89] = "pageup",
-[90] = "delete",
-[91] = "end",
-[92] = "pagedown",
-[93] = "right",
-[94] = "left",
-[95] = "down",
-[96] = "up",
-[97] = "numlock",
-[100] = "f13",
-[101] = "f14",
-[102] = "f15",
-[103] = "f16",
-[104] = "f17",
-[105] = "f18",
-[106] = "f19",
-[107] = "f20",
-[108] = "f21",
-[109] = "f22",
-[110] = "f23",
-[111] = "f24",
-[112] = "keypad 0",
-[113] = "keypad 1",
-[114] = "keypad 2",
-[115] = "keypad 3",
-[116] = "keypad 4",
-[117] = "keypad 6",
-[118] = "keypad 7",
-[119] = "keypad 8",
-[120] = "keypad 9",
-[121] = "keypad .",
+  "ctrl",
+  "alt",
+  "shift",
+  "gui",
+  "menu",
+  "return",
+  "enter",
+  "escape",
+  "backspace",
+  "tab",
+  "space",
+  "!",
+  "\"",
+  "#",
+  "%",
+  "$",
+  "&",
+  "\'",
+  "(",
+  ")",
+  "*",
+  "+",
+  ",",
+  "-",
+  ".",
+  "/",
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  ":",
+  ";",
+  "<",
+  "=",
+  ">",
+  "?",
+  "@",
+  "[",
+  "\\",
+  "]",
+  "^",
+  "_",
+  "`",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "capslock",
+  "f1",
+  "f2",
+  "f3",
+  "f4",
+  "f5",
+  "f6",
+  "f7",
+  "f8",
+  "f9",
+  "f10",
+  "f11",
+  "f12",
+  "printscreen",
+  "scrolllock",
+  "pause",
+  "insert",
+  "home",
+  "pageup",
+  "delete",
+  "end",
+  "pagedown",
+  "right",
+  "left",
+  "down",
+  "up",
+  "numlock",
+  "f13",
+  "f14",
+  "f15",
+  "f16",
+  "f17",
+  "f18",
+  "f19",
+  "f20",
+  "f21",
+  "f22",
+  "f23",
+  "f24",
+  "keypad 0",
+  "keypad 1",
+  "keypad 2",
+  "keypad 3",
+  "keypad 4",
+  "keypad 6",
+  "keypad 7",
+  "keypad 8",
+  "keypad 9",
+  "keypad .",
 }
 
+--! Removes qualifiers like left and right from modifier keys
+--! e.g. left shift becomes shift.
+--!
+--!param noted_keys (table) Array of keys to normalize
+--!return (table) New array of normalized keys
+local function normalize_modifiers(noted_keys)
+  local res = shallow_clone(noted_keys)
+
+  -- Go through the new key table and remove "left" or "right" from any modifier strings.
+  for k, v in ipairs(res) do
+    -- Ctrl
+    if string.find(v, "ctrl", 1, true) then
+      res[k] = "ctrl"
+    end
+    -- Alt
+    if string.find(v, "alt", 1, true) then
+      res[k] = "alt"
+    end
+    -- Shift
+    if string.find(v, "shift", 1, true) then
+      res[k] = "shift"
+    end
+    -- GUI
+    if string.find(v, "gui", 1, true) then
+      res[k] = "gui"
+    end
+    -- MENU
+    if string.find(v, "menu", 1, true) then
+      res[k] = "menu"
+    end
+  end
+
+  return res
+end
+
+--! Return an array of the keys from the given array, sorted into a
+--! deterministic order.
+local function sort_noted_keys(noted_keys)
+  -- Go through the new noted_keys and order it according to the key hairarchy.
+  local result = {}
+  local idx = 1
+
+  for _, v1 in ipairs(key_hierarchy) do
+    for _, v2 in ipairs(noted_keys) do
+      if v1 == v2 then
+        result[idx] = v2
+        idx = idx + 1
+      end
+    end
+  end
+
+  return result
+end
+
+--! Determine if the given key sequence is already being used for an action in
+--! the app.
+--!
+--!param keys (table) A sorted array of the key sequence to test
+--!param app (App) The App
+--!return (boolean,string) Whether the key is used, and if so, for what action
+local function is_hotkey_used(keys, app)
+  -- Find out if there is another hotkey with the same key assignment.
+  -- Make sure it's not the same key we are currently mapping.
+  local our_key_str = serialize(keys)
+  local key_str = ""
+  -- Go through the app.hotkeys table...
+  for k, _ in pairs(app.hotkeys) do
+    if type(app.hotkeys[k]) == "table" then
+      key_str = serialize(app.hotkeys[k])
+    elseif type(app.hotkeys[k]) == "string" then
+      key_str = serialize({app.hotkeys[k]})
+    end
+
+    -- If the key(s) that were pressed match the current key in the "app.hotkey" table...
+    if our_key_str == key_str then
+      return true, k
+    end
+  end
+
+  return false
+end
+
+--! Assign the given key sequence to a hotkey.
+--!
+--! Validates a given key sequence and applies it to the given hotkey.
+--! If the key sequence is already used, first swap that hotkey with the given
+--! one to prevent duplicates.
+--!
+--!param hotkey (string) The hotkey to change
+--!param hotkey_buttons_table (table) Configuration table of all hotkeys
+--!param app (App) The App
 local function hotkey_input(hotkey, hotkey_buttons_table, app)
   --[[
   TODO:
@@ -192,162 +288,46 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
         -- Ex: STRG for german's "CTRL".
   ]]
 
-  local table_01 = shallow_clone(hotkey_buttons_table[hotkey].noted_keys)
+  local noted_keys = hotkey_buttons_table[hotkey].noted_keys
 
   -- If the current hotkey being changed is the alternate global confirm key...
   if hotkey == "global_confirm_alt" then
     -- If it's the same as the "global_confirm" key...
-    if array_join( app.hotkeys["global_confirm"] ) == array_join(table_01) then
+    if array_join( app.hotkeys["global_confirm"] ) == array_join(noted_keys) then
       return
     end
   end
 
   -- Check if the table even has anything or has too much.
-  local table_length = 0
-  for _, _ in pairs(table_01) do
-    table_length = table_length + 1
-  end
+  local table_length = #noted_keys
   if table_length == 0 or table_length > 4 then
     hotkey_buttons_table[hotkey]:abort()
     return
   end
 
-  -- Go through the new key table and remove "left" or "right" from any modifier strings.
-  for k, v in pairs(table_01) do
-    -- Ctrl
-    if string.find(v, "ctrl", 1, true) then
-      table_01[k] = "ctrl"
-    end
-    -- Alt
-    if string.find(v, "alt", 1, true) then
-      table_01[k] = "alt"
-    end
-    -- Shift
-    if string.find(v, "shift", 1, true) then
-      table_01[k] = "shift"
-    end
-    -- GUI
-    if string.find(v, "gui", 1, true) then
-      table_01[k] = "gui"
-    end
-    -- MENU
-    if string.find(v, "menu", 1, true) then
-      table_01[k] = "menu"
+  noted_keys = normalize_modifiers(noted_keys)
+  noted_keys = sort_noted_keys(noted_keys)
+  local hotkey_used, hotkey_used_key = is_hotkey_used(noted_keys, app)
+
+  -- If this hotkey was used for a different action, swap with current assignment
+  if hotkey_used and hotkey ~= hotkey_used_key then
+    app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
+    if hotkey_buttons_table[hotkey_used_key] then
+      hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
     end
   end
 
-  -- Go through the table again and organize the modifier keys to have a particluar order.
-  --  Use this hierarcy:
-  --    CTRL, ALT, SHIFT, GUI, MENU
-  local modifier_hierarchy = { [1] = "ctrl", [2] = "alt", [3] = "shift", [4] = "gui", [5] = "menu"}
-  local table_02 = {}
-  -- Go through and get the modifier keys and set them to the correct order.
-  for _, v1 in ipairs(modifier_hierarchy) do
-    for _, v2 in ipairs(table_01) do
-      if v1 == v2 then
-        table_02[#table_02 + 1] = v2
-      end
-    end
+  if #noted_keys == 1 then
+    noted_keys = noted_keys[1]
   end
 
-  -- Go through table_01 and only copy the non-modifier keys into table_03.
-  local table_03 = {}
-  local temp_index = 1
-  for _, v in pairs(table_01) do
-    if v ~= "ctrl" and v ~= "alt" and v ~= "shift" and v ~= "gui" and v ~= "menu" then
-      table_03[temp_index] = v
-    end
-    temp_index = temp_index + 1
+  app.hotkeys[hotkey] = noted_keys
+  -- If the key is "global_cancel_alt"...
+  if hotkey == "global_cancel_alt" then
+    app.hotkeys["global_stop_movie_alt"] = noted_keys
+    app.hotkeys["global_window_close_alt"] = noted_keys
   end
 
-  -- Go through the new table_03 and order it according to the key hairarchy.
-  local table_04 = {}
-  for _, v1 in ipairs(key_hierarchy) do
-    for _, v2 in pairs(table_03) do
-      if v1 == v2 then
-        table_04[#table_04 + 1] = v2
-      end
-    end
-  end
-
-  -- Then go through table_02 and table_04 and put it all in table_FIN.
-  local table_FIN = {}
-  for _, v in ipairs(table_02) do
-    table_FIN[#table_FIN + 1] = v
-  end
-  for _, v in ipairs(table_04) do
-    table_FIN[#table_FIN + 1] = v
-  end
-
-  -- Find out if there is another hotkey with the same key assignment.
-  -- Make sure it's not the same key we are currently mapping.
-  local hotkey_used = false
-  local hotkey_used_key = ""
-  local keys_01 = serialize(table_FIN)
-  local keys_02 = ""
-  -- Go through the app.hotkeys table...
-  for k, _ in pairs(app.hotkeys) do
-    if type(app.hotkeys[k]) == "table" then
-      keys_02 = serialize(app.hotkeys[k])
-    elseif type(app.hotkeys[k]) == "string" then
-      keys_02 = serialize({app.hotkeys[k]})
-    end
-
-    -- If the key(s) that were pressed (table_FIN) match the current key in the "app.hotkey" table...
-    if keys_01 == keys_02 then
-      hotkey_used = true
-      hotkey_used_key = k
-    end
-  end
-
-  local clone_key = false
-  if hotkey_used then
-    -- If it is NOT the same key we are currently working with...
-    if hotkey ~= hotkey_used_key then
-      clone_key = true
-    end
-  end
-
-  -- Note the table length of table_FIN.
-  table_length = 0
-  for _ in pairs(table_FIN) do
-    table_length = table_length + 1
-  end
-
-  -- Apply according to how many keys are pressed.
-  -- If there are multiple keys pressed...
-  if table_length > 1 then
-    if clone_key then
-      app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
-      if hotkey_buttons_table[hotkey_used_key] then
-        hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
-      end
-    end
-
-    app.hotkeys[hotkey] = table_FIN
-    -- If the key is "global_cancel_alt"...
-    if hotkey == "global_cancel_alt" then
-      app.hotkeys["global_stop_movie_alt"] = table_FIN
-      app.hotkeys["global_window_close_alt"] = table_FIN
-    end
-  -- If there is only one key pressed...
-  else
-    if clone_key then
-      app.hotkeys[hotkey_used_key] = shallow_clone(app.hotkeys[hotkey])
-      if hotkey_buttons_table[hotkey_used_key] then
-        hotkey_buttons_table[hotkey_used_key]:setText( string.upper(array_join(app.hotkeys[hotkey_used_key], "+")) )
-      end
-    end
-
-    app.hotkeys[hotkey] = table_FIN[1]
-    -- If the key is "global_cancel_alt"...
-    if hotkey == "global_cancel_alt" then
-      app.hotkeys["global_stop_movie_alt"] = table_FIN[1]
-      app.hotkeys["global_window_close_alt"] = table_FIN[1]
-    end
-  end
-
-  -- Set the current hotkeybox text.
   hotkey_buttons_table[hotkey]:setText( string.upper( array_join(app.hotkeys[hotkey], "+") ) )
 end
 
