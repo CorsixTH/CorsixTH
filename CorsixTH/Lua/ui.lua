@@ -369,11 +369,11 @@ function UI:addKeyHandler(keys, window, callback, ...)
 
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
-      if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = shallow_clone(self.app.hotkeys[keys])
-      elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = shallow_clone({self.app.hotkeys[keys]})
-      end
+    if type(self.app.hotkeys[keys]) == "table" then
+      temp_keys = shallow_clone(self.app.hotkeys[keys])
+    elseif type(self.app.hotkeys[keys]) == "string" then
+      temp_keys = shallow_clone({self.app.hotkeys[keys]})
+    end
   else
     if type(keys) == "string" then
       print(string.format("\"%s\" does not exist in the hotkeys configuration file.", keys))
@@ -465,11 +465,11 @@ function UI:removeKeyHandler(keys, window)
 
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
-      if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = {table.unpack(self.app.hotkeys[keys])}
-      elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = {table.unpack({self.app.hotkeys[keys]})}
-      end
+    if type(self.app.hotkeys[keys]) == "table" then
+      temp_keys = shallow_clone(self.app.hotkeys[keys])
+    elseif type(self.app.hotkeys[keys]) == "string" then
+      temp_keys = shallow_clone({self.app.hotkeys[keys]})
+    end
   else
     if type(keys) == "string" then
       print(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))

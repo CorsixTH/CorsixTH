@@ -239,6 +239,40 @@ local function sort_noted_keys(noted_keys)
   return result
 end
 
+--! Return an array with the modifier keys removed.
+--! Used when assigning the scroll keys.
+--!
+--!param noted_keys (table) Array of keys to check for modifiers
+--!return (table) New array of keys without modifiers
+local function remove_modifiers(noted_keys)
+  local res = shallow_clone(noted_keys)
+
+  for k, v in ipairs(res) do
+    -- Ctrl
+    if string.find(v, "ctrl", 1, true) then
+      table.remove(res, k)
+    end
+    -- Alt
+    if string.find(v, "alt", 1, true) then
+      table.remove(res, k)
+    end
+    -- Shift
+    if string.find(v, "shift", 1, true) then
+      table.remove(res, k)
+    end
+    -- GUI
+    if string.find(v, "gui", 1, true) then
+      table.remove(res, k)
+    end
+    -- MENU
+    if string.find(v, "menu", 1, true) then
+      table.remove(res, k)
+    end
+  end
+
+  return res
+end
+
 --! Determine if the given key sequence is already being used for an action in
 --! the app.
 --!
@@ -290,14 +324,6 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
 
   local noted_keys = hotkey_buttons_table[hotkey].noted_keys
 
-  -- If the current hotkey being changed is the alternate global confirm key...
-  if hotkey == "global_confirm_alt" then
-    -- If it's the same as the "global_confirm" key...
-    if array_join( app.hotkeys["global_confirm"] ) == array_join(noted_keys) then
-      return
-    end
-  end
-
   -- Check if the table even has anything or has too much.
   local table_length = #noted_keys
   if table_length == 0 or table_length > 4 then
@@ -305,8 +331,28 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
     return
   end
 
+  -- If the noted key input is "enter", "return", or "escape"...
+  if array_join(noted_keys) == array_join( {"enter"} ) or
+      array_join(noted_keys) == array_join( {"return"} ) or
+      array_join(noted_keys) == array_join( {"escape"} ) then
+    -- Abort, as we don't want the enter or esc key used for anything other
+    --  than "global_confirm" and "global_cancel".
+    hotkey_buttons_table[hotkey]:abort()
+    return
+  end
+
   noted_keys = normalize_modifiers(noted_keys)
   noted_keys = sort_noted_keys(noted_keys)
+
+  -- If the current hotkey is a scroll key...
+  if hotkey == "ingame_scroll_up" or
+      hotkey == "ingame_scroll_down" or
+      hotkey == "ingame_scroll_left" or
+      hotkey == "ingame_scroll_right" then
+    -- Get rid of any modifers, as they won't work correctly, anyway.
+    noted_keys = remove_modifiers(noted_keys)
+  end
+
   local hotkey_used, hotkey_used_key = is_hotkey_used(noted_keys, app)
 
   -- If this hotkey was used for a different action, swap with current assignment
