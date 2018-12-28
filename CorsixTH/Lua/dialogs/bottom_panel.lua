@@ -103,7 +103,7 @@ function UIBottomPanel:registerKeyHandlers()
   local ui = self.ui
   local buttons = self.additional_buttons
 
-  -- original TH F-key shortcuts
+  -- The bottom panel hotkeys.
   ui:addKeyHandler("ingame_panel_bankManager", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
   ui:addKeyHandler("ingame_panel_bankStats", self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
   ui:addKeyHandler("ingame_panel_staffManage", buttons[1], buttons[1].handleClick, "left")    -- staff management
@@ -113,13 +113,13 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_panel_status", buttons[5], buttons[5].handleClick, "left")    -- status
   ui:addKeyHandler("ingame_panel_charts", buttons[6], buttons[6].handleClick, "left")    -- charts
   ui:addKeyHandler("ingame_panel_policy", buttons[7], buttons[7].handleClick, "left")    -- policy
-  -- New bottom panel hotkeys for the first 4 buttons.
+  -- Hotkeys for building a room, furnishing the corridor, editing a room, and hiring staff.
   ui:addKeyHandler("ingame_panel_buildRoom", self, self.dialogBuildRoom)    -- Build room.
   ui:addKeyHandler("ingame_panel_furnishCorridor", self, self.dialogFurnishCorridor)    -- Furnish corridor.
   ui:addKeyHandler("ingame_panel_editRoom", self, self.editRoom)    -- Edit room.
   ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.
 
-  -- "old" keyboard shortcuts for some of the fullscreen windows
+  -- Alternate keyboard shortcuts for some of the fullscreen windows.
   ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- T for town map
   ui:addKeyHandler("ingame_panel_research_alt", buttons[4], buttons[4].handleClick, "left") -- R for research
   local config = ui.app.config

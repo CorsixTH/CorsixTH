@@ -18,12 +18,6 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
-  function loadstring(str)
-    return load(str)
-  end
-end
-
 --[[ Iterator factory for iterating over the deep children of a table.
   For example: for fn in values(_G, "*.remove") do fn() end
   Will call os.remove() and table.remove()

@@ -805,7 +805,7 @@ local string_03 = [=[
 end
 
 for k, str_val in pairs(hotkeys_values) do
-  local status, lua_val = pcall(loadstring('return ' .. str_val))
+  local status, lua_val = pcall(loadstring_envcall('return ' .. str_val))
   if status then
     hotkeys_values[k] = lua_val
   end
