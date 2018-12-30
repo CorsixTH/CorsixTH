@@ -637,7 +637,7 @@ if hotkeys_needs_rewrite then
   -- The config file that will be written is divided into seperate strings, which are concatenated when they are written into the file.
   -- This is done to avoid a "Too many C levels" error.
   local string_01 = [=[
-----------------------------------------CorsixTH Hotkey Mappings File----------------------------------------
+--------------------------CorsixTH Hotkey Mappings File-------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
 -- Number settings should not have anything around their value, and complex
@@ -648,7 +648,7 @@ if hotkeys_needs_rewrite then
 --   setting = 42
 --   setting = { 42, [[value]] }
 
-----------------------------------------Global Keys----------------------------------------
+-----------------------------------Global Keys----------------------------------
 -- These are global keys to be used at anytime while the application is open.
 --]=] .. '\n' ..
 'global_confirm = ' .. hotkeys_values.global_confirm .. '\n' ..
@@ -668,7 +668,7 @@ if hotkeys_needs_rewrite then
 'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
 'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[
 
---------------------------------------------Scroll Keys------------------------------------------------------
+-----------------------------------Scroll Keys----------------------------------
 -- These are the keys to be used to scroll the camera around in-game.
 -- ]=] .. '\n' ..
 'ingame_scroll_up = ' .. hotkeys_values.ingame_scroll_up .. '\n' ..
@@ -677,7 +677,7 @@ if hotkeys_needs_rewrite then
 'ingame_scroll_right = ' .. hotkeys_values.ingame_scroll_right .. '\n' ..
 'ingame_scroll_shift = ' .. hotkeys_values.ingame_scroll_shift .. '\n' .. [=[
 
---------------------------------------------Zoom------------------------------------------------------
+--------------------------------------Zoom--------------------------------------
 -- These are keys used to zoom the camera in and out.
 -- ]=] .. '\n' ..
 'ingame_zoom_in = '.. hotkeys_values.ingame_zoom_in .. '\n' ..
@@ -685,7 +685,7 @@ if hotkeys_needs_rewrite then
 'ingame_zoom_out = ' .. hotkeys_values.ingame_zoom_out .. '\n' ..
 'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' .. [=[
 
-----------------------------------------In-Game Menus----------------------------------------
+----------------------------------In-Game Menus---------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
 -- ]=] .. '\n' ..
 'ingame_showmenubar = ' .. hotkeys_values.ingame_showmenubar .. '\n' ..
@@ -697,7 +697,7 @@ if hotkeys_needs_rewrite then
 
   local string_02 = [=[
 
-----------------------------------------Speed Control------------------------------------------------------
+----------------------------------Speed Control---------------------------------
 -- These pause and control the speed of the game.
 -- ]=] .. '\n' ..
 'ingame_pause = ' .. hotkeys_values.ingame_pause .. '\n' ..
@@ -708,7 +708,7 @@ if hotkeys_needs_rewrite then
 'ingame_gamespeed_thensome = ' .. hotkeys_values.ingame_gamespeed_thensome .. '\n' ..
 'ingame_gamespeed_speedup = ' .. hotkeys_values.ingame_gamespeed_speedup .. '\n' .. [=[
 
-----------------------------------------In-Game Bottom Panel------------------------------------------------------
+------------------------------In-Game Bottom Panel------------------------------
 -- These open in-game panel windows like the town map or the "build room" dialog.
 -- ]=] .. '\n' ..
 'ingame_panel_bankManager = ' .. hotkeys_values.ingame_panel_bankManager .. '\n' ..
@@ -729,12 +729,12 @@ if hotkeys_needs_rewrite then
 'ingame_panel_editRoom = ' .. hotkeys_values.ingame_panel_editRoom .. '\n' ..
 'ingame_panel_hireStaff = ' .. hotkeys_values.ingame_panel_hireStaff .. '\n' .. [=[
 
-----------------------------------------Rotate Object----------------------------------------
+----------------------------------Rotate Object---------------------------------
 -- This key rotates objects while they are being placed.
 -- ]=] .. '\n' ..
 'ingame_rotateobject = ' .. hotkeys_values.ingame_rotateobject .. '\n' .. [=[
 
-----------------------------------------Quick Keys----------------------------------------
+-----------------------------------Quick Keys-----------------------------------
 -- These are keys for quick saving and loading, and for quickly restarting and quitting the level.
 -- ]=] .. '\n' ..
 'ingame_quickSave = ' .. hotkeys_values.ingame_quickSave .. '\n' ..
@@ -742,7 +742,7 @@ if hotkeys_needs_rewrite then
 'ingame_restartLevel = ' .. hotkeys_values.ingame_restartLevel .. '\n' ..
 'ingame_quitLevel = ' .. hotkeys_values.ingame_quitLevel .. '\n' .. [=[
 
-----------------------------------------Set Transparent----------------------------------------
+---------------------------------Set Transparent--------------------------------
 -- While held down any walls will be transparent, allowing you to see behind them.
 -- ]=] .. '\n' ..
 'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
@@ -750,7 +750,7 @@ if hotkeys_needs_rewrite then
 
 local string_03 = [=[
 
-----------------------------------------Store and Recall Position----------------------------------------
+----------------------------Store and Recall Position---------------------------
 -- These keys store and recall camera positions. If you press the key(s) that correspond to
 -- "ingame_recallPosition_1" while looking over the operating room, for instance, and then
 -- you move the camera away from there, you can press "ingame_recallPosition_1" whenever
@@ -777,7 +777,7 @@ local string_03 = [=[
 'ingame_recallPosition_9 = ' .. hotkeys_values.ingame_recallPosition_9 .. '\n' ..
 'ingame_recallPosition_0 = ' .. hotkeys_values.ingame_recallPosition_0 .. '\n' .. [=[
 
-----------------------------------------Toggle Various----------------------------------------
+---------------------------------Toggle Various---------------------------------
 -- These toggle various things. The names tell all.
 -- ]=] .. '\n' ..
 'ingame_toggleAnnouncements = ' .. hotkeys_values.ingame_toggleAnnouncements .. '\n' ..
@@ -786,13 +786,13 @@ local string_03 = [=[
 'ingame_toggleAdvisor = ' .. hotkeys_values.ingame_toggleAdvisor .. '\n' ..
 'ingame_toggleInfo = ' .. hotkeys_values.ingame_toggleInfo .. '\n' .. [=[
 
-----------------------------------------Dump Log----------------------------------------
+------------------------------------Dump Log------------------------------------
 -- These keys dump logs. And strings, if too much fiber was taken.
 -- ]=] .. '\n' ..
 'ingame_poopLog = ' .. hotkeys_values.ingame_poopLog .. '\n' ..
 'ingame_poopStrings = ' .. hotkeys_values.ingame_poopStrings .. '\n' .. [=[
 
-----------------------------------------Patient, Go Home!------------------------------------------------------
+--------------------------------Patient, Go Home--------------------------------
 -- This sends a patient home. Also a good anime episode name.
 -- ]=] .. '\n' ..
 'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[

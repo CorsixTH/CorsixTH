@@ -74,7 +74,7 @@ end
 
 
 function UIOptions:UIOptions(ui, mode)
-  self:UIResizable(ui, 320, 412, col_bg)
+  self:UIResizable(ui, 320, 430, col_bg)
 
   local app = ui.app
   self.mode = mode
@@ -203,12 +203,12 @@ function UIOptions:UIOptions(ui, mode)
 
   -- "Hotkeys" button
   local hotkey_y_pos = self:_getOptionYPos() + 10
-  self:addBevelPanel(20, hotkey_y_pos, BTN_WIDTH, 30, col_bg):setLabel(_S.options_window.hotkey)
-    :makeButton(0, 0, BTN_WIDTH, 30, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
+  self:addBevelPanel(20, hotkey_y_pos, 280, 40, col_bg):setLabel(_S.options_window.hotkey)
+    :makeButton(0, 0, 280, 40, nil, self.buttonHotkey):setTooltip(_S.tooltip.options_window.hotkey)
 
   -- "Back" button
   -- Give some extra space to back button. This is fine as long as it is the last button in the options menu
-  local back_button_y_pos = self:_getOptionYPos() + 15
+  local back_button_y_pos = self:_getOptionYPos() + 30
   self:addBevelPanel(20, back_button_y_pos, 280, 40, col_bg):setLabel(_S.options_window.back)
     :makeButton(0, 0, 280, 40, nil, self.buttonBack):setTooltip(_S.tooltip.options_window.back)
 end

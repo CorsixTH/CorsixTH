@@ -120,25 +120,25 @@ function UIBottomPanel:registerKeyHandlers()
   ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.
 
   -- Alternate keyboard shortcuts for some of the fullscreen windows.
-  ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- T for town map
-  ui:addKeyHandler("ingame_panel_research_alt", buttons[4], buttons[4].handleClick, "left") -- R for research
+  ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- town map
+  ui:addKeyHandler("ingame_panel_research_alt", buttons[4], buttons[4].handleClick, "left") -- research
   local config = ui.app.config
   if not config.volume_opens_casebook then
-    ui:addKeyHandler("ingame_panel_casebook_alt", buttons[3], buttons[3].handleClick, "left") -- C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt", buttons[3], buttons[3].handleClick, "left") -- casebook
   else
-    ui:addKeyHandler("ingame_panel_casebook_alt02", buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt02", buttons[3], buttons[3].handleClick, "left") -- casebook
   end
-  ui:addKeyHandler("ingame_loadMenu", self, self.openLoad)  -- Shift + L for Load saved game menu
-  ui:addKeyHandler("ingame_saveMenu", self, self.openSave)  -- Shift + S for Load create save menu
-  ui:addKeyHandler("ingame_restartLevel", self, self.restart)  -- Shift + R for restart the level
-  ui:addKeyHandler("ingame_quitLevel", self, self.quit)  -- Shift + Q quit the game and return to main menu
-  ui:addKeyHandler("ingame_quickSave", self, self.quickSave)  -- Shift+Alt+S quick save
-  ui:addKeyHandler("ingame_quickLoad", self, self.quickLoad)  -- Shift+Alt+L load last quick save
+  ui:addKeyHandler("ingame_loadMenu", self, self.openLoad)  -- load saved game menu
+  ui:addKeyHandler("ingame_saveMenu", self, self.openSave)  -- load create save menu
+  ui:addKeyHandler("ingame_restartLevel", self, self.restart)  -- restart the level
+  ui:addKeyHandler("ingame_quitLevel", self, self.quit)  -- quit the game and return to main menu
+  ui:addKeyHandler("ingame_quickSave", self, self.quickSave)  -- quick save
+  ui:addKeyHandler("ingame_quickLoad", self, self.quickLoad)  -- load last quick save
 
   -- misc. keyhandlers
-  ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- I for Information when you first build
-  ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- open the jukebox
+  ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- message
+  ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- information when you first build
+  ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- jukebox
 end
 
 function UIBottomPanel:openJukebox()
