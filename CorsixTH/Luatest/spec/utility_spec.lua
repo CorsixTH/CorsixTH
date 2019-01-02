@@ -31,7 +31,7 @@ describe("serialize", function()
   it("serializes a simple key value table", function()
     local test_tbl = {foo='bar', [true]='candy', bar=42}
     local res = serialize(test_tbl)
-    local res_tbl = loadstring_envcall("return " .. res)()
+    local res_tbl = loadstring_envcall("return " .. res)({})
     assert.same(test_tbl, res_tbl)
   end)
 
