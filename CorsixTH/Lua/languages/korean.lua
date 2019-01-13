@@ -597,15 +597,15 @@ tooltip = {
   },
 }
 menu_charts = {
-  bank_manager =    "  (%1%) 은행 지점장  ",
-  statement =       "  (%1%) 명세서  ",
-  staff_listing =   "  (%1%) 직원 목록  ",
-  town_map =        "  (%1%) 마을 지도  ",
-  casebook =        "  (%1%) 사례집  ",
-  research =        "  (%1%) 연구  ",
-  status =          "  (%1%) 상태  ",
-  graphs =          "  (%1%) 그래프  ",
-  policy =          "  (%1%) 정책  ",
+  bank_manager =    "  (F1) 은행 지점장  ",
+  statement =       "  (F2) 명세서  ",
+  staff_listing =   "  (F3) 직원 목록  ",
+  town_map =        "  (F4) 마을 지도  ",
+  casebook =        "  (F5) 사례집  ",
+  research =        "  (F6) 연구  ",
+  status =          "  (F7) 상태  ",
+  graphs =          "  (F8) 그래프  ",
+  policy =          "  (F9) 정책  ",
   briefing =        "  브리핑  ",
 }
 town_map = {
@@ -826,16 +826,16 @@ pay_rise = {
 }
 menu_debug = {
   jump_to_level = "  다음 레벨로 점프  ",
-  transparent_walls = "  (%1%) 투명한 벽  ",
+  transparent_walls = "  (X) 투명한 벽  ",
   limit_camera = "  카메라 제한  ",
   disable_salary_raise = "  급여 인상 비활성화  ",
   make_debug_fax = "  디버그 팩스 만들기  ",
   make_debug_patient = "  디버그 환자 만들기  ",
-  cheats = "  (%1%) 치트  ",
-  lua_console = "  (%1%) 루아 콘솔  ",
+  cheats = "  (F11) 치트  ",
+  lua_console = "  (F12) 루아 콘솔  ",
   calls_dispatcher = "  콜 디스패쳐  ",
-  dump_strings = "  (%1%) 문자열 덤프  ",
-  dump_gamelog = "  (%1%) 게임 로그 덤프  ",
+  dump_strings = "  문자열 덤프  ",
+  dump_gamelog = "  (CTRL+D) 게임 로그 덤프  ",
   map_overlay = "  맵 오버레이  ",
   sprite_viewer = "  스프라이트 뷰어  ",
 }
@@ -851,16 +851,16 @@ progress_report = {
   more_drinks_machines = "자판기를 더 설치하세요.",
 }
 menu_options = {
-  sound = "  (%1%) 효과음   ",
-  announcements = "  (%1%) 공지   ",
-  music = "  (%1%) 음악   ",
+  sound = "  효과음   ",
+  announcements = "  공지   ",
+  music = "  음악   ",
   sound_vol = "  효과음 볼륨   ",
   announcements_vol = "  공지 볼륨  ",
   music_vol = "  음악 볼륨  ",
-  jukebox = "  (%1%) 주크박스  ",
+  jukebox = "  (J) 주크박스  ",
   lock_windows = "  창 잠그기  ",
   edge_scrolling = "  가장자리 스크롤  ",
-  adviser_disabled = "  (%1%) 조언자  ",
+  adviser_disabled = "  (SHIFT+A) 조언자  ",
   twentyfour_hour_clock = "  24 시간 시계  ",
   warmth_colors = "  온도 표시 색  ",
   game_speed = "  게임 속도  ",
@@ -868,12 +868,12 @@ menu_options = {
   wage_increase = "  급여 인상  ",
 }
 menu_options_game_speed = {
-  pause = "  (%1%) 일시 정지  ",
-  slowest = "  (%1%) 가장 느림  ",
-  slower = "  (%1%) 느림  ",
-  normal = "  (%1%) 보통  ",
-  max_speed = "  (%1%) 최고 속도  ",
-  and_then_some_more = "  (%1%) 에서 더 빠르게  ",
+  pause = "  (P) 일시 정지  ",
+  slowest = "  (1) 가장 느림  ",
+  slower = "  (2) 느림  ",
+  normal = "  (3) 보통  ",
+  max_speed = "  (4) 최고 속도  ",
+  and_then_some_more = "  (5) 에서 더 빠르게  ",
 }
 rooms_short = {
   gps_office = "진료실",
@@ -1984,10 +1984,10 @@ menu_file_load = {
   [8] = "  게임 8  ",
 }
 menu_file = {
-  quit = " (%1%) 종료   ",
-  save = " (%1%) 저장   ",
-  load = " (%1%) 불러오기   ",
-  restart = " (%1%) 재시작",
+  quit = " (SHIFT+Q) 종료   ",
+  save = " (SHIFT+S) 저장   ",
+  load = " (SHIFT+L) 불러오기   ",
+  restart = " (SHIFT+R) 재시작",
 }
 menu_options_wage_increase = {
   deny = "    거절 ",

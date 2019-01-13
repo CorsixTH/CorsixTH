@@ -119,16 +119,16 @@ menu_file.restart     = "  Újrakezdés  "
 
 menu_debug = {
   jump_to_level               = "  UGRÁS PÁLYÁRA  ",
-  transparent_walls           = "  (%1%) ÁTLÁTSZÓ FALAK  ",
+  transparent_walls           = "  (X) ÁTLÁTSZÓ FALAK  ",
   limit_camera                = "  KAMERA HATÁROLÁSA  ",
   disable_salary_raise        = "  FIZETÉSEMELÉS KIKAPCSOLÁSA  ",
-  make_debug_fax              = "  FAX HIBAKERESÉS  ",
-  make_debug_patient          = "  BETEG HIBAKERESÉS  ",
-  cheats                      = "  (%1%) CSALÁSOK  ",
-  lua_console                 = "  (%1%) LUA KONZOL  ",
+  make_debug_fax              = "  (F8) FAX HIBAKERESÉS  ",
+  make_debug_patient          = "  (F9) BETEG HIBAKERESÉS  ",
+  cheats                      = "  (F11) CSALÁSOK  ",
+  lua_console                 = "  (F12) LUA KONZOL  ",
   calls_dispatcher            = "  HÍVÁS ELOSZTÓ  ",
-  dump_strings                = "  (%1%) SZTRINGEK LEMENTÉSE  ",
-  dump_gamelog                = "  (%1%) JÁTÉK LOG LEMENTÉSE  ",
+  dump_strings                = "  SZTRINGEK LEMENTÉSE  ",
+  dump_gamelog                = "  (CTRL+D) JÁTÉK LOG LEMENTÉSE  ",
   map_overlay                 = "  TÉRKÉP RÉTEG  ",
   sprite_viewer               = "  SPRITE NÉZEGETŐ  ",
 }
@@ -840,10 +840,10 @@ menu = {
 
 -- Menu File
 menu_file = {
-  load                  = "  (%1%) Betöltés  ",
-  save                  = "  (%1%) Mentés  ",
-  restart               = "  (%1%) Újrakezdés  ",
-  quit                  = "  (%1%) Kilépés  ",
+  load                  = "  Betöltés  ",
+  save                  = "  Mentés  ",
+  restart               = "  Újrakezdés  ",
+  quit                  = "  Kilépés  ",
 }
 menu_file_load = {
   [1] = "  Mentés 1  ",
@@ -868,15 +868,15 @@ menu_file_save = {
 
 -- Menu Options
 menu_options = {
-  sound               = "  (%1%) Hang  ",
-  announcements       = "  (%1%) Hangosbemondó  ",
-  music               = "  (%1%) Zene  ",
+  sound               = "  Hang  ",
+  announcements       = "  Hangosbemondó  ",
+  music               = "  Zene  ",
   sound_vol           = "  Hangerő  ",
   announcements_vol   = "  Hangosbemondó hangereje  ",
   music_vol           = "  Zene hangereje  ",
   autosave            = "  Automatikus mentés  ",
   game_speed          = "  Játék sebessége  ",
-  jukebox             = "  (%1%) Zenegép  ",
+  jukebox             = "  Zenegép  ",
 }
 
 -- Menu Options Volume
@@ -895,11 +895,11 @@ menu_options_volume = {
 
 -- Menu Options Game Speed
 menu_options_game_speed = {
-  slowest             = "  (%1%) Leglassabb  ",
-  slower              = "  (%1%) Lassú  ",
-  normal              = "  (%1%) Normál  ",
-  max_speed           = "  (%1%) Maximum sebesség  ",
-  and_then_some_more  = "  (%1%) Még egy kicsivel több  ",
+  slowest             = "  Leglassabb  ",
+  slower              = "  Lassú  ",
+  normal              = "  Normál  ",
+  max_speed           = "  Maximum sebesség  ",
+  and_then_some_more  = "  Még egy kicsivel több  ",
 }
 
 -- Menu Display
@@ -911,14 +911,14 @@ menu_display = {
 
 -- Menu Charts
 menu_charts = {
-  statement           = "  (%1%) Egyenleg  ",
-  casebook            = "  (%1%) Esetek  ",
-  policy              = "  (%1%) Szabályzat  ",
-  research            = "  (%1%) Kutatás  ",
-  graphs              = "  (%1%) Grafikonok  ",
-  staff_listing       = "  (%1%) Személyzet  ",
-  bank_manager        = "  (%1%) Bankár  ",
-  status              = "  (%1%) Állapot  ",
+  statement           = "  Egyenleg  ",
+  casebook            = "  Esetek  ",
+  policy              = "  Szabályzat  ",
+  research            = "  Kutatás  ",
+  graphs              = "  Grafikonok  ",
+  staff_listing       = "  Személyzet  ",
+  bank_manager        = "  Bankár  ",
+  status              = "  Állapot  ",
   briefing            = "  Eligazítás  ",
 }
 

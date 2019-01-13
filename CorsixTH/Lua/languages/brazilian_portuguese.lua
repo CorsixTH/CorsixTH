@@ -89,33 +89,33 @@ tooltip.research_policy.research_progress = "Progresso para a próxima descobert
 menu["player_count"] = "QUANTIDADE DE JOGADORES"
 
 menu_file = {
-  load =    "  (%1%) CARREGAR  ",
-  save =    "  (%1%) SALVAR  ",
-  restart = "  (%1%) REINICIAR  ",
-  quit =    "  (%1%) SAIR  ",
+  load =    " CARREGAR (SHIFT+L)   ",
+  save =    " SALVAR (SHIFT+S)   ",
+  restart = " REINICIAR (SHIFT+R)",
+  quit =    " SAIR (SHIFT+Q)   ",
 }
 
 menu_options = {
-  sound = "  (%1%) SOM  ",
-  announcements = "  (%1%) ANUNCIOS  ",
-  music = "  (%1%) MUSICA  ",
-  jukebox = "  (%1%) MAQUINA DE DISCOS  ",
+  sound = "  SOM (ALT+S)  ",
+  announcements = "  ANUNCIOS (ALT+A)   ",
+  music = "  MUSICA (ALT+M)   ",
+  jukebox = "  MAQUINA DE DISCOS (J)  ",
   lock_windows = "  TRAVAR JANELAS  ",
   edge_scrolling = "  ROLAR MARGEM  ",
   capture_mouse = "  CAPTURAR MOUSE  ",
-  adviser_disabled = "  (%1%) CONSELHEIRO  ",
+  adviser_disabled = "  CONSELHEIRO (SHIFT+A)  ",
   warmth_colors = "  CORES QUENTES  ",
-  wage_increase = "  EXIGENCIAS SALARIAS  ",
+  wage_increase = "  EXIGENCIAS SALARIAS",
   twentyfour_hour_clock = "  RELOGIO DE 24 HORAS  ",
 }
 
 menu_options_game_speed = {
-  pause               = "  (%1%) PAUSAR  ",
-  slowest             = "  (%1%) MUITO LENTO  ",
-  slower             = "  (%1%) LENTO  ",
-  normal              = "  (%1%) NORMAL  ",
-  max_speed           = "  (%1%) RAPIDO  ",
-  and_then_some_more   = "  (%1%) MUITO RAPIDO  ",
+  pause               = "  PAUSAR (P)  ",
+  slowest             = "  MUITO LENTO (1)  ",
+  slower             = "  LENTO (2)  ",
+  normal              = "  NORMAL (3)  ",
+  max_speed           = "  RAPIDO (4)  ",
+  and_then_some_more   = "  MUITO RAPIDO (5)  ",
 }
 
 menu_options_warmth_colors = {
@@ -131,31 +131,31 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager = "  (%1%) GERENTE DO BANCO  ",
-  statement = "  (%1%) ESTADO DA CONTA  ",
-  staff_listing = "  (%1%) LISTA DOS FUNCIONARIOS  ",
-  town_map = "  (%1%) MAPA DA CIDADE  ",
-  casebook = "  (%1%) FICHA CLINICA  ",
-  research = "  (%1%) PESQUISA  ",
-  status = "  (%1%) ESTADO  ",
-  graphs = "  (%1%) GRAFICO  ",
-  policy = "  (%1%) NORMAS  ",
+  bank_manager = "  GERENTE DO BANCO (F1)  ",
+  statement = "  ESTADO DA CONTA (F2)   ",
+  staff_listing = "  LISTA DOS FUNCIONARIOS (F3)  ",
+  town_map = "  MAPA DA CIDADE (F4)  ",
+  casebook = "  FICHA CLINICA (F5)  ",
+  research = "  PESQUISA (F6)  ",
+  status = "  ESTADO (F7)  ",
+  graphs = "  GRAFICO (F8)  ",
+  policy = "  NORMAS (F9)  ",
 }
 
 menu_debug = {
   jump_to_level               = "  SALTAR PARA NIVEL  ",
-  connect_debugger            = "  (%1%) CONECTAR SERVIDOR LUA DBGp  ",
-  transparent_walls           = "  (%1%) PAREDES TRANSPARENTES  ",
+  connect_debugger            = "  CONECTAR SERVIDOR LUA DBGp (CTRL + C)  ",
+  transparent_walls           = "  PAREDES TRANSPARENTES (X)  ",
   limit_camera                = "  LIMITAR CAMERA  ",
   disable_salary_raise        = "  DESATIVAR AUMENTO DE SALARIO  ",
   make_debug_fax              = "  FAZER DEBUG DO FAX  ",
   make_debug_patient          = "  FAZER DEBUG DO PACIENTE  ",
-  cheats                      = "  (%1%) TRAPAÇAS  ",
-  lua_console                 = "  (%1%) CONSOLE LUA  ",
-  debug_script                = "  (%1%) RODAR SCRIPT DE DEBUG  ",
+  cheats                      = "  TRAPAÇAS (F11)  ",
+  lua_console                 = "  CONSOLE LUA (F12)  ",
+  debug_script                = "  RODAR SCRIPT DE DEBUG (SHIFT + D)  ",
   calls_dispatcher            = "  CHAMAR CONTROLADOR  ",
   dump_strings                = "  DUMPAR TEXTOS DO JOGO  ",
-  dump_gamelog                = "  (%1%) DUMPAR LOG DO JOGO  ",
+  dump_gamelog                = "  DUMPAR LOG DO JOGO (CTRL + D)  ",
   map_overlay                 = "  SOBREPOR MAPA   ",
   sprite_viewer               = "  VISUALIZADOR DE SPRITE  ",
 }

@@ -26,7 +26,6 @@ globals = { -- Globals
             "lfs", "list_to_set", "loadfile_envcall", "loadstring_envcall",
             "permanent", "print_table", "rangeMapLookup", "rnc",
             "strict_declare_global", "table_length", "unpermanent", "values",
-            "serialize","array_join","shallow_clone",
 
             -- Game classes
             "AIHospital", "AnimationManager", "App", "Audio",
@@ -55,9 +54,7 @@ globals = { -- Globals
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
             "UIResolution", "UISaveGame", "UISaveMap", "UIStaff",
             "UIStaffManagement", "UIStaffRise", "UITipOfTheDay", "UITownMap",
-            "UIUpdate", "UIWatch", "UIHotkeyAssign", "UIScrollSpeed",
-            "UIShiftScrollSpeed", "UIZoomSpeed", "UIHotkeyAssign_Panels",
-            "UIHotkeyAssign_storeRecallPos",
+            "UIUpdate", "UIWatch",
 
             -- Actions
             "AnswerCallAction", "CallCheckPointAction", "CheckWatchAction",

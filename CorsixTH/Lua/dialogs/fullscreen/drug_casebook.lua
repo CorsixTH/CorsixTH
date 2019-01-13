@@ -41,7 +41,6 @@ function UICasebook:UICasebook(ui, disease_selection)
     return
   end
 
-  self.ui = ui
   self.hospital = ui.hospital
   self.casebook = self.hospital.disease_casebook
   self:updateDiseaseList()
@@ -55,7 +54,11 @@ function UICasebook:UICasebook(ui, disease_selection)
   self:addPanel(0, 235, 400):makeButton(0, 0, 140, 20, 0, self.concentrateResearch)
     :setTooltip(_S.tooltip.casebook.research)
 
-  self:registerKeyHandlers();
+  -- Hotkeys
+  self:addKeyHandler("up", self.scrollUp)
+  self:addKeyHandler("down", self.scrollDown)
+  self:addKeyHandler("right", self.increasePay)
+  self:addKeyHandler("left", self.decreasePay)
 
   -- Icons representing cure effectiveness and other important information.
   self.machinery = self:addPanel(6, 306, 352):setTooltip(_S.tooltip.casebook.cure_type.machine)
@@ -92,14 +95,6 @@ function UICasebook:UICasebook(ui, disease_selection)
     self.selected_disease = self.names_sorted[self.selected_index]
     self:updateIcons()
   end
-end
-
-function UICasebook:registerKeyHandlers()
-  -- Hotkeys
-  self:addKeyHandler("ingame_scroll_up", self.scrollUp)
-  self:addKeyHandler("ingame_scroll_down", self.scrollDown)
-  self:addKeyHandler("ingame_scroll_left", self.decreasePay)
-  self:addKeyHandler("ingame_scroll_right", self.increasePay)
 end
 
 function UICasebook:close()
@@ -403,8 +398,4 @@ function UICasebook:onTick()
     end
   end
   return UIFullscreen.onTick(self)
-end
-
-function UICasebook:afterLoad()
-  self:registerKeyHandlers()
 end

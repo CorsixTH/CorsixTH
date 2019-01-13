@@ -133,15 +133,11 @@ function UIStaffManagement:UIStaffManagement(ui)
 
   self:setCategory("Doctor")
 
-  self:registerKeyHandlers()
-end
-
-function UIStaffManagement:registerKeyHandlers()
   -- Hotkeys.
-  self:addKeyHandler("ingame_scroll_left", self.previousCategory)
-  self:addKeyHandler("ingame_scroll_right", self.nextCategory)
-  self:addKeyHandler("ingame_scroll_up", self.previousStaff)
-  self:addKeyHandler("ingame_scroll_down", self.nextStaff)
+  self:addKeyHandler("left", self.previousCategory)
+  self:addKeyHandler("right", self.nextCategory)
+  self:addKeyHandler("up", self.previousStaff)
+  self:addKeyHandler("down", self.nextStaff)
 end
 
 function UIStaffManagement:updateTooltips()
@@ -566,8 +562,4 @@ end
 function UIStaffManagement:close()
   UIFullscreen.close(self)
   self.ui:getWindow(UIBottomPanel):updateButtonStates()
-end
-
-function UIStaffManagement:afterLoad(old, new)
-  self:registerKeyHandlers()
 end

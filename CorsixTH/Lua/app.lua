@@ -38,7 +38,6 @@ local App = _G["App"]
 function App:App()
   self.command_line = {}
   self.config = {}
-  self.hotkeys = {}
   self.runtime_config = {}
   self.running = false
   self.key_modifiers = {}
@@ -236,16 +235,6 @@ function App:init()
     self:dumpStrings()
   end
 
-  -- Load/setup hotkeys.
-  local hotkeys_path = self.command_line["hotkeys-file"] or "hotkeys.txt"
-  local hotkeys_chunk, hotkeys_err = loadfile_envcall(hotkeys_path)
-  if not hotkeys_chunk then
-    error(_S.hotkeys_file_err.file_err_01 .. hotkeys_path .. _S.hotkeys_file_err.file_err_02 .. hotkeys_err )
-  else
-    hotkeys_chunk(self.hotkeys)
-  end
-  self:fixHotkeys()
-
   -- Load map before world
   corsixth.require("map")
 
@@ -302,7 +291,6 @@ function App:init()
     self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
     return true
   end
-
 
   -- Load main menu (which creates UI)
   local function callback_after_movie()
@@ -810,7 +798,7 @@ end
 
 function App:fixConfig()
   -- Fill in default values for things which don't exist
-  local config_defaults = select(2, corsixth.require("config_finder"))
+  local _, config_defaults = corsixth.require("config_finder")
   for k, v in pairs(config_defaults) do
     if self.config[k] == nil then
       self.config[k] = v
@@ -908,91 +896,6 @@ function App:saveConfig()
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
-  fi:close()
-end
-
-function App:fixHotkeys()
-  -- Fill in default values for things which don't exist
-  local hotkeys_defaults = select(4, corsixth.require("config_finder"))
-
-  for k, v in pairs(hotkeys_defaults) do
-    if self.hotkeys[k] == nil then
-      self.hotkeys[k] = v
-    end
-  end
-
-  for key, value in pairs(self.hotkeys) do
-    -- Trim whitespace from beginning and end string values - it shouldn't be
-    -- there (at least in any current configuration options).
-    if type(value) == "string" then
-      if value:match("^[%s]") or value:match("[%s]$") then
-        self.hotkeys[key] = value:match("^[%s]*(.-)[%s]*$")
-      end
-    end
-  end
-end
-
-function App:saveHotkeys()
-  -- Load lines from config file
-  local fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "r")
-  local lines = {}
-  local handled_ids = {}
-
-  if fi then
-    for line in fi:lines() do
-      lines[#lines + 1] = line
-      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
-        -- Look for identifiers we want to save
-        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
-        if identifier then
-          local _, temp
-          -- Trim possible trailing comment from value
-          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
-          value = temp or value
-          -- Remove enclosing [[]], if necessary
-          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
-          value = temp or value
-
-          -- If identifier also exists in runtime options, compare their values and
-          -- replace the line, if needed
-          handled_ids[identifier] = true
-
-          if value ~= serialize(self.hotkeys[identifier]) then
-            local new_value = self.hotkeys[identifier]
-            if type(new_value) == "string" then
-              new_value = string.format("[[%s]]", new_value)
-            else
-              new_value = serialize(new_value)
-            end
-            lines[#lines] = string.format("%s = %s", identifier, new_value)
-          end
-        end
-      end
-    end
-    fi:close()
-  end
-
-  -- Append options that were not found
-  for identifier, value in pairs(self.hotkeys) do
-    if not handled_ids[identifier] then
-      if type(value) == "string" then
-        value = string.format("[[%s]]", value)
-      else
-        value = tostring(value)
-      end
-      lines[#lines + 1] = string.format("%s = %s", identifier, value)
-    end
-  end
-  -- Trim trailing newlines
-  while lines[#lines] == "" do
-    lines[#lines] = nil
-  end
-
-  fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "w")
-  for _, line in ipairs(lines) do
-    fi:write(line .. "\n")
-  end
-
   fi:close()
 end
 
@@ -1517,6 +1420,7 @@ function App:afterLoad()
     self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
         "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     self.world:playLoadedEntitySounds()
+    return
   elseif new > old then
     self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
                        ") to " .. new .. " (" .. self:getVersion() ..
@@ -1544,8 +1448,8 @@ function App:afterLoad()
   end
 
   self.map:afterLoad(old, new)
-  self.ui:afterLoad(old, new)
   self.world:afterLoad(old, new)
+  self.ui:afterLoad(old, new)
 end
 
 function App:checkForUpdates()

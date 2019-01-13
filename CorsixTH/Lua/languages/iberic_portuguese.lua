@@ -127,10 +127,10 @@ object.litter = "Lixo"
 tooltip.objects.litter = "Lixo: Deitado fora por um paciente porque não encontrou um caixote do lixo onde o colocar."
 
 menu_options.lock_windows = "  BLOQUEAR JANELAS  "
-menu_options_game_speed.pause = "  (%1%) PAUSA  "
+menu_options_game_speed.pause = "  PAUSA  "
 
 menu_debug = {
-  transparent_walls           = "  (%1%) PAREDES TRANSPARENTES  ",
+  transparent_walls           = "  PAREDES TRANSPARENTES  ",
   limit_camera                = "  LIMITAR CAMARA  ",
   disable_salary_raise        = "  DESACTIVAR AUMENTO DOS SALÁRIOS  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
@@ -139,7 +139,7 @@ menu_debug = {
   show_watch                  = "  MOSTRAR RELÓGIO  ",
   create_emergency            = "  CRIAR EMERGENCIA  ",
   place_objects               = "  COLOCAR OBJECTOS  ",
-  dump_strings                = "  (%1%) DUMP DAS STRINGS  ",
+  dump_strings                = "  DUMP DAS STRINGS  ",
   map_overlay                 = "  OVERLAY DO MAPA  ",
   sprite_viewer               = "  VISUALIZAR SPRITES  ",
 }
@@ -393,11 +393,11 @@ date_format.daymonth = "%1% - %2% -"
 
 
 menu_debug = {
-  lua_console = "  (%1%) CONSOLA LUA",
+  lua_console = "  (F12) CONSOLA LUA",
   make_debug_fax = "  DEBUG FAX",
   calls_dispatcher = "  CHAMAR EXPEDIDOR",
-  cheats = "  (%1%) TRUQUES",
-  dump_gamelog = "  (%1%) CRIAR LOG DO JOGO",
+  cheats = "  (F11) TRUQUES",
+  dump_gamelog = "  (CTRL+D) CRIAR LOG DO JOGO",
   jump_to_level = "  SALTAR PARA OUTRO NIVEL",
 }
 
@@ -696,11 +696,11 @@ rooms_short = {
 
 -- Menu Options Game Speed
 menu_options_game_speed = {
-  slowest             = "  (%1%) MUITO LENTO  ",
-  slower              = "  (%1%) LENTO  ",
-  normal              = "  (%1%) NORMAL  ",
-  max_speed           = "  (%1%) RAPIDO  ",
-  and_then_some_more  = "  (%1%) AINDA MAIS RAPIDO  ",
+  slowest             = "  MUITO LENTO  ",
+  slower              = "  LENTO  ",
+  normal              = "  NORMAL  ",
+  max_speed           = "  RAPIDO  ",
+  and_then_some_more  = "  AINDA MAIS RAPIDO  ",
 }
 
 -- Menu Display
@@ -712,14 +712,14 @@ menu_display = {
 
 -- Menu Charts
 menu_charts = {
-  statement           = "  (%1%) INDICACOES  ",
-  casebook            = "  (%1%) PONTUARIO DE DOENÇAS  ",
-  policy              = "  (%1%) POLITICAS DO HOSPITAL  ",
-  research            = "  (%1%) PESQUISA  ",
-  graphs              = "  (%1%) GRAFICOS  ",
-  staff_listing       = "  (%1%) LISTA DO STAFF  ",
-  bank_manager        = "  (%1%) CONTA BANCARIA  ",
-  status              = "  (%1%) STATUS  ",
+  statement           = "  INDICACOES  ",
+  casebook            = "  PONTUARIO DE DOENÇAS  ",
+  policy              = "  POLITICAS DO HOSPITAL  ",
+  research            = "  PESQUISA  ",
+  graphs              = "  GRAFICOS  ",
+  staff_listing       = "  LISTA DO STAFF  ",
+  bank_manager        = "  CONTA BANCARIA  ",
+  status              = "  STATUS  ",
   briefing            = "  BRIEFING  ",
 }
 
@@ -734,24 +734,24 @@ menu = {
 
 -- Menu File
 menu_file = {
-  load                  = "  (%1%) LER JOGO  ",
-  save                  = "  (%1%) SALVAR JOGO  ",
-  restart               = "  (%1%) REINICIAR  ",
-  quit                  = "  (%1%) SAIR  ",
+  load                  = "  LER JOGO  ",
+  save                  = "  SALVAR JOGO  ",
+  restart               = "  REINICIAR  ",
+  quit                  = "  SAIR  ",
 }
 
 
 -- Menu Options
 menu_options = {
-  sound               = "  (%1%) SOM  ",
-  announcements       = "  (%1%) ANUNCIOS  ",
-  music               = "  (%1%) MUSICA  ",
+  sound               = "  SOM  ",
+  announcements       = "  ANUNCIOS  ",
+  music               = "  MUSICA  ",
   sound_vol           = "  VOLUME DOS SONS  ",
   announcements_vol   = "  SOM DOS ANUNCIOS  ",
   music_vol           = "  VOLUME DA MUSICA  ",
   autosave            = "  AUTOSAVE  ",
   game_speed          = "  VELOCIDADE DO JOGO  ",
-  jukebox             = "  (%1%) JUKEBOX  ",
+  jukebox             = "  JUKEBOX  ",
 }
 
 -- Menu Options Volume

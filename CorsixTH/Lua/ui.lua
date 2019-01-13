@@ -56,7 +56,6 @@ function UI:initKeyAndButtonCodes()
     k = tostring(k):lower()
     return rawget(t, k) or k
   end})
-  --[===[
   do
     local ourpath = debug.getinfo(1, "S").source:sub(2, -7)
     local result, err = loadfile_envcall(ourpath .. "key_mapping.txt")
@@ -86,7 +85,6 @@ function UI:initKeyAndButtonCodes()
       result(env)
     end
   end
-  ]===]
 
   local keypad = {
     ["Keypad 0"] = "insert",
@@ -168,10 +166,6 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
-  -- For use in onKeyUp when assigning hotkeys in the "Assign Hotkeys" window.
-  self.temp_button_down = false
-  --
-  self.key_noted = false
 
   self.down_count = 0
   if not minimal then
@@ -250,14 +244,15 @@ end
 
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
-  self:addKeyHandler("global_cancel", self, self.closeWindow)
-  self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
-  self:addKeyHandler("global_stop_movie", self, self.stopMovie)
-  self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
-  self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
-  self:addKeyHandler("global_exitApp", self, self.exitApplication)
-  self:addKeyHandler("global_resetApp", self, self.resetApp)
-  self:addKeyHandler("global_captureMouse", self, self.toggleCaptureMouse)
+  self:addKeyHandler("escape", self, self.closeWindow)
+  self:addKeyHandler("escape", self, self.stopMovie)
+  self:addKeyHandler("space", self, self.stopMovie)
+  self:addKeyHandler({"ctrl", "s"}, self, self.makeScreenshot)
+  self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
+  self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
+  self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
+  self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
 end
@@ -359,100 +354,20 @@ end
 -- pressed.
 --!param ... Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
-  -- It is nessecary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
-  -- the last key of that table permenently in the next line of code after this one, until the program is restarted.
-  -- I.E. if the "ingame_quitLevel" hotkey from the "hotkeys_values" table in "config_finder.lua" is a table that looks like this:
-  --   {"shift", "q"}
-  -- We would lose the "q" element until we restarted the game and the "hotkey.txt" was read from again, causing the "ingame_quitLevel"
-  -- table to be reset back to {"shift, "q"}
-  local temp_keys = {}
+  keys = (type(keys) == "table") and keys or {keys}
 
-  -- Check to see if "keys" key exist in the hotkeys table.
-  if self.app.hotkeys[keys] ~= nil then
-    if type(self.app.hotkeys[keys]) == "table" then
-      temp_keys = shallow_clone(self.app.hotkeys[keys])
-    elseif type(self.app.hotkeys[keys]) == "string" then
-      temp_keys = shallow_clone({self.app.hotkeys[keys]})
-    end
-  else
-    if type(keys) == "string" then
-      print(string.format("\"%s\" does not exist in the hotkeys configuration file.", keys))
-    else
-      print("Useage of addKeyHandler() requires the first argument to be a string of a key that can be found in the hotkeys configuration file.")
-    end
+  local key = table.remove(keys, #keys):lower()
+  local modifiers = list_to_set(keys) -- SET of modifiers
+  if not self.key_handlers[key] then
+    -- No handlers for this key? Create a new table.
+    self.key_handlers[key] = {}
   end
-
-  if temp_keys ~= nil then
-    local has_enterOrPlus
-    local temp_keys_copy = {}
-
-    if type(temp_keys) == "table" then
-      temp_keys_copy = shallow_clone(temp_keys)
-    elseif type(temp_keys) == "string" then
-      temp_keys_copy = {temp_keys}
-    end
-
-    for _, v in pairs(temp_keys_copy) do
-      if v == "enter" then
-        has_enterOrPlus = true
-      elseif v == "return" then
-        has_enterOrPlus = true
-      elseif v == "+" then
-        has_enterOrPlus = true
-      elseif v == "=" then
-        has_enterOrPlus = true
-      else
-        has_enterOrPlus = false
-      end
-    end
-
-    local key = table.remove(temp_keys, #temp_keys):lower()
-    local modifiers = list_to_set(temp_keys) -- SET of modifiers
-    if not self.key_handlers[key] then
-      -- No handlers for this key? Create a new table.
-      self.key_handlers[key] = {}
-    end
-
-    table.insert(self.key_handlers[key], {
-      modifiers = modifiers,
-      window = window,
-      callback = callback,
-      ...
-    })
-
-    -- If the handler added has enter, return, plus, or minus in it...
-    if has_enterOrPlus then
-      for k, _ in pairs(temp_keys_copy) do
-        if temp_keys_copy[k] == "enter" then
-          temp_keys_copy[k] = "return"
-        elseif temp_keys_copy[k] == "return" then
-          temp_keys_copy[k] = "enter"
-        elseif temp_keys_copy[k] == "+" then
-          temp_keys_copy[k] = "="
-        elseif temp_keys_copy[k] == "=" then
-          temp_keys_copy[k] = "+"
-        end
-      end
-
-      local key_02 = table.remove(temp_keys_copy, #temp_keys_copy):lower()
-      local modifiers_02 = list_to_set(temp_keys_copy) -- SET of modifiers
-      if not self.key_handlers[key_02] then
-        -- No handlers for this key? Create a new table.
-        self.key_handlers[key_02] = {}
-      end
-
-      -- Then make the same handler, but with the complementary button.
-      --  i.e. If it asks for "enter", it will also add "return".
-      table.insert(self.key_handlers[key_02], {
-        modifiers = modifiers_02,
-        window = window,
-        callback = callback,
-        ...
-      })
-    end
-  else
-    print("addKeyHandler() failed.")
-  end
+  table.insert(self.key_handlers[key], {
+    modifiers = modifiers,
+    window = window,
+    callback = callback,
+    ...
+  })
 end
 
 --! Unregister a key handler previously registered by `addKeyHandler`.
@@ -461,88 +376,19 @@ end
 --!param window (Window) The window of a key / window pair previously passed
 -- to `addKeyHandler`.
 function UI:removeKeyHandler(keys, window)
-  local temp_keys = nil
+  keys = (type(keys) == "table") and keys or {keys}
 
-  -- Check to see if "keys" key exist in the hotkeys table.
-  if self.app.hotkeys[keys] ~= nil then
-    if type(self.app.hotkeys[keys]) == "table" then
-      temp_keys = shallow_clone(self.app.hotkeys[keys])
-    elseif type(self.app.hotkeys[keys]) == "string" then
-      temp_keys = shallow_clone({self.app.hotkeys[keys]})
-    end
-  else
-    if type(keys) == "string" then
-      print(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))
-    else
-      print("Useage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
-    end
-  end
-
-  if temp_keys ~= nil then
-    local has_enterOrPlus
-    local temp_keys_copy = {}
-
-    if type(temp_keys) == "table" then
-      temp_keys_copy = shallow_clone(temp_keys)
-    elseif type(temp_keys) == "string" then
-      temp_keys_copy = shallow_clone({temp_keys})
-    end
-
-    for _, v in pairs(temp_keys_copy) do
-      if v == "enter" then
-        has_enterOrPlus = true
-      elseif v == "return" then
-        has_enterOrPlus = true
-      elseif v == "+" then
-        has_enterOrPlus = true
-      elseif v == "=" then
-        has_enterOrPlus = true
-      else
-        has_enterOrPlus = false
+  local key = table.remove(keys, #keys):lower()
+  local modifiers = list_to_set(keys) -- SET of modifiers
+  if self.key_handlers[key] then
+    for index, info in ipairs(self.key_handlers[key]) do
+      if info.window == window and compare_tables(info.modifiers, modifiers) then
+        table.remove(self.key_handlers[key], index)
       end
     end
-
-    local key = table.remove(temp_keys, #temp_keys):lower()
-    local modifiers = list_to_set(temp_keys) -- SET of modifiers
-    if self.key_handlers[key] then
-      for index, info in ipairs(self.key_handlers[key]) do
-        if info.window == window and compare_tables(info.modifiers, modifiers) then
-          table.remove(self.key_handlers[key], index)
-        end
-      end
-      -- If last key handler was removed, delete the (now empty) list.
-      if #self.key_handlers[key] == 0 then
-        self.key_handlers[key] = nil
-      end
-    end
-
-    -- If the handler added has enter, return, plus, or minus in it...
-    if has_enterOrPlus then
-      for k, _ in pairs(temp_keys_copy) do
-        if temp_keys_copy[k] == "enter" then
-          temp_keys_copy[k] = "return"
-        elseif temp_keys_copy[k] == "return" then
-          temp_keys_copy[k] = "enter"
-        elseif temp_keys_copy[k] == "+" then
-          temp_keys_copy[k] = "="
-        elseif temp_keys_copy[k] == "=" then
-          temp_keys_copy[k] = "+"
-        end
-      end
-
-      local key_02 = table.remove(temp_keys_copy, #temp_keys_copy):lower()
-      local modifiers_02 = list_to_set(temp_keys_copy) -- SET of modifiers
-      if self.key_handlers[key_02] then
-        for index, info in ipairs(self.key_handlers[key_02]) do
-          if info.window == window and compare_tables(info.modifiers, modifiers_02) then
-            table.remove(self.key_handlers[key_02], index)
-          end
-        end
-        -- If last key handler was removed, delete the (now empty) list.
-        if #self.key_handlers[key_02] == 0 then
-          self.key_handlers[key_02] = nil
-        end
-      end
+    -- If last key handler was removed, delete the (now empty) list.
+    if #self.key_handlers[key] == 0 then
+      self.key_handlers[key] = nil
     end
   end
 end
@@ -599,19 +445,6 @@ function UI:unregisterTextBox(box)
   for num, b in ipairs(self.textboxes) do
     if b == box then
       table.remove(self.textboxes, num)
-      break
-    end
-  end
-end
-
-function UI:registerHotkeyBox(box)
-  self.hotkeyboxes[#self.hotkeyboxes + 1] = box
-end
-
-function UI:unregisterHotkeyBox(box)
-  for num, b in ipairs(self.hotkeyboxes) do
-    if b == box then
-      table.remove(self.hotkeyboxes, num)
       break
     end
   end
@@ -721,18 +554,12 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
 
   -- Remove numlock modifier
   modifiers["numlockactive"] = nil
+
   -- If there is one, the current textbox gets the key.
   -- It will not process any text at this point though.
   for _, box in ipairs(self.textboxes) do
     if box.enabled and box.active and not handled then
       handled = box:keyInput(key, rawchar)
-    end
-  end
-
-  -- If there is a hotkey box
-  for _, hotkeybox in ipairs(self.hotkeyboxes) do
-    if hotkeybox.enabled and hotkeybox.active and not handled then
-      handled = hotkeybox:keyInput(key, rawchar, modifiers)
     end
   end
 
@@ -765,49 +592,15 @@ function UI:onKeyUp(rawchar)
             string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
             rawchar
   local key = rawchar:lower()
-
-  self.buttons_down[key] = nil
-
-  -- Go through all the hotkeyboxes.
-  for _, hotkeybox in ipairs(self.hotkeyboxes) do
-    -- If one is enabled and active...
-    if hotkeybox.enabled and hotkeybox.active then
-      -- If the key lifted is escape...
-      if(key == "escape") then
-        hotkeybox:abort()
-        hotkeybox.noted_keys = {}
-      else
-        -- Check if the current key lifted has already been noted.
-        self.key_noted = false
-        for _, v in pairs(hotkeybox.noted_keys) do
-          if v == key then
-            self.key_noted = true
-          end
-        end
-
-        -- If the current key hasn't been noted...
-        if self.key_noted == false then
-          hotkeybox.noted_keys[#hotkeybox.noted_keys + 1] = key
-        end
-
-        -- Says if there is still a button being pressed.
-        self.temp_button_down = false
-
-        -- Go through and check if there are still any buttons pressed. If so...
-        for _, _ in pairs(self.buttons_down) do
-          -- Then toggle the corresponding bool.
-          self.temp_button_down = true
-        end
-
-        --If there ISN'T still a button down when a button was released...
-        if self.temp_button_down == false then
-          -- Activate the confirm function on the hotkey box.
-          hotkeybox:confirm()
-          hotkeybox.noted_keys = {}
-        end
-      end
+  do
+    local mapped_button = self.key_to_button_remaps[key]
+    if mapped_button then
+      self:onMouseUp(mapped_button, self.cursor_x, self.cursor_y)
+      return true
     end
+    key = self.key_remaps[key] or key
   end
+  self.buttons_down[key] = nil
 end
 
 function UI:onEditingText(text, start, length)
@@ -1037,23 +830,56 @@ function UI:getCursorPosition(window)
 end
 
 function UI:addOrRemoveDebugModeKeyHandlers()
-  self:removeKeyHandler("global_connectDebugger", self)
-  self:removeKeyHandler("global_showLuaConsole", self)
-  self:removeKeyHandler("global_runDebugScript", self)
+  self:removeKeyHandler({"ctrl", "c"}, self)
+  self:removeKeyHandler("f12", self)
+  self:removeKeyHandler({"shift", "d"}, self)
   if self.app.config.debug then
-    self:addKeyHandler("global_connectDebugger", self, self.connectDebugger)
-    self:addKeyHandler("global_showLuaConsole", self, self.showLuaConsole)
-    self:addKeyHandler("global_runDebugScript", self, self.runDebugScript)
+    self:addKeyHandler({"ctrl", "c"}, self, self.connectDebugger)
+    self:addKeyHandler("f12", self, self.showLuaConsole)
+    self:addKeyHandler({"shift", "d"}, self, self.runDebugScript)
   end
 end
 
 function UI:afterLoad(old, new)
-  -- Get rid of old key handlers from save file.
-  self.key_handlers = {}
   if old < 5 then
     self.editing_allowed = true
   end
-  self:setupGlobalKeyHandlers()
+  if old < 63 then
+    -- modifiers have been added to key handlers
+    for _, handlers in pairs(self.key_handlers) do
+      for _, handler in ipairs(handlers) do
+        handler.modifiers = {}
+      end
+    end
+    -- some global key shortcuts were converted to use keyHandlers
+    self:removeKeyHandler("f12", self)
+    self:removeKeyHandler({"shift", "d"}, self)
+    self:setupGlobalKeyHandlers()
+  end
+
+  if old < 70 then
+    self:removeKeyHandler("f10", self)
+    self:addKeyHandler({"shift", "f10"}, self, self.resetApp)
+    self:removeKeyHandler("a", self)
+  end
+  -- changing this so that it is quit application and Shift + Q is quit to main menu
+  if old < 71 then
+    self:removeKeyHandler({"alt", "f4"}, self, self.quit)
+    self:addKeyHandler({"alt", "f4"}, self, self.exitApplication)
+  end
+
+  if old < 100 then
+    self:removeKeyHandler({"alt", "enter"}, self)
+    self:addKeyHandler({"alt", "return"}, self, self.toggleFullscreen)
+  end
+  if old < 104 then
+    self:addKeyHandler({"alt", "keypad enter"}, self, self.toggleFullscreen)
+  end
+
+  if old < 118 then
+    self:addKeyHandler({"ctrl", "f10"}, self, self.toggleCaptureMouse)
+  end
+
   Window.afterLoad(self, old, new)
 end
 
