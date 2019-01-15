@@ -145,7 +145,7 @@ static int l_random(lua_State *L)
     case 1:
         max = (uint32_t)luaL_checkinteger(L, 1);
         luaL_argcheck(L, 1 <= max, 1, "interval is empty");
-        lua_pushinteger(L, 1 + (lua_Integer)(genrand_int32() % max));
+        lua_pushinteger(L, (lua_Integer)(genrand_int32() % max));
         break;
     case 0:
         lua_pushnumber(L, (lua_Number)genrand_res53());

@@ -60,6 +60,7 @@ local earthquake_warning_period = 600 -- hours between warning and real thing
 local earthquake_warning_length = 25 -- length of early warning quake
 
 function World:World(app)
+  self.app = app
   self.map = app.map
   self.wall_types = app.walls
   self.object_types = app.objects
@@ -208,19 +209,18 @@ end
 --! Register key shortcuts for controlling the world (game speed, etc.)
 function World:setUI(ui)
   self.ui = ui
-  self.ui:addKeyHandler("P", self, self.pauseOrUnpause, "Pause")
-  self.ui:addKeyHandler("1", self, self.setSpeed, "Slowest")
-  self.ui:addKeyHandler("2", self, self.setSpeed, "Slower")
-  self.ui:addKeyHandler("3", self, self.setSpeed, "Normal")
-  self.ui:addKeyHandler("4", self, self.setSpeed, "Max speed")
-  self.ui:addKeyHandler("5", self, self.setSpeed, "And then some more")
 
-  self.ui:addKeyHandler("=", self, self.adjustZoom,  1)
-  self.ui:addKeyHandler({"shift", "="}, self, self.adjustZoom, 5)
-  self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
-  self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom, 5)
-  self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
-  self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)
+  self.ui:addKeyHandler("ingame_pause", self, self.pauseOrUnpause, "Pause")
+  self.ui:addKeyHandler("ingame_gamespeed_slowest", self, self.setSpeed, "Slowest")
+  self.ui:addKeyHandler("ingame_gamespeed_slower", self, self.setSpeed, "Slower")
+  self.ui:addKeyHandler("ingame_gamespeed_normal", self, self.setSpeed, "Normal")
+  self.ui:addKeyHandler("ingame_gamespeed_max", self, self.setSpeed, "Max speed")
+  self.ui:addKeyHandler("ingame_gamespeed_thensome", self, self.setSpeed, "And then some more")
+
+  self.ui:addKeyHandler("ingame_zoom_in", self, self.adjustZoom,  1)
+  self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
+  self.ui:addKeyHandler("ingame_zoom_out", self, self.adjustZoom, -1)
+  self.ui:addKeyHandler("ingame_zoom_out_more", self, self.adjustZoom, -5)
 end
 
 function World:adjustZoom(delta)
@@ -2332,6 +2332,9 @@ function World:afterLoad(old, new)
   if new - 20 > self.original_savegame_version then
     self.ui:addWindow(UIInformation(self.ui, {_S.information.very_old_save}))
   end
+
+  self:setUI(self.ui)
+
   -- insert global compatibility code here
   if old < 4 then
     self.room_built = {}
@@ -2408,10 +2411,6 @@ function World:afterLoad(old, new)
   if old < 12 then
     self.animation_manager = TheApp.animation_manager
     self.anim_length_cache = nil
-  end
-  if old < 16 then
-    self.ui:addKeyHandler("+", self, self.adjustZoom,  1)
-    self.ui:addKeyHandler("-", self, self.adjustZoom, -1)
   end
   if old < 17 then
     -- Added another object
@@ -2555,10 +2554,6 @@ function World:afterLoad(old, new)
         end
       end
     end
-  end
-  if old < 77 then
-    self.ui:addKeyHandler({"shift", "+"}, self, self.adjustZoom,  5)
-    self.ui:addKeyHandler({"shift", "-"}, self, self.adjustZoom, -5)
   end
 
   if old < 103 then

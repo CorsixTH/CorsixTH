@@ -108,21 +108,21 @@ menu_options = {
 menu_options_game_speed.pause   = "  PAUSE  "
 
 -- The demo does not contain this string
-menu_file.restart = "  RESTART  "
+menu_file.restart = "  (%1%) RESTART  "
 
 menu_debug = {
   jump_to_level                 = "  GÅ TIL NIVÅ  ",
-  transparent_walls             = "  GJENNOMSIKTIGE VEGGER  ",
+  transparent_walls             = "  (%1%) GJENNOMSIKTIGE VEGGER  ",
   limit_camera                  = "  BEGRENS KAMERA  ",
   disable_salary_raise          = "  DEAKTIVER LÖNNSÖKNINGER  ",
   make_debug_patient            = "  LAG TESTPASIENT  ",
-  cheats                        = "  (F11) JUKSEKODER  ",
+  cheats                        = "  (%1%) JUKSEKODER  ",
   make_debug_fax                = "  LAG DEBUG FAKS  ",
-  dump_strings                  = "  DUMP SPRÅKSTRENGER  ",
-  dump_gamelog                  = "  DUMP SPILL-LOGGEN  ",
+  dump_strings                  = "  (%1%) DUMP SPRÅKSTRENGER  ",
+  dump_gamelog                  = "  (%1%) DUMP SPILL-LOGGEN  ",
   map_overlay                   = "  KARTOVERLEGG  ",
   sprite_viewer                 = "  SPRITE-VISNING  ",
-  lua_console                   = "  LUA KONSOLL ",
+  lua_console                   = "  (%1%) LUA KONSOLL ",
   calls_dispatcher              = "  ANROPSEKSPEDERING  ",
 }
 
@@ -1678,10 +1678,10 @@ menu = {
 
 -- Menu File
 menu_file = {
-  load                  = "  LAST INN  ",
-  save                  = "  LAGRE  ",
-  restart               = "  START PÅ NYTT  ",
-  quit                  = "  AVSLUTT  ",
+  load                  = "  (%1%) LAST INN  ",
+  save                  = "  (%1%) LAGRE  ",
+  restart               = "  (%1%) START PÅ NYTT  ",
+  quit                  = "  (%1%) AVSLUTT  ",
 }
 menu_player_count = { -- In map editor
   players_1 = "  1 SPILLER  ",
@@ -1712,15 +1712,15 @@ menu_file_save = {
 
 -- Menu Options
 menu_options = {
-  sound               = "  LYD  ",
-  announcements       = "  SPEAKER  ",
-  music               = "  MUSIKK  ",
+  sound               = "  (%1%) LYD  ",
+  announcements       = "  (%1%) SPEAKER  ",
+  music               = "  (%1%) MUSIKK  ",
   sound_vol           = "  LYDVOLUM  ",
   announcements_vol   = "  SPEAKERVOLUM  ",
   music_vol           = "  MUSIKKVOLUM  ",
   autosave            = "  AUTOLAGRING  ",
   game_speed          = "  SPILLHASTIGHET  ",
-  jukebox             = "  JUKEBOX  ",
+  jukebox             = "  (%1%) JUKEBOX  ",
   twentyfour_hour_clock = "  24 TIMERS KLOKKE  ",
   wage_increase = "  LÖNNSBEGJÆRINGER", --todo: annet ord? "wage requests"
   capture_mouse = "  LÅS MUSEPEKER  ",
@@ -1747,11 +1747,11 @@ menu_options_volume = {
 
 -- Menu Options Game Speed
 menu_options_game_speed = {
-  slowest             = "  TREGEST  ",
-  slower              = "  TREGERE  ",
-  normal              = "  NORMAL  ",
-  max_speed           = "  MAKSIMAL HASTIGHET  ",
-  and_then_some_more  = "  ENDA LITT RASKERE  ",
+  slowest             = "  (%1%) TREGEST  ",
+  slower              = "  (%1%) TREGERE  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAKSIMAL HASTIGHET  ",
+  and_then_some_more  = "  (%1%) ENDA LITT RASKERE  ",
 }
 
 -- Menu Options Warmth Colours
@@ -1770,16 +1770,16 @@ menu_display = {
 
 -- Menu Charts
 menu_charts = {
-  statement           = "  KONTOUTSKRIFT  ",
-  casebook            = "  MEDISINBOK  ",
-  policy              = "  SYKEHUSPOLICY  ",
-  research            = "  FORSKNING  ",
-  graphs              = "  DIAGRAMMER  ",
-  staff_listing       = "  PERSONALBEHANDLING  ",
-  bank_manager        = "  BANKMANAGER  ",
-  status              = "  STATUS  ",
+  statement           = "  (%1%) KONTOUTSKRIFT  ",
+  casebook            = "  (%1%) MEDISINBOK  ",
+  policy              = "  (%1%) SYKEHUSPOLICY  ",
+  research            = "  (%1%) FORSKNING  ",
+  graphs              = "  (%1%) DIAGRAMMER  ",
+  staff_listing       = "  (%1%) PERSONALBEHANDLING  ",
+  bank_manager        = "  (%1%) BANKMANAGER  ",
+  status              = "  (%1%)STATUS  ",
   briefing            = "  BRIEFING  ",
-  town_map            = "  BYKART (F4)  ",
+  town_map            = "  (%1%) BYKART  ",
 }
 
 -- Menu Debug
@@ -1803,8 +1803,8 @@ menu_debug = {
   show_help_hotspot   = "  VIS HJELP HOTSPOTS  ",
   win_game_anim       = "  VINN SPILL ANIM       ",
   win_level_anim      = "  VINN BANE ANIM      ",
-  debug_script = "  (SHIFT + D) KJÖR DEBUG SCRIPT  ",
-  connect_debugger = "  (CTRL + C) KOBLE TIL LUA DEBUG SERVER  ",
+  debug_script = "  (%1%) KJÖR DEBUG SCRIPT  ",
+  connect_debugger = "  (%1%) KOBLE TIL LUA DEBUG SERVER  ",
   lose_game_anim = {
     [1]  = "  TAPT SPILL 1 ANIM  ",
     [2]  = "  TAPT SPILL 2 ANIM  ",

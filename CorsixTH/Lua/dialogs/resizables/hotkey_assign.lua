@@ -725,6 +725,7 @@ end
 
 function UIHotkeyAssign:buttonAccept()
   self.app:saveHotkeys()
+  hotkeys_backedUp = false
 
   self:close()
   local window = UIOptions(self.ui, "menu")
@@ -743,7 +744,7 @@ end
 
 function UIHotkeyAssign:buttonCancel()
   --Reset all keys back to what they were before opening the hotkey window.
-  self.app.hotkeys = hotkey_backup
+  self.app.hotkeys = shallow_clone(hotkey_backup)
   hotkeys_backedUp = false
 
   self:close()

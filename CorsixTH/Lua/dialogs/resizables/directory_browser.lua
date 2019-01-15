@@ -149,7 +149,8 @@ function UIDirectoryBrowser:UIDirectoryBrowser(ui, mode, instruction, treenode_c
   else
     self.font = ui.app.gfx:loadBuiltinFont()
     self:setDefaultPosition(0.05, 0.5)
-    self:addKeyHandler("escape", self.exit)
+    self:addKeyHandler("global_cancel", self.exit)
+    self:addKeyHandler("global_cancel_alt", self.exit)
     self.exit_button:setLabel(_S.install.exit, self.font):makeButton(0, 0, 100, 18, nil, self.exit)
   end
 

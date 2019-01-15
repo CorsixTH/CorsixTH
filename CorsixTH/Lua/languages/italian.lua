@@ -55,32 +55,32 @@ tooltip.research_policy.research_progress = "Progresso verso una nuova scoperta 
 menu["player_count"] = "CONTA GIOCATORI"
 
 menu_file = {
-  load =    " (SHIFT+L) CARICA   ",
-  save =    " (SHIFT+S) SALVA   ",
-  restart = " (SHIFT+R) RIAVVIA",
-  quit =    " (SHIFT+Q) ESCI   "
+  load =    " (%1%) CARICA   ",
+  save =    " (%1%) SALVA   ",
+  restart = " (%1%) RIAVVIA",
+  quit =    " (%1%) ESCI   "
 }
 
 menu_options = {
-  sound = "  (ALT+S) SONORO   ",
-  announcements = "  (ALT+A) ANNUNCI   ",
-  music = "  (ALT+M) MUSICA   ",
-  jukebox = "  (J) JUKEBOX  ",
+  sound = "  (%1%) SONORO   ",
+  announcements = "  (%1%) ANNUNCI   ",
+  music = "  (%1%) MUSICA   ",
+  jukebox = "  (%1%) JUKEBOX  ",
   lock_windows = "  BLOCCA FINESTRE  ",
   edge_scrolling = "  SCORRIMENTO AI LATI  ",
-  adviser_disabled = "  (SHIFT+A) CONSIGLIERE  ",
+  adviser_disabled = "  (%1%) CONSIGLIERE  ",
   warmth_colors = "  COLORI RISCALDAMENTO  ",
   wage_increase = "  RICHIESTE STIPENDI",
   twentyfour_hour_clock = "  OROLOGIO 24 ORE  "
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSA  ",
-  slowest             = "  (1) LENTISSIMO  ",
-  slower              = "  (2) LENTO  ",
-  normal              = "  (3) NORMALE  ",
-  max_speed           = "  (4) VELOCITA' MASSIMA  ",
-  and_then_some_more  = "  (5) E ANCORA DI PIU'  ",
+  pause               = "  (%1%) PAUSA  ",
+  slowest             = "  (%1%) LENTISSIMO  ",
+  slower              = "  (%1%) LENTO  ",
+  normal              = "  (%1%) NORMALE  ",
+  max_speed           = "  (%1%) VELOCITA' MASSIMA  ",
+  and_then_some_more  = "  (%1%) E ANCORA DI PIU'  ",
 }
 
 menu_options_warmth_colors = {
@@ -96,15 +96,15 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager  = "  (F1) BANCA  ",
-  statement     = "  (F2) RENDICONTO  ",
-  staff_listing = "  (F3) PERSONALE  ",
-  town_map      = "  (F4) MAPPA CITTADINA  ",
-  casebook      = "  (F5) REGISTRO CURE  ",
-  research      = "  (F6) RICERCA  ",
-  status        = "  (F7) RIEPILOGO  ",
-  graphs        = "  (F8) GRAFICI  ",
-  policy        = "  (F9) GESTIONE  ",
+  bank_manager  = "  (%1%) BANCA  ",
+  statement     = "  (%1%) RENDICONTO  ",
+  staff_listing = "  (%1%) PERSONALE  ",
+  town_map      = "  (%1%) MAPPA CITTADINA  ",
+  casebook      = "  (%1%) REGISTRO CURE  ",
+  research      = "  (%1%) RICERCA  ",
+  status        = "  (%1%) RIEPILOGO  ",
+  graphs        = "  (%1%) GRAFICI  ",
+  policy        = "  (%1%) GESTIONE  ",
 }
 
 
@@ -113,18 +113,18 @@ menu_file.restart = "  RIAVVIA  "
 
 menu_debug = {
   jump_to_level               = "  SALTA AL LIVELLO  ",
-  connect_debugger            = "  (CTRL + C) CONNETTI SERVER LUA DBGp  ",
-  transparent_walls           = "  (X) MURA TRASPARENTI  ",
+  connect_debugger            = "  (%1%) CONNETTI SERVER LUA DBGp  ",
+  transparent_walls           = "  (%1%) MURA TRASPARENTI  ",
   limit_camera                = "  LIMITA TELECAMERA  ",
   disable_salary_raise        = "  DISABILITA AUMENTI DI SALARIO  ",
   make_debug_fax              = "  CREA FAX DI DEBUG  ",
   make_debug_patient          = "  CREA UN PAZIENTE DI DEBUG  ",
-  cheats                      = "  (F11) CHEAT  ",
-  lua_console                 = "  (F12) CONSOLE LUA  ",
-  debug_script                = "  (SHIFT + D) ESEGUI SCRIPT DI DEBUG  ",
+  cheats                      = "  (%1%) CHEAT  ",
+  lua_console                 = "  (%1%) CONSOLE LUA  ",
+  debug_script                = "  (%1%) ESEGUI SCRIPT DI DEBUG  ",
   calls_dispatcher            = "  GESTORE CHIAMATE  ",
-  dump_strings                = "  FAI IL DUMP DELLE STRINGHE  ",
-  dump_gamelog                = "  (CTRL+D) FAI IL DUMP DEL GAMELOG  ",
+  dump_strings                = "  (%1%) FAI IL DUMP DELLE STRINGHE  ",
+  dump_gamelog                = "  (%1%) FAI IL DUMP DEL GAMELOG  ",
   map_overlay                 = "  MAPPA IN SOVRAPPOSIZIONE  ",
   sprite_viewer               = "  VISUALIZZATORE SPRITE  ",
 }

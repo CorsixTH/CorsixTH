@@ -13,7 +13,7 @@ local function run()
     return "Can't connect debugger: LuaSocket is not available."
   end
 
-  local _, config = corsixth.require("config_finder")
+  local config = select(2, corsixth.require("config_finder"))
   local connect = dofile("debugger")
 
   local successful, error_message = pcall(connect, config.DBGp_client_idehost,

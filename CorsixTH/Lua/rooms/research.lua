@@ -166,18 +166,15 @@ function ResearchRoom:commandEnteringPatient(patient)
     local hosp = self.hospital
     local patient_room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
     hosp.research:addResearchPoints("dummy", patient_room)
-    -- average morale of all staff affects chances
-    local avg_happiness = hosp:getAverageStaffAttribute("happiness", nil)
-    local autopsy_discovered
-    -- low morale - more likely to discover
-    if avg_happiness < 0.25 then
-      autopsy_discovered = math.random(1,3) ~= 1
-    else
-      autopsy_discovered = math.random(1,3) == 1
-    end
-    if autopsy_discovered then
+    if not hosp.autopsy_discovered and hosp.discover_autopsy_risk > math.random(1, 100) then
+      -- Can only be discovered once.
+      hosp.autopsy_discovered = true
       hosp:changeReputation("autopsy_discovered")
       hosp.world.ui.adviser:say(_A.research.autopsy_discovered_rep_loss)
+    else
+      -- The risk increases after each use.
+      -- TODO: Should it ever become 100%?
+      self.hospital.discover_autopsy_risk = self.hospital.discover_autopsy_risk + 10
     end
     if patient.hospital then
       hosp:removePatient(patient)

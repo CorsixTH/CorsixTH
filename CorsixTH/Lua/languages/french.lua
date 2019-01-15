@@ -534,29 +534,29 @@ tooltip.research_policy.no_research = "Aucune recherche n'est actuellement effec
 tooltip.research_policy.research_progress = "Progrès vers la prochaine découverte dans cette catégorie : %1%/%2%"
 
 menu_file = {
-  load =    " (SHIFT+L) CHARGER   ",
-  save =    " (SHIFT+S) ENREGISTRER   ",
-  restart = " (SHIFT+R) RELANCER",
-  quit =    " (SHIFT+Q) QUITTER   ",
+  load =    " (%1%) CHARGER   ",
+  save =    " (%1%) ENREGISTRER   ",
+  restart = " (%1%) RELANCER",
+  quit =    " (%1%) QUITTER   ",
 }
 
 -- Options menu
 menu_options = {
   lock_windows = "  FIGER LES FENETRES  ",
   edge_scrolling = "  DEFILEMENT PAR BORD  ",
-  adviser_disabled = "  ASSISTANT  ",
+  adviser_disabled = "  (%1%) ASSISTANT  ",
   warmth_colors = "  COULEURS CHAUDES  ",
   wage_increase = " AUGMENTATION DE SALAIRE ",
   twentyfour_hour_clock = " HORLOGE 24 HEURES ",
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) AU PLUS LENT  ",
-  slower              = "  (2) PLUS LENT  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) VITESSE MAXI  ",
-  and_then_some_more  = "  (5) ET ENCORE PLUS  ",
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) AU PLUS LENT  ",
+  slower              = "  (%1%) PLUS LENT  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) VITESSE MAXI  ",
+  and_then_some_more  = "  (%1%) ET ENCORE PLUS  ",
 }
 
 menu_options_warmth_colors = {
@@ -572,32 +572,32 @@ menu_options_wage_increase = {
 
 -- Charts Menu ' Temporary; must see in-game for correct translation
 menu_charts = {
-  bank_manager  = "  (F1) GESTION BANCAIRE  ",
-  statement     = "  (F2) DECLARATION  ",
-  staff_listing = "  (F3) LISTE DU PERSONNEL  ",
-  town_map      = "  (F4) CARTE DE LA VILLE  ",
-  casebook      = "  (F5) MALLETTE  ",
-  research      = "  (F6) RECHERCHE  ",
-  status        = "  (F7) STATUTS  ",
-  graphs        = "  (F8) GRAPHIQUES  ",
-  policy        = "  (F9) POLITIQUE ",
+  bank_manager  = "  (%1%) GESTION BANCAIRE  ",
+  statement     = "  (%1%) DECLARATION  ",
+  staff_listing = "  (%1%) LISTE DU PERSONNEL  ",
+  town_map      = "  (%1%) CARTE DE LA VILLE  ",
+  casebook      = "  (%1%) MALLETTE  ",
+  research      = "  (%1%) RECHERCHE  ",
+  status        = "  (%1%) STATUTS  ",
+  graphs        = "  (%1%) GRAPHIQUES  ",
+  policy        = "  (%1%) POLITIQUE ",
 }
 
 -- Debug menu
 menu_debug = {
   jump_to_level               = "  ALLER AU NIVEAU  ",
-  connect_debugger            = " (CTRL + C) CONNECTER AU SERVEUR DE DÉBOGUAGE ",
-  transparent_walls           = "  (X) MURS TRANSPARENTS  ",
+  connect_debugger            = "  (%1%) CONNECTER AU SERVEUR DE DÉBOGUAGE ",
+  transparent_walls           = "  (%1%) MURS TRANSPARENTS  ",
   limit_camera                = "  LIMITER LA CAMERA  ",
   disable_salary_raise        = "  DÉSACTIVER LES AUGMENTATIONS DE SALAIRE  ",
   make_debug_fax              = "  CRÉER UN FAX DE TEST  ",
   make_debug_patient          = "  CRÉER UN PATIENT DE TEST  ",
-  cheats                      = "  (F11) TRICHES  ",
-  lua_console                 = "  (F12) CONSOLE LUA  ",
-  debug_script                = "  (MAJ + DS) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
+  cheats                      = "  (%1%) TRICHES  ",
+  lua_console                 = "  (%1%) CONSOLE LUA  ",
+  debug_script                = "  (%1%) ACTIVER LE DÉBOGUAGE PAR SCRIPT ",
   calls_dispatcher            = "  RÉPARTITION DES TÂCHES  ",
-  dump_strings                = "  EXTRAIRE LES TEXTES  ",
-  dump_gamelog                = "  (CTRL+D) EXTRAIRE LE JOURNAL DE JEU  ",
+  dump_strings                = "  (%1%) EXTRAIRE LES TEXTES  ",
+  dump_gamelog                = "  (%1%) EXTRAIRE LE JOURNAL DE JEU  ",
   map_overlay                 = "  INCRUSTATIONS DE CARTE  ",
   sprite_viewer               = "  VISIONNEUSE DE SPRITES  ",
 }
