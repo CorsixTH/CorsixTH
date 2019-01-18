@@ -123,6 +123,7 @@ end
 function UIFurnishCorridor:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.confirm)
   self:addKeyHandler("global_confirm_alt", self.confirm)
+  self:addKeyHandler("global_confirm_alt02", self.confirm)
 end
 
 function UIFurnishCorridor:purchaseItem(index, quantity)

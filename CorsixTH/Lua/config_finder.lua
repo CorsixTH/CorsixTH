@@ -512,7 +512,9 @@ local hotkeys_filename = pathconcat(config_path, hotkeys_name)
 local hotkeys_defaults = {
   global_confirm = "return",
   global_confirm_alt = "enter",
+  global_confirm_alt02 = "e",
   global_cancel = "escape",
+  global_cancel_alt = "q",
   global_fullscreen_toggle = {"alt", "return"},
   global_fullscreen_toggle_alt = {"alt", "keypad enter"},
   global_exitApp = {"alt", "f4"},
@@ -524,6 +526,8 @@ local hotkeys_defaults = {
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
   global_window_close = "escape",
+  global_stop_movie_alt = "q",
+  global_window_close_alt = "q",
   ingame_showmenubar = "escape",
   ingame_showCheatWindow = "f11",
   ingame_pause = "p",
@@ -601,7 +605,6 @@ local hotkeys_defaults = {
 }
 
 -- Clear the loaded file variable.
-fi = nil
 fi = io.open(hotkeys_filename, "r")
 local hotkeys_values = {}
 local hotkeys_needs_rewrite = false
@@ -614,9 +617,8 @@ if fi then
 
   local file_contents = fi:read("*all")
   fi:close()
-  local temp_string_01 = ""
 
-  for key, value in pairs(hotkeys_defaults) do
+  for key, _ in pairs(hotkeys_defaults) do
     local ind = string.find(file_contents, "\n" .. "%s*" .. key .. "%s*=")
 
     -- If we couldn't find the key in the hotkeys.txt file...
@@ -655,7 +657,9 @@ if hotkeys_needs_rewrite then
 --]=] .. '\n' ..
 'global_confirm = ' .. hotkeys_values.global_confirm .. '\n' ..
 'global_confirm_alt = ' .. hotkeys_values.global_confirm_alt .. '\n' ..
+'global_confirm_alt02 = ' .. hotkeys_values.global_confirm_alt02 .. '\n' ..
 'global_cancel = ' .. hotkeys_values.global_cancel .. '\n' ..
+'global_cancel_alt = ' .. hotkeys_values.global_cancel_alt .. '\n' ..
 'global_fullscreen_toggle = ' .. hotkeys_values.global_fullscreen_toggle .. '\n' ..
 'global_fullscreen_toggle_alt = ' .. hotkeys_values.global_fullscreen_toggle_alt .. '\n' ..
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
@@ -666,7 +670,9 @@ if hotkeys_needs_rewrite then
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..
 'global_screenshot = ' .. hotkeys_values.global_screenshot .. '\n' ..
 'global_stop_movie = ' .. hotkeys_values.global_stop_movie .. '\n' ..
-'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' .. [=[
+'global_window_close = ' .. hotkeys_values.global_window_close .. '\n' ..
+'global_stop_movie_alt =' .. hotkeys_values.global_stop_movie_alt .. '\n' ..
+'global_window_close_alt =' .. hotkeys_values.global_window_close_alt .. '\n' .. [=[
 
 -----------------------------------Scroll Keys----------------------------------
 -- These are the keys to be used to scroll the camera around in-game.

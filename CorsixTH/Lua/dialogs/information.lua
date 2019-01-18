@@ -72,6 +72,7 @@ end
 function UIInformation:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.close)
   self:addKeyHandler("global_confirm_alt", self.close)
+  self:addKeyHandler("global_confirm_alt02", self.close)
 end
 
 function UIInformation:onChangeLanguage()

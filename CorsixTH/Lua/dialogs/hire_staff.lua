@@ -101,6 +101,7 @@ end
 function UIHireStaff:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.hire)
   self:addKeyHandler("global_confirm_alt", self.hire)
+  self:addKeyHandler("global_confirm_alt02", self.hire)
 end
 
 function UIHireStaff:updateTooltips()

@@ -168,7 +168,10 @@ function UI:UI(app, minimal)
   }
   -- Windows can tell UI to pass specific codes forward to them. See addKeyHandler and removeKeyHandler
   self.key_handlers = {}
-  
+  -- For use in onKeyUp when assigning hotkeys in the "Assign Hotkeys" window.
+  self.temp_button_down = false
+  -- 
+  self.key_noted = false
 
   self.down_count = 0
   if not minimal then
@@ -248,6 +251,7 @@ end
 function UI:setupGlobalKeyHandlers()
   -- Add some global keyhandlers
   self:addKeyHandler("global_cancel", self, self.closeWindow)
+  self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
@@ -362,14 +366,14 @@ function UI:addKeyHandler(keys, window, callback, ...)
   --   {"shift", "q"}
   -- We would lose the "q" element until we restarted the game and the "hotkey.txt" was read from again, causing the "ingame_quitLevel"
   -- table to be reset back to {"shift, "q"}
-  local temp_keys = nil
+  local temp_keys = {}
 
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
       if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = table.clone(self.app.hotkeys[keys])
+        temp_keys = shallow_clone(self.app.hotkeys[keys])
       elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = table.clone({self.app.hotkeys[keys]})
+        temp_keys = shallow_clone({self.app.hotkeys[keys]})
       end
   else
     if type(keys) == "string" then
@@ -409,9 +413,9 @@ function UI:removeKeyHandler(keys, window)
   -- Check to see if "keys" key exist in the hotkeys table.
   if self.app.hotkeys[keys] ~= nil then
       if type(self.app.hotkeys[keys]) == "table" then
-        temp_keys = table.clone(self.app.hotkeys[keys])
+        temp_keys = {table.unpack(self.app.hotkeys[keys])}
       elseif type(self.app.hotkeys[keys]) == "string" then
-        temp_keys = table.clone({self.app.hotkeys[keys]})
+        temp_keys = {table.unpack({self.app.hotkeys[keys]})}
       end
   else
     if type(keys) == "string" then
@@ -490,6 +494,19 @@ function UI:unregisterTextBox(box)
   for num, b in ipairs(self.textboxes) do
     if b == box then
       table.remove(self.textboxes, num)
+      break
+    end
+  end
+end
+
+function UI:registerHotkeyBox(box)
+  self.hotkeyboxes[#self.hotkeyboxes + 1] = box
+end
+
+function UI:unregisterHotkeyBox(box)
+  for num, b in ipairs(self.hotkeyboxes) do
+    if b == box then
+      table.remove(self.hotkeyboxes, num)
       break
     end
   end
@@ -599,12 +616,31 @@ function UI:onKeyDown(rawchar, modifiers, is_repeat)
 
   -- Remove numlock modifier
   modifiers["numlockactive"] = nil
+  
+  --[[ TEMP LEIGET REFERNCE
+  if modifiers["ctrl"] then
+    print("ctrl == ", modifiers["ctrl"])
+  end
+  if modifiers["alt"] then
+    print("alt == ", modifiers["alt"])
+  end
+  if modifiers["shift"] then
+    print("shift == ", modifiers["shift"])
+  end
+  ]]
 
   -- If there is one, the current textbox gets the key.
   -- It will not process any text at this point though.
   for _, box in ipairs(self.textboxes) do
     if box.enabled and box.active and not handled then
       handled = box:keyInput(key, rawchar)
+    end
+  end
+  
+  -- If there is a hotkey box
+  for _, hotkeybox in ipairs(self.hotkeyboxes) do
+    if hotkeybox.enabled and hotkeybox.active and not handled then
+      handled = hotkeybox:keyInput(key, rawchar, modifiers)
     end
   end
 
@@ -637,15 +673,54 @@ function UI:onKeyUp(rawchar)
             string.sub(rawchar,1,6) == "Keypad" and string.sub(rawchar,8) or
             rawchar
   local key = rawchar:lower()
-  do
-    local mapped_button = self.key_to_button_remaps[key]
-    if mapped_button then
-      self:onMouseUp(mapped_button, self.cursor_x, self.cursor_y)
-      return true
-    end
-    key = self.key_remaps[key] or key
-  end
+
   self.buttons_down[key] = nil
+  
+  -- Go through all the hotkeyboxes.
+  for _, hotkeybox in ipairs(self.hotkeyboxes) do
+    -- If one is enabled and active...
+    if hotkeybox.enabled and hotkeybox.active then
+      self.temp_button_down = false
+      -- Go through and check if there are still any buttons pressed. If so...
+      for _, _ in pairs(self.buttons_down) do
+        -- Then toggle the corresponding bool.
+        self.temp_button_down = true
+      end
+      
+      -- If there is still a button down when a button was released...
+      if self.temp_button_down then
+        self.key_noted = false
+        -- Loop through the noted keys table.
+        for _, v2 in pairs(hotkeybox.noted_keys) do
+          -- If the key has been noted already...
+          if v2 == key then
+            -- Say so.
+            self.key_noted = true
+          end
+        end
+        
+        -- If the key hasn't been noted yet...
+        if self.key_noted == false then
+          -- Go through the keys that are still down.
+          for k, v in pairs(hotkeybox.temp_keys_down) do
+              -- If the key released still exist in "temp_keys_down"...
+              if v == key then
+                -- Remove it.
+                table.remove(hotkeybox.temp_keys_down , k)
+              end
+          end
+          
+          -- Say that it has now been noted.
+          hotkeybox.noted_keys[#hotkeybox.noted_keys + 1] = key
+        end
+      else
+        -- Confirm and deactivate the hotkey box.
+        hotkeybox:confirm()
+        hotkeybox.noted_keys = {}
+      end
+
+    end
+  end
 end
 
 function UI:onEditingText(text, start, length)
@@ -667,6 +742,30 @@ function UI:onTextInput(text)
   -- differing local keyboard layout. Give it another shot.
   if not self.key_press_handled then
     local keyHandlers = self.key_handlers[text]
+    if keyHandlers then
+      -- Iterate over key handlers and call each one whose modifier(s) are pressed
+      -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.
+      for _, handler in ipairs(keyHandlers) do
+        if compare_tables(handler.modifiers, self.modifiers_down) then
+          handler.callback(handler.window, unpack(handler))
+        end
+      end
+    end
+  end
+end
+
+function UI:onHotkeyInput(key)
+  -- It's time for any active textbox to get input.
+  for _, box in ipairs(self.hotkeyboxes) do
+    if box.enabled and box.active then
+      box:hotkeyInput(key)
+    end
+  end
+
+  -- Finally it might happen that a hotkey was not recognized because of
+  -- differing local keyboard layout. Give it another shot.
+  if not self.key_press_handled then
+    local keyHandlers = self.key_handlers[key]
     if keyHandlers then
       -- Iterate over key handlers and call each one whose modifier(s) are pressed
       -- NB: Only if the exact correct modifiers are pressed will the shortcut get processed.

@@ -93,6 +93,7 @@ end
 function UIEditRoom:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.confirm) -- UIPlaceObjects does not need this
   self:addKeyHandler("global_confirm_alt", self.confirm)
+  self:addKeyHandler("global_confirm_alt02", self.confirm)
 end
 
 function UIEditRoom:close(...)

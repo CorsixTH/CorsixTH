@@ -28,7 +28,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 131
+local SAVEGAME_VERSION = 132
 
 class "App"
 
@@ -930,6 +930,70 @@ function App:fixHotkeys()
       end
     end
   end
+end
+
+function App:saveHotkeys()
+  -- Load lines from config file
+  local fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "r")
+  local lines = {}
+  local handled_ids = {}
+
+  if fi then
+    for line in fi:lines() do
+      lines[#lines + 1] = line
+      if not (string.find(line, "^%s*$") or string.find(line, "^%s*%-%-")) then -- empty lines or comments
+        -- Look for identifiers we want to save
+        local _, _, identifier, value = string.find(line, "^%s*([_%a][_%w]*)%s*=%s*(.-)%s*$")
+        if identifier then
+          local _, temp
+          -- Trim possible trailing comment from value
+          _, _, temp = string.find(value, "^(.-)%s*%-%-.*")
+          value = temp or value
+          -- Remove enclosing [[]], if necessary
+          _, _, temp = string.find(value, "^%[%[(.*)%]%]$")
+          value = temp or value
+
+          -- If identifier also exists in runtime options, compare their values and
+          -- replace the line, if needed
+          handled_ids[identifier] = true
+
+          if value ~= serialize(self.hotkeys[identifier]) then
+            local new_value = self.hotkeys[identifier]
+            if type(new_value) == "string" then
+              new_value = string.format("[[%s]]", new_value)
+            else
+              new_value = serialize(new_value)
+            end
+            lines[#lines] = string.format("%s = %s", identifier, new_value)
+          end
+        end
+      end
+    end
+    fi:close()
+  end
+
+  -- Append options that were not found
+  for identifier, value in pairs(self.hotkeys) do
+    if not handled_ids[identifier] then
+      if type(value) == "string" then
+        value = string.format("[[%s]]", value)
+      else
+        value = tostring(value)
+      end
+      lines[#lines + 1] = string.format("%s = %s", identifier, value)
+    end
+  end
+  -- Trim trailing newlines
+  while lines[#lines] == "" do
+    lines[#lines] = nil
+  end
+
+  fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "w")
+  for _, line in ipairs(lines) do
+    fi:write(line .. "\n")
+  end
+
+  fi:close()
 end
 
 function App:run()
