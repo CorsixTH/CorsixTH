@@ -90,10 +90,14 @@ function UIPatient:UIPatient(ui, patient)
     end
   end, 17, 216, 92, 292)
 
+  self:registerKeyHandlers()
+end
+
+function UIPatient:registerKeyHandlers()
   -- Always add this because of a race condition if the user clicks a patient
   -- that's already going home, then clicks another, the handler is left empty. Bad.
   -- Just do a going_home check when called.
-  self:addKeyHandler("H", self.goHome)
+  self:addKeyHandler("ingame_patient_gohome", self.goHome)
 end
 
 --! Normalise warmth of a patient.
@@ -342,4 +346,8 @@ end
 
 function UIPatient:hitTest(x, y)
   return Window.hitTest(self, x, y) or is_in_view_circle(x, y)
+end
+
+function UIPatient:afterLoad(_, _)
+  self:registerKeyHandlers()
 end

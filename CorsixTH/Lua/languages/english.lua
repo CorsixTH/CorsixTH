@@ -86,33 +86,33 @@ tooltip.research_policy.research_progress = "Progress towards the next discovery
 menu["player_count"] = "PLAYER COUNT"
 
 menu_file = {
-  load =    " (SHIFT+L) LOAD   ",
-  save =    " (SHIFT+S) SAVE   ",
-  restart = " (SHIFT+R) RESTART",
-  quit =    " (SHIFT+Q) QUIT   "
+  load =    "  (%1%) LOAD  ",
+  save =    "  (%1%) SAVE   ",
+  restart = "  (%1%) RESTART",
+  quit =    "  (%1%) QUIT   "
 }
 
 menu_options = {
-  sound = "  (ALT+S) SOUND   ",
-  announcements = "  (ALT+A) ANNOUNCEMENTS   ",
-  music = "  (ALT+M) MUSIC   ",
-  jukebox = "  (J) JUKEBOX  ",
+  sound = "  (%1%) SOUND   ",
+  announcements = "  (%1%) ANNOUNCEMENTS   ",
+  music = "  (%1%) MUSIC   ",
+  jukebox = "  (%1%) JUKEBOX  ",
   lock_windows = "  LOCK WINDOWS  ",
   edge_scrolling = "  EDGE SCROLLING  ",
   capture_mouse = "  CAPTURE MOUSE  ",
-  adviser_disabled = "  (SHIFT+A) ADVISER  ",
+  adviser_disabled = "  (%1%) ADVISER  ",
   warmth_colors = "  WARMTH COLOURS  ",
-  wage_increase = "  WAGE REQUESTS",
+  wage_increase = "  WAGE REQUESTS  ",
   twentyfour_hour_clock = "  24 HOUR CLOCK  "
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) SLOWEST  ",
-  slower              = "  (2) SLOWER  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) MAX SPEED  ",
-  and_then_some_more  = "  (5) AND THEN SOME MORE  ",
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) SLOWEST  ",
+  slower              = "  (%1%) SLOWER  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAX SPEED  ",
+  and_then_some_more  = "  (%1%) AND THEN SOME MORE  ",
 }
 
 menu_options_warmth_colors = {
@@ -128,31 +128,31 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager  = "  (F1) BANK MANAGER  ",
-  statement     = "  (F2) STATEMENT  ",
-  staff_listing = "  (F3) STAFF LISTING  ",
-  town_map      = "  (F4) TOWN MAP  ",
-  casebook      = "  (F5) CASEBOOK  ",
-  research      = "  (F6) RESEARCH  ",
-  status        = "  (F7) STATUS  ",
-  graphs        = "  (F8) GRAPHS  ",
-  policy        = "  (F9) POLICY  ",
+  bank_manager  = "  (%1%) BANK MANAGER  ",
+  statement     = "  (%1%) STATEMENT  ",
+  staff_listing = "  (%1%) STAFF LISTING  ",
+  town_map      = "  (%1%) TOWN MAP  ",
+  casebook      = "  (%1%) CASEBOOK  ",
+  research      = "  (%1%) RESEARCH  ",
+  status        = "  (%1%) STATUS  ",
+  graphs        = "  (%1%) GRAPHS  ",
+  policy        = "  (%1%) POLICY  ",
 }
 
 menu_debug = {
   jump_to_level               = "  JUMP TO LEVEL  ",
-  connect_debugger            = "  (CTRL + C) CONNECT LUA DBGp SERVER  ",
-  transparent_walls           = "  (X) TRANSPARENT WALLS  ",
+  connect_debugger            = "  (%1%) CONNECT LUA DBGp SERVER  ",
+  transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
-  cheats                      = "  (F11) CHEATS  ",
-  lua_console                 = "  (F12) LUA CONSOLE  ",
-  debug_script                = "  (SHIFT + D) RUN DEBUG SCRIPT  ",
+  cheats                      = "  (%1%) CHEATS  ",
+  lua_console                 = "  (%1%) LUA CONSOLE  ",
+  debug_script                = "  (%1%) RUN DEBUG SCRIPT  ",
   calls_dispatcher            = "  CALLS DISPATCHER  ",
-  dump_strings                = "  DUMP STRINGS  ",
-  dump_gamelog                = "  (CTRL+D) DUMP GAME LOG  ",
+  dump_strings                = "  (%1%) DUMP STRINGS  ",
+  dump_gamelog                = "  (%1%) DUMP GAME LOG  ",
   map_overlay                 = "  MAP OVERLAY  ",
   sprite_viewer               = "  SPRITE VIEWER  ",
 }
@@ -368,6 +368,10 @@ options_window = {
   apply = "Apply",
   cancel = "Cancel",
   back = "Back",
+  scrollspeed = "Scroll Speed",
+  shift_scrollspeed = "Shift Scroll Speed",
+  zoom_speed = "Zoom Speed",
+  hotkey = "Hotkeys",
 }
 
 tooltip.options_window = {
@@ -388,6 +392,16 @@ tooltip.options_window = {
   select_language = "Select the game language",
   language_dropdown_item = "Choose %s as language",
   back = "Close the Settings window",
+  scrollspeed = "Set the scroll speed between 1 (slowest) to 10 (fastest). The default is 2.",
+  shift_scrollspeed = "Set the speed of scrolling when the shift key is pressed while scrolling. 1 (slowest) to 10 (fastest). Default: 4.",
+  zoom_speed = "Set the camera zoom speed from 10 (slowest) to 1000 (fastest). The default is 80.",
+  apply_scrollspeed = "Apply the entered scroll speed.",
+  cancel_scrollspeed = "Return without changing the scroll speed.",
+  apply_shift_scrollspeed = "Apply the entered shift scroll speed.",
+  cancel_shift_scrollspeed = "Return without changing the shift scroll speed.",
+  apply_zoomspeed = "Apply the entered zoom speed.",
+  cancel_zoomspeed = "Return without changing the zoom speed.",
+  hotkey = "Change keyboard hotkeys.",
 }
 
 customise_window = {
@@ -448,6 +462,124 @@ tooltip.folders_window = {
   reset_to_default = "Reset the directory to its default location",
  -- original_path = "The currently chosen directory of the original Theme Hospital installation", -- where is this used, I have left if for the time being?
   back  = "Close this menu and go back to the Settings Menu",
+}
+
+hotkey_window = {
+  caption_main = "Hotkey Assignment",
+  caption_panels = "Panel Keys",
+  button_accept = "Accept",
+  button_defaults = "Reset to Defaults",
+  button_cancel = "Cancel",
+  button_back = "Back",
+  button_toggleKeys = "Toggle Keys",
+  button_recallPosKeys = "Recall Position Keys",
+  panel_globalKeys = "Global Keys",
+  panel_generalInGameKeys = "General In-Game Keys",
+  panel_scrollKeys = "Scroll Keys",
+  panel_zoomKeys = "Zoom Keys",
+  panel_gameSpeedKeys = "Game Speed Keys",
+  panel_miscInGameKeys = "Misc. In-Game Keys",
+  panel_toggleKeys = "Toggle Keys",
+  panel_debugKeys = "Debug Keys",
+  panel_storePosKey = "Store Position Keys",
+  panel_recallPosKeys = "Recall Position Keys",
+  panel_altPanelKeys = "Alternate Panel Keys",
+  global_confirm = "Confirm",
+  global_confirm_alt = "Confirm Alt",
+  global_cancel = "Cancel",
+  global_cancel_alt = "Cancel Alt",
+  global_fullscreen_toggle = "Fullscreen",
+  global_exitApp = "Exit App",
+  global_resetApp = "Reset App",
+  global_captureMouse = "Capture Mouse",
+  global_connectDebugger = "Debugger",
+  global_showLuaConsole = "Lua Console",
+  global_runDebugScript = "Debug Script",
+  global_screenshot = "Screenshot",
+  global_stop_movie_alt = "Stop Movie",
+  global_window_close_alt = "Close Window",
+  ingame_scroll_up = "Scroll Up",
+  ingame_scroll_down = "Scroll Down",
+  ingame_scroll_left = "Scroll Left",
+  ingame_scroll_right = "Scroll Right",
+  ingame_scroll_shift = "Speed Shift",
+  ingame_zoom_in = "Zoom In",
+  ingame_zoom_in_more = "Zoom In More",
+  ingame_zoom_out = "Zoom Out",
+  ingame_zoom_out_more = "Zoom Out More",
+  ingame_showmenubar = "Show Menu Bar",
+  ingame_showCheatWindow = "Cheat Menu",
+  ingame_loadMenu = "Load Game",
+  ingame_saveMenu = "Save Game",
+  ingame_jukebox = "Jukebox",
+  ingame_openFirstMessage = "Level Message",
+  ingame_pause = "Pause",
+  ingame_gamespeed_slowest = "Slowest",
+  ingame_gamespeed_slower = "Slower",
+  ingame_gamespeed_normal = "Normal",
+  ingame_gamespeed_max = "Max",
+  ingame_gamespeed_thensome = "Then Some",
+  ingame_gamespeed_speedup = "Speed Up",
+  ingame_panel_bankManager = "Bank Manager",
+  ingame_panel_bankStats = "Bank Status",
+  ingame_panel_staffManage = "Manage Staff",
+  ingame_panel_townMap = "Town Map",
+  ingame_panel_casebook = "Casebook",
+  ingame_panel_research = "Research",
+  ingame_panel_status = "Status",
+  ingame_panel_charts = "Charts",
+  ingame_panel_policy = "Policy",
+  ingame_panel_map_alt = "Town Map 2",
+  ingame_panel_research_alt = "Research 2",
+  ingame_panel_casebook_alt = "Casebook 2",
+  ingame_panel_casebook_alt02 = "Casebook 3",
+  ingame_panel_buildRoom = "Build Room",
+  ingame_panel_furnishCorridor = "Furnish Corridor",
+  ingame_panel_editRoom = "Edit Room",
+  ingame_panel_hireStaff = "Hire Staff",
+  ingame_rotateobject = "Rotate Object",
+  ingame_quickSave = "Quick Save",
+  ingame_quickLoad = "Quick Load",
+  ingame_restartLevel = "Restart Level",
+  ingame_quitLevel = "Quit Level",
+  ingame_setTransparent = "Transparent",
+  ingame_toggleAnnouncements = "Announcements",
+  ingame_toggleSounds = "Sounds",
+  ingame_toggleMusic = "Music",
+  ingame_toggleAdvisor = "Advisor",
+  ingame_toggleInfo = "Info",
+  ingame_poopLog = "Dump Log",
+  ingame_poopStrings = "Dump Strings",
+  ingame_patient_gohome = "Send Home",
+  ingame_storePosition_1 = "1",
+  ingame_storePosition_2 = "2",
+  ingame_storePosition_3 = "3",
+  ingame_storePosition_4 = "4",
+  ingame_storePosition_5 = "5",
+  ingame_storePosition_6 = "6",
+  ingame_storePosition_7 = "7",
+  ingame_storePosition_8 = "8",
+  ingame_storePosition_9 = "9",
+  ingame_storePosition_0 = "10",
+  ingame_recallPosition_1 = "1",
+  ingame_recallPosition_2 = "2",
+  ingame_recallPosition_3 = "3",
+  ingame_recallPosition_4 = "4",
+  ingame_recallPosition_5 = "5",
+  ingame_recallPosition_6 = "6",
+  ingame_recallPosition_7 = "7",
+  ingame_recallPosition_8 = "8",
+  ingame_recallPosition_9 = "9",
+  ingame_recallPosition_0 = "10",
+}
+
+tooltip.hotkey_window = {
+  button_accept = "Accept hotkey assignment above and save them to the disk",
+  button_defaults = "Reset all hotkeys to the program's defaults",
+  button_cancel = "Cancel the assignment and go back to the options menu",
+  caption_panels = "Open window to assign panel keys",
+  button_recallPosKeys = "Open window to set keys to store and recall camera positions",
+  button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
 }
 
 font_location_window = {
@@ -696,6 +828,13 @@ map_editor_window = {
     heliport_4 = "Heliport 4",
     paste = "Paste area",
   }
+}
+
+hotkeys_file_err = {
+  file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
+        "has permission to read/write ",
+  file_err_02 = ", or use the --hotkeys-file=filename command line option to specify a writable file. " ..
+        "For reference, the error loading the hotkeys file was: ",
 }
 
 --------------------------------  UNUSED  -----------------------------------
