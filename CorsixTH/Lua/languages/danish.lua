@@ -123,7 +123,7 @@ menu_file.restart = "  START FORFRA  "
 
 menu_debug = {
   jump_to_level               = "  Gå til bane  ",
-  transparent_walls           = "  (K) Gennemsigtige VæGE  ",
+  transparent_walls           = "  (%1%) Gennemsigtige VæGE  ",
   limit_camera                = "  BEGRæNS KAMERAET  ",
   disable_salary_raise        = "  STOP LÖNFORHÖJELSER  ",
   make_debug_fax              = "  LAV FEJLFINDINGS FAX  ",
@@ -133,11 +133,11 @@ menu_debug = {
   show_watch                  = "  VIS URET ",
   create_emergency            = "  LAV ET AKUTTILFæLDE  ",
   place_objects               = "  PLACER OBJEKTER  ",
-  cheats                      = "  (F11) SNYD  ",
-  lua_console                 = "  (F12) LUA KONSOL  ",
+  cheats                      = "  (%1%) SNYD  ",
+  lua_console                 = "  (%1%) LUA KONSOL  ",
   calls_dispatcher            = "  KALD På AFSENDER  ",
-  dump_strings                = "  DUMP TEKT  ",
-  dump_gamelog                = "  (CTRL + D) DUMP SPILLOG  ",
+  dump_strings                = "  (%1%) DUMP TEKT  ",
+  dump_gamelog                = "  (%1%) DUMP SPILLOG  ",
   map_overlay                 = "  KORTOVERSIGT  ",
   sprite_viewer               = "  SPRITE VISER  ",
 }
@@ -1007,10 +1007,10 @@ menu = {
 }
 
 menu_file = {
-  load                = "  INDLæS  ",
-  save                = "  GEM  ",
-  restart             = "  START FORFRA  ",
-  quit                = "  AFSLUT  ",
+  load                = "  (%1%) INDLæS  ",
+  save                = "  (%1%) GEM  ",
+  restart             = "  (%1%) START FORFRA  ",
+  quit                = "  (%1%) AFSLUT  ",
 }
 
 
@@ -1027,27 +1027,27 @@ menu_file_load = {
 
 -- Menu Options
 menu_options = {
-  sound               = "  LYD  ",
-  announcements       = "  ANNONCERINGER  ",
-  music               = "  MUSIK  ",
+  sound               = "  (%1%) LYD  ",
+  announcements       = "  (%1%) ANNONCERINGER  ",
+  music               = "  (%1%) MUSIK  ",
   sound_vol           = "  LYDSTYRKE  ",
   announcements_vol   = "  ANNONCERINGSSTYRKE  ",
   music_vol           = "  MUSIKSTYRKE  ",
   autosave            = "  AUTOMATISK GEM  ",
   game_speed          = "  SPILHASTIGHED  ",
-  jukebox             = "  JUKEBOX  ",
+  jukebox             = "  (%1%) JUKEBOX  ",
   edge_scrolling      = "  KANT SCROLLING  ",
   settings            = "  INDSTILLINGER  ",
 }
 
 -- Menu Options Game Speed
 menu_options_game_speed = {
-  pause               = "  (P) PAUSE  ",
-  slowest             = "  (1) LANGSOMMEST  ",
-  slower              = "  (2) LANGSOMMERE  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) HURTIGST  ",
-  and_then_some_more  = "  (5) OG SÅ LIGE LIDT MERE  ",
+  pause               = "  (%1%) PAUSE  ",
+  slowest             = "  (%1%) LANGSOMMEST  ",
+  slower              = "  (%1%) LANGSOMMERE  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) HURTIGST  ",
+  and_then_some_more  = "  (%1%) OG SÅ LIGE LIDT MERE  ",
 }
 
 -- Menu Display
@@ -1059,14 +1059,14 @@ menu_display = {
 
 -- Menu Charts
 menu_charts = {
-  statement           = "  ERKLÆRINGER  ",
-  casebook            = "  MEDICINBOG  ",
-  policy              = "  POLITIK  ",
-  research            = "  FORSKNING  ",
-  graphs              = "  DIAGRAMMER  ",
-  staff_listing       = "  PERSONALEHÅNDTERING  ",
-  bank_manager        = "  BANKKONSULENT  ",
-  status              = "  STATUS  ",
+  statement           = "  (%1%) ERKLÆRINGER  ",
+  casebook            = "  (%1%) MEDICINBOG  ",
+  policy              = "  (%1%) POLITIK  ",
+  research            = "  (%1%) FORSKNING  ",
+  graphs              = "  (%1%) DIAGRAMMER  ",
+  staff_listing       = "  (%1%) PERSONALEHÅNDTERING  ",
+  bank_manager        = "  (%1%) BANKKONSULENT  ",
+  status              = "  (%1%) STATUS  ",
   briefing            = "  BRIEFING  ",
 }
 

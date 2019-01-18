@@ -78,19 +78,19 @@ menu.player_count = "ANTAL SPELARE"
 menu_options = {
   lock_windows = "  LÅS FÖNSTER  ",
   edge_scrolling = "  KANTRULLNING  ",
-  adviser_disabled = "  MEDHJÄLPARE  ",
+  adviser_disabled = "  (%1%) MEDHJÄLPARE  ",
   warmth_colors = "  VÄRMEFÄRGER  ",
   wage_increase = "  LÖNFÖRFRÅGNINGAR  ",
   twentyfour_hour_clock = "  24-TIMMARSKLOCKA  "
 }
 
 menu_options_game_speed = {
-  pause               = "  (P) PAUSA  ",
-  slowest             = "  (1) LÅNGSAMMAST  ",
-  slower              = "  (2) LÅNGSAMMARE  ",
-  normal              = "  (3) NORMAL  ",
-  max_speed           = "  (4) MAXHASTIGHET  ",
-  and_then_some_more  = "  (5) OCH SÅ LITE TILL  ",
+  pause               = "  (%1%) PAUSA  ",
+  slowest             = "  (%1%) LÅNGSAMMAST  ",
+  slower              = "  (%1%) LÅNGSAMMARE  ",
+  normal              = "  (%1%) NORMAL  ",
+  max_speed           = "  (%1%) MAXHASTIGHET  ",
+  and_then_some_more  = "  (%1%) OCH SÅ LITE TILL  ",
 }
 
 menu_options_warmth_colors = {
@@ -106,33 +106,33 @@ menu_options_wage_increase = {
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager  = "  (F1) BANKKAMRER  ",
-  statement     = "  (F2) KONTOUTDRAG  ",
-  staff_listing = "  (F3) PERSONALLEDNING  ",
-  town_map      = "  (F4) STADSKARTA  ",
-  casebook      = "  (F5) MEDICINJOURNAL  ",
-  research      = "  (F6) FORSKNING  ",
-  status        = "  (F7) STATUS  ",
-  graphs        = "  (F8) GRAFER  ",
-  policy        = "  (F9) POLICY  ",
+  bank_manager  = "  (%1%) BANKKAMRER  ",
+  statement     = "  (%1%) KONTOUTDRAG  ",
+  staff_listing = "  (%1%) PERSONALLEDNING  ",
+  town_map      = "  (%1%) STADSKARTA  ",
+  casebook      = "  (%1%) MEDICINJOURNAL  ",
+  research      = "  (%1%) FORSKNING  ",
+  status        = "  (%1%) STATUS  ",
+  graphs        = "  (%1%) GRAFER  ",
+  policy        = "  (%1%) POLICY  ",
 }
 
-menu_file.restart = "  STARTA OM  "
+menu_file.restart = "  (%1%) STARTA OM  "
 
 menu_debug = {
   jump_to_level               = "  HOPPA TILL NIVÅ  ",
-  connect_debugger            = "  (CTRL + C) KOPPLA LUA DBGp SERVER  ",
-  transparent_walls           = "  (X) TRANSPARENTA VÄGGAR  ",
+  connect_debugger            = "  (%1%) KOPPLA LUA DBGp SERVER  ",
+  transparent_walls           = "  (%1%) TRANSPARENTA VÄGGAR  ",
   limit_camera                = "  BEGRÄNSA KAMERAN  ",
   disable_salary_raise        = "  STÄNG AV LÖNEÖKNINGAR  ",
   make_debug_fax              = "  SKAPA DEBUGFAX  ",
   make_debug_patient          = "  SKAPA DEBUGPATIENT  ",
-  cheats                      = "  (F11) FUSK  ",
-  lua_console                 = "  (F12) LUATERMINAL  ",
-  debug_script                = "  (SHIFT + D) KÖR DEBUGSKRIPT  ",
+  cheats                      = "  (%1%) FUSK  ",
+  lua_console                 = "  (%1%) LUATERMINAL  ",
+  debug_script                = "  (%1%) KÖR DEBUGSKRIPT  ",
   calls_dispatcher            = "  ANROPSKLARERARE  ",
-  dump_strings                = "  SKAPA TEXTFILER  ",
-  dump_gamelog                = "  (CTRL+D) DUMPA SPELLOGG  ",
+  dump_strings                = "  (%1%) SKAPA TEXTFILER  ",
+  dump_gamelog                = "  (%1%) DUMPA SPELLOGG  ",
   map_overlay                 = "  KARTÖVERSIKT  ",
   sprite_viewer               = "  GRAFIKVISARE  ",
 }

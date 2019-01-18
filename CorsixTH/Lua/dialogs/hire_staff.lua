@@ -35,8 +35,6 @@ function UIHireStaff:UIHireStaff(ui)
   self.panel_sprites = ui.app.gfx:loadSpriteTable("QData", "Req11V", true)
   self.white_font = ui.app.gfx:loadFont("QData", "Font01V")
   self.face_parts = ui.app.gfx:loadRaw("Face01V", 65, 1350, nil, "Data", "MPalette.dat")
-  self:addKeyHandler("return", self.hire)
-  self:addKeyHandler("keypad enter", self.hire)
 
   -- Left hand side tab backgrounds
   self:addPanel(253, 0,   0)
@@ -97,6 +95,12 @@ function UIHireStaff:UIHireStaff(ui)
   self:makeTooltip(_S.tooltip.hire_staff_window.researcher, 164, 136, 191, 167)
 
   self:updateTooltips()
+  self:registerKeyHandlers()
+end
+
+function UIHireStaff:registerKeyHandlers()
+  self:addKeyHandler("global_confirm", self.hire)
+  self:addKeyHandler("global_confirm_alt", self.hire)
 end
 
 function UIHireStaff:updateTooltips()
@@ -268,11 +272,5 @@ function UIHireStaff:close()
 end
 
 function UIHireStaff:afterLoad(old, new)
-  if old < 101 then
-    self:removeKeyHandler("enter")
-    self:addKeyHandler("return", self.hire)
-  end
-  if old < 104 then
-    self:addKeyHandler("keypad enter", self.hire)
-  end
+  self:registerKeyHandlers()
 end

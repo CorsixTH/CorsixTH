@@ -21,6 +21,7 @@ SOFTWARE. --]]
 --! The multi-purpose panel for launching dialogs / screens and dynamic information.
 class "UIBottomPanel" (Window)
 
+
 ---@type UIBottomPanel
 local UIBottomPanel = _G["UIBottomPanel"]
 
@@ -96,37 +97,49 @@ function UIBottomPanel:UIBottomPanel(ui)
     return _S.tooltip.toolbar.reputation .. " (" .. self.ui.hospital.reputation .. ")"
   end, 41, 30, 137, 42)
 
+  self:registerKeyHandlers()
+end
+
+function UIBottomPanel:registerKeyHandlers()
+  local ui = self.ui
+  local buttons = self.additional_buttons
+
   -- original TH F-key shortcuts
-  ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
-  ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
-  ui:addKeyHandler("F3", buttons[1], buttons[1].handleClick, "left")    -- staff management
-  ui:addKeyHandler("F4", buttons[2], buttons[2].handleClick, "left")    -- town map
-  ui:addKeyHandler("F5", buttons[3], buttons[3].handleClick, "left")    -- casebook
-  ui:addKeyHandler("F6", buttons[4], buttons[4].handleClick, "left")    -- research
-  ui:addKeyHandler("F7", buttons[5], buttons[5].handleClick, "left")    -- status
-  ui:addKeyHandler("F8", buttons[6], buttons[6].handleClick, "left")    -- charts
-  ui:addKeyHandler("F9", buttons[7], buttons[7].handleClick, "left")    -- policy
+  ui:addKeyHandler("ingame_panel_bankManager", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
+  ui:addKeyHandler("ingame_panel_bankStats", self.bank_button, self.bank_button.handleClick, "right")  -- bank stats
+  ui:addKeyHandler("ingame_panel_staffManage", buttons[1], buttons[1].handleClick, "left")    -- staff management
+  ui:addKeyHandler("ingame_panel_townMap", buttons[2], buttons[2].handleClick, "left")    -- town map
+  ui:addKeyHandler("ingame_panel_casebook", buttons[3], buttons[3].handleClick, "left")    -- casebook
+  ui:addKeyHandler("ingame_panel_research", buttons[4], buttons[4].handleClick, "left")    -- research
+  ui:addKeyHandler("ingame_panel_status", buttons[5], buttons[5].handleClick, "left")    -- status
+  ui:addKeyHandler("ingame_panel_charts", buttons[6], buttons[6].handleClick, "left")    -- charts
+  ui:addKeyHandler("ingame_panel_policy", buttons[7], buttons[7].handleClick, "left")    -- policy
+  -- New bottom panel hotkeys for the first 4 buttons.
+  ui:addKeyHandler("ingame_panel_buildRoom", self, self.dialogBuildRoom)    -- Build room.
+  ui:addKeyHandler("ingame_panel_furnishCorridor", self, self.dialogFurnishCorridor)    -- Furnish corridor.
+  ui:addKeyHandler("ingame_panel_editRoom", self, self.editRoom)    -- Edit room.
+  ui:addKeyHandler("ingame_panel_hireStaff", self, self.dialogHireStaff)    -- Hire staff.  
 
   -- "old" keyboard shortcuts for some of the fullscreen windows
-  ui:addKeyHandler("T", buttons[2], buttons[2].handleClick, "left") -- T for town map
-  ui:addKeyHandler("R", buttons[4], buttons[4].handleClick, "left") -- R for research
+  ui:addKeyHandler("ingame_panel_map_alt", buttons[2], buttons[2].handleClick, "left") -- T for town map
+  ui:addKeyHandler("ingame_panel_research_alt", buttons[4], buttons[4].handleClick, "left") -- R for research
   local config = ui.app.config
   if not config.volume_opens_casebook then
-    ui:addKeyHandler("C", buttons[3], buttons[3].handleClick, "left") -- C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt", buttons[3], buttons[3].handleClick, "left") -- C for casebook
   else
-    ui:addKeyHandler({"shift", "C"}, buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
+    ui:addKeyHandler("ingame_panel_casebook_alt02", buttons[3], buttons[3].handleClick, "left") -- Shift + C for casebook
   end
-  ui:addKeyHandler({"shift", "L"}, self, self.openLoad)  -- Shift + L for Load saved game menu
-  ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
-  ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level
-  ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu
-  ui:addKeyHandler({"shift", "alt", "S"}, self, self.quickSave)  -- Shift+Alt+S quick save
-  ui:addKeyHandler({"shift", "alt", "L"}, self, self.quickLoad)  -- Shift+Alt+L load last quick save
+  ui:addKeyHandler("ingame_loadMenu", self, self.openLoad)  -- Shift + L for Load saved game menu
+  ui:addKeyHandler("ingame_saveMenu", self, self.openSave)  -- Shift + S for Load create save menu
+  ui:addKeyHandler("ingame_restartLevel", self, self.restart)  -- Shift + R for restart the level
+  ui:addKeyHandler("ingame_quitLevel", self, self.quit)  -- Shift + Q quit the game and return to main menu
+  ui:addKeyHandler("ingame_quickSave", self, self.quickSave)  -- Shift+Alt+S quick save
+  ui:addKeyHandler("ingame_quickLoad", self, self.quickLoad)  -- Shift+Alt+L load last quick save
 
   -- misc. keyhandlers
-  ui:addKeyHandler("M", self, self.openFirstMessage)    -- M for message
-  ui:addKeyHandler("I", self, self.toggleInformation)   -- I for Information when you first build
-  ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
+  ui:addKeyHandler("ingame_openFirstMessage", self, self.openFirstMessage)    -- M for message
+  ui:addKeyHandler("ingame_toggleInfo", self, self.toggleInformation)   -- I for Information when you first build
+  ui:addKeyHandler("ingame_jukebox", self, self.openJukebox)   -- open the jukebox
 end
 
 function UIBottomPanel:openJukebox()
@@ -798,10 +811,6 @@ function UIBottomPanel:afterLoad(old, new)
       end
     end
   end
-  if old < 47 then
-    self.ui:addKeyHandler("I", self, self.toggleInformation)
-    self.ui:addKeyHandler("A", self, self.toggleAdviser)
-  end
   if old < 58 then
     self.pause_font = TheApp.gfx:loadFont("QData", "Font124V")
   end
@@ -814,47 +823,10 @@ function UIBottomPanel:afterLoad(old, new)
       self.additional_buttons[i] = self.buttons[5 + i]:makeToggle() -- made them toggle buttons
     end
     self.bank_button = self.buttons[1]:makeToggle()
+  end
 
-    -- keyboard shortcuts have been added/changed
-    self.ui:addKeyHandler("F1", self.bank_button, self.bank_button.handleClick, "left")  -- bank manager
-    self.ui:addKeyHandler("F2", self.bank_button, self.bank_button.handleClick, "right")  -- bank manager
-    self.ui:addKeyHandler("F3", self.additional_buttons[1], self.additional_buttons[1].handleClick, "left")    -- staff management
-    self.ui:addKeyHandler("F4", self.additional_buttons[2], self.additional_buttons[2].handleClick, "left")    -- town map
-    self.ui:addKeyHandler("F5", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left")    -- casebook
-    self.ui:addKeyHandler("F6", self.additional_buttons[4], self.additional_buttons[4].handleClick, "left")    -- research
-    self.ui:addKeyHandler("F7", self.additional_buttons[5], self.additional_buttons[5].handleClick, "left")    -- status
-    self.ui:addKeyHandler("F8", self.additional_buttons[6], self.additional_buttons[6].handleClick, "left")    -- charts
-    self.ui:addKeyHandler("F9", self.additional_buttons[7], self.additional_buttons[7].handleClick, "left")    -- policy
-    self.ui:removeKeyHandler("T", self)
-    self.ui:removeKeyHandler("C", self)
-    self.ui:removeKeyHandler("R", self)
-    self.ui:addKeyHandler("T", self.additional_buttons[2], self.additional_buttons[2].handleClick, "left") -- T for town map
-    self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
-    self.ui:addKeyHandler("R", self.additional_buttons[4], self.additional_buttons[4].handleClick, "left") -- R for research
-  end
-  if old <  70 then
-    self.ui:removeKeyHandler("a", self)
-  end
-  if old < 71 then
-    self.ui:removeKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left")  -- remove C for opening the Casebook
-    -- add choice for opening casebook as per chosen option in config
-    local config = self.ui.app.config
-    if not config.volume_opens_casebook then
-      self.ui:addKeyHandler("C", self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- C for casebook
-    else
-      self.ui:addKeyHandler({"shift", "C"}, self.additional_buttons[3], self.additional_buttons[3].handleClick, "left") -- Shift + C for casebook
-    end
-    -- add new key handlers
-    self.ui:addKeyHandler("J", self, self.openJukebox)   -- open the jukebox
-    self.ui:addKeyHandler({"shift", "L"}, self, self.openLoad)  -- Shift + L for Load saved game menu
-    self.ui:addKeyHandler({"shift", "S"}, self, self.openSave)  -- Shift + S for Load create save menu
-    self.ui:addKeyHandler({"shift", "R"}, self, self.restart)  -- Shift + R for restart the level
-    self.ui:addKeyHandler({"shift", "Q"}, self, self.quit)  -- Shift + Q quit the game and return to main menu
-  end
-  if old < 82 then
-    self.ui:addKeyHandler({"shift","alt", "S"}, self, self.quickSave)  -- Shift+Alt+S quick save
-    self.ui:addKeyHandler({"shift","alt", "L"}, self, self.quickLoad)  -- Shift+Alt+L load last quick save
-  end
+  self:registerKeyHandlers()
+
   Window.afterLoad(self, old, new)
 end
 

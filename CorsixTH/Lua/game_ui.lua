@@ -47,8 +47,7 @@ local multigesture_pinch_amplification_factor = 100
 --!param map_editor (bool) Whether the map is editable.
 function GameUI:GameUI(app, local_hospital, map_editor)
   self:UI(app)
-
-  self.scroll_keys = {}
+  self.app = app
 
   self.hospital = local_hospital
   self.tutorial = { chapter = 0, phase = 0 }
@@ -99,39 +98,39 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.announcer = Announcer(app)
   
-  
-  -- Set the scrolling keys.
-  self.scroll_keys = {
-    [tostring(app.hotkeys["scroll_up"])]   = {x =   0, y = -10},
-    [tostring(app.hotkeys["scroll_down"])] = {x =  0, y =   10},
-    [tostring(app.hotkeys["scroll_left"])]  = {x =   -10, y =  0},
-    [tostring(app.hotkeys["scroll_right"])]  = {x = 10, y =   0},
-  }
 end
 
 function GameUI:setupGlobalKeyHandlers()
   UI.setupGlobalKeyHandlers(self)
 
-  self:addKeyHandler("escape", self, self.setEditRoom, false)
-  self:addKeyHandler("escape", self, self.showMenuBar)
-  self:addKeyHandler("z", self, self.keySpeedUp)
-  self:addKeyHandler("x", self, self.keyTransparent)
-  self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
-  self:addKeyHandler({"ctrl", "d"}, self.app.world, self.app.world.dumpGameLog)
-  self:addKeyHandler({"ctrl", "t"}, self.app, self.app.dumpStrings)
-  self:addKeyHandler({"alt", "a"}, self, self.togglePlayAnnouncements)
-  self:addKeyHandler({"alt", "s"}, self, self.togglePlaySounds)
-  self:addKeyHandler({"alt", "m"}, self, self.togglePlayMusic)
+  -- Set the scrolling keys.
+  self.scroll_keys = {
+     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
+     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
+     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+  }
+
+  self:addKeyHandler("global_window_close", self, self.setEditRoom, false)
+  self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
+  self:addKeyHandler("ingame_gamespeed_speedup", self, self.keySpeedUp)
+  self:addKeyHandler("ingame_setTransparent", self, self.keyTransparent)
+  self:addKeyHandler("ingame_toggleAdvisor", self, self.toggleAdviser)
+  self:addKeyHandler("ingame_poopLog", self.app.world, self.app.world.dumpGameLog)
+  self:addKeyHandler("ingame_poopStrings", self.app, self.app.dumpStrings)
+  self:addKeyHandler("ingame_toggleAnnouncements", self, self.togglePlayAnnouncements)
+  self:addKeyHandler("ingame_toggleSounds", self, self.togglePlaySounds)
+  self:addKeyHandler("ingame_toggleMusic", self, self.togglePlayMusic)
   -- scroll to map position
   for i = 0, 9 do
     -- set camera view
-    self:addKeyHandler({"alt", tostring(i)}, self, self.setMapRecallPosition, i)
+    self:addKeyHandler(string.format("ingame_storePosition_%d", i), self, self.setMapRecallPosition, i)
     -- recall camera view
-    self:addKeyHandler({"ctrl", tostring(i)}, self, self.recallMapPosition, i)
+    self:addKeyHandler(string.format("ingame_recallPosition_%d", i), self, self.recallMapPosition, i)
   end
 
   if self.app.config.debug then
-    self:addKeyHandler("f11", self, self.showCheatsWindow)
+    self:addKeyHandler("ingame_showCheatWindow", self, self.showCheatsWindow)
   end
 end
 
@@ -1142,20 +1141,12 @@ function GameUI:afterLoad(old, new)
     self.adviser.frame = 1
     self.adviser.number_frames = 4
   end
-  if old < 70 then
-    self:addKeyHandler({"shift", "a"}, self, self.toggleAdviser)
-  end
   if old < 75 then
     self.current_momentum = { x = 0, y = 0 }
     self.momentum = self.app.config.scrolling_momentum
   end
   if old < 78 then
     self.current_momentum = { x = 0, y = 0, z = 0}
-  end
-  if old < 81 then
-    self:removeKeyHandler("x", self, self.toggleWallsTransparent)
-    self:addKeyHandler("z", self, self.keySpeedUp)
-    self:addKeyHandler("x", self, self.keyTransparent)
   end
   if old < 115 then
     self.shake_screen_intensity = 0
@@ -1165,11 +1156,6 @@ function GameUI:afterLoad(old, new)
   end
   if old < 129 then
     self.recallpositions = {}
-    -- snap to screen position
-    for i = 0, 9 do
-      self:addKeyHandler({"alt", tostring(i)}, self, self.setMapRecallPosition, i)
-      self:addKeyHandler({"ctrl", tostring(i)}, self, self.recallMapPosition, i)
-    end
   end
   if old < 130 then
     self.ticks_since_last_announcement = nil -- cleanup
