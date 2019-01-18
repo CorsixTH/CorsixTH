@@ -511,12 +511,10 @@ local hotkeys_filename = pathconcat(config_path, hotkeys_name)
 -- Defaults for hotkeys.
 local hotkeys_defaults = {
   global_confirm = "return",
-  global_confirm_alt = "enter",
-  global_confirm_alt02 = "e",
+  global_confirm_alt = "e",
   global_cancel = "escape",
   global_cancel_alt = "q",
   global_fullscreen_toggle = {"alt", "return"},
-  global_fullscreen_toggle_alt = {"alt", "keypad enter"},
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
   global_captureMouse = {"ctrl", "f10"},
@@ -537,14 +535,13 @@ local hotkeys_defaults = {
   ingame_gamespeed_max = "4",
   ingame_gamespeed_thensome = "5",
   ingame_gamespeed_speedup = "z",
-  ingame_scroll_up = "w",
-  ingame_scroll_down = "s",
-  ingame_scroll_left = "a",
-  ingame_scroll_right = "d",
+  ingame_scroll_up = "up",
+  ingame_scroll_down = "down",
+  ingame_scroll_left = "left",
+  ingame_scroll_right = "right",
+  ingame_scroll_shift = "shift",
   ingame_zoom_in = "=",
   ingame_zoom_in_more = {"shift", "="},
-  ingame_zoom_in_alt = "+",
-  ingame_zoom_in_more_alt = {"shift", "+"},
   ingame_zoom_out = "-",
   ingame_zoom_out_more = {"shift", "-"},
   ingame_setTransparent = "x",
@@ -614,7 +611,6 @@ end
 
 -- If the file opened succesfully...
 if fi then
-
   local file_contents = fi:read("*all")
   fi:close()
 
@@ -657,11 +653,9 @@ if hotkeys_needs_rewrite then
 --]=] .. '\n' ..
 'global_confirm = ' .. hotkeys_values.global_confirm .. '\n' ..
 'global_confirm_alt = ' .. hotkeys_values.global_confirm_alt .. '\n' ..
-'global_confirm_alt02 = ' .. hotkeys_values.global_confirm_alt02 .. '\n' ..
 'global_cancel = ' .. hotkeys_values.global_cancel .. '\n' ..
 'global_cancel_alt = ' .. hotkeys_values.global_cancel_alt .. '\n' ..
 'global_fullscreen_toggle = ' .. hotkeys_values.global_fullscreen_toggle .. '\n' ..
-'global_fullscreen_toggle_alt = ' .. hotkeys_values.global_fullscreen_toggle_alt .. '\n' ..
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
 'global_captureMouse = ' .. hotkeys_values.global_captureMouse .. '\n' ..
@@ -680,15 +674,14 @@ if hotkeys_needs_rewrite then
 'ingame_scroll_up = ' .. hotkeys_values.ingame_scroll_up .. '\n' ..
 'ingame_scroll_down = ' .. hotkeys_values.ingame_scroll_down .. '\n' ..
 'ingame_scroll_left = ' .. hotkeys_values.ingame_scroll_left .. '\n' ..
-'ingame_scroll_right = ' .. hotkeys_values.ingame_scroll_right .. '\n' .. [=[
+'ingame_scroll_right = ' .. hotkeys_values.ingame_scroll_right .. '\n' ..
+'ingame_scroll_shift = ' .. hotkeys_values.ingame_scroll_shift .. '\n' .. [=[
 
 --------------------------------------Zoom--------------------------------------
 -- These are keys used to zoom the camera in and out.
 -- ]=] .. '\n' ..
 'ingame_zoom_in = '.. hotkeys_values.ingame_zoom_in .. '\n' ..
 'ingame_zoom_in_more = ' .. hotkeys_values.ingame_zoom_in_more .. '\n' ..
-'ingame_zoom_in_alt = ' .. hotkeys_values.ingame_zoom_in_alt .. '\n' ..
-'ingame_zoom_in_more_alt = '.. hotkeys_values.ingame_zoom_in_more_alt .. '\n' ..
 'ingame_zoom_out = ' .. hotkeys_values.ingame_zoom_out .. '\n' ..
 'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' .. [=[
 
@@ -818,4 +811,4 @@ for k, str_val in pairs(hotkeys_values) do
   end
 end
 
-return config_filename, config_values, hotkeys_filename, hotkeys_values
+return config_filename, config_values, hotkeys_filename, hotkeys_values, hotkeys_defaults

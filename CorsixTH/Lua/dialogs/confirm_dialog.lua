@@ -65,7 +65,6 @@ end
 function UIConfirmDialog:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.ok)
   self:addKeyHandler("global_confirm_alt", self.ok)
-  self:addKeyHandler("global_confirm_alt02", self.ok)
 end
 
 function UIConfirmDialog:cancel()

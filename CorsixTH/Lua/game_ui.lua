@@ -91,13 +91,46 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.speed_up_key_pressed = false
 
+  -- This is the long version of the shift speed key.
+  -- i.e. if the "ingame_scroll_shift" key is "ctrl", then it will give us
+  --  "left ctrl" and "right ctrl" for reference against the rawchar in
+  --  "onKeyDown()" and "onKeyUp()"
+  self.shift_scroll_key_long = {}
+  self.shift_scroll_speed_pressed = false
+  local temp_table = {}
+  local shift_scroll_key_index = 1
+  if type(self.app.hotkeys["ingame_scroll_shift"]) == "string" then
+    temp_table = {self.app.hotkeys["ingame_scroll_shift"]}
+  elseif type(self.app.hotkeys["ingame_scroll_shift"]) == "table" then
+    temp_table = shallow_clone(self.app.hotkeys["ingame_scroll_shift"])
+  end
+  -- Go through the "ingame_scroll_shift" key table and see if it has any modifier names.
+  for _, v in pairs (temp_table) do
+    -- If it does then add long name version of them into the long key table.
+    if v == "ctrl" then
+      self.shift_scroll_key_long[shift_scroll_key_index] = "left ctrl"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+      self.shift_scroll_key_long[shift_scroll_key_index] = "right ctrl"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+    elseif v == "alt" then
+      self.shift_scroll_key_long[shift_scroll_key_index] = "left alt"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+      self.shift_scroll_key_long[shift_scroll_key_index] = "right alt"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+    elseif v == "shift" then
+      self.shift_scroll_key_long[shift_scroll_key_index] = "left shift"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+      self.shift_scroll_key_long[shift_scroll_key_index] = "right shift"
+      shift_scroll_key_index = shift_scroll_key_index + 1
+    end
+  end
+
   -- The currently specified intensity value for earthquakes. To abstract
   -- the effect from the implementation this value is a number between 0
   -- and 1.
   self.shake_screen_intensity = 0
 
   self.announcer = Announcer(app)
-  
 end
 
 function GameUI:setupGlobalKeyHandlers()
@@ -121,6 +154,7 @@ function GameUI:setupGlobalKeyHandlers()
   self:addKeyHandler("ingame_toggleAnnouncements", self, self.togglePlayAnnouncements)
   self:addKeyHandler("ingame_toggleSounds", self, self.togglePlaySounds)
   self:addKeyHandler("ingame_toggleMusic", self, self.togglePlayMusic)
+
   -- scroll to map position
   for i = 0, 9 do
     -- set camera view
@@ -308,6 +342,12 @@ function GameUI:onKeyDown(rawchar, modifiers, is_repeat)
     return true
   end
   local key = rawchar:lower()
+  -- If key is shift speed key...
+  for _, v in pairs(self.shift_scroll_key_long) do
+    if v == key then
+      self.shift_scroll_speed_pressed = true
+    end
+  end
   if self.scroll_keys[key] then
     self:updateKeyScroll()
     return
@@ -320,6 +360,11 @@ function GameUI:onKeyUp(rawchar)
   end
 
   local key = rawchar:lower()
+  for _, v in pairs(self.shift_scroll_key_long) do
+    if v == key then
+      self.shift_scroll_speed_pressed = false
+    end
+  end
   if self.scroll_keys[key] then
     self:updateKeyScroll()
     return
@@ -742,7 +787,7 @@ function GameUI:onTick()
     -- By multiplying by 0.5, we allow for setting slower than normal
     -- scroll speeds, and ensure there is no behaviour change for players
     -- who do not modify their config file.
-    if self.app.key_modifiers.shift then
+    if self.shift_scroll_speed_pressed then
       mult = mult * self.app.config.shift_scroll_speed * 0.5
     else
       mult = mult * self.app.config.scroll_speed * 0.5

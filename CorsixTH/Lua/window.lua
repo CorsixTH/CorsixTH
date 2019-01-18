@@ -1309,8 +1309,6 @@ function HotkeyBox:HotkeyBox()
   self.visible = nil
   self.enabled = nil
   self.active = nil
-  self.temp_keys_down = {}
-  self.temp_key_processed = false
   self.noted_keys = {}
 end
 
@@ -1322,7 +1320,6 @@ function HotkeyBox:confirm()
   if self.confirm_callback then
     self.confirm_callback()
   end
-  self.temp_keys_down = {}
   self.noted_keys = {}
 end
 
@@ -1332,6 +1329,7 @@ function HotkeyBox:abort()
   if self.abort_callback then
     self.abort_callback()
   end
+  self.noted_keys = {}
 end
 
 --! Set the hotkeybox active status to true or false, taking care of any
@@ -1373,25 +1371,10 @@ function HotkeyBox:clicked()
 end
 
 function HotkeyBox:keyInput(char, rawchar, modifiers)
-  self.temp_key_processed = false
-
-  -- If ctrl is pressed, do we pass it to this next function, below?
-  --  
-
-  -- Find out if the current character has been processed.
-  for _, key in pairs(self.temp_keys_down) do
-    if key == char then
-      self.temp_key_processed = true
-    else
-      self.temp_key_processed = false
-    end
+  if not self.active then
+    return false
   end
-
-  -- If the key has not been processed then add it to the table.
-  if self.temp_key_processed == false then
-    self.temp_keys_down[#self.temp_keys_down+1] = char
-  end
-  
+  -- Just return true so any key's we press aren't passed to anything else.
   return true
 end
 
@@ -1458,8 +1441,6 @@ function Window:makeHotkeyBoxOnPanel(panel, confirm_callback, abort_callback)
     visible = true,
     enabled = true,
     active = false,
-    temp_keys_down = {},
-    temp_key_processed = false,
     noted_keys = {},
   }, hotkeybox_mt)
 
