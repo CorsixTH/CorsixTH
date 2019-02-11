@@ -45,6 +45,11 @@ else()
   )
 endif()
 
+# Set language standard
+set_property(TARGET AnimView PROPERTY CXX_STANDARD 11)
+set_property(TARGET AnimView PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET AnimView PROPERTY CXX_STANDARD_REQUIRED ON)
+
 ## Finding libraries
 
 # Find WxWidgets

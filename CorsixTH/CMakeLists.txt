@@ -78,6 +78,11 @@ if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
 endif()
 
+# Set language standard
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 11)
+set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
+
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
