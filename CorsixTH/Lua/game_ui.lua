@@ -528,6 +528,10 @@ end
 
 -- TODO: try to remove duplication with UI:onMouseMove
 function GameUI:onMouseMove(x, y, dx, dy)
+  if self.mouse_released then
+    return false
+  end
+
   local repaint = UpdateCursorPosition(self.app.video, x, y)
   if self.app.moviePlayer.playing then
     return false

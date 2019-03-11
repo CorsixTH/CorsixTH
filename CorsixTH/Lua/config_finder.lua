@@ -517,7 +517,7 @@ local hotkeys_defaults = {
   global_fullscreen_toggle = {"alt", "return"},
   global_exitApp = {"alt", "f4"},
   global_resetApp = {"shift", "f10"},
-  global_captureMouse = {"ctrl", "f10"},
+  global_releaseMouse = {"ctrl", "f10"},
   global_connectDebugger = {"ctrl", "c"},
   global_showLuaConsole = "f12",
   global_runDebugScript = {"shift", "d"},
@@ -658,7 +658,7 @@ if hotkeys_needs_rewrite then
 'global_fullscreen_toggle = ' .. hotkeys_values.global_fullscreen_toggle .. '\n' ..
 'global_exitApp = ' .. hotkeys_values.global_exitApp .. '\n' ..
 'global_resetApp = ' .. hotkeys_values.global_resetApp .. '\n' ..
-'global_captureMouse = ' .. hotkeys_values.global_captureMouse .. '\n' ..
+'global_releaseMouse = ' .. hotkeys_values.global_releaseMouse .. '\n' ..
 'global_connectDebugger = ' .. hotkeys_values.global_connectDebugger .. '\n' ..
 'global_showLuaConsole = ' .. hotkeys_values.global_showLuaConsole .. '\n' ..
 'global_runDebugScript = ' .. hotkeys_values.global_runDebugScript .. '\n' ..

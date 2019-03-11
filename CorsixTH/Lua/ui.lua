@@ -172,6 +172,7 @@ function UI:UI(app, minimal)
   self.temp_button_down = false
   --
   self.key_noted = false
+  self.mouse_released = false
 
   self.down_count = 0
   if not minimal then
@@ -257,7 +258,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
   self:addKeyHandler("global_resetApp", self, self.resetApp)
-  self:addKeyHandler("global_captureMouse", self, self.toggleCaptureMouse)
+  self:addKeyHandler("global_releaseMouse", self, self.releaseMouse)
 
   self:addOrRemoveDebugModeKeyHandlers()
 end
@@ -649,6 +650,16 @@ function UI:toggleCaptureMouse()
   self.app.video:setCaptureMouse(self.app.capturemouse)
 end
 
+function UI:setMouseReleased(released)
+  self.mouse_released = released
+  WM.showCursor(released)
+  self.app.video:setCaptureMouse(self.app.capturemouse and not self.app.mouse_released)
+end
+
+function UI:releaseMouse()
+  self:setMouseReleased(true)
+end
+
 function UI:toggleFullscreen()
   local modes = self.app.modes
 
@@ -842,6 +853,8 @@ function UI:onTextInput(text)
 end
 
 function UI:onMouseDown(code, x, y)
+  self:setMouseReleased(false)
+
   local repaint = false
   local button = self.button_codes[code] or code
   if self.app.moviePlayer.playing then
@@ -951,6 +964,10 @@ function UI:onWindowResize(width, height)
 end
 
 function UI:onMouseMove(x, y, dx, dy)
+  if self.mouse_released then
+    return false
+  end
+
   local repaint = UpdateCursorPosition(self.app.video, x, y)
 
   self.cursor_x = x

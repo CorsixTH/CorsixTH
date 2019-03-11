@@ -458,10 +458,10 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self.hotkey_buttons["global_screenshot"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
     :makeHotkeyBox(function() self:confirm_func("global_screenshot") end, nil):setText( string.upper(array_join(ui.app.hotkeys["global_screenshot"], "+")) )
   get_next_pos_y()
-  -- global_captureMouse
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.global_captureMouse)
-  self.hotkey_buttons["global_captureMouse"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("global_captureMouse") end, nil):setText( string.upper(array_join(ui.app.hotkeys["global_captureMouse"], "+")) )
+  -- global_releaseMouse
+  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.global_releaseMouse)
+  self.hotkey_buttons["global_releaseMouse"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("global_releaseMouse") end, nil):setText( string.upper(array_join(ui.app.hotkeys["global_releaseMouse"], "+")) )
   get_next_pos_y()
 
   -- global_confirm_alt
