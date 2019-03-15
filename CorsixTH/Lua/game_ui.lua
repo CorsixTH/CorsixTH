@@ -91,6 +91,25 @@ function GameUI:GameUI(app, local_hospital, map_editor)
 
   self.speed_up_key_pressed = false
 
+  -- The currently specified intensity value for earthquakes. To abstract
+  -- the effect from the implementation this value is a number between 0
+  -- and 1.
+  self.shake_screen_intensity = 0
+
+  self.announcer = Announcer(app)
+end
+
+function GameUI:setupGlobalKeyHandlers()
+  UI.setupGlobalKeyHandlers(self)
+
+  -- Set the scrolling keys.
+  self.scroll_keys = {
+     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
+     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
+     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+  }
+
   -- This is the long version of the shift speed key.
   -- i.e. if the "ingame_scroll_shift" key is "ctrl", then it will give us
   --  "left ctrl" and "right ctrl" for reference against the rawchar in
@@ -124,25 +143,6 @@ function GameUI:GameUI(app, local_hospital, map_editor)
       shift_scroll_key_index = shift_scroll_key_index + 1
     end
   end
-
-  -- The currently specified intensity value for earthquakes. To abstract
-  -- the effect from the implementation this value is a number between 0
-  -- and 1.
-  self.shake_screen_intensity = 0
-
-  self.announcer = Announcer(app)
-end
-
-function GameUI:setupGlobalKeyHandlers()
-  UI.setupGlobalKeyHandlers(self)
-
-  -- Set the scrolling keys.
-  self.scroll_keys = {
-     [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
-     [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
-     [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
-  }
 
   self:addKeyHandler("global_window_close", self, self.setEditRoom, false)
   self:addKeyHandler("ingame_showmenubar", self, self.showMenuBar)
