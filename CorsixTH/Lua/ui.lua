@@ -651,6 +651,10 @@ function UI:toggleCaptureMouse()
 end
 
 function UI:setMouseReleased(released)
+  if released == self.mouse_released then
+    return
+  end
+
   self.mouse_released = released
 
   -- If we are using a software cursor, show the hardware cursor on release
