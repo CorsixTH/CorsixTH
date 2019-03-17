@@ -309,7 +309,7 @@ function UI:setCursor(cursor)
     else
       -- Cursor is a Lua simulated cursor.
       -- Make the real cursor invisible, and simulate it with this.
-      WM.showCursor(false)
+      WM.showCursor(self.mouse_released)
       self.simulated_cursor = cursor
     end
   end
@@ -651,8 +651,18 @@ function UI:toggleCaptureMouse()
 end
 
 function UI:setMouseReleased(released)
+  if released == self.mouse_released then
+    return
+  end
+
   self.mouse_released = released
-  WM.showCursor(released)
+
+  -- If we are using a software cursor, show the hardware cursor on release
+  -- and hide it again on capture.
+  if self.cursor and not self.cursor.use then
+    WM.showCursor(released)
+  end
+
   self.app.video:setCaptureMouse(self.app.capturemouse and not self.app.mouse_released)
 end
 
@@ -854,7 +864,6 @@ end
 
 function UI:onMouseDown(code, x, y)
   self:setMouseReleased(false)
-
   local repaint = false
   local button = self.button_codes[code] or code
   if self.app.moviePlayer.playing then
