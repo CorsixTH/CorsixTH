@@ -309,7 +309,7 @@ function UI:setCursor(cursor)
     else
       -- Cursor is a Lua simulated cursor.
       -- Make the real cursor invisible, and simulate it with this.
-      WM.showCursor(false)
+      WM.showCursor(self.mouse_released)
       self.simulated_cursor = cursor
     end
   end
@@ -864,7 +864,6 @@ end
 
 function UI:onMouseDown(code, x, y)
   self:setMouseReleased(false)
-
   local repaint = false
   local button = self.button_codes[code] or code
   if self.app.moviePlayer.playing then
