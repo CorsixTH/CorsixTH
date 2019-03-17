@@ -652,7 +652,13 @@ end
 
 function UI:setMouseReleased(released)
   self.mouse_released = released
-  WM.showCursor(released)
+
+  -- If we are using a software cursor, show the hardware cursor on release
+  -- and hide it again on capture.
+  if self.cursor and not self.cursor.use then
+    WM.showCursor(released)
+  end
+
   self.app.video:setCaptureMouse(self.app.capturemouse and not self.app.mouse_released)
 end
 
