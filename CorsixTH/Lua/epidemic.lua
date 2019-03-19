@@ -513,16 +513,8 @@ end
 --[[ Forces evacuation of the hospital - it makes ALL patients leave and storm out. ]]
 function Epidemic:evacuateHospital()
   for _, patient in ipairs(self.hospital.patients) do
-    local patient_room = patient:getRoom()
-    if patient_room then
-      patient_room:makeHumanoidDressIfNecessaryAndThenLeave(patient)
-    end
-    if patient.has_passed_reception then
-      patient:clearDynamicInfo()
-      patient:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
-      patient:setMood("exit","activate")
-      local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
-      patient:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
+    if patient.has_passed_reception and not patient.going_home then
+      patient:goHome("evacuated")
     end
   end
 end

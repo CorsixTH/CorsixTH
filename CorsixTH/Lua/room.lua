@@ -148,7 +148,7 @@ function Room:dealtWithPatient(patient)
   patient = patient or self:getPatient()
   -- If the patient was sent home while in the room, don't
   -- do anything apart from removing any leading idle action.
-  if not patient.hospital then
+  if not patient.hospital or patient.going_home then
     if patient:getCurrentAction().name == "idle" then
       patient:finishAction()
     end

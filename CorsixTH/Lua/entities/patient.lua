@@ -554,6 +554,11 @@ function Patient:goHome(reason, disease_id)
     self:clearDynamicInfo()
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
 
+  elseif reason == "evacuated" then
+    self:clearDynamicInfo()
+    self:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
+    self:setMood("exit","activate")
+
   else
     TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
   end
@@ -578,7 +583,7 @@ function Patient:goHome(reason, disease_id)
   if room then
     room:makeHumanoidLeave(self)
   end
-  self:despawn()
+  Humanoid.despawn(self)
 end
 
 -- Despawns the patient and removes them from the hospital
