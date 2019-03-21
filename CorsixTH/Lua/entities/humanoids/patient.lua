@@ -1078,22 +1078,30 @@ end
 ]]
 function Patient:updateMessage(choice)
   if self.message and self.message.choices then
+    local message_choice
     local enabled = false
-    if choice == "research" then
+
+    for _, c in ipairs(self.message.choices) do
+      if c.choice == choice then
+        message_choice = choice
+      end
+    end
+
+    if choice == "research" and message_choice == choice then
       -- enable only if research department is built and a room in the treatment chain is undiscovered
       local req = self.hospital:checkDiseaseRequirements(self.disease.id)
       if req then
         local strings = _S.fax.disease_discovered_patient_choice
         enabled = self.hospital:hasRoomOfType("research") and self.hospital:hasStaffOfCategory("Researcher")
         local output_text = strings.can_not_cure
-        if #req.rooms > 0 then
-          local room_name, _, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[#req.rooms])
-          if next(req.staff) then
+        if #req.rooms == 1 then
+          local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[#req.rooms])
+          if req.staff[required_staff] or 0 > 0 then
             output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
           else
             output_text = strings.need_to_build:format(room_name)
           end
-        elseif next(req.staff) then
+        elseif #req.rooms == 0 and next(req.staff) then
           local staffclass_to_string = {
               Nurse        = _S.staff_title.nurse,
               Doctor       = _S.staff_title.doctor,
@@ -1101,12 +1109,10 @@ function Patient:updateMessage(choice)
               Psychiatrist = _S.staff_title.psychiatrist,
           }
           output_text = strings.need_to_employ:format(staffclass_to_string[next(req.staff)])
-        else
-          enabled = false
         end
         self.message[3].text = output_text
       else
-        --no requirements
+        -- no requirements missing
         enabled = false
       end
     else -- if choice == "guess_cure" then

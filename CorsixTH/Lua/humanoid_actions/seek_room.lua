@@ -134,20 +134,27 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   --local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
 
   local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
-
+  local research_enabled = false
   if req then
-    local room_name, _, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
-    if #req.rooms > 0 then
-      if next(req.staff) then
+    research_enabled = humanoid.hospital:hasRoomOfType("research") and humanoid.hospital:hasStaffOfCategory("Researcher")
+    if #req.rooms == 1 then
+      local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(req.rooms[1])
+      if req.staff[required_staff] or 0 > 0 then
         output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
       else
         output_text = strings.need_to_build:format(room_name)
       end
-    else
-      output_text = strings.need_to_employ:format(staff_name)
+    elseif #req.rooms == 0 and next(req.staff) then
+      local staffclass_to_string = {
+          Nurse        = _S.staff_title.nurse,
+          Doctor       = _S.staff_title.doctor,
+          Surgeon      = _S.staff_title.surgeon,
+          Psychiatrist = _S.staff_title.psychiatrist,
+      }
+      output_text = strings.need_to_employ:format(staffclass_to_string[next(req.staff)])
     end
   end
-  local research_enabled = humanoid.hospital:hasStaffOfCategory("Researcher") and humanoid.hospital:hasRoomOfType("research")
+
   local message = {
     {text = strings.disease_name:format(humanoid.disease.name)},
     {text = " "},
