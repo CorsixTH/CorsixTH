@@ -160,12 +160,12 @@ end
 function WardRoom:getStaffMember()
   local staff
   for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff_member.fired and not staff_member:isLeaving() then
+    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
       if staff.profile.skill > staff_member.profile.skill then
         staff = staff_member
       end
     else
-      if not staff_member.fired and not staff_member:isLeaving() then
+      if not staff_member.fired and not staff_member:hasLeavingAction() then
         staff = staff_member
       end
     end
