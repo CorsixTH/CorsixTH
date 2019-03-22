@@ -177,12 +177,14 @@ end
 function OperatingTheatreRoom:getStaffMember()
   local staff
   for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff.fired then
+    if staff and not staff_member.fired and not staff_member:isLeaving() then
       if staff.attributes["fatigue"] < staff_member.attributes["fatigue"] then
         staff = staff_member
       end
     else
-      staff = staff_member
+      if not staff_member.fired and not staff_member:isLeaving() then
+        staff = staff_member
+      end
     end
   end
   return staff
