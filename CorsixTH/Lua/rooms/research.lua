@@ -151,7 +151,7 @@ function ResearchRoom:commandEnteringStaff(staff)
 end
 
 function ResearchRoom:commandEnteringPatient(patient)
-  local staff = next(self.staff_member_set)
+  local staff = self:getStaffMember()
   local autopsy, stf_x, stf_y = self.world:findObjectNear(patient, "autopsy")
   local pat_x, pat_y = autopsy:getSecondaryUsageTile()
   patient:walkTo(pat_x, pat_y)
@@ -193,12 +193,14 @@ end
 function ResearchRoom:getStaffMember()
   local staff
   for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff.fired then
+    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
       if staff.profile.skill > staff_member.profile.skill then
         staff = staff_member
       end
     else
-      staff = staff_member
+      if not staff_member.fired and not staff_member:hasLeavingAction() then
+        staff = staff_member
+      end
     end
   end
   return staff
