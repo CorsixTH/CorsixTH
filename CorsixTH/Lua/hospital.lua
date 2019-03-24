@@ -1678,7 +1678,7 @@ function Hospital:initStaff()
         added_staff = false
       end
       if added_staff then
-        local staff = self.world:newEntity("Staff", 2)
+        local staff = self.world:newEntity(profile.humanoid_class, 2)
         staff:setProfile(profile)
         -- TODO: Make a somewhat "nicer" placing algorithm.
         staff:setTile(self.world.map.th:getCameraTile(1))

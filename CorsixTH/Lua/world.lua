@@ -22,11 +22,14 @@ local TH = require"TH"
 local ipairs, _G, table_remove
     = ipairs, _G, table.remove
 
-corsixth.require("entities.patient")
-corsixth.require("entities.staff")
-corsixth.require("entities.vip")
-corsixth.require("entities.grim_reaper")
-corsixth.require("entities.inspector")
+corsixth.require("entities.humanoids.patient")
+corsixth.require("entities.humanoids.staff.doctor")
+corsixth.require("entities.humanoids.staff.nurse")
+corsixth.require("entities.humanoids.staff.handyman")
+corsixth.require("entities.humanoids.staff.receptionist")
+corsixth.require("entities.humanoids.vip")
+corsixth.require("entities.humanoids.grim_reaper")
+corsixth.require("entities.humanoids.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
 corsixth.require("epidemic")
