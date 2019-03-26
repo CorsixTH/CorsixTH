@@ -40,12 +40,7 @@ function Handyman:leaveAnnounce()
 end
 
 function Handyman:die()
-  if self.task then
-    -- If the staff member had a task outstanding, unassigning them from that task.
-    -- Tasks with no handyman assigned will be eligible for reassignment by the hospital.
-    self.task.assignedHandyman = nil
-    self.task = nil
-  end
+  self:unassignTask()
   Staff.die(self)
 end
 
@@ -80,19 +75,12 @@ end
 
 function Handyman:goToStaffRoom()
   Staff.goToStaffRoom(self)
-  if self.task then
-    self.task.assignedHandyman = nil
-    self.task = nil
-  end
+  self:unassignTask()
 end
 
 function Handyman:onPlaceInCorridor()
   Staff.onPlaceInCorridor(self)
-
-  if self.task then
-    self.task.assignedHandyman = nil
-    self.task = nil
-  end
+  self:unassignTask()
 end
 
 -- Helper function to decide if Handyman fulfills a criterion
@@ -114,7 +102,7 @@ function Handyman:interruptHandymanTask()
     self.on_call.assigned = nil
     self.on_call = nil
   end
-  self.task = nil
+  self:unassignTask()
   self:setNextAction(AnswerCallAction())
 end
 
@@ -186,5 +174,14 @@ function Handyman:assignHandymanTask(taskIndex, taskType)
       task.call.dropped = nil
     end
     task.call.dispatcher:executeCall(task.call, self)
+  end
+end
+
+-- If the staff member had a task outstanding, unassigning them from that task.
+-- Tasks with no handyman assigned will be eligible for reassignment by the hospital.
+function Handyman:unassignTask()
+  if self.task then
+    self.task.assignedHandyman = nil
+    self.task = nil
   end
 end

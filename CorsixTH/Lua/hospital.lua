@@ -2177,8 +2177,8 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
       subTable[taskIndex].assignedHandyman = handyman
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
-      subTable[taskIndex].assignedHandyman = handyman
       formerHandyman:interruptHandymanTask()
+      subTable[taskIndex].assignedHandyman = handyman
     end
   end
 end
@@ -2215,13 +2215,13 @@ function Hospital:searchForHandymanTask(handyman, taskType)
     if canContinue then
       if v.assignedHandyman then
         if v.assignedHandyman.fired then
-          v.assignedHandyman = nil
+          v.assignedHandyman:unassignTask()
         elseif not v.assignedHandyman.hospital then
           -- This should normally never be the case. If the handyman doesn't belong to a hsopital
           -- then they should not have any tasks assigned to them however it was previously possible
           -- We need to tidy up to make sure the task can be reassigned.
           print("Warning: Orphaned handyman is still assigned a task. Removing.")
-          v.assignedHandyman = nil
+          v.assignedHandyman:unassignTask()
         else
           local assignedDistance = self.world:getPathDistance(v.tile_x, v.tile_y, v.assignedHandyman.tile_x, v.assignedHandyman.tile_y)
           if assignedDistance ~= false then
