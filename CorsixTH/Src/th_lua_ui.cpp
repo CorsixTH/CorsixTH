@@ -47,10 +47,10 @@ static int l_town_map_draw(lua_State *L)
     int iCanvasYBase = static_cast<int>(luaL_checkinteger(L, 5));
     bool bShowHeat = lua_toboolean(L, 6) != 0;
 
-    uint32_t iColourMyHosp = pCanvas->map_colour(0, 0, 70);
-    uint32_t iColourWall = pCanvas->map_colour(255, 255, 255);
-    uint32_t iColourDoor = pCanvas->map_colour(200, 200, 200);
-    uint32_t iColourPurchasable = pCanvas->map_colour(255, 0, 0);
+    uint32_t iColourMyHosp = render_target::map_colour(0, 0, 70);
+    uint32_t iColourWall = render_target::map_colour(255, 255, 255);
+    uint32_t iColourDoor = render_target::map_colour(200, 200, 200);
+    uint32_t iColourPurchasable = render_target::map_colour(255, 0, 0);
 
     const map_tile *pNode = pMap->get_tile_unchecked(0, 0);
     const map_tile *pOriginalNode = pMap->get_original_tile_unchecked(0, 0);
@@ -116,7 +116,7 @@ static int l_town_map_draw(lua_State *L)
                         break;
                     }
 
-                    iColour = pCanvas->map_colour(iR, iG, iB);
+                    iColour = render_target::map_colour(iR, iG, iB);
                 }
                 pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
             }

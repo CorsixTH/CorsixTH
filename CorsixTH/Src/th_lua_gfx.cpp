@@ -437,8 +437,8 @@ static int l_font_draw_tooltip(lua_State *L)
     int iScreenWidth = pCanvas->get_width();
 
     int iW = 200; // (for now) hardcoded width of tooltips
-    uint32_t iBlack = pCanvas->map_colour(0x00, 0x00, 0x00);
-    uint32_t iWhite = pCanvas->map_colour(0xFF, 0xFF, 0xFF);
+    uint32_t iBlack = render_target::map_colour(0x00, 0x00, 0x00);
+    uint32_t iWhite = render_target::map_colour(0xFF, 0xFF, 0xFF);
     text_layout oArea = pFont->draw_text_wrapped(nullptr, sMsg, iMsgLen, iX + 2, iY + 1, iW - 4, INT_MAX, 0);
     int iLastX = iX + oArea.width + 3;
     int iFirstY = iY - (oArea.end_y - iY) - 1;
@@ -681,7 +681,7 @@ static int l_surface_set_blue_filter_active(lua_State *L)
 static int l_surface_map(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
-    lua_pushnumber(L, (lua_Number)pCanvas->map_colour(
+    lua_pushnumber(L, (lua_Number)render_target::map_colour(
         (Uint8)luaL_checkinteger(L, 2),
         (Uint8)luaL_checkinteger(L, 3),
         (Uint8)luaL_checkinteger(L, 4)));

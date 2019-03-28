@@ -82,6 +82,66 @@ static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     return palette::pack_argb(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
 }
 
+palette::palette()
+{
+    colour_count = 0;
+}
+
+static constexpr uint8_t gs_iTHColourLUT[0x40] = {
+    // Maps 0-63 to 0-255
+    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
+    0x20, 0x24, 0x28, 0x2D, 0x31, 0x35, 0x39, 0x3D,
+    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
+    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
+    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
+    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
+    0xC2, 0xC6, 0xCA, 0xCE, 0xD2, 0xD7, 0xDB, 0xDF,
+    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF,
+};
+
+bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength)
+{
+    if(iDataLength != 256 * 3)
+        return false;
+
+    colour_count = static_cast<int>(iDataLength / 3);
+    for(int i = 0; i < colour_count; ++i, pData += 3)
+    {
+        uint8_t iR = gs_iTHColourLUT[pData[0] & 0x3F];
+        uint8_t iG = gs_iTHColourLUT[pData[1] & 0x3F];
+        uint8_t iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
+        // Remap magenta to transparent
+        if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
+            iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
+        colour_index_to_argb_map[i] = iColour;
+    }
+
+    return true;
+}
+
+bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    if(iEntry < 0 || iEntry >= colour_count)
+        return false;
+    uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
+    // Remap magenta to transparent
+    if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
+        iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
+    colour_index_to_argb_map[iEntry] = iColour;
+    return true;
+}
+
+int palette::get_colour_count() const
+{
+    return colour_count;
+}
+
+const uint32_t* palette::get_argb_data() const
+{
+    return colour_index_to_argb_map;
+}
+
 void full_colour_renderer::decode_image(const uint8_t* pImg, const palette *pPalette, uint32_t iSpriteFlags)
 {
     if (width <= 0) {
@@ -437,11 +497,6 @@ void render_target::set_window_grab(bool bActivate)
     SDL_SetWindowGrab(window, bActivate ? SDL_TRUE : SDL_FALSE);
 }
 
-uint32_t render_target::map_colour(uint8_t iR, uint8_t iG, uint8_t iB)
-{
-    return palette::pack_argb(0xFF, iR, iG, iB);
-}
-
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
     SDL_Rect rcDest = { iX, iY, iW, iH };
@@ -723,66 +778,6 @@ void render_target::draw_line(line *pLine, int iX, int iY)
 
         op = (line::line_operation*)(op->next);
     }
-}
-
-palette::palette()
-{
-    colour_count = 0;
-}
-
-static const uint8_t gs_iTHColourLUT[0x40] = {
-    // Maps 0-63 to 0-255
-    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
-    0x20, 0x24, 0x28, 0x2D, 0x31, 0x35, 0x39, 0x3D,
-    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
-    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
-    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
-    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
-    0xC2, 0xC6, 0xCA, 0xCE, 0xD2, 0xD7, 0xDB, 0xDF,
-    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF,
-};
-
-bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength)
-{
-    if(iDataLength != 256 * 3)
-        return false;
-
-    colour_count = static_cast<int>(iDataLength / 3);
-    for(int i = 0; i < colour_count; ++i, pData += 3)
-    {
-        uint8_t iR = gs_iTHColourLUT[pData[0] & 0x3F];
-        uint8_t iG = gs_iTHColourLUT[pData[1] & 0x3F];
-        uint8_t iB = gs_iTHColourLUT[pData[2] & 0x3F];
-        uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
-        // Remap magenta to transparent
-        if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
-            iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
-        colour_index_to_argb_map[i] = iColour;
-    }
-
-    return true;
-}
-
-bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
-{
-    if(iEntry < 0 || iEntry >= colour_count)
-        return false;
-    uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
-    // Remap magenta to transparent
-    if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
-        iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
-    colour_index_to_argb_map[iEntry] = iColour;
-    return true;
-}
-
-int palette::get_colour_count() const
-{
-    return colour_count;
-}
-
-const uint32_t* palette::get_argb_data() const
-{
-    return colour_index_to_argb_map;
 }
 
 raw_bitmap::raw_bitmap()
