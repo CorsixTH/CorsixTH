@@ -294,6 +294,26 @@ function Queue:move(index, new_index)
   end
 end
 
+--! Move an entering patient in the queue at position 'index' to position 'new_index'.
+--! Persons between 'index' and 'new_index' move one place to 'index'.
+--! Values are relative to the reported humanoids in the queue
+--!param index (int) Index number of the person to move.
+--!param new_index (int) Destination of the person being moved.
+--!param new_index (string) 'front' or 'back' as relative markers
+function Queue:movePatient(index, new_index)
+  local first_patient_index = self:size() - self:reportedSize() + 1
+  if type(new_index) == "string" then
+    if new_index == 'front' then
+      new_index = first_patient_index
+    else
+      new_index = self:size()
+    end
+  else
+    new_index = first_patient_index + new_index
+  end
+  self:move(first_patient_index + index - 1, new_index)
+end
+
 --! Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
   for _, humanoid in ipairs(self) do
