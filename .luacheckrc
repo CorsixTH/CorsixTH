@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+self = false
+
 globals = { -- Globals
             "_A", "_S",
             "corsixth",
@@ -39,7 +41,7 @@ globals = { -- Globals
             "Patient", "Plant", "Queue", "ResearchDepartment", "Room",
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
-            "World", "Date",
+            "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
 
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
@@ -129,8 +131,8 @@ add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "width_textbox_reset")
 add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "height_textbox_reset")
 add_ignore("CorsixTH/Lua/entities/machine.lua", "callbackNewRoom")
 add_ignore("CorsixTH/Lua/entities/machine.lua", "repair_loop_callback")
-add_ignore("CorsixTH/Lua/entities/patient.lua", "callbackNewRoom")
-add_ignore("CorsixTH/Lua/entities/staff.lua", "callbackNewRoom")
+add_ignore("CorsixTH/Lua/entities/humanoids/patient.lua", "callbackNewRoom")
+add_ignore("CorsixTH/Lua/entities/humanoids/staff.lua", "callbackNewRoom")
 add_ignore("CorsixTH/Lua/humanoid_actions/vip_go_to_next_room.lua", "action_vip_go_to_next_room_end")
 add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "after_use")
 add_ignore("CorsixTH/Lua/rooms/operating_theatre.lua", "wait_for_ready")
@@ -179,15 +181,15 @@ add_ignore("CorsixTH/Lua/dialogs/resizables/options.lua", "212")
 add_ignore("CorsixTH/Lua/dialogs/staff_rise.lua", "212")
 add_ignore("CorsixTH/Lua/dialogs/staff_rise.lua", "542")
 add_ignore("CorsixTH/Lua/dialogs/tree_ctrl.lua", "212")
-add_ignore("CorsixTH/Lua/entities/grim_reaper.lua", "212")
 add_ignore("CorsixTH/Lua/entities/humanoid.lua", "212")
-add_ignore("CorsixTH/Lua/entities/inspector.lua", "212")
 add_ignore("CorsixTH/Lua/entities/machine.lua", "212")
 add_ignore("CorsixTH/Lua/entities/object.lua", "212")
-add_ignore("CorsixTH/Lua/entities/patient.lua", "212")
-add_ignore("CorsixTH/Lua/entities/patient.lua", "542")
-add_ignore("CorsixTH/Lua/entities/staff.lua", "212")
-add_ignore("CorsixTH/Lua/entities/vip.lua", "212")
+add_ignore("CorsixTH/Lua/entities/humanoids/grim_reaper.lua", "212")
+add_ignore("CorsixTH/Lua/entities/humanoids/inspector.lua", "212")
+add_ignore("CorsixTH/Lua/entities/humanoids/patient.lua", "212")
+add_ignore("CorsixTH/Lua/entities/humanoids/patient.lua", "542")
+add_ignore("CorsixTH/Lua/entities/humanoids/staff.lua", "212")
+add_ignore("CorsixTH/Lua/entities/humanoids/vip.lua", "212")
 add_ignore("CorsixTH/Lua/entity.lua", "212")
 add_ignore("CorsixTH/Lua/epidemic.lua", "212")
 add_ignore("CorsixTH/Lua/filesystem.lua", "212")

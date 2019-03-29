@@ -99,7 +99,7 @@ function HumanoidAction:disableTruncate()
 end
 
 function HumanoidAction:afterLoad(old, new)
-  if old < 112 then
+  if old < 112 and new >= 112 then
     self.is_leaving = not not self.is_leaving
     self.must_happen = not not self.must_happen
     self.no_truncate = not not self.no_truncate

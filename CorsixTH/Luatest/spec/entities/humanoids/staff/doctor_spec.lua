@@ -23,16 +23,16 @@ require("corsixth")
 
 require("entity")
 require("entities.humanoid")
-require("entities.staff")
+require("entities.humanoids.staff.doctor")
 
-describe("Staff:", function()
-  local function getStaff()
+describe("Doctor:", function()
+  local function getDoctor()
     local animation = {setHitTestResult = function() end}
-    return Staff(animation)
+    return Doctor(animation)
   end
 
   it("Can represent doctor as a string", function()
-    local doctor = getStaff()
+    local doctor = getDoctor()
     doctor.humanoid_class = "Doctor"
     local name = "WHITMAN"
     doctor.profile = {skill = 0.5, is_psychiatrist = 0.5, name = name}

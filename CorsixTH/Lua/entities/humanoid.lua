@@ -304,24 +304,24 @@ end
 
 -- Save game compatibility
 function Humanoid:afterLoad(old, new)
-  if old < 38 then
+  if old < 38 and new >= 38 then
     -- should existing patients be updated and be getting really ill?
     -- adds the new variables for health icons
     self.attributes["health"] = math.random(60, 100) /100
   end
   -- make sure female slack patients have the correct animation
-  if old < 42 then
+  if old < 42 and new >= 42 then
     if self.humanoid_class == "Slack Female Patient" then
       self.die_anims = die_animations["Slack Female Patient"]
     end
   end
-  if old < 77 then
+  if old < 77 and new >= 77 then
     self.has_vomitted = 0
   end
-  if old < 49 then
+  if old < 49 and new >= 49 then
     self.has_fallen = 1
   end
-  if old < 61 then
+  if old < 61 and new >= 61 then
     -- callbacks changed
     self.build_callbacks = {}
     self.remove_callbacks = {}
@@ -334,7 +334,7 @@ function Humanoid:afterLoad(old, new)
       self.toilet_callback = nil
     end
   end
-  if old < 83 and self.humanoid_class == "Chewbacca Patient" then
+  if old < 83 and new >= 83 and self.humanoid_class == "Chewbacca Patient" then
     self.die_anims.extra_east = 1682
   end
 
