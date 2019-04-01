@@ -619,6 +619,7 @@ function TreeControl:onMouseUp(button, x, y)
       end
     elseif self.selected_node == node and self.select_callback then
       self.select_callback(node)
+      redraw = true
     else
       self.selected_node = node
       node:select()
