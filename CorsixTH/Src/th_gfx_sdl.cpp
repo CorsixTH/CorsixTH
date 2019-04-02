@@ -84,17 +84,11 @@ inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_
     return palette::pack_argb(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
 }
 
-constexpr uint8_t gs_iTHColourLUT[0x40] = {
-    // Maps 0-63 to 0-255
-    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
-    0x20, 0x24, 0x28, 0x2D, 0x31, 0x35, 0x39, 0x3D,
-    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
-    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
-    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
-    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
-    0xC2, 0xC6, 0xCA, 0xCE, 0xD2, 0xD7, 0xDB, 0xDF,
-    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF,
-};
+uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component)
+{
+    constexpr uint8_t mask_6bit = 0x3F;
+    return static_cast<uint8_t>(((colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit) + 0.5);
+}
 
 } // namespace
 
@@ -111,9 +105,9 @@ bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength)
     colour_count = static_cast<int>(iDataLength / 3);
     for(int i = 0; i < colour_count; ++i, pData += 3)
     {
-        uint8_t iR = gs_iTHColourLUT[pData[0] & 0x3F];
-        uint8_t iG = gs_iTHColourLUT[pData[1] & 0x3F];
-        uint8_t iB = gs_iTHColourLUT[pData[2] & 0x3F];
+        uint8_t iR = convert_6bit_to_8bit_colour_component(pData[0]);
+        uint8_t iG = convert_6bit_to_8bit_colour_component(pData[1]);
+        uint8_t iB = convert_6bit_to_8bit_colour_component(pData[2]);
         uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
         // Remap magenta to transparent
         if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
