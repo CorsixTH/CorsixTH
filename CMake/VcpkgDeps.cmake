@@ -25,6 +25,7 @@ set(_VCPKG_SCRIPT_NAME "build_vcpkg_deps.ps1")
 set(_SCRIPT_DIR ${CMAKE_SOURCE_DIR}/scripts)
 # By default place VCPKG into root folder
 set(VCPKG_PARENT_DIR ${CMAKE_SOURCE_DIR} CACHE PATH "Destination for vcpkg dependencies")
+set(VCPKG_REMOTE "origin" CACHE STRING "Name of the remote in the git repository")
 
 # Determine the args to use
 if(VCPKG_TARGET_TRIPLET)
@@ -45,7 +46,7 @@ else()
   string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -BuildAnimView $False")
 endif()
 
-string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -VcpkgCommitSha " ${VCPKG_COMMIT_SHA} " ")
+string(CONCAT _VCPKG_ARGS ${_VCPKG_ARGS} " -VcpkgCommitSha " ${VCPKG_COMMIT_SHA} " -VcpkgRemote " ${VCPKG_REMOTE} " ")
 
 # Run the build script
 set(_SCRIPT_COMMAND  powershell ${_SCRIPT_DIR}/${_VCPKG_SCRIPT_NAME})

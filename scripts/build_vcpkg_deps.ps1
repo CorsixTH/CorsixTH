@@ -26,7 +26,8 @@
 Param(
     [Parameter(Mandatory=$true)][bool]$BuildAnimView,
     [Parameter(Mandatory=$true)][string]$VcpkgTriplet,
-    [Parameter(Mandatory=$true)][string]$VcpkgCommitSha
+    [Parameter(Mandatory=$true)][string]$VcpkgCommitSha,
+    [Parameter(Mandatory=$true)][string]$VcpkgRemote
 )
 
 ################
@@ -74,7 +75,7 @@ function run_script {
     } else {
         # Move into vcpkg folder and update to latest version
         Set-Location -Path $dest_folder_path
-        run_command "git reset --hard; git fetch origin; git checkout $VcpkgCommitSha"
+        run_command "git reset --hard; git fetch $VcpkgRemote; git checkout $VcpkgCommitSha"
     }
 
     $commit_id_filename = "commit_id.txt"
