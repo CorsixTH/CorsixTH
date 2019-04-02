@@ -479,7 +479,7 @@ static int l_map_getcell(lua_State *L)
 }
 
 /** Recognized tile flags by Lua. */
-static const std::map<std::string, map_tile_flags::key> lua_tile_flag_map = {
+static const std::map<std::string, map_tile_flags::key> lua_tile_flag_map {
     {"passable",       map_tile_flags::key::passable_mask},
     {"hospital",       map_tile_flags::key::hospital_mask},
     {"buildable",      map_tile_flags::key::buildable_mask},

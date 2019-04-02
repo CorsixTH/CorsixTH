@@ -25,7 +25,7 @@ SOFTWARE.
 #include "th_lua.h"
 #include <cstring>
 #include <cstdio>
-#include <vector>
+#include <array>
 
 static int l_init(lua_State *L)
 {
@@ -357,19 +357,20 @@ static int l_get_ticks(lua_State *L)
     return 1;
 }
 
-static const std::vector<luaL_Reg> sdllib = {
+static constexpr std::array<luaL_Reg, 4> sdllib {{
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
     {nullptr, nullptr}
-};
-static const std::vector<luaL_Reg> sdllib_with_upvalue = {
+}};
+
+static constexpr std::array<luaL_Reg, 5> sdllib_with_upvalue {{
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
     {"limitFPS", l_limit_fps},
     {nullptr, nullptr}
-};
+}};
 
 inline void load_extra(lua_State *L, const char *name, lua_CFunction fn)
 {

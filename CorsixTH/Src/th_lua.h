@@ -45,7 +45,8 @@ inline int luaT_upvalueindex(int i)
 #endif
 }
 
-inline void luaT_register(lua_State *L, const char *n, const std::vector<luaL_Reg> &l)
+template<class Collection>
+inline void luaT_register(lua_State *L, const char *n, Collection &l)
 {
 #if LUA_VERSION_NUM >= 502
     lua_createtable(L, 0, static_cast<int>(l.size()));
