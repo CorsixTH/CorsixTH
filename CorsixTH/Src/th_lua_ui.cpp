@@ -38,6 +38,16 @@ static uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t s
     return static_cast<uint8_t>(std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
 }
 
+static inline bool is_wall(uint16_t blk)
+{
+    return ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164));
+}
+
+static inline bool is_wall_drawn(const level_map &map, const map_tile &node, const map_tile &original_node, size_t n)
+{
+    return map.get_tile_owner(&node) != 0 ? is_wall(node.iBlock[n]) : is_wall(original_node.iBlock[n]);
+}
+
 static int l_town_map_draw(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -121,10 +131,7 @@ static int l_town_map_draw(lua_State *L)
                 pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
             }
             dont_paint_tile:
-#define IsWall(blk) ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164))
-#define IsWallDrawn(n) pMap->get_tile_owner(pNode) != 0 ? \
-    IsWall(pNode->iBlock[n]) : IsWall(pOriginalNode->iBlock[n])
-            if(IsWallDrawn(1)) {
+            if(is_wall_drawn(*pMap, *pNode, *pOriginalNode, 1)) {
                 pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3, 1);
 
                 // Draw entrance door
@@ -137,7 +144,7 @@ static int l_town_map_draw(lua_State *L)
                     }
                 }
             }
-            if(IsWallDrawn(2)) {
+            if(is_wall_drawn(*pMap, *pNode, *pOriginalNode, 2)) {
                 pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 1, 3);
 
                 // Draw entrance door
@@ -150,8 +157,6 @@ static int l_town_map_draw(lua_State *L)
                     }
                 }
             }
-#undef IsWallDrawn
-#undef IsWall
         }
     }
 

@@ -1117,11 +1117,14 @@ void chunk_renderer::decode_chunks(const uint8_t* data, int datalen, bool comple
     chunk_finish(0xFF);
 }
 
-#define ARE_FLAGS_SET(val, flags) (((val) & (flags)) == (flags))
+static bool are_flags_set(uint32_t val, uint32_t flags)
+{
+    return (val & flags) == flags;
+}
 
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if(are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
 
     iDestX += x_relative_to_tile;
@@ -1157,9 +1160,9 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY)
 
 void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
-    if(ARE_FLAGS_SET(parent->flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75))
         return;
     int iX = 0, iY = 0;
     parent->get_marker(&iX, &iY);
@@ -1198,7 +1201,7 @@ static void CalculateMorphRect(const clip_rect& rcOriginal, clip_rect& rcMorph, 
 
 void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
 
     if(!manager)
@@ -1234,7 +1237,7 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
 
 bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return false;
     if(manager == nullptr)
         return false;
@@ -1244,7 +1247,7 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY)
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return false;
     if(manager == nullptr)
         return false;
@@ -1252,8 +1255,6 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY)
         y_relative_to_tile + iDestY, flags, iTestX, iTestY) || morph_target->hit_test(
         iDestX, iDestY, iTestX, iTestY);
 }
-
-#undef ARE_FLAGS_SET
 
 static bool THAnimation_hit_test_child(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
@@ -1335,14 +1336,12 @@ void animation::persist(lua_persist_writer *pWriter) const
 
     // Write the drawable fields
     pWriter->write_uint(flags);
-#define IS_USING_FUNCTION_SET(d, ht) draw_fn == (THAnimation_ ## d) \
-                            && hit_test_fn == (THAnimation_ ## ht)
 
-    if(IS_USING_FUNCTION_SET(draw, hit_test))
+    if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test)
         pWriter->write_uint(1);
-    else if(IS_USING_FUNCTION_SET(draw_child, hit_test_child))
+    else if (draw_fn == THAnimation_draw_child && hit_test_fn == THAnimation_hit_test_child)
         pWriter->write_uint(2);
-    else if(IS_USING_FUNCTION_SET(draw_morph, hit_test_morph))
+    else if(draw_fn == THAnimation_draw_morph && hit_test_fn == THAnimation_hit_test_morph)
     {
         // NB: Prior version of code used the number 3 here, and forgot
         // to persist the morph target.
@@ -1355,8 +1354,6 @@ void animation::persist(lua_persist_writer *pWriter) const
     }
     else
         pWriter->write_uint(0);
-
-#undef IS_USING_FUNCTION_SET
 
     // Write the simple fields
     pWriter->write_uint(animation_index);
@@ -1547,12 +1544,10 @@ void animation_base::attach_to_tile(map_tile *pMapNode, int layer)
 
     this->set_drawing_layer(layer);
 
-#define GetFlags(x) (reinterpret_cast<drawable*>(x)->m_iFlags)
     while(pList->next && pList->next->get_drawing_layer() < layer)
     {
         pList = pList->next;
     }
-#undef GetFlags
 
     prev = pList;
     if(pList->next != nullptr)
@@ -1679,16 +1674,14 @@ void animation::set_morph_target(animation *pMorphTarget, unsigned int iDuration
     int iOrigMinY, iOrigMaxY;
     int iMorphMinY, iMorphMaxY;
 
-#define GADEA GetAnimationDurationAndExtent
-    int iOriginalDuration = GADEA(manager, frame_index, layers, &iOrigMinY,
+    int iOriginalDuration = GetAnimationDurationAndExtent(manager, frame_index, layers, &iOrigMinY,
                                   &iOrigMaxY, flags);
-    int iMorphDuration = GADEA(morph_target->manager,
+    int iMorphDuration = GetAnimationDurationAndExtent(morph_target->manager,
                                morph_target->frame_index,
                                morph_target->layers, &iMorphMinY,
                                &iMorphMaxY, morph_target->flags);
     if(iMorphDuration > iOriginalDuration)
         iMorphDuration = iOriginalDuration;
-#undef GADEA
 
     iMorphDuration *= iDurationFactor;
     if(iOrigMinY < iMorphMinY)

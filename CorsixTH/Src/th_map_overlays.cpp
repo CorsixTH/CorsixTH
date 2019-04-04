@@ -160,6 +160,27 @@ void map_flags_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
     }
 }
 
+namespace {
+
+// The sprite to include if the tile in the direction indicated by dx,dy is
+// not from the same parcel.
+struct parcel_edge_sprite
+{
+    ptrdiff_t dx;
+    ptrdiff_t dy;
+    size_t sprite;
+};
+
+// Parcel edge sprites for all four directions
+constexpr std::array<parcel_edge_sprite, 4> parcel_edges {{
+    {0, -1, 18},
+    {1, 0, 19},
+    {0, 1, 20},
+    {-1, 0, 21}
+}};
+
+}
+
 void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
                                    int iCanvasY, const level_map* pMap, int iNodeX,
                                    int iNodeY)
@@ -171,16 +192,14 @@ void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
         draw_text(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
     if(sprites)
     {
-        uint16_t iParcel = pNode->iParcelId;
-#define DIR(dx, dy, sprite) \
-        pNode = pMap->get_tile(iNodeX + dx, iNodeY + dy); \
-        if(!pNode || pNode->iParcelId != iParcel) \
-            sprites->draw_sprite(pCanvas, sprite, iCanvasX, iCanvasY, 0)
-        DIR( 0, -1, 18);
-        DIR( 1,  0, 19);
-        DIR( 0,  1, 20);
-        DIR(-1,  0, 21);
-#undef DIR
+        for(const parcel_edge_sprite& dir_sprite : parcel_edges)
+        {
+            const map_tile* dir_node = pMap->get_tile(iNodeX + dir_sprite.dx, iNodeY + dir_sprite.dy);
+            if (!dir_node || dir_node->iParcelId == pNode->iParcelId)
+            {
+                sprites->draw_sprite(pCanvas, dir_sprite.sprite, iCanvasX, iCanvasY, 0);
+            }
+        }
     }
 }
 

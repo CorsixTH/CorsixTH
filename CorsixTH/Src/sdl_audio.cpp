@@ -166,7 +166,7 @@ static int l_load_music_async(lua_State *L)
     SDL_RWops* rwop = SDL_RWFromConstMem(pData, (int)iLength);
     lua_settop(L, 2);
 
-    load_music_async_data *async = luaT_new(L, load_music_async_data);
+    load_music_async_data *async = luaT_new<load_music_async_data>(L);
     lua_pushlightuserdata(L, async);
     lua_pushvalue(L, -2);
     lua_settable(L, LUA_REGISTRYINDEX);

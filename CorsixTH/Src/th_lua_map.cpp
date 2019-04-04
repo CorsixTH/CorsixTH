@@ -127,7 +127,7 @@ static animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     if(lua_type(L, -1) == LUA_TNIL)
     {
         lua_pop(L, 1);
-        pAnim = luaT_new(L, animation);
+        pAnim = luaT_new<animation>(L);
         lua_pushvalue(L, luaT_upvalueindex(2));
         lua_setmetatable(L, -2);
         lua_createtable(L, 0, 2);

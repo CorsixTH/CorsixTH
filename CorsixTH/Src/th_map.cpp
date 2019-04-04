@@ -350,6 +350,11 @@ bool level_map::load_blank()
     return true;
 }
 
+static inline bool is_divider_wall(const uint8_t byte)
+{
+    return (byte >> 1) == 70;
+}
+
 bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
                            map_load_object_callback_fn fnObjectCallback,
                            void* pCallbackToken)
@@ -395,8 +400,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
             else if(iY == 127)
                 pNode->flags.can_travel_s = false;
             pNode->iBlock[0] = iBaseTile;
-#define IsDividerWall(x) (((x) >> 1) == 70)
-            if(pData[3] == 0 || IsDividerWall(pData[3]))
+            if(pData[3] == 0 || is_divider_wall(pData[3]))
             {
                 // Tiles 71, 72 and 73 (pond foliage) are used as floor tiles,
                 // but are too tall to be floor tiles, so move them to a wall,
@@ -418,7 +422,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
                     pNode[-128].flags.can_travel_s = false;
                 }
             }
-            if(pData[4] == 0 || IsDividerWall(pData[4]))
+            if(pData[4] == 0 || is_divider_wall(pData[4]))
                 pNode->iBlock[2] = 0;
             else
             {
@@ -460,12 +464,10 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
             }
 
             *pOriginalNode = *pNode;
-            if(IsDividerWall(pData[3]))
+            if(is_divider_wall(pData[3]))
                 pOriginalNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
-            if(IsDividerWall(pData[4]))
+            if(is_divider_wall(pData[4]))
                 pOriginalNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
-
-#undef IsDividerWall
 
             if(pData[1] != 0 && fnObjectCallback != nullptr)
             {
@@ -668,6 +670,17 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId, int 
     return vSplitTiles;
 }
 
+static inline void test_adj(bool* parcel_adjacency_matrix, int parcel_count, const map_tile *original_node, int xy, ptrdiff_t delta)
+{
+    if(xy > 0 &&
+            original_node->iParcelId != original_node[-delta].iParcelId &&
+            original_node->flags.passable && original_node[-delta].flags.passable)
+    {
+            parcel_adjacency_matrix[original_node->iParcelId * parcel_count + original_node[-delta].iParcelId] = true;
+            parcel_adjacency_matrix[original_node->iParcelId + original_node[-delta].iParcelId * parcel_count] = true;
+    }
+}
+
 void level_map::make_adjacency_matrix()
 {
     if(parcel_adjacency_matrix != nullptr)
@@ -685,19 +698,11 @@ void level_map::make_adjacency_matrix()
     const map_tile *pOriginalNode = original_cells;
     for(int iY = 0; iY < 128; ++iY)
     {
-        for(int iX = 0; iX < 128; ++iX, ++pOriginalNode)
+        for(int iX = 0; iX < 128; ++iX)
         {
-#define TEST_ADJ(xy, delta) if(xy > 0 && \
-            pOriginalNode->iParcelId != pOriginalNode[-delta].iParcelId &&  \
-            pOriginalNode->flags.passable && pOriginalNode[-delta].flags.passable)\
-            parcel_adjacency_matrix[pOriginalNode->iParcelId * parcel_count\
-            + pOriginalNode[-delta].iParcelId] = true, \
-            parcel_adjacency_matrix[pOriginalNode->iParcelId + \
-            pOriginalNode[-delta].iParcelId * parcel_count] = true
-
-            TEST_ADJ(iX, 1);
-            TEST_ADJ(iY, 128);
-#undef TEST_ADJ
+            ++pOriginalNode;
+            test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iX, 1);
+            test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY, 128);
         }
     }
 }
@@ -1263,6 +1268,11 @@ uint32_t level_map::thermal_neighbour(uint32_t &iNeighbourSum, bool canTravel, s
     return iNeighbourCount;
 }
 
+static inline void merge_temperatures(map_tile& node, size_t new_temp_idx, int other_temp, double ratio)
+{
+    const uint32_t node_temp = node.aiTemperature[new_temp_idx];
+    node.aiTemperature[new_temp_idx] = static_cast<uint16_t>(node_temp * ((ratio - 1) + other_temp) / ratio);
+}
 
 void level_map::update_temperatures(uint16_t iAirTemperature,
                                uint16_t iRadiatorTemperature)
@@ -1285,10 +1295,6 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
         iNeighbourCount += thermal_neighbour(iNeighbourSum, pNode->flags.can_travel_e,  1, pNode, iPrevTemp);
         iNeighbourCount += thermal_neighbour(iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
 
-#define MERGE2(src, other, ratio) (src) = static_cast<uint16_t>( \
-    (static_cast<uint32_t>(src) * ((ratio) - 1) + (other)) / (ratio))
-#define MERGE(other, ratio) \
-    MERGE2(pNode->aiTemperature[iNewTemp], other, ratio)
         uint32_t iRadiatorNumber = 0;
         // Merge 1% against air temperature
         // or 50% against radiator temperature
@@ -1314,12 +1320,10 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
         // Diffuse 25% with neighbours
         pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
         if(iNeighbourCount != 0) {
-            MERGE(iNeighbourSum / iNeighbourCount, 4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
+            merge_temperatures(*pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
         }
 
-        MERGE(iMergeTemp, iMergeRatio);
-#undef MERGE
-#undef MERGE2
+        merge_temperatures(*pNode, iNewTemp, iMergeTemp, iMergeRatio);
     }
 }
 

@@ -121,13 +121,17 @@ inline int luaT_resume(lua_State *L, lua_State *f, int n)
 //! Version of operator new which allocates into a Lua userdata
 /*!
     If a specific constructor of T is required, then call like:
-      T* variable = luaT_new(L, T)(constructor arguments);
+      T* variable = luaT_new<T>(L, constructor arguments);
     If the default constructor is wanted, it can be called like:
-      T* variable = luaT_new(L, T);
+      T* variable = luaT_new<T>(L);
     See also luaT_stdnew() which allocates, and also sets up the environment
     table and metatable for the userdata.
 */
-#define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
+template<typename T, typename ...Ts>
+T* luaT_new(lua_State* L, Ts ...args)
+{
+    return new (lua_newuserdata(L, sizeof(T))) T(args...);
+}
 
 //! Check that a Lua argument is a binary data blob
 /*!
@@ -158,7 +162,7 @@ void luaT_getenvfield(lua_State *L, int index, const char *k);
 template <class T>
 inline T* luaT_stdnew(lua_State *L, int mt_idx = luaT_environindex, bool env = false)
 {
-    T* p = luaT_new(L, T);
+    T* p = luaT_new<T>(L);
     lua_pushvalue(L, mt_idx);
     lua_setmetatable(L, -2);
     if(env)
