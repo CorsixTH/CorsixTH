@@ -168,7 +168,9 @@ const uint8_t* luaT_checkfile(lua_State *L, int idx, size_t* pDataLen)
     return pData;
 }
 
-static int l_load_strings(lua_State *L)
+namespace {
+
+int l_load_strings(lua_State *L)
 {
     size_t iDataLength;
     const uint8_t* pData = luaT_checkfile(L, 1, &iDataLength);
@@ -197,12 +199,12 @@ static int l_load_strings(lua_State *L)
     return 1;
 }
 
-static int get_api_version()
+int get_api_version()
 {
 #include "../Lua/api_version.lua"
 }
 
-static int l_get_compile_options(lua_State *L)
+int l_get_compile_options(lua_State *L)
 {
     lua_settop(L, 0);
     lua_newtable(L);
@@ -243,6 +245,8 @@ static int l_get_compile_options(lua_State *L)
 
     return 1;
 }
+
+} // namespace
 
 void luaT_setclosure(const lua_register_state *pState, lua_CFunction fn, size_t iUps) {
     luaT_pushcclosure(pState->L, fn, iUps);

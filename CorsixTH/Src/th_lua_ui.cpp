@@ -27,28 +27,30 @@ SOFTWARE.
 
 class abstract_window {};
 
-static int l_abstract_window_new(lua_State *L)
+namespace {
+
+int l_abstract_window_new(lua_State *L)
 {
     return luaL_error(L, "windowBase can only be used a base class - "
         " do not create a windowBase directly.");
 }
 
-static uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start, uint16_t end)
+uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start, uint16_t end)
 {
     return static_cast<uint8_t>(std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
 }
 
-static inline bool is_wall(uint16_t blk)
+inline bool is_wall(uint16_t blk)
 {
     return ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164));
 }
 
-static inline bool is_wall_drawn(const level_map &map, const map_tile &node, const map_tile &original_node, size_t n)
+inline bool is_wall_drawn(const level_map &map, const map_tile &node, const map_tile &original_node, size_t n)
 {
     return map.get_tile_owner(&node) != 0 ? is_wall(node.iBlock[n]) : is_wall(original_node.iBlock[n]);
 }
 
-static int l_town_map_draw(lua_State *L)
+int l_town_map_draw(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
@@ -162,6 +164,8 @@ static int l_town_map_draw(lua_State *L)
 
     return 0;
 }
+
+} // namespace
 
 void lua_register_ui(const lua_register_state *pState)
 {

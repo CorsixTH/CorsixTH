@@ -105,10 +105,14 @@ constexpr uint32_t fourcc(const char c1, const char c2, const char c3, const cha
         | static_cast<uint32_t>(static_cast<uint8_t>(c4) << 24));
 }
 
+namespace {
+
 template <typename A, typename B>
-static inline uint64_t mul64(A a, B b) {
+inline uint64_t mul64(A a, B b) {
     return static_cast<uint64_t>(a) * static_cast<uint64_t>(b);
 }
+
+} // namespace
 
 size_t sound_archive::get_sound_duration(size_t iIndex)
 {

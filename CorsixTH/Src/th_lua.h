@@ -297,7 +297,7 @@ template <> struct luaT_classinfo<FILE*> {
 };
 
 template <class T>
-static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
+T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {
     // Turn mt_idx into an absolute index, as the stack size changes.
     if(mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
@@ -331,7 +331,7 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
 }
 
 template <class T>
-static T* luaT_testuserdata(lua_State *L, int idx = 1)
+T* luaT_testuserdata(lua_State *L, int idx = 1)
 {
     int iMetaIndex = luaT_environindex;
     if(idx > 1)
@@ -340,7 +340,7 @@ static T* luaT_testuserdata(lua_State *L, int idx = 1)
 }
 
 template <class T, int mt>
-static int luaT_stdgc(lua_State *L)
+int luaT_stdgc(lua_State *L)
 {
     T* p = luaT_testuserdata<T>(L, 1, mt, false);
     if(p != nullptr)
@@ -358,7 +358,7 @@ void luaT_push(lua_State *L, int i);
 void luaT_push(lua_State *L, const char* s);
 
 template <class T>
-static void luaT_execute(lua_State *L, const char* sLuaString, T arg)
+void luaT_execute(lua_State *L, const char* sLuaString, T arg)
 {
     luaT_execute_loadstring(L, sLuaString);
     luaT_push(L, arg);
@@ -366,7 +366,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString, T arg)
 }
 
 template <class T1, class T2>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2)
 {
     luaT_execute_loadstring(L, sLuaString);
@@ -376,7 +376,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
 }
 
 template <class T1, class T2, class T3>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2, T3 arg3)
 {
     luaT_execute_loadstring(L, sLuaString);
@@ -387,7 +387,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
 }
 
 template <class T1, class T2, class T3, class T4>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2, T3 arg3, T4 arg4)
 {
     luaT_execute_loadstring(L, sLuaString);

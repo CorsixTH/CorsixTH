@@ -27,7 +27,9 @@ SOFTWARE.
 #include <cstdio>
 #include <array>
 
-static int l_init(lua_State *L)
+namespace {
+
+int l_init(lua_State *L)
 {
     Uint32 flags = 0;
     int i;
@@ -57,7 +59,7 @@ static int l_init(lua_State *L)
     return 1;
 }
 
-static Uint32 timer_frame_callback(Uint32 interval, void *param)
+Uint32 timer_frame_callback(Uint32 interval, void *param)
 {
     SDL_Event e;
     e.type = SDL_USEREVENT_TICK;
@@ -65,8 +67,9 @@ static Uint32 timer_frame_callback(Uint32 interval, void *param)
     return interval;
 }
 
-struct fps_ctrl
+class fps_ctrl
 {
+public:
     bool limit_fps;
     bool track_fps;
 
@@ -105,7 +108,7 @@ struct fps_ctrl
     }
 };
 
-static void l_push_modifiers_table(lua_State *L, Uint16 mod)
+void l_push_modifiers_table(lua_State *L, Uint16 mod)
 {
     lua_newtable(L);
     if ((mod & KMOD_SHIFT) != 0)
@@ -130,13 +133,13 @@ static void l_push_modifiers_table(lua_State *L, Uint16 mod)
     }
 }
 
-static int l_get_key_modifiers(lua_State *L)
+int l_get_key_modifiers(lua_State *L)
 {
     l_push_modifiers_table(L, SDL_GetModState());
     return 1;
 }
 
-static int l_mainloop(lua_State *L)
+int l_mainloop(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTHREAD);
     lua_State *dispatcher = lua_tothread(L, 1);
@@ -323,21 +326,21 @@ leave_loop:
     return n;
 }
 
-static int l_track_fps(lua_State *L)
+int l_track_fps(lua_State *L)
 {
     fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     ctrl->track_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
     return 0;
 }
 
-static int l_limit_fps(lua_State *L)
+int l_limit_fps(lua_State *L)
 {
     fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     ctrl->limit_fps = lua_isnone(L, 1) ? true : (lua_toboolean(L, 1) != 0);
     return 0;
 }
 
-static int l_get_fps(lua_State *L)
+int l_get_fps(lua_State *L)
 {
     fps_ctrl *ctrl = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
     if(ctrl->track_fps)
@@ -351,20 +354,20 @@ static int l_get_fps(lua_State *L)
     return 1;
 }
 
-static int l_get_ticks(lua_State *L)
+int l_get_ticks(lua_State *L)
 {
     lua_pushinteger(L, (lua_Integer)SDL_GetTicks());
     return 1;
 }
 
-static constexpr std::array<luaL_Reg, 4> sdllib {{
+constexpr std::array<luaL_Reg, 4> sdllib {{
     {"init", l_init},
     {"getTicks", l_get_ticks},
     {"getKeyModifiers", l_get_key_modifiers},
     {nullptr, nullptr}
 }};
 
-static constexpr std::array<luaL_Reg, 5> sdllib_with_upvalue {{
+constexpr std::array<luaL_Reg, 5> sdllib_with_upvalue {{
     {"mainloop", l_mainloop},
     {"getFPS", l_get_fps},
     {"trackFPS", l_track_fps},
@@ -378,6 +381,8 @@ inline void load_extra(lua_State *L, const char *name, lua_CFunction fn)
     lua_call(L, 0, 1);
     lua_setfield(L, -2, name);
 }
+
+} // namespace
 
 int luaopen_sdl_audio(lua_State *L);
 int luaopen_sdl_wm(lua_State *L);

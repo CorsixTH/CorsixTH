@@ -26,13 +26,15 @@ SOFTWARE.
 #include <cstring>
 #include <exception>
 
-static int l_palette_new(lua_State *L)
+namespace {
+
+int l_palette_new(lua_State *L)
 {
     luaT_stdnew<palette>(L);
     return 1;
 }
 
-static int l_palette_load(lua_State *L)
+int l_palette_load(lua_State *L)
 {
     palette* pPalette = luaT_testuserdata<palette>(L);
     size_t iDataLen;
@@ -45,7 +47,7 @@ static int l_palette_load(lua_State *L)
     return 1;
 }
 
-static int l_palette_set_entry(lua_State *L)
+int l_palette_set_entry(lua_State *L)
 {
     palette* pPalette = luaT_testuserdata<palette>(L);
     lua_pushboolean(L, pPalette->set_entry(static_cast<int>(luaL_checkinteger(L, 2)),
@@ -56,13 +58,13 @@ static int l_palette_set_entry(lua_State *L)
     return 1;
 }
 
-static int l_rawbitmap_new(lua_State *L)
+int l_rawbitmap_new(lua_State *L)
 {
     luaT_stdnew<raw_bitmap>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_rawbitmap_set_pal(lua_State *L)
+int l_rawbitmap_set_pal(lua_State *L)
 {
     raw_bitmap* pBitmap = luaT_testuserdata<raw_bitmap>(L);
     palette* pPalette = luaT_testuserdata<palette>(L, 2);
@@ -73,7 +75,7 @@ static int l_rawbitmap_set_pal(lua_State *L)
     return 1;
 }
 
-static int l_rawbitmap_load(lua_State *L)
+int l_rawbitmap_load(lua_State *L)
 {
     raw_bitmap* pBitmap = luaT_testuserdata<raw_bitmap>(L);
     size_t iDataLen;
@@ -94,7 +96,7 @@ static int l_rawbitmap_load(lua_State *L)
     return 1;
 }
 
-static int l_rawbitmap_draw(lua_State *L)
+int l_rawbitmap_draw(lua_State *L)
 {
     raw_bitmap* pBitmap = luaT_testuserdata<raw_bitmap>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -112,13 +114,13 @@ static int l_rawbitmap_draw(lua_State *L)
     return 1;
 }
 
-static int l_spritesheet_new(lua_State *L)
+int l_spritesheet_new(lua_State *L)
 {
     luaT_stdnew<sprite_sheet>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_spritesheet_set_pal(lua_State *L)
+int l_spritesheet_set_pal(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     palette* pPalette = luaT_testuserdata<palette>(L, 2);
@@ -129,7 +131,7 @@ static int l_spritesheet_set_pal(lua_State *L)
     return 1;
 }
 
-static int l_spritesheet_load(lua_State *L)
+int l_spritesheet_load(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     size_t iDataLenTable, iDataLenChunk;
@@ -146,7 +148,7 @@ static int l_spritesheet_load(lua_State *L)
     return 1;
 }
 
-static int l_spritesheet_count(lua_State *L)
+int l_spritesheet_count(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
 
@@ -154,7 +156,7 @@ static int l_spritesheet_count(lua_State *L)
     return 1;
 }
 
-static int l_spritesheet_size(lua_State *L)
+int l_spritesheet_size(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     size_t iSprite = luaL_checkinteger(L, 2); // No array adjustment
@@ -169,7 +171,7 @@ static int l_spritesheet_size(lua_State *L)
     return 2;
 }
 
-static int l_spritesheet_draw(lua_State *L)
+int l_spritesheet_draw(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -181,7 +183,7 @@ static int l_spritesheet_draw(lua_State *L)
     return 1;
 }
 
-static int l_spritesheet_hittest(lua_State *L)
+int l_spritesheet_hittest(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     size_t iSprite = luaL_checkinteger(L, 2);
@@ -191,7 +193,7 @@ static int l_spritesheet_hittest(lua_State *L)
     return pSheet->hit_test_sprite(iSprite, iX, iY, iFlags);
 }
 
-static int l_spritesheet_isvisible(lua_State *L)
+int l_spritesheet_isvisible(lua_State *L)
 {
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
     size_t iSprite = luaL_checkinteger(L, 2);
@@ -200,18 +202,18 @@ static int l_spritesheet_isvisible(lua_State *L)
     return 1;
 }
 
-static int l_font_new(lua_State *L)
+int l_font_new(lua_State *L)
 {
     return luaL_error(L, "Cannot instantiate an interface");
 }
 
-static int l_bitmap_font_new(lua_State *L)
+int l_bitmap_font_new(lua_State *L)
 {
     luaT_stdnew<bitmap_font>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_bitmap_font_set_spritesheet(lua_State *L)
+int l_bitmap_font_set_spritesheet(lua_State *L)
 {
     bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -222,14 +224,14 @@ static int l_bitmap_font_set_spritesheet(lua_State *L)
     return 1;
 }
 
-static int l_bitmap_font_get_spritesheet(lua_State *L)
+int l_bitmap_font_get_spritesheet(lua_State *L)
 {
     luaT_testuserdata<bitmap_font>(L);
     luaT_getenvfield(L, 1, "sprites");
     return 1;
 }
 
-static int l_bitmap_font_set_sep(lua_State *L)
+int l_bitmap_font_set_sep(lua_State *L)
 {
     bitmap_font* pFont = luaT_testuserdata<bitmap_font>(L);
 
@@ -240,7 +242,7 @@ static int l_bitmap_font_set_sep(lua_State *L)
 }
 
 #ifdef CORSIX_TH_USE_FREETYPE2
-static void l_freetype_throw_error_code(lua_State *L, FT_Error e)
+void l_freetype_throw_error_code(lua_State *L, FT_Error e)
 {
     if(e != FT_Err_Ok)
     {
@@ -259,7 +261,7 @@ static void l_freetype_throw_error_code(lua_State *L, FT_Error e)
     }
 }
 
-static int l_freetype_font_new(lua_State *L)
+int l_freetype_font_new(lua_State *L)
 {
     freetype_font *pFont = luaT_stdnew<freetype_font>(L, luaT_environindex,
         true);
@@ -267,7 +269,7 @@ static int l_freetype_font_new(lua_State *L)
     return 1;
 }
 
-static int l_freetype_font_set_spritesheet(lua_State *L)
+int l_freetype_font_set_spritesheet(lua_State *L)
 {
     freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -278,13 +280,13 @@ static int l_freetype_font_set_spritesheet(lua_State *L)
     return 1;
 }
 
-static int l_freetype_font_get_copyright(lua_State *L)
+int l_freetype_font_get_copyright(lua_State *L)
 {
     lua_pushstring(L, freetype_font::get_copyright_notice());
     return 1;
 }
 
-static int l_freetype_font_set_face(lua_State *L)
+int l_freetype_font_set_face(lua_State *L)
 {
     freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
     size_t iLength;
@@ -296,7 +298,7 @@ static int l_freetype_font_set_face(lua_State *L)
     return 1;
 }
 
-static int l_freetype_font_clear_cache(lua_State *L)
+int l_freetype_font_clear_cache(lua_State *L)
 {
     freetype_font* pFont = luaT_testuserdata<freetype_font>(L);
     pFont->clear_cache();
@@ -305,7 +307,7 @@ static int l_freetype_font_clear_cache(lua_State *L)
 
 #endif
 
-static int l_font_get_size(lua_State *L)
+int l_font_get_size(lua_State *L)
 {
     font* pFont = luaT_testuserdata<font>(L);
     size_t iMsgLen;
@@ -324,7 +326,7 @@ static int l_font_get_size(lua_State *L)
     return 3;
 }
 
-static int l_font_draw(lua_State *L)
+int l_font_draw(lua_State *L)
 {
     font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = nullptr;
@@ -375,7 +377,7 @@ static int l_font_draw(lua_State *L)
     return 2;
 }
 
-static int l_font_draw_wrapped(lua_State *L)
+int l_font_draw_wrapped(lua_State *L)
 {
     font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = nullptr;
@@ -426,7 +428,7 @@ static int l_font_draw_wrapped(lua_State *L)
     return 3;
 }
 
-static int l_font_draw_tooltip(lua_State *L)
+int l_font_draw_tooltip(lua_State *L)
 {
     font* pFont = luaT_testuserdata<font>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -456,7 +458,7 @@ static int l_font_draw_tooltip(lua_State *L)
     return 1;
 }
 
-static int l_layers_new(lua_State *L)
+int l_layers_new(lua_State *L)
 {
     layers* pLayers = luaT_stdnew<layers>(L, luaT_environindex, false);
     for(int i = 0; i < 13; ++i)
@@ -464,7 +466,7 @@ static int l_layers_new(lua_State *L)
     return 1;
 }
 
-static int l_layers_get(lua_State *L)
+int l_layers_get(lua_State *L)
 {
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_Integer iLayer = luaL_checkinteger(L, 2);
@@ -475,7 +477,7 @@ static int l_layers_get(lua_State *L)
     return 1;
 }
 
-static int l_layers_set(lua_State *L)
+int l_layers_set(lua_State *L)
 {
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_Integer iLayer = luaL_checkinteger(L, 2);
@@ -485,7 +487,7 @@ static int l_layers_set(lua_State *L)
     return 0;
 }
 
-static int l_layers_persist(lua_State *L)
+int l_layers_persist(lua_State *L)
 {
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_settop(L, 2);
@@ -503,7 +505,7 @@ static int l_layers_persist(lua_State *L)
     return 0;
 }
 
-static int l_layers_depersist(lua_State *L)
+int l_layers_depersist(lua_State *L)
 {
     layers* pLayers = luaT_testuserdata<layers>(L);
     lua_settop(L, 2);
@@ -529,13 +531,13 @@ static int l_layers_depersist(lua_State *L)
     return 0;
 }
 
-static int l_cursor_new(lua_State *L)
+int l_cursor_new(lua_State *L)
 {
     luaT_stdnew<cursor>(L, luaT_environindex, false);
     return 1;
 }
 
-static int l_cursor_load(lua_State *L)
+int l_cursor_load(lua_State *L)
 {
     cursor* pCursor = luaT_testuserdata<cursor>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -552,7 +554,7 @@ static int l_cursor_load(lua_State *L)
     }
 }
 
-static int l_cursor_use(lua_State *L)
+int l_cursor_use(lua_State *L)
 {
     cursor* pCursor = luaT_testuserdata<cursor>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -560,7 +562,7 @@ static int l_cursor_use(lua_State *L)
     return 0;
 }
 
-static int l_cursor_position(lua_State *L)
+int l_cursor_position(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 1, luaT_upvalueindex(1));
     lua_pushboolean(L, cursor::set_position(pCanvas, static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3))) ? 1 : 0);
@@ -568,7 +570,7 @@ static int l_cursor_position(lua_State *L)
 }
 
 /** Construct the helper structure for making a #THRenderTarget. */
-static render_target_creation_params l_surface_creation_params(lua_State *L, int iArgStart)
+render_target_creation_params l_surface_creation_params(lua_State *L, int iArgStart)
 {
     render_target_creation_params oParams;
     oParams.width = static_cast<int>(luaL_checkinteger(L, iArgStart));
@@ -591,7 +593,7 @@ static render_target_creation_params l_surface_creation_params(lua_State *L, int
     return oParams;
 }
 
-static int l_surface_new(lua_State *L)
+int l_surface_new(lua_State *L)
 {
     lua_remove(L, 1); // Value inserted by __call
 
@@ -605,7 +607,7 @@ static int l_surface_new(lua_State *L)
     return 2;
 }
 
-static int l_surface_update(lua_State *L)
+int l_surface_update(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     render_target_creation_params oParams = l_surface_creation_params(L, 2);
@@ -619,7 +621,7 @@ static int l_surface_update(lua_State *L)
     return 1;
 }
 
-static int l_surface_destroy(lua_State *L)
+int l_surface_destroy(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     pCanvas->end_frame();
@@ -627,7 +629,7 @@ static int l_surface_destroy(lua_State *L)
     return 1;
 }
 
-static int l_surface_fill_black(lua_State *L)
+int l_surface_fill_black(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_settop(L, 1);
@@ -638,7 +640,7 @@ static int l_surface_fill_black(lua_State *L)
     return 2;
 }
 
-static int l_surface_start_frame(lua_State *L)
+int l_surface_start_frame(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_settop(L, 1);
@@ -649,7 +651,7 @@ static int l_surface_start_frame(lua_State *L)
     return 2;
 }
 
-static int l_surface_end_frame(lua_State *L)
+int l_surface_end_frame(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_settop(L, 1);
@@ -660,7 +662,7 @@ static int l_surface_end_frame(lua_State *L)
     return 2;
 }
 
-static int l_surface_nonoverlapping(lua_State *L)
+int l_surface_nonoverlapping(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     if(lua_isnone(L, 2) || lua_toboolean(L, 2) != 0)
@@ -671,14 +673,14 @@ static int l_surface_nonoverlapping(lua_State *L)
     return 1;
 }
 
-static int l_surface_set_blue_filter_active(lua_State *L)
+int l_surface_set_blue_filter_active(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     pCanvas->set_blue_filter_active((lua_isnoneornil(L, 2) != 0) ? false : (lua_toboolean(L, 2) != 0));
     return 1;
 }
 
-static int l_surface_map(lua_State *L)
+int l_surface_map(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_pushnumber(L, (lua_Number)render_target::map_colour(
@@ -688,7 +690,7 @@ static int l_surface_map(lua_State *L)
     return 1;
 }
 
-static int l_surface_rect(lua_State *L)
+int l_surface_rect(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     if(pCanvas->fill_rect(static_cast<uint32_t>(luaL_checkinteger(L, 2)),
@@ -703,7 +705,7 @@ static int l_surface_rect(lua_State *L)
     return 2;
 }
 
-static int l_surface_screenshot(lua_State *L)
+int l_surface_screenshot(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     const char *sFile = luaL_checkstring(L, 2);
@@ -717,7 +719,7 @@ static int l_surface_screenshot(lua_State *L)
     return 2;
 }
 
-static int l_surface_get_clip(lua_State *L)
+int l_surface_get_clip(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     clip_rect rcClip;
@@ -729,7 +731,7 @@ static int l_surface_get_clip(lua_State *L)
     return 4;
 }
 
-static int l_surface_set_clip(lua_State *L)
+int l_surface_set_clip(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     clip_rect rcClip;
@@ -748,7 +750,7 @@ static int l_surface_set_clip(lua_State *L)
     return 1;
 }
 
-static int l_surface_scale(lua_State *L)
+int l_surface_scale(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     scaled_items eToScale = scaled_items::none;
@@ -772,7 +774,7 @@ static int l_surface_scale(lua_State *L)
     return 1;
 }
 
-static int l_surface_set_caption(lua_State *L)
+int l_surface_set_caption(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     pCanvas->set_caption(luaL_checkstring(L, 2));
@@ -781,7 +783,7 @@ static int l_surface_set_caption(lua_State *L)
     return 1;
 }
 
-static int l_surface_get_renderer_details(lua_State *L)
+int l_surface_get_renderer_details(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_pushstring(L, pCanvas->get_renderer_details());
@@ -789,20 +791,20 @@ static int l_surface_get_renderer_details(lua_State *L)
 }
 
 // Lua to THRenderTarget->setWindowGrab
-static int l_surface_set_capture_mouse(lua_State *L)
+int l_surface_set_capture_mouse(lua_State *L)
 {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     pCanvas->set_window_grab((lua_isnoneornil(L, 2) != 0) ? false : (lua_toboolean(L, 2) != 0));
     return 0;
 }
 
-static int l_line_new(lua_State *L)
+int l_line_new(lua_State *L)
 {
     luaT_stdnew<line>(L);
     return 1;
 }
 
-static int l_move_to(lua_State *L)
+int l_move_to(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     pLine->move_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
@@ -811,7 +813,7 @@ static int l_move_to(lua_State *L)
     return 1;
 }
 
-static int l_line_to(lua_State *L)
+int l_line_to(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     pLine->line_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
@@ -820,7 +822,7 @@ static int l_line_to(lua_State *L)
     return 1;
 }
 
-static int l_set_width(lua_State *L)
+int l_set_width(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     pLine->set_width(luaL_optnumber(L, 2, 1));
@@ -829,7 +831,7 @@ static int l_set_width(lua_State *L)
     return 1;
 }
 
-static int l_set_colour(lua_State *L)
+int l_set_colour(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     pLine->set_colour(static_cast<uint8_t>(luaL_optinteger(L, 2, 0)),
@@ -841,7 +843,7 @@ static int l_set_colour(lua_State *L)
     return 1;
 }
 
-static int l_line_draw(lua_State *L)
+int l_line_draw(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -851,7 +853,7 @@ static int l_line_draw(lua_State *L)
     return 1;
 }
 
-static int l_line_persist(lua_State *L)
+int l_line_persist(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     lua_settop(L, 2);
@@ -861,7 +863,7 @@ static int l_line_persist(lua_State *L)
     return 0;
 }
 
-static int l_line_depersist(lua_State *L)
+int l_line_depersist(lua_State *L)
 {
     line* pLine = luaT_testuserdata<line>(L);
     lua_settop(L, 2);
@@ -870,6 +872,8 @@ static int l_line_depersist(lua_State *L)
     pLine->depersist(pReader);
     return 0;
 }
+
+} // namespace
 
 void lua_register_gfx(const lua_register_state *pState)
 {

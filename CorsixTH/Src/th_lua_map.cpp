@@ -27,15 +27,17 @@ SOFTWARE.
 #include <string>
 #include <exception>
 
-static const int player_max = 4;
+namespace {
 
-static int l_map_new(lua_State *L)
+constexpr int player_max = 4;
+
+int l_map_new(lua_State *L)
 {
     luaT_stdnew<level_map>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_map_set_sheet(lua_State *L)
+int l_map_set_sheet(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -46,7 +48,7 @@ static int l_map_set_sheet(lua_State *L)
     return 1;
 }
 
-static int l_map_persist(lua_State *L)
+int l_map_persist(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_settop(L, 2);
@@ -55,7 +57,7 @@ static int l_map_persist(lua_State *L)
     return 0;
 }
 
-static int l_map_depersist(lua_State *L)
+int l_map_depersist(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_settop(L, 2);
@@ -69,7 +71,7 @@ static int l_map_depersist(lua_State *L)
     return 0;
 }
 
-static void l_map_load_obj_cb(void *pL, int iX, int iY, object_type eTHOB, uint8_t iFlags)
+void l_map_load_obj_cb(void *pL, int iX, int iY, object_type eTHOB, uint8_t iFlags)
 {
     lua_State *L = reinterpret_cast<lua_State*>(pL);
     lua_createtable(L, 4, 0);
@@ -86,7 +88,7 @@ static void l_map_load_obj_cb(void *pL, int iX, int iY, object_type eTHOB, uint8
     lua_rawseti(L, 3, static_cast<int>(lua_objlen(L, 3)) + 1);
 }
 
-static int l_map_load(lua_State *L)
+int l_map_load(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     size_t iDataLen;
@@ -101,7 +103,7 @@ static int l_map_load(lua_State *L)
     return 2;
 }
 
-static int l_map_loadblank(lua_State *L)
+int l_map_loadblank(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     if(pMap->load_blank())
@@ -112,7 +114,7 @@ static int l_map_loadblank(lua_State *L)
     return 2;
 }
 
-static int l_map_save(lua_State *L)
+int l_map_save(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     std::string filename(luaL_checkstring(L, 2));
@@ -120,7 +122,7 @@ static int l_map_save(lua_State *L)
     return 0;
 }
 
-static animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
+animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 {
     animation *pAnim;
     lua_rawgeti(L, 11, iIndex);
@@ -147,7 +149,7 @@ static animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
     return pAnim;
 }
 
-static uint16_t l_check_temp(lua_State *L, int iArg)
+uint16_t l_check_temp(lua_State *L, int iArg)
 {
     lua_Number n = luaL_checknumber(L, iArg);
     if(n < static_cast<lua_Number>(0) || static_cast<lua_Number>(1) < n)
@@ -155,7 +157,7 @@ static uint16_t l_check_temp(lua_State *L, int iArg)
     return static_cast<uint16_t>(n * static_cast<lua_Number>(65535));
 }
 
-static int l_map_settemperaturedisplay(lua_State *L)
+int l_map_settemperaturedisplay(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_Integer iTD = luaL_checkinteger(L, 2);
@@ -180,7 +182,7 @@ static int l_map_settemperaturedisplay(lua_State *L)
     return 1;
 }
 
-static int l_map_updatetemperature(lua_State *L)
+int l_map_updatetemperature(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     uint16_t iAir = l_check_temp(L, 2);
@@ -190,7 +192,7 @@ static int l_map_updatetemperature(lua_State *L)
     return 1;
 }
 
-static int l_map_gettemperature(lua_State *L)
+int l_map_gettemperature(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2)) - 1;
@@ -209,7 +211,7 @@ static int l_map_gettemperature(lua_State *L)
  * @param player_id The player to check for.
  * @return Whether the tile position is valid for a new room.
  */
-static inline bool is_valid(
+inline bool is_valid(
     bool entire_invalid, const map_tile *pNode,
     const level_map* pMap, int player_id)
 {
@@ -217,7 +219,7 @@ static inline bool is_valid(
         (player_id == 0 || pMap->get_tile_owner(pNode) == player_id);
 }
 
-static int l_map_updateblueprint(lua_State *L)
+int l_map_updateblueprint(lua_State *L)
 {
     // NB: This function can be implemented in Lua, but is implemented in C for
     // efficiency.
@@ -364,7 +366,7 @@ static int l_map_updateblueprint(lua_State *L)
     return 1;
 }
 
-static int l_map_getsize(lua_State *L)
+int l_map_getsize(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushinteger(L, pMap->get_width());
@@ -372,14 +374,14 @@ static int l_map_getsize(lua_State *L)
     return 2;
 }
 
-static int l_map_get_player_count(lua_State *L)
+int l_map_get_player_count(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushinteger(L, pMap->get_player_count());
     return 1;
 }
 
-static int l_map_set_player_count(lua_State *L)
+int l_map_set_player_count(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int count = static_cast<int>(luaL_checkinteger(L, 2));
@@ -395,7 +397,7 @@ static int l_map_set_player_count(lua_State *L)
     return 0;
 }
 
-static int l_map_get_player_camera(lua_State *L)
+int l_map_get_player_camera(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX, iY;
@@ -408,7 +410,7 @@ static int l_map_get_player_camera(lua_State *L)
     return 2;
 }
 
-static int l_map_set_player_camera(lua_State *L)
+int l_map_set_player_camera(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1);
@@ -422,7 +424,7 @@ static int l_map_set_player_camera(lua_State *L)
     return 0;
 }
 
-static int l_map_get_player_heliport(lua_State *L)
+int l_map_get_player_heliport(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX, iY;
@@ -435,7 +437,7 @@ static int l_map_get_player_heliport(lua_State *L)
     return 2;
 }
 
-static int l_map_set_player_heliport(lua_State *L)
+int l_map_set_player_heliport(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1);
@@ -449,7 +451,7 @@ static int l_map_set_player_heliport(lua_State *L)
     return 0;
 }
 
-static int l_map_getcell(lua_State *L)
+int l_map_getcell(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -479,7 +481,7 @@ static int l_map_getcell(lua_State *L)
 }
 
 /** Recognized tile flags by Lua. */
-static const std::map<std::string, map_tile_flags::key> lua_tile_flag_map {
+const std::map<std::string, map_tile_flags::key> lua_tile_flag_map {
     {"passable",       map_tile_flags::key::passable_mask},
     {"hospital",       map_tile_flags::key::hospital_mask},
     {"buildable",      map_tile_flags::key::buildable_mask},
@@ -506,7 +508,7 @@ static const std::map<std::string, map_tile_flags::key> lua_tile_flag_map {
  * @param flag Flag of the tile to check (and report).
  * @param name Name of the flag in Lua code.
  */
-static inline void add_cellflag(lua_State *L, const map_tile *tile,
+inline void add_cellflag(lua_State *L, const map_tile *tile,
                                 map_tile_flags::key flag, const std::string &name)
 {
     lua_pushlstring(L, name.c_str(), name.size());
@@ -520,7 +522,7 @@ static inline void add_cellflag(lua_State *L, const map_tile *tile,
  * @param value Value of the tile field to add.
  * @param name Name of the field in Lua code.
  */
-static inline void add_cellint(lua_State *L, int value, const std::string &name)
+inline void add_cellint(lua_State *L, int value, const std::string &name)
 {
     lua_pushlstring(L, name.c_str(), name.size());
     lua_pushinteger(L, value);
@@ -532,7 +534,7 @@ static inline void add_cellint(lua_State *L, int value, const std::string &name)
  * @param L Lua context.
  * @return Number of results of the call.
  */
-static int l_map_getcellflags(lua_State *L)
+int l_map_getcellflags(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -566,7 +568,7 @@ static int l_map_getcellflags(lua_State *L)
   lua objects use the afterLoad function to be registered after a load,
   if the object list would not be cleared it would result in duplication
   of thobs in the object list. */
-static int l_map_erase_thobs(lua_State *L)
+int l_map_erase_thobs(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -578,7 +580,7 @@ static int l_map_erase_thobs(lua_State *L)
     return 1;
 }
 
-static int l_map_remove_cell_thob(lua_State *L)
+int l_map_remove_cell_thob(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -598,7 +600,7 @@ static int l_map_remove_cell_thob(lua_State *L)
     return 1;
 }
 
-static int l_map_setcellflags(lua_State *L)
+int l_map_setcellflags(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -648,7 +650,7 @@ static int l_map_setcellflags(lua_State *L)
     return 0;
 }
 
-static int l_map_setwallflags(lua_State *L)
+int l_map_setwallflags(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     pMap->set_all_wall_draw_flags((uint8_t)luaL_checkinteger(L, 2));
@@ -656,7 +658,7 @@ static int l_map_setwallflags(lua_State *L)
     return 1;
 }
 
-static int l_map_setcell(lua_State *L)
+int l_map_setcell(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
@@ -684,7 +686,7 @@ static int l_map_setcell(lua_State *L)
     return 1;
 }
 
-static int l_map_updateshadows(lua_State *L)
+int l_map_updateshadows(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     pMap->update_shadows();
@@ -692,7 +694,7 @@ static int l_map_updateshadows(lua_State *L)
     return 1;
 }
 
-static int l_map_updatepathfinding(lua_State *L)
+int l_map_updatepathfinding(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     pMap->update_pathfinding();
@@ -700,7 +702,7 @@ static int l_map_updatepathfinding(lua_State *L)
     return 1;
 }
 
-static int l_map_mark_room(lua_State *L)
+int l_map_mark_room(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX_ = static_cast<int>(luaL_checkinteger(L, 2) - 1);
@@ -733,7 +735,7 @@ static int l_map_mark_room(lua_State *L)
     return 1;
 }
 
-static int l_map_unmark_room(lua_State *L)
+int l_map_unmark_room(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iX_ = static_cast<int>(luaL_checkinteger(L, 2) - 1);
@@ -762,7 +764,7 @@ static int l_map_unmark_room(lua_State *L)
     return 1;
 }
 
-static int l_map_draw(lua_State *L)
+int l_map_draw(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -774,7 +776,7 @@ static int l_map_draw(lua_State *L)
     return 1;
 }
 
-static int l_map_hittest(lua_State *L)
+int l_map_hittest(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     drawable* pObject = pMap->hit_test(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
@@ -786,7 +788,7 @@ static int l_map_hittest(lua_State *L)
     return 1;
 }
 
-static int l_map_get_parcel_tilecount(lua_State *L)
+int l_map_get_parcel_tilecount(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int iParcel = static_cast<int>(luaL_checkinteger(L, 2));
@@ -795,14 +797,14 @@ static int l_map_get_parcel_tilecount(lua_State *L)
     return 1;
 }
 
-static int l_map_get_parcel_count(lua_State *L)
+int l_map_get_parcel_count(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushinteger(L, pMap->get_parcel_count());
     return 1;
 }
 
-static int l_map_set_parcel_owner(lua_State *L)
+int l_map_set_parcel_owner(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int parcelId = static_cast<int>(luaL_checkinteger(L, 2));
@@ -832,14 +834,14 @@ static int l_map_set_parcel_owner(lua_State *L)
     return 1;
 }
 
-static int l_map_get_parcel_owner(lua_State *L)
+int l_map_get_parcel_owner(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushinteger(L, pMap->get_parcel_owner(static_cast<int>(luaL_checkinteger(L, 2))));
     return 1;
 }
 
-static int l_map_is_parcel_purchasable(lua_State *L)
+int l_map_is_parcel_purchasable(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushboolean(L, pMap->is_parcel_purchasable(static_cast<int>(luaL_checkinteger(L, 2)),
@@ -848,7 +850,7 @@ static int l_map_is_parcel_purchasable(lua_State *L)
 }
 
 /* Compute the fraction of corridor tiles with litter, of the parcels owned by the given player. */
-static int l_map_get_litter_fraction(lua_State *L)
+int l_map_get_litter_fraction(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     int owner = static_cast<int>(luaL_checkinteger(L, 2));
@@ -888,13 +890,13 @@ static int l_map_get_litter_fraction(lua_State *L)
     return 1;
 }
 
-static int l_path_new(lua_State *L)
+int l_path_new(lua_State *L)
 {
     luaT_stdnew<pathfinder>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_path_set_map(lua_State *L)
+int l_path_set_map(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
@@ -905,7 +907,7 @@ static int l_path_set_map(lua_State *L)
     return 1;
 }
 
-static int l_path_persist(lua_State *L)
+int l_path_persist(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     lua_settop(L, 2);
@@ -914,7 +916,7 @@ static int l_path_persist(lua_State *L)
     return 0;
 }
 
-static int l_path_depersist(lua_State *L)
+int l_path_depersist(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     lua_settop(L, 2);
@@ -927,7 +929,7 @@ static int l_path_depersist(lua_State *L)
     return 0;
 }
 
-static int l_path_is_reachable_from_hospital(lua_State *L)
+int l_path_is_reachable_from_hospital(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     if(pPathfinder->find_path_to_hospital(nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
@@ -947,7 +949,7 @@ static int l_path_is_reachable_from_hospital(lua_State *L)
     }
 }
 
-static int l_path_distance(lua_State *L)
+int l_path_distance(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     if(pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
@@ -962,7 +964,7 @@ static int l_path_distance(lua_State *L)
     return 1;
 }
 
-static int l_path_path(lua_State *L)
+int l_path_path(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
@@ -971,7 +973,7 @@ static int l_path_path(lua_State *L)
     return 2;
 }
 
-static int l_path_idle(lua_State *L)
+int l_path_idle(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     if(!pPathfinder->find_idle_tile(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
@@ -986,7 +988,7 @@ static int l_path_idle(lua_State *L)
     return 2;
 }
 
-static int l_path_visit(lua_State *L)
+int l_path_visit(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     luaL_checktype(L, 6, LUA_TFUNCTION);
@@ -995,6 +997,8 @@ static int l_path_visit(lua_State *L)
         static_cast<int>(luaL_checkinteger(L, 5)), L, 6, luaL_checkinteger(L, 4) == 0 ? true : false) ? 1 : 0);
     return 1;
 }
+
+} // namespace
 
 void lua_register_map(const lua_register_state *pState)
 {

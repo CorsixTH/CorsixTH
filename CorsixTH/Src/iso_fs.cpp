@@ -28,6 +28,8 @@ SOFTWARE.
 #include <algorithm>
 #include <array>
 
+namespace {
+
 enum iso_volume_descriptor_type : uint8_t
 {
     vdt_privary_volume = 0x01,
@@ -74,6 +76,17 @@ constexpr std::array<const char, 10> vblk_0_filename {'V','B','L','K','-','0','.
 /// size is 2048.
 constexpr size_t min_sector_size = 2048;
 
+template <class T> inline T read_native_int(const uint8_t *p)
+{
+    // ISO 9660 commonly encodes multi-byte integers as little endian followed
+    // by big endian. Note that the first byte of iEndianness will be a zero on
+    // little endian systems, and a one on big endian.
+    static const uint16_t iEndianness = 0x0100;
+    return reinterpret_cast<const T*>(p)[*reinterpret_cast<const uint8_t*>(&iEndianness)];
+}
+
+} // namespace
+
 iso_filesystem::iso_filesystem()
 {
     raw_file = nullptr;
@@ -108,15 +121,6 @@ void iso_filesystem::clear()
 void iso_filesystem::set_path_separator(char cSeparator)
 {
     path_seperator = cSeparator;
-}
-
-template <class T> static inline T read_native_int(const uint8_t *p)
-{
-    // ISO 9660 commonly encodes multi-byte integers as little endian followed
-    // by big endian. Note that the first byte of iEndianness will be a zero on
-    // little endian systems, and a one on big endian.
-    static const uint16_t iEndianness = 0x0100;
-    return reinterpret_cast<const T*>(p)[*reinterpret_cast<const uint8_t*>(&iEndianness)];
 }
 
 bool iso_filesystem::initialise(FILE* fRawFile)
@@ -479,13 +483,15 @@ void iso_filesystem::set_error(const char* sFormat, ...)
     va_end(a);
 }
 
-static int l_isofs_new(lua_State *L)
+namespace {
+
+int l_isofs_new(lua_State *L)
 {
     luaT_stdnew<iso_filesystem>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_isofs_set_path_separator(lua_State *L)
+int l_isofs_set_path_separator(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     pSelf->set_path_separator(luaL_checkstring(L, 2)[0]);
@@ -493,7 +499,7 @@ static int l_isofs_set_path_separator(lua_State *L)
     return 1;
 }
 
-static int l_isofs_set_root(lua_State *L)
+int l_isofs_set_root(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     FILE *fIso = *luaT_testuserdata<FILE*>(L, 2);
@@ -512,7 +518,7 @@ static int l_isofs_set_root(lua_State *L)
     }
 }
 
-static int l_isofs_read_contents(lua_State *L)
+int l_isofs_read_contents(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     const char* sFilename = luaL_checkstring(L, 2);
@@ -534,7 +540,7 @@ static int l_isofs_read_contents(lua_State *L)
     return 1;
 }
 
-static void l_isofs_list_files_callback(void *p, const char* s)
+void l_isofs_list_files_callback(void *p, const char* s)
 {
     lua_State *L = reinterpret_cast<lua_State*>(p);
     lua_pushstring(L, s);
@@ -542,7 +548,7 @@ static void l_isofs_list_files_callback(void *p, const char* s)
     lua_settable(L, 3);
 }
 
-static int l_isofs_list_files(lua_State *L)
+int l_isofs_list_files(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
     const char* sPath = luaL_checkstring(L, 2);
@@ -551,6 +557,8 @@ static int l_isofs_list_files(lua_State *L)
     pSelf->visit_directory_files(sPath, l_isofs_list_files_callback, L);
     return 1;
 }
+
+} // namespace
 
 int luaopen_iso_fs(lua_State *L)
 {

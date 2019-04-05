@@ -24,13 +24,15 @@ SOFTWARE.
 #include "th_movie.h"
 #include "th_gfx.h"
 
-static int l_movie_new(lua_State *L)
+namespace {
+
+int l_movie_new(lua_State *L)
 {
     luaT_stdnew<movie_player>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_movie_set_renderer(lua_State *L)
+int l_movie_set_renderer(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     render_target *pRenderTarget = luaT_testuserdata<render_target>(L, 2);
@@ -38,14 +40,14 @@ static int l_movie_set_renderer(lua_State *L)
     return 0;
 }
 
-static int l_movie_enabled(lua_State *L)
+int l_movie_enabled(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     lua_pushboolean(L, pMovie->movies_enabled());
     return 1;
 }
 
-static int l_movie_load(lua_State *L)
+int l_movie_load(lua_State *L)
 {
     bool loaded;
     const char* warning;
@@ -59,14 +61,14 @@ static int l_movie_load(lua_State *L)
     return 2;
 }
 
-static int l_movie_unload(lua_State *L)
+int l_movie_unload(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->unload();
     return 0;
 }
 
-static int l_movie_play(lua_State *L)
+int l_movie_play(lua_State *L)
 {
     const char* warning;
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
@@ -78,35 +80,35 @@ static int l_movie_play(lua_State *L)
     return 1;
 }
 
-static int l_movie_stop(lua_State *L)
+int l_movie_stop(lua_State *L)
 {
     movie_player *pVideo = luaT_testuserdata<movie_player>(L);
     pVideo->stop();
     return 0;
 }
 
-static int l_movie_get_native_height(lua_State *L)
+int l_movie_get_native_height(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     lua_pushinteger(L, pMovie->get_native_height());
     return 1;
 }
 
-static int l_movie_get_native_width(lua_State *L)
+int l_movie_get_native_width(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     lua_pushinteger(L, pMovie->get_native_width());
     return 1;
 }
 
-static int l_movie_has_audio_track(lua_State *L)
+int l_movie_has_audio_track(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     lua_pushboolean(L, pMovie->has_audio_track());
     return 1;
 }
 
-static int l_movie_refresh(lua_State *L)
+int l_movie_refresh(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->refresh(SDL_Rect{
@@ -117,19 +119,21 @@ static int l_movie_refresh(lua_State *L)
     return 0;
 }
 
-static int l_movie_allocate_picture_buffer(lua_State *L)
+int l_movie_allocate_picture_buffer(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->allocate_picture_buffer();
     return 0;
 }
 
-static int l_movie_deallocate_picture_buffer(lua_State *L)
+int l_movie_deallocate_picture_buffer(lua_State *L)
 {
     movie_player *pMovie = luaT_testuserdata<movie_player>(L);
     pMovie->deallocate_picture_buffer();
     return 0;
 }
+
+} // namespace
 
 void lua_register_movie(const lua_register_state *pState)
 {

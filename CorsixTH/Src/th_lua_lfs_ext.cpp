@@ -29,7 +29,9 @@ SOFTWARE.
 
 class lfs_ext {};
 
-static int l_lfs_ext_new(lua_State *L)
+namespace {
+
+int l_lfs_ext_new(lua_State *L)
 {
     luaT_stdnew<lfs_ext>(L, luaT_environindex, true);
     return 1;
@@ -37,7 +39,7 @@ static int l_lfs_ext_new(lua_State *L)
 
 #ifdef _WIN32
 #ifdef CORSIX_TH_USE_WIN32_SDK
-static int l_volume_list(lua_State *L)
+int l_volume_list(lua_State *L)
 {
     /* Windows, using the Win32 API. */
     DWORD iDriveMask = GetLogicalDrives();
@@ -60,7 +62,7 @@ static int l_volume_list(lua_State *L)
     return 1;
 }
 #else
-static int l_volume_list(lua_State *L)
+int l_volume_list(lua_State *L)
 {
     /* Windows, without the Win32 API. */
     int iNDrives = 0;
@@ -85,7 +87,7 @@ static int l_volume_list(lua_State *L)
 }
 #endif
 #else
-static int l_volume_list(lua_State *L)
+int l_volume_list(lua_State *L)
 {
     /* Non-Windows systems. Assume that / is the root of the filesystem. */
     lua_settop(L, 0);
@@ -95,6 +97,8 @@ static int l_volume_list(lua_State *L)
     return 1;
 }
 #endif
+
+} // namespace
 
 void lua_register_lfs_ext(const lua_register_state *pState)
 {

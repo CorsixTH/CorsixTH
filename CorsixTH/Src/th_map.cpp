@@ -278,9 +278,11 @@ bool level_map::set_size(int iWidth, int iHeight)
     return true;
 }
 
+namespace {
+
 // NB: http://connection-endpoint.de/th-format-specification/
 // gives a (slightly) incorrect array, which is why it differs from this one.
-static constexpr uint8_t gs_iTHMapBlockLUT[256] = {
+constexpr uint8_t gs_iTHMapBlockLUT[256] = {
     0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C,
     0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
     0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20, 0x21, 0x22, 0x23, 0x24,
@@ -304,6 +306,8 @@ static constexpr uint8_t gs_iTHMapBlockLUT[256] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
     0x00, 0x00, 0x00, 0x00
 };
+
+} // namespace
 
 void level_map::read_tile_index(const uint8_t* pData, int& iX, int &iY) const
 {
@@ -350,10 +354,14 @@ bool level_map::load_blank()
     return true;
 }
 
-static inline bool is_divider_wall(const uint8_t byte)
+namespace {
+
+inline bool is_divider_wall(const uint8_t byte)
 {
     return (byte >> 1) == 70;
 }
+
+} // namespace
 
 bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
                            map_load_object_callback_fn fnObjectCallback,
@@ -583,6 +591,8 @@ void level_map::save(std::string filename)
     os.close();
 }
 
+namespace {
+
 //! Add or remove divider wall for the given tile
 /*!
    If the given 'pNode' has an indoor border to another parcel in the 'delta' direction:
@@ -591,7 +601,7 @@ void level_map::save(std::string filename)
    * A divider wall is removed if the owners are the same and 'iParcelId' is involved.
    \return True if a border was removed, false otherwise
 */
-static bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode, const map_tile* pOriginalNode,
+bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode, const map_tile* pOriginalNode,
                                   int iXY, int delta, int block, int iParcelId)
 {
     if (iXY > 0 && pOriginalNode->flags.hospital &&
@@ -612,6 +622,8 @@ static bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode, const map_ti
     }
     return false;
 }
+
+} // namespace
 
 std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId, int iOwner)
 {
@@ -670,7 +682,9 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId, int 
     return vSplitTiles;
 }
 
-static inline void test_adj(bool* parcel_adjacency_matrix, int parcel_count, const map_tile *original_node, int xy, ptrdiff_t delta)
+namespace {
+
+void test_adj(bool* parcel_adjacency_matrix, int parcel_count, const map_tile *original_node, int xy, ptrdiff_t delta)
 {
     if(xy > 0 &&
             original_node->iParcelId != original_node[-delta].iParcelId &&
@@ -680,6 +694,8 @@ static inline void test_adj(bool* parcel_adjacency_matrix, int parcel_count, con
             parcel_adjacency_matrix[original_node->iParcelId + original_node[-delta].iParcelId * parcel_count] = true;
     }
 }
+
+} // namespace
 
 void level_map::make_adjacency_matrix()
 {
@@ -1268,11 +1284,15 @@ uint32_t level_map::thermal_neighbour(uint32_t &iNeighbourSum, bool canTravel, s
     return iNeighbourCount;
 }
 
-static inline void merge_temperatures(map_tile& node, size_t new_temp_idx, int other_temp, double ratio)
+namespace {
+
+void merge_temperatures(map_tile& node, size_t new_temp_idx, int other_temp, double ratio)
 {
     const uint32_t node_temp = node.aiTemperature[new_temp_idx];
     node.aiTemperature[new_temp_idx] = static_cast<uint16_t>(node_temp * ((ratio - 1) + other_temp) / ratio);
 }
+
+} // namespace
 
 void level_map::update_temperatures(uint16_t iAirTemperature,
                                uint16_t iRadiatorTemperature)
@@ -1366,13 +1386,17 @@ void level_map::update_pathfinding()
     }
 }
 
+namespace {
+
 //! For shadow casting, a tile is considered to have a wall on a direction
 //! if it has a door in that direction, or the block is from the hardcoded
 //! range of wall-like blocks.
-static inline bool is_wall(map_tile *tile, size_t block, bool flag)
+bool is_wall(map_tile *tile, size_t block, bool flag)
 {
     return flag || (82 <= (tile->iBlock[block] & 0xFF) && (tile->iBlock[block] & 0xFF) <= 164);
 }
+
+} // namespace
 
 void level_map::update_shadows()
 {
@@ -1409,8 +1433,6 @@ void level_map::update_shadows()
             }
         }
     }
-
-#undef IsWall
 }
 
 void level_map::persist(lua_persist_writer *pWriter) const

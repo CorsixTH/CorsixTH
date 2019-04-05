@@ -40,10 +40,14 @@ int luaopen_random(lua_State *L);
 #endif
 // End of config file checking
 
-static inline void preload_lua_package(lua_State *L, const char* name, lua_CFunction fn)
+namespace {
+
+inline void preload_lua_package(lua_State *L, const char* name, lua_CFunction fn)
 {
     luaT_execute(L, std::string("package.preload.").append(name).append(" = ...").c_str(), fn);
 }
+
+} // namespace
 
 int lua_main_no_eval(lua_State *L)
 {

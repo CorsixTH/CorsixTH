@@ -28,17 +28,19 @@ SOFTWARE.
 #include <map>
 #include <cctype>
 
-static int played_sound_callback_ids[1000];
-static int played_sound_callback_index = 0;
-static std::map<int,SDL_TimerID> map_sound_timers;
+namespace {
 
-static int l_soundarc_new(lua_State *L)
+int played_sound_callback_ids[1000];
+int played_sound_callback_index = 0;
+std::map<int,SDL_TimerID> map_sound_timers;
+
+int l_soundarc_new(lua_State *L)
 {
     luaT_stdnew<sound_archive>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_soundarc_load(lua_State *L)
+int l_soundarc_load(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     size_t iDataLen;
@@ -51,7 +53,7 @@ static int l_soundarc_load(lua_State *L)
     return 1;
 }
 
-static int l_soundarc_count(lua_State *L)
+int l_soundarc_count(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     lua_pushnumber(L, (lua_Number)pArchive->get_number_of_sounds());
@@ -65,7 +67,7 @@ static int l_soundarc_count(lua_State *L)
  * @return Negative number when \a s1 should be before \a s2, zero if both
  *      string are equal, else a positive number.
  */
-static int ignorecase_cmp(const char *s1, const char *s2)
+int ignorecase_cmp(const char *s1, const char *s2)
 {
     while(*s1 && *s2)
     {
@@ -78,7 +80,7 @@ static int ignorecase_cmp(const char *s1, const char *s2)
     return std::tolower(*s1) - std::tolower(*s2);
 }
 
-static size_t l_soundarc_checkidx(lua_State *L, int iArg, sound_archive* pArchive)
+size_t l_soundarc_checkidx(lua_State *L, int iArg, sound_archive* pArchive)
 {
     if(lua_isnumber(L, iArg))
     {
@@ -124,7 +126,7 @@ static size_t l_soundarc_checkidx(lua_State *L, int iArg, sound_archive* pArchiv
     return pArchive->get_number_of_sounds();
 }
 
-static int l_soundarc_sound_name(lua_State *L)
+int l_soundarc_sound_name(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
@@ -134,7 +136,7 @@ static int l_soundarc_sound_name(lua_State *L)
     return 1;
 }
 
-static int l_soundarc_duration(lua_State *L)
+int l_soundarc_duration(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
@@ -145,7 +147,7 @@ static int l_soundarc_duration(lua_State *L)
     return 1;
 }
 
-static int l_soundarc_data(lua_State *L)
+int l_soundarc_data(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
@@ -166,7 +168,7 @@ static int l_soundarc_data(lua_State *L)
     return 1;
 }
 
-static int l_soundarc_sound_exists(lua_State *L)
+int l_soundarc_sound_exists(lua_State *L)
 {
     sound_archive* pArchive = luaT_testuserdata<sound_archive>(L);
     size_t iIndex = l_soundarc_checkidx(L, 2, pArchive);
@@ -177,13 +179,13 @@ static int l_soundarc_sound_exists(lua_State *L)
     return 1;
 }
 
-static int l_soundfx_new(lua_State *L)
+int l_soundfx_new(lua_State *L)
 {
     luaT_stdnew<sound_player>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_soundfx_set_archive(lua_State *L)
+int l_soundfx_set_archive(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     sound_archive *pArchive = luaT_testuserdata<sound_archive>(L, 2);
@@ -193,21 +195,21 @@ static int l_soundfx_set_archive(lua_State *L)
     return 1;
 }
 
-static int l_soundfx_set_sound_volume(lua_State *L)
+int l_soundfx_set_sound_volume(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     pEffects->set_sound_effect_volume(luaL_checknumber(L, 2));
     return 1;
 }
 
-static int l_soundfx_set_sound_effects_on(lua_State *L)
+int l_soundfx_set_sound_effects_on(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     pEffects->set_sound_effects_enabled(lua_toboolean(L, 2) != 0);
     return 1;
 }
 
-static Uint32 played_sound_callback(Uint32 interval, void* param)
+Uint32 played_sound_callback(Uint32 interval, void* param)
 {
     SDL_Event e;
     e.type = SDL_USEREVENT_SOUND_OVER;
@@ -220,7 +222,7 @@ static Uint32 played_sound_callback(Uint32 interval, void* param)
     return interval;
 }
 
-static int l_soundfx_play(lua_State *L)
+int l_soundfx_play(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     lua_settop(L, 7);
@@ -270,14 +272,14 @@ static int l_soundfx_play(lua_State *L)
     return 1;
 }
 
-static int l_soundfx_set_camera(lua_State *L)
+int l_soundfx_set_camera(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     pEffects->set_camera(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)), static_cast<int>(luaL_checkinteger(L, 4)));
     return 0;
 }
 
-static int l_soundfx_reserve_channel(lua_State *L)
+int l_soundfx_reserve_channel(lua_State *L)
 {
     int iChannel;
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
@@ -286,12 +288,14 @@ static int l_soundfx_reserve_channel(lua_State *L)
     return 1;
 }
 
-static int l_soundfx_release_channel(lua_State *L)
+int l_soundfx_release_channel(lua_State *L)
 {
     sound_player *pEffects = luaT_testuserdata<sound_player>(L);
     pEffects->release_channel(static_cast<int>(luaL_checkinteger(L, 2)));
     return 1;
 }
+
+} // namespace
 
 void lua_register_sound(const lua_register_state *pState)
 {

@@ -8,7 +8,10 @@
         to this function has one parameter which is the RNC compressed data.
         The return value is the decompressed data.
 */
-static int l_decompress(lua_State *L)
+
+namespace {
+
+int l_decompress(lua_State *L)
 {
     size_t inlen;
     const uint8_t* in = reinterpret_cast<const uint8_t*>(luaL_checklstring(L, 1, &inlen));
@@ -63,10 +66,12 @@ static int l_decompress(lua_State *L)
     return 2;
 }
 
-static const std::vector<luaL_Reg> rnclib = {
+const std::vector<luaL_Reg> rnclib = {
     {"decompress", l_decompress},
     {nullptr, nullptr}
 };
+
+} // namespace
 
 int luaopen_rnc(lua_State *L)
 {

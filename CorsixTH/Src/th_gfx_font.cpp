@@ -30,9 +30,11 @@ SOFTWARE.
 #include <cstring>
 #include <algorithm>
 
+namespace {
+
 constexpr unsigned int invalid_char_codepoint = 0xFFFD;
 
-static size_t discard_leading_set_bits(uint8_t &byte) {
+size_t discard_leading_set_bits(uint8_t &byte) {
     size_t count = 0;
     while ((byte & 0x80) != 0) {
         count++;
@@ -42,7 +44,7 @@ static size_t discard_leading_set_bits(uint8_t &byte) {
     return count;
 }
 
-static unsigned int next_utf8_codepoint(const char*& sString)
+unsigned int next_utf8_codepoint(const char*& sString)
 {
     uint8_t cur_byte = *reinterpret_cast<const uint8_t*>(sString++);
     size_t leading_bit_count = discard_leading_set_bits(cur_byte);
@@ -66,44 +68,7 @@ static unsigned int next_utf8_codepoint(const char*& sString)
     return codepoint;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
-// Since these functions are only used when we use freetype2, this silences
-// warnings about defined and not used.
-
-static unsigned int decode_utf8(const char* sString)
-{
-    return next_utf8_codepoint(sString);
-}
-
-static const char* previous_utf8_codepoint(const char* sString)
-{
-    do
-    {
-        --sString;
-    } while(((*sString) & 0xC0) == 0x80);
-    return sString;
-}
-#endif
-
-bitmap_font::bitmap_font()
-{
-    sheet = nullptr;
-    letter_spacing = 0;
-    line_spacing = 0;
-}
-
-void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet)
-{
-    sheet = pSpriteSheet;
-}
-
-void bitmap_font::set_separation(int iCharSep, int iLineSep)
-{
-    letter_spacing = iCharSep;
-    line_spacing = iLineSep;
-}
-
-static constexpr uint16_t unicode_to_cp437_table[0x60] = {
+constexpr uint16_t unicode_to_cp437_table[0x60] = {
     0xFF, 0xAD, 0x9B, 0x9C, 0x3F, 0x9D, 0x3F, 0x3F, 0x3F, 0x3F, 0xA6, 0xAE,
     0xAA, 0x3F, 0x3F, 0x3F, 0xF8, 0xF1, 0xFD, 0x3F, 0x3F, 0x3F, 0x3F, 0xFA,
     0x3F, 0x3F, 0xA7, 0xAF, 0xAC, 0xAB, 0x3F, 0xA8, 0x3F, 0x3F, 0x3F, 0x3F,
@@ -114,7 +79,7 @@ static constexpr uint16_t unicode_to_cp437_table[0x60] = {
     0x93, 0x3F, 0x94, 0xF6, 0x3F, 0x97, 0xA3, 0x96, 0x81, 0x3F, 0x3F, 0x98
 };
 
-static unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
+unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
 {
     if(iCodePoint < 0x80)
         return iCodePoint;
@@ -154,6 +119,45 @@ static unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
         case 0x25A0: return 0xFE;
     }
     return 0x3F;
+}
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+// Since these functions are only used when we use freetype2, this silences
+// warnings about defined and not used.
+
+unsigned int decode_utf8(const char* sString)
+{
+    return next_utf8_codepoint(sString);
+}
+
+const char* previous_utf8_codepoint(const char* sString)
+{
+    do
+    {
+        --sString;
+    } while(((*sString) & 0xC0) == 0x80);
+    return sString;
+}
+#endif
+
+} // namespace
+
+bitmap_font::bitmap_font()
+{
+    sheet = nullptr;
+    letter_spacing = 0;
+    line_spacing = 0;
+}
+
+void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet)
+{
+    sheet = pSpriteSheet;
+}
+
+void bitmap_font::set_separation(int iCharSep, int iLineSep)
+{
+    letter_spacing = iCharSep;
+    line_spacing = iLineSep;
 }
 
 text_layout bitmap_font::get_text_dimensions(const char* sMessage, size_t iMessageLength,
@@ -488,6 +492,8 @@ void freetype_font::draw_text(render_target* pCanvas, const char* sMessage,
     draw_text_wrapped(pCanvas, sMessage, iMessageLength, iX, iY, INT_MAX);
 }
 
+namespace {
+
 struct codepoint_glyph
 {
     FT_Glyph_Metrics metrics;
@@ -505,6 +511,8 @@ bool isCjkBreakCharacter(int charcode) {
             charcode == 0xff1b || // Fullwidth semicolon
             charcode == 0xff1f); //Fullwidth question mark
 }
+
+} // namespace
 
 text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char* sMessage,
         size_t iMessageLength, int iX, int iY,

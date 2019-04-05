@@ -238,7 +238,7 @@ struct midi_token
     uint8_t    data;
 };
 
-static bool operator < (const midi_token& oLeft, const midi_token& oRight)
+bool operator < (const midi_token& oLeft, const midi_token& oRight)
 {
     return oLeft.time < oRight.time;
 }

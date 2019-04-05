@@ -32,6 +32,8 @@ SOFTWARE.
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
 
+namespace {
+
 enum persist_type
 {
     //  LUA_TNIL = 0,
@@ -53,15 +55,18 @@ enum persist_type
     PERSIST_TCOUNT, // must equal 16 (for compatibility)
 };
 
-static int l_writer_mt_index(lua_State *L);
+int l_writer_mt_index(lua_State *L);
 
-template <class T> static int l_crude_gc(lua_State *L)
+template <class T>
+int l_crude_gc(lua_State *L)
 {
     // This __gc metamethod does not verify that the given value is the correct
     // type of userdata, or that the value is userdata at all.
     reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
     return 0;
 };
+
+} // namespace
 
 //! Structure for loading multiple strings as a Lua chunk, avoiding concatenation
 /*!
@@ -688,11 +693,15 @@ private:
     bool had_error;
 };
 
-static int l_writer_mt_index(lua_State *L)
+namespace {
+
+int l_writer_mt_index(lua_State *L)
 {
     return reinterpret_cast<lua_persist_basic_writer*>(
         lua_touserdata(L, luaT_upvalueindex(2)))->write_object_raw();
 }
+
+} // namespace
 
 //! Basic implementation of depersistance interface
 /*!
@@ -1198,7 +1207,9 @@ private:
     bool had_error;
 };
 
-static int l_dump_toplevel(lua_State *L)
+namespace {
+
+int l_dump_toplevel(lua_State *L)
 {
     luaL_checktype(L, 2, LUA_TTABLE);
     lua_settop(L, 2);
@@ -1210,7 +1221,7 @@ static int l_dump_toplevel(lua_State *L)
     return pWriter->finish();
 }
 
-static int l_load_toplevel(lua_State *L)
+int l_load_toplevel(lua_State *L)
 {
     size_t iDataLength;
     const uint8_t *pData = luaT_checkfile(L, 1, &iDataLength);
@@ -1236,7 +1247,7 @@ static int l_load_toplevel(lua_State *L)
     }
 }
 
-static int calculate_line_number(const char *sStart, const char *sPosition)
+int calculate_line_number(const char *sStart, const char *sPosition)
 {
     int iLine = 1;
     for(; sStart != sPosition; ++sStart)
@@ -1260,7 +1271,7 @@ static int calculate_line_number(const char *sStart, const char *sPosition)
     return iLine;
 }
 
-static const char* find_function_end(lua_State *L, const char* sStart)
+const char* find_function_end(lua_State *L, const char* sStart)
 {
     const char* sEnd = sStart;
     while(sEnd)
@@ -1285,7 +1296,7 @@ static const char* find_function_end(lua_State *L, const char* sStart)
     return nullptr;
 }
 
-static int l_persist_dofile(lua_State *L)
+int l_persist_dofile(lua_State *L)
 {
     const char *sFilename = luaL_checkstring(L, 1);
     lua_settop(L, 1);
@@ -1428,7 +1439,7 @@ static int l_persist_dofile(lua_State *L)
     return lua_gettop(L) - 1;
 }
 
-static int l_errcatch(lua_State *L)
+int l_errcatch(lua_State *L)
 {
     // Dummy function for debugging - place a breakpoint on the following
     // return statement to inspect the full C call stack when a Lua error
@@ -1436,12 +1447,14 @@ static int l_errcatch(lua_State *L)
     return 1;
 }
 
-static const std::vector<luaL_Reg> persist_lib = {
+const std::vector<luaL_Reg> persist_lib = {
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
     {nullptr, nullptr}
 };
+
+} // namespace
 
 int luaopen_persist(lua_State *L)
 {
