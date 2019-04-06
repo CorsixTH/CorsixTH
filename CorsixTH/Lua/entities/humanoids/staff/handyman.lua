@@ -79,8 +79,8 @@ function Handyman:goToStaffRoom()
 end
 
 function Handyman:onPlaceInCorridor()
-  Staff.onPlaceInCorridor(self)
   self:unassignTask()
+  Staff.onPlaceInCorridor(self)
 end
 
 -- Helper function to decide if Handyman fulfills a criterion
