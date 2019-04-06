@@ -90,7 +90,7 @@ function Receptionist:fulfillsCriterion(criterion) -- luacheck: no unused args
   return false
 end
 
-function Staff:getDrawingLayer()
+function Receptionist:getDrawingLayer()
   local direction = self.last_move_direction
   if direction == "west" or direction == "north" then
     return 5
