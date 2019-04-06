@@ -99,10 +99,10 @@ const char* sound_archive::get_sound_name(size_t iIndex) const
 constexpr uint32_t fourcc(const char c1, const char c2, const char c3, const char c4)
 {
     return (
-        static_cast<uint32_t>(static_cast<uint8_t>(c1) <<  0)
-        | static_cast<uint32_t>(static_cast<uint8_t>(c2) <<  8)
-        | static_cast<uint32_t>(static_cast<uint8_t>(c3) << 16)
-        | static_cast<uint32_t>(static_cast<uint8_t>(c4) << 24));
+        (static_cast<uint32_t>(static_cast<uint8_t>(c1)) <<  0)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c2)) <<  8)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c3)) << 16)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c4)) << 24));
 }
 
 namespace {
