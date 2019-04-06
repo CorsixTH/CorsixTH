@@ -1,6 +1,7 @@
 #include "lua_rnc.h"
 #include "../../common/rnc.h"
 #include "th_lua.h"
+#include <array>
 
 //! Provides lua function to decompress RNC data
 /*!
@@ -66,10 +67,10 @@ int l_decompress(lua_State *L)
     return 2;
 }
 
-const std::vector<luaL_Reg> rnclib = {
+constexpr std::array<luaL_Reg, 2> rnclib {{
     {"decompress", l_decompress},
     {nullptr, nullptr}
-};
+}};
 
 } // namespace
 
