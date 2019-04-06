@@ -341,17 +341,17 @@ void sound_player::set_camera(int iX, int iY, int iRadius)
 
 #else // CORSIX_TH_USE_SDL_MIXER
 
-sound_effect_player::sound_effect_player() {}
-sound_effect_player::~sound_effect_player() {}
-sound_effect_player* sound_effect_player::get_singleton() {return nullptr;}
-void sound_effect_player::set_sound_archive(THSoundArchive *pArchive) {}
-void sound_effect_player::play(size_t iIndex, double dVolume) {}
-void sound_effect_player::play_at(size_t iIndex, int iX, int iY) {}
-void sound_effect_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
-int sound_effect_player::reserve_channel() { return 0; }
-void sound_effect_player::release_channel(int iChannel) {}
-void sound_effect_player::set_camera(int iX, int iY, int iRadius) {}
-void sound_effect_player::set_sound_effect_volume(double dVolume) {}
-void sound_effect_player::set_sound_effects_enabled(bool iOn) {}
+sound_player::sound_player() {}
+sound_player::~sound_player() {}
+sound_player* sound_player::get_singleton() {return nullptr;}
+void sound_player::populate_from(sound_archive *pArchive) {}
+void sound_player::play(size_t iIndex, double dVolume) {}
+void sound_player::play_at(size_t iIndex, int iX, int iY) {}
+void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
+int sound_player::reserve_channel() { return 0; }
+void sound_player::release_channel(int iChannel) {}
+void sound_player::set_camera(int iX, int iY, int iRadius) {}
+void sound_player::set_sound_effect_volume(double dVolume) {}
+void sound_player::set_sound_effects_enabled(bool iOn) {}
 
 #endif // CORSIX_TH_USE_SDL_MIXER
