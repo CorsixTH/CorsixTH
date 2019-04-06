@@ -24,6 +24,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_map.h"
 #include <sstream>
+#include <array>
 
 map_overlay_pair::map_overlay_pair()
 {
@@ -166,8 +167,8 @@ namespace {
 // not from the same parcel.
 struct parcel_edge_sprite
 {
-    ptrdiff_t dx;
-    ptrdiff_t dy;
+    int dx;
+    int dy;
     size_t sprite;
 };
 
