@@ -472,7 +472,7 @@ public: // External API
     /*!
         @param iSprite Sprite getting the mapped palette.
         @param pMap The palette map to apply.
-        @param iAlt32 What to do for a 32bpp sprite (#THDF_Alt32_Mask bits).
+        @param iAlt32 What to do for a 32bpp sprite (#thdf_alt32_mask bits).
     */
     void set_sprite_alt_palette_map(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32);
 

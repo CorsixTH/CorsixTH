@@ -98,7 +98,7 @@ public:
     //! Expand the \a pNode to its neighbours.
     /*!
         @param pNode Node to expand.
-        @param iFlags Flags of the node.
+        @param flags Flags of the node.
         @param iWidth Width of the map.
         @return Whether the search is done.
      */
