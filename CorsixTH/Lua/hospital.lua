@@ -2177,8 +2177,8 @@ function Hospital:assignHandymanToTask(handyman, taskIndex, taskType)
       subTable[taskIndex].assignedHandyman = handyman
     else
       local formerHandyman = subTable[taskIndex].assignedHandyman
-      formerHandyman:interruptHandymanTask()
       subTable[taskIndex].assignedHandyman = handyman
+      formerHandyman:interruptHandymanTask()
     end
   end
 end
