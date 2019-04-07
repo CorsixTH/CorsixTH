@@ -79,8 +79,8 @@ function Handyman:goToStaffRoom()
 end
 
 function Handyman:onPlaceInCorridor()
-  Staff.onPlaceInCorridor(self)
   self:unassignTask()
+  Staff.onPlaceInCorridor(self)
 end
 
 -- Helper function to decide if Handyman fulfills a criterion
@@ -102,7 +102,7 @@ function Handyman:interruptHandymanTask()
     self.on_call.assigned = nil
     self.on_call = nil
   end
-  self:unassignTask()
+  self.task = nil
   self:setNextAction(AnswerCallAction())
 end
 

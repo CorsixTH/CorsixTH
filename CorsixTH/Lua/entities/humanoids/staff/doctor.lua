@@ -262,7 +262,7 @@ function Doctor:fulfillsCriterion(criterion)
   return false
 end
 
-function Staff:adviseWrongPersonForThisRoom()
+function Doctor:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
   if room.room_info.id == "toilets" then
