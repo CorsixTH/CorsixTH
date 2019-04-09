@@ -14,7 +14,7 @@ install:
   - git remote add corsixth https://github.com/CorsixTH/vcpkg
 before_build:
   - cmd: cd %APPVEYOR_BUILD_FOLDER%
-  - cmd: cmake -G "%GENERATOR%" -DUSE_VCPKG_DEPS=ON -DVCPKG_PARENT_DIR=c:/tools -DVCPKG_REMOTE=corsixth .
+  - cmd: cmake -G "%GENERATOR%" -DUSE_VCPKG_DEPS=ON -DVCPKG_PARENT_DIR=c:/tools -DVCPKG_REMOTE=corsixth --trace .
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal
