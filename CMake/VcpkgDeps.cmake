@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set(VCPKG_COMMIT_SHA "37ddeed0ead71cf4fa3770b5affb83a2a9230976")
+set(VCPKG_COMMIT_SHA "660745956a59f58bc95b1802b2d08ddaeff37eb7")
 
 # Setup the various paths we are using
 set(_VCPKG_SCRIPT_NAME "build_vcpkg_deps.ps1")
