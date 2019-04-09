@@ -1,0 +1,15 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- master
+
+jobs:
+- job: Windows
+pool:
+  vmImage: 'vs2017-win2016'
+
+- task: @CMake@1
+  -cmakeArgs: -DUSE_VCPKG_DEPS=ON
