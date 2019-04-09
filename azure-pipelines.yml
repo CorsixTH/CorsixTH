@@ -13,4 +13,4 @@ jobs:
   steps:
   - task: CMake@1
     inputs:
-      cmakeArgs: '-DUSE_VCPKG_DEPS=ON'
+      cmakeArgs: '-DUSE_VCPKG_DEPS=ON ..'
