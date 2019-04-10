@@ -134,8 +134,11 @@ function run_script {
 $starting_dir = Convert-Path .
 try {
     run_script
+    Write-Output "** Done script"
     # Move back up a dir to return user to original location
     Set-Location -Path $starting_dir
+    Write-Output "** Exiting"
+    Exit 0
 } catch [Exception]{
     Set-Location -Path $starting_dir
     # Echo the exception back out

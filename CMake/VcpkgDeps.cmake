@@ -57,6 +57,7 @@ if(err_val)
   message(FATAL_ERROR "Failed to build vcpkg dependencies. "
     "\nIf this error persists try deleting the 'vcpkg' folder.\n")
 endif()
+message(INFO "Finished with build script, returning to cmake\n")
 
 set(VCPKG_INSTALLED_PATH ${VCPKG_PARENT_DIR}/vcpkg/installed/${_VCPKG_TARGET_TRIPLET})
 set(CMAKE_TOOLCHAIN_FILE ${VCPKG_PARENT_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake)
