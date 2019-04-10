@@ -34,7 +34,7 @@ Param(
 ################
 
 $anim_view_libs = "wxwidgets"
-$corsixth_libs = "ffmpeg freetype", "lua", "luafilesystem", "lpeg", "sdl2", "sdl2-mixer", "luasocket"
+$corsixth_libs = "ffmpeg"
 
 $vcpkg_git_url = "https://github.com/CorsixTH/vcpkg"
 
