@@ -10,4 +10,4 @@ cache:
   - vcpkg -> CMake/VcpkgDeps.cmake, scripts/build_vcpkg_deps.ps1
 configuration: Release
 build_script:
-  - ps: ./scripts/build_vcpkg_deps.ps1 -VcpkgTriplet x64-windows -BuildAnimView $false -VcpkgCommitSha 1134de5eacf2052a936a943acea7f08ba06462d7
+  - ps: ./scripts/build_vcpkg_deps.ps1 -VcpkgTriplet x64-windows -BuildAnimView $false -VcpkgCommitSha 373740023a66a055b897af1851ebe51f0e6c3fea
