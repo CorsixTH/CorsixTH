@@ -3,7 +3,6 @@ image: Visual Studio 2017
 pull_requests:
   do_not_increment_build_number: true
 init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 environment:
   matrix:
   - GENERATOR: Visual Studio 15 2017 Win64
@@ -11,4 +10,4 @@ cache:
   - vcpkg -> CMake/VcpkgDeps.cmake, scripts/build_vcpkg_deps.ps1
 configuration: Release
 build_script:
-  - ps: ./scripts/build_vcpkg_deps.ps1 -VcpkgTriplet x64-windows -BuildAnimView $false -VcpkgCommitSha 9f35b7da7c46efea01b8a15beb0b3df3539b4781
+  - ps: ./scripts/build_vcpkg_deps.ps1 -VcpkgTriplet x64-windows -BuildAnimView $false -VcpkgCommitSha 7d2f73d36bf29ffa8d57525feda1dec55c86a66f
