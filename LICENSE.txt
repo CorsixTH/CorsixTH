@@ -27,14 +27,14 @@ Copyright (C) 2011 Chris James
 Copyright (C) 2011 John Pirie
 Copyright (C) 2011-2015 Mark Lawlor
 Copyright (C) 2011-2016 William "Sadger" Gatens
-Copyright (C) 2011-2017 Ola "Grimdoc" Skogrand
+Copyright (C) 2011-2018 Ola "Grimdoc" Skogrand
 Copyright (C) 2011-2015 Jørgen P. Tjernø
 Copyright (C) 2011-2012 Zbyněk "teh dude :D" Schwarz
 Copyright (C) 2011 Rene "Kleeze" Bergfort
 Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
-Copyright (C) 2012-2018 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2019 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013 Luis "Driver" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -47,7 +47,7 @@ Copyright (C) 2013 YoungSeok Yoon
 Copyright (C) 2013-2015 Maarten Peters
 Copyright (C) 2013 nullstein
 Copyright (C) 2013 BuTcHeR (extragry.pl)
-Copyright (C) 2013-2017 Albert "Alberth" Hofkamp
+Copyright (C) 2013-2018 Albert "Alberth" Hofkamp
 Copyright (C) 2014-2015 Joseph "J-Shep" Sheppard
 Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
@@ -63,8 +63,10 @@ Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017 David Fairbrother
 Copyright (C) 2017-2018 Altieres Lima
-Copyright (C) 2017-2018 Justin "mugmuggy" Mugford
+Copyright (C) 2017-2019 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
+Copyright (C) 2018 Rick "Feanathiel" Megens
+Copyright (C) 2018-2019 James "leiget" Russell
 
 et al.
 
