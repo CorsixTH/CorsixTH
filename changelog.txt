@@ -6,6 +6,27 @@ Version next - released ???
   mp3 and mid/xmi tracks.
 * No more hunting for that machine that's always breaking down. Save your
   camera position with ALT+number, and restore with CTRL+number.
+* Announcements are now queued to play one after another instead of
+  overlapping.
+* New man page for unix like operating systems.
+* Fax message improvements.
+* Hotkey configuration! All hotkeys in the game are now configurable from
+  within a new option in the settings menu.
+* Configure the scroll and zoom speed in game.
+* Improved mouse 'release' behaviour. Release mouse (CTRL+F10 by default) now.
+  always releases the mouse, so the game will not scroll when moving out of
+  the window. Clicking in the game window causes the game to recognize the
+  mouse again.
+
+# Bug Fixes
+* Handymen now know where to find machines that have been moved.
+* Fix crashes that happen when staff are killed in exploding rooms.
+* Open file leak in the file tree dialogs.
+* Autopsy machine can only be 'discovered' once.
+* Fix issue with staff getting stuck in rooms that support multiple staff.
+* Fix position of patients dragged in the room queue while a staff is waiting
+  for the door, or a patient is waiting to leave.
+* Pathfinding has been improved.
 
 -------------------------------------------------------------------------------
 Version 0.62 - released July 2018
