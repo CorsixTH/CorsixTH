@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version next - released ???
+Version 0.63-beta1 - released April 2019
 -------------------------------------------------------------------------------
 # New Features
 * Game music now supports ogg, flac, wav, aiff, voc, and mod in addition to
@@ -13,7 +13,7 @@ Version next - released ???
 * Hotkey configuration! All hotkeys in the game are now configurable from
   within a new option in the settings menu.
 * Configure the scroll and zoom speed in game.
-* Improved mouse 'release' behaviour. Release mouse (CTRL+F10 by default) now.
+* Improved mouse 'release' behaviour. Release mouse (CTRL+F10 by default) now
   always releases the mouse, so the game will not scroll when moving out of
   the window. Clicking in the game window causes the game to recognize the
   mouse again.
