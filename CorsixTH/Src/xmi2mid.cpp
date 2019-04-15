@@ -214,7 +214,9 @@ private:
         if(pNewData == nullptr)
             return false;
         size_t iOldLength = data_end - data;
-        std::memcpy(pNewData, data, size > iOldLength ? iOldLength : size);
+        if (iOldLength > 0) {
+            std::memcpy(pNewData, data, size > iOldLength ? iOldLength : size);
+        }
         pointer = pointer - data + pNewData;
         if(buffer_end != nullptr)
             delete[] data;
@@ -256,8 +258,9 @@ struct midi_token_list : std::vector<midi_token>
 uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data,
                                  size_t xmi_length, size_t* midi_length)
 {
+    if (xmi_data == nullptr) { return nullptr; }
+
     memory_buffer bufInput(xmi_data, xmi_length);
-    memory_buffer bufOutput;
 
     if(!bufInput.scan_to("EVNT", 4) || !bufInput.skip(8))
         return nullptr;
@@ -350,6 +353,8 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data,
 
     if(lstTokens.empty())
         return nullptr;
+
+    memory_buffer bufOutput;
     if(!bufOutput.write("MThd\0\0\0\x06\0\0\0\x01", 12))
         return nullptr;
     if(!bufOutput.write_big_endian_uint16(static_cast<uint16_t>((iTempo * 3) / 25000)))
