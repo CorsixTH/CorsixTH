@@ -65,7 +65,7 @@ int l_crude_gc(lua_State *L)
     // type of userdata, or that the value is userdata at all.
     reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
     return 0;
-};
+}
 
 } // namespace
 
