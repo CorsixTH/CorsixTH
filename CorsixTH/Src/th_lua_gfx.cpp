@@ -878,100 +878,110 @@ int l_line_depersist(lua_State *L)
 void lua_register_gfx(const lua_register_state *pState)
 {
     // Palette
-    luaT_class(palette, l_palette_new, "palette", lua_metatable::palette);
-    luaT_setfunction(l_palette_load, "load");
-    luaT_setfunction(l_palette_set_entry, "setEntry");
-    luaT_endclass();
+    {
+        lua_class_binding<palette> lcb(pState, "palette", l_palette_new, lua_metatable::palette);
+        lcb.add_function(l_palette_load, "load");
+        lcb.add_function(l_palette_set_entry, "setEntry");
+    }
 
     // Raw bitmap
-    luaT_class(raw_bitmap, l_rawbitmap_new, "bitmap", lua_metatable::bitmap);
-    luaT_setfunction(l_rawbitmap_load, "load", lua_metatable::surface);
-    luaT_setfunction(l_rawbitmap_set_pal, "setPalette", lua_metatable::palette);
-    luaT_setfunction(l_rawbitmap_draw, "draw", lua_metatable::surface);
-    luaT_endclass();
+    {
+        lua_class_binding<raw_bitmap> lcb(pState, "bitmap", l_rawbitmap_new, lua_metatable::bitmap);
+        lcb.add_function(l_rawbitmap_load, "load", lua_metatable::surface);
+        lcb.add_function(l_rawbitmap_set_pal, "setPalette", lua_metatable::palette);
+        lcb.add_function(l_rawbitmap_draw, "draw", lua_metatable::surface);
+    }
 
     // Sprite sheet
-    luaT_class(sprite_sheet, l_spritesheet_new, "sheet", lua_metatable::sheet);
-    luaT_setmetamethod(l_spritesheet_count, "len");
-    luaT_setfunction(l_spritesheet_load, "load", lua_metatable::surface);
-    luaT_setfunction(l_spritesheet_set_pal, "setPalette", lua_metatable::palette);
-    luaT_setfunction(l_spritesheet_size, "size");
-    luaT_setfunction(l_spritesheet_draw, "draw", lua_metatable::surface);
-    luaT_setfunction(l_spritesheet_hittest, "hitTest");
-    luaT_setfunction(l_spritesheet_isvisible, "isVisible");
-    luaT_endclass();
+    {
+        lua_class_binding<sprite_sheet> lcb(pState, "sheet", l_spritesheet_new, lua_metatable::sheet);
+        lcb.add_metamethod(l_spritesheet_count, "len");
+        lcb.add_function(l_spritesheet_load, "load", lua_metatable::surface);
+        lcb.add_function(l_spritesheet_set_pal, "setPalette", lua_metatable::palette);
+        lcb.add_function(l_spritesheet_size, "size");
+        lcb.add_function(l_spritesheet_draw, "draw", lua_metatable::surface);
+        lcb.add_function(l_spritesheet_hittest, "hitTest");
+        lcb.add_function(l_spritesheet_isvisible, "isVisible");
+    }
 
     // Font
     // Also adapt the font proxy meta table (font_proxy_mt) in graphics.lua.
-    luaT_class(font, l_font_new, "font", lua_metatable::font);
-    luaT_setfunction(l_font_get_size, "sizeOf");
-    luaT_setfunction(l_font_draw, "draw", lua_metatable::surface);
-    luaT_setfunction(l_font_draw_wrapped, "drawWrapped", lua_metatable::surface);
-    luaT_setfunction(l_font_draw_tooltip, "drawTooltip", lua_metatable::surface);
-    luaT_endclass();
+    {
+        lua_class_binding<font> lcb(pState, "font", l_font_new, lua_metatable::font);
+        lcb.add_function(l_font_get_size, "sizeOf");
+        lcb.add_function(l_font_draw, "draw", lua_metatable::surface);
+        lcb.add_function(l_font_draw_wrapped, "drawWrapped", lua_metatable::surface);
+        lcb.add_function(l_font_draw_tooltip, "drawTooltip", lua_metatable::surface);
+    }
 
     // BitmapFont
-    luaT_class(bitmap_font, l_bitmap_font_new, "bitmap_font", lua_metatable::bitmap_font);
-    luaT_superclass(lua_metatable::font);
-    luaT_setfunction(l_bitmap_font_set_spritesheet, "setSheet", lua_metatable::sheet);
-    luaT_setfunction(l_bitmap_font_get_spritesheet, "getSheet", lua_metatable::sheet);
-    luaT_setfunction(l_bitmap_font_set_sep, "setSeparation");
-    luaT_endclass();
+    {
+        lua_class_binding<bitmap_font> lcb(pState, "bitmap_font", l_bitmap_font_new, lua_metatable::bitmap_font);
+        lcb.set_superclass(lua_metatable::font);
+        lcb.add_function(l_bitmap_font_set_spritesheet, "setSheet", lua_metatable::sheet);
+        lcb.add_function(l_bitmap_font_get_spritesheet, "getSheet", lua_metatable::sheet);
+        lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
+    }
 
 #ifdef CORSIX_TH_USE_FREETYPE2
     // FreeTypeFont
-    luaT_class(freetype_font, l_freetype_font_new, "freetype_font", lua_metatable::freetype_font);
-    luaT_superclass(lua_metatable::font);
-    luaT_setfunction(l_freetype_font_set_spritesheet, "setSheet", lua_metatable::sheet);
-    luaT_setfunction(l_freetype_font_set_face, "setFace");
-    luaT_setfunction(l_freetype_font_get_copyright, "getCopyrightNotice");
-    luaT_setfunction(l_freetype_font_clear_cache, "clearCache");
-    luaT_endclass();
+    {
+        lua_class_binding<freetype_font> lcb(pState, "freetype_font", l_freetype_font_new, lua_metatable::freetype_font);
+        lcb.set_superclass(lua_metatable::font);
+        lcb.add_function(l_freetype_font_set_spritesheet, "setSheet", lua_metatable::sheet);
+        lcb.add_function(l_freetype_font_set_face, "setFace");
+        lcb.add_function(l_freetype_font_get_copyright, "getCopyrightNotice");
+        lcb.add_function(l_freetype_font_clear_cache, "clearCache");
+    }
 #endif
 
     // Layers
-    luaT_class(layers, l_layers_new, "layers", lua_metatable::layers);
-    luaT_setmetamethod(l_layers_get, "index");
-    luaT_setmetamethod(l_layers_set, "newindex");
-    luaT_setmetamethod(l_layers_persist, "persist");
-    luaT_setmetamethod(l_layers_depersist, "depersist");
-    luaT_endclass();
+    {
+        lua_class_binding<layers> lcb(pState, "layers", l_layers_new, lua_metatable::layers);
+        lcb.add_metamethod(l_layers_get, "index");
+        lcb.add_metamethod(l_layers_set, "newindex");
+        lcb.add_metamethod(l_layers_persist, "persist");
+        lcb.add_metamethod(l_layers_depersist, "depersist");
+    }
 
     // Cursor
-    luaT_class(cursor, l_cursor_new, "cursor", lua_metatable::cursor);
-    luaT_setfunction(l_cursor_load, "load", lua_metatable::sheet);
-    luaT_setfunction(l_cursor_use, "use", lua_metatable::surface);
-    luaT_setfunction(l_cursor_position, "setPosition", lua_metatable::surface);
-    luaT_endclass();
+    {
+        lua_class_binding<cursor> lcb(pState, "cursor", l_cursor_new, lua_metatable::cursor);
+        lcb.add_function(l_cursor_load, "load", lua_metatable::sheet);
+        lcb.add_function(l_cursor_use, "use", lua_metatable::surface);
+        lcb.add_function(l_cursor_position, "setPosition", lua_metatable::surface);
+    }
 
     // Surface
-    luaT_class(render_target, l_surface_new, "surface", lua_metatable::surface);
-    luaT_setfunction(l_surface_update, "update");
-    luaT_setfunction(l_surface_destroy, "destroy");
-    luaT_setfunction(l_surface_fill_black, "fillBlack");
-    luaT_setfunction(l_surface_start_frame, "startFrame");
-    luaT_setfunction(l_surface_end_frame, "endFrame");
-    luaT_setfunction(l_surface_nonoverlapping, "nonOverlapping");
-    luaT_setfunction(l_surface_map, "mapRGB");
-    luaT_setfunction(l_surface_set_blue_filter_active, "setBlueFilterActive");
-    luaT_setfunction(l_surface_rect, "drawRect");
-    luaT_setfunction(l_surface_get_clip, "getClip");
-    luaT_setfunction(l_surface_set_clip, "setClip");
-    luaT_setfunction(l_surface_screenshot, "takeScreenshot");
-    luaT_setfunction(l_surface_scale, "scale");
-    luaT_setfunction(l_surface_set_caption, "setCaption");
-    luaT_setfunction(l_surface_get_renderer_details, "getRendererDetails");
-    luaT_setfunction(l_surface_set_capture_mouse, "setCaptureMouse");
-    luaT_endclass();
+    {
+        lua_class_binding<render_target> lcb(pState, "surface", l_surface_new, lua_metatable::surface);
+        lcb.add_function(l_surface_update, "update");
+        lcb.add_function(l_surface_destroy, "destroy");
+        lcb.add_function(l_surface_fill_black, "fillBlack");
+        lcb.add_function(l_surface_start_frame, "startFrame");
+        lcb.add_function(l_surface_end_frame, "endFrame");
+        lcb.add_function(l_surface_nonoverlapping, "nonOverlapping");
+        lcb.add_function(l_surface_map, "mapRGB");
+        lcb.add_function(l_surface_set_blue_filter_active, "setBlueFilterActive");
+        lcb.add_function(l_surface_rect, "drawRect");
+        lcb.add_function(l_surface_get_clip, "getClip");
+        lcb.add_function(l_surface_set_clip, "setClip");
+        lcb.add_function(l_surface_screenshot, "takeScreenshot");
+        lcb.add_function(l_surface_scale, "scale");
+        lcb.add_function(l_surface_set_caption, "setCaption");
+        lcb.add_function(l_surface_get_renderer_details, "getRendererDetails");
+        lcb.add_function(l_surface_set_capture_mouse, "setCaptureMouse");
+    }
 
     // Line
-    luaT_class(line, l_line_new, "line", lua_metatable::line);
-    luaT_setfunction(l_move_to, "moveTo");
-    luaT_setfunction(l_line_to, "lineTo");
-    luaT_setfunction(l_set_width, "setWidth");
-    luaT_setfunction(l_set_colour, "setColour");
-    luaT_setfunction(l_line_draw, "draw", lua_metatable::surface);
-    luaT_setmetamethod(l_line_persist, "persist");
-    luaT_setmetamethod(l_line_depersist, "depersist");
-    luaT_endclass();
+    {
+        lua_class_binding<line> lcb(pState, "line", l_line_new, lua_metatable::line);
+        lcb.add_function(l_move_to, "moveTo");
+        lcb.add_function(l_line_to, "lineTo");
+        lcb.add_function(l_set_width, "setWidth");
+        lcb.add_function(l_set_colour, "setColour");
+        lcb.add_function(l_line_draw, "draw", lua_metatable::surface);
+        lcb.add_metamethod(l_line_persist, "persist");
+        lcb.add_metamethod(l_line_depersist, "depersist");
+    }
 }

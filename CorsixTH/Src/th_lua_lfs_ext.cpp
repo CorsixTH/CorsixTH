@@ -102,7 +102,6 @@ int l_volume_list(lua_State *L)
 
 void lua_register_lfs_ext(const lua_register_state *pState)
 {
-    luaT_class(lfs_ext, l_lfs_ext_new, "lfsExt", lua_metatable::lfs_ext);
-    luaT_setfunction(l_volume_list, "volumes");
-    luaT_endclass();
+    lua_class_binding<lfs_ext> lcb(pState, "lfsExt", l_lfs_ext_new, lua_metatable::lfs_ext);
+    lcb.add_function(l_volume_list, "volumes");
 }

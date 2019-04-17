@@ -1003,54 +1003,56 @@ int l_path_visit(lua_State *L)
 void lua_register_map(const lua_register_state *pState)
 {
     // Map
-    luaT_class(level_map, l_map_new, "map", lua_metatable::map);
-    luaT_setmetamethod(l_map_persist, "persist", lua_metatable::anim);
-    luaT_setmetamethod(l_map_depersist, "depersist", lua_metatable::anim);
-    luaT_setfunction(l_map_load, "load");
-    luaT_setfunction(l_map_loadblank, "loadBlank");
-    luaT_setfunction(l_map_save, "save");
-    luaT_setfunction(l_map_getsize, "size");
-    luaT_setfunction(l_map_get_player_count, "getPlayerCount");
-    luaT_setfunction(l_map_set_player_count, "setPlayerCount");
-    luaT_setfunction(l_map_get_player_camera, "getCameraTile");
-    luaT_setfunction(l_map_set_player_camera, "setCameraTile");
-    luaT_setfunction(l_map_get_player_heliport, "getHeliportTile");
-    luaT_setfunction(l_map_set_player_heliport, "setHeliportTile");
-    luaT_setfunction(l_map_getcell, "getCell");
-    luaT_setfunction(l_map_gettemperature, "getCellTemperature");
-    luaT_setfunction(l_map_getcellflags, "getCellFlags");
-    luaT_setfunction(l_map_setcellflags, "setCellFlags");
-    luaT_setfunction(l_map_setcell, "setCell");
-    luaT_setfunction(l_map_setwallflags, "setWallDrawFlags");
-    luaT_setfunction(l_map_settemperaturedisplay, "setTemperatureDisplay");
-    luaT_setfunction(l_map_updatetemperature, "updateTemperatures");
-    luaT_setfunction(l_map_updateblueprint, "updateRoomBlueprint", lua_metatable::anims, lua_metatable::anim);
-    luaT_setfunction(l_map_updateshadows, "updateShadows");
-    luaT_setfunction(l_map_updatepathfinding, "updatePathfinding");
-    luaT_setfunction(l_map_mark_room, "markRoom");
-    luaT_setfunction(l_map_unmark_room, "unmarkRoom");
-    luaT_setfunction(l_map_set_sheet, "setSheet", lua_metatable::sheet);
-    luaT_setfunction(l_map_draw, "draw", lua_metatable::surface);
-    luaT_setfunction(l_map_hittest, "hitTestObjects", lua_metatable::anim);
-    luaT_setfunction(l_map_get_parcel_tilecount, "getParcelTileCount");
-    luaT_setfunction(l_map_get_parcel_count, "getPlotCount");
-    luaT_setfunction(l_map_set_parcel_owner, "setPlotOwner");
-    luaT_setfunction(l_map_get_parcel_owner, "getPlotOwner");
-    luaT_setfunction(l_map_is_parcel_purchasable, "isParcelPurchasable");
-    luaT_setfunction(l_map_erase_thobs, "eraseObjectTypes");
-    luaT_setfunction(l_map_remove_cell_thob, "removeObjectType");
-    luaT_setfunction(l_map_get_litter_fraction, "getLitterFraction");
-    luaT_endclass();
+    {
+        lua_class_binding<level_map> lcb(pState, "map", l_map_new, lua_metatable::map);
+        lcb.add_metamethod(l_map_persist, "persist", lua_metatable::anim);
+        lcb.add_metamethod(l_map_depersist, "depersist", lua_metatable::anim);
+        lcb.add_function(l_map_load, "load");
+        lcb.add_function(l_map_loadblank, "loadBlank");
+        lcb.add_function(l_map_save, "save");
+        lcb.add_function(l_map_getsize, "size");
+        lcb.add_function(l_map_get_player_count, "getPlayerCount");
+        lcb.add_function(l_map_set_player_count, "setPlayerCount");
+        lcb.add_function(l_map_get_player_camera, "getCameraTile");
+        lcb.add_function(l_map_set_player_camera, "setCameraTile");
+        lcb.add_function(l_map_get_player_heliport, "getHeliportTile");
+        lcb.add_function(l_map_set_player_heliport, "setHeliportTile");
+        lcb.add_function(l_map_getcell, "getCell");
+        lcb.add_function(l_map_gettemperature, "getCellTemperature");
+        lcb.add_function(l_map_getcellflags, "getCellFlags");
+        lcb.add_function(l_map_setcellflags, "setCellFlags");
+        lcb.add_function(l_map_setcell, "setCell");
+        lcb.add_function(l_map_setwallflags, "setWallDrawFlags");
+        lcb.add_function(l_map_settemperaturedisplay, "setTemperatureDisplay");
+        lcb.add_function(l_map_updatetemperature, "updateTemperatures");
+        lcb.add_function(l_map_updateblueprint, "updateRoomBlueprint", lua_metatable::anims, lua_metatable::anim);
+        lcb.add_function(l_map_updateshadows, "updateShadows");
+        lcb.add_function(l_map_updatepathfinding, "updatePathfinding");
+        lcb.add_function(l_map_mark_room, "markRoom");
+        lcb.add_function(l_map_unmark_room, "unmarkRoom");
+        lcb.add_function(l_map_set_sheet, "setSheet", lua_metatable::sheet);
+        lcb.add_function(l_map_draw, "draw", lua_metatable::surface);
+        lcb.add_function(l_map_hittest, "hitTestObjects", lua_metatable::anim);
+        lcb.add_function(l_map_get_parcel_tilecount, "getParcelTileCount");
+        lcb.add_function(l_map_get_parcel_count, "getPlotCount");
+        lcb.add_function(l_map_set_parcel_owner, "setPlotOwner");
+        lcb.add_function(l_map_get_parcel_owner, "getPlotOwner");
+        lcb.add_function(l_map_is_parcel_purchasable, "isParcelPurchasable");
+        lcb.add_function(l_map_erase_thobs, "eraseObjectTypes");
+        lcb.add_function(l_map_remove_cell_thob, "removeObjectType");
+        lcb.add_function(l_map_get_litter_fraction, "getLitterFraction");
+    }
 
     // Pathfinder
-    luaT_class(pathfinder, l_path_new, "pathfinder", lua_metatable::pathfinder);
-    luaT_setmetamethod(l_path_persist, "persist");
-    luaT_setmetamethod(l_path_depersist, "depersist");
-    luaT_setfunction(l_path_distance, "findDistance");
-    luaT_setfunction(l_path_is_reachable_from_hospital, "isReachableFromHospital");
-    luaT_setfunction(l_path_path, "findPath");
-    luaT_setfunction(l_path_idle, "findIdleTile");
-    luaT_setfunction(l_path_visit, "findObject");
-    luaT_setfunction(l_path_set_map, "setMap", lua_metatable::map);
-    luaT_endclass();
+    {
+        lua_class_binding<pathfinder> lcb(pState, "pathfinder", l_path_new, lua_metatable::pathfinder);
+        lcb.add_metamethod(l_path_persist, "persist");
+        lcb.add_metamethod(l_path_depersist, "depersist");
+        lcb.add_function(l_path_distance, "findDistance");
+        lcb.add_function(l_path_is_reachable_from_hospital, "isReachableFromHospital");
+        lcb.add_function(l_path_path, "findPath");
+        lcb.add_function(l_path_idle, "findIdleTile");
+        lcb.add_function(l_path_visit, "findObject");
+        lcb.add_function(l_path_set_map, "setMap", lua_metatable::map);
+    }
 }

@@ -170,7 +170,6 @@ int l_town_map_draw(lua_State *L)
 void lua_register_ui(const lua_register_state *pState)
 {
     // WindowBase
-    luaT_class(abstract_window, l_abstract_window_new, "windowHelpers", lua_metatable::window_base);
-    luaT_setfunction(l_town_map_draw, "townMapDraw", lua_metatable::map, lua_metatable::surface);
-    luaT_endclass();
+    lua_class_binding<abstract_window> lcb(pState, "windowHelpers", l_abstract_window_new, lua_metatable::window_base);
+    lcb.add_function(l_town_map_draw, "townMapDraw", lua_metatable::map, lua_metatable::surface);
 }

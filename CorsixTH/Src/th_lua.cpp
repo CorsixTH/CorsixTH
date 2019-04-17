@@ -271,9 +271,9 @@ int luaopen_th(lua_State *L)
 
     // Misc. functions
     lua_settop(L, oState.top);
-    luaT_setfunction(l_load_strings, "LoadStrings");
-    luaT_setfunction(l_get_compile_options, "GetCompileOptions");
-    luaT_setfunction(bootstrap_lua_resources, "GetBuiltinFont");
+    add_lua_function(pState, l_load_strings, "LoadStrings");
+    add_lua_function(pState, l_get_compile_options, "GetCompileOptions");
+    add_lua_function(pState, bootstrap_lua_resources, "GetBuiltinFont");
 
     // Classes
     lua_register_map(pState);

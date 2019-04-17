@@ -300,23 +300,25 @@ int l_soundfx_release_channel(lua_State *L)
 void lua_register_sound(const lua_register_state *pState)
 {
     // Sound Archive
-    luaT_class(sound_archive, l_soundarc_new, "soundArchive", lua_metatable::sound_archive);
-    luaT_setmetamethod(l_soundarc_count, "len");
-    luaT_setfunction(l_soundarc_load, "load");
-    luaT_setfunction(l_soundarc_sound_name, "getFilename"); // Bad name, doesn't represent a file
-    luaT_setfunction(l_soundarc_duration, "getDuration");
-    luaT_setfunction(l_soundarc_data, "getFileData"); // Bad name, doesn't represent a file
-    luaT_setfunction(l_soundarc_sound_exists, "soundExists");
-    luaT_endclass();
+    {
+        lua_class_binding<sound_archive> lcb(pState, "soundArchive", l_soundarc_new, lua_metatable::sound_archive);
+        lcb.add_metamethod(l_soundarc_count, "len");
+        lcb.add_function(l_soundarc_load, "load");
+        lcb.add_function(l_soundarc_sound_name, "getFilename"); // Bad name, doesn't represent a file
+        lcb.add_function(l_soundarc_duration, "getDuration");
+        lcb.add_function(l_soundarc_data, "getFileData"); // Bad name, doesn't represent a file
+        lcb.add_function(l_soundarc_sound_exists, "soundExists");
+    }
 
     // Sound Effects
-    luaT_class(sound_player, l_soundfx_new, "soundEffects", lua_metatable::sound_fx);
-    luaT_setfunction(l_soundfx_set_archive, "setSoundArchive", lua_metatable::sound_archive);
-    luaT_setfunction(l_soundfx_play, "play");
-    luaT_setfunction(l_soundfx_set_sound_volume, "setSoundVolume");
-    luaT_setfunction(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
-    luaT_setfunction(l_soundfx_set_camera, "setCamera");
-    luaT_setfunction(l_soundfx_reserve_channel, "reserveChannel");
-    luaT_setfunction(l_soundfx_release_channel, "releaseChannel");
-    luaT_endclass();
+    {
+        lua_class_binding<sound_player> lcb(pState, "soundEffects", l_soundfx_new, lua_metatable::sound_fx);
+        lcb.add_function(l_soundfx_set_archive, "setSoundArchive", lua_metatable::sound_archive);
+        lcb.add_function(l_soundfx_play, "play");
+        lcb.add_function(l_soundfx_set_sound_volume, "setSoundVolume");
+        lcb.add_function(l_soundfx_set_sound_effects_on, "setSoundEffectsOn");
+        lcb.add_function(l_soundfx_set_camera, "setCamera");
+        lcb.add_function(l_soundfx_reserve_channel, "reserveChannel");
+        lcb.add_function(l_soundfx_release_channel, "releaseChannel");
+    }
 }

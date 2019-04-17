@@ -137,18 +137,17 @@ int l_movie_deallocate_picture_buffer(lua_State *L)
 
 void lua_register_movie(const lua_register_state *pState)
 {
-    luaT_class(movie_player, l_movie_new, "moviePlayer", lua_metatable::movie);
-    luaT_setfunction(l_movie_set_renderer, "setRenderer", lua_metatable::surface);
-    luaT_setfunction(l_movie_enabled, "getEnabled");
-    luaT_setfunction(l_movie_load, "load");
-    luaT_setfunction(l_movie_unload, "unload");
-    luaT_setfunction(l_movie_play, "play");
-    luaT_setfunction(l_movie_stop, "stop");
-    luaT_setfunction(l_movie_get_native_height, "getNativeHeight");
-    luaT_setfunction(l_movie_get_native_width, "getNativeWidth");
-    luaT_setfunction(l_movie_has_audio_track, "hasAudioTrack");
-    luaT_setfunction(l_movie_refresh, "refresh");
-    luaT_setfunction(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
-    luaT_setfunction(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");
-    luaT_endclass();
+    lua_class_binding<movie_player> lcb(pState, "moviePlayer", l_movie_new, lua_metatable::movie);
+    lcb.add_function(l_movie_set_renderer, "setRenderer", lua_metatable::surface);
+    lcb.add_function(l_movie_enabled, "getEnabled");
+    lcb.add_function(l_movie_load, "load");
+    lcb.add_function(l_movie_unload, "unload");
+    lcb.add_function(l_movie_play, "play");
+    lcb.add_function(l_movie_stop, "stop");
+    lcb.add_function(l_movie_get_native_height, "getNativeHeight");
+    lcb.add_function(l_movie_get_native_width, "getNativeWidth");
+    lcb.add_function(l_movie_has_audio_track, "hasAudioTrack");
+    lcb.add_function(l_movie_refresh, "refresh");
+    lcb.add_function(l_movie_allocate_picture_buffer, "allocatePictureBuffer");
+    lcb.add_function(l_movie_deallocate_picture_buffer, "deallocatePictureBuffer");
 }
