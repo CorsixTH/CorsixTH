@@ -1289,7 +1289,7 @@ namespace {
 void merge_temperatures(map_tile& node, size_t new_temp_idx, int other_temp, double ratio)
 {
     const uint32_t node_temp = node.aiTemperature[new_temp_idx];
-    node.aiTemperature[new_temp_idx] = static_cast<uint16_t>(node_temp * ((ratio - 1) + other_temp) / ratio);
+    node.aiTemperature[new_temp_idx] = static_cast<uint16_t>(((node_temp * (ratio - 1)) + other_temp) / ratio);
 }
 
 } // namespace
