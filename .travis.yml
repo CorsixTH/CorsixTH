@@ -11,6 +11,7 @@ addons:
       - doxygen
       - g++-5
       - sshpass
+      - ant
 
 before_install:
   - luarocks --local install --server=http://luarocks.org luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/
