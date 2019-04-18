@@ -1,11 +1,10 @@
 sudo: false
-dist: trusty
+dist: xenial
 language: cpp
 compiler: gcc
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
     packages:
       - libssl-dev
       - luarocks
