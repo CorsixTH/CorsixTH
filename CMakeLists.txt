@@ -11,7 +11,7 @@
 #   - WITH_LIBAV   : Whether to use LibAV (as opposed to FFMEPG) when building movies
 #   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
 
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
