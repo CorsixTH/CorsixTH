@@ -9,7 +9,6 @@ addons:
       - libssl-dev
       - luarocks
       - doxygen
-      - g++-5
       - sshpass
       - ant
 
@@ -33,7 +32,7 @@ install:
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
   - cp $HOME/deps/travisci/cmake/FindFreetype.cmake CMake/FindFreetype.cmake
-  - cmake -DCMAKE_CXX_COMPILER="g++-5" -DLUA_PROGRAM_PATH=`which lua` -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DWITH_LUAJIT=OFF -DCMAKE_INCLUDE_PATH="$CMAKE_INCLUDE_PATH;$CMAKE_INCLUDE_PATH/SDL2" -DCMAKE_LIBRARY_PATH="$CMAKE_LIBRARY_PATH" -DLUA_LIBRARY="$CMAKE_LIBRARY_PATH/liblua.so" -Bfresh -H. --debug-output
+  - cmake -DLUA_PROGRAM_PATH=`which lua` -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DWITH_LUAJIT=OFF -DCMAKE_INCLUDE_PATH="$CMAKE_INCLUDE_PATH;$CMAKE_INCLUDE_PATH/SDL2" -DCMAKE_LIBRARY_PATH="$CMAKE_LIBRARY_PATH" -DLUA_LIBRARY="$CMAKE_LIBRARY_PATH/liblua.so" -Bfresh -H. --debug-output
 before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
