@@ -1696,7 +1696,7 @@ function Hospital:addStaff(staff)
   -- Cost of hiring staff:
   self:spendMoney(staff.profile.wage, _S.transactions.hire_staff .. ": " .. staff.profile.name)
   for _, patient in pairs(self.patients) do
-    patient:notifyOfStaff(staff)
+    patient:notifyOfStaffChange(staff)
   end
 end
 
@@ -1775,7 +1775,7 @@ function Hospital:removeStaff(staff)
   RemoveByValue(self.staff, staff)
   -- update all messages for waiting patients
   for _, patient in pairs(self.patients) do
-    patient:notifyOfStaff(nil)
+    patient:notifyOfStaffChange(staff)
   end
 end
 

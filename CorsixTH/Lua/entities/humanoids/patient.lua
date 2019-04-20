@@ -1095,7 +1095,7 @@ function Patient:updateMessage(choice)
         enabled = self.hospital:hasRoomOfType("research") and self.hospital:hasStaffOfCategory("Researcher")
         local output_text = strings.can_not_cure
         if #req.rooms == 1 then
-          local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[#req.rooms])
+          local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])
           if req.staff[required_staff] or 0 > 0 then
             output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
           else

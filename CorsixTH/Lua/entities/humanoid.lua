@@ -300,7 +300,7 @@ function Humanoid:Humanoid(...)
 
   self.build_callbacks  = {--[[set]]}
   self.remove_callbacks = {--[[set]]}
-  self.staff_callbacks = {--[[set]]}
+  self.staff_change_callbacks = {--[[set]]}
 end
 
 -- Save game compatibility
@@ -338,8 +338,8 @@ function Humanoid:afterLoad(old, new)
   if old < 83 and new >= 83 and self.humanoid_class == "Chewbacca Patient" then
     self.die_anims.extra_east = 1682
   end
-  if old < 133 then
-    self.staff_callbacks = {}
+  if old < 134 and new >= 134 then
+    self.staff_change_callbacks = {}
   end
 
   for _, action in pairs(self.action_queue) do
@@ -824,8 +824,8 @@ function Humanoid:notifyNewRoom(room)
   end
 end
 
-function Humanoid:notifyOfStaff(staff)
-  for callback, _ in pairs(self.staff_callbacks) do
+function Humanoid:notifyOfStaffChange(staff)
+  for callback, _ in pairs(self.staff_change_callbacks) do
     callback(staff)
   end
 end
@@ -853,22 +853,22 @@ function Humanoid:unregisterRoomRemoveCallback(callback)
 end
 
 
--- Registers a new staff callback for this humanoid.
+-- Registers a new staff change callback for this humanoid.
 --!param callback (function) The callback to call when a staff member has been hired or fired
-function Humanoid:registerStaffCallback(callback)
-  if self.staff_callbacks and not self.staff_callbacks[callback] then
-    self.staff_callbacks[callback] = true
+function Humanoid:registerStaffChangeCallback(callback)
+  if self.staff_change_callbacks and not self.staff_change_callbacks[callback] then
+    self.staff_change_callbacks[callback] = true
   else
     self.world:gameLog("Warning: Trying to re-add staff callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
   end
 end
 
--- Unregisters a remove callback for this humanoid.
+-- Unregisters a staff change callback for this humanoid.
 --!param callback (function) The callback to remove.
-function Humanoid:unregisterStaffCallback(callback)
+function Humanoid:unregisterStaffChangeCallback(callback)
 
-  if self.staff_callbacks and self.staff_callbacks[callback] then
-    self.staff_callbacks[callback] = nil
+  if self.staff_change_callbacks and self.staff_change_callbacks[callback] then
+    self.staff_change_callbacks[callback] = nil
   else
     self.world:gameLog("Warning: Trying to remove nonexistant staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
@@ -887,8 +887,8 @@ function Humanoid:unregisterCallbacks()
     self:unregisterRoomRemoveCallback(cb)
   end
   -- Remove callbacks for removed rooms
-  for cb, _ in pairs(self.staff_callbacks) do
-    self:unregisterStaffCallback(cb)
+  for cb, _ in pairs(self.staff_change_callbacks) do
+    self:unregisterStaffChangeCallback(cb)
   end
   -- Remove any message related to the humanoid.
   if self.message_callback then

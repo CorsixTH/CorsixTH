@@ -218,7 +218,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     humanoid:setDiagnosed()
     humanoid:unregisterRoomBuildCallback(action.build_callback)
     humanoid:unregisterRoomRemoveCallback(action.remove_callback)
-    humanoid:unregisterStaffCallback(action.staff_callback)
+    humanoid:unregisterStaffChangeCallback(action.staff_change_callback)
     if humanoid:agreesToPay(humanoid.disease.id) then
       humanoid:queueAction({
         name = "seek_room",
@@ -240,10 +240,10 @@ local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( functi
   --        the callback does not happen, meaning that the message does not disappear.
   humanoid:unregisterRoomBuildCallback(action.build_callback)
   humanoid:unregisterRoomRemoveCallback(action.remove_callback)
-  humanoid:unregisterStaffCallback(action.staff_callback)
+  humanoid:unregisterStaffChangeCallback(action.staff_change_callback)
   action.build_callback = nil
   action.remove_callback = nil
-  action.staff_callback = nil
+  action.staff_change_callback = nil
   action.done_init = false
   humanoid:finishAction()
 end)
@@ -299,32 +299,31 @@ local function action_seek_room_start(action, humanoid)
 
     local build_callback
 
-    local staff_callback
-    staff_callback = --[[persistable:action_seek_room_staff_callback]] function(staff)
+    local staff_change_callback
+    staff_change_callback = --[[persistable:action_seek_room_staff_change_callback]] function(staff)
       -- we might have hired or fired a staff member
       -- technically we don't care about Receptionist or Handyman
-      if staff then
-        if staff.humanoid_class == "Receptionist" or staff.humanoid_class == "Handyman" then
-          return
-        end
+      if staff.humanoid_class == "Receptionist" or staff.humanoid_class == "Handyman" then
+        return
       end
       -- update the message either way
       humanoid:updateMessage("research")
 
       local room_req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
-      if not room_req then
+      -- only need to check if we hired someone
+      if not staff.fired and not room_req then
         local room = action_seek_room_find_room(action, humanoid)
         if room then
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
-          humanoid:unregisterStaffCallback(staff_callback)
+          humanoid:unregisterStaffChangeCallback(staff_change_callback)
           action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
         end
       end
-    end -- End of staff_callback function
-    action.staff_callback = staff_callback
-    humanoid:registerStaffCallback(staff_callback)
+    end -- End of staff_change_callback function
+    action.staff_change_callback = staff_change_callback
+    humanoid:registerStaffChangeCallback(staff_change_callback)
 
     build_callback = --[[persistable:action_seek_room_build_callback]] function(rm)
       -- if research room was built, message may need to be updated
@@ -340,7 +339,7 @@ local function action_seek_room_start(action, humanoid)
         TheApp.ui.bottom_panel:removeMessage(humanoid)
         humanoid:unregisterRoomBuildCallback(build_callback)
         humanoid:unregisterRoomRemoveCallback(remove_callback)
-        humanoid:unregisterStaffCallback(staff_callback)
+        humanoid:unregisterStaffChangeCallback(staff_change_callback)
         action.room_type_needed = nil
         action_seek_room_start(action, humanoid)
       elseif not humanoid.diagnosed then
@@ -364,7 +363,7 @@ local function action_seek_room_start(action, humanoid)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
-          humanoid:unregisterStaffCallback(staff_callback)
+          humanoid:unregisterStaffChangeCallback(staff_change_callback)
         end
       end
     end -- End of build_callback function
