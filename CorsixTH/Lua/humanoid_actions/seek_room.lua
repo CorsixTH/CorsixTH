@@ -48,7 +48,7 @@ function SeekRoomAction:setDiagnosisRoom(room)
   return self
 end
 
-local function action_seek_room_find_room(action, humanoid)
+local action_seek_room_find_room = permanent"action_seek_room_find_room"( function(action, humanoid)
   local room_type = action.room_type
   if action.diagnosis_room then
     local tried_rooms = 0
@@ -97,7 +97,7 @@ local function action_seek_room_find_room(action, humanoid)
     end
   end
   return humanoid.world:findRoomNear(humanoid, room_type, nil, "advanced")
-end
+end)
 
 local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( function(room, humanoid, diagnosis_room)
   humanoid:setMood("patient_wait", "deactivate")
@@ -128,22 +128,33 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   humanoid.waiting = 60
   local strings = _S.fax.disease_discovered_patient_choice
   -- Can this room be built right now? What is then missing?
-  -- TODO: Change to make use of Hospital:checkDiseaseRequirements
+
   local output_text = strings.can_not_cure
   -- TODO: can we really assert this? Or should we just make the patient go home?
-  local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
+  --local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
 
-  local room_discovered = false
-  if humanoid.hospital.discovered_rooms[room] then
-    room_discovered = true
-    local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(room_type)
-    if humanoid.hospital:hasStaffOfCategory(required_staff) then
-      output_text = strings.need_to_build:format(room_name)
-    else
-      output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+  local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
+  local research_enabled = false
+  if req then
+    research_enabled = humanoid.hospital:hasRoomOfType("research") and humanoid.hospital:hasStaffOfCategory("Researcher")
+    if #req.rooms == 1 then
+      local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(req.rooms[1])
+      if req.staff[required_staff] or 0 > 0 then
+        output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+      else
+        output_text = strings.need_to_build:format(room_name)
+      end
+    elseif #req.rooms == 0 and next(req.staff) then
+      local staffclass_to_string = {
+          Nurse        = _S.staff_title.nurse,
+          Doctor       = _S.staff_title.doctor,
+          Surgeon      = _S.staff_title.surgeon,
+          Psychiatrist = _S.staff_title.psychiatrist,
+      }
+      output_text = strings.need_to_employ:format(staffclass_to_string[next(req.staff)])
     end
   end
-  local research_enabled = not room_discovered and humanoid.hospital:hasRoomOfType("research")
+
   local message = {
     {text = strings.disease_name:format(humanoid.disease.name)},
     {text = " "},
@@ -207,6 +218,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     humanoid:setDiagnosed()
     humanoid:unregisterRoomBuildCallback(action.build_callback)
     humanoid:unregisterRoomRemoveCallback(action.remove_callback)
+    humanoid:unregisterStaffChangeCallback(action.staff_change_callback)
     if humanoid:agreesToPay(humanoid.disease.id) then
       humanoid:queueAction({
         name = "seek_room",
@@ -228,8 +240,10 @@ local action_seek_room_interrupt = permanent"action_seek_room_interrupt"( functi
   --        the callback does not happen, meaning that the message does not disappear.
   humanoid:unregisterRoomBuildCallback(action.build_callback)
   humanoid:unregisterRoomRemoveCallback(action.remove_callback)
+  humanoid:unregisterStaffChangeCallback(action.staff_change_callback)
   action.build_callback = nil
   action.remove_callback = nil
+  action.staff_change_callback = nil
   action.done_init = false
   humanoid:finishAction()
 end)
@@ -246,115 +260,161 @@ local function action_seek_room_start(action, humanoid)
     return
   end
   -- Tries to find the room, if it is a diagnosis room, try to find any room in the diagnosis list.
-  local room = action_seek_room_find_room(action, humanoid)
+  if not humanoid.diagnosed or action.room_type == "research" then
+    local room = action_seek_room_find_room(action, humanoid)
+    -- if we have the room but not the staff we shouldn't seek out the room either
+    if room then
+      if humanoid.message then
+        TheApp.ui.bottom_panel:removeMessage(humanoid)
+      end
+      action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+      return
+    end
+  end
 
-  if room then
-    action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
-  else
-    if not action.done_init then
-      action.done_init = true
-      action.must_happen = true
+  -- check we can treat the patient - and just shortcut the processing
+  local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
+  if humanoid.diagnosed and not req then
+    local room = action_seek_room_find_room(action, humanoid)
+    -- if we have the room but not the staff we shouldn't seek out the room either
+    if room then
+      if humanoid.message then
+        TheApp.ui.bottom_panel:removeMessage(humanoid)
+      end
+      action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+      return
+    end
+  end
+  -- we can't yet treat the patient, register callbacks
+  -- create message etc
+  if not action.done_init then
+    action.done_init = true
+    action.must_happen = true
 
-      local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(rm)
-        if rm.room_info.id == "research" then
-          humanoid:updateMessage("research")
-        end
-      end -- End of remove_callback function
-      action.remove_callback = remove_callback
-      humanoid:registerRoomRemoveCallback(remove_callback)
+    local remove_callback = --[[persistable:action_seek_room_remove_callback]] function(rm)
+      humanoid:updateMessage("research")
+    end -- End of remove_callback function
+    action.remove_callback = remove_callback
+    humanoid:registerRoomRemoveCallback(remove_callback)
 
-      local build_callback
-      build_callback = --[[persistable:action_seek_room_build_callback]] function(rm)
-        -- if research room was built, message may need to be updated
-        if rm.room_info.id == "research" then
-          humanoid:updateMessage("research")
-        end
+    local build_callback
 
-        local found = false
-        if rm.room_info.id == action.room_type then
-          found = true
-        elseif rm.room_info.id == action.room_type_needed then
-          -- So the room that we're going to is not actually the room we waited for to be built.
-          -- Example: Will go to ward, but is waiting for the operating theatre.
-          -- Clean up and start over to find the room we actually want to go to.
+    local staff_change_callback
+    staff_change_callback = --[[persistable:action_seek_room_staff_change_callback]] function(staff)
+      -- we might have hired or fired a staff member
+      -- technically we don't care about Receptionist or Handyman
+      if staff.humanoid_class == "Receptionist" or staff.humanoid_class == "Handyman" then
+        return
+      end
+      -- update the message either way
+      humanoid:updateMessage("research")
+
+      local room_req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
+      -- only need to check if we hired someone
+      if not staff.fired and not room_req then
+        local room = action_seek_room_find_room(action, humanoid)
+        if room then
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
-          action.room_type_needed = nil
-          action_seek_room_start(action, humanoid)
-        elseif not humanoid.diagnosed then
-          -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
-          if action.room_type ~= "gp" then
-            for i = 1, #humanoid.available_diagnosis_rooms do
-              if humanoid.available_diagnosis_rooms[i].id == rm.room_info.id then
-                found = true
-              end
+          humanoid:unregisterStaffChangeCallback(staff_change_callback)
+          action_seek_room_goto_room(room, humanoid, action.diagnosis_room)
+        end
+      end
+    end -- End of staff_change_callback function
+    action.staff_change_callback = staff_change_callback
+    humanoid:registerStaffChangeCallback(staff_change_callback)
+
+    build_callback = --[[persistable:action_seek_room_build_callback]] function(rm)
+      -- if research room was built, message may need to be updated
+      humanoid:updateMessage("research")
+
+      local found = false
+      if rm.room_info.id == action.room_type then
+        found = true
+      elseif rm.room_info.id == action.room_type_needed then
+        -- So the room that we're going to is not actually the room we waited for to be built.
+        -- Example: Will go to ward, but is waiting for the operating theatre.
+        -- Clean up and start over to find the room we actually want to go to.
+        TheApp.ui.bottom_panel:removeMessage(humanoid)
+        humanoid:unregisterRoomBuildCallback(build_callback)
+        humanoid:unregisterRoomRemoveCallback(remove_callback)
+        humanoid:unregisterStaffChangeCallback(staff_change_callback)
+        action.room_type_needed = nil
+        action_seek_room_start(action, humanoid)
+      elseif not humanoid.diagnosed then
+        -- Waiting for a diagnosis room, we need to go through the list - unless it is gp
+        if action.room_type ~= "gp" then
+          for i = 1, #humanoid.available_diagnosis_rooms do
+            if humanoid.available_diagnosis_rooms[i].id == rm.room_info.id then
+              found = true
             end
           end
         end
-        if found then
-          -- Don't add a "go to room" action to the patient's queue if the
-          -- autopsy machine is about to kill them:
-          local current_room = humanoid:getRoom()
-          if not current_room or not (current_room.room_info.id == "research" and
-              current_room:getStaffMember() and
-              current_room:getStaffMember():getCurrentAction().name == "multi_use_object") then
-            action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
-          end
+      end
+      if found then
+        -- Don't add a "go to room" action to the patient's queue if the
+        -- autopsy machine is about to kill them:
+        -- don't need this as we unregistered all previous callbacks if we went to research
+        local room_req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
+        -- get required staff
+        if not room_req then
+          action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
           humanoid:unregisterRoomRemoveCallback(remove_callback)
+          humanoid:unregisterStaffChangeCallback(staff_change_callback)
         end
-      end -- End of build_callback function
-      action.build_callback = build_callback
-      humanoid:registerRoomBuildCallback(build_callback)
+      end
+    end -- End of build_callback function
+    action.build_callback = build_callback
+    humanoid:registerRoomBuildCallback(build_callback)
 
-      action.on_interrupt = action_seek_room_interrupt
-    end
+    action.on_interrupt = action_seek_room_interrupt
+  end
 
-    -- Things needed to get the patient to the correct room in due time are done. Now it's
-    -- time to let the player know about it too.
-    -- If done_walk is set the meander action that takes place after not finding any room has been
-    -- done = nothing more to do right now.
-    if not action.done_walk then
-      local action_still_valid = true
-      if not action.message_sent then
-        -- Make a message about that something needs to be done about this patient
-        if humanoid.diagnosed then
-          -- The patient is diagnosed, a treatment room is missing.
-          -- It may happen that it is another room in a series which is missing.
-          local room_to_find = action.room_type_needed and action.room_type_needed or action.room_type
-          action_seek_room_no_treatment_room_found(room_to_find, humanoid)
+  -- Things needed to get the patient to the correct room in due time are done. Now it's
+  -- time to let the player know about it too.
+  -- If done_walk is set the meander action that takes place after not finding any room has been
+  -- done = nothing more to do right now.
+  if not action.done_walk then
+    local action_still_valid = true
+    if not action.message_sent then
+      -- Make a message about that something needs to be done about this patient
+      if humanoid.diagnosed then
+        -- The patient is diagnosed, a treatment room is missing.
+        -- It may happen that it is another room in a series which is missing.
+        local room_to_find = action.room_type_needed and action.room_type_needed or action.room_type
+        action_seek_room_no_treatment_room_found(room_to_find, humanoid)
+      else
+        -- No more diagnosis rooms can be found
+        -- The GP's office is a special case. TODO: Make a custom message anyway?
+        if action.room_type == "gp" then
+          humanoid:setMood("patient_wait", "activate")
+          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
         else
-          -- No more diagnosis rooms can be found
-          -- The GP's office is a special case. TODO: Make a custom message anyway?
-          if action.room_type == "gp" then
-            humanoid:setMood("patient_wait", "activate")
-            humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_gp_available)
-          else
-            action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
-          end
+          action_still_valid = action_seek_room_no_diagnosis_room_found(action, humanoid)
         end
       end
-      if action_still_valid then
-        action.done_walk = true
-        humanoid:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
-      end
-    else
-      -- Make sure the patient stands in a correct way as he/she is waiting.
-      local direction = humanoid.last_move_direction
-      local anims = humanoid.walk_anims
-      if direction == "north" then
-        humanoid:setAnimation(anims.idle_north, 0)
-      elseif direction == "east" then
-        humanoid:setAnimation(anims.idle_east, 0)
-      elseif direction == "south" then
-        humanoid:setAnimation(anims.idle_east, 1)
-      elseif direction == "west" then
-        humanoid:setAnimation(anims.idle_north, 1)
-      end
-      humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y)
     end
+    if action_still_valid then
+      action.done_walk = true
+      humanoid:queueAction(MeanderAction():setCount(1):setMustHappen(true), 0)
+    end
+  else
+    -- Make sure the patient stands in a correct way as he/she is waiting.
+    local direction = humanoid.last_move_direction
+    local anims = humanoid.walk_anims
+    if direction == "north" then
+      humanoid:setAnimation(anims.idle_north, 0)
+    elseif direction == "east" then
+      humanoid:setAnimation(anims.idle_east, 0)
+    elseif direction == "south" then
+      humanoid:setAnimation(anims.idle_east, 1)
+    elseif direction == "west" then
+      humanoid:setAnimation(anims.idle_north, 1)
+    end
+    humanoid:setTilePositionSpeed(humanoid.tile_x, humanoid.tile_y)
   end
 end
 

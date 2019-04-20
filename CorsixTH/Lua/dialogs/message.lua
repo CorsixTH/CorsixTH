@@ -144,8 +144,10 @@ function UIMessage:removeMessage(choice_number)
       self.owner.message = nil
       self.owner.message_callback = nil
     end
-    self:onClose(false)
-    self.onClose = nil
+    if self.onClose then
+      self:onClose(false)
+      self.onClose = nil
+    end
     self:close()
   end
 end

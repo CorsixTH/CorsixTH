@@ -202,6 +202,7 @@ add_ignore("CorsixTH/Lua/humanoid_actions/multi_use_object.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/pickup.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/seek_reception.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/seek_reception.lua", "542")
+add_ignore("CorsixTH/Lua/humanoid_actions/seek_room.lua", "212")
 add_ignore("CorsixTH/Lua/humanoid_actions/staff_reception.lua", "113") -- ReceptionDesk does exist
 add_ignore("CorsixTH/Lua/humanoid_actions/use_object.lua", "542")
 add_ignore("CorsixTH/Lua/humanoid_actions/vaccinate.lua", "212")
