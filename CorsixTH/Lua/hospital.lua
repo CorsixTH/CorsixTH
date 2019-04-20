@@ -1695,9 +1695,7 @@ function Hospital:addStaff(staff)
   self.staff[#self.staff + 1] = staff
   -- Cost of hiring staff:
   self:spendMoney(staff.profile.wage, _S.transactions.hire_staff .. ": " .. staff.profile.name)
-  for _, patient in pairs(self.patients) do
-    patient:notifyOfStaffChange(staff)
-  end
+  self:notifyOfStaffChange(staff)
 end
 
 function Hospital:addPatient(patient)
@@ -1774,9 +1772,7 @@ end
 function Hospital:removeStaff(staff)
   RemoveByValue(self.staff, staff)
   -- update all messages for waiting patients
-  for _, patient in pairs(self.patients) do
-    patient:notifyOfStaffChange(staff)
-  end
+  self:notifyOfStaffChange(staff)
 end
 
 --! Remove a patient from the hospital.
@@ -2371,5 +2367,13 @@ function Hospital:computePriceLevelImpact(patient, casebook)
   elseif math.abs(price_distortion) <= 0.15 and math.random(1, 200) == 1 then
     -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
     self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+  end
+end
+
+--! Notify patients of a change to hospital staff members
+--!param staff (Staff) Changed staff member subject of notification
+function Hospital:notifyOfStaffChange(staff)
+  for _, patient in pairs(self.patients) do
+    patient:notifyOfStaffChange(staff)
   end
 end

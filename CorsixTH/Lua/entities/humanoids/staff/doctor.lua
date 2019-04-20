@@ -159,6 +159,8 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused ar
     local is = trait:match"^is_(.*)"
     if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
       self.world.ui.adviser:say(_A.information.promotion_to_specialist:format(_S.staff_title[is]))
+      -- patients might we waiting for a doctor with this skill, notify them
+      self.hospital:notifyOfStaffChange(self)
     end
     self:updateStaffTitle()
   end
