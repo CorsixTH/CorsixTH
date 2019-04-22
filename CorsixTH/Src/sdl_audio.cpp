@@ -30,6 +30,7 @@ SOFTWARE.
 #pragma comment(lib, "SDL2_mixer")
 #endif
 #include <cstring>
+#include <array>
 
 class music
 {
@@ -232,13 +233,13 @@ int l_transcode_xmi(lua_State *L)
     return 1;
 }
 
-const struct luaL_Reg sdl_audiolib[] = {
+constexpr std::array<struct luaL_Reg, 3> sdl_audiolib {{
     {"init", l_init},
     {"transcodeXmiToMid", l_transcode_xmi},
     {nullptr, nullptr}
-};
+}};
 
-const struct luaL_Reg sdl_musiclib[] = {
+constexpr std::array<struct luaL_Reg, 8> sdl_musiclib {{
     {"loadMusic", l_load_music},
     {"loadMusicAsync", l_load_music_async},
     {"playMusic", l_play_music},
@@ -247,7 +248,7 @@ const struct luaL_Reg sdl_musiclib[] = {
     {"resumeMusic", l_resume_music},
     {"setMusicVolume", l_music_volume},
     {nullptr, nullptr}
-};
+}};
 
 } // namespace
 
@@ -307,7 +308,7 @@ int l_load_music_async_callback(lua_State *L)
 int luaopen_sdl_audio(lua_State *L)
 {
     lua_newtable(L);
-    luaT_setfuncs(L, sdl_audiolib);
+    luaT_setfuncs(L, sdl_audiolib.data());
     lua_pushboolean(L, 1);
     lua_setfield(L, -2, "loaded");
 
@@ -320,7 +321,7 @@ int luaopen_sdl_audio(lua_State *L)
     lua_pushvalue(L, 1);
     lua_setfield(L, -2, "__index");
     lua_pop(L, 1);
-    luaT_setfuncs(L, sdl_musiclib);
+    luaT_setfuncs(L, sdl_musiclib.data());
 
     return 1;
 }

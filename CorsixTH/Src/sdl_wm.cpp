@@ -28,6 +28,7 @@ SOFTWARE.
 #include <SDL_syswm.h>
 #include "../resource.h"
 #endif
+#include <array>
 
 namespace {
 
@@ -61,18 +62,18 @@ int l_show_cursor(lua_State *L)
     return 0;
 }
 
-const struct luaL_Reg sdl_wmlib[] = {
+constexpr std::array<struct luaL_Reg, 3> sdl_wmlib {{
     {"setIconWin32", l_set_icon_win32},
     {"showCursor", l_show_cursor},
     {nullptr, nullptr}
-};
+}};
 
 } // namespace
 
 int luaopen_sdl_wm(lua_State *L)
 {
     lua_newtable(L);
-    luaT_setfuncs(L, sdl_wmlib);
+    luaT_setfuncs(L, sdl_wmlib.data());
 
     return 1;
 }
