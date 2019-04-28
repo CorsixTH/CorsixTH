@@ -405,6 +405,7 @@ function UICasebook:onTick()
   return UIFullscreen.onTick(self)
 end
 
-function UICasebook:afterLoad()
+function UICasebook:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

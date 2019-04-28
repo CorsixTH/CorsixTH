@@ -569,5 +569,6 @@ function UIStaffManagement:close()
 end
 
 function UIStaffManagement:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
