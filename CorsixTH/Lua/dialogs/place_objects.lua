@@ -86,7 +86,7 @@ function UIPlaceObjects:UIPlaceObjects(ui, object_list, pay_for)
 
   self:addObjects(object_list, pay_for)
   ui:setWorldHitTest(false)
-  self:registerKeyHandlers()
+  UIPlaceObjects.registerKeyHandlers(self)
 end
 
 function UIPlaceObjects:registerKeyHandlers()
@@ -829,5 +829,5 @@ function UIPlaceObjects:selectObjectType(object_type)
 end
 
 function UIPlaceObjects:afterLoad(_, _)
-  self:registerKeyHandlers()
+  UIPlaceObjects.registerKeyHandlers(self)
 end
