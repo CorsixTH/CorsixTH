@@ -151,5 +151,3 @@ private:
     static int filename_compare(const void* lhs, const void* rhs);
     static void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength);
 };
-
-int luaopen_iso_fs(lua_State *L);

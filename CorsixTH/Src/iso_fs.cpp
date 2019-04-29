@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "iso_fs.h"
+#include "th_lua_internal.h"
 #include <cstring>
 #include <cstdarg>
 #include <cstdlib>
@@ -560,50 +561,11 @@ int l_isofs_list_files(lua_State *L)
 
 } // namespace
 
-int luaopen_iso_fs(lua_State *L)
+void lua_register_iso_fs(const lua_register_state* pState)
 {
-    lua_settop(L, 1);
-    if(!lua_tostring(L, 1))
-    {
-        lua_pushliteral(L, "ISO_FS");
-        lua_replace(L, 1);
-    }
-
-    // Metatable
-    lua_createtable(L, 0, 2);
-    lua_pushvalue(L, -1);
-    lua_replace(L, luaT_environindex);
-
-    luaT_pushcclosure(L, luaT_stdgc<iso_filesystem, luaT_environindex>, 0);
-    lua_setfield(L, -2, "__gc");
-
-    // Methods table
-    luaT_pushcclosuretable(L, l_isofs_new, 0);
-    lua_pushvalue(L, -1);
-    lua_setfield(L, -3, "__index");
-
-    lua_pushcfunction(L, l_isofs_set_path_separator);
-    lua_setfield(L, -2, "setPathSeparator");
-
-    lua_getfield(L, LUA_REGISTRYINDEX, LUA_FILEHANDLE);
-    luaT_pushcclosure(L, l_isofs_set_root, 1);
-    lua_setfield(L, -2, "setRoot");
-
-    lua_pushcfunction(L, l_isofs_read_contents);
-    lua_setfield(L, -2, "readContents");
-
-    lua_pushcfunction(L, l_isofs_list_files);
-    lua_setfield(L, -2, "listFiles");
-
-    lua_pushvalue(L, 1);
-    lua_pushvalue(L, 2);
-#ifndef LUA_GLOBALSINDEX
-    lua_pushglobaltable(L);
-    lua_insert(L, -3);
-    lua_settable(L, -3);
-    lua_pop(L, 1);
-#else
-    lua_settable(L, LUA_GLOBALSINDEX);
-#endif
-    return 1;
+    lua_class_binding<iso_filesystem> lcb(pState, "iso_fs", l_isofs_new, lua_metatable::iso_fs);
+    lcb.add_function(l_isofs_set_path_separator, "setPathSeparator");
+    lcb.add_function(l_isofs_set_root, "setRoot");
+    lcb.add_function(l_isofs_read_contents, "readContents");
+    lcb.add_function(l_isofs_list_files, "listFiles");
 }

@@ -71,7 +71,6 @@ int lua_main_no_eval(lua_State *L)
     // will call the appropriate luaopen_X function in C.
     preload_lua_package(L, "rnc", luaopen_rnc);
     preload_lua_package(L, "TH", luaopen_th);
-    preload_lua_package(L, "ISO_FS", luaopen_iso_fs);
     preload_lua_package(L, "persist", luaopen_persist);
     preload_lua_package(L, "sdl", luaopen_sdl);
 
