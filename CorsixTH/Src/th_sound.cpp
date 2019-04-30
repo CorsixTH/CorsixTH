@@ -37,12 +37,37 @@ sound_archive::~sound_archive()
     delete[] data;
 }
 
+namespace {
+
+/**
+ * Convert 4 bytes representing uint32 in little endian representation into a
+ * uint32.
+ *
+ * @param bytes A pointer to the first of 4 sequential bytes in memory making
+ * up the uint32.
+ */
+uint32_t bytes_to_uint32_le(const uint8_t* bytes)
+{
+    uint32_t res = bytes[3];
+    res <<= 8;
+    res |= bytes[2];
+    res <<= 8;
+    res |= bytes[1];
+    res <<= 8;
+    res |= bytes[0];
+
+    return res;
+}
+
+} // namespace
+
 bool sound_archive::load_from_th_file(const uint8_t* pData, size_t iDataLength)
 {
     if(iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header))
         return false;
 
-    uint32_t iHeaderPosition = reinterpret_cast<const uint32_t*>(pData + iDataLength)[-1];
+    uint32_t iHeaderPosition = bytes_to_uint32_le(pData + iDataLength - sizeof(uint32_t));
+
     if(static_cast<size_t>(iHeaderPosition) >= iDataLength - sizeof(sound_dat_file_header))
         return false;
 
