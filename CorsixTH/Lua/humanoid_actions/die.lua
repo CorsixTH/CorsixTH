@@ -121,6 +121,10 @@ local action_die_tick_reaper; action_die_tick_reaper = permanent"action_die_tick
         grim_use_tile_y = hole_y + spawn_scenario[5]
         humanoid.hole_use_tile_x = hole_x + spawn_scenario[7]
         humanoid.hole_use_tile_y = hole_y + spawn_scenario[8]
+        -- tile can't be in a room
+        if humanoid.world:getRoom(humanoid.hole_use_tile_x, humanoid.hole_use_tile_y) then
+          return false
+        end
         --Ensure that the lava hole is passable on at least one of its sides to prevent it from blocking 1 tile wide corridors:
         humanoid.world.map:setCellFlags(hole_x, hole_y, {passable = false})
         local hole_has_passable_side = humanoid.world:getPathDistance(grim_use_tile_x, grim_use_tile_y, humanoid.hole_use_tile_x, humanoid.hole_use_tile_y) == 4
