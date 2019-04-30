@@ -99,5 +99,6 @@ function UIConfirmDialog:draw(canvas, x, y)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

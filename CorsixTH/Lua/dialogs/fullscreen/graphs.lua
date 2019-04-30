@@ -435,6 +435,7 @@ function UIGraphs:close()
 end
 
 function UIGraphs:afterLoad(old, new)
+  UIFullscreen.afterLoad(self, old, new)
   if old < 117 then
     self:close()
   end

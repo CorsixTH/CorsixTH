@@ -272,5 +272,6 @@ function UIHireStaff:close()
 end
 
 function UIHireStaff:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

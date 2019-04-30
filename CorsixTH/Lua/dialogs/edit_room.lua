@@ -1536,5 +1536,6 @@ function UIEditRoom:placeObject()
 end
 
 function UIEditRoom:afterLoad(old, new)
+  UIPlaceObjects.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

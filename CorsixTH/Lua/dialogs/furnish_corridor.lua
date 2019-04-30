@@ -238,5 +238,6 @@ function UIFurnishCorridor:onMouseMove(x, y, dx, dy)
 end
 
 function UIFurnishCorridor:afterLoad(old, new)
+  Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end
