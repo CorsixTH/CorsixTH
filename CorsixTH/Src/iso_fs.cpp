@@ -285,15 +285,16 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
         delete[] pBuffer;
         return;
     }
+
     uint8_t *pDirEnt = pBuffer;
-    for(; iDirEntsSize > 0; iDirEntsSize -= *pDirEnt, pDirEnt += *pDirEnt)
+    for(;;)
     {
         // There is zero padding so that no record spans multiple sectors.
-        if(*pDirEnt == 0)
-        {
-            --iDirEntsSize, ++pDirEnt;
-            continue;
+        while (*pDirEnt == 0 && iDirEntsSize > 0) {
+            --iDirEntsSize;
+            ++pDirEnt;
         }
+        if (iDirEntsSize <= 0) { break; }
 
         uint32_t iDataSector = read_native_int<uint32_t>(pDirEnt + file_sector_offset);
         uint32_t iDataLength = read_native_int<uint32_t>(pDirEnt + file_data_length_offset);
@@ -333,6 +334,9 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
             sPath = nullptr;
         }
         delete[] sPath;
+
+        iDirEntsSize -= *pDirEnt;
+        pDirEnt += *pDirEnt;
     }
     delete[] pBuffer;
 
@@ -359,26 +363,31 @@ iso_filesystem::file_metadata* iso_filesystem::allocate_file_record()
 }
 
 void iso_filesystem::visit_directory_files(const char* sPath,
-                             void (*fnCallback)(void*, const char*),
+                             void (*fnCallback)(void*, const char*, const char*),
                              void* pCallbackData) const
 {
     size_t iLen = std::strlen(sPath) + 1;
     std::vector<char> sNormedPath(iLen);
-    for(size_t i = 0; i < iLen; ++i)
+    for (size_t i = 0; i < iLen; ++i)
         sNormedPath[i] = normalise(sPath[i]);
 
     // Inefficient (better would be to binary search for first and last files
     // which begin with sPath), but who cares - this isn't called often
-    for(size_t i = 0; i < file_count; ++i)
+    for (size_t i = 0; i < file_count; ++i)
     {
         const char *sName = files[i].path;
-        if(std::strlen(sName) >= iLen && std::memcmp(sNormedPath.data(), sName, iLen - 1) == 0)
+        if (std::strlen(sName) >= iLen && std::memcmp(sNormedPath.data(), sName, iLen - 1) == 0)
         {
             sName += iLen - 1;
-            if(*sName == path_seperator)
+            if (*sName == path_seperator) {
                 ++sName;
-            if(std::strchr(sName, path_seperator) == nullptr)
-                fnCallback(pCallbackData, sName);
+            }
+            if (std::strchr(sName, path_seperator) == nullptr) {
+                std::string file_path(sPath);
+                file_path.push_back(path_seperator);
+                file_path.append(sName);
+                fnCallback(pCallbackData, sName, file_path.c_str());
+            }
         }
     }
 }
@@ -503,7 +512,7 @@ int l_isofs_set_path_separator(lua_State *L)
 int l_isofs_set_root(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
-    FILE *fIso = *luaT_testuserdata<FILE*>(L, 2);
+    FILE *fIso = *luaT_testuserdata<FILE*>(L, 2, false);
     if(pSelf->initialise(fIso))
     {
         lua_pushvalue(L, 2);
@@ -541,11 +550,11 @@ int l_isofs_read_contents(lua_State *L)
     return 1;
 }
 
-void l_isofs_list_files_callback(void *p, const char* s)
+void l_isofs_list_files_callback(void *p, const char* name, const char* path)
 {
     lua_State *L = reinterpret_cast<lua_State*>(p);
-    lua_pushstring(L, s);
-    lua_pushboolean(L, 1);
+    lua_pushstring(L, name);
+    lua_pushstring(L, path);
     lua_settable(L, 3);
 }
 

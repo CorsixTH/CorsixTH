@@ -99,8 +99,20 @@ function FileSystem:listFiles(virtual_path, ...)
   return self.files
 end
 
+local function getFullPath(virtual_path, ...)
+  if ... then
+    virtual_path = table.concat({virtual_path, ...}, pathsep)
+  end
+  return virtual_path
+end
+
 function FileSystem:readContents(virtual_path, ...)
-  local file, err = self:getFilePath(virtual_path, ...)
+  virtual_path = getFullPath(virtual_path, ...)
+  if self.provider then
+    return self.provider:readContents(virtual_path)
+  end
+
+  local file, err = self:getFilePath(virtual_path)
   if not file then
     return file, err
   end
@@ -114,9 +126,7 @@ function FileSystem:readContents(virtual_path, ...)
 end
 
 function FileSystem:getFilePath(virtual_path, ...)
-  if ... then
-    virtual_path = table.concat({virtual_path, ...}, pathsep)
-  end
+  virtual_path = getFullPath(virtual_path, ...)
   if self.provider then
     return self.provider:readContents(virtual_path)
   elseif not self.sub_dirs then

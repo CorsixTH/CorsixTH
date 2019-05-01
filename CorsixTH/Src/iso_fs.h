@@ -75,7 +75,7 @@ public:
         \param pCallbackData Opaque value to be called to fnCallback.
     */
     void visit_directory_files(const char* sPath,
-                             void (*fnCallback)(void*, const char*),
+                             void (*fnCallback)(void*, const char*, const char*),
                              void* pCallbackData) const;
 
     //! Test if a file handle from findFile() is good or is invalid

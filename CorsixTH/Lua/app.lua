@@ -1249,7 +1249,13 @@ function App:checkInstallFolder()
   -- Do a few more checks to make sure that commonly corrupted files are OK.
   local corrupt = {}
 
+  -- Check for file corruption for local files.
+  -- No check is done if the game is loaded from an ISO
   local function check_corrupt(path, correct_size)
+    if self.fs.provider then
+      return true
+    end
+
     local real_path = self.fs:getFilePath(path)
     -- If the file exists but is smaller than usual it is probably corrupt
     if real_path then
@@ -1318,6 +1324,7 @@ function App:readDataFile(dir, filename)
   if filename == nil then
     dir, filename = "Data", dir
   end
+
   local data = assert(self.fs:readContents(dir .. pathsep .. filename))
   if data:sub(1, 3) == "RNC" then
     data = assert(rnc.decompress(data))
