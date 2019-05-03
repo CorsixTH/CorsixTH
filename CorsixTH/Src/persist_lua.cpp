@@ -1305,7 +1305,7 @@ int l_persist_dofile(lua_State *L)
     lua_settop(L, 1);
 
     // Read entire file into memory
-    FILE *fFile = std::fopen(sFilename, "r");
+    std::FILE *fFile = std::fopen(sFilename, "r");
     if(fFile == nullptr)
     {
         const char *sError =std::strerror(errno);
