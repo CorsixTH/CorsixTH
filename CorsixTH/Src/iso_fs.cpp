@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "iso_fs.h"
 #include "th_lua_internal.h"
+#include "th.h"
 #include <cstring>
 #include <cstdarg>
 #include <cstdlib>
@@ -80,15 +81,6 @@ constexpr const char*  vblk_0_filename = "VBLK-0.TAB";
 /// size is 2048.
 constexpr size_t min_sector_size = 2048;
 
-template <class T> inline T read_native_int(const uint8_t *p)
-{
-    // ISO 9660 commonly encodes multi-byte integers as little endian followed
-    // by big endian. Note that the first byte of iEndianness will be a zero on
-    // little endian systems, and a one on big endian.
-    static const uint16_t iEndianness = 0x0100;
-    return reinterpret_cast<const T*>(p)[*reinterpret_cast<const uint8_t*>(&iEndianness)];
-}
-
 void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength)
 {
     for(uint8_t i = 0; i < iLength; ++i)
@@ -135,8 +127,8 @@ class iso_file_entry {
 public:
     iso_file_entry()=default;
     iso_file_entry(const uint8_t* b) {
-        data_sector = read_native_int<uint32_t>(b + file_sector_offset);
-        data_length = read_native_int<uint32_t>(b + file_data_length_offset);
+        data_sector = bytes_to_uint32_le(b + file_sector_offset);
+        data_length = bytes_to_uint32_le(b + file_data_length_offset);
         flags = b[file_flags_offset];
         uint8_t filename_length = b[filename_length_offset];
         trim_identifier_version(b + filename_offset, filename_length);
@@ -332,7 +324,7 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
         {
             if(aBuffer[0] == vdt_privary_volume)
             {
-                sector_size = read_native_int<uint16_t>(aBuffer + 128);
+                sector_size = bytes_to_uint16_le(aBuffer + 128);
                 find_hosp_directory(aBuffer + 156, 34, 0);
                 if(files.empty())
                 {
