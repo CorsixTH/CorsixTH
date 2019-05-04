@@ -47,7 +47,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:addPanel(357, 0, 0)  -- Dialog header
   local last_y = 22
   -- Rough estimate of how many rows it will be when drawn.
-  for y = 22, h * (w / 160) * 1.4, 11 do -- Previous value: 136
+  for y = 22, h * (w / 160) * 1.4, 11 do -- Previously changed to 160, but breaks quit dialog. Put back to 136
     self:addPanel(358, 0, y)  -- Dialog background
     self.height = self.height + 11
     last_y = last_y + 11
