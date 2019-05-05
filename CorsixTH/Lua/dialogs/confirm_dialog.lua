@@ -27,6 +27,10 @@ local UIConfirmDialog = _G["UIConfirmDialog"]
 function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
 
+  local topFrameIndex = 357;
+  local topFrameHeight = 22;
+  self:addPanel(topFrameIndex, 0, 0)  -- Dialog header
+
   local app = ui.app
   self.modal_class = "information"
   self.esc_closes = true
@@ -37,26 +41,35 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:setDefaultPosition(0.5, 0.5)
   self.panel_sprites = app.gfx:loadSpriteTable("QData", "Req04V", true)
   self.white_font = app.gfx:loadFont("QData", "Font01V")
-  self.text = text
   self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
+  self.text = text
 
-  -- Check how "high" the dialog must be
-  local w, h = self.white_font:sizeOf(text)
+  local maxLineLengthPixels = 152 -- this should come from somewhere else
 
-  self:addPanel(357, 0, 0)  -- Dialog header
-  local last_y = 22
-  -- Rough estimate of how many rows it will be when drawn.
-  for y = 22, h * (w / 160) * 1.4, 11 do -- Previous value: 136
+  -- Text is varable width, calculate it
+  local lineWidthPixels, textHeight = self.white_font:sizeOf(self.text)
+
+  -- This was previously hard coded to 11, but textHeight is actually 12, one less
+  -- But the graphics appear to be drawn to 13 - one more
+  local textRowHeight = textHeight + 1
+
+  -- Calculate how many text rows we need
+  -- Retail has a fixed size box - but existing behaviour is to calculate size of box
+  -- Leave this as it is
+  local totalLines = math.ceil(lineWidthPixels / maxLineLengthPixels)
+  --local totalLines = 9
+
+  local y = topFrameHeight;
+  for i=1, totalLines do
     self:addPanel(358, 0, y)  -- Dialog background
-    self.height = self.height + 11
-    last_y = last_y + 11
+	y = y + textRowHeight
   end
 
-  self:addPanel(359, 0, last_y)  -- Dialog footer
-  self:addPanel(360, 0, last_y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
+  self:addPanel(359, 0, y)  -- Dialog footer
+  self:addPanel(360, 0, y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
     :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
-  self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
+  self:addPanel(362, 90, y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:registerKeyHandlers()
