@@ -56,9 +56,9 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   local totalLines = math.ceil(lineWidthPixels / maxLineLengthPixels)
 
   local y = topFrameHeight;
-  for i=1, totalLines do
+  for _=1, totalLines do
     self:addPanel(358, 0, y)  -- Dialog background
-    y = topFrameHeight + (i * textRowHeight)
+    y = y + textRowHeight
   end
 
   self:addPanel(359, 0, y)  -- Dialog footer
