@@ -49,23 +49,16 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
 
   -- Text is varable width, calculate it
   local lineWidthPixels, textHeight = self.white_font:sizeOf(self.text)
-
-  -- This was previously hard coded to 11, but textHeight is actually 12, one less
-  -- But the graphics appear to be drawn to 13 - one more
   local textRowHeight = textHeight + 1
 
   -- Calculate how many text rows we need
-  -- Retail has a fixed size box - but existing behaviour is to calculate size of box
-  -- Leave this as it is
+  -- Retail has a fixed size box - but current behaviour is to calculate size of box
   local totalLines = math.ceil(lineWidthPixels / maxLineLengthPixels)
-  --local totalLines = 9
 
   local y = topFrameHeight;
-  local i=0
-  while (i < totalLines) do
+  for i=1, totalLines do
     self:addPanel(358, 0, y)  -- Dialog background
-	y = y + textRowHeight
-	i = i + 1
+    y = y + textRowHeight
   end
 
   self:addPanel(359, 0, y)  -- Dialog footer
