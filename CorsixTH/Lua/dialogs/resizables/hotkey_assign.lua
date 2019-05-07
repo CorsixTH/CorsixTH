@@ -952,7 +952,7 @@ function UIHotkeyAssign_storeRecallPos:UIHotkeyAssign_storeRecallPos(ui, mode)
   end
 
   -- Title
-  self:addBevelPanel(10, 10, 430, panel_height, col_caption):setLabel(_S.hotkey_window.caption_panels)
+  self:addBevelPanel(10, 10, 420, panel_height, col_caption):setLabel(_S.hotkey_window.panel_recallPosKeys)
 
   -- "Back" button
   self:addBevelPanel(10, 270, 420, 40, col_bg):setLabel(_S.hotkey_window.button_back)
