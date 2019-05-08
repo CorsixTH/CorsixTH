@@ -37,7 +37,7 @@ namespace {
 
 enum iso_volume_descriptor_type : uint8_t
 {
-    vdt_privary_volume = 0x01,
+    vdt_primary_volume = 0x01,
     // Other type numbers are either reserved for future use, or are not
     // interesting to us.
     vdt_terminator = 0xFF,
@@ -80,6 +80,19 @@ constexpr const char*  vblk_0_filename = "VBLK-0.TAB";
 /// Sector sizes can vary, but they must be powers of two, and the minimum
 /// size is 2048.
 constexpr size_t min_sector_size = 2048;
+
+/// Offset of the sector size from the primary volume descriptor
+constexpr size_t sector_size_offset = 128;
+
+/// Offset of the root directory entry from the primary volume descriptor
+constexpr ptrdiff_t root_directory_offset = 156;
+
+/// The root directory entry is a fixed size.
+constexpr size_t root_directory_entry_size = 34;
+
+/// ISO 9660 has a 32kb reserve area at the beginning of the file formal
+/// e.g. boot information.
+constexpr uint32_t first_filesystem_sector = 16;
 
 void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength)
 {
@@ -314,30 +327,25 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
 
     // The first 16 sectors are reserved for bootable media.
     // Volume descriptor records follow this, with one record per sector.
-    for(uint32_t iSector = 16; seek_to_sector(iSector); ++iSector)
-    {
-        uint8_t aBuffer[190];
-        if(!read_data(sizeof(aBuffer), aBuffer))
+    for(uint32_t iSector = first_filesystem_sector; seek_to_sector(iSector); ++iSector) {
+        uint8_t aBuffer[root_directory_offset + root_directory_entry_size];
+        if(!read_data(sizeof(aBuffer), aBuffer)) {
             break;
+        }
         // CD001 is a standard identifier, \x01 is a version number
-        if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0)
-        {
-            if(aBuffer[0] == vdt_privary_volume)
-            {
-                sector_size = bytes_to_uint16_le(aBuffer + 128);
-                find_hosp_directory(aBuffer + 156, 34, 0);
-                if(files.empty())
-                {
+        if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0) {
+            if(aBuffer[0] == vdt_primary_volume) {
+                sector_size = bytes_to_uint16_le(aBuffer + sector_size_offset);
+                find_hosp_directory(aBuffer + root_directory_offset, root_directory_entry_size, 0);
+                if(files.empty()) {
                     set_error("Could not find Theme Hospital data directory.");
                     return false;
-                }
-                else
-                {
+                } else {
                     return true;
                 }
-            }
-            else if(aBuffer[0] == vdt_terminator)
+            } else if(aBuffer[0] == vdt_terminator) {
                 break;
+            }
         }
     }
     set_error("Could not find primary volume descriptor.");
