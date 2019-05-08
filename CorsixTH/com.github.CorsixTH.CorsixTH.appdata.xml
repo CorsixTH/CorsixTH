@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2019 Artem Polishchuk <ego.cordatus@gmail.com> -->
+<component type="desktop">
+  <id>corsix-th.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <name>CorsixTH</name>
+  <summary>Open source clone of Theme Hospital</summary>
+  <description>
+    <p>CorsixTH aims to reimplement the game engine of Theme Hospital, and be able to load the original game data files. This means that you will need a purchased copy of Theme Hospital, or a copy of the demo, in order to use CorsixTH. After most of the original engine has been reimplemented in open source code, the project will serve as a base from which extensions and improvements to the original game can be made.</p>
+    <ul>
+      <li>To play CorsixTH, you will need either the Demo: https://th.corsix.org/Demo.zip</li>
+      <li>or the full game of Theme Hospital, available for example at: https://www.gog.com/game/theme_hospital</li>
+    </ul>
+  </description>
+  <provides>
+    <binary>corsix-th</binary>
+  </provides>
+  <releases>
+    <release version="0.63 Beta 1" date="2019-04-15">
+    </release>
+  </releases>
+  <screenshots>
+    <screenshot type="default">
+      <image>http://corsixth.com/wp-content/uploads/2016/04/screenshot9-1024x640.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>http://corsixth.com/wp-content/uploads/2016/04/screenshot0-1024x640.jpg</image>
+    </screenshot>
+    <screenshot>
+      <image>https://camo.githubusercontent.com/1b82352e0f0eac03a6927af7e9d7bbad8c380f93/687474703a2f2f692e696d6775722e636f6d2f714856363055692e706e67</image>
+    </screenshot>
+  </screenshots>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">intense</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">none</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
+  <developer_name>CorsixTH developers</developer_name>
+  <url type="homepage">http://corsixth.com</url>
+  <url type="bugtracker">https://github.com/CorsixTH/CorsixTH/issues</url>
+  <url type="translate">http://forums.corsixth.com/index.php/board,11.0.html</url>
+  <url type="help">https://github.com/CorsixTH/CorsixTH/wiki</url>
+</component>
