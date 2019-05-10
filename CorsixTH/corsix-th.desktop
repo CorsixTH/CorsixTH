@@ -1,8 +1,11 @@
 [Desktop Entry]
 Name=CorsixTH
-Comment=Open source clone of Theme Hospital
 Exec=corsix-th
+Comment=Open source clone of Theme Hospital
+Comment[de]=Ein Klon von Theme Hospital
 Icon=corsix-th
-Terminal=false
 Type=Application
-Categories=Game;StrategyGame;
+Terminal=false
+StartupNotify=false
+Categories=Game;Simulation;
+Keywords=hospital;simulation;bullfrog;
