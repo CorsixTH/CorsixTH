@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop">
-  <id>corsix-th.desktop</id>
+  <id>com.corsixth.CorsixTH.desktop</id>
   <!-- Copyright 2019 Artem Polishchuk <ego.cordatus@gmail.com> -->
   <metadata_license>CC0</metadata_license>
   <project_license>BSD-3-Clause AND MIT</project_license>
