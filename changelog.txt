@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.63-beta1 - released April 2019
+Version 0.63-rc1 - released May 2019
 -------------------------------------------------------------------------------
 # New Features
 * Game music now supports ogg, flac, wav, aiff, voc, and mod in addition to
@@ -27,6 +27,14 @@ Version 0.63-beta1 - released April 2019
 * Fix position of patients dragged in the room queue while a staff is waiting
   for the door, or a patient is waiting to leave.
 * Pathfinding has been improved.
+* Fix fax messages and options displayed in many circumstances.
+* Fix game error where lava hole is not accessible without entering a room.
+* Map fixes for many of the custom campaign levels.
+* Engine stability fixes.
+
+# Packaging
+* Appdata metainfo, desktop files, and a scalable icon are now included by
+  make install on XDG systems.
 
 -------------------------------------------------------------------------------
 Version 0.62 - released July 2018
