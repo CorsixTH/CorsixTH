@@ -24,7 +24,7 @@
     <binary>corsix-th</binary>
   </provides>
   <releases>
-    <release version="0.63-rc1" date="2019-05-11"></release>
+    <release version="0.63" date="2019-05-24"></release>
   </releases>
   <screenshots>
     <screenshot type="default">

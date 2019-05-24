@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.63-rc1 - released May 2019
+Version 0.63 - released May 2019
 -------------------------------------------------------------------------------
 # New Features
 * Game music now supports ogg, flac, wav, aiff, voc, and mod in addition to
