@@ -251,9 +251,9 @@ if(NOT USE_SOURCE_DATADIRS)
 
   if(UNIX AND NOT APPLE)
     install(FILES corsix-th.6 DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)
-    install(FILES com.corsixth.CorsixTH.appdata.xml DESTINATION ${CMAKE_INSTALL_DATADIR}/metainfo)
-    install(FILES com.corsixth.CorsixTH.desktop DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
-    install(FILES Original_Logo.svg DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps RENAME corsix-th.svg)
+    install(FILES com.corsixth.CorsixTH.appdata.xml DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo)
+    install(FILES com.corsixth.CorsixTH.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    install(FILES Original_Logo.svg DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps RENAME corsix-th.svg)
   endif()
 
   if(APPLE)
