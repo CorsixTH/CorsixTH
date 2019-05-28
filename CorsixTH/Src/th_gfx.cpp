@@ -292,12 +292,14 @@ bool animation_manager::load_from_th_file(
     return true;
 }
 
+namespace {
+
 //! Update \a iLeft with the smallest of both values.
 /*!
     @param [inout] iLeft Left value to check and update.
     @param iRight Second value to check.
  */
-static void set_left_to_min(int& iLeft, int iRight)
+void set_left_to_min(int& iLeft, int iRight)
 {
     if(iRight < iLeft)
         iLeft = iRight;
@@ -308,11 +310,13 @@ static void set_left_to_min(int& iLeft, int iRight)
     @param [inout] iLeft Left value to check and update.
     @param iRight Second value to check.
  */
-static void set_left_to_max(int& iLeft, int iRight)
+void set_left_to_max(int& iLeft, int iRight)
 {
     if(iRight > iLeft)
         iLeft = iRight;
 }
+
+} // namespace
 
 void animation_manager::set_bounding_box(frame &oFrame)
 {
@@ -345,12 +349,14 @@ void animation_manager::set_canvas(render_target *pCanvas)
     canvas = pCanvas;
 }
 
+namespace {
+
 //! Load the header.
 /*!
     @param [inout] input Data to read.
     @return Number of consumed bytes, a negative number indicates an error.
  */
-static int load_header(memory_reader &input)
+int load_header(memory_reader &input)
 {
     static const uint8_t aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
 
@@ -363,6 +369,8 @@ static int load_header(memory_reader &input)
     }
     return true;
 }
+
+} // namespace
 
 size_t animation_manager::load_elements(memory_reader &input, sprite_sheet *pSpriteSheet,
                                         size_t iNumElements, size_t &iLoadedElements,
@@ -430,6 +438,8 @@ size_t animation_manager::make_list_elements(size_t iFirstElement, size_t iNumEl
     return iFirst;
 }
 
+namespace {
+
 //! Shift the first frame if all frames are available.
 /*!
     @param iFirst First frame number, or 0xFFFFFFFFu if no animation.
@@ -438,13 +448,15 @@ size_t animation_manager::make_list_elements(size_t iFirstElement, size_t iNumEl
     @param iLoaded Number of loaded frames.
     @return The shifted first frame, or 0xFFFFFFFFu.
  */
-static uint32_t shift_first(uint32_t iFirst, size_t iLength,
+uint32_t shift_first(uint32_t iFirst, size_t iLength,
                             size_t iStart, size_t iLoaded)
 {
     if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded)
         return 0xFFFFFFFFu;
     return iFirst + static_cast<uint32_t>(iStart);
 }
+
+} // namespace
 
 void animation_manager::fix_next_frame(uint32_t iFirst, size_t iLength)
 {
@@ -1117,11 +1129,18 @@ void chunk_renderer::decode_chunks(const uint8_t* data, int datalen, bool comple
     chunk_finish(0xFF);
 }
 
-#define ARE_FLAGS_SET(val, flags) (((val) & (flags)) == (flags))
+namespace {
+
+bool are_flags_set(uint32_t val, uint32_t flags)
+{
+    return (val & flags) == flags;
+}
+
+} // namespace
 
 void animation::draw(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if(are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
 
     iDestX += x_relative_to_tile;
@@ -1157,9 +1176,9 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY)
 
 void animation::draw_child(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
-    if(ARE_FLAGS_SET(parent->flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(parent->flags, thdf_alpha_50 | thdf_alpha_75))
         return;
     int iX = 0, iY = 0;
     parent->get_marker(&iX, &iY);
@@ -1182,7 +1201,9 @@ bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY)
     return false;
 }
 
-static void CalculateMorphRect(const clip_rect& rcOriginal, clip_rect& rcMorph, int iYLow, int iYHigh)
+namespace {
+
+void CalculateMorphRect(const clip_rect& rcOriginal, clip_rect& rcMorph, int iYLow, int iYHigh)
 {
     rcMorph = rcOriginal;
     if(rcMorph.y < iYLow)
@@ -1196,9 +1217,11 @@ static void CalculateMorphRect(const clip_rect& rcOriginal, clip_rect& rcMorph, 
     }
 }
 
+} // namespace
+
 void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return;
 
     if(!manager)
@@ -1234,7 +1257,7 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
 
 bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return false;
     if(manager == nullptr)
         return false;
@@ -1244,7 +1267,7 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY)
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if(ARE_FLAGS_SET(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
         return false;
     if(manager == nullptr)
         return false;
@@ -1253,39 +1276,38 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY)
         iDestX, iDestY, iTestX, iTestY);
 }
 
-#undef ARE_FLAGS_SET
-
-static bool THAnimation_hit_test_child(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
+namespace {
+bool THAnimation_hit_test_child(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
     return reinterpret_cast<animation*>(pSelf)->hit_test_child(iDestX, iDestY, iTestX, iTestY);
 }
 
-static void THAnimation_draw_child(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
+void THAnimation_draw_child(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
 {
     reinterpret_cast<animation*>(pSelf)->draw_child(pCanvas, iDestX, iDestY);
 }
 
-static bool THAnimation_hit_test_morph(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
+bool THAnimation_hit_test_morph(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
     return reinterpret_cast<animation*>(pSelf)->hit_test_morph(iDestX, iDestY, iTestX, iTestY);
 }
 
-static void THAnimation_draw_morph(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
+void THAnimation_draw_morph(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
 {
     reinterpret_cast<animation*>(pSelf)->draw_morph(pCanvas, iDestX, iDestY);
 }
 
-static bool THAnimation_hit_test(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
+bool THAnimation_hit_test(drawable* pSelf, int iDestX, int iDestY, int iTestX, int iTestY)
 {
     return reinterpret_cast<animation*>(pSelf)->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
-static void THAnimation_draw(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
+void THAnimation_draw(drawable* pSelf, render_target* pCanvas, int iDestX, int iDestY)
 {
     reinterpret_cast<animation*>(pSelf)->draw(pCanvas, iDestX, iDestY);
 }
 
-static bool THAnimation_is_multiple_frame_animation(drawable* pSelf)
+bool THAnimation_is_multiple_frame_animation(drawable* pSelf)
 {
     animation *pAnimation = reinterpret_cast<animation *>(pSelf);
     if(pAnimation)
@@ -1298,6 +1320,8 @@ static bool THAnimation_is_multiple_frame_animation(drawable* pSelf)
         return false;
 
 }
+
+} // namespace
 
 animation_base::animation_base()
 {
@@ -1335,14 +1359,12 @@ void animation::persist(lua_persist_writer *pWriter) const
 
     // Write the drawable fields
     pWriter->write_uint(flags);
-#define IS_USING_FUNCTION_SET(d, ht) draw_fn == (THAnimation_ ## d) \
-                            && hit_test_fn == (THAnimation_ ## ht)
 
-    if(IS_USING_FUNCTION_SET(draw, hit_test))
+    if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test)
         pWriter->write_uint(1);
-    else if(IS_USING_FUNCTION_SET(draw_child, hit_test_child))
+    else if (draw_fn == THAnimation_draw_child && hit_test_fn == THAnimation_hit_test_child)
         pWriter->write_uint(2);
-    else if(IS_USING_FUNCTION_SET(draw_morph, hit_test_morph))
+    else if(draw_fn == THAnimation_draw_morph && hit_test_fn == THAnimation_hit_test_morph)
     {
         // NB: Prior version of code used the number 3 here, and forgot
         // to persist the morph target.
@@ -1355,8 +1377,6 @@ void animation::persist(lua_persist_writer *pWriter) const
     }
     else
         pWriter->write_uint(0);
-
-#undef IS_USING_FUNCTION_SET
 
     // Write the simple fields
     pWriter->write_uint(animation_index);
@@ -1547,12 +1567,10 @@ void animation_base::attach_to_tile(map_tile *pMapNode, int layer)
 
     this->set_drawing_layer(layer);
 
-#define GetFlags(x) (reinterpret_cast<drawable*>(x)->m_iFlags)
     while(pList->next && pList->next->get_drawing_layer() < layer)
     {
         pList = pList->next;
     }
-#undef GetFlags
 
     prev = pList;
     if(pList->next != nullptr)
@@ -1624,7 +1642,9 @@ bool animation::get_secondary_marker(int* pX, int* pY)
     return true;
 }
 
-static int GetAnimationDurationAndExtent(animation_manager *pManager,
+namespace {
+
+int GetAnimationDurationAndExtent(animation_manager *pManager,
                                          size_t iFrame,
                                          const ::layers& oLayers,
                                          int* pMinY, int* pMaxY,
@@ -1653,6 +1673,8 @@ static int GetAnimationDurationAndExtent(animation_manager *pManager,
     return iDuration;
 }
 
+} // namespace
+
 void animation::set_morph_target(animation *pMorphTarget, unsigned int iDurationFactor)
 {
     morph_target = pMorphTarget;
@@ -1679,16 +1701,14 @@ void animation::set_morph_target(animation *pMorphTarget, unsigned int iDuration
     int iOrigMinY, iOrigMaxY;
     int iMorphMinY, iMorphMaxY;
 
-#define GADEA GetAnimationDurationAndExtent
-    int iOriginalDuration = GADEA(manager, frame_index, layers, &iOrigMinY,
+    int iOriginalDuration = GetAnimationDurationAndExtent(manager, frame_index, layers, &iOrigMinY,
                                   &iOrigMaxY, flags);
-    int iMorphDuration = GADEA(morph_target->manager,
+    int iMorphDuration = GetAnimationDurationAndExtent(morph_target->manager,
                                morph_target->frame_index,
                                morph_target->layers, &iMorphMinY,
                                &iMorphMaxY, morph_target->flags);
     if(iMorphDuration > iOriginalDuration)
         iMorphDuration = iOriginalDuration;
-#undef GADEA
 
     iMorphDuration *= iDurationFactor;
     if(iOrigMinY < iMorphMinY)
@@ -1719,24 +1739,29 @@ void animation_base::set_layer(int iLayer, int iId)
     }
 }
 
-static bool THSpriteRenderList_hit_test(drawable* pSelf, int iDestX,
+namespace {
+
+bool THSpriteRenderList_hit_test(drawable* pSelf, int iDestX,
                                        int iDestY, int iTestX, int iTestY)
 {
     return reinterpret_cast<sprite_render_list*>(pSelf)->
         hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
-static void THSpriteRenderList_draw(drawable* pSelf, render_target* pCanvas,
+void THSpriteRenderList_draw(drawable* pSelf, render_target* pCanvas,
                                     int iDestX, int iDestY)
 {
     reinterpret_cast<sprite_render_list*>(pSelf)->
         draw(pCanvas, iDestX, iDestY);
 }
 
-static bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf)
+bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf)
 {
     return false;
 }
+
+} // namespace
+
 sprite_render_list::sprite_render_list()
 {
     draw_fn = THSpriteRenderList_draw;

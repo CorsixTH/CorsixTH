@@ -32,12 +32,22 @@ int luaopen_random(lua_State *L);
 #include "iso_fs.h"
 #include <cstring>
 #include <cstdio>
+#include <string>
 
 // Config file checking
 #ifndef CORSIX_TH_USE_PACK_PRAGMAS
 #error "config.h is out of date - please rerun CMake"
 #endif
 // End of config file checking
+
+namespace {
+
+inline void preload_lua_package(lua_State *L, const char* name, lua_CFunction fn)
+{
+    luaT_execute(L, std::string("package.preload.").append(name).append(" = ...").c_str(), fn);
+}
+
+} // namespace
 
 int lua_main_no_eval(lua_State *L)
 {
@@ -59,14 +69,11 @@ int lua_main_no_eval(lua_State *L)
 
     // Fill in package.preload table so that calls to require("X") from Lua
     // will call the appropriate luaopen_X function in C.
-#define PRELOAD(name, fn) \
-    luaT_execute(L, "package.preload." name " = ...", fn)
-    PRELOAD("rnc", luaopen_rnc);
-    PRELOAD("TH", luaopen_th);
-    PRELOAD("ISO_FS", luaopen_iso_fs);
-    PRELOAD("persist", luaopen_persist);
-    PRELOAD("sdl", luaopen_sdl);
-#undef PRELOAD
+    preload_lua_package(L, "rnc", luaopen_rnc);
+    preload_lua_package(L, "TH", luaopen_th);
+    preload_lua_package(L, "ISO_FS", luaopen_iso_fs);
+    preload_lua_package(L, "persist", luaopen_persist);
+    preload_lua_package(L, "sdl", luaopen_sdl);
 
     // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatbility)
     luaT_execute(L, "require \"debug\"");

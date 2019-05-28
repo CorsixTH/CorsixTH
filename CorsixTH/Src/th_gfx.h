@@ -87,7 +87,7 @@ enum draw_flags : uint32_t
     thdf_crop = 1 << 13,
 };
 
-/** Helper structure with parameters to create a #THRenderTarget. */
+/** Helper structure with parameters to create a #render_target. */
 struct render_target_creation_params
 {
     int width;              ///< Expected width of the render target.

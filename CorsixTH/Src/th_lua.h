@@ -45,7 +45,8 @@ inline int luaT_upvalueindex(int i)
 #endif
 }
 
-inline void luaT_register(lua_State *L, const char *n, const std::vector<luaL_Reg> &l)
+template<class Collection>
+inline void luaT_register(lua_State *L, const char *n, Collection &l)
 {
 #if LUA_VERSION_NUM >= 502
     lua_createtable(L, 0, static_cast<int>(l.size()));
@@ -120,13 +121,17 @@ inline int luaT_resume(lua_State *L, lua_State *f, int n)
 //! Version of operator new which allocates into a Lua userdata
 /*!
     If a specific constructor of T is required, then call like:
-      T* variable = luaT_new(L, T)(constructor arguments);
+      T* variable = luaT_new<T>(L, constructor arguments);
     If the default constructor is wanted, it can be called like:
-      T* variable = luaT_new(L, T);
+      T* variable = luaT_new<T>(L);
     See also luaT_stdnew() which allocates, and also sets up the environment
     table and metatable for the userdata.
 */
-#define luaT_new(L, T) new ((T*)lua_newuserdata(L, sizeof(T))) T
+template<typename T, typename ...Ts>
+T* luaT_new(lua_State* L, Ts ...args)
+{
+    return new (lua_newuserdata(L, sizeof(T))) T(args...);
+}
 
 //! Check that a Lua argument is a binary data blob
 /*!
@@ -157,7 +162,7 @@ void luaT_getenvfield(lua_State *L, int index, const char *k);
 template <class T>
 inline T* luaT_stdnew(lua_State *L, int mt_idx = luaT_environindex, bool env = false)
 {
-    T* p = luaT_new(L, T);
+    T* p = luaT_new<T>(L);
     lua_pushvalue(L, mt_idx);
     lua_setmetatable(L, -2);
     if(env)
@@ -292,7 +297,7 @@ template <> struct luaT_classinfo<FILE*> {
 };
 
 template <class T>
-static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
+T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = true)
 {
     // Turn mt_idx into an absolute index, as the stack size changes.
     if(mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
@@ -326,7 +331,7 @@ static T* luaT_testuserdata(lua_State *L, int idx, int mt_idx, bool required = t
 }
 
 template <class T>
-static T* luaT_testuserdata(lua_State *L, int idx = 1)
+T* luaT_testuserdata(lua_State *L, int idx = 1)
 {
     int iMetaIndex = luaT_environindex;
     if(idx > 1)
@@ -335,7 +340,7 @@ static T* luaT_testuserdata(lua_State *L, int idx = 1)
 }
 
 template <class T, int mt>
-static int luaT_stdgc(lua_State *L)
+int luaT_stdgc(lua_State *L)
 {
     T* p = luaT_testuserdata<T>(L, 1, mt, false);
     if(p != nullptr)
@@ -353,7 +358,7 @@ void luaT_push(lua_State *L, int i);
 void luaT_push(lua_State *L, const char* s);
 
 template <class T>
-static void luaT_execute(lua_State *L, const char* sLuaString, T arg)
+void luaT_execute(lua_State *L, const char* sLuaString, T arg)
 {
     luaT_execute_loadstring(L, sLuaString);
     luaT_push(L, arg);
@@ -361,7 +366,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString, T arg)
 }
 
 template <class T1, class T2>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2)
 {
     luaT_execute_loadstring(L, sLuaString);
@@ -371,7 +376,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
 }
 
 template <class T1, class T2, class T3>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2, T3 arg3)
 {
     luaT_execute_loadstring(L, sLuaString);
@@ -382,7 +387,7 @@ static void luaT_execute(lua_State *L, const char* sLuaString,
 }
 
 template <class T1, class T2, class T3, class T4>
-static void luaT_execute(lua_State *L, const char* sLuaString,
+void luaT_execute(lua_State *L, const char* sLuaString,
                          T1 arg1, T2 arg2, T3 arg3, T4 arg4)
 {
     luaT_execute_loadstring(L, sLuaString);

@@ -53,18 +53,20 @@ SOFTWARE.
 
 class string_proxy {};
 
+namespace {
+
 // We need 2 lightuserdata keys for naming the weak tables in the registry,
 // which we get by having 2 bytes of dummy global variables.
-static uint8_t weak_table_keys[2] = {0};
+uint8_t weak_table_keys[2] = {0};
 
-static inline void aux_push_weak_table(lua_State *L, int iIndex)
+inline void aux_push_weak_table(lua_State *L, int iIndex)
 {
     lua_pushlightuserdata(L, &weak_table_keys[iIndex]);
     lua_rawget(L, LUA_REGISTRYINDEX);
 }
 
 // Replace the value at the top of the stack with a userdata proxy
-static int l_str_new_aux(lua_State *L)
+int l_str_new_aux(lua_State *L)
 {
     luaT_stdnew<string_proxy>(L);
     aux_push_weak_table(L, 0);
@@ -77,7 +79,7 @@ static int l_str_new_aux(lua_State *L)
 }
 
 // Create a new root-level userdata proxy
-static int l_str_new(lua_State *L)
+int l_str_new(lua_State *L)
 {
     // Pack extra arguments into a table
     int iNArgs = lua_gettop(L);
@@ -97,7 +99,7 @@ static int l_str_new(lua_State *L)
 }
 
 // Helper function to make an array in Lua
-static void aux_mk_table(lua_State *L, int nliterals, int nvalues, ...)
+void aux_mk_table(lua_State *L, int nliterals, int nvalues, ...)
 {
     lua_createtable(L, nliterals + nvalues, 0);
     va_list args;
@@ -121,7 +123,7 @@ static void aux_mk_table(lua_State *L, int nliterals, int nvalues, ...)
 
 // Helper function which pushes onto the stack a random key from the table
 // (previously) on the top of the stack.
-static void aux_push_random_key(lua_State *L)
+void aux_push_random_key(lua_State *L)
 {
     int iNKeys = 0;
     lua_newtable(L);
@@ -155,7 +157,7 @@ static void aux_push_random_key(lua_State *L)
 // __index metamethod handler.
 // For proxied tables, return proxies of children, preferably cached
 // For proxied strings, return methods
-static int l_str_index(lua_State *L)
+int l_str_index(lua_State *L)
 {
     // Look up cached value, and return it if present
     aux_push_weak_table(L, 1);
@@ -215,14 +217,14 @@ static int l_str_index(lua_State *L)
 }
 
 // __newindex metamethod handler
-static int l_str_newindex(lua_State *L)
+int l_str_newindex(lua_State *L)
 {
     return luaL_error(L, "String tables are read-only");
 }
 
 // Generic string method handler
 // The name of the method is stored at upvalue 1
-static int l_str_func(lua_State *L)
+int l_str_func(lua_State *L)
 {
     int iArgCount = lua_gettop(L);
     lua_checkstack(L, iArgCount + 10);
@@ -268,7 +270,7 @@ static int l_str_func(lua_State *L)
 
 // __concat metamethod handler
 // Simple (but inefficient) handling by converting concat into format
-static int l_str_concat(lua_State *L)
+int l_str_concat(lua_State *L)
 {
     int iParent = (lua_type(L, 1) == LUA_TUSERDATA) ? 1 : 2;
     lua_getfield(L, iParent, "format");
@@ -280,7 +282,7 @@ static int l_str_concat(lua_State *L)
 }
 
 // pairs() metamethod handler
-static int l_str_pairs(lua_State *L)
+int l_str_pairs(lua_State *L)
 {
     lua_settop(L, 1);
     lua_getfield(L, luaT_environindex, "__next");
@@ -290,7 +292,7 @@ static int l_str_pairs(lua_State *L)
 }
 
 // ipairs() metamethod handler
-static int l_str_ipairs(lua_State *L)
+int l_str_ipairs(lua_State *L)
 {
     lua_settop(L, 1);
     lua_getfield(L, luaT_environindex, "__inext");
@@ -300,7 +302,7 @@ static int l_str_ipairs(lua_State *L)
 }
 
 // pairs() iterator function
-static int l_str_next(lua_State *L)
+int l_str_next(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
     lua_settop(L, 2);
@@ -330,7 +332,7 @@ static int l_str_next(lua_State *L)
 }
 
 // __len metamethod handler
-static int l_str_len(lua_State *L)
+int l_str_len(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
 
@@ -354,7 +356,7 @@ static int l_str_len(lua_State *L)
 }
 
 // ipairs() iterator function
-static int l_str_inext(lua_State *L)
+int l_str_inext(lua_State *L)
 {
     lua_Integer n = luaL_checkinteger(L, 2) + 1;
     lua_settop(L, 1);
@@ -377,7 +379,7 @@ static int l_str_inext(lua_State *L)
 }
 
 // tostring() metamethod handler for debugging / diagnostics
-static int l_str_tostring(lua_State *L)
+int l_str_tostring(lua_State *L)
 {
     // Convert the proxy to a string, recursively calling tostring()
     lua_settop(L, 1);
@@ -404,7 +406,7 @@ static int l_str_tostring(lua_State *L)
 
 // __call metamethod handler
 // Required to support the compatibility hack for calling _S
-static int l_str_call(lua_State *L)
+int l_str_call(lua_State *L)
 {
     luaL_checkany(L, 1);
 
@@ -425,7 +427,7 @@ static int l_str_call(lua_State *L)
 // to create nice user-interface listing of strings. Note that this will mean
 // that persist->change language->depersist will result in a "random" ordering
 // of the resulting list, but this is generally acceptable.
-static int l_str_lt(lua_State *L)
+int l_str_lt(lua_State *L)
 {
     luaL_checkany(L, 1);
     luaL_checkany(L, 2);
@@ -440,7 +442,7 @@ static int l_str_lt(lua_State *L)
 }
 
 // __persist metamethod handler
-static int l_str_persist(lua_State *L)
+int l_str_persist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
@@ -466,7 +468,7 @@ static int l_str_persist(lua_State *L)
 }
 
 // __depersist metamethod handler
-static int l_str_depersist(lua_State *L)
+int l_str_depersist(lua_State *L)
 {
     lua_settop(L, 2);
     lua_insert(L, 1);
@@ -550,21 +552,7 @@ static int l_str_depersist(lua_State *L)
     return 0;
 }
 
-const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength)
-{
-    if(lua_isuserdata(L, idx))
-    {
-        aux_push_weak_table(L, 0);
-        bool bRel = (0 > idx && idx > LUA_REGISTRYINDEX);
-        lua_pushvalue(L, bRel ? (idx - 1) : idx);
-        lua_rawget(L, -2);
-        lua_replace(L, bRel ? (idx - 2) : idx);
-        lua_pop(L, 1);
-    }
-    return luaL_checklstring(L, idx, pLength);
-}
-
-static int l_str_reload_actual(lua_State *L)
+int l_str_reload_actual(lua_State *L)
 {
     // Reload a single string proxy
     // Stack: reload_cache proxy_to_reload <top
@@ -631,7 +619,7 @@ static int l_str_reload_actual(lua_State *L)
     return 1;
 }
 
-static int l_str_unwrap(lua_State *L)
+int l_str_unwrap(lua_State *L)
 {
     luaL_checkany(L, 1);
     lua_settop(L, 1);
@@ -650,7 +638,7 @@ static int l_str_unwrap(lua_State *L)
     return 2;
 }
 
-static int l_str_reload(lua_State *L)
+int l_str_reload(lua_State *L)
 {
     // The first argument should be the old root object, second argument the
     // new one.
@@ -684,7 +672,7 @@ static int l_str_reload(lua_State *L)
     return 0;
 }
 
-static int l_mk_cache(lua_State *L)
+int l_mk_cache(lua_State *L)
 {
     lua_newtable(L);
     lua_pushvalue(L, luaT_upvalueindex(1));
@@ -693,6 +681,22 @@ static int l_mk_cache(lua_State *L)
     lua_pushvalue(L, 3);
     lua_settable(L, 1);
     return 1;
+}
+
+} // namespace
+
+const char* luaT_checkstring(lua_State *L, int idx, size_t* pLength)
+{
+    if(lua_isuserdata(L, idx))
+    {
+        aux_push_weak_table(L, 0);
+        bool bRel = (0 > idx && idx > LUA_REGISTRYINDEX);
+        lua_pushvalue(L, bRel ? (idx - 1) : idx);
+        lua_rawget(L, -2);
+        lua_replace(L, bRel ? (idx - 2) : idx);
+        lua_pop(L, 1);
+    }
+    return luaL_checklstring(L, idx, pLength);
 }
 
 void lua_register_strings(const lua_register_state *pState)
@@ -728,29 +732,28 @@ void lua_register_strings(const lua_register_state *pState)
     lua_rawget(L, LUA_REGISTRYINDEX);
     lua_rawset(L, LUA_REGISTRYINDEX);
 
-    luaT_class(string_proxy, l_str_new, "stringProxy", lua_metatable::string_proxy);
+    lua_class_binding<string_proxy> lcb(pState, "stringProxy", l_str_new, lua_metatable::string_proxy);
     // As we overwrite __index, move methods to lua_metatable::string_proxy[4]
     lua_getfield(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], "__index");
     lua_rawseti(L, pState->metatables[static_cast<size_t>(lua_metatable::string_proxy)], 4);
-    luaT_setmetamethod(l_str_index, "index");
-    luaT_setmetamethod(l_str_newindex, "newindex");
-    luaT_setmetamethod(l_str_concat, "concat");
-    luaT_setmetamethod(l_str_len, "len");
-    luaT_setmetamethod(l_str_tostring, "tostring");
-    luaT_setmetamethod(l_str_persist, "persist");
-    luaT_setmetamethod(l_str_depersist, "depersist");
-    luaT_setmetamethod(l_str_call, "call");
-    luaT_setmetamethod(l_str_lt, "lt");
-    luaT_setmetamethod(l_str_pairs, "pairs");
-    luaT_setmetamethod(l_str_ipairs, "ipairs");
-    luaT_setmetamethod(l_str_next, "next");
-    luaT_setmetamethod(l_str_inext, "inext");
-    luaT_setfunction(l_str_func, "format", "format");
-    luaT_setfunction(l_str_func, "lower", "lower");
-    luaT_setfunction(l_str_func, "rep", "rep");
-    luaT_setfunction(l_str_func, "reverse", "reverse");
-    luaT_setfunction(l_str_func, "upper", "upper");
-    luaT_setfunction(l_str_unwrap, "_unwrap");
-    luaT_setfunction(l_str_reload, "reload");
-    luaT_endclass();
+    lcb.add_metamethod(l_str_index, "index");
+    lcb.add_metamethod(l_str_newindex, "newindex");
+    lcb.add_metamethod(l_str_concat, "concat");
+    lcb.add_metamethod(l_str_len, "len");
+    lcb.add_metamethod(l_str_tostring, "tostring");
+    lcb.add_metamethod(l_str_persist, "persist");
+    lcb.add_metamethod(l_str_depersist, "depersist");
+    lcb.add_metamethod(l_str_call, "call");
+    lcb.add_metamethod(l_str_lt, "lt");
+    lcb.add_metamethod(l_str_pairs, "pairs");
+    lcb.add_metamethod(l_str_ipairs, "ipairs");
+    lcb.add_metamethod(l_str_next, "next");
+    lcb.add_metamethod(l_str_inext, "inext");
+    lcb.add_function(l_str_func, "format", "format");
+    lcb.add_function(l_str_func, "lower", "lower");
+    lcb.add_function(l_str_func, "rep", "rep");
+    lcb.add_function(l_str_func, "reverse", "reverse");
+    lcb.add_function(l_str_func, "upper", "upper");
+    lcb.add_function(l_str_unwrap, "_unwrap");
+    lcb.add_function(l_str_reload, "reload");
 }

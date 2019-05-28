@@ -24,17 +24,19 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_map.h"
 
+namespace {
+
 /* this variable is used to determine the layer of the animation, it should be rewriten at some
   point so that the it is passed as an argument in the function l_anim_set_tile */
-static int last_layer = 2;
+int last_layer = 2;
 
-static int l_anims_new(lua_State *L)
+int l_anims_new(lua_State *L)
 {
     luaT_stdnew<animation_manager>(L, luaT_environindex, true);
     return 1;
 }
 
-static int l_anims_set_spritesheet(lua_State *L)
+int l_anims_set_spritesheet(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -49,7 +51,7 @@ static int l_anims_set_spritesheet(lua_State *L)
 /*!
     setCanvas(<video-surface>)
  */
-static int l_anims_set_canvas(lua_State *L)
+int l_anims_set_canvas(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -60,7 +62,7 @@ static int l_anims_set_canvas(lua_State *L)
     return 1;
 }
 
-static int l_anims_load(lua_State *L)
+int l_anims_load(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     size_t iStartDataLength, iFrameDataLength, iListDataLength, iElementDataLength;
@@ -86,7 +88,7 @@ static int l_anims_load(lua_State *L)
 /*!
     loadCustom(<data-of-an-animation-file>) -> true/false
  */
-static int l_anims_loadcustom(lua_State *L)
+int l_anims_loadcustom(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     size_t iDataLength;
@@ -109,7 +111,7 @@ static int l_anims_loadcustom(lua_State *L)
 /*!
     getAnimations(<tile-size>, <animation-name>) -> (<anim-north>, <anim-east>,  <anim-south>, <anim-west>)
  */
-static int l_anims_getanims(lua_State *L)
+int l_anims_getanims(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     int iTileSize = static_cast<int>(luaL_checkinteger(L, 2));
@@ -124,7 +126,7 @@ static int l_anims_getanims(lua_State *L)
 }
 
 
-static int l_anims_getfirst(lua_State *L)
+int l_anims_getfirst(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     int iAnim = static_cast<int>(luaL_checkinteger(L, 2));
@@ -133,7 +135,7 @@ static int l_anims_getfirst(lua_State *L)
     return 1;
 }
 
-static int l_anims_getnext(lua_State *L)
+int l_anims_getnext(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     int iFrame = static_cast<int>(luaL_checkinteger(L, 2));
@@ -142,7 +144,7 @@ static int l_anims_getnext(lua_State *L)
     return 1;
 }
 
-static int l_anims_set_alt_pal(lua_State *L)
+int l_anims_set_alt_pal(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     size_t iAnimation = luaL_checkinteger(L, 2);
@@ -164,7 +166,7 @@ static int l_anims_set_alt_pal(lua_State *L)
     return 1;
 }
 
-static int l_anims_set_marker(lua_State *L)
+int l_anims_set_marker(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     lua_pushboolean(L, pAnims->set_frame_marker(luaL_checkinteger(L, 2),
@@ -172,7 +174,7 @@ static int l_anims_set_marker(lua_State *L)
     return 1;
 }
 
-static int l_anims_set_secondary_marker(lua_State *L)
+int l_anims_set_secondary_marker(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     lua_pushboolean(L, pAnims->set_frame_secondary_marker(luaL_checkinteger(L, 2),
@@ -180,7 +182,7 @@ static int l_anims_set_secondary_marker(lua_State *L)
     return 1;
 }
 
-static int l_anims_draw(lua_State *L)
+int l_anims_draw(lua_State *L)
 {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -197,7 +199,7 @@ static int l_anims_draw(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_new(lua_State *L)
+int l_anim_new(lua_State *L)
 {
     T* pAnimation = luaT_stdnew<T>(L, luaT_environindex, true);
     lua_rawgeti(L, luaT_environindex, 2);
@@ -209,7 +211,7 @@ static int l_anim_new(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_persist(lua_State *L)
+int l_anim_persist(lua_State *L)
 {
     T* pAnimation;
     if(lua_gettop(L) == 2)
@@ -234,7 +236,7 @@ static int l_anim_persist(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_pre_depersist(lua_State *L)
+int l_anim_pre_depersist(lua_State *L)
 {
     // Note that anims and the map have nice reference cycles between them
     // and hence we cannot be sure which is depersisted first. To ensure that
@@ -250,7 +252,7 @@ static int l_anim_pre_depersist(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_depersist(lua_State *L)
+int l_anim_depersist(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     lua_settop(L, 2);
@@ -272,7 +274,7 @@ static int l_anim_depersist(lua_State *L)
     return 0;
 }
 
-static int l_anim_set_hitresult(lua_State *L)
+int l_anim_set_hitresult(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TUSERDATA);
     lua_settop(L, 2);
@@ -284,7 +286,7 @@ static int l_anim_set_hitresult(lua_State *L)
     return 1;
 }
 
-static int l_anim_set_frame(lua_State *L)
+int l_anim_set_frame(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     pAnimation->set_frame(luaL_checkinteger(L, 2));
@@ -292,14 +294,14 @@ static int l_anim_set_frame(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_frame(lua_State *L)
+int l_anim_get_frame(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     lua_pushinteger(L, pAnimation->get_frame());
     return 1;
 }
 
-static int l_anim_set_crop(lua_State *L)
+int l_anim_set_crop(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     pAnimation->set_crop_column(static_cast<int>(luaL_checkinteger(L, 2)));
@@ -307,14 +309,14 @@ static int l_anim_set_crop(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_crop(lua_State *L)
+int l_anim_get_crop(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     lua_pushinteger(L, pAnimation->get_crop_column());
     return 1;
 }
 
-static int l_anim_set_anim(lua_State *L)
+int l_anim_set_anim(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     animation_manager* pManager = luaT_testuserdata<animation_manager>(L, 2);
@@ -336,7 +338,7 @@ static int l_anim_set_anim(lua_State *L)
     return 1;
 }
 
-static int l_anim_set_morph(lua_State *L)
+int l_anim_set_morph(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     animation* pMorphTarget = luaT_testuserdata<animation>(L, 2, luaT_environindex);
@@ -352,13 +354,13 @@ static int l_anim_set_morph(lua_State *L)
     return 1;
 }
 
-static int l_anim_set_drawable_layer(lua_State *L)
+int l_anim_set_drawable_layer(lua_State *L)
 {
     last_layer = static_cast<int>(luaL_checkinteger(L, 2));
     return 1;
 }
 
-static int l_anim_get_anim(lua_State *L)
+int l_anim_get_anim(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     lua_pushinteger(L, pAnimation->get_animation());
@@ -367,7 +369,7 @@ static int l_anim_get_anim(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_tile(lua_State *L)
+int l_anim_set_tile(lua_State *L)
 {
 
     T* pAnimation = luaT_testuserdata<T>(L);
@@ -399,7 +401,7 @@ static int l_anim_set_tile(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_tile(lua_State *L)
+int l_anim_get_tile(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     lua_settop(L, 1);
@@ -433,7 +435,7 @@ static int l_anim_get_tile(lua_State *L)
     return 3; // map, x, y
 }
 
-static int l_anim_set_parent(lua_State *L)
+int l_anim_set_parent(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     animation* pParent = luaT_testuserdata<animation>(L, 2, luaT_environindex, false);
@@ -443,7 +445,7 @@ static int l_anim_set_parent(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_flag(lua_State *L)
+int l_anim_set_flag(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->set_flags(static_cast<uint32_t>(luaL_checkinteger(L, 2)));
@@ -453,7 +455,7 @@ static int l_anim_set_flag(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_flag_partial(lua_State *L)
+int l_anim_set_flag_partial(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     uint32_t iFlags = static_cast<uint32_t>(luaL_checkinteger(L, 2));
@@ -470,7 +472,7 @@ static int l_anim_set_flag_partial(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_make_visible(lua_State *L)
+int l_anim_make_visible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->set_flags(pAnimation->get_flags() & ~static_cast<uint32_t>(thdf_alpha_50 | thdf_alpha_75));
@@ -480,7 +482,7 @@ static int l_anim_make_visible(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_make_invisible(lua_State *L)
+int l_anim_make_invisible(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->set_flags(pAnimation->get_flags() | static_cast<uint32_t>(thdf_alpha_50 | thdf_alpha_75));
@@ -490,7 +492,7 @@ static int l_anim_make_invisible(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_get_flag(lua_State *L)
+int l_anim_get_flag(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     lua_pushinteger(L, pAnimation->get_flags());
@@ -499,7 +501,7 @@ static int l_anim_get_flag(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_position(lua_State *L)
+int l_anim_set_position(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
@@ -509,7 +511,7 @@ static int l_anim_set_position(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_position(lua_State *L)
+int l_anim_get_position(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
 
@@ -520,7 +522,7 @@ static int l_anim_get_position(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_speed(lua_State *L)
+int l_anim_set_speed(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
@@ -531,7 +533,7 @@ static int l_anim_set_speed(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_set_layer(lua_State *L)
+int l_anim_set_layer(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
 
@@ -541,7 +543,7 @@ static int l_anim_set_layer(lua_State *L)
     return 1;
 }
 
-static int l_anim_set_layers_from(lua_State *L)
+int l_anim_set_layers_from(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     const animation* pAnimationSrc = luaT_testuserdata<animation>(L, 2, luaT_environindex);
@@ -552,7 +554,7 @@ static int l_anim_set_layers_from(lua_State *L)
     return 1;
 }
 
-static int l_anim_set_tag(lua_State *L)
+int l_anim_set_tag(lua_State *L)
 {
     luaT_testuserdata<animation>(L);
     lua_settop(L, 2);
@@ -560,7 +562,7 @@ static int l_anim_set_tag(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_tag(lua_State *L)
+int l_anim_get_tag(lua_State *L)
 {
     luaT_testuserdata<animation>(L);
     lua_settop(L, 1);
@@ -569,7 +571,7 @@ static int l_anim_get_tag(lua_State *L)
     return 1;
 }
 
-static int l_anim_get_marker(lua_State *L)
+int l_anim_get_marker(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     int iX = 0;
@@ -580,7 +582,7 @@ static int l_anim_get_marker(lua_State *L)
     return 2;
 }
 
-static int l_anim_get_secondary_marker(lua_State *L)
+int l_anim_get_secondary_marker(lua_State *L)
 {
     animation* pAnimation = luaT_testuserdata<animation>(L);
     int iX = 0;
@@ -592,7 +594,7 @@ static int l_anim_get_secondary_marker(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_tick(lua_State *L)
+int l_anim_tick(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     pAnimation->tick();
@@ -601,7 +603,7 @@ static int l_anim_tick(lua_State *L)
 }
 
 template <typename T>
-static int l_anim_draw(lua_State *L)
+int l_anim_draw(lua_State *L)
 {
     T* pAnimation = luaT_testuserdata<T>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
@@ -610,7 +612,7 @@ static int l_anim_draw(lua_State *L)
     return 1;
 }
 
-static int l_srl_set_sheet(lua_State *L)
+int l_srl_set_sheet(lua_State *L)
 {
     sprite_render_list *pSrl = luaT_testuserdata<sprite_render_list>(L);
     sprite_sheet *pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -621,7 +623,7 @@ static int l_srl_set_sheet(lua_State *L)
     return 1;
 }
 
-static int l_srl_append(lua_State *L)
+int l_srl_append(lua_State *L)
 {
     sprite_render_list *pSrl = luaT_testuserdata<sprite_render_list>(L);
     pSrl->append_sprite(luaL_checkinteger(L, 2),
@@ -630,7 +632,7 @@ static int l_srl_append(lua_State *L)
     return 1;
 }
 
-static int l_srl_set_lifetime(lua_State *L)
+int l_srl_set_lifetime(lua_State *L)
 {
     sprite_render_list *pSrl = luaT_testuserdata<sprite_render_list>(L);
     pSrl->set_lifetime(static_cast<int>(luaL_checkinteger(L, 2)));
@@ -638,31 +640,34 @@ static int l_srl_set_lifetime(lua_State *L)
     return 1;
 }
 
-static int l_srl_is_dead(lua_State *L)
+int l_srl_is_dead(lua_State *L)
 {
     sprite_render_list *pSrl = luaT_testuserdata<sprite_render_list>(L);
     lua_pushboolean(L, pSrl->is_dead() ? 1 : 0);
     return 1;
 }
 
+} // namespace
+
 void lua_register_anims(const lua_register_state *pState)
 {
     // Anims
-    luaT_class(animation_manager, l_anims_new, "anims", lua_metatable::anims);
-    luaT_setfunction(l_anims_load, "load");
-    luaT_setfunction(l_anims_loadcustom, "loadCustom");
-    luaT_setfunction(l_anims_set_spritesheet, "setSheet", lua_metatable::sheet);
-    luaT_setfunction(l_anims_set_canvas, "setCanvas", lua_metatable::surface);
-    luaT_setfunction(l_anims_getanims, "getAnimations");
-    luaT_setfunction(l_anims_getfirst, "getFirstFrame");
-    luaT_setfunction(l_anims_getnext, "getNextFrame");
-    luaT_setfunction(l_anims_set_alt_pal, "setAnimationGhostPalette");
-    luaT_setfunction(l_anims_set_marker, "setFrameMarker");
-    luaT_setfunction(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
-    luaT_setfunction(l_anims_draw, "draw", lua_metatable::surface, lua_metatable::layers);
-    luaT_setconstant("Alt32_GreyScale",   thdf_alt32_grey_scale);
-    luaT_setconstant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
-    luaT_endclass();
+    {
+        lua_class_binding<animation_manager> lcb(pState, "anims", l_anims_new, lua_metatable::anims);
+        lcb.add_function(l_anims_load, "load");
+        lcb.add_function(l_anims_loadcustom, "loadCustom");
+        lcb.add_function(l_anims_set_spritesheet, "setSheet", lua_metatable::sheet);
+        lcb.add_function(l_anims_set_canvas, "setCanvas", lua_metatable::surface);
+        lcb.add_function(l_anims_getanims, "getAnimations");
+        lcb.add_function(l_anims_getfirst, "getFirstFrame");
+        lcb.add_function(l_anims_getnext, "getNextFrame");
+        lcb.add_function(l_anims_set_alt_pal, "setAnimationGhostPalette");
+        lcb.add_function(l_anims_set_marker, "setFrameMarker");
+        lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
+        lcb.add_function(l_anims_draw, "draw", lua_metatable::surface, lua_metatable::layers);
+        lcb.add_constant("Alt32_GreyScale",   thdf_alt32_grey_scale);
+        lcb.add_constant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
+    }
 
     // Weak table at AnimMetatable[1] for light UD -> object lookup
     // For hitTest / setHitTestResult
@@ -683,39 +688,40 @@ void lua_register_anims(const lua_register_state *pState)
     lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 2);
 
     // Anim
-    luaT_class(animation, l_anim_new<animation>, "animation", lua_metatable::anim);
-    luaT_setmetamethod(l_anim_persist<animation>, "persist");
-    luaT_setmetamethod(l_anim_pre_depersist<animation>, "pre_depersist");
-    luaT_setmetamethod(l_anim_depersist<animation>, "depersist");
-    luaT_setfunction(l_anim_set_anim, "setAnimation", lua_metatable::anims);
-    luaT_setfunction(l_anim_set_crop, "setCrop");
-    luaT_setfunction(l_anim_get_crop, "getCrop");
-    luaT_setfunction(l_anim_set_morph, "setMorph");
-    luaT_setfunction(l_anim_set_frame, "setFrame");
-    luaT_setfunction(l_anim_get_frame, "getFrame");
-    luaT_setfunction(l_anim_get_anim, "getAnimation");
-    luaT_setfunction(l_anim_set_tile<animation>, "setTile", lua_metatable::map);
-    luaT_setfunction(l_anim_get_tile, "getTile");
-    luaT_setfunction(l_anim_set_parent, "setParent");
-    luaT_setfunction(l_anim_set_flag<animation>, "setFlag");
-    luaT_setfunction(l_anim_set_flag_partial<animation>, "setPartialFlag");
-    luaT_setfunction(l_anim_get_flag<animation>, "getFlag");
-    luaT_setfunction(l_anim_make_visible<animation>, "makeVisible");
-    luaT_setfunction(l_anim_make_invisible<animation>, "makeInvisible");
-    luaT_setfunction(l_anim_set_tag, "setTag");
-    luaT_setfunction(l_anim_get_tag, "getTag");
-    luaT_setfunction(l_anim_set_position<animation>, "setPosition");
-    luaT_setfunction(l_anim_get_position, "getPosition");
-    luaT_setfunction(l_anim_set_speed<animation>, "setSpeed");
-    luaT_setfunction(l_anim_set_layer<animation>, "setLayer");
-    luaT_setfunction(l_anim_set_layers_from, "setLayersFrom");
-    luaT_setfunction(l_anim_set_hitresult, "setHitTestResult");
-    luaT_setfunction(l_anim_get_marker, "getMarker");
-    luaT_setfunction(l_anim_get_secondary_marker, "getSecondaryMarker");
-    luaT_setfunction(l_anim_tick<animation>, "tick");
-    luaT_setfunction(l_anim_draw<animation>, "draw", lua_metatable::surface);
-    luaT_setfunction(l_anim_set_drawable_layer, "setDrawingLayer");
-    luaT_endclass();
+    {
+        lua_class_binding<animation> lcb(pState, "animation", l_anim_new<animation>, lua_metatable::anim);
+        lcb.add_metamethod(l_anim_persist<animation>, "persist");
+        lcb.add_metamethod(l_anim_pre_depersist<animation>, "pre_depersist");
+        lcb.add_metamethod(l_anim_depersist<animation>, "depersist");
+        lcb.add_function(l_anim_set_anim, "setAnimation", lua_metatable::anims);
+        lcb.add_function(l_anim_set_crop, "setCrop");
+        lcb.add_function(l_anim_get_crop, "getCrop");
+        lcb.add_function(l_anim_set_morph, "setMorph");
+        lcb.add_function(l_anim_set_frame, "setFrame");
+        lcb.add_function(l_anim_get_frame, "getFrame");
+        lcb.add_function(l_anim_get_anim, "getAnimation");
+        lcb.add_function(l_anim_set_tile<animation>, "setTile", lua_metatable::map);
+        lcb.add_function(l_anim_get_tile, "getTile");
+        lcb.add_function(l_anim_set_parent, "setParent");
+        lcb.add_function(l_anim_set_flag<animation>, "setFlag");
+        lcb.add_function(l_anim_set_flag_partial<animation>, "setPartialFlag");
+        lcb.add_function(l_anim_get_flag<animation>, "getFlag");
+        lcb.add_function(l_anim_make_visible<animation>, "makeVisible");
+        lcb.add_function(l_anim_make_invisible<animation>, "makeInvisible");
+        lcb.add_function(l_anim_set_tag, "setTag");
+        lcb.add_function(l_anim_get_tag, "getTag");
+        lcb.add_function(l_anim_set_position<animation>, "setPosition");
+        lcb.add_function(l_anim_get_position, "getPosition");
+        lcb.add_function(l_anim_set_speed<animation>, "setSpeed");
+        lcb.add_function(l_anim_set_layer<animation>, "setLayer");
+        lcb.add_function(l_anim_set_layers_from, "setLayersFrom");
+        lcb.add_function(l_anim_set_hitresult, "setHitTestResult");
+        lcb.add_function(l_anim_get_marker, "getMarker");
+        lcb.add_function(l_anim_get_secondary_marker, "getSecondaryMarker");
+        lcb.add_function(l_anim_tick<animation>, "tick");
+        lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
+        lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
+    }
 
     // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
     lua_rawgeti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::anim)], 1);
@@ -724,24 +730,25 @@ void lua_register_anims(const lua_register_state *pState)
     lua_rawseti(pState->L, pState->metatables[static_cast<size_t>(lua_metatable::sprite_list)], 2);
 
     // SpriteList
-    luaT_class(sprite_render_list, l_anim_new<sprite_render_list>, "spriteList", lua_metatable::sprite_list);
-    luaT_setmetamethod(l_anim_persist<sprite_render_list>, "persist");
-    luaT_setmetamethod(l_anim_pre_depersist<sprite_render_list>, "pre_depersist");
-    luaT_setmetamethod(l_anim_depersist<sprite_render_list>, "depersist");
-    luaT_setfunction(l_srl_set_sheet, "setSheet", lua_metatable::sheet);
-    luaT_setfunction(l_srl_append, "append");
-    luaT_setfunction(l_srl_set_lifetime, "setLifetime");
-    luaT_setfunction(l_srl_is_dead, "isDead");
-    luaT_setfunction(l_anim_set_tile<sprite_render_list>, "setTile", lua_metatable::map);
-    luaT_setfunction(l_anim_set_flag<sprite_render_list>, "setFlag");
-    luaT_setfunction(l_anim_set_flag_partial<sprite_render_list>, "setPartialFlag");
-    luaT_setfunction(l_anim_get_flag<sprite_render_list>, "getFlag");
-    luaT_setfunction(l_anim_make_visible<sprite_render_list>, "makeVisible");
-    luaT_setfunction(l_anim_make_invisible<sprite_render_list>, "makeInvisible");
-    luaT_setfunction(l_anim_set_position<sprite_render_list>, "setPosition");
-    luaT_setfunction(l_anim_set_speed<sprite_render_list>, "setSpeed");
-    luaT_setfunction(l_anim_set_layer<sprite_render_list>, "setLayer");
-    luaT_setfunction(l_anim_tick<sprite_render_list>, "tick");
-    luaT_setfunction(l_anim_draw<sprite_render_list>, "draw", lua_metatable::surface);
-    luaT_endclass();
+    {
+        lua_class_binding<sprite_render_list> lcb(pState, "spriteList", l_anim_new<sprite_render_list>, lua_metatable::sprite_list);
+        lcb.add_metamethod(l_anim_persist<sprite_render_list>, "persist");
+        lcb.add_metamethod(l_anim_pre_depersist<sprite_render_list>, "pre_depersist");
+        lcb.add_metamethod(l_anim_depersist<sprite_render_list>, "depersist");
+        lcb.add_function(l_srl_set_sheet, "setSheet", lua_metatable::sheet);
+        lcb.add_function(l_srl_append, "append");
+        lcb.add_function(l_srl_set_lifetime, "setLifetime");
+        lcb.add_function(l_srl_is_dead, "isDead");
+        lcb.add_function(l_anim_set_tile<sprite_render_list>, "setTile", lua_metatable::map);
+        lcb.add_function(l_anim_set_flag<sprite_render_list>, "setFlag");
+        lcb.add_function(l_anim_set_flag_partial<sprite_render_list>, "setPartialFlag");
+        lcb.add_function(l_anim_get_flag<sprite_render_list>, "getFlag");
+        lcb.add_function(l_anim_make_visible<sprite_render_list>, "makeVisible");
+        lcb.add_function(l_anim_make_invisible<sprite_render_list>, "makeInvisible");
+        lcb.add_function(l_anim_set_position<sprite_render_list>, "setPosition");
+        lcb.add_function(l_anim_set_speed<sprite_render_list>, "setSpeed");
+        lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
+        lcb.add_function(l_anim_tick<sprite_render_list>, "tick");
+        lcb.add_function(l_anim_draw<sprite_render_list>, "draw", lua_metatable::surface);
+    }
 }

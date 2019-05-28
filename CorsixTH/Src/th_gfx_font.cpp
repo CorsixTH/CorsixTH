@@ -30,91 +30,45 @@ SOFTWARE.
 #include <cstring>
 #include <algorithm>
 
-static unsigned int next_utf8_codepoint(const char*& sString)
-{
-    unsigned int iCode = *reinterpret_cast<const uint8_t*>(sString++);
-    unsigned int iContinuation;
-    if(iCode & 0x80)
-    {
-        if((iCode & 0x40) == 0)
-        {
-            // Invalid encoding: character should not start with a continuation
-            // byte. Hence return the Unicode replacement character.
-            return 0xFFFD;
-        }
-        else
-        {
-#define CONTINUATION_CHAR \
-    iContinuation = *reinterpret_cast<const uint8_t*>(sString); \
-    if((iContinuation & 0xC0) != 0x80) \
-        /* Invalid encoding: not enough continuation characters. */ \
-        return 0xFFFD; \
-    iCode = (iCode << 6) | (iContinuation & 0x3F); \
-    ++sString
+namespace {
 
-            iCode &= 0x3F;
-            if(iCode & 0x20)
-            {
-                iCode &= 0x1F;
-                if(iCode & 0x10)
-                {
-                    iCode &= 0x0F;
-                    if(iCode & 0x08)
-                    {
-                        // Invalid encoding: too-long byte sequence. Hence
-                        // return the Unicode replacement character.
-                        return 0xFFFD;
-                    }
-                    CONTINUATION_CHAR;
-                }
-                CONTINUATION_CHAR;
-            }
-            CONTINUATION_CHAR;
-        }
+constexpr unsigned int invalid_char_codepoint = 0xFFFD;
 
-#undef CONTINUATION_CHAR
+size_t discard_leading_set_bits(uint8_t &byte) {
+    size_t count = 0;
+    while ((byte & 0x80) != 0) {
+        count++;
+        byte = byte << 1;
     }
-    return iCode;
+    byte = byte >> count;
+    return count;
 }
 
-#ifdef CORSIX_TH_USE_FREETYPE2
-// Since these functions are only used when we use freetype2, this silences
-// warnings about defined and not used.
-
-static unsigned int decode_utf8(const char* sString)
+unsigned int next_utf8_codepoint(const char*& sString)
 {
-    return next_utf8_codepoint(sString);
+    uint8_t cur_byte = *reinterpret_cast<const uint8_t*>(sString++);
+    size_t leading_bit_count = discard_leading_set_bits(cur_byte);
+
+    if (leading_bit_count == 1 || leading_bit_count > 4) {
+        // A single leading bit is a continuation character. A utf-8 character can be at most 4 bytes long.
+        return invalid_char_codepoint;
+    }
+
+    unsigned int codepoint = cur_byte;
+    for (size_t i = 1; i < leading_bit_count; ++i) {
+        cur_byte = *reinterpret_cast<const uint8_t*>(sString++);
+        size_t continue_leading_bits = discard_leading_set_bits(cur_byte);
+
+        if (continue_leading_bits != 1) {
+            // Not enough continuation characters
+            return invalid_char_codepoint;
+        }
+        codepoint = (codepoint << 6) | cur_byte;
+    }
+    return codepoint;
 }
 
-static const char* previous_utf8_codepoint(const char* sString)
-{
-    do
-    {
-        --sString;
-    } while(((*sString) & 0xC0) == 0x80);
-    return sString;
-}
-#endif
-
-bitmap_font::bitmap_font()
-{
-    sheet = nullptr;
-    letter_spacing = 0;
-    line_spacing = 0;
-}
-
-void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet)
-{
-    sheet = pSpriteSheet;
-}
-
-void bitmap_font::set_separation(int iCharSep, int iLineSep)
-{
-    letter_spacing = iCharSep;
-    line_spacing = iLineSep;
-}
-
-static const uint16_t unicode_to_cp437_table[0x60] = {
+constexpr uint16_t unicode_to_cp437_table[0x60] = {
     0xFF, 0xAD, 0x9B, 0x9C, 0x3F, 0x9D, 0x3F, 0x3F, 0x3F, 0x3F, 0xA6, 0xAE,
     0xAA, 0x3F, 0x3F, 0x3F, 0xF8, 0xF1, 0xFD, 0x3F, 0x3F, 0x3F, 0x3F, 0xFA,
     0x3F, 0x3F, 0xA7, 0xAF, 0xAC, 0xAB, 0x3F, 0xA8, 0x3F, 0x3F, 0x3F, 0x3F,
@@ -125,7 +79,7 @@ static const uint16_t unicode_to_cp437_table[0x60] = {
     0x93, 0x3F, 0x94, 0xF6, 0x3F, 0x97, 0xA3, 0x96, 0x81, 0x3F, 0x3F, 0x98
 };
 
-static unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
+unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
 {
     if(iCodePoint < 0x80)
         return iCodePoint;
@@ -165,6 +119,45 @@ static unsigned int unicode_to_codepage_437(unsigned int iCodePoint)
         case 0x25A0: return 0xFE;
     }
     return 0x3F;
+}
+
+#ifdef CORSIX_TH_USE_FREETYPE2
+// Since these functions are only used when we use freetype2, this silences
+// warnings about defined and not used.
+
+unsigned int decode_utf8(const char* sString)
+{
+    return next_utf8_codepoint(sString);
+}
+
+const char* previous_utf8_codepoint(const char* sString)
+{
+    do
+    {
+        --sString;
+    } while(((*sString) & 0xC0) == 0x80);
+    return sString;
+}
+#endif
+
+} // namespace
+
+bitmap_font::bitmap_font()
+{
+    sheet = nullptr;
+    letter_spacing = 0;
+    line_spacing = 0;
+}
+
+void bitmap_font::set_sprite_sheet(sprite_sheet* pSpriteSheet)
+{
+    sheet = pSpriteSheet;
+}
+
+void bitmap_font::set_separation(int iCharSep, int iLineSep)
+{
+    letter_spacing = iCharSep;
+    line_spacing = iLineSep;
 }
 
 text_layout bitmap_font::get_text_dimensions(const char* sMessage, size_t iMessageLength,
@@ -499,6 +492,8 @@ void freetype_font::draw_text(render_target* pCanvas, const char* sMessage,
     draw_text_wrapped(pCanvas, sMessage, iMessageLength, iX, iY, INT_MAX);
 }
 
+namespace {
+
 struct codepoint_glyph
 {
     FT_Glyph_Metrics metrics;
@@ -516,6 +511,8 @@ bool isCjkBreakCharacter(int charcode) {
             charcode == 0xff1b || // Fullwidth semicolon
             charcode == 0xff1f); //Fullwidth question mark
 }
+
+} // namespace
 
 text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char* sMessage,
         size_t iMessageLength, int iX, int iY,

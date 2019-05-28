@@ -27,18 +27,30 @@ SOFTWARE.
 
 class abstract_window {};
 
-static int l_abstract_window_new(lua_State *L)
+namespace {
+
+int l_abstract_window_new(lua_State *L)
 {
     return luaL_error(L, "windowBase can only be used a base class - "
         " do not create a windowBase directly.");
 }
 
-static uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start, uint16_t end)
+uint8_t range_scale(uint16_t low, uint16_t high, uint16_t val, uint16_t start, uint16_t end)
 {
     return static_cast<uint8_t>(std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
 }
 
-static int l_town_map_draw(lua_State *L)
+inline bool is_wall(uint16_t blk)
+{
+    return ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164));
+}
+
+inline bool is_wall_drawn(const level_map &map, const map_tile &node, const map_tile &original_node, size_t n)
+{
+    return map.get_tile_owner(&node) != 0 ? is_wall(node.iBlock[n]) : is_wall(original_node.iBlock[n]);
+}
+
+int l_town_map_draw(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
     level_map* pMap = luaT_testuserdata<level_map>(L, 2);
@@ -47,10 +59,10 @@ static int l_town_map_draw(lua_State *L)
     int iCanvasYBase = static_cast<int>(luaL_checkinteger(L, 5));
     bool bShowHeat = lua_toboolean(L, 6) != 0;
 
-    uint32_t iColourMyHosp = pCanvas->map_colour(0, 0, 70);
-    uint32_t iColourWall = pCanvas->map_colour(255, 255, 255);
-    uint32_t iColourDoor = pCanvas->map_colour(200, 200, 200);
-    uint32_t iColourPurchasable = pCanvas->map_colour(255, 0, 0);
+    uint32_t iColourMyHosp = render_target::map_colour(0, 0, 70);
+    uint32_t iColourWall = render_target::map_colour(255, 255, 255);
+    uint32_t iColourDoor = render_target::map_colour(200, 200, 200);
+    uint32_t iColourPurchasable = render_target::map_colour(255, 0, 0);
 
     const map_tile *pNode = pMap->get_tile_unchecked(0, 0);
     const map_tile *pOriginalNode = pMap->get_original_tile_unchecked(0, 0);
@@ -116,15 +128,12 @@ static int l_town_map_draw(lua_State *L)
                         break;
                     }
 
-                    iColour = pCanvas->map_colour(iR, iG, iB);
+                    iColour = render_target::map_colour(iR, iG, iB);
                 }
                 pCanvas->fill_rect(iColour, iCanvasX, iCanvasY, 3, 3);
             }
             dont_paint_tile:
-#define IsWall(blk) ((82 <= ((blk) & 0xFF)) && (((blk) & 0xFF) <= 164))
-#define IsWallDrawn(n) pMap->get_tile_owner(pNode) != 0 ? \
-    IsWall(pNode->iBlock[n]) : IsWall(pOriginalNode->iBlock[n])
-            if(IsWallDrawn(1)) {
+            if(is_wall_drawn(*pMap, *pNode, *pOriginalNode, 1)) {
                 pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 3, 1);
 
                 // Draw entrance door
@@ -137,7 +146,7 @@ static int l_town_map_draw(lua_State *L)
                     }
                 }
             }
-            if(IsWallDrawn(2)) {
+            if(is_wall_drawn(*pMap, *pNode, *pOriginalNode, 2)) {
                 pCanvas->fill_rect(iColourWall, iCanvasX, iCanvasY, 1, 3);
 
                 // Draw entrance door
@@ -150,18 +159,17 @@ static int l_town_map_draw(lua_State *L)
                     }
                 }
             }
-#undef IsWallDrawn
-#undef IsWall
         }
     }
 
     return 0;
 }
 
+} // namespace
+
 void lua_register_ui(const lua_register_state *pState)
 {
     // WindowBase
-    luaT_class(abstract_window, l_abstract_window_new, "windowHelpers", lua_metatable::window_base);
-    luaT_setfunction(l_town_map_draw, "townMapDraw", lua_metatable::map, lua_metatable::surface);
-    luaT_endclass();
+    lua_class_binding<abstract_window> lcb(pState, "windowHelpers", l_abstract_window_new, lua_metatable::window_base);
+    lcb.add_function(l_town_map_draw, "townMapDraw", lua_metatable::map, lua_metatable::surface);
 }

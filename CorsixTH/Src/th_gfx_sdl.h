@@ -35,6 +35,123 @@ struct clip_rect : public SDL_Rect {
 };
 struct render_target_creation_params;
 
+//! 32bpp ARGB colour. See #palette::pack_argb
+typedef uint32_t argb_colour;
+
+//! 8bpp palette class.
+class palette
+{
+public: // External API
+    palette();
+
+    //! Load palette from the supplied data.
+    /*!
+        Note that the data uses palette entries of 6 bit colours.
+        @param pData Data loaded from the file.
+        @param iDataLength Size of the data.
+        @return Whether loading of the palette succeeded.
+    */
+    bool load_from_th_file(const uint8_t* pData, size_t iDataLength);
+
+    //! Set an entry of the palette.
+    /*!
+        The RGB colour (255, 0, 255) is used as the transparent colour.
+        @param iEntry Entry number to change.
+        @param iR Amount of red in the new entry.
+        @param iG Amount of green in the new entry.
+        @param iB Amount of blue in the new entry.
+        @return Setting the entry succeeded.
+    */
+    bool set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
+
+public: // Internal (this rendering engine only) API
+
+    //! Convert A, R, G, B values to a 32bpp colour.
+    /*!
+        @param iA Amount of opacity (0-255).
+        @param iR Amount of red (0-255).
+        @param iG Amount of green (0-255).
+        @param iB Amount of blue (0-255).
+        @return 32bpp value representing the provided colour values.
+    */
+    static constexpr argb_colour pack_argb(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
+    {
+        return (static_cast<argb_colour>(iR) <<  0) |
+        (static_cast<argb_colour>(iG) <<  8) |
+        (static_cast<argb_colour>(iB) << 16) |
+        (static_cast<argb_colour>(iA) << 24) ;
+    }
+
+    //! Get the red component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The red component intensity of the colour.
+    */
+    static constexpr uint8_t get_red(argb_colour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 0) & 0xFF);
+    }
+
+    //! Get the green component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The green component intensity of the colour.
+    */
+    static constexpr uint8_t get_green(argb_colour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 8) & 0xFF);
+    }
+
+    //! Get the blue component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The blue component intensity of the colour.
+    */
+    static constexpr uint8_t get_blue(argb_colour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 16) & 0xFF);
+    }
+
+    //! Get the opacity component of a colour.
+    /*!
+        @param iColour Colour to examine.
+        @return The opacity of the colour.
+    */
+    static constexpr uint8_t get_alpha(argb_colour iColour)
+    {
+        return static_cast<uint8_t>((iColour >> 24) & 0xFF);
+    }
+
+    //! Get the number of colours in the palette.
+    /*!
+        @return The number of colours in the palette.
+    */
+    int get_colour_count() const;
+
+    //! Get the internal palette data for fast (read-only) access.
+    /*!
+        @return Table with all 256 colours of the palette.
+    */
+    const argb_colour* get_argb_data() const;
+
+    //! Set an entry of the palette.
+    /*!
+        @param iEntry Entry to modify.
+        @param iVal Palette value to set.
+    */
+    inline void set_argb(int iEntry, uint32_t iVal)
+    {
+        colour_index_to_argb_map[iEntry] = iVal;
+    }
+
+private:
+    //! 32bpp palette colours associated with the 8bpp colour index.
+    uint32_t colour_index_to_argb_map[256];
+
+    //! Number of colours in the palette.
+    int colour_count;
+};
+
 /*!
     Utility class for decoding 32bpp images.
 */
@@ -126,6 +243,12 @@ public: // External API
     render_target();
     ~render_target();
 
+    //! Encode an RGB triplet for fillRect()
+    static constexpr uint32_t map_colour(uint8_t iR, uint8_t iG, uint8_t iB)
+    {
+        return palette::pack_argb(0xFF, iR, iG, iB);
+    }
+
     //! Initialise the render target
     bool create(const render_target_creation_params* pParams);
 
@@ -150,9 +273,6 @@ public: // External API
     //! Sets a blue filter on the current surface.
     // Used to add the blue effect when the game is paused.
     void set_blue_filter_active(bool bActivate);
-
-    //! Encode an RGB triplet for fillRect()
-    uint32_t map_colour(uint8_t iR, uint8_t iG, uint8_t iB);
 
     //! Fill a rectangle of the render target with a solid colour
     bool fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH);
@@ -243,123 +363,6 @@ private:
     bool apply_opengl_clip_fix;
 
     void flush_zoom_buffer();
-};
-
-//! 32bpp ARGB colour. See #palette::pack_argb
-typedef uint32_t argb_colour;
-
-//! 8bpp palette class.
-class palette
-{
-public: // External API
-    palette();
-
-    //! Load palette from the supplied data.
-    /*!
-        Note that the data uses palette entries of 6 bit colours.
-        @param pData Data loaded from the file.
-        @param iDataLength Size of the data.
-        @return Whether loading of the palette succeeded.
-    */
-    bool load_from_th_file(const uint8_t* pData, size_t iDataLength);
-
-    //! Set an entry of the palette.
-    /*!
-        The RGB colour (255, 0, 255) is used as the transparent colour.
-        @param iEntry Entry number to change.
-        @param iR Amount of red in the new entry.
-        @param iG Amount of green in the new entry.
-        @param iB Amount of blue in the new entry.
-        @return Setting the entry succeeded.
-    */
-    bool set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
-
-public: // Internal (this rendering engine only) API
-
-    //! Convert A, R, G, B values to a 32bpp colour.
-    /*!
-        @param iA Amount of opacity (0-255).
-        @param iR Amount of red (0-255).
-        @param iG Amount of green (0-255).
-        @param iB Amount of blue (0-255).
-        @return 32bpp value representing the provided colour values.
-    */
-    inline static argb_colour pack_argb(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
-    {
-        return (static_cast<argb_colour>(iR) <<  0) |
-        (static_cast<argb_colour>(iG) <<  8) |
-        (static_cast<argb_colour>(iB) << 16) |
-        (static_cast<argb_colour>(iA) << 24) ;
-    }
-
-    //! Get the red component of a colour.
-    /*!
-        @param iColour Colour to examine.
-        @return The red component intensity of the colour.
-    */
-    inline static uint8_t get_red(argb_colour iColour)
-    {
-        return static_cast<uint8_t>((iColour >> 0) & 0xFF);
-    }
-
-    //! Get the green component of a colour.
-    /*!
-        @param iColour Colour to examine.
-        @return The green component intensity of the colour.
-    */
-    inline static uint8_t get_green(argb_colour iColour)
-    {
-        return static_cast<uint8_t>((iColour >> 8) & 0xFF);
-    }
-
-    //! Get the blue component of a colour.
-    /*!
-        @param iColour Colour to examine.
-        @return The blue component intensity of the colour.
-    */
-    inline static uint8_t get_blue(argb_colour iColour)
-    {
-        return static_cast<uint8_t>((iColour >> 16) & 0xFF);
-    }
-
-    //! Get the opacity component of a colour.
-    /*!
-        @param iColour Colour to examine.
-        @return The opacity of the colour.
-    */
-    inline static uint8_t get_alpha(argb_colour iColour)
-    {
-        return static_cast<uint8_t>((iColour >> 24) & 0xFF);
-    }
-
-    //! Get the number of colours in the palette.
-    /*!
-        @return The number of colours in the palette.
-    */
-    int get_colour_count() const;
-
-    //! Get the internal palette data for fast (read-only) access.
-    /*!
-        @return Table with all 256 colours of the palette.
-    */
-    const argb_colour* get_argb_data() const;
-
-    //! Set an entry of the palette.
-    /*!
-        @param iEntry Entry to modify.
-        @param iVal Palette value to set.
-    */
-    inline void set_argb(int iEntry, uint32_t iVal)
-    {
-        colour_index_to_argb_map[iEntry] = iVal;
-    }
-
-private:
-    //! 32bpp palette colours associated with the 8bpp colour index.
-    uint32_t colour_index_to_argb_map[256];
-
-    //! Number of colours in the palette.
-    int colour_count;
 };
 
 //! Stored image.
@@ -469,7 +472,7 @@ public: // External API
     /*!
         @param iSprite Sprite getting the mapped palette.
         @param pMap The palette map to apply.
-        @param iAlt32 What to do for a 32bpp sprite (#THDF_Alt32_Mask bits).
+        @param iAlt32 What to do for a 32bpp sprite (#thdf_alt32_mask bits).
     */
     void set_sprite_alt_palette_map(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32);
 

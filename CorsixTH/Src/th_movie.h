@@ -157,7 +157,7 @@ private:
     //! \remark Requires external locking
     bool unsafe_full();
 
-    static const size_t picture_buffer_size = 4; ///< The number of elements to allocate in the picture queue
+    static constexpr size_t picture_buffer_size = 4; ///< The number of elements to allocate in the picture queue
     std::atomic<bool> aborting; ///< Whether we are in the process of aborting
     bool allocated; ///< Whether the picture buffer has been allocated (and hasn't since been deallocated)
     int picture_count; ///< The number of elements currently written to the picture queue
@@ -299,8 +299,8 @@ public:
 
 private:
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && defined(CORSIX_TH_USE_SDL_MIXER)
-    static const size_t movie_error_buffer_capacity = 128; ///< Buffer to hold last error description
-    static const size_t audio_chunk_buffer_capacity = 1024; ///< Buffer for audio playback
+    static constexpr size_t movie_error_buffer_capacity = 128; ///< Buffer to hold last error description
+    static constexpr size_t audio_chunk_buffer_capacity = 1024; ///< Buffer for audio playback
 
     //! Get the AVCodecContext associated with a given stream
     AVCodecContext* get_codec_context_for_stream(AVCodec* codec, AVStream* stream) const;

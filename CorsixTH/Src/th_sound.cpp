@@ -96,11 +96,23 @@ const char* sound_archive::get_sound_name(size_t iIndex) const
     return sound_files[iIndex].sound_name;
 }
 
-#define FOURCC(c1, c2, c3, c4) \
-    ( static_cast<uint32_t>(static_cast<uint8_t>(c1) <<  0) \
-    | static_cast<uint32_t>(static_cast<uint8_t>(c2) <<  8) \
-    | static_cast<uint32_t>(static_cast<uint8_t>(c3) << 16) \
-    | static_cast<uint32_t>(static_cast<uint8_t>(c4) << 24) )
+constexpr uint32_t fourcc(const char c1, const char c2, const char c3, const char c4)
+{
+    return (
+        (static_cast<uint32_t>(static_cast<uint8_t>(c1)) <<  0)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c2)) <<  8)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c3)) << 16)
+        | (static_cast<uint32_t>(static_cast<uint8_t>(c4)) << 24));
+}
+
+namespace {
+
+template <typename A, typename B>
+inline uint64_t mul64(A a, B b) {
+    return static_cast<uint64_t>(a) * static_cast<uint64_t>(b);
+}
+
+} // namespace
 
 size_t sound_archive::get_sound_duration(size_t iIndex)
 {
@@ -125,7 +137,7 @@ size_t sound_archive::get_sound_duration(size_t iIndex)
             break;
         if(SDL_RWread(pFile, &iChunkLength, 4, 1) != 1)
             break;
-        if(iFourCC == FOURCC('R','I','F','F') || iFourCC == FOURCC('L','I','S','T'))
+        if(iFourCC == fourcc('R','I','F','F') || iFourCC == fourcc('L','I','S','T'))
         {
             if(iChunkLength >= 4)
             {
@@ -135,7 +147,7 @@ size_t sound_archive::get_sound_duration(size_t iIndex)
                     continue;
             }
         }
-        if(iFourCC == FOURCC('f','m','t',' ') && iChunkLength >= 16)
+        if(iFourCC == fourcc('f','m','t',' ') && iChunkLength >= 16)
         {
             if(SDL_RWread(pFile, &iWaveAudioFormat, 2, 1) != 1)
                 break;
@@ -152,7 +164,7 @@ size_t sound_archive::get_sound_duration(size_t iIndex)
             iChunkLength -= 16;
         }
         //Finally:
-        if(iFourCC == FOURCC('d','a','t','a'))
+        if(iFourCC == fourcc('d','a','t','a'))
         {
             iWaveDataLength = iChunkLength;
             break;
@@ -167,13 +179,10 @@ size_t sound_archive::get_sound_duration(size_t iIndex)
     {
         return 0;
     }
-#define mul64(a, b) (static_cast<uint64_t>(a) * static_cast<uint64_t>(b))
+
     return static_cast<size_t>(mul64(iWaveDataLength, 8000) /
         mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate));
-#undef mul64
 }
-
-#undef FOURCC
 
 SDL_RWops* sound_archive::load_sound(size_t iIndex)
 {
@@ -185,6 +194,8 @@ SDL_RWops* sound_archive::load_sound(size_t iIndex)
 }
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
+
+constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
 
@@ -201,15 +212,8 @@ sound_player::sound_player()
     positionless_volume = MIX_MAX_VOLUME;
     sound_effects_enabled = true;
 
-#define NUM_CHANNELS 32
-#if NUM_CHANNELS >= 32
     available_channels_bitmap = ~0;
-    Mix_AllocateChannels(32);
-#else
-    channels_in_use_bitmap = (1 << NUM_CHANNELS) - 1;
-    Mix_AllocateChannels(NUM_CHANNELS);
-#endif
-#undef NUM_CHANNELS
+    Mix_AllocateChannels(number_of_channels);
 
     Mix_ChannelFinished(on_channel_finished);
 }
@@ -337,17 +341,17 @@ void sound_player::set_camera(int iX, int iY, int iRadius)
 
 #else // CORSIX_TH_USE_SDL_MIXER
 
-sound_effect_player::sound_effect_player() {}
-sound_effect_player::~sound_effect_player() {}
-sound_effect_player* sound_effect_player::get_singleton() {return nullptr;}
-void sound_effect_player::set_sound_archive(THSoundArchive *pArchive) {}
-void sound_effect_player::play(size_t iIndex, double dVolume) {}
-void sound_effect_player::play_at(size_t iIndex, int iX, int iY) {}
-void sound_effect_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
-int sound_effect_player::reserve_channel() { return 0; }
-void sound_effect_player::release_channel(int iChannel) {}
-void sound_effect_player::set_camera(int iX, int iY, int iRadius) {}
-void sound_effect_player::set_sound_effect_volume(double dVolume) {}
-void sound_effect_player::set_sound_effects_enabled(bool iOn) {}
+sound_player::sound_player() {}
+sound_player::~sound_player() {}
+sound_player* sound_player::get_singleton() {return nullptr;}
+void sound_player::populate_from(sound_archive *pArchive) {}
+void sound_player::play(size_t iIndex, double dVolume) {}
+void sound_player::play_at(size_t iIndex, int iX, int iY) {}
+void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
+int sound_player::reserve_channel() { return 0; }
+void sound_player::release_channel(int iChannel) {}
+void sound_player::set_camera(int iX, int iY, int iRadius) {}
+void sound_player::set_sound_effect_volume(double dVolume) {}
+void sound_player::set_sound_effects_enabled(bool iOn) {}
 
 #endif // CORSIX_TH_USE_SDL_MIXER

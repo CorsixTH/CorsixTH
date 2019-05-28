@@ -54,7 +54,9 @@ void link_list::remove_from_list()
 #include "cp437_table.h"
 #include "cp936_table.h"
 
-static void utf8encode(uint8_t*& sOut, uint32_t iCodepoint)
+namespace {
+
+void utf8encode(uint8_t*& sOut, uint32_t iCodepoint)
 {
     if(iCodepoint <= 0x7F)
     {
@@ -96,7 +98,7 @@ static void utf8encode(uint8_t*& sOut, uint32_t iCodepoint)
     }
 }
 
-static void CopyStringCP437(const uint8_t*& sIn, uint8_t*& sOut)
+void CopyStringCP437(const uint8_t*& sIn, uint8_t*& sOut)
 {
     uint8_t cChar;
     do
@@ -115,7 +117,7 @@ static void CopyStringCP437(const uint8_t*& sIn, uint8_t*& sOut)
     } while(cChar != 0);
 }
 
-static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
+void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
 {
     uint8_t cChar1, cChar2;
     do
@@ -150,6 +152,8 @@ static void CopyStringCP936(const uint8_t*& sIn, uint8_t*& sOut)
         }
     } while(cChar1 != 0);
 }
+
+} // namespace
 
 th_string_list::th_string_list(const uint8_t* data, size_t length)
 {

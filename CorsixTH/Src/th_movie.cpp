@@ -63,11 +63,15 @@ void avcodec_free_context(AVCodecContext** ctx) {
 }
 #endif
 
-static void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
+namespace {
+
+void th_movie_audio_callback(int iChannel, void *pStream, int iStreamSize, void *pUserData)
 {
     movie_player *pMovie = (movie_player *)pUserData;
     pMovie->copy_audio_to_stream((uint8_t*)pStream, iStreamSize);
 }
+
+} // namespace
 
 movie_picture::movie_picture():
     buffer(nullptr),

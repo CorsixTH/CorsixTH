@@ -28,9 +28,12 @@ SOFTWARE.
 #include <vector>
 #include <cstdlib>
 #include <string>
+#include <array>
 #ifdef _MSC_VER
 #pragma warning(disable: 4996) // Disable "std::strcpy unsafe" warnings under MSVC
 #endif
+
+namespace {
 
 enum persist_type
 {
@@ -53,15 +56,18 @@ enum persist_type
     PERSIST_TCOUNT, // must equal 16 (for compatibility)
 };
 
-static int l_writer_mt_index(lua_State *L);
+int l_writer_mt_index(lua_State *L);
 
-template <class T> static int l_crude_gc(lua_State *L)
+template <class T>
+int l_crude_gc(lua_State *L)
 {
     // This __gc metamethod does not verify that the given value is the correct
     // type of userdata, or that the value is userdata at all.
     reinterpret_cast<T*>(lua_touserdata(L, 1))->~T();
     return 0;
-};
+}
+
+} // namespace
 
 //! Structure for loading multiple strings as a Lua chunk, avoiding concatenation
 /*!
@@ -70,10 +76,12 @@ template <class T> static int l_crude_gc(lua_State *L)
     can be more efficient to use this structure, which can load them without
     concatenating them. Sample usage is:
 
+    ```
     load_multi_buffer ls;
     ls.s[0] = lua_tolstring(L, -2, &ls.i[0]);
     ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
     lua_load(L, LoadMultiBuffer_t::load_fn, &ls, "chunk name");
+    ```
 */
 class load_multi_buffer
 {
@@ -111,16 +119,16 @@ public:
 /*!
     self - Instance of lua_persist_basic_writer allocated as a Lua userdata
     self metatable:
-      __gc - ~lua_persist_basic_writer (via l_crude_gc)
-      "<file>:<line>" - <index of function prototype in already written data>
+      `__gc` - ~lua_persist_basic_writer (via l_crude_gc)
+      `<file>:<line>` - index of function prototype in already written data
       [1] - pre-populated prototype persistance names
-        "<file>:<line>" - "<name>"
+        `<file>:<line>` - `<name>`
       err - an object which could not be persisted
     self environment:
-      <object> - <index of object in already written data>
+      `<object>` - index of object in already written data
       [1] - permanents table
     self environment metatable:
-      __index - writeObjectRaw (via l_writer_mt_index)
+      `__index` - writeObjectRaw (via l_writer_mt_index)
         upvalue 1 - permanents table
         upvalue 2 - self
 */
@@ -688,11 +696,15 @@ private:
     bool had_error;
 };
 
-static int l_writer_mt_index(lua_State *L)
+namespace {
+
+int l_writer_mt_index(lua_State *L)
 {
     return reinterpret_cast<lua_persist_basic_writer*>(
         lua_touserdata(L, luaT_upvalueindex(2)))->write_object_raw();
 }
+
+} // namespace
 
 //! Basic implementation of depersistance interface
 /*!
@@ -700,14 +712,14 @@ static int l_writer_mt_index(lua_State *L)
     self environment:
       [-3] - self
       [-2] - pre-populated prototype persistance code
-        "<name>" - "<code>"
+        `<name>` - `<code>`
       [-1] - pre-populated prototype persistance filenames
-        "<name>" - "<filename>"
+        `<name>` - `<filename>`
       [ 0] - permanents table
-      <index> - <object already depersisted>
+      `<index>` - object already depersisted
     self metatable:
-      __gc - ~lua_persist_basic_reader (via l_crude_gc)
-      <N> - <userdata to have second __depersist call>
+      `__gc` - ~lua_persist_basic_reader (via l_crude_gc)
+      `<N>` - userdata to have second `__depersist` call
 */
 class lua_persist_basic_reader : public lua_persist_reader
 {
@@ -1198,7 +1210,9 @@ private:
     bool had_error;
 };
 
-static int l_dump_toplevel(lua_State *L)
+namespace {
+
+int l_dump_toplevel(lua_State *L)
 {
     luaL_checktype(L, 2, LUA_TTABLE);
     lua_settop(L, 2);
@@ -1210,7 +1224,7 @@ static int l_dump_toplevel(lua_State *L)
     return pWriter->finish();
 }
 
-static int l_load_toplevel(lua_State *L)
+int l_load_toplevel(lua_State *L)
 {
     size_t iDataLength;
     const uint8_t *pData = luaT_checkfile(L, 1, &iDataLength);
@@ -1236,7 +1250,7 @@ static int l_load_toplevel(lua_State *L)
     }
 }
 
-static int calculate_line_number(const char *sStart, const char *sPosition)
+int calculate_line_number(const char *sStart, const char *sPosition)
 {
     int iLine = 1;
     for(; sStart != sPosition; ++sStart)
@@ -1260,7 +1274,7 @@ static int calculate_line_number(const char *sStart, const char *sPosition)
     return iLine;
 }
 
-static const char* find_function_end(lua_State *L, const char* sStart)
+const char* find_function_end(lua_State *L, const char* sStart)
 {
     const char* sEnd = sStart;
     while(sEnd)
@@ -1285,7 +1299,7 @@ static const char* find_function_end(lua_State *L, const char* sStart)
     return nullptr;
 }
 
-static int l_persist_dofile(lua_State *L)
+int l_persist_dofile(lua_State *L)
 {
     const char *sFilename = luaL_checkstring(L, 1);
     lua_settop(L, 1);
@@ -1428,7 +1442,7 @@ static int l_persist_dofile(lua_State *L)
     return lua_gettop(L) - 1;
 }
 
-static int l_errcatch(lua_State *L)
+int l_errcatch(lua_State *L)
 {
     // Dummy function for debugging - place a breakpoint on the following
     // return statement to inspect the full C call stack when a Lua error
@@ -1436,12 +1450,14 @@ static int l_errcatch(lua_State *L)
     return 1;
 }
 
-static const std::vector<luaL_Reg> persist_lib = {
+constexpr std::array<luaL_Reg, 2> persist_lib {{
     // Due to the various required upvalues, functions are registered
     // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
     {nullptr, nullptr}
-};
+}};
+
+} // namespace
 
 int luaopen_persist(lua_State *L)
 {

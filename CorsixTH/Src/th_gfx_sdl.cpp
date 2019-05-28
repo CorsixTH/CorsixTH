@@ -40,6 +40,8 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight) : width(iWid
     y = 0;
 }
 
+namespace {
+
 //! Convert a colour to an equivalent grey scale level.
 /*!
     @param iOpacity Opacity of the pixel.
@@ -48,7 +50,7 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight) : width(iWid
     @param iB Blue colour intensity.
     @return 32bpp colour pixel in grey scale.
  */
-static inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
+inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
 {
     // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
     // 0.2126*R + 0.7152*G + 0.0722*B
@@ -68,7 +70,7 @@ static inline uint32_t makeGreyScale(uint8_t iOpacity, uint8_t iR, uint8_t iG, u
     @param iB Blue colour intensity.
     @return 32bpp colour pixel with red and blue swapped.
  */
-static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
+inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG, uint8_t iB)
 {
     // http://en.wikipedia.org/wiki/Grayscale#Converting_color_to_grayscale
     // The Y factor for red is 0.2126, and for blue 0.0722. This means red is about 3 times stronger than blue.
@@ -80,6 +82,62 @@ static inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
     if (iNewBlue > 255)
         iNewBlue = 255;
     return palette::pack_argb(iOpacity, iNewRed, iG, static_cast<uint8_t>(iNewBlue));
+}
+
+uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component)
+{
+    constexpr uint8_t mask_6bit = 0x3F;
+    return static_cast<uint8_t>(((colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit) + 0.5);
+}
+
+} // namespace
+
+palette::palette()
+{
+    colour_count = 0;
+}
+
+bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength)
+{
+    if(iDataLength != 256 * 3)
+        return false;
+
+    colour_count = static_cast<int>(iDataLength / 3);
+    for(int i = 0; i < colour_count; ++i, pData += 3)
+    {
+        uint8_t iR = convert_6bit_to_8bit_colour_component(pData[0]);
+        uint8_t iG = convert_6bit_to_8bit_colour_component(pData[1]);
+        uint8_t iB = convert_6bit_to_8bit_colour_component(pData[2]);
+        uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
+        // Remap magenta to transparent
+        if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
+            iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
+        colour_index_to_argb_map[i] = iColour;
+    }
+
+    return true;
+}
+
+bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
+{
+    if(iEntry < 0 || iEntry >= colour_count)
+        return false;
+    uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
+    // Remap magenta to transparent
+    if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
+        iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
+    colour_index_to_argb_map[iEntry] = iColour;
+    return true;
+}
+
+int palette::get_colour_count() const
+{
+    return colour_count;
+}
+
+const uint32_t* palette::get_argb_data() const
+{
+    return colour_index_to_argb_map;
 }
 
 void full_colour_renderer::decode_image(const uint8_t* pImg, const palette *pPalette, uint32_t iSpriteFlags)
@@ -437,11 +495,6 @@ void render_target::set_window_grab(bool bActivate)
     SDL_SetWindowGrab(window, bActivate ? SDL_TRUE : SDL_FALSE);
 }
 
-uint32_t render_target::map_colour(uint8_t iR, uint8_t iG, uint8_t iB)
-{
-    return palette::pack_argb(0xFF, iR, iG, iB);
-}
-
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW, int iH)
 {
     SDL_Rect rcDest = { iX, iY, iW, iH };
@@ -598,13 +651,15 @@ void render_target::flush_zoom_buffer()
     zoom_texture = nullptr;
 }
 
+namespace {
+
 //! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special recolour table 0xFF.
 /*!
     @param pPixelData Legacy 8bpp pixels.
     @param iPixelDataLength Number of pixels in the \a pPixelData.
     @return Converted 32bpp pixel data, if succeeded else nullptr is returned. Caller should free the returned memory.
  */
-static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
+uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelDataLength)
 {
     // Recolour blocks are 63 pixels long.
     // XXX To reduce the size of the 32bpp data, transparent pixels can be stored more compactly.
@@ -627,6 +682,8 @@ static uint8_t *convertLegacySprite(const uint8_t* pPixelData, size_t iPixelData
     }
     return pData;
 }
+
+} // namespace
 
 SDL_Texture* render_target::create_palettized_texture(
             int iWidth, int iHeight, const uint8_t* pPixels,
@@ -725,66 +782,6 @@ void render_target::draw_line(line *pLine, int iX, int iY)
     }
 }
 
-palette::palette()
-{
-    colour_count = 0;
-}
-
-static const uint8_t gs_iTHColourLUT[0x40] = {
-    // Maps 0-63 to 0-255
-    0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C,
-    0x20, 0x24, 0x28, 0x2D, 0x31, 0x35, 0x39, 0x3D,
-    0x41, 0x45, 0x49, 0x4D, 0x51, 0x55, 0x59, 0x5D,
-    0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D,
-    0x82, 0x86, 0x8A, 0x8E, 0x92, 0x96, 0x9A, 0x9E,
-    0xA2, 0xA6, 0xAA, 0xAE, 0xB2, 0xB6, 0xBA, 0xBE,
-    0xC2, 0xC6, 0xCA, 0xCE, 0xD2, 0xD7, 0xDB, 0xDF,
-    0xE3, 0xE7, 0xEB, 0xEF, 0xF3, 0xF7, 0xFB, 0xFF,
-};
-
-bool palette::load_from_th_file(const uint8_t* pData, size_t iDataLength)
-{
-    if(iDataLength != 256 * 3)
-        return false;
-
-    colour_count = static_cast<int>(iDataLength / 3);
-    for(int i = 0; i < colour_count; ++i, pData += 3)
-    {
-        uint8_t iR = gs_iTHColourLUT[pData[0] & 0x3F];
-        uint8_t iG = gs_iTHColourLUT[pData[1] & 0x3F];
-        uint8_t iB = gs_iTHColourLUT[pData[2] & 0x3F];
-        uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
-        // Remap magenta to transparent
-        if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
-            iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
-        colour_index_to_argb_map[i] = iColour;
-    }
-
-    return true;
-}
-
-bool palette::set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB)
-{
-    if(iEntry < 0 || iEntry >= colour_count)
-        return false;
-    uint32_t iColour = pack_argb(0xFF, iR, iG, iB);
-    // Remap magenta to transparent
-    if(iColour == pack_argb(0xFF, 0xFF, 0x00, 0xFF))
-        iColour = pack_argb(0x00, 0x00, 0x00, 0x00);
-    colour_index_to_argb_map[iEntry] = iColour;
-    return true;
-}
-
-int palette::get_colour_count() const
-{
-    return colour_count;
-}
-
-const uint32_t* palette::get_argb_data() const
-{
-    return colour_index_to_argb_map;
-}
-
 raw_bitmap::raw_bitmap()
 {
     texture = nullptr;
@@ -826,6 +823,8 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
     target = pEventualCanvas;
 }
 
+namespace {
+
 /**
  * Test whether the loaded full colour sprite loads correctly.
  * @param pData Data of the sprite.
@@ -834,7 +833,7 @@ void raw_bitmap::load_from_th_file(const uint8_t* pPixelData,
  * @param iHeight Height of the sprite.
  * @return Whether the sprite loads correctly (at the end of the sprite, all data is used).
  */
-static bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth, int iHeight)
+bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth, int iHeight)
 {
     if (iWidth <= 0 || iHeight <= 0)
         return true;
@@ -893,6 +892,8 @@ static bool testSprite(const uint8_t* pData, size_t iDataLength, int iWidth, int
     }
     return iDataLength == 0;
 }
+
+} // namespace
 
 void raw_bitmap::draw(render_target* pCanvas, int iX, int iY)
 {
@@ -1226,6 +1227,8 @@ SDL_Texture* sprite_sheet::_makeAltBitmap(sprite *pSprite)
     return pSprite->alt_texture;
 }
 
+namespace {
+
 /**
  * Get the colour data of pixel \a iPixelNumber (\a iWidth * y + x)
  * @param pImg 32bpp image data.
@@ -1234,7 +1237,7 @@ SDL_Texture* sprite_sheet::_makeAltBitmap(sprite *pSprite)
  * @param pPalette Palette of the image, or \c nullptr.
  * @param iPixelNumber Number of the pixel to retrieve.
  */
-static uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
+uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
                               const ::palette *pPalette, size_t iPixelNumber)
 {
     if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 ||
@@ -1331,6 +1334,8 @@ static uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
         }
     }
 }
+
+} // namespace
 
 bool sprite_sheet::hit_test_sprite(size_t iSprite, int iX, int iY, uint32_t iFlags) const
 {

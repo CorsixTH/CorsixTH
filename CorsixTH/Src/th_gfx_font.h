@@ -93,7 +93,7 @@ public:
     //! Draw a single line of text, splitting it at word boundaries
     /*!
         This function still only draws a single line of text (i.e. any line
-        breaks like \r and \n in sMessage are ignored), but inserts line breaks
+        breaks like `\r` and `\n` in sMessage are ignored), but inserts line breaks
         between words so that no single line is wider than iWidth pixels.
         If iMaxRows is specified it will simply cut after that many rows.
         @param pCanvas The canvas on which to draw. Can be nullptr, in which case
