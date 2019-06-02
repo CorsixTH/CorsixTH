@@ -352,7 +352,7 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
     return false;
 }
 
-bool iso_filesystem::filename_compare(const file_metadata& lhs, const file_metadata& rhs)
+bool iso_filesystem::file_metadata_less(const file_metadata& lhs, const file_metadata& rhs)
 {
     return lhs.path < rhs.path;
 }
@@ -454,8 +454,8 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
     if(prefix.size() == 0)
     {
         // The lookup table will be ordered by the underlying ordering of the
-        // disk, which isn't quite the ordering we want.
-        std::sort(files.begin(), files.end(), filename_compare);
+        // disk. we want it sorted by the path for ease of lookup.
+        std::sort(files.begin(), files.end(), file_metadata_less);
     }
 }
 
@@ -611,6 +611,36 @@ int l_isofs_set_root(lua_State *L)
     }
 }
 
+int l_isofs_file_exists(lua_State *L)
+{
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
+    const char* sFilename = luaL_checkstring(L, 2);
+    iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
+    if(!iso_filesystem::isHandleGood(iFile))
+    {
+        lua_pushnil(L);
+        lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
+        return 2;
+    }
+    lua_pushboolean(L, true);
+    return 1;
+}
+
+int l_isofs_file_size(lua_State *L)
+{
+    iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
+    const char* sFilename = luaL_checkstring(L, 2);
+    iso_filesystem::file_handle iFile = pSelf->find_file(sFilename);
+    if(!iso_filesystem::isHandleGood(iFile))
+    {
+        lua_pushnil(L);
+        lua_pushfstring(L, "Could not find \'%s\' in .iso image", sFilename);
+        return 2;
+    }
+    lua_pushinteger(L, pSelf->get_file_size(iFile));
+    return 1;
+}
+
 int l_isofs_read_contents(lua_State *L)
 {
     iso_filesystem *pSelf = luaT_testuserdata<iso_filesystem>(L);
@@ -658,6 +688,8 @@ void lua_register_iso_fs(const lua_register_state* pState)
     lua_class_binding<iso_filesystem> lcb(pState, "iso_fs", l_isofs_new, lua_metatable::iso_fs);
     lcb.add_function(l_isofs_set_path_separator, "setPathSeparator");
     lcb.add_function(l_isofs_set_root, "setRoot");
+    lcb.add_function(l_isofs_file_exists, "fileExists");
+    lcb.add_function(l_isofs_file_size, "fileSize");
     lcb.add_function(l_isofs_read_contents, "readContents");
     lcb.add_function(l_isofs_list_files, "listFiles");
 }

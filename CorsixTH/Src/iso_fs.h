@@ -143,5 +143,6 @@ private:
     */
     void build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const std::string& prefix);
 
-    static bool filename_compare(const file_metadata& lhs, const file_metadata& rhs);
+    //! std:less like implementation for file_metadata. Based on the path.
+    static bool file_metadata_less(const file_metadata& lhs, const file_metadata& rhs);
 };

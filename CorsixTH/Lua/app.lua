@@ -1252,14 +1252,9 @@ function App:checkInstallFolder()
   -- Check for file corruption for local files.
   -- No check is done if the game is loaded from an ISO
   local function check_corrupt(path, correct_size)
-    if self.fs.provider then
-      return true
-    end
-
-    local real_path = self.fs:getFilePath(path)
     -- If the file exists but is smaller than usual it is probably corrupt
-    if real_path then
-      local real_size = lfs.attributes(real_path, "size")
+    if self.fs:fileExists(path) then
+      local real_size = self.fs:fileSize(path)
       if real_size + 1024 < correct_size or real_size - 1024 > correct_size then
         corrupt[#corrupt + 1] = path .. " (Size: " .. math.floor(real_size/1024) .. " kB / Correct: about " .. math.floor(correct_size/1024) .. " kB)"
       end

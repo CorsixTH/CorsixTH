@@ -23,19 +23,44 @@ local part_pattern = "[^" .. pathsep .. "]+"
 
 local ISO_FS = require("TH").iso_fs
 
---! Layer for abstracting away differences in file systems
+--! Layer for abstracting away differences in file systems.
+--
+-- In the traditional case, the FileSystem is associated with a path on the
+-- actual filesystem, from which all other operations are considered relative.
+--
+-- The FileSystem is also able to delegate operations to the ISO_FS library
+-- in the engine for reading / listing files off an ISO image instead of a
+-- file system.
 class "FileSystem"
 
 ---@type FileSystem
 local FileSystem = _G["FileSystem"]
 
 function FileSystem:FileSystem()
+  -- A mapping of normalized file names in the current directory to their
+  -- actual path names.
+  self.files = nil
+
+  -- A mapping of normalized directory names in the current directory to
+  -- an object containing their actual physical path.
+  self.sub_dirs = nil
+
+  -- The actual filesystem path that is the basis/root of this FileSystem. Not
+  -- used when a provider is specified.
+  self.physical_path = nil
+
+  -- The ISO_FS provider if we are reading from an ISO instead of a
+  -- filesystem, otherwise nil.
+  self.provider = nil
 end
 
+--! Convert a file name to a canonical, case insensitive format.
+-- The format is based on the limitations of the ISO filesystem.
 local function normalise(str)
   return str:upper():gsub("_", "-")
 end
 
+--! Populate the files and sub_dirs values for the current FileSystem path.
 function FileSystem:_enumerate()
   self.sub_dirs = {}
   self.files = {}
@@ -49,6 +74,12 @@ function FileSystem:_enumerate()
   end
 end
 
+--! Set the root physical path for this FileSystem.
+-- If the path is an ISO then set the provider. If the path is a directory
+-- then set the pysical_path and populate the files and sub_dirs.
+--
+--!param physical_path (string) a path on the filesystem to either a directory
+-- or theme hospital ISO file.
 function FileSystem:setRoot(physical_path)
   if physical_path:match"%.[iI][sS][oO]$" or physical_path:match"%.[iI][sS][oO]9660$" then
     self.provider = ISO_FS()
@@ -58,9 +89,8 @@ function FileSystem:setRoot(physical_path)
       return nil, err
     end
     return self.provider:setRoot(file)
-  else
-    self.provider = nil
   end
+
   if physical_path:sub(-1) == pathsep then
     -- Trim off the trailing separator (lfs doesn't like querying the mode of a
     -- directory with a trailing slash on win32)
@@ -69,11 +99,20 @@ function FileSystem:setRoot(physical_path)
   if lfs.attributes(physical_path, "mode") ~= "directory"  then
     return nil, "Specified path ('" .. physical_path .. "') is not a directory"
   end
+
+  self.provider = nil
   self.physical_path = physical_path
   self:_enumerate()
+
   return true
 end
 
+--! list the files in the given path.
+--
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
+--!return (object) a map of normalized names to actual names of files.
 function FileSystem:listFiles(virtual_path, ...)
   if ... then
     virtual_path = table.concat({virtual_path, ...}, pathsep)
@@ -99,6 +138,10 @@ function FileSystem:listFiles(virtual_path, ...)
   return self.files
 end
 
+--! Combine the given path segments into a single path string.
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
 local function getFullPath(virtual_path, ...)
   if ... then
     virtual_path = table.concat({virtual_path, ...}, pathsep)
@@ -106,13 +149,18 @@ local function getFullPath(virtual_path, ...)
   return virtual_path
 end
 
+--! Return the contents of the file at the given path.
+--
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
 function FileSystem:readContents(virtual_path, ...)
   virtual_path = getFullPath(virtual_path, ...)
   if self.provider then
     return self.provider:readContents(virtual_path)
   end
 
-  local file, err = self:getFilePath(virtual_path)
+  local file, err = self:_getFilePath(virtual_path)
   if not file then
     return file, err
   end
@@ -125,11 +173,55 @@ function FileSystem:readContents(virtual_path, ...)
   return data
 end
 
-function FileSystem:getFilePath(virtual_path, ...)
+--! Determines if the given path points to a real file.
+--
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
+function FileSystem:fileExists(virtual_path, ...)
   virtual_path = getFullPath(virtual_path, ...)
   if self.provider then
-    return self.provider:readContents(virtual_path)
-  elseif not self.sub_dirs then
+    local found, err = self.provider:fileExists(virtual_path)
+    if found then
+      return true
+    else
+      return nil, err
+    end
+  end
+
+  local s, e = self:_getFilePath(virtual_path)
+  return (not not s), e
+end
+
+--! Get the size of the file at the given path.
+--
+--!param virtual_path (string) a path relative to the FileSystem root.
+--!param ... (string) the virtual_path may be split into separate arguments
+-- for each level in the filesystem.
+--!return (numeric) Number of bytes in the given file. Nil if the file doesn't
+-- exist.
+function FileSystem:fileSize(virtual_path, ...)
+  virtual_path = getFullPath(virtual_path, ...)
+  if self.provider then
+    return self.provider:fileSize(virtual_path)
+  end
+
+  local s, e = self:_getFilePath(virtual_path)
+  if not s then
+    return nil, e
+  end
+  return lfs.attributes(s, "size")
+end
+
+-- If the file exists and we are not using a provider then return a FileSystem
+-- rooted in the directory that the directory the file is contained in.
+-- Otherwise return nil and an error message.
+function FileSystem:_getFilePath(virtual_path, ...)
+  virtual_path = getFullPath(virtual_path, ...)
+  if self.provider then
+    return nil, "This function is not supported for providers"
+  end
+  if not self.sub_dirs then
     return nil, "Filesystem layer not initialised"
   end
   local is_file = false
