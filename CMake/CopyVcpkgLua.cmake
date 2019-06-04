@@ -1,25 +1,19 @@
 # Add an extra step to copy LUA files from vcpkg
 add_custom_command(TARGET CorsixTH POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
-  "${VCPKG_INSTALLED_PATH}/share/lua"
-  $<TARGET_FILE_DIR:CorsixTH>
-)
-
-add_custom_command(TARGET CorsixTH POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E remove
-  $<TARGET_FILE_DIR:CorsixTH>/COPYRIGHT
+  "${VCPKG_INSTALLED_PATH}/share/lua/socket"
+  $<TARGET_FILE_DIR:CorsixTH>/mime
 )
 
 add_custom_command(TARGET CorsixTH POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy
+  "${VCPKG_INSTALLED_PATH}/share/lua/ltn12.lua"
+  "${VCPKG_INSTALLED_PATH}/share/lua/mime.lua"
+  "${VCPKG_INSTALLED_PATH}/share/lua/re.lua"
+  "${VCPKG_INSTALLED_PATH}/share/lua/socket.lua"
   "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/lfs.dll"
-  $<TARGET_FILE_DIR:CorsixTH>/lfs.dll
-)
-
-add_custom_command(TARGET CorsixTH POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy
   "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/lpeg.dll"
-  $<TARGET_FILE_DIR:CorsixTH>/lpeg.dll
+  $<TARGET_FILE_DIR:CorsixTH>
 )
 
 add_custom_command(TARGET CorsixTH POST_BUILD
