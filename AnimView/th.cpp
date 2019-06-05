@@ -501,11 +501,12 @@ th_element_t* THAnimations::_getElement(uint32_t iListIndex)
 
 unsigned char* THAnimations::Decompress(unsigned char* pData, size_t& iLength)
 {
-    unsigned long outlen = rnc_output_size(pData);
-    unsigned char* outbuf = new unsigned char[outlen];
     if (rnc_input_size(pData) != iLength) {
         throw std::length_error("rnc data does not match the expected length");
     }
+
+    unsigned long outlen = rnc_output_size(pData);
+    unsigned char* outbuf = new unsigned char[outlen];
 
     if(rnc_unpack(pData, outbuf) == rnc_status::ok)
     {
