@@ -69,6 +69,10 @@ constexpr ptrdiff_t filename_length_offset = 32;
 /// from the start of the file entry.
 constexpr ptrdiff_t filename_offset = 33;
 
+/// The minimium valid size of a valid file entry.
+/// Accounts for all fixed header value offsets and even number padding.
+constexpr uint8_t minimum_file_entry_size = 34;
+
 /// Formal depth limit in spec is 8. We allows for loose implementations.
 constexpr int max_directory_depth = 16;
 
@@ -139,12 +143,21 @@ class iso_file_entry {
 public:
     iso_file_entry()=default;
     iso_file_entry(const uint8_t* b) {
+        uint8_t size = *b;
+        if (size < minimum_file_entry_size) {
+            throw std::runtime_error("size specified for file entry is too small.");
+        }
+
+        uint8_t filename_length = b[filename_length_offset];
+        if (filename_length + filename_offset > size) {
+            throw std::runtime_error("size specified for file entry is too small.");
+        }
+        trim_identifier_version(b + filename_offset, filename_length);
+        filename = normalise(b + filename_offset, filename_length);
+
         data_sector = bytes_to_uint32_le(b + file_sector_offset);
         data_length = bytes_to_uint32_le(b + file_data_length_offset);
         flags = b[file_flags_offset];
-        uint8_t filename_length = b[filename_length_offset];
-        trim_identifier_version(b + filename_offset, filename_length);
-        filename = normalise(b + filename_offset, filename_length);
     }
 
     uint32_t data_sector;
@@ -169,7 +182,9 @@ public:
 
     /**
      * Initialize an iterator for the directory table in the memory region
-     * defined by by begin and end.
+     * defined by by begin and end. This iterator is aware of its container
+     * and will throw an exception if an attempt is made to access it out of
+     * range.
      *
      * \param begin pointer to the first byte of the directory table.
      * \param end pointer to the first byte following the directory table.
@@ -177,7 +192,7 @@ public:
     iso_directory_iterator(const uint8_t* begin, const uint8_t* end) {
         directory_ptr = begin;
         end_ptr = end;
-        if (directory_ptr == end_ptr) {
+        if (directory_ptr >= end_ptr) {
             // dummy value, not accessible.
             entry = iso_file_entry();
         } else {
@@ -228,7 +243,7 @@ public:
      * Get the file entry pointed to by the iterator.
      */
     reference operator*() const {
-        if (directory_ptr == end_ptr) {
+        if (directory_ptr >= end_ptr) {
             throw std::out_of_range("iso directory iterator is past end of input");
         }
         return entry;
@@ -260,17 +275,32 @@ public:
     /**
      * Advance this iterator to the next file entry in the directory table,
      * returning the result.
+     * In cases where advancing the iterator would read past the end of the
+     * directory table, an exception is thrown and the iterator is not
+     * advanced.
      */
     iso_directory_iterator& operator++() {
-        directory_ptr += *directory_ptr;
-        while (*directory_ptr == 0 && directory_ptr < end_ptr) {
-            ++directory_ptr;
+        if (directory_ptr >= end_ptr) {
+            throw std::out_of_range("Cannot advance iso directory iterator past end of input");
         }
-        if (directory_ptr == end_ptr) {
-            entry = iso_file_entry();
+
+        const uint8_t* new_dir_ptr = directory_ptr + *directory_ptr;
+        while (new_dir_ptr < end_ptr && *new_dir_ptr == 0) {
+            ++new_dir_ptr;
+        }
+
+        // Catch a malformed directory entry where the size would extend past
+        // the end of the table.
+        if (new_dir_ptr < end_ptr && new_dir_ptr + *new_dir_ptr > end_ptr) {
+            throw std::runtime_error("The last directory entry was larger than the defined table region.");
+        }
+
+        if (new_dir_ptr < end_ptr) {
+            entry = iso_file_entry(new_dir_ptr);
         } else {
-            entry = iso_file_entry(directory_ptr);
+            entry = iso_file_entry();
         }
+        directory_ptr = new_dir_ptr;
         return *this;
     }
 
@@ -279,14 +309,19 @@ public:
      * returning a copy of the old iterator.
      */
     iso_directory_iterator operator++(int) {
-        iso_directory_iterator o(*this);
+        iso_directory_iterator old(*this);
         ++(*this);
-        return o;
+        return old;
     }
 
 private:
+    /// Pointer to the current entry.
     const uint8_t* directory_ptr;
+
+    /// Pointer to the end of the directory table.
     const uint8_t* end_ptr;
+
+    /// Current entry.
     iso_file_entry entry;
 };
 
@@ -335,12 +370,17 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
         if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0) {
             if(aBuffer[0] == vdt_primary_volume) {
                 sector_size = bytes_to_uint16_le(aBuffer + sector_size_offset);
-                find_hosp_directory(aBuffer + root_directory_offset, root_directory_entry_size, 0);
-                if(files.empty()) {
-                    set_error("Could not find Theme Hospital data directory.");
+                try {
+                    find_hosp_directory(aBuffer + root_directory_offset, root_directory_entry_size, 0);
+                    if(files.empty()) {
+                        set_error("Could not find Theme Hospital data directory.");
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } catch (const std::exception& ex) {
+                    set_error(ex.what());
                     return false;
-                } else {
-                    return true;
                 }
             } else if(aBuffer[0] == vdt_terminator) {
                 break;
