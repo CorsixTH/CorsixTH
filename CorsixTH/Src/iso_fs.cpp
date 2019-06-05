@@ -42,6 +42,7 @@ enum iso_volume_descriptor_type : uint8_t
     vdt_terminator = 0xFF,
 };
 
+/// Flag values for directory table entries. The flag itself is a bitmask.
 enum iso_dir_ent_flag : uint8_t
 {
     def_hidden = 0x01,
@@ -97,11 +98,13 @@ constexpr size_t root_directory_entry_size = 34;
 /// e.g. boot information.
 constexpr uint32_t first_filesystem_sector = 16;
 
-void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength)
+/// Finds the length of the file name within a file identifier.
+/// The file identifier is `filename;file id`.
+void trim_file_id(const uint8_t* sIdent, uint8_t& iLength)
 {
-    for(uint8_t i = 0; i < iLength; ++i)
+    for (uint8_t i = 0; i < iLength; ++i)
     {
-        if(sIdent[i] == ';')
+        if (sIdent[i] == ';')
         {
             iLength = i;
             return;
@@ -109,6 +112,8 @@ void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength)
     }
 }
 
+/// Convert character to filename normalized format conforming to ISO filename
+/// limitations. All letters are converted to upper case, and `_` to `-`.
 char normalise(char c) {
     if (c == '_') {
         return '-';
@@ -119,6 +124,8 @@ char normalise(char c) {
     }
 }
 
+/// Convert length bytes from the start pointer to a normalized filename
+/// string. All ASCII letters are converted to upper case, and `_` to `-`.
 std::string normalise(const uint8_t* start, size_t length) {
     std::string ret;
     const uint8_t* p = start;
@@ -129,6 +136,8 @@ std::string normalise(const uint8_t* start, size_t length) {
     return ret;
 }
 
+/// Convert c string to normalized filename string. All ASCII letters are
+/// converted to upper case, and `_` to `-`.
 std::string normalise(const char* str) {
     std::string ret;
     const char* p = str;
@@ -139,9 +148,17 @@ std::string normalise(const char* str) {
     return ret;
 }
 
+/// A file entry from the directory table
 class iso_file_entry {
 public:
+    /// Construct dummy entry.
     iso_file_entry()=default;
+
+    /// Construct entry from the given memory location.
+    /// The first byte is the size of the entry. Other useful headers are read
+    /// from their offsets from that location.
+    ///
+    /// \param Pointer to first byte of file entry in directory table.
     iso_file_entry(const uint8_t* b) {
         uint8_t size = *b;
         if (size < minimum_file_entry_size) {
@@ -152,7 +169,7 @@ public:
         if (filename_length + filename_offset > size) {
             throw std::runtime_error("size specified for file entry is too small.");
         }
-        trim_identifier_version(b + filename_offset, filename_length);
+        trim_file_id(b + filename_offset, filename_length);
         filename = normalise(b + filename_offset, filename_length);
 
         data_sector = bytes_to_uint32_le(b + file_sector_offset);
@@ -160,9 +177,19 @@ public:
         flags = b[file_flags_offset];
     }
 
+    /// Logical location of the data for this file in the ISO image.
     uint32_t data_sector;
+
+    /// The length of the data for this file.
     uint32_t data_length;
+
+    /// Flags that indicate whether this entry is a file or directory, along
+    /// with other properties.
+    ///
+    /// \see iso_dir_ent_flag
     uint8_t flags;
+
+    /// The filename of this entry.
     std::string filename;
 };
 
