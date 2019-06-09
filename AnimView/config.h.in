@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2019 Stephen "TheCycoONE" Baker
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -20,26 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#ifndef CORSIX_AV_CONFIG_H_
+#define CORSIX_AV_CONFIG_H_
 
-#include "config.h"
-// For compilers that support precompilation, includes "wx/wx.h".
-#include "wx/wxprec.h"
+/** Standard includes **/
+#include <cstddef>
+#include <cstdint>
 
-#ifdef __BORLANDC__
-    #pragma hdrstop
-#endif
+// We bring in the most common stddef and stdint types to avoid typing
+using std::size_t;
+using std::uint8_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::int8_t;
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
 
-// for all others, include the necessary headers (this file is usually all you
-// need because it includes almost all "standard" wxWidgets headers)
-#ifndef WX_PRECOMP
-    #include "wx/wx.h"
-#endif
-// ----------------------------
-
-class ThemeHospitalAnimViewApp : public wxApp
-{
-    virtual bool OnInit();
-};
-
-DECLARE_APP(ThemeHospitalAnimViewApp)
+#endif // CORSIX_AV_CONFIG_H_

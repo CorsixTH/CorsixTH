@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #pragma once
+#include "config.h"
 #include <wx/frame.h>
 #include <wx/button.h>
 #include <wx/spinctrl.h>

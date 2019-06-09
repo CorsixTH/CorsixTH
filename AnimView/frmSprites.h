@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #pragma once
+
+#include "config.h"
 #include <wx/bitmap.h>
 #include <wx/frame.h>
 #include <wx/button.h>

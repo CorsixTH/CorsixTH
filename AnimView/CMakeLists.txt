@@ -1,22 +1,31 @@
 # Project Declaration
 project(AnimView)
 
+configure_file(config.h.in config.h)
+
 # Generate source files list
 # Note: do not use generic includes (*.cpp and such) this will break things with cmake
 set(animview_source_files
+  ${CMAKE_CURRENT_BINARY_DIR}/config.h
+
+  ${CMAKE_SOURCE_DIR}/common/rnc.h
+  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
+
   app.cpp
   frmMain.cpp
   frmSprites.cpp
-  ${CMAKE_SOURCE_DIR}/common/rnc.h
-  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
   th.cpp
+
   app.h
   backdrop.h
   frmMain.h
   frmSprites.h
   th.h
+
   AnimView.rc
 )
+
+include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 # Declaration of the executable
 if(APPLE)

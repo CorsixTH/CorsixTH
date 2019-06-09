@@ -35,6 +35,7 @@ SOFTWARE.
 */
 
 #pragma once
+#include "config.h"
 #include <wx/string.h>
 #include <wx/file.h>
 #include <wx/image.h>
