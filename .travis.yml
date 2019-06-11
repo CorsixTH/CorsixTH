@@ -1,4 +1,3 @@
-sudo: true
 dist: xenial
 language: cpp
 compiler: gcc
@@ -11,16 +10,14 @@ addons:
       - doxygen
       - sshpass
       - ant
-      - cmake
-      - git
 
 before_install:
-  # Required as xenial has catch v1 - later on we can just use the package version
+  # Xenial does not have catch2 in its repo so clone and install locally
   - cd $HOME
   - git clone https://github.com/catchorg/Catch2.git --depth=1
   - cd Catch2
   - cmake -Bbuild -H. -DBUILD_TESTING=OFF
-  - sudo cmake --build build/ --target install 
+  - cd build && sudo make install
   - cd ${TRAVIS_BUILD_DIR}
 
   - luarocks --local install --server=http://luarocks.org luasec OPENSSL_DIR=/usr OPENSSL_LIBDIR=/usr/lib/x86_64-linux-gnu/

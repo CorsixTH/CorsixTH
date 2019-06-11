@@ -25,13 +25,7 @@ set (TESTING_FILES
     example.cpp
 )
 
-# Ubuntu 16.04 does not have catch and it requires a different
-# path from the bare "catch.hpp" if a user manually installs
-# so instead use a bundled copy
-set(CATCH_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/Catch)
-add_library(catch2 INTERFACE)
-target_include_directories(catch2 INTERFACE ${CATCH_INCLUDE_DIR})
-
+find_package(Catch2 CONFIG REQUIRED)
 
 add_custom_target(AllTests)
 
@@ -39,8 +33,12 @@ add_custom_target(AllTests)
 include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 add_executable(UnitTests ${TESTING_FILES} ${TEST_SOURCE_FILES})
-target_link_libraries(UnitTests catch2)
-target_link_libraries(UnitTests corsixth_lib)
+target_link_libraries(UnitTests Catch2::Catch2)
+target_link_libraries(UnitTests Corsixth_lib)
+
+set_property(TARGET UnitTests PROPERTY CXX_STANDARD 14)
+set_property(TARGET UnitTests PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET UnitTests PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Add the target to CTest
 add_test(NAME UnitTests COMMAND UnitTests)
