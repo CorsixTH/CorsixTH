@@ -224,6 +224,14 @@ elseif(MSVC)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.vcxproj.user.in ${CMAKE_CURRENT_BINARY_DIR}/CorsixTH.vcxproj.user @ONLY)
 endif()
 
+# Adding testing files whilst we also have the list of source files and have found libs
+if(ENABLE_UNIT_TESTS)
+  message("Building Unit Tests")
+  # Enable testing if set at this level so we can use CTest from the root of the build dir
+  enable_testing()
+  add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
+endif()
+
 
 # Declaration of the install process
 if(NOT USE_SOURCE_DATADIRS)

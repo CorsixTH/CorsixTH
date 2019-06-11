@@ -15,11 +15,14 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
+option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
+
 if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
 
 if(USE_VCPKG_DEPS)
+  # This must be before the project for tool-chain to work correctly
   message("Note: Using locally built vcpkg dependencies.")
   include(VcpkgDeps)
 endif()
