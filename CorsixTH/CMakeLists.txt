@@ -100,6 +100,10 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # Set language standard
+set_property(TARGET corsixth_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET corsixth_lib PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET corsixth_lib PROPERTY CXX_STANDARD_REQUIRED ON)
+
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
@@ -114,7 +118,7 @@ ENDIF()
 # Find SDL
 if(MSVC AND USE_VCPKG_DEPS)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(CorsixTH SDL2::SDL2)
+  target_link_libraries(corsixth_lib SDL2::SDL2)
   target_link_libraries(CorsixTH SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)

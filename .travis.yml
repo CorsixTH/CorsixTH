@@ -17,7 +17,7 @@ addons:
 before_install:
   # Required as xenial has catch v1 - later on we can just use the package version
   - cd $HOME
-  - git clone https://github.com/catchorg/Catch2.git
+  - git clone https://github.com/catchorg/Catch2.git --depth=1
   - cd Catch2
   - cmake -Bbuild -H. -DBUILD_TESTING=OFF
   - sudo cmake --build build/ --target install 
