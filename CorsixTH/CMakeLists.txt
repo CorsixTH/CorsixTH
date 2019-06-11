@@ -34,43 +34,15 @@ include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Generate source files list
 # Note: Done after generating config.h
+add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 
-# XXX: We should manually specify the files to include in each directory rather
-# than glob them all
-file(GLOB_RECURSE corsixth_source_files
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.hpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
-  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
-  ${CMAKE_SOURCE_DIR}/common/rnc.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
-  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
-  ${CMAKE_SOURCE_DIR}/LFS/*.c
-  ${CMAKE_SOURCE_DIR}/LPEG/*.c
-
-  ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
-)
+add_library(Corsixth_lib STATIC ${corsixth_lib_src_files} ${corsixth_lib_hdr_files})
 
 set(corsixth_main_files
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp
   ${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.h
 )
-
-message(${corsixth_main_files})
-
-# Remove main.cpp and main.h from the files we compile in to lib
-list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp" 
-                                   "${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp")
-list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.h")
-
-add_library(CorsixTH_lib STATIC ${corsixth_source_files})
 
 # Declaration of the executable
 if(APPLE)
@@ -107,6 +79,10 @@ set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
+
+set_property(TARGET Corsixth_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET Corsixth_lib PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET Corsixth_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
