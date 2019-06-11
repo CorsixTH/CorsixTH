@@ -88,5 +88,5 @@ protected:
     wxTextCtrl* m_txtData;
     wxTextCtrl* m_txtPalette;
     MyVScrolled* m_panFrame;
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
