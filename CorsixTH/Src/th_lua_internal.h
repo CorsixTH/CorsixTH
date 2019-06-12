@@ -52,6 +52,7 @@ enum class lua_metatable {
     sprite_list,
     string_proxy,
     line,
+    iso_fs,
 
     count
 };

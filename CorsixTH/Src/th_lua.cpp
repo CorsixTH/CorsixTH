@@ -35,6 +35,7 @@ void lua_register_movie(const lua_register_state *pState);
 void lua_register_strings(const lua_register_state *pState);
 void lua_register_ui(const lua_register_state *pState);
 void lua_register_lfs_ext(const lua_register_state *pState);
+void lua_register_iso_fs(const lua_register_state *pState);
 
 //! Set a field on the environment table of an object
 void luaT_setenvfield(lua_State *L, int index, const char *k)
@@ -284,6 +285,7 @@ int luaopen_th(lua_State *L)
     lua_register_strings(pState);
     lua_register_ui(pState);
     lua_register_lfs_ext(pState);
+    lua_register_iso_fs(pState);
 
     lua_settop(L, oState.main_table);
     return 1;

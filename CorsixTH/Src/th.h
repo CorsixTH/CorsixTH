@@ -92,4 +92,40 @@ private:
     std::vector<uint8_t> string_buffer;
 };
 
+/**
+ * Convert 4 bytes representing uint32 in little endian representation into a
+ * uint32.
+ *
+ * @param bytes A pointer to the first of 4 sequential bytes in memory making
+ * up the uint32.
+ */
+inline uint32_t bytes_to_uint32_le(const uint8_t* bytes)
+{
+    uint32_t res = bytes[3];
+    res <<= 8;
+    res |= bytes[2];
+    res <<= 8;
+    res |= bytes[1];
+    res <<= 8;
+    res |= bytes[0];
+
+    return res;
+}
+
+/**
+ * Convert 2 bytes representing uint16 in little endian representation into a
+ * uint16.
+ *
+ * @param bytes A pointer to the first of 2 sequential bytes in memory making
+ * up the uint16.
+ */
+inline uint16_t bytes_to_uint16_le(const uint8_t* bytes)
+{
+    uint16_t res = bytes[1];
+    res <<= 8;
+    res |= bytes[0];
+
+    return res;
+}
+
 #endif // CORSIX_TH_TH_H_

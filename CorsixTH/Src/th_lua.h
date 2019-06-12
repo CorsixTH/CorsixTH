@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_LUA_H_
 #include "config.h"
 #include "lua.hpp"
+#include <cstdio>
 #include <new>
 #include <vector>
 
@@ -292,7 +293,7 @@ template <> struct luaT_classinfo<iso_filesystem> {
     static inline const char* name() {return "ISO Filesystem";}
 };
 
-template <> struct luaT_classinfo<FILE*> {
+template <> struct luaT_classinfo<std::FILE*> {
     static inline const char* name() {return "file";}
 };
 

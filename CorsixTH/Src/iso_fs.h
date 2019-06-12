@@ -23,6 +23,7 @@ SOFTWARE.
 #include "config.h"
 #include "th_lua.h"
 #include <cstdio>
+#include <string>
 
 //! Layer for reading Theme Hospital files out of an .iso disk image
 /*!
@@ -49,7 +50,7 @@ public:
           is not automatically closed by the IsoFilesystem instance.
         \return true on success, false on failure - call getError() for reason
     */
-    bool initialise(FILE* fRawFile);
+    bool initialise(std::FILE* fRawFile);
 
     //! Get the reason for the most recent failure
     /*!
@@ -75,7 +76,7 @@ public:
         \param pCallbackData Opaque value to be called to fnCallback.
     */
     void visit_directory_files(const char* sPath,
-                             void (*fnCallback)(void*, const char*),
+                             void (*fnCallback)(void*, const char*, const char*),
                              void* pCallbackData) const;
 
     //! Test if a file handle from findFile() is good or is invalid
@@ -98,16 +99,14 @@ public:
 private:
     struct file_metadata
     {
-        char *path;
+        std::string path;
         uint32_t sector;
         uint32_t size;
     };
 
-    FILE* raw_file;
+    std::FILE* raw_file;
     char* error;
-    file_metadata* files;
-    size_t file_count;
-    size_t file_table_size;
+    std::vector<file_metadata> files;
     long sector_size;
     char path_seperator;
 
@@ -140,16 +139,10 @@ private:
         \param iSector The ordinal of a logical sector containing a padded
           arrary of ISO 9660 directory entries.
         \param iDirEntsSize The number of bytes in the directory entry array.
-        \param sPrefix The path name to prepend to filenames in the directory.
+        \param prefix The path name to prepend to filenames in the directory.
     */
-    void build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const char* sPrefix);
+    void build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const std::string& prefix);
 
-    //! Return the next free entry in files
-    file_metadata* allocate_file_record();
-
-    static char normalise(char c);
-    static int filename_compare(const void* lhs, const void* rhs);
-    static void trim_identifier_version(const uint8_t* sIdent, uint8_t& iLength);
+    //! std:less like implementation for file_metadata. Based on the path.
+    static bool file_metadata_less(const file_metadata& lhs, const file_metadata& rhs);
 };
-
-int luaopen_iso_fs(lua_State *L);
