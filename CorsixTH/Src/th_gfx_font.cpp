@@ -512,6 +512,10 @@ bool isCjkBreakCharacter(int charcode) {
             charcode == 0xff1f); //Fullwidth question mark
 }
 
+FT_Pos pixel_align(FT_Pos position) {
+    return ((position + 63) >> 6) << 6;
+}
+
 } // namespace
 
 text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char* sMessage,
@@ -612,9 +616,9 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
             }
 
             // Make an automatic line break if one is needed.
-            if((ftvPen.x + oGlyph.metrics.horiBearingX +
-                oGlyph.metrics.width + 63) / 64 >= iWidth || bIsNewLine)
-            {
+            int line_width_with_glyph =
+                (ftvPen.x + oGlyph.metrics.horiBearingX + oGlyph.metrics.width + 63) / 64;
+            if (line_width_with_glyph >= iWidth || bIsNewLine) {
                 if(bIsNewLine)
                 {
                     sLineBreakPosition = sOldMessage;
@@ -690,12 +694,14 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
         codepoint_glyph& oGlyph = mapGlyphs['l'];
         FT_Pos iBearingY = oGlyph.metrics.horiBearingY;
         FT_Pos iNormalLineHeight = oGlyph.metrics.height - iBearingY;
-        iBearingY = ((iBearingY + 63) >> 6) << 6; // Pixel-align
+
+        iBearingY = pixel_align(iBearingY);
         iNormalLineHeight += iBearingY;
         iNormalLineHeight += iLineSpacing;
-        iNormalLineHeight = ((iNormalLineHeight + 63) >> 6) << 6; // Pixel-align
-        for(std::vector<std::pair<const char*, const char*> >::const_iterator
-            itr = vLines.begin(), itrEnd = vLines.end(); itr != itrEnd && iNumRows < iMaxRows; ++itr)
+
+        iNormalLineHeight = pixel_align(iNormalLineHeight);
+
+        for (auto itr = vLines.begin(); itr != vLines.end() && iNumRows < iMaxRows; ++itr)
         {
             // Calculate the X change resulting from alignment.
             const char* sLastChar = previous_utf8_codepoint(itr->second);
@@ -724,10 +730,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
                 if(iCoBearingY > iLineHeight)
                     iLineHeight = iCoBearingY;
             }
-            iBaselinePos = ((iBaselinePos + 63) >> 6) << 6; // Pixel-align
+
+            iBaselinePos = pixel_align(iBaselinePos);
             iLineHeight += iBaselinePos;
             iLineHeight += iLineSpacing;
-            iLineHeight = ((iLineHeight + 63) >> 6) << 6; // Pixel-align
+            iLineHeight = pixel_align(iLineHeight);
 
             iNormalLineHeight = std::max(iNormalLineHeight, iLineHeight);
 
@@ -762,8 +769,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
         bool bIsMonochrome = is_monochrome();
         FT_Render_Mode eRenderMode = bIsMonochrome ? FT_RENDER_MODE_MONO
             : FT_RENDER_MODE_NORMAL;
-        for(std::map<unsigned int, codepoint_glyph>::iterator itr =
-            mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd; ++itr)
+        for (auto itr = mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd; ++itr)
         {
             FT_Glyph_To_Bitmap(&itr->second.glyph, eRenderMode, nullptr, 1);
         }
@@ -774,9 +780,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
 
         int iDrawnLines = 0;
         // Render each character to the canvas.
-        for(std::vector<std::pair<const char*, const char*> >::const_iterator
-            itr = vLines.begin(), itrEnd = vLines.end();
-            itr != itrEnd && iDrawnLines < iMaxRows + iSkipRows; ++itr)
+        for (auto itr = vLines.begin(); itr != vLines.end() && iDrawnLines < iMaxRows + iSkipRows; ++itr)
         {
             iDrawnLines++;
             for(const char* s = itr->first; s < itr->second; )
@@ -787,8 +791,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
                 {
                     iCode = ' ';
                 }
-                FT_BitmapGlyph pGlyph = reinterpret_cast<FT_BitmapGlyph>(
-                    mapGlyphs[iCode].glyph);
+                FT_BitmapGlyph pGlyph = reinterpret_cast<FT_BitmapGlyph>(mapGlyphs[iCode].glyph);
                 FT_Pos x = pGlyph->left + (ftvPos.x >> 6);
                 FT_Pos y = (ftvPos.y >> 6) - pGlyph->top;
                 // We may have asked for grayscale but been given monochrome,
@@ -806,19 +809,17 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas, const char*
         }
 
         // Free all glyphs.
-        for(std::map<unsigned int, codepoint_glyph>::const_iterator itr =
-            mapGlyphs.begin(), itrEnd = mapGlyphs.end(); itr != itrEnd; ++itr)
-        {
+        for(auto itr = mapGlyphs.begin(); itr != mapGlyphs.end(); ++itr) {
             FT_Done_Glyph(itr->second.glyph);
         }
 
         pEntry->is_valid = true;
     }
 
-    if (pCanvas != nullptr)
-    {
-        if (pEntry->texture == nullptr)
+    if (pCanvas != nullptr) {
+        if (pEntry->texture == nullptr) {
             make_texture(pCanvas, pEntry);
+        }
         draw_texture(pCanvas, pEntry, iX, iY);
     }
     oDrawArea.width = pEntry->widest_line_width;

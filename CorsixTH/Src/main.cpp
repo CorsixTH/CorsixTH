@@ -22,9 +22,6 @@ SOFTWARE.
 
 #include "config.h"
 #include "lua.hpp"
-extern "C" {
-int luaopen_random(lua_State *L);
-}
 #include "th_lua.h"
 #include "lua_rnc.h"
 #include "lua_sdl.h"
@@ -39,6 +36,10 @@ int luaopen_random(lua_State *L);
 #error "config.h is out of date - please rerun CMake"
 #endif
 // End of config file checking
+
+extern "C" {
+int luaopen_random(lua_State *L);
+}
 
 namespace {
 
@@ -57,9 +58,7 @@ int lua_main_no_eval(lua_State *L)
     const char* sVersion = lua_tolstring(L, -1, &iLength);
     if(iLength != std::strlen(LUA_VERSION) || std::strcmp(sVersion, LUA_VERSION) != 0)
     {
-        lua_pushliteral(L, "Linked against a version of Lua different to the "
-            "one used when compiling.\nPlease recompile CorsixTH against the "
-            "same Lua version it is linked against.");
+        lua_pushliteral(L, "Linked against a version of Lua different to the one used when compiling.\nPlease recompile CorsixTH against the same Lua version it is linked against.");
         return lua_error(L);
     }
     lua_pop(L, 1);
@@ -142,8 +141,7 @@ int lua_stacktrace(lua_State *L)
 
 int lua_panic(lua_State *L)
 {
-    std::fprintf(stderr, "A Lua error has occurred in CorsixTH outside of protected "
-        "mode!!\n");
+    std::fprintf(stderr, "A Lua error has occurred in CorsixTH outside of protected mode!\n");
     std::fflush(stderr);
 
     if(lua_type(L, -1) == LUA_TSTRING)

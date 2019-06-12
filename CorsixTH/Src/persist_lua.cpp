@@ -1450,9 +1450,9 @@ int l_errcatch(lua_State *L)
     return 1;
 }
 
+// Due to the various required upvalues, functions are registered manually, but
+// we still need a dummy to pass to luaL_register.
 constexpr std::array<luaL_Reg, 2> persist_lib {{
-    // Due to the various required upvalues, functions are registered
-    // manually, but we still need a dummy to pass to luaL_register.
     {"errcatch", l_errcatch},
     {nullptr, nullptr}
 }};

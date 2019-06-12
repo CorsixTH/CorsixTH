@@ -28,6 +28,10 @@ SOFTWARE.
 #include FT_FREETYPE_H
 #endif
 
+class render_target;
+
+class sprite_sheet;
+
 enum class text_alignment {
     left = 0,
     center = 1,

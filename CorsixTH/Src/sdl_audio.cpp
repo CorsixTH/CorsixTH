@@ -21,16 +21,16 @@ SOFTWARE.
 */
 
 #include "config.h"
-#include "lua_sdl.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
+#include <SDL_mixer.h>
+#include <cstring>
+#include <array>
+#include "lua_sdl.h"
 #include "th_lua.h"
 #include "xmi2mid.h"
-#include <SDL_mixer.h>
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL2_mixer")
 #endif
-#include <cstring>
-#include <array>
 
 class music
 {
@@ -63,10 +63,14 @@ void audio_music_over_callback()
 
 int l_init(lua_State *L)
 {
-    if(Mix_OpenAudio(static_cast<int>(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY)),
-        MIX_DEFAULT_FORMAT,
-        static_cast<int>(luaL_optinteger(L, 2, MIX_DEFAULT_CHANNELS)),
-        static_cast<int>(luaL_optinteger(L, 3, 2048)) /* chunk size */) != 0)
+    constexpr int chunk_size = 2048;
+
+    int err = Mix_OpenAudio(
+            static_cast<int>(luaL_optinteger(L, 1, MIX_DEFAULT_FREQUENCY)),
+            MIX_DEFAULT_FORMAT,
+            static_cast<int>(luaL_optinteger(L, 2, MIX_DEFAULT_CHANNELS)),
+            static_cast<int>(luaL_optinteger(L, 3, chunk_size)));
+    if (err != 0)
     {
         lua_pushboolean(L, 0);
         lua_pushstring(L, Mix_GetError());
@@ -174,10 +178,11 @@ int l_music_volume(lua_State *L)
     lua_Number fValue = luaL_checknumber(L, 1);
     fValue = fValue * (lua_Number)MIX_MAX_VOLUME;
     int iVolume = (int)(fValue + 0.5);
-    if(iVolume < 0)
+    if(iVolume < 0) {
         iVolume = 0;
-    else if(iVolume > MIX_MAX_VOLUME)
+    } else if(iVolume > MIX_MAX_VOLUME) {
         iVolume = MIX_MAX_VOLUME;
+    }
     Mix_VolumeMusic(iVolume);
     return 0;
 }
@@ -185,7 +190,8 @@ int l_music_volume(lua_State *L)
 int l_play_music(lua_State *L)
 {
     music* pLMusic = luaT_testuserdata<music>(L, -1);
-    if(Mix_PlayMusic(pLMusic->pMusic, static_cast<int>(luaL_optinteger(L, 2, 1))) != 0)
+    int err = Mix_PlayMusic(pLMusic->pMusic, static_cast<int>(luaL_optinteger(L, 2, 1)));
+    if(err != 0)
     {
         lua_pushnil(L);
         lua_pushstring(L, Mix_GetError());

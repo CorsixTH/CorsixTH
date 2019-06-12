@@ -23,6 +23,11 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 #include "th.h"
+#include "th_gfx_sdl.h"
+#include <vector>
+#include <map>
+#include <string>
+
 
 class lua_persist_reader;
 class lua_persist_writer;
@@ -33,12 +38,6 @@ enum class scaled_items {
     bitmaps,
     all
 };
-
-#include "th_gfx_sdl.h"
-#include "th_gfx_font.h"
-#include <vector>
-#include <map>
-#include <string>
 
 void clip_rect_intersection(clip_rect& rcClip, const clip_rect& rcIntersect);
 

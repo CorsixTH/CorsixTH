@@ -126,18 +126,22 @@ public:
     {
         char buff[256];
 
-        if (is_at_end_of_file())
+        if (is_at_end_of_file()) {
             return false;
+        }
 
         size_t iLength = read_uint8();
-        if (!are_bytes_available(iLength))
+        if (!are_bytes_available(iLength)) {
             return false;
+        }
 
         size_t idx;
-        for (idx = 0; idx < iLength; idx++)
+        for (idx = 0; idx < iLength; idx++) {
             buff[idx] = read_uint8();
+        }
         buff[idx] = '\0';
         *pStr = std::string(buff);
+
         return true;
     }
 };
@@ -160,8 +164,9 @@ animation_manager::animation_manager()
 
 animation_manager::~animation_manager()
 {
-    for (size_t i = 0; i < custom_sheets.size(); i++)
+    for (size_t i = 0; i < custom_sheets.size(); i++) {
         delete custom_sheets[i];
+    }
 }
 
 void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet)
@@ -180,8 +185,9 @@ bool animation_manager::load_from_th_file(
     size_t iListCount      = iListDataLength / 2;
     size_t iElementCount   = iElementDataLength / sizeof(th_element_properties);
 
-    if(iAnimationCount == 0 || iFrameCount == 0 || iListCount == 0 || iElementCount == 0)
+    if(iAnimationCount == 0 || iFrameCount == 0 || iListCount == 0 || iElementCount == 0) {
         return false;
+    }
 
     // Start offset of the file data into the vectors.
     size_t iAnimationStart = animation_count;
@@ -190,11 +196,14 @@ bool animation_manager::load_from_th_file(
     size_t iElementStart   = element_count;
 
     // Original data file must start at offset 0 due to the hard-coded animation numbers in the Lua code.
-    if (iAnimationStart > 0 || iFrameStart > 0 || iListStart > 0 || iElementStart > 0)
+    if (iAnimationStart > 0 || iFrameStart > 0 || iListStart > 0 || iElementStart > 0) {
         return false;
+    }
 
-    if (iElementStart + iElementCount >= 0xFFFF) // Overflow of list elements.
+    // Overflow of list elements.
+    if (iElementStart + iElementCount >= 0xFFFF) {
         return false;
+    }
 
     // Create new space for the data.
     first_frames.reserve(iAnimationStart + iAnimationCount);
@@ -206,8 +215,9 @@ bool animation_manager::load_from_th_file(
     for(size_t i = 0; i < iAnimationCount; ++i)
     {
         size_t iFirstFrame = reinterpret_cast<const th_animation_properties*>(pStartData)[i].first_frame;
-        if(iFirstFrame > iFrameCount)
+        if(iFirstFrame > iFrameCount) {
             iFirstFrame = 0;
+        }
 
         iFirstFrame += iFrameStart;
         first_frames.push_back(iFirstFrame);
@@ -261,8 +271,10 @@ bool animation_manager::load_from_th_file(
         oElement.x = static_cast<int>(pTHElement->offx) - 141;
         oElement.y = static_cast<int>(pTHElement->offy) - 186;
         oElement.layer = static_cast<uint8_t>(pTHElement->flags >> 4); // High nibble, layer of the element.
-        if(oElement.layer > 12)
-            oElement.layer = 6; // Nothing lives on layer 6
+        if(oElement.layer > 12) {
+            // Nothing lives on layer 6
+            oElement.layer = 6;
+        }
         oElement.layer_id = pTHElement->layerid;
         if (oElement.sprite < iSpriteCount) {
             oElement.element_sprite_sheet = sheet;
@@ -324,16 +336,19 @@ void animation_manager::set_bounding_box(frame &oFrame)
     oFrame.bounding_right  = INT_MIN;
     oFrame.bounding_top    = INT_MAX;
     oFrame.bounding_bottom = INT_MIN;
+
     size_t iListIndex = oFrame.list_index;
     for(; ; ++iListIndex)
     {
         uint16_t iElement = element_list[iListIndex];
-        if(iElement >= elements.size())
+        if(iElement >= elements.size()) {
             break;
+        }
 
         element& oElement = elements[iElement];
-        if(oElement.element_sprite_sheet == nullptr)
+        if(oElement.element_sprite_sheet == nullptr) {
             continue;
+        }
 
         unsigned int iWidth, iHeight;
         oElement.element_sprite_sheet->get_sprite_size_unchecked(oElement.sprite, &iWidth, &iHeight);
@@ -360,12 +375,15 @@ int load_header(memory_reader &input)
 {
     static const uint8_t aHdr[] = {'C', 'T', 'H', 'G', 1, 2};
 
-    if (!input.are_bytes_available(6))
+    if (!input.are_bytes_available(6)) {
         return false;
+    }
+
     for (int i = 0; i < 6; i++)
     {
-        if (input.read_uint8() != aHdr[i])
+        if (input.read_uint8() != aHdr[i]) {
             return false;
+        }
     }
     return true;
 }
@@ -381,8 +399,9 @@ size_t animation_manager::load_elements(memory_reader &input, sprite_sheet *pSpr
     size_t iSpriteCount = pSpriteSheet->get_sprite_count();
     while (iNumElements > 0)
     {
-        if (iLoadedElements >= iElementCount || !input.are_bytes_available(12))
+        if (iLoadedElements >= iElementCount || !input.are_bytes_available(12)) {
             return SIZE_MAX;
+        }
 
         size_t iSprite = input.read_uint32();
         int iX = input.read_int16();
@@ -391,8 +410,10 @@ size_t animation_manager::load_elements(memory_reader &input, sprite_sheet *pSpr
         uint8_t iLayerId = input.read_uint8();
         uint32_t iFlags = input.read_uint16();
 
-        if (iLayerClass > 12)
-            iLayerClass = 6; // Nothing lives on layer 6
+        if (iLayerClass > 12) {
+            // Nothing lives on layer 6
+            iLayerClass = 6;
+        }
 
         element oElement;
         oElement.sprite = iSprite;
@@ -420,9 +441,12 @@ size_t animation_manager::make_list_elements(size_t iFirstElement, size_t iNumEl
     size_t iFirst = iLoadedListElements + iListStart;
 
     // Verify there is enough room for all list elements + 0xFFFF
-    if (iLoadedListElements + iNumElements + 1 > iListCount)
+    if (iLoadedListElements + iNumElements + 1 > iListCount) {
         return SIZE_MAX;
-    assert(iFirstElement + iNumElements < 0xFFFF); // Overflow for list elements.
+    }
+
+     // Overflow for list elements.
+    assert(iFirstElement + iNumElements < 0xFFFF);
 
     while (iNumElements > 0)
     {
@@ -451,8 +475,9 @@ namespace {
 uint32_t shift_first(uint32_t iFirst, size_t iLength,
                             size_t iStart, size_t iLoaded)
 {
-    if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded)
+    if (iFirst == 0xFFFFFFFFu || iFirst + iLength > iLoaded) {
         return 0xFFFFFFFFu;
+    }
     return iFirst + static_cast<uint32_t>(iStart);
 }
 
@@ -460,8 +485,9 @@ uint32_t shift_first(uint32_t iFirst, size_t iLength,
 
 void animation_manager::fix_next_frame(uint32_t iFirst, size_t iLength)
 {
-    if (iFirst == 0xFFFFFFFFu)
+    if (iFirst == 0xFFFFFFFFu) {
         return;
+    }
 
     frame &oFirst = frames[iFirst];
     oFirst.flags |= 0x1; // Start of animation flag.
@@ -474,11 +500,13 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
 {
     memory_reader input(pData, iDataLength);
 
-    if (!load_header(input))
+    if (!load_header(input)) {
         return false;
+    }
 
-    if (!input.are_bytes_available(5*4))
+    if (!input.are_bytes_available(5*4)) {
         return false;
+    }
 
     size_t iAnimationCount = input.read_uint32();
     size_t iFrameCount = input.read_uint32();
@@ -493,14 +521,18 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
     size_t iListStart = element_list_count;
     size_t iElementStart = element_count;
 
-    if (iAnimationCount == 0 || iFrameCount == 0 || iElementCount == 0 || iSpriteCount == 0)
+    if (iAnimationCount == 0 || iFrameCount == 0 || iElementCount == 0 || iSpriteCount == 0) {
         return false;
+    }
 
-    if (iElementStart + iElementCount >= 0xFFFF) // Overflow of list elements.
+    // Overflow of list elements.
+    if (iElementStart + iElementCount >= 0xFFFF) {
         return false;
+    }
 
     // Create new space for the elements.
-    first_frames.reserve(first_frames.size() + iAnimationCount * 4); // Be optimistic in reservation.
+    // Be optimistic in reservation.
+    first_frames.reserve(first_frames.size() + iAnimationCount * 4); 
     frames.reserve(iFrameStart + iFrameCount);
     element_list.reserve(iListStart + iListCount);
     elements.reserve(iElementStart + iElementCount);
@@ -532,18 +564,24 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
         {
             animation_key oKey;
 
-            if (!input.are_bytes_available(2+4))
+            if (!input.are_bytes_available(2+4)) {
                 return false;
+            }
+
             oKey.tile_size = input.read_uint16();
             size_t iNumFrames = input.read_uint32();
-            if (iNumFrames == 0)
+            if (iNumFrames == 0) {
                 return false;
+            }
 
-            if (!input.read_string(&oKey.name))
+            if (!input.read_string(&oKey.name)) {
                 return false;
+            }
 
-            if (!input.are_bytes_available(4*4))
+            if (!input.are_bytes_available(4*4)) {
                 return false;
+            }
+
             uint32_t iNorthFirst = input.read_uint32();
             uint32_t iEastFirst  = input.read_uint32();
             uint32_t iSouthFirst = input.read_uint32();
@@ -588,34 +626,43 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
             named_animation_pair p(oKey, oFrames);
             named_animations.insert(p);
             continue;
-        }
-
-        // Recognized a frame block, load it.
-        else if (first == 'F' && second == 'R')
-        {
-            if (iLoadedFrames >= iFrameCount)
+        } else if (first == 'F' && second == 'R') {
+            // Recognized a frame block, load it.
+            
+            if (iLoadedFrames >= iFrameCount) {
                 return false;
+            }
 
-            if (!input.are_bytes_available(2+2))
+            if (!input.are_bytes_available(2+2)) {
                 return false;
+            }
+
             int iSound = input.read_uint16();
             size_t iNumElements = input.read_uint16();
 
             size_t iElm = load_elements(input, pSheet, iNumElements,
                                     iLoadedElements, iElementStart, iElementCount);
-            if (iElm == SIZE_MAX)
+            if (iElm == SIZE_MAX) {
                 return false;
+            }
 
             size_t iListElm = make_list_elements(iElm, iNumElements,
                                             iLoadedListElements, iListStart, iListCount);
-            if (iListElm == SIZE_MAX)
+            if (iListElm == SIZE_MAX) {
                 return false;
+            }
 
             frame oFrame;
             oFrame.list_index = iListElm;
-            oFrame.next_frame = iFrameStart + iLoadedFrames + 1; // Point to next frame (changed later).
+            
+            // Point to next frame.
+            // Last frame of each animation corrected later.
+            oFrame.next_frame = iFrameStart + iLoadedFrames + 1;
+
             oFrame.sound = iSound;
-            oFrame.flags = 0; // Set later.
+
+            // Set later
+            oFrame.flags = 0; 
             oFrame.marker_x = 0;
             oFrame.marker_y = 0;
             oFrame.secondary_marker_x = 0;
@@ -626,45 +673,50 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
             frames.push_back(oFrame);
             iLoadedFrames++;
             continue;
-        }
+        } else if (first == 'S' && second == 'P') {
+            // Recognized a Sprite block, load it.
 
-        // Recognized a Sprite block, load it.
-        else if (first == 'S' && second == 'P')
-        {
-            if (iLoadedSprites >= iSpriteCount)
+            if (iLoadedSprites >= iSpriteCount) {
                 return false;
+            }
 
-            if (!input.are_bytes_available(2+2+4))
+            if (!input.are_bytes_available(2+2+4)) {
                 return false;
+            }
+
             int iWidth = input.read_uint16();
             int iHeight = input.read_uint16();
             uint32_t iSize = input.read_uint32();
-            if (iSize > INT_MAX) // Check it is safe to use as 'int'
+
+            // Check it is safe to use as 'int'
+            if (iSize > INT_MAX) {
                 return false;
+            }
 
             // Load data.
             uint8_t *pData = new (std::nothrow) uint8_t[iSize];
             if (pData == nullptr) {
                 return false;
             }
+
             if (!input.are_bytes_available(iSize)) {
                 delete[] pData;
                 return false;
             }
-            for (uint32_t i = 0; i < iSize; i++)
+
+            for (uint32_t i = 0; i < iSize; i++) {
                 pData[i] = input.read_uint8();
+            }
 
             if (!pSheet->set_sprite_data(iLoadedSprites, pData, true, iSize,
-                                       iWidth, iHeight))
+                                       iWidth, iHeight)) {
                 return false;
+            }
 
             iLoadedSprites++;
             continue;
-        }
-
-        // Unrecognized block, fail.
-        else
-        {
+        } else {
+            // Unrecognized block, fail.
             return false;
         }
     }
@@ -676,8 +728,10 @@ bool animation_manager::load_custom_animations(const uint8_t* pData, size_t iDat
 
     // Fix the next pointer of the last frame in case it points to non-existing frames.
     frame &oFrame = frames[iFrameStart + iFrameCount - 1];
-    if (iFrameCount > 0 && oFrame.next_frame >= iFrameStart + iFrameCount)
-        oFrame.next_frame = iFrameStart; // Useless, but maybe less crashy.
+    if (iFrameCount > 0 && oFrame.next_frame >= iFrameStart + iFrameCount) {
+        // Useless, but maybe less crashy.
+        oFrame.next_frame = iFrameStart;
+    }
 
     animation_count = first_frames.size();
     frame_count += iFrameCount;
@@ -699,8 +753,9 @@ const animation_start_frames &animation_manager::get_named_animations(const std:
     oKey.tile_size = iTilesize;
 
     named_animations_map::const_iterator iter = named_animations.find(oKey);
-    if (iter == named_animations.end())
+    if (iter == named_animations.end()) {
         return oNoneAnimations;
+    }
     return (*iter).second;
 }
 
@@ -716,24 +771,27 @@ size_t animation_manager::get_frame_count() const
 
 size_t animation_manager::get_first_frame(size_t iAnimation) const
 {
-    if(iAnimation < animation_count)
+    if(iAnimation < animation_count) {
         return first_frames[iAnimation];
-    else
+    } else {
         return 0;
+    }
 }
 
 size_t animation_manager::get_next_frame(size_t iFrame) const
 {
-    if(iFrame < frame_count)
+    if(iFrame < frame_count) {
         return frames[iFrame].next_frame;
-    else
+    } else {
         return iFrame;
+    }
 }
 
 void animation_manager::set_animation_alt_palette_map(size_t iAnimation, const uint8_t* pMap, uint32_t iAlt32)
 {
-    if(iAnimation >= animation_count)
+    if(iAnimation >= animation_count) {
         return;
+    }
 
     size_t iFrame = first_frames[iAnimation];
     size_t iFirstFrame = iFrame;
@@ -743,12 +801,14 @@ void animation_manager::set_animation_alt_palette_map(size_t iAnimation, const u
         for(; ; ++iListIndex)
         {
             uint16_t iElement = element_list[iListIndex];
-            if(iElement >= element_count)
+            if(iElement >= element_count) {
                 break;
+            }
 
             element& oElement = elements[iElement];
-            if (oElement.element_sprite_sheet != nullptr)
+            if (oElement.element_sprite_sheet != nullptr) {
                 oElement.element_sprite_sheet->set_sprite_alt_palette_map(oElement.sprite, pMap, iAlt32);
+            }
         }
         iFrame = frames[iFrame].next_frame;
     } while(iFrame != iFirstFrame);
@@ -756,8 +816,10 @@ void animation_manager::set_animation_alt_palette_map(size_t iAnimation, const u
 
 bool animation_manager::set_frame_marker(size_t iFrame, int iX, int iY)
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return false;
+    }
+
     frames[iFrame].marker_x = iX;
     frames[iFrame].marker_y = iY;
     return true;
@@ -765,8 +827,10 @@ bool animation_manager::set_frame_marker(size_t iFrame, int iX, int iY)
 
 bool animation_manager::set_frame_secondary_marker(size_t iFrame, int iX, int iY)
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return false;
+    }
+
     frames[iFrame].secondary_marker_x = iX;
     frames[iFrame].secondary_marker_y = iY;
     return true;
@@ -774,8 +838,10 @@ bool animation_manager::set_frame_secondary_marker(size_t iFrame, int iX, int iY
 
 bool animation_manager::get_frame_marker(size_t iFrame, int* pX, int* pY)
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return false;
+    }
+
     *pX = frames[iFrame].marker_x;
     *pY = frames[iFrame].marker_y;
     return true;
@@ -783,8 +849,10 @@ bool animation_manager::get_frame_marker(size_t iFrame, int* pX, int* pY)
 
 bool animation_manager::get_frame_secondary_marker(size_t iFrame, int* pX, int* pY)
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return false;
+    }
+
     *pX = frames[iFrame].secondary_marker_x;
     *pY = frames[iFrame].secondary_marker_y;
     return true;
@@ -794,38 +862,46 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers,
                                  int iX, int iY, uint32_t iFlags,
                                  int iTestX, int iTestY) const
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return false;
+    }
 
     const frame& oFrame = frames[iFrame];
     iTestX -= iX;
     iTestY -= iY;
 
-    if(iFlags & thdf_flip_horizontal)
+    if(iFlags & thdf_flip_horizontal) {
         iTestX = -iTestX;
-    if(iTestX < oFrame.bounding_left || iTestX > oFrame.bounding_right)
+    }
+
+    if(iTestX < oFrame.bounding_left || iTestX > oFrame.bounding_right) {
         return false;
+    }
 
     if(iFlags & thdf_flip_vertical)
     {
-        if(-iTestY < oFrame.bounding_top || -iTestY > oFrame.bounding_bottom)
+        if(-iTestY < oFrame.bounding_top || -iTestY > oFrame.bounding_bottom) {
             return false;
+        }
     }
     else
     {
-        if(iTestY < oFrame.bounding_top || iTestY > oFrame.bounding_bottom)
+        if(iTestY < oFrame.bounding_top || iTestY > oFrame.bounding_bottom) {
             return false;
+        }
     }
 
-    if(iFlags & thdf_bound_box_hit_test)
+    if(iFlags & thdf_bound_box_hit_test) {
         return true;
+    }
 
     size_t iListIndex = oFrame.list_index;
     for(; ; ++iListIndex)
     {
         uint16_t iElement = element_list[iListIndex];
-        if(iElement >= element_count)
+        if(iElement >= element_count) {
             break;
+        }
 
         const element &oElement = elements[iElement];
         if((oElement.layer_id != 0 && oLayers.layer_contents[oElement.layer] != oElement.layer_id)
@@ -861,8 +937,9 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers,
                                    int iX, int iY, uint32_t iFlags) const
 {
-    if(iFrame >= frame_count)
+    if(iFrame >= frame_count) {
         return;
+    }
 
     uint32_t iPassOnFlags = iFlags & thdf_alt_palette;
 
@@ -870,12 +947,14 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
     for(; ; ++iListIndex)
     {
         uint16_t iElement = element_list[iListIndex];
-        if(iElement >= element_count)
+        if(iElement >= element_count) {
             break;
+        }
 
         const element &oElement = elements[iElement];
-        if (oElement.element_sprite_sheet == nullptr)
+        if (oElement.element_sprite_sheet == nullptr) {
             continue;
+        }
 
         if(oElement.layer_id != 0 && oLayers.layer_contents[oElement.layer] != oElement.layer_id)
         {
@@ -885,10 +964,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
             // the W1 layer as well as W2 if W2 is being used, and similarly
             // for B1 / B2. A better fix would be to go into each animation
             // which needs it, and duplicate the W1 / B1 layers to W2 / B2.
-            if(oElement.layer == 5 && oLayers.layer_contents[5] - 4 == oElement.layer_id)
+            if(oElement.layer == 5 && oLayers.layer_contents[5] - 4 == oElement.layer_id) {
                 /* don't skip */;
-            else
+            } else {
                 continue;
+            }
         }
 
         if(iFlags & thdf_flip_horizontal)
@@ -909,10 +989,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
 size_t animation_manager::get_frame_sound(size_t iFrame)
 {
-    if(iFrame < frame_count)
+    if(iFrame < frame_count) {
         return frames[iFrame].sound;
-    else
+    } else {
         return 0;
+    }
 }
 
 void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
@@ -931,8 +1012,9 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
         for(; ; ++iListIndex)
         {
             uint16_t iElement = element_list[iListIndex];
-            if(iElement >= element_count)
+            if(iElement >= element_count) {
                 break;
+            }
 
             const element &oElement = elements[iElement];
             if((oElement.layer_id != 0 && oLayers.layer_contents[oElement.layer] != oElement.layer_id)
@@ -1257,20 +1339,28 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY)
 
 bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) {
         return false;
-    if(manager == nullptr)
+    }
+
+    if(manager == nullptr) {
         return false;
+    }
+
     return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
         y_relative_to_tile + iDestY, flags, iTestX, iTestY);
 }
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY)
 {
-    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75))
+    if (are_flags_set(flags, thdf_alpha_50 | thdf_alpha_75)) {
         return false;
-    if(manager == nullptr)
+    }
+
+    if(manager == nullptr) {
         return false;
+    }
+
     return manager->hit_test(frame_index, layers, x_relative_to_tile + iDestX,
         y_relative_to_tile + iDestY, flags, iTestX, iTestY) || morph_target->hit_test(
         iDestX, iDestY, iTestX, iTestY);
@@ -1316,9 +1406,9 @@ bool THAnimation_is_multiple_frame_animation(drawable* pSelf)
         size_t nextFrame = pAnimation->get_animation_manager()->get_next_frame(firstFrame);
         return nextFrame != firstFrame;
     }
-    else
+    else {
         return false;
-
+    }
 }
 
 } // namespace
@@ -1327,8 +1417,9 @@ animation_base::animation_base()
 {
     x_relative_to_tile = 0;
     y_relative_to_tile = 0;
-    for(int i = 0; i < 13; ++i)
+    for(int i = 0; i < 13; ++i) {
         layers.layer_contents[i] = 0;
+    }
     flags = 0;
 }
 
@@ -1360,12 +1451,11 @@ void animation::persist(lua_persist_writer *pWriter) const
     // Write the drawable fields
     pWriter->write_uint(flags);
 
-    if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test)
+    if (draw_fn == THAnimation_draw && hit_test_fn == THAnimation_hit_test) {
         pWriter->write_uint(1);
-    else if (draw_fn == THAnimation_draw_child && hit_test_fn == THAnimation_hit_test_child)
+    } else if (draw_fn == THAnimation_draw_child && hit_test_fn == THAnimation_hit_test_child) {
         pWriter->write_uint(2);
-    else if(draw_fn == THAnimation_draw_morph && hit_test_fn == THAnimation_hit_test_morph)
-    {
+    } else if(draw_fn == THAnimation_draw_morph && hit_test_fn == THAnimation_hit_test_morph) {
         // NB: Prior version of code used the number 3 here, and forgot
         // to persist the morph target.
         pWriter->write_uint(4);
@@ -1375,18 +1465,25 @@ void animation::persist(lua_persist_writer *pWriter) const
         pWriter->write_stack_object(-1);
         lua_pop(L, 2);
     }
-    else
+    else {
         pWriter->write_uint(0);
+    }
 
     // Write the simple fields
     pWriter->write_uint(animation_index);
     pWriter->write_uint(frame_index);
     pWriter->write_int(x_relative_to_tile);
     pWriter->write_int(y_relative_to_tile);
-    pWriter->write_int((int)sound_to_play); // Not a uint, for compatibility
-    pWriter->write_int(0); // For compatibility
-    if(flags & thdf_crop)
+
+    // Not a uint, for compatibility
+    pWriter->write_int((int)sound_to_play); 
+
+    // For compatibility
+    pWriter->write_int(0);
+
+    if(flags & thdf_crop) {
         pWriter->write_int(crop_column);
+    }
 
     // Write the unioned fields
     if(draw_fn != THAnimation_draw_child)
@@ -1478,11 +1575,13 @@ void animation::depersist(lua_persist_reader *pReader)
             break;
         if(flags & thdf_crop)
         {
-            if(!pReader->read_int(crop_column))
+            if(!pReader->read_int(crop_column)) {
                 break;
+            }
         }
-        else
+        else {
             crop_column = 0;
+        }
 
         // Read the unioned fields
         if(draw_fn != THAnimation_draw_child)
@@ -1503,8 +1602,10 @@ void animation::depersist(lua_persist_reader *pReader)
         // Read the layers
         std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
         int iNumLayers;
-        if(!pReader->read_uint(iNumLayers))
+        if(!pReader->read_uint(iNumLayers)) {
             break;
+        }
+
         if(iNumLayers > 13)
         {
             if(!pReader->read_byte_stream(layers.layer_contents, 13))
@@ -1537,18 +1638,21 @@ void animation::tick()
         x_relative_to_tile += speed.dx;
         y_relative_to_tile += speed.dy;
     }
+
     if(morph_target)
     {
         morph_target->y_relative_to_tile += morph_target->speed.dy;
-        if(morph_target->y_relative_to_tile < morph_target->x_relative_to_tile)
+        if(morph_target->y_relative_to_tile < morph_target->x_relative_to_tile) {
             morph_target->y_relative_to_tile = morph_target->x_relative_to_tile;
+        }
     }
 
     //Female flying to heaven sound fix:
-    if(frame_index == 6987)
+    if(frame_index == 6987) {
         sound_to_play = 123;
-    else
+    } else {
         sound_to_play = manager->get_frame_sound(frame_index);
+    }
 }
 
 void animation_base::remove_from_tile()
@@ -1560,10 +1664,11 @@ void animation_base::attach_to_tile(map_tile *pMapNode, int layer)
 {
     remove_from_tile();
     link_list *pList;
-    if(flags & thdf_early_list)
+    if(flags & thdf_early_list) {
         pList = &pMapNode->oEarlyEntities;
-    else
+    } else {
         pList = pMapNode;
+    }
 
     this->set_drawing_layer(layer);
 
@@ -1622,10 +1727,14 @@ void animation::set_animation(animation_manager* pManager, size_t iAnimation)
 
 bool animation::get_marker(int* pX, int* pY)
 {
-    if(!manager || !manager->get_frame_marker(frame_index, pX, pY))
+    if(!manager || !manager->get_frame_marker(frame_index, pX, pY)) {
         return false;
-    if(flags & thdf_flip_horizontal)
+    }
+
+    if(flags & thdf_flip_horizontal) {
         *pX = -*pX;
+    }
+
     *pX += x_relative_to_tile;
     *pY += y_relative_to_tile + 16;
     return true;
@@ -1633,10 +1742,14 @@ bool animation::get_marker(int* pX, int* pY)
 
 bool animation::get_secondary_marker(int* pX, int* pY)
 {
-    if(!manager || !manager->get_frame_secondary_marker(frame_index, pX, pY))
+    if(!manager || !manager->get_frame_secondary_marker(frame_index, pX, pY)) {
         return false;
-    if(flags & thdf_flip_horizontal)
+    }
+
+    if(flags & thdf_flip_horizontal) {
         *pX = -*pX;
+    }
+
     *pX += x_relative_to_tile;
     *pY += y_relative_to_tile + 16;
     return true;
@@ -1666,10 +1779,12 @@ int GetAnimationDurationAndExtent(animation_manager *pManager,
         iCurFrame = pManager->get_next_frame(iCurFrame);
         ++iDuration;
     } while(iCurFrame != iFrame);
-    if(pMinY)
+    if(pMinY) {
         *pMinY = iMinY;
-    if(pMaxY)
+    }
+    if(pMaxY) {
         *pMaxY = iMaxY;
+    }
     return iDuration;
 }
 
@@ -1707,19 +1822,22 @@ void animation::set_morph_target(animation *pMorphTarget, unsigned int iDuration
                                morph_target->frame_index,
                                morph_target->layers, &iMorphMinY,
                                &iMorphMaxY, morph_target->flags);
-    if(iMorphDuration > iOriginalDuration)
+    if(iMorphDuration > iOriginalDuration) {
         iMorphDuration = iOriginalDuration;
+    }
 
     iMorphDuration *= iDurationFactor;
-    if(iOrigMinY < iMorphMinY)
+    if(iOrigMinY < iMorphMinY) {
         morph_target->x_relative_to_tile = iOrigMinY;
-    else
+    } else {
         morph_target->x_relative_to_tile = iMorphMinY;
+    }
 
-    if(iOrigMaxY > iMorphMaxY)
+    if(iOrigMaxY > iMorphMaxY) {
         morph_target->speed.dx = iOrigMaxY;
-    else
+    } else { 
         morph_target->speed.dx = iMorphMaxY;
+    }
 
     int iDist = morph_target->x_relative_to_tile - morph_target->speed.dx;
     morph_target->speed.dy = (iDist - iMorphDuration + 1) / iMorphDuration;
@@ -1785,19 +1903,22 @@ void sprite_render_list::tick()
 {
     x_relative_to_tile += dx_per_tick;
     y_relative_to_tile += dy_per_tick;
-    if(lifetime > 0)
+    if(lifetime > 0) {
         --lifetime;
+    }
 }
 
 void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY)
 {
-    if(!sheet)
+    if(!sheet) {
         return;
+    }
 
     iDestX += x_relative_to_tile;
     iDestY += y_relative_to_tile;
-    for(sprite *pSprite = sprites, *pLast = sprites + sprite_count;
-        pSprite != pLast; ++pSprite)
+
+    sprite *pLast = sprites + sprite_count;
+    for(sprite *pSprite = sprites; pSprite != pLast; ++pSprite)
     {
         sheet->draw_sprite(pCanvas, pSprite->index,
             iDestX + pSprite->x, iDestY + pSprite->y, flags);
@@ -1812,8 +1933,9 @@ bool sprite_render_list::hit_test(int iDestX, int iDestY, int iTestX, int iTestY
 
 void sprite_render_list::set_lifetime(int iLifetime)
 {
-    if(iLifetime < 0)
+    if(iLifetime < 0) {
         iLifetime = -1;
+    }
     lifetime = iLifetime;
 }
 
@@ -1822,8 +1944,9 @@ void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY)
     if(buffer_size == sprite_count)
     {
         int iNewSize = buffer_size * 2;
-        if(iNewSize == 0)
+        if(iNewSize == 0) {
             iNewSize = 4;
+        }
         sprite* pNewSprites = new sprite[iNewSize];
 #ifdef _MSC_VER
 #pragma warning(disable: 4996)
@@ -1853,8 +1976,9 @@ void sprite_render_list::persist(lua_persist_writer *pWriter) const
     pWriter->write_int(dx_per_tick);
     pWriter->write_int(dy_per_tick);
     pWriter->write_int(lifetime);
-    for(sprite *pSprite = sprites, *pLast = sprites + sprite_count;
-        pSprite != pLast; ++pSprite)
+
+    sprite *pLast = sprites + sprite_count;
+    for(sprite *pSprite = sprites; pSprite != pLast; ++pSprite)
     {
         pWriter->write_uint(pSprite->index);
         pWriter->write_int(pSprite->x);
@@ -1865,8 +1989,9 @@ void sprite_render_list::persist(lua_persist_writer *pWriter) const
     int iNumLayers = 13;
     for( ; iNumLayers >= 1; --iNumLayers)
     {
-        if(layers.layer_contents[iNumLayers - 1] != 0)
+        if(layers.layer_contents[iNumLayers - 1] != 0) {
             break;
+        }
     }
     pWriter->write_uint(iNumLayers);
     pWriter->write_byte_stream(layers.layer_contents, iNumLayers);
@@ -1915,27 +2040,36 @@ void sprite_render_list::depersist(lua_persist_reader *pReader)
     // Read the layers
     std::memset(layers.layer_contents, 0, sizeof(layers.layer_contents));
     int iNumLayers;
-    if(!pReader->read_uint(iNumLayers))
+    if(!pReader->read_uint(iNumLayers)) {
         return;
+    }
+
     if(iNumLayers > 13)
     {
-        if(!pReader->read_byte_stream(layers.layer_contents, 13))
+        if(!pReader->read_byte_stream(layers.layer_contents, 13)) {
             return;
-        if(!pReader->read_byte_stream(nullptr, iNumLayers - 13))
+        }
+
+        if(!pReader->read_byte_stream(nullptr, iNumLayers - 13)) {
             return;
+        }
     }
     else
     {
-        if(!pReader->read_byte_stream(layers.layer_contents, iNumLayers))
+        if(!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) {
             return;
+        }
     }
 
     // Read the chain
-    if(!pReader->read_stack_object())
+    if(!pReader->read_stack_object()) {
         return;
+    }
+
     next = reinterpret_cast<link_list*>(lua_touserdata(L, -1));
-    if(next)
+    if(next) {
         next->prev = this;
+    }
     lua_pop(L, 1);
 
     // Fix the sheet field

@@ -29,11 +29,15 @@ SOFTWARE.
 #include <stdexcept>
 
 class cursor;
+
 struct clip_rect : public SDL_Rect {
     typedef Sint16 x_y_type;
     typedef Uint16 w_h_type;
 };
+
 struct render_target_creation_params;
+
+enum class scaled_items;
 
 //! 32bpp ARGB colour. See #palette::pack_argb
 typedef uint32_t argb_colour;

@@ -95,10 +95,11 @@ int l_map_load(lua_State *L)
     const uint8_t* pData = luaT_checkfile(L, 2, &iDataLen);
     lua_settop(L, 2);
     lua_newtable(L);
-    if(pMap->load_from_th_file(pData, iDataLen, l_map_load_obj_cb, (void*)L))
+    if(pMap->load_from_th_file(pData, iDataLen, l_map_load_obj_cb, (void*)L)) {
         lua_pushboolean(L, 1);
-    else
+    } else {
         lua_pushboolean(L, 0);
+    }
     lua_insert(L, -2);
     return 2;
 }
@@ -106,10 +107,11 @@ int l_map_load(lua_State *L)
 int l_map_loadblank(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
-    if(pMap->load_blank())
+    if(pMap->load_blank()) {
         lua_pushboolean(L, 1);
-    else
+    } else {
         lua_pushboolean(L, 0);
+    }
     lua_newtable(L);
     return 2;
 }
@@ -152,8 +154,9 @@ animation* l_map_updateblueprint_getnextanim(lua_State *L, int& iIndex)
 uint16_t l_check_temp(lua_State *L, int iArg)
 {
     lua_Number n = luaL_checknumber(L, iArg);
-    if(n < static_cast<lua_Number>(0) || static_cast<lua_Number>(1) < n)
+    if(n < static_cast<lua_Number>(0) || static_cast<lua_Number>(1) < n) {
         luaL_argerror(L, iArg, "temperature (number in [0,1])");
+    }
     return static_cast<uint16_t>(n * static_cast<lua_Number>(65535));
 }
 
@@ -268,10 +271,9 @@ int l_map_updateblueprint(lua_State *L)
         for(int iX = iNewX; iX < iNewX + iNewW; ++iX)
         {
             map_tile *pNode = pMap->get_tile_unchecked(iX, iY);
-            if(is_valid(entire_invalid, pNode, pMap, player_id))
+            if(is_valid(entire_invalid, pNode, pMap, player_id)) {
                 pNode->iBlock[3] = iFloorTileGood;
-            else
-            {
+            } else {
                 pNode->iBlock[3] = iFloorTileBad;
                 valid = false;
             }
@@ -403,8 +405,9 @@ int l_map_get_player_camera(lua_State *L)
     int iX, iY;
     int iPlayer = static_cast<int>(luaL_optinteger(L, 2, 1));
     bool bGood = pMap->get_player_camera_tile(iPlayer - 1, &iX, &iY);
-    if(!bGood)
+    if(!bGood) {
         return luaL_error(L, "Player index out of range: %d", iPlayer);
+    }
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 1);
     return 2;
@@ -417,8 +420,9 @@ int l_map_set_player_camera(lua_State *L)
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);
     int iPlayer = static_cast<int>(luaL_optinteger(L, 4, 1));
 
-    if (iPlayer < 1 || iPlayer > player_max)
+    if (iPlayer < 1 || iPlayer > player_max) {
         return luaL_error(L, "Player index out of range: %i", iPlayer);
+    }
 
     pMap->set_player_camera_tile(iPlayer - 1, iX, iY);
     return 0;
@@ -430,8 +434,9 @@ int l_map_get_player_heliport(lua_State *L)
     int iX, iY;
     int iPlayer = static_cast<int>(luaL_optinteger(L, 2, 1));
     bool bGood = pMap->get_player_heliport_tile(iPlayer - 1, &iX, &iY);
-    if(!bGood)
+    if(!bGood) {
         return luaL_error(L, "Player index out of range: %d", iPlayer);
+    }
     lua_pushinteger(L, iX + 1);
     lua_pushinteger(L, iY + 1);
     return 2;
@@ -444,8 +449,9 @@ int l_map_set_player_heliport(lua_State *L)
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);
     int iPlayer = static_cast<int>(luaL_optinteger(L, 4, 1));
 
-    if (iPlayer < 1 || iPlayer > player_max)
+    if (iPlayer < 1 || iPlayer > player_max) {
         return luaL_error(L, "Player index out of range: %i", iPlayer);
+    }
 
     pMap->set_player_heliport_tile(iPlayer - 1, iX, iY);
     return 0;
@@ -540,8 +546,9 @@ int l_map_getcellflags(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     map_tile* pNode = pMap->get_tile(iX, iY);
-    if(pNode == nullptr)
+    if(pNode == nullptr) {
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    }
     if(lua_type(L, 4) != LUA_TTABLE)
     {
         lua_settop(L, 3);
@@ -574,8 +581,9 @@ int l_map_erase_thobs(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     map_tile* pNode = pMap->get_tile(iX, iY);
-    if(pNode == nullptr)
+    if(pNode == nullptr) {
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    }
     pNode->objects.clear();
     return 1;
 }
@@ -586,8 +594,9 @@ int l_map_remove_cell_thob(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     map_tile* pNode = pMap->get_tile(iX, iY);
-    if(pNode == nullptr)
+    if(pNode == nullptr) {
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    }
     auto thob = static_cast<object_type>(luaL_checkinteger(L, 4));
     for(auto iter = pNode->objects.begin(); iter != pNode->objects.end(); iter++)
     {
@@ -606,8 +615,9 @@ int l_map_setcellflags(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     map_tile* pNode = pMap->get_tile(iX, iY);
-    if(pNode == nullptr)
+    if(pNode == nullptr) {
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    }
     luaL_checktype(L, 4, LUA_TTABLE);
     lua_settop(L, 4);
 
@@ -622,10 +632,11 @@ int l_map_setcellflags(lua_State *L)
             auto iter = lua_tile_flag_map.find(field);
             if(iter != lua_tile_flag_map.end())
             {
-                if (lua_toboolean(L, 6) == 0)
+                if (lua_toboolean(L, 6) == 0) {
                     pNode->flags[(*iter).second] = false;
-                else
+                } else {
                     pNode->flags[(*iter).second] = true;
+                }
             }
             else if (std::strcmp(field, "thob") == 0)
             {
@@ -664,8 +675,9 @@ int l_map_setcell(lua_State *L)
     int iX = static_cast<int>(luaL_checkinteger(L, 2) - 1); // Lua arrays start at 1 - pretend
     int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1); // the map does too.
     map_tile* pNode = pMap->get_tile(iX, iY);
-    if(pNode == nullptr)
+    if(pNode == nullptr) {
         return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    }
     if(lua_gettop(L) >= 7)
     {
         pNode->iBlock[0] = (uint16_t)luaL_checkinteger(L, 4);
@@ -712,8 +724,9 @@ int l_map_mark_room(lua_State *L)
     uint16_t iTile = static_cast<uint16_t>(luaL_checkinteger(L, 6));
     uint16_t iRoomId = static_cast<uint16_t>(luaL_optinteger(L, 7, 0));
 
-    if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->get_width() || (iY_ + iH) > pMap->get_height())
+    if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->get_width() || (iY_ + iH) > pMap->get_height()) {
         luaL_argerror(L, 2, "Rectangle is out of bounds");
+    }
 
     for(int iY = iY_; iY < iY_ + iH; ++iY)
     {
@@ -743,8 +756,9 @@ int l_map_unmark_room(lua_State *L)
     int iW = static_cast<int>(luaL_checkinteger(L, 4));
     int iH = static_cast<int>(luaL_checkinteger(L, 5));
 
-    if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->get_width() || (iY_ + iH) > pMap->get_height())
+    if(iX_ < 0 || iY_ < 0 || (iX_ + iW) > pMap->get_width() || (iY_ + iH) > pMap->get_height()) {
         luaL_argerror(L, 2, "Rectangle is out of bounds");
+    }
 
     for(int iY = iY_; iY < iY_ + iH; ++iY)
     {
@@ -780,8 +794,9 @@ int l_map_hittest(lua_State *L)
 {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     drawable* pObject = pMap->hit_test(static_cast<int>(luaL_checkinteger(L, 2)), static_cast<int>(luaL_checkinteger(L, 3)));
-    if(pObject == nullptr)
+    if(pObject == nullptr) {
         return 0;
+    }
     lua_rawgeti(L, luaT_upvalueindex(1), 1);
     lua_pushlightuserdata(L, pObject);
     lua_gettable(L, -2);
@@ -932,8 +947,12 @@ int l_path_depersist(lua_State *L)
 int l_path_is_reachable_from_hospital(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
-    if(pPathfinder->find_path_to_hospital(nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
-        static_cast<int>(luaL_checkinteger(L, 3) - 1)))
+
+    bool found = pPathfinder->find_path_to_hospital(
+            nullptr,
+            static_cast<int>(luaL_checkinteger(L, 2) - 1),
+            static_cast<int>(luaL_checkinteger(L, 3) - 1));
+    if (found)
     {
         lua_pushboolean(L, 1);
         int iX, iY;
@@ -952,8 +971,14 @@ int l_path_is_reachable_from_hospital(lua_State *L)
 int l_path_distance(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
-    if(pPathfinder->find_path(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1, static_cast<int>(luaL_checkinteger(L, 3)) - 1,
-        static_cast<int>(luaL_checkinteger(L, 4)) - 1, static_cast<int>(luaL_checkinteger(L, 5)) - 1))
+
+    bool found = pPathfinder->find_path(
+            nullptr,
+            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+            static_cast<int>(luaL_checkinteger(L, 4)) - 1,
+            static_cast<int>(luaL_checkinteger(L, 5)) - 1);
+    if (found)
     {
         lua_pushinteger(L, pPathfinder->get_path_length());
     }
@@ -976,8 +1001,13 @@ int l_path_path(lua_State *L)
 int l_path_idle(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
-    if(!pPathfinder->find_idle_tile(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-        static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<int>(luaL_optinteger(L, 4, 0))))
+
+    bool found = pPathfinder->find_idle_tile(
+            nullptr,
+            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+            static_cast<int>(luaL_optinteger(L, 4, 0)));
+    if (!found)
     {
         return 0;
     }
@@ -992,9 +1022,18 @@ int l_path_visit(lua_State *L)
 {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     luaL_checktype(L, 6, LUA_TFUNCTION);
-    lua_pushboolean(L, pPathfinder->visit_objects(nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
-        static_cast<int>(luaL_checkinteger(L, 3)) - 1, static_cast<object_type>(luaL_checkinteger(L, 4)),
-        static_cast<int>(luaL_checkinteger(L, 5)), L, 6, luaL_checkinteger(L, 4) == 0 ? true : false) ? 1 : 0);
+
+    bool found = pPathfinder->visit_objects(
+            nullptr,
+            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            static_cast<int>(luaL_checkinteger(L, 3)) - 1,
+            static_cast<object_type>(luaL_checkinteger(L, 4)),
+            static_cast<int>(luaL_checkinteger(L, 5)),
+            L,
+            6,
+            luaL_checkinteger(L, 4) == 0 ? true : false);
+
+    lua_pushboolean(L, found);
     return 1;
 }
 

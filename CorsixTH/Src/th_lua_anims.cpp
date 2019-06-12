@@ -324,10 +324,11 @@ int l_anim_set_anim(lua_State *L)
     if(iAnim < 0 || iAnim >= pManager->get_animation_count())
         luaL_argerror(L, 3, "Animation index out of bounds");
 
-    if(lua_isnoneornil(L, 4))
+    if (lua_isnoneornil(L, 4)) {
         pAnimation->set_flags(0);
-    else
+    } else {
         pAnimation->set_flags(static_cast<uint32_t>(luaL_checkinteger(L, 4)));
+    }
 
     pAnimation->set_animation(pManager, iAnim);
     lua_settop(L, 2);
@@ -344,8 +345,9 @@ int l_anim_set_morph(lua_State *L)
     animation* pMorphTarget = luaT_testuserdata<animation>(L, 2, luaT_environindex);
 
     unsigned int iDurationFactor = 1;
-    if(!lua_isnoneornil(L, 3) && luaL_checkinteger(L, 3) > 0)
+    if(!lua_isnoneornil(L, 3) && luaL_checkinteger(L, 3) > 0) {
         iDurationFactor = static_cast<unsigned int>(luaL_checkinteger(L, 3));
+    }
 
     pAnimation->set_morph_target(pMorphTarget, iDurationFactor);
     lua_settop(L, 2);
@@ -384,11 +386,9 @@ int l_anim_set_tile(lua_State *L)
     {
         level_map* pMap = luaT_testuserdata<level_map>(L, 2);
         map_tile* pNode = pMap->get_tile(static_cast<int>(luaL_checkinteger(L, 3) - 1), static_cast<int>(luaL_checkinteger(L, 4) - 1));
-        if(pNode)
+        if(pNode) {
             pAnimation->attach_to_tile(pNode, last_layer);
-
-        else
-        {
+        } else {
             luaL_argerror(L, 3, lua_pushfstring(L, "Map index out of bounds ("
                 LUA_NUMBER_FMT "," LUA_NUMBER_FMT ")", lua_tonumber(L, 3),
                 lua_tonumber(L, 4)));

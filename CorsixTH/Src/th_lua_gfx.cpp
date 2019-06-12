@@ -22,6 +22,7 @@ SOFTWARE.
 
 #include "th_lua_internal.h"
 #include "th_gfx.h"
+#include "th_gfx_font.h"
 #include <SDL.h>
 #include <cstring>
 #include <exception>

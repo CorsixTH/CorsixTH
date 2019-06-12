@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include "th.h"
 #include "th_map.h"
 #include "th_map_overlays.h"
 #include "th_gfx.h"
@@ -34,78 +35,84 @@ SOFTWARE.
 #include <string>
 #include <exception>
 
+constexpr size_t max_player_count = 4;
+
 map_tile_flags& map_tile_flags::operator=(uint32_t raw)
 {
-    passable = (raw & static_cast<uint32_t>(map_tile_flags::key::passable_mask)) != 0;
-    can_travel_n = (raw & static_cast<uint32_t>(map_tile_flags::key::can_travel_n_mask)) != 0;
-    can_travel_e = (raw & static_cast<uint32_t>(map_tile_flags::key::can_travel_e_mask)) != 0;
-    can_travel_s = (raw & static_cast<uint32_t>(map_tile_flags::key::can_travel_s_mask)) != 0;
-    can_travel_w = (raw & static_cast<uint32_t>(map_tile_flags::key::can_travel_w_mask)) != 0;
-    hospital = (raw & static_cast<uint32_t>(map_tile_flags::key::hospital_mask)) != 0;
-    buildable = (raw & static_cast<uint32_t>(map_tile_flags::key::buildable_mask)) != 0;
-    passable_if_not_for_blueprint = (raw & static_cast<uint32_t>(map_tile_flags::key::passable_if_not_for_blueprint_mask)) != 0;
-    room = (raw & static_cast<uint32_t>(map_tile_flags::key::room_mask)) != 0;
-    shadow_half = (raw & static_cast<uint32_t>(map_tile_flags::key::shadow_half_mask)) != 0;
-    shadow_full = (raw & static_cast<uint32_t>(map_tile_flags::key::shadow_full_mask)) != 0;
-    shadow_wall = (raw & static_cast<uint32_t>(map_tile_flags::key::shadow_wall_mask)) != 0;
-    door_north = (raw & static_cast<uint32_t>(map_tile_flags::key::door_north_mask)) != 0;
-    door_west = (raw & static_cast<uint32_t>(map_tile_flags::key::door_west_mask)) != 0;
-    do_not_idle = (raw & static_cast<uint32_t>(map_tile_flags::key::do_not_idle_mask)) != 0;
-    tall_north = (raw & static_cast<uint32_t>(map_tile_flags::key::tall_north_mask)) != 0;
-    tall_west = (raw & static_cast<uint32_t>(map_tile_flags::key::tall_west_mask)) != 0;
-    buildable_n = (raw & static_cast<uint32_t>(map_tile_flags::key::buildable_n_mask)) != 0;
-    buildable_e = (raw & static_cast<uint32_t>(map_tile_flags::key::buildable_e_mask)) != 0;
-    buildable_s = (raw & static_cast<uint32_t>(map_tile_flags::key::buildable_s_mask)) != 0;
-    buildable_w = (raw & static_cast<uint32_t>(map_tile_flags::key::buildable_w_mask)) != 0;
+    using flags = map_tile_flags::key;
+
+    passable = (raw & static_cast<uint32_t>(flags::passable_mask)) != 0;
+    can_travel_n = (raw & static_cast<uint32_t>(flags::can_travel_n_mask)) != 0;
+    can_travel_e = (raw & static_cast<uint32_t>(flags::can_travel_e_mask)) != 0;
+    can_travel_s = (raw & static_cast<uint32_t>(flags::can_travel_s_mask)) != 0;
+    can_travel_w = (raw & static_cast<uint32_t>(flags::can_travel_w_mask)) != 0;
+    hospital = (raw & static_cast<uint32_t>(flags::hospital_mask)) != 0;
+    buildable = (raw & static_cast<uint32_t>(flags::buildable_mask)) != 0;
+    passable_if_not_for_blueprint = (raw & static_cast<uint32_t>(flags::passable_if_not_for_blueprint_mask)) != 0;
+    room = (raw & static_cast<uint32_t>(flags::room_mask)) != 0;
+    shadow_half = (raw & static_cast<uint32_t>(flags::shadow_half_mask)) != 0;
+    shadow_full = (raw & static_cast<uint32_t>(flags::shadow_full_mask)) != 0;
+    shadow_wall = (raw & static_cast<uint32_t>(flags::shadow_wall_mask)) != 0;
+    door_north = (raw & static_cast<uint32_t>(flags::door_north_mask)) != 0;
+    door_west = (raw & static_cast<uint32_t>(flags::door_west_mask)) != 0;
+    do_not_idle = (raw & static_cast<uint32_t>(flags::do_not_idle_mask)) != 0;
+    tall_north = (raw & static_cast<uint32_t>(flags::tall_north_mask)) != 0;
+    tall_west = (raw & static_cast<uint32_t>(flags::tall_west_mask)) != 0;
+    buildable_n = (raw & static_cast<uint32_t>(flags::buildable_n_mask)) != 0;
+    buildable_e = (raw & static_cast<uint32_t>(flags::buildable_e_mask)) != 0;
+    buildable_s = (raw & static_cast<uint32_t>(flags::buildable_s_mask)) != 0;
+    buildable_w = (raw & static_cast<uint32_t>(flags::buildable_w_mask)) != 0;
 
     return *this;
 }
 
 bool& map_tile_flags::operator[](map_tile_flags::key key)
 {
+    using flags = map_tile_flags::key;
+
     switch(key)
     {
-    case map_tile_flags::key::passable_mask:
+    case flags::passable_mask:
         return passable;
-    case map_tile_flags::key::can_travel_n_mask:
+    case flags::can_travel_n_mask:
         return can_travel_n;
-    case map_tile_flags::key::can_travel_e_mask:
+    case flags::can_travel_e_mask:
         return can_travel_e;
-    case map_tile_flags::key::can_travel_s_mask:
+    case flags::can_travel_s_mask:
         return can_travel_s;
-    case map_tile_flags::key::can_travel_w_mask:
+    case flags::can_travel_w_mask:
         return can_travel_w;
-    case map_tile_flags::key::hospital_mask:
+    case flags::hospital_mask:
         return hospital;
-    case map_tile_flags::key::buildable_mask:
+    case flags::buildable_mask:
         return buildable;
-    case map_tile_flags::key::passable_if_not_for_blueprint_mask:
+    case flags::passable_if_not_for_blueprint_mask:
         return passable_if_not_for_blueprint;
-    case map_tile_flags::key::room_mask:
+    case flags::room_mask:
         return room;
-    case map_tile_flags::key::shadow_half_mask:
+    case flags::shadow_half_mask:
         return shadow_half;
-    case map_tile_flags::key::shadow_full_mask:
+    case flags::shadow_full_mask:
         return shadow_full;
-    case map_tile_flags::key::shadow_wall_mask:
+    case flags::shadow_wall_mask:
         return shadow_wall;
-    case map_tile_flags::key::door_north_mask:
+    case flags::door_north_mask:
         return door_north;
-    case map_tile_flags::key::door_west_mask:
+    case flags::door_west_mask:
         return door_west;
-    case map_tile_flags::key::do_not_idle_mask:
+    case flags::do_not_idle_mask:
         return do_not_idle;
-    case map_tile_flags::key::tall_north_mask:
+    case flags::tall_north_mask:
         return tall_north;
-    case map_tile_flags::key::tall_west_mask:
+    case flags::tall_west_mask:
         return tall_west;
-    case map_tile_flags::key::buildable_n_mask:
+    case flags::buildable_n_mask:
         return buildable_n;
-    case map_tile_flags::key::buildable_e_mask:
+    case flags::buildable_e_mask:
         return buildable_e;
-    case map_tile_flags::key::buildable_s_mask:
+    case flags::buildable_s_mask:
         return buildable_s;
-    case map_tile_flags::key::buildable_w_mask:
+    case flags::buildable_w_mask:
         return buildable_w;
     default:
         throw std::out_of_range("map tile flag is invalid");
@@ -114,49 +121,51 @@ bool& map_tile_flags::operator[](map_tile_flags::key key)
 
 const bool& map_tile_flags::operator[](map_tile_flags::key key) const
 {
+    using flags = map_tile_flags::key;
+
     switch(key)
     {
-    case map_tile_flags::key::passable_mask:
+    case flags::passable_mask:
         return passable;
-    case map_tile_flags::key::can_travel_n_mask:
+    case flags::can_travel_n_mask:
         return can_travel_n;
-    case map_tile_flags::key::can_travel_e_mask:
+    case flags::can_travel_e_mask:
         return can_travel_e;
-    case map_tile_flags::key::can_travel_s_mask:
+    case flags::can_travel_s_mask:
         return can_travel_s;
-    case map_tile_flags::key::can_travel_w_mask:
+    case flags::can_travel_w_mask:
         return can_travel_w;
-    case map_tile_flags::key::hospital_mask:
+    case flags::hospital_mask:
         return hospital;
-    case map_tile_flags::key::buildable_mask:
+    case flags::buildable_mask:
         return buildable;
-    case map_tile_flags::key::passable_if_not_for_blueprint_mask:
+    case flags::passable_if_not_for_blueprint_mask:
         return passable_if_not_for_blueprint;
-    case map_tile_flags::key::room_mask:
+    case flags::room_mask:
         return room;
-    case map_tile_flags::key::shadow_half_mask:
+    case flags::shadow_half_mask:
         return shadow_half;
-    case map_tile_flags::key::shadow_full_mask:
+    case flags::shadow_full_mask:
         return shadow_full;
-    case map_tile_flags::key::shadow_wall_mask:
+    case flags::shadow_wall_mask:
         return shadow_wall;
-    case map_tile_flags::key::door_north_mask:
+    case flags::door_north_mask:
         return door_north;
-    case map_tile_flags::key::door_west_mask:
+    case flags::door_west_mask:
         return door_west;
-    case map_tile_flags::key::do_not_idle_mask:
+    case flags::do_not_idle_mask:
         return do_not_idle;
-    case map_tile_flags::key::tall_north_mask:
+    case flags::tall_north_mask:
         return tall_north;
-    case map_tile_flags::key::tall_west_mask:
+    case flags::tall_west_mask:
         return tall_west;
-    case map_tile_flags::key::buildable_n_mask:
+    case flags::buildable_n_mask:
         return buildable_n;
-    case map_tile_flags::key::buildable_e_mask:
+    case flags::buildable_e_mask:
         return buildable_e;
-    case map_tile_flags::key::buildable_s_mask:
+    case flags::buildable_s_mask:
         return buildable_s;
-    case map_tile_flags::key::buildable_w_mask:
+    case flags::buildable_w_mask:
         return buildable_w;
     default:
         throw std::out_of_range("map tile flag is invalid");
@@ -165,28 +174,32 @@ const bool& map_tile_flags::operator[](map_tile_flags::key key) const
 
 map_tile_flags::operator uint32_t() const
 {
+    using flags = map_tile_flags::key;
+
     uint32_t raw = 0;
-    if(passable) { raw |= static_cast<uint32_t>(map_tile_flags::key::passable_mask); }
-    if(can_travel_n) { raw |= static_cast<uint32_t>(map_tile_flags::key::can_travel_n_mask); }
-    if(can_travel_e) { raw |= static_cast<uint32_t>(map_tile_flags::key::can_travel_e_mask); }
-    if(can_travel_s) { raw |= static_cast<uint32_t>(map_tile_flags::key::can_travel_s_mask); }
-    if(can_travel_w) { raw |= static_cast<uint32_t>(map_tile_flags::key::can_travel_w_mask); }
-    if(hospital) { raw |= static_cast<uint32_t>(map_tile_flags::key::hospital_mask); }
-    if(buildable) { raw |= static_cast<uint32_t>(map_tile_flags::key::buildable_mask); }
-    if(passable_if_not_for_blueprint) { raw |= static_cast<uint32_t>(map_tile_flags::key::passable_if_not_for_blueprint_mask); }
-    if(room) { raw |= static_cast<uint32_t>(map_tile_flags::key::room_mask); }
-    if(shadow_half) { raw |= static_cast<uint32_t>(map_tile_flags::key::shadow_half_mask); }
-    if(shadow_full) { raw |= static_cast<uint32_t>(map_tile_flags::key::shadow_full_mask); }
-    if(shadow_wall) { raw |= static_cast<uint32_t>(map_tile_flags::key::shadow_wall_mask); }
-    if(door_north) { raw |= static_cast<uint32_t>(map_tile_flags::key::door_north_mask); }
-    if(door_west) { raw |= static_cast<uint32_t>(map_tile_flags::key::door_west_mask); }
-    if(do_not_idle) { raw |= static_cast<uint32_t>(map_tile_flags::key::do_not_idle_mask); }
-    if(tall_north) { raw |= static_cast<uint32_t>(map_tile_flags::key::tall_north_mask); }
-    if(tall_west) { raw |= static_cast<uint32_t>(map_tile_flags::key::tall_west_mask); }
-    if(buildable_n) { raw |= static_cast<uint32_t>(map_tile_flags::key::buildable_n_mask); }
-    if(buildable_e) { raw |= static_cast<uint32_t>(map_tile_flags::key::buildable_e_mask); }
-    if(buildable_s) { raw |= static_cast<uint32_t>(map_tile_flags::key::buildable_s_mask); }
-    if(buildable_w) { raw |= static_cast<uint32_t>(map_tile_flags::key::buildable_w_mask); }
+    if(passable) { raw |= static_cast<uint32_t>(flags::passable_mask); }
+    if(can_travel_n) { raw |= static_cast<uint32_t>(flags::can_travel_n_mask); }
+    if(can_travel_e) { raw |= static_cast<uint32_t>(flags::can_travel_e_mask); }
+    if(can_travel_s) { raw |= static_cast<uint32_t>(flags::can_travel_s_mask); }
+    if(can_travel_w) { raw |= static_cast<uint32_t>(flags::can_travel_w_mask); }
+    if(hospital) { raw |= static_cast<uint32_t>(flags::hospital_mask); }
+    if(buildable) { raw |= static_cast<uint32_t>(flags::buildable_mask); }
+    if(passable_if_not_for_blueprint) {
+        raw |= static_cast<uint32_t>(flags::passable_if_not_for_blueprint_mask);
+    }
+    if(room) { raw |= static_cast<uint32_t>(flags::room_mask); }
+    if(shadow_half) { raw |= static_cast<uint32_t>(flags::shadow_half_mask); }
+    if(shadow_full) { raw |= static_cast<uint32_t>(flags::shadow_full_mask); }
+    if(shadow_wall) { raw |= static_cast<uint32_t>(flags::shadow_wall_mask); }
+    if(door_north) { raw |= static_cast<uint32_t>(flags::door_north_mask); }
+    if(door_west) { raw |= static_cast<uint32_t>(flags::door_west_mask); }
+    if(do_not_idle) { raw |= static_cast<uint32_t>(flags::do_not_idle_mask); }
+    if(tall_north) { raw |= static_cast<uint32_t>(flags::tall_north_mask); }
+    if(tall_west) { raw |= static_cast<uint32_t>(flags::tall_west_mask); }
+    if(buildable_n) { raw |= static_cast<uint32_t>(flags::buildable_n_mask); }
+    if(buildable_e) { raw |= static_cast<uint32_t>(flags::buildable_e_mask); }
+    if(buildable_s) { raw |= static_cast<uint32_t>(flags::buildable_s_mask); }
+    if(buildable_w) { raw |= static_cast<uint32_t>(flags::buildable_w_mask); }
 
     return raw;
 }
@@ -194,6 +207,7 @@ map_tile_flags::operator uint32_t() const
 map_tile::map_tile() :
     iParcelId(0),
     iRoomId(0),
+    flags({}),
     objects()
 {
     iBlock[0] = 0;
@@ -201,31 +215,29 @@ map_tile::map_tile() :
     iBlock[2] = 0;
     iBlock[3] = 0;
     aiTemperature[0] = aiTemperature[1] = 8192;
-    flags = {};
 }
 
 map_tile::~map_tile()
 {
 }
 
-level_map::level_map()
-{
-    width = 0;
-    height = 0;
-    player_count = 0;
-    current_temperature_index = 0;
-    current_temperature_theme = temperature_theme::red;
-    parcel_count = 0;
-    cells = nullptr;
-    original_cells = nullptr;
-    blocks = nullptr;
-    overlay = nullptr;
-    owns_overlay = false;
-    plot_owner = nullptr;
-    parcel_tile_counts = nullptr;
-    parcel_adjacency_matrix = nullptr;
-    purchasable_matrix = nullptr;
-}
+level_map::level_map() :
+    cells(nullptr),
+    original_cells(nullptr),
+    blocks(nullptr),
+    overlay(nullptr),
+    owns_overlay(false),
+    plot_owner(nullptr),
+    width(0),
+    height(0),
+    player_count(0),
+    parcel_count(0),
+    current_temperature_index(0),
+    current_temperature_theme(temperature_theme::red),
+    parcel_tile_counts(nullptr),
+    parcel_adjacency_matrix(nullptr),
+    purchasable_matrix(nullptr)
+{}
 
 level_map::~level_map()
 {
@@ -240,16 +252,18 @@ level_map::~level_map()
 
 void level_map::set_overlay(map_overlay *pOverlay, bool bTakeOwnership)
 {
-    if(overlay && owns_overlay)
+    if (overlay && owns_overlay) {
         delete overlay;
+    }
     overlay = pOverlay;
     owns_overlay = bTakeOwnership;
 }
 
 bool level_map::set_size(int iWidth, int iHeight)
 {
-    if(iWidth <= 0 || iHeight <= 0)
+    if (iWidth <= 0 || iHeight <= 0) {
         return false;
+    }
 
     delete[] cells;
     delete[] original_cells;
@@ -326,8 +340,9 @@ void level_map::write_tile_index(uint8_t* pData, int iX, int iY) const
 
 bool level_map::load_blank()
 {
-    if(!set_size(128, 128))
+    if(!set_size(128, 128)) {
         return false;
+    }
 
     player_count = 1;
     initial_camera_x[0] = initial_camera_y[0] = 63;
@@ -339,9 +354,9 @@ bool level_map::load_blank()
     parcel_tile_counts = nullptr;
     map_tile *pNode = cells;
     map_tile *pOriginalNode = original_cells;
-    for(int iY = 0; iY < 128; ++iY)
+    for(int iY = 0; iY < height; ++iY)
     {
-        for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode)
+        for(int iX = 0; iX < width; ++iX, ++pNode, ++pOriginalNode)
         {
             pNode->iBlock[0] = static_cast<uint16_t>(2 + (iX % 2));
         }
@@ -349,7 +364,7 @@ bool level_map::load_blank()
     plot_owner = new int[1];
     plot_owner[0] = 0;
     parcel_tile_counts = new int[1];
-    parcel_tile_counts[0] = 128 * 128;
+    parcel_tile_counts[0] = height * width;
 
     return true;
 }
@@ -367,15 +382,20 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
                            map_load_object_callback_fn fnObjectCallback,
                            void* pCallbackToken)
 {
-    if(iDataLength < 163948 || !set_size(128, 128))
-        return false;
+    const size_t camera_offset = 163876;
+    const size_t heliport_offset = 163884;
+    const size_t parcel_offset = 131106;
 
-    player_count = pData[0];
+    if (iDataLength < 163948 || !set_size(128, 128)) {
+        return false;
+    }
+
+    player_count = pData[0] % max_player_count;
     for(int i = 0; i < player_count; ++i)
     {
-        read_tile_index(pData + 163876 + (i % 4) * 2,
+        read_tile_index(pData + camera_offset + (i * 2),
             initial_camera_x[i], initial_camera_y[i]);
-        read_tile_index(pData + 163884 + (i % 4) * 2,
+        read_tile_index(pData + heliport_offset + (i * 2),
             heliport_x[i], heliport_y[i]);
     }
     parcel_count = 0;
@@ -386,72 +406,69 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
 
     map_tile *pNode = cells;
     map_tile *pOriginalNode = original_cells;
-    const uint16_t *pParcel = reinterpret_cast<const uint16_t*>(pData + 131106);
+    const uint8_t *pParcel = pData + parcel_offset;
     pData += 34;
 
     pNode->objects.clear();
-    for(int iY = 0; iY < 128; ++iY)
+    for(int iY = 0; iY < height; ++iY)
     {
-        for(int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode, pData += 8, ++pParcel)
+        for(int iX = 0; iX < width; ++iX)
         {
             uint8_t iBaseTile = gs_iTHMapBlockLUT[pData[2]];
             pNode->flags.can_travel_n = true;
             pNode->flags.can_travel_e = true;
             pNode->flags.can_travel_s = true;
             pNode->flags.can_travel_w = true;
-            if(iX == 0)
+            if (iX == 0) {
                 pNode->flags.can_travel_w = false;
-            else if(iX == 127)
+            } else if (iX == width - 1) {
                 pNode->flags.can_travel_e = false;
-            if(iY == 0)
+            }
+
+            if (iY == 0) {
                 pNode->flags.can_travel_n = false;
-            else if(iY == 127)
+            } else if(iY == height - 1) {
                 pNode->flags.can_travel_s = false;
+            }
+
             pNode->iBlock[0] = iBaseTile;
-            if(pData[3] == 0 || is_divider_wall(pData[3]))
-            {
+            if(pData[3] == 0 || is_divider_wall(pData[3])) {
                 // Tiles 71, 72 and 73 (pond foliage) are used as floor tiles,
                 // but are too tall to be floor tiles, so move them to a wall,
                 // and replace the floor with something similar (pond base).
-                if(71 <= iBaseTile && iBaseTile <= 73)
-                {
+                if (71 <= iBaseTile && iBaseTile <= 73) {
                     pNode->iBlock[1] = iBaseTile;
                     pNode->iBlock[0] = iBaseTile = 69;
-                }
-                else
+                } else {
                     pNode->iBlock[1] = 0;
-            }
-            else
-            {
+                }
+            } else {
                 pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
                 pNode->flags.can_travel_n = false;
-                if(iY != 0)
-                {
+                if (iY != 0) {
                     pNode[-128].flags.can_travel_s = false;
                 }
             }
-            if(pData[4] == 0 || is_divider_wall(pData[4]))
+            if (pData[4] == 0 || is_divider_wall(pData[4])) {
                 pNode->iBlock[2] = 0;
-            else
-            {
+            } else {
                 pNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
                 pNode->flags.can_travel_w = false;
-                if(iX != 0)
-                {
+                if (iX != 0) {
                     pNode[-1].flags.can_travel_e = false;
                 }
             }
 
             pNode->iRoomId = 0;
-            pNode->iParcelId = *pParcel;
-            if(*pParcel >= parcel_count)
-                parcel_count = *pParcel + 1;
+            pNode->iParcelId = bytes_to_uint16_le(pParcel);
+            if (pNode->iParcelId >= parcel_count) {
+                parcel_count = pNode->iParcelId + 1;
+            }
 
             if(!(pData[5] & 1))
             {
                 pNode->flags.passable = true;
-                if(!(pData[7] & 16))
-                {
+                if (!(pData[7] & 16)) {
                     pNode->flags.hospital = true;
                     if(!(pData[5] & 2)) {
                         pNode->flags.buildable = true;
@@ -472,28 +489,37 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
             }
 
             *pOriginalNode = *pNode;
-            if(is_divider_wall(pData[3]))
+            if (is_divider_wall(pData[3])) {
                 pOriginalNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
-            if(is_divider_wall(pData[4]))
+            }
+            if (is_divider_wall(pData[4])) {
                 pOriginalNode->iBlock[2] = gs_iTHMapBlockLUT[pData[4]];
+            }
 
-            if(pData[1] != 0 && fnObjectCallback != nullptr)
-            {
+            if (pData[1] != 0 && fnObjectCallback != nullptr) {
                 fnObjectCallback(pCallbackToken, iX, iY, (object_type)pData[1], pData[0]);
             }
+
+            ++pNode;
+            ++pOriginalNode;
+            pData += 8;
+            pParcel += 2;
         }
     }
+
     plot_owner = new int[parcel_count];
     plot_owner[0] = 0;
-    for(int i = 1; i < parcel_count; ++i)
+    for (int i = 1; i < parcel_count; ++i) {
         plot_owner[i] = 1;
+    }
 
     update_shadows();
 
     parcel_tile_counts = new int[parcel_count];
     parcel_tile_counts[0] = 0;
-    for(int i = 1; i < parcel_count; ++i)
+    for (int i = 1; i < parcel_count; ++i) {
         parcel_tile_counts[i] = count_parcel_tiles(i);
+    }
 
     return true;
 }
@@ -530,25 +556,32 @@ void level_map::save(std::string filename)
 
         // Flags (TODO: Set a few more flag bits?)
         uint8_t iFlags = 63;
-        if(pNode->flags.passable)
+        if(pNode->flags.passable) {
             iFlags ^= 1;
-        if(pNode->flags.buildable)
+        }
+        if(pNode->flags.buildable) {
             iFlags ^= 2;
-        if(pNode->flags.buildable_n)
+        }
+        if(pNode->flags.buildable_n) {
             iFlags ^= 4;
-        if(pNode->flags.buildable_e)
+        }
+        if(pNode->flags.buildable_e) {
             iFlags ^= 8;
-        if(pNode->flags.buildable_s)
+        }
+        if(pNode->flags.buildable_s) {
             iFlags ^= 16;
-        if(pNode->flags.buildable_w)
+        }
+        if(pNode->flags.buildable_w) {
             iFlags ^= 32;
+        }
 
         aBuffer[iBufferNext++] = iFlags;
 
         aBuffer[iBufferNext++] = 0;
         iFlags = 16;
-        if(pNode->flags.hospital)
+        if (pNode->flags.hospital) {
             iFlags ^= 16;
+        }
         aBuffer[iBufferNext++] = iFlags;
 
         if(iBufferNext == sizeof(aBuffer))
@@ -628,8 +661,9 @@ bool addRemoveDividerWalls(level_map* pMap, map_tile* pNode, const map_tile* pOr
 std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId, int iOwner)
 {
     std::vector<std::pair<int, int>> vSplitTiles;
-    if(iParcelId <= 0 || parcel_count <= iParcelId || iOwner < 0)
+    if (iParcelId <= 0 || parcel_count <= iParcelId || iOwner < 0) {
         return vSplitTiles;
+    }
     plot_owner[iParcelId] = iOwner;
 
     map_tile *pNode = cells;
@@ -699,8 +733,9 @@ void test_adj(bool* parcel_adjacency_matrix, int parcel_count, const map_tile *o
 
 void level_map::make_adjacency_matrix()
 {
-    if(parcel_adjacency_matrix != nullptr)
+    if(parcel_adjacency_matrix != nullptr) {
         return;
+    }
 
     parcel_adjacency_matrix = new bool[parcel_count * parcel_count];
     for(int i = 0; i < parcel_count; ++i)
@@ -725,17 +760,21 @@ void level_map::make_adjacency_matrix()
 
 void level_map::make_purchase_matrix()
 {
-    if(purchasable_matrix != nullptr)
+    if(purchasable_matrix != nullptr) {
         return; // Already made
-    purchasable_matrix = new bool[4 * parcel_count];
+    }
+
+    purchasable_matrix = new bool[max_player_count * parcel_count];
     update_purchase_matrix();
 }
 
 void level_map::update_purchase_matrix()
 {
-    if(purchasable_matrix == nullptr)
+    if (purchasable_matrix == nullptr) {
         return; // Nothing to update
-    for(int iPlayer = 1; iPlayer <= 4; ++iPlayer)
+    }
+
+    for(int iPlayer = 1; iPlayer <= max_player_count; ++iPlayer)
     {
         for(int iParcel = 0; iParcel < parcel_count; ++iParcel)
         {
@@ -754,7 +793,7 @@ void level_map::update_purchase_matrix()
                     }
                 }
             }
-            purchasable_matrix[iParcel * 4 + iPlayer - 1] = bPurchasable;
+            purchasable_matrix[iParcel * max_player_count + iPlayer - 1] = bPurchasable;
         }
     }
 }
@@ -773,18 +812,19 @@ bool level_map::are_parcels_adjacent(int iParcel1, int iParcel2)
 bool level_map::is_parcel_purchasable(int iParcelId, int iPlayer)
 {
     if(0 <= iParcelId && iParcelId < parcel_count
-    && 1 <= iPlayer && iPlayer <= 4)
+    && 1 <= iPlayer && iPlayer <= max_player_count)
     {
         make_purchase_matrix();
-        return purchasable_matrix[iParcelId * 4 + iPlayer - 1];
+        return purchasable_matrix[iParcelId * max_player_count + iPlayer - 1];
     }
     return false;
 }
 
 void level_map::set_player_count(int count)
 {
-    if (count < 1 || count > 4)
+    if (count < 1 || count > max_player_count) {
         throw std::out_of_range("Player count must be between 1 and 4");
+    }
 
     player_count = count;
 }
@@ -793,12 +833,12 @@ bool level_map::get_player_camera_tile(int iPlayer, int* pX, int* pY) const
 {
     if(iPlayer < 0 || iPlayer >= get_player_count())
     {
-        if(pX) *pX = 0;
-        if(pY) *pY = 0;
+        if (pX) { *pX = 0; }
+        if (pY) { *pY = 0; }
         return false;
     }
-    if(pX) *pX = initial_camera_x[iPlayer];
-    if(pY) *pY = initial_camera_y[iPlayer];
+    if (pX) { *pX = initial_camera_x[iPlayer]; }
+    if (pY) { *pY = initial_camera_y[iPlayer]; }
     return true;
 }
 
@@ -806,12 +846,12 @@ bool level_map::get_player_heliport_tile(int iPlayer, int* pX, int* pY) const
 {
     if(iPlayer < 0 || iPlayer >= get_player_count())
     {
-        if(pX) *pX = 0;
-        if(pY) *pY = 0;
+        if (pX) { *pX = 0; }
+        if (pY) { *pY = 0; }
         return false;
     }
-    if(pX) *pX = heliport_x[iPlayer];
-    if(pY) *pY = heliport_y[iPlayer];
+    if (pX) { *pX = heliport_x[iPlayer]; }
+    if (pY) { *pY = heliport_y[iPlayer]; }
     return true;
 }
 
@@ -850,7 +890,9 @@ int level_map::count_parcel_tiles(int iParcelId) const
         for(int iX = 0; iX < width; ++iX)
         {
             const map_tile* pNode = get_tile_unchecked(iX, iY);
-            if(pNode->iParcelId == iParcelId) iTiles++;
+            if (pNode->iParcelId == iParcelId) {
+                iTiles++;
+            }
         }
     }
     return iTiles;
@@ -858,26 +900,29 @@ int level_map::count_parcel_tiles(int iParcelId) const
 
 map_tile* level_map::get_tile(int iX, int iY)
 {
-    if(0 <= iX && iX < width && 0 <= iY && iY < height)
+    if (0 <= iX && iX < width && 0 <= iY && iY < height) {
         return get_tile_unchecked(iX, iY);
-    else
+    } else {
         return nullptr;
+    }
 }
 
 const map_tile* level_map::get_tile(int iX, int iY) const
 {
-    if(0 <= iX && iX < width && 0 <= iY && iY < height)
+    if (0 <= iX && iX < width && 0 <= iY && iY < height) {
         return get_tile_unchecked(iX, iY);
-    else
+    } else {
         return nullptr;
+    }
 }
 
 const map_tile* level_map::get_original_tile(int iX, int iY) const
 {
-    if(0 <= iX && iX < width && 0 <= iY && iY < height)
+    if (0 <= iX && iX < width && 0 <= iY && iY < height) {
         return get_original_tile_unchecked(iX, iY);
-    else
+    } else {
         return nullptr;
+    }
 }
 
 map_tile* level_map::get_tile_unchecked(int iX, int iY)
@@ -953,8 +998,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         2) For each tile, left to right, the west wall, then the late entities
     */
 
-    if(blocks == nullptr || cells == nullptr)
+    if (blocks == nullptr || cells == nullptr) {
         return;
+    }
 
     clip_rect rcClip;
     rcClip.x = static_cast<clip_rect::x_y_type>(iCanvasX);
@@ -992,8 +1038,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                 itrNode2.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
         }
 
-        if(!itrNode2.is_last_on_scanline())
+        if (!itrNode2.is_last_on_scanline()) {
             continue;
+        }
 
         for(map_scanline_iterator itrNode(itrNode2, map_scanline_iterator_direction::backward, iCanvasX, iCanvasY); itrNode; ++itrNode)
         {
@@ -1031,10 +1078,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         if(!bFirst) {
             //since the scanline count from one THMapScanlineIterator to another can differ
             //synchronization between the current iterator and the former one is neeeded
-             if(itrNode.x() < -64)
+             if (itrNode.x() < -64) {
                  ++itrNode;
-             while(formerIterator.x() < itrNode.x())
+             }
+             while (formerIterator.x() < itrNode.x()) {
                  ++formerIterator;
+             }
         }
         bool bPreviousTileNeedsRedraw = false;
         for(; itrNode; ++itrNode)
@@ -1056,11 +1105,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                     itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[1];
-            if(iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF,
-                nullptr, &iH) && iH > 0)
+            if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF,
+                nullptr, &iH) && iH > 0) {
                 bNeedsRedraw = true;
-            if(itrNode->oEarlyEntities.next)
+            }
+            if (itrNode->oEarlyEntities.next) {
                 bNeedsRedraw = true;
+            }
 
             bool bRedrawAnimations = false;
 
@@ -1068,10 +1119,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             while(pItem)
             {
                 pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
-                if(pItem->is_multiple_frame_animation_fn(pItem))
+                if (pItem->is_multiple_frame_animation_fn(pItem)) {
                     bRedrawAnimations = true;
-                if(pItem->get_drawing_layer() == 1)
+                }
+                if (pItem->get_drawing_layer() == 1) {
                     bNeedsRedraw = true;
+                }
                 pItem = (drawable*)(pItem->next);
             }
 
@@ -1101,8 +1154,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                 pItem = formerIterator ? (drawable*)(formerIterator->next) : nullptr;
                 while(pItem)
                 {
-                    if(pItem->get_drawing_layer() == 8)
+                    if(pItem->get_drawing_layer() == 8) {
                         pItem->draw_fn(pItem, pCanvas, formerIterator.x(), formerIterator.y());
+                    }
                     pItem = (drawable*)(pItem->next);
                 }
 
@@ -1142,12 +1196,15 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                     }
 
                     pItem = (drawable*)(itrNode.get_previous_tile())->next;
-                    for(; pItem; pItem = (drawable*)(pItem->next))
+                    for (; pItem; pItem = (drawable*)(pItem->next)) {
                         pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
+                    }
                 }
             }
            bPreviousTileNeedsRedraw = bNeedsRedraw;
-           if (!bFirst) ++formerIterator;
+           if (!bFirst) {
+               ++formerIterator;
+           }
         }
 
      formerIterator = itrNode;
@@ -1171,13 +1228,15 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const
     // This function needs to hitTest each drawable object, in the reverse
     // order to that in which they would be drawn.
 
-    if(blocks == nullptr || cells == nullptr)
+    if (blocks == nullptr || cells == nullptr) {
         return nullptr;
+    }
 
     for(map_tile_iterator itrNode2(this, iTestX, iTestY, 1, 1, map_scanline_iterator_direction::backward); itrNode2; ++itrNode2)
     {
-        if(!itrNode2.is_last_on_scanline())
+        if (!itrNode2.is_last_on_scanline()) {
             continue;
+        }
 
         for(map_scanline_iterator itrNode(itrNode2, map_scanline_iterator_direction::backward); itrNode; ++itrNode)
         {
@@ -1185,8 +1244,9 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const
             {
                 drawable* pResult = hit_test_drawables(itrNode->next,
                     itrNode.x(), itrNode.y(), 0, 0);
-                if(pResult)
+                if (pResult) {
                     return pResult;
+                }
             }
         }
         for(map_scanline_iterator itrNode(itrNode2, map_scanline_iterator_direction::forward); itrNode; ++itrNode)
@@ -1195,8 +1255,9 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const
             {
                 drawable* pResult = hit_test_drawables(itrNode->oEarlyEntities.next,
                     itrNode.x(), itrNode.y(), 0, 0);
-                if(pResult)
+                if (pResult) {
                     return pResult;
+                }
             }
         }
     }
@@ -1208,8 +1269,9 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
                                         int iTestX, int iTestY) const
 {
     link_list* pListEnd = pListStart;
-    while(pListEnd->next)
+    while (pListEnd->next) {
         pListEnd = pListEnd->next;
+    }
     drawable* pList = (drawable*)pListEnd;
 
     while(true)
@@ -1217,10 +1279,11 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
         if(pList->hit_test_fn(pList, iXs, iYs, iTestX, iTestY))
             return pList;
 
-        if(pList == pListStart)
+        if (pList == pListStart) {
             return nullptr;
-        else
+        } else {
             pList = (drawable*)pList->prev;
+        }
     }
 }
 
@@ -1231,10 +1294,11 @@ int level_map::get_tile_owner(const map_tile* pNode) const
 
 int level_map::get_parcel_owner(int iParcel) const
 {
-    if(0 <= iParcel && iParcel < parcel_count)
+    if (0 <= iParcel && iParcel < parcel_count) {
         return plot_owner[iParcel];
-    else
+    } else {
         return 0;
+    }
 }
 
 
@@ -1358,14 +1422,19 @@ void level_map::update_pathfinding()
             pNode->flags.can_travel_e = true;
             pNode->flags.can_travel_s = true;
             pNode->flags.can_travel_w = true;
-            if(iX == 0)
+
+            if (iX == 0) {
                 pNode->flags.can_travel_w = false;
-            else if(iX == 127)
+            } else if (iX == 127) {
                 pNode->flags.can_travel_e = false;
-            if(iY == 0)
+            }
+
+            if (iY == 0) {
                 pNode->flags.can_travel_n = false;
-            else if(iY == 127)
+            } else if (iY == 127) {
                 pNode->flags.can_travel_s = false;
+            }
+
             if(pNode->iBlock[1] & 0xFF)
             {
                 pNode->flags.can_travel_n = false;
@@ -1527,7 +1596,7 @@ void level_map::depersist(lua_persist_reader *pReader)
             luaL_error(L, "Cannot load savegame from a newer version.");
         }
     }
-    if(!pReader->read_uint(player_count)) return;
+    if (!pReader->read_uint(player_count)) return;
     for(int i = 0; i < player_count; ++i)
     {
         if(!pReader->read_uint(initial_camera_x[i])) return;
@@ -1535,12 +1604,16 @@ void level_map::depersist(lua_persist_reader *pReader)
         if(!pReader->read_uint(heliport_x[i])) return;
         if(!pReader->read_uint(heliport_y[i])) return;
     }
-    if(!pReader->read_uint(parcel_count)) return;
+    if (!pReader->read_uint(parcel_count)) {
+        return;
+    }
     delete[] plot_owner;
     plot_owner = new int[parcel_count];
     for(int i = 0; i < parcel_count; ++i)
     {
-        if(!pReader->read_uint(plot_owner[i])) return;
+        if (!pReader->read_uint(plot_owner[i])) {
+            return;
+        }
     }
     delete[] parcel_tile_counts;
     parcel_tile_counts = new int[parcel_count];
@@ -1550,12 +1623,15 @@ void level_map::depersist(lua_persist_reader *pReader)
     {
         for(int i = 0; i < parcel_count; ++i)
         {
-            if(!pReader->read_uint(parcel_tile_counts[i])) return;
+            if (!pReader->read_uint(parcel_tile_counts[i])) {
+                return;
+            }
         }
     }
 
-    if(!pReader->read_uint(iWidth) || !pReader->read_uint(iHeight))
+    if(!pReader->read_uint(iWidth) || !pReader->read_uint(iHeight)) {
         return;
+    }
     if(!set_size(iWidth, iHeight))
     {
         pReader->set_error("Unable to set size while depersisting map");
@@ -1563,8 +1639,9 @@ void level_map::depersist(lua_persist_reader *pReader)
     }
     if(iVersion >= 4)
     {
-        if(!pReader->read_uint(current_temperature_index))
+        if(!pReader->read_uint(current_temperature_index)) {
             return;
+        }
     }
     for(map_tile *pNode = cells, *pLimitNode = cells + width * height;
         pNode != pLimitNode; ++pNode)
@@ -1575,15 +1652,19 @@ void level_map::depersist(lua_persist_reader *pReader)
         if(iVersion >= 4)
         {
             if(!pReader->read_uint(pNode->aiTemperature[0])
-            || !pReader->read_uint(pNode->aiTemperature[1])) return;
+            || !pReader->read_uint(pNode->aiTemperature[1])) {
+                return;
+            }
         }
-        if(!pReader->read_stack_object())
+        if(!pReader->read_stack_object()) {
             return;
+        }
         pNode->next = (link_list*)lua_touserdata(L, -1);
         if(pNode->next)
         {
-            if(pNode->next->prev != nullptr)
+            if(pNode->next->prev != nullptr) {
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+            }
             pNode->next->prev = pNode;
         }
         lua_pop(L, 1);
@@ -1592,8 +1673,9 @@ void level_map::depersist(lua_persist_reader *pReader)
         pNode->oEarlyEntities.next = (link_list*)lua_touserdata(L, -1);
         if(pNode->oEarlyEntities.next)
         {
-            if(pNode->oEarlyEntities.next->prev != nullptr)
+            if(pNode->oEarlyEntities.next->prev != nullptr) {
                 std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
+            }
             pNode->oEarlyEntities.next->prev = &pNode->oEarlyEntities;
         }
         lua_pop(L, 1);
@@ -1622,8 +1704,9 @@ void level_map::depersist(lua_persist_reader *pReader)
 
     if(iVersion < 3)
     {
-        for(int i = 1; i < parcel_count; ++i)
+        for(int i = 1; i < parcel_count; ++i) {
             parcel_tile_counts[i] = get_parcel_tile_count(i);
+        }
     }
 }
 
@@ -1652,10 +1735,9 @@ map_tile_iterator::map_tile_iterator(const level_map* pMap, int iScreenX, int iS
     {
         base_x = 0;
         base_y = (iScreenY - 32) / 16;
-        if(base_y < 0)
+        if(base_y < 0) {
             base_y = 0;
-        else if(base_y >= container->get_height())
-        {
+        } else if(base_y >= container->get_height()) {
             base_x = base_y - container->get_height() + 1;
             base_y = container->get_height() - 1;
             if(base_x >= container->get_width())
@@ -1712,36 +1794,38 @@ void map_tile_iterator::advance_until_visible()
                     ++scanline_count;
                     tile = container->get_tile_unchecked(world_x, world_y);
                     return;
-                }
-                else
+                } else {
                     break;
+                }
                 --world_y;
                 ++world_x;
                 x_relative_to_screen += 64;
             }
         }
         scanline_count = 0;
-        if(direction == map_scanline_iterator_direction::forward)
+        if (direction == map_scanline_iterator_direction::forward)
         {
-            if(base_y == container->get_height() - 1)
+            if (base_y == container->get_height() - 1)
             {
-                if(++base_x == container->get_width())
+                if (++base_x == container->get_width()) {
                     break;
-            }
-            else
+                }
+            } else {
                 ++base_y;
+            }
         }
         else
         {
             if(base_x == 0)
             {
-                if(base_y == 0)
+                if (base_y == 0) {
                     break;
-                else
+                } else {
                     --base_y;
-            }
-            else
+                }
+            } else {
                 --base_x;
+            }
         }
         world_x = base_x;
         world_y = base_y;
@@ -1784,7 +1868,6 @@ map_scanline_iterator::map_scanline_iterator(const map_tile_iterator& itrNodes,
 
     end_tile = tile + tile_step * itrNodes.scanline_count;
     first_tile = tile;
-
 }
 
 map_scanline_iterator& map_scanline_iterator::operator ++ ()

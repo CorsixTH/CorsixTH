@@ -604,10 +604,11 @@ bool iso_filesystem::seek_to_sector(uint32_t iSector)
         set_error("No raw file.");
         return false;
     }
-    if(std::fseek(raw_file, sector_size * static_cast<long>(iSector), SEEK_SET) == 0)
+    int res = std::fseek(
+            raw_file, sector_size * static_cast<long>(iSector), SEEK_SET);
+    if (res == 0) {
         return true;
-    else
-    {
+    } else {
         set_error("Unable to seek to sector %i.", static_cast<int>(iSector));
         return false;
     }

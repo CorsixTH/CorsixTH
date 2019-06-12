@@ -76,7 +76,7 @@ public:
     int q_front;
     int q_back;
     int frame_count;
-    Uint32 frame_time[4096];
+    std::array<Uint32, 4096> frame_time;
 
     void init()
     {
@@ -91,19 +91,23 @@ public:
     {
         Uint32 now = SDL_GetTicks();
         frame_time[q_front] = now;
-        q_front = (q_front + 1) % static_cast<int>((sizeof(frame_time) / sizeof(*frame_time)));
-        if(q_front == q_back)
-            q_back = (q_back + 1) % static_cast<int>((sizeof(frame_time) / sizeof(*frame_time)));
-        else
+        q_front = (q_front + 1) % frame_time.size();
+        if(q_front == q_back) {
+            q_back = (q_back + 1) % frame_time.size();
+        } else {
             ++frame_count;
-        if(now < 1000)
+        }
+
+        if(now < 1000) {
             now = 0;
-        else
+        } else {
             now -= 1000;
+        }
+
         while(frame_time[q_back] < now)
         {
             --frame_count;
-            q_back = (q_back + 1) % static_cast<int>((sizeof(frame_time) / sizeof(*frame_time)));
+            q_back = (q_back + 1) % frame_time.size();
         }
     }
 };
