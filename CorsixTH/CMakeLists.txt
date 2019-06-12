@@ -70,7 +70,7 @@ list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cp
                                    "${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp")
 list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.h")
 
-add_library(Corsixth_lib STATIC ${corsixth_source_files})
+add_library(CorsixTH_lib STATIC ${corsixth_source_files})
 
 # Declaration of the executable
 if(APPLE)
@@ -88,21 +88,21 @@ if(APPLE)
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 
   target_link_libraries(CorsixTH SDL2main)
-  target_link_libraries(CorsixTH Corsixth_lib)
   include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
   add_executable(CorsixTH ${corsixth_main_files})
-  target_link_libraries(CorsixTH Corsixth_lib)
 endif()
+
+target_link_libraries(CorsixTH CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
 endif()
 
 # Set language standard
-set_property(TARGET Corsixth_lib PROPERTY CXX_STANDARD 14)
-set_property(TARGET Corsixth_lib PROPERTY CXX_EXTENSIONS OFF)
-set_property(TARGET Corsixth_lib PROPERTY CXX_STANDARD_REQUIRED ON)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
+set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
@@ -118,7 +118,7 @@ ENDIF()
 # Find SDL
 if(MSVC AND USE_VCPKG_DEPS)
   find_package(SDL2 CONFIG REQUIRED)
-  target_link_libraries(Corsixth_lib SDL2::SDL2)
+  target_link_libraries(CorsixTH_lib SDL2::SDL2)
   target_link_libraries(CorsixTH SDL2::SDL2main)
 else()
   find_package(SDL2 REQUIRED)

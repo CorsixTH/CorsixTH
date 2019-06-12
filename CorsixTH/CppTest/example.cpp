@@ -1,5 +1,6 @@
 #include "catch2/catch.hpp"
 
-TEST_CASE("Example Test", "[example]") {
+TEST_CASE("Example Test", "[example]")
+{
 	REQUIRE(true);
 }

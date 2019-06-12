@@ -34,7 +34,7 @@ include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 add_executable(UnitTests ${TESTING_FILES} ${TEST_SOURCE_FILES})
 target_link_libraries(UnitTests Catch2::Catch2)
-target_link_libraries(UnitTests Corsixth_lib)
+target_link_libraries(UnitTests CorsixTH_lib)
 
 set_property(TARGET UnitTests PROPERTY CXX_STANDARD 14)
 set_property(TARGET UnitTests PROPERTY CXX_EXTENSIONS OFF)
