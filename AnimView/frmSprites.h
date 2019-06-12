@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #pragma once
+
+#include "config.h"
 #include <wx/bitmap.h>
 #include <wx/frame.h>
 #include <wx/button.h>
@@ -86,5 +88,5 @@ protected:
     wxTextCtrl* m_txtData;
     wxTextCtrl* m_txtPalette;
     MyVScrolled* m_panFrame;
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };

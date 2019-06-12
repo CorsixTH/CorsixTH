@@ -20,6 +20,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#include "config.h"
 #include "frmMain.h"
 #include <wx/radiobut.h>
 #include <wx/sizer.h>

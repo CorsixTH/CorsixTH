@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #pragma once
+#include "config.h"
 #include <wx/frame.h>
 #include <wx/button.h>
 #include <wx/spinctrl.h>
@@ -128,5 +129,5 @@ protected:
     wxCheckBox* m_chkFrameFlags[16];
     wxListBox* m_lstSearchResults;
     wxPanel* m_panFrame;
-    DECLARE_EVENT_TABLE();
+    DECLARE_EVENT_TABLE()
 };
