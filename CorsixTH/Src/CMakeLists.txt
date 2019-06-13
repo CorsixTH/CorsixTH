@@ -1,4 +1,8 @@
-set(corsixth_lib_src_files 
+# Modify the config.h based upon our selection of options
+configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
+
+target_sources(CorsixTH_lib
+    PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/random.c
     ${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/iso_fs.cpp
@@ -27,12 +31,12 @@ set(corsixth_lib_src_files
     ${CMAKE_CURRENT_SOURCE_DIR}/th_pathfind.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.cpp
-
-    ${CMAKE_SOURCE_DIR}/common/rnc.cpp
-    PARENT_SCOPE
 )
 
-set(corsixth_lib_hdr_files
+# These are for IDEs such as XCode and MSVC to track headers within their
+# project files. They are not used by the build system.
+target_sources(CorsixTH_lib
+    PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/bootstrap.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cp437_table.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cp936_table.h
@@ -54,8 +58,11 @@ set(corsixth_lib_hdr_files
     ${CMAKE_CURRENT_SOURCE_DIR}/th_sound.h
     ${CMAKE_CURRENT_SOURCE_DIR}/xmi2mid.h
 
-    ${CMAKE_SOURCE_DIR}/common/rnc.h
-
     ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
-    PARENT_SCOPE
+)
+
+target_sources(CorsixTH
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.h
 )
