@@ -19,6 +19,7 @@ target_sources(CorsixTH_lib
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_anims.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_gfx.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_iso.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_lfs_ext.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_map.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/th_lua_movie.cpp
