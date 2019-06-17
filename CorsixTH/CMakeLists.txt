@@ -73,7 +73,7 @@ target_sources(CorsixTH_lib
 
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project
-include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+target_include_directories(CorsixTH_lib PUBLIC ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Set language standard
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
