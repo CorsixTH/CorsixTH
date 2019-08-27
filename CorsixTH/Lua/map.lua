@@ -268,6 +268,12 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
     end
   end
 
+  -- fix original level 6 map
+  if level == 6 and not map_file and not map_editor then
+    self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
+    self:setCellFlags(58, 72, {passable = false})
+  end
+
   return objects
 end
 
@@ -777,5 +783,9 @@ function Map:afterLoad(old, new)
   if old < 120 then
     -- Issue #1105 update pathfinding (rebuild walls) potentially broken by side object placement
     self.th:updatePathfinding()
+  end
+  if old < 136 then
+    self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
+    self:setCellFlags(58, 72, {passable = false})
   end
 end
