@@ -785,7 +785,9 @@ function Map:afterLoad(old, new)
     self.th:updatePathfinding()
   end
   if old < 136 then
-    self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
-    self:setCellFlags(58, 72, {passable = false})
+    if self.level_number == 6 then
+      self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
+      self:setCellFlags(58, 72, {passable = false})
+    end
   end
 end
