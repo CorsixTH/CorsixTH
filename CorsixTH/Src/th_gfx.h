@@ -547,6 +547,13 @@ protected:
     ::layers layers;
 };
 
+struct xy_diff {
+    //! Amount to change x per tick
+    int dx;
+    //! Amount to change y per tick
+    int dy;
+};
+
 class animation : public animation_base {
 public:
     animation();
@@ -587,12 +594,7 @@ private:
     size_t animation_index;  ///< Animation number.
     size_t frame_index;      ///< Frame number.
     union {
-        struct {
-            //! Amount to change x per tick
-            int dx;
-            //! Amount to change y per tick
-            int dy;
-        } speed;
+        xy_diff speed;
         //! Some animations are tied to the marker of another animation and
         //! hence have a parent rather than a speed.
         animation* parent;
