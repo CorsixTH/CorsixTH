@@ -1,0 +1,29 @@
+---
+Language:        Cpp
+BasedOnStyle: Google
+
+MacroBlockBegin: "^\
+BEGIN_EVENT_TABLE.*"
+MacroBlockEnd: "^\
+END_EVENT_TABLE()"
+
+DerivePointerAlignment: false
+PointerAlignment: Left
+AlignAfterOpenBracket: AlwaysBreak
+BinPackArguments: false
+BinPackParameters: false
+
+IndentWidth: 4
+AccessModifierOffset: -4
+ContinuationIndentWidth: 8
+
+IncludeCategories: 
+  - Regex:           '^"config.h"'
+    Priority:        1
+  - Regex:           '^<.*\.h>'
+    Priority:        2
+  - Regex:           '^<.*'
+    Priority:        3
+  - Regex:           '.*'
+    Priority:        4
+
