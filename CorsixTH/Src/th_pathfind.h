@@ -30,15 +30,14 @@ class pathfinder;
 
 /** Directions of movement. */
 enum class travel_direction {
-    north = 0, ///< Move to the north.
-    east = 1, ///< Move to the east.
-    south = 2, ///< Move to the south.
-    west = 3 ///< Move to the west.
+    north = 0,  ///< Move to the north.
+    east = 1,   ///< Move to the east.
+    south = 2,  ///< Move to the south.
+    west = 3    ///< Move to the west.
 };
 
 /** Node in the path finder routines. */
-struct path_node
-{
+struct path_node {
     //! Pointer to the previous node in the path to this cell.
     /*!
         Points to nullptr if this is the first cell in the path, or points to
@@ -74,16 +73,16 @@ struct path_node
 
     //! Total cost of this node.
     /*!
-        @return Total cost of the node, traveled distance and guess to the destination.
+        @return Total cost of the node, traveled distance and guess to the
+       destination.
      */
     inline int value() const { return distance + guess; }
 };
 
 /** Base class of the path finders. */
-class abstract_pathfinder
-{
+class abstract_pathfinder {
 public:
-    abstract_pathfinder(pathfinder *pf);
+    abstract_pathfinder(pathfinder* pf);
     virtual ~abstract_pathfinder() = default;
 
     //! Initialize the path finder.
@@ -93,7 +92,7 @@ public:
         @param iStarty Y coordinate of the start position.
         @return The initial node to expand.
      */
-    path_node *init(const level_map *pMap, int iStartX, int iStarty);
+    path_node* init(const level_map* pMap, int iStartX, int iStarty);
 
     //! Expand the \a pNode to its neighbours.
     /*!
@@ -102,16 +101,19 @@ public:
         @param iWidth Width of the map.
         @return Whether the search is done.
      */
-    bool search_neighbours(path_node *pNode, map_tile_flags flags, int iWidth);
+    bool search_neighbours(path_node* pNode, map_tile_flags flags, int iWidth);
 
-    void record_neighbour_if_passable(path_node *pNode, map_tile_flags neighbour_flags,
-        bool passable, path_node *pNeighbour);
+    void record_neighbour_if_passable(
+            path_node* pNode,
+            map_tile_flags neighbour_flags,
+            bool passable,
+            path_node* pNeighbour);
 
     //! Guess distance to the destination for \a pNode.
     /*!
         @param pNode Node to fill.
      */
-    virtual int guess_distance(path_node *pNode) = 0;
+    virtual int guess_distance(path_node* pNode) = 0;
 
     //! Try the \a pNeighbour node.
     /*!
@@ -121,72 +123,95 @@ public:
         @param direction Direction of travel.
         @return Whether the search is done.
      */
-    virtual bool try_node(path_node *pNode, map_tile_flags flags,
-            path_node *pNeighbour, travel_direction direction) = 0;
+    virtual bool try_node(
+            path_node* pNode,
+            map_tile_flags flags,
+            path_node* pNeighbour,
+            travel_direction direction) = 0;
 
 protected:
-    pathfinder *parent; ///< Path finder parent object, containing shared data.
-    const level_map *map; ///< Map being searched.
+    pathfinder* parent;  ///< Path finder parent object, containing shared data.
+    const level_map* map;  ///< Map being searched.
 };
 
-class basic_pathfinder : public abstract_pathfinder
-{
+class basic_pathfinder : public abstract_pathfinder {
 public:
-    basic_pathfinder(pathfinder *pf) : abstract_pathfinder(pf) { }
+    basic_pathfinder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
-    int guess_distance(path_node *pNode) override;
-    bool try_node(path_node *pNode, map_tile_flags flags,
-            path_node *pNeighbour, travel_direction direction) override;
+    int guess_distance(path_node* pNode) override;
+    bool try_node(
+            path_node* pNode,
+            map_tile_flags flags,
+            path_node* pNeighbour,
+            travel_direction direction) override;
 
-    bool find_path(const level_map *pMap, int iStartX, int iStartY, int iEndX, int iEndY);
+    bool find_path(
+            const level_map* pMap,
+            int iStartX,
+            int iStartY,
+            int iEndX,
+            int iEndY);
 
-    int destination_x; ///< X coordinate of the destination of the path.
-    int destination_y; ///< Y coordinate of the destination of the path.
+    int destination_x;  ///< X coordinate of the destination of the path.
+    int destination_y;  ///< Y coordinate of the destination of the path.
 };
 
-class hospital_finder : public abstract_pathfinder
-{
+class hospital_finder : public abstract_pathfinder {
 public:
-    hospital_finder(pathfinder *pf) : abstract_pathfinder(pf) { }
+    hospital_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
-    int guess_distance(path_node *pNode) override;
-    bool try_node(path_node *pNode, map_tile_flags flags,
-            path_node *pNeighbour, travel_direction direction) override;
+    int guess_distance(path_node* pNode) override;
+    bool try_node(
+            path_node* pNode,
+            map_tile_flags flags,
+            path_node* pNeighbour,
+            travel_direction direction) override;
 
-    bool find_path_to_hospital(const level_map *pMap, int iStartX, int iStartY);
+    bool find_path_to_hospital(const level_map* pMap, int iStartX, int iStartY);
 };
 
-class idle_tile_finder : public abstract_pathfinder
-{
+class idle_tile_finder : public abstract_pathfinder {
 public:
-    idle_tile_finder(pathfinder *pf) : abstract_pathfinder(pf) { }
+    idle_tile_finder(pathfinder* pf) : abstract_pathfinder(pf) {}
 
-    int guess_distance(path_node *pNode) override;
-    bool try_node(path_node *pNode, map_tile_flags flags,
-            path_node *pNeighbour, travel_direction direction) override;
+    int guess_distance(path_node* pNode) override;
+    bool try_node(
+            path_node* pNode,
+            map_tile_flags flags,
+            path_node* pNeighbour,
+            travel_direction direction) override;
 
-    bool find_idle_tile(const level_map *pMap, int iStartX, int iStartY, int iN);
+    bool find_idle_tile(
+            const level_map* pMap, int iStartX, int iStartY, int iN);
 
-    path_node *best_next_node;
+    path_node* best_next_node;
     double best_distance;
-    int start_x;       ///< X coordinate of the start position.
-    int start_y;       ///< Y coordinate of the start position.
+    int start_x;  ///< X coordinate of the start position.
+    int start_y;  ///< Y coordinate of the start position.
 };
 
-class object_visitor : public abstract_pathfinder
-{
+class object_visitor : public abstract_pathfinder {
 public:
-    object_visitor(pathfinder *pf) : abstract_pathfinder(pf) { }
+    object_visitor(pathfinder* pf) : abstract_pathfinder(pf) {}
 
-    int guess_distance(path_node *pNode) override;
-    bool try_node(path_node *pNode, map_tile_flags flags,
-            path_node *pNeighbour, travel_direction direction) override;
+    int guess_distance(path_node* pNode) override;
+    bool try_node(
+            path_node* pNode,
+            map_tile_flags flags,
+            path_node* pNeighbour,
+            travel_direction direction) override;
 
-    bool visit_objects(const level_map *pMap, int iStartX, int iStartY,
-                      object_type eTHOB, int iMaxDistance,
-                      lua_State *L, int iVisitFunction, bool anyObjectType);
+    bool visit_objects(
+            const level_map* pMap,
+            int iStartX,
+            int iStartY,
+            object_type eTHOB,
+            int iMaxDistance,
+            lua_State* L,
+            int iVisitFunction,
+            bool anyObjectType);
 
-    lua_State *L;
+    lua_State* L;
     int visit_function_index;
     int max_distance;
     bool target_any_object_type;
@@ -208,45 +233,58 @@ public:
     the current search. The algorithm is implemented in such a way that most
     path find operations do not need to allocate (or free) any memory.
 */
-class pathfinder
-{
+class pathfinder {
 public:
     pathfinder();
     ~pathfinder();
 
-    void set_default_map(const level_map *pMap);
+    void set_default_map(const level_map* pMap);
 
-    inline bool find_path(const level_map *pMap, int iStartX, int iStartY, int iEndX,
-                         int iEndY)
-    {
+    inline bool find_path(
+            const level_map* pMap,
+            int iStartX,
+            int iStartY,
+            int iEndX,
+            int iEndY) {
         return basic_pathfinder.find_path(pMap, iStartX, iStartY, iEndX, iEndY);
     }
 
-    inline bool find_idle_tile(const level_map *pMap, int iStartX, int iStartY, int iN)
-    {
+    inline bool find_idle_tile(
+            const level_map* pMap, int iStartX, int iStartY, int iN) {
         return idle_tile_finder.find_idle_tile(pMap, iStartX, iStartY, iN);
     }
 
-    inline bool find_path_to_hospital(const level_map *pMap, int iStartX, int iStartY)
-    {
+    inline bool find_path_to_hospital(
+            const level_map* pMap, int iStartX, int iStartY) {
         return hospital_finder.find_path_to_hospital(pMap, iStartX, iStartY);
     }
 
-    inline bool visit_objects(const level_map *pMap, int iStartX, int iStartY,
-                      object_type eTHOB, int iMaxDistance, lua_State *L,
-                      int iVisitFunction, bool anyObjectType)
-    {
+    inline bool visit_objects(
+            const level_map* pMap,
+            int iStartX,
+            int iStartY,
+            object_type eTHOB,
+            int iMaxDistance,
+            lua_State* L,
+            int iVisitFunction,
+            bool anyObjectType) {
         return object_visitor.visit_objects(
-                            pMap, iStartX, iStartY, eTHOB, iMaxDistance,
-                            L, iVisitFunction, anyObjectType);
+                pMap,
+                iStartX,
+                iStartY,
+                eTHOB,
+                iMaxDistance,
+                L,
+                iVisitFunction,
+                anyObjectType);
     }
 
     int get_path_length() const;
     bool get_path_end(int* pX, int* pY) const;
-    void push_result(lua_State *L) const;
+    void push_result(lua_State* L) const;
 
-    void persist(lua_persist_writer *pWriter) const;
-    void depersist(lua_persist_reader *pReader);
+    void persist(lua_persist_writer* pWriter) const;
+    void depersist(lua_persist_reader* pReader);
 
     //! Allocate node cache for all tiles of the map.
     /*!
@@ -259,17 +297,17 @@ public:
     void push_to_open_heap(path_node* pNode);
     void open_heap_promote(path_node* pNode);
 
-    const level_map *default_map;
+    const level_map* default_map;
 
     //! 2D array of nodes, one for each map cell
-    path_node *nodes;
+    path_node* nodes;
 
     //! Array of "dirty" nodes which need to be reset before the next path find
     /*!
         This array is always large enough to hold every single node, and
         #dirty_node_count holds the number of items currently in the array.
     */
-    path_node **dirty_node_list;
+    path_node** dirty_node_list;
 
     //! Heap of not yet evaluated nodes as a 0-based array
     /*!
@@ -280,7 +318,7 @@ public:
     */
     std::vector<path_node*> open_heap;
 
-    path_node *destination;
+    path_node* destination;
     int node_cache_width;
     int node_cache_height;
     int dirty_node_count;
@@ -292,4 +330,4 @@ private:
     ::object_visitor object_visitor;
 };
 
-#endif // CORSIX_TH_TH_PATHFIND_H_
+#endif  // CORSIX_TH_TH_PATHFIND_H_

@@ -21,19 +21,18 @@ SOFTWARE.
 */
 
 #include "config.h"
-#include "th_lua.h"
 #include "lua_sdl.h"
+#include "th_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
-#include <windows.h>
 #include <SDL_syswm.h>
+#include <windows.h>
 #include "../resource.h"
 #endif
 #include <array>
 
 namespace {
 
-int l_set_icon_win32(lua_State *L)
-{
+int l_set_icon_win32(lua_State* L) {
     // Hack to set the window icon from the EXE resource under Windows.
     // Does nothing (and returns false) on other platforms.
 
@@ -56,22 +55,19 @@ int l_set_icon_win32(lua_State *L)
     return 1;
 }
 
-int l_show_cursor(lua_State *L)
-{
+int l_show_cursor(lua_State* L) {
     SDL_ShowCursor(lua_toboolean(L, 1));
     return 0;
 }
 
-constexpr std::array<struct luaL_Reg, 3> sdl_wmlib {{
-    {"setIconWin32", l_set_icon_win32},
-    {"showCursor", l_show_cursor},
-    {nullptr, nullptr}
-}};
+constexpr std::array<struct luaL_Reg, 3> sdl_wmlib{
+        {{"setIconWin32", l_set_icon_win32},
+         {"showCursor", l_show_cursor},
+         {nullptr, nullptr}}};
 
-} // namespace
+}  // namespace
 
-int luaopen_sdl_wm(lua_State *L)
-{
+int luaopen_sdl_wm(lua_State* L) {
     lua_newtable(L);
     luaT_setfuncs(L, sdl_wmlib.data());
 

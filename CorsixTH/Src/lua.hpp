@@ -24,8 +24,8 @@ SOFTWARE.
 #define CORSIX_TH_LUA_HPP_
 
 extern "C" {
-#include <lua.h>
 #include <lauxlib.h>
+#include <lua.h>
 #include <lualib.h>
 }
 
@@ -35,22 +35,17 @@ extern "C" {
 // with LUA_COMPAT_ALL defined, but we have no control over this.
 
 #ifndef lua_objlen
-inline size_t lua_objlen(lua_State *L, int idx)
-{
-    return lua_rawlen(L, idx);
-}
+inline size_t lua_objlen(lua_State* L, int idx) { return lua_rawlen(L, idx); }
 #endif
 
 #ifndef lua_equal
-inline int lua_equal(lua_State *L, int idx1, int idx2)
-{
+inline int lua_equal(lua_State* L, int idx1, int idx2) {
     return lua_compare(L, idx1, idx2, LUA_OPEQ);
 }
 #endif
 
 #ifndef lua_lessthan
-inline int lua_lessthan(lua_State *L, int idx1, int idx2)
-{
+inline int lua_lessthan(lua_State* L, int idx1, int idx2) {
     return lua_compare(L, idx1, idx2, LUA_OPLT);
 }
 #endif
@@ -58,20 +53,14 @@ inline int lua_lessthan(lua_State *L, int idx1, int idx2)
 // Use our own replacements for lua_[sg]etfenv
 #ifndef lua_setfenv
 int luaT_setfenv52(lua_State*, int);
-inline int lua_setfenv(lua_State *L, int n)
-{
-    return luaT_setfenv52(L, n);
-}
+inline int lua_setfenv(lua_State* L, int n) { return luaT_setfenv52(L, n); }
 #endif
 
 #ifndef lua_getfenv
 void luaT_getfenv52(lua_State*, int);
-inline void lua_getfenv(lua_State *L, int n)
-{
-    luaT_getfenv52(L, n);
-}
+inline void lua_getfenv(lua_State* L, int n) { luaT_getfenv52(L, n); }
 #endif
 
-#endif // LUA_VERSION_NUM >= 502
+#endif  // LUA_VERSION_NUM >= 502
 
-#endif // CORSIX_TH_LUA_HPP_
+#endif  // CORSIX_TH_LUA_HPP_

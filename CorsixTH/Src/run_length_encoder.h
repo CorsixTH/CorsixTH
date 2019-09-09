@@ -39,8 +39,7 @@ class lua_persist_writer;
       * Object - One or more records. Each object has an associated repeat
                  count.
 */
-class integer_run_length_encoder
-{
+class integer_run_length_encoder {
 public:
     integer_run_length_encoder();
     ~integer_run_length_encoder();
@@ -63,8 +62,8 @@ public:
     */
     void finish();
 
-    uint32_t* get_output(size_t *pCount) const;
-    void pump_output(lua_persist_writer *pWriter) const;
+    uint32_t* get_output(size_t* pCount) const;
+    void pump_output(lua_persist_writer* pWriter) const;
 
 private:
     void clean();
@@ -76,7 +75,11 @@ private:
     */
     void flush(bool bAll);
 
-    bool are_ranges_equal(size_t iObjIdx1, size_t iObjIdx2, size_t iOffset, size_t iObjSize) const;
+    bool are_ranges_equal(
+            size_t iObjIdx1,
+            size_t iObjIdx2,
+            size_t iOffset,
+            size_t iObjSize) const;
     bool move_object_to_output(size_t iObjSize, size_t iObjCount);
 
     //! A circular fixed-size buffer holding the most recent input
@@ -103,14 +106,13 @@ private:
     size_t object_copies;
 };
 
-class integer_run_length_decoder
-{
+class integer_run_length_decoder {
 public:
     integer_run_length_decoder();
     ~integer_run_length_decoder();
 
-    bool initialise(size_t iRecordSize, lua_persist_reader *pReader);
-    bool initialise(size_t iRecordSize, const uint32_t *pInput, size_t iCount);
+    bool initialise(size_t iRecordSize, lua_persist_reader* pReader);
+    bool initialise(size_t iRecordSize, const uint32_t* pInput, size_t iCount);
     uint32_t read();
     bool is_finished() const;
 
@@ -120,8 +122,7 @@ private:
     uint32_t* buffer;
     lua_persist_reader* reader;
     const uint32_t* input;
-    union
-    {
+    union {
         const uint32_t* input_end;
         size_t reads_remaining;
     };
@@ -131,4 +132,4 @@ private:
     size_t object_size;
 };
 
-#endif // CORSIX_TH_RLE_H_
+#endif  // CORSIX_TH_RLE_H_

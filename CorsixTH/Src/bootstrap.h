@@ -25,9 +25,9 @@ SOFTWARE.
 #include "lua.hpp"
 
 //! Push onto the stack the bootstrap font data file, table file and palette.
-int bootstrap_lua_resources(lua_State *L);
+int bootstrap_lua_resources(lua_State* L);
 
 //! Provide an onscreen report of the error message on the top of the stack.
-int bootstrap_lua_error_report(lua_State *L);
+int bootstrap_lua_error_report(lua_State* L);
 
-#endif // CORSIX_TH_BOOTSTRAP_H_
+#endif  // CORSIX_TH_BOOTSTRAP_H_

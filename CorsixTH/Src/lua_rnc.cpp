@@ -1,7 +1,7 @@
 #include "lua_rnc.h"
+#include <array>
 #include "../../common/rnc.h"
 #include "th_lua.h"
-#include <array>
 
 //! Provides lua function to decompress RNC data
 /*!
@@ -12,15 +12,14 @@
 
 namespace {
 
-int l_decompress(lua_State *L)
-{
+int l_decompress(lua_State* L) {
     size_t inlen;
-    const uint8_t* in = reinterpret_cast<const uint8_t*>(luaL_checklstring(L, 1, &inlen));
+    const uint8_t* in =
+            reinterpret_cast<const uint8_t*>(luaL_checklstring(L, 1, &inlen));
 
     // Verify that the data contains an RNC signature, and that the input
     // size matches the size specified in the data header.
-    if(inlen < rnc_header_size || inlen != rnc_input_size(in))
-    {
+    if (inlen < rnc_header_size || inlen != rnc_input_size(in)) {
         lua_pushnil(L);
         lua_pushliteral(L, "Input is not RNC compressed data");
         return 2;
@@ -34,48 +33,44 @@ int l_decompress(lua_State *L)
     void* outbuf = lua_newuserdata(L, outlen);
 
     lua_pushnil(L);
-    switch(rnc_unpack(in, (uint8_t*)outbuf))
-    {
-    case rnc_status::ok:
-        lua_pushlstring(L, (const char*)outbuf, outlen);
-        return 1;
+    switch (rnc_unpack(in, (uint8_t*)outbuf)) {
+        case rnc_status::ok:
+            lua_pushlstring(L, (const char*)outbuf, outlen);
+            return 1;
 
-    case rnc_status::file_is_not_rnc:
-        lua_pushliteral(L, "Input is not RNC compressed data");
-        break;
+        case rnc_status::file_is_not_rnc:
+            lua_pushliteral(L, "Input is not RNC compressed data");
+            break;
 
-    case rnc_status::huf_decode_error:
-        lua_pushliteral(L, "Invalid Huffman coding");
-        break;
+        case rnc_status::huf_decode_error:
+            lua_pushliteral(L, "Invalid Huffman coding");
+            break;
 
-    case rnc_status::file_size_mismatch:
-        lua_pushliteral(L, "Size mismatch");
-        break;
+        case rnc_status::file_size_mismatch:
+            lua_pushliteral(L, "Size mismatch");
+            break;
 
-    case rnc_status::packed_crc_error:
-        lua_pushliteral(L, "Incorrect packed CRC");
-        break;
+        case rnc_status::packed_crc_error:
+            lua_pushliteral(L, "Incorrect packed CRC");
+            break;
 
-    case rnc_status::unpacked_crc_error:
-        lua_pushliteral(L, "Incorrect unpacked CRC");
-        break;
+        case rnc_status::unpacked_crc_error:
+            lua_pushliteral(L, "Incorrect unpacked CRC");
+            break;
 
-    default:
-        lua_pushliteral(L, "Unknown error decompressing RNC data");
-        break;
+        default:
+            lua_pushliteral(L, "Unknown error decompressing RNC data");
+            break;
     }
     return 2;
 }
 
-constexpr std::array<luaL_Reg, 2> rnclib {{
-    {"decompress", l_decompress},
-    {nullptr, nullptr}
-}};
+constexpr std::array<luaL_Reg, 2> rnclib{
+        {{"decompress", l_decompress}, {nullptr, nullptr}}};
 
-} // namespace
+}  // namespace
 
-int luaopen_rnc(lua_State *L)
-{
+int luaopen_rnc(lua_State* L) {
     luaT_register(L, "rnc", rnclib);
     return 1;
 }

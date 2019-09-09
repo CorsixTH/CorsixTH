@@ -20,66 +20,63 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
 #include "th_sound.h"
-#include "th.h"
+#include "config.h"
 #include <cmath>
-#include <new>
 #include <cstring>
+#include <new>
+#include "th.h"
 
-sound_archive::sound_archive()
-{
+sound_archive::sound_archive() {
     sound_files = nullptr;
     data = nullptr;
 }
 
-sound_archive::~sound_archive()
-{
-    delete[] data;
-}
+sound_archive::~sound_archive() { delete[] data; }
 
-bool sound_archive::load_from_th_file(const uint8_t* pData, size_t iDataLength)
-{
-    if(iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header))
+bool sound_archive::load_from_th_file(
+        const uint8_t* pData, size_t iDataLength) {
+    if (iDataLength < sizeof(uint32_t) + sizeof(sound_dat_file_header)) {
         return false;
+    }
 
-    uint32_t iHeaderPosition = bytes_to_uint32_le(pData + iDataLength - sizeof(uint32_t));
+    uint32_t iHeaderPosition =
+            bytes_to_uint32_le(pData + iDataLength - sizeof(uint32_t));
 
-    if(static_cast<size_t>(iHeaderPosition) >= iDataLength - sizeof(sound_dat_file_header))
+    if (static_cast<size_t>(iHeaderPosition) >=
+        iDataLength - sizeof(sound_dat_file_header)) {
         return false;
+    }
 
-    header = *reinterpret_cast<const sound_dat_file_header*>(pData + iHeaderPosition);
+    header = *reinterpret_cast<const sound_dat_file_header*>(
+            pData + iHeaderPosition);
 
     delete[] data;
     data = new (std::nothrow) uint8_t[iDataLength];
-    if(data == nullptr)
+    if (data == nullptr) {
         return false;
+    }
     std::memcpy(data, pData, iDataLength);
 
-    sound_files = reinterpret_cast<sound_dat_sound_info*>(data + header.table_position);
+    sound_files = reinterpret_cast<sound_dat_sound_info*>(
+            data + header.table_position);
     sound_file_count = header.table_length / sizeof(sound_dat_sound_info);
     return true;
 }
 
-size_t sound_archive::get_number_of_sounds() const
-{
-    return sound_file_count;
-}
+size_t sound_archive::get_number_of_sounds() const { return sound_file_count; }
 
-const char* sound_archive::get_sound_name(size_t iIndex) const
-{
-    if(iIndex >= sound_file_count)
-        return nullptr;
+const char* sound_archive::get_sound_name(size_t iIndex) const {
+    if (iIndex >= sound_file_count) return nullptr;
     return sound_files[iIndex].sound_name;
 }
 
-constexpr uint32_t fourcc(const char c1, const char c2, const char c3, const char c4)
-{
-    return (
-        (static_cast<uint32_t>(static_cast<uint8_t>(c1)) <<  0)
-        | (static_cast<uint32_t>(static_cast<uint8_t>(c2)) <<  8)
-        | (static_cast<uint32_t>(static_cast<uint8_t>(c3)) << 16)
-        | (static_cast<uint32_t>(static_cast<uint8_t>(c4)) << 24));
+constexpr uint32_t fourcc(
+        const char c1, const char c2, const char c3, const char c4) {
+    return ((static_cast<uint32_t>(static_cast<uint8_t>(c1)) << 0) |
+            (static_cast<uint32_t>(static_cast<uint8_t>(c2)) << 8) |
+            (static_cast<uint32_t>(static_cast<uint8_t>(c3)) << 16) |
+            (static_cast<uint32_t>(static_cast<uint8_t>(c4)) << 24));
 }
 
 namespace {
@@ -89,13 +86,13 @@ inline uint64_t mul64(A a, B b) {
     return static_cast<uint64_t>(a) * static_cast<uint64_t>(b);
 }
 
-} // namespace
+}  // namespace
 
-size_t sound_archive::get_sound_duration(size_t iIndex)
-{
-    SDL_RWops *pFile = load_sound(iIndex);
-    if(!pFile)
+size_t sound_archive::get_sound_duration(size_t iIndex) {
+    SDL_RWops* pFile = load_sound(iIndex);
+    if (!pFile) {
         return 0;
+    }
 
     uint16_t iWaveAudioFormat = 0;
     uint16_t iWaveChannelCount = 0;
@@ -108,65 +105,73 @@ size_t sound_archive::get_sound_duration(size_t iIndex)
     // This is a very crude RIFF parser, but it does the job.
     uint32_t iFourCC;
     uint32_t iChunkLength;
-    for(;;)
-    {
-        if(SDL_RWread(pFile, &iFourCC, 4, 1) != 1)
+    for (;;) {
+        if (SDL_RWread(pFile, &iFourCC, 4, 1) != 1) {
             break;
-        if(SDL_RWread(pFile, &iChunkLength, 4, 1) != 1)
+        }
+        if (SDL_RWread(pFile, &iChunkLength, 4, 1) != 1) {
             break;
-        if(iFourCC == fourcc('R','I','F','F') || iFourCC == fourcc('L','I','S','T'))
-        {
-            if(iChunkLength >= 4)
-            {
-                if(SDL_RWread(pFile, &iFourCC, 4, 1) != 1)
+        }
+        if (iFourCC == fourcc('R', 'I', 'F', 'F') ||
+            iFourCC == fourcc('L', 'I', 'S', 'T')) {
+            if (iChunkLength >= 4) {
+                if (SDL_RWread(pFile, &iFourCC, 4, 1) != 1) {
                     break;
-                else
+                } else {
                     continue;
+                }
             }
         }
-        if(iFourCC == fourcc('f','m','t',' ') && iChunkLength >= 16)
-        {
-            if(SDL_RWread(pFile, &iWaveAudioFormat, 2, 1) != 1)
+        if (iFourCC == fourcc('f', 'm', 't', ' ') && iChunkLength >= 16) {
+            if (SDL_RWread(pFile, &iWaveAudioFormat, 2, 1) != 1) {
                 break;
-            if(SDL_RWread(pFile, &iWaveChannelCount, 2, 1) != 1)
+            }
+            if (SDL_RWread(pFile, &iWaveChannelCount, 2, 1) != 1) {
                 break;
-            if(SDL_RWread(pFile, &iWaveSampleRate, 4, 1) != 1)
+            }
+            if (SDL_RWread(pFile, &iWaveSampleRate, 4, 1) != 1) {
                 break;
-            if(SDL_RWread(pFile, &iWaveByteRate, 4, 1) != 1)
+            }
+            if (SDL_RWread(pFile, &iWaveByteRate, 4, 1) != 1) {
                 break;
-            if(SDL_RWread(pFile, &iWaveBlockAlign, 2, 1) != 1)
+            }
+            if (SDL_RWread(pFile, &iWaveBlockAlign, 2, 1) != 1) {
                 break;
-            if(SDL_RWread(pFile, &iWaveBitsPerSample, 2, 1) != 1)
+            }
+            if (SDL_RWread(pFile, &iWaveBitsPerSample, 2, 1) != 1) {
                 break;
+            }
             iChunkLength -= 16;
         }
-        //Finally:
-        if(iFourCC == fourcc('d','a','t','a'))
-        {
+        // Finally:
+        if (iFourCC == fourcc('d', 'a', 't', 'a')) {
             iWaveDataLength = iChunkLength;
             break;
         }
-        if(SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), RW_SEEK_CUR) == -1) {
+        if (SDL_RWseek(pFile, iChunkLength + (iChunkLength & 1), RW_SEEK_CUR) ==
+            -1) {
             break;
         }
     }
     SDL_RWclose(pFile);
-    if(iWaveAudioFormat != 1 || iWaveChannelCount == 0 || iWaveSampleRate == 0
-    || iWaveDataLength == 0 || iWaveBitsPerSample == 0)
-    {
+    if (iWaveAudioFormat != 1 || iWaveChannelCount == 0 ||
+        iWaveSampleRate == 0 || iWaveDataLength == 0 ||
+        iWaveBitsPerSample == 0) {
         return 0;
     }
 
-    return static_cast<size_t>(mul64(iWaveDataLength, 8000) /
-        mul64(mul64(iWaveBitsPerSample, iWaveChannelCount), iWaveSampleRate));
+    return static_cast<size_t>(
+            mul64(iWaveDataLength, 8000) /
+            mul64(mul64(iWaveBitsPerSample, iWaveChannelCount),
+                  iWaveSampleRate));
 }
 
-SDL_RWops* sound_archive::load_sound(size_t iIndex)
-{
-    if(iIndex >= sound_file_count)
+SDL_RWops* sound_archive::load_sound(size_t iIndex) {
+    if (iIndex >= sound_file_count) {
         return nullptr;
+    }
 
-    sound_dat_sound_info *pFile = sound_files + iIndex;
+    sound_dat_sound_info* pFile = sound_files + iIndex;
     return SDL_RWFromConstMem(data + pFile->position, pFile->length);
 }
 
@@ -176,8 +181,7 @@ constexpr int number_of_channels = 32;
 
 sound_player* sound_player::singleton = nullptr;
 
-sound_player::sound_player()
-{
+sound_player::sound_player() {
     sounds = nullptr;
     sound_count = 0;
     singleton = this;
@@ -195,133 +199,120 @@ sound_player::sound_player()
     Mix_ChannelFinished(on_channel_finished);
 }
 
-sound_player::~sound_player()
-{
+sound_player::~sound_player() {
     populate_from(nullptr);
-    if(singleton == this)
+    if (singleton == this) {
         singleton = nullptr;
+    }
 }
 
-void sound_player::on_channel_finished(int iChannel)
-{
-    sound_player *pThis = get_singleton();
-    if(pThis == nullptr)
-        return;
+void sound_player::on_channel_finished(int iChannel) {
+    sound_player* pThis = get_singleton();
+    if (pThis == nullptr) return;
 
     pThis->release_channel(iChannel);
 }
 
-sound_player* sound_player::get_singleton()
-{
-    return singleton;
-}
+sound_player* sound_player::get_singleton() { return singleton; }
 
-void sound_player::populate_from(sound_archive *pArchive)
-{
-    for(size_t i = 0; i < sound_count; ++i)
-    {
+void sound_player::populate_from(sound_archive* pArchive) {
+    for (size_t i = 0; i < sound_count; ++i) {
         Mix_FreeChunk(sounds[i]);
     }
     delete[] sounds;
     sounds = nullptr;
     sound_count = 0;
 
-    if(pArchive == nullptr)
-        return;
+    if (pArchive == nullptr) return;
 
     sounds = new Mix_Chunk*[pArchive->get_number_of_sounds()];
-    for(; sound_count < pArchive->get_number_of_sounds(); ++sound_count)
-    {
+    for (; sound_count < pArchive->get_number_of_sounds(); ++sound_count) {
         sounds[sound_count] = nullptr;
-        SDL_RWops *pRwop = pArchive->load_sound(sound_count);
-        if(pRwop)
-        {
+        SDL_RWops* pRwop = pArchive->load_sound(sound_count);
+        if (pRwop) {
             sounds[sound_count] = Mix_LoadWAV_RW(pRwop, 1);
-            if(sounds[sound_count])
+            if (sounds[sound_count]) {
                 Mix_VolumeChunk(sounds[sound_count], MIX_MAX_VOLUME);
+            }
         }
     }
 }
 
-void sound_player::play(size_t iIndex, double dVolume)
-{
-    if(available_channels_bitmap == 0 || iIndex >= sound_count || !sounds[iIndex])
+void sound_player::play(size_t iIndex, double dVolume) {
+    if (available_channels_bitmap == 0 || iIndex >= sound_count ||
+        !sounds[iIndex]) {
         return;
+    }
 
     play_raw(iIndex, (int)(positionless_volume * dVolume));
 }
 
-void sound_player::play_at(size_t iIndex, int iX, int iY)
-{
-    if(sound_effects_enabled)
+void sound_player::play_at(size_t iIndex, int iX, int iY) {
+    if (sound_effects_enabled) {
         play_at(iIndex, sound_effect_volume, iX, iY);
+    }
 }
 
-void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY)
-{
-    if(available_channels_bitmap == 0 || iIndex >= sound_count || !sounds[iIndex])
+void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
+    if (available_channels_bitmap == 0 || iIndex >= sound_count ||
+        !sounds[iIndex]) {
         return;
+    }
 
     double fDX = (double)(iX - camera_x);
     double fDY = (double)(iY - camera_y);
     double fDistance = sqrt(fDX * fDX + fDY * fDY);
-    if(fDistance > camera_radius)
-        return;
+    if (fDistance > camera_radius) return;
     fDistance = fDistance / camera_radius;
 
-    double fVolume = master_volume * (1.0 - fDistance * 0.8) * (double)MIX_MAX_VOLUME * dVolume;
+    double fVolume = master_volume * (1.0 - fDistance * 0.8) *
+                     (double)MIX_MAX_VOLUME * dVolume;
 
     play_raw(iIndex, (int)(fVolume + 0.5));
 }
 
-void sound_player::set_sound_effect_volume(double dVolume)
-{
+void sound_player::set_sound_effect_volume(double dVolume) {
     sound_effect_volume = dVolume;
 }
 
-void sound_player::set_sound_effects_enabled(bool bOn)
-{
+void sound_player::set_sound_effects_enabled(bool bOn) {
     sound_effects_enabled = bOn;
 }
 
-int sound_player::reserve_channel()
-{
+int sound_player::reserve_channel() {
     // NB: Callers ensure that m_iChannelStatus != 0
     int iChannel = 0;
-    for(; (available_channels_bitmap & (1 << iChannel)) == 0; ++iChannel) {}
-    available_channels_bitmap &=~ (1 << iChannel);
+    for (; (available_channels_bitmap & (1 << iChannel)) == 0; ++iChannel) {
+    }
+    available_channels_bitmap &= ~(1 << iChannel);
 
     return iChannel;
 }
 
-void sound_player::release_channel(int iChannel)
-{
+void sound_player::release_channel(int iChannel) {
     available_channels_bitmap |= (1 << iChannel);
 }
 
-void sound_player::play_raw(size_t iIndex, int iVolume)
-{
+void sound_player::play_raw(size_t iIndex, int iVolume) {
     int iChannel = reserve_channel();
 
     Mix_Volume(iChannel, iVolume);
     Mix_PlayChannelTimed(iChannel, sounds[iIndex], 0, -1);
 }
 
-void sound_player::set_camera(int iX, int iY, int iRadius)
-{
+void sound_player::set_camera(int iX, int iY, int iRadius) {
     camera_x = iX;
     camera_y = iY;
     camera_radius = (double)iRadius;
-    if(camera_radius < 0.001)
-        camera_radius = 0.001;
+    if (camera_radius < 0.001) camera_radius = 0.001;
 }
 
-#else // CORSIX_TH_USE_SDL_MIXER
+#else  // CORSIX_TH_USE_SDL_MIXER
 
 sound_player::sound_player() {}
 sound_player::~sound_player() {}
-sound_player* sound_player::get_singleton() {return nullptr;}
-void sound_player::populate_from(sound_archive *pArchive) {}
+sound_player* sound_player::get_singleton() { return nullptr; }
+void sound_player::populate_from(sound_archive* pArchive) {}
 void sound_player::play(size_t iIndex, double dVolume) {}
 void sound_player::play_at(size_t iIndex, int iX, int iY) {}
 void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {}
@@ -331,4 +322,4 @@ void sound_player::set_camera(int iX, int iY, int iRadius) {}
 void sound_player::set_sound_effect_volume(double dVolume) {}
 void sound_player::set_sound_effects_enabled(bool iOn) {}
 
-#endif // CORSIX_TH_USE_SDL_MIXER
+#endif  // CORSIX_TH_USE_SDL_MIXER

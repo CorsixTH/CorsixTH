@@ -21,21 +21,20 @@ SOFTWARE.
 */
 
 #include "iso_fs.h"
-#include "th.h"
-#include <cstring>
-#include <cstdarg>
-#include <cstdlib>
-#include <cstdio>
-#include <vector>
 #include <algorithm>
 #include <array>
+#include <cstdarg>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <iterator>
 #include <stdexcept>
+#include <vector>
+#include "th.h"
 
 namespace {
 
-enum iso_volume_descriptor_type : uint8_t
-{
+enum iso_volume_descriptor_type : uint8_t {
     vdt_primary_volume = 0x01,
     // Other type numbers are either reserved for future use, or are not
     // interesting to us.
@@ -43,8 +42,7 @@ enum iso_volume_descriptor_type : uint8_t
 };
 
 /// Flag values for directory table entries. The flag itself is a bitmask.
-enum iso_dir_ent_flag : uint8_t
-{
+enum iso_dir_ent_flag : uint8_t {
     def_hidden = 0x01,
     def_directory = 0x02,
     def_multi_extent = 0x80,
@@ -79,7 +77,7 @@ constexpr int max_directory_depth = 16;
 
 /// Reasonably unique name of a file from Theme Hospital that can be used to
 /// indicate that we've loaded the right directory.
-constexpr const char*  vblk_0_filename = "VBLK-0.TAB";
+constexpr const char* vblk_0_filename = "VBLK-0.TAB";
 
 /// Sector sizes can vary, but they must be powers of two, and the minimum
 /// size is 2048.
@@ -100,12 +98,9 @@ constexpr uint32_t first_filesystem_sector = 16;
 
 /// Finds the length of the file name within a file identifier.
 /// The file identifier is `filename;file id`.
-void trim_file_id(const uint8_t* sIdent, uint8_t& iLength)
-{
-    for (uint8_t i = 0; i < iLength; ++i)
-    {
-        if (sIdent[i] == ';')
-        {
+void trim_file_id(const uint8_t* sIdent, uint8_t& iLength) {
+    for (uint8_t i = 0; i < iLength; ++i) {
+        if (sIdent[i] == ';') {
             iLength = i;
             return;
         }
@@ -152,7 +147,7 @@ std::string normalise(const char* str) {
 class iso_file_entry {
 public:
     /// Construct dummy entry.
-    iso_file_entry()=default;
+    iso_file_entry() = default;
 
     /// Construct entry from the given memory location.
     /// The first byte is the size of the entry. Other useful headers are read
@@ -162,12 +157,14 @@ public:
     iso_file_entry(const uint8_t* b) {
         uint8_t size = *b;
         if (size < minimum_file_entry_size) {
-            throw std::runtime_error("size specified for file entry is too small.");
+            throw std::runtime_error(
+                    "size specified for file entry is too small.");
         }
 
         uint8_t filename_length = b[filename_length_offset];
         if (filename_length + filename_offset > size) {
-            throw std::runtime_error("size specified for file entry is too small.");
+            throw std::runtime_error(
+                    "size specified for file entry is too small.");
         }
         trim_file_id(b + filename_offset, filename_length);
         filename = normalise(b + filename_offset, filename_length);
@@ -205,7 +202,7 @@ class iso_directory_iterator final {
     using reference = const iso_file_entry&;
 
 public:
-    iso_directory_iterator()=delete;
+    iso_directory_iterator() = delete;
 
     /**
      * Initialize an iterator for the directory table in the memory region
@@ -248,7 +245,7 @@ public:
         it.entry = iso_file_entry();
     }
 
-    ~iso_directory_iterator()=default;
+    ~iso_directory_iterator() = default;
 
     /**
      * Determine whether two iso_directory_iterators point to the same table
@@ -263,7 +260,7 @@ public:
      * table entry.
      */
     bool operator!=(const iso_directory_iterator& rhs) const {
-        return !((*this)==rhs);
+        return !((*this) == rhs);
     }
 
     /**
@@ -271,7 +268,8 @@ public:
      */
     reference operator*() const {
         if (directory_ptr >= end_ptr) {
-            throw std::out_of_range("iso directory iterator is past end of input");
+            throw std::out_of_range(
+                    "iso directory iterator is past end of input");
         }
         return entry;
     }
@@ -308,7 +306,8 @@ public:
      */
     iso_directory_iterator& operator++() {
         if (directory_ptr >= end_ptr) {
-            throw std::out_of_range("Cannot advance iso directory iterator past end of input");
+            throw std::out_of_range(
+                    "Cannot advance iso directory iterator past end of input");
         }
 
         const uint8_t* new_dir_ptr = directory_ptr + *directory_ptr;
@@ -319,7 +318,9 @@ public:
         // Catch a malformed directory entry where the size would extend past
         // the end of the table.
         if (new_dir_ptr < end_ptr && new_dir_ptr + *new_dir_ptr > end_ptr) {
-            throw std::runtime_error("The last directory entry was larger than the defined table region.");
+            throw std::runtime_error(
+                    "The last directory entry was larger than the defined "
+                    "table region.");
         }
 
         if (new_dir_ptr < end_ptr) {
@@ -352,34 +353,24 @@ private:
     iso_file_entry entry;
 };
 
-} // namespace
+}  // namespace
 
-iso_filesystem::iso_filesystem() :
-    raw_file(nullptr),
-    error(nullptr),
-    files(),
-    path_seperator('\\')
-{ }
+iso_filesystem::iso_filesystem()
+    : raw_file(nullptr), error(nullptr), files(), path_seperator('\\') {}
 
-iso_filesystem::~iso_filesystem()
-{
-    clear();
-}
+iso_filesystem::~iso_filesystem() { clear(); }
 
-void iso_filesystem::clear()
-{
+void iso_filesystem::clear() {
     delete[] error;
     error = nullptr;
     files.clear();
 }
 
-void iso_filesystem::set_path_separator(char cSeparator)
-{
+void iso_filesystem::set_path_separator(char cSeparator) {
     path_seperator = cSeparator;
 }
 
-bool iso_filesystem::initialise(std::FILE* fRawFile)
-{
+bool iso_filesystem::initialise(std::FILE* fRawFile) {
     raw_file = fRawFile;
     clear();
 
@@ -388,19 +379,25 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
 
     // The first 16 sectors are reserved for bootable media.
     // Volume descriptor records follow this, with one record per sector.
-    for(uint32_t iSector = first_filesystem_sector; seek_to_sector(iSector); ++iSector) {
+    for (uint32_t iSector = first_filesystem_sector; seek_to_sector(iSector);
+         ++iSector) {
         uint8_t aBuffer[root_directory_offset + root_directory_entry_size];
-        if(!read_data(sizeof(aBuffer), aBuffer)) {
+        if (!read_data(sizeof(aBuffer), aBuffer)) {
             break;
         }
         // CD001 is a standard identifier, \x01 is a version number
-        if(std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0) {
-            if(aBuffer[0] == vdt_primary_volume) {
+        if (std::memcmp(aBuffer + 1, "CD001\x01", 6) == 0) {
+            if (aBuffer[0] == vdt_primary_volume) {
                 sector_size = bytes_to_uint16_le(aBuffer + sector_size_offset);
                 try {
-                    find_hosp_directory(aBuffer + root_directory_offset, root_directory_entry_size, 0);
-                    if(files.empty()) {
-                        set_error("Could not find Theme Hospital data directory.");
+                    find_hosp_directory(
+                            aBuffer + root_directory_offset,
+                            root_directory_entry_size,
+                            0);
+                    if (files.empty()) {
+                        set_error(
+                                "Could not find Theme Hospital data "
+                                "directory.");
                         return false;
                     } else {
                         return true;
@@ -409,7 +406,7 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
                     set_error(ex.what());
                     return false;
                 }
-            } else if(aBuffer[0] == vdt_terminator) {
+            } else if (aBuffer[0] == vdt_terminator) {
                 break;
             }
         }
@@ -418,41 +415,49 @@ bool iso_filesystem::initialise(std::FILE* fRawFile)
     return false;
 }
 
-bool iso_filesystem::file_metadata_less(const file_metadata& lhs, const file_metadata& rhs)
-{
+bool iso_filesystem::file_metadata_less(
+        const file_metadata& lhs, const file_metadata& rhs) {
     return lhs.path < rhs.path;
 }
 
-int iso_filesystem::find_hosp_directory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel)
-{
+int iso_filesystem::find_hosp_directory(
+        const uint8_t* pDirEnt, int iDirEntsSize, int iLevel) {
     // Sanity check
     // Apart from at the root level, directory record arrays must take up whole
     // sectors, whose sizes are powers of two and at least 2048.
     // The formal limit on directory depth is 8, so hitting 16 is insane.
-    if((iLevel != 0 && (iDirEntsSize & (min_sector_size - 1)) != 0) || iLevel > max_directory_depth)
+    if ((iLevel != 0 && (iDirEntsSize & (min_sector_size - 1)) != 0) ||
+        iLevel > max_directory_depth)
         return 0;
 
-    uint8_t *pBuffer = nullptr;
+    uint8_t* pBuffer = nullptr;
     uint32_t iBufferSize = 0;
     iso_directory_iterator dir_iter(pDirEnt, pDirEnt + iDirEntsSize);
-    iso_directory_iterator end_iter(pDirEnt + iDirEntsSize, pDirEnt + iDirEntsSize);
+    iso_directory_iterator end_iter(
+            pDirEnt + iDirEntsSize, pDirEnt + iDirEntsSize);
     for (; dir_iter != end_iter; ++dir_iter) {
         const iso_file_entry& ent = *dir_iter;
         if (ent.flags & def_directory) {
             // The names "\x00" and "\x01" are used for the current directory
             // the parent directory respectively. We only want to visit these
             // when at the root level.
-            if (iLevel == 0 || !(ent.filename == "\x00" || ent.filename == "\x01")) {
+            if (iLevel == 0 ||
+                !(ent.filename == "\x00" || ent.filename == "\x01")) {
                 if (ent.data_length > iBufferSize) {
                     delete[] pBuffer;
                     iBufferSize = ent.data_length;
                     pBuffer = new uint8_t[iBufferSize];
                 }
-                if (seek_to_sector(ent.data_sector) && read_data(ent.data_length, pBuffer)) {
-                    int iFoundLevel = find_hosp_directory(pBuffer, ent.data_length, iLevel + 1);
+                if (seek_to_sector(ent.data_sector) &&
+                    read_data(ent.data_length, pBuffer)) {
+                    int iFoundLevel = find_hosp_directory(
+                            pBuffer, ent.data_length, iLevel + 1);
                     if (iFoundLevel != 0) {
                         if (iFoundLevel == 2) {
-                            build_file_lookup_table(ent.data_sector, ent.data_length, std::string(""));
+                            build_file_lookup_table(
+                                    ent.data_sector,
+                                    ent.data_length,
+                                    std::string(""));
                         }
                         delete[] pBuffer;
                         return iFoundLevel + 1;
@@ -472,26 +477,26 @@ int iso_filesystem::find_hosp_directory(const uint8_t *pDirEnt, int iDirEntsSize
     return 0;
 }
 
-void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const std::string& prefix)
-{
+void iso_filesystem::build_file_lookup_table(
+        uint32_t iSector, int iDirEntsSize, const std::string& prefix) {
     // Sanity check
     // Apart from at the root level, directory record arrays must take up whole
     // sectors, whose sizes are powers of two and at least 2048.
     // Path lengths shouldn't exceed 256 either (or at least not for the files
     // which we're interested in).
-    if((prefix.size() != 0 && (iDirEntsSize & 0x7FF)) || (prefix.size() > 256))
+    if ((prefix.size() != 0 && (iDirEntsSize & 0x7FF)) || (prefix.size() > 256))
         return;
 
-    uint8_t *pBuffer = new uint8_t[iDirEntsSize];
-    if(!seek_to_sector(iSector) || !read_data(iDirEntsSize, pBuffer))
-    {
+    uint8_t* pBuffer = new uint8_t[iDirEntsSize];
+    if (!seek_to_sector(iSector) || !read_data(iDirEntsSize, pBuffer)) {
         delete[] pBuffer;
         return;
     }
 
-    uint8_t *pDirEnt = pBuffer;
+    uint8_t* pDirEnt = pBuffer;
     iso_directory_iterator dir_iter(pDirEnt, pDirEnt + iDirEntsSize);
-    iso_directory_iterator end_iter(pDirEnt + iDirEntsSize, pDirEnt + iDirEntsSize);
+    iso_directory_iterator end_iter(
+            pDirEnt + iDirEntsSize, pDirEnt + iDirEntsSize);
     for (; dir_iter != end_iter; ++dir_iter) {
         const iso_file_entry& ent = *dir_iter;
         std::string path;
@@ -508,7 +513,7 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
                 build_file_lookup_table(ent.data_sector, ent.data_length, path);
             }
         } else {
-            file_metadata file {};
+            file_metadata file{};
             file.path = std::move(path);
             file.sector = ent.data_sector;
             file.size = ent.data_length;
@@ -517,24 +522,27 @@ void iso_filesystem::build_file_lookup_table(uint32_t iSector, int iDirEntsSize,
     }
     delete[] pBuffer;
 
-    if(prefix.size() == 0)
-    {
+    if (prefix.size() == 0) {
         // The lookup table will be ordered by the underlying ordering of the
         // disk. we want it sorted by the path for ease of lookup.
         std::sort(files.begin(), files.end(), file_metadata_less);
     }
 }
 
-void iso_filesystem::visit_directory_files(const char* sPath,
-                             void (*fnCallback)(void*, const char*, const char*),
-                             void* pCallbackData) const
-{
+void iso_filesystem::visit_directory_files(
+        const char* sPath,
+        void (*fnCallback)(void*, const char*, const char*),
+        void* pCallbackData) const {
     std::string normalised_path = normalise(sPath);
 
     // Inefficient (better would be to binary search for first and last files
     // which begin with sPath), but who cares - this isn't called often
     for (const file_metadata& file : files) {
-        if (normalised_path.size() < file.path.size() && std::equal(normalised_path.begin(), normalised_path.end(), file.path.begin())) {
+        if (normalised_path.size() < file.path.size() &&
+            std::equal(
+                    normalised_path.begin(),
+                    normalised_path.end(),
+                    file.path.begin())) {
             size_t filename_pos = normalised_path.size();
             if (file.path.at(normalised_path.size()) == path_seperator) {
                 ++filename_pos;
@@ -548,15 +556,13 @@ void iso_filesystem::visit_directory_files(const char* sPath,
     }
 }
 
-iso_filesystem::file_handle iso_filesystem::find_file(const char* sPath) const
-{
+iso_filesystem::file_handle iso_filesystem::find_file(const char* sPath) const {
     std::string normalised_path = normalise(sPath);
 
     // Standard binary search over sorted list of files
     int iLower = 0;
     int iUpper = static_cast<int>(files.size());
-    while(iLower != iUpper)
-    {
+    while (iLower != iUpper) {
         int iMid = (iLower + iUpper) / 2;
         int iComp = normalised_path.compare(files[iMid].path);
         if (iComp == 0) {
@@ -570,37 +576,27 @@ iso_filesystem::file_handle iso_filesystem::find_file(const char* sPath) const
     return 0;
 }
 
-uint32_t iso_filesystem::get_file_size(file_handle iFile) const
-{
-    if(iFile <= 0 || static_cast<size_t>(iFile) > files.size())
+uint32_t iso_filesystem::get_file_size(file_handle iFile) const {
+    if (iFile <= 0 || static_cast<size_t>(iFile) > files.size())
         return 0;
     else
         return files[iFile - 1].size;
 }
 
-bool iso_filesystem::get_file_data(file_handle iFile, uint8_t *pBuffer)
-{
-    if(iFile <= 0 || static_cast<size_t>(iFile) > files.size())
-    {
+bool iso_filesystem::get_file_data(file_handle iFile, uint8_t* pBuffer) {
+    if (iFile <= 0 || static_cast<size_t>(iFile) > files.size()) {
         set_error("Invalid file handle.");
         return false;
-    }
-    else
-    {
+    } else {
         return seek_to_sector(files[iFile - 1].sector) &&
                read_data(files[iFile - 1].size, pBuffer);
     }
 }
 
-const char* iso_filesystem::get_error() const
-{
-    return error;
-}
+const char* iso_filesystem::get_error() const { return error; }
 
-bool iso_filesystem::seek_to_sector(uint32_t iSector)
-{
-    if(!raw_file)
-    {
+bool iso_filesystem::seek_to_sector(uint32_t iSector) {
+    if (!raw_file) {
         set_error("No raw file.");
         return false;
     }
@@ -614,26 +610,21 @@ bool iso_filesystem::seek_to_sector(uint32_t iSector)
     }
 }
 
-bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t *pBuffer)
-{
-    if(!raw_file)
-    {
+bool iso_filesystem::read_data(uint32_t iByteCount, uint8_t* pBuffer) {
+    if (!raw_file) {
         set_error("No raw file.");
         return false;
     }
-    if(std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount)
+    if (std::fread(pBuffer, 1, iByteCount, raw_file) == iByteCount)
         return true;
-    else
-    {
+    else {
         set_error("Unable to read %i bytes.", static_cast<int>(iByteCount));
         return false;
     }
 }
 
-void iso_filesystem::set_error(const char* sFormat, ...)
-{
-    if(error == nullptr)
-    {
+void iso_filesystem::set_error(const char* sFormat, ...) {
+    if (error == nullptr) {
         // None of the errors which we generate will be longer than 1024.
         error = new char[1024];
     }

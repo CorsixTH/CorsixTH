@@ -21,15 +21,15 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include <cstdio>
+#include <cstring>
+#include <string>
+#include "iso_fs.h"
 #include "lua.hpp"
-#include "th_lua.h"
 #include "lua_rnc.h"
 #include "lua_sdl.h"
 #include "persist_lua.h"
-#include "iso_fs.h"
-#include <cstring>
-#include <cstdio>
-#include <string>
+#include "th_lua.h"
 
 // Config file checking
 #ifndef CORSIX_TH_USE_PACK_PRAGMAS
@@ -38,27 +38,36 @@ SOFTWARE.
 // End of config file checking
 
 extern "C" {
-int luaopen_random(lua_State *L);
+int luaopen_random(lua_State* L);
 }
 
 namespace {
 
-inline void preload_lua_package(lua_State *L, const char* name, lua_CFunction fn)
-{
-    luaT_execute(L, std::string("package.preload.").append(name).append(" = ...").c_str(), fn);
+inline void preload_lua_package(
+        lua_State* L, const char* name, lua_CFunction fn) {
+    luaT_execute(
+            L,
+            std::string("package.preload.")
+                    .append(name)
+                    .append(" = ...")
+                    .c_str(),
+            fn);
 }
 
-} // namespace
+}  // namespace
 
-int lua_main_no_eval(lua_State *L)
-{
+int lua_main_no_eval(lua_State* L) {
     // assert(_VERSION == LUA_VERSION)
     size_t iLength;
     lua_getglobal(L, "_VERSION");
     const char* sVersion = lua_tolstring(L, -1, &iLength);
-    if(iLength != std::strlen(LUA_VERSION) || std::strcmp(sVersion, LUA_VERSION) != 0)
-    {
-        lua_pushliteral(L, "Linked against a version of Lua different to the one used when compiling.\nPlease recompile CorsixTH against the same Lua version it is linked against.");
+    if (iLength != std::strlen(LUA_VERSION) ||
+        std::strcmp(sVersion, LUA_VERSION) != 0) {
+        lua_pushliteral(
+                L,
+                "Linked against a version of Lua different to the one used "
+                "when compiling.\nPlease recompile CorsixTH against the same "
+                "Lua version it is linked against.");
         return lua_error(L);
     }
     lua_pop(L, 1);
@@ -79,14 +88,11 @@ int lua_main_no_eval(lua_State *L)
     // Check for --interpreter and run that instead of CorsixTH.lua
     bool bGotScriptFile = false;
     int iNArgs = lua_gettop(L);
-    for(int i = 1; i <= iNArgs; ++i)
-    {
-        if(lua_type(L, i) == LUA_TSTRING)
-        {
+    for (int i = 1; i <= iNArgs; ++i) {
+        if (lua_type(L, i) == LUA_TSTRING) {
             size_t iLen;
             const char* sCmd = lua_tolstring(L, i, &iLen);
-            if(iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0)
-            {
+            if (iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0) {
                 lua_getglobal(L, "assert");
                 lua_getglobal(L, "loadfile");
                 lua_pushlstring(L, sCmd + 14, iLen - 14);
@@ -96,8 +102,7 @@ int lua_main_no_eval(lua_State *L)
         }
     }
 
-    if(!bGotScriptFile)
-    {
+    if (!bGotScriptFile) {
         lua_getglobal(L, "assert");
         lua_getglobal(L, "loadfile");
         lua_pushstring(L, CORSIX_TH_INTERPRETER_PATH);
@@ -110,14 +115,12 @@ int lua_main_no_eval(lua_State *L)
     return lua_gettop(L);
 }
 
-int lua_main(lua_State *L)
-{
+int lua_main(lua_State* L) {
     lua_call(L, lua_main_no_eval(L) - 1, LUA_MULTRET);
     return lua_gettop(L);
 }
 
-int lua_stacktrace(lua_State *L)
-{
+int lua_stacktrace(lua_State* L) {
     // err = tostring(err)
     lua_settop(L, 1);
     lua_getglobal(L, "tostring");
@@ -139,12 +142,14 @@ int lua_stacktrace(lua_State *L)
     return 1;
 }
 
-int lua_panic(lua_State *L)
-{
-    std::fprintf(stderr, "A Lua error has occurred in CorsixTH outside of protected mode!\n");
+int lua_panic(lua_State* L) {
+    std::fprintf(
+            stderr,
+            "A Lua error has occurred in CorsixTH outside of protected "
+            "mode!\n");
     std::fflush(stderr);
 
-    if(lua_type(L, -1) == LUA_TSTRING)
+    if (lua_type(L, -1) == LUA_TSTRING)
         std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
     else
         std::fprintf(stderr, "%p\n", lua_topointer(L, -1));

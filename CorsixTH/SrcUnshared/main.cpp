@@ -20,30 +20,32 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
 #include "../Src/main.h"
-#include "../Src/bootstrap.h"
-#include <stack>
+#include "config.h"
 #include <SDL.h>
+#include <stack>
+#include "../Src/bootstrap.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 #endif
 // Template magic for checking type equality
 template <typename T1, typename T2>
-struct types_equal{ enum{
-    result = -1,
-}; };
+struct types_equal {
+    enum {
+        result = -1,
+    };
+};
 
 template <typename T1>
-struct types_equal<T1, T1>{ enum{
-    result = 1,
-}; };
+struct types_equal<T1, T1> {
+    enum {
+        result = 1,
+    };
+};
 
-static void cleanup(lua_State* L)
-{
+static void cleanup(lua_State* L) {
 #ifdef CORSIX_TH_USE_SDL_MIXER
-    while(Mix_QuerySpec(nullptr, nullptr, nullptr))
-    {
+    while (Mix_QuerySpec(nullptr, nullptr, nullptr)) {
         Mix_CloseAudio();
     }
 #endif
@@ -59,10 +61,8 @@ static void cleanup(lua_State* L)
     sooner, hence this function does as little as possible and leaves the rest
     for lua_main().
 */
-int main(int argc, char** argv)
-{
-    struct compile_time_lua_check
-    {
+int main(int argc, char** argv) {
+    struct compile_time_lua_check {
         // Lua 5.1, not 5.0, is required
         int lua_5_point_1_required[LUA_VERSION_NUM >= 501 ? 1 : -1];
 
@@ -73,15 +73,14 @@ int main(int argc, char** argv)
 
     bool bRun = true;
 
-    while(bRun)
-    {
-        lua_State *L = NULL;
+    while (bRun) {
+        lua_State* L = NULL;
 
         L = luaL_newstate();
-        if(L == NULL)
-        {
-            fprintf(stderr, "Fatal error starting CorsixTH: "
-                "Cannot open Lua state.\n");
+        if (L == NULL) {
+            fprintf(stderr,
+                    "Fatal error starting CorsixTH: "
+                    "Cannot open Lua state.\n");
             return 0;
         }
         lua_atpanic(L, lua_panic);
@@ -92,27 +91,22 @@ int main(int argc, char** argv)
 
         // Move command line parameters onto the Lua stack
         lua_checkstack(L, argc);
-        for(int i = 0; i < argc; ++i)
-        {
+        for (int i = 0; i < argc; ++i) {
             lua_pushstring(L, argv[i]);
         }
 
-        if(lua_pcall(L, argc, 0, 1) != 0)
-        {
+        if (lua_pcall(L, argc, 0, 1) != 0) {
             const char* err = lua_tostring(L, -1);
-            if(err != NULL)
-            {
+            if (err != NULL) {
                 fprintf(stderr, "%s\n", err);
-            }
-            else
-            {
-                fprintf(stderr, "An error has occurred in CorsixTH:\n"
-                    "Uncaught non-string Lua error\n");
+            } else {
+                fprintf(stderr,
+                        "An error has occurred in CorsixTH:\n"
+                        "Uncaught non-string Lua error\n");
             }
             lua_pushcfunction(L, bootstrap_lua_error_report);
             lua_insert(L, -2);
-            if(lua_pcall(L, 1, 0, 0) != 0)
-            {
+            if (lua_pcall(L, 1, 0, 0) != 0) {
                 fprintf(stderr, "%s\n", lua_tostring(L, -1));
             }
         }
@@ -122,8 +116,7 @@ int main(int argc, char** argv)
 
         cleanup(L);
 
-        if(bRun)
-        {
+        if (bRun) {
             printf("\n\nRestarting...\n\n\n");
         }
     }

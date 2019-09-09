@@ -21,140 +21,140 @@ SOFTWARE.
 */
 
 #include "th_map_overlays.h"
+#include <array>
+#include <sstream>
 #include "th_gfx.h"
 #include "th_gfx_font.h"
 #include "th_map.h"
-#include <sstream>
-#include <array>
 
-map_overlay_pair::map_overlay_pair()
-{
+map_overlay_pair::map_overlay_pair() {
     first = nullptr;
     second = nullptr;
     owns_first = false;
     owns_second = false;
 }
 
-map_overlay_pair::~map_overlay_pair()
-{
+map_overlay_pair::~map_overlay_pair() {
     set_first(nullptr, false);
     set_second(nullptr, false);
 }
 
-void map_overlay_pair::set_first(map_overlay* pOverlay, bool bTakeOwnership)
-{
-    if(first && owns_first)
+void map_overlay_pair::set_first(map_overlay* pOverlay, bool bTakeOwnership) {
+    if (first && owns_first) {
         delete first;
+    }
     first = pOverlay;
     owns_first = bTakeOwnership;
 }
 
-void map_overlay_pair::set_second(map_overlay* pOverlay, bool bTakeOwnership)
-{
-    if(second && owns_second)
+void map_overlay_pair::set_second(map_overlay* pOverlay, bool bTakeOwnership) {
+    if (second && owns_second) {
         delete second;
+    }
     second = pOverlay;
     owns_second = bTakeOwnership;
 }
 
-void map_overlay_pair::draw_cell(render_target* pCanvas, int iCanvasX,
-                                int iCanvasY, const level_map* pMap, int iNodeX,
-                                int iNodeY)
-{
-    if(first)
+void map_overlay_pair::draw_cell(
+        render_target* pCanvas,
+        int iCanvasX,
+        int iCanvasY,
+        const level_map* pMap,
+        int iNodeX,
+        int iNodeY) {
+    if (first) {
         first->draw_cell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
-    if(second)
+    }
+    if (second) {
         second->draw_cell(pCanvas, iCanvasX, iCanvasY, pMap, iNodeX, iNodeY);
+    }
 }
 
-map_text_overlay::map_text_overlay()
-{
-    background_sprite = 0;
-}
+map_text_overlay::map_text_overlay() { background_sprite = 0; }
 
-void map_text_overlay::set_background_sprite(size_t iSprite)
-{
+void map_text_overlay::set_background_sprite(size_t iSprite) {
     background_sprite = iSprite;
 }
 
-void map_text_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                int iCanvasY, const level_map* pMap, int iNodeX,
-                                int iNodeY)
-{
-    if(sprites && background_sprite)
-    {
-        sprites->draw_sprite(pCanvas, background_sprite, iCanvasX,
-            iCanvasY, 0);
+void map_text_overlay::draw_cell(
+        render_target* pCanvas,
+        int iCanvasX,
+        int iCanvasY,
+        const level_map* pMap,
+        int iNodeX,
+        int iNodeY) {
+    if (sprites && background_sprite) {
+        sprites->draw_sprite(pCanvas, background_sprite, iCanvasX, iCanvasY, 0);
     }
-    if(font)
-    {
+    if (font) {
         draw_text(pCanvas, iCanvasX, iCanvasY, get_text(pMap, iNodeX, iNodeY));
     }
 }
 
-const std::string map_positions_overlay::get_text(const level_map* pMap, int iNodeX, int iNodeY)
-{
+const std::string map_positions_overlay::get_text(
+        const level_map* pMap, int iNodeX, int iNodeY) {
     std::ostringstream str;
     str << iNodeX + 1 << ',' << iNodeY + 1;
     return str.str();
 }
 
-map_typical_overlay::map_typical_overlay()
-{
+map_typical_overlay::map_typical_overlay() {
     sprites = nullptr;
     font = nullptr;
     owns_sprites = false;
     owns_font = false;
 }
 
-map_typical_overlay::~map_typical_overlay()
-{
+map_typical_overlay::~map_typical_overlay() {
     set_sprites(nullptr, false);
     set_font(nullptr, false);
 }
 
-void map_flags_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                 int iCanvasY, const level_map* pMap, int iNodeX,
-                                 int iNodeY)
-{
-    const map_tile *pNode = pMap->get_tile(iNodeX, iNodeY);
-    if(!pNode)
+void map_flags_overlay::draw_cell(
+        render_target* pCanvas,
+        int iCanvasX,
+        int iCanvasY,
+        const level_map* pMap,
+        int iNodeX,
+        int iNodeY) {
+    const map_tile* pNode = pMap->get_tile(iNodeX, iNodeY);
+    if (!pNode) {
         return;
-    if(sprites)
-    {
-        if(pNode->flags.passable)
+    }
+    if (sprites) {
+        if (pNode->flags.passable) {
             sprites->draw_sprite(pCanvas, 3, iCanvasX, iCanvasY, 0);
-        if(pNode->flags.hospital)
+        }
+        if (pNode->flags.hospital) {
             sprites->draw_sprite(pCanvas, 8, iCanvasX, iCanvasY, 0);
-        if(pNode->flags.buildable)
+        }
+        if (pNode->flags.buildable) {
             sprites->draw_sprite(pCanvas, 9, iCanvasX, iCanvasY, 0);
-        if(pNode->flags.can_travel_n && pMap->get_tile(iNodeX, iNodeY - 1)->flags.passable)
-        {
+        }
+        if (pNode->flags.can_travel_n &&
+            pMap->get_tile(iNodeX, iNodeY - 1)->flags.passable) {
             sprites->draw_sprite(pCanvas, 4, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_e && pMap->get_tile(iNodeX + 1, iNodeY)->flags.passable)
-        {
+        if (pNode->flags.can_travel_e &&
+            pMap->get_tile(iNodeX + 1, iNodeY)->flags.passable) {
             sprites->draw_sprite(pCanvas, 5, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_s && pMap->get_tile(iNodeX, iNodeY + 1)->flags.passable)
-        {
+        if (pNode->flags.can_travel_s &&
+            pMap->get_tile(iNodeX, iNodeY + 1)->flags.passable) {
             sprites->draw_sprite(pCanvas, 6, iCanvasX, iCanvasY, 0);
         }
-        if(pNode->flags.can_travel_w && pMap->get_tile(iNodeX - 1, iNodeY)->flags.passable)
-        {
+        if (pNode->flags.can_travel_w &&
+            pMap->get_tile(iNodeX - 1, iNodeY)->flags.passable) {
             sprites->draw_sprite(pCanvas, 7, iCanvasX, iCanvasY, 0);
         }
     }
-    if(font)
-    {
-        if(!pNode->objects.empty())
-        {
+    if (font) {
+        if (!pNode->objects.empty()) {
             std::ostringstream str;
             str << 'T' << static_cast<int>(pNode->objects.front());
             draw_text(pCanvas, iCanvasX, iCanvasY - 8, str.str());
         }
-        if(pNode->iRoomId)
-        {
+        if (pNode->iRoomId) {
             std::ostringstream str;
             str << 'R' << static_cast<int>(pNode->iRoomId);
             draw_text(pCanvas, iCanvasX, iCanvasY + 8, str.str());
@@ -166,66 +166,72 @@ namespace {
 
 // The sprite to include if the tile in the direction indicated by dx,dy is
 // not from the same parcel.
-struct parcel_edge_sprite
-{
+struct parcel_edge_sprite {
     int dx;
     int dy;
     size_t sprite;
 };
 
 // Parcel edge sprites for all four directions
-constexpr std::array<parcel_edge_sprite, 4> parcel_edges {{
-    {0, -1, 18},
-    {1, 0, 19},
-    {0, 1, 20},
-    {-1, 0, 21}
-}};
+constexpr std::array<parcel_edge_sprite, 4> parcel_edges{
+        {{0, -1, 18}, {1, 0, 19}, {0, 1, 20}, {-1, 0, 21}}};
 
-}
+}  // namespace
 
-void map_parcels_overlay::draw_cell(render_target* pCanvas, int iCanvasX,
-                                   int iCanvasY, const level_map* pMap, int iNodeX,
-                                   int iNodeY)
-{
-    const map_tile *pNode = pMap->get_tile(iNodeX, iNodeY);
-    if(!pNode)
+void map_parcels_overlay::draw_cell(
+        render_target* pCanvas,
+        int iCanvasX,
+        int iCanvasY,
+        const level_map* pMap,
+        int iNodeX,
+        int iNodeY) {
+    const map_tile* pNode = pMap->get_tile(iNodeX, iNodeY);
+    if (!pNode) {
         return;
-    if(font)
-        draw_text(pCanvas, iCanvasX, iCanvasY, std::to_string((int)pNode->iParcelId));
-    if(sprites)
-    {
-        for(const parcel_edge_sprite& dir_sprite : parcel_edges)
-        {
-            const map_tile* dir_node = pMap->get_tile(iNodeX + dir_sprite.dx, iNodeY + dir_sprite.dy);
-            if (!dir_node || dir_node->iParcelId == pNode->iParcelId)
-            {
-                sprites->draw_sprite(pCanvas, dir_sprite.sprite, iCanvasX, iCanvasY, 0);
+    }
+    if (font) {
+        draw_text(
+                pCanvas,
+                iCanvasX,
+                iCanvasY,
+                std::to_string((int)pNode->iParcelId));
+    }
+    if (sprites) {
+        for (const parcel_edge_sprite& dir_sprite : parcel_edges) {
+            const map_tile* dir_node = pMap->get_tile(
+                    iNodeX + dir_sprite.dx, iNodeY + dir_sprite.dy);
+            if (!dir_node || dir_node->iParcelId == pNode->iParcelId) {
+                sprites->draw_sprite(
+                        pCanvas, dir_sprite.sprite, iCanvasX, iCanvasY, 0);
             }
         }
     }
 }
 
-
-void map_typical_overlay::draw_text(render_target* pCanvas, int iX, int iY,
-        std::string str)
-{
+void map_typical_overlay::draw_text(
+        render_target* pCanvas, int iX, int iY, std::string str) {
     text_layout oArea = font->get_text_dimensions(str.c_str(), str.length());
-    font->draw_text(pCanvas, str.c_str(), str.length(), iX + (64 - oArea.end_x) / 2,
-        iY + (32 - oArea.end_y) / 2);
+    font->draw_text(
+            pCanvas,
+            str.c_str(),
+            str.length(),
+            iX + (64 - oArea.end_x) / 2,
+            iY + (32 - oArea.end_y) / 2);
 }
 
-void map_typical_overlay::set_sprites(sprite_sheet* pSheet, bool bTakeOwnership)
-{
-    if(sprites && owns_sprites)
+void map_typical_overlay::set_sprites(
+        sprite_sheet* pSheet, bool bTakeOwnership) {
+    if (sprites && owns_sprites) {
         delete sprites;
+    }
     sprites = pSheet;
     owns_sprites = bTakeOwnership;
 }
 
-void map_typical_overlay::set_font(::font* font, bool take_ownership)
-{
-    if(this->font && owns_font)
+void map_typical_overlay::set_font(::font* font, bool take_ownership) {
+    if (this->font && owns_font) {
         delete this->font;
+    }
     this->font = font;
     owns_font = take_ownership;
 }

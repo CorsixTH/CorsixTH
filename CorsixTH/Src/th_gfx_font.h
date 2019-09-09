@@ -39,8 +39,7 @@ enum class text_alignment {
 };
 
 /** Structure for the bounds of a text string that is rendered to the screen. */
-struct text_layout
-{
+struct text_layout {
     //! Number of rows the rendered text spans
     int row_count;
 
@@ -60,8 +59,7 @@ struct text_layout
     int width;
 };
 
-class font
-{
+class font {
 public:
     virtual ~font() = default;
 
@@ -76,7 +74,9 @@ public:
         @param iMaxWidth The maximum length, in pixels, that the text may
             occupy. Default is INT_MAX.
     */
-    virtual text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+    virtual text_layout get_text_dimensions(
+            const char* sMessage,
+            size_t iMessageLength,
             int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
@@ -91,17 +91,21 @@ public:
         @param iY The Y coordinate of the top-left corner of the bounding
             rectangle for the drawn text.
     */
-    virtual void draw_text(render_target* pCanvas, const char* sMessage,
-                           size_t iMessageLength, int iX, int iY) const = 0;
+    virtual void draw_text(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY) const = 0;
 
     //! Draw a single line of text, splitting it at word boundaries
     /*!
         This function still only draws a single line of text (i.e. any line
-        breaks like `\r` and `\n` in sMessage are ignored), but inserts line breaks
-        between words so that no single line is wider than iWidth pixels.
+        breaks like `\r` and `\n` in sMessage are ignored), but inserts line
+       breaks between words so that no single line is wider than iWidth pixels.
         If iMaxRows is specified it will simply cut after that many rows.
-        @param pCanvas The canvas on which to draw. Can be nullptr, in which case
-          nothing is drawn, but other calculations are still made.
+        @param pCanvas The canvas on which to draw. Can be nullptr, in which
+       case nothing is drawn, but other calculations are still made.
         @param sMessage The line of text to draw, encoded in CP437.
         @param iMessageLength The length (in bytes) of sMessage.
         @param iX The X position to start drawing on the canvas.
@@ -112,14 +116,19 @@ public:
         @param eAlign How to align each line of text if the width of the line
           of text is smaller than iWidth.
     */
-    virtual text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
-            size_t iMessageLength, int iX, int iY,
-            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+    virtual text_layout draw_text_wrapped(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY,
+            int iWidth,
+            int iMaxRows = INT_MAX,
+            int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const = 0;
 };
 
-class bitmap_font final : public font
-{
+class bitmap_font final : public font {
 public:
     bitmap_font();
 
@@ -131,7 +140,7 @@ public:
     */
     void set_sprite_sheet(sprite_sheet* pSpriteSheet);
 
-    sprite_sheet* get_sprite_sheet() {return sheet;}
+    sprite_sheet* get_sprite_sheet() { return sheet; }
 
     //! Set the separation between characters and between lines
     /*!
@@ -140,15 +149,27 @@ public:
     */
     void set_separation(int iCharSep, int iLineSep);
 
-    text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+    text_layout get_text_dimensions(
+            const char* sMessage,
+            size_t iMessageLength,
             int iMaxWidth = INT_MAX) const override;
 
-    void draw_text(render_target* pCanvas, const char* sMessage,
-                   size_t iMessageLength, int iX, int iY) const override;
+    void draw_text(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY) const override;
 
-    text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
-            size_t iMessageLength, int iX, int iY,
-            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+    text_layout draw_text_wrapped(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY,
+            int iWidth,
+            int iMaxRows = INT_MAX,
+            int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const override;
 
 private:
@@ -171,8 +192,7 @@ private:
     THRawBitmap class, but with an alpha channel, and a single colour rather
     than a palette).
 */
-class freetype_font final : public font
-{
+class freetype_font final : public font {
 public:
     freetype_font();
     ~freetype_font();
@@ -220,20 +240,31 @@ public:
     */
     FT_Error set_ideal_character_size(int iWidth, int iHeight);
 
-    text_layout get_text_dimensions(const char* sMessage, size_t iMessageLength,
+    text_layout get_text_dimensions(
+            const char* sMessage,
+            size_t iMessageLength,
             int iMaxWidth = INT_MAX) const override;
 
-    void draw_text(render_target* pCanvas, const char* sMessage,
-                   size_t iMessageLength, int iX, int iY) const override;
+    void draw_text(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY) const override;
 
-    text_layout draw_text_wrapped(render_target* pCanvas, const char* sMessage,
-            size_t iMessageLength, int iX, int iY,
-            int iWidth, int iMaxRows = INT_MAX, int iSkipRows = 0,
+    text_layout draw_text_wrapped(
+            render_target* pCanvas,
+            const char* sMessage,
+            size_t iMessageLength,
+            int iX,
+            int iY,
+            int iWidth,
+            int iMaxRows = INT_MAX,
+            int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const override;
 
 private:
-    struct cached_text
-    {
+    struct cached_text {
         //! The text being converted to pixels
         char* message;
 
@@ -272,10 +303,18 @@ private:
     };
 
     //! Render a FreeType2 monochrome bitmap to a cache canvas.
-    void render_mono(cached_text *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
+    void render_mono(
+            cached_text* pCacheEntry,
+            FT_Bitmap* pBitmap,
+            FT_Pos x,
+            FT_Pos y) const;
 
     //! Render a FreeType2 grayscale bitmap to a cache canvas.
-    void render_gray(cached_text *pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x, FT_Pos y) const;
+    void render_gray(
+            cached_text* pCacheEntry,
+            FT_Bitmap* pBitmap,
+            FT_Pos x,
+            FT_Pos y) const;
 
     static FT_Library freetype_library;
     static int freetype_init_count;
@@ -304,7 +343,8 @@ private:
             an object which can be used by the rendering engine, and store the
             result in the pTexture or iTexture field.
     */
-    void make_texture(render_target *pEventualCanvas, cached_text* pCacheEntry) const;
+    void make_texture(
+            render_target* pEventualCanvas, cached_text* pCacheEntry) const;
 
     //! Free a previously-made texture of a cache entry.
     /*!
@@ -324,9 +364,12 @@ private:
         @param iX The X position at which to draw the texture on the canvas.
         @param iY The Y position at which to draw the texture on the canvas.
     */
-    void draw_texture(render_target* pCanvas, cached_text* pCacheEntry,
-                      int iX, int iY) const;
+    void draw_texture(
+            render_target* pCanvas,
+            cached_text* pCacheEntry,
+            int iX,
+            int iY) const;
 };
-#endif // CORSIX_TH_USE_FREETYPE2
+#endif  // CORSIX_TH_USE_FREETYPE2
 
-#endif // CORSIX_TH_TH_GFX_FONT_H_
+#endif  // CORSIX_TH_TH_GFX_FONT_H_

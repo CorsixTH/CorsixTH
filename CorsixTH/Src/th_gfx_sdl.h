@@ -25,8 +25,8 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
-#include "persist_lua.h"
 #include <stdexcept>
+#include "persist_lua.h"
 
 class cursor;
 
@@ -43,9 +43,8 @@ enum class scaled_items;
 typedef uint32_t argb_colour;
 
 //! 8bpp palette class.
-class palette
-{
-public: // External API
+class palette {
+public:  // External API
     palette();
 
     //! Load palette from the supplied data.
@@ -68,8 +67,7 @@ public: // External API
     */
     bool set_entry(int iEntry, uint8_t iR, uint8_t iG, uint8_t iB);
 
-public: // Internal (this rendering engine only) API
-
+public:  // Internal (this rendering engine only) API
     //! Convert A, R, G, B values to a 32bpp colour.
     /*!
         @param iA Amount of opacity (0-255).
@@ -78,12 +76,12 @@ public: // Internal (this rendering engine only) API
         @param iB Amount of blue (0-255).
         @return 32bpp value representing the provided colour values.
     */
-    static constexpr argb_colour pack_argb(uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB)
-    {
-        return (static_cast<argb_colour>(iR) <<  0) |
-        (static_cast<argb_colour>(iG) <<  8) |
-        (static_cast<argb_colour>(iB) << 16) |
-        (static_cast<argb_colour>(iA) << 24) ;
+    static constexpr argb_colour pack_argb(
+            uint8_t iA, uint8_t iR, uint8_t iG, uint8_t iB) {
+        return (static_cast<argb_colour>(iR) << 0) |
+               (static_cast<argb_colour>(iG) << 8) |
+               (static_cast<argb_colour>(iB) << 16) |
+               (static_cast<argb_colour>(iA) << 24);
     }
 
     //! Get the red component of a colour.
@@ -91,8 +89,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The red component intensity of the colour.
     */
-    static constexpr uint8_t get_red(argb_colour iColour)
-    {
+    static constexpr uint8_t get_red(argb_colour iColour) {
         return static_cast<uint8_t>((iColour >> 0) & 0xFF);
     }
 
@@ -101,8 +98,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The green component intensity of the colour.
     */
-    static constexpr uint8_t get_green(argb_colour iColour)
-    {
+    static constexpr uint8_t get_green(argb_colour iColour) {
         return static_cast<uint8_t>((iColour >> 8) & 0xFF);
     }
 
@@ -111,8 +107,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The blue component intensity of the colour.
     */
-    static constexpr uint8_t get_blue(argb_colour iColour)
-    {
+    static constexpr uint8_t get_blue(argb_colour iColour) {
         return static_cast<uint8_t>((iColour >> 16) & 0xFF);
     }
 
@@ -121,8 +116,7 @@ public: // Internal (this rendering engine only) API
         @param iColour Colour to examine.
         @return The opacity of the colour.
     */
-    static constexpr uint8_t get_alpha(argb_colour iColour)
-    {
+    static constexpr uint8_t get_alpha(argb_colour iColour) {
         return static_cast<uint8_t>((iColour >> 24) & 0xFF);
     }
 
@@ -143,8 +137,7 @@ public: // Internal (this rendering engine only) API
         @param iEntry Entry to modify.
         @param iVal Palette value to set.
     */
-    inline void set_argb(int iEntry, uint32_t iVal)
-    {
+    inline void set_argb(int iEntry, uint32_t iVal) {
         colour_index_to_argb_map[iEntry] = iVal;
     }
 
@@ -159,8 +152,7 @@ private:
 /*!
     Utility class for decoding 32bpp images.
 */
-class full_colour_renderer
-{
+class full_colour_renderer {
 public:
     //! Initialize the renderer for a specific render.
     /*!
@@ -177,7 +169,10 @@ public:
         @param iSpriteFlags Flags how to render the sprite.
         @return Decoding was successful.
     */
-    void decode_image(const uint8_t* pImg, const ::palette *pPalette, uint32_t iSpriteFlags);
+    void decode_image(
+            const uint8_t* pImg,
+            const ::palette* pPalette,
+            uint32_t iSpriteFlags);
 
 private:
     //! Store a decoded pixel. Use x and y if necessary.
@@ -195,39 +190,33 @@ private:
     /*!
         @param iValue Pixel value to store.
     */
-    inline void push_pixel(uint32_t iValue)
-    {
-        if (y < height)
-        {
+    inline void push_pixel(uint32_t iValue) {
+        if (y < height) {
             store_argb(iValue);
             x++;
-            if (x >= width)
-            {
+            if (x >= width) {
                 x = 0;
                 y++;
             }
-        }
-        else
-        {
-            throw std::logic_error("Attempt to push_pixel past the end of the image");
+        } else {
+            throw std::logic_error(
+                    "Attempt to push_pixel past the end of the image");
         }
     }
 };
 
-class full_colour_storing : public full_colour_renderer
-{
+class full_colour_storing : public full_colour_renderer {
 public:
-    full_colour_storing(uint32_t *pDest, int iWidth, int iHeight);
+    full_colour_storing(uint32_t* pDest, int iWidth, int iHeight);
 
 private:
     void store_argb(uint32_t pixel) override;
 
     //! Pointer to the storage (not owned by this class).
-    uint32_t *destination;
+    uint32_t* destination;
 };
 
-class wx_storing : public full_colour_renderer
-{
+class wx_storing : public full_colour_renderer {
 public:
     wx_storing(uint8_t* pRGBData, uint8_t* pAData, int iWidth, int iHeight);
 
@@ -235,21 +224,19 @@ private:
     void store_argb(uint32_t pixel) override;
 
     //! Pointer to the RGB storage (not owned by this class).
-    uint8_t *rgb_data;
+    uint8_t* rgb_data;
 
     //! Pointer to the Alpha channel storage (not owned by this class).
-    uint8_t *alpha_data;
+    uint8_t* alpha_data;
 };
 
-class render_target
-{
-public: // External API
+class render_target {
+public:  // External API
     render_target();
     ~render_target();
 
     //! Encode an RGB triplet for fillRect()
-    static constexpr uint32_t map_colour(uint8_t iR, uint8_t iG, uint8_t iB)
-    {
+    static constexpr uint32_t map_colour(uint8_t iR, uint8_t iG, uint8_t iB) {
         return palette::pack_argb(0xFF, iR, iG, iB);
     }
 
@@ -323,14 +310,14 @@ public: // External API
     void set_window_grab(bool bActivate);
 
     //! Get any user-displayable information to describe the renderer path used
-    const char *get_renderer_details() const;
+    const char* get_renderer_details() const;
 
     // If you add any extra methods here which are called from outside the
     // rendering engine, then be sure to at least add dummy implementations
     // to the other rendering engines.
 
-public: // Internal (this rendering engine only) API
-    SDL_Renderer *get_renderer() const { return renderer; }
+public:  // Internal (this rendering engine only) API
+    SDL_Renderer* get_renderer() const { return renderer; }
 
     //! Should bitmaps be scaled?
     /*!
@@ -340,25 +327,34 @@ public: // Internal (this rendering engine only) API
      */
     bool should_scale_bitmaps(double* pFactor);
 
-    SDL_Texture* create_palettized_texture(int iWidth, int iHeight, const uint8_t* pPixels,
-                                           const ::palette* pPalette, uint32_t iSpriteFlags) const;
-    SDL_Texture* create_texture(int iWidth, int iHeight, const uint32_t* pPixels) const;
-    void draw(SDL_Texture *pTexture, const SDL_Rect *prcSrcRect, const SDL_Rect *prcDstRect, int iFlags);
-    void draw_line(line *pLine, int iX, int iY);
+    SDL_Texture* create_palettized_texture(
+            int iWidth,
+            int iHeight,
+            const uint8_t* pPixels,
+            const ::palette* pPalette,
+            uint32_t iSpriteFlags) const;
+    SDL_Texture* create_texture(
+            int iWidth, int iHeight, const uint32_t* pPixels) const;
+    void draw(
+            SDL_Texture* pTexture,
+            const SDL_Rect* prcSrcRect,
+            const SDL_Rect* prcDstRect,
+            int iFlags);
+    void draw_line(line* pLine, int iX, int iY);
 
 private:
-    SDL_Window *window;
-    SDL_Renderer *renderer;
-    SDL_Texture *zoom_texture;
-    SDL_PixelFormat *pixel_format;
+    SDL_Window* window;
+    SDL_Renderer* renderer;
+    SDL_Texture* zoom_texture;
+    SDL_PixelFormat* pixel_format;
     bool blue_filter_active;
     cursor* game_cursor;
-    double bitmap_scale_factor; ///< Bitmap scale factor.
+    double bitmap_scale_factor;  ///< Bitmap scale factor.
     int width;
     int height;
     int cursor_x;
     int cursor_y;
-    bool scale_bitmaps; ///< Whether bitmaps should be scaled.
+    bool scale_bitmaps;  ///< Whether bitmaps should be scaled.
     bool supports_target_textures;
 
     // In SDL2 < 2.0.4 there is an issue with the y coordinates used for
@@ -370,8 +366,7 @@ private:
 };
 
 //! Stored image.
-class raw_bitmap
-{
+class raw_bitmap {
 public:
     raw_bitmap();
     ~raw_bitmap();
@@ -391,8 +386,11 @@ public:
         @param pEventualCanvas Canvas to render the image to (eventually).
         @return Loading was a success.
     */
-    void load_from_th_file(const uint8_t* pPixelData, size_t iPixelDataLength,
-                           int iWidth, render_target *pEventualCanvas);
+    void load_from_th_file(
+            const uint8_t* pPixelData,
+            size_t iPixelDataLength,
+            int iWidth,
+            render_target* pEventualCanvas);
 
     //! Draw the image at a given position at the given canvas.
     /*!
@@ -412,12 +410,18 @@ public:
         @param iWidth Width of the part to display.
         @param iHeight Height of the part to display.
     */
-    void draw(render_target* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
-              int iWidth, int iHeight);
+    void draw(
+            render_target* pCanvas,
+            int iX,
+            int iY,
+            int iSrcX,
+            int iSrcY,
+            int iWidth,
+            int iHeight);
 
 private:
     //! Image stored in SDL format for quick rendering.
-    SDL_Texture *texture;
+    SDL_Texture* texture;
 
     //! Palette of the image.
     const ::palette* bitmap_palette;
@@ -433,9 +437,8 @@ private:
 };
 
 //! Sheet of sprites.
-class sprite_sheet
-{
-public: // External API
+class sprite_sheet {
+public:  // External API
     sprite_sheet();
     ~sprite_sheet();
 
@@ -445,9 +448,11 @@ public: // External API
     */
     void set_palette(const ::palette* pPalette);
 
-    //! Load the sprites from the supplied data (using the palette supplied earlier).
+    //! Load the sprites from the supplied data (using the palette supplied
+    //! earlier).
     /*!
-        @param pTableData Start of table data with TH sprite information (see th_sprite_properties).
+        @param pTableData Start of table data with TH sprite information (see
+       th_sprite_properties).
         @param iTableDataLength Length of the table data.
         @param pChunkData Start of image data (chunks).
         @param iChunkDataLength Length of the chunk data.
@@ -455,22 +460,32 @@ public: // External API
         @param pEventualCanvas Canvas to draw at.
         @return Loading succeeded.
     */
-    bool load_from_th_file(const uint8_t* pTableData, size_t iTableDataLength,
-                           const uint8_t* pChunkData, size_t iChunkDataLength,
-                           bool bComplexChunks, render_target* pEventualCanvas);
+    bool load_from_th_file(
+            const uint8_t* pTableData,
+            size_t iTableDataLength,
+            const uint8_t* pChunkData,
+            size_t iChunkDataLength,
+            bool bComplexChunks,
+            render_target* pEventualCanvas);
 
     //! Set the data of a sprite.
     /*!
         @param iSprite Number of the sprite to set.
         @param pData Data of the sprite.
-        @param bTakeData Whether the data block may be taken (must be new[] then).
+        @param bTakeData Whether the data block may be taken (must be new[]
+       then).
         @param iDataLength Length of the data.
         @param iWidth Width of the sprite.
         @param iHeight Height of the sprite.
         @return Setting the sprite succeeded.
     */
-    bool set_sprite_data(size_t iSprite, const uint8_t *pData, bool bTakeData,
-                         size_t iDataLength, int iWidth, int iHeight);
+    bool set_sprite_data(
+            size_t iSprite,
+            const uint8_t* pData,
+            bool bTakeData,
+            size_t iDataLength,
+            int iWidth,
+            int iHeight);
 
     //! Supply a new mapped palette to a sprite.
     /*!
@@ -478,7 +493,8 @@ public: // External API
         @param pMap The palette map to apply.
         @param iAlt32 What to do for a 32bpp sprite (#thdf_alt32_mask bits).
     */
-    void set_sprite_alt_palette_map(size_t iSprite, const uint8_t* pMap, uint32_t iAlt32);
+    void set_sprite_alt_palette_map(
+            size_t iSprite, const uint8_t* pMap, uint32_t iAlt32);
 
     //! Get the number of sprites at the sheet.
     /*!
@@ -497,11 +513,14 @@ public: // External API
     //! Get size of a sprite.
     /*!
         @param iSprite Sprite to get info from.
-        @param pWidth [out] If not nullptr, the sprite width is stored in the destination.
-        @param pHeight [out] If not nullptr, the sprite height is stored in the destination.
+        @param pWidth [out] If not nullptr, the sprite width is stored in the
+       destination.
+        @param pHeight [out] If not nullptr, the sprite height is stored in the
+       destination.
         @return Size could be provided for the sprite.
     */
-    bool get_sprite_size(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+    bool get_sprite_size(
+            size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
 
     //! Get size of a sprite, assuming all input is correctly supplied.
     /*!
@@ -509,7 +528,8 @@ public: // External API
         @param pWidth [out] The sprite width is stored in the destination.
         @param pHeight [out] The sprite height is stored in the destination.
     */
-    void get_sprite_size_unchecked(size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
+    void get_sprite_size_unchecked(
+            size_t iSprite, unsigned int* pWidth, unsigned int* pHeight) const;
 
     //! Get the best colour to represent the sprite.
     /*!
@@ -527,19 +547,26 @@ public: // External API
         @param iY Y position to draw the sprite.
         @param iFlags Flags to apply for drawing.
     */
-    void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY, uint32_t iFlags);
+    void draw_sprite(
+            render_target* pCanvas,
+            size_t iSprite,
+            int iX,
+            int iY,
+            uint32_t iFlags);
 
     //! Test whether a sprite was hit.
     /*!
         @param iSprite Sprite being tested.
-        @param iX X position of the point to test relative to the origin of the sprite.
-        @param iY Y position of the point to test relative to the origin of the sprite.
+        @param iX X position of the point to test relative to the origin of the
+       sprite.
+        @param iY Y position of the point to test relative to the origin of the
+       sprite.
         @param iFlags Draw flags to apply to the sprite before testing.
         @return Whether the sprite covers the give point.
     */
     bool hit_test_sprite(size_t iSprite, int iX, int iY, uint32_t iFlags) const;
 
-public: // Internal (this rendering engine only) API
+public:  // Internal (this rendering engine only) API
     //! Draw a sprite into wxImage data arrays (for the Map Editor)
     /*!
         @param iSprite Sprite number to draw.
@@ -555,8 +582,7 @@ private:
 #pragma pack(1)
 #endif
     //! Sprite structure in the table file.
-    struct th_sprite_properties
-    {
+    struct th_sprite_properties {
         //! Position of the sprite in the chunk data file.
         uint32_t position;
 
@@ -571,19 +597,18 @@ private:
 #endif
 
     //! Sprites of the sheet.
-    struct sprite
-    {
+    struct sprite {
         //! SDL structure containing the sprite with original palette.
-        SDL_Texture *texture;
+        SDL_Texture* texture;
 
         //! SDL structure containing the sprite with alternative palette.
-        SDL_Texture *alt_texture;
+        SDL_Texture* alt_texture;
 
         //! Data of the sprite.
-        const uint8_t *data;
+        const uint8_t* data;
 
         //! Alternative palette (if available).
-        const uint8_t *alt_palette_map;
+        const uint8_t* alt_palette_map;
 
         //! Flags how to render the sprite, contains #THDF_Alt32_Mask bits.
         uint32_t sprite_flags;
@@ -593,7 +618,7 @@ private:
 
         //! Height of the sprite.
         int height;
-    } *sprites;
+    } * sprites;
 
     //! Original palette.
     const ::palette* palette;
@@ -613,28 +638,32 @@ private:
     //! Free the memory used by the sprites. Also releases the SDL bitmaps.
     void _freeSprites();
 
-    //! Construct an alternative version (with its alternative palette map) of the sprite.
+    //! Construct an alternative version (with its alternative palette map) of
+    //! the sprite.
     /*!
         @param pSprite Sprite to change.
         @return SDL texture containing the sprite.
     */
-    SDL_Texture *_makeAltBitmap(sprite *pSprite);
+    SDL_Texture* _makeAltBitmap(sprite* pSprite);
 };
 
-class cursor
-{
+class cursor {
 public:
     cursor();
     ~cursor();
 
-    bool create_from_sprite(sprite_sheet* pSheet, size_t iSprite,
-                            int iHotspotX = 0, int iHotspotY = 0);
+    bool create_from_sprite(
+            sprite_sheet* pSheet,
+            size_t iSprite,
+            int iHotspotX = 0,
+            int iHotspotY = 0);
 
     void use(render_target* pTarget);
 
     static bool set_position(render_target* pTarget, int iX, int iY);
 
     void draw(render_target* pCanvas, int iX, int iY);
+
 private:
     SDL_Surface* bitmap;
     SDL_Cursor* hidden_cursor;
@@ -642,9 +671,7 @@ private:
     int hotspot_y;
 };
 
-
-class line
-{
+class line {
 public:
     line();
     ~line();
@@ -659,24 +686,21 @@ public:
 
     void set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA = 255);
 
-    void persist(lua_persist_writer *pWriter) const;
-    void depersist(lua_persist_reader *pReader);
+    void persist(lua_persist_writer* pWriter) const;
+    void depersist(lua_persist_reader* pReader);
 
 private:
     friend class render_target;
     void initialize();
 
-    enum class line_operation_type {
-        move,
-        line
-    };
+    enum class line_operation_type { move, line };
 
-    class line_operation : public link_list
-    {
+    class line_operation : public link_list {
     public:
         line_operation_type type;
         double x, y;
-        line_operation(line_operation_type type, double x, double y) : type(type), x(x), y(y) {
+        line_operation(line_operation_type type, double x, double y)
+            : type(type), x(x), y(y) {
             next = nullptr;
         }
     };
@@ -687,4 +711,4 @@ private:
     uint8_t red, green, blue, alpha;
 };
 
-#endif // CORSIX_TH_TH_GFX_SDL_H_
+#endif  // CORSIX_TH_TH_GFX_SDL_H_

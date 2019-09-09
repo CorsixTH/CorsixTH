@@ -29,8 +29,7 @@ SOFTWARE.
 #endif
 
 //! Utility class for accessing Theme Hospital's SOUND-0.DAT
-class sound_archive
-{
+class sound_archive {
 public:
     sound_archive();
     ~sound_archive();
@@ -41,7 +40,7 @@ public:
     size_t get_number_of_sounds() const;
 
     //! Gets the name of the sound at a given index
-    const char *get_sound_name(size_t iIndex) const;
+    const char* get_sound_name(size_t iIndex) const;
 
     //! Gets the duration (in miliseconds) of the sound at a given index
     size_t get_sound_duration(size_t iIndex);
@@ -57,22 +56,20 @@ private:
 #pragma pack(push)
 #pragma pack(1)
 #endif
-    struct sound_dat_file_header
-    {
-        uint8_t  unknown1[50];
+    struct sound_dat_file_header {
+        uint8_t unknown1[50];
         uint32_t table_position;
         uint32_t unknown2;
         uint32_t table_length;
         uint32_t table_position2;
-        uint8_t  unknown3[112];
+        uint8_t unknown3[112];
         uint32_t table_position3;
         uint32_t table_length2;
-        uint8_t  unknown4[48];
+        uint8_t unknown4[48];
     } CORSIX_TH_PACKED_FLAGS;
 
-    struct sound_dat_sound_info
-    {
-        char     sound_name[18];
+    struct sound_dat_sound_info {
+        char sound_name[18];
         uint32_t position;
         uint32_t unknown1;
         uint32_t length;
@@ -89,15 +86,14 @@ private:
     size_t sound_file_count;
 };
 
-class sound_player
-{
+class sound_player {
 public:
     sound_player();
     ~sound_player();
 
     static sound_player* get_singleton();
 
-    void populate_from(sound_archive *pArchive);
+    void populate_from(sound_archive* pArchive);
 
     void play(size_t iIndex, double dVolume);
     void play_at(size_t iIndex, int iX, int iY);
@@ -115,9 +111,12 @@ private:
 
     inline void play_raw(size_t iIndex, int iVolume);
 
-    Mix_Chunk **sounds;
+    Mix_Chunk** sounds;
     size_t sound_count;
-    uint32_t available_channels_bitmap; ///< The bit index corresponding to a channel is 1 if the channel is available and 0 if it is reserved or in use.
+    uint32_t available_channels_bitmap;  ///< The bit index corresponding to a
+                                         ///< channel is 1 if the channel is
+                                         ///< available and 0 if it is reserved
+                                         ///< or in use.
     int camera_x;
     int camera_y;
     double camera_radius;
@@ -125,7 +124,7 @@ private:
     double sound_effect_volume;
     int positionless_volume;
     bool sound_effects_enabled;
-#endif // CORSIX_TH_USE_SDL_MIXER
+#endif  // CORSIX_TH_USE_SDL_MIXER
 };
 
-#endif // CORSIX_TH_TH_SOUND_H_
+#endif  // CORSIX_TH_TH_SOUND_H_

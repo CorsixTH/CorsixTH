@@ -23,8 +23,8 @@ SOFTWARE.
 #ifndef CORSIX_TH_LUA_SDL_H_
 #define CORSIX_TH_LUA_SDL_H_
 
-#include "lua.hpp"
 #include <SDL.h>
+#include "lua.hpp"
 
 // SDL event codes used for delivering custom events to l_mainloop in
 // sdl_core.cpp
@@ -39,8 +39,8 @@ SOFTWARE.
 // SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
 #define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
 
-int luaopen_sdl(lua_State *L);
+int luaopen_sdl(lua_State* L);
 
-int l_load_music_async_callback(lua_State *L);
+int l_load_music_async_callback(lua_State* L);
 
-#endif // CORSIX_TH_LUA_SDL_H_
+#endif  // CORSIX_TH_LUA_SDL_H_

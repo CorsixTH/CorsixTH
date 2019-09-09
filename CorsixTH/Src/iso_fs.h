@@ -21,9 +21,9 @@ SOFTWARE.
 */
 
 #include "config.h"
-#include "th_lua.h"
 #include <cstdio>
 #include <string>
+#include "th_lua.h"
 
 //! Layer for reading Theme Hospital files out of an .iso disk image
 /*!
@@ -34,8 +34,7 @@ SOFTWARE.
     searches for the Theme Hospital data files, and can then be used to read
     these data files.
 */
-class iso_filesystem
-{
+class iso_filesystem {
 public:
     iso_filesystem();
     ~iso_filesystem();
@@ -75,12 +74,13 @@ public:
           of a file which is in sPath.
         \param pCallbackData Opaque value to be called to fnCallback.
     */
-    void visit_directory_files(const char* sPath,
-                             void (*fnCallback)(void*, const char*, const char*),
-                             void* pCallbackData) const;
+    void visit_directory_files(
+            const char* sPath,
+            void (*fnCallback)(void*, const char*, const char*),
+            void* pCallbackData) const;
 
     //! Test if a file handle from findFile() is good or is invalid
-    static inline bool isHandleGood(file_handle x) {return x != 0;}
+    static inline bool isHandleGood(file_handle x) { return x != 0; }
 
     //! Get the size (in bytes) of a file in the loaded .iso disk image
     /*!
@@ -94,11 +94,10 @@ public:
         \param pBuffer The buffer to place the resulting data in
         \return true on success, false on failure - call getError() for reason
     */
-    bool get_file_data(file_handle iFile, uint8_t *pBuffer);
+    bool get_file_data(file_handle iFile, uint8_t* pBuffer);
 
 private:
-    struct file_metadata
-    {
+    struct file_metadata {
         std::string path;
         uint32_t sector;
         uint32_t size;
@@ -120,7 +119,7 @@ private:
     bool seek_to_sector(uint32_t iSector);
 
     //! Read data from the disk image
-    bool read_data(uint32_t iByteCount, uint8_t *pBuffer);
+    bool read_data(uint32_t iByteCount, uint8_t* pBuffer);
 
     //! Scan the given array of directory entries for a Theme Hospital file
     /*!
@@ -132,7 +131,8 @@ private:
           contains a Theme Hospital data file. 2 if the given array is the
           top-level Theme Hospital data directory. Other values otherwise.
     */
-    int find_hosp_directory(const uint8_t *pDirEnt, int iDirEntsSize, int iLevel);
+    int find_hosp_directory(
+            const uint8_t* pDirEnt, int iDirEntsSize, int iLevel);
 
     //! Build the list of Theme Hospital data files
     /*!
@@ -141,8 +141,10 @@ private:
         \param iDirEntsSize The number of bytes in the directory entry array.
         \param prefix The path name to prepend to filenames in the directory.
     */
-    void build_file_lookup_table(uint32_t iSector, int iDirEntsSize, const std::string& prefix);
+    void build_file_lookup_table(
+            uint32_t iSector, int iDirEntsSize, const std::string& prefix);
 
     //! std:less like implementation for file_metadata. Based on the path.
-    static bool file_metadata_less(const file_metadata& lhs, const file_metadata& rhs);
+    static bool file_metadata_less(
+            const file_metadata& lhs, const file_metadata& rhs);
 };
