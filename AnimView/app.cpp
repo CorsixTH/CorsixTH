@@ -20,17 +20,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include "config.h"
 #include "app.h"
+#include "config.h"
 #include "frmMain.h"
 #include "frmSprites.h"
 
 IMPLEMENT_APP(ThemeHospitalAnimViewApp)
 
-bool ThemeHospitalAnimViewApp::OnInit()
-{
-    wxTopLevelWindow *pForm;
-    if(::wxMessageBox(L"Launch animation viewer? (No -> sprite viewer)", L"AnimView", wxYES_NO) == wxYES)
+bool ThemeHospitalAnimViewApp::OnInit() {
+    wxTopLevelWindow* pForm;
+    if (::wxMessageBox(
+                L"Launch animation viewer? (No -> sprite viewer)",
+                L"AnimView",
+                wxYES_NO) == wxYES)
         pForm = new frmMain;
     else
         pForm = new frmSprites;

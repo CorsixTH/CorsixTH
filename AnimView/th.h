@@ -36,25 +36,23 @@ SOFTWARE.
 
 #pragma once
 #include "config.h"
-#include <wx/string.h>
+#include <stdint.h>
 #include <wx/file.h>
 #include <wx/image.h>
+#include <wx/string.h>
 #include <wx/txtstrm.h>
 #include <array>
-#include <stdint.h>
 #include <vector>
 
 #pragma pack(push)
 #pragma pack(1)
 
-struct th_anim_t
-{
+struct th_anim_t {
     uint16_t frame;
     uint16_t unknown;
 };
 
-struct th_frame_t
-{
+struct th_frame_t {
     uint32_t list_index;
     uint8_t width;
     uint8_t height;
@@ -62,8 +60,7 @@ struct th_frame_t
     uint16_t next;
 };
 
-struct th_element_t
-{
+struct th_element_t {
     uint16_t table_position;
     uint8_t offx;
     uint8_t offy;
@@ -71,15 +68,13 @@ struct th_element_t
     uint8_t layerid;
 };
 
-struct th_sprite_t
-{
+struct th_sprite_t {
     uint32_t offset;
     uint8_t width;
     uint8_t height;
 };
 
-struct th_colour_t
-{
+struct th_colour_t {
     uint8_t r;
     uint8_t g;
     uint8_t b;
@@ -87,38 +82,33 @@ struct th_colour_t
 
 #pragma pack(pop)
 
-class THLayerMask
-{
+class THLayerMask {
 public:
     THLayerMask();
 
-    inline void set(int iLayer, int iID)
-    {
-        if(0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
+    inline void set(int iLayer, int iID) {
+        if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
             m_iMask[iLayer] |= (1 << iID);
     }
 
     void clear();
 
-    inline void clear(int iLayer, int iID)
-    {
-        if(0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
+    inline void clear(int iLayer, int iID) {
+        if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
             m_iMask[iLayer] &= ~(1 << iID);
     }
 
-    inline bool isSet(int iLayer, int iID) const
-    {
-        if(0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
+    inline bool isSet(int iLayer, int iID) const {
+        if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
             return (m_iMask[iLayer] & (1 << iID)) != 0;
         else
             return false;
     }
-    inline bool isSet(int iLayer) const
-    {
-        if(0 <= iLayer && iLayer < 13)
-            for(int iId = 0; iId < 32; ++iId)
-            {
-                if((m_iMask[iLayer] & (static_cast<std::uint32_t>(1) << iId)) != 0)
+    inline bool isSet(int iLayer) const {
+        if (0 <= iLayer && iLayer < 13)
+            for (int iId = 0; iId < 32; ++iId) {
+                if ((m_iMask[iLayer] &
+                     (static_cast<std::uint32_t>(1) << iId)) != 0)
                     return true;
             }
         return false;
@@ -128,8 +118,7 @@ protected:
     uint32_t m_iMask[13];
 };
 
-class Bitmap
-{
+class Bitmap {
 public:
     Bitmap();
     ~Bitmap();
@@ -137,16 +126,26 @@ public:
     void create(int iWidth, int iHeight);
     void create(int iWidth, int iHeight, const uint8_t* pData);
 
-    inline uint8_t pixel(int iX, int iY) const {return m_pData[iY * m_iWidth + iX];}
-    inline uint8_t& pixel(int iX, int iY) {return m_pData[iY * m_iWidth + iX];}
+    inline uint8_t pixel(int iX, int iY) const {
+        return m_pData[iY * m_iWidth + iX];
+    }
+    inline uint8_t& pixel(int iX, int iY) {
+        return m_pData[iY * m_iWidth + iX];
+    }
 
-    int getWidth() const {return m_iWidth;}
-    int getHeight() const {return m_iHeight;}
+    int getWidth() const { return m_iWidth; }
+    int getHeight() const { return m_iHeight; }
 
     void blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags = 0) const;
-    void blit(wxImage& imgCanvas, int iX, int iY, const unsigned char* pColourTranslate, const th_colour_t* pPalette, int iFlags = 0) const;
+    void blit(
+            wxImage& imgCanvas,
+            int iX,
+            int iY,
+            const unsigned char* pColourTranslate,
+            const th_colour_t* pPalette,
+            int iFlags = 0) const;
 
-    bool IsOk() {return m_pData != nullptr;}
+    bool IsOk() { return m_pData != nullptr; }
 
 protected:
     int m_iWidth;
@@ -154,8 +153,7 @@ protected:
     uint8_t* m_pData;
 };
 
-class THAnimations
-{
+class THAnimations {
 public:
     THAnimations();
     ~THAnimations();
@@ -189,8 +187,12 @@ public:
     size_t getAnimationCount();
     size_t getSpriteCount();
     size_t getFrameCount(size_t iAnimation);
-    uint16_t getUnknownField(size_t iAnimation) {return anims.at(iAnimation).unknown; }
-    uint16_t getFrameField(size_t iAnimation) {return anims.at(iAnimation).frame; }
+    uint16_t getUnknownField(size_t iAnimation) {
+        return anims.at(iAnimation).unknown;
+    }
+    uint16_t getFrameField(size_t iAnimation) {
+        return anims.at(iAnimation).frame;
+    }
     th_frame_t* getFrameStruct(size_t iAnimation, size_t iFrame);
     bool isAnimationDuplicate(size_t iAnimation);
     bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
@@ -201,27 +203,38 @@ public:
     th_colour_t* getPalette() { return colours.data(); }
 
     void setGhost(int iFile, int iIndex);
-    void drawFrame(wxImage& imgCanvas, size_t iAnimation, size_t iFrame, const THLayerMask* pMask, wxSize& size, int iXOffset = 0, int iYOffset = 0);
-    void copySpriteToCanvas(wxString spriteFile, int iSpriteIndex, wxImage& imgCanvas, int iX, int iY, int iFlags = 0);
+    void drawFrame(
+            wxImage& imgCanvas,
+            size_t iAnimation,
+            size_t iFrame,
+            const THLayerMask* pMask,
+            wxSize& size,
+            int iXOffset = 0,
+            int iYOffset = 0);
+    void copySpriteToCanvas(
+            wxString spriteFile,
+            int iSpriteIndex,
+            wxImage& imgCanvas,
+            int iX,
+            int iY,
+            int iFlags = 0);
 
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
+
 protected:
     template <class T>
     bool loadVector(std::vector<T>& vector, wxString sFilename) {
         vector.clear();
 
         wxFile oFile(sFilename);
-        if (!oFile.IsOpened())
-            return false;
+        if (!oFile.IsOpened()) return false;
 
         size_t iLen = oFile.Length();
         unsigned char* pBuffer = new unsigned char[iLen];
         oFile.Read(pBuffer, iLen);
-        if(memcmp(pBuffer, "RNC\001", 4) == 0)
-        {
+        if (memcmp(pBuffer, "RNC\001", 4) == 0) {
             pBuffer = Decompress(pBuffer, iLen);
-            if(!pBuffer)
-            {
+            if (!pBuffer) {
                 return false;
             }
         }

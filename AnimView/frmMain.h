@@ -22,27 +22,25 @@ SOFTWARE.
 
 #pragma once
 #include "config.h"
-#include <wx/frame.h>
 #include <wx/button.h>
-#include <wx/spinctrl.h>
 #include <wx/checkbox.h>
-#include <wx/textctrl.h>
-#include <wx/panel.h>
-#include <wx/timer.h>
-#include <wx/listbox.h>
 #include <wx/dcclient.h>
+#include <wx/frame.h>
+#include <wx/listbox.h>
+#include <wx/panel.h>
+#include <wx/spinctrl.h>
+#include <wx/textctrl.h>
+#include <wx/timer.h>
 #include <wx/txtstrm.h>
 #include "th.h"
 //#include <vector>
 
-class frmMain : public wxFrame
-{
+class frmMain : public wxFrame {
 public:
     frmMain();
     ~frmMain();
 
-    enum
-    {
+    enum {
         ID_FIRST_ANIM = wxID_HIGHEST + 1,
         ID_PREV_ANIM,
         ID_ANIM_INDEX,
@@ -65,13 +63,18 @@ public:
         ID_EXPORT,
         ID_DRAW_MOOD,
         ID_DRAW_COORDINATES,
-        ID_LAYER_CHECKS, // Must be last ID
+        ID_LAYER_CHECKS,  // Must be last ID
     };
 
     void load();
     void export_png();
-    void exportSpritesPage(bool bComplex, wxString sPath, wxString sFilename, wxString spPath=L"", wxString sPalette=L"MPALETTE.DAT");
-    //std::vector<_sprite_t> m_vSprites;
+    void exportSpritesPage(
+            bool bComplex,
+            wxString sPath,
+            wxString sFilename,
+            wxString spPath = L"",
+            wxString sPalette = L"MPALETTE.DAT");
+    // std::vector<_sprite_t> m_vSprites;
 
 protected:
     void _onLoad(wxCommandEvent& evt);
@@ -101,7 +104,8 @@ protected:
     void _onAnimChange(size_t iIndex);
 
     void _drawCoordinates(wxPaintDC& DC, int i, int j);
-    wxString _getCaseSensitivePath(const wxString& sInsensitivePathPart, const wxString& sPath);
+    wxString _getCaseSensitivePath(
+            const wxString& sInsensitivePathPart, const wxString& sPath);
 
     THAnimations m_oAnims;
     THLayerMask m_mskLayers;
