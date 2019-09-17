@@ -20,11 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set (TESTING_FILES
-    test_main.cpp
-    example.cpp
-)
-
 find_package(Catch2 CONFIG REQUIRED)
 
 add_custom_target(AllTests)
@@ -32,7 +27,7 @@ add_custom_target(AllTests)
 # Expose the header files from CorsixTH
 include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
-add_executable(UnitTests ${TESTING_FILES} ${TEST_SOURCE_FILES})
+add_executable(UnitTests "")
 target_link_libraries(UnitTests Catch2::Catch2)
 target_link_libraries(UnitTests CorsixTH_lib)
 
@@ -46,3 +41,10 @@ set_target_properties(UnitTests PROPERTIES FOLDER UnitTests)
 
 # Make sure we add it as a dependency to all tests (some day we can add LuaTest here)
 add_dependencies(AllTests UnitTests)
+
+# List of all test files
+target_sources(UnitTests
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/example.cpp
+)

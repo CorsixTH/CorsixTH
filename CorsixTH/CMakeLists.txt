@@ -28,49 +28,8 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
 endif()
 
-# Modify the config.h based upon our selection of options
-configure_file(${CMAKE_SOURCE_DIR}/CorsixTH/Src/config.h.in ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h)
-include_directories(${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
-# Generate source files list
-# Note: Done after generating config.h
-
-# XXX: We should manually specify the files to include in each directory rather
-# than glob them all
-file(GLOB_RECURSE corsixth_source_files
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/*.hpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.c
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.hpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/*.h
-  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
-  ${CMAKE_SOURCE_DIR}/common/rnc.h
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/shaders/*.psh
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Lua/api_version.lua
-  ${CMAKE_SOURCE_DIR}/CorsixTH/CorsixTH.rc
-  ${CMAKE_SOURCE_DIR}/LFS/*.c
-  ${CMAKE_SOURCE_DIR}/LPEG/*.c
-
-  ${CMAKE_BINARY_DIR}/CorsixTH/Src/config.h
-)
-
-set(corsixth_main_files
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp
-  ${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.h
-)
-
-message(${corsixth_main_files})
-
-# Remove main.cpp and main.h from the files we compile in to lib
-list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.cpp" 
-                                   "${CMAKE_SOURCE_DIR}/CorsixTH/SrcUnshared/main.cpp")
-list(REMOVE_ITEM corsixth_source_files "${CMAKE_SOURCE_DIR}/CorsixTH/Src/main.h")
-
-add_library(CorsixTH_lib STATIC ${corsixth_source_files})
+add_library(CorsixTH_lib STATIC "")
 
 # Declaration of the executable
 if(APPLE)
@@ -82,7 +41,7 @@ if(APPLE)
   )
   set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
 
-  add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_main_files} ${corsixth_icon_file})
+  add_executable(CorsixTH MACOSX_BUNDLE ${corsixth_icon_file})
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
@@ -90,7 +49,7 @@ if(APPLE)
   target_link_libraries(CorsixTH SDL2main)
   include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
-  add_executable(CorsixTH ${corsixth_main_files})
+  add_executable(CorsixTH "")
 endif()
 
 target_link_libraries(CorsixTH CorsixTH_lib)
@@ -98,6 +57,23 @@ target_link_libraries(CorsixTH CorsixTH_lib)
 if(UNIX AND NOT APPLE)
   set_target_properties(CorsixTH PROPERTIES OUTPUT_NAME corsix-th)
 endif()
+
+# Generate source files list
+# Note: Done after generating targets
+add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
+add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
+
+# Manually add common files - as different targets could include the file 
+# so we can't just do it in in the folder like above
+target_sources(CorsixTH_lib
+  PRIVATE
+  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
+  ${CMAKE_SOURCE_DIR}/common/rnc.h
+)
+
+# Ensure config.h is picked up by cmake - moving this into subdir cmake files will
+# prevent it applying to the CorsixTH project
+target_include_directories(CorsixTH_lib PUBLIC ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Set language standard
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
