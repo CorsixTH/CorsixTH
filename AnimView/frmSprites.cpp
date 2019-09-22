@@ -47,64 +47,47 @@ frmSprites::frmSprites()
     wxFlexGridSizer* pFilesGrid = new wxFlexGridSizer(4, 3, 2, 1);
     pFilesGrid->AddGrowableCol(1, 1);
     pFilesGrid->Add(
-            new wxStaticText(this, wxID_ANY, L"Table:"),
-            0,
+            new wxStaticText(this, wxID_ANY, L"Table:"), 0,
             wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(
             m_txtTable = new wxTextCtrl(
-                    this,
-                    wxID_ANY,
+                    this, wxID_ANY,
                     L"X:\\ThemeHospital\\hospital\\QData\\Font00V.tab"),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxEXPAND);
+            1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
     pFilesGrid->Add(
-            new wxButton(this, ID_BROWSE_TABLE, L"Browse..."),
-            0,
+            new wxButton(this, ID_BROWSE_TABLE, L"Browse..."), 0,
             wxALIGN_CENTER_VERTICAL);
     pFilesGrid->Add(
-            new wxStaticText(this, wxID_ANY, L"Data:"),
-            0,
+            new wxStaticText(this, wxID_ANY, L"Data:"), 0,
             wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(
-            m_txtData = new wxTextCtrl(this, wxID_ANY, L""),
-            1,
+            m_txtData = new wxTextCtrl(this, wxID_ANY, L""), 1,
             wxALIGN_CENTER_VERTICAL | wxEXPAND);
     pFilesGrid->Add(
-            new wxButton(this, ID_BROWSE_DATA, L"Browse..."),
-            0,
+            new wxButton(this, ID_BROWSE_DATA, L"Browse..."), 0,
             wxALIGN_CENTER_VERTICAL);
     pFilesGrid->Add(
-            new wxStaticText(this, wxID_ANY, L"Palette:"),
-            0,
+            new wxStaticText(this, wxID_ANY, L"Palette:"), 0,
             wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
     pFilesGrid->Add(
             m_txtPalette = new wxTextCtrl(
-                    this,
-                    wxID_ANY,
+                    this, wxID_ANY,
                     L"X:\\ThemeHospital\\hospital\\Data\\MPalette.dat"),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxEXPAND);
+            1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
     pFilesGrid->Add(
-            new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."),
-            0,
+            new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."), 0,
             wxALIGN_CENTER_VERTICAL);
     pFiles->Add(pFilesGrid, 0, wxEXPAND | wxALL, 1);
     wxButton* pTmp;
     pFiles->Add(
-            pTmp = new wxButton(this, ID_LOAD, L"Load Simple"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            pTmp = new wxButton(this, ID_LOAD, L"Load Simple"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pFiles->Add(
-            pTmp = new wxButton(this, ID_LOAD_COMPLEX, L"Load Complex"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            pTmp = new wxButton(this, ID_LOAD_COMPLEX, L"Load Complex"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pFiles->Add(
-            pTmp = new wxButton(this, ID_NEXT, L"Next"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            pTmp = new wxButton(this, ID_NEXT, L"Next"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     SetBackgroundColour(pTmp->GetBackgroundColour());
     pMainSizer->Add(pFiles, 0, wxEXPAND | wxALL, 2);
 
@@ -113,10 +96,8 @@ frmSprites::frmSprites()
     pSprites->Add(m_panFrame = new MyVScrolled(this), 1, wxEXPAND);
     pMainSizer->Add(pSprites, 1, wxEXPAND | wxALL, 2);
     m_panFrame->Connect(
-            wxEVT_PAINT,
-            (wxObjectEventFunction)&frmSprites::_onPanelPaint,
-            NULL,
-            this);
+            wxEVT_PAINT, (wxObjectEventFunction)&frmSprites::_onPanelPaint,
+            NULL, this);
 
     SetSizer(pMainSizer);
 
@@ -171,14 +152,11 @@ void frmSprites::load(bool bComplex) {
         _sprite_t oSprite;
         Bitmap* pSpriteBitmap = m_oAnims.getSpriteBitmap(i, bComplex);
         oSprite.caption = wxString::Format(
-                L"#%i (%ix%i)",
-                (int)i,
-                pSpriteBitmap->getWidth(),
+                L"#%i (%ix%i)", (int)i, pSpriteBitmap->getWidth(),
                 pSpriteBitmap->getHeight());
         if (pSpriteBitmap->getWidth() * pSpriteBitmap->getHeight() > 0) {
             wxImage imgSprite(
-                    pSpriteBitmap->getWidth(),
-                    pSpriteBitmap->getHeight(),
+                    pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight(),
                     false);
             pSpriteBitmap->blit(
                     imgSprite, 0, 0, NULL, m_oAnims.getPalette(), 0x8000);
@@ -202,8 +180,7 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt) {
 
     for (std::vector<_sprite_t>::iterator itr = m_vSprites.begin(),
                                           itrEnd = m_vSprites.end();
-         itr != itrEnd;
-         ++itr) {
+         itr != itrEnd; ++itr) {
         wxSize szLabel = dc.GetTextExtent(itr->caption);
         int iWidth =
                 wxMax(szLabel.GetWidth(),
@@ -237,31 +214,19 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt) {
 
 void frmSprites::_onBrowseTable(wxCommandEvent& WXUNUSED(evt)) {
     m_txtTable->SetValue(::wxFileSelector(
-            L"Select location of Font00V.tab (DATA)",
-            m_txtTable->GetValue(),
-            L"Font00V.tab",
-            L"tab",
-            L"Tab files (*.tab)|*.[tT][aA][bB]",
-            0,
+            L"Select location of Font00V.tab (DATA)", m_txtTable->GetValue(),
+            L"Font00V.tab", L"tab", L"Tab files (*.tab)|*.[tT][aA][bB]", 0,
             this));
 }
 void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt)) {
     m_txtData->SetValue(::wxFileSelector(
-            L"Choose Theme Hospital data file",
-            m_txtData->GetValue(),
-            L"",
-            L"dat",
-            L"Dat files (*.dat)|*.[dD][aA][tT]",
-            0,
-            this));
+            L"Choose Theme Hospital data file", m_txtData->GetValue(), L"",
+            L"dat", L"Dat files (*.dat)|*.[dD][aA][tT]", 0, this));
 }
 void frmSprites::_onBrowsePalette(wxCommandEvent& WXUNUSED(evt)) {
     m_txtPalette->SetValue(::wxFileSelector(
             L"Select location of MPalette.dat (QDATA)",
-            m_txtPalette->GetValue(),
-            L"MPalette.dat",
-            L"dat",
-            L"Dat or Pal files (*.dat, *.pal)|*.[dD][aA][tT];*.[pP][aA][lL]",
-            0,
+            m_txtPalette->GetValue(), L"MPalette.dat", L"dat",
+            L"Dat or Pal files (*.dat, *.pal)|*.[dD][aA][tT];*.[pP][aA][lL]", 0,
             this));
 }

@@ -454,14 +454,12 @@ int l_map_getcell(lua_State* L) {
     map_tile* pNode = pMap->get_tile(iX, iY);
     if (pNode == nullptr) {
         return luaL_argerror(
-                L,
-                2,
+                L, 2,
                 lua_pushfstring(
                         L,
                         "Map co-ordinates out "
                         "of bounds (%d, %d)",
-                        iX + 1,
-                        iY + 1));
+                        iX + 1, iY + 1));
     }
     if (lua_isnoneornil(L, 4)) {
         lua_pushinteger(L, pNode->iBlock[0]);
@@ -759,8 +757,7 @@ int l_map_draw(lua_State* L) {
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
 
     pMap->draw(
-            pCanvas,
-            static_cast<int>(luaL_checkinteger(L, 3)),
+            pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
             static_cast<int>(luaL_checkinteger(L, 4)),
             static_cast<int>(luaL_checkinteger(L, 5)),
             static_cast<int>(luaL_checkinteger(L, 6)),
@@ -812,8 +809,7 @@ int l_map_set_parcel_owner(lua_State* L) {
     std::vector<std::pair<int, int>> vSplitTiles =
             pMap->set_parcel_owner(parcelId, player);
     for (std::vector<std::pair<int, int>>::size_type i = 0;
-         i != vSplitTiles.size();
-         i++) {
+         i != vSplitTiles.size(); i++) {
         lua_pushinteger(L, i + 1);
         lua_createtable(L, 0, 2);
         lua_pushinteger(L, 1);
@@ -838,12 +834,11 @@ int l_map_get_parcel_owner(lua_State* L) {
 int l_map_is_parcel_purchasable(lua_State* L) {
     level_map* pMap = luaT_testuserdata<level_map>(L);
     lua_pushboolean(
-            L,
-            pMap->is_parcel_purchasable(
-                    static_cast<int>(luaL_checkinteger(L, 2)),
-                    static_cast<int>(luaL_checkinteger(L, 3)))
-                    ? 1
-                    : 0);
+            L, pMap->is_parcel_purchasable(
+                       static_cast<int>(luaL_checkinteger(L, 2)),
+                       static_cast<int>(luaL_checkinteger(L, 3)))
+                       ? 1
+                       : 0);
     return 1;
 }
 
@@ -870,8 +865,7 @@ int l_map_get_litter_fraction(lua_State* L) {
 
             tile_count++;
             for (auto iter = pNode->objects.begin();
-                 iter != pNode->objects.end();
-                 iter++) {
+                 iter != pNode->objects.end(); iter++) {
                 if (*iter == object_type::litter) {
                     litter_count++;
                     break;
@@ -925,8 +919,7 @@ int l_path_is_reachable_from_hospital(lua_State* L) {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
     bool found = pPathfinder->find_path_to_hospital(
-            nullptr,
-            static_cast<int>(luaL_checkinteger(L, 2) - 1),
+            nullptr, static_cast<int>(luaL_checkinteger(L, 2) - 1),
             static_cast<int>(luaL_checkinteger(L, 3) - 1));
     if (found) {
         lua_pushboolean(L, 1);
@@ -945,8 +938,7 @@ int l_path_distance(lua_State* L) {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
     bool found = pPathfinder->find_path(
-            nullptr,
-            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
             static_cast<int>(luaL_checkinteger(L, 3)) - 1,
             static_cast<int>(luaL_checkinteger(L, 4)) - 1,
             static_cast<int>(luaL_checkinteger(L, 5)) - 1);
@@ -961,8 +953,7 @@ int l_path_distance(lua_State* L) {
 int l_path_path(lua_State* L) {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
     pPathfinder->find_path(
-            nullptr,
-            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
             static_cast<int>(luaL_checkinteger(L, 3)) - 1,
             static_cast<int>(luaL_checkinteger(L, 4)) - 1,
             static_cast<int>(luaL_checkinteger(L, 5)) - 1);
@@ -974,8 +965,7 @@ int l_path_idle(lua_State* L) {
     pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
 
     bool found = pPathfinder->find_idle_tile(
-            nullptr,
-            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
             static_cast<int>(luaL_checkinteger(L, 3)) - 1,
             static_cast<int>(luaL_optinteger(L, 4, 0)));
     if (!found) {
@@ -993,13 +983,10 @@ int l_path_visit(lua_State* L) {
     luaL_checktype(L, 6, LUA_TFUNCTION);
 
     bool found = pPathfinder->visit_objects(
-            nullptr,
-            static_cast<int>(luaL_checkinteger(L, 2)) - 1,
+            nullptr, static_cast<int>(luaL_checkinteger(L, 2)) - 1,
             static_cast<int>(luaL_checkinteger(L, 3)) - 1,
             static_cast<object_type>(luaL_checkinteger(L, 4)),
-            static_cast<int>(luaL_checkinteger(L, 5)),
-            L,
-            6,
+            static_cast<int>(luaL_checkinteger(L, 5)), L, 6,
             luaL_checkinteger(L, 4) == 0 ? true : false);
 
     lua_pushboolean(L, found);
@@ -1034,10 +1021,8 @@ void lua_register_map(const lua_register_state* pState) {
         lcb.add_function(l_map_settemperaturedisplay, "setTemperatureDisplay");
         lcb.add_function(l_map_updatetemperature, "updateTemperatures");
         lcb.add_function(
-                l_map_updateblueprint,
-                "updateRoomBlueprint",
-                lua_metatable::anims,
-                lua_metatable::anim);
+                l_map_updateblueprint, "updateRoomBlueprint",
+                lua_metatable::anims, lua_metatable::anim);
         lcb.add_function(l_map_updateshadows, "updateShadows");
         lcb.add_function(l_map_updatepathfinding, "updatePathfinding");
         lcb.add_function(l_map_mark_room, "markRoom");

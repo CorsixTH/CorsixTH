@@ -71,14 +71,8 @@ int l_anims_load(lua_State* L) {
     const uint8_t* pElementData = luaT_checkfile(L, 5, &iElementDataLength);
 
     if (pAnims->load_from_th_file(
-                pStartData,
-                iStartDataLength,
-                pFrameData,
-                iFrameDataLength,
-                pListData,
-                iListDataLength,
-                pElementData,
-                iElementDataLength)) {
+                pStartData, iStartDataLength, pFrameData, iFrameDataLength,
+                pListData, iListDataLength, pElementData, iElementDataLength)) {
         lua_pushboolean(L, 1);
     } else {
         lua_pushboolean(L, 0);
@@ -181,26 +175,24 @@ int l_anims_set_alt_pal(lua_State* L) {
 int l_anims_set_marker(lua_State* L) {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     lua_pushboolean(
-            L,
-            pAnims->set_frame_marker(
-                    luaL_checkinteger(L, 2),
-                    static_cast<int>(luaL_checkinteger(L, 3)),
-                    static_cast<int>(luaL_checkinteger(L, 4)))
-                    ? 1
-                    : 0);
+            L, pAnims->set_frame_marker(
+                       luaL_checkinteger(L, 2),
+                       static_cast<int>(luaL_checkinteger(L, 3)),
+                       static_cast<int>(luaL_checkinteger(L, 4)))
+                       ? 1
+                       : 0);
     return 1;
 }
 
 int l_anims_set_secondary_marker(lua_State* L) {
     animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
     lua_pushboolean(
-            L,
-            pAnims->set_frame_secondary_marker(
-                    luaL_checkinteger(L, 2),
-                    static_cast<int>(luaL_checkinteger(L, 3)),
-                    static_cast<int>(luaL_checkinteger(L, 4)))
-                    ? 1
-                    : 0);
+            L, pAnims->set_frame_secondary_marker(
+                       luaL_checkinteger(L, 2),
+                       static_cast<int>(luaL_checkinteger(L, 3)),
+                       static_cast<int>(luaL_checkinteger(L, 4)))
+                       ? 1
+                       : 0);
     return 1;
 }
 
@@ -392,14 +384,12 @@ int l_anim_set_tile(lua_State* L) {
             pAnimation->attach_to_tile(pNode, last_layer);
         } else {
             luaL_argerror(
-                    L,
-                    3,
+                    L, 3,
                     lua_pushfstring(
                             L,
                             "Map index out of bounds (" LUA_NUMBER_FMT
                             "," LUA_NUMBER_FMT ")",
-                            lua_tonumber(L, 3),
-                            lua_tonumber(L, 4)));
+                            lua_tonumber(L, 3), lua_tonumber(L, 4)));
         }
 
         lua_settop(L, 2);
@@ -605,8 +595,7 @@ int l_anim_draw(lua_State* L) {
     T* pAnimation = luaT_testuserdata<T>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
     pAnimation->draw(
-            pCanvas,
-            static_cast<int>(luaL_checkinteger(L, 3)),
+            pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
             static_cast<int>(luaL_checkinteger(L, 4)));
     lua_settop(L, 1);
     return 1;
@@ -625,8 +614,7 @@ int l_srl_set_sheet(lua_State* L) {
 int l_srl_append(lua_State* L) {
     sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
     pSrl->append_sprite(
-            luaL_checkinteger(L, 2),
-            static_cast<int>(luaL_checkinteger(L, 3)),
+            luaL_checkinteger(L, 2), static_cast<int>(luaL_checkinteger(L, 3)),
             static_cast<int>(luaL_checkinteger(L, 4)));
     lua_settop(L, 1);
     return 1;
@@ -666,9 +654,7 @@ void lua_register_anims(const lua_register_state* pState) {
         lcb.add_function(
                 l_anims_set_secondary_marker, "setFrameSecondaryMarker");
         lcb.add_function(
-                l_anims_draw,
-                "draw",
-                lua_metatable::surface,
+                l_anims_draw, "draw", lua_metatable::surface,
                 lua_metatable::layers);
         lcb.add_constant("Alt32_GreyScale", thdf_alt32_grey_scale);
         lcb.add_constant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
@@ -683,8 +669,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lua_setmetatable(pState->L, -2);
     lua_rawseti(
             pState->L,
-            pState->metatables[static_cast<size_t>(lua_metatable::anim)],
-            1);
+            pState->metatables[static_cast<size_t>(lua_metatable::anim)], 1);
 
     // Weak table at AnimMetatable[2] for light UD -> full UD lookup
     // For persisting Map
@@ -695,15 +680,12 @@ void lua_register_anims(const lua_register_state* pState) {
     lua_setmetatable(pState->L, -2);
     lua_rawseti(
             pState->L,
-            pState->metatables[static_cast<size_t>(lua_metatable::anim)],
-            2);
+            pState->metatables[static_cast<size_t>(lua_metatable::anim)], 2);
 
     // Anim
     {
         lua_class_binding<animation> lcb(
-                pState,
-                "animation",
-                l_anim_new<animation>,
+                pState, "animation", l_anim_new<animation>,
                 lua_metatable::anim);
         lcb.add_metamethod(l_anim_persist<animation>, "persist");
         lcb.add_metamethod(l_anim_pre_depersist<animation>, "pre_depersist");
@@ -743,16 +725,14 @@ void lua_register_anims(const lua_register_state* pState) {
     // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
     lua_rawgeti(
             pState->L,
-            pState->metatables[static_cast<size_t>(lua_metatable::anim)],
-            1);
+            pState->metatables[static_cast<size_t>(lua_metatable::anim)], 1);
     lua_rawseti(
             pState->L,
             pState->metatables[static_cast<size_t>(lua_metatable::sprite_list)],
             1);
     lua_rawgeti(
             pState->L,
-            pState->metatables[static_cast<size_t>(lua_metatable::anim)],
-            2);
+            pState->metatables[static_cast<size_t>(lua_metatable::anim)], 2);
     lua_rawseti(
             pState->L,
             pState->metatables[static_cast<size_t>(lua_metatable::sprite_list)],
@@ -761,9 +741,7 @@ void lua_register_anims(const lua_register_state* pState) {
     // SpriteList
     {
         lua_class_binding<sprite_render_list> lcb(
-                pState,
-                "spriteList",
-                l_anim_new<sprite_render_list>,
+                pState, "spriteList", l_anim_new<sprite_render_list>,
                 lua_metatable::sprite_list);
         lcb.add_metamethod(l_anim_persist<sprite_render_list>, "persist");
         lcb.add_metamethod(
@@ -774,8 +752,7 @@ void lua_register_anims(const lua_register_state* pState) {
         lcb.add_function(l_srl_set_lifetime, "setLifetime");
         lcb.add_function(l_srl_is_dead, "isDead");
         lcb.add_function(
-                l_anim_set_tile<sprite_render_list>,
-                "setTile",
+                l_anim_set_tile<sprite_render_list>, "setTile",
                 lua_metatable::map);
         lcb.add_function(l_anim_set_flag<sprite_render_list>, "setFlag");
         lcb.add_function(
@@ -791,8 +768,7 @@ void lua_register_anims(const lua_register_state* pState) {
         lcb.add_function(l_anim_set_layer<sprite_render_list>, "setLayer");
         lcb.add_function(l_anim_tick<sprite_render_list>, "tick");
         lcb.add_function(
-                l_anim_draw<sprite_render_list>,
-                "draw",
+                l_anim_draw<sprite_render_list>, "draw",
                 lua_metatable::surface);
     }
 }

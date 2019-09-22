@@ -277,11 +277,8 @@ bool render_target::create(const render_target_creation_params* pParams) {
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
     pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
     window = SDL_CreateWindow(
-            "CorsixTH",
-            SDL_WINDOWPOS_UNDEFINED,
-            SDL_WINDOWPOS_UNDEFINED,
-            pParams->width,
-            pParams->height,
+            "CorsixTH", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+            pParams->width, pParams->height,
             SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     if (!window) {
         return false;
@@ -369,11 +366,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         int virtHeight = static_cast<int>(height / fScale);
 
         zoom_texture = SDL_CreateTexture(
-                renderer,
-                SDL_PIXELFORMAT_ABGR8888,
-                SDL_TEXTUREACCESS_TARGET,
-                virtWidth,
-                virtHeight);
+                renderer, SDL_PIXELFORMAT_ABGR8888, SDL_TEXTUREACCESS_TARGET,
+                virtWidth, virtHeight);
 
         SDL_RenderSetLogicalSize(renderer, virtWidth, virtHeight);
         if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
@@ -430,10 +424,7 @@ bool render_target::end_frame() {
     if (blue_filter_active) {
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(
-                renderer,
-                51,
-                51,
-                255,
+                renderer, 51, 51, 255,
                 128);  // r=0.2, g=0.2, b=1, a=0.5 .
         SDL_RenderFillRect(renderer, nullptr);
     }
@@ -556,11 +547,8 @@ bool render_target::take_screenshot(const char* sFile) {
         // Ask the renderer to (slowly) fill the surface with renderer
         // output data.
         readStatus = SDL_RenderReadPixels(
-                renderer,
-                nullptr,
-                pRgbSurface->format->format,
-                pRgbSurface->pixels,
-                pRgbSurface->pitch);
+                renderer, nullptr, pRgbSurface->format->format,
+                pRgbSurface->pixels, pRgbSurface->pitch);
         SDL_UnlockSurface(pRgbSurface);
 
         if (readStatus != -1) SDL_SaveBMP(pRgbSurface, sFile);
@@ -645,10 +633,7 @@ SDL_Texture* render_target::create_palettized_texture(
 SDL_Texture* render_target::create_texture(
         int iWidth, int iHeight, const uint32_t* pPixels) const {
     SDL_Texture* pTexture = SDL_CreateTexture(
-            renderer,
-            pixel_format->format,
-            SDL_TEXTUREACCESS_STATIC,
-            iWidth,
+            renderer, pixel_format->format, SDL_TEXTUREACCESS_STATIC, iWidth,
             iHeight);
 
     if (pTexture == nullptr) {
@@ -657,9 +642,7 @@ SDL_Texture* render_target::create_texture(
 
     int err = 0;
     err = SDL_UpdateTexture(
-            pTexture,
-            nullptr,
-            pPixels,
+            pTexture, nullptr, pPixels,
             static_cast<int>(sizeof(*pPixels) * iWidth));
     if (err < 0) {
         throw std::runtime_error(SDL_GetError());
@@ -699,12 +682,7 @@ void render_target::draw(
 
     if (iSDLFlip != 0) {
         SDL_RenderCopyEx(
-                renderer,
-                pTexture,
-                prcSrcRect,
-                prcDstRect,
-                0,
-                nullptr,
+                renderer, pTexture, prcSrcRect, prcDstRect, 0, nullptr,
                 (SDL_RendererFlip)iSDLFlip);
     } else {
         SDL_RenderCopy(renderer, pTexture, prcSrcRect, prcDstRect);
@@ -724,10 +702,8 @@ void render_target::draw_line(line* pLine, int iX, int iY) {
     while (op) {
         if (op->type == line::line_operation_type::line) {
             SDL_RenderDrawLine(
-                    renderer,
-                    static_cast<int>(lastX + iX),
-                    static_cast<int>(lastY + iY),
-                    static_cast<int>(op->x + iX),
+                    renderer, static_cast<int>(lastX + iX),
+                    static_cast<int>(lastY + iY), static_cast<int>(op->x + iX),
                     static_cast<int>(op->y + iY));
         }
 
@@ -768,10 +744,7 @@ void raw_bitmap::load_from_th_file(
 
     int iHeight = static_cast<int>(iPixelDataLength) / iWidth;
     texture = pEventualCanvas->create_palettized_texture(
-            iWidth,
-            iHeight,
-            converted_sprite,
-            bitmap_palette,
+            iWidth, iHeight, converted_sprite, bitmap_palette,
             thdf_alt32_plain);
     delete[] converted_sprite;
 
@@ -858,9 +831,7 @@ void raw_bitmap::draw(
     }
 
     const SDL_Rect rcSrc = {iSrcX, iSrcY, iWidth, iHeight};
-    const SDL_Rect rcDest = {iX,
-                             iY,
-                             static_cast<int>(iWidth * fScaleFactor),
+    const SDL_Rect rcDest = {iX, iY, static_cast<int>(iWidth * fScaleFactor),
                              static_cast<int>(iHeight * fScaleFactor)};
 
     pCanvas->draw(texture, &rcSrc, &rcDest, 0);
@@ -1111,19 +1082,13 @@ SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) {
         uint32_t iSprFlags =
                 (pSprite->sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
         pSprite->alt_texture = target->create_palettized_texture(
-                pSprite->width,
-                pSprite->height,
-                pSprite->data,
-                palette,
+                pSprite->width, pSprite->height, pSprite->data, palette,
                 iSprFlags);
     } else if (!pPalette)  // Draw alternative palette, but no palette set (ie
                            // 32bpp image).
     {
         pSprite->alt_texture = target->create_palettized_texture(
-                pSprite->width,
-                pSprite->height,
-                pSprite->data,
-                palette,
+                pSprite->width, pSprite->height, pSprite->data, palette,
                 pSprite->sprite_flags);
     } else  // Paletted image, build recolour palette.
     {
@@ -1137,10 +1102,7 @@ SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) {
                 pPalette[255]);  // Colour 0xFF doesn't get remapped.
 
         pSprite->alt_texture = target->create_palettized_texture(
-                pSprite->width,
-                pSprite->height,
-                pSprite->data,
-                &oPalette,
+                pSprite->width, pSprite->height, pSprite->data, &oPalette,
                 pSprite->sprite_flags);
     }
 
@@ -1437,8 +1399,7 @@ void freetype_font::make_texture(
         render_target* pEventualCanvas, cached_text* pCacheEntry) const {
     uint32_t* pPixels = new uint32_t[pCacheEntry->width * pCacheEntry->height];
     std::memset(
-            pPixels,
-            0,
+            pPixels, 0,
             pCacheEntry->width * pCacheEntry->height * sizeof(uint32_t));
     uint8_t* pInRow = pCacheEntry->data;
     uint32_t* pOutRow = pPixels;

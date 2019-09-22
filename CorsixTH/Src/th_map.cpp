@@ -407,12 +407,10 @@ bool level_map::load_from_th_file(
     player_count = pData[0] % max_player_count;
     for (int i = 0; i < player_count; ++i) {
         read_tile_index(
-                pData + camera_offset + (i * 2),
-                initial_camera_x[i],
+                pData + camera_offset + (i * 2), initial_camera_x[i],
                 initial_camera_y[i]);
         read_tile_index(
-                pData + heliport_offset + (i * 2),
-                heliport_x[i],
+                pData + heliport_offset + (i * 2), heliport_x[i],
                 heliport_y[i]);
     }
     parcel_count = 0;
@@ -512,10 +510,7 @@ bool level_map::load_from_th_file(
 
             if (pData[1] != 0 && fnObjectCallback != nullptr) {
                 fnObjectCallback(
-                        pCallbackToken,
-                        iX,
-                        iY,
-                        (object_type)pData[1],
+                        pCallbackToken, iX, iY, (object_type)pData[1],
                         pData[0]);
             }
 
@@ -560,8 +555,7 @@ void level_map::save(std::string filename) {
     aReverseBlockLUT[0] = 0;
 
     for (map_tile *pNode = cells, *pLimitNode = pNode + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         // TODO: Nicer system for saving object data
         aBuffer[iBufferNext++] = pNode->flags.tall_west ? 1 : 0;
         aBuffer[iBufferNext++] = static_cast<uint8_t>(
@@ -609,8 +603,7 @@ void level_map::save(std::string filename) {
         }
     }
     for (map_tile *pNode = cells, *pLimitNode = pNode + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId & 0xFF);
         aBuffer[iBufferNext++] = static_cast<uint8_t>(pNode->iParcelId >> 8);
         if (iBufferNext == sizeof(aBuffer)) {
@@ -628,8 +621,7 @@ void level_map::save(std::string filename) {
     std::memset(aBuffer, 0, 56);
     for (int i = 0; i < player_count; ++i) {
         write_tile_index(
-                aBuffer + iBufferNext,
-                initial_camera_x[i],
+                aBuffer + iBufferNext, initial_camera_x[i],
                 initial_camera_y[i]);
         write_tile_index(
                 aBuffer + iBufferNext + 8, heliport_x[i], heliport_y[i]);
@@ -762,16 +754,10 @@ void level_map::make_adjacency_matrix() {
         for (int iX = 0; iX < 128; ++iX) {
             ++pOriginalNode;
             test_adj(
-                    parcel_adjacency_matrix,
-                    parcel_count,
-                    pOriginalNode,
-                    iX,
+                    parcel_adjacency_matrix, parcel_count, pOriginalNode, iX,
                     1);
             test_adj(
-                    parcel_adjacency_matrix,
-                    parcel_count,
-                    pOriginalNode,
-                    iY,
+                    parcel_adjacency_matrix, parcel_count, pOriginalNode, iY,
                     128);
         }
     }
@@ -1012,14 +998,12 @@ void level_map::draw(
     // 1st pass
     pCanvas->start_nonoverlapping_draws();
     for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
-         itrNode1;
-         ++itrNode1) {
+         itrNode1; ++itrNode1) {
         unsigned int iH = 32;
         unsigned int iBlock = itrNode1->iBlock[0];
         blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
         blocks->draw_sprite(
-                pCanvas,
-                iBlock & 0xFF,
+                pCanvas, iBlock & 0xFF,
                 itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
                 itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32,
                 iBlock >> 8);
@@ -1030,19 +1014,16 @@ void level_map::draw(
     map_scanline_iterator formerIterator;
     // 2nd pass
     for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
-         itrNode2;
-         ++itrNode2) {
+         itrNode2; ++itrNode2) {
         if (itrNode2->flags.shadow_full) {
             blocks->draw_sprite(
-                    pCanvas,
-                    74,
+                    pCanvas, 74,
                     itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
                     itrNode2.tile_y_position_on_screen() + iCanvasY,
                     thdf_alpha_75);
         } else if (itrNode2->flags.shadow_half) {
             blocks->draw_sprite(
-                    pCanvas,
-                    75,
+                    pCanvas, 75,
                     itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
                     itrNode2.tile_y_position_on_screen() + iCanvasY,
                     thdf_alpha_75);
@@ -1053,23 +1034,17 @@ void level_map::draw(
         }
 
         for (map_scanline_iterator itrNode(
-                     itrNode2,
-                     map_scanline_iterator_direction::backward,
-                     iCanvasX,
-                     iCanvasY);
-             itrNode;
-             ++itrNode) {
+                     itrNode2, map_scanline_iterator_direction::backward,
+                     iCanvasX, iCanvasY);
+             itrNode; ++itrNode) {
             unsigned int iH;
             unsigned int iBlock = itrNode->iBlock[1];
             if (iBlock != 0 &&
                 blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
                 iH > 0) {
                 blocks->draw_sprite(
-                        pCanvas,
-                        iBlock & 0xFF,
-                        itrNode.x() - 32,
-                        itrNode.y() - iH + 32,
-                        iBlock >> 8);
+                        pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                        itrNode.y() - iH + 32, iBlock >> 8);
                 if (itrNode->flags.shadow_wall) {
                     clip_rect rcOldClip, rcNewClip;
                     pCanvas->get_clip_rect(&rcOldClip);
@@ -1082,10 +1057,7 @@ void level_map::draw(
                     clip_rect_intersection(rcNewClip, rcOldClip);
                     pCanvas->set_clip_rect(&rcNewClip);
                     blocks->draw_sprite(
-                            pCanvas,
-                            156,
-                            itrNode.x() - 32,
-                            itrNode.y() - 56,
+                            pCanvas, 156, itrNode.x() - 32, itrNode.y() - 56,
                             thdf_alpha_75);
                     pCanvas->set_clip_rect(&rcOldClip);
                 }
@@ -1098,9 +1070,7 @@ void level_map::draw(
         }
 
         map_scanline_iterator itrNode(
-                itrNode2,
-                map_scanline_iterator_direction::forward,
-                iCanvasX,
+                itrNode2, map_scanline_iterator_direction::forward, iCanvasX,
                 iCanvasY);
         if (!bFirst) {
             // since the scanline count from one THMapScanlineIterator to
@@ -1122,22 +1092,16 @@ void level_map::draw(
                 blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
                 iH > 0) {
                 blocks->draw_sprite(
-                        pCanvas,
-                        iBlock & 0xFF,
-                        itrNode.x() - 32,
-                        itrNode.y() - iH + 32,
-                        iBlock >> 8);
+                        pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                        itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[3];
             if (iBlock != 0 &&
                 blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
                 iH > 0) {
                 blocks->draw_sprite(
-                        pCanvas,
-                        iBlock & 0xFF,
-                        itrNode.x() - 32,
-                        itrNode.y() - iH + 32,
-                        iBlock >> 8);
+                        pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                        itrNode.y() - iH + 32, iBlock >> 8);
             }
             iBlock = itrNode->iBlock[1];
             if (iBlock != 0 &&
@@ -1177,9 +1141,7 @@ void level_map::draw(
                 while (pItem) {
                     if (pItem->get_drawing_layer() == 9) {
                         pItem->draw_fn(
-                                pItem,
-                                pCanvas,
-                                formerIterator.x() - 64,
+                                pItem, pCanvas, formerIterator.x() - 64,
                                 formerIterator.y());
                         bTileNeedsRedraw = true;
                     }
@@ -1193,9 +1155,7 @@ void level_map::draw(
                 while (pItem) {
                     if (pItem->get_drawing_layer() == 8) {
                         pItem->draw_fn(
-                                pItem,
-                                pCanvas,
-                                formerIterator.x(),
+                                pItem, pCanvas, formerIterator.x(),
                                 formerIterator.y());
                     }
                     pItem = (drawable*)(pItem->next);
@@ -1212,11 +1172,8 @@ void level_map::draw(
                         blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
                         iH > 0) {
                         blocks->draw_sprite(
-                                pCanvas,
-                                iBlock & 0xFF,
-                                itrNode.x() - 96,
-                                itrNode.y() - iH + 32,
-                                iBlock >> 8);
+                                pCanvas, iBlock & 0xFF, itrNode.x() - 96,
+                                itrNode.y() - iH + 32, iBlock >> 8);
                         if (itrNode.get_previous_tile()->flags.shadow_wall) {
                             clip_rect rcOldClip, rcNewClip;
                             pCanvas->get_clip_rect(&rcOldClip);
@@ -1230,11 +1187,8 @@ void level_map::draw(
                             clip_rect_intersection(rcNewClip, rcOldClip);
                             pCanvas->set_clip_rect(&rcNewClip);
                             blocks->draw_sprite(
-                                    pCanvas,
-                                    156,
-                                    itrNode.x() - 96,
-                                    itrNode.y() - 56,
-                                    thdf_alpha_75);
+                                    pCanvas, 156, itrNode.x() - 96,
+                                    itrNode.y() - 56, thdf_alpha_75);
                             pCanvas->set_clip_rect(&rcOldClip);
                         }
                     }
@@ -1266,15 +1220,12 @@ void level_map::draw(
     if (overlay) {
         for (map_tile_iterator itrNode(
                      this, iScreenX, iScreenY, iWidth, iHeight);
-             itrNode;
-             ++itrNode) {
+             itrNode; ++itrNode) {
             overlay->draw_cell(
                     pCanvas,
                     itrNode.tile_x_position_on_screen() + iCanvasX - 32,
-                    itrNode.tile_y_position_on_screen() + iCanvasY,
-                    this,
-                    itrNode.tile_x(),
-                    itrNode.tile_y());
+                    itrNode.tile_y_position_on_screen() + iCanvasY, this,
+                    itrNode.tile_x(), itrNode.tile_y());
         }
     }
 
@@ -1290,22 +1241,16 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
     }
 
     for (map_tile_iterator itrNode2(
-                 this,
-                 iTestX,
-                 iTestY,
-                 1,
-                 1,
+                 this, iTestX, iTestY, 1, 1,
                  map_scanline_iterator_direction::backward);
-         itrNode2;
-         ++itrNode2) {
+         itrNode2; ++itrNode2) {
         if (!itrNode2.is_last_on_scanline()) {
             continue;
         }
 
         for (map_scanline_iterator itrNode(
                      itrNode2, map_scanline_iterator_direction::backward);
-             itrNode;
-             ++itrNode) {
+             itrNode; ++itrNode) {
             if (itrNode->next != nullptr) {
                 drawable* pResult = hit_test_drawables(
                         itrNode->next, itrNode.x(), itrNode.y(), 0, 0);
@@ -1316,15 +1261,11 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
         }
         for (map_scanline_iterator itrNode(
                      itrNode2, map_scanline_iterator_direction::forward);
-             itrNode;
-             ++itrNode) {
+             itrNode; ++itrNode) {
             if (itrNode->oEarlyEntities.next != nullptr) {
                 drawable* pResult = hit_test_drawables(
-                        itrNode->oEarlyEntities.next,
-                        itrNode.x(),
-                        itrNode.y(),
-                        0,
-                        0);
+                        itrNode->oEarlyEntities.next, itrNode.x(), itrNode.y(),
+                        0, 0);
                 if (pResult) {
                     return pResult;
                 }
@@ -1438,16 +1379,10 @@ void level_map::update_temperatures(
         uint32_t iNeighbourCount = 0;
 
         iNeighbourCount += thermal_neighbour(
-                iNeighbourSum,
-                pNode->flags.can_travel_n,
-                -width,
-                pNode,
+                iNeighbourSum, pNode->flags.can_travel_n, -width, pNode,
                 iPrevTemp);
         iNeighbourCount += thermal_neighbour(
-                iNeighbourSum,
-                pNode->flags.can_travel_s,
-                width,
-                pNode,
+                iNeighbourSum, pNode->flags.can_travel_s, width, pNode,
                 iPrevTemp);
         iNeighbourCount += thermal_neighbour(
                 iNeighbourSum, pNode->flags.can_travel_e, 1, pNode, iPrevTemp);
@@ -1480,9 +1415,7 @@ void level_map::update_temperatures(
         pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
         if (iNeighbourCount != 0) {
             merge_temperatures(
-                    *pNode,
-                    iNewTemp,
-                    iNeighbourSum / iNeighbourCount,
+                    *pNode, iNewTemp, iNeighbourSum / iNeighbourCount,
                     4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5
                                              : 0));
         }
@@ -1595,8 +1528,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_uint(current_temperature_index);
     oEncoder.initialise(6);
     for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         oEncoder.write(pNode->iBlock[0]);
         oEncoder.write(pNode->iBlock[1]);
         oEncoder.write(pNode->iBlock[2]);
@@ -1625,8 +1557,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     oEncoder.initialise(5);
     for (map_tile *pNode = original_cells,
                   *pLimitNode = original_cells + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         oEncoder.write(pNode->iBlock[0]);
         oEncoder.write(pNode->iBlock[1]);
         oEncoder.write(pNode->iBlock[2]);
@@ -1698,8 +1629,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
         }
     }
     for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         uint32_t f;
         if (!pReader->read_uint(f)) return;
         pNode->flags = f;
@@ -1734,8 +1664,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     }
     oDecoder.initialise(6, pReader);
     for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());
@@ -1746,8 +1675,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
     oDecoder.initialise(5, pReader);
     for (map_tile *pNode = original_cells,
                   *pLimitNode = original_cells + width * height;
-         pNode != pLimitNode;
-         ++pNode) {
+         pNode != pLimitNode; ++pNode) {
         pNode->iBlock[0] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[1] = static_cast<uint16_t>(oDecoder.read());
         pNode->iBlock[2] = static_cast<uint16_t>(oDecoder.read());

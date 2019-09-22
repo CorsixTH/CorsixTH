@@ -305,8 +305,7 @@ uint8_t* transcode_xmi_to_midi(
 
     for (midi_token_list::iterator itr = lstTokens.begin(),
                                    itrEnd = lstTokens.end();
-         itr != itrEnd && !bEnd;
-         ++itr) {
+         itr != itrEnd && !bEnd; ++itr) {
         if (!bufOutput.write_variable_length_uint(itr->time - iTokenTime))
             return nullptr;
         iTokenTime = itr->time;

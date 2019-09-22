@@ -106,10 +106,7 @@ int l_town_map_draw(lua_State* L) {
                                         0, minOkTemp - 1, iTemp, 200, 60);
                             } else if (iTemp < maxOkTemp) {
                                 iG = range_scale(
-                                        minOkTemp,
-                                        maxOkTemp - 1,
-                                        iTemp,
-                                        140,
+                                        minOkTemp, maxOkTemp - 1, iTemp, 140,
                                         224);
                             } else {
                                 iR = range_scale(
@@ -184,13 +181,9 @@ int l_town_map_draw(lua_State* L) {
 void lua_register_ui(const lua_register_state* pState) {
     // WindowBase
     lua_class_binding<abstract_window> lcb(
-            pState,
-            "windowHelpers",
-            l_abstract_window_new,
+            pState, "windowHelpers", l_abstract_window_new,
             lua_metatable::window_base);
     lcb.add_function(
-            l_town_map_draw,
-            "townMapDraw",
-            lua_metatable::map,
+            l_town_map_draw, "townMapDraw", lua_metatable::map,
             lua_metatable::surface);
 }

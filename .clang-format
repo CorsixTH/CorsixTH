@@ -10,7 +10,6 @@ END_EVENT_TABLE()"
 DerivePointerAlignment: false
 PointerAlignment: Left
 AlignAfterOpenBracket: AlwaysBreak
-BinPackArguments: false
 
 IndentWidth: 4
 AccessModifierOffset: -4

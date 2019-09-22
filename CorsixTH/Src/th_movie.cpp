@@ -138,11 +138,8 @@ void movie_picture_buffer::allocate(
                      "allocated!\n";
     }
     texture = SDL_CreateTexture(
-            pRenderer,
-            SDL_PIXELFORMAT_RGB24,
-            SDL_TEXTUREACCESS_STREAMING,
-            iWidth,
-            iHeight);
+            pRenderer, SDL_PIXELFORMAT_RGB24, SDL_TEXTUREACCESS_STREAMING,
+            iWidth, iHeight);
     if (texture == nullptr) {
         std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
         return;
@@ -254,17 +251,10 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
 
     if (pMoviePicture->buffer) {
         sws_context = sws_getCachedContext(
-                sws_context,
-                pFrame->width,
-                pFrame->height,
-                (AVPixelFormat)pFrame->format,
-                pMoviePicture->width,
-                pMoviePicture->height,
-                pMoviePicture->pixel_format,
-                SWS_BICUBIC,
-                nullptr,
-                nullptr,
-                nullptr);
+                sws_context, pFrame->width, pFrame->height,
+                (AVPixelFormat)pFrame->format, pMoviePicture->width,
+                pMoviePicture->height, pMoviePicture->pixel_format, SWS_BICUBIC,
+                nullptr, nullptr, nullptr);
         if (sws_context == nullptr) {
             std::cerr << "Failed to initialize SwsContext\n";
             return 1;
@@ -277,31 +267,20 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
         (defined(CORSIX_TH_USE_FFMPEG) &&                  \
          LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
         av_image_fill_arrays(
-                pFrameRGB->data,
-                pFrameRGB->linesize,
-                pMoviePicture->buffer,
-                pMoviePicture->pixel_format,
-                pMoviePicture->width,
-                pMoviePicture->height,
-                1);
+                pFrameRGB->data, pFrameRGB->linesize, pMoviePicture->buffer,
+                pMoviePicture->pixel_format, pMoviePicture->width,
+                pMoviePicture->height, 1);
 #else
         avpicture_fill(
-                (AVPicture*)pFrameRGB,
-                pMoviePicture->buffer,
-                pMoviePicture->pixel_format,
-                pMoviePicture->width,
+                (AVPicture*)pFrameRGB, pMoviePicture->buffer,
+                pMoviePicture->pixel_format, pMoviePicture->width,
                 pMoviePicture->height);
 #endif
 
         /* Rescale the frame data and convert it to RGB24. */
         sws_scale(
-                sws_context,
-                pFrame->data,
-                pFrame->linesize,
-                0,
-                pFrame->height,
-                pFrameRGB->data,
-                pFrameRGB->linesize);
+                sws_context, pFrame->data, pFrame->linesize, 0, pFrame->height,
+                pFrameRGB->data, pFrameRGB->linesize);
 
         av_frame_free(&pFrameRGB);
 
@@ -620,38 +599,28 @@ void movie_player::play(int iChannel) {
         audio_resample_context = swr_alloc_set_opts(
                 audio_resample_context,
                 mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO,
-                AV_SAMPLE_FMT_S16,
-                mixer_frequency,
+                AV_SAMPLE_FMT_S16, mixer_frequency,
                 audio_codec_context->channel_layout,
                 audio_codec_context->sample_fmt,
-                audio_codec_context->sample_rate,
-                0,
-                nullptr);
+                audio_codec_context->sample_rate, 0, nullptr);
         swr_init(audio_resample_context);
 #elif defined(CORSIX_TH_USE_LIBAV)
         audio_resample_context = avresample_alloc_context();
         av_opt_set_int(
-                audio_resample_context,
-                "in_channel_layout",
-                audio_codec_context->channel_layout,
-                0);
+                audio_resample_context, "in_channel_layout",
+                audio_codec_context->channel_layout, 0);
         av_opt_set_int(
-                audio_resample_context,
-                "out_channel_layout",
+                audio_resample_context, "out_channel_layout",
                 mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO,
                 0);
         av_opt_set_int(
-                audio_resample_context,
-                "in_sample_rate",
-                audio_codec_context->sample_rate,
-                0);
+                audio_resample_context, "in_sample_rate",
+                audio_codec_context->sample_rate, 0);
         av_opt_set_int(
                 audio_resample_context, "out_sample_rate", mixer_frequency, 0);
         av_opt_set_int(
-                audio_resample_context,
-                "in_sample_fmt",
-                audio_codec_context->sample_fmt,
-                0);
+                audio_resample_context, "in_sample_fmt",
+                audio_codec_context->sample_fmt, 0);
         av_opt_set_int(
                 audio_resample_context, "out_sample_fmt", AV_SAMPLE_FMT_S16, 0);
         avresample_open(audio_resample_context);
@@ -703,10 +672,8 @@ void movie_player::clear_last_error() { last_error.clear(); }
 void movie_player::refresh(const SDL_Rect& destination_rect) {
     SDL_Rect dest_rect;
 
-    dest_rect = SDL_Rect{destination_rect.x,
-                         destination_rect.y,
-                         destination_rect.w,
-                         destination_rect.h};
+    dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
+                         destination_rect.w, destination_rect.h};
 
     if (!movie_picture_buffer->empty()) {
         double dCurTime = SDL_GetTicks() - current_sync_pts_system_time +
@@ -928,8 +895,7 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
             iCopyLength = iStreamSize;
         }
         std::memcpy(
-                pbStream,
-                (uint8_t*)audio_buffer + audio_buffer_index,
+                pbStream, (uint8_t*)audio_buffer + audio_buffer_index,
                 iCopyLength);
         iStreamSize -= iCopyLength;
         pbStream += iCopyLength;
@@ -1043,10 +1009,8 @@ int movie_player::decode_audio_frame(bool fFirst) {
 #endif
     // over-estimate output samples
     int iOutSamples = (int)av_rescale_rnd(
-            audio_frame->nb_samples,
-            mixer_frequency,
-            audio_codec_context->sample_rate,
-            AV_ROUND_UP);
+            audio_frame->nb_samples, mixer_frequency,
+            audio_codec_context->sample_rate, AV_ROUND_UP);
     int iSampleSize = av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples *
                       mixer_channels;
 
@@ -1060,20 +1024,12 @@ int movie_player::decode_audio_frame(bool fFirst) {
 
 #ifdef CORSIX_TH_USE_FFMPEG
     swr_convert(
-            audio_resample_context,
-            &audio_buffer,
-            iOutSamples,
-            (const uint8_t**)&audio_frame->data[0],
-            audio_frame->nb_samples);
+            audio_resample_context, &audio_buffer, iOutSamples,
+            (const uint8_t**)&audio_frame->data[0], audio_frame->nb_samples);
 #elif defined(CORSIX_TH_USE_LIBAV)
     avresample_convert(
-            audio_resample_context,
-            &audio_buffer,
-            0,
-            iOutSamples,
-            (uint8_t**)&audio_frame->data[0],
-            0,
-            audio_frame->nb_samples);
+            audio_resample_context, &audio_buffer, 0, iOutSamples,
+            (uint8_t**)&audio_frame->data[0], 0, audio_frame->nb_samples);
 #endif
     return iSampleSize;
 }

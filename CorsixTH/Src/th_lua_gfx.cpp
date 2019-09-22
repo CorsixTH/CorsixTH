@@ -49,14 +49,13 @@ int l_palette_load(lua_State* L) {
 int l_palette_set_entry(lua_State* L) {
     palette* pPalette = luaT_testuserdata<palette>(L);
     lua_pushboolean(
-            L,
-            pPalette->set_entry(
-                    static_cast<int>(luaL_checkinteger(L, 2)),
-                    static_cast<uint8_t>(luaL_checkinteger(L, 3)),
-                    static_cast<uint8_t>(luaL_checkinteger(L, 4)),
-                    static_cast<uint8_t>(luaL_checkinteger(L, 5)))
-                    ? 1
-                    : 0);
+            L, pPalette->set_entry(
+                       static_cast<int>(luaL_checkinteger(L, 2)),
+                       static_cast<uint8_t>(luaL_checkinteger(L, 3)),
+                       static_cast<uint8_t>(luaL_checkinteger(L, 4)),
+                       static_cast<uint8_t>(luaL_checkinteger(L, 5)))
+                       ? 1
+                       : 0);
     return 1;
 }
 
@@ -101,8 +100,7 @@ int l_rawbitmap_draw(lua_State* L) {
 
     if (lua_gettop(L) >= 8) {
         pBitmap->draw(
-                pCanvas,
-                static_cast<int>(luaL_checkinteger(L, 3)),
+                pCanvas, static_cast<int>(luaL_checkinteger(L, 3)),
                 static_cast<int>(luaL_checkinteger(L, 4)),
                 static_cast<int>(luaL_checkinteger(L, 5)),
                 static_cast<int>(luaL_checkinteger(L, 6)),
@@ -110,8 +108,7 @@ int l_rawbitmap_draw(lua_State* L) {
                 static_cast<int>(luaL_checkinteger(L, 8)));
     } else
         pBitmap->draw(
-                pCanvas,
-                static_cast<int>(luaL_optinteger(L, 3, 0)),
+                pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
                 static_cast<int>(luaL_optinteger(L, 4, 0)));
 
     lua_settop(L, 1);
@@ -143,11 +140,7 @@ int l_spritesheet_load(lua_State* L) {
             luaT_testuserdata<render_target>(L, 5, luaT_upvalueindex(1), false);
 
     if (pSheet->load_from_th_file(
-                pDataTable,
-                iDataLenTable,
-                pDataChunk,
-                iDataLenChunk,
-                bComplex,
+                pDataTable, iDataLenTable, pDataChunk, iDataLenChunk, bComplex,
                 pSurface))
         lua_pushboolean(L, 1);
     else
@@ -184,9 +177,7 @@ int l_spritesheet_draw(lua_State* L) {
             static_cast<int>(luaL_checkinteger(L, 3));  // No array adjustment
 
     pSheet->draw_sprite(
-            pCanvas,
-            iSprite,
-            static_cast<int>(luaL_optinteger(L, 4, 0)),
+            pCanvas, iSprite, static_cast<int>(luaL_optinteger(L, 4, 0)),
             static_cast<int>(luaL_optinteger(L, 5, 0)),
             static_cast<int>(luaL_optinteger(L, 6, 0)));
 
@@ -446,24 +437,14 @@ int l_font_draw_tooltip(lua_State* L) {
     int iYOffset = iFirstY < 0 ? -iFirstY : 0;
 
     pCanvas->fill_rect(
-            iBlack,
-            iX + iXOffset,
-            iFirstY + iYOffset,
-            oArea.width + 3,
+            iBlack, iX + iXOffset, iFirstY + iYOffset, oArea.width + 3,
             oArea.end_y - iY + 2);
     pCanvas->fill_rect(
-            iWhite,
-            iX + iXOffset + 1,
-            iFirstY + 1 + iYOffset,
-            oArea.width + 1,
+            iWhite, iX + iXOffset + 1, iFirstY + 1 + iYOffset, oArea.width + 1,
             oArea.end_y - iY);
 
     pFont->draw_text_wrapped(
-            pCanvas,
-            sMsg,
-            iMsgLen,
-            iX + 2 + iXOffset,
-            iFirstY + 1 + iYOffset,
+            pCanvas, sMsg, iMsgLen, iX + 2 + iXOffset, iFirstY + 1 + iYOffset,
             iW - 4);
 
     lua_pushinteger(L, oArea.end_y);
@@ -538,8 +519,7 @@ int l_cursor_load(lua_State* L) {
     cursor* pCursor = luaT_testuserdata<cursor>(L);
     sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
     if (pCursor->create_from_sprite(
-                pSheet,
-                static_cast<int>(luaL_checkinteger(L, 3)),
+                pSheet, static_cast<int>(luaL_checkinteger(L, 3)),
                 static_cast<int>(luaL_optinteger(L, 4, 0)),
                 static_cast<int>(luaL_optinteger(L, 5, 0)))) {
         lua_settop(L, 1);
@@ -561,13 +541,11 @@ int l_cursor_position(lua_State* L) {
     render_target* pCanvas =
             luaT_testuserdata<render_target>(L, 1, luaT_upvalueindex(1));
     lua_pushboolean(
-            L,
-            cursor::set_position(
-                    pCanvas,
-                    static_cast<int>(luaL_checkinteger(L, 2)),
-                    static_cast<int>(luaL_checkinteger(L, 3)))
-                    ? 1
-                    : 0);
+            L, cursor::set_position(
+                       pCanvas, static_cast<int>(luaL_checkinteger(L, 2)),
+                       static_cast<int>(luaL_checkinteger(L, 3)))
+                       ? 1
+                       : 0);
     return 1;
 }
 
@@ -673,11 +651,10 @@ int l_surface_set_blue_filter_active(lua_State* L) {
 int l_surface_map(lua_State* L) {
     render_target* pCanvas = luaT_testuserdata<render_target>(L);
     lua_pushnumber(
-            L,
-            (lua_Number)render_target::map_colour(
-                    (Uint8)luaL_checkinteger(L, 2),
-                    (Uint8)luaL_checkinteger(L, 3),
-                    (Uint8)luaL_checkinteger(L, 4)));
+            L, (lua_Number)render_target::map_colour(
+                       (Uint8)luaL_checkinteger(L, 2),
+                       (Uint8)luaL_checkinteger(L, 3),
+                       (Uint8)luaL_checkinteger(L, 4)));
     return 1;
 }
 
@@ -751,11 +728,10 @@ int l_surface_scale(lua_State* L) {
             luaL_error(L, "Expected \"bitmap\" as 2nd argument");
     }
     lua_pushboolean(
-            L,
-            pCanvas->set_scale_factor(
-                    static_cast<float>(luaL_checknumber(L, 2)), eToScale)
-                    ? 1
-                    : 0);
+            L, pCanvas->set_scale_factor(
+                       static_cast<float>(luaL_checknumber(L, 2)), eToScale)
+                       ? 1
+                       : 0);
     return 1;
 }
 
@@ -826,8 +802,7 @@ int l_line_draw(lua_State* L) {
     line* pLine = luaT_testuserdata<line>(L);
     render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
     pLine->draw(
-            pCanvas,
-            static_cast<int>(luaL_optinteger(L, 3, 0)),
+            pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
             static_cast<int>(luaL_optinteger(L, 4, 0)));
 
     lua_settop(L, 1);
@@ -903,18 +878,14 @@ void lua_register_gfx(const lua_register_state* pState) {
     // BitmapFont
     {
         lua_class_binding<bitmap_font> lcb(
-                pState,
-                "bitmap_font",
-                l_bitmap_font_new,
+                pState, "bitmap_font", l_bitmap_font_new,
                 lua_metatable::bitmap_font);
         lcb.set_superclass(lua_metatable::font);
         lcb.add_function(
-                l_bitmap_font_set_spritesheet,
-                "setSheet",
+                l_bitmap_font_set_spritesheet, "setSheet",
                 lua_metatable::sheet);
         lcb.add_function(
-                l_bitmap_font_get_spritesheet,
-                "getSheet",
+                l_bitmap_font_get_spritesheet, "getSheet",
                 lua_metatable::sheet);
         lcb.add_function(l_bitmap_font_set_sep, "setSeparation");
     }
@@ -923,14 +894,11 @@ void lua_register_gfx(const lua_register_state* pState) {
     // FreeTypeFont
     {
         lua_class_binding<freetype_font> lcb(
-                pState,
-                "freetype_font",
-                l_freetype_font_new,
+                pState, "freetype_font", l_freetype_font_new,
                 lua_metatable::freetype_font);
         lcb.set_superclass(lua_metatable::font);
         lcb.add_function(
-                l_freetype_font_set_spritesheet,
-                "setSheet",
+                l_freetype_font_set_spritesheet, "setSheet",
                 lua_metatable::sheet);
         lcb.add_function(l_freetype_font_set_face, "setFace");
         lcb.add_function(l_freetype_font_get_copyright, "getCopyrightNotice");

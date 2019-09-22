@@ -79,8 +79,7 @@ void luaT_getfenv52(lua_State* L, int iIndex) {
             break;
         default:
             luaL_error(
-                    L,
-                    "Unable to get environment of a %s in 5.2",
+                    L, "Unable to get environment of a %s in 5.2",
                     lua_typename(L, iType));
             break;
     }

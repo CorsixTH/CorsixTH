@@ -612,21 +612,14 @@ bool animation_manager::load_custom_animations(
             size_t iNumElements = input.read_uint16();
 
             size_t iElm = load_elements(
-                    input,
-                    pSheet,
-                    iNumElements,
-                    iLoadedElements,
-                    iElementStart,
+                    input, pSheet, iNumElements, iLoadedElements, iElementStart,
                     iElementCount);
             if (iElm == SIZE_MAX) {
                 return false;
             }
 
             size_t iListElm = make_list_elements(
-                    iElm,
-                    iNumElements,
-                    iLoadedListElements,
-                    iListStart,
+                    iElm, iNumElements, iLoadedListElements, iListStart,
                     iListCount);
             if (iListElm == SIZE_MAX) {
                 return false;
@@ -882,18 +875,15 @@ bool animation_manager::hit_test(
             oElement.element_sprite_sheet->get_sprite_size_unchecked(
                     oElement.sprite, &iWidth, &iHeight);
             if (oElement.element_sprite_sheet->hit_test_sprite(
-                        oElement.sprite,
-                        oElement.x + iWidth - iTestX,
+                        oElement.sprite, oElement.x + iWidth - iTestX,
                         iTestY - oElement.y,
                         oElement.flags ^ thdf_flip_horizontal)) {
                 return true;
             }
         } else {
             if (oElement.element_sprite_sheet->hit_test_sprite(
-                        oElement.sprite,
-                        iTestX - oElement.x,
-                        iTestY - oElement.y,
-                        oElement.flags)) {
+                        oElement.sprite, iTestX - oElement.x,
+                        iTestY - oElement.y, oElement.flags)) {
                 return true;
             }
         }
@@ -945,17 +935,12 @@ void animation_manager::draw_frame(
                     oElement.sprite, &iWidth, &iHeight);
 
             oElement.element_sprite_sheet->draw_sprite(
-                    pCanvas,
-                    oElement.sprite,
-                    iX - oElement.x - iWidth,
+                    pCanvas, oElement.sprite, iX - oElement.x - iWidth,
                     iY + oElement.y,
                     iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal));
         } else {
             oElement.element_sprite_sheet->draw_sprite(
-                    pCanvas,
-                    oElement.sprite,
-                    iX + oElement.x,
-                    iY + oElement.y,
+                    pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
                     iPassOnFlags | oElement.flags);
         }
     }
@@ -1224,25 +1209,17 @@ void animation::draw_morph(render_target* pCanvas, int iDestX, int iDestY) {
     pCanvas->get_clip_rect(&oClipRect);
     clip_rect oMorphRect;
     CalculateMorphRect(
-            oClipRect,
-            oMorphRect,
-            iDestY + morph_target->x_relative_to_tile,
+            oClipRect, oMorphRect, iDestY + morph_target->x_relative_to_tile,
             iDestY + morph_target->y_relative_to_tile + 1);
     pCanvas->set_clip_rect(&oMorphRect);
     manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
     CalculateMorphRect(
-            oClipRect,
-            oMorphRect,
-            iDestY + morph_target->y_relative_to_tile,
+            oClipRect, oMorphRect, iDestY + morph_target->y_relative_to_tile,
             iDestY + morph_target->speed.dx);
     pCanvas->set_clip_rect(&oMorphRect);
     manager->draw_frame(
-            pCanvas,
-            morph_target->frame_index,
-            morph_target->layers,
-            iDestX,
-            iDestY,
-            morph_target->flags);
+            pCanvas, morph_target->frame_index, morph_target->layers, iDestX,
+            iDestY, morph_target->flags);
     pCanvas->set_clip_rect(&oClipRect);
 }
 
@@ -1256,13 +1233,8 @@ bool animation::hit_test(int iDestX, int iDestY, int iTestX, int iTestY) {
     }
 
     return manager->hit_test(
-            frame_index,
-            layers,
-            x_relative_to_tile + iDestX,
-            y_relative_to_tile + iDestY,
-            flags,
-            iTestX,
-            iTestY);
+            frame_index, layers, x_relative_to_tile + iDestX,
+            y_relative_to_tile + iDestY, flags, iTestX, iTestY);
 }
 
 bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
@@ -1275,13 +1247,8 @@ bool animation::hit_test_morph(int iDestX, int iDestY, int iTestX, int iTestY) {
     }
 
     return manager->hit_test(
-                   frame_index,
-                   layers,
-                   x_relative_to_tile + iDestX,
-                   y_relative_to_tile + iDestY,
-                   flags,
-                   iTestX,
-                   iTestY) ||
+                   frame_index, layers, x_relative_to_tile + iDestX,
+                   y_relative_to_tile + iDestY, flags, iTestX, iTestY) ||
            morph_target->hit_test(iDestX, iDestY, iTestX, iTestY);
 }
 
@@ -1641,12 +1608,7 @@ int GetAnimationDurationAndExtent(
         int iFrameMinY;
         int iFrameMaxY;
         pManager->get_frame_extent(
-                iCurFrame,
-                oLayers,
-                nullptr,
-                nullptr,
-                &iFrameMinY,
-                &iFrameMaxY,
+                iCurFrame, oLayers, nullptr, nullptr, &iFrameMinY, &iFrameMaxY,
                 iFlags);
         if (iFrameMinY < iMinY) iMinY = iFrameMinY;
         if (iFrameMaxY > iMaxY) iMaxY = iFrameMaxY;
@@ -1693,11 +1655,8 @@ void animation::set_morph_target(
     int iOriginalDuration = GetAnimationDurationAndExtent(
             manager, frame_index, layers, &iOrigMinY, &iOrigMaxY, flags);
     int iMorphDuration = GetAnimationDurationAndExtent(
-            morph_target->manager,
-            morph_target->frame_index,
-            morph_target->layers,
-            &iMorphMinY,
-            &iMorphMaxY,
+            morph_target->manager, morph_target->frame_index,
+            morph_target->layers, &iMorphMinY, &iMorphMaxY,
             morph_target->flags);
     if (iMorphDuration > iOriginalDuration) {
         iMorphDuration = iOriginalDuration;
@@ -1783,11 +1742,8 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
     sprite* pLast = sprites + sprite_count;
     for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
         sheet->draw_sprite(
-                pCanvas,
-                pSprite->index,
-                iDestX + pSprite->x,
-                iDestY + pSprite->y,
-                flags);
+                pCanvas, pSprite->index, iDestX + pSprite->x,
+                iDestY + pSprite->y, flags);
     }
 }
 
@@ -1879,8 +1835,7 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     if (!pReader->read_int(dy_per_tick)) return;
     if (!pReader->read_int(lifetime)) return;
     for (sprite *pSprite = sprites, *pLast = sprites + sprite_count;
-         pSprite != pLast;
-         ++pSprite) {
+         pSprite != pLast; ++pSprite) {
         if (!pReader->read_uint(pSprite->index)) return;
         if (!pReader->read_int(pSprite->x)) return;
         if (!pReader->read_int(pSprite->y)) return;

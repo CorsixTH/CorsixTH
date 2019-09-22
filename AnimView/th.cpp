@@ -345,8 +345,7 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex) {
         (bComplex ? decode_chunks_complex : decode_chunks)(
                 oRenderer,
                 (const unsigned char*)chunks.data() + pSprite->offset,
-                chunks.size() - pSprite->offset,
-                0xFF);
+                chunks.size() - pSprite->offset, 0xFF);
         spriteBitmaps[iSprite].create(
                 pSprite->width, pSprite->height, oRenderer.getData());
     }
@@ -389,11 +388,9 @@ void THAnimations::drawFrame(
         if (iBottom > iFarY) iFarY = iBottom;
 
         getSpriteBitmap(iSpriteIndex)
-                ->blit(imgCanvas,
-                       pElement->offx + iXOffset,
+                ->blit(imgCanvas, pElement->offx + iXOffset,
                        pElement->offy + iYOffset,
-                       ghostMaps.data() + m_iGhostMapOffset,
-                       colours.data(),
+                       ghostMaps.data() + m_iGhostMapOffset, colours.data(),
                        pElement->flags & 0xF);
     }
     size.x = iFarX;

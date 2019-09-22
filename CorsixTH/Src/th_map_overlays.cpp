@@ -175,9 +175,7 @@ void map_parcels_overlay::draw_cell(
     }
     if (font) {
         draw_text(
-                pCanvas,
-                iCanvasX,
-                iCanvasY,
+                pCanvas, iCanvasX, iCanvasY,
                 std::to_string((int)pNode->iParcelId));
     }
     if (sprites) {
@@ -196,10 +194,7 @@ void map_typical_overlay::draw_text(
         render_target* pCanvas, int iX, int iY, std::string str) {
     text_layout oArea = font->get_text_dimensions(str.c_str(), str.length());
     font->draw_text(
-            pCanvas,
-            str.c_str(),
-            str.length(),
-            iX + (64 - oArea.end_x) / 2,
+            pCanvas, str.c_str(), str.length(), iX + (64 - oArea.end_x) / 2,
             iY + (32 - oArea.end_y) / 2);
 }
 

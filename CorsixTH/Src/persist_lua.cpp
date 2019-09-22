@@ -474,8 +474,7 @@ public:
 
                 default:
                     set_error(lua_pushfstring(
-                            L,
-                            "Cannot persist %s values",
+                            L, "Cannot persist %s values",
                             luaL_typename(L, 2)));
                     break;
             }
@@ -546,8 +545,7 @@ public:
             // NB: Chunks are not functions defined *in* source files, because
             // chunks *are* source files.
             set_error(lua_pushfstring(
-                    L,
-                    "Cannot persist entire Lua chunks (%s)",
+                    L, "Cannot persist entire Lua chunks (%s)",
                     pProtoInfo->source + 1));
             lua_pop(L, 1);
             return;
@@ -594,8 +592,7 @@ public:
                     "persistable name in order to be persisted (attempt to "
                     "persist"
                     " %s:%d)",
-                    pProtoInfo->source + 1,
-                    pProtoInfo->linedefined));
+                    pProtoInfo->source + 1, pProtoInfo->linedefined));
             lua_pop(L, 2);
             return;
         }
@@ -875,11 +872,8 @@ public:
                     ls.s[0] = lua_tolstring(L, -3, &ls.i[0]);
                     ls.s[1] = lua_tolstring(L, -1, &ls.i[1]);
                     if (luaT_load(
-                                L,
-                                load_multi_buffer::load_fn,
-                                &ls,
-                                lua_tostring(L, -2),
-                                "bt") != 0) {
+                                L, load_multi_buffer::load_fn, &ls,
+                                lua_tostring(L, -2), "bt") != 0) {
                         // Should never happen
                         lua_error(L);
                         return false;
@@ -1040,8 +1034,7 @@ public:
         // Ensure that all data has been read
         if (data_buffer_size != 0) {
             set_error(lua_pushfstring(
-                    L,
-                    "%d bytes of data remain unpersisted",
+                    L, "%d bytes of data remain unpersisted",
                     (int)data_buffer_size));
             return false;
         }
@@ -1073,8 +1066,7 @@ public:
             set_error(lua_pushfstring(
                     L,
                     "End of input reached while attempting to read %d byte%s",
-                    (int)iCount,
-                    iCount == 1 ? "" : "s"));
+                    (int)iCount, iCount == 1 ? "" : "s"));
             lua_pop(L, 1);
             return false;
         }
@@ -1091,8 +1083,7 @@ public:
             set_error(lua_pushfstring(
                     L,
                     "End of input reached while attempting to read %d byte%s",
-                    (int)iCount,
-                    iCount == 1 ? "" : "s"));
+                    (int)iCount, iCount == 1 ? "" : "s"));
             lua_pop(L, 1);
             return false;
         }
@@ -1154,12 +1145,10 @@ int l_load_toplevel(lua_State* L) {
         int iNumBytes = (int)(pReader->get_pointer() - pData);
         lua_pushnil(L);
         lua_pushfstring(
-                L,
-                "%s after %d objects (%d bytes)",
+                L, "%s after %d objects (%d bytes)",
                 pReader->get_error() ? pReader->get_error()
                                      : "Error while depersisting",
-                iNumObjects,
-                iNumBytes);
+                iNumObjects, iNumBytes);
         return 2;
     } else {
         return 1;
@@ -1223,15 +1212,12 @@ int l_persist_dofile(lua_State* L) {
                 reinterpret_cast<char*>(
                         lua_touserdata(L, luaT_upvalueindex(1))) +
                         iBufferUsed,
-                1,
-                iBufferSize - iBufferUsed,
-                fFile);
+                1, iBufferSize - iBufferUsed, fFile);
         if (iBufferUsed == iBufferSize) {
             iBufferSize *= 2;
             std::memcpy(
                     lua_newuserdata(L, iBufferSize),
-                    lua_touserdata(L, luaT_upvalueindex(1)),
-                    iBufferUsed);
+                    lua_touserdata(L, luaT_upvalueindex(1)), iBufferUsed);
             lua_replace(L, luaT_upvalueindex(1));
         } else
             break;
@@ -1306,8 +1292,7 @@ int l_persist_dofile(lua_State* L) {
                             L,
                             "Multiple persistable functions defin"
                             "ed on the same line (%s:%d)",
-                            sFilename,
-                            iLineNumber);
+                            sFilename, iLineNumber);
                 }
 
                 // Save <name> => <filename>
@@ -1323,8 +1308,7 @@ int l_persist_dofile(lua_State* L) {
                             L,
                             "Persistable function name \'%s\' is"
                             " not unique (defined in both %s and %s)",
-                            lua_tostring(L, -2),
-                            lua_tostring(L, -1),
+                            lua_tostring(L, -2), lua_tostring(L, -1),
                             sFilename);
                 }
 

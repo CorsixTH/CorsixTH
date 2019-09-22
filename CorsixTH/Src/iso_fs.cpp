@@ -392,8 +392,7 @@ bool iso_filesystem::initialise(std::FILE* fRawFile) {
                 try {
                     find_hosp_directory(
                             aBuffer + root_directory_offset,
-                            root_directory_entry_size,
-                            0);
+                            root_directory_entry_size, 0);
                     if (files.empty()) {
                         set_error(
                                 "Could not find Theme Hospital data "
@@ -455,8 +454,7 @@ int iso_filesystem::find_hosp_directory(
                     if (iFoundLevel != 0) {
                         if (iFoundLevel == 2) {
                             build_file_lookup_table(
-                                    ent.data_sector,
-                                    ent.data_length,
+                                    ent.data_sector, ent.data_length,
                                     std::string(""));
                         }
                         delete[] pBuffer;
@@ -539,8 +537,7 @@ void iso_filesystem::visit_directory_files(
     for (const file_metadata& file : files) {
         if (normalised_path.size() < file.path.size() &&
             std::equal(
-                    normalised_path.begin(),
-                    normalised_path.end(),
+                    normalised_path.begin(), normalised_path.end(),
                     file.path.begin())) {
             size_t filename_pos = normalised_path.size();
             if (file.path.at(normalised_path.size()) == path_seperator) {

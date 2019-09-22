@@ -220,8 +220,7 @@ int l_soundfx_play(lua_State* L) {
         pEffects->play(iIndex, luaL_checknumber(L, 3));
     } else {
         pEffects->play_at(
-                iIndex,
-                luaL_checknumber(L, 3),
+                iIndex, luaL_checknumber(L, 3),
                 static_cast<int>(luaL_checkinteger(L, 4)),
                 static_cast<int>(luaL_checkinteger(L, 5)));
     }
@@ -241,8 +240,7 @@ int l_soundfx_play(lua_State* L) {
         size_t interval =
                 pArchive->get_sound_duration(iIndex) + iPlayedCallbackDelay;
         SDL_TimerID timersID = SDL_AddTimer(
-                static_cast<Uint32>(interval),
-                played_sound_callback,
+                static_cast<Uint32>(interval), played_sound_callback,
                 &(played_sound_callback_ids[played_sound_callback_index]));
         map_sound_timers.insert(std::pair<int, SDL_TimerID>(
                 played_sound_callback_ids[played_sound_callback_index],
@@ -283,9 +281,7 @@ void lua_register_sound(const lua_register_state* pState) {
     // Sound Archive
     {
         lua_class_binding<sound_archive> lcb(
-                pState,
-                "soundArchive",
-                l_soundarc_new,
+                pState, "soundArchive", l_soundarc_new,
                 lua_metatable::sound_archive);
         lcb.add_metamethod(l_soundarc_count, "len");
         lcb.add_function(l_soundarc_load, "load");
@@ -304,8 +300,7 @@ void lua_register_sound(const lua_register_state* pState) {
         lua_class_binding<sound_player> lcb(
                 pState, "soundEffects", l_soundfx_new, lua_metatable::sound_fx);
         lcb.add_function(
-                l_soundfx_set_archive,
-                "setSoundArchive",
+                l_soundfx_set_archive, "setSoundArchive",
                 lua_metatable::sound_archive);
         lcb.add_function(l_soundfx_play, "play");
         lcb.add_function(l_soundfx_set_sound_volume, "setSoundVolume");

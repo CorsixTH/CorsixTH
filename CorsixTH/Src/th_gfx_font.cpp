@@ -274,11 +274,8 @@ text_layout bitmap_font::draw_text_wrapped(
                         iXOffset = (iWidth - iMsgBreakWidth) *
                                    static_cast<int>(eAlign) / 2;
                     draw_text(
-                            pCanvas,
-                            sMessage,
-                            sBreakPosition - sMessage,
-                            iX + iXOffset,
-                            iY);
+                            pCanvas, sMessage, sBreakPosition - sMessage,
+                            iX + iXOffset, iY);
                 }
                 iY += static_cast<int>(iTallest) + line_spacing;
                 oDrawArea.end_x = iMsgWidth;
@@ -387,10 +384,7 @@ FT_Error freetype_font::set_face(const uint8_t* pData, size_t iLength) {
         font_face = nullptr;
     }
     iError = FT_New_Memory_Face(
-            freetype_library,
-            pData,
-            static_cast<FT_Long>(iLength),
-            0,
+            freetype_library, pData, static_cast<FT_Long>(iLength), 0,
             &font_face);
     return iError;
 }
@@ -594,11 +588,8 @@ text_layout freetype_font::draw_text_wrapped(
             if (bUseKerning && iPreviousGlyphIndex && oGlyph.index) {
                 FT_Vector ftvKerning;
                 FT_Get_Kerning(
-                        font_face,
-                        iPreviousGlyphIndex,
-                        oGlyph.index,
-                        FT_KERNING_DEFAULT,
-                        &ftvKerning);
+                        font_face, iPreviousGlyphIndex, oGlyph.index,
+                        FT_KERNING_DEFAULT, &ftvKerning);
                 ftvPen.x += ftvKerning.x;
                 ftvPen.y += ftvKerning.y;
             }
@@ -686,8 +677,7 @@ text_layout freetype_font::draw_text_wrapped(
         iNormalLineHeight = pixel_align(iNormalLineHeight);
 
         for (auto itr = vLines.begin();
-             itr != vLines.end() && iNumRows < iMaxRows;
-             ++itr) {
+             itr != vLines.end() && iNumRows < iMaxRows; ++itr) {
             // Calculate the X change resulting from alignment.
             const char* sLastChar = previous_utf8_codepoint(itr->second);
             codepoint_glyph& oLastGlyph = mapGlyphs[decode_utf8(sLastChar)];
@@ -746,8 +736,7 @@ text_layout freetype_font::draw_text_wrapped(
         FT_Render_Mode eRenderMode =
                 bIsMonochrome ? FT_RENDER_MODE_MONO : FT_RENDER_MODE_NORMAL;
         for (auto itr = mapGlyphs.begin(), itrEnd = mapGlyphs.end();
-             itr != itrEnd;
-             ++itr) {
+             itr != itrEnd; ++itr) {
             FT_Glyph_To_Bitmap(&itr->second.glyph, eRenderMode, nullptr, 1);
         }
 
@@ -758,8 +747,7 @@ text_layout freetype_font::draw_text_wrapped(
         int iDrawnLines = 0;
         // Render each character to the canvas.
         for (auto itr = vLines.begin();
-             itr != vLines.end() && iDrawnLines < iMaxRows + iSkipRows;
-             ++itr) {
+             itr != vLines.end() && iDrawnLines < iMaxRows + iSkipRows; ++itr) {
             iDrawnLines++;
             for (const char* s = itr->first; s < itr->second;) {
                 FT_Vector& ftvPos = vCharPositions[s - sMessage];

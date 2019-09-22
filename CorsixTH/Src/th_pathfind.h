@@ -241,13 +241,7 @@ public:
             int iMaxDistance, lua_State* L, int iVisitFunction,
             bool anyObjectType) {
         return object_visitor.visit_objects(
-                pMap,
-                iStartX,
-                iStartY,
-                eTHOB,
-                iMaxDistance,
-                L,
-                iVisitFunction,
+                pMap, iStartX, iStartY, eTHOB, iMaxDistance, L, iVisitFunction,
                 anyObjectType);
     }
 

@@ -73,25 +73,17 @@ frmMain::frmMain()
     wxStaticBoxSizer* pThemeHospital =
             new wxStaticBoxSizer(wxHORIZONTAL, this, L"Theme Hospital");
     pThemeHospital->Add(
-            new wxStaticText(this, wxID_ANY, L"Directory:"),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxStaticText(this, wxID_ANY, L"Directory:"), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(
             m_txtTHPath = new wxTextCtrl(this, wxID_ANY, L"", def, wxTE_CENTRE),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(
-            new wxButton(this, ID_BROWSE, L"Browse..."),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_BROWSE, L"Browse..."), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pThemeHospital->Add(
-            new wxButton(this, ID_LOAD, L"Load"),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_LOAD, L"Load"), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pSidebarSizer->Add(pThemeHospital, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pPalette =
@@ -106,93 +98,60 @@ frmMain::frmMain()
     pPalette->Add(pPaletteTop, 0, wxEXPAND | wxALL, 1);
     pPalette->Add(
             new wxSpinCtrl(
-                    this,
-                    wxID_ANY,
-                    wxEmptyString,
-                    def,
-                    wxSP_ARROW_KEYS | wxSP_WRAP,
-                    0,
-                    255),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+                    this, wxID_ANY, wxEmptyString, def,
+                    wxSP_ARROW_KEYS | wxSP_WRAP, 0, 255),
+            0, wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pPalette, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pAnimation =
             new wxStaticBoxSizer(wxHORIZONTAL, this, L"Animation");
     pAnimation->Add(
-            new wxButton(this, ID_FIRST_ANIM, L"<<", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_FIRST_ANIM, L"<<", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
-            new wxButton(this, ID_PREV_ANIM, L"<", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_PREV_ANIM, L"<", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
             m_txtAnimIndex =
                     new wxTextCtrl(this, ID_ANIM_INDEX, L"0", def, wxTE_CENTRE),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
-            new wxStaticText(this, wxID_ANY, L"of"),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxStaticText(this, wxID_ANY, L"of"), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
             m_txtAnimCount = new wxTextCtrl(
                     this, wxID_ANY, L"?", def, wxTE_CENTRE | wxTE_READONLY),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
-            new wxButton(this, ID_NEXT_ANIM, L">", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_NEXT_ANIM, L">", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pAnimation->Add(
-            new wxButton(this, ID_LAST_ANIM, L">>", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_LAST_ANIM, L">>", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pSidebarSizer->Add(pAnimation, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pFrame =
             new wxStaticBoxSizer(wxHORIZONTAL, this, L"Frame");
     pFrame->Add(
-            new wxButton(this, ID_PREV_FRAME, L"<", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_PREV_FRAME, L"<", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(
             m_txtFrameIndex =
                     new wxTextCtrl(this, wxID_ANY, L"0", def, wxTE_CENTRE),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(
-            new wxStaticText(this, wxID_ANY, L"of", def, wxALIGN_CENTRE),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxStaticText(this, wxID_ANY, L"of", def, wxALIGN_CENTRE), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(
             m_txtFrameCount = new wxTextCtrl(
                     this, wxID_ANY, L"?", def, wxTE_CENTRE | wxTE_READONLY),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(
-            new wxButton(this, ID_NEXT_FRAME, L">", def, wxBU_EXACTFIT),
-            0,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            new wxButton(this, ID_NEXT_FRAME, L">", def, wxBU_EXACTFIT), 0,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     pFrame->Add(
-            m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause"),
-            1,
-            wxALIGN_CENTER_VERTICAL | wxALL,
-            1);
+            m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause"), 1,
+            wxALIGN_CENTER_VERTICAL | wxALL, 1);
     m_bPlayingAnimation = true;
     // m_bPlayingAnimation = false;
     pSidebarSizer->Add(pFrame, 0, wxEXPAND | wxALL, 0);
@@ -211,39 +170,25 @@ frmMain::frmMain()
     pLayer0->Add(
             new wxCheckBox(this, ID(0, 8), L"8"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 10), L"10"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 10), L"10"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 12), L"12"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 12), L"12"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 14), L"14"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 14), L"14"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 16), L"16"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 16), L"16"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 18), L"18"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 18), L"18"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 20), L"20"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 20), L"20"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer0->Add(
-            new wxCheckBox(this, ID(0, 22), L"22"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(0, 22), L"22"), 0, wxALIGN_CENTER | wxALL,
             1);
     pSidebarSizer->Add(pLayer0, 0, wxEXPAND | wxALL, 0);
 
@@ -252,41 +197,29 @@ frmMain::frmMain()
     pLayer1->Add(
             new wxCheckBox(this, ID(1, 0), L"0"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer1->Add(
-            new wxCheckBox(this, ID(1, 2), L"2 (A)"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(1, 2), L"2 (A)"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer1->Add(
-            new wxCheckBox(this, ID(1, 4), L"4 (B)"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(1, 4), L"4 (B)"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer1->Add(
-            new wxCheckBox(this, ID(1, 6), L"6 (C)"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(1, 6), L"6 (C)"), 0, wxALIGN_CENTER | wxALL,
             1);
     pLayer1->Add(
             new wxCheckBox(this, ID(1, 8), L"8"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer1->Add(
-            new wxCheckBox(this, ID(1, 10), L"10"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(1, 10), L"10"), 0, wxALIGN_CENTER | wxALL,
             1);
     pSidebarSizer->Add(pLayer1, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer2 = new wxStaticBoxSizer(
             wxHORIZONTAL, this, L"Layer 2 (Bandages / Patient Accessory)");
     pLayer2->Add(
-            new wxCheckBox(this, ID(2, 2), L"2 (Head / Alt Shoes)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(2, 2), L"2 (Head / Alt Shoes)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer2->Add(
-            new wxCheckBox(this, ID(2, 4), L"4 (Arm / Hat)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(2, 4), L"4 (Arm / Hat)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer2->Add(
             new wxCheckBox(this, ID(2, 6), L"6"), 0, wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer2, 0, wxEXPAND | wxALL, 0);
@@ -296,30 +229,20 @@ frmMain::frmMain()
     pLayer3->Add(
             new wxCheckBox(this, ID(3, 0), L"0"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer3->Add(
-            new wxCheckBox(this, ID(3, 2), L"2 (? / Yellow)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(3, 2), L"2 (? / Yellow)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer3->Add(
-            new wxCheckBox(this, ID(3, 4), L"4 (L Foot / Blue)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(3, 4), L"4 (L Foot / Blue)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer3->Add(
-            new wxCheckBox(this, ID(3, 6), L"6 (? / White)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(3, 6), L"6 (? / White)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer3->Add(
-            new wxCheckBox(this, ID(3, 8), L"8 (R Arm)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(3, 8), L"8 (R Arm)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer3->Add(
-            new wxCheckBox(this, ID(3, 10), L"10 (R Foot)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(3, 10), L"10 (R Foot)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer3, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer4 = new wxStaticBoxSizer(
@@ -327,27 +250,19 @@ frmMain::frmMain()
     pLayer4->Add(
             new wxCheckBox(this, ID(4, 0), L"0"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer4->Add(
-            new wxCheckBox(this, ID(4, 2), L"2 (Head / Repair)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(4, 2), L"2 (Head / Repair)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer4->Add(
-            new wxCheckBox(this, ID(4, 4), L"4 (L Root)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(4, 4), L"4 (L Root)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer4->Add(
             new wxCheckBox(this, ID(4, 6), L"6"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer4->Add(
-            new wxCheckBox(this, ID(4, 8), L"8 (R Arm)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(4, 8), L"8 (R Arm)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer4->Add(
-            new wxCheckBox(this, ID(4, 10), L"10 (R Foot)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(4, 10), L"10 (R Foot)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer4, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer5 =
@@ -355,109 +270,76 @@ frmMain::frmMain()
     pLayer5->Add(
             new wxCheckBox(this, ID(5, 0), L"0"), 0, wxALIGN_CENTER | wxALL, 1);
     pLayer5->Add(
-            new wxCheckBox(this, ID(5, 2), L"2 (W1)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(5, 2), L"2 (W1)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer5->Add(
-            new wxCheckBox(this, ID(5, 4), L"4 (B1)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(5, 4), L"4 (B1)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer5->Add(
-            new wxCheckBox(this, ID(5, 6), L"6 (W2)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(5, 6), L"6 (W2)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer5->Add(
-            new wxCheckBox(this, ID(5, 8), L"8 (B2)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(5, 8), L"8 (B2)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer5->Add(
-            new wxCheckBox(this, ID(5, 10), L"10"),
-            0,
-            wxALIGN_CENTER | wxALL,
+            new wxCheckBox(this, ID(5, 10), L"10"), 0, wxALIGN_CENTER | wxALL,
             1);
     pSidebarSizer->Add(pLayer5, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer10 = new wxStaticBoxSizer(
             wxHORIZONTAL, this, L"Layer 10 (Wall Colour / Smoke)");
     pLayer10->Add(
-            new wxCheckBox(this, ID(10, 2), L"2 (Yellow / Smoke)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(10, 2), L"2 (Yellow / Smoke)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer10->Add(
-            new wxCheckBox(this, ID(10, 4), L"4 (Blue)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(10, 4), L"4 (Blue)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer10->Add(
-            new wxCheckBox(this, ID(10, 6), L"6 (White)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(10, 6), L"6 (White)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer10, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer11 = new wxStaticBoxSizer(
             wxHORIZONTAL, this, L"Layer 11 (Wall Colour / Smoke / Screen)");
     pLayer11->Add(
-            new wxCheckBox(this, ID(11, 2), L"2 (Yellow / Smoke / On)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(11, 2), L"2 (Yellow / Smoke / On)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer11->Add(
-            new wxCheckBox(this, ID(11, 4), L"4 (Blue)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(11, 4), L"4 (Blue)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pLayer11->Add(
-            new wxCheckBox(this, ID(11, 6), L"6 (Green)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(11, 6), L"6 (Green)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer11, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pLayer12 =
             new wxStaticBoxSizer(wxHORIZONTAL, this, L"Layer 12 (Smoke)");
     pLayer12->Add(
-            new wxCheckBox(this, ID(12, 2), L"2 (Smoke)"),
-            0,
-            wxALIGN_CENTER | wxALL,
-            1);
+            new wxCheckBox(this, ID(12, 2), L"2 (Smoke)"), 0,
+            wxALIGN_CENTER | wxALL, 1);
     pSidebarSizer->Add(pLayer12, 0, wxEXPAND | wxALL, 0);
 
     wxStaticBoxSizer* pMoodOverlay =
             new wxStaticBoxSizer(wxVERTICAL, this, L"Overlays");
     pMoodOverlay->Add(
-            new wxCheckBox(this, ID_DRAW_MOOD, L"Draw mood overlay"),
-            0,
-            wxEXPAND | wxALL,
-            1);
+            new wxCheckBox(this, ID_DRAW_MOOD, L"Draw mood overlay"), 0,
+            wxEXPAND | wxALL, 1);
     wxBoxSizer* pMoodRow = new wxBoxSizer(wxHORIZONTAL);
     pMoodRow->Add(
             new wxStaticText(
                     this, wxID_ANY, L"Marker position (click to move it):"),
-            0,
-            wxEXPAND | wxRIGHT,
-            2);
+            0, wxEXPAND | wxRIGHT, 2);
     pMoodRow->Add(
-            m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"),
-            1,
-            wxEXPAND | wxRIGHT,
-            1);
+            m_txtMoodPosition[0] = new wxTextCtrl(this, wxID_ANY, L"{0, 0}"), 1,
+            wxEXPAND | wxRIGHT, 1);
     pMoodRow->Add(
             m_txtMoodPosition[1] =
                     new wxTextCtrl(this, wxID_ANY, L"{0, 0, \"px\"}"),
-            1,
-            wxEXPAND);
+            1, wxEXPAND);
     pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
     pMoodOverlay->Add(
             new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"),
-            0,
-            wxEXPAND | wxALL,
-            0);
+            0, wxEXPAND | wxALL, 0);
     pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
     m_bDrawMood = false;
     m_bDrawCoordinates = false;
@@ -473,9 +355,7 @@ frmMain::frmMain()
         }
     }
 
-    Connect(ID(0, 0),
-            ID(12, 24),
-            wxEVT_COMMAND_CHECKBOX_CLICKED,
+    Connect(ID(0, 0), ID(12, 24), wxEVT_COMMAND_CHECKBOX_CLICKED,
             (wxObjectEventFunction)&frmMain::_onToggleMask);
 #undef ID
 
@@ -490,107 +370,69 @@ frmMain::frmMain()
             new wxButton(this, ID_SEARCH_SOUND, L"Sound"), 0, wxALL, 1);
     pSearch->Add(pSearchButtons, 0);
     pSearch->Add(
-            m_lstSearchResults = new wxListBox(this, ID_SEARCH_RESULTS),
-            1,
-            wxEXPAND | wxALL,
-            1);
+            m_lstSearchResults = new wxListBox(this, ID_SEARCH_RESULTS), 1,
+            wxEXPAND | wxALL, 1);
 
     wxStaticBoxSizer* pFrameFlags =
             new wxStaticBoxSizer(wxHORIZONTAL, this, L"Frame Flags");
     wxBoxSizer* pFlags1 = new wxBoxSizer(wxVERTICAL);
     pFlags1->Add(
-            m_txtFrameFlags[0] = new wxTextCtrl(this, wxID_ANY),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_txtFrameFlags[0] = new wxTextCtrl(this, wxID_ANY), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[0] = new wxCheckBox(this, wxID_ANY, L"2^0"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[0] = new wxCheckBox(this, wxID_ANY, L"2^0"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[1] = new wxCheckBox(this, wxID_ANY, L"2^1"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[1] = new wxCheckBox(this, wxID_ANY, L"2^1"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[2] = new wxCheckBox(this, wxID_ANY, L"2^2"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[2] = new wxCheckBox(this, wxID_ANY, L"2^2"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[3] = new wxCheckBox(this, wxID_ANY, L"2^3"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[3] = new wxCheckBox(this, wxID_ANY, L"2^3"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[4] = new wxCheckBox(this, wxID_ANY, L"2^4"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[4] = new wxCheckBox(this, wxID_ANY, L"2^4"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[5] = new wxCheckBox(this, wxID_ANY, L"2^5"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[5] = new wxCheckBox(this, wxID_ANY, L"2^5"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[6] = new wxCheckBox(this, wxID_ANY, L"2^6"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[6] = new wxCheckBox(this, wxID_ANY, L"2^6"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags1->Add(
-            m_chkFrameFlags[7] = new wxCheckBox(this, wxID_ANY, L"2^7"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[7] = new wxCheckBox(this, wxID_ANY, L"2^7"), 0,
+            wxEXPAND | wxALL, 2);
     pFrameFlags->Add(pFlags1, 1, wxEXPAND);
     wxBoxSizer* pFlags2 = new wxBoxSizer(wxVERTICAL);
     pFlags2->Add(
-            m_txtFrameFlags[1] = new wxTextCtrl(this, wxID_ANY),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_txtFrameFlags[1] = new wxTextCtrl(this, wxID_ANY), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
             m_chkFrameFlags[8] =
                     new wxCheckBox(this, wxID_ANY, L"2^8 (Animation Start)"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            0, wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[9] = new wxCheckBox(this, wxID_ANY, L"2^9"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[9] = new wxCheckBox(this, wxID_ANY, L"2^9"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[10] = new wxCheckBox(this, wxID_ANY, L"2^10"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[10] = new wxCheckBox(this, wxID_ANY, L"2^10"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[11] = new wxCheckBox(this, wxID_ANY, L"2^11"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[11] = new wxCheckBox(this, wxID_ANY, L"2^11"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[12] = new wxCheckBox(this, wxID_ANY, L"2^12"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[12] = new wxCheckBox(this, wxID_ANY, L"2^12"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[13] = new wxCheckBox(this, wxID_ANY, L"2^13"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[13] = new wxCheckBox(this, wxID_ANY, L"2^13"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[14] = new wxCheckBox(this, wxID_ANY, L"2^14"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[14] = new wxCheckBox(this, wxID_ANY, L"2^14"), 0,
+            wxEXPAND | wxALL, 2);
     pFlags2->Add(
-            m_chkFrameFlags[15] = new wxCheckBox(this, wxID_ANY, L"2^15"),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_chkFrameFlags[15] = new wxCheckBox(this, wxID_ANY, L"2^15"), 0,
+            wxEXPAND | wxALL, 2);
     pFrameFlags->Add(pFlags2, 1, wxEXPAND);
 
     pMainSizer->Add(pSidebarSizer, 0, wxEXPAND | wxALL, 2);
@@ -599,19 +441,13 @@ frmMain::frmMain()
     pRightHandSizer->AddSpacer(1);
 
     pRightHandSizer->Add(
-            m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE),
-            0,
-            wxEXPAND | wxALL,
-            2);
+            m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0,
+            wxEXPAND | wxALL, 2);
     m_panFrame->Connect(
-            wxEVT_PAINT,
-            (wxObjectEventFunction)&frmMain::_onPanelPaint,
-            NULL,
+            wxEVT_PAINT, (wxObjectEventFunction)&frmMain::_onPanelPaint, NULL,
             this);
     m_panFrame->Connect(
-            wxEVT_LEFT_UP,
-            (wxObjectEventFunction)&frmMain::_onPanelClick,
-            NULL,
+            wxEVT_LEFT_UP, (wxObjectEventFunction)&frmMain::_onPanelClick, NULL,
             this);
     m_panFrame->SetMinSize(m_panFrame->ClientToWindowSize(wxSize(402, 402)));
 
@@ -634,11 +470,8 @@ frmMain::frmMain()
 
 void frmMain::_onBrowse(wxCommandEvent& WXUNUSED(evt)) {
     m_txtTHPath->SetValue(::wxDirSelector(
-            L"Choose Theme Hospital root folder",
-            m_txtTHPath->GetValue(),
-            0,
-            wxDefaultPosition,
-            this));
+            L"Choose Theme Hospital root folder", m_txtTHPath->GetValue(), 0,
+            wxDefaultPosition, this));
 }
 
 void frmMain::_onLoad(wxCommandEvent& WXUNUSED(evt)) {
@@ -655,10 +488,8 @@ void frmMain::load() {
     }
     if (!wxFileName::DirExists(sPath)) {
         ::wxMessageBox(
-                L"Theme Hospital path non-existant",
-                L"Load Animations",
-                wxOK | wxICON_ERROR,
-                this);
+                L"Theme Hospital path non-existant", L"Load Animations",
+                wxOK | wxICON_ERROR, this);
         return;
     }
     sPath = _getCaseSensitivePath(L"DATA", sPath);
@@ -684,10 +515,8 @@ void frmMain::load() {
         !m_oAnims.loadGhostFile(
                 _getCaseSensitivePath(L"../QDATA/GHOST66.DAT", sPath), 3)) {
         ::wxMessageBox(
-                L"Cannot load one or more data files",
-                L"Load Animations",
-                wxOK | wxICON_ERROR,
-                this);
+                L"Cannot load one or more data files", L"Load Animations",
+                wxOK | wxICON_ERROR, this);
     }
     m_oAnims.markDuplicates();
 
@@ -890,12 +719,7 @@ void frmMain::_onPanelPaint(wxPaintEvent& evt) {
             imgCanvas, m_iCurrentAnim, m_iCurrentFrame, &m_mskLayers, oSize);
     if (m_bDrawMood) {
         m_oAnims.drawFrame(
-                imgCanvas,
-                4048,
-                0,
-                &m_mskLayers,
-                oSize,
-                m_iMoodDrawX - 1,
+                imgCanvas, 4048, 0, &m_mskLayers, oSize, m_iMoodDrawX - 1,
                 m_iMoodDrawY - 80);
     }
     th_frame_t* pFrame =
@@ -948,22 +772,12 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
     int iLayer = ::wxGetNumberFromUser(
-            L"Enter the layer number to search in (0 - 12)",
-            L"Layer:",
-            L"Search for Layer / ID Combo",
-            0,
-            0,
-            13,
-            this);
+            L"Enter the layer number to search in (0 - 12)", L"Layer:",
+            L"Search for Layer / ID Combo", 0, 0, 13, this);
     if (iLayer == -1) return;
     int iID = ::wxGetNumberFromUser(
-            L"Enter the ID number to search for (0 - 24)",
-            L"ID:",
-            L"Search for Layer / ID Combo",
-            0,
-            0,
-            24,
-            this);
+            L"Enter the ID number to search for (0 - 24)", L"ID:",
+            L"Search for Layer / ID Combo", 0, 0, 24, this);
     if (iID == -1) return;
 
     m_lstSearchResults->Clear();
@@ -981,13 +795,8 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
 
 void frmMain::_onSearchFrame(wxCommandEvent& evt) {
     int iFrame = ::wxGetNumberFromUser(
-            L"Enter the frame number to search for.",
-            L"Frame:",
-            L"Search for frame",
-            0,
-            0,
-            20000,
-            this);
+            L"Enter the frame number to search for.", L"Frame:",
+            L"Search for frame", 0, 0, 20000, this);
     if (iFrame == -1) return;
 
     m_lstSearchResults->Clear();
@@ -1002,13 +811,8 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
 
 void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
     int iFrame = ::wxGetNumberFromUser(
-            L"Enter the sound index to search for.",
-            L"Sound index:",
-            L"Search for sound",
-            0,
-            0,
-            256,
-            this);
+            L"Enter the sound index to search for.", L"Sound index:",
+            L"Search for sound", 0, 0, 256, this);
     if (iFrame == -1) return;
 
     m_lstSearchResults->Clear();
@@ -1062,8 +866,7 @@ wxString frmMain::_getCaseSensitivePath(
 
         wxString realName;
         cont = dir.GetFirst(
-                &realName,
-                wxEmptyString,
+                &realName, wxEmptyString,
                 wxDIR_DIRS | wxDIR_FILES | wxDIR_HIDDEN | wxDIR_DOTDOT);
         found = false;
         while (cont) {

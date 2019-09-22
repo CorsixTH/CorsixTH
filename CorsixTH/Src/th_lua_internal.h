@@ -159,8 +159,7 @@ public:
     void set_superclass(lua_metatable super_mt) {
         lua_getmetatable(pState->L, -1);
         lua_getfield(
-                pState->L,
-                pState->metatables[static_cast<size_t>(super_mt)],
+                pState->L, pState->metatables[static_cast<size_t>(super_mt)],
                 "__index");
         lua_setfield(pState->L, -2, "__index");
         lua_pop(pState->L, 1);
@@ -193,8 +192,7 @@ public:
     void add_metamethod(lua_CFunction fn, const char* name, Args... args) {
         luaT_setclosure(pState, fn, 0, args...);
         lua_setfield(
-                pState->L,
-                class_metatable,
+                pState->L, class_metatable,
                 std::string("__").append(name).c_str());
     }
 

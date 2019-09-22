@@ -336,9 +336,7 @@ T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
 
     if (required) {
         const char* msg = lua_pushfstring(
-                L,
-                "%s expected, got %s",
-                luaT_classinfo<T>::name(),
+                L, "%s expected, got %s", luaT_classinfo<T>::name(),
                 luaL_typename(L, idx));
         luaL_argerror(L, idx, msg);
     }
