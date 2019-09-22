@@ -203,9 +203,7 @@ int l_map_gettemperature(lua_State* L) {
  * @return Whether the tile position is valid for a new room.
  */
 inline bool is_valid(
-        bool entire_invalid,
-        const map_tile* pNode,
-        const level_map* pMap,
+        bool entire_invalid, const map_tile* pNode, const level_map* pMap,
         int player_id) {
     return !entire_invalid && !pNode->flags.room && pNode->flags.buildable &&
            (player_id == 0 || pMap->get_tile_owner(pNode) == player_id);
@@ -509,9 +507,7 @@ const std::map<std::string, map_tile_flags::key> lua_tile_flag_map{
  * @param name Name of the flag in Lua code.
  */
 inline void add_cellflag(
-        lua_State* L,
-        const map_tile* tile,
-        map_tile_flags::key flag,
+        lua_State* L, const map_tile* tile, map_tile_flags::key flag,
         const std::string& name) {
     lua_pushlstring(L, name.c_str(), name.size());
     lua_pushboolean(L, tile->flags[flag] ? 1 : 0);

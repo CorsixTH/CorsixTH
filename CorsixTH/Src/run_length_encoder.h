@@ -76,9 +76,7 @@ private:
     void flush(bool bAll);
 
     bool are_ranges_equal(
-            size_t iObjIdx1,
-            size_t iObjIdx2,
-            size_t iOffset,
+            size_t iObjIdx1, size_t iObjIdx2, size_t iOffset,
             size_t iObjSize) const;
     bool move_object_to_output(size_t iObjSize, size_t iObjCount);
 

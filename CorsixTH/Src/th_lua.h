@@ -395,11 +395,7 @@ void luaT_execute(
 
 template <class T1, class T2, class T3, class T4>
 void luaT_execute(
-        lua_State* L,
-        const char* sLuaString,
-        T1 arg1,
-        T2 arg2,
-        T3 arg3,
+        lua_State* L, const char* sLuaString, T1 arg1, T2 arg2, T3 arg3,
         T4 arg4) {
     luaT_execute_loadstring(L, sLuaString);
     luaT_push(L, arg1);

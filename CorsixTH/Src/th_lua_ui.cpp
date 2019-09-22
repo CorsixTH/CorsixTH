@@ -37,10 +37,7 @@ int l_abstract_window_new(lua_State* L) {
 }
 
 uint8_t range_scale(
-        uint16_t low,
-        uint16_t high,
-        uint16_t val,
-        uint16_t start,
+        uint16_t low, uint16_t high, uint16_t val, uint16_t start,
         uint16_t end) {
     return static_cast<uint8_t>(
             std::max(start + (end - start) * (val - low) / (high - low), 0xFF));
@@ -51,10 +48,8 @@ inline bool is_wall(uint16_t blk) {
 }
 
 inline bool is_wall_drawn(
-        const level_map& map,
-        const map_tile& node,
-        const map_tile& original_node,
-        size_t n) {
+        const level_map& map, const map_tile& node,
+        const map_tile& original_node, size_t n) {
     return map.get_tile_owner(&node) != 0 ? is_wall(node.iBlock[n])
                                           : is_wall(original_node.iBlock[n]);
 }

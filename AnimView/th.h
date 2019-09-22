@@ -138,11 +138,8 @@ public:
 
     void blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags = 0) const;
     void blit(
-            wxImage& imgCanvas,
-            int iX,
-            int iY,
-            const unsigned char* pColourTranslate,
-            const th_colour_t* pPalette,
+            wxImage& imgCanvas, int iX, int iY,
+            const unsigned char* pColourTranslate, const th_colour_t* pPalette,
             int iFlags = 0) const;
 
     bool IsOk() { return m_pData != nullptr; }
@@ -204,20 +201,12 @@ public:
 
     void setGhost(int iFile, int iIndex);
     void drawFrame(
-            wxImage& imgCanvas,
-            size_t iAnimation,
-            size_t iFrame,
-            const THLayerMask* pMask,
-            wxSize& size,
-            int iXOffset = 0,
+            wxImage& imgCanvas, size_t iAnimation, size_t iFrame,
+            const THLayerMask* pMask, wxSize& size, int iXOffset = 0,
             int iYOffset = 0);
     void copySpriteToCanvas(
-            wxString spriteFile,
-            int iSpriteIndex,
-            wxImage& imgCanvas,
-            int iX,
-            int iY,
-            int iFlags = 0);
+            wxString spriteFile, int iSpriteIndex, wxImage& imgCanvas, int iX,
+            int iY, int iFlags = 0);
 
     static unsigned char* Decompress(unsigned char* pData, size_t& iLength);
 

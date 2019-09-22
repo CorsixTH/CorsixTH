@@ -104,9 +104,7 @@ public:
     bool search_neighbours(path_node* pNode, map_tile_flags flags, int iWidth);
 
     void record_neighbour_if_passable(
-            path_node* pNode,
-            map_tile_flags neighbour_flags,
-            bool passable,
+            path_node* pNode, map_tile_flags neighbour_flags, bool passable,
             path_node* pNeighbour);
 
     //! Guess distance to the destination for \a pNode.
@@ -124,9 +122,7 @@ public:
         @return Whether the search is done.
      */
     virtual bool try_node(
-            path_node* pNode,
-            map_tile_flags flags,
-            path_node* pNeighbour,
+            path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
             travel_direction direction) = 0;
 
 protected:
@@ -140,16 +136,11 @@ public:
 
     int guess_distance(path_node* pNode) override;
     bool try_node(
-            path_node* pNode,
-            map_tile_flags flags,
-            path_node* pNeighbour,
+            path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
             travel_direction direction) override;
 
     bool find_path(
-            const level_map* pMap,
-            int iStartX,
-            int iStartY,
-            int iEndX,
+            const level_map* pMap, int iStartX, int iStartY, int iEndX,
             int iEndY);
 
     int destination_x;  ///< X coordinate of the destination of the path.
@@ -162,9 +153,7 @@ public:
 
     int guess_distance(path_node* pNode) override;
     bool try_node(
-            path_node* pNode,
-            map_tile_flags flags,
-            path_node* pNeighbour,
+            path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
             travel_direction direction) override;
 
     bool find_path_to_hospital(const level_map* pMap, int iStartX, int iStartY);
@@ -176,9 +165,7 @@ public:
 
     int guess_distance(path_node* pNode) override;
     bool try_node(
-            path_node* pNode,
-            map_tile_flags flags,
-            path_node* pNeighbour,
+            path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
             travel_direction direction) override;
 
     bool find_idle_tile(
@@ -196,19 +183,12 @@ public:
 
     int guess_distance(path_node* pNode) override;
     bool try_node(
-            path_node* pNode,
-            map_tile_flags flags,
-            path_node* pNeighbour,
+            path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
             travel_direction direction) override;
 
     bool visit_objects(
-            const level_map* pMap,
-            int iStartX,
-            int iStartY,
-            object_type eTHOB,
-            int iMaxDistance,
-            lua_State* L,
-            int iVisitFunction,
+            const level_map* pMap, int iStartX, int iStartY, object_type eTHOB,
+            int iMaxDistance, lua_State* L, int iVisitFunction,
             bool anyObjectType);
 
     lua_State* L;
@@ -241,10 +221,7 @@ public:
     void set_default_map(const level_map* pMap);
 
     inline bool find_path(
-            const level_map* pMap,
-            int iStartX,
-            int iStartY,
-            int iEndX,
+            const level_map* pMap, int iStartX, int iStartY, int iEndX,
             int iEndY) {
         return basic_pathfinder.find_path(pMap, iStartX, iStartY, iEndX, iEndY);
     }
@@ -260,13 +237,8 @@ public:
     }
 
     inline bool visit_objects(
-            const level_map* pMap,
-            int iStartX,
-            int iStartY,
-            object_type eTHOB,
-            int iMaxDistance,
-            lua_State* L,
-            int iVisitFunction,
+            const level_map* pMap, int iStartX, int iStartY, object_type eTHOB,
+            int iMaxDistance, lua_State* L, int iVisitFunction,
             bool anyObjectType) {
         return object_visitor.visit_objects(
                 pMap,

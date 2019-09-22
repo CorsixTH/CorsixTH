@@ -253,14 +253,10 @@ public:
         @return Loading was successful.
     */
     bool load_from_th_file(
-            const uint8_t* pStartData,
-            size_t iStartDataLength,
-            const uint8_t* pFrameData,
-            size_t iFrameDataLength,
-            const uint8_t* pListData,
-            size_t iListDataLength,
-            const uint8_t* pElementData,
-            size_t iElementDataLength);
+            const uint8_t* pStartData, size_t iStartDataLength,
+            const uint8_t* pFrameData, size_t iFrameDataLength,
+            const uint8_t* pListData, size_t iListDataLength,
+            const uint8_t* pElementData, size_t iElementDataLength);
 
     //! Set the video target.
     /*!
@@ -325,31 +321,17 @@ public:
         @param iFlags Zero or more THDrawFlags flags.
     */
     void draw_frame(
-            render_target* pCanvas,
-            size_t iFrame,
-            const ::layers& oLayers,
-            int iX,
-            int iY,
-            uint32_t iFlags) const;
+            render_target* pCanvas, size_t iFrame, const ::layers& oLayers,
+            int iX, int iY, uint32_t iFlags) const;
 
     void get_frame_extent(
-            size_t iFrame,
-            const ::layers& oLayers,
-            int* pMinX,
-            int* pMaxX,
-            int* pMinY,
-            int* pMaxY,
-            uint32_t iFlags) const;
+            size_t iFrame, const ::layers& oLayers, int* pMinX, int* pMaxX,
+            int* pMinY, int* pMaxY, uint32_t iFlags) const;
     size_t get_frame_sound(size_t iFrame);
 
     bool hit_test(
-            size_t iFrame,
-            const ::layers& oLayers,
-            int iX,
-            int iY,
-            uint32_t iFlags,
-            int iTestX,
-            int iTestY) const;
+            size_t iFrame, const ::layers& oLayers, int iX, int iY,
+            uint32_t iFlags, int iTestX, int iTestY) const;
 
     bool set_frame_marker(size_t iFrame, int iX, int iY);
     bool set_frame_secondary_marker(size_t iFrame, int iX, int iY);
@@ -484,11 +466,8 @@ private:
        means failure.
      */
     size_t load_elements(
-            memory_reader& input,
-            sprite_sheet* pSpriteSheet,
-            size_t iNumElements,
-            size_t& iLoadedElements,
-            size_t iElementStart,
+            memory_reader& input, sprite_sheet* pSpriteSheet,
+            size_t iNumElements, size_t& iLoadedElements, size_t iElementStart,
             size_t iElementCount);
 
     //! Construct a list element for every element, and a 0xFFFF at the end.
@@ -503,11 +482,8 @@ private:
        failure.
      */
     size_t make_list_elements(
-            size_t iFirstElement,
-            size_t iNumElements,
-            size_t& iLoadedListElements,
-            size_t iListStart,
-            size_t iListCount);
+            size_t iFirstElement, size_t iNumElements,
+            size_t& iLoadedListElements, size_t iListStart, size_t iListCount);
 
     //! Fix the flags of the first frame, and set the next frame of the last
     //! frame back to the first frame.

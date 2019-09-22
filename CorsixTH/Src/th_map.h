@@ -236,10 +236,8 @@ public:
     bool set_size(int iWidth, int iHeight);
     bool load_blank();
     bool load_from_th_file(
-            const uint8_t* pData,
-            size_t iDataLength,
-            map_load_object_callback_fn fnObjectCallback,
-            void* pCallbackToken);
+            const uint8_t* pData, size_t iDataLength,
+            map_load_object_callback_fn fnObjectCallback, void* pCallbackToken);
 
     void save(std::string filename);
 
@@ -338,13 +336,8 @@ public:
         screen co-ordinates.
     */
     void draw(
-            render_target* pCanvas,
-            int iScreenX,
-            int iScreenY,
-            int iWidth,
-            int iHeight,
-            int iCanvasX,
-            int iCanvasY) const;
+            render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
+            int iHeight, int iCanvasX, int iCanvasY) const;
 
     //! Perform a hit-test against the animations attached to the map
     /*!
@@ -391,10 +384,7 @@ public:
 
 private:
     drawable* hit_test_drawables(
-            link_list* pListStart,
-            int iXs,
-            int iYs,
-            int iTestX,
+            link_list* pListStart, int iXs, int iYs, int iTestX,
             int iTestY) const;
     void read_tile_index(const uint8_t* pData, int& iX, int& iY) const;
     void write_tile_index(uint8_t* pData, int iX, int iY) const;
@@ -410,11 +400,8 @@ private:
     //! (prior to this calculation). \return The weight of the connection, 0 if
     //! there is no neighbour, 1 through walls, and 4 through air.
     uint32_t thermal_neighbour(
-            uint32_t& iNeighbourSum,
-            bool canTravel,
-            std::ptrdiff_t relative_idx,
-            map_tile* pNode,
-            int prevTemp) const;
+            uint32_t& iNeighbourSum, bool canTravel,
+            std::ptrdiff_t relative_idx, map_tile* pNode, int prevTemp) const;
 
     //! Create the adjacency matrix if it doesn't already exist
     void make_adjacency_matrix();
@@ -485,10 +472,7 @@ public:
             forward for top-to-bottom, backward for bottom-to-top.
     */
     map_tile_iterator(
-            const level_map* pMap,
-            int iScreenX,
-            int iScreenY,
-            int iWidth,
+            const level_map* pMap, int iScreenX, int iScreenY, int iWidth,
             int iHeight,
             map_scanline_iterator_direction eScanlineDirection =
                     map_scanline_iterator_direction::forward);
@@ -578,8 +562,7 @@ public:
     */
     map_scanline_iterator(
             const map_tile_iterator& itrNodes,
-            map_scanline_iterator_direction eDirection,
-            int iXOffset = 0,
+            map_scanline_iterator_direction eDirection, int iXOffset = 0,
             int iYOffset = 0);
 
     inline operator bool() const { return tile != end_tile; }

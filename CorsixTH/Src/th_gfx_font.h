@@ -75,8 +75,7 @@ public:
             occupy. Default is INT_MAX.
     */
     virtual text_layout get_text_dimensions(
-            const char* sMessage,
-            size_t iMessageLength,
+            const char* sMessage, size_t iMessageLength,
             int iMaxWidth = INT_MAX) const = 0;
 
     //! Draw a single line of text
@@ -92,11 +91,8 @@ public:
             rectangle for the drawn text.
     */
     virtual void draw_text(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY) const = 0;
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY) const = 0;
 
     //! Draw a single line of text, splitting it at word boundaries
     /*!
@@ -117,13 +113,8 @@ public:
           of text is smaller than iWidth.
     */
     virtual text_layout draw_text_wrapped(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY,
-            int iWidth,
-            int iMaxRows = INT_MAX,
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY, int iWidth, int iMaxRows = INT_MAX,
             int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const = 0;
 };
@@ -150,25 +141,16 @@ public:
     void set_separation(int iCharSep, int iLineSep);
 
     text_layout get_text_dimensions(
-            const char* sMessage,
-            size_t iMessageLength,
+            const char* sMessage, size_t iMessageLength,
             int iMaxWidth = INT_MAX) const override;
 
     void draw_text(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY) const override;
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY) const override;
 
     text_layout draw_text_wrapped(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY,
-            int iWidth,
-            int iMaxRows = INT_MAX,
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY, int iWidth, int iMaxRows = INT_MAX,
             int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const override;
 
@@ -241,25 +223,16 @@ public:
     FT_Error set_ideal_character_size(int iWidth, int iHeight);
 
     text_layout get_text_dimensions(
-            const char* sMessage,
-            size_t iMessageLength,
+            const char* sMessage, size_t iMessageLength,
             int iMaxWidth = INT_MAX) const override;
 
     void draw_text(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY) const override;
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY) const override;
 
     text_layout draw_text_wrapped(
-            render_target* pCanvas,
-            const char* sMessage,
-            size_t iMessageLength,
-            int iX,
-            int iY,
-            int iWidth,
-            int iMaxRows = INT_MAX,
+            render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+            int iX, int iY, int iWidth, int iMaxRows = INT_MAX,
             int iSkipRows = 0,
             text_alignment eAlign = text_alignment::left) const override;
 
@@ -304,16 +277,12 @@ private:
 
     //! Render a FreeType2 monochrome bitmap to a cache canvas.
     void render_mono(
-            cached_text* pCacheEntry,
-            FT_Bitmap* pBitmap,
-            FT_Pos x,
+            cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
             FT_Pos y) const;
 
     //! Render a FreeType2 grayscale bitmap to a cache canvas.
     void render_gray(
-            cached_text* pCacheEntry,
-            FT_Bitmap* pBitmap,
-            FT_Pos x,
+            cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
             FT_Pos y) const;
 
     static FT_Library freetype_library;
@@ -365,9 +334,7 @@ private:
         @param iY The Y position at which to draw the texture on the canvas.
     */
     void draw_texture(
-            render_target* pCanvas,
-            cached_text* pCacheEntry,
-            int iX,
+            render_target* pCanvas, cached_text* pCacheEntry, int iX,
             int iY) const;
 };
 #endif  // CORSIX_TH_USE_FREETYPE2

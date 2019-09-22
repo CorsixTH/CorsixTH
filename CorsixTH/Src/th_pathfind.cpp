@@ -80,9 +80,7 @@ bool abstract_pathfinder::search_neighbours(
 }
 
 void abstract_pathfinder::record_neighbour_if_passable(
-        path_node* pNode,
-        map_tile_flags neighbour_flags,
-        bool passable,
+        path_node* pNode, map_tile_flags neighbour_flags, bool passable,
         path_node* pNeighbour) {
     if (neighbour_flags.passable || !passable) {
         if (pNeighbour->prev == pNeighbour) {
@@ -107,9 +105,7 @@ int basic_pathfinder::guess_distance(path_node* pNode) {
 }
 
 bool basic_pathfinder::try_node(
-        path_node* pNode,
-        map_tile_flags flags,
-        path_node* pNeighbour,
+        path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
         travel_direction direction) {
     map_tile_flags neighbour_flags =
             map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
@@ -162,9 +158,7 @@ bool basic_pathfinder::find_path(
 int hospital_finder::guess_distance(path_node* pNode) { return 0; }
 
 bool hospital_finder::try_node(
-        path_node* pNode,
-        map_tile_flags flags,
-        path_node* pNeighbour,
+        path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
         travel_direction direction) {
     map_tile_flags neighbour_flags =
             map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
@@ -215,9 +209,7 @@ bool hospital_finder::find_path_to_hospital(
 int idle_tile_finder::guess_distance(path_node* pNode) { return 0; }
 
 bool idle_tile_finder::try_node(
-        path_node* pNode,
-        map_tile_flags flags,
-        path_node* pNeighbour,
+        path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
         travel_direction direction) {
     map_tile_flags neighbour_flags =
             map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
@@ -329,9 +321,7 @@ bool idle_tile_finder::find_idle_tile(
 int object_visitor::guess_distance(path_node* pNode) { return 0; }
 
 bool object_visitor::try_node(
-        path_node* pNode,
-        map_tile_flags flags,
-        path_node* pNeighbour,
+        path_node* pNode, map_tile_flags flags, path_node* pNeighbour,
         travel_direction direction) {
     int iObjectNumber = 0;
     const map_tile* pMapNode =
@@ -403,13 +393,8 @@ bool object_visitor::try_node(
 }
 
 bool object_visitor::visit_objects(
-        const level_map* pMap,
-        int iStartX,
-        int iStartY,
-        object_type eTHOB,
-        int iMaxDistance,
-        lua_State* L,
-        int iVisitFunction,
+        const level_map* pMap, int iStartX, int iStartY, object_type eTHOB,
+        int iMaxDistance, lua_State* L, int iVisitFunction,
         bool anyObjectType) {
     if (pMap == nullptr) {
         pMap = parent->default_map;

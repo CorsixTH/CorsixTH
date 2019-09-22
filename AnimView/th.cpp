@@ -112,9 +112,7 @@ protected:
 };
 
 static void decode_chunks(
-        ChunkRenderer& renderer,
-        const unsigned char* data,
-        int datalen,
+        ChunkRenderer& renderer, const unsigned char* data, int datalen,
         unsigned char transparent) {
     while (!renderer.isDone() && datalen > 0) {
         unsigned char b = *data;
@@ -136,9 +134,7 @@ static void decode_chunks(
 }
 
 static void decode_chunks_complex(
-        ChunkRenderer& renderer,
-        const unsigned char* data,
-        int datalen,
+        ChunkRenderer& renderer, const unsigned char* data, int datalen,
         unsigned char transparent) {
     while (!renderer.isDone() && datalen > 0) {
         unsigned char b = *data;
@@ -368,13 +364,8 @@ th_frame_t* THAnimations::getFrameStruct(size_t iAnimation, size_t iFrame) {
 }
 
 void THAnimations::drawFrame(
-        wxImage& imgCanvas,
-        size_t iAnimation,
-        size_t iFrame,
-        const THLayerMask* pMask,
-        wxSize& size,
-        int iXOffset,
-        int iYOffset) {
+        wxImage& imgCanvas, size_t iAnimation, size_t iFrame,
+        const THLayerMask* pMask, wxSize& size, int iXOffset, int iYOffset) {
     if (iAnimation >= anims.size()) return;
     uint16_t iFrameIndex = anims.at(iAnimation).frame;
     while (iFrame--) {
@@ -477,11 +468,8 @@ static inline void _merge(th_colour_t& dst, const th_colour_t& src) {
 }
 
 void Bitmap::blit(
-        wxImage& imgCanvas,
-        int iX,
-        int iY,
-        const unsigned char* pColourTranslate,
-        const th_colour_t* pPalette,
+        wxImage& imgCanvas, int iX, int iY,
+        const unsigned char* pColourTranslate, const th_colour_t* pPalette,
         int iFlags) const {
     if (m_iHeight == 0 || m_iWidth == 0) return;
 

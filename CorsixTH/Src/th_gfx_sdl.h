@@ -170,8 +170,7 @@ public:
         @return Decoding was successful.
     */
     void decode_image(
-            const uint8_t* pImg,
-            const ::palette* pPalette,
+            const uint8_t* pImg, const ::palette* pPalette,
             uint32_t iSpriteFlags);
 
 private:
@@ -328,18 +327,13 @@ public:  // Internal (this rendering engine only) API
     bool should_scale_bitmaps(double* pFactor);
 
     SDL_Texture* create_palettized_texture(
-            int iWidth,
-            int iHeight,
-            const uint8_t* pPixels,
-            const ::palette* pPalette,
-            uint32_t iSpriteFlags) const;
+            int iWidth, int iHeight, const uint8_t* pPixels,
+            const ::palette* pPalette, uint32_t iSpriteFlags) const;
     SDL_Texture* create_texture(
             int iWidth, int iHeight, const uint32_t* pPixels) const;
     void draw(
-            SDL_Texture* pTexture,
-            const SDL_Rect* prcSrcRect,
-            const SDL_Rect* prcDstRect,
-            int iFlags);
+            SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
+            const SDL_Rect* prcDstRect, int iFlags);
     void draw_line(line* pLine, int iX, int iY);
 
 private:
@@ -387,9 +381,7 @@ public:
         @return Loading was a success.
     */
     void load_from_th_file(
-            const uint8_t* pPixelData,
-            size_t iPixelDataLength,
-            int iWidth,
+            const uint8_t* pPixelData, size_t iPixelDataLength, int iWidth,
             render_target* pEventualCanvas);
 
     //! Draw the image at a given position at the given canvas.
@@ -411,13 +403,8 @@ public:
         @param iHeight Height of the part to display.
     */
     void draw(
-            render_target* pCanvas,
-            int iX,
-            int iY,
-            int iSrcX,
-            int iSrcY,
-            int iWidth,
-            int iHeight);
+            render_target* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+            int iWidth, int iHeight);
 
 private:
     //! Image stored in SDL format for quick rendering.
@@ -461,12 +448,9 @@ public:  // External API
         @return Loading succeeded.
     */
     bool load_from_th_file(
-            const uint8_t* pTableData,
-            size_t iTableDataLength,
-            const uint8_t* pChunkData,
-            size_t iChunkDataLength,
-            bool bComplexChunks,
-            render_target* pEventualCanvas);
+            const uint8_t* pTableData, size_t iTableDataLength,
+            const uint8_t* pChunkData, size_t iChunkDataLength,
+            bool bComplexChunks, render_target* pEventualCanvas);
 
     //! Set the data of a sprite.
     /*!
@@ -480,12 +464,8 @@ public:  // External API
         @return Setting the sprite succeeded.
     */
     bool set_sprite_data(
-            size_t iSprite,
-            const uint8_t* pData,
-            bool bTakeData,
-            size_t iDataLength,
-            int iWidth,
-            int iHeight);
+            size_t iSprite, const uint8_t* pData, bool bTakeData,
+            size_t iDataLength, int iWidth, int iHeight);
 
     //! Supply a new mapped palette to a sprite.
     /*!
@@ -548,10 +528,7 @@ public:  // External API
         @param iFlags Flags to apply for drawing.
     */
     void draw_sprite(
-            render_target* pCanvas,
-            size_t iSprite,
-            int iX,
-            int iY,
+            render_target* pCanvas, size_t iSprite, int iX, int iY,
             uint32_t iFlags);
 
     //! Test whether a sprite was hit.
@@ -653,9 +630,7 @@ public:
     ~cursor();
 
     bool create_from_sprite(
-            sprite_sheet* pSheet,
-            size_t iSprite,
-            int iHotspotX = 0,
+            sprite_sheet* pSheet, size_t iSprite, int iHotspotX = 0,
             int iHotspotY = 0);
 
     void use(render_target* pTarget);

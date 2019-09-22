@@ -430,7 +430,11 @@ bool render_target::end_frame() {
     if (blue_filter_active) {
         SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
         SDL_SetRenderDrawColor(
-                renderer, 51, 51, 255, 128);  // r=0.2, g=0.2, b=1, a=0.5 .
+                renderer,
+                51,
+                51,
+                255,
+                128);  // r=0.2, g=0.2, b=1, a=0.5 .
         SDL_RenderFillRect(renderer, nullptr);
     }
 
@@ -626,11 +630,8 @@ uint8_t* convertLegacySprite(
 }  // namespace
 
 SDL_Texture* render_target::create_palettized_texture(
-        int iWidth,
-        int iHeight,
-        const uint8_t* pPixels,
-        const palette* pPalette,
-        uint32_t iSpriteFlags) const {
+        int iWidth, int iHeight, const uint8_t* pPixels,
+        const palette* pPalette, uint32_t iSpriteFlags) const {
     uint32_t* pARGBPixels = new uint32_t[iWidth * iHeight];
 
     full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
@@ -683,10 +684,8 @@ SDL_Texture* render_target::create_texture(
 }
 
 void render_target::draw(
-        SDL_Texture* pTexture,
-        const SDL_Rect* prcSrcRect,
-        const SDL_Rect* prcDstRect,
-        int iFlags) {
+        SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
+        const SDL_Rect* prcDstRect, int iFlags) {
     SDL_SetTextureAlphaMod(pTexture, 0xFF);
     if (iFlags & thdf_alpha_50) {
         SDL_SetTextureAlphaMod(pTexture, 0x80);
@@ -758,9 +757,7 @@ void raw_bitmap::set_palette(const palette* pPalette) {
 }
 
 void raw_bitmap::load_from_th_file(
-        const uint8_t* pPixelData,
-        size_t iPixelDataLength,
-        int iWidth,
+        const uint8_t* pPixelData, size_t iPixelDataLength, int iWidth,
         render_target* pEventualCanvas) {
     if (pEventualCanvas == nullptr) {
         throw std::invalid_argument("pEventualCanvas cannot be null");
@@ -851,13 +848,8 @@ void raw_bitmap::draw(render_target* pCanvas, int iX, int iY) {
 }
 
 void raw_bitmap::draw(
-        render_target* pCanvas,
-        int iX,
-        int iY,
-        int iSrcX,
-        int iSrcY,
-        int iWidth,
-        int iHeight) {
+        render_target* pCanvas, int iX, int iY, int iSrcX, int iSrcY,
+        int iWidth, int iHeight) {
     double fScaleFactor;
     if (texture == nullptr) return;
 
@@ -940,11 +932,8 @@ bool sprite_sheet::set_sprite_count(size_t iCount, render_target* pCanvas) {
 }
 
 bool sprite_sheet::load_from_th_file(
-        const uint8_t* pTableData,
-        size_t iTableDataLength,
-        const uint8_t* pChunkData,
-        size_t iChunkDataLength,
-        bool bComplexChunks,
+        const uint8_t* pTableData, size_t iTableDataLength,
+        const uint8_t* pChunkData, size_t iChunkDataLength, bool bComplexChunks,
         render_target* pCanvas) {
     _freeSprites();
     if (pCanvas == nullptr) return false;
@@ -984,12 +973,8 @@ bool sprite_sheet::load_from_th_file(
 }
 
 bool sprite_sheet::set_sprite_data(
-        size_t iSprite,
-        const uint8_t* pData,
-        bool bTakeData,
-        size_t iDataLength,
-        int iWidth,
-        int iHeight) {
+        size_t iSprite, const uint8_t* pData, bool bTakeData,
+        size_t iDataLength, int iWidth, int iHeight) {
     if (iSprite >= sprite_count) return false;
 
     if (!testSprite(pData, iDataLength, iWidth, iHeight)) {
@@ -1077,10 +1062,7 @@ bool sprite_sheet::get_sprite_average_colour(
 }
 
 void sprite_sheet::draw_sprite(
-        render_target* pCanvas,
-        size_t iSprite,
-        int iX,
-        int iY,
+        render_target* pCanvas, size_t iSprite, int iX, int iY,
         uint32_t iFlags) {
     if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
         return;
@@ -1151,7 +1133,8 @@ SDL_Texture* sprite_sheet::_makeAltBitmap(sprite* pSprite) {
                     iColour, pPalette[pSprite->alt_palette_map[iColour]]);
         }
         oPalette.set_argb(
-                255, pPalette[255]);  // Colour 0xFF doesn't get remapped.
+                255,
+                pPalette[255]);  // Colour 0xFF doesn't get remapped.
 
         pSprite->alt_texture = target->create_palettized_texture(
                 pSprite->width,
@@ -1175,10 +1158,7 @@ namespace {
  * @param iPixelNumber Number of the pixel to retrieve.
  */
 uint32_t get32BppPixel(
-        const uint8_t* pImg,
-        int iWidth,
-        int iHeight,
-        const ::palette* pPalette,
+        const uint8_t* pImg, int iWidth, int iHeight, const ::palette* pPalette,
         size_t iPixelNumber) {
     if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 ||
         iPixelNumber >= static_cast<size_t>(iWidth) * iHeight) {
@@ -1476,9 +1456,7 @@ void freetype_font::make_texture(
 }
 
 void freetype_font::draw_texture(
-        render_target* pCanvas,
-        cached_text* pCacheEntry,
-        int iX,
+        render_target* pCanvas, cached_text* pCacheEntry, int iX,
         int iY) const {
     if (pCacheEntry->texture == nullptr) return;
 

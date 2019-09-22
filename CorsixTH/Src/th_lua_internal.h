@@ -69,11 +69,8 @@ void luaT_setclosure(
 
 template <typename... Args>
 void luaT_setclosure(
-        const lua_register_state* pState,
-        lua_CFunction fn,
-        size_t iUps,
-        lua_metatable eMetatable1,
-        Args... args) {
+        const lua_register_state* pState, lua_CFunction fn, size_t iUps,
+        lua_metatable eMetatable1, Args... args) {
     lua_pushvalue(
             pState->L, pState->metatables[static_cast<size_t>(eMetatable1)]);
     luaT_setclosure(pState, fn, iUps + 1, args...);
@@ -81,11 +78,8 @@ void luaT_setclosure(
 
 template <typename... Args>
 void luaT_setclosure(
-        const lua_register_state* pState,
-        lua_CFunction fn,
-        size_t iUps,
-        const char* str,
-        Args... args) {
+        const lua_register_state* pState, lua_CFunction fn, size_t iUps,
+        const char* str, Args... args) {
     lua_pushstring(pState->L, str);
     luaT_setclosure(pState, fn, iUps + 1, args...);
 }
@@ -100,9 +94,7 @@ void luaT_setclosure(
  */
 template <typename... Args>
 void add_lua_function(
-        const lua_register_state* pState,
-        lua_CFunction fn,
-        const char* name,
+        const lua_register_state* pState, lua_CFunction fn, const char* name,
         Args... args) {
     luaT_setclosure(pState, fn, 0, args...);
     lua_setfield(pState->L, -2, name);
@@ -132,10 +124,8 @@ public:
      * @param mt The metatable id for the class
      */
     lua_class_binding(
-            const lua_register_state* pState,
-            const char* name,
-            lua_CFunction new_fn,
-            lua_metatable mt)
+            const lua_register_state* pState, const char* name,
+            lua_CFunction new_fn, lua_metatable mt)
         : pState(pState),
           class_name(name),
           class_metatable(pState->metatables[static_cast<size_t>(mt)]) {

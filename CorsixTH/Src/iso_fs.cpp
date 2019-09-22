@@ -530,8 +530,7 @@ void iso_filesystem::build_file_lookup_table(
 }
 
 void iso_filesystem::visit_directory_files(
-        const char* sPath,
-        void (*fnCallback)(void*, const char*, const char*),
+        const char* sPath, void (*fnCallback)(void*, const char*, const char*),
         void* pCallbackData) const {
     std::string normalised_path = normalise(sPath);
 

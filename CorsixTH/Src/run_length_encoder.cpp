@@ -145,9 +145,7 @@ void integer_run_length_encoder::flush(bool bAll) {
 }
 
 bool integer_run_length_encoder::are_ranges_equal(
-        size_t iObjIdx1,
-        size_t iObjIdx2,
-        size_t iOffset,
+        size_t iObjIdx1, size_t iObjIdx2, size_t iOffset,
         size_t iObjSize) const {
     iObjIdx1 = buffer_offset + iOffset * record_size + iObjIdx1 * iObjSize;
     iObjIdx2 = buffer_offset + iOffset * record_size + iObjIdx2 * iObjSize;

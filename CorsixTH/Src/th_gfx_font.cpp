@@ -184,11 +184,8 @@ text_layout bitmap_font::get_text_dimensions(
 }
 
 void bitmap_font::draw_text(
-        render_target* pCanvas,
-        const char* sMessage,
-        size_t iMessageLength,
-        int iX,
-        int iY) const {
+        render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+        int iX, int iY) const {
     pCanvas->start_nonoverlapping_draws();
     if (iMessageLength != 0 && sheet != nullptr) {
         const unsigned int iFirstASCII = 31;
@@ -213,14 +210,8 @@ void bitmap_font::draw_text(
 }
 
 text_layout bitmap_font::draw_text_wrapped(
-        render_target* pCanvas,
-        const char* sMessage,
-        size_t iMessageLength,
-        int iX,
-        int iY,
-        int iWidth,
-        int iMaxRows,
-        int iSkipRows,
+        render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+        int iX, int iY, int iWidth, int iMaxRows, int iSkipRows,
         text_alignment eAlign) const {
     text_layout oDrawArea = {};
     int iSkippedRows = 0;
@@ -487,11 +478,8 @@ text_layout freetype_font::get_text_dimensions(
 }
 
 void freetype_font::draw_text(
-        render_target* pCanvas,
-        const char* sMessage,
-        size_t iMessageLength,
-        int iX,
-        int iY) const {
+        render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+        int iX, int iY) const {
     draw_text_wrapped(pCanvas, sMessage, iMessageLength, iX, iY, INT_MAX);
 }
 
@@ -519,14 +507,8 @@ FT_Pos pixel_align(FT_Pos position) { return ((position + 63) >> 6) << 6; }
 }  // namespace
 
 text_layout freetype_font::draw_text_wrapped(
-        render_target* pCanvas,
-        const char* sMessage,
-        size_t iMessageLength,
-        int iX,
-        int iY,
-        int iWidth,
-        int iMaxRows,
-        int iSkipRows,
+        render_target* pCanvas, const char* sMessage, size_t iMessageLength,
+        int iX, int iY, int iWidth, int iMaxRows, int iSkipRows,
         text_alignment eAlign) const {
     text_layout oDrawArea = {};
     int iNumRows = 0;
@@ -829,9 +811,7 @@ text_layout freetype_font::draw_text_wrapped(
 // #define TRUST_RENDER_COORDS
 
 void freetype_font::render_mono(
-        cached_text* pCacheEntry,
-        FT_Bitmap* pBitmap,
-        FT_Pos x,
+        cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
         FT_Pos y) const {
     uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
     uint8_t* pInRow = pBitmap->buffer;
@@ -859,9 +839,7 @@ void freetype_font::render_mono(
 }
 
 void freetype_font::render_gray(
-        cached_text* pCacheEntry,
-        FT_Bitmap* pBitmap,
-        FT_Pos x,
+        cached_text* pCacheEntry, FT_Bitmap* pBitmap, FT_Pos x,
         FT_Pos y) const {
     uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
     uint8_t* pInRow = pBitmap->buffer;

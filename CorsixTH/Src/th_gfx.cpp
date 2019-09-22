@@ -159,14 +159,10 @@ void animation_manager::set_sprite_sheet(sprite_sheet* pSpriteSheet) {
 }
 
 bool animation_manager::load_from_th_file(
-        const uint8_t* pStartData,
-        size_t iStartDataLength,
-        const uint8_t* pFrameData,
-        size_t iFrameDataLength,
-        const uint8_t* pListData,
-        size_t iListDataLength,
-        const uint8_t* pElementData,
-        size_t iElementDataLength) {
+        const uint8_t* pStartData, size_t iStartDataLength,
+        const uint8_t* pFrameData, size_t iFrameDataLength,
+        const uint8_t* pListData, size_t iListDataLength,
+        const uint8_t* pElementData, size_t iElementDataLength) {
     size_t iAnimationCount = iStartDataLength / sizeof(th_animation_properties);
     size_t iFrameCount = iFrameDataLength / sizeof(th_frame_properties);
     size_t iListCount = iListDataLength / 2;
@@ -373,12 +369,8 @@ int load_header(memory_reader& input) {
 }  // namespace
 
 size_t animation_manager::load_elements(
-        memory_reader& input,
-        sprite_sheet* pSpriteSheet,
-        size_t iNumElements,
-        size_t& iLoadedElements,
-        size_t iElementStart,
-        size_t iElementCount) {
+        memory_reader& input, sprite_sheet* pSpriteSheet, size_t iNumElements,
+        size_t& iLoadedElements, size_t iElementStart, size_t iElementCount) {
     size_t iFirst = iLoadedElements + iElementStart;
 
     size_t iSpriteCount = pSpriteSheet->get_sprite_count();
@@ -420,11 +412,8 @@ size_t animation_manager::load_elements(
 }
 
 size_t animation_manager::make_list_elements(
-        size_t iFirstElement,
-        size_t iNumElements,
-        size_t& iLoadedListElements,
-        size_t iListStart,
-        size_t iListCount) {
+        size_t iFirstElement, size_t iNumElements, size_t& iLoadedListElements,
+        size_t iListStart, size_t iListCount) {
     size_t iFirst = iLoadedListElements + iListStart;
 
     // Verify there is enough room for all list elements + 0xFFFF
@@ -842,13 +831,8 @@ bool animation_manager::get_frame_secondary_marker(
 }
 
 bool animation_manager::hit_test(
-        size_t iFrame,
-        const ::layers& oLayers,
-        int iX,
-        int iY,
-        uint32_t iFlags,
-        int iTestX,
-        int iTestY) const {
+        size_t iFrame, const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
+        int iTestX, int iTestY) const {
     if (iFrame >= frame_count) {
         return false;
     }
@@ -919,12 +903,8 @@ bool animation_manager::hit_test(
 }
 
 void animation_manager::draw_frame(
-        render_target* pCanvas,
-        size_t iFrame,
-        const ::layers& oLayers,
-        int iX,
-        int iY,
-        uint32_t iFlags) const {
+        render_target* pCanvas, size_t iFrame, const ::layers& oLayers, int iX,
+        int iY, uint32_t iFlags) const {
     if (iFrame >= frame_count) {
         return;
     }
@@ -990,13 +970,8 @@ size_t animation_manager::get_frame_sound(size_t iFrame) {
 }
 
 void animation_manager::get_frame_extent(
-        size_t iFrame,
-        const ::layers& oLayers,
-        int* pMinX,
-        int* pMaxX,
-        int* pMinY,
-        int* pMaxY,
-        uint32_t iFlags) const {
+        size_t iFrame, const ::layers& oLayers, int* pMinX, int* pMaxX,
+        int* pMinY, int* pMaxY, uint32_t iFlags) const {
     int iMinX = INT_MAX;
     int iMaxX = INT_MIN;
     int iMinY = INT_MAX;
@@ -1218,9 +1193,7 @@ bool animation::hit_test_child(int iDestX, int iDestY, int iTestX, int iTestY) {
 namespace {
 
 void CalculateMorphRect(
-        const clip_rect& rcOriginal,
-        clip_rect& rcMorph,
-        int iYLow,
+        const clip_rect& rcOriginal, clip_rect& rcMorph, int iYLow,
         int iYHigh) {
     rcMorph = rcOriginal;
     if (rcMorph.y < iYLow) {
@@ -1658,12 +1631,8 @@ bool animation::get_secondary_marker(int* pX, int* pY) {
 namespace {
 
 int GetAnimationDurationAndExtent(
-        animation_manager* pManager,
-        size_t iFrame,
-        const ::layers& oLayers,
-        int* pMinY,
-        int* pMaxY,
-        uint32_t iFlags) {
+        animation_manager* pManager, size_t iFrame, const ::layers& oLayers,
+        int* pMinY, int* pMaxY, uint32_t iFlags) {
     int iMinY = INT_MAX;
     int iMaxY = INT_MIN;
     int iDuration = 0;

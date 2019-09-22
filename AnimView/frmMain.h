@@ -69,11 +69,8 @@ public:
     void load();
     void export_png();
     void exportSpritesPage(
-            bool bComplex,
-            wxString sPath,
-            wxString sFilename,
-            wxString spPath = L"",
-            wxString sPalette = L"MPALETTE.DAT");
+            bool bComplex, wxString sPath, wxString sFilename,
+            wxString spPath = L"", wxString sPalette = L"MPALETTE.DAT");
     // std::vector<_sprite_t> m_vSprites;
 
 protected:

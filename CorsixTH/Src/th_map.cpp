@@ -394,10 +394,8 @@ inline bool is_divider_wall(const uint8_t byte) { return (byte >> 1) == 70; }
 }  // namespace
 
 bool level_map::load_from_th_file(
-        const uint8_t* pData,
-        size_t iDataLength,
-        map_load_object_callback_fn fnObjectCallback,
-        void* pCallbackToken) {
+        const uint8_t* pData, size_t iDataLength,
+        map_load_object_callback_fn fnObjectCallback, void* pCallbackToken) {
     const size_t camera_offset = 163876;
     const size_t heliport_offset = 163884;
     const size_t parcel_offset = 131106;
@@ -656,13 +654,8 @@ namespace {
    involved. \return True if a border was removed, false otherwise
 */
 bool addRemoveDividerWalls(
-        level_map* pMap,
-        map_tile* pNode,
-        const map_tile* pOriginalNode,
-        int iXY,
-        int delta,
-        int block,
-        int iParcelId) {
+        level_map* pMap, map_tile* pNode, const map_tile* pOriginalNode,
+        int iXY, int delta, int block, int iParcelId) {
     if (iXY > 0 && pOriginalNode->flags.hospital &&
         pOriginalNode[-delta].flags.hospital &&
         pNode->iParcelId != pNode[-delta].iParcelId) {
@@ -737,11 +730,8 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(
 namespace {
 
 void test_adj(
-        bool* parcel_adjacency_matrix,
-        int parcel_count,
-        const map_tile* original_node,
-        int xy,
-        ptrdiff_t delta) {
+        bool* parcel_adjacency_matrix, int parcel_count,
+        const map_tile* original_node, int xy, ptrdiff_t delta) {
     if (xy > 0 && original_node->iParcelId != original_node[-delta].iParcelId &&
         original_node->flags.passable && original_node[-delta].flags.passable) {
         parcel_adjacency_matrix
@@ -989,13 +979,8 @@ void clip_rect_intersection(clip_rect& rcClip, const clip_rect& rcIntersect) {
 }
 
 void level_map::draw(
-        render_target* pCanvas,
-        int iScreenX,
-        int iScreenY,
-        int iWidth,
-        int iHeight,
-        int iCanvasX,
-        int iCanvasY) const {
+        render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
+        int iHeight, int iCanvasX, int iCanvasY) const {
     /*
        The map is drawn in two passes, with each pass done one scanline at a
        time (a scanline is a list of tiles with the same screen Y co-ordinate).
@@ -1390,11 +1375,8 @@ void level_map::set_temperature_display(temperature_theme eTempDisplay) {
 }
 
 uint32_t level_map::thermal_neighbour(
-        uint32_t& iNeighbourSum,
-        bool canTravel,
-        std::ptrdiff_t relative_idx,
-        map_tile* pNode,
-        int prevTemp) const {
+        uint32_t& iNeighbourSum, bool canTravel, std::ptrdiff_t relative_idx,
+        map_tile* pNode, int prevTemp) const {
     int iNeighbourCount = 0;
 
     map_tile* pNeighbour = pNode + relative_idx;
@@ -1789,12 +1771,8 @@ map_tile_iterator::map_tile_iterator()
       screen_height(0) {}
 
 map_tile_iterator::map_tile_iterator(
-        const level_map* pMap,
-        int iScreenX,
-        int iScreenY,
-        int iWidth,
-        int iHeight,
-        map_scanline_iterator_direction eScanlineDirection)
+        const level_map* pMap, int iScreenX, int iScreenY, int iWidth,
+        int iHeight, map_scanline_iterator_direction eScanlineDirection)
     : container(pMap),
       screen_offset_x(iScreenX),
       screen_offset_y(iScreenY),
@@ -1896,9 +1874,7 @@ map_scanline_iterator::map_scanline_iterator()
 
 map_scanline_iterator::map_scanline_iterator(
         const map_tile_iterator& itrNodes,
-        map_scanline_iterator_direction eDirection,
-        int iXOffset,
-        int iYOffset)
+        map_scanline_iterator_direction eDirection, int iXOffset, int iYOffset)
     : tile_step(
               (static_cast<int>(eDirection) - 1) *
               (1 - itrNodes.container->get_width())),
