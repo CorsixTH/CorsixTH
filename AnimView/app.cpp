@@ -28,16 +28,15 @@ SOFTWARE.
 IMPLEMENT_APP(ThemeHospitalAnimViewApp)
 
 bool ThemeHospitalAnimViewApp::OnInit() {
-    wxTopLevelWindow* pForm;
-    if (::wxMessageBox(
-                L"Launch animation viewer? (No -> sprite viewer)", L"AnimView",
-                wxYES_NO) == wxYES)
-        pForm = new frmMain;
-    else
-        pForm = new frmSprites;
+  wxTopLevelWindow* pForm;
+  if (::wxMessageBox(L"Launch animation viewer? (No -> sprite viewer)",
+                     L"AnimView", wxYES_NO) == wxYES)
+    pForm = new frmMain;
+  else
+    pForm = new frmSprites;
 
-    pForm->Show(true);
-    SetTopWindow(pForm);
+  pForm->Show(true);
+  SetTopWindow(pForm);
 
-    return true;
+  return true;
 }

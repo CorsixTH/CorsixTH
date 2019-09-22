@@ -32,67 +32,67 @@ class lfs_ext {};
 namespace {
 
 int l_lfs_ext_new(lua_State* L) {
-    luaT_stdnew<lfs_ext>(L, luaT_environindex, true);
-    return 1;
+  luaT_stdnew<lfs_ext>(L, luaT_environindex, true);
+  return 1;
 }
 
 #ifdef _WIN32
 #ifdef CORSIX_TH_USE_WIN32_SDK
 int l_volume_list(lua_State* L) {
-    /* Windows, using the Win32 API. */
-    DWORD iDriveMask = GetLogicalDrives();
-    int iNDrives = 0;
-    char cDrive;
-    lua_settop(L, 0);
-    lua_newtable(L);
-    for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive) {
-        if (iDriveMask & (1 << (cDrive - 'A'))) {
-            char sName[4] = {cDrive, ':', '\\', 0};
-            if (GetDriveTypeA(sName) > DRIVE_NO_ROOT_DIR) {
-                lua_pushlstring(L, sName, 2);
-                lua_rawseti(L, 1, ++iNDrives);
-            }
-        }
+  /* Windows, using the Win32 API. */
+  DWORD iDriveMask = GetLogicalDrives();
+  int iNDrives = 0;
+  char cDrive;
+  lua_settop(L, 0);
+  lua_newtable(L);
+  for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive) {
+    if (iDriveMask & (1 << (cDrive - 'A'))) {
+      char sName[4] = {cDrive, ':', '\\', 0};
+      if (GetDriveTypeA(sName) > DRIVE_NO_ROOT_DIR) {
+        lua_pushlstring(L, sName, 2);
+        lua_rawseti(L, 1, ++iNDrives);
+      }
     }
-    return 1;
+  }
+  return 1;
 }
 #else
 int l_volume_list(lua_State* L) {
-    /* Windows, without the Win32 API. */
-    int iNDrives = 0;
-    char cDrive;
-    lua_settop(L, 0);
-    lua_newtable(L);
-    lua_getfield(L, luaT_upvalueindex(1), "attributes");
-    for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive) {
-        lua_pushvalue(L, 2);
-        lua_pushfstring(L, "%c:\\", cDrive);
-        lua_pushliteral(L, "mode");
-        lua_call(L, 2, 1);
-        if (lua_toboolean(L, 3) != 0) {
-            lua_pushfstring(L, "%c:", cDrive);
-            lua_rawseti(L, 1, ++iNDrives);
-        }
-        lua_pop(L, 1);
+  /* Windows, without the Win32 API. */
+  int iNDrives = 0;
+  char cDrive;
+  lua_settop(L, 0);
+  lua_newtable(L);
+  lua_getfield(L, luaT_upvalueindex(1), "attributes");
+  for (cDrive = 'A'; cDrive <= 'Z'; ++cDrive) {
+    lua_pushvalue(L, 2);
+    lua_pushfstring(L, "%c:\\", cDrive);
+    lua_pushliteral(L, "mode");
+    lua_call(L, 2, 1);
+    if (lua_toboolean(L, 3) != 0) {
+      lua_pushfstring(L, "%c:", cDrive);
+      lua_rawseti(L, 1, ++iNDrives);
     }
-    return 1;
+    lua_pop(L, 1);
+  }
+  return 1;
 }
 #endif
 #else
 int l_volume_list(lua_State* L) {
-    /* Non-Windows systems. Assume that / is the root of the filesystem. */
-    lua_settop(L, 0);
-    lua_newtable(L);
-    lua_pushliteral(L, "/");
-    lua_rawseti(L, 1, 1);
-    return 1;
+  /* Non-Windows systems. Assume that / is the root of the filesystem. */
+  lua_settop(L, 0);
+  lua_newtable(L);
+  lua_pushliteral(L, "/");
+  lua_rawseti(L, 1, 1);
+  return 1;
 }
 #endif
 
 }  // namespace
 
 void lua_register_lfs_ext(const lua_register_state* pState) {
-    lua_class_binding<lfs_ext> lcb(
-            pState, "lfsExt", l_lfs_ext_new, lua_metatable::lfs_ext);
-    lcb.add_function(l_volume_list, "volumes");
+  lua_class_binding<lfs_ext> lcb(pState, "lfsExt", l_lfs_ext_new,
+                                 lua_metatable::lfs_ext);
+  lcb.add_function(l_volume_list, "volumes");
 }

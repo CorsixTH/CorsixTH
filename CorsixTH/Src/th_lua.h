@@ -39,76 +39,76 @@ const int luaT_environindex = LUA_ENVIRONINDEX;
 
 inline int luaT_upvalueindex(int i) {
 #if LUA_VERSION_NUM >= 502
-    return lua_upvalueindex(i + 1);
+  return lua_upvalueindex(i + 1);
 #else
-    return lua_upvalueindex(i);
+  return lua_upvalueindex(i);
 #endif
 }
 
 template <class Collection>
 inline void luaT_register(lua_State* L, const char* n, Collection& l) {
 #if LUA_VERSION_NUM >= 502
-    lua_createtable(L, 0, static_cast<int>(l.size()));
-    lua_pushvalue(L, luaT_environindex);
-    luaL_setfuncs(L, l.data(), 1);
-    lua_pushvalue(L, -1);
-    lua_setglobal(L, n);
+  lua_createtable(L, 0, static_cast<int>(l.size()));
+  lua_pushvalue(L, luaT_environindex);
+  luaL_setfuncs(L, l.data(), 1);
+  lua_pushvalue(L, -1);
+  lua_setglobal(L, n);
 #else
-    luaL_register(L, n, l.data());
+  luaL_register(L, n, l.data());
 #endif
 }
 
 inline void luaT_setfuncs(lua_State* L, const luaL_Reg* R) {
 #if LUA_VERSION_NUM >= 502
-    lua_pushvalue(L, luaT_environindex);
-    luaL_setfuncs(L, R, 1);
+  lua_pushvalue(L, luaT_environindex);
+  luaL_setfuncs(L, R, 1);
 #else
-    luaL_register(L, nullptr, R);
+  luaL_register(L, nullptr, R);
 #endif
 }
 
 inline void luaT_pushcclosure(lua_State* L, lua_CFunction f, int nups) {
 #if LUA_VERSION_NUM >= 502
-    ++nups;
-    lua_pushvalue(L, luaT_environindex);
-    lua_insert(L, -nups);
-    lua_pushcclosure(L, f, nups);
+  ++nups;
+  lua_pushvalue(L, luaT_environindex);
+  lua_insert(L, -nups);
+  lua_pushcclosure(L, f, nups);
 #else
-    lua_pushcclosure(L, f, nups);
+  lua_pushcclosure(L, f, nups);
 #endif
 }
 
 inline void luaT_pushcfunction(lua_State* L, lua_CFunction f) {
-    luaT_pushcclosure(L, f, 0);
+  luaT_pushcclosure(L, f, 0);
 }
 
 inline int luaT_cpcall(lua_State* L, lua_CFunction f, void* u) {
 #if LUA_VERSION_NUM >= 502
-    lua_checkstack(L, 2);
-    lua_pushcfunction(L, f);
-    lua_pushlightuserdata(L, u);
-    return lua_pcall(L, 1, 0, 0);
+  lua_checkstack(L, 2);
+  lua_pushcfunction(L, f);
+  lua_pushlightuserdata(L, u);
+  return lua_pcall(L, 1, 0, 0);
 #else
-    return lua_cpcall(L, f, u);
+  return lua_cpcall(L, f, u);
 #endif
 }
 
 // Compatibility for missing mode argument on lua_load in 5.1
-inline int luaT_load(
-        lua_State* L, lua_Reader r, void* d, const char* s, const char* m) {
+inline int luaT_load(lua_State* L, lua_Reader r, void* d, const char* s,
+                     const char* m) {
 #if LUA_VERSION_NUM >= 502
-    return lua_load(L, r, d, s, m);
+  return lua_load(L, r, d, s, m);
 #else
-    return lua_load(L, r, d, s);
+  return lua_load(L, r, d, s);
 #endif
 }
 
 // Compatibility for missing from argument on lua_resume in 5.1
 inline int luaT_resume(lua_State* L, lua_State* f, int n) {
 #if LUA_VERSION_NUM >= 502
-    return lua_resume(L, f, n);
+  return lua_resume(L, f, n);
 #else
-    return lua_resume(L, n);
+  return lua_resume(L, n);
 #endif
 }
 
@@ -123,7 +123,7 @@ inline int luaT_resume(lua_State* L, lua_State* f, int n) {
 */
 template <typename T, typename... Ts>
 T* luaT_new(lua_State* L, Ts... args) {
-    return new (lua_newuserdata(L, sizeof(T))) T(args...);
+  return new (lua_newuserdata(L, sizeof(T))) T(args...);
 }
 
 //! Check that a Lua argument is a binary data blob
@@ -153,16 +153,16 @@ void luaT_setenvfield(lua_State* L, int index, const char* k);
 void luaT_getenvfield(lua_State* L, int index, const char* k);
 
 template <class T>
-inline T* luaT_stdnew(
-        lua_State* L, int mt_idx = luaT_environindex, bool env = false) {
-    T* p = luaT_new<T>(L);
-    lua_pushvalue(L, mt_idx);
-    lua_setmetatable(L, -2);
-    if (env) {
-        lua_newtable(L);
-        lua_setfenv(L, -2);
-    }
-    return p;
+inline T* luaT_stdnew(lua_State* L, int mt_idx = luaT_environindex,
+                      bool env = false) {
+  T* p = luaT_new<T>(L);
+  lua_pushvalue(L, mt_idx);
+  lua_setmetatable(L, -2);
+  if (env) {
+    lua_newtable(L);
+    lua_setfenv(L, -2);
+  }
+  return p;
 }
 
 template <typename T>
@@ -171,192 +171,192 @@ struct luaT_classinfo {};
 class render_target;
 template <>
 struct luaT_classinfo<render_target> {
-    static inline const char* name() { return "Surface"; }
+  static inline const char* name() { return "Surface"; }
 };
 
 class level_map;
 template <>
 struct luaT_classinfo<level_map> {
-    static inline const char* name() { return "Map"; }
+  static inline const char* name() { return "Map"; }
 };
 
 class sprite_sheet;
 template <>
 struct luaT_classinfo<sprite_sheet> {
-    static inline const char* name() { return "SpriteSheet"; }
+  static inline const char* name() { return "SpriteSheet"; }
 };
 
 class animation;
 template <>
 struct luaT_classinfo<animation> {
-    static inline const char* name() { return "Animation"; }
+  static inline const char* name() { return "Animation"; }
 };
 
 class animation_manager;
 template <>
 struct luaT_classinfo<animation_manager> {
-    static inline const char* name() { return "Animator"; }
+  static inline const char* name() { return "Animator"; }
 };
 
 class palette;
 template <>
 struct luaT_classinfo<palette> {
-    static inline const char* name() { return "Palette"; }
+  static inline const char* name() { return "Palette"; }
 };
 
 class raw_bitmap;
 template <>
 struct luaT_classinfo<raw_bitmap> {
-    static inline const char* name() { return "RawBitmap"; }
+  static inline const char* name() { return "RawBitmap"; }
 };
 
 class font;
 template <>
 struct luaT_classinfo<font> {
-    static inline const char* name() { return "Font"; }
+  static inline const char* name() { return "Font"; }
 };
 
 class bitmap_font;
 template <>
 struct luaT_classinfo<bitmap_font> {
-    static inline const char* name() { return "BitmapFont"; }
+  static inline const char* name() { return "BitmapFont"; }
 };
 
 #ifdef CORSIX_TH_USE_FREETYPE2
 class freetype_font;
 template <>
 struct luaT_classinfo<freetype_font> {
-    static inline const char* name() { return "FreeTypeFont"; }
+  static inline const char* name() { return "FreeTypeFont"; }
 };
 #endif
 
 struct layers;
 template <>
 struct luaT_classinfo<layers> {
-    static inline const char* name() { return "Layers"; }
+  static inline const char* name() { return "Layers"; }
 };
 
 class pathfinder;
 template <>
 struct luaT_classinfo<pathfinder> {
-    static inline const char* name() { return "Pathfinder"; }
+  static inline const char* name() { return "Pathfinder"; }
 };
 
 class cursor;
 template <>
 struct luaT_classinfo<cursor> {
-    static inline const char* name() { return "Cursor"; }
+  static inline const char* name() { return "Cursor"; }
 };
 
 class line;
 template <>
 struct luaT_classinfo<line> {
-    static inline const char* name() { return "Line"; }
+  static inline const char* name() { return "Line"; }
 };
 
 class music;
 template <>
 struct luaT_classinfo<music> {
-    static inline const char* name() { return "Music"; }
+  static inline const char* name() { return "Music"; }
 };
 
 class sound_archive;
 template <>
 struct luaT_classinfo<sound_archive> {
-    static inline const char* name() { return "SoundArchive"; }
+  static inline const char* name() { return "SoundArchive"; }
 };
 
 class sound_player;
 template <>
 struct luaT_classinfo<sound_player> {
-    static inline const char* name() { return "SoundEffects"; }
+  static inline const char* name() { return "SoundEffects"; }
 };
 
 class movie_player;
 template <>
 struct luaT_classinfo<movie_player> {
-    static inline const char* name() { return "Movie"; }
+  static inline const char* name() { return "Movie"; }
 };
 
 class abstract_window;
 template <>
 struct luaT_classinfo<abstract_window> {
-    static inline const char* name() { return "WindowBase"; }
+  static inline const char* name() { return "WindowBase"; }
 };
 
 class sprite_render_list;
 template <>
 struct luaT_classinfo<sprite_render_list> {
-    static inline const char* name() { return "SpriteRenderList"; }
+  static inline const char* name() { return "SpriteRenderList"; }
 };
 
 class string_proxy;
 template <>
 struct luaT_classinfo<string_proxy> {
-    static inline const char* name() { return "StringProxy"; }
+  static inline const char* name() { return "StringProxy"; }
 };
 
 class lfs_ext;
 template <>
 struct luaT_classinfo<lfs_ext> {
-    static inline const char* name() { return "LfsExt"; }
+  static inline const char* name() { return "LfsExt"; }
 };
 
 class iso_filesystem;
 template <>
 struct luaT_classinfo<iso_filesystem> {
-    static inline const char* name() { return "ISO Filesystem"; }
+  static inline const char* name() { return "ISO Filesystem"; }
 };
 
 template <>
 struct luaT_classinfo<std::FILE*> {
-    static inline const char* name() { return "file"; }
+  static inline const char* name() { return "file"; }
 };
 
 template <class T>
 T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
-    // Turn mt_idx into an absolute index, as the stack size changes.
-    if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
-        mt_idx = lua_gettop(L) + mt_idx + 1;
+  // Turn mt_idx into an absolute index, as the stack size changes.
+  if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
+    mt_idx = lua_gettop(L) + mt_idx + 1;
 
-    void* ud = lua_touserdata(L, idx);
-    if (ud != nullptr && lua_getmetatable(L, idx) != 0) {
-        while (true) {
-            if (lua_equal(L, mt_idx, -1) != 0) {
-                lua_pop(L, 1);
-                return (T*)ud;
-            }
-            // Go up one inheritance level, if there is one.
-            if (lua_type(L, -1) != LUA_TTABLE) break;
-            lua_rawgeti(L, -1, 1);
-            lua_replace(L, -2);
-        }
+  void* ud = lua_touserdata(L, idx);
+  if (ud != nullptr && lua_getmetatable(L, idx) != 0) {
+    while (true) {
+      if (lua_equal(L, mt_idx, -1) != 0) {
         lua_pop(L, 1);
+        return (T*)ud;
+      }
+      // Go up one inheritance level, if there is one.
+      if (lua_type(L, -1) != LUA_TTABLE) break;
+      lua_rawgeti(L, -1, 1);
+      lua_replace(L, -2);
     }
+    lua_pop(L, 1);
+  }
 
-    if (required) {
-        const char* msg = lua_pushfstring(
-                L, "%s expected, got %s", luaT_classinfo<T>::name(),
-                luaL_typename(L, idx));
-        luaL_argerror(L, idx, msg);
-    }
-    return nullptr;
+  if (required) {
+    const char* msg =
+        lua_pushfstring(L, "%s expected, got %s", luaT_classinfo<T>::name(),
+                        luaL_typename(L, idx));
+    luaL_argerror(L, idx, msg);
+  }
+  return nullptr;
 }
 
 template <class T>
 T* luaT_testuserdata(lua_State* L, int idx = 1) {
-    int iMetaIndex = luaT_environindex;
-    if (idx > 1) iMetaIndex = luaT_upvalueindex(idx - 1);
-    return luaT_testuserdata<T>(L, idx, iMetaIndex);
+  int iMetaIndex = luaT_environindex;
+  if (idx > 1) iMetaIndex = luaT_upvalueindex(idx - 1);
+  return luaT_testuserdata<T>(L, idx, iMetaIndex);
 }
 
 template <class T, int mt>
 int luaT_stdgc(lua_State* L) {
-    T* p = luaT_testuserdata<T>(L, 1, mt, false);
-    if (p != nullptr) {
-        p->~T();
-    }
-    return 0;
+  T* p = luaT_testuserdata<T>(L, 1, mt, false);
+  if (p != nullptr) {
+    p->~T();
+  }
+  return 0;
 }
 
 void luaT_execute(lua_State* L, const char* sLuaString);
@@ -368,39 +368,38 @@ void luaT_push(lua_State* L, const char* s);
 
 template <class T>
 void luaT_execute(lua_State* L, const char* sLuaString, T arg) {
-    luaT_execute_loadstring(L, sLuaString);
-    luaT_push(L, arg);
-    lua_call(L, 1, LUA_MULTRET);
+  luaT_execute_loadstring(L, sLuaString);
+  luaT_push(L, arg);
+  lua_call(L, 1, LUA_MULTRET);
 }
 
 template <class T1, class T2>
 void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2) {
-    luaT_execute_loadstring(L, sLuaString);
-    luaT_push(L, arg1);
-    luaT_push(L, arg2);
-    lua_call(L, 2, LUA_MULTRET);
+  luaT_execute_loadstring(L, sLuaString);
+  luaT_push(L, arg1);
+  luaT_push(L, arg2);
+  lua_call(L, 2, LUA_MULTRET);
 }
 
 template <class T1, class T2, class T3>
-void luaT_execute(
-        lua_State* L, const char* sLuaString, T1 arg1, T2 arg2, T3 arg3) {
-    luaT_execute_loadstring(L, sLuaString);
-    luaT_push(L, arg1);
-    luaT_push(L, arg2);
-    luaT_push(L, arg3);
-    lua_call(L, 3, LUA_MULTRET);
+void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
+                  T3 arg3) {
+  luaT_execute_loadstring(L, sLuaString);
+  luaT_push(L, arg1);
+  luaT_push(L, arg2);
+  luaT_push(L, arg3);
+  lua_call(L, 3, LUA_MULTRET);
 }
 
 template <class T1, class T2, class T3, class T4>
-void luaT_execute(
-        lua_State* L, const char* sLuaString, T1 arg1, T2 arg2, T3 arg3,
-        T4 arg4) {
-    luaT_execute_loadstring(L, sLuaString);
-    luaT_push(L, arg1);
-    luaT_push(L, arg2);
-    luaT_push(L, arg3);
-    luaT_push(L, arg4);
-    lua_call(L, 4, LUA_MULTRET);
+void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
+                  T3 arg3, T4 arg4) {
+  luaT_execute_loadstring(L, sLuaString);
+  luaT_push(L, arg1);
+  luaT_push(L, arg2);
+  luaT_push(L, arg3);
+  luaT_push(L, arg4);
+  lua_call(L, 4, LUA_MULTRET);
 }
 
 void luaT_pushtablebool(lua_State* L, const char* k, bool v);

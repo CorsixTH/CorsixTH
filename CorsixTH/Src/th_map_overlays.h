@@ -32,85 +32,80 @@ class render_target;
 class sprite_sheet;
 
 class map_overlay {
-public:
-    virtual ~map_overlay() = default;
+ public:
+  virtual ~map_overlay() = default;
 
-    virtual void draw_cell(
-            render_target* pCanvas, int iCanvasX, int iCanvasY,
-            const level_map* pMap, int iNodeX, int iNodeY) = 0;
+  virtual void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                         const level_map* pMap, int iNodeX, int iNodeY) = 0;
 };
 
 class map_overlay_pair : public map_overlay {
-public:
-    map_overlay_pair();
-    virtual ~map_overlay_pair();
+ public:
+  map_overlay_pair();
+  virtual ~map_overlay_pair();
 
-    void set_first(map_overlay* pOverlay, bool bTakeOwnership);
-    void set_second(map_overlay* pOverlay, bool bTakeOwnership);
+  void set_first(map_overlay* pOverlay, bool bTakeOwnership);
+  void set_second(map_overlay* pOverlay, bool bTakeOwnership);
 
-    void draw_cell(
-            render_target* pCanvas, int iCanvasX, int iCanvasY,
-            const level_map* pMap, int iNodeX, int iNodeY) override;
+  void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                 const level_map* pMap, int iNodeX, int iNodeY) override;
 
-private:
-    map_overlay *first, *second;
-    bool owns_first, owns_second;
+ private:
+  map_overlay *first, *second;
+  bool owns_first, owns_second;
 };
 
 class map_typical_overlay : public map_overlay {
-public:
-    map_typical_overlay();
-    virtual ~map_typical_overlay();
+ public:
+  map_typical_overlay();
+  virtual ~map_typical_overlay();
 
-    void set_sprites(sprite_sheet* pSheet, bool bTakeOwnership);
-    void set_font(::font* font, bool take_ownership);
+  void set_sprites(sprite_sheet* pSheet, bool bTakeOwnership);
+  void set_font(::font* font, bool take_ownership);
 
-protected:
-    void draw_text(render_target* pCanvas, int iX, int iY, std::string str);
+ protected:
+  void draw_text(render_target* pCanvas, int iX, int iY, std::string str);
 
-    sprite_sheet* sprites;
-    ::font* font;
+  sprite_sheet* sprites;
+  ::font* font;
 
-private:
-    bool owns_sprites;
-    bool owns_font;
+ private:
+  bool owns_sprites;
+  bool owns_font;
 };
 
 class map_text_overlay : public map_typical_overlay {
-public:
-    map_text_overlay();
-    virtual ~map_text_overlay() = default;
+ public:
+  map_text_overlay();
+  virtual ~map_text_overlay() = default;
 
-    virtual void draw_cell(
-            render_target* pCanvas, int iCanvasX, int iCanvasY,
-            const level_map* pMap, int iNodeX, int iNodeY);
+  virtual void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                         const level_map* pMap, int iNodeX, int iNodeY);
 
-    void set_background_sprite(size_t iSprite);
-    virtual const std::string get_text(
-            const level_map* pMap, int iNodeX, int iNodeY) = 0;
+  void set_background_sprite(size_t iSprite);
+  virtual const std::string get_text(const level_map* pMap, int iNodeX,
+                                     int iNodeY) = 0;
 
-private:
-    size_t background_sprite;
+ private:
+  size_t background_sprite;
 };
 
 class map_positions_overlay final : public map_text_overlay {
-public:
-    const std::string get_text(
-            const level_map* pMap, int iNodeX, int iNodeY) override;
+ public:
+  const std::string get_text(const level_map* pMap, int iNodeX,
+                             int iNodeY) override;
 };
 
 class map_flags_overlay final : public map_typical_overlay {
-public:
-    void draw_cell(
-            render_target* pCanvas, int iCanvasX, int iCanvasY,
-            const level_map* pMap, int iNodeX, int iNodeY) override;
+ public:
+  void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                 const level_map* pMap, int iNodeX, int iNodeY) override;
 };
 
 class map_parcels_overlay final : public map_typical_overlay {
-public:
-    void draw_cell(
-            render_target* pCanvas, int iCanvasX, int iCanvasY,
-            const level_map* pMap, int iNodeX, int iNodeY) override;
+ public:
+  void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                 const level_map* pMap, int iNodeX, int iNodeY) override;
 };
 
 #endif

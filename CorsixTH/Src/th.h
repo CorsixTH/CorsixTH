@@ -27,68 +27,68 @@ SOFTWARE.
 
 //! Generic linked list class (for inheriting from)
 class link_list {
-public:
-    link_list();
-    ~link_list();
+ public:
+  link_list();
+  ~link_list();
 
-    link_list* prev;
-    link_list* next;
+  link_list* prev;
+  link_list* next;
 
-    void remove_from_list();
+  void remove_from_list();
 
-    // TODO: drawing layer doesn't belong in a generic link list.
-    int get_drawing_layer() { return drawing_layer; }
-    void set_drawing_layer(int layer) { drawing_layer = layer; }
+  // TODO: drawing layer doesn't belong in a generic link list.
+  int get_drawing_layer() { return drawing_layer; }
+  void set_drawing_layer(int layer) { drawing_layer = layer; }
 
-private:
-    int drawing_layer;
+ private:
+  int drawing_layer;
 };
 
 //! \brief Theme Hospital localised string list
 //!
 //! Presents Theme Hospital strings by section and index.
 class th_string_list {
-public:
-    //! Construct an instance of string_list from the given data
-    //! from a Theme Hosptial string file. The format of the data is
-    //! described at:
-    //! https://github.com/alexandergitter/theme-hospital-spec/blob/master/format-specification.md#strings
-    //!
-    //! \param data A pointer to the raw data
-    //! \param length The size of the data
-    th_string_list(const uint8_t* data, size_t length);
+ public:
+  //! Construct an instance of string_list from the given data
+  //! from a Theme Hosptial string file. The format of the data is
+  //! described at:
+  //! https://github.com/alexandergitter/theme-hospital-spec/blob/master/format-specification.md#strings
+  //!
+  //! \param data A pointer to the raw data
+  //! \param length The size of the data
+  th_string_list(const uint8_t* data, size_t length);
 
-    // Delete default constructors and assignment operators. They
-    // can be implemented properly later if they are needed but
-    // for now they are unneeded so it is safer to remove them.
-    th_string_list() = delete;
-    th_string_list(const th_string_list&) = delete;
-    th_string_list(th_string_list&&) = delete;
-    th_string_list& operator=(const th_string_list&) = delete;
-    th_string_list&& operator=(th_string_list&&) = delete;
-    ~th_string_list();
+  // Delete default constructors and assignment operators. They
+  // can be implemented properly later if they are needed but
+  // for now they are unneeded so it is safer to remove them.
+  th_string_list() = delete;
+  th_string_list(const th_string_list&) = delete;
+  th_string_list(th_string_list&&) = delete;
+  th_string_list& operator=(const th_string_list&) = delete;
+  th_string_list&& operator=(th_string_list&&) = delete;
+  ~th_string_list();
 
-    //! Get the number of sections in the string list
-    size_t get_section_count();
+  //! Get the number of sections in the string list
+  size_t get_section_count();
 
-    //! Get the number of strings in a section of the string list
-    size_t get_section_size(size_t section);
+  //! Get the number of strings in a section of the string list
+  size_t get_section_size(size_t section);
 
-    //! Get a string from the string list
-    /*!
-        @param section Section index in range [0, getSectionCount() - 1]
-        @param index String index in range [0, getSectionSize(iSection) - 1]
-        @return nullptr if the index is invalid, otherwise a UTF-8 encoded
-       string.
-    */
-    const char* get_string(size_t section, size_t index);
+  //! Get a string from the string list
+  /*!
+      @param section Section index in range [0, getSectionCount() - 1]
+      @param index String index in range [0, getSectionSize(iSection) - 1]
+      @return nullptr if the index is invalid, otherwise a UTF-8 encoded
+     string.
+  */
+  const char* get_string(size_t section, size_t index);
 
-private:
-    //! Section information
-    std::vector<std::vector<const char*>> sections;
+ private:
+  //! Section information
+  std::vector<std::vector<const char*>> sections;
 
-    //! Memory block containing all the actual strings utf-8 encoded
-    std::vector<uint8_t> string_buffer;
+  //! Memory block containing all the actual strings utf-8 encoded
+  std::vector<uint8_t> string_buffer;
 };
 
 /**
@@ -99,15 +99,15 @@ private:
  * up the uint32.
  */
 inline uint32_t bytes_to_uint32_le(const uint8_t* bytes) {
-    uint32_t res = bytes[3];
-    res <<= 8;
-    res |= bytes[2];
-    res <<= 8;
-    res |= bytes[1];
-    res <<= 8;
-    res |= bytes[0];
+  uint32_t res = bytes[3];
+  res <<= 8;
+  res |= bytes[2];
+  res <<= 8;
+  res |= bytes[1];
+  res <<= 8;
+  res |= bytes[0];
 
-    return res;
+  return res;
 }
 
 /**
@@ -118,11 +118,11 @@ inline uint32_t bytes_to_uint32_le(const uint8_t* bytes) {
  * up the uint16.
  */
 inline uint16_t bytes_to_uint16_le(const uint8_t* bytes) {
-    uint16_t res = bytes[1];
-    res <<= 8;
-    res |= bytes[0];
+  uint16_t res = bytes[1];
+  res <<= 8;
+  res |= bytes[0];
 
-    return res;
+  return res;
 }
 
 #endif  // CORSIX_TH_TH_H_

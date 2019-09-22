@@ -38,7 +38,7 @@ SOFTWARE.
 // ----------------------------
 
 class ThemeHospitalAnimViewApp : public wxApp {
-    virtual bool OnInit();
+  virtual bool OnInit();
 };
 
 DECLARE_APP(ThemeHospitalAnimViewApp)

@@ -33,10 +33,10 @@ SOFTWARE.
 namespace {
 
 int l_set_icon_win32(lua_State* L) {
-    // Hack to set the window icon from the EXE resource under Windows.
-    // Does nothing (and returns false) on other platforms.
+  // Hack to set the window icon from the EXE resource under Windows.
+  // Does nothing (and returns false) on other platforms.
 
-    lua_pushboolean(L, 0);
+  lua_pushboolean(L, 0);
 #if 0
     // XXX: Doesn't work any more, since window is inside renderer. Move to renderer.
     SDL_SysWMinfo oWindowInfo;
@@ -52,24 +52,24 @@ int l_set_icon_win32(lua_State* L) {
         lua_pushboolean(L, 1);
     }
 #endif
-    return 1;
+  return 1;
 }
 
 int l_show_cursor(lua_State* L) {
-    SDL_ShowCursor(lua_toboolean(L, 1));
-    return 0;
+  SDL_ShowCursor(lua_toboolean(L, 1));
+  return 0;
 }
 
 constexpr std::array<struct luaL_Reg, 3> sdl_wmlib{
-        {{"setIconWin32", l_set_icon_win32},
-         {"showCursor", l_show_cursor},
-         {nullptr, nullptr}}};
+    {{"setIconWin32", l_set_icon_win32},
+     {"showCursor", l_show_cursor},
+     {nullptr, nullptr}}};
 
 }  // namespace
 
 int luaopen_sdl_wm(lua_State* L) {
-    lua_newtable(L);
-    luaT_setfuncs(L, sdl_wmlib.data());
+  lua_newtable(L);
+  luaT_setfuncs(L, sdl_wmlib.data());
 
-    return 1;
+  return 1;
 }
