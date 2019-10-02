@@ -78,10 +78,7 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     if door and (door.reserved_for == humanoid or class.is(humanoid, Vip)) then --  "or class.is(humanoid, Vip)" is added as a temporary fix
   -- TODO: find the cause of the "VIP bug", why does the door not get unreserved sometimes when the VIP has looked into a room? See issue 1025
       door.reserved_for = nil
-      if door.queue:size() > 0 then
-        door.queue:pop()
-        door:updateDynamicInfo()
-      end
+      door:getRoom():tryAdvanceQueue()
     end
   else
     -- This flag can be used only once at a time.
