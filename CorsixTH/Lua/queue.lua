@@ -36,7 +36,7 @@ local Queue = _G["Queue"]
 --! Constructor of a queue.
 function Queue:Queue()
   self.reported_size = 0   -- Number of real patients
-  self.expected = {}       -- Expected patients
+  self.expected = {}       -- Expected humanoids
   self.callbacks = {}
   self.expected_count = 0  -- Number of expected patients
   self.visitor_count = 0
@@ -45,20 +45,27 @@ function Queue:Queue()
 end
 
 --! A humanoid is expected in a queue.
---!param humanoid New patient that is expected.
-function Queue:expect(humanoid)
-  if not self.expected[humanoid] and not class.is(humanoid, Vip) then
-    self.expected[humanoid] = true
-    self.expected_count = self.expected_count + 1
+--!param humanoid - any humanoid expected for the room
+--!param callback - register a callback for when queue is 'destroyed'
+function Queue:expect(humanoid, callback)
+  if not self.expected[humanoid] then
+    self.expected[humanoid] = callback
+    -- only count patients in the expected count
+    if class.is(humanoid, Patient) then
+      self.expected_count = self.expected_count + 1
+    end
   end
 end
 
 --! A humanoid is canceled as expected in a queue.
---!param humanoid Patient that is not coming to this queue.
+--!param humanoid - Humanoid that is not coming to this queue.
 function Queue:unexpect(humanoid)
   if self.expected[humanoid] then
     self.expected[humanoid] = nil
-    self.expected_count = self.expected_count - 1
+    -- only count patients in the expected count
+    if class.is(humanoid, Patient) then
+      self.expected_count = self.expected_count - 1
+    end
   end
 end
 
@@ -324,9 +331,11 @@ function Queue:rerouteAllPatients(action)
     for k, v in pairs(action) do clone[k] = v end
     humanoid:queueAction(clone)
   end
-  for humanoid in pairs(self.expected) do
-    humanoid:setNextAction(IdleAction():setCount(1))
-    humanoid:queueAction(action)
+  for humanoid, callback in pairs(self.expected) do
+    -- call the callback if registered as door is closing
+    if callback then
+      callback.callback()
+    end
     self:unexpect(humanoid)
   end
 end

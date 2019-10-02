@@ -103,12 +103,19 @@ function Room:createEnterAction(humanoid_entering, callback)
       end
     else
       callback = --[[persistable:room_humanoid_enroute_cancel]] function()
-        humanoid_entering:setNextAction(MeanderAction())
+        local room = humanoid_entering:getRoom()
+        -- if the room is one we should 'cycle' in, resume that
+        -- otherwise staff member will meander in room incorrectly again
+        if room and room.doStaffUseCycle and humanoid_entering.user_of ~= room.door then
+          room:commandEnteringStaff(humanoid_entering)
+        else
+          humanoid_entering:setNextAction(MeanderAction())
+        end
       end
     end
   end
   if self.is_active then
-    self.humanoids_enroute[humanoid_entering] = {callback = callback}
+    self.door.queue:expect(humanoid_entering, {callback = callback})
   end
 
   return WalkAction(x, y):setIsEntering(true)
@@ -284,11 +291,6 @@ function Room:onHumanoidEnter(humanoid)
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
   -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
-
-  --entering humanoids are no longer enroute
-  if self.humanoids_enroute[humanoid] then
-    self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
-  end
 
   -- If this humanoid for some strange reason happens to enter a non-active room,
   -- just leave.
@@ -904,11 +906,11 @@ end
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
-  for _, callback in pairs(self.humanoids_enroute) do
-    callback.callback()
+
+  -- crashRoom might have deactivated the door already
+  if self.door.queue then
+    self.door.queue:rerouteAllPatients(SeekRoomAction(self.room_info.id))
   end
-  -- Now empty the humanoids_enroute list since they are not enroute anymore.
-  self.humanoids_enroute = {}
 
   self.hospital:removeRatholesAroundRoom(self)
 end

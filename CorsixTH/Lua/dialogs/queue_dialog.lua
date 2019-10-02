@@ -205,7 +205,6 @@ function UIQueue:onMouseUp(button, x, y)
       patient:setNextAction(room:createEnterAction(patient))
       patient.next_room_to_visit = room
       patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
-      room.door.queue:expect(patient)
       room.door:updateDynamicInfo()
     end
   end

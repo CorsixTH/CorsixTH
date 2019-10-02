@@ -42,7 +42,7 @@ local function action_vip_go_to_next_room_start(action, humanoid)
     end
     humanoid:queueAction(WalkAction(x, y))
     -- What happens if the room disappears:
-    humanoid.next_room.humanoids_enroute[humanoid] = {callback = callback}
+    humanoid.next_room.door.queue:expect(humanoid, {callback = callback})
 
     -- Evaluation function
     local --[[persistable:vip_next_room_eval]] function evaluate()
