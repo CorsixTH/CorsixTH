@@ -298,10 +298,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     local queue = door.queue
     if door.reserved_for == humanoid then
       door.reserved_for = nil
-      if queue:size() > 0 and room.is_active then
-        queue:pop()
-        door:updateDynamicInfo()
-      end
+      room:tryAdvanceQueue()
     end
     humanoid:setTilePositionSpeed(x1, y1)
     local action_index = 0
