@@ -324,12 +324,22 @@ end
 --! Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.
 function Queue:rerouteAllPatients(action)
   for _, humanoid in ipairs(self) do
-    -- slight delay so the desk is really destroyed before rerouting
-    humanoid:setNextAction(IdleAction():setCount(1))
-    -- Don't queue the same action table, but clone it for each patient.
-    local clone = {}
-    for k, v in pairs(action) do clone[k] = v end
-    humanoid:queueAction(clone)
+    -- check by class type as staff/vips shouldn't get a SeekRoomAction
+    if class.is(humanoid, Patient) then
+      -- slight delay so the desk is really destroyed before rerouting
+      humanoid:setNextAction(IdleAction():setCount(1))
+      -- Don't queue the same action table, but clone it for each patient.
+      local clone = {}
+      for k, v in pairs(action) do clone[k] = v end
+      humanoid:queueAction(clone)
+    elseif class.is(humanoid, Staff) then
+      -- likewise believe we need action here to stop
+      humanoid:setNextAction(IdleAction():setCount(1))
+	  humanoid:queueAction(MeanderAction())
+    else
+      -- other humanoids don't enter rooms
+	  humanoid:setNextAction(MeanderAction())
+    end
   end
   for humanoid, callback in pairs(self.expected) do
     -- call the callback if registered as door is closing
