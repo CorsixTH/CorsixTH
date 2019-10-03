@@ -542,7 +542,7 @@ function Room:onHumanoidLeave(humanoid)
       end
     end
     -- There might be other similar rooms with patients queueing
-    if self.door.queue and self.door.queue:reportedSize() == 0 then
+    if self.door.queue and self.door.queue:reportedSize() == 0 and self.is_active then
       self:tryToFindNearbyPatients()
     end
   end
@@ -698,9 +698,6 @@ local function tryMovePatient(old_room, new_room, patient)
   -- Update the queues
   local old_queue = old_room.door.queue
   old_queue:removeValue(patient)
-  patient.next_room_to_visit = new_room
-  new_room.door.queue:expect(patient)
-  new_room.door:updateDynamicInfo()
 
   -- Rewrite the action queue
   for i, action in ipairs(patient.action_queue) do
@@ -718,6 +715,13 @@ local function tryMovePatient(old_room, new_room, patient)
       break
     end
   end
+
+  -- next_room_to_visit is guarded in checks in WalkAction from being incorrectly
+  -- interrupted, there is possibility walk above isn't found and there is no new
+  -- room to go to, but this remains mostly safe, see #1561
+  patient.next_room_to_visit = new_room
+  new_room.door:updateDynamicInfo()
+  old_room.door:updateDynamicInfo()
 
   local interrupted = patient:getCurrentAction()
   local on_interrupt = interrupted.on_interrupt
