@@ -33,14 +33,14 @@ SOFTWARE.
     transfers control to CorsixTH.lua as soon as possible (so that as little as
     possible behaviour is hardcoded into C rather than Lua).
 */
-int lua_main(lua_State *L);
+int lua_main(lua_State* L);
 
 //! Alternative lua mode entry point
 /*!
     Behaves like CorsixTH_lua_main, except that it doesn't transfer control
     over to Lua scripts - it just prepares everything for them and loads them.
 */
-int lua_main_no_eval(lua_State *L);
+int lua_main_no_eval(lua_State* L);
 
 //! Process a caught error before returning it to the caller
 /*!
@@ -49,7 +49,7 @@ int lua_main_no_eval(lua_State *L);
     processing the error, the caller receives LUA_ERRERR rather than panicking
     while processing it itself.
 */
-int lua_stacktrace(lua_State *L);
+int lua_stacktrace(lua_State* L);
 
 //! Process an uncaught Lua error before aborting
 /*!
@@ -57,6 +57,6 @@ int lua_stacktrace(lua_State *L);
     which can be done when they do, but at least the user should be informed,
     and the error message printed.
 */
-int lua_panic(lua_State *L);
+int lua_panic(lua_State* L);
 
-#endif // CORSIX_TH_MAIN_H_
+#endif  // CORSIX_TH_MAIN_H_

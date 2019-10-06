@@ -63,7 +63,7 @@ SOFTWARE.
 
 /** Standard includes **/
 #ifndef __STDC_CONSTANT_MACROS
-#  define __STDC_CONSTANT_MACROS
+#define __STDC_CONSTANT_MACROS
 #endif
 #include <cstddef>
 #include <cstdint>
@@ -74,18 +74,20 @@ SOFTWARE.
 #endif
 
 // We bring in the most common stddef and stdint types to avoid typing
+// clang-format off
+using std::int8_t;
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
 using std::size_t;
 using std::uint8_t;
 using std::uint16_t;
 using std::uint32_t;
 using std::uint64_t;
-using std::int8_t;
-using std::int16_t;
-using std::int32_t;
-using std::int64_t;
+// clang-format on
 
 /** Visual Leak Detector **/
 // In Visual Studio, Visual Leak Detector can be used to find memory leaks.
 #cmakedefine CORSIX_TH_USE_VLD
 
-#endif // CORSIX_TH_CONFIG_H_
+#endif  // CORSIX_TH_CONFIG_H_

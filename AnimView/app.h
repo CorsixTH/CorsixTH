@@ -27,19 +27,18 @@ SOFTWARE.
 #include "wx/wxprec.h"
 
 #ifdef __BORLANDC__
-    #pragma hdrstop
+#pragma hdrstop
 #endif
 
 // for all others, include the necessary headers (this file is usually all you
 // need because it includes almost all "standard" wxWidgets headers)
 #ifndef WX_PRECOMP
-    #include "wx/wx.h"
+#include "wx/wx.h"
 #endif
 // ----------------------------
 
-class ThemeHospitalAnimViewApp : public wxApp
-{
-    virtual bool OnInit();
+class ThemeHospitalAnimViewApp : public wxApp {
+  virtual bool OnInit();
 };
 
 DECLARE_APP(ThemeHospitalAnimViewApp)

@@ -1,4 +1,5 @@
 /* XPM */
+// clang-format off
 static const char *const backdrop_xpm[] = {
 "126 64 12 1",
 "f c #695D7D",
@@ -78,3 +79,4 @@ static const char *const backdrop_xpm[] = {
 "                            bfffff                                                          bfffff                            ",
 "                              .f                                                              .f                              "
 };
+// clang-format on

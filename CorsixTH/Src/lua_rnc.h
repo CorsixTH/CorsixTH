@@ -3,6 +3,6 @@
 
 #include "th_lua.h"
 
-int luaopen_rnc(lua_State *L);
+int luaopen_rnc(lua_State* L);
 
 #endif

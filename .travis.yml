@@ -44,7 +44,6 @@ before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - echo -e "Host server2.armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-  - cd fresh
 script:
   # Check if there are trailing whitespaces.
   - ${TRAVIS_BUILD_DIR}/scripts/check_trailing_whitespaces.py $TRAVIS_BUILD_DIR
@@ -52,7 +51,12 @@ script:
   - ${TRAVIS_BUILD_DIR}/scripts/check_language_files_not_BOM.py $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages
   # Check if there are lua classes with invalid/improper declarations.
   - ${TRAVIS_BUILD_DIR}/scripts/check_lua_classes.py
+  # Check cpp format
+  - cd ${TRAVIS_BUILD_DIR}
+  - clang-format -i CorsixTH/Src/*{.cpp,.h} AnimView/*{.cpp,.h} common/*{.cpp,.h} CorsixTH/SrcUnshared/main.cpp
+  - git diff --exit-code
   # Build CorsixTH
+  - cd fresh
   - make VERBOSE=1
   # Validate lua files
   - find $TRAVIS_BUILD_DIR -path $TRAVIS_BUILD_DIR/CorsixTH/Lua/languages -prune -o -name '*.lua' -print0 | xargs -0 luac -p --

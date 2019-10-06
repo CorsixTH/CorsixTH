@@ -24,69 +24,69 @@ SOFTWARE.
 
 #include "config.h"
 #include <wx/bitmap.h>
-#include <wx/frame.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
-#include <wx/textctrl.h>
-#include <wx/panel.h>
-#include <wx/timer.h>
+#include <wx/frame.h>
 #include <wx/listbox.h>
+#include <wx/panel.h>
+#include <wx/textctrl.h>
+#include <wx/timer.h>
 #include <wx/vscroll.h>
-#include "th.h"
 #include <vector>
+#include "th.h"
 
 static const int ROW_COUNT = 1000;
 
 // Derived class to add scrollbars to the window.
 class MyVScrolled : public wxVScrolledWindow {
-public:
-    MyVScrolled(wxWindow *parent) : wxVScrolledWindow(parent, wxID_ANY) { iMyCount = ROW_COUNT; }
+ public:
+  MyVScrolled(wxWindow* parent) : wxVScrolledWindow(parent, wxID_ANY) {
+    iMyCount = ROW_COUNT;
+  }
 
-    wxCoord OnGetRowHeight(size_t  row) const { return 1; }
+  wxCoord OnGetRowHeight(size_t row) const { return 1; }
 
-    wxCoord EstimateTotalHeight() const { return iMyCount; }
+  wxCoord EstimateTotalHeight() const { return iMyCount; }
 
-    int iMyCount;
+  int iMyCount;
 };
 
-class frmSprites : public wxFrame
-{
-public:
-    frmSprites();
-    ~frmSprites();
+class frmSprites : public wxFrame {
+ public:
+  frmSprites();
+  ~frmSprites();
 
-    enum
-    {
-        ID_LOAD = wxID_HIGHEST + 1,
-        ID_BROWSE_TABLE,
-        ID_BROWSE_DATA,
-        ID_BROWSE_PALETTE,
-        ID_LOAD_COMPLEX,
-        ID_NEXT,
-    };
+  enum {
+    ID_LOAD = wxID_HIGHEST + 1,
+    ID_BROWSE_TABLE,
+    ID_BROWSE_DATA,
+    ID_BROWSE_PALETTE,
+    ID_LOAD_COMPLEX,
+    ID_NEXT,
+  };
 
-    void load(bool bComplex);
-protected:
-    struct _sprite_t
-    {
-        wxBitmap bitmap;
-        wxString caption;
-    };
+  void load(bool bComplex);
 
-    void _onNext(wxCommandEvent& evt);
-    void _onLoad(wxCommandEvent& evt);
-    void _onLoadComplex(wxCommandEvent& evt);
-    void _onPanelPaint(wxPaintEvent& evt);
-    void _onBrowseData(wxCommandEvent& evt);
-    void _onBrowsePalette(wxCommandEvent& evt);
-    void _onBrowseTable(wxCommandEvent& evt);
+ protected:
+  struct _sprite_t {
+    wxBitmap bitmap;
+    wxString caption;
+  };
 
-    std::vector<_sprite_t> m_vSprites;
-    THAnimations m_oAnims;
+  void _onNext(wxCommandEvent& evt);
+  void _onLoad(wxCommandEvent& evt);
+  void _onLoadComplex(wxCommandEvent& evt);
+  void _onPanelPaint(wxPaintEvent& evt);
+  void _onBrowseData(wxCommandEvent& evt);
+  void _onBrowsePalette(wxCommandEvent& evt);
+  void _onBrowseTable(wxCommandEvent& evt);
 
-    wxTextCtrl* m_txtTable;
-    wxTextCtrl* m_txtData;
-    wxTextCtrl* m_txtPalette;
-    MyVScrolled* m_panFrame;
-    DECLARE_EVENT_TABLE()
+  std::vector<_sprite_t> m_vSprites;
+  THAnimations m_oAnims;
+
+  wxTextCtrl* m_txtTable;
+  wxTextCtrl* m_txtData;
+  wxTextCtrl* m_txtPalette;
+  MyVScrolled* m_panFrame;
+  DECLARE_EVENT_TABLE()
 };
