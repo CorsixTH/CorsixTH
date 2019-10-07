@@ -197,15 +197,20 @@ function UIQueue:onMouseUp(button, x, y)
       room = self.ui.app.world:getRoom(wx, wy)
     end
 
-    -- The new room must be of the same class as the current one
+    -- The new room must be of the same class as the current one and active
     local this_room = self.dragged.patient.next_room_to_visit
-    if this_room and room and room ~= this_room and room.room_info.id == this_room.room_info.id then
+    if this_room and room and room ~= this_room and
+        room.room_info.id == this_room.room_info.id and room.is_active then
       -- Move to another room
       local patient = self.dragged.patient
       patient:setNextAction(room:createEnterAction(patient))
       patient.next_room_to_visit = room
       patient:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to:format(room.room_info.name))
       room.door:updateDynamicInfo()
+      -- call staff to room if required
+      if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
+        patient.world.dispatcher:callForStaff(room)
+      end
     end
   end
   self.dragged = nil

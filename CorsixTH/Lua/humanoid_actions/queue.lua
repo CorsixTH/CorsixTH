@@ -203,8 +203,8 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
   end
 
   -- Find out if we have to be standing up - considering humanoid_class covers both health inspector and VIP
-  local must_stand = class.is(humanoid, Staff) or humanoid.humanoid_class == "Inspector" or
-    humanoid.humanoid_class == "VIP" or (humanoid.disease and humanoid.disease.must_stand)
+  local must_stand = not class.is(humanoid, Patient) or humanoid.is_leaving or
+      (humanoid.disease and humanoid.disease.must_stand)
   local queue = action.queue
   if not must_stand then
     for i = 1, queue.bench_threshold do

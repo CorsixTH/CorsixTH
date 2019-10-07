@@ -296,8 +296,6 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   if door.user or (door.reserved_for and door.reserved_for ~= humanoid) or
       (is_entering_room and not room:canHumanoidEnter(humanoid)) then
-    --queueing patients are no longer enroute
-    room.humanoids_enroute[humanoid] = nil
     local queue = door.queue
     if door.reserved_for == humanoid then
       door.reserved_for = nil

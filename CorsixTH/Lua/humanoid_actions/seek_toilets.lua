@@ -51,6 +51,8 @@ local function seek_toilets_action_start(action, humanoid)
       end
       humanoid:updateDynamicInfo("")
     end
+    -- toilet door should reflect the expected count
+    room.door:updateDynamicInfo()
     humanoid:finishAction()
   else
     -- This should happen only in rare cases, e.g. if the target toilet room was
