@@ -762,7 +762,7 @@ function Room:crashRoom()
     if not person:isLeaving() then
       if class.is(person, Patient) then
         --Delay so that room is destroyed before the SeekRoom search.
-        person:queueAction(IdleAction():setCount(1))
+        person:setNextAction(IdleAction():setCount(1))
         person:queueAction(SeekRoomAction(self.room_info.id))
       end
     end
