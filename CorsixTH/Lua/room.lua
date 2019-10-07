@@ -956,6 +956,31 @@ function Room:afterLoad(old, new)
   if old and old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
   end
+  if old and old < 137 then
+    if self.door.queue then
+      -- reset expected count so we can recalculate it
+      self.door.queue.expected = {}
+      self.door.queue.expected_count = 0
+      for enroute, callback in pairs(self.humanoids_enroute) do -- Go through all registered callbacks
+        local clear_this_callback = true -- Presume the callback must be cleared
+        for _, action in pairs(enroute.action_queue) do -- Go through the action queue
+          if action.name == "walk" then -- Only look at walk actions
+            if self == self.world:getRoom(action.x, action.y) and -- This walk action leads into the room
+                self ~= enroute:getRoom() then -- The entity is not already in the room
+              clear_this_callback = false -- Assume the callback is valid, don't clear
+            end
+          end
+        end
+        if not clear_this_callback then
+          -- still expecting
+          self.door.queue:expect(enroute, callback)
+        end
+      end
+      self.door:updateDynamicInfo()
+    end
+    -- no longer using this so empty it
+    self.humanoids_enroute = {}
+  end
 end
 
 --[[ Is the room one of the diagnosis rooms for the patient?
