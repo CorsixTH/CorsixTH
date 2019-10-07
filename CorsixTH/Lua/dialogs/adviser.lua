@@ -152,8 +152,9 @@ function UIAdviser:say(speech, talk_until_next_announce, override_current)
       self.up_again = true
     elseif override_current then
       -- He was saying/was about to say something else. Discard those messages.
+      self.queued_messages[1] = self.queued_messages[#self.queued_messages]
       while #self.queued_messages > 1 do
-        table.remove(self.queued_messages, 2)
+        table.remove(self.queued_messages)
       end
       -- Now say the new thing instead.
       self:talk()
