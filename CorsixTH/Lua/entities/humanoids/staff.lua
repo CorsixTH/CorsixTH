@@ -511,10 +511,8 @@ function Staff:isIdle()
         return true
       else
         -- It might still be the case that the patient is leaving
-        for _, action in ipairs(room:getPatient().action_queue) do
-          if action.is_leaving then
-            return true
-          end
+        if room:getPatient().isLeaving() then
+          return true
         end
       end
     end
