@@ -1,28 +1,30 @@
 # Cmake File for CorsixTH
 # OPTIONS AVAILABLE:
-# At most, one of the following:
-#   - WITH_SDL     : Activate SDL Renderer (default)
-# Any of the following:
-#   - WITH_AUDIO   : Activate Sound (enabled by default)
-#   - WITH_FREETYPE2
-#   - WITH_MOVIES  : Activate movies (requires Sound)
-#   - BUILD_ANIMVIEWER
-#   - WITH_LUAJIT  : Whether to use LuaJIT 2 instead of Lua51 (default is LuaJIT 2)
-#   - WITH_LIBAV   : Whether to use LibAV (as opposed to FFMEPG) when building movies
-#   - WITH_VLD     : Build with Visual Leak Detector (requires Visual Studio)
+# Any of the following: (default)
+#   - WITH_AUDIO   	: Activate sound (yes)
+#   - WITH_FREETYPE2	: Active support for non-Latin script alphabets (yes)
+#   - WITH_MOVIES  	: Activate movies (requires with_audio, FFmpeg) (yes)
+#   - WITH_LUAJIT 	: Use LuaJIT instead of Lua (must specify library path) (no)
+#   - WITH_LIBAV  	: Use Libav instead of FFmpeg when building movies (no)
+#   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
+
+#   - WITH_VLD    	: Build with Visual Leak Detector (requires Visual Studio) (no)
+#   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
+#   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
+
+#   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
+#   - BUILD_ANIMVIEWER : Generate AnimViewer build files (no)
 
 cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
-
-option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 
 if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
   option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 endif()
 
 if(USE_VCPKG_DEPS)
-  # This must be before the project for tool-chain to work correctly
+  # This must be before the project for the tool-chain to work correctly
   message("Note: Using locally built vcpkg dependencies.")
   include(VcpkgDeps)
 endif()
@@ -37,23 +39,24 @@ include(CheckIncludeFiles)
 
 set(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
+# Define our options
+option(WITH_AUDIO "Activate sound" ON)
+option(WITH_FREETYPE2 "Enhanced font support" ON)
+option(WITH_MOVIES "Activate in game movies" ON)
+option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
+option(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
+option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
+
+if(MSVC)
+  option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
+endif()
 # Dependency management
 if(UNIX AND CMAKE_COMPILER_IS_GNU)
   option(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
 endif()
 
-# Define our options
-option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
-option(WITH_SDL "Activate SDL Renderer" ON) # our default option
-option(WITH_AUDIO "Activate Sound" ON) # enabled by default
-option(WITH_MOVIES "Activate in game movies" ON)
-option(WITH_FREETYPE2 "Enhanced Font Support" ON)
-option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
-option(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
+option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
 option(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
-if(MSVC)
-  option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
-endif()
 
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
@@ -72,17 +75,17 @@ if(WITH_MOVIES)
     else()
       set(CORSIX_TH_USE_FFMPEG ON)
       set(CORSIX_TH_USE_LIBAV OFF)
-      message("Note: FFMPEG video is enabled (default)")
+      message("Note: FFmpeg video is enabled (default)")
     endif()
   else()
     set(CORSIX_TH_USE_FFMPEG OFF)
     set(CORSIX_TH_USE_LIBAV OFF)
-    message("Note: FFMPEG video disabled since it requires SDL audio.")
+    message("Note: FFmpeg video disabled since it requires SDL audio.")
   endif()
 else()
   set(CORSIX_TH_USE_FFMPEG OFF)
   set(CORSIX_TH_USE_LIBAV OFF)
-  message("Note: FFMPEG video is disabled")
+  message("Note: FFmpeg video is disabled")
 endif()
 
 if(WITH_FREETYPE2)
@@ -127,30 +130,7 @@ if(BUILD_ANIMVIEWER)
   message("Building AnimView")
   add_subdirectory(AnimView)
 endif()
+message("")
 
-# Documentation generation, construct 'doc' target (or a message it is disabled).
-
-# Try to find 'lua'
-if(WITH_LUAJIT)
-  set(LUA_PROGRAM_NAMES luajit-2.0.3 luajit)
-else()
-  set(LUA_PROGRAM_NAMES lua53 lua5.3 lua-5.3 lua52 lua5.2 lua-5.2 lua51 lua5.1 lua-5.1 lua)
-endif()
-
-find_program(LUA_PROGRAM_PATH ${LUA_PROGRAM_NAMES}
-  PATHS
-    ENV LUA_DIR
-    /opt
-    /opt/local
-    ~
-    ~/Library/Frameworks
-    /Library/Frameworks
-)
-
-if(LUA_PROGRAM_PATH)
-  set(LUA_PROGRAM_FOUND TRUE)
-else()
-  set(LUA_PROGRAM_FOUND FALSE)
-endif()
-
+# Documentation generation, construct 'doc' target
 include(GenerateDoc)
