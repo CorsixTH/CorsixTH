@@ -335,10 +335,10 @@ function Queue:rerouteAllPatients(action)
     elseif class.is(humanoid, Staff) then
       -- likewise believe we need action here to stop
       humanoid:setNextAction(IdleAction():setCount(1))
-	  humanoid:queueAction(MeanderAction())
+      humanoid:queueAction(MeanderAction())
     else
       -- other humanoids don't enter rooms
-	  humanoid:setNextAction(MeanderAction())
+      humanoid:setNextAction(MeanderAction())
     end
   end
   for humanoid, callback in pairs(self.expected) do
