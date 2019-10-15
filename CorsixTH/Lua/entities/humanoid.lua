@@ -947,7 +947,7 @@ function Humanoid:tostring()
         distance = "nil"
       end
       local standing = "false"
-      if action:isStanding() then
+      if action.isStanding and action:isStanding() then
         standing = "true"
       end
       action_string = action_string .. " - Bench distance: " .. distance .. " Standing: " .. standing

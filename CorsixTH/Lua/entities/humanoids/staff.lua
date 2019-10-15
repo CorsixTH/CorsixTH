@@ -511,7 +511,7 @@ function Staff:isIdle()
         return true
       else
         -- It might still be the case that the patient is leaving
-        if room:getPatient().isLeaving() then
+        if room:getPatient():isLeaving() then
           return true
         end
       end
