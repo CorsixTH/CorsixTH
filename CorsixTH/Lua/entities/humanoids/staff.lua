@@ -395,9 +395,6 @@ function Staff:checkIfNeedRest()
       -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
-      if room then
-        room.staff_leaving = true
-      end
       self:goToStaffRoom()
     end
   end
