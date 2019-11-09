@@ -319,7 +319,7 @@ function(action, humanoid, machine, mx, my, fun_after_use)
     -- If the patient is still in the queue, insert an idle action so that
     -- change_position can do its work.
     -- Note that it is inserted after the currently executing use_object action.
-    if action.is_in_queue then
+    if action.is_in_queue and not humanoid.going_home then
       humanoid:queueAction(IdleAction():setMustHappen(true), 1)
       action_queue_on_change_position(action, humanoid)
     end
