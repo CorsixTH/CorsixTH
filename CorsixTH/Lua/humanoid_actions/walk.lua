@@ -91,8 +91,8 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
     -- 1st condition checks normal room routing
 	-- 2nd checks patients going to toilets, doctors and nurses
     -- and redundantly checks patients routed between rooms
-    if (humanoid.next_room_to_visit and humanoid.next_room_to_visit == dest_room or
-        dest_room and dest_room ~= humanoid.next_room_to_visit and not humanoid:getRoom()) and
+    if humanoid.next_room_to_visit and humanoid.next_room_to_visit == dest_room or
+        dest_room and dest_room ~= humanoid.next_room_to_visit and (not humanoid:getRoom() or class.is(humanoid, Staff)) and
         dest_room.door.queue then
       dest_room.door.queue:unexpect(humanoid)
       dest_room.door:updateDynamicInfo()
@@ -312,7 +312,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
       humanoid:queueAction(KnockDoorAction(door, dir), action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(humanoid:isLeaving())
+    -- a doctor/nurse answering a call but not yet left the room will not ever be leaving
+    -- if they happen to queue when leaving the room, humanoid:isLeaving will not reflect
+    -- the true state, so just use the is_entering_room fact instead
+    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(not is_entering_room)
         :setReserveWhenDone(door), action_index)
     action.must_happen = action.saved_must_happen
     action.reserve_on_resume = door
