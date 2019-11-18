@@ -367,28 +367,8 @@ function Patient:falling()
     if self.on_ground then
       self:setNextAction(GetUpAction())
     end
-    if current.name == "idle" or current.name == "walk" then
-      self:queueAction({
-        name = current.name,
-        x = current.x,
-        y = current.y,
-        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
-        is_entering = current.is_entering,
-      }, 2)
-    else
-      self:queueAction({
-        name = current.name,
-        room_type = current.room_type,
-        message_sent = true,
-        diagnosis_room = current.diagnosis_room,
-        treatment_room = current.treatment_room,
-      }, 2)
-    end
-    if current.on_interrupt then
-      current.on_interrupt(current, self)
-    else
-      self:finishAction()
-    end
+    -- TODO: falls are broken, the will change once implemented
+    self:interruptAndRequeueAction(current, 2)
     self.on_ground = false
     if math.random(1, 5) == 3 then
       self:shakeFist()
@@ -426,28 +406,7 @@ function Patient:vomit()
   --Only vomit under these conditions. Maybe I should add a vomit for patients in queues too?
   if self:canPeeOrPuke(current) and self.has_vomitted == 0 then
     self:queueAction(VomitAction(), 1)
-    if current.name == "idle" or current.name == "walk" then
-      self:queueAction({
-        name = current.name,
-        x = current.x,
-        y = current.y,
-        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
-        is_entering = current.is_entering,
-      }, 2)
-    else
-      self:queueAction({
-        name = current.name,
-        room_type = current.room_type,
-        message_sent = true,
-        diagnosis_room = current.diagnosis_room,
-        treatment_room = current.treatment_room,
-      }, 2)
-    end
-    if current.on_interrupt then
-      current.on_interrupt(current, self)
-    else
-      self:finishAction()
-    end
+    self:interruptAndRequeueAction(current, 2)
     self.has_vomitted = self.has_vomitted + 1
     self:changeAttribute("happiness", -0.02) -- being sick makes you unhappy
   else
@@ -460,28 +419,7 @@ function Patient:pee()
   --Only pee under these conditions. As with vomit, should they also pee if in a queue?
   if self:canPeeOrPuke(current) then
     self:queueAction(PeeAction(), 1)
-    if current.name == "idle" or current.name == "walk" then
-      self:queueAction({
-        name = current.name,
-        x = current.x,
-        y = current.y,
-        must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
-        is_entering = current.is_entering,
-      }, 2)
-    else
-      self:queueAction({
-        name = current.name,
-        room_type = current.room_type,
-        message_sent = true,
-        diagnosis_room = current.diagnosis_room,
-        treatment_room = current.treatment_room,
-      }, 2)
-    end
-    if current.on_interrupt then
-      current.on_interrupt(current, self)
-    else
-      self:finishAction()
-    end
+    self:interruptAndRequeueAction(current, 2)
     self:setMood("poo", "deactivate")
     self:changeAttribute("happiness", -0.02) -- not being able to find a loo and doing it in the corridor will make you sad too
     if not self.hospital.did_it_on_floor then
@@ -881,34 +819,7 @@ function Patient:tickDay()
         machine:addReservedUser(self)
         -- Insert the old action again, a little differently depending on
         -- what the previous action was.
-        if current.name == "idle" or current.name == "walk" then
-          self:queueAction({
-            name = current.name,
-            x = current.x,
-            y = current.y,
-            must_happen = (current.name == "walk" and current.saved_must_happen) or (current.name == "idle" and current.must_happen),
-            is_entering = current.is_entering,
-          }, 3)
-          -- If we were idling, also go away a little before continuing with
-          -- that important action.
-          if current.name == "idle" then
-            self:queueAction(MeanderAction():setCount(1), 3)
-          end
-        else -- We were seeking a room, start that action from the beginning
-             -- i.e. do not set the must_happen flag.
-          self:queueAction({
-            name = current.name,
-            room_type = current.room_type,
-            message_sent = true,
-            diagnosis_room = current.diagnosis_room,
-            treatment_room = current.treatment_room,
-          }, 3)
-        end
-        if current.on_interrupt then
-          current.on_interrupt(current, self)
-        else
-          self:finishAction()
-        end
+        self:interruptAndRequeueAction(current, 3, true)
       end
     end
   end
@@ -1195,6 +1106,53 @@ function Patient:isMalePatient()
   else
     local male_patient_classes = {["Chewbacca Patient"] = true,["Elvis Patient"] = true,["Invisible Patient"] = true}
     return male_patient_classes[self.humanoid_class] ~= nil
+  end
+end
+
+--[[ Interrupt a patients current action and resumes it after
+!param current_action (string) Action being interrupted
+!param queue_pos (int) Position to insert resumed action in queue
+!param meander_before_resume (bool) Indicator to insert an additional action before resuming.
+]]
+function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_before_resume)
+  if current_action.name == "idle" or current_action.name == "walk" then
+    local requeue_action = {
+        name = current_action.name,
+        x = current_action.x,
+        y = current_action.y,
+        must_happen = current_action.must_happen,
+        is_entering = current_action.is_entering,
+    }
+    self:queueAction(requeue_action, queue_pos)
+    -- If we were idling, also go away a little before continuing with
+    -- that important action.
+    if current_action.name == "idle" and meander_before_resume then
+      self:queueAction(MeanderAction():setCount(1), queue_pos)
+    -- if walking, and action was already started, use the original must_happen
+    elseif current_action.name == "walk" then
+      if current_action.saved_must_happen ~= nil then
+        requeue_action.must_happen = current_action.saved_must_happen
+      end
+      -- need to copy the reserve_on_resume, otherwise the new queued action will not
+      -- unreserve on interrupt
+      requeue_action.reserve_on_resume = current_action.reserve_on_resume
+    end
+  else
+    -- We were seeking a room, start that action from the beginning
+    -- i.e. do not set the must_happen flag.
+    self:queueAction({
+      name = current_action.name,
+      room_type = current_action.room_type,
+      message_sent = true,
+      diagnosis_room = current_action.diagnosis_room,
+      treatment_room = current_action.treatment_room,
+    }, queue_pos)
+  end
+  -- now interrupt
+  if current_action.on_interrupt then
+    current_action.on_interrupt(current_action, self)
+  else
+    self:finishAction()
   end
 end
 
