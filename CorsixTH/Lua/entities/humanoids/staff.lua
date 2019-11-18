@@ -395,9 +395,6 @@ function Staff:checkIfNeedRest()
       -- If occupied by patient, staff will go to the staffroom after the patient left.
       self.staffroom_needed = true
     else
-      if room then
-        room.staff_leaving = true
-      end
       self:goToStaffRoom()
     end
   end
@@ -511,10 +508,8 @@ function Staff:isIdle()
         return true
       else
         -- It might still be the case that the patient is leaving
-        for _, action in ipairs(room:getPatient().action_queue) do
-          if action.is_leaving then
-            return true
-          end
+        if room:getPatient():isLeaving() then
+          return true
         end
       end
     end

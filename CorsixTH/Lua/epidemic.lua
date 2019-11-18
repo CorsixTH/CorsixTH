@@ -544,7 +544,7 @@ end
   @param patient (Patient) the patient we wish to determine if they are static.]]
 local function is_static(patient)
   local action = patient:getCurrentAction()
-  return action.name == "queue" or action.name == "idle" or
+  return action.name == "queue" or action.name == "idle" or action.name == "seek_room" or
       (action.name == "use_object" and action.object.object_type.id == "bench")
 end
 

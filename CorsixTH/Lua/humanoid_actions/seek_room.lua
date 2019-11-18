@@ -357,7 +357,7 @@ local function action_seek_room_start(action, humanoid)
         -- don't need this as we unregistered all previous callbacks if we went to research
         local room_req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
         -- get required staff
-        if not room_req then
+        if not humanoid.diagnosed or not room_req then
           action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
