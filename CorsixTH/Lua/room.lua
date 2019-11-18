@@ -103,12 +103,19 @@ function Room:createEnterAction(humanoid_entering, callback)
       end
     else
       callback = --[[persistable:room_humanoid_enroute_cancel]] function()
-        humanoid_entering:setNextAction(MeanderAction())
+        local room = humanoid_entering:getRoom()
+        -- if the room is one we should 'cycle' in, resume that
+        -- otherwise staff member will meander in room incorrectly again
+        if room and room.doStaffUseCycle and humanoid_entering.user_of ~= room.door then
+          room:commandEnteringStaff(humanoid_entering)
+        else
+          humanoid_entering:setNextAction(MeanderAction())
+        end
       end
     end
   end
   if self.is_active then
-    self.humanoids_enroute[humanoid_entering] = {callback = callback}
+    self.door.queue:expect(humanoid_entering, {callback = callback})
   end
 
   return WalkAction(x, y):setIsEntering(true)
@@ -284,11 +291,6 @@ function Room:onHumanoidEnter(humanoid)
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
   -- Do not set humanoids[humanoid] here, because it affect staffFitsInRoom test
-
-  --entering humanoids are no longer enroute
-  if self.humanoids_enroute[humanoid] then
-    self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
-  end
 
   -- If this humanoid for some strange reason happens to enter a non-active room,
   -- just leave.
@@ -540,7 +542,7 @@ function Room:onHumanoidLeave(humanoid)
       end
     end
     -- There might be other similar rooms with patients queueing
-    if self.door.queue and self.door.queue:reportedSize() == 0 then
+    if self.door.queue and self.door.queue:reportedSize() == 0 and self.is_active then
       self:tryToFindNearbyPatients()
     end
   end
@@ -696,9 +698,6 @@ local function tryMovePatient(old_room, new_room, patient)
   -- Update the queues
   local old_queue = old_room.door.queue
   old_queue:removeValue(patient)
-  patient.next_room_to_visit = new_room
-  new_room.door.queue:expect(patient)
-  new_room.door:updateDynamicInfo()
 
   -- Rewrite the action queue
   for i, action in ipairs(patient.action_queue) do
@@ -716,6 +715,13 @@ local function tryMovePatient(old_room, new_room, patient)
       break
     end
   end
+
+  -- next_room_to_visit is guarded in checks in WalkAction from being incorrectly
+  -- interrupted, there is possibility walk above isn't found and there is no new
+  -- room to go to, but this remains mostly safe, see #1561
+  patient.next_room_to_visit = new_room
+  new_room.door:updateDynamicInfo()
+  old_room.door:updateDynamicInfo()
 
   local interrupted = patient:getCurrentAction()
   local on_interrupt = interrupted.on_interrupt
@@ -904,11 +910,11 @@ end
 function Room:deactivate()
   self.is_active = false -- So that no more patients go to it.
   self.world:notifyRoomRemoved(self)
-  for _, callback in pairs(self.humanoids_enroute) do
-    callback.callback()
+
+  -- crashRoom might have deactivated the door already
+  if self.door.queue then
+    self.door.queue:rerouteAllPatients(SeekRoomAction(self.room_info.id))
   end
-  -- Now empty the humanoids_enroute list since they are not enroute anymore.
-  self.humanoids_enroute = {}
 
   self.hospital:removeRatholesAroundRoom(self)
 end
@@ -949,6 +955,31 @@ end
 function Room:afterLoad(old, new)
   if old and old < 46 then
     self.humanoids_enroute = {--[[a set rather than a list]]}
+  end
+  if old and old < 137 then
+    if self.door.queue then
+      -- reset expected count so we can recalculate it
+      self.door.queue.expected = {}
+      self.door.queue.expected_count = 0
+      for enroute, callback in pairs(self.humanoids_enroute) do -- Go through all registered callbacks
+        local clear_this_callback = true -- Presume the callback must be cleared
+        for _, action in pairs(enroute.action_queue) do -- Go through the action queue
+          if action.name == "walk" then -- Only look at walk actions
+            if self == self.world:getRoom(action.x, action.y) and -- This walk action leads into the room
+                self ~= enroute:getRoom() then -- The entity is not already in the room
+              clear_this_callback = false -- Assume the callback is valid, don't clear
+            end
+          end
+        end
+        if not clear_this_callback then
+          -- still expecting
+          self.door.queue:expect(enroute, callback)
+        end
+      end
+      self.door:updateDynamicInfo()
+    end
+    -- no longer using this so empty it
+    self.humanoids_enroute = {}
   end
 end
 

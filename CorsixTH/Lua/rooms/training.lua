@@ -161,11 +161,6 @@ function TrainingRoom:onHumanoidEnter(humanoid)
   humanoid.in_room = self
   humanoid.last_room = self -- Remember where the staff was for them to come back after staffroom rest
 
-  --entering humanoids are no longer enroute
-  if self.humanoids_enroute[humanoid] then
-    self.humanoids_enroute[humanoid] = nil -- humanoid is no longer walking to this room
-  end
-
   humanoid:setCallCompleted()
   self:commandEnteringStaff(humanoid)
   self.humanoids[humanoid] = true

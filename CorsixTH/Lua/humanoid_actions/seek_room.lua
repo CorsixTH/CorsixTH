@@ -107,7 +107,6 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   humanoid.next_room_to_visit = room
   humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
     :format(room.room_info.name))
-  room.door.queue:expect(humanoid)
   room.door:updateDynamicInfo()
   if not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
     humanoid.world.dispatcher:callForStaff(room)

@@ -83,18 +83,25 @@ action_walk_interrupt = permanent"action_walk_interrupt"( function(action, human
         door:updateDynamicInfo()
       end
     end
+
+    -- guarding with the action.keep_reserved check as we don't want to unexpect
+    -- if we are just interrupting but resume the walk action afterwards
+    local dest_room = humanoid.world:getRoom(action.x, action.y)
+    -- Unexpect the patient from a possible destination room.
+    -- 1st condition checks normal room routing
+	-- 2nd checks patients going to toilets, doctors and nurses
+    -- and redundantly checks patients routed between rooms
+    if humanoid.next_room_to_visit and humanoid.next_room_to_visit == dest_room or
+        dest_room and dest_room ~= humanoid.next_room_to_visit and (not humanoid:getRoom() or class.is(humanoid, Staff)) and
+        dest_room.door.queue then
+      dest_room.door.queue:unexpect(humanoid)
+      dest_room.door:updateDynamicInfo()
+    end
   else
     -- This flag can be used only once at a time.
     action.keep_reserved = nil
   end
-  -- Unexpect the patient from a possible destination room.
-  if humanoid.next_room_to_visit then
-    local door = humanoid.next_room_to_visit.door
-    if door.queue then
-      door.queue:unexpect(humanoid)
-      door:updateDynamicInfo()
-    end
-  end
+
   -- Terminate immediately if high-priority
   if high_priority then
     local timer_function = humanoid.timer_function
@@ -289,8 +296,6 @@ navigateDoor = function(humanoid, x1, y1, dir)
   end
   if door.user or (door.reserved_for and door.reserved_for ~= humanoid) or
       (is_entering_room and not room:canHumanoidEnter(humanoid)) then
-    --queueing patients are no longer enroute
-    room.humanoids_enroute[humanoid] = nil
     local queue = door.queue
     if door.reserved_for == humanoid then
       door.reserved_for = nil
@@ -307,7 +312,10 @@ navigateDoor = function(humanoid, x1, y1, dir)
       humanoid:queueAction(KnockDoorAction(door, dir), action_index)
       action_index = action_index + 1
     end
-    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(humanoid:isLeaving())
+    -- a doctor/nurse answering a call but not yet left the room will not ever be leaving
+    -- if they happen to queue when leaving the room, humanoid:isLeaving will not reflect
+    -- the true state, so just use the is_entering_room fact instead
+    humanoid:queueAction(QueueAction(x1, y1, queue):setIsLeaving(not is_entering_room)
         :setReserveWhenDone(door), action_index)
     action.must_happen = action.saved_must_happen
     action.reserve_on_resume = door

@@ -206,6 +206,12 @@ function Vip:evaluateRoom()
   -- Another room visited.
   self.num_visited_rooms = self.num_visited_rooms + 1
   local room = self.next_room
+
+  -- Consider doing this when reserving the door instead
+  if room.door.queue then
+    room.door.queue:unexpect(self)
+  end
+
   -- if the player is about to kill a live patient for research, lower their rating dramatically
   if room.room_info.id == "research" then
     if room:getPatient() then

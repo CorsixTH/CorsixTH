@@ -580,6 +580,19 @@ function Humanoid:setNextAction(action, high_priority)
       if removed.object and removed.object:isReservedFor(self) then
         removed.object:removeReservedUser(self)
       end
+      if removed.is_entering then
+        local dest_room = self.world:getRoom(removed.x, removed.y)
+        if self.next_room_to_visit and self.next_room_to_visit == dest_room or
+            dest_room and dest_room ~= self.next_room_to_visit and (not self:getRoom() or class.is(self, Staff)) and
+            dest_room.door.queue then
+          dest_room.door.queue:unexpect(self)
+          dest_room.door:updateDynamicInfo()
+        end
+        if removed.reserve_on_resume and removed.reserve_on_resume:isReservedFor(self) then
+          removed.reserve_on_resume:removeReservedUser(self)
+          dest_room:tryAdvanceQueue()
+        end
+      end
     end
   end
 
