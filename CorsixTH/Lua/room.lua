@@ -323,6 +323,7 @@ function Room:onHumanoidEnter(humanoid)
       -- If the handyman was not assigned for the job (e.g. drop by manual pickup), do answer a call
       humanoid:setNextAction(AnswerCallAction())
     end
+    self:tryAdvanceQueue()
     return
   end
   local msg = {
@@ -496,7 +497,7 @@ function Room:commandEnteringPatient(humanoid)
 end
 
 function Room:tryAdvanceQueue()
-  if self.door.queue:size() > 0 and not self.door.user and not self.door.reserved_for then
+  if self.door.queue and self.door.queue:size() > 0 and not self.door.user and not self.door.reserved_for then
     local front = self.door.queue:front()
     -- These two conditions differ by the waiting symbol
 
