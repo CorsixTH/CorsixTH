@@ -51,7 +51,7 @@ class memory_buffer {
 
   uint8_t* take_data(size_t* pLength) {
     if (pLength) *pLength = data_end - data;
-    uint8_t* pResult = (unsigned char*)data;
+    uint8_t* pResult = reinterpret_cast<uint8_t*>(data);
     data = pointer = data_end = buffer_end = nullptr;
     return pResult;
   }
@@ -59,7 +59,7 @@ class memory_buffer {
   size_t tell() const { return pointer - data; }
 
   bool seek(size_t position) {
-    if (data + position > data_end) {
+    if (data == nullptr || data + position > data_end) {
       if (!resize_buffer(position)) return false;
     }
     pointer = data + position;
@@ -162,7 +162,7 @@ class memory_buffer {
   }
 
   bool resize_buffer(size_t size) {
-    if (data + size <= buffer_end) {
+    if (data != nullptr && data + size <= buffer_end) {
       data_end = data + size;
       return true;
     }
