@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #include <cstring>
+#include <vector>
+
 #include "persist_lua.h"
 #include "th_lua_internal.h"
 
@@ -95,22 +97,20 @@ int l_str_new(lua_State* L) {
 }
 
 // Helper function to make an array in Lua
-void aux_mk_table(lua_State* L, int nliterals, int nvalues, ...) {
-  lua_createtable(L, nliterals + nvalues, 0);
-  va_list args;
-  va_start(args, nvalues);
-  for (int i = 1; i <= nliterals; ++i) {
-    const char* sStr = va_arg(args, const char*);
+void aux_mk_table(lua_State* L, std::vector<const char*> literals,
+                  std::vector<int> values) {
+  lua_createtable(L, literals.size() + values.size(), 0);
+  for (int i = 0; i < literals.size(); ++i) {
+    const char* sStr = literals.at(i);
     lua_pushstring(L, sStr);
-    lua_rawseti(L, -2, i);
+    lua_rawseti(L, -2, i + 1);
   }
-  for (int i = nliterals + 1; i <= nliterals + nvalues; ++i) {
-    int iValue = va_arg(args, int);
+  for (int i = 0; i < values.size(); ++i) {
+    int iValue = values.at(i);
     if (0 > iValue && iValue > LUA_REGISTRYINDEX) --iValue;
     lua_pushvalue(L, iValue);
-    lua_rawseti(L, -2, i);
+    lua_rawseti(L, -2, i + literals.size() + 1);
   }
-  va_end(args);
 }
 
 // Helper function which pushes onto the stack a random key from the table
@@ -190,7 +190,7 @@ int l_str_index(lua_State* L) {
 
   // Create new userdata proxy
   l_str_new_aux(L);
-  aux_mk_table(L, 0, 2, 1, 2);
+  aux_mk_table(L, std::vector<const char*>{}, std::vector<int>{1, 2});
   lua_setfenv(L, 4);
 
   // Save to cache and return
