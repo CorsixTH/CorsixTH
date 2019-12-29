@@ -28,6 +28,7 @@ SOFTWARE.
 #include <cstdlib>
 #include <cstring>
 #include <iterator>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 #include "th.h"
@@ -425,7 +426,7 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
       iLevel > max_directory_depth)
     return 0;
 
-  uint8_t* pBuffer = nullptr;
+  std::unique_ptr<uint8_t[]> pBuffer(nullptr);
   uint32_t iBufferSize = 0;
   iso_directory_iterator dir_iter(pDirEnt, pDirEnt + iDirEntsSize);
   iso_directory_iterator end_iter(pDirEnt + iDirEntsSize,
@@ -438,20 +439,18 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
       // when at the root level.
       if (iLevel == 0 || !(ent.filename == "\x00" || ent.filename == "\x01")) {
         if (ent.data_length > iBufferSize) {
-          delete[] pBuffer;
           iBufferSize = ent.data_length;
-          pBuffer = new uint8_t[iBufferSize];
+          pBuffer = std::make_unique<uint8_t[]>(iBufferSize);
         }
         if (seek_to_sector(ent.data_sector) &&
-            read_data(ent.data_length, pBuffer)) {
+            read_data(ent.data_length, pBuffer.get())) {
           int iFoundLevel =
-              find_hosp_directory(pBuffer, ent.data_length, iLevel + 1);
+              find_hosp_directory(pBuffer.get(), ent.data_length, iLevel + 1);
           if (iFoundLevel != 0) {
             if (iFoundLevel == 2) {
               build_file_lookup_table(ent.data_sector, ent.data_length,
                                       std::string(""));
             }
-            delete[] pBuffer;
             return iFoundLevel + 1;
           }
         }
@@ -464,7 +463,6 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
       }
     }
   }
-  delete[] pBuffer;
 
   return 0;
 }
