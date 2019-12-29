@@ -25,6 +25,7 @@ SOFTWARE.
 #include <map>
 #include <string>
 #include <vector>
+
 #include "th.h"
 #include "th_gfx_sdl.h"
 

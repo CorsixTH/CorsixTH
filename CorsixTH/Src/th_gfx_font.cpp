@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "th_gfx_font.h"
+
 #include "config.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include FT_GLYPH_H

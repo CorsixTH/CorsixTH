@@ -23,6 +23,7 @@ SOFTWARE.
 #pragma once
 
 #include "config.h"
+
 #include <wx/bitmap.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -32,7 +33,9 @@ SOFTWARE.
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/vscroll.h>
+
 #include <vector>
+
 #include "th.h"
 
 static const int ROW_COUNT = 1000;

@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "th.h"
+
 #include "config.h"
+
 #include <cstring>
 #include <stdexcept>
 

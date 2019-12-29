@@ -21,9 +21,11 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include <cstdio>
 #include <cstring>
 #include <string>
+
 #include "iso_fs.h"
 #include "lua.hpp"
 #include "lua_rnc.h"

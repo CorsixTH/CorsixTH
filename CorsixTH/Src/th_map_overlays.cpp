@@ -21,8 +21,10 @@ SOFTWARE.
 */
 
 #include "th_map_overlays.h"
+
 #include <array>
 #include <sstream>
+
 #include "th_gfx.h"
 #include "th_gfx_font.h"
 #include "th_map.h"

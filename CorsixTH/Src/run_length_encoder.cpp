@@ -21,8 +21,10 @@ SOFTWARE.
 */
 
 #include "run_length_encoder.h"
+
 #include <algorithm>
 #include <new>
+
 #include "persist_lua.h"
 
 integer_run_length_encoder::integer_run_length_encoder() {

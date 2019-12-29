@@ -23,6 +23,7 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_H_
 #define CORSIX_TH_TH_H_
 #include "config.h"
+
 #include <vector>
 
 //! Generic linked list class (for inheriting from)

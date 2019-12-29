@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "th_movie.h"
+
 #include "config.h"
+
 #include "lua_sdl.h"
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
     defined(CORSIX_TH_USE_SDL_MIXER)
@@ -41,6 +43,7 @@ extern "C" {
 #endif
 }
 #include <SDL_mixer.h>
+
 #include <chrono>
 #include <cstring>
 #include <iostream>

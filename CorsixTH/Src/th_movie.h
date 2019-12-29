@@ -24,12 +24,14 @@ SOFTWARE.
 #define TH_VIDEO_H
 
 #include "config.h"
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
+
 #include "SDL.h"
 
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \

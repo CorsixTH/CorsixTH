@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "frmSprites.h"
+
 #include "config.h"
+
 #include <wx/dcclient.h>
 #include <wx/dirdlg.h>
 #include <wx/filedlg.h>

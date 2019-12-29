@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "persist_lua.h"
+
 #include <errno.h>
+
 #include <array>
 #include <cmath>
 #include <cstdio>

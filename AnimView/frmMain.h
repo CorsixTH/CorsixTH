@@ -22,6 +22,7 @@ SOFTWARE.
 
 #pragma once
 #include "config.h"
+
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
@@ -32,6 +33,7 @@ SOFTWARE.
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/txtstrm.h>
+
 #include "th.h"
 //#include <vector>
 

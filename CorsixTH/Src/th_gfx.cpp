@@ -21,12 +21,15 @@ SOFTWARE.
 */
 
 #include "th_gfx.h"
+
 #include "config.h"
+
 #include <algorithm>
 #include <cassert>
 #include <climits>
 #include <cstring>
 #include <new>
+
 #include "persist_lua.h"
 #include "th_map.h"
 #include "th_sound.h"

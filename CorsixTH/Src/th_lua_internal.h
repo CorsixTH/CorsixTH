@@ -23,9 +23,10 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_LUA_INTERNAL_H_
 #define CORSIX_TH_TH_LUA_INTERNAL_H_
 #include "config.h"
-#include "th_lua.h"
 
 #include <string>
+
+#include "th_lua.h"
 
 enum class lua_metatable {
   map,

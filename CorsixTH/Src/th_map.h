@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_MAP_H_
 #include <list>
 #include <string>
+
 #include "th_gfx.h"
 
 /*

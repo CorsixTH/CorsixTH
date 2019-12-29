@@ -21,9 +21,11 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include <array>
 #include <cstdio>
 #include <cstring>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 

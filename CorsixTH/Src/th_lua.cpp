@@ -23,6 +23,7 @@ SOFTWARE.
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+
 #include "bootstrap.h"
 #include "th.h"
 #include "th_lua_internal.h"

@@ -21,10 +21,13 @@ SOFTWARE.
 */
 
 #include "th_sound.h"
+
 #include "config.h"
+
 #include <cmath>
 #include <cstring>
 #include <new>
+
 #include "th.h"
 
 sound_archive::sound_archive() {

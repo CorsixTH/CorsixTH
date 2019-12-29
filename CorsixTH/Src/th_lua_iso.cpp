@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include <cstdio>
+
 #include "iso_fs.h"
 #include "th_lua_internal.h"
 

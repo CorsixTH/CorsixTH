@@ -23,8 +23,10 @@ SOFTWARE.
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
+
 #include <array>
 #include <cstring>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 #include "xmi2mid.h"

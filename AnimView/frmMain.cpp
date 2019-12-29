@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "frmMain.h"
+
 #include "config.h"
+
 #include <wx/bitmap.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
@@ -36,6 +38,7 @@ SOFTWARE.
 #include <wx/stattext.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+
 #include "backdrop.h"
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)

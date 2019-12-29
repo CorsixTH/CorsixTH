@@ -36,11 +36,13 @@ SOFTWARE.
 
 #pragma once
 #include "config.h"
+
 #include <stdint.h>
 #include <wx/file.h>
 #include <wx/image.h>
 #include <wx/string.h>
 #include <wx/txtstrm.h>
+
 #include <array>
 #include <vector>
 

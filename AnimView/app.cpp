@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "app.h"
+
 #include "config.h"
+
 #include "frmMain.h"
 #include "frmSprites.h"
 

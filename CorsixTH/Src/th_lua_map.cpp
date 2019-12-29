@@ -23,6 +23,7 @@ SOFTWARE.
 #include <cstring>
 #include <exception>
 #include <string>
+
 #include "th_lua_internal.h"
 #include "th_map.h"
 #include "th_pathfind.h"

@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_LUA_SDL_H_
 
 #include <SDL.h>
+
 #include "lua.hpp"
 
 // SDL event codes used for delivering custom events to l_mainloop in

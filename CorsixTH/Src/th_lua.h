@@ -23,10 +23,12 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_LUA_H_
 #define CORSIX_TH_TH_LUA_H_
 #include "config.h"
+
 #include <cassert>
 #include <cstdio>
 #include <new>
 #include <vector>
+
 #include "lua.hpp"
 
 int luaopen_th(lua_State* L);
@@ -340,7 +342,7 @@ T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
         lua_pushfstring(L, "%s expected, got %s", luaT_classinfo<T>::name(),
                         luaL_typename(L, idx));
     luaL_argerror(L, idx, msg);
-    assert(false); // unreachable
+    assert(false);  // unreachable
   }
   return nullptr;
 }

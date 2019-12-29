@@ -34,6 +34,7 @@ SOFTWARE.
 #include <limits>
 #include <new>
 #include <stdexcept>
+
 #include "th_map.h"
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)

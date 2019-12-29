@@ -21,15 +21,19 @@ SOFTWARE.
 */
 
 #include "th.h"
+
 #include "config.h"
+
 #include <wx/app.h>
 #include <wx/filename.h>
 #include <wx/toplevel.h>
+
 #include <algorithm>
 #include <array>
 #include <set>
 #include <stdexcept>
 #include <vector>
+
 #include "../common/rnc.h"
 
 static const unsigned char palette_upscale_map[0x40] = {

@@ -40,13 +40,13 @@ inline size_t lua_objlen(lua_State* L, int idx) { return lua_rawlen(L, idx); }
 
 #ifndef lua_equal
 inline int lua_equal(lua_State* L, int idx1, int idx2) {
-    return lua_compare(L, idx1, idx2, LUA_OPEQ);
+  return lua_compare(L, idx1, idx2, LUA_OPEQ);
 }
 #endif
 
 #ifndef lua_lessthan
 inline int lua_lessthan(lua_State* L, int idx1, int idx2) {
-    return lua_compare(L, idx1, idx2, LUA_OPLT);
+  return lua_compare(L, idx1, idx2, LUA_OPLT);
 }
 #endif
 

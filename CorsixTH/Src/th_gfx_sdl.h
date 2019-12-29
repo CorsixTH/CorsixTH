@@ -25,7 +25,9 @@ SOFTWARE.
 #include "config.h"
 
 #include <SDL.h>
+
 #include <stdexcept>
+
 #include "persist_lua.h"
 
 class cursor;
