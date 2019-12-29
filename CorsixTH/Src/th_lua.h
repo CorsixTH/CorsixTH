@@ -324,7 +324,7 @@ T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
     while (true) {
       if (lua_equal(L, mt_idx, -1) != 0) {
         lua_pop(L, 1);
-        return (T*)ud;
+        return static_cast<T*>(ud);
       }
       // Go up one inheritance level, if there is one.
       if (lua_type(L, -1) != LUA_TTABLE) break;

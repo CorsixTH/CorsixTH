@@ -636,7 +636,6 @@ int l_surface_set_blue_filter_active(lua_State* L) {
 }
 
 int l_surface_map(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_pushnumber(
       L, (lua_Number)render_target::map_colour((Uint8)luaL_checkinteger(L, 2),
                                                (Uint8)luaL_checkinteger(L, 3),

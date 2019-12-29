@@ -428,11 +428,11 @@ bool object_visitor::visit_objects(const level_map* pMap, int iStartX,
 }
 
 pathfinder::pathfinder()
-    : basic_pathfinder(this),
+    : open_heap(),
+      basic_pathfinder(this),
       hospital_finder(this),
       idle_tile_finder(this),
-      object_visitor(this),
-      open_heap() {
+      object_visitor(this) {
   nodes = nullptr;
   dirty_node_list = nullptr;
   destination = nullptr;
