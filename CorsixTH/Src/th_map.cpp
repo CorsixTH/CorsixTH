@@ -21,8 +21,11 @@ SOFTWARE.
 */
 
 #include "th_map.h"
+
 #include "config.h"
+
 #include <SDL.h>
+
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
@@ -30,6 +33,7 @@ SOFTWARE.
 #include <fstream>
 #include <new>
 #include <string>
+
 #include "run_length_encoder.h"
 #include "th.h"
 #include "th_gfx.h"
@@ -1746,7 +1750,14 @@ bool map_tile_iterator::is_last_on_scanline() const {
 }
 
 map_scanline_iterator::map_scanline_iterator()
-    : tile_step(0), x_step(0), steps_taken(0) {}
+    : tile(nullptr),
+      first_tile(nullptr),
+      end_tile(nullptr),
+      tile_step(0),
+      x_step(0),
+      x_relative_to_screen(0),
+      y_relative_to_screen(0),
+      steps_taken(0) {}
 
 map_scanline_iterator::map_scanline_iterator(
     const map_tile_iterator& itrNodes,
