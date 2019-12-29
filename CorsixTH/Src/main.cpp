@@ -102,7 +102,6 @@ int lua_main_no_eval(lua_State* L) {
     lua_getglobal(L, "assert");
     lua_getglobal(L, "loadfile");
     lua_pushstring(L, CORSIX_TH_INTERPRETER_PATH);
-    bGotScriptFile = true;
   }
 
   lua_call(L, 1, 2);

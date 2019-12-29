@@ -296,7 +296,6 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           next_utf8_codepoint(sMessage);
         }
       }
-      foundNewLine = 0;
     }
   }
   oDrawArea.end_x = iX + oDrawArea.end_x;
