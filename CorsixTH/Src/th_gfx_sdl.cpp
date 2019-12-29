@@ -27,9 +27,11 @@ SOFTWARE.
 #include "th_gfx_font.h"
 #endif
 #include <algorithm>
+#include <cmath>
 #include <cstdio>
 #include <cstring>
 #include <iostream>
+#include <limits>
 #include <new>
 #include <stdexcept>
 #include "th_map.h"
@@ -1315,10 +1317,10 @@ void line::draw(render_target* pCanvas, int iX, int iY) {
 }
 
 void line::persist(lua_persist_writer* pWriter) const {
-  pWriter->write_uint((uint32_t)red);
-  pWriter->write_uint((uint32_t)green);
-  pWriter->write_uint((uint32_t)blue);
-  pWriter->write_uint((uint32_t)alpha);
+  pWriter->write_uint(static_cast<uint32_t>(red));
+  pWriter->write_uint(static_cast<uint32_t>(green));
+  pWriter->write_uint(static_cast<uint32_t>(blue));
+  pWriter->write_uint(static_cast<uint32_t>(alpha));
   pWriter->write_float(width);
 
   line_operation* op = (line_operation*)(first_operation->next);
@@ -1331,7 +1333,7 @@ void line::persist(lua_persist_writer* pWriter) const {
 
   op = (line_operation*)(first_operation->next);
   while (op) {
-    pWriter->write_uint((uint32_t)op->type);
+    pWriter->write_uint(static_cast<uint32_t>(op->type));
     pWriter->write_float<double>(op->x);
     pWriter->write_float(op->y);
 
@@ -1350,16 +1352,23 @@ void line::depersist(lua_persist_reader* pReader) {
 
   uint32_t numOps = 0;
   pReader->read_uint(numOps);
+
   for (uint32_t i = 0; i < numOps; i++) {
-    line_operation_type type;
-    double fX, fY;
-    pReader->read_uint((uint32_t&)type);
+    // Initialize to invalid in case the read fails.
+    uint32_t type_val = std::numeric_limits<uint32_t>::max();
+    double fX = std::nan("");
+    double fY = std::nan("");
+    pReader->read_uint(type_val);
     pReader->read_float(fX);
     pReader->read_float(fY);
 
-    if (type == line_operation_type::move) {
+    if (std::isnan(fX) || std::isnan(fY)) {
+      return;
+    }
+
+    if (type_val == static_cast<uint32_t>(line_operation_type::move)) {
       move_to(fX, fY);
-    } else if (type == line_operation_type::line) {
+    } else if (type_val == static_cast<uint32_t>(line_operation_type::line)) {
       line_to(fX, fY);
     }
   }

@@ -660,7 +660,7 @@ class line {
   friend class render_target;
   void initialize();
 
-  enum class line_operation_type { move, line };
+  enum class line_operation_type : uint32_t { move = 0, line = 1 };
 
   class line_operation : public link_list {
    public:
