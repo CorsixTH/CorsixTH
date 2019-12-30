@@ -29,6 +29,7 @@ SOFTWARE.
 #include <stdexcept>
 
 #include "persist_lua.h"
+#include "th.h"
 
 class cursor;
 
