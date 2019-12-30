@@ -24,6 +24,13 @@ class "UIConfirmDialog" (Window)
 ---@type UIConfirmDialog
 local UIConfirmDialog = _G["UIConfirmDialog"]
 
+local top_frame = 357
+local top_frame_height = 22
+local middle_frame = 358
+local middle_frame_height = 11
+local bottom_frame = 359
+local text_width = 153
+
 function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:Window()
 
@@ -42,18 +49,18 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
 
   -- Check how "high" the dialog must be
-  local w, h = self.white_font:sizeOf(text)
+  local _, text_height = self.white_font:sizeOf(text, text_width)
 
-  self:addPanel(357, 0, 0)  -- Dialog header
-  local last_y = 22
-  -- Rough estimate of how many rows it will be when drawn.
-  for y = 22, h * (w / 160) * 1.4, 11 do -- Previous value: 136
-    self:addPanel(358, 0, y)  -- Dialog background
-    self.height = self.height + 11
-    last_y = last_y + 11
+  self:addPanel(top_frame, 0, 0)  -- Dialog header
+  local last_y = top_frame_height
+
+  for _ = 1, math.ceil(text_height / middle_frame_height) do
+    self:addPanel(middle_frame, 0, last_y)  -- Dialog background
+    self.height = self.height + middle_frame_height
+    last_y = last_y + middle_frame_height
   end
 
-  self:addPanel(359, 0, last_y)  -- Dialog footer
+  self:addPanel(bottom_frame, 0, last_y)  -- Dialog footer
   self:addPanel(360, 0, last_y + 10):makeButton(8, 10, 82, 34, 361, self.cancel)
     :setTooltip(_S.tooltip.window_general.cancel):setSound"No4.wav"
   self:addPanel(362, 90, last_y + 10):makeButton(0, 10, 82, 34, 363, self.ok)
@@ -95,7 +102,7 @@ function UIConfirmDialog:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
   x, y = x + self.x, y + self.y
-  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, 153)
+  self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, text_width)
 end
 
 function UIConfirmDialog:afterLoad(old, new)
