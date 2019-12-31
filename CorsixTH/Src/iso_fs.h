@@ -20,6 +20,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
+#ifndef CORSIX_TH_ISO_FS_H_
+#define CORSIX_TH_ISO_FS_H_
+
 #include "config.h"
 #include <cstdio>
 #include <string>
@@ -147,3 +150,5 @@ class iso_filesystem {
   static bool file_metadata_less(const file_metadata& lhs,
                                  const file_metadata& rhs);
 };
+
+#endif
