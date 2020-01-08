@@ -1,7 +1,7 @@
 ---
 Checks:          'clang-diagnostic-*,clang-analyzer-*'
 WarningsAsErrors: ''
-HeaderFilterRegex: ''
+HeaderFilterRegex: '/CorsixTH/Src/|/AnimView/|/common/'
 AnalyzeTemporaryDtors: false
 FormatStyle:     file
 CheckOptions:
