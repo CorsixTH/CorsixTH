@@ -1010,7 +1010,7 @@ chunk_renderer::~chunk_renderer() { delete[] data; }
 
 uint8_t* chunk_renderer::take_data() {
   uint8_t* buffer = data;
-  data = 0;
+  data = nullptr;
   return buffer;
 }
 

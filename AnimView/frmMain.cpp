@@ -67,7 +67,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
 END_EVENT_TABLE()
 
 frmMain::frmMain()
-    : wxFrame(NULL, wxID_ANY, L"Theme Hospital Animation Viewer") {
+    : wxFrame(nullptr, wxID_ANY, L"Theme Hospital Animation Viewer") {
   wxSizer* pMainSizer = new wxBoxSizer(wxHORIZONTAL);
 
   wxSizer* pSidebarSizer = new wxBoxSizer(wxVERTICAL);
@@ -295,7 +295,7 @@ frmMain::frmMain()
 
   for (int iLayer = 0; iLayer < 13; ++iLayer) {
     wxCheckBox* pCheck = wxDynamicCast(FindWindow(ID(iLayer, 0)), wxCheckBox);
-    if (pCheck != NULL) {
+    if (pCheck != nullptr) {
       pCheck->SetValue(true);
       m_mskLayers.set(iLayer, 0);
     }
@@ -369,10 +369,11 @@ frmMain::frmMain()
   pRightHandSizer->Add(
       m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0,
       wxEXPAND | wxALL, 2);
-  m_panFrame->Connect(
-      wxEVT_PAINT, (wxObjectEventFunction)&frmMain::_onPanelPaint, NULL, this);
+  m_panFrame->Connect(wxEVT_PAINT,
+                      (wxObjectEventFunction)&frmMain::_onPanelPaint, nullptr,
+                      this);
   m_panFrame->Connect(wxEVT_LEFT_UP,
-                      (wxObjectEventFunction)&frmMain::_onPanelClick, NULL,
+                      (wxObjectEventFunction)&frmMain::_onPanelClick, nullptr,
                       this);
   m_panFrame->SetMinSize(m_panFrame->ClientToWindowSize(wxSize(402, 402)));
 

@@ -47,7 +47,7 @@ static const unsigned char palette_upscale_map[0x40] = {
 
 class ChunkRenderer {
  public:
-  ChunkRenderer(int width, int height, unsigned char* buffer = NULL) {
+  ChunkRenderer(int width, int height, unsigned char* buffer = nullptr) {
     m_data = buffer ? buffer : new unsigned char[width * height];
     m_ptr = m_data;
     m_end = m_data + width * height;
@@ -64,7 +64,7 @@ class ChunkRenderer {
 
   unsigned char* takeData() {
     unsigned char* buffer = m_data;
-    m_data = 0;
+    m_data = nullptr;
     return buffer;
   }
 
@@ -355,7 +355,7 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex) {
 }
 
 th_frame_t* THAnimations::getFrameStruct(size_t iAnimation, size_t iFrame) {
-  if (iAnimation >= anims.size()) return 0;
+  if (iAnimation >= anims.size()) return nullptr;
   uint16_t iFrameIndex = anims.at(iAnimation).frame;
   while (iFrame--) {
     iFrameIndex = frames.at(iFrameIndex).next;
@@ -378,7 +378,8 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation,
   int iFarX = 0;
   int iFarY = 0;
   while ((pElement = _getElement(iListIndex++))) {
-    if (pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
+    if (pMask != nullptr &&
+        !pMask->isSet(pElement->flags >> 4, pElement->layerid))
       continue;
     uint16_t iSpriteIndex = pElement->table_position / sizeof(th_sprite_t);
     th_sprite_t* pSprite = &(sprites.at(iSpriteIndex));
@@ -477,7 +478,7 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
     for (int x = 0; x < m_iWidth; ++x) {
       uint8_t src = pixel(x, y);
       if (src == 0xFF && (iFlags & 0x8000) == 0) continue;
-      if (pColourTranslate != NULL) {
+      if (pColourTranslate != nullptr) {
         src = pColourTranslate[src];
         if (src == 0xFF && (iFlags & 0x8000) == 0) continue;
       }

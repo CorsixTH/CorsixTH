@@ -148,7 +148,7 @@ const uint8_t* luaT_checkfile(lua_State* L, int idx, size_t* pDataLen) {
     pData =
         reinterpret_cast<const uint8_t*>(luaL_checklstring(L, idx, &iLength));
   }
-  if (pDataLen != 0) *pDataLen = iLength;
+  if (pDataLen != nullptr) *pDataLen = iLength;
   return pData;
 }
 
