@@ -34,7 +34,9 @@ SOFTWARE.
          changes to.
 */
 
-#pragma once
+#ifndef ANIMVIEW_TH_H_
+#define ANIMVIEW_TH_H_
+
 #include "config.h"
 
 #include <stdint.h>
@@ -245,3 +247,5 @@ class THAnimations {
   size_t m_iGhostMapOffset;
   wxString m_sSpritePath;
 };
+
+#endif

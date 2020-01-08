@@ -20,7 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#ifndef ANIMVIEW_FRMSPRITES_H_
+#define ANIMVIEW_FRMSPRITES_H_
 
 #include "config.h"
 
@@ -93,3 +94,5 @@ class frmSprites : public wxFrame {
   MyVScrolled* m_panFrame;
   DECLARE_EVENT_TABLE()
 };
+
+#endif
