@@ -380,7 +380,7 @@ int l_map_set_player_count(lua_State* L) {
 
   try {
     pMap->set_player_count(count);
-  } catch (std::out_of_range) {
+  } catch (std::out_of_range&) {
     return luaL_error(L, "Player count out of range %d", count);
   }
   return 0;

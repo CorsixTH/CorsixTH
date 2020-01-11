@@ -172,7 +172,7 @@ class bitmap_font final : public font {
 class freetype_font final : public font {
  public:
   freetype_font();
-  ~freetype_font();
+  ~freetype_font() override;
 
   //! Get the copyright notice which should be displayed for FreeType2.
   /*!

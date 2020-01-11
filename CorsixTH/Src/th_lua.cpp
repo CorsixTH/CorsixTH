@@ -171,7 +171,7 @@ int l_load_strings(lua_State* L) {
       }
       lua_rawseti(L, 1, static_cast<int>(iSec + 1));
     }
-  } catch (std::invalid_argument) {
+  } catch (std::invalid_argument&) {
     lua_pushboolean(L, 0);
   }
   return 1;

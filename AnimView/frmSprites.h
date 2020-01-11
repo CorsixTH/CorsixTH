@@ -48,9 +48,9 @@ class MyVScrolled : public wxVScrolledWindow {
     iMyCount = ROW_COUNT;
   }
 
-  wxCoord OnGetRowHeight(size_t row) const { return 1; }
+  wxCoord OnGetRowHeight(size_t row) const override { return 1; }
 
-  wxCoord EstimateTotalHeight() const { return iMyCount; }
+  wxCoord EstimateTotalHeight() const override { return iMyCount; }
 
   int iMyCount;
 };
@@ -58,7 +58,7 @@ class MyVScrolled : public wxVScrolledWindow {
 class frmSprites : public wxFrame {
  public:
   frmSprites();
-  ~frmSprites() = default;
+  ~frmSprites() override = default;
 
   enum {
     ID_LOAD = wxID_HIGHEST + 1,

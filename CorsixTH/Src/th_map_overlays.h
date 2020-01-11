@@ -42,7 +42,7 @@ class map_overlay {
 class map_overlay_pair : public map_overlay {
  public:
   map_overlay_pair();
-  virtual ~map_overlay_pair();
+  ~map_overlay_pair() override;
 
   void set_first(map_overlay* pOverlay, bool bTakeOwnership);
   void set_second(map_overlay* pOverlay, bool bTakeOwnership);
@@ -58,7 +58,7 @@ class map_overlay_pair : public map_overlay {
 class map_typical_overlay : public map_overlay {
  public:
   map_typical_overlay();
-  virtual ~map_typical_overlay();
+  ~map_typical_overlay() override;
 
   void set_sprites(sprite_sheet* pSheet, bool bTakeOwnership);
   void set_font(::font* font, bool take_ownership);
@@ -77,10 +77,10 @@ class map_typical_overlay : public map_overlay {
 class map_text_overlay : public map_typical_overlay {
  public:
   map_text_overlay();
-  virtual ~map_text_overlay() = default;
+  ~map_text_overlay() override = default;
 
-  virtual void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
-                         const level_map* pMap, int iNodeX, int iNodeY);
+  void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
+                         const level_map* pMap, int iNodeX, int iNodeY) override;
 
   void set_background_sprite(size_t iSprite);
   virtual const std::string get_text(const level_map* pMap, int iNodeX,
