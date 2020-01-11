@@ -153,7 +153,7 @@ class Bitmap {
 class THAnimations {
  public:
   THAnimations();
-  ~THAnimations();
+  ~THAnimations() = default;
 
   bool loadAnimationFile(wxString sFilename) {
     return loadVector(anims, sFilename);

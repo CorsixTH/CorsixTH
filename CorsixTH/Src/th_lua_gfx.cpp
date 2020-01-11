@@ -160,7 +160,8 @@ int l_spritesheet_size(lua_State* L) {
   if (iSprite < 0 || iSprite >= pSheet->get_sprite_count())
     return luaL_argerror(L, 2, "Sprite index out of bounds");
 
-  unsigned int iWidth, iHeight;
+  int iWidth;
+  int iHeight;
   pSheet->get_sprite_size_unchecked(iSprite, &iWidth, &iHeight);
 
   lua_pushinteger(L, iWidth);

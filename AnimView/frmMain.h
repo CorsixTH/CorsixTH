@@ -42,7 +42,7 @@ SOFTWARE.
 class frmMain : public wxFrame {
  public:
   frmMain();
-  ~frmMain();
+  ~frmMain() = default;
 
   enum {
     ID_FIRST_ANIM = wxID_HIGHEST + 1,

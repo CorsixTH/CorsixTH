@@ -47,15 +47,11 @@ static const unsigned char palette_upscale_map[0x40] = {
 
 class ChunkRenderer {
  public:
-  ChunkRenderer(int width, int height, unsigned char* buffer = nullptr) {
-    m_data = buffer ? buffer : new unsigned char[width * height];
+  ChunkRenderer(int width, int height)
+      : m_x(0), m_y(0), m_width(width), m_height(height), m_skip_eol(false) {
+    m_data = new unsigned char[width * height];
     m_ptr = m_data;
     m_end = m_data + width * height;
-    m_x = 0;
-    m_y = 0;
-    m_width = width;
-    m_height = height;
-    m_skip_eol = false;
   }
 
   ~ChunkRenderer() { delete[] m_data; }
@@ -77,7 +73,9 @@ class ChunkRenderer {
     m_skip_eol = false;
   }
 
-  void chunkFinish(unsigned char value) { chunkFill(m_end - m_ptr, value); }
+  void chunkFinish(unsigned char value) {
+    chunkFill(static_cast<int>(m_end - m_ptr), value);
+  }
 
   void chunkFill(int npixels, unsigned char value) {
     _fixNpixels(npixels);
@@ -98,7 +96,7 @@ class ChunkRenderer {
  protected:
   inline void _fixNpixels(int& npixels) const {
     if (m_ptr + npixels > m_end) {
-      npixels = m_end - m_ptr;
+      npixels = static_cast<int>(m_end - m_ptr);
     }
   }
 
@@ -110,13 +108,15 @@ class ChunkRenderer {
     m_skip_eol = true;
   }
 
-  unsigned char *m_data, *m_ptr, *m_end;
+  unsigned char* m_data;
+  unsigned char* m_ptr;
+  unsigned char* m_end;
   int m_x, m_y, m_width, m_height;
   bool m_skip_eol;
 };
 
 static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
-                          int datalen, unsigned char transparent) {
+                          size_t datalen, unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
     --datalen;
@@ -137,7 +137,7 @@ static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
 }
 
 static void decode_chunks_complex(ChunkRenderer& renderer,
-                                  const unsigned char* data, int datalen,
+                                  const unsigned char* data, size_t datalen,
                                   unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
@@ -201,8 +201,6 @@ THAnimations::THAnimations() {
   }
   m_iGhostMapOffset = 0;
 }
-
-THAnimations::~THAnimations() {}
 
 bool THAnimations::isAnimationDuplicate(size_t iAnimation) {
   if (iAnimation < anims.size())

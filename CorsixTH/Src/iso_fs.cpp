@@ -277,12 +277,7 @@ class iso_directory_iterator final {
   /**
    * Assign this iterator the value of another iterator by copy
    */
-  iso_directory_iterator& operator=(iso_directory_iterator& rhs) {
-    directory_ptr = rhs.directory_ptr;
-    end_ptr = rhs.end_ptr;
-    entry = rhs.entry;
-    return *this;
-  }
+  iso_directory_iterator& operator=(iso_directory_iterator& rhs) = default;
 
   /**
    * Assign this iterator the value of another iterator by move
@@ -439,7 +434,8 @@ int iso_filesystem::find_hosp_directory(const uint8_t* pDirEnt,
       // The names "\x00" and "\x01" are used for the current directory
       // the parent directory respectively. We only want to visit these
       // when at the root level.
-      if (iLevel == 0 || !(ent.filename == "\x00" || ent.filename == "\x01")) {
+      if (iLevel == 0 || !(ent.filename == std::string(1, '\x00') ||
+                           ent.filename == std::string(1, '\x01'))) {
         if (ent.data_length > iBufferSize) {
           iBufferSize = ent.data_length;
           pBuffer = std::make_unique<uint8_t[]>(iBufferSize);

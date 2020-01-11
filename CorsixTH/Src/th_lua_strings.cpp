@@ -99,7 +99,7 @@ int l_str_new(lua_State* L) {
 // Helper function to make an array in Lua
 void aux_mk_table(lua_State* L, std::vector<const char*> literals,
                   std::vector<int> values) {
-  lua_createtable(L, literals.size() + values.size(), 0);
+  lua_createtable(L, static_cast<int>(literals.size() + values.size()), 0);
   for (int i = 0; i < literals.size(); ++i) {
     const char* sStr = literals.at(i);
     lua_pushstring(L, sStr);

@@ -91,9 +91,8 @@ inline uint32_t makeSwapRedBlue(uint8_t iOpacity, uint8_t iR, uint8_t iG,
 
 uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
   constexpr uint8_t mask_6bit = 0x3F;
-  return static_cast<uint8_t>(
-      ((colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit) +
-      0.5);
+  return static_cast<uint8_t>(std::lround(
+      (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
 }  // namespace
@@ -387,9 +386,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     bitmap_scale_factor = fScale;
 
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 void render_target::set_caption(const char* sCaption) {
@@ -976,17 +974,16 @@ void sprite_sheet::set_sprite_alt_palette_map(size_t iSprite,
 
 size_t sprite_sheet::get_sprite_count() const { return sprite_count; }
 
-bool sprite_sheet::get_sprite_size(size_t iSprite, unsigned int* pWidth,
-                                   unsigned int* pHeight) const {
+bool sprite_sheet::get_sprite_size(size_t iSprite, int* pWidth,
+                                   int* pHeight) const {
   if (iSprite >= sprite_count) return false;
   if (pWidth != nullptr) *pWidth = sprites[iSprite].width;
   if (pHeight != nullptr) *pHeight = sprites[iSprite].height;
   return true;
 }
 
-void sprite_sheet::get_sprite_size_unchecked(size_t iSprite,
-                                             unsigned int* pWidth,
-                                             unsigned int* pHeight) const {
+void sprite_sheet::get_sprite_size_unchecked(size_t iSprite, int* pWidth,
+                                             int* pHeight) const {
   *pWidth = sprites[iSprite].width;
   *pHeight = sprites[iSprite].height;
 }

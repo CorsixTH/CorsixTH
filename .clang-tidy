@@ -1,5 +1,5 @@
 ---
-Checks:          'clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr'
+Checks:          'bugprone-*,-bugprone-suspicious-enum-usage,clang-diagnostic-*,clang-analyzer-*,modernize-use-nullptr,modernize-use-equals-default,modernize-use-equals-delete'
 WarningsAsErrors: ''
 HeaderFilterRegex: '/CorsixTH/Src/|/AnimView/|/common/'
 AnalyzeTemporaryDtors: false

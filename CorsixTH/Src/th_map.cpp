@@ -39,7 +39,7 @@ SOFTWARE.
 #include "th_gfx.h"
 #include "th_map_overlays.h"
 
-constexpr size_t max_player_count = 4;
+constexpr int max_player_count = 4;
 
 map_tile_flags& map_tile_flags::operator=(uint32_t raw) {
   using flags = map_tile_flags::key;
@@ -252,8 +252,6 @@ map_tile::map_tile() : iParcelId(0), iRoomId(0), flags({}), objects() {
   aiTemperature[0] = aiTemperature[1] = 8192;
 }
 
-map_tile::~map_tile() {}
-
 level_map::level_map()
     : cells(nullptr),
       original_cells(nullptr),
@@ -351,8 +349,8 @@ constexpr uint8_t gs_iTHMapBlockLUT[256] = {
 }  // namespace
 
 void level_map::read_tile_index(const uint8_t* pData, int& iX, int& iY) const {
-  unsigned int iIndex = static_cast<unsigned int>(pData[1]);
-  iIndex = iIndex * 0x100 + static_cast<unsigned int>(pData[0]);
+  int iIndex = static_cast<int>(pData[1]);
+  iIndex = iIndex * 0x100 + static_cast<int>(pData[0]);
   iX = iIndex % width;
   iY = iIndex / width;
 }
@@ -948,10 +946,9 @@ void clip_rect_intersection(clip_rect& rcClip, const clip_rect& rcIntersect) {
   rcClip.h = maxY - rcClip.y;
 
   // Make sure that we clamp the values to 0.
-  if (rcClip.w <= 0) {
-    rcClip.w = rcClip.h = 0;
-  } else if (rcClip.h <= 0) {
-    rcClip.w = rcClip.h = 0;
+  if (rcClip.w <= 0 || rcClip.h <= 0) {
+    rcClip.w = 0;
+    rcClip.h = 0;
   }
 }
 
@@ -990,7 +987,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   pCanvas->start_nonoverlapping_draws();
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
-    unsigned int iH = 32;
+    int iH = 32;
     unsigned int iBlock = itrNode1->iBlock[0];
     blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
     blocks->draw_sprite(
@@ -1023,7 +1020,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
              itrNode2, map_scanline_iterator_direction::backward, iCanvasX,
              iCanvasY);
          itrNode; ++itrNode) {
-      unsigned int iH;
+      int iH;
       unsigned int iBlock = itrNode->iBlock[1];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
@@ -1067,7 +1064,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     bool bPreviousTileNeedsRedraw = false;
     for (; itrNode; ++itrNode) {
       bool bNeedsRedraw = false;
-      unsigned int iH;
+      int iH;
       unsigned int iBlock = itrNode->iBlock[2];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
@@ -1314,8 +1311,8 @@ uint32_t level_map::thermal_neighbour(uint32_t& iNeighbourSum, bool canTravel,
 
 namespace {
 
-void merge_temperatures(map_tile& node, size_t new_temp_idx, int other_temp,
-                        double ratio) {
+void merge_temperatures(map_tile& node, size_t new_temp_idx,
+                        uint32_t other_temp, double ratio) {
   const uint32_t node_temp = node.aiTemperature[new_temp_idx];
   node.aiTemperature[new_temp_idx] =
       static_cast<uint16_t>(((node_temp * (ratio - 1)) + other_temp) / ratio);

@@ -269,7 +269,7 @@ void sound_player::play_at(size_t iIndex, double dVolume, int iX, int iY) {
   double fVolume = master_volume * (1.0 - fDistance * 0.8) *
                    (double)MIX_MAX_VOLUME * dVolume;
 
-  play_raw(iIndex, (int)(fVolume + 0.5));
+  play_raw(iIndex, static_cast<int>(std::lround(fVolume)));
 }
 
 void sound_player::set_sound_effect_volume(double dVolume) {

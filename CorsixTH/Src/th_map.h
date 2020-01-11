@@ -173,7 +173,7 @@ enum class temperature_theme {
 
 struct map_tile : public link_list {
   map_tile();
-  ~map_tile();
+  ~map_tile() = default;
 
   // Linked list for entities rendered at this tile
   // THLinkList::pPrev (will always be nullptr)

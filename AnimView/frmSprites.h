@@ -58,7 +58,7 @@ class MyVScrolled : public wxVScrolledWindow {
 class frmSprites : public wxFrame {
  public:
   frmSprites();
-  ~frmSprites();
+  ~frmSprites() = default;
 
   enum {
     ID_LOAD = wxID_HIGHEST + 1,

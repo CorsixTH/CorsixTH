@@ -175,8 +175,6 @@ th_string_list::th_string_list(const uint8_t* data, size_t length) {
   *sDataOut = 0;
 }
 
-th_string_list::~th_string_list() {}
-
 size_t th_string_list::get_section_count() { return sections.size(); }
 
 size_t th_string_list::get_section_size(size_t section) {

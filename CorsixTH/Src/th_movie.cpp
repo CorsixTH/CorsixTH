@@ -299,8 +299,6 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
 av_packet_queue::av_packet_queue()
     : first_packet(nullptr), last_packet(nullptr), count(0), mutex{}, cond{} {}
 
-av_packet_queue::~av_packet_queue() {}
-
 int av_packet_queue::get_count() const { return count; }
 
 void av_packet_queue::push(AVPacket* pPacket) {

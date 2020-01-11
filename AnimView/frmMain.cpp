@@ -490,8 +490,6 @@ void frmMain::_onToggleMask(wxCommandEvent& evt) {
   m_panFrame->Refresh(false);
 }
 
-frmMain::~frmMain() {}
-
 void frmMain::_onFirstAnim(wxCommandEvent& evt) {
   if (m_iCurrentAnim > 0) _onAnimChange(0);
 }
@@ -689,14 +687,14 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
-  int iLayer = ::wxGetNumberFromUser(
+  long iLayer = ::wxGetNumberFromUser(
       L"Enter the layer number to search in (0 - 12)", L"Layer:",
       L"Search for Layer / ID Combo", 0, 0, 13, this);
-  if (iLayer == -1) return;
-  int iID = ::wxGetNumberFromUser(L"Enter the ID number to search for (0 - 24)",
-                                  L"ID:", L"Search for Layer / ID Combo", 0, 0,
-                                  24, this);
-  if (iID == -1) return;
+  if (iLayer < 0 || iLayer > 12) return;
+  long iID = ::wxGetNumberFromUser(
+      L"Enter the ID number to search for (0 - 24)", L"ID:",
+      L"Search for Layer / ID Combo", 0, 0, 24, this);
+  if (iID < 0 || iID > 24) return;
 
   m_lstSearchResults->Clear();
   wxBusyCursor oBusy;
@@ -705,14 +703,14 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
 
     THLayerMask mskAnim;
     m_oAnims.getAnimationMask(i, mskAnim);
-    if (mskAnim.isSet(iLayer, iID)) {
+    if (mskAnim.isSet(static_cast<int>(iLayer), static_cast<int>(iID))) {
       m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
     }
   }
 }
 
 void frmMain::_onSearchFrame(wxCommandEvent& evt) {
-  int iFrame =
+  long iFrame =
       ::wxGetNumberFromUser(L"Enter the frame number to search for.", L"Frame:",
                             L"Search for frame", 0, 0, 20000, this);
   if (iFrame == -1) return;
@@ -728,9 +726,9 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
 }
 
 void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
-  int iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
-                                     L"Sound index:", L"Search for sound", 0, 0,
-                                     256, this);
+  long iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
+                                      L"Sound index:", L"Search for sound", 0,
+                                      0, 256, this);
   if (iFrame == -1) return;
 
   m_lstSearchResults->Clear();

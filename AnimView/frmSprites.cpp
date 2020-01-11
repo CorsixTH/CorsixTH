@@ -94,8 +94,6 @@ frmSprites::frmSprites()
   load(true);
 }
 
-frmSprites::~frmSprites() {}
-
 void frmSprites::_onLoad(wxCommandEvent& evt) { load(false); }
 
 void frmSprites::_onLoadComplex(wxCommandEvent& evt) { load(true); }

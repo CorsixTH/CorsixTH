@@ -199,7 +199,8 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
           unicode_to_codepage_437(next_utf8_codepoint(sMessage));
       if (iFirstASCII <= iChar && iChar <= iLastASCII) {
         iChar -= iFirstASCII;
-        unsigned int iWidth, iHeight;
+        int iWidth;
+        int iHeight;
         sheet->draw_sprite(pCanvas, iChar, iX, iY, 0);
         sheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
         iX += iWidth + letter_spacing;
@@ -244,7 +245,8 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           sBreakPosition = sOld;
           break;
         }
-        unsigned int iCharWidth = 0, iCharHeight = 0;
+        int iCharWidth = 0;
+        int iCharHeight = 0;
         if (iFirstASCII <= iChar && iChar <= iLastASCII) {
           sheet->get_sprite_size_unchecked(iChar - iFirstASCII, &iCharWidth,
                                            &iCharHeight);
@@ -391,7 +393,8 @@ FT_Error freetype_font::match_bitmap_font(
   // the standard font character, but for fonts which only have numbers, zero
   // seems like the next best choice).
   for (const char* sCharToTry = "M0"; *sCharToTry; ++sCharToTry) {
-    unsigned int iWidth, iHeight;
+    int iWidth;
+    int iHeight;
     unsigned int iSprite = *sCharToTry - 31;
     if (pBitmapFontSpriteSheet->get_sprite_size(iSprite, &iWidth, &iHeight) &&
         pBitmapFontSpriteSheet->get_sprite_average_colour(iSprite, &colour) &&
@@ -401,10 +404,13 @@ FT_Error freetype_font::match_bitmap_font(
   }
 
   // Take the average size of all characters, and the colour of one of them.
-  unsigned int iWidthSum = 0, iHeightSum = 0, iAverageNum = 0;
+  int iWidthSum = 0;
+  int iHeightSum = 0;
+  int iAverageNum = 0;
   for (unsigned int i = 0; i < pBitmapFontSpriteSheet->get_sprite_count();
        ++i) {
-    unsigned int iWidth, iHeight;
+    int iWidth;
+    int iHeight;
     pBitmapFontSpriteSheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
     if (iWidth <= 1 || iHeight <= 1) continue;
     if (!pBitmapFontSpriteSheet->get_sprite_average_colour(i, &colour))
@@ -478,7 +484,7 @@ struct codepoint_glyph {
 
 // Determine if the character code is a suitable Chinese/Japanese/Korean
 // character for a line break.
-bool isCjkBreakCharacter(int charcode) {
+bool isCjkBreakCharacter(unsigned int charcode) {
   return (charcode == 0x3000 ||  // Ideographic space
           charcode == 0x3002 ||  // Ideographic full stop
           charcode == 0xff0c ||  // Fullwidth comma
@@ -587,7 +593,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       }
 
       // Make an automatic line break if one is needed.
-      int line_width_with_glyph =
+      long line_width_with_glyph =
           (ftvPen.x + oGlyph.metrics.horiBearingX + oGlyph.metrics.width + 63) /
           64;
       if (line_width_with_glyph >= iWidth || bIsNewLine) {

@@ -195,7 +195,7 @@ class av_packet_queue {
   //!
   //! \remarks Does not free the included packets. The packet queue should be
   //! flushed before it is destroyed.
-  ~av_packet_queue();
+  ~av_packet_queue() = default;
 
   //! Push a new packet on the back of the queue
   void push(AVPacket* packet);

@@ -67,7 +67,7 @@ class th_string_list {
   th_string_list(th_string_list&&) = delete;
   th_string_list& operator=(const th_string_list&) = delete;
   th_string_list&& operator=(th_string_list&&) = delete;
-  ~th_string_list();
+  ~th_string_list() = default;
 
   //! Get the number of sections in the string list
   size_t get_section_count();

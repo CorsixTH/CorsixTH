@@ -332,7 +332,8 @@ void animation_manager::set_bounding_box(frame& oFrame) {
       continue;
     }
 
-    unsigned int iWidth, iHeight;
+    int iWidth;
+    int iHeight;
     oElement.element_sprite_sheet->get_sprite_size_unchecked(oElement.sprite,
                                                              &iWidth, &iHeight);
     set_left_to_min(oFrame.bounding_left, oElement.x);
@@ -871,7 +872,8 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
     }
 
     if (iFlags & thdf_flip_horizontal) {
-      unsigned int iWidth, iHeight;
+      int iWidth;
+      int iHeight;
       oElement.element_sprite_sheet->get_sprite_size_unchecked(
           oElement.sprite, &iWidth, &iHeight);
       if (oElement.element_sprite_sheet->hit_test_sprite(
@@ -929,7 +931,8 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
     }
 
     if (iFlags & thdf_flip_horizontal) {
-      unsigned int iWidth, iHeight;
+      int iWidth;
+      int iHeight;
       oElement.element_sprite_sheet->get_sprite_size_unchecked(
           oElement.sprite, &iWidth, &iHeight);
 
@@ -977,11 +980,10 @@ void animation_manager::get_frame_extent(size_t iFrame, const ::layers& oLayers,
 
       int iX = oElement.x;
       int iY = oElement.y;
-      unsigned int iWidth_, iHeight_;
+      int iWidth;
+      int iHeight;
       oElement.element_sprite_sheet->get_sprite_size_unchecked(
-          oElement.sprite, &iWidth_, &iHeight_);
-      int iWidth = static_cast<int>(iWidth_);
-      int iHeight = static_cast<int>(iHeight_);
+          oElement.sprite, &iWidth, &iHeight);
       if (iFlags & thdf_flip_horizontal) iX = -(iX + iWidth);
       if (iX < iMinX) iMinX = iX;
       if (iY < iMinY) iMinY = iY;
@@ -1611,8 +1613,7 @@ int GetAnimationDurationAndExtent(animation_manager* pManager, size_t iFrame,
 
 }  // namespace
 
-void animation::set_morph_target(animation* pMorphTarget,
-                                 unsigned int iDurationFactor) {
+void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
   morph_target = pMorphTarget;
   draw_fn = THAnimation_draw_morph;
   hit_test_fn = THAnimation_hit_test_morph;

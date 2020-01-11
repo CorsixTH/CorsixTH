@@ -496,8 +496,7 @@ class sprite_sheet {
      destination.
       @return Size could be provided for the sprite.
   */
-  bool get_sprite_size(size_t iSprite, unsigned int* pWidth,
-                       unsigned int* pHeight) const;
+  bool get_sprite_size(size_t iSprite, int* pWidth, int* pHeight) const;
 
   //! Get size of a sprite, assuming all input is correctly supplied.
   /*!
@@ -505,8 +504,8 @@ class sprite_sheet {
       @param pWidth [out] The sprite width is stored in the destination.
       @param pHeight [out] The sprite height is stored in the destination.
   */
-  void get_sprite_size_unchecked(size_t iSprite, unsigned int* pWidth,
-                                 unsigned int* pHeight) const;
+  void get_sprite_size_unchecked(size_t iSprite, int* pWidth,
+                                 int* pHeight) const;
 
   //! Get the best colour to represent the sprite.
   /*!

@@ -133,7 +133,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
  public:
   lua_persist_basic_writer(lua_State* L) : L(L), data() {}
 
-  ~lua_persist_basic_writer() {}
+  ~lua_persist_basic_writer() = default;
 
   lua_State* get_stack() override { return L; }
 
@@ -671,7 +671,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
  public:
   lua_persist_basic_reader(lua_State* L) : L(L), string_buffer() {}
 
-  ~lua_persist_basic_reader() {}
+  ~lua_persist_basic_reader() = default;
 
   lua_State* get_stack() override { return L; }
 
