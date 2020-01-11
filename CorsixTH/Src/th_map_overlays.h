@@ -64,7 +64,8 @@ class map_typical_overlay : public map_overlay {
   void set_font(::font* font, bool take_ownership);
 
  protected:
-  void draw_text(render_target* pCanvas, int iX, int iY, std::string str);
+  void draw_text(render_target* pCanvas, int iX, int iY,
+                 const std::string& str);
 
   sprite_sheet* sprites;
   ::font* font;
@@ -80,7 +81,7 @@ class map_text_overlay : public map_typical_overlay {
   ~map_text_overlay() override = default;
 
   void draw_cell(render_target* pCanvas, int iCanvasX, int iCanvasY,
-                         const level_map* pMap, int iNodeX, int iNodeY) override;
+                 const level_map* pMap, int iNodeX, int iNodeY) override;
 
   void set_background_sprite(size_t iSprite);
   virtual const std::string get_text(const level_map* pMap, int iNodeX,

@@ -240,7 +240,7 @@ class level_map {
                          map_load_object_callback_fn fnObjectCallback,
                          void* pCallbackToken);
 
-  void save(std::string filename);
+  void save(const std::string& filename);
 
   //! Set the sprite sheet to be used for drawing the map
   /*!

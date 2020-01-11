@@ -1,5 +1,5 @@
 ---
-Checks:          'bugprone-*,-bugprone-suspicious-enum-usage,clang-diagnostic-*,clang-analyzer-*,misc-throw-by-value-catch-by-reference,modernize-use-nullptr,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-override'
+Checks:          'bugprone-*,-bugprone-suspicious-enum-usage,clang-diagnostic-*,clang-analyzer-*,misc-throw-by-value-catch-by-reference,modernize-use-nullptr,modernize-use-equals-default,modernize-use-equals-delete,modernize-use-override,performance-*'
 WarningsAsErrors: ''
 HeaderFilterRegex: '/CorsixTH/Src/|/AnimView/|/common/'
 AnalyzeTemporaryDtors: false

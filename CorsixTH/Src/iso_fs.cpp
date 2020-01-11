@@ -237,7 +237,7 @@ class iso_directory_iterator final {
   /**
    * Move the given iso_directory_iterator
    */
-  iso_directory_iterator(iso_directory_iterator&& it) {
+  iso_directory_iterator(iso_directory_iterator&& it) noexcept {
     directory_ptr = it.directory_ptr;
     end_ptr = it.end_ptr;
     entry = std::move(it.entry);
@@ -282,7 +282,7 @@ class iso_directory_iterator final {
   /**
    * Assign this iterator the value of another iterator by move
    */
-  iso_directory_iterator& operator=(iso_directory_iterator&& rhs) {
+  iso_directory_iterator& operator=(iso_directory_iterator&& rhs) noexcept {
     directory_ptr = rhs.directory_ptr;
     end_ptr = rhs.end_ptr;
     entry = std::move(rhs.entry);

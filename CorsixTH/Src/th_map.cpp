@@ -537,7 +537,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   return true;
 }
 
-void level_map::save(std::string filename) {
+void level_map::save(const std::string& filename) {
   uint8_t aBuffer[256] = {0};
   int iBufferNext = 0;
   std::ofstream os(filename, std::ios_base::trunc | std::ios_base::binary);

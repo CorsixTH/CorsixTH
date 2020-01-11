@@ -233,7 +233,7 @@ size_t THAnimations::markDuplicates() {
   return iNonDuplicateCount;
 }
 
-bool THAnimations::loadFrameFile(wxString sFilename) {
+bool THAnimations::loadFrameFile(const wxString& sFilename) {
   if (!loadVector(frames, sFilename)) return false;
 
   /*
@@ -245,14 +245,14 @@ bool THAnimations::loadFrameFile(wxString sFilename) {
   return true;
 }
 
-bool THAnimations::loadTableFile(wxString sFilename) {
+bool THAnimations::loadTableFile(const wxString& sFilename) {
   spriteBitmaps.clear();
   if (!loadVector(sprites, sFilename)) return false;
   spriteBitmaps.resize(sprites.size());
   return true;
 }
 
-bool THAnimations::loadPaletteFile(wxString sFilename) {
+bool THAnimations::loadPaletteFile(const wxString& sFilename) {
   if (!loadVector(colours, sFilename)) return false;
   for (th_colour_t& colour : colours) {
     colour.r = palette_upscale_map[colour.r & 0x3F];
@@ -262,7 +262,7 @@ bool THAnimations::loadPaletteFile(wxString sFilename) {
   return true;
 }
 
-bool THAnimations::loadGhostFile(wxString sFilename, int iIndex) {
+bool THAnimations::loadGhostFile(const wxString& sFilename, int iIndex) {
   if (iIndex < 0 || iIndex >= 4) return false;
 
   std::vector<unsigned char> data;
@@ -285,7 +285,9 @@ size_t THAnimations::getAnimationCount() { return anims.size(); }
 
 size_t THAnimations::getSpriteCount() { return sprites.size(); }
 
-void THAnimations::setSpritePath(wxString aPath) { m_sSpritePath = aPath; }
+void THAnimations::setSpritePath(const wxString& aPath) {
+  m_sSpritePath = aPath;
+}
 
 void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
   mskLayers.clear();
