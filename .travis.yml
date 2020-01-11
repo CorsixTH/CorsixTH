@@ -1,4 +1,4 @@
-dist: xenial
+dist: bionic
 language: cpp
 compiler: gcc
 addons:
@@ -9,10 +9,20 @@ addons:
       - luarocks
       - doxygen
       - sshpass
-      - ant
+      - libavcodec-dev
+      - libavformat-dev
+      - libavutil-dev
+      - libswresample-dev
+      - libswscale-dev
+      - libsdl2-dev
+      - libsdl2-mixer-dev
+      - libfreetype6-dev
+      - libwxgtk3.0-gtk3-dev
+      - clang-tidy-8
+
 
 before_install:
-  # Xenial does not have catch2 in its repo so clone and install locally
+  # Bionic does not have catch2 in its repo so clone and install locally
   - cd $HOME
   - git clone https://github.com/catchorg/Catch2.git --depth=1
   - cd Catch2
@@ -28,18 +38,14 @@ before_install:
   - luarocks --local install luacheck 0.19.1
   # Required for lua unit tests
   - luarocks --local install busted
-  - git clone --depth=1 https://github.com/CorsixTH/deps.git $HOME/deps
   - mkdir libs
   - pushd libs
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
   - popd
 install:
-  - CMAKE_INCLUDE_PATH=$HOME/deps/gnu-linux-x64
-  - CMAKE_LIBRARY_PATH=$HOME/deps/gnu-linux-x64/lib
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
-  - cp $HOME/deps/travisci/cmake/FindFreetype.cmake CMake/FindFreetype.cmake
-  - cmake -DLUA_PROGRAM_PATH=`which lua` -DENABLE_UNIT_TESTS=ON -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DWITH_LUAJIT=OFF -DCMAKE_INCLUDE_PATH="$CMAKE_INCLUDE_PATH;$CMAKE_INCLUDE_PATH/SDL2" -DCMAKE_LIBRARY_PATH="$CMAKE_LIBRARY_PATH" -DLUA_LIBRARY="$CMAKE_LIBRARY_PATH/liblua.so" -Bfresh -H. --debug-output
+  - cmake -DLUA_PROGRAM_PATH=`which lua` -DENABLE_UNIT_TESTS=ON -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DWITH_LUAJIT=OFF -DCMAKE_EXPORT_COMPILE_COMMANDS=ON -Bfresh -H. --debug-output
 before_script:
   # Don't ask for confirmation when using scp
   - echo -e "Host armedpineapple.co.uk\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
@@ -54,6 +60,8 @@ script:
   # Check cpp format
   - cd ${TRAVIS_BUILD_DIR}
   - clang-format -i CorsixTH/Src/*{.cpp,.h} AnimView/*{.cpp,.h} common/*{.cpp,.h} CorsixTH/SrcUnshared/main.cpp
+  # clang-tidy check. The valist test is buggy in this environment (https://bugs.llvm.org/show_bug.cgi?id=41311)
+  - clang-tidy-8 -p $TRAVIS_BUILD_DIR/fresh --warnings-as-errors=\*,-clang-analyzer-valist.Uninitialized CorsixTH/Src/*{.cpp,.c} common/*.cpp CorsixTH/SrcUnshared/main.cpp
   - git diff --exit-code
   # Build CorsixTH
   - cd fresh

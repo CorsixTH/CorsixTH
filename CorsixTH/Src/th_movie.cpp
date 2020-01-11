@@ -935,7 +935,6 @@ int movie_player::decode_audio_frame(bool fFirst) {
       audio_packet_size = audio_packet->size;
 
       if (audio_packet == nullptr) {
-        fNewPacket = false;
         return -1;
       }
       fNewPacket = true;
