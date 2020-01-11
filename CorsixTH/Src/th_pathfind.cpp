@@ -530,9 +530,9 @@ void pathfinder::push_to_open_heap(path_node* pNode) {
 }
 
 void pathfinder::open_heap_promote(path_node* pNode) {
-  int i = pNode->open_idx;
+  size_t i = pNode->open_idx;
   while (i > 0) {
-    int parent = (i - 1) / 2;
+    size_t parent = (i - 1) / 2;
     path_node* pParent = open_heap[parent];
     if (pParent->value() <= pNode->value()) {
       break;

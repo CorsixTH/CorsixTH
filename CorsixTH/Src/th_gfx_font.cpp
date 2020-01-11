@@ -229,7 +229,7 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
       const char* sLastGoodBreakPosition = sBreakPosition;
       int iMsgWidth = -letter_spacing;
       int iMsgBreakWidth = iMsgWidth;
-      unsigned int iTallest = 0;
+      int iTallest = 0;
       const char* s;
       bool foundNewLine = false;
       unsigned int iNextChar = 0;
@@ -794,7 +794,9 @@ void freetype_font::render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
                                 FT_Pos x, FT_Pos y) const {
   uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
   uint8_t* pInRow = pBitmap->buffer;
-  for (int iY = 0; iY < pBitmap->rows;
+  int rows = static_cast<int>(pBitmap->rows);
+  int width = static_cast<int>(pBitmap->width);
+  for (int iY = 0; iY < rows;
        ++iY, pOutRow += pCacheEntry->width, pInRow += pBitmap->pitch) {
 #ifndef TRUST_RENDER_COORDS
     if (y + iY < 0) continue;
@@ -802,7 +804,7 @@ void freetype_font::render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
 #endif
     uint8_t *pIn = pInRow, *pOut = pOutRow;
     uint8_t iMask = 0x80;
-    for (int iX = 0; iX < pBitmap->width; ++iX, ++pOut) {
+    for (int iX = 0; iX < width; ++iX, ++pOut) {
 #ifndef TRUST_RENDER_COORDS
       if (x + iX < 0) continue;
       if (x + iX >= pCacheEntry->width) break;
@@ -821,14 +823,16 @@ void freetype_font::render_gray(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
                                 FT_Pos x, FT_Pos y) const {
   uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
   uint8_t* pInRow = pBitmap->buffer;
-  for (int iY = 0; iY < pBitmap->rows;
+  int rows = static_cast<int>(pBitmap->rows);
+  int width = static_cast<int>(pBitmap->width);
+  for (int iY = 0; iY < rows;
        ++iY, pOutRow += pCacheEntry->width, pInRow += pBitmap->pitch) {
 #ifndef TRUST_RENDER_COORDS
     if (y + iY < 0) continue;
     if (y + iY >= pCacheEntry->height) break;
 #endif
     uint8_t *pIn = pInRow, *pOut = pOutRow;
-    for (int iX = 0; iX < pBitmap->width; ++iX, ++pIn, ++pOut) {
+    for (int iX = 0; iX < width; ++iX, ++pIn, ++pOut) {
 #ifndef TRUST_RENDER_COORDS
       if (x + iX < 0) continue;
       if (x + iX >= pCacheEntry->width) break;

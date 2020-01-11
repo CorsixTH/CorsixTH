@@ -26,7 +26,7 @@ int l_decompress(lua_State* L) {
     lua_pushliteral(L, "Input is not RNC compressed data");
     return 2;
   }
-  uint32_t outlen = rnc_output_size(in);
+  size_t outlen = rnc_output_size(in);
 
   // Allocate scratch area as Lua userdata so that if something horrible
   // happens, it'll be cleaned up by Lua's GC. Remember that most Lua API

@@ -342,7 +342,7 @@ int l_anim_set_morph(lua_State* L) {
 
   int iDurationFactor = 1;
   if (!lua_isnoneornil(L, 3) && luaL_checkinteger(L, 3) > 0) {
-    iDurationFactor = luaL_checkinteger(L, 3);
+    iDurationFactor = static_cast<int>(luaL_checkinteger(L, 3));
   }
 
   pAnimation->set_morph_target(pMorphTarget, iDurationFactor);

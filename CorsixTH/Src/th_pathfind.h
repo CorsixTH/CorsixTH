@@ -69,7 +69,7 @@ struct path_node {
   /*!
       If the cell is not in the open heap, then this value is undefined.
   */
-  int open_idx;
+  size_t open_idx;
 
   //! Total cost of this node.
   /*!

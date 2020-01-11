@@ -222,7 +222,7 @@ int l_get_compile_options(lua_State* L) {
 }  // namespace
 
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
-                     size_t iUps) {
+                     int iUps) {
   luaT_pushcclosure(pState->L, fn, iUps);
 }
 

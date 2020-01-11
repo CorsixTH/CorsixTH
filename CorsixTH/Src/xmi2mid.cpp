@@ -66,7 +66,7 @@ class memory_buffer {
     return true;
   }
 
-  bool skip(ssize_t distance) {
+  bool skip(std::ptrdiff_t distance) {
     if (distance < 0) {
       if (pointer + distance < data) return false;
     }
@@ -121,7 +121,7 @@ class memory_buffer {
 
   template <class T>
   bool write(const T* values, size_t count) {
-    if (!skip(static_cast<ssize_t>(sizeof(T) * count))) return false;
+    if (!skip(static_cast<std::ptrdiff_t>(sizeof(T) * count))) return false;
     std::memcpy(pointer - sizeof(T) * count, values, sizeof(T) * count);
     return true;
   }
@@ -274,7 +274,7 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
               bufInput.skip(-4);
             } else {
               lstTokens.pop_back();
-              if (!bufInput.skip(static_cast<ssize_t>(
+              if (!bufInput.skip(static_cast<std::ptrdiff_t>(
                       bufInput.read_variable_length_uint())))
                 return nullptr;
               break;
