@@ -407,8 +407,7 @@ FT_Error freetype_font::match_bitmap_font(
   int iWidthSum = 0;
   int iHeightSum = 0;
   int iAverageNum = 0;
-  for (unsigned int i = 0; i < pBitmapFontSpriteSheet->get_sprite_count();
-       ++i) {
+  for (size_t i = 0; i < pBitmapFontSpriteSheet->get_sprite_count(); ++i) {
     int iWidth;
     int iHeight;
     pBitmapFontSpriteSheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);

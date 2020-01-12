@@ -99,17 +99,21 @@ int l_str_new(lua_State* L) {
 // Helper function to make an array in Lua
 void aux_mk_table(lua_State* L, std::vector<const char*> literals,
                   std::vector<int> values) {
-  lua_createtable(L, static_cast<int>(literals.size() + values.size()), 0);
-  for (int i = 0; i < literals.size(); ++i) {
+  // .size is a size_t, but lua only handles int indexes
+  int literal_count = static_cast<int>(literals.size());
+  int value_count = static_cast<int>(values.size());
+
+  lua_createtable(L, literal_count + value_count, 0);
+  for (int i = 0; i < literal_count; ++i) {
     const char* sStr = literals.at(i);
     lua_pushstring(L, sStr);
     lua_rawseti(L, -2, i + 1);
   }
-  for (int i = 0; i < values.size(); ++i) {
+  for (int i = 0; i < value_count; ++i) {
     int iValue = values.at(i);
     if (0 > iValue && iValue > LUA_REGISTRYINDEX) --iValue;
     lua_pushvalue(L, iValue);
-    lua_rawseti(L, -2, i + literals.size() + 1);
+    lua_rawseti(L, -2, i + literal_count + 1);
   }
 }
 
