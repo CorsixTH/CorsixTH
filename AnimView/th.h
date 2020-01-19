@@ -34,13 +34,17 @@ SOFTWARE.
          changes to.
 */
 
-#pragma once
+#ifndef ANIMVIEW_TH_H_
+#define ANIMVIEW_TH_H_
+
 #include "config.h"
+
 #include <stdint.h>
 #include <wx/file.h>
 #include <wx/image.h>
 #include <wx/string.h>
 #include <wx/txtstrm.h>
+
 #include <array>
 #include <vector>
 
@@ -149,31 +153,31 @@ class Bitmap {
 class THAnimations {
  public:
   THAnimations();
-  ~THAnimations();
+  ~THAnimations() = default;
 
-  bool loadAnimationFile(wxString sFilename) {
+  bool loadAnimationFile(const wxString& sFilename) {
     return loadVector(anims, sFilename);
   }
 
-  bool loadFrameFile(wxString sFilename);
+  bool loadFrameFile(const wxString& sFilename);
 
-  bool loadListFile(wxString sFilename) {
+  bool loadListFile(const wxString& sFilename) {
     return loadVector(elementList, sFilename);
   }
 
-  bool loadElementFile(wxString sFilename) {
+  bool loadElementFile(const wxString& sFilename) {
     return loadVector(elements, sFilename);
   }
 
-  bool loadTableFile(wxString sFilename);
+  bool loadTableFile(const wxString& sFilename);
 
-  bool loadSpriteFile(wxString sFilename) {
+  bool loadSpriteFile(const wxString& sFilename) {
     return loadVector(chunks, sFilename);
   }
 
-  bool loadPaletteFile(wxString sFilename);
+  bool loadPaletteFile(const wxString& sFilename);
 
-  bool loadGhostFile(wxString sFilename, int iIndex);
+  bool loadGhostFile(const wxString& sFilename, int iIndex);
 
   size_t markDuplicates();
 
@@ -190,7 +194,7 @@ class THAnimations {
   bool isAnimationDuplicate(size_t iAnimation);
   bool doesAnimationIncludeFrame(size_t iAnimation, size_t iFrame);
   void getAnimationMask(size_t iAnimation, THLayerMask& mskLayers);
-  void setSpritePath(wxString aPath);
+  void setSpritePath(const wxString& aPath);
 
   Bitmap* getSpriteBitmap(size_t iSprite, bool bComplex = false);
   th_colour_t* getPalette() { return colours.data(); }
@@ -206,7 +210,7 @@ class THAnimations {
 
  protected:
   template <class T>
-  bool loadVector(std::vector<T>& vector, wxString sFilename) {
+  bool loadVector(std::vector<T>& vector, const wxString& sFilename) {
     vector.clear();
 
     wxFile oFile(sFilename);
@@ -243,3 +247,5 @@ class THAnimations {
   size_t m_iGhostMapOffset;
   wxString m_sSpritePath;
 };
+
+#endif

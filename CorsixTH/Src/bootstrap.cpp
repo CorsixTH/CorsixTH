@@ -20,8 +20,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 #include "config.h"
+
 #include <array>
 #include <cstring>
+
 #include "lua.hpp"
 #include "th_lua.h"
 

@@ -69,7 +69,7 @@ struct path_node {
   /*!
       If the cell is not in the open heap, then this value is undefined.
   */
-  int open_idx;
+  size_t open_idx;
 
   //! Total cost of this node.
   /*!
@@ -256,7 +256,7 @@ class pathfinder {
   const level_map* default_map;
 
   //! 2D array of nodes, one for each map cell
-  path_node* nodes;
+  std::vector<path_node> nodes;
 
   //! Array of "dirty" nodes which need to be reset before the next path find
   /*!

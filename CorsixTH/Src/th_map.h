@@ -24,6 +24,7 @@ SOFTWARE.
 #define CORSIX_TH_TH_MAP_H_
 #include <list>
 #include <string>
+
 #include "th_gfx.h"
 
 /*
@@ -172,7 +173,7 @@ enum class temperature_theme {
 
 struct map_tile : public link_list {
   map_tile();
-  ~map_tile();
+  ~map_tile() = default;
 
   // Linked list for entities rendered at this tile
   // THLinkList::pPrev (will always be nullptr)
@@ -239,7 +240,7 @@ class level_map {
                          map_load_object_callback_fn fnObjectCallback,
                          void* pCallbackToken);
 
-  void save(std::string filename);
+  void save(const std::string& filename);
 
   //! Set the sprite sheet to be used for drawing the map
   /*!

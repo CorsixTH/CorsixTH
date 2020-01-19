@@ -74,10 +74,10 @@ int main(int argc, char** argv) {
   bool bRun = true;
 
   while (bRun) {
-    lua_State* L = NULL;
+    lua_State* L = nullptr;
 
     L = luaL_newstate();
-    if (L == NULL) {
+    if (L == nullptr) {
       fprintf(stderr,
               "Fatal error starting CorsixTH: "
               "Cannot open Lua state.\n");
@@ -97,7 +97,7 @@ int main(int argc, char** argv) {
 
     if (lua_pcall(L, argc, 0, 1) != 0) {
       const char* err = lua_tostring(L, -1);
-      if (err != NULL) {
+      if (err != nullptr) {
         fprintf(stderr, "%s\n", err);
       } else {
         fprintf(stderr,

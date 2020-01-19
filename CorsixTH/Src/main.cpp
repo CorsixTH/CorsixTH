@@ -21,9 +21,11 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include <cstdio>
 #include <cstring>
 #include <string>
+
 #include "iso_fs.h"
 #include "lua.hpp"
 #include "lua_rnc.h"
@@ -102,7 +104,6 @@ int lua_main_no_eval(lua_State* L) {
     lua_getglobal(L, "assert");
     lua_getglobal(L, "loadfile");
     lua_pushstring(L, CORSIX_TH_INTERPRETER_PATH);
-    bGotScriptFile = true;
   }
 
   lua_call(L, 1, 2);

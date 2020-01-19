@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "th.h"
+
 #include "config.h"
+
 #include <cstring>
 #include <stdexcept>
 
@@ -172,8 +174,6 @@ th_string_list::th_string_list(const uint8_t* data, size_t length) {
   // Terminate final string with nil character
   *sDataOut = 0;
 }
-
-th_string_list::~th_string_list() {}
 
 size_t th_string_list::get_section_count() { return sections.size(); }
 

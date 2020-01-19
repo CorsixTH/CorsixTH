@@ -21,15 +21,19 @@ SOFTWARE.
 */
 
 #include "th.h"
+
 #include "config.h"
+
 #include <wx/app.h>
 #include <wx/filename.h>
 #include <wx/toplevel.h>
+
 #include <algorithm>
 #include <array>
 #include <set>
 #include <stdexcept>
 #include <vector>
+
 #include "../common/rnc.h"
 
 static const unsigned char palette_upscale_map[0x40] = {
@@ -43,15 +47,11 @@ static const unsigned char palette_upscale_map[0x40] = {
 
 class ChunkRenderer {
  public:
-  ChunkRenderer(int width, int height, unsigned char* buffer = NULL) {
-    m_data = buffer ? buffer : new unsigned char[width * height];
+  ChunkRenderer(int width, int height)
+      : m_x(0), m_y(0), m_width(width), m_height(height), m_skip_eol(false) {
+    m_data = new unsigned char[width * height];
     m_ptr = m_data;
     m_end = m_data + width * height;
-    m_x = 0;
-    m_y = 0;
-    m_width = width;
-    m_height = height;
-    m_skip_eol = false;
   }
 
   ~ChunkRenderer() { delete[] m_data; }
@@ -60,7 +60,7 @@ class ChunkRenderer {
 
   unsigned char* takeData() {
     unsigned char* buffer = m_data;
-    m_data = 0;
+    m_data = nullptr;
     return buffer;
   }
 
@@ -73,7 +73,9 @@ class ChunkRenderer {
     m_skip_eol = false;
   }
 
-  void chunkFinish(unsigned char value) { chunkFill(m_end - m_ptr, value); }
+  void chunkFinish(unsigned char value) {
+    chunkFill(static_cast<int>(m_end - m_ptr), value);
+  }
 
   void chunkFill(int npixels, unsigned char value) {
     _fixNpixels(npixels);
@@ -94,7 +96,7 @@ class ChunkRenderer {
  protected:
   inline void _fixNpixels(int& npixels) const {
     if (m_ptr + npixels > m_end) {
-      npixels = m_end - m_ptr;
+      npixels = static_cast<int>(m_end - m_ptr);
     }
   }
 
@@ -106,13 +108,15 @@ class ChunkRenderer {
     m_skip_eol = true;
   }
 
-  unsigned char *m_data, *m_ptr, *m_end;
+  unsigned char* m_data;
+  unsigned char* m_ptr;
+  unsigned char* m_end;
   int m_x, m_y, m_width, m_height;
   bool m_skip_eol;
 };
 
 static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
-                          int datalen, unsigned char transparent) {
+                          size_t datalen, unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
     --datalen;
@@ -133,7 +137,7 @@ static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
 }
 
 static void decode_chunks_complex(ChunkRenderer& renderer,
-                                  const unsigned char* data, int datalen,
+                                  const unsigned char* data, size_t datalen,
                                   unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
@@ -198,8 +202,6 @@ THAnimations::THAnimations() {
   m_iGhostMapOffset = 0;
 }
 
-THAnimations::~THAnimations() {}
-
 bool THAnimations::isAnimationDuplicate(size_t iAnimation) {
   if (iAnimation < anims.size())
     return anims.at(iAnimation).unknown == 1;
@@ -231,7 +233,7 @@ size_t THAnimations::markDuplicates() {
   return iNonDuplicateCount;
 }
 
-bool THAnimations::loadFrameFile(wxString sFilename) {
+bool THAnimations::loadFrameFile(const wxString& sFilename) {
   if (!loadVector(frames, sFilename)) return false;
 
   /*
@@ -243,14 +245,14 @@ bool THAnimations::loadFrameFile(wxString sFilename) {
   return true;
 }
 
-bool THAnimations::loadTableFile(wxString sFilename) {
+bool THAnimations::loadTableFile(const wxString& sFilename) {
   spriteBitmaps.clear();
   if (!loadVector(sprites, sFilename)) return false;
   spriteBitmaps.resize(sprites.size());
   return true;
 }
 
-bool THAnimations::loadPaletteFile(wxString sFilename) {
+bool THAnimations::loadPaletteFile(const wxString& sFilename) {
   if (!loadVector(colours, sFilename)) return false;
   for (th_colour_t& colour : colours) {
     colour.r = palette_upscale_map[colour.r & 0x3F];
@@ -260,7 +262,7 @@ bool THAnimations::loadPaletteFile(wxString sFilename) {
   return true;
 }
 
-bool THAnimations::loadGhostFile(wxString sFilename, int iIndex) {
+bool THAnimations::loadGhostFile(const wxString& sFilename, int iIndex) {
   if (iIndex < 0 || iIndex >= 4) return false;
 
   std::vector<unsigned char> data;
@@ -283,7 +285,9 @@ size_t THAnimations::getAnimationCount() { return anims.size(); }
 
 size_t THAnimations::getSpriteCount() { return sprites.size(); }
 
-void THAnimations::setSpritePath(wxString aPath) { m_sSpritePath = aPath; }
+void THAnimations::setSpritePath(const wxString& aPath) {
+  m_sSpritePath = aPath;
+}
 
 void THAnimations::getAnimationMask(size_t iAnimation, THLayerMask& mskLayers) {
   mskLayers.clear();
@@ -351,7 +355,7 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex) {
 }
 
 th_frame_t* THAnimations::getFrameStruct(size_t iAnimation, size_t iFrame) {
-  if (iAnimation >= anims.size()) return 0;
+  if (iAnimation >= anims.size()) return nullptr;
   uint16_t iFrameIndex = anims.at(iAnimation).frame;
   while (iFrame--) {
     iFrameIndex = frames.at(iFrameIndex).next;
@@ -374,7 +378,8 @@ void THAnimations::drawFrame(wxImage& imgCanvas, size_t iAnimation,
   int iFarX = 0;
   int iFarY = 0;
   while ((pElement = _getElement(iListIndex++))) {
-    if (pMask != NULL && !pMask->isSet(pElement->flags >> 4, pElement->layerid))
+    if (pMask != nullptr &&
+        !pMask->isSet(pElement->flags >> 4, pElement->layerid))
       continue;
     uint16_t iSpriteIndex = pElement->table_position / sizeof(th_sprite_t);
     th_sprite_t* pSprite = &(sprites.at(iSpriteIndex));
@@ -473,7 +478,7 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
     for (int x = 0; x < m_iWidth; ++x) {
       uint8_t src = pixel(x, y);
       if (src == 0xFF && (iFlags & 0x8000) == 0) continue;
-      if (pColourTranslate != NULL) {
+      if (pColourTranslate != nullptr) {
         src = pColourTranslate[src];
         if (src == 0xFF && (iFlags & 0x8000) == 0) continue;
       }

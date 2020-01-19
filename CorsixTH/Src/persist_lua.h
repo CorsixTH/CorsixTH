@@ -23,8 +23,10 @@ SOFTWARE.
 #ifndef CORSIX_TH_PERSIST_LUA_H_
 #define CORSIX_TH_PERSIST_LUA_H_
 #include "config.h"
+
 #include <cstdlib>
 #include <vector>
+
 #include "th_lua.h"
 
 template <class T>

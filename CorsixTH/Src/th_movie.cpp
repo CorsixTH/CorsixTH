@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "th_movie.h"
+
 #include "config.h"
+
 #include "lua_sdl.h"
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
     defined(CORSIX_TH_USE_SDL_MIXER)
@@ -41,6 +43,7 @@ extern "C" {
 #endif
 }
 #include <SDL_mixer.h>
+
 #include <chrono>
 #include <cstring>
 #include <iostream>
@@ -295,8 +298,6 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
 
 av_packet_queue::av_packet_queue()
     : first_packet(nullptr), last_packet(nullptr), count(0), mutex{}, cond{} {}
-
-av_packet_queue::~av_packet_queue() {}
 
 int av_packet_queue::get_count() const { return count; }
 
@@ -934,7 +935,6 @@ int movie_player::decode_audio_frame(bool fFirst) {
       audio_packet_size = audio_packet->size;
 
       if (audio_packet == nullptr) {
-        fNewPacket = false;
         return -1;
       }
       fNewPacket = true;

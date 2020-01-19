@@ -21,8 +21,10 @@ SOFTWARE.
 */
 
 #include <SDL.h>
+
 #include <cstring>
 #include <exception>
+
 #include "th_gfx.h"
 #include "th_gfx_font.h"
 #include "th_lua_internal.h"
@@ -158,7 +160,8 @@ int l_spritesheet_size(lua_State* L) {
   if (iSprite < 0 || iSprite >= pSheet->get_sprite_count())
     return luaL_argerror(L, 2, "Sprite index out of bounds");
 
-  unsigned int iWidth, iHeight;
+  int iWidth;
+  int iHeight;
   pSheet->get_sprite_size_unchecked(iSprite, &iWidth, &iHeight);
 
   lua_pushinteger(L, iWidth);
@@ -483,7 +486,8 @@ int l_layers_depersist(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
-  lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
+  lua_persist_reader* pReader =
+      static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
 
   std::memset(pLayers->layer_contents, 0, sizeof(pLayers->layer_contents));
   int iNumLayers;
@@ -636,7 +640,6 @@ int l_surface_set_blue_filter_active(lua_State* L) {
 }
 
 int l_surface_map(lua_State* L) {
-  render_target* pCanvas = luaT_testuserdata<render_target>(L);
   lua_pushnumber(
       L, (lua_Number)render_target::map_colour((Uint8)luaL_checkinteger(L, 2),
                                                (Uint8)luaL_checkinteger(L, 3),
@@ -804,7 +807,8 @@ int l_line_depersist(lua_State* L) {
   line* pLine = luaT_testuserdata<line>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
-  lua_persist_reader* pReader = (lua_persist_reader*)lua_touserdata(L, 1);
+  lua_persist_reader* pReader =
+      static_cast<lua_persist_reader*>(lua_touserdata(L, 1));
   pLine->depersist(pReader);
   return 0;
 }

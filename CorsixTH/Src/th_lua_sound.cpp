@@ -23,6 +23,7 @@ SOFTWARE.
 #include <cctype>
 #include <cstring>
 #include <map>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 #include "th_lua_internal.h"

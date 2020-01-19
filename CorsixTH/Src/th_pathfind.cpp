@@ -21,11 +21,14 @@ SOFTWARE.
 */
 
 #include "th_pathfind.h"
+
 #include "config.h"
+
 #include <cmath>
 #include <cstdlib>
 #include <queue>
 #include <vector>
+
 #include "lua.hpp"
 #include "persist_lua.h"
 
@@ -36,7 +39,7 @@ path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
   int iWidth = pMap->get_width();
   parent->destination = nullptr;
   parent->allocate_node_cache(iWidth, pMap->get_height());
-  path_node* pNode = parent->nodes + iStartY * iWidth + iStartX;
+  path_node* pNode = &parent->nodes.at(iStartY * iWidth + iStartX);
   pNode->prev = nullptr;
   pNode->distance = 0;
   pNode->guess = guess_distance(pNode);
@@ -131,7 +134,7 @@ bool basic_pathfinder::find_path(const level_map* pMap, int iStartX,
 
   path_node* pNode = init(pMap, iStartX, iStartY);
   int iWidth = pMap->get_width();
-  path_node* pTarget = parent->nodes + iEndY * iWidth + iEndX;
+  path_node* pTarget = &parent->nodes.at(iEndY * iWidth + iEndX);
 
   while (true) {
     if (pNode == pTarget) {
@@ -428,37 +431,32 @@ bool object_visitor::visit_objects(const level_map* pMap, int iStartX,
 }
 
 pathfinder::pathfinder()
-    : basic_pathfinder(this),
+    : default_map(nullptr),
+      nodes({}),
+      dirty_node_list(nullptr),
+      open_heap(),
+      destination(nullptr),
+      node_cache_width(0),
+      node_cache_height(0),
+      dirty_node_count(0),
+      basic_pathfinder(this),
       hospital_finder(this),
       idle_tile_finder(this),
-      object_visitor(this),
-      open_heap() {
-  nodes = nullptr;
-  dirty_node_list = nullptr;
-  destination = nullptr;
-  default_map = nullptr;
-  node_cache_width = 0;
-  node_cache_height = 0;
-  dirty_node_count = 0;
-}
+      object_visitor(this) {}
 
-pathfinder::~pathfinder() {
-  delete[] nodes;
-  delete[] dirty_node_list;
-}
+pathfinder::~pathfinder() { delete[] dirty_node_list; }
 
 void pathfinder::set_default_map(const level_map* pMap) { default_map = pMap; }
 
 void pathfinder::allocate_node_cache(int iWidth, int iHeight) {
   if (node_cache_width != iWidth || node_cache_height != iHeight) {
-    delete[] nodes;
-    nodes = new path_node[iWidth * iHeight];
-    path_node* pNode = nodes;
+    nodes = std::vector<path_node>(iWidth * iHeight);
     for (int iY = 0; iY < iHeight; ++iY) {
-      for (int iX = 0; iX < iWidth; ++iX, ++pNode) {
-        pNode->prev = pNode;
-        pNode->x = iX;
-        pNode->y = iY;
+      for (int iX = 0; iX < iWidth; ++iX) {
+        path_node& node = nodes[iY * iWidth + iX];
+        node.prev = &node;
+        node.x = iX;
+        node.y = iY;
         // Other fields are undefined as the node is not part of a
         // path, and thus can be left uninitialised.
       }
@@ -532,9 +530,9 @@ void pathfinder::push_to_open_heap(path_node* pNode) {
 }
 
 void pathfinder::open_heap_promote(path_node* pNode) {
-  int i = pNode->open_idx;
+  size_t i = pNode->open_idx;
   while (i > 0) {
-    int parent = (i - 1) / 2;
+    size_t parent = (i - 1) / 2;
     path_node* pParent = open_heap[parent];
     if (pParent->value() <= pNode->value()) {
       break;
@@ -626,13 +624,13 @@ void pathfinder::depersist(lua_persist_reader* pReader) {
   if (!pReader->read_uint(iX) || !pReader->read_uint(iY)) {
     return;
   }
-  path_node* pNode = nodes + iY * iWidth + iX;
+  path_node* pNode = &nodes[iY * iWidth + iX];
   destination = pNode;
   for (int i = 0; i <= iLength - 2; ++i) {
     if (!pReader->read_uint(iX) || !pReader->read_uint(iY)) {
       return;
     }
-    path_node* pPrevNode = nodes + iY * iWidth + iX;
+    path_node* pPrevNode = &nodes[iY * iWidth + iX];
     pNode->distance = iLength - 1 - i;
     pNode->prev = pPrevNode;
     dirty_node_list[dirty_node_count++] = pNode;

@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include <algorithm>
+
 #include "th_gfx.h"
 #include "th_lua_internal.h"
 #include "th_map.h"

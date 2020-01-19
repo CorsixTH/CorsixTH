@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "frmSprites.h"
+
 #include "config.h"
+
 #include <wx/dcclient.h>
 #include <wx/dirdlg.h>
 #include <wx/filedlg.h>
@@ -40,7 +42,7 @@ BEGIN_EVENT_TABLE(frmSprites, wxFrame)
 END_EVENT_TABLE()
 
 frmSprites::frmSprites()
-    : wxFrame(NULL, wxID_ANY, L"Theme Hospital Sprite Viewer") {
+    : wxFrame(nullptr, wxID_ANY, L"Theme Hospital Sprite Viewer") {
   wxBoxSizer* pMainSizer = new wxBoxSizer(wxVERTICAL);
 
   wxStaticBoxSizer* pFiles = new wxStaticBoxSizer(wxVERTICAL, this, L"Files");
@@ -84,15 +86,13 @@ frmSprites::frmSprites()
   pSprites->Add(m_panFrame = new MyVScrolled(this), 1, wxEXPAND);
   pMainSizer->Add(pSprites, 1, wxEXPAND | wxALL, 2);
   m_panFrame->Connect(wxEVT_PAINT,
-                      (wxObjectEventFunction)&frmSprites::_onPanelPaint, NULL,
-                      this);
+                      (wxObjectEventFunction)&frmSprites::_onPanelPaint,
+                      nullptr, this);
 
   SetSizer(pMainSizer);
 
   load(true);
 }
-
-frmSprites::~frmSprites() {}
 
 void frmSprites::_onLoad(wxCommandEvent& evt) { load(false); }
 
@@ -145,7 +145,8 @@ void frmSprites::load(bool bComplex) {
     if (pSpriteBitmap->getWidth() * pSpriteBitmap->getHeight() > 0) {
       wxImage imgSprite(pSpriteBitmap->getWidth(), pSpriteBitmap->getHeight(),
                         false);
-      pSpriteBitmap->blit(imgSprite, 0, 0, NULL, m_oAnims.getPalette(), 0x8000);
+      pSpriteBitmap->blit(imgSprite, 0, 0, nullptr, m_oAnims.getPalette(),
+                          0x8000);
       oSprite.bitmap = wxBitmap(imgSprite);
     }
     m_vSprites.push_back(oSprite);

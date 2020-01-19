@@ -20,8 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#ifndef ANIMVIEW_FRMMAIN_H_
+#define ANIMVIEW_FRMMAIN_H_
+
 #include "config.h"
+
 #include <wx/button.h>
 #include <wx/checkbox.h>
 #include <wx/dcclient.h>
@@ -32,13 +35,14 @@ SOFTWARE.
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/txtstrm.h>
+
 #include "th.h"
 //#include <vector>
 
 class frmMain : public wxFrame {
  public:
   frmMain();
-  ~frmMain();
+  ~frmMain() override = default;
 
   enum {
     ID_FIRST_ANIM = wxID_HIGHEST + 1,
@@ -132,3 +136,5 @@ class frmMain : public wxFrame {
   wxPanel* m_panFrame;
   DECLARE_EVENT_TABLE()
 };
+
+#endif

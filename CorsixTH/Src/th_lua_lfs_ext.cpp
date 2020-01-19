@@ -22,6 +22,7 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include "th_lua_internal.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <windows.h>

@@ -23,9 +23,10 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_LUA_INTERNAL_H_
 #define CORSIX_TH_TH_LUA_INTERNAL_H_
 #include "config.h"
-#include "th_lua.h"
 
 #include <string>
+
+#include "th_lua.h"
 
 enum class lua_metatable {
   map,
@@ -65,11 +66,11 @@ struct lua_register_state {
 };
 
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
-                     size_t iUps);
+                     int iUps);
 
 template <typename... Args>
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
-                     size_t iUps, lua_metatable eMetatable1, Args... args) {
+                     int iUps, lua_metatable eMetatable1, Args... args) {
   lua_pushvalue(pState->L,
                 pState->metatables[static_cast<size_t>(eMetatable1)]);
   luaT_setclosure(pState, fn, iUps + 1, args...);
@@ -77,7 +78,7 @@ void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
 
 template <typename... Args>
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
-                     size_t iUps, const char* str, Args... args) {
+                     int iUps, const char* str, Args... args) {
   lua_pushstring(pState->L, str);
   luaT_setclosure(pState, fn, iUps + 1, args...);
 }

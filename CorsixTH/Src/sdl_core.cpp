@@ -21,9 +21,11 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include <array>
 #include <cstdio>
 #include <cstring>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 
@@ -68,8 +70,8 @@ class fps_ctrl {
   bool limit_fps;
   bool track_fps;
 
-  int q_front;
-  int q_back;
+  size_t q_front;
+  size_t q_back;
   int frame_count;
   std::array<Uint32, 4096> frame_time;
 

@@ -20,7 +20,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#ifndef ANIMVIEW_APP_H_
+#define ANIMVIEW_APP_H_
 
 #include "config.h"
 // For compilers that support precompilation, includes "wx/wx.h".
@@ -38,7 +39,9 @@ SOFTWARE.
 // ----------------------------
 
 class ThemeHospitalAnimViewApp : public wxApp {
-  virtual bool OnInit();
+  bool OnInit() override;
 };
 
 DECLARE_APP(ThemeHospitalAnimViewApp)
+
+#endif

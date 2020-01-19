@@ -21,11 +21,13 @@ SOFTWARE.
 */
 
 #include "config.h"
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 #ifdef CORSIX_TH_USE_WIN32_SDK
 #include <SDL_syswm.h>
 #include <windows.h>
+
 #include "../resource.h"
 #endif
 #include <array>

@@ -21,7 +21,9 @@ SOFTWARE.
 */
 
 #include "frmMain.h"
+
 #include "config.h"
+
 #include <wx/bitmap.h>
 #include <wx/dcclient.h>
 #include <wx/dcmemory.h>
@@ -36,6 +38,7 @@ SOFTWARE.
 #include <wx/stattext.h>
 #include <wx/tokenzr.h>
 #include <wx/wfstream.h>
+
 #include "backdrop.h"
 
 BEGIN_EVENT_TABLE(frmMain, wxFrame)
@@ -64,7 +67,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
 END_EVENT_TABLE()
 
 frmMain::frmMain()
-    : wxFrame(NULL, wxID_ANY, L"Theme Hospital Animation Viewer") {
+    : wxFrame(nullptr, wxID_ANY, L"Theme Hospital Animation Viewer") {
   wxSizer* pMainSizer = new wxBoxSizer(wxHORIZONTAL);
 
   wxSizer* pSidebarSizer = new wxBoxSizer(wxVERTICAL);
@@ -292,7 +295,7 @@ frmMain::frmMain()
 
   for (int iLayer = 0; iLayer < 13; ++iLayer) {
     wxCheckBox* pCheck = wxDynamicCast(FindWindow(ID(iLayer, 0)), wxCheckBox);
-    if (pCheck != NULL) {
+    if (pCheck != nullptr) {
       pCheck->SetValue(true);
       m_mskLayers.set(iLayer, 0);
     }
@@ -366,10 +369,11 @@ frmMain::frmMain()
   pRightHandSizer->Add(
       m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0,
       wxEXPAND | wxALL, 2);
-  m_panFrame->Connect(
-      wxEVT_PAINT, (wxObjectEventFunction)&frmMain::_onPanelPaint, NULL, this);
+  m_panFrame->Connect(wxEVT_PAINT,
+                      (wxObjectEventFunction)&frmMain::_onPanelPaint, nullptr,
+                      this);
   m_panFrame->Connect(wxEVT_LEFT_UP,
-                      (wxObjectEventFunction)&frmMain::_onPanelClick, NULL,
+                      (wxObjectEventFunction)&frmMain::_onPanelClick, nullptr,
                       this);
   m_panFrame->SetMinSize(m_panFrame->ClientToWindowSize(wxSize(402, 402)));
 
@@ -485,8 +489,6 @@ void frmMain::_onToggleMask(wxCommandEvent& evt) {
 
   m_panFrame->Refresh(false);
 }
-
-frmMain::~frmMain() {}
 
 void frmMain::_onFirstAnim(wxCommandEvent& evt) {
   if (m_iCurrentAnim > 0) _onAnimChange(0);
@@ -685,14 +687,14 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
-  int iLayer = ::wxGetNumberFromUser(
+  long iLayer = ::wxGetNumberFromUser(
       L"Enter the layer number to search in (0 - 12)", L"Layer:",
       L"Search for Layer / ID Combo", 0, 0, 13, this);
-  if (iLayer == -1) return;
-  int iID = ::wxGetNumberFromUser(L"Enter the ID number to search for (0 - 24)",
-                                  L"ID:", L"Search for Layer / ID Combo", 0, 0,
-                                  24, this);
-  if (iID == -1) return;
+  if (iLayer < 0 || iLayer > 12) return;
+  long iID = ::wxGetNumberFromUser(
+      L"Enter the ID number to search for (0 - 24)", L"ID:",
+      L"Search for Layer / ID Combo", 0, 0, 24, this);
+  if (iID < 0 || iID > 24) return;
 
   m_lstSearchResults->Clear();
   wxBusyCursor oBusy;
@@ -701,14 +703,14 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
 
     THLayerMask mskAnim;
     m_oAnims.getAnimationMask(i, mskAnim);
-    if (mskAnim.isSet(iLayer, iID)) {
+    if (mskAnim.isSet(static_cast<int>(iLayer), static_cast<int>(iID))) {
       m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
     }
   }
 }
 
 void frmMain::_onSearchFrame(wxCommandEvent& evt) {
-  int iFrame =
+  long iFrame =
       ::wxGetNumberFromUser(L"Enter the frame number to search for.", L"Frame:",
                             L"Search for frame", 0, 0, 20000, this);
   if (iFrame == -1) return;
@@ -724,9 +726,9 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
 }
 
 void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
-  int iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
-                                     L"Sound index:", L"Search for sound", 0, 0,
-                                     256, this);
+  long iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
+                                      L"Sound index:", L"Search for sound", 0,
+                                      0, 256, this);
   if (iFrame == -1) return;
 
   m_lstSearchResults->Clear();

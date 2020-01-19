@@ -23,6 +23,7 @@ SOFTWARE.
 #include <cstring>
 #include <exception>
 #include <string>
+
 #include "th_lua_internal.h"
 #include "th_map.h"
 #include "th_pathfind.h"
@@ -379,7 +380,7 @@ int l_map_set_player_count(lua_State* L) {
 
   try {
     pMap->set_player_count(count);
-  } catch (std::out_of_range) {
+  } catch (std::out_of_range&) {
     return luaL_error(L, "Player count out of range %d", count);
   }
   return 0;
@@ -536,7 +537,7 @@ int l_map_getcellflags(lua_State* L) {
   }
 
   // Fill Lua table with the flags and numbers of the tile.
-  for (auto val : lua_tile_flag_map) {
+  for (const auto& val : lua_tile_flag_map) {
     add_cellflag(L, pNode, val.second, val.first);
   }
   add_cellint(L, pNode->iRoomId, "roomId");

@@ -35,6 +35,7 @@ SOFTWARE.
 */
 
 #include "rnc.h"
+
 #include <cstddef>
 #include <cstdint>
 #include <vector>

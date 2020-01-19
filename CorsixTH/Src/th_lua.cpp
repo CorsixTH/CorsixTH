@@ -23,6 +23,7 @@ SOFTWARE.
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
+
 #include "bootstrap.h"
 #include "th.h"
 #include "th_lua_internal.h"
@@ -147,7 +148,7 @@ const uint8_t* luaT_checkfile(lua_State* L, int idx, size_t* pDataLen) {
     pData =
         reinterpret_cast<const uint8_t*>(luaL_checklstring(L, idx, &iLength));
   }
-  if (pDataLen != 0) *pDataLen = iLength;
+  if (pDataLen != nullptr) *pDataLen = iLength;
   return pData;
 }
 
@@ -170,7 +171,7 @@ int l_load_strings(lua_State* L) {
       }
       lua_rawseti(L, 1, static_cast<int>(iSec + 1));
     }
-  } catch (std::invalid_argument) {
+  } catch (std::invalid_argument&) {
     lua_pushboolean(L, 0);
   }
   return 1;
@@ -221,7 +222,7 @@ int l_get_compile_options(lua_State* L) {
 }  // namespace
 
 void luaT_setclosure(const lua_register_state* pState, lua_CFunction fn,
-                     size_t iUps) {
+                     int iUps) {
   luaT_pushcclosure(pState->L, fn, iUps);
 }
 

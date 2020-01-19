@@ -21,6 +21,7 @@ SOFTWARE.
 */
 
 #include "th_gfx_font.h"
+
 #include "config.h"
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include FT_GLYPH_H
@@ -198,7 +199,8 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
           unicode_to_codepage_437(next_utf8_codepoint(sMessage));
       if (iFirstASCII <= iChar && iChar <= iLastASCII) {
         iChar -= iFirstASCII;
-        unsigned int iWidth, iHeight;
+        int iWidth;
+        int iHeight;
         sheet->draw_sprite(pCanvas, iChar, iX, iY, 0);
         sheet->get_sprite_size_unchecked(iChar, &iWidth, &iHeight);
         iX += iWidth + letter_spacing;
@@ -227,7 +229,7 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
       const char* sLastGoodBreakPosition = sBreakPosition;
       int iMsgWidth = -letter_spacing;
       int iMsgBreakWidth = iMsgWidth;
-      unsigned int iTallest = 0;
+      int iTallest = 0;
       const char* s;
       bool foundNewLine = false;
       unsigned int iNextChar = 0;
@@ -243,7 +245,8 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           sBreakPosition = sOld;
           break;
         }
-        unsigned int iCharWidth = 0, iCharHeight = 0;
+        int iCharWidth = 0;
+        int iCharHeight = 0;
         if (iFirstASCII <= iChar && iChar <= iLastASCII) {
           sheet->get_sprite_size_unchecked(iChar - iFirstASCII, &iCharWidth,
                                            &iCharHeight);
@@ -296,7 +299,6 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
           next_utf8_codepoint(sMessage);
         }
       }
-      foundNewLine = 0;
     }
   }
   oDrawArea.end_x = iX + oDrawArea.end_x;
@@ -391,7 +393,8 @@ FT_Error freetype_font::match_bitmap_font(
   // the standard font character, but for fonts which only have numbers, zero
   // seems like the next best choice).
   for (const char* sCharToTry = "M0"; *sCharToTry; ++sCharToTry) {
-    unsigned int iWidth, iHeight;
+    int iWidth;
+    int iHeight;
     unsigned int iSprite = *sCharToTry - 31;
     if (pBitmapFontSpriteSheet->get_sprite_size(iSprite, &iWidth, &iHeight) &&
         pBitmapFontSpriteSheet->get_sprite_average_colour(iSprite, &colour) &&
@@ -401,10 +404,12 @@ FT_Error freetype_font::match_bitmap_font(
   }
 
   // Take the average size of all characters, and the colour of one of them.
-  unsigned int iWidthSum = 0, iHeightSum = 0, iAverageNum = 0;
-  for (unsigned int i = 0; i < pBitmapFontSpriteSheet->get_sprite_count();
-       ++i) {
-    unsigned int iWidth, iHeight;
+  int iWidthSum = 0;
+  int iHeightSum = 0;
+  int iAverageNum = 0;
+  for (size_t i = 0; i < pBitmapFontSpriteSheet->get_sprite_count(); ++i) {
+    int iWidth;
+    int iHeight;
     pBitmapFontSpriteSheet->get_sprite_size_unchecked(i, &iWidth, &iHeight);
     if (iWidth <= 1 || iHeight <= 1) continue;
     if (!pBitmapFontSpriteSheet->get_sprite_average_colour(i, &colour))
@@ -478,7 +483,7 @@ struct codepoint_glyph {
 
 // Determine if the character code is a suitable Chinese/Japanese/Korean
 // character for a line break.
-bool isCjkBreakCharacter(int charcode) {
+bool isCjkBreakCharacter(unsigned int charcode) {
   return (charcode == 0x3000 ||  // Ideographic space
           charcode == 0x3002 ||  // Ideographic full stop
           charcode == 0xff0c ||  // Fullwidth comma
@@ -587,7 +592,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       }
 
       // Make an automatic line break if one is needed.
-      int line_width_with_glyph =
+      long line_width_with_glyph =
           (ftvPen.x + oGlyph.metrics.horiBearingX + oGlyph.metrics.width + 63) /
           64;
       if (line_width_with_glyph >= iWidth || bIsNewLine) {
@@ -788,7 +793,9 @@ void freetype_font::render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
                                 FT_Pos x, FT_Pos y) const {
   uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
   uint8_t* pInRow = pBitmap->buffer;
-  for (int iY = 0; iY < pBitmap->rows;
+  int rows = static_cast<int>(pBitmap->rows);
+  int width = static_cast<int>(pBitmap->width);
+  for (int iY = 0; iY < rows;
        ++iY, pOutRow += pCacheEntry->width, pInRow += pBitmap->pitch) {
 #ifndef TRUST_RENDER_COORDS
     if (y + iY < 0) continue;
@@ -796,7 +803,7 @@ void freetype_font::render_mono(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
 #endif
     uint8_t *pIn = pInRow, *pOut = pOutRow;
     uint8_t iMask = 0x80;
-    for (int iX = 0; iX < pBitmap->width; ++iX, ++pOut) {
+    for (int iX = 0; iX < width; ++iX, ++pOut) {
 #ifndef TRUST_RENDER_COORDS
       if (x + iX < 0) continue;
       if (x + iX >= pCacheEntry->width) break;
@@ -815,14 +822,16 @@ void freetype_font::render_gray(cached_text* pCacheEntry, FT_Bitmap* pBitmap,
                                 FT_Pos x, FT_Pos y) const {
   uint8_t* pOutRow = pCacheEntry->data + y * pCacheEntry->width + x;
   uint8_t* pInRow = pBitmap->buffer;
-  for (int iY = 0; iY < pBitmap->rows;
+  int rows = static_cast<int>(pBitmap->rows);
+  int width = static_cast<int>(pBitmap->width);
+  for (int iY = 0; iY < rows;
        ++iY, pOutRow += pCacheEntry->width, pInRow += pBitmap->pitch) {
 #ifndef TRUST_RENDER_COORDS
     if (y + iY < 0) continue;
     if (y + iY >= pCacheEntry->height) break;
 #endif
     uint8_t *pIn = pInRow, *pOut = pOutRow;
-    for (int iX = 0; iX < pBitmap->width; ++iX, ++pIn, ++pOut) {
+    for (int iX = 0; iX < width; ++iX, ++pIn, ++pOut) {
 #ifndef TRUST_RENDER_COORDS
       if (x + iX < 0) continue;
       if (x + iX >= pCacheEntry->width) break;

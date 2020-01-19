@@ -25,6 +25,7 @@ SOFTWARE.
 #include <map>
 #include <string>
 #include <vector>
+
 #include "th.h"
 #include "th_gfx_sdl.h"
 
@@ -550,8 +551,7 @@ class animation : public animation_base {
   int get_crop_column() const { return crop_column; }
 
   void set_animation(animation_manager* pManager, size_t iAnimation);
-  void set_morph_target(animation* pMorphTarget,
-                        unsigned int iDurationFactor = 1);
+  void set_morph_target(animation* pMorphTarget, int iDurationFactor = 1);
   void set_frame(size_t iFrame);
 
   void set_speed(int iX, int iY) { speed.dx = iX, speed.dy = iY; }

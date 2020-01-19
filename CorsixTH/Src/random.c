@@ -62,56 +62,56 @@ uint16_t mti = N + 1; /* mti==N+1 means mt[N] is not initialized */
 
 /* initializes mt[N] with a seed */
 static void init_genrand(uint32_t s) {
-    mt[0] = s;
-    for (mti = 1; mti < N; mti++) {
-        mt[mti] = (1812433253UL * (mt[mti - 1] ^ (mt[mti - 1] >> 30)) + mti);
-        /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
-        /* In the previous versions, MSBs of the seed affect   */
-        /* only MSBs of the array mt[].                        */
-    }
+  mt[0] = s;
+  for (mti = 1; mti < N; mti++) {
+    mt[mti] = (1812433253UL * (mt[mti - 1] ^ (mt[mti - 1] >> 30)) + mti);
+    /* See Knuth TAOCP Vol2. 3rd Ed. P.106 for multiplier. */
+    /* In the previous versions, MSBs of the seed affect   */
+    /* only MSBs of the array mt[].                        */
+  }
 }
 
 /* generates a random number on [0,0xffffffff]-interval */
 static uint32_t genrand_int32(void) {
-    uint32_t y;
-    static uint32_t mag01[2] = {0x0UL, MATRIX_A};
-    /* mag01[x] = x * MATRIX_A  for x=0,1 */
+  uint32_t y;
+  static uint32_t mag01[2] = {0x0UL, MATRIX_A};
+  /* mag01[x] = x * MATRIX_A  for x=0,1 */
 
-    if (mti >= N) { /* generate N words at one time */
-        int kk;
+  if (mti >= N) { /* generate N words at one time */
+    int kk;
 
-        if (mti == N + 1)         /* if init_genrand() has not been called, */
-            init_genrand(5489UL); /* a default initial seed is used */
+    if (mti == N + 1)       /* if init_genrand() has not been called, */
+      init_genrand(5489UL); /* a default initial seed is used */
 
-        for (kk = 0; kk < N - M; kk++) {
-            y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
-            mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
-        }
-        for (; kk < N - 1; kk++) {
-            y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
-            mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
-        }
-        y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
-        mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
-
-        mti = 0;
+    for (kk = 0; kk < N - M; kk++) {
+      y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+      mt[kk] = mt[kk + M] ^ (y >> 1) ^ mag01[y & 0x1UL];
     }
+    for (; kk < N - 1; kk++) {
+      y = (mt[kk] & UPPER_MASK) | (mt[kk + 1] & LOWER_MASK);
+      mt[kk] = mt[kk + (M - N)] ^ (y >> 1) ^ mag01[y & 0x1UL];
+    }
+    y = (mt[N - 1] & UPPER_MASK) | (mt[0] & LOWER_MASK);
+    mt[N - 1] = mt[M - 1] ^ (y >> 1) ^ mag01[y & 0x1UL];
 
-    y = mt[mti++];
+    mti = 0;
+  }
 
-    /* Tempering */
-    y ^= (y >> 11);
-    y ^= (y << 7) & 0x9d2c5680UL;
-    y ^= (y << 15) & 0xefc60000UL;
-    y ^= (y >> 18);
+  y = mt[mti++];
 
-    return y;
+  /* Tempering */
+  y ^= (y >> 11);
+  y ^= (y << 7) & 0x9d2c5680UL;
+  y ^= (y << 15) & 0xefc60000UL;
+  y ^= (y >> 18);
+
+  return y;
 }
 
 /* generates a random number on [0,1) with 53-bit resolution*/
 static double genrand_res53(void) {
-    uint32_t a = genrand_int32() >> 5, b = genrand_int32() >> 6;
-    return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
+  uint32_t a = genrand_int32() >> 5, b = genrand_int32() >> 6;
+  return (a * 67108864.0 + b) * (1.0 / 9007199254740992.0);
 }
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
@@ -126,26 +126,26 @@ static double genrand_res53(void) {
   integer in the range [range_start, range_end].
 */
 static int l_random(lua_State* L) {
-    lua_Integer min;
-    uint32_t max;
-    switch (lua_gettop(L)) {
-        default:
-        case 2:
-            min = luaL_checkinteger(L, 1);
-            max = (uint32_t)(luaL_checkinteger(L, 2) - min + 1);
-            luaL_argcheck(L, max > 0, 2, "interval is empty");
-            lua_pushinteger(L, min + (lua_Integer)(genrand_int32() % max));
-            break;
-        case 1:
-            max = (uint32_t)luaL_checkinteger(L, 1);
-            luaL_argcheck(L, 1 <= max, 1, "interval is empty");
-            lua_pushinteger(L, 1 + (lua_Integer)(genrand_int32() % max));
-            break;
-        case 0:
-            lua_pushnumber(L, (lua_Number)genrand_res53());
-            break;
-    }
-    return 1;
+  lua_Integer min;
+  uint32_t max;
+  switch (lua_gettop(L)) {
+    default:
+    case 2:
+      min = luaL_checkinteger(L, 1);
+      max = (uint32_t)(luaL_checkinteger(L, 2) - min + 1);
+      luaL_argcheck(L, max > 0, 2, "interval is empty");
+      lua_pushinteger(L, min + (lua_Integer)(genrand_int32() % max));
+      break;
+    case 1:
+      max = (uint32_t)luaL_checkinteger(L, 1);
+      luaL_argcheck(L, 1 <= max, 1, "interval is empty");
+      lua_pushinteger(L, 1 + (lua_Integer)(genrand_int32() % max));
+      break;
+    case 0:
+      lua_pushnumber(L, (lua_Number)genrand_res53());
+      break;
+  }
+  return 1;
 }
 
 /**
@@ -157,10 +157,10 @@ static int l_random(lua_State* L) {
   the random number generator to its current state.
 */
 static int l_randomdump(lua_State* L) {
-    lua_pushlstring(L, (const char*)mt, N * 4);
-    lua_pushlstring(L, (const char*)&mti, 2);
-    lua_concat(L, 2);
-    return 1;
+  lua_pushlstring(L, (const char*)mt, N * 4);
+  lua_pushlstring(L, (const char*)&mti, 2);
+  lua_concat(L, 2);
+  return 1;
 }
 
 /**
@@ -174,29 +174,29 @@ static int l_randomdump(lua_State* L) {
   math.randomdump().
 */
 static int l_randomseed(lua_State* L) {
-    if (lua_type(L, 1) == LUA_TSTRING) {
-        int i;
-        size_t len;
-        const char* data = lua_tolstring(L, 1, &len);
-        if (len != N * 4 + 2) luaL_argerror(L, 1, "Seed string wrong length");
-        for (i = 0; i < N; ++i) mt[i] = ((uint32_t*)data)[i];
-        mti = *(uint16_t*)(data + len - 2);
-    } else {
-        init_genrand((uint32_t)luaL_checkinteger(L, 1));
-    }
-    return 0;
+  if (lua_type(L, 1) == LUA_TSTRING) {
+    int i;
+    size_t len;
+    const char* data = lua_tolstring(L, 1, &len);
+    if (len != N * 4 + 2) luaL_argerror(L, 1, "Seed string wrong length");
+    for (i = 0; i < N; ++i) mt[i] = ((uint32_t*)data)[i];
+    mti = *(uint16_t*)(data + len - 2);
+  } else {
+    init_genrand((uint32_t)luaL_checkinteger(L, 1));
+  }
+  return 0;
 }
 
 int luaopen_random(lua_State* L) {
-    lua_getglobal(L, "math");
-    lua_pushliteral(L, "random");
-    lua_pushcfunction(L, l_random);
-    lua_settable(L, -3);
-    lua_pushliteral(L, "randomseed");
-    lua_pushcfunction(L, l_randomseed);
-    lua_settable(L, -3);
-    lua_pushliteral(L, "randomdump");
-    lua_pushcfunction(L, l_randomdump);
-    lua_settable(L, -3);
-    return 0;
+  lua_getglobal(L, "math");
+  lua_pushliteral(L, "random");
+  lua_pushcfunction(L, l_random);
+  lua_settable(L, -3);
+  lua_pushliteral(L, "randomseed");
+  lua_pushcfunction(L, l_randomseed);
+  lua_settable(L, -3);
+  lua_pushliteral(L, "randomdump");
+  lua_pushcfunction(L, l_randomdump);
+  lua_settable(L, -3);
+  return 0;
 }

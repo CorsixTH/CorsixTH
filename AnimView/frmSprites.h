@@ -20,9 +20,11 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#pragma once
+#ifndef ANIMVIEW_FRMSPRITES_H_
+#define ANIMVIEW_FRMSPRITES_H_
 
 #include "config.h"
+
 #include <wx/bitmap.h>
 #include <wx/button.h>
 #include <wx/checkbox.h>
@@ -32,7 +34,9 @@ SOFTWARE.
 #include <wx/textctrl.h>
 #include <wx/timer.h>
 #include <wx/vscroll.h>
+
 #include <vector>
+
 #include "th.h"
 
 static const int ROW_COUNT = 1000;
@@ -44,9 +48,9 @@ class MyVScrolled : public wxVScrolledWindow {
     iMyCount = ROW_COUNT;
   }
 
-  wxCoord OnGetRowHeight(size_t row) const { return 1; }
+  wxCoord OnGetRowHeight(size_t row) const override { return 1; }
 
-  wxCoord EstimateTotalHeight() const { return iMyCount; }
+  wxCoord EstimateTotalHeight() const override { return iMyCount; }
 
   int iMyCount;
 };
@@ -54,7 +58,7 @@ class MyVScrolled : public wxVScrolledWindow {
 class frmSprites : public wxFrame {
  public:
   frmSprites();
-  ~frmSprites();
+  ~frmSprites() override = default;
 
   enum {
     ID_LOAD = wxID_HIGHEST + 1,
@@ -90,3 +94,5 @@ class frmSprites : public wxFrame {
   MyVScrolled* m_panFrame;
   DECLARE_EVENT_TABLE()
 };
+
+#endif

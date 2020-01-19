@@ -23,8 +23,11 @@ SOFTWARE.
 #include "config.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
+
 #include <array>
+#include <cmath>
 #include <cstring>
+
 #include "lua_sdl.h"
 #include "th_lua.h"
 #include "xmi2mid.h"
@@ -160,7 +163,7 @@ int l_load_music(lua_State* L) {
 int l_music_volume(lua_State* L) {
   lua_Number fValue = luaL_checknumber(L, 1);
   fValue = fValue * (lua_Number)MIX_MAX_VOLUME;
-  int iVolume = (int)(fValue + 0.5);
+  int iVolume = static_cast<int>(std::lround(fValue));
   if (iVolume < 0) {
     iVolume = 0;
   } else if (iVolume > MIX_MAX_VOLUME) {

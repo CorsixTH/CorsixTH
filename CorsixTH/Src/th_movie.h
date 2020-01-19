@@ -24,12 +24,14 @@ SOFTWARE.
 #define TH_VIDEO_H
 
 #include "config.h"
+
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
 #include <queue>
 #include <string>
 #include <thread>
+
 #include "SDL.h"
 
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
@@ -193,7 +195,7 @@ class av_packet_queue {
   //!
   //! \remarks Does not free the included packets. The packet queue should be
   //! flushed before it is destroyed.
-  ~av_packet_queue();
+  ~av_packet_queue() = default;
 
   //! Push a new packet on the back of the queue
   void push(AVPacket* packet);
