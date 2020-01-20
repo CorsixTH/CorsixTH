@@ -21,6 +21,8 @@ SOFTWARE.
 */
 
 #include "config.h"
+#include "lua_sdl.h"
+#include "th_lua.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>
 
@@ -28,8 +30,6 @@ SOFTWARE.
 #include <cmath>
 #include <cstring>
 
-#include "lua_sdl.h"
-#include "th_lua.h"
 #include "xmi2mid.h"
 #ifdef _MSC_VER
 #pragma comment(lib, "SDL2_mixer")
