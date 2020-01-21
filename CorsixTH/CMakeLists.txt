@@ -7,9 +7,7 @@ endif()
 # Project Declaration
 project(CorsixTH)
 
-if(APPLE)
-  add_subdirectory(SDLMain)
-elseif(MSVC)
+if(MSVC)
   # We want to bind against the very latest versions of the MSVC runtimes
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
@@ -44,9 +42,6 @@ if(APPLE)
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
-
-  target_link_libraries(CorsixTH SDL2main)
-  include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
   add_executable(CorsixTH "")
 endif()
