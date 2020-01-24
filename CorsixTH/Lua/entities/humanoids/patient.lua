@@ -334,6 +334,10 @@ function Patient:die()
   hospital:msgKilled()
   self:setMood("dead", "activate")
   self.world.ui:playSound("boo.wav") -- this sound is always heard
+
+  -- Remove any messages and/or callbacks related to the patient.
+  self:unregisterCallbacks()
+
   self.going_home = true
   if self:getRoom() then
     self:queueAction(MeanderAction():setCount(1))
