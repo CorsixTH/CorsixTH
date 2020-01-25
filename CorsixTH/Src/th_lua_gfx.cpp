@@ -156,13 +156,15 @@ int l_spritesheet_count(lua_State* L) {
 
 int l_spritesheet_size(lua_State* L) {
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L);
-  size_t iSprite = luaL_checkinteger(L, 2);  // No array adjustment
-  if (iSprite < 0 || iSprite >= pSheet->get_sprite_count())
+  lua_Integer iSprite = luaL_checkinteger(L, 2);  // No array adjustment
+  if (iSprite < 0 ||
+      iSprite >= static_cast<lua_Integer>(pSheet->get_sprite_count()))
     return luaL_argerror(L, 2, "Sprite index out of bounds");
 
   int iWidth;
   int iHeight;
-  pSheet->get_sprite_size_unchecked(iSprite, &iWidth, &iHeight);
+  pSheet->get_sprite_size_unchecked(static_cast<size_t>(iSprite), &iWidth,
+                                    &iHeight);
 
   lua_pushinteger(L, iWidth);
   lua_pushinteger(L, iHeight);
