@@ -1104,7 +1104,7 @@ namespace {
  */
 uint32_t get32BppPixel(const uint8_t* pImg, int iWidth, int iHeight,
                        const ::palette* pPalette, size_t iPixelNumber) {
-  if (iWidth <= 0 || iHeight <= 0 || iPixelNumber < 0 ||
+  if (iWidth <= 0 || iHeight <= 0 ||
       iPixelNumber >= static_cast<size_t>(iWidth) * iHeight) {
     return palette::pack_argb(0, 0, 0, 0);
   }

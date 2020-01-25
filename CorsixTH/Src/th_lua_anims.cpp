@@ -316,8 +316,9 @@ int l_anim_get_crop(lua_State* L) {
 int l_anim_set_anim(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation_manager* pManager = luaT_testuserdata<animation_manager>(L, 2);
-  size_t iAnim = luaL_checkinteger(L, 3);
-  if (iAnim < 0 || iAnim >= pManager->get_animation_count())
+  lua_Integer iAnim = luaL_checkinteger(L, 3);
+  if (iAnim < 0 ||
+      iAnim >= static_cast<lua_Integer>(pManager->get_animation_count()))
     luaL_argerror(L, 3, "Animation index out of bounds");
 
   if (lua_isnoneornil(L, 4)) {
@@ -326,7 +327,7 @@ int l_anim_set_anim(lua_State* L) {
     pAnimation->set_flags(static_cast<uint32_t>(luaL_checkinteger(L, 4)));
   }
 
-  pAnimation->set_animation(pManager, iAnim);
+  pAnimation->set_animation(pManager, static_cast<size_t>(iAnim));
   lua_settop(L, 2);
   luaT_setenvfield(L, 1, "animator");
   lua_pushnil(L);
