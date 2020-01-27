@@ -8,9 +8,6 @@ configure_file(config.h.in config.h)
 set(animview_source_files
   ${CMAKE_CURRENT_BINARY_DIR}/config.h
 
-  ${CMAKE_SOURCE_DIR}/common/rnc.h
-  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
-
   app.cpp
   frmMain.cpp
   frmSprites.cpp
@@ -53,6 +50,8 @@ else()
     ${animview_source_files}
   )
 endif()
+
+target_link_libraries(AnimView RncLib)
 
 # Set language standard
 set_property(TARGET AnimView PROPERTY CXX_STANDARD 14)

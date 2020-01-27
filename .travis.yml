@@ -38,10 +38,7 @@ before_install:
   - luarocks --local install luacheck 0.19.1
   # Required for lua unit tests
   - luarocks --local install busted
-  - mkdir libs
-  - pushd libs
   - mkdir $TRAVIS_BUILD_DIR/LevelEdit/bin
-  - popd
 install:
   - cd $TRAVIS_BUILD_DIR
   # Create unix makefiles
@@ -59,9 +56,9 @@ script:
   - ${TRAVIS_BUILD_DIR}/scripts/check_lua_classes.py
   # Check cpp format
   - cd ${TRAVIS_BUILD_DIR}
-  - clang-format -i CorsixTH/Src/*{.cpp,.h} AnimView/*{.cpp,.h} common/*{.cpp,.h} CorsixTH/SrcUnshared/main.cpp
+  - clang-format -i CorsixTH/Src/*{.cpp,.h} AnimView/*{.cpp,.h} libs/rnc/*{.cpp,.h} CorsixTH/SrcUnshared/main.cpp
   # clang-tidy check. The valist test is buggy in this environment (https://bugs.llvm.org/show_bug.cgi?id=41311)
-  - clang-tidy-8 -p $TRAVIS_BUILD_DIR/fresh --warnings-as-errors=\*,-clang-analyzer-valist.Uninitialized CorsixTH/Src/*{.cpp,.c} common/*.cpp CorsixTH/SrcUnshared/main.cpp
+  - clang-tidy-8 -p $TRAVIS_BUILD_DIR/fresh --warnings-as-errors=\*,-clang-analyzer-valist.Uninitialized CorsixTH/Src/*{.cpp,.c} libs/rnc/*.cpp CorsixTH/SrcUnshared/main.cpp
   - git diff --exit-code
   # Build CorsixTH
   - cd fresh

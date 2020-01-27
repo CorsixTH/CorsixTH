@@ -52,6 +52,7 @@ else()
   add_executable(CorsixTH "")
 endif()
 
+target_link_libraries(CorsixTH_lib RncLib)
 target_link_libraries(CorsixTH CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
@@ -62,14 +63,6 @@ endif()
 # Note: Done after generating targets
 add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
-
-# Manually add common files - as different targets could include the file 
-# so we can't just do it in in the folder like above
-target_sources(CorsixTH_lib
-  PRIVATE
-  ${CMAKE_SOURCE_DIR}/common/rnc.cpp
-  ${CMAKE_SOURCE_DIR}/common/rnc.h
-)
 
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project

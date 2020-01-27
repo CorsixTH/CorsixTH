@@ -115,6 +115,10 @@ include(GNUInstallDirs)
 
 # Include individual projects
 message("")
+
+message("Building common libraries")
+add_subdirectory("libs")
+
 # We always build CorsixTH otherwise we would miss the generated header
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
