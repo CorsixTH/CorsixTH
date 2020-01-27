@@ -79,14 +79,17 @@ function UINewGame:UINewGame(ui)
 
 
   local avail_diff = {
-    {text = _S.new_game_window.medium, tooltip = _S.tooltip.new_game_window.medium, param = "full"},
+    {text = _S.new_game_window.medium, tooltip = { _S.tooltip.new_game_window.medium,
+     nil, 130 }, param = "full"}
   }
   if TheApp.fs:fileExists("Levels", "Easy01.SAM") then
-    table.insert(avail_diff, 1, {text = _S.new_game_window.easy, tooltip = _S.tooltip.new_game_window.easy, param = "easy"})
+    table.insert(avail_diff, 1, {text = _S.new_game_window.easy, tooltip = { _S.tooltip.new_game_window.easy,
+     nil, 100 }, param = "easy"})
     self.difficulty = 2
   end
   if TheApp.fs:fileExists("Levels", "Hard01.SAM") then
-    avail_diff[#avail_diff + 1] = {text = _S.new_game_window.hard, tooltip = _S.tooltip.new_game_window.hard, param = "hard"}
+    avail_diff[#avail_diff + 1] = {text = _S.new_game_window.hard, tooltip = { _S.tooltip.new_game_window.hard,
+     nil, 175 }, param = "hard"}
   end
   self.available_difficulties = avail_diff
 
