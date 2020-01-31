@@ -1559,7 +1559,7 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local update_url = 'http://www.corsixth.com/check-for-updates'
+  local update_url = 'www.corsixth.com/check-for-updates'
   local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
@@ -1582,6 +1582,14 @@ function App:checkForUpdates()
   end
   local http = require("socket.http")
   local url = require("socket.url")
+
+  -- Safely attempt to use luasec
+  local hassec, _ = pcall(require, "ssl.https")
+  if hassec then
+    update_url = "https://" .. update_url
+  else
+    update_url = "http://" .. update_url
+  end
 
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)
