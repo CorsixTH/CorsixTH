@@ -1397,7 +1397,7 @@ end
 --! which save game version it is. This was added after the Beta 8
 --! release, which is why the checks prior to that version aren't made.
 --!param version An optional value if you want to find what game version
--- a specific savegame verion is from.
+-- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
   if ver > 134 then
@@ -1497,7 +1497,7 @@ function App:exit()
   self.running = false
 end
 
---! Exits the game completly without saving the config i.e. Alt+F4 for Quit Application
+--! Exits the game completely without saving the config i.e. Alt+F4 for Quit Application
 function App:abandon()
   self.running = false
 end

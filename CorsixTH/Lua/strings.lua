@@ -66,7 +66,7 @@ function Strings:init()
   self.chunk_to_names = {}
   for chunk, filename in pairs(self.language_chunks) do
     -- To allow the file to set global variables without causing an error, it
-    -- is given an infinite table as an environment. Reading a non-existant
+    -- is given an infinite table as an environment. Reading a non-existent
     -- key from an infinite table returns another infinite table, rather than
     -- the default value of nil.
     local infinite_table_mt
@@ -127,7 +127,7 @@ end
 local shadows = setmetatable({}, {__mode = "k"})
 
 -- Metatable which is used for all tables returned by Strings:load()
--- The end effect is to raise errors on accesses to non-existant strings
+-- The end effect is to raise errors on accesses to non-existent strings
 -- (unless no_restriction is set to true), to add a special string called
 -- "__random" to each table (which always resolves to a random string from
 -- the table), and to prevent editing or adding to a string table.
@@ -140,7 +140,7 @@ local strings_metatable = function(no_restriction) return {
     end
     if key ~= "__random" then
       if no_restriction then return nil end
-      error("Non-existant string: " .. tostring(key), 2)
+      error("Non-existent string: " .. tostring(key), 2)
     end
     local candidates = {}
     for _, v in pairs(t) do
@@ -159,7 +159,7 @@ local strings_metatable = function(no_restriction) return {
   end,
 } end
 
--- no_restriction disables errors on access to non-existant strings (for debug purposes)
+-- no_restriction disables errors on access to non-existent strings (for debug purposes)
 -- no_inheritance disables inheritance except original_strings (for debug purposes)
 function Strings:load(language, no_restriction, no_inheritance)
   assert(language ~= "original_strings", "Original strings can not be loaded directly. Please select a proper language.")
@@ -191,7 +191,7 @@ function Strings:load(language, no_restriction, no_inheritance)
     end,
     ipairs = ipairs,
     pairs = pairs,
-    -- Calling the Langauage() function should have no effect any more
+    -- Calling the Language() function should have no effect any more
     Language = function()
       language_called = true
     end,

@@ -57,7 +57,7 @@ class lua_persist_writer {
   virtual void fast_write_stack_object(int iIndex) = 0;
 
   // Writes an unsigned integer as a variable number of bytes
-  // Endian independant and underlying type size independant
+  // Endian independent and underlying type size independent
   template <class T>
   void write_uint(T tValue) {
     T tTemp(tValue);

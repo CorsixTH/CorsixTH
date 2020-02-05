@@ -216,7 +216,7 @@ end
 --[[ Create orders for the specified receptionist to walk to and then staff the reception desk,
 if not already staffed or someone is on the way
 !param receptionist (Staff) the receptionist to occupy this desk
-!return true iff the receptionist was ordered to the desk
+!return true if the receptionist was ordered to the desk
 ]]
 function ReceptionDesk:occupy(receptionist)
   if not self.receptionist and not self.reserved_for then

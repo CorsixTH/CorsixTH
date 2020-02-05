@@ -957,12 +957,12 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                      int iCanvasY) const {
   /*
      The map is drawn in two passes, with each pass done one scanline at a
-     time (a scanline is a list of tiles with the same screen Y co-ordinate).
+     time (a scanline is a list of tiles with the same screen Y coordinate).
      The first pass does floor tiles, as the entire floor needs to be painted
      below anything else (for example, see the walking north through a door
      animation, which needs to paint over the floor of the scanline below the
      animation). On the second pass, walls and entities are drawn, with the
-     order controlled such that entites appear in the right order relative to
+     order controlled such that entities appear in the right order relative to
      the walls around them. For each scanline, the following is done:
 
      1st pass:
@@ -1053,7 +1053,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     if (!bFirst) {
       // since the scanline count from one THMapScanlineIterator to
       // another can differ synchronization between the current iterator
-      // and the former one is neeeded
+      // and the former one is needed
       if (itrNode.x() < -64) {
         ++itrNode;
       }

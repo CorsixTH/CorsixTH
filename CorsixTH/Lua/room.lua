@@ -144,7 +144,7 @@ function Room:getPatientCount()
 end
 
 -- function that sets a given attribute to a given value for all staff members.
--- Should be overriden for rooms that have more than one staff member.
+-- Should be overridden for rooms that have more than one staff member.
 function Room:setStaffMembersAttribute(attribute, value)
   if self.staff_member then
     self.staff_member[attribute] = value

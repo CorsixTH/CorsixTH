@@ -60,7 +60,7 @@ struct path_node {
 
   //! Minimum distance from this cell to the goal
   /*!
-      Value is only dependant upon the cell position and the goal
+      Value is only dependent upon the cell position and the goal
       position, and is undefined if not part of a path.
   */
   int guess;

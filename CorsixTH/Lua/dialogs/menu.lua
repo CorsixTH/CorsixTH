@@ -48,7 +48,7 @@ function UIMenuBar:UIMenuBar(ui, map_editor)
   -- This should be present in self.open_menus, else it won't be drawn
   self.active_menu = false
   -- The list of menus which should be displayed
-  -- This list satifies: open_menus[x] == nil or open_menus[x].level == x
+  -- This list satisfies: open_menus[x] == nil or open_menus[x].level == x
   self.open_menus = {}
 
   if map_editor then

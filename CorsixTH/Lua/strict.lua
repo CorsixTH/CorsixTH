@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
--- Force local variables to be used for everything (except for explicity
+-- Force local variables to be used for everything (except for explicitly
 -- declared variables and any code running in derestriced mode). This helps to
 -- catch typos in variable names, and promotes usage of locals over globals
 -- (which improves speed).

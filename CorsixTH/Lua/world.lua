@@ -812,7 +812,7 @@ function World:notifyRoomRemoved(room)
   end
 end
 
---! Clear all internal caches which are dependant upon map state / object position
+--! Clear all internal caches which are dependent upon map state / object position
 function World:clearCaches()
   self.idle_cache = {}
 end

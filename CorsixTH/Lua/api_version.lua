@@ -20,7 +20,7 @@ SOFTWARE.
 
 This file is used to ensure that the compiled binary being used by Lua is up
 to date. Without this system, if the binary was not recent enough, then the
-user would get a confusing error message along the lines of attemping to call
+user would get a confusing error message along the lines of attempting to call
 a nil value (as new API functions are nil in older binaries).
 
 When a new API call is added to the C++ source, the version number in this

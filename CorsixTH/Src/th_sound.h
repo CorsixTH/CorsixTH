@@ -43,7 +43,7 @@ class sound_archive {
   //! Gets the name of the sound at a given index
   const char* get_sound_name(size_t iIndex) const;
 
-  //! Gets the duration (in miliseconds) of the sound at a given index
+  //! Gets the duration (in milliseconds) of the sound at a given index
   size_t get_sound_duration(size_t iIndex);
 
   //! Opens the sound at a given index into an SDL_RWops structure

@@ -273,7 +273,7 @@ class animation_manager {
   */
   bool load_custom_animations(const uint8_t* pData, size_t iDataLength);
 
-  //! Get the total numer of animations
+  //! Get the total number of animations
   size_t get_animation_count() const;
 
   //! Get the total number of animation frames

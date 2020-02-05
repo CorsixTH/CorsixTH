@@ -42,7 +42,7 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 When a drug is researched, what effectiveness does it have
 #gbv.StartRating 80
 
-The following table contains all diagnoses and treatments that shows up inthe drug casebook
+The following table contains all diagnoses and treatments that shows up in the drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
 RschReqd how much research is required to discover the treatment room for the disease.
 #expertise[1].Known.RschReqd 1 0 GENERAL_PRACTICE

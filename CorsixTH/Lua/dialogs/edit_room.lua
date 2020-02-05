@@ -707,7 +707,7 @@ function UIEditRoom:screenToWall(x, y)
   -- NB: Doors and windows cannot be placed on corner tiles, hence walls of corner tiles
   -- are never returned, and the nearest non-corner wall is returned instead. If they
   -- could be placed on corner tiles, then you would have to consider the interaction of
-  -- wall shadows with windows and doors, amonst other things.
+  -- wall shadows with windows and doors, amongst other things.
   -- Swing doors are allowed to be adjacent everywhere except the top corner.
   local modifier = 0
   local swinging = false
@@ -1167,7 +1167,7 @@ end
 --! param wall (string) original wall orientation
 --! return x (int) updated x value
 --! return y (int) updated y value
---! return x_mod (int) offest value to apply to tile count to determine relative position
+--! return x_mod (int) offset value to apply to tile count to determine relative position
 --! return y_mod (int) offset value to apply to tile count to determine relatitve position
 --! return wall (string) wall orientation style (only 2 styles)
 local function doorWallOffsetCalculations(x, y, wall)

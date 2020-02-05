@@ -141,7 +141,7 @@ class iso_filesystem {
   //! Build the list of Theme Hospital data files
   /*!
       \param iSector The ordinal of a logical sector containing a padded
-        arrary of ISO 9660 directory entries.
+        array of ISO 9660 directory entries.
       \param iDirEntsSize The number of bytes in the directory entry array.
       \param prefix The path name to prepend to filenames in the directory.
   */

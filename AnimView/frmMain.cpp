@@ -285,7 +285,7 @@ frmMain::frmMain()
       1, wxEXPAND);
   pMoodOverlay->Add(pMoodRow, 1, wxEXPAND | wxALL, 2);
   pMoodOverlay->Add(
-      new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coodinates"), 0,
+      new wxCheckBox(this, ID_DRAW_COORDINATES, L"Draw tile coordinates"), 0,
       wxEXPAND | wxALL, 0);
   pSidebarSizer->Add(pMoodOverlay, 0, wxEXPAND | wxALL, 0);
   m_bDrawMood = false;
@@ -413,7 +413,7 @@ void frmMain::load() {
     sPath += wxFileName::GetPathSeparator();
   }
   if (!wxFileName::DirExists(sPath)) {
-    ::wxMessageBox(L"Theme Hospital path non-existant", L"Load Animations",
+    ::wxMessageBox(L"Theme Hospital path non-existent", L"Load Animations",
                    wxOK | wxICON_ERROR, this);
     return;
   }

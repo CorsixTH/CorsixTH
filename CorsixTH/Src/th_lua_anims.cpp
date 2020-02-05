@@ -27,7 +27,7 @@ SOFTWARE.
 namespace {
 
 /* this variable is used to determine the layer of the animation, it should be
-  rewriten at some
+  rewritten at some
   point so that the it is passed as an argument in the function l_anim_set_tile
 */
 int last_layer = 2;

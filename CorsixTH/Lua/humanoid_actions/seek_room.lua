@@ -70,7 +70,7 @@ local action_seek_room_find_room = permanent"action_seek_room_find_room"( functi
         return room
       else
         tried_rooms = tried_rooms + 1
-        -- Remove the index of this room from the list of indeces available in available_diagnosis_rooms
+        -- Remove the index of this room from the list of indices available in available_diagnosis_rooms
         table.remove(available_rooms, room_at_index)
         -- If the room can be built, set the flag for it.
         local diag = humanoid.world.available_rooms[room_type]

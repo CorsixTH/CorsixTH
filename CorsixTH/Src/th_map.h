@@ -331,24 +331,24 @@ class level_map {
   /*!
       Draws the world pixel rectangle (iScreenX, iScreenY, iWidth, iHeight)
       to the rectangle (iCanvasX, iCanvasY, iWidth, iHeight) on pCanvas. Note
-      that world pixel co-ordinates are also known as absolute screen
-      co-ordinates - they are not world (tile) co-ordinates, nor (relative)
-      screen co-ordinates.
+      that world pixel coordinates are also known as absolute screen
+      coordinates - they are not world (tile) coordinates, nor (relative)
+      screen coordinates.
   */
   void draw(render_target* pCanvas, int iScreenX, int iScreenY, int iWidth,
             int iHeight, int iCanvasX, int iCanvasY) const;
 
   //! Perform a hit-test against the animations attached to the map
   /*!
-      If there is an animation at world pixel co-ordinates (iTestX, iTestY),
+      If there is an animation at world pixel coordinates (iTestX, iTestY),
       then it is returned. Otherwise nullptr is returned.
-      To perform a hit-test using world (tile) co-ordinates, get the tile
+      To perform a hit-test using world (tile) coordinates, get the tile
       itself and query the top 8 bits of map_tile::flags, or traverse the
       tile's animation lists.
   */
   drawable* hit_test(int iTestX, int iTestY) const;
 
-  // When using the unchecked versions, the map co-ordinates MUST be valid.
+  // When using the unchecked versions, the map coordinates MUST be valid.
   // When using the normal versions, nullptr is returned for invalid co-ords.
   map_tile* get_tile(int iX, int iY);
   const map_tile* get_tile(int iX, int iY) const;
@@ -360,7 +360,7 @@ class level_map {
   uint16_t get_tile_temperature(const map_tile* pNode) const;
   int get_tile_owner(const map_tile* pNode) const;
 
-  //! Convert world (tile) co-ordinates to absolute screen co-ordinates
+  //! Convert world (tile) coordinates to absolute screen coordinates
   template <typename T>
   static inline void world_to_screen(T& x, T& y) {
     T x_(x);
@@ -368,7 +368,7 @@ class level_map {
     y = (T)16 * (x_ + y);
   }
 
-  //! Convert absolute screen co-ordinates to world (tile) co-ordinates
+  //! Convert absolute screen coordinates to world (tile) coordinates
   template <typename T>
   static inline void screen_to_world(T& x, T& y) {
     T x_(x);
@@ -460,9 +460,9 @@ class map_tile_iterator {
 
   /*!
       @arg pMap The map whose tiles should be iterated
-      @arg iScreenX The X co-ordinate of the top-left corner of the
+      @arg iScreenX The X coordinate of the top-left corner of the
           screen-space rectangle to iterate.
-      @arg iScreenY The Y co-ordinate of the top-left corner of the
+      @arg iScreenY The Y coordinate of the top-left corner of the
           screen-space rectangle to iterate.
       @arg iWidth The width of the screen-space rectangle to iterate.
       @arg iHeight The width of the screen-space rectangle to iterate.
@@ -474,7 +474,7 @@ class map_tile_iterator {
                     map_scanline_iterator_direction eScanlineDirection =
                         map_scanline_iterator_direction::forward);
 
-  //! Returns false iff the iterator has exhausted its tiles
+  //! Returns false if the iterator has exhausted its tiles
   inline operator bool() const { return tile != nullptr; }
 
   //! Advances the iterator to the next tile
@@ -501,7 +501,7 @@ class map_tile_iterator {
     return (static_cast<int>(direction) - 1) * (1 - container->get_width());
   }
 
-  //! Returns true iff the next tile will be on a different scanline
+  //! Returns true if the next tile will be on a different scanline
   /*!
       To visit a scanline in right-to-left order, or to revisit a scanline,
       wait until this method returns true, then use a THMapScanlineIterator.

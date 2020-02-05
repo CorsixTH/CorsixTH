@@ -877,8 +877,8 @@ function Hospital:getHeliportSpawnPosition()
 end
 
 --[[ Test if a given map tile is part of this hospital.
-!param x (integer) The 1-based X co-ordinate of the tile to test.
-!param y (integer) The 1-based Y co-ordinate of the tile to test.
+!param x (integer) The 1-based X coordinate of the tile to test.
+!param y (integer) The 1-based Y coordinate of the tile to test.
 ]]
 function Hospital:isInHospital(x, y)
   local flags = self.world.map.th:getCellFlags(x, y)
@@ -1824,7 +1824,7 @@ function Hospital:changeReputation(reason, disease, valueChange)
   if self.reputation_above_threshold then self:checkReputation() end
 end
 
---! Check whether the reputation is still above the treshold.
+--! Check whether the reputation is still above the threshold.
 function Hospital:checkReputation()
   local level_config = self.world.map.level_config
   if level_config.awards_trophies then

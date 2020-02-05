@@ -536,7 +536,7 @@ end
 --! Does not affect the configuration setting play_music.
 function Audio:stopBackgroundTrack()
   if self.background_paused then
-    -- unpause first in order to clear the backupped volume
+    -- Resume first in order to clear the saved volume.
     self:pauseBackgroundTrack()
   end
   SDL.audio.stopMusic()
