@@ -740,8 +740,8 @@ end
 
 --[[ Convert a static panel into a clickable button.
 !param panel (Panel) The panel to convert into a button.
-!param x (integer) The X co-ordinate of the clickable rectangle on the panel.
-!param y (integer) The Y co-ordinate of the clickable rectangle on the panel.
+!param x (integer) The X coordinate of the clickable rectangle on the panel.
+!param y (integer) The Y coordinate of the clickable rectangle on the panel.
 !param w (integer) The width of the clickable rectangle on the panel.
 !param h (integer) The height of the clickable rectangle on the panel.
 !param sprite (integer) An index into the window's sprite sheet. The panel will
@@ -1524,9 +1524,9 @@ function Window:hitTestPanel(x, y, panel)
 end
 
 --[[ Used to test if the window has a (non-transparent) pixel at the given position.
-!param x (integer) The X co-ordinate of the pixel to test, relative to the
+!param x (integer) The X coordinate of the pixel to test, relative to the
 top-left corner of the window.
-!param y (integer) The Y co-ordinate of the pixel to test, relative to the
+!param y (integer) The Y coordinate of the pixel to test, relative to the
 top-left corner of the window.
 ]]
 function Window:hitTest(x, y)
@@ -1744,9 +1744,9 @@ function Window:beginDrag(x, y)
 end
 
 --[[ Called when the user moves the mouse.
-!param x (integer) The new X co-ordinate of the cursor, relative to the top-left
+!param x (integer) The new X coordinate of the cursor, relative to the top-left
 corner of the window.
-!param y (integer) The new Y co-ordinate of the cursor, relative to the top-left
+!param y (integer) The new Y coordinate of the cursor, relative to the top-left
 corner of the window.
 !param dx (integer) The number of pixels which the cursor moved horizontally.
 !param dy (integer) The number of pixels which the cursor moved vertically.
@@ -1925,12 +1925,12 @@ end
 --! Create a static (non-changeable) tooltip to be displayed in a certain region.
 --! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
 --!param text (string) The string to display.
---!param x (integer) The X co-ordinate relative to the top-left corner.
---!param y (integer) The Y co-ordinate relative to the top-left corner.
---!param r (integer) The right (X + width) co-ordinate relative to the top-left corner.
---!param b (integer) The bottom (Y + height) co-ordinate relative to the top-left corner.
---!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
---!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
+--!param x (integer) The X coordinate relative to the top-left corner.
+--!param y (integer) The Y coordinate relative to the top-left corner.
+--!param r (integer) The right (X + width) coordinate relative to the top-left corner.
+--!param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
+--!param tooltip_x (integer) [optional] The X coordinate to display the tooltip at.
+--!param tooltip_y (integer) [optional] The Y coordinate to display the tooltip at.
 function Window:makeTooltip(text, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     text = text, x = x, y = y, r = r, b = b,
@@ -1944,12 +1944,12 @@ end
 --! Create a dynamic tooltip to be displayed in a certain region.
 --! tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.
 --!param callback (function) A function that returns the string to display or nil for no tooltip.
---!param x (integer) The X co-ordinate relative to the top-left corner.
---!param y (integer) The Y co-ordinate relative to the top-left corner.
---!param r (integer) The right (X + width) co-ordinate relative to the top-left corner.
---!param b (integer) The bottom (Y + height) co-ordinate relative to the top-left corner.
---!param tooltip_x (integer) [optional] The X co-ordinate to display the tooltip at.
---!param tooltip_y (integer) [optional] The Y co-ordinate to display the tooltip at.
+--!param x (integer) The X coordinate relative to the top-left corner.
+--!param y (integer) The Y coordinate relative to the top-left corner.
+--!param r (integer) The right (X + width) coordinate relative to the top-left corner.
+--!param b (integer) The bottom (Y + height) coordinate relative to the top-left corner.
+--!param tooltip_x (integer) [optional] The X coordinate to display the tooltip at.
+--!param tooltip_y (integer) [optional] The Y coordinate to display the tooltip at.
 function Window:makeDynamicTooltip(callback, x, y, r, b, tooltip_x, tooltip_y)
   local region = {
     callback = callback, x = x, y = y, r = r, b = b,
@@ -1981,8 +1981,8 @@ end
 -- (see Button:setTooltip, Panel:setTooltip, Window:make[Dynamic]Tooltip)
 --! Button tooltips take precedence over region tooltips, which again take precedence over panels.
 -- Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.
---!param x (integer) The X co-ordinate relative to the top-left corner.
---!param y (integer) The Y co-ordinate relative to the top-left corner.
+--!param x (integer) The X coordinate relative to the top-left corner.
+--!param y (integer) The Y coordinate relative to the top-left corner.
 function Window:getTooltipAt(x, y)
   if x < 0 or y < 0 or (self.width and x >= self.width) or (self.height and y >= self.height) then
     return

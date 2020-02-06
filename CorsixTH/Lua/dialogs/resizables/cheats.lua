@@ -171,7 +171,7 @@ end
 
 --[[ Before an epidemic has been revealed toggle the infected icons
 to easily distinguish the infected patients -- will toggle icons
-for ALL future epidemics you cannot distingush between epidemics
+for ALL future epidemics you cannot distinguish between epidemics
 by disease ]]
 function UICheats:cheatToggleInfected()
   local hospital = self.ui.hospital

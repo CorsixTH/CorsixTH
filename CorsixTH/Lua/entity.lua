@@ -63,7 +63,7 @@ The silences between these sounds can either have randomly generated lengths bet
 they can all be a specified length by providing min and max tables with one value for the desired pause duration.
 
 !param name_pattern (String) example: LAVA00*.WAV
-!param min_silence_lengths (table) the desired mininum silences length for the different tick rates, [3] = Normal
+!param min_silence_lengths (table) the desired minimum silences length for the different tick rates, [3] = Normal
 !param max_silence_lengths (table) the desired maximum silences length for the different tick rates, [3] = Normal
 !param num_silences (integer) how many different silence lengths should be used, this can be a nil parameter.
 -]]
@@ -103,8 +103,8 @@ function Entity:setAnimation(animation, flags)
 end
 
 --[[ Set the map tile which the entity is on.
-!param x (integer) The 1-based X co-ordinate of the tile.
-!param y (integer) The 1-based Y co-ordinate of the tile.
+!param x (integer) The 1-based X coordinate of the tile.
+!param y (integer) The 1-based Y coordinate of the tile.
 ]]
 function Entity:setTile(x, y)
   if self.user_of then
@@ -160,8 +160,8 @@ function Entity:setSpeed(x, y)
 end
 
 --[[ Combined form of `setTile`, `setPosition`, and `setSpeed`
-!param tx (integer) The 1-based X co-ordinate of the tile.
-!param ty (integer) The 1-based Y co-ordinate of the tile.
+!param tx (integer) The 1-based X coordinate of the tile.
+!param ty (integer) The 1-based Y coordinate of the tile.
 !param px (integer) The 0-based X pixel offset from the default position.
 !param py (integer) The 0-based Y pixel offset from the default position.
 !param sx (integer) The X component of the speed in pixels per tick.
@@ -359,7 +359,7 @@ function Entity:resetAnimation()
 end
 
 --[[
-  Returns the drawing layer for this particular entity. Should be overriden in derived classes. The drawing layer
+  Returns the drawing layer for this particular entity. Should be overridden in derived classes. The drawing layer
   specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
   Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
   normal objects should have layers between 3 and 7, east side object should have layer 8 and south side

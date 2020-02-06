@@ -528,7 +528,7 @@ function Staff:isIdle()
   return false
 end
 
--- Makes the staff member request a raise of 10%, or a wage exactly inbetween their current and a fair one, whichever is more.
+-- Makes the staff member request a raise of 10%, or a wage exactly in the middle of their current and a fair one, whichever is more.
 function Staff:requestRaise()
   -- Is this the first time a member of staff is requesting a raise?
   -- Only show the help if the player is playing the campaign though

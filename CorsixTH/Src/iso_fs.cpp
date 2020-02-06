@@ -71,7 +71,7 @@ constexpr ptrdiff_t filename_length_offset = 32;
 /// from the start of the file entry.
 constexpr ptrdiff_t filename_offset = 33;
 
-/// The minimium valid size of a valid file entry.
+/// The minimum valid size of a valid file entry.
 /// Accounts for all fixed header value offsets and even number padding.
 constexpr uint8_t minimum_file_entry_size = 34;
 

@@ -829,7 +829,7 @@ function GameUI.limitPointToDiamond(dx, dy, visible_diamond, do_limit)
     if do_limit then
       -- Determine the quadrant which the point lies in and accordingly set:
       --  (vx, vy) : a unit vector perpendicular to the diamond edge in the quadrant
-      --  (p1x, p1y), (p2x, p2y) : the two diamond verticies in the quadrant
+      --  (p1x, p1y), (p2x, p2y) : the two diamond vertices in the quadrant
       --  d : distance from the point to the line defined by the diamond edge (not the line segment itself)
       local vx, vy, d
       local p1x, p1y, p2x, p2y = 0, 0, 0, 0
@@ -1131,15 +1131,15 @@ function GameUI:startTutorial(chapter)
   self:tutorialStep(chapter, 0, 1)
 end
 
---! Converts centre of screen co-ordinates to world tile positions and stores the values for later recall
--- param index (integer) Postion in recallpositions table
+--! Converts centre of screen coordinates to world tile positions and stores the values for later recall
+-- param index (integer) Position in recallpositions table
 function GameUI:setMapRecallPosition(index)
   local cx, cy = self:ScreenToWorld(self.app.config.width / 2, self.app.config.height / 2)
   self.recallpositions[index] = {x = cx, y = cy, z = self.zoom_factor}
 end
 
---! Retrives stored recall position and attempts to scroll to that position - will be limited to the bounds of the camera when zoomed out
--- param index (integer) Postion in recallpositions table
+--! Retrieves stored recall position and attempts to scroll to that position - will be limited to the bounds of the camera when zoomed out
+-- param index (integer) Position in recallpositions table
 function GameUI:recallMapPosition(index)
   if self.recallpositions[index] ~= nil then
     local sx, sy = self.app.map:WorldToScreen(self.recallpositions[index].x,  self.recallpositions[index].y)

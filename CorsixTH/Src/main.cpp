@@ -80,7 +80,7 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
 
-  // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatbility)
+  // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatibility)
   luaT_execute(L, "require \"debug\"");
 
   // Check for --interpreter and run that instead of CorsixTH.lua

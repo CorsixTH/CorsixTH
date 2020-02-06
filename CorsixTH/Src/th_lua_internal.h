@@ -118,7 +118,7 @@ class lua_class_binding final {
    *
    * @param pState The lua environment to bind to.
    * @param name The name to give this lua 'class'.
-   * @param new_fn The fuction to call when a new class is created.
+   * @param new_fn The function to call when a new class is created.
    * @param mt The metatable id for the class
    */
   lua_class_binding(const lua_register_state* pState, const char* name,

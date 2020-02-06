@@ -154,7 +154,7 @@ function UIProgressReport:drawMarkers(canvas, x, y)
   end
 
   -- Possibly show warning that it's too cold, too hot, patients not happy
-  -- or if theres need to build drink machines as folks are thirsty.  Only show one at a time though!
+  -- or if there's need to build drink machines as folks are thirsty.  Only show one at a time though!
   -- TODO the levels may need adjustment
   local msg = self.ui.hospital.show_progress_screen_warnings
   if warmth < 0.3 and msg == 1 then

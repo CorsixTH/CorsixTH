@@ -46,7 +46,7 @@ local identifier_type = {
   ["true"] = "constant",
   ["until"] = "keyword",
   ["while"] = "keyword",
-  -- everything else is "identifer"
+  -- everything else is "identifier"
 }
 
 local tokens = P { "tokens";
@@ -56,7 +56,7 @@ local tokens = P { "tokens";
   file_start = Ct(C(P"#" * (1 - S"\r\n")^0) * Cc"comment"),
   utf8_bom = P"\239\187\191",
 
-  -- Single platform independant line break which increments line number
+  -- Single platform independent line break which increments line number
   newline = (P"\r\n" + P"\n\r" + S"\r\n") * (Cp() * Carg(1)) / function(pos, state)
     state.line = state.line + 1
     state.line_start = pos

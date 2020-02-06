@@ -104,10 +104,10 @@ function Map:registerTemperatureDisplayMethod()
   self.th:setTemperatureDisplay(self.temperature_display_method)
 end
 
--- Convert between world co-ordinates and screen co-ordinates
--- World co-ordinates are (at least for standard maps) in the range [1, 128)
+-- Convert between world coordinates and screen coordinates
+-- World coordinates are (at least for standard maps) in the range [1, 128)
 -- for both x and y, with the floor of the values giving the cell index.
--- Screen co-ordinates are pixels relative to the map origin - NOT relative to
+-- Screen coordinates are pixels relative to the map origin - NOT relative to
 -- the top-left corner of the screen (use UI:WorldToScreen and UI:ScreenToWorld
 -- for this).
 

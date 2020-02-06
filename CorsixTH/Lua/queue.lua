@@ -95,7 +95,7 @@ end
 --! For a true patient queue count, use Queue:reportedSize.
 --!return (int) Number of various people in the queue.
 function Queue:size()
-  -- Rememeber, the size includes people waiting to leave and staff waiting to enter
+  -- Remember, the size includes people waiting to leave and staff waiting to enter
   -- For just the patients waiting to enter, use Queue:reportedSize()
   -- Most of the time, size() == reportedSize(), so it won't be immediately obvious
   -- if you're using the wrong method, but from time to time, staff or exiting

@@ -449,7 +449,7 @@ int l_map_getcell(lua_State* L) {
   if (pNode == nullptr) {
     return luaL_argerror(L, 2,
                          lua_pushfstring(L,
-                                         "Map co-ordinates out "
+                                         "Map coordinates out "
                                          "of bounds (%d, %d)",
                                          iX + 1, iY + 1));
   }
@@ -527,7 +527,7 @@ int l_map_getcellflags(lua_State* L) {
   int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
-    return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   if (lua_type(L, 4) != LUA_TTABLE) {
     lua_settop(L, 3);
@@ -561,7 +561,7 @@ int l_map_erase_thobs(lua_State* L) {
   int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
-    return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   pNode->objects.clear();
   return 1;
@@ -574,7 +574,7 @@ int l_map_remove_cell_thob(lua_State* L) {
   int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
-    return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   auto thob = static_cast<object_type>(luaL_checkinteger(L, 4));
   for (auto iter = pNode->objects.begin(); iter != pNode->objects.end();
@@ -594,7 +594,7 @@ int l_map_setcellflags(lua_State* L) {
   int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
-    return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   luaL_checktype(L, 4, LUA_TTABLE);
   lua_settop(L, 4);
@@ -642,7 +642,7 @@ int l_map_setcell(lua_State* L) {
   int iY = static_cast<int>(luaL_checkinteger(L, 3) - 1);  // the map does too.
   map_tile* pNode = pMap->get_tile(iX, iY);
   if (pNode == nullptr) {
-    return luaL_argerror(L, 2, "Map co-ordinates out of bounds");
+    return luaL_argerror(L, 2, "Map coordinates out of bounds");
   }
   if (lua_gettop(L) >= 7) {
     pNode->iBlock[0] = (uint16_t)luaL_checkinteger(L, 4);

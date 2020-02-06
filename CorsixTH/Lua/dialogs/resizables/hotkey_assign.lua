@@ -318,7 +318,7 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
         Left for future patch.
     -- Disable the "global_exitApp" hotkey while assigning hotkeys?
         Even when "global_exitApp" isn't added at startup Alt+F4 still abandons program. Why?
-    -- Modifier keys for other languages nessecary?
+    -- Modifier keys for other languages necessary?
         -- Ex: STRG for german's "CTRL".
   ]]
 
@@ -349,7 +349,7 @@ local function hotkey_input(hotkey, hotkey_buttons_table, app)
       hotkey == "ingame_scroll_down" or
       hotkey == "ingame_scroll_left" or
       hotkey == "ingame_scroll_right" then
-    -- Get rid of any modifers, as they won't work correctly, anyway.
+    -- Get rid of any modifiers, as they won't work correctly, anyway.
     noted_keys = remove_modifiers(noted_keys)
   end
 

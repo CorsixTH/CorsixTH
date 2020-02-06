@@ -688,9 +688,9 @@ end
 -- Helper function for the common case of instructing a `Humanoid` to walk to
 -- a position on the map. Equivalent to calling `setNextAction` with a walk
 -- action.
---!param tile_x (integer) The X-component of the Lua tile co-ordinates of the
+--!param tile_x (integer) The X-component of the Lua tile coordinates of the
 -- tile to walk to.
---!param tile_y (integer) The Y-component of the Lua tile co-ordinates of the
+--!param tile_y (integer) The Y-component of the Lua tile coordinates of the
 -- tile to walk to.
 --!param must_happen (boolean, nil) If true, then the walk action will not be
 -- interrupted.
@@ -777,8 +777,8 @@ function Humanoid:tickDay()
 
   -- If it is too hot or too cold, start to decrease happiness and
   -- show the corresponding icon. Otherwise we could get happier instead.
-  local min_comfort_temp = 0.22 -- 11 degrees Celcius.
-  local max_comfort_temp = 0.36 -- 18 degrees Celcius.
+  local min_comfort_temp = 0.22 -- 11 degrees Celsius.
+  local max_comfort_temp = 0.36 -- 18 degrees Celsius.
   local decrease_factor = 0.10
   local increase_happiness = 0.005
 
@@ -827,7 +827,7 @@ function Humanoid:unregisterRoomBuildCallback(callback)
   if self.build_callbacks[callback] then
     self.build_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistant room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world:gameLog("Warning: Trying to remove nonexistent room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -861,7 +861,7 @@ function Humanoid:unregisterRoomRemoveCallback(callback)
     self.world:unregisterRoomRemoveCallback(callback)
     self.remove_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistant room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world:gameLog("Warning: Trying to remove nonexistent room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -883,7 +883,7 @@ function Humanoid:unregisterStaffChangeCallback(callback)
   if self.staff_change_callbacks and self.staff_change_callbacks[callback] then
     self.staff_change_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistant staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world:gameLog("Warning: Trying to remove nonexistent staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 

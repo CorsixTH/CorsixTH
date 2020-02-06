@@ -360,7 +360,7 @@ end
 -- pressed.
 --!param ... Additional arguments to `callback`.
 function UI:addKeyHandler(keys, window, callback, ...)
-  -- It is nessecary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
+  -- It is necessary to clone the key table into another temporary table, as if we don't the original table that we take it from will lose
   -- the last key of that table permenently in the next line of code after this one, until the program is restarted.
   -- I.E. if the "ingame_quitLevel" hotkey from the "hotkeys_values" table in "config_finder.lua" is a table that looks like this:
   --   {"shift", "q"}
@@ -379,7 +379,7 @@ function UI:addKeyHandler(keys, window, callback, ...)
     if type(keys) == "string" then
       print(string.format("\"%s\" does not exist in the hotkeys configuration file.", keys))
     else
-      print("Useage of addKeyHandler() requires the first argument to be a string of a key that can be found in the hotkeys configuration file.")
+      print("Usage of addKeyHandler() requires the first argument to be a string of a key that can be found in the hotkeys configuration file.")
     end
   end
 
@@ -475,7 +475,7 @@ function UI:removeKeyHandler(keys, window)
     if type(keys) == "string" then
       print(string.format("\"%s\" does not exist in the \"ui.key_handlers\" table.", keys))
     else
-      print("Useage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
+      print("Usage of removeKeyHandler() requires the first argument to be a string of a key that can be found in the \"ui.key_handlers\" table.")
     end
   end
 
@@ -1106,7 +1106,7 @@ function UI:makeScreenshot()
 end
 
 --! Closes one window (the topmost / active window, if possible)
---!return true iff a window was closed
+--!return true if a window was closed
 function UI:closeWindow()
   if not self.windows then
     return false

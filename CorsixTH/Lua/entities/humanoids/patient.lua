@@ -622,7 +622,7 @@ function Patient:tickDay()
   end
 
   -- Note: to avoid empty action queue error if the player spam clicks a patient at the same time as the day changes
-  -- there is now an inbetween "neutal" stage.
+  -- there is now an between "neutral" stage.
   if self.has_fallen == 3 then
     self.has_fallen = 1
   elseif self.has_fallen == 2 then

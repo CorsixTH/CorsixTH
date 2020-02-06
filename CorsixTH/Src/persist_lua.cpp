@@ -1274,8 +1274,8 @@ int l_persist_dofile(lua_State* L) {
           lua_settable(L, luaT_upvalueindex(2));
         } else {
           return luaL_error(L,
-                            "Multiple persistable functions defin"
-                            "ed on the same line (%s:%d)",
+                            "Multiple persistable functions defined"
+                            "on the same line (%s:%d)",
                             sFilename, iLineNumber);
         }
 

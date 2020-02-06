@@ -211,7 +211,7 @@ local configuration = {
     {StartCost = 2500, StartAvail = 0, WhenAvail = 0, StartStrength = 8, AvailableForLevel = 0}, --  9 Inflator Machine
     {StartCost = 150, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  10 Snooker Table
     {StartCost = 150, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  11 New Receptionists Station
-    {StartCost = 5, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  12 Build Room Tressle Table
+    {StartCost = 5, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  12 Build Room Trestle Table
     {StartCost = 1000, StartAvail = 0, WhenAvail = 0, StartStrength = 13, AvailableForLevel = 0}, --  13 Cardiogram
     {StartCost = 5000, StartAvail = 0, WhenAvail = 0, StartStrength = 12, AvailableForLevel = 0}, --  14 Scanner
     {StartCost = 3000, StartAvail = 1, WhenAvail = 0, StartStrength = 10, AvailableForLevel = 1}, --  15 Scanner Console

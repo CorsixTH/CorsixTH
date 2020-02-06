@@ -30,7 +30,7 @@ object.idle_animations = {
   south = 2130,
 }
 -- There are five animations, for each the doctor and the handyman.
--- The nurses don't like pool, appearently.
+-- The nurses don't like pool, apparently.
 --
 -- anim      | doctor | handyman
 -- -----------------------------

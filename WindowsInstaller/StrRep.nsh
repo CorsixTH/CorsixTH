@@ -14,7 +14,7 @@
 ;       misrepresented as being the original software.
 ;    3. This notice may not be removed or altered from any source distribution. 
 
-; Replaces all ocurrences of a given needle within a haystack with another string
+; Replaces all occurrences of a given needle within a haystack with another string
 ; Written by dandaman32
  
 Var STR_REPLACE_VAR_0

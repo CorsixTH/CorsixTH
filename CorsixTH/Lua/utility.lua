@@ -277,14 +277,14 @@ function hasBit(value, bit)
 end
 
 --! Convert an array table to a string.
---! Joins each elements by the provided seperator. As a convenience feature
+--! Joins each elements by the provided separator. As a convenience feature
 --! if the input is not an array it will be converted to a string and
 --! returned.
 --!param array (table) array to join.
---!param seperator (string) seperator between elements.
+--!param separator (string) separator between elements.
 --!return (string) The joined string.
-function array_join(array, seperator)
-  seperator = seperator or ","
+function array_join(array, separator)
+  separator = separator or ","
 
   if type(array) ~= "table" then
     return tostring(array)
@@ -297,7 +297,7 @@ function array_join(array, seperator)
   local result = tostring(array[1])
   local i = 2
   while array[i] ~= nil do
-    result = result .. seperator
+    result = result .. separator
     result = result .. tostring(array[i])
     i = i + 1
   end

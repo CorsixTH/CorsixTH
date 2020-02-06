@@ -609,7 +609,7 @@ for key, value in pairs(hotkeys_defaults) do
   hotkeys_values[key] = serialize(value)
 end
 
--- If the file opened succesfully...
+-- If the file opened successfully...
 if fi then
   local file_contents = fi:read("*all")
   fi:close()
@@ -634,7 +634,7 @@ end
 
 --
 if hotkeys_needs_rewrite then
-  -- The config file that will be written is divided into seperate strings, which are concatenated when they are written into the file.
+  -- The config file that will be written is divided into separate strings, which are concatenated when they are written into the file.
   -- This is done to avoid a "Too many C levels" error.
   local string_01 = [=[
 --------------------------CorsixTH Hotkey Mappings File-------------------------
