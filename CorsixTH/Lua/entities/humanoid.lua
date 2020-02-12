@@ -582,14 +582,8 @@ function Humanoid:setNextAction(action, high_priority)
       end
       if removed.is_entering then
         local dest_room = self.world:getRoom(removed.x, removed.y)
-        if dest_room and dest_room.door.queue then
-          if self.next_room_to_visit and self.next_room_to_visit == dest_room or
-              dest_room ~= self.next_room_to_visit and (not self:getRoom() or class.is(self, Staff)) then
-            dest_room.door.queue:unexpect(self)
-            dest_room.door:updateDynamicInfo()
-          end
-        end
-        if removed.reserve_on_resume and removed.reserve_on_resume:isReservedFor(self) then
+        self:unexpectFromRoom(dest_room)
+        if dest_room and removed.reserve_on_resume and removed.reserve_on_resume:isReservedFor(self) then
           removed.reserve_on_resume:removeReservedUser(self)
           dest_room:tryAdvanceQueue()
         end
@@ -979,3 +973,19 @@ function Humanoid:tostring()
   result = result .. "]"
   return result
 end
+
+--! Unexpects humanoid from a room, if validly entering this room
+--!param dest_room (Room) The room the humanoid maybe expected at
+function Humanoid:unexpectFromRoom(dest_room)
+  -- Unexpect the patient from a possible destination room.
+  if dest_room and dest_room.door.queue then
+    -- 1st condition checks normal room routing
+    -- 2nd checks patients going to toilets, doctors and nurses
+    -- and redundantly checks patients routed between rooms
+    if self.next_room_to_visit == dest_room or
+        (dest_room ~= self.next_room_to_visit and (not self:getRoom() or class.is(self, Staff))) then
+      dest_room.door.queue:unexpect(self)
+      dest_room.door:updateDynamicInfo()
+    end
+  end
+ end

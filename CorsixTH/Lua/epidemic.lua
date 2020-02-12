@@ -268,7 +268,7 @@ end
 epidemic was started to be fair on the players so they don't instantly fail.
 Additionally if any patients die during an epidemic we also remove them,
 otherwise a player may never win the epidemic in such a case.]]
-function Epidemic:checkPatientsForRemoval(lastchance)
+function Epidemic:checkPatientsForRemoval()
   for i = #self.infected_patients, 1, -1 do
     local infected_patient = self.infected_patients[i]
     if (not self.coverup_in_progress and infected_patient.going_home) or
