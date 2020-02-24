@@ -7,9 +7,7 @@ endif()
 # Project Declaration
 project(CorsixTH)
 
-if(APPLE)
-  add_subdirectory(SDLMain)
-elseif(MSVC)
+if(MSVC)
   # We want to bind against the very latest versions of the MSVC runtimes
   add_definitions(/D "_BIND_TO_CURRENT_VCLIBS_VERSION=1")
 endif()
@@ -28,7 +26,6 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
 endif()
 
-
 add_library(CorsixTH_lib STATIC "")
 
 # Declaration of the executable
@@ -45,9 +42,6 @@ if(APPLE)
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
-
-  target_link_libraries(CorsixTH SDL2main)
-  include_directories(${CMAKE_BINARY_DIR}/CorsixTH/SDLMain/)
 else()
   add_executable(CorsixTH "")
 endif()
@@ -94,14 +88,14 @@ else()
   if(SDL_FOUND)
     include_directories(${SDL_INCLUDE_DIR})
     if(SDLMAIN_LIBRARY STREQUAL "")
-      message(FATAL_ERROR "Error: SDL was found but SDLmain was not")
+      message(FATAL_ERROR "Error: SDL2 was found but SDL2main was not")
       message("Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
     endif()
-    # No need to specify sdlmain separately, the FindSDL.cmake file will take care of that. If not we get an error about it
+    # No need to specify sdl2main separately, the FindSDL.cmake file will take care of that. If not we get an error about it
     target_link_libraries(CorsixTH ${SDL_LIBRARY})
-    message("  SDL found")
+    message("  SDL2 found")
   else()
-    message(FATAL_ERROR "Error: SDL library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
+    message(FATAL_ERROR "Error: SDL2 library not found, it is required to build. Make sure the path is correctly defined or set the environment variable SDLDIR to the correct location")
   endif()
 endif()
 
@@ -110,13 +104,21 @@ find_package(Lua REQUIRED)
 if(Lua_FOUND)
   target_link_libraries(CorsixTH ${LUA_LIBRARY})
   include_directories(${LUA_INCLUDE_DIR})
-  # Special link flags needed on OSX/64bit, according to: http://luajit.org/install.html
+  # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
   # If these are not specified, luaL_newstate() returns NULL and we get this:
   #   Fatal error starting CorsixTH: Cannot open Lua state.
-  if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin" AND LUA_INTERPRETER_TYPE STREQUAL "LuaJIT" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
+  if(APPLE AND LUA_LIBRARIES MATCHES "libluajit" AND CMAKE_SIZEOF_VOID_P EQUAL 8)
     target_link_libraries(CorsixTH "-pagezero_size 10000" "-image_base 100000000")
   endif()
-  message("  ${LUA_INTERPRETER_TYPE} found")
+  if(LUA_LIBRARIES MATCHES "libluajit")
+    message("  LuaJIT${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
+  else()
+    message("  Lua${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR} found")
+    if(WITH_LUAJIT)
+      message("    Did you want to use LuaJIT? Please specify the path")
+    endif()
+    unset(WITH_LUAJIT CACHE)
+  endif()
 else()
   message(FATAL_ERROR "Error: Lua library not found, it is required to build")
 endif()
@@ -142,8 +144,6 @@ if(CORSIX_TH_USE_SDL_MIXER)
   endif()
 endif()
 
-message(STATUS "CMAKE_MODULE_PATH=${CMAKE_MODULE_PATH}")
-
 # Find FFMPEG
 if(CORSIX_TH_USE_FFMPEG)
   find_package(FFmpeg COMPONENTS AVFORMAT AVCODEC AVUTIL SWSCALE SWRESAMPLE REQUIRED)
@@ -152,6 +152,8 @@ if(CORSIX_TH_USE_FFMPEG)
     include_directories(${FFMPEG_INCLUDE_DIRS})
     if(APPLE)
       target_link_libraries(CorsixTH libz.dylib)
+      # These LDFLAGS are necessary for static ffmpeg, harmless for dynamic ffmpeg
+      set(CMAKE_EXE_LINKER_FLAGS "-liconv -framework CoreVideo")
     endif()
     message("  FFmpeg found")
   else()
@@ -207,9 +209,9 @@ endif()
 
 # Launch script to facilitate out of source builds
 if(USE_SOURCE_DATADIRS)
-  #do not generate launch script. The default is fine for this case.
+  # Do not generate launch script. The default is fine for this case.
 elseif(XCODE)
-  message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with  -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
+  message(WARNING "By default you will not be able to run CorsixTH from Xcode. If you do not plan to deploy then run cmake with -DUSE_SOURCE_DATADIRS. If you want to both run and deploy from Xcode then set the command line arguments in your run scheme to --interpreter=${CMAKE_CURRENT_SOURCE_DIR}/CorsixTH.lua")
 elseif(APPLE)
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/run-corsix-th-dev.sh.in.apple ${CMAKE_CURRENT_BINARY_DIR}/run-corsixth-dev.sh @ONLY)
 elseif(UNIX)
@@ -226,11 +228,10 @@ if(ENABLE_UNIT_TESTS)
   add_subdirectory(${PROJECT_SOURCE_DIR}/CppTest)
 endif()
 
-
 # Declaration of the install process
 if(NOT USE_SOURCE_DATADIRS)
   if(APPLE)
-    #Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
+    # Just use the prefix as it's sufficient to just set the prefix to /Applications on Mac.
     install(TARGETS CorsixTH BUNDLE DESTINATION .)
   elseif(MSVC)
     install(TARGETS CorsixTH
@@ -240,7 +241,7 @@ if(NOT USE_SOURCE_DATADIRS)
     )
     install(FILES CorsixTH.ico DESTINATION ${CORSIX_TH_DATADIR})
 
-    # install dependencies
+    # Install dependencies
     file(GLOB DLL_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.dll")
     install(FILES ${DLL_DEPS} DESTINATION ${CORSIX_TH_DATADIR})
     file(GLOB LUA_DEPS "${CMAKE_CURRENT_BINARY_DIR}/*.lua")
@@ -269,7 +270,7 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
 
   if(APPLE)
-    # Fix the OS X bundle to include required libraries (create a redistributable app)
+    # Fix the macOS bundle to include required libraries (create a redistributable app)
     install(CODE "
       INCLUDE(BundleUtilities)
       SET(BU_CHMOD_BUNDLE_ITEMS ON)
