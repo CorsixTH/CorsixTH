@@ -27,6 +27,7 @@ SOFTWARE.
 #include <cmath>
 #include <cstdlib>
 #include <queue>
+#include <stdexcept>
 #include <vector>
 
 #include "lua.hpp"
@@ -43,6 +44,7 @@ path_node* abstract_pathfinder::init(const level_map* pMap, int iStartX,
   pNode->prev = nullptr;
   pNode->distance = 0;
   pNode->guess = guess_distance(pNode);
+  pNode->visited = true;
   parent->dirty_node_list[0] = pNode;
   parent->dirty_node_count = 1;
   parent->open_heap.clear();
@@ -85,19 +87,24 @@ bool abstract_pathfinder::search_neighbours(path_node* pNode,
 void abstract_pathfinder::record_neighbour_if_passable(
     path_node* pNode, map_tile_flags neighbour_flags, bool passable,
     path_node* pNeighbour) {
-  if (neighbour_flags.passable || !passable) {
-    if (pNeighbour->prev == pNeighbour) {
-      pNeighbour->prev = pNode;
-      pNeighbour->distance = pNode->distance + 1;
-      pNeighbour->guess = guess_distance(pNeighbour);
-      parent->dirty_node_list[parent->dirty_node_count++] = pNeighbour;
-      parent->push_to_open_heap(pNeighbour);
-    } else if (pNode->distance + 1 < pNeighbour->distance) {
-      pNeighbour->prev = pNode;
-      pNeighbour->distance = pNode->distance + 1;
-      /* guess doesn't change, and already in the dirty list */
-      parent->open_heap_promote(pNeighbour);
-    }
+  if (pNeighbour->visited) {
+    return;
+  }
+  if (passable && !neighbour_flags.passable) {
+    return;
+  }
+
+  if (pNeighbour->prev == pNeighbour) {
+    pNeighbour->prev = pNode;
+    pNeighbour->distance = pNode->distance + 1;
+    pNeighbour->guess = guess_distance(pNeighbour);
+    parent->dirty_node_list[parent->dirty_node_count++] = pNeighbour;
+    parent->push_to_open_heap(pNeighbour);
+  } else if (pNode->distance + 1 < pNeighbour->distance) {
+    pNeighbour->prev = pNode;
+    pNeighbour->distance = pNode->distance + 1;
+    /* guess doesn't change, and already in the dirty list */
+    parent->open_heap_promote(pNeighbour);
   }
 }
 
@@ -186,6 +193,7 @@ bool hospital_finder::find_path_to_hospital(const level_map* pMap, int iStartX,
   int iWidth = pMap->get_width();
 
   while (true) {
+    pNode->visited = true;
     map_tile_flags flags = pMap->get_tile_unchecked(pNode->x, pNode->y)->flags;
 
     if (flags.hospital) {
@@ -212,6 +220,10 @@ int idle_tile_finder::guess_distance(path_node* pNode) { return 0; }
 bool idle_tile_finder::try_node(path_node* pNode, map_tile_flags flags,
                                 path_node* pNeighbour,
                                 travel_direction direction) {
+  if (pNeighbour->visited) {
+    return false;
+  }
+
   map_tile_flags neighbour_flags =
       map->get_tile_unchecked(pNeighbour->x, pNeighbour->y)->flags;
   /* When finding an idle tile, do not navigate through doors */
@@ -246,7 +258,7 @@ bool idle_tile_finder::try_node(path_node* pNode, map_tile_flags flags,
   }
 
   /* Identify the neighbour in the open list nearest to the start */
-  if (pNeighbour->prev != pNeighbour && pNeighbour->open_idx != -1) {
+  if (pNeighbour->prev != pNeighbour) {
     int iDX = pNeighbour->x - start_x;
     int iDY = pNeighbour->y - start_y;
     double fDistance = sqrt((double)(iDX * iDX + iDY * iDY));
@@ -277,7 +289,7 @@ bool idle_tile_finder::find_idle_tile(const level_map* pMap, int iStartX,
   path_node* pPossibleResult = nullptr;
 
   while (true) {
-    pNode->open_idx = -1;
+    pNode->visited = true;
     map_tile_flags flags = pMap->get_tile_unchecked(pNode->x, pNode->y)->flags;
 
     if (!flags.do_not_idle && flags.passable && flags.hospital) {
@@ -415,6 +427,7 @@ bool object_visitor::visit_objects(const level_map* pMap, int iStartX,
   int iWidth = pMap->get_width();
 
   while (true) {
+    pNode->visited = true;
     map_tile_flags flags = pMap->get_tile_unchecked(pNode->x, pNode->y)->flags;
     if (search_neighbours(pNode, flags, iWidth)) {
       return true;
@@ -457,6 +470,7 @@ void pathfinder::allocate_node_cache(int iWidth, int iHeight) {
         node.prev = &node;
         node.x = iX;
         node.y = iY;
+        node.visited = false;
         // Other fields are undefined as the node is not part of a
         // path, and thus can be left uninitialised.
       }
@@ -468,6 +482,7 @@ void pathfinder::allocate_node_cache(int iWidth, int iHeight) {
   } else {
     for (int i = 0; i < dirty_node_count; ++i) {
       dirty_node_list[i]->prev = dirty_node_list[i];
+      dirty_node_list[i]->visited = false;
       // Other fields are undefined as the node is not part of a path,
       // and thus can keep their old values.
     }
@@ -531,6 +546,11 @@ void pathfinder::push_to_open_heap(path_node* pNode) {
 
 void pathfinder::open_heap_promote(path_node* pNode) {
   size_t i = pNode->open_idx;
+  if (open_heap.at(i) != pNode) {
+    throw std::runtime_error(
+        "Invalid open_idx on node. Does not point to itself in the open heap");
+  }
+
   while (i > 0) {
     size_t parent = (i - 1) / 2;
     path_node* pParent = open_heap[parent];

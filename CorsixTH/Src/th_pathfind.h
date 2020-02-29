@@ -71,6 +71,9 @@ struct path_node {
   */
   size_t open_idx;
 
+  //! True if the cell has already been visited (popped from the open heap)
+  bool visited;
+
   //! Total cost of this node.
   /*!
       @return Total cost of the node, traveled distance and guess to the
