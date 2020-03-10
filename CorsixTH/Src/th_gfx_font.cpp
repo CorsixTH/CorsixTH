@@ -31,6 +31,7 @@ SOFTWARE.
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <cwctype>
 
 namespace {
 
@@ -626,7 +627,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             iHandledRows++;
           }
           sMessage = sLineBreakPosition;
-          next_utf8_codepoint(sMessage);
+          // Skip one char only when it's .. (maybe a CJK character)
+          if (std::iswspace(iCode) ||  // Whitespace characters
+              iCode == 0x3000) {       // Ideographic space
+            next_utf8_codepoint(sMessage);
+          }
           sLineStart = sMessage;
         } else {
           if (iHandledRows >= iSkipRows) {
