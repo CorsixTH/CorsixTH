@@ -31,6 +31,7 @@ SOFTWARE.
 #include <algorithm>
 #include <cstdio>
 #include <cstring>
+#include <cwctype>
 
 namespace {
 
@@ -481,15 +482,26 @@ struct codepoint_glyph {
   FT_UInt index;
 };
 
+enum class CJK_breakable { nonbreakable = 0, break_after, break_before };
+
 // Determine if the character code is a suitable Chinese/Japanese/Korean
 // character for a line break.
-bool isCjkBreakCharacter(unsigned int charcode) {
-  return (charcode == 0x3000 ||  // Ideographic space
-          charcode == 0x3002 ||  // Ideographic full stop
-          charcode == 0xff0c ||  // Fullwidth comma
-          charcode == 0xff0d ||  // Fullwidth hyphen-minus
-          charcode == 0xff1b ||  // Fullwidth semicolon
-          charcode == 0xff1f);   // Fullwidth question mark
+CJK_breakable isCjkBreakCharacter(unsigned int charcode) {
+  if (charcode == 0x3000 ||  // Ideographic space
+      charcode == 0x3001 ||  // Ideographic comma
+      charcode == 0x3002 ||  // Ideographic full stop
+      charcode == 0x301e ||  // Double prime quotation mark
+      charcode == 0xff09 ||  // Fullwidth right parenthesis
+      charcode == 0xff0c ||  // Fullwidth comma
+      charcode == 0xff0d ||  // Fullwidth hyphen-minus
+      charcode == 0xff1a ||  // Fullwidth Colon
+      charcode == 0xff1b ||  // Fullwidth semicolon
+      charcode == 0xff1f)    // Fullwidth question mark
+    return CJK_breakable::break_after;
+  if (charcode == 0x301d ||  // Reversed double prime quotation mark
+      charcode == 0xff08)    // Fullwidth left parenthesis
+    return CJK_breakable::break_before;
+  return CJK_breakable::nonbreakable;
 }
 
 FT_Pos pixel_align(FT_Pos position) { return ((position + 63) >> 6) << 6; }
@@ -615,7 +627,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             iHandledRows++;
           }
           sMessage = sLineBreakPosition;
-          next_utf8_codepoint(sMessage);
+          // Skip one char only when it's .. (maybe a CJK character)
+          if (std::iswspace(iCode) ||  // Whitespace characters
+              iCode == 0x3000) {       // Ideographic space
+            next_utf8_codepoint(sMessage);
+          }
           sLineStart = sMessage;
         } else {
           if (iHandledRows >= iSkipRows) {
@@ -635,10 +651,20 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       // Determine if a line can be broken at the current position.
       if (iCode == ' ') {
         sLineBreakPosition = sOldMessage;
-      } else if (isCjkBreakCharacter(iCode)) {
-        // break after this codepoint (cjk codepoints are 3 bytes in
-        // utf-8)
-        sLineBreakPosition = sOldMessage + 3;
+      } else {
+        switch (isCjkBreakCharacter(iCode)) {
+          case CJK_breakable::break_after:
+            // break after this codepoint (cjk codepoints are 3 bytes in
+            // utf-8)
+            sLineBreakPosition = sOldMessage + 3;
+            break;
+          case CJK_breakable::break_before:
+            // break before this codepoint
+            sLineBreakPosition = sOldMessage;
+            break;
+          default:
+            break;
+        }
       }
 
       // Save (unless we are skipping lines) and advance the pen.
