@@ -87,7 +87,7 @@ introduction_texts.level11 = " You've been given the chance to build the ultimat
 introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy. You'll also need a Nurse to dispense the various drugs in the Pharmacy."
 
 -- Override for level progress typo
-level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level.",
+level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level."
 level_progress.cured_enough_patients = "You've cured enough of your patients, but you need to get your hospital in better order to win the level."
 
 -- Override for multiplayer typos
