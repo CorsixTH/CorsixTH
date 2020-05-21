@@ -55,7 +55,7 @@ vip_names = {
 }
 
 -- A small error in the introduction text of level 2
-introduction_texts.level2 = "There is a greater variety of ailments in this area. Set up your hospital to deal with more patients, " ..
+introduction_texts.level2 = " There is a greater variety of ailments in this area. Set up your hospital to deal with more patients, " ..
                             "and plan to build a Research Department. Remember to keep your establishment clean, and try to get your " ..
                             "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
                             "Tongue Clinic. You can also build a Cardiogram to help you diagnose new illnesses. Both these rooms will " ..
@@ -64,6 +64,41 @@ introduction_texts.level2 = "There is a greater variety of ailments in this area
 
 -- An override for the squits becoming the the squits see issue 1646
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
+
+-- Disease overrides where there are typos
+golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
+ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
+slack_tongue.cause = "Cause - chronic over-discussion at soap operas."
+slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
+the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
+bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
+
+-- Rooms overrides where there are typos
+inflation[2] = "Patients with the painful-yet-humorous condition of Bloaty Head must come to the Inflation Clinic, where the overlarge cranium will be popped and instantly re-inflated to the correct pressure.//"
+staff_room[2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money, and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. "
+
+-- Staff description overrides where there are typos
+staff_descriptions.bad[14] = "Sly, cunning, and subversive. "
+staff_descriptions.misc[11] = "Distils whiskey. "
+
+-- Level description overrides where there are typos
+introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now. Good luck and all that."
+introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have sightings of UFOs in the area. Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
+introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy. You'll also need a Nurse to dispense the various drugs in the Pharmacy."
+
+-- Override for level progress typo
+level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level.",
+level_progress.cured_enough_patients = "You've cured enough of your patients, but you need to get your hospital in better order to win the level."
+
+-- Override for multiplayer typos
+multiplayer.players_failed = "The following player(s) failed to achieve the last objective:"
+multiplayer.everyone_failed = "Everyone failed to satisfy that last objective. So everyone gets to play on!"
+
+-- Override for a disease patient choice typo
+disease_discovered_patient_choice.need_to_employ = "Employ a %s to be able to handle this situation."
+
+--Win message override typo
+letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. However, such has been your impact on the cosy world of medicine, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. The whole world is clamouring for you, and it would be great PR for us all!//"
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
@@ -654,7 +689,7 @@ warnings = {
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000.  Larger resolutions are possible, but will require better hardware in order to maintain a playable frame rate.  Are you sure you want to continue?",
+  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000.  Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate.  Are you sure you want to continue?",
 }
 
 information = {
@@ -684,7 +719,7 @@ totd_window = {
     "After a while, your staff will get tired. Be sure to build a staff room, so they can relax.",
     "Place enough radiators to keep your staff and patients warm, or they will become unhappy. Use the town map to locate any spots in your hospital that need more heating.",
     "A doctor's skill level greatly influences the quality and speed of his diagnoses. Place a skilled doctor in your GP's office, and you won't need as many additional diagnosis rooms.",
-    "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist or researcher), he will also pass on this knowledge to his pupil(s).",
+    "Juniors and doctors can improve their skills by learning from a consultant in the training room. If the consultant has a special qualification (surgeon, psychiatrist, or researcher), he will also pass on this knowledge to his pupil(s).",
     "Did you try to enter the European emergency number (112) into the fax machine? Make sure your sound is on!",
     "You can adjust some settings such as the resolution and language in the options window found both in the main menu and ingame.",
     "You selected a language other than English, but there's English text all over the place? Help us by translating missing texts into your language!",
