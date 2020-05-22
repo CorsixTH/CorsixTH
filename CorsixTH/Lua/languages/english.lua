@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2014 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al
+--[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al., lewri 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -21,6 +21,7 @@ SOFTWARE. --]]
 Language("English", "en", "eng")
 Inherit("original_strings", 0)
 
+--Note: All strings should use a single space after full-stops. Only exception is level descriptions.
 -------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
 -- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
@@ -54,21 +55,13 @@ vip_names = {
  [6] = "Sir Lancelot Spratt",
 }
 
--- A small error in the introduction text of level 2
-introduction_texts.level2 = " There is a greater variety of ailments in this area. Set up your hospital to deal with more patients, " ..
-                            "and plan to build a Research Department. Remember to keep your establishment clean, and try to get your " ..
-                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
-                            "Tongue Clinic. You can also build a Cardiogram to help you diagnose new illnesses. Both these rooms will " ..
-                            "need to be researched before you can build them. Now you can also buy extra plots of land to expand your " ..
-                            "hospital - use the Town map for this. Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
-
 -- An override for the squits becoming the the squits see issue 1646
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 
 -- Disease overrides where there are typos
 golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
 ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
-slack_tongue.cause = "Cause - chronic over-discussion at soap operas."
+slack_tongue.cause = "Cause - chronic over-discussion of soap operas."
 slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
 the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
 bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
@@ -79,12 +72,26 @@ staff_room[2] = "Your staff get tired as they carry out their jobs. They require
 
 -- Staff description overrides where there are typos
 staff_descriptions.bad[14] = "Sly, cunning, and subversive. "
-staff_descriptions.misc[11] = "Distils whiskey. "
+staff_descriptions.misc[11] = "Distils whisky. "
 
--- Level description overrides where there are typos
-introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now. Good luck and all that."
-introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have sightings of UFOs in the area. Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
-introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy. You'll also need a Nurse to dispense the various drugs in the Pharmacy."
+-- Correction to a pay rise prompt with typos
+pay_rise.regular[1] = "I'm totally frazzled. I need a good rest, plus a rise of %d if you don't want to see me jack in this poxy job."
+
+-- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
+introduction_texts.level17 = " Last word of warning - keep a keen eye on your Reputation - this is what will attract the patients from far and wide to your establishment.  If you don't kill too many people and keep them reasonably happy you shouldn't have too much trouble on this level!// You're on you own now.  Good luck and all that."
+introduction_texts.level11 = " You've been given the chance to build the ultimate in hospitals.  This is an exceedingly prestigious area, and the Ministry would like to see the best possible hospital.  We'll be expecting you to make big money, have a superbly high reputation and cover every possible eventuality.  It's an important job, this.  You'll have to be something special to pull it off.  Note, too, that there have sightings of UFOs in the area.  Make sure your staff are prepared for some unexpected visitors.  Your hospital will need to be worth $240,000, you'll need $500,000 in the bank, and your reputation will need to be 700."
+introduction_texts.level9 = " Having filled the Ministry's bank account and paid for a new limousine for the Minister himself, you can now get back to creating a caring, well-run hospital for the benefit of the unwell and needy.  You can expect a lot of different problems to crop up here.  If you have enough well-trained staff and rooms, you should have all the angles covered.  Your hospital will need to be worth $200,000, and you'll need $400,000 in the bank.  Any less and you won't be able to finish the level."
+introduction_texts.level16 = " Once you have diagnosed some of the patients you will need to build treatment facilities and clinics to cure them - a good one to start off with is the Pharmacy.  You'll also need a Nurse to dispense the various drugs in the Pharmacy."
+introduction_texts.level10 = " As well as covering all the illnesses which crop up in this neck of the woods, the Ministry request that you spend some time concentrating on the efficiency of your drugs.  There have been some complaints from Ofsick, the Health Watchdog, so in order to look good you must make sure all your drugs are extremely efficient.  Also, make sure your hospital is above reproach as well. Keep those deaths down.  As a hint, you might like to keep space free for a Jelly Vat.  Develop all your drugs to at least 80 per cent efficiency, get a reputation of 650 and stash $500,000 in the bank to win."
+introduction_texts.level12 = " You've got the mother of all challenges now.  Impressed with your success, the Ministry has got the top job for you; they want someone to build another ultimate hospital, make a vast amount of dosh and have an incredible reputation.  You'll also be expected to buy all the land you can, cure everything (and we mean everything) and win all the awards.  Think you're up to it?  Earn $650,000, cure 750 people, and get a reputation of 800 to win this one."
+introduction_texts.level15 = " Okay that's the basic mechanics of putting a hospital together.// Your Doctors are going to need all the help they can get to diagnose some of these patients.  You can assist them by building another diagnosis facility such as the General Diagnosis Room."
+-- A small error in the introduction text of level 2
+introduction_texts.level2 = " There is a greater variety of ailments in this area.  Set up your hospital to deal with more patients, " ..
+                            "and plan to build a Research Department.  Remember to keep your establishment clean, and try to get your " ..
+                            "reputation as high as possible - you'll be dealing with diseases like Slack Tongue, so you'll need a Slack " ..
+                            "Tongue Clinic.  You can also build a Cardiogram to help you diagnose new illnesses.  Both these rooms will " ..
+                            "need to be researched before you can build them.  Now you can also buy extra plots of land to expand your " ..
+                            "hospital - use the Town map for this.  Aim for a reputation of 300 a bank balance of $10,000 and 40 people cured."
 
 -- Override for level progress typo
 level_progress.hospital_value_enough = "Keep the value of your hospital above %d and attend to your other problems to win the level."
@@ -221,7 +228,7 @@ adviser = {
     no_desk_4 = "A Receptionist needs to have her own work station to greet your patients as they arrive.",
     no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
     no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
-    no_desk_7 = "You've built the reception desk, so how about hiring a receptionist?  You won't see any patients until you get this sorted out you know!",
+    no_desk_7 = "You've built the reception desk, so how about hiring a receptionist? You won't see any patients until you get this sorted out you know!",
     cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "You don't have enough money in the bank to make that purchase!",
     falling_1 = "Hey! That is not funny, watch where you click that mouse; someone could get hurt!",
@@ -295,7 +302,7 @@ install = {
 }
 
 misc.not_yet_implemented = "(not yet implemented)"
-misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map.  It might be that you need to build a reception desk and hire a receptionist"
+misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist"
 
 main_menu = {
   new_game = "Campaign",
@@ -319,7 +326,7 @@ tooltip.main_menu = {
   options = "Tweak various settings",
   map_edit = "Create a custom map",
   exit = "No, no, please don't leave!",
-  quit = "You are about to quit from CorsixTH.   Are you sure this is what you want to do?",
+  quit = "You are about to quit from CorsixTH. Are you sure this is what you want to do?",
 }
 
 load_game_window = {
@@ -459,7 +466,7 @@ tooltip.customise_window = {
   paused = "In Theme Hospital the player would only be allowed to use the top menu if the game was paused. That is the default setting in CorsixTH too, but by turning this on everything is allowed while the game is paused",
   volume = "If the volume down button is also opening the casebook, turn this on to change the hotkey for the casebook to Shift + C",
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
-  fractured_bones = "Because of some poor animations we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
+  fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
   back = "Close this menu and go back to the Settings Menu",
 }
@@ -483,14 +490,14 @@ tooltip.folders_window = {
   browse = "Browse for folder location",
   data_location = "The directory of the original Theme Hospital installation, which is required to run CorsixTH",
   font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
-  savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own. Just browse to the directory that you want to use.",
-  screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own. Just browse to the directory that you want to use.",
-  music_location = "Select a location for your music files. Just browse to the directory you want to use (directory must already exist beforehand).",
+  savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own by browsing to the directory that you want to use.",
+  screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own by browsing to the directory that you want to use.",
+  music_location = "Select a location for your music files by browsing to the directory you want to use (directory must already exist beforehand).",
   browse_data = "Browse for another location of a Theme Hospital installation (current location: %1%)",
-  browse_font = "Browse for another font file ( current location: %1% )",
-  browse_saves = "Browse for another location for your Saves directory  ( Current location: %1% ) ",
-  browse_screenshots = "Browse for another location for your Screenshots directory  ( Current location: %1% ) ",
-  browse_music = "Browse for another location for your Music directory  ( Current location: %1% ) ",
+  browse_font = "Browse for another font file ( Current location: %1% )",
+  browse_saves = "Browse for another location for your Saves directory ( Current location: %1% ) ",
+  browse_screenshots = "Browse for another location for your Screenshots directory ( Current location: %1% ) ",
+  browse_music = "Browse for another location for your Music directory ( Current location: %1% ) ",
   no_font_specified = "No font location specified yet!",
   not_specified = "No folder location specified yet!",
   default = "Default location",
@@ -675,7 +682,7 @@ errors = {
   map_file_missing = "Could not find the map file %s for this level!",
   minimum_screen_size = "Please enter a screen size of at least 640x480.",
   unavailable_screen_size = "The screen size you requested is not available in fullscreen mode.",
-  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening, or knocking on doors etc. So like with Theme Hospital, performing those actions will change the patient to normal then back to Alien.  Patients with Alien DNA will only appear if they are set to in the level file.",
+  alien_dna = "NOTE: There are no animations for Alien patients for sitting down, opening or knocking on doors etc. Like with Theme Hospital, performing those actions will change the patient to normal then back to Alien. Patients with Alien DNA will only appear if they are set to in the level file.",
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
@@ -689,7 +696,7 @@ warnings = {
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
-  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000.  Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate.  Are you sure you want to continue?",
+  maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
 }
 
 information = {
@@ -793,12 +800,13 @@ tooltip.cheats_window = {
   }
 }
 
+--Level description, can be double spaced after full-stop
 introduction_texts = {
   demo =
     "Welcome to the demo hospital!//" ..
-    "Unfortunately the demo version only contains this level. However, there is more than enough to do here to keep you busy for a while! " ..
-    "You will encounter various diseases that require different rooms to cure. From time to time, emergencies may occur. And you will need to research additional rooms using a research room. " ..
-    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients. " ..
+    "Unfortunately the demo version only contains this level.  However, there is more than enough to do here to keep you busy for a while!  " ..
+    "You will encounter various diseases that require different rooms to cure.  From time to time, emergencies may occur.  And you will need to research additional rooms using a research room.  " ..
+    "Your goal is to earn $100,000, have a hospital value of $70,000 and a reputation of 700, while having cured at least 75% of your patients.  " ..
     "Make sure your reputation does not fall below 300 and that you don't kill off more than 40% of your patients, or you will lose.//" ..
     "Good luck!",
 }
