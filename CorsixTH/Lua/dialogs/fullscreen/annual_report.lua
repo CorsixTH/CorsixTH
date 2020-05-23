@@ -141,7 +141,6 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     self.value_sort = {}
 
     -- TODO: Right now there are no real competitors, they all have initial values.
-    -- Fix for #1615 where annual report showed .0 at end of values
     for i, hospital in ipairs(world.hospitals) do
       self.money_sort[i] = {value = math.floor(hospital.balance - hospital.loan), hosp_index = i}
       self.visitors_sort[i] = {value = hospital.num_visitors, hosp_index = i}
