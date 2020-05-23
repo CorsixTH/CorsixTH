@@ -34,7 +34,7 @@ Copyright (C) 2011 Rene "Kleeze" Bergfort
 Copyright (C) 2011-2012 Sérgio "Get_It" Ribeiro
 Copyright (C) 2011 Sergei Larionov
 Copyright (C) 2011 Alexey Pinyagin
-Copyright (C) 2012-2019 Stephen "TheCycoONE" Baker
+Copyright (C) 2012-2020 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
 Copyright (C) 2012-2013 Luis "Driver" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
@@ -53,7 +53,7 @@ Copyright (C) 2014 Phillipp Röll
 Copyright (C) 2014 Leonardo "LeonardoGamer" Malaman
 Copyright (C) 2015 Víctor "mccunyao" González
 Copyright (C) 2015 Josh Keegan
-Copyright (C) 2016,2018 Toby Lane
+Copyright (C) 2016-2020 Toby Lane
 Copyright (C) 2016 Phil Morrell
 Copyright (C) 2017 Arne Zelasko
 Copyright (C) 2017 Víctor "IlDucci"
@@ -63,7 +63,7 @@ Copyright (C) 2017 Steven Price
 Copyright (C) 2017 Radomir Wojtera
 Copyright (C) 2017 David Fairbrother
 Copyright (C) 2017-2018 Altieres Lima
-Copyright (C) 2017-2019 Justin "mugmuggy" Mugford
+Copyright (C) 2017-2020 Justin "mugmuggy" Mugford
 Copyright (C) 2018 Pavel Schoffer
 Copyright (C) 2018 Rick "Feanathiel" Megens
 Copyright (C) 2018-2019 James "leiget" Russell
