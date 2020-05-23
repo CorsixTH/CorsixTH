@@ -1,4 +1,4 @@
---[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge et al., lewri
+--[[ Copyright (c) 2010-2020 Manuel "Roujin" Wolf, Edvin "Lego3" Linge, lewri et al.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -61,7 +61,7 @@ adviser.research.drug_improved_1 = "%s drug has been improved by your Research D
 -- Disease overrides where there are typos
 golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
 ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
-slack_tongue.cause = "Cause - chronic over-discussion of soap operas."
+slack_tongue.cause = "Cause - Chronic over-discussion of soap operas."
 slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
 the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
 bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
@@ -493,7 +493,7 @@ tooltip.folders_window = {
   savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own by browsing to the directory that you want to use.",
   screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own by browsing to the directory that you want to use.",
   music_location = "Select a location for your music files by browsing to the directory you want to use (directory must already exist beforehand).",
-  browse_data = "Browse for another location of a Theme Hospital installation (current location: %1%)",
+  browse_data = "Browse for another location for your Theme Hospital installation (current location: %1%)",
   browse_font = "Browse for another font file ( Current location: %1% )",
   browse_saves = "Browse for another location for your Saves directory ( Current location: %1% ) ",
   browse_screenshots = "Browse for another location for your Screenshots directory ( Current location: %1% ) ",
