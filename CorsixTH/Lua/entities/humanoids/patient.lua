@@ -75,7 +75,7 @@ function Patient:onClick(ui, button)
       if epidemic and epidemic.coverup_in_progress and
           self.infected and not self.marked_for_vaccination and
           -- Prevent further vaccinations when the timer ends
-          not epidemic.timer.closed then
+          not epidemic.timer.closed and epidemic.vaccination_mode_active then
         epidemic:markForVaccination(self)
       end
     end
