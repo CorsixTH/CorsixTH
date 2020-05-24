@@ -293,7 +293,7 @@ end
  the player and can only happen during a cover up. ]]
 function Epidemic:markForVaccination(patient)
   if patient.infected and not patient.vaccinated and
-      not patient.marked_for_vaccination and self.vaccination_mode_active then
+      not patient.marked_for_vaccination then
     patient.marked_for_vaccination = true
     patient:setMood("epidemy4","deactivate")
     patient:setMood("epidemy2","activate")
