@@ -45,7 +45,8 @@ local action_staff_reception_interrupt = permanent"action_staff_reception_interr
     humanoid:setTilePositionSpeed(dx, dy)
     humanoid:finishAction()
   else
-    HumanoidRawWalk(humanoid, humanoid.tile_x, humanoid.tile_y, dx, dy, nil, function()
+    HumanoidRawWalk(humanoid, humanoid.tile_x, humanoid.tile_y, dx, dy, nil,
+        --[[persistable:action_staff_reception_walk]] function()
       humanoid:setTilePositionSpeed(dx, dy)
       humanoid:finishAction()
     end)
