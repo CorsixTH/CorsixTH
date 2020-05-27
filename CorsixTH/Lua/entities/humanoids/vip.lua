@@ -80,7 +80,9 @@ function Vip:Vip(...)
   --self.hospital = hospital
   --staff = {}
   --self.__index = self
-
+  self.enter_deaths = 0
+  self.enter_visitors = 0
+  self.enter_explosions = 0
   self.num_vomit_noninducing = 0
   self.num_vomit_inducing = 0
   self.found_vomit = {}
