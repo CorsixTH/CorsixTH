@@ -1948,8 +1948,10 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
   local sum = 0
   local count = 0
   for _, staff in ipairs(self.staff) do
-    sum = sum + staff.attributes[attribute]
-    count = count + 1
+    if staff.attributes[attributes] ~= nil then
+      sum = sum + staff.attributes[attribute]
+      count = count + 1
+    end
   end
 
   if count == 0 then
