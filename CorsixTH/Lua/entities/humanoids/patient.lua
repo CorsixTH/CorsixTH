@@ -66,17 +66,10 @@ function Patient:onClick(ui, button)
     else
       local hospital = self.hospital or self.world:getLocalPlayerHospital()
       local epidemic = hospital and hospital.epidemic
-      if not epidemic or
-          (not epidemic.coverup_in_progress or
-            (not self.infected or self.marked_for_vaccination) and
-            not epidemic.vaccination_mode_active) then
-        ui:addWindow(UIPatient(ui, self))
-      end
-      if epidemic and epidemic.coverup_in_progress and
-          self.infected and not self.marked_for_vaccination and
-          -- Prevent further vaccinations when the timer ends
-          not epidemic.timer.closed then
+      if epidemic and epidemic.vaccination_mode_active then
         epidemic:markForVaccination(self)
+      else
+        ui:addWindow(UIPatient(ui, self))
       end
     end
   elseif self.user_of then
