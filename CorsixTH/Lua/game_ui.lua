@@ -1211,6 +1211,8 @@ function GameUI:afterLoad(old, new)
     self.announcer = Announcer(self.app)
   end
 
+  self.announcer.playing = false
+
   return UI.afterLoad(self, old, new)
 end
 

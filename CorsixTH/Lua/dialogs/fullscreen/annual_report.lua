@@ -150,10 +150,9 @@ function UIAnnualReport:UIAnnualReport(ui, world)
       self.salary_sort[i] = {value = math.floor(hospital.player_salary), hosp_index = i}
     end
 
-    local local_hosp_index = 1
     -- sort putting local player hospital first when values the same
-    local desc_order = function(a,b) return a.value > b.value or (a.value == b.value and a.hosp_index == local_hosp_index) end
-    local asc_order = function(a,b) return a.value < b.value or (a.value == b.value and a.hosp_index == local_hosp_index) end
+    local desc_order = function(a,b) return a.value > b.value or (a.value == b.value and a.hosp_index < b.hosp_index) end
+    local asc_order = function(a,b) return a.value < b.value or (a.value == b.value and a.hosp_index < b.hosp_index) end
     table.sort(self.money_sort, desc_order)
     table.sort(self.visitors_sort, desc_order)
     table.sort(self.deaths_sort, asc_order)
