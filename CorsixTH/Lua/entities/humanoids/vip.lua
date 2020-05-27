@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 --[[
 ---------------------------------- VIP Rating System ---------------------------------
-| Vip rating is calculated between -5 and +9                                         |
+| Vip rating is calculated between 0 and 15                                          |
 | If rating exceeds values, it will be capped as necessary                           |
 | 1. LITTER OBJECTS                                                                  |
 |  - a. General litter and vomit 'litter' is counted                                 |
@@ -70,16 +70,12 @@ function Vip:Vip(...)
 
     --original value is 50
     --First we should generate an initial VIP rating
-  self.vip_rating = 2 - math.floor(math.random(0,5))
+  self.vip_rating = 8 - math.floor(math.random(0,5))
   print("My initial rating is " .. self.vip_rating)
 
   self.cash_reward = 0
   self.rep_reward = 0
   self.vip_message = 0
-  --self.world = world
-  --self.hospital = hospital
-  --staff = {}
-  --self.__index = self
   self.enter_deaths = 0
   self.enter_visitors = 0
   self.enter_explosions = 0
@@ -178,7 +174,7 @@ function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
     --debug
-    print("I rate this hospital " .. self.vip_rating .. " penalty points out of 20")
+    print("I rate this hospital " .. self.vip_rating .. " penalty points out of 15")
     --end-debug
   if self.world.free_build_mode then
     self.last_hospital.reputation = self.last_hospital.reputation + 20
@@ -187,7 +183,7 @@ function Vip:onDestroy()
       {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
-  elseif self.vip_rating <= 1 then
+  elseif self.vip_rating <= 7 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
@@ -198,7 +194,7 @@ function Vip:onDestroy()
         {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
         choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
       }
-  elseif self.vip_rating >=2 and self.vip_rating <= 5 then
+  elseif self.vip_rating >=8 and self.vip_rating <= 11 then
     -- dont tell player about any rep change in this range
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
       message = {
@@ -412,28 +408,28 @@ local rep_change = {
         [14] = -20,
         [15] = -25,
     }
-  if self.vip_rating >= 2 then
+  if self.vip_rating >= 8 then
     self.cash_reward = rewards[8]
-  elseif self.vip_rating <= -5 then
+  elseif self.vip_rating <= 1 then
     self.cash_reward = rewards[1]
   else
-    self.cash_reward = rewards[self.vip_rating + 6]
+    self.cash_reward = rewards[self.vip_rating]
   end
   print("cash reward " .. self.cash_reward)
-  if self.vip_rating >= 9 then
+  if self.vip_rating >= 15 then
     self.rep_reward = rep_change[15]
-  elseif self.vip_rating <= -5 then
+  elseif self.vip_rating <= 1 then
     self.rep_reward = rep_change[1]
   else
-    self.rep_reward = rep_change[self.vip_rating + 6]
+    self.rep_reward = rep_change[self.vip_rating]
   end
   print("rep reward " .. self.rep_reward)
-  if self.vip_rating <= -5 then
+  if self.vip_rating <= 1 then
   self.vip_message = 1
-  elseif self.vip_rating >= 9 then
+  elseif self.vip_rating >= 15 then
     self.vip_message = 15
   else
-    self.vip_message = self.vip_rating + 6
+    self.vip_message = self.vip_rating
   end
   print("message number: " .. self.vip_message)
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
