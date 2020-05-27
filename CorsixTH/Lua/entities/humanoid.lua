@@ -1,4 +1,4 @@
---[[ Copyright (c) 2011-2020 John Pirie, lewri
+--[[ Copyright (c) 2009 Peter "Corsix" Cawley
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -18,441 +18,974 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---[[
----------------------------------- VIP Rating System ---------------------------------
-| Vip rating is calculated between -5 and +9                                         |
-| If rating exceeds values, it will be capped as necessary                           |
-| 1. LITTER OBJECTS                                                                  |
-|  - a. General litter and vomit 'litter' is counted                                 |
-|  - b. At end of visit, if number <=10 award -1                                     |
-|  - c. Otherwise, award +1                                                          |
-| 2. STAFF TIREDNESS                                                                 |
-|  - a. If staff <=1, award +4 and skip other checks                                 |
-|  - b. If any staff member very tired (over 0.7), award 2                           |
-|  - c. If average staff tiredness over tired (0.5), award 1                         |
-|  - d. Else award -1                                                                |
-| 3. PATIENTS                                                                        |
-|  - a. If average patient health >= 0.2, award -1                                   |
-|  - b. If average patient health < 0.2, award +1                                    |
-|  - c. Assess patient warmth, too hot/cold award +2, perfect -1, just over 1        |
-|  - d. Average happiness, award 3 if <0.2; 2 if <0.4, 1 if <0.6, 0 if <0.8, else -1 |
-|  - e. Check if anyone has died during visit, punish based on severity              |
-| 4. DOCTORS                                                                         |
-|  - a. If no doctors, award +4 and skip other checks                                |
-|  - b. If more than half doctors are consultants, award -2                          |
-|  - c. If more than half doctors are juniors, award +2                              |
-| 5. ROOMS                                                                           |
-|  - a. If there are no active rooms, award +4                                       |
-|  - b. If rooms not crashed (exploded) <3, award +1                                 |
-| 6. SEATING                                                                         |
-|  - a. If more standing than siting, award +1, else -1                              |
---------------------------------------------------------------------------------------
---]]
+--! An `Entity` which occupies a single tile and is capable of moving around the map.
+class "Humanoid" (Entity)
 
---[[ initialisation --]]
-corsixth.require("announcer")
+---@type Humanoid
+local Humanoid = _G["Humanoid"]
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
---local Hospital = require 'Hospital'
+local walk_animations = permanent"humanoid_walk_animations"({})
+local door_animations = permanent"humanoid_door_animations"({})
+local die_animations = permanent"humanoid_die_animations"({})
+local falling_animations = permanent"humanoid_falling_animations"({})
+local on_ground_animations = permanent"humanoid_on_ground_animations"({})
+local get_up_animations = permanent"humanoid_get_up_animations"({})
+local shake_fist_animations = permanent"humanoid_shake_fist_animations"({})
+local pee_animations = permanent"humanoid_pee_animations"({})
+local vomit_animations = permanent"humanoid_vomit_animations"({})
+local tap_foot_animations = permanent"humanoid_tap_foot_animations"({})
+local yawn_animations = permanent"humanoid_yawn_animations"({})
+local check_watch_animations = permanent"humanoid_check_watch_animations"({})
 
---! A `Vip` who is in the hospital to evaluate the hospital and produce a report
-class "Vip" (Humanoid)
+local mood_icons = permanent"humanoid_mood_icons"({})
 
----@type Vip
-local Vip = _G["Vip"]
-
-function Vip:Vip(...)
-  self:Humanoid(...)
-  self.hover_cursor = TheApp.gfx:loadMainCursor("default")
-  self.action_string = ""
-  self.name=""
-  self.announced = false
-
-    --original value is 50
-    --First we should generate an initial VIP rating
-  self.vip_rating = 2 - math.floor(math.random(0,5))
-  print("My initial rating is " .. self.vip_rating)
-
-  self.cash_reward = 0
-  self.rep_reward = 0
-  self.vip_message = 0
-  --self.world = world
-  --self.hospital = hospital
-  --staff = {}
-  --self.__index = self
-
-  self.num_vomit_noninducing = 0
-  self.num_vomit_inducing = 0
-  self.found_vomit = {}
-  self.num_visited_rooms = 0
-  self.room_eval = 0
-  self.waiting = 0
+local function anims(name, walkN, walkE, idleN, idleE, doorL, doorE, knockN, knockE, swingL, swingE)
+  walk_animations[name] = {
+    walk_east = walkE,
+    walk_north = walkN,
+    idle_east = idleE,
+    idle_north = idleN,
+  }
+  door_animations[name] = {
+    entering = doorE,
+    leaving = doorL,
+    entering_swing = swingE,
+    leaving_swing = swingL,
+    knock_north = knockN,
+    knock_east = knockE,
+  }
 end
 
---[[--VIP while on premesis--]]
-function Vip:tickDay()
-  -- for the vip
-if self.waiting then
-    self.waiting = self.waiting - 1
-    if self.waiting == 0 then
-      if #self.world.rooms == 0 then
-        -- No rooms have been built yet
-        self:goHome()
-      end
-      -- First let the previous room go.
-      -- Include this when the VIP is supposed to block doors again.
-      --[[if self.next_room then
-        self.next_room.door.reserved_for = nil
-        self.next_room:tryAdvanceQueue()
-      end--]]
-      -- Find out which next room to visit.
-      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      -- Make sure that this room is active
-      while self.next_room and not self.next_room.is_active do
-        self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      end
-      self:setNextAction(VipGoToNextRoomAction())
+---
+-- @param name The name of the patient class these death animations are for.
+-- @param fall The patient's fall animation.
+-- @param rise The transparent getting up animation for heaven death patients who have been lying dead on the ground.
+-- @param rise_hell The opaque getting up animation for hell death patients who have been lying dead on the ground.
+-- @param wings The heaven death animation in which the patient's wings appear.
+-- @param hands The heaven death animation which occurs after the wings animation when the patient puts their hands together.
+-- @param fly The heaven death animation which makes patients fly upwards to heaven.
+-- @param extra Dead untreated patients who don't transform before falling over use this animation afterwards to transform into a standard male/female.
+---
+local function die_anims(name, fall, rise, rise_hell, wings, hands, fly, extra)
+  die_animations[name] = {
+    fall_east = fall,
+    rise_east = rise,
+    rise_hell_east = rise_hell,
+    wings_east = wings,
+    hands_east = hands,
+    fly_east = fly,
+    extra_east = extra,
+  }
+end
+local function falling_anim(name, fallingAnim)
+  falling_animations[name] = fallingAnim
+end
+local function on_ground_anim(name, on_groundAnim)
+  on_ground_animations[name] = on_groundAnim
+end
+local function get_up_anim(name, get_upAnim)
+  get_up_animations[name] = get_upAnim
+end
+local function shake_fist_anim(name, shake_fistAnim)
+  shake_fist_animations[name] = shake_fistAnim
+end
+local function vomit_anim(name, vomitAnim)
+  vomit_animations[name] = vomitAnim
+end
+local function yawn_anim(name, yawnAnim)
+  yawn_animations[name] = yawnAnim
+end
+local function tap_foot_anim(name, tap_footAnim)
+  tap_foot_animations[name] = tap_footAnim
+end
+local function check_watch_anim(name, check_watchAnim)
+  check_watch_animations[name] = check_watchAnim
+end
+local function pee_anim(name, peeAnim)
+  pee_animations[name] = peeAnim
+end
+local function moods(name, iconNo, prio, alwaysOn)
+  mood_icons[name] = {icon = iconNo, priority = prio, on_hover = alwaysOn}
+end
+
+--   | Walk animations           |
+--   | Name                      |WalkN|WalkE|IdleN|IdleE|DoorL|DoorE|KnockN|KnockE|SwingL|SwingE| Notes
+-----+---------------------------+-----+-----+-----+-----+-----+-----+------+------+-------+---------+
+anims("Standard Male Patient",       16,   18,   24,   26,  182,  184,   286,   288,  2040,  2042) -- 0-16, ABC
+anims("Gowned Male Patient",        406,  408,  414,  416)                           -- 0-10
+anims("Stripped Male Patient",      818,  820,  826,  828)                           -- 0-16
+anims("Stripped Male Patient 2",      818,  820,  826,  828)                           -- 0-16
+anims("Stripped Male Patient 3",      818,  820,  826,  828)
+anims("Alternate Male Patient",    2704, 2706, 2712, 2714, 2748, 2750,  2764,  2766) -- 0-10, ABC
+anims("Slack Male Patient",        1484, 1486, 1492, 1494, 1524, 1526,  2764,  1494) -- 0-14, ABC
+anims("Slack Female Patient",         0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
+anims("Transparent Male Patient",  1064, 1066, 1072, 1074, 1104, 1106,  1120,  1074) -- 0-16, ABC
+anims("Standard Female Patient",      0,    2,    8,   10,  258,  260,   294,   296,  2864,  2866) -- 0-16, ABC
+anims("Gowned Female Patient",     2876, 2878, 2884, 2886)                           -- 0-8
+anims("Stripped Female Patient",    834,  836,  842,  844)                           -- 0-16
+anims("Stripped Female Patient 2",    834,  836,  842,  844)                           -- 0-16
+anims("Stripped Female Patient 3",    834,  836,  842,  844)
+anims("Transparent Female Patient",3012, 3014, 3020, 3022, 3052, 3054,  3068,  3070) -- 0-8, ABC
+anims("Chewbacca Patient",          858,  860,  866,  868, 3526, 3528,  4150,  4152)
+anims("Elvis Patient",              978,  980,  986,  988, 3634, 3636,  4868,  4870)
+anims("Invisible Patient",         1642, 1644, 1840, 1842, 1796, 1798,  4192,  4194)
+anims("Alien Male Patient",        3598, 3600, 3606, 3608,  182,  184,   286,   288, 3626,  3628) -- remember, no "normal"-doors animation
+anims("Alien Female Patient",      3598, 3600, 3606, 3608,  258,  260,   294,   296, 3626,  3628) -- identical to male; however death animations differ
+anims("Doctor",                      32,   34,   40,   42,  670,  672,   nil,   nil, 4750,  4752)
+anims("Surgeon",                   2288, 2290, 2296, 2298)
+anims("Nurse",                     1206, 1208, 1650, 1652, 3264, 3266,   nil,   nil, 3272,  3274)
+anims("Handyman",                  1858, 1860, 1866, 1868, 3286, 3288,   nil,   nil, 3518,  3520)
+anims("Receptionist",              3668, 3670, 3676, 3678) -- Could do with door animations
+anims("VIP",                        266,  268,  274,  276)
+anims("Inspector",                  266,  268,  274,  276)
+anims("Grim Reaper",                994,  996, 1002, 1004)
+
+--  | Die Animations                 |
+--  | Name                           |FallE|RiseE|RiseE Hell|WingsE|HandsE|FlyE|ExtraE| Notes 2248
+----+--------------------------------+-----+-----+----------+-----+------+-----+------
+die_anims("Standard Male Patient",     1682, 2434,       384, 2438,  2446, 2450) -- Always facing east or south
+die_anims("Alternate Male Patient",    1682, 2434,      3404, 2438,  2446, 2450)
+die_anims("Slack Male Patient",        1682, 2434,       384, 2438,  2446, 2450)
+-- TODO: Where is slack male transformation? Uses alternate male for now.
+die_anims("Transparent Male Patient",  4412, 2434,       384, 2438,  2446, 2450,  4416) -- Extra = Transformation
+die_anims("Standard Female Patient",   3116, 3208,       580, 3212,  3216, 3220)
+die_anims("Slack Female Patient",      4288, 3208,       580, 3212,  3216, 3220)
+die_anims("Transparent Female Patient",4420, 3208,       580, 3212,  3216, 3220,  4428) -- Extra = Transformation
+die_anims("Chewbacca Patient",         4182, 2434,       384, 2438,  2446, 2450,  1682) -- Only males die... (1222 is the Female)
+die_anims("Elvis Patient",              974, 2434,       384, 2438,  2446, 2450,  4186) -- Extra = Transformation
+die_anims("Invisible Patient",         4200, 2434,       384, 2438,  2446, 2450)
+die_anims("Alien Male Patient",        4882, 2434,       384, 2438,  2446, 2450)
+die_anims("Alien Female Patient",      4886, 3208,       580, 3212,  3216, 3220)
+
+-- The next fours sets belong together, but are done like this so we can use them on there own
+-- I also had difficulty in keeping them together, as the patient needs to on the floor
+-- for the duration of the earth quake before getting back up
+-- Shaking of fist could perhaps be used when waiting too long
+--  | Falling Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+falling_anim("Standard Male Patient",     1682)
+falling_anim("Standard Female Patient",   3116)
+
+--  | On_ground Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+on_ground_anim("Standard Male Patient",     1258)
+on_ground_anim("Standard Female Patient",   3116)
+
+--  | Get_up Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+get_up_anim("Standard Male Patient",     384)
+get_up_anim("Standard Female Patient",   580)
+
+--  | Shake_fist Animations                   |
+--  | Name                                 |Anim| Notes
+----+--------------------------------+-----+-----+-----+-----+------+------+
+shake_fist_anim("Standard Male Patient",     392) -- bloaty head patients lose head!
+
+
+--  | Vomit Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+vomit_anim("Elvis Patient",              1034)
+vomit_anim("Standard Female Patient",    3184)
+vomit_anim("Standard Male Patient",      2056)
+vomit_anim("Alternate Male Patient",     4476)
+vomit_anim("Chewbacca Patient",          4138)
+vomit_anim("Invisible Patient",          4204)
+vomit_anim("Slack Male Patient",         4324)
+vomit_anim("Transparent Female Patient", 4452)
+vomit_anim("Transparent Male Patient",   4384)
+
+--  | Yawn Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+yawn_anim("Standard Female Patient",    4864)
+yawn_anim("Standard Male Patient",      368)
+--yawn_anim("Alternate Male Patient",     2968)  is this one the same as standard male?
+-- whichever one is used for male, if he wears a hat it will lift when he yawns
+
+--  | Foot tapping Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+tap_foot_anim("Standard Female Patient",    4464)
+tap_foot_anim("Standard Male Patient",      2960)
+tap_foot_anim("Alternate Male Patient",     360)
+
+--  | Check watch Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+check_watch_anim("Standard Female Patient",    4468)
+check_watch_anim("Standard Male Patient",      2964)
+check_watch_anim("Alternate Male Patient",     364)
+check_watch_anim("Slack Male Patient",         4060)
+
+--  | pee Animations                  |
+--  | Name                              |Anim | Notes
+----+-----------------------------------+-----+
+pee_anim("Elvis Patient",              970)
+pee_anim("Standard Female Patient",    4744)
+pee_anim("Slack Female Patient",       4744)
+pee_anim("Standard Male Patient",      2244)
+pee_anim("Alternate Male Patient",     4472)
+pee_anim("Slack Male Patient",         4328)
+pee_anim("Chewbacca Patient",          4178)
+pee_anim("Invisible Patient",          4208)
+pee_anim("Transparent Female Patient", 4852)
+pee_anim("Transparent Male Patient",   4848)
+
+--   | Available Moods |
+--   | Name            |Icon|Priority|Show Always| Notes
+-----+-----------------+----+--------+-----------+
+moods("reflexion",      4020,       5)            -- Some icons should only appear when the player
+moods("cantfind",       4050,       3)            -- hover over the humanoid
+moods("idea1",          2464,      10)            -- Higher priority is more important.
+moods("idea2",          2466,      11)
+moods("idea3",          4044,      12)
+moods("staff_wait",     4054,      20)
+moods("tired",          3990,      30)
+moods("pay_rise",       4576,      40)
+moods("thirsty",        3986,       4)
+moods("cold",           3994,       0,       true) -- These have no priority since
+moods("hot",            3988,       0,       true) -- they will be shown when hovering
+moods("queue",          4568,      70)             -- no matter what other priorities.
+moods("poo",            3996,       5)
+moods("sad_money",      4018,      50)
+moods("patient_wait",   5006,      40)
+moods("epidemy1",       4566,      55)
+moods("epidemy2",       4570,      55)
+moods("epidemy3",       4572,      55)
+moods("epidemy4",       4574,      55)
+moods("sad1",           3992,      40)
+moods("sad2",           4000,      41)
+moods("sad3",           4002,      42)
+moods("sad4",           4004,      43)
+moods("sad5",           4006,      44)
+moods("sad6",           4008,      45)
+moods("sad7",           4578,      46)
+moods("dead",           4046,      60)
+moods("cured",          4048,      60)
+moods("emergency",      3914,      50)
+moods("exit",           4052,      60)
+
+local anim_mgr = TheApp.animation_manager
+for anim in values(door_animations, "*.entering") do
+  anim_mgr:setMarker(anim, 0, {-1, 0}, 3, {-1, 0}, 9, {0, 0})
+end
+for anim in values(door_animations, "*.leaving") do
+  anim_mgr:setMarker(anim, 1, {0, 0.4}, 4, {0, 0.4}, 7, {0, 0}, 11, {0, -1})
+end
+for anim in values(door_animations, "*.entering_swing") do
+  anim_mgr:setMarker(anim, 0, {-1, 0}, 8, {0, 0})
+end
+for anim in values(door_animations, "*.leaving_swing") do
+  anim_mgr:setMarker(anim, 0, {0.1, 0}, 9, {0, -1})
+end
+
+--!param ... Arguments for base class constructor.
+function Humanoid:Humanoid(...)
+  self:Entity(...)
+  self.action_queue = {}
+  self.last_move_direction = "east"
+  self.attributes = {}
+  self.attributes["warmth"] = 0.29
+  self.attributes["happiness"] = 1
+  -- patients should be not be fully well when they come to your hospital and if it is staff there is no harm done!
+  self.attributes["health"] = math.random(80, 100) /100
+  self.active_moods = {}
+  self.should_knock_on_doors = false
+
+  self.speed = "normal"
+
+  self.build_callbacks  = {--[[set]]}
+  self.remove_callbacks = {--[[set]]}
+  self.staff_change_callbacks = {--[[set]]}
+end
+
+-- Save game compatibility
+function Humanoid:afterLoad(old, new)
+  if old < 38 and new >= 38 then
+    -- should existing patients be updated and be getting really ill?
+    -- adds the new variables for health icons
+    self.attributes["health"] = math.random(60, 100) /100
+  end
+  -- make sure female slack patients have the correct animation
+  if old < 42 and new >= 42 then
+    if self.humanoid_class == "Slack Female Patient" then
+      self.die_anims = die_animations["Slack Female Patient"]
     end
   end
+  if old < 77 and new >= 77 then
+    self.has_vomitted = 0
+  end
+  if old < 49 and new >= 49 then
+    self.has_fallen = 1
+  end
+  if old < 61 and new >= 61 then
+    -- callbacks changed
+    self.build_callbacks = {}
+    self.remove_callbacks = {}
+    if self.build_callback then
+      self.build_callbacks[self.build_callback] = true
+      self.build_callback = nil
+    end
+    if self.toilet_callback then
+      self.build_callbacks[self.toilet_callback] = true
+      self.toilet_callback = nil
+    end
+  end
+  if old < 83 and new >= 83 and self.humanoid_class == "Chewbacca Patient" then
+    self.die_anims.extra_east = 1682
+  end
+  if old < 134 and new >= 134 then
+    self.staff_change_callbacks = {}
+  end
 
-  self.world:findObjectNear(self, "litter", 8, function(x, y)
-    local litter = self.world:getObject(x, y, "litter")
-    if not litter then
+  for _, action in pairs(self.action_queue) do
+    -- Sometimes actions not actual instances of HumanoidAction
+    HumanoidAction.afterLoad(action, old, new)
+  end
+
+  Entity.afterLoad(self, old, new)
+end
+
+-- Function which is called when the user clicks on the `Humanoid`.
+--!param ui (GameUI) The UI which the user in question is using.
+--!param button (string) One of: "left", "middle", "right".
+function Humanoid:onClick(ui, button)
+  if TheApp.config.debug then
+    self:dump()
+  end
+end
+
+function Humanoid:getRoom()
+  return self.in_room or Entity.getRoom(self)
+end
+
+function Humanoid:dump()
+  print("-----------------------------------")
+  print("Clicked on: ")
+  print(self:tostring())
+  print("-----------------------------------")
+end
+
+-- Called when the humanoid is about to be removed from the world.
+function Humanoid:onDestroy()
+  local x, y = self.tile_x, self.tile_y
+  if x and y then
+    local notify_object = self.world:getObjectToNotifyOfOccupants(x, y)
+    if notify_object then
+      notify_object:onOccupantChange(-1)
+    end
+  end
+  -- Make absolutely sure there are no callbacks left on the humanoid.
+  self:unregisterCallbacks()
+  return Entity.onDestroy(self)
+end
+
+-- Set the `Hospital` which is responsible for treating or employing the
+-- `Humanoid`. In single player games, this has little effect, but it is very
+-- important in multiplayer games.
+--!param hospital (Hospital) The `Hospital` which should be responsible
+-- for the `Humanoid`.
+function Humanoid:setHospital(hospital)
+  self.hospital = hospital
+  if not hospital.is_in_world then
+    self:despawn()
+  end
+end
+
+--! Despawn the humanoid.
+function Humanoid:despawn()
+  local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
+  self:setNextAction(SpawnAction("despawn", spawn_point):setMustHappen(true))
+end
+
+-- Function to activate/deactivate moods of a humanoid.
+-- If mood_name is nil it is considered a refresh only.
+function Humanoid:setMood(mood_name, activate)
+  if mood_name then
+    if activate and activate ~= "deactivate" then
+      if self.active_moods[mood_name] then
+        return -- No use doing anything if it already exists.
+      end
+      self.active_moods[mood_name] = mood_icons[mood_name]
+    else
+      if not self.active_moods[mood_name] then
+        return -- No use doing anything if the mood isn't there anyway.
+      end
+      self.active_moods[mood_name] = nil
+    end
+  end
+  local new_mood = nil
+  -- TODO: Make equal priorities cycle, or make all moods unique
+  for _, value in pairs(self.active_moods) do
+    if new_mood then -- There is a mood, check priorities.
+      if new_mood.priority < value.priority then
+        new_mood = value
+      end
+    else
+      if not value.on_hover then
+        new_mood = value
+      end
+    end
+  end
+  self:setMoodInfo(new_mood)
+end
+
+function Humanoid:setCallCompleted()
+  if self.on_call then
+    CallsDispatcher.onCheckpointCompleted(self.on_call)
+  end
+end
+
+-- Is the given mood in the list of active moods.
+function Humanoid:isMoodActive(mood)
+  for i, _ in pairs(self.active_moods) do
+    if i == mood then
+      return true
+    end
+  end
+  return false
+end
+
+function Humanoid.getIdleAnimation(humanoid_class)
+  return assert(walk_animations[humanoid_class], "Invalid humanoid class").idle_east
+end
+
+function Humanoid:getCurrentMood()
+  if self.mood_info then
+    return self.mood_info
+  end
+end
+
+local function Humanoid_startAction(self)
+  local action = self.action_queue[1]
+
+  -- Handle an empty action queue in some way instead of crashing.
+  if not action then
+    -- if this is a patient that is going home, an empty
+    -- action queue is not a problem
+    if class.is(self, Patient) and self.going_home then
       return
     end
 
-    local alreadyFound = false
-    for i=1, (self.num_vomit_noninducing + self.num_vomit_inducing) do
-      if self.found_vomit[i] == litter then
-        alreadyFound = true
-        break
-      end
+    ---- Empty action queue! ----
+    -- First find out if this humanoid is in a room.
+    local room = self:getRoom()
+    if room then
+      room:makeHumanoidLeave(self)
     end
-
-    self.found_vomit[(self.num_vomit_noninducing + self.num_vomit_inducing + 1)] = litter
-
-    if not alreadyFound then
-      if litter:anyLitter() then
-        self.num_vomit_noninducing = self.num_vomit_noninducing + 1
-          print("Found a litter")
-      else
-        self.num_vomit_inducing = self.num_vomit_inducing + 1
-          print("Found a vomit")
-      end
+    -- Is it a member of staff, grim or a patient?
+    if class.is(self, Staff) then
+      self:queueAction(MeanderAction())
+    elseif class.is(self,GrimReaper) then
+      self:queueAction(IdleAction())
+    else
+      self:queueAction(SeekReceptionAction())
     end
-  end)
+    -- Open the dialog of the humanoid.
+    local ui = self.world.ui
+    if class.is(self, Patient) then
+      ui:addWindow(UIPatient(ui, self))
+    elseif class.is(self, Staff) then
+      ui:addWindow(UIStaff(ui, self))
+    end
+    -- Pause the game.
+    self.world:setSpeed("Pause")
 
-  return Humanoid.tickDay(self)
-end
+    -- Tell the player what just happened.
+    self.world:gameLog("")
+    self.world:gameLog("Empty action queue!")
+    self.world:gameLog("Last action: " .. self.previous_action.name)
+    self.world:gameLog(debug.traceback())
 
--- display the VIP name in the info box
-function Vip:updateDynamicInfo(action_string)
-  self:setDynamicInfo('text', {self.name})
-end
-
---[[--VIP is leaving--]]
-function Vip:goHome()
-  if self.going_home then
-    return
-  end
-
-  self:unregisterCallbacks()
-  -- Set the rating.
-  self:setVIPRating()
-
-  self.going_home = true
-  -- save self.hospital so we can reference it in self:onDestroy
-  self.last_hospital = self.hospital
-  self:despawn()
-end
-
-function Vip:evaluateRoom()
-    --do nothing. Just keeping it here to prevent a breakage, needs removing from vip_go_to_next_room.lua
-end
-
---[[--VIP has left--]]
--- called when the vip is out of the hospital grounds
-function Vip:onDestroy()
-  local message
-  -- First of all there's a special message if we're in free build mode.
-    --debug
-    print("I rate this hospital " .. self.vip_rating .. " penalty points out of 20")
-    --end-debug
-  if self.world.free_build_mode then
-    self.last_hospital.reputation = self.last_hospital.reputation + 20
-    message = {
-      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
-      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-    }
-  elseif self.vip_rating <= 1 then
-    self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
-    self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        {text = _S.fax.vip_visit_result.rep_boost},
-        {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
-  elseif self.vip_rating >=2 and self.vip_rating <= 5 then
-    -- dont tell player about any rep change in this range
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
-  else
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        {text = _S.fax.vip_visit_result.rep_loss},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
-  end
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24 * 20, 1)
-
-  self.world:nextVip()
-
-  return Humanoid.onDestroy(self)
-end
-
-function Vip:announce()
-  local announcements = {
-    "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
-  }   -- there is also vip008 which announces a man from the ministry
-  self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.High)
-  if self.hospital.num_vips < 1 then
-    self.world.ui.adviser:say(_A.information.initial_general_advice.first_VIP)
-  else
-    self.world.ui.adviser:say(_A.information.vip_arrived:format(self.name))
-  end
-end
-
-function Vip:setVIPRating()
---[[-- Group factor 1: Litter--]]
-      if (self.num_vomit_noninducing + self.num_vomit_inducing) <= 10 then
-        self.vip_rating = self.vip_rating - 1
-      else
-        self.vip_rating = self.vip_rating + 1
-      end
-      print("I have assessed litter. My rating is now " .. self.vip_rating .. " points")
-
---[[-- Group factor 2: Staff tiredness--]]
---First get staff members
-      local count_staff = 0
-      for _, staff in ipairs(self.hospital.staff) do
-        count_staff = count_staff + 1
-      end
---Count number, if only 1 staff member, exit and award 4 points
-      if count_staff > 1 then
-
--- Loop through staff tiredness, if any above verytired, break loop and award 2 points
-        for _, staff in ipairs(self.hospital.staff) do
-      print(staff.attributes["fatigue"])
-      if staff.attributes["fatigue"] ~= nil then
-          if staff.attributes["fatigue"] >= 0.7 then
-            self.vip_rating = self.vip_rating + 2
-            break --exit when triggered once
-          end
-        end
-        end           
--- Average all staff tiredness. If above tiredness level award 1, else -1
-    local avg_tired = 0    
-    avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
-  print(avg_tired .. " avg_tired")
-        if avg_tired >= 0.5 then
-          self.vip_rating = self.vip_rating + 1
+    ui:addWindow(UIConfirmDialog(ui,
+      "Sorry, a humanoid just had an empty action queue,"..
+      " which means that he or she didn't know what to do next."..
+      " Please consult the command window for more detailed information. "..
+      "A dialog with "..
+      "the offending humanoid has been opened. "..
+      "Would you like him/her to leave the hospital?",
+      --[[persistable:humanoid_leave_hospital]] function()
+        self.world:gameLog("The humanoid was told to leave the hospital...")
+        if class.is(self, Staff) then
+          self:fire()
         else
-          self.vip_rating = self.vip_rating - 1
+          -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
+          self.going_home = false
+          self.hospital = self.world:getLocalPlayerHospital()
+          self:goHome("kicked")
         end
-      else 
-        self.vip_rating = self.vip_rating + 4
+        if TheApp.world:isCurrentSpeed("Pause") then
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
+      end,
+      --[[persistable:humanoid_stay_in_hospital]] function()
+        if TheApp.world:isCurrentSpeed("Pause") then
+          TheApp.world:setSpeed(TheApp.world.prev_speed)
+        end
       end
-  print("I have assessed staff tiredness. My rating is now " .. self.vip_rating)
---[[-- Group factor 3: Patients--]]
--- Average all patient health, if below 20% award 1, else -1
-      local avg_health = self.hospital:getAveragePatientAttribute("health", 0.19)
-      if avg_health >= 0.2 then
-        self.vip_rating = self.vip_rating - 1
-      else
-        self.vip_rating = self.vip_rating + 1
-      end
-      print("I have assessed patient health. My rating is now" .. self.vip_rating)
-  -- do patient warmth
-  local avg_warmth = self.hospital:getAveragePatientAttribute("warmth", nil)
-  -- punish if too cold/hot
-  if avg_warmth then
-    local patients_warmth_ratio_rangemap = {
-      {upper = 0.21, value = 2},
-      {upper = 0.36, value = -1},
-      {upper = 0.43, value = 1},
-      {value = 2}
-    }
-    self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
-    end
-    -- check average patient happiness
-  local avg_happiness = self.hospital:getAveragePatientAttribute("happiness", nil)
-  if avg_happiness then
-    local patients_happy_ratio_rangemap = {
-      {upper = 0.20, value = 3},
-      {upper = 0.40, value = 2},
-      {upper = 0.60, value = 1},
-      {upper = 0.80, value = 0},
-                    {value = -1}
-    }
-    self.vip_rating = self.vip_rating + rangeMapLookup(avg_happiness, patients_happy_ratio_rangemap)
-  end
-print("I have assessed patient happiness. My rating is now " .. self.vip_rating .. " points")
-  --check the visitor to patient death ratio
-  local death_diff = self.hospital.num_deaths - self.enter_deaths
-  local visitors_diff = self.hospital.num_visitors - self.enter_visitors
-  if death_diff == 0 then
-    if visitors_diff ~= 0 then --if there have been no new patients, no +/- points
-      self.vip_rating = self.vip_rating - 4
-    end
-  else
-    local death_ratio = visitors_diff / death_diff
-    local death_ratio_rangemap = {
-      {upper = 2, value = 4},
-      {upper = 4, value = 3},
-      {upper = 8, value = 2},
-      {upper = 12, value = 1},
-                  {value = 0}
-    }
-    self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
-    print("I have assessed deaths. My rating is now " .. self.vip_rating .. " points")
-  end
---[[--Group factor 4: Doctor ratios--]]
--- First get all doctors
-  local num_docs = self.hospital:hasStaffOfCategory("Doctor")
-  --if there's no doctors award +4
-  if not num_docs then
-    self.vip_rating = self.vip_rating + 4
-  else
--- Count num. consultants, num. juniors
-    local num_cons = self.hospital:hasStaffOfCategory("Consultant")
-    if not num_cons then
-      num_cons = 0
-    end
-    local num_junior = self.hospital:hasStaffOfCategory("Junior")
-    if not num_junior then
-      num_junior = 0
-    end
+    ))
+    action = self.action_queue[1]
 
--- If num. consultants / all doctors > 50%, award -1
-    print(num_cons / num_docs .. " condocratio")
-    print(num_junior / num_docs .. " jundocratio")
-    if num_cons / num_docs > 0.5 then
-      self.vip_rating = self.vip_rating - 1
--- If num. juniors / all doctors > 50%, award 1
-    elseif num_junior / num_docs > 0.5 then
-      self.vip_rating = self.vip_rating + 1
-    end
   end
-  print("I have assessed doctor numbers. My rating is now" .. self.vip_rating)
---[[--Group factor 5: Rooms--]]
--- Get number of rooms
-  local count_rooms = 0
-  for _, room in ipairs(self.world.rooms) do
-    if not room.crashed then
-      count_rooms = count_rooms + 1
-    end
-  end
--- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
-  if count_rooms < 1 then
-  self.vip_rating = self.vip_rating + 4
-  elseif count_rooms >= 1 and count_rooms < 3 then
-    self.vip_rating = self.vip_rating + 1
-  end
-  print("I have assessed rooms. My rating is now" .. self.vip_rating)
+  ---- There is an action to start ----
+  -- Call the action start handler
+  TheApp.humanoid_actions[action.name](action, self)
 
-  --[[Group factor 6: Seating--]]
-  -- check the seating : standing ratio of waiting patients
-  -- find all the patients who are currently waiting around
-  local sum_sitting, sum_standing = self.hospital:countSittingStanding()
-  if sum_sitting >= sum_standing then
-    self.vip_rating = self.vip_rating - 1
-  else
-    self.vip_rating = self.vip_rating + 1
+  if action == self.action_queue[1] and action.todo_interrupt then
+    local high_priority = action.todo_interrupt == "high"
+    action.todo_interrupt = nil
+    local on_interrupt = action.on_interrupt
+    if on_interrupt then
+      action.on_interrupt = nil
+      on_interrupt(action, self, high_priority)
+    end
   end
-print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
---[[--Finalise score--]]
-  --documented rewards. Use +6 to account for numbering
-local rewards = {
-        [1] = 4000,
-        [2] = 2000,
-        [3] = 1500,
-        [4] = 1200,
-        [5] = 800,
-        [6] = 400,
-        [7] = 200,
-        [8] = 0,
-    }
---documented reps, values guessed. Use +6 to account for numbering
-local rep_change = {
-        [1] = 50,
-        [2] = 45,
-        [3] = 40,
-        [4] = 35,
-        [5] = 30,
-        [6] = 25,
-        [7] = 20,
-        [8] = 15,
-        [9] = 10,
-        [10] = 5,
-        [11] = -5,
-        [12] = -10,
-        [13] = -15,
-        [14] = -20,
-        [15] = -25,
-    }
-  if self.vip_rating >= 2 then
-    self.cash_reward = rewards[8]
-  elseif self.vip_rating <= -5 then
-    self.cash_reward = rewards[1]
-  else
-    self.cash_reward = rewards[self.vip_rating + 6]
-  end
-  print("cash reward " .. self.cash_reward)
-  if self.vip_rating >= 9 then
-    self.rep_reward = rep_change[15]
-  elseif self.vip_rating <= -5 then
-    self.rep_reward = rep_change[1]
-  else
-    self.rep_reward = rep_change[self.vip_rating + 6]
-  end
-  print("rep reward " .. self.rep_reward)
-  if self.vip_rating <= -5 then
-  self.vip_message = 1
-  elseif self.vip_rating >= 9 then
-    self.vip_message = 15
-  else
-    self.vip_message = self.vip_rating + 6
-  end
-  print("message number: " .. self.vip_message)
-  self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
 
---remarks order pulled from orignal strings
+function Humanoid:setNextAction(action, high_priority)
+  -- Aim: Cleanly finish the current action (along with any subsequent actions
+  -- which must happen), then replace all the remaining actions with the given
+  -- one.
+  local i = 1
+  local queue = self.action_queue
+  local interrupted = false
 
-function Vip:afterLoad(old, new)
-  if old < 50 then
-    self.num_visited_rooms = 0
+  -- Skip over any actions which must happen
+  while queue[i] and queue[i].must_happen do
+    interrupted = true
+    i = i + 1
+  end
+
+  -- Remove actions which are no longer going to happen
+  local done_set = {}
+  for j = #queue, i, -1 do
+    local removed = queue[j]
+    queue[j] = nil
+    if not removed then
+      -- A bug (rare) that removed could be nil.
+      --   but as it's being removed anyway...it could be ignored
+      print("Warning: Action to be removed was nil")
+    else
+      if removed.on_remove then
+        removed.on_remove(removed, self)
+      end
+      if removed.until_leave_queue and not done_set[removed.until_leave_queue] then
+        removed.until_leave_queue:removeValue(self)
+        done_set[removed.until_leave_queue] = true
+      end
+      if removed.object and removed.object:isReservedFor(self) then
+        removed.object:removeReservedUser(self)
+      end
+      if removed.is_entering then
+        local dest_room = self.world:getRoom(removed.x, removed.y)
+        self:unexpectFromRoom(dest_room)
+        if dest_room and removed.reserve_on_resume and removed.reserve_on_resume:isReservedFor(self) then
+          removed.reserve_on_resume:removeReservedUser(self)
+          dest_room:tryAdvanceQueue()
+        end
+      end
+    end
+  end
+
+  -- Add the new action to the queue
+  queue[i] = action
+
+  -- Interrupt the current action and queue other actions to be interrupted
+  -- when they start.
+  if interrupted then
+    interrupted = queue[1]
+    for j = 1, i - 1 do
+      queue[j].todo_interrupt = high_priority and "high" or true
+    end
+    local on_interrupt = interrupted.on_interrupt
+    if on_interrupt then
+      interrupted.on_interrupt = nil
+      on_interrupt(interrupted, self, high_priority or false)
+    end
+  else
+    -- Start the action if it has become the current action
+    Humanoid_startAction(self)
+  end
+  return self
+end
+
+function Humanoid:queueAction(action, pos)
+  if pos then
+    table.insert(self.action_queue, pos + 1, action)
+    if pos == 0 then
+      Humanoid_startAction(self)
+    end
+  else
+    self.action_queue[#self.action_queue + 1] = action
+  end
+  return self
+end
+
+
+function Humanoid:finishAction(action)
+  if action ~= nil then
+    assert(action == self.action_queue[1], "Can only finish current action")
+  end
+  -- Save the previous action just a while longer.
+  self.previous_action = self.action_queue[1]
+  table.remove(self.action_queue, 1)
+  Humanoid_startAction(self)
+end
+
+-- Check if the humanoid is running actions intended to leave the room, as indicated by the flag
+function Humanoid:isLeaving()
+  return self.action_queue[1].is_leaving and true or false
+end
+
+-- Check if there is "is_leaving" action in the action queue
+function Humanoid:hasLeavingAction()
+  for _, action in ipairs(self.action_queue) do
+    if action.is_leaving then
+      return true
+    end
+  end
+  return false
+end
+
+function Humanoid:setType(humanoid_class)
+  assert(walk_animations[humanoid_class], "Invalid humanoid class: " .. tostring(humanoid_class))
+  self.walk_anims = walk_animations[humanoid_class]
+  self.door_anims = door_animations[humanoid_class]
+  self.die_anims  = die_animations[humanoid_class]
+  self.falling_anim  = falling_animations[humanoid_class]
+  self.on_ground_anim  = on_ground_animations[humanoid_class]
+  self.get_up_anim  = get_up_animations[humanoid_class]
+  self.shake_fist_anim  = shake_fist_animations[humanoid_class]
+  self.vomit_anim = vomit_animations[humanoid_class]
+  self.yawn_anim = yawn_animations[humanoid_class]
+  self.tap_foot_anim = tap_foot_animations[humanoid_class]
+  self.check_watch_anim = check_watch_animations[humanoid_class]
+  self.pee_anim = pee_animations[humanoid_class]
+  self.humanoid_class = humanoid_class
+  if #self.action_queue == 0 then
     self:setNextAction(IdleAction())
-    self.waiting = 1
-    for _, room in pairs(self.world.rooms) do
-      if room.door.reserved_for == self then
-        room.door.reserved_for = nil
-        room:tryAdvanceQueue()
+  end
+
+  self.th:setPartialFlag(self.permanent_flags or 0, false)
+  if humanoid_class == "Invisible Patient" then
+    -- Invisible patients do not have very many pixels to hit, box works better
+    self.permanent_flags = DrawFlags.BoundBoxHitTest
+  else
+    self.permanent_flags = nil
+  end
+  self.th:setPartialFlag(self.permanent_flags or 0)
+end
+
+-- Helper function for the common case of instructing a `Humanoid` to walk to
+-- a position on the map. Equivalent to calling `setNextAction` with a walk
+-- action.
+--!param tile_x (integer) The X-component of the Lua tile coordinates of the
+-- tile to walk to.
+--!param tile_y (integer) The Y-component of the Lua tile coordinates of the
+-- tile to walk to.
+--!param must_happen (boolean, nil) If true, then the walk action will not be
+-- interrupted.
+function Humanoid:walkTo(tile_x, tile_y, must_happen)
+  self:setNextAction(WalkAction(tile_x, tile_y)
+      :setMustHappen(not not must_happen))
+end
+
+-- Stub functions for handling fatigue. These are overridden by the staff subclass,
+-- but also defined here, so we can just call it on any humanoid
+function Humanoid:tire(amount)
+end
+
+function Humanoid:wake(amount)
+end
+
+function Humanoid:updateSpeed()
+  self.speed = "normal"
+end
+
+function Humanoid:handleRemovedObject(object)
+  local replacement_action
+  if self.humanoid_class and self.humanoid_class == "Receptionist" then
+    replacement_action = MeanderAction()
+  elseif object.object_type.id == "bench" or object.object_type.id == "drinks_machine" then
+    replacement_action = IdleAction():setMustHappen(true)
+  end
+
+  for i, action in ipairs(self.action_queue) do
+    if (action.name == "use_object" or action.name == "staff_reception") and action.object == object then
+      if replacement_action then
+        self:queueAction(replacement_action, i)
       end
+      if i == 1 then
+        local on_interrupt = action.on_interrupt
+        action.on_interrupt = nil
+        if on_interrupt then
+          on_interrupt(action, self, true)
+        end
+      else
+        table.remove(self.action_queue, i)
+        self.associated_desk = nil -- NB: for the other case, this is already handled in the on_interrupt function
+      end
+      -- Are we in a queue?
+      if self.action_queue[i + 1] and self.action_queue[i + 1].name == "queue" then
+        self.action_queue[i + 1]:onChangeQueuePosition(self)
+      end
+      break
     end
   end
-  if old < 79 then
-    self.name = self.hospital.visitingVIP
-  end
-  Humanoid.afterLoad(self, old, new)
 end
+
+-- Adjusts one of the `Humanoid`'s attributes.
+--!param attribute (string) One of: "happiness", "thirst", "toilet_need", "warmth".
+--!param amount (number) This amount is added to the existing value for the attribute,
+--  and is then capped to be between 0 and 1.
+function Humanoid:changeAttribute(attribute, amount)
+  -- Receptionist is always 100% happy
+  if self.humanoid_class and self.humanoid_class == "Receptionist" and attribute == "happiness" then
+    self.attributes[attribute] = 1
+    return true
+  end
+
+  if self.attributes[attribute] then
+    self.attributes[attribute] = self.attributes[attribute] + amount
+    if self.attributes[attribute] > 1 then
+      self.attributes[attribute] = 1
+    elseif self.attributes[attribute] < 0 then
+      self.attributes[attribute] = 0
+    end
+  end
+end
+
+-- Check if it is cold or hot around the humanoid and increase/decrease the
+-- feeling of warmth accordingly. Returns whether the calling function should proceed.
+function Humanoid:tickDay()
+  -- No use doing anything if we're going home
+  if self.going_home then
+    return false
+  end
+
+  local temperature = self.world.map.th:getCellTemperature(self.tile_x, self.tile_y)
+  self.attributes.warmth = self.attributes.warmth * 0.75 + temperature * 0.25
+
+  -- If it is too hot or too cold, start to decrease happiness and
+  -- show the corresponding icon. Otherwise we could get happier instead.
+  local min_comfort_temp = 0.22 -- 11 degrees Celsius.
+  local max_comfort_temp = 0.36 -- 18 degrees Celsius.
+  local decrease_factor = 0.10
+  local increase_happiness = 0.005
+
+  if self.attributes["warmth"] and self.hospital then
+    -- Cold: less than comfortable.
+    if self.attributes["warmth"] < min_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (min_comfort_temp - self.attributes["warmth"]))
+      self:setMood("cold", "activate")
+    -- Hot: More than comfortable.
+    elseif self.attributes["warmth"] > max_comfort_temp then
+      self:changeAttribute("happiness", -decrease_factor * (self.attributes["warmth"] - max_comfort_temp))
+      self:setMood("hot", "activate")
+    -- Ideal: Not too cold or too warm.
+    else
+      self:changeAttribute("happiness", increase_happiness)
+      self:setMood("cold", "deactivate")
+      self:setMood("hot", "deactivate")
+    end
+  end
+  return true
+end
+
+-- Helper function that finds out if there is an action queued to use the specified object
+function Humanoid:goingToUseObject(object_type)
+  for _, action in ipairs(self.action_queue) do
+    if action.object and action.object.object_type.id == object_type then
+      return true
+    end
+  end
+  return false
+end
+
+-- Registers a new build callback for this humanoid.
+--!param callback (function) The callback to call when a room has been built.
+function Humanoid:registerRoomBuildCallback(callback)
+  if not self.build_callbacks[callback] then
+    self.build_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add room build callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a build callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterRoomBuildCallback(callback)
+  if self.build_callbacks[callback] then
+    self.build_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistent room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+function Humanoid:notifyNewRoom(room)
+  for callback, _ in pairs(self.build_callbacks) do
+    callback(room)
+  end
+end
+
+function Humanoid:notifyOfStaffChange(staff)
+  for callback, _ in pairs(self.staff_change_callbacks) do
+    callback(staff)
+  end
+end
+
+-- Registers a new remove callback for this humanoid.
+--!param callback (function) The callback to call when a room has been removed.
+function Humanoid:registerRoomRemoveCallback(callback)
+  if not self.remove_callbacks[callback] then
+    self.world:registerRoomRemoveCallback(callback)
+    self.remove_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add room remove callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a remove callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterRoomRemoveCallback(callback)
+  if self.remove_callbacks[callback] then
+    self.world:unregisterRoomRemoveCallback(callback)
+    self.remove_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistent room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+
+-- Registers a new staff change callback for this humanoid.
+--!param callback (function) The callback to call when a staff member has been hired or fired
+function Humanoid:registerStaffChangeCallback(callback)
+  if self.staff_change_callbacks and not self.staff_change_callbacks[callback] then
+    self.staff_change_callbacks[callback] = true
+  else
+    self.world:gameLog("Warning: Trying to re-add staff callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+-- Unregisters a staff change callback for this humanoid.
+--!param callback (function) The callback to remove.
+function Humanoid:unregisterStaffChangeCallback(callback)
+
+  if self.staff_change_callbacks and self.staff_change_callbacks[callback] then
+    self.staff_change_callbacks[callback] = nil
+  else
+    self.world:gameLog("Warning: Trying to remove nonexistent staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+  end
+end
+
+
+-- Function called when a humanoid is sent away from the hospital to prevent
+-- further actions taken as a result of a callback
+function Humanoid:unregisterCallbacks()
+  -- Remove callbacks for new rooms
+  for cb, _ in pairs(self.build_callbacks) do
+    self:unregisterRoomBuildCallback(cb)
+  end
+  -- Remove callbacks for removed rooms
+  for cb, _ in pairs(self.remove_callbacks) do
+    self:unregisterRoomRemoveCallback(cb)
+  end
+  -- Remove callbacks for removed rooms
+  for cb, _ in pairs(self.staff_change_callbacks) do
+    self:unregisterStaffChangeCallback(cb)
+  end
+  -- Remove any message related to the humanoid.
+  if self.message_callback then
+    self:message_callback(true)
+    self.message_callback = nil
+  end
+end
+
+function Humanoid:getDrawingLayer()
+  return 4
+end
+
+function Humanoid:getCurrentAction()
+  if next(self.action_queue) == nil then
+    error("Action queue was empty. This should never happen.\n" .. self:tostring())
+  end
+
+  return self.action_queue[1]
+end
+
+--[[ Return string representation
+! Returns string representation of the humanoid like status and action queue
+!return (string)
+]]
+function Humanoid:tostring()
+  local name = self.profile and self.profile.name or nil
+  local class = self.humanoid_class and self.humanoid_class or "N/A"
+  local full_name = "humanoid"
+  if (name) then
+    full_name = full_name .. " (" .. name .. ")"
+  end
+
+  local result = string.format("%s - class: %s", full_name, class)
+
+  result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
+    self.attributes["warmth"] or 0,
+    self.attributes["happiness"] or 0,
+    self.attributes["fatigue"] or 0,
+    self.attributes["thirst"] or 0,
+    self.attributes["toilet_need"] or 0,
+    self.attributes["health"] or 0)
+
+  result = result .. "\nActions: ["
+  for i = 1, #self.action_queue do
+    local action = self.action_queue[i]
+    local action_string = action.name
+    if action.room_type then
+      action_string = action_string .. " - " .. action.room_type
+    elseif action.object then
+      action_string = action_string .. " - " .. action.object.object_type.id
+    elseif action.name == "walk" then
+      action_string = action_string .. " - going to " .. action.x .. ":" .. action.y
+    elseif action.name == "queue" then
+      local distance = action.current_bench_distance
+      if distance == nil then
+        distance = "nil"
+      end
+      local standing = "false"
+      if action.isStanding and action:isStanding() then
+        standing = "true"
+      end
+      action_string = action_string .. " - Bench distance: " .. distance .. " Standing: " .. standing
+    end
+    local flag = action.must_happen and "  must_happen" or ""
+    if flag ~= "" then
+      action_string = action_string .. " " .. flag
+    end
+
+    if i ~= 1 then
+      result = result .. ", "
+    end
+    result = result .. action_string
+  end
+  result = result .. "]"
+  return result
+end
+
+--! Unexpects humanoid from a room, if validly entering this room
+--!param dest_room (Room) The room the humanoid maybe expected at
+function Humanoid:unexpectFromRoom(dest_room)
+  -- Unexpect the patient from a possible destination room.
+  if dest_room and dest_room.door.queue then
+    -- 1st condition checks normal room routing
+    -- 2nd checks patients going to toilets, doctors and nurses
+    -- and redundantly checks patients routed between rooms
+    if self.next_room_to_visit == dest_room or
+        (dest_room ~= self.next_room_to_visit and (not self:getRoom() or class.is(self, Staff))) then
+      dest_room.door.queue:unexpect(self)
+      dest_room.door:updateDynamicInfo()
+    end
+  end
+ end
