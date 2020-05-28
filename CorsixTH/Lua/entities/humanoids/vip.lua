@@ -165,7 +165,58 @@ function Vip:goHome()
 end
 
 function Vip:evaluateRoom()
-    --do nothing. Just keeping it here to prevent a breakage, needs removing from vip_go_to_next_room.lua
+    local room_extinguisher = 0
+    local room_plant = 0
+  -- Another room visited.
+    --debug
+    print("Visited a room. My current rating is " .. self.vip_rating .. " points")
+    --debug-end
+  self.num_visited_rooms = self.num_visited_rooms + 1
+  local room = self.next_room
+  -- if the player is about to kill a live patient for research, punish hard
+  if room.room_info.id == "research" then
+    if room:getPatient() then
+      self.vip_rating = self.vip_rating + 6 
+    end
+  end
+  -- evaluate the room we're currently looking at
+    --debug adds self.room_extinguisher and self.room_plant
+  for object, _ in pairs(room.objects) do
+    if object.object_type.id == "extinguisher" then
+        --check if 1 extinguisher already found in room
+        if room_extinguisher == 0 then
+            self.room_eval = self.room_eval + 1
+            print("Found fire extinguisher")
+            room_extinguisher = 1
+        end
+      --break
+    elseif object.object_type.id == "plant" then
+            --check if more than 3 plants assessed
+            if room_plant < 3 then
+                if object.days_left >= 10 then
+                    self.room_eval = self.room_eval + 1
+                elseif object.days_left <= 3 then
+                    self.room_eval = self.room_eval - 1
+                end
+                print("Found plant")
+                --pevent abuse of rating by placing lots of plants
+                room_plant = room_plant + 1
+            else
+                print("Maximum plants assessed in this room")
+            end
+      --break
+    end
+
+    if object.strength then
+            print("Found object with strength attr")
+      if object.strength > (object.object_type.default_strength / 2) then
+        self.room_eval = self.room_eval + 1
+      else
+        self.room_eval = self.room_eval - 1
+      end
+    end
+  end
+    print("After assessing this room, my evaluation of rooms is currently " .. self.room_eval .. " points")
 end
 
 --[[--VIP has left--]]
@@ -365,6 +416,19 @@ print("I have assessed patient happiness. My rating is now " .. self.vip_rating 
   self.vip_rating = self.vip_rating + 4
   elseif count_rooms >= 1 and count_rooms < 3 then
     self.vip_rating = self.vip_rating + 1
+  end
+-- Room decor average
+  local avg_room_eval = 0
+  local room_eval_rangemap = {
+    {upper = 1, value = 3},
+    {upper = 2, value = 1},
+    {upper = 3, value = 0},
+                {value = -1}
+    
+  }
+  if self.num_visited_rooms ~= 0 then
+    print("My room evaluation score is " .. self.room_eval .. " points")
+    self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
   end
   print("I have assessed rooms. My rating is now" .. self.vip_rating)
 
