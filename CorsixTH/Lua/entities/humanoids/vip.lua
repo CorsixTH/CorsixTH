@@ -176,7 +176,7 @@ function Vip:evaluateRoom()
   -- if the player is about to kill a live patient for research, punish hard
   if room.room_info.id == "research" then
     if room:getPatient() then
-      self.vip_rating = self.vip_rating + 6 
+      self.vip_rating = self.vip_rating + 6
     end
   end
   -- evaluate the room we're currently looking at
@@ -306,17 +306,16 @@ function Vip:setVIPRating()
             break --exit when triggered once
           end
         end
-    end           
+    end
 -- Average all staff tiredness. If above tiredness level award 1, else -1
-    local avg_tired = 0    
-    avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
+    local avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
     print(avg_tired .. " avg_tired")
     if avg_tired >= 0.5 then
       self.vip_rating = self.vip_rating + 1
     else
       self.vip_rating = self.vip_rating - 1
     end
-  else 
+  else
     self.vip_rating = self.vip_rating + 4
   end
   print("I have assessed staff tiredness. My rating is now " .. self.vip_rating)
@@ -420,7 +419,6 @@ function Vip:setVIPRating()
       {upper = 2, value = 1},
       {upper = 3, value = 0},
       {value = -1}
-    
   }
     if self.num_visited_rooms ~= 0 then
       print("My room evaluation score is " .. self.room_eval .. " points")
@@ -439,7 +437,6 @@ function Vip:setVIPRating()
     else
       self.vip_rating = self.vip_rating + 1
     end
-  else
   end
   print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
 --[[--Finalise score--]]
