@@ -1,4 +1,4 @@
---[[ Copyright (c) 2011 John Pirie, lewri
+--[[ Copyright (c) 2011-2020 John Pirie, lewri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -58,7 +58,6 @@ General TODO:
 corsixth.require("announcer")
 
 local AnnouncementPriority = _G["AnnouncementPriority"]
---local Hospital = require 'Hospital'
 
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)
@@ -243,7 +242,7 @@ function Vip:onDestroy()
         {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
         choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
       }
-  elseif self.vip_rating >=8 and self.vip_rating <= 11 then
+  elseif self.vip_rating >=8 and self.vip_rating < 11 then
     -- dont tell player about any rep change in this range
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
       message = {
