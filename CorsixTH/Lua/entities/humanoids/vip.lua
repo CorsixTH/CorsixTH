@@ -107,6 +107,7 @@ if self.waiting then
       end--]]
       -- Find out which next room to visit.
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      print("Next room: " .. self.next_room .. " , Room num: " .. self.next_room_no)
       -- Make sure that this room is active
       while self.next_room and not self.next_room.is_active do
         self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
@@ -496,8 +497,6 @@ function Vip:setVIPRating()
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
 
--- PROBLEM: Function VIP:afterload is not being called at all, but not sure how to fix this
-
 function Vip:afterLoad(old, new)
   if old < 50 then
     self.num_visited_rooms = 0
@@ -513,7 +512,8 @@ function Vip:afterLoad(old, new)
   if old < 79 then
     self.name = self.hospital.visitingVIP
   end
-  if old < 137 then
+-- TODO: If we make the VIP visit select rooms, we need to handle the VIP from and old save
+  if old < 138 then
     self.vip_rating = 8 - math.floor(math.random(0,5))
     print("Warning! My rating was reset")
   end
