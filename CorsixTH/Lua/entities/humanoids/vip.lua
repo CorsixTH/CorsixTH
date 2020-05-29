@@ -49,8 +49,7 @@ SOFTWARE. --]]
 |  - a. If more standing than siting, award +1, else -1                              |
 --------------------------------------------------------------------------------------
 General TODO:
-- Add explosion rating back in
-- Make VIP visit a finite number of rooms, ideally looking at all rooms then building a list randomly
+- Add back in cure ratios
 
 --]]
 
