@@ -87,6 +87,7 @@ function Vip:Vip(...)
   self.num_visited_rooms = 0
   self.room_eval = 0
   self.waiting = 0
+
 end
 
 --[[--VIP while on premesis--]]
@@ -105,12 +106,39 @@ if self.waiting then
         self.next_room.door.reserved_for = nil
         self.next_room:tryAdvanceQueue()
       end--]]
+      local roll_to_visit = math.random(1, 10)
+      local forced_roll = 1
+      print("initial roll is " .. roll_to_visit)
       -- Find out which next room to visit.
-      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      print("Next room: " .. self.next_room .. " , Room num: " .. self.next_room_no)
-      -- Make sure that this room is active
-      while self.next_room and not self.next_room.is_active do
+      -- if this is our first room we must visit it
+      if self.num_visited_rooms == 0 then
+        print("Visiting the first room!")
         self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+        while self.next_room and not self.next_room.is_active do
+          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+        end
+      else
+        self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+        if self.next_room_no == nil and self.next_room == nil then
+          self:setNextAction(VipGoToNextRoomAction())
+        end
+        print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+        -- check if we will visit this room, 40% chance but increases by 10% each failure
+        while roll_to_visit < 6 do
+          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+          if self.next_room_no == nil and self.next_room == nil then
+            break
+          end
+          roll_to_visit = math.random(1,10) + forced_roll
+          forced_roll = forced_roll + 1
+          print("Roll failed! My new roll is " .. roll_to_visit)
+          print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+        end
+        -- Make sure that this room is active; if not, always visit the next available room
+        while self.next_room and not self.next_room.is_active do
+          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+          print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+        end
       end
       self:setNextAction(VipGoToNextRoomAction())
     end
@@ -512,10 +540,10 @@ function Vip:afterLoad(old, new)
   if old < 79 then
     self.name = self.hospital.visitingVIP
   end
--- TODO: If we make the VIP visit select rooms, we need to handle the VIP from and old save
   if old < 138 then
     self.vip_rating = 8 - math.floor(math.random(0,5))
-    print("Warning! My rating was reset")
+    self.room_eval = 0
+    print("Warning! My VIP rating was reset")
   end
   Humanoid.afterLoad(self, old, new)
 end
