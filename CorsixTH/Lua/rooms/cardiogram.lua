@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "cardiogram"
+room.must_visit = false
 room.level_config_id = 12
 room.class = "CardiogramRoom"
 room.name = _S.rooms_short.cardiogram
