@@ -538,13 +538,10 @@ function Vip:afterLoad(old, new)
   if old < 79 then
     self.name = self.hospital.visitingVIP
   end
-  if old < 139 then
+  if old < 138 then
     self.vip_rating = 8 - math.floor(math.random(0,5))
     self.room_eval = 0
     print("Warning! My VIP rating was reset")
-    for _, room in pairs(self.world.rooms) do
-      print("Room info: " .. tostring(room.room_info.id) .. " " .. tostring(room.room_info.must_visit))
-      end
   end
   Humanoid.afterLoad(self, old, new)
 end
