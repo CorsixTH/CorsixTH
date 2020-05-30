@@ -438,18 +438,18 @@ function Vip:setVIPRating()
   self.vip_rating = self.vip_rating + 4
   elseif count_rooms >= 1 and count_rooms < 3 then
     self.vip_rating = self.vip_rating + 1
+  end
 -- Room decor average
-    local avg_room_eval = 0
-    local room_eval_rangemap = {
-      {upper = 1, value = 3},
-      {upper = 2, value = 1},
-      {upper = 3, value = 0},
-      {value = -1}
+  local avg_room_eval = self.room_eval / self.num_visited_rooms
+  local room_eval_rangemap = {
+    {upper = 1, value = 3},
+    {upper = 2, value = 1},
+    {upper = 3, value = 0},
+    {value = -1}
   }
-    if self.num_visited_rooms ~= 0 then
-      print("My room evaluation score is " .. self.room_eval .. " points")
-      self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
-    end
+  if self.num_visited_rooms ~= 0 then
+    print("My room evaluation score is " .. self.room_eval .. " points")
+    self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
   end
   print("I have assessed rooms. My rating is now" .. self.vip_rating)
 
@@ -540,7 +540,9 @@ function Vip:afterLoad(old, new)
   end
   if old < 138 then
     self.vip_rating = 8 - math.floor(math.random(0,5))
+    --Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
+    self.num_visited_rooms = 0
     print("Warning! My VIP rating was reset")
   end
   Humanoid.afterLoad(self, old, new)
