@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "scanner"
-room.must_visit = false
+room.vip_must_visit = false
 room.level_config_id = 13
 room.class = "ScannerRoom"
 room.name = _S.rooms_short.scanner

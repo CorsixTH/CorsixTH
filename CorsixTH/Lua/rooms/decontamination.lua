@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "decontamination"
-room.must_visit = false
+room.vip_must_visit = false
 room.level_config_id = 30
 room.class = "DecontaminationRoom"
 room.name = _S.rooms_short.decontamination

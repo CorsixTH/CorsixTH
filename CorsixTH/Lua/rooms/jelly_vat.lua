@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "jelly_vat"
-room.must_visit = false
+room.vip_must_visit = false
 room.level_config_id = 24
 room.class = "JellyVatRoom"
 room.name = _S.rooms_short.jelly_vat

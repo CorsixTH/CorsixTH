@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "psych"
-room.must_visit = false
+room.vip_must_visit = false
 room.level_config_id = 8
 room.class = "PsychRoom"
 room.name = _S.rooms_short.psychiatric
