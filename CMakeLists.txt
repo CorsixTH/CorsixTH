@@ -19,9 +19,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
-if(CMAKE_GENERATOR MATCHES "^Visual Studio 14 2015" OR CMAKE_GENERATOR MATCHES "^Visual Studio 15 2017")
-  option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
-endif()
+option(USE_VCPKG_DEPS "Build vcpkg dependencies locally" OFF)
 
 if(USE_VCPKG_DEPS)
   # This must be before the project for the tool-chain to work correctly
