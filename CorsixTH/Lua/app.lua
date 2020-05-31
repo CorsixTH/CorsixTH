@@ -1400,8 +1400,10 @@ end
 -- a specific savegame version is from.
 function App:getVersion(version)
   local ver = version or self.savegame_version
-  if ver > 134 then
+  if ver > 138 then
     return "Trunk"
+  elseif ver > 134 then
+    return "v0.64-rc1"
   elseif ver > 127 then
     return "v0.63"
   elseif ver > 122 then
