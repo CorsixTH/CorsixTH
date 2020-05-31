@@ -50,6 +50,7 @@ SOFTWARE. --]]
 --------------------------------------------------------------------------------------
 General TODO:
 - Add back in cure ratios
+- Handler for old saves if VIP is leaving
 
 --]]
 
