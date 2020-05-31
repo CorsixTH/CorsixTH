@@ -106,38 +106,28 @@ function Vip:tickDay()
         self.next_room:tryAdvanceQueue()
       end--]]
       -- Find out which next room to visit.
-      -- if this is our first room we must visit it
-      if self.num_visited_rooms == 0 then
-        print("Visiting the first room!")
-        self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      if self.next_room == nil then
+        print("Finished all rooms. Exiting...")
+      else
+        local roll_to_visit = math.random(0,1)
+        print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+        while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not   self.next_room.room_info.vip_must_visit do
+          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+          if self.next_room == nil then
+            print("Finished all rooms. Exiting...")
+            break
+          end
+          roll_to_visit = math.random(0,1)
+          print("Roll failed! My new roll is " .. roll_to_visit)
+          print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+        end
+          -- Make sure that this room is active; if not, always visit the next available room
         while self.next_room and not self.next_room.is_active do
           self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-        end
-      else
-        self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-        if self.next_room == nil then
-          print("Finished all rooms. Exiting...")
-          self:setNextAction(VipGoToNextRoomAction())
-        else
-        -- check if we will visit this room, 50/50 chance
-          local roll_to_visit = math.random(0,1)
-          while roll_to_visit ~= 1 and not self.next_room.room_info.vip_must_visit do
-            print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
-            print("Roll failed! My new roll is " .. roll_to_visit)
-            self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-            if self.next_room == nil then
-              print("Finished all rooms. Exiting...")
-              break -- end of rooms
-            end
-            roll_to_visit = math.random(0,1)
-          end
-          -- Make sure that this room is active; if not, always visit the next available room
-          while self.next_room and not self.next_room.is_active do
-            self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-            print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+          print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
           end
         end
-      end
       self:setNextAction(VipGoToNextRoomAction())
     end
   end
