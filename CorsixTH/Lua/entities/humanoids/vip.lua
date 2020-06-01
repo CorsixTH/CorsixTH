@@ -536,10 +536,10 @@ function Vip:afterLoad(old, new)
     self.num_visited_rooms = 0
     if self.going_home then
       --ratings always come out as max reward if we try to reasses, so use that
-      self.vip_rating = 1
-      self.cash_reward = 4000
-      self.rep_reward = 50
-      self.vip_message = 1
+      self.vip_rating = 2
+      self.cash_reward = 2000
+      self.rep_reward = 45
+      self.vip_message = 2
       print("VIP was leaving in old save. Max rewards given")
     end
     print("Warning! My VIP rating was reset")
