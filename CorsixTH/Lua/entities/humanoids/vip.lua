@@ -535,7 +535,7 @@ function Vip:afterLoad(old, new)
     self.room_eval = 0
     self.num_visited_rooms = 0
     if self.going_home then
-      --ratings always come out as max reward if we try to reasses, so use that
+      --nothing to rate if VIP is already leaving, so award max reward based on old code
       self.vip_rating = 2
       self.cash_reward = 2000
       self.rep_reward = 45
