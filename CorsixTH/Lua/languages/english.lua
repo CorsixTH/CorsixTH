@@ -480,7 +480,7 @@ folders_window = {
   savegames_label = "Saves",
   screenshots_label = "Screenshots",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Here you can specify a new Theme Hospital installation directory. As soon as you choose the new directory the game will be restarted.",
+  new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. //Note: File extensions are not currently shown",
   savegames_location = "Select the directory you want to use for Saves",
   music_location = "Select the directory you want to use for your Music",
   screenshots_location = "Select the directory you want to use for Screenshots",
@@ -489,7 +489,7 @@ folders_window = {
 
 tooltip.folders_window = {
   browse = "Browse for folder location",
-  data_location = "The directory of the original Theme Hospital installation, which is required to run CorsixTH",
+  data_location = "The directory or ISO file of the original Theme Hospital installation, which is required to run CorsixTH",
   font_location = "Location of a font file that is capable of displaying Unicode characters required by your language. If this is not specified you will not be able to choose languages that need more characters than the original game can supply. Example: Russian and Chinese",
   savegames_location = "By default, the Saves directory is alongside the config file and will be used for storing saved games in. Alternatively, you can choose your own by browsing to the directory that you want to use.",
   screenshots_location = "By default, the Screenshots are stored in a folder alongside the config file. Alternatively, you can choose your own by browsing to the directory that you want to use.",
