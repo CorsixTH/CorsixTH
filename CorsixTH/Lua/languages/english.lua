@@ -480,7 +480,7 @@ folders_window = {
   savegames_label = "Saves",
   screenshots_label = "Screenshots",
   -- next four are the captions for the browser window, which are called from the folder setting menu
-  new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. //Note: File extensions are not currently shown",
+  new_th_location = "Here you can specify a new Theme Hospital installation directory or ISO file. As soon as you choose the new directory the game will be restarted. Note that file extensions are not currently shown.",
   savegames_location = "Select the directory you want to use for Saves",
   music_location = "Select the directory you want to use for your Music",
   screenshots_location = "Select the directory you want to use for Screenshots",
