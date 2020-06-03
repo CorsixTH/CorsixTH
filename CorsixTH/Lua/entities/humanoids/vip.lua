@@ -362,6 +362,7 @@ function Vip:setVIPRating()
       {value = 2}
     }
     self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
+    print("I have assessed patient warmth. My rating is now " .. self.vip_rating .. " points")
     end
     -- check average patient happiness
   local avg_happiness = self.hospital:getAveragePatientAttribute("happiness", nil)
@@ -378,13 +379,14 @@ function Vip:setVIPRating()
   print("I have assessed patient happiness. My rating is now " .. self.vip_rating .. " points")
   --check the visitor to patient death ratio
   local death_diff = self.hospital.num_deaths - self.enter_deaths
+  print("num deaths " .. self.hospital.num_deaths .. " enter deaths " .. self.enter_deaths)
   local visitors_diff = self.hospital.num_visitors - self.enter_visitors
-  if death_diff == 0 then
-    if visitors_diff ~= 0 then --if there have been no new patients, no +/- points
-      self.vip_rating = self.vip_rating - 4
-    end
-  else
-    local death_ratio = visitors_diff / death_diff
+  print("num visitors " .. self.hospital.num_visitors .. " enter visitors " .. self.enter_visitors)
+  local death_ratio = visitors_diff / death_diff
+  if visitors_diff == 0 and death_diff == 0 then
+    --no visitors incurs no penalty
+    death_ratio = 99
+  end
     local death_ratio_rangemap = {
       {upper = 2, value = 4},
       {upper = 4, value = 3},
@@ -394,7 +396,21 @@ function Vip:setVIPRating()
     }
     self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
     print("I have assessed deaths. My rating is now " .. self.vip_rating .. " points")
+  local cure_diff = self.hospital.num_cured - self.enter_cures
+  print("num cures " .. self.hospital.num_cured .. " enter cures " .. self.enter_cures)
+    local cure_ratio = visitors_diff / cure_diff
+  if visitors_diff == 0 and cure_diff == 0 then
+    --no visitors incurs no score
+    cure_ratio = 10
   end
+  local cure_ratio_rangemap = {
+      {upper = 2, value = -1},
+      {upper = 3, value = 0},
+      {upper = 4, value = 1},
+      {upper = 5, value = 2},
+                 {value = 3}
+    }
+    self.vip_rating = self.vip_rating + rangeMapLookup(cure_ratio, cure_ratio_rangemap)
 --[[--Group factor 4: Doctor ratios--]]
 -- First get all doctors
   local num_docs = self.hospital:hasStaffOfCategory("Doctor")
@@ -415,9 +431,11 @@ function Vip:setVIPRating()
 
 -- If num. consultants / all doctors > 50%, award -1
     if num_cons / num_docs > 0.5 then
+      print("Cons over 50 percent")
       self.vip_rating = self.vip_rating - 1
 -- If num. juniors / all doctors > 50%, award 1
     elseif num_junior / num_docs > 0.5 then
+      print("Junior over 50 percent")
       self.vip_rating = self.vip_rating + 1
     end
   end
