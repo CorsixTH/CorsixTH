@@ -100,7 +100,7 @@ function Vip:tickDay()
   -- No rooms have been built yet
         self:goHome()
       end
-      self.getNextRoom()
+      self:getNextRoom()
       self.waiting = nil
     end
   end
