@@ -63,7 +63,8 @@ local function action_vip_go_to_next_room_start(action, humanoid)
       else
         dir = "east"
       end
-    end humanoid:queueAction(IdleAction():setCount(50):setAfterUse(evaluate):setDirection(dir))
+    end
+    humanoid:queueAction(IdleAction():setCount(50):setAfterUse(evaluate):setDirection(dir))
 
     -- Finish this action and start the above sequence.
     humanoid:finishAction()
