@@ -97,42 +97,14 @@ function Vip:tickDay()
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
       if #self.world.rooms == 0 then
-        -- No rooms have been built yet
+  -- No rooms have been built yet
         self:goHome()
       end
-      -- First let the previous room go.
-      -- Include this when the VIP is supposed to block doors again.
-      --[[if self.next_room then
-        self.next_room.door.reserved_for = nil
-        self.next_room:tryAdvanceQueue()
-      end--]]
-      -- Find out which next room to visit.
-      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      if self.next_room == nil then
-        print("Finished all rooms. Exiting...")
-      else
-        local roll_to_visit = math.random(0,1)
-        print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
-        while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not   self.next_room.room_info.vip_must_visit do
-          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-          if self.next_room == nil then
-            print("Finished all rooms. Exiting...")
-            break
-          end
-          roll_to_visit = math.random(0,1)
-          print("Roll failed! My new roll is " .. roll_to_visit)
-          print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
-        end
-          -- Make sure that this room is active; if not, always visit the next available room
-        while self.next_room and not self.next_room.is_active do
-          self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-          print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
-          end
-        end
-      self:setNextAction(VipGoToNextRoomAction())
+      self.getNextRoom()
+      self.waiting = nil
     end
   end
-
+  
   self.world:findObjectNear(self, "litter", 8, function(x, y)
     local litter = self.world:getObject(x, y, "litter")
     if not litter then
@@ -161,6 +133,39 @@ function Vip:tickDay()
   end)
 
   return Humanoid.tickDay(self)
+end
+
+function Vip:getNextRoom()
+      -- First let the previous room go.
+      -- Include this when the VIP is supposed to block doors again.
+      --[[if self.next_room then
+        self.next_room.door.reserved_for = nil
+        self.next_room:tryAdvanceQueue()
+      end--]]
+      -- Find out which next room to visit.
+  self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+  if self.next_room == nil then
+    print("Finished all rooms. Exiting...")
+  else
+    local roll_to_visit = math.random(0,1)
+    print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+    while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not   self.next_room.room_info.vip_must_visit do
+      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      if self.next_room == nil then
+        print("Finished all rooms. Exiting...")
+        break
+      end
+      roll_to_visit = math.random(0,1)
+      print("Roll failed! My new roll is " .. roll_to_visit)
+      print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+    end
+    -- Make sure that this room is active; if not, always visit the next available room
+    while self.next_room and not self.next_room.is_active do
+      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+      print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+    end
+  end
+  self:setNextAction(VipGoToNextRoomAction())
 end
 
 -- display the VIP name in the info box
@@ -232,6 +237,7 @@ function Vip:evaluateRoom()
     end
   end
   print("After assessing this room, my evaluation of rooms is currently " .. self.room_eval .. " points")
+  self:getNextRoom()
 end
 
 --[[--VIP has left--]]
@@ -535,7 +541,7 @@ function Vip:afterLoad(old, new)
     self.room_eval = 0
     self.num_visited_rooms = 0
     if self.going_home then
-      --nothing to rate if VIP is already leaving, so award max reward based on old code
+      --ratings always come out as max reward if we try to reasses, so use that
       self.vip_rating = 2
       self.cash_reward = 2000
       self.rep_reward = 45
@@ -543,6 +549,17 @@ function Vip:afterLoad(old, new)
       print("VIP was leaving in old save. Max rewards given")
     end
     print("Warning! My VIP rating was reset")
+    for i, action in ipairs(self.action_queue) do
+       if action.name == 'idle' and action.loop_callback and (self.waiting > 1 or i > 1) then
+        action:setCount(50):setAfterUse(action.loop_callback)
+        action.loop_callback = nil
+        self.waiting = nil
+        if i == 1 then
+          self:queueAction(action, 1)
+          self:finishAction()
+        end
+      end
+    end
   end
   Humanoid.afterLoad(self, old, new)
 end
