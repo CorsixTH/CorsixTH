@@ -1333,6 +1333,7 @@ function World:nextEarthquake()
     self.next_earthquake.start_day = math.random(1, eqml)
 
     self.next_earthquake.size = control.Severity
+    print("next size is " .. self.next_earthquake.size)
     self.next_earthquake.remaining_damage = self.next_earthquake.size
     self.next_earthquake.damage_timer = earthquake_damage_time
     self.next_earthquake.warning_timer = earthquake_warning_period
@@ -1340,6 +1341,19 @@ function World:nextEarthquake()
   end
 end
 
+-- Earthquake override from cheat menu
+function World:createEarthquake()
+  self.next_earthquake.start_day = self.game_date:dayOfMonth()
+  self.next_earthquake.start_month = self.game_date:monthOfGame()
+  if self.next_earthquake.remaining_damage == nil then
+    --forcefully make an earthquake if none left in level file
+    self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
+    self.next_earthquake.remaining_damage = self.next_earthquake.size
+    self.next_earthquake.damage_timer = earthquake_damage_time
+    self.next_earthquake.warning_timer = earthquake_warning_period
+    self.current_map_earthquake = self.current_map_earthquake + 1
+  end
+end
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
