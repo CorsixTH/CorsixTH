@@ -1333,7 +1333,6 @@ function World:nextEarthquake()
     self.next_earthquake.start_day = math.random(1, eqml)
 
     self.next_earthquake.size = control.Severity
-    print("next size is " .. self.next_earthquake.size)
     self.next_earthquake.remaining_damage = self.next_earthquake.size
     self.next_earthquake.damage_timer = earthquake_damage_time
     self.next_earthquake.warning_timer = earthquake_warning_period
