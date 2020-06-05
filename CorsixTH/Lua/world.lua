@@ -1340,6 +1340,21 @@ function World:nextEarthquake()
   end
 end
 
+-- Earthquake override from cheat menu
+function World:createEarthquake()
+  --make sure an earthquake isn't already happening
+  if not self.next_earthquake.active then
+    self.next_earthquake.start_day = self.game_date:dayOfMonth()
+    self.next_earthquake.start_month = self.game_date:monthOfGame()
+    if self.next_earthquake.size == nil then
+      --forcefully make an earthquake if none left in level file
+      self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
+      self.next_earthquake.remaining_damage = self.next_earthquake.size
+      self.next_earthquake.damage_timer = earthquake_damage_time
+      self.next_earthquake.warning_timer = earthquake_warning_period
+    end
+  end
+end
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
