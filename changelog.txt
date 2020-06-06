@@ -2,9 +2,10 @@
 Version 0.64 - released TBD
 -------------------------------------------------------------------------------
 # New Features
-* ISO images may be used as a Theme Hospital data source, though currently
-  movies are skipped with that option. This was supported early on, but
-  dropped.
+* EXPERIMENTAL: ISO images may be used as a Theme Hospital data source. Known
+  limitations of using ISOs are that the in game movies will not play, and the
+	first time Windows install will not allow selecting the ISO file in the file
+	dialog.
 
 # Bug Fixes
 * Confirm dialogs are now sized properly in all languages
@@ -15,6 +16,7 @@ Version 0.64 - released TBD
 * French Level 5 description was replaced so that formatting characters
   no longer show up in it.
 * Some undefined behavior and potential memory leaks have been corrected.
+* Earthquake cheat now breaks your hospital instead of the game.
 
 # Translations
 * Updated translations for Chinese, French
