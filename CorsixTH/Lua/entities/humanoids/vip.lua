@@ -37,6 +37,8 @@ SOFTWARE. --]]
 |  - c. Assess patient warmth, too hot/cold award +2, perfect -1, just over 1        |
 |  - d. Average happiness, award 3 if <0.2; 2 if <0.4, 1 if <0.6, 0 if <0.8, else -1 |
 |  - e. Check if anyone has died during visit, punish based on severity              |
+|  - f. Check how many patients are cured vs. all patients, award based on %         |
+|  - g. Check seating. Award -1 for more seated than standing, else +1               |
 | 4. DOCTORS                                                                         |
 |  - a. If no doctors, award +4 and skip other checks                                |
 |  - b. If more than half doctors are consultants, award -2                          |
@@ -44,9 +46,7 @@ SOFTWARE. --]]
 | 5. ROOMS                                                                           |
 |  - a. If there are no active rooms, award +4                                       |
 |  - b. If rooms not crashed (exploded) <3, award +1                                 |
-|  - c. Get average room decoration score, award based on decoration level           |
-| 6. SEATING                                                                         |
-|  - a. If more standing than siting, award +1, else -1                              |
+|  - c. Get average room decoration score, award based on decoration level           | 
 --------------------------------------------------------------------------------------
 General TODO:
 -Rebalancing
@@ -191,6 +191,7 @@ end
 function Vip:evaluateRoom()
   local room_extinguisher = 0
   local room_plant = 0
+  local room_bin = 0
   -- Another room visited.
   self.num_visited_rooms = self.num_visited_rooms + 1
   local room = self.next_room
@@ -204,26 +205,33 @@ function Vip:evaluateRoom()
   --debug adds self.room_extinguisher and self.room_plant
   for object, _ in pairs(room.objects) do
     if object.object_type.id == "extinguisher" then
-        --check if 1 extinguisher already found in room
-        if room_extinguisher == 0 then
-            self.room_eval = self.room_eval + 1
-            print("Found fire extinguisher")
-            room_extinguisher = 1
-        end
+      --check if 1 extinguisher already found in room
+      if room_extinguisher == 0 then
+        self.room_eval = self.room_eval + 1
+        print("Found fire extinguisher")
+        room_extinguisher = 1
+      end
     elseif object.object_type.id == "plant" then
-            --check if more than 3 plants assessed
-            if room_plant < 3 then
-                if object.days_left >= 10 then
-                    self.room_eval = self.room_eval + 1
-                elseif object.days_left <= 3 then
-                    self.room_eval = self.room_eval - 1
-                end
-                print("Found plant")
-                --pevent abuse of rating by placing lots of plants
-                room_plant = room_plant + 1
-            else
-                print("Maximum plants assessed in this room")
-            end
+      --check if more than 3 plants assessed
+      if room_plant < 3 then
+        if object.days_left >= 10 then
+          self.room_eval = self.room_eval + 1
+        elseif object.days_left <= 3 then
+          self.room_eval = self.room_eval - 1
+        end
+        print("Found plant")
+        --pevent abuse of rating by placing lots of plants
+        room_plant = room_plant + 1
+      else
+        print("Maximum plants assessed in this room")
+      end
+    elseif object.object_type.id == "bin" then
+      --check if 1 extinguisher already found in room
+      if room_bin == 0 then
+        self.room_eval = self.room_eval + 1
+        print("Found bin")
+        room_bin = 1
+      end
     end
 
     if object.strength then
@@ -311,7 +319,7 @@ function Vip:setVIPRating()
   print("I have assessed litter. My rating is now " .. self.vip_rating .. " points")
 
 --[[-- Group factor 2: Staff tiredness--]]
---First get staff members
+  --First get staff members
   local count_staff = 0
   for _, staff in ipairs(self.hospital.staff) do
     count_staff = count_staff + 1
@@ -366,7 +374,7 @@ function Vip:setVIPRating()
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
       print("I have assessed patient warmth. My rating is now " .. self.vip_rating .. " points")
-      end
+    end
     
     -- check average patient happiness
     local avg_happiness = self.hospital:getAveragePatientAttribute("happiness", nil)
@@ -415,6 +423,18 @@ function Vip:setVIPRating()
     else
       self.vip_rating = self.vip_rating + 3
     end
+  
+    -- check the seating : standing ratio of waiting patients
+    -- find all the patients who are currently waiting around
+    local sum_sitting, sum_standing = self.hospital:countSittingStanding()
+    if (sum_sitting + sum_standing) ~= 0 then
+      if sum_sitting >= sum_standing or sum_standing == 0 then
+        self.vip_rating = self.vip_rating - 1
+      else
+        self.vip_rating = self.vip_rating + 1
+      end
+    end
+    print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
   else
     print("There were no patients. Why am I here???")
   end
@@ -459,35 +479,25 @@ function Vip:setVIPRating()
 -- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
   if count_rooms < 1 then
   self.vip_rating = self.vip_rating + 4
-  elseif count_rooms >= 1 and count_rooms < 3 then
-    self.vip_rating = self.vip_rating + 1
-  end
--- Room decor average
-  local avg_room_eval = self.room_eval / self.num_visited_rooms
-  local room_eval_rangemap = {
-    {upper = 1, value = 3},
-    {upper = 2, value = 1},
-    {upper = 3, value = 0},
-    {value = -1}
-  }
-  if self.num_visited_rooms ~= 0 then
-    print("My room evaluation score is " .. self.room_eval .. " points")
-    self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
-  end
-  print("I have assessed rooms. My rating is now" .. self.vip_rating)
-
-  --[[Group factor 6: Seating--]]
-  -- check the seating : standing ratio of waiting patients
-  -- find all the patients who are currently waiting around
-  local sum_sitting, sum_standing = self.hospital:countSittingStanding()
-  if (sum_sitting + sum_standing) ~= 0 then
-    if sum_sitting >= sum_standing or sum_standing == 0 then
-      self.vip_rating = self.vip_rating - 1
-    else
+  else 
+    if count_rooms < 3 then
       self.vip_rating = self.vip_rating + 1
     end
+    -- Room decor average
+    local avg_room_eval = self.room_eval / self.num_visited_rooms
+    local room_eval_rangemap = {
+      {upper = 2, value = 3},
+      {upper = 3, value = 1},
+      {upper = 4, value = 0},
+      {value = -1}
+    }
+    if self.num_visited_rooms ~= 0 then
+      print("My room evaluation score is " .. self.room_eval .. " points")
+      self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
+    end
+  print("I have assessed rooms. My rating is now" .. self.vip_rating)
   end
-  print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
+
 --[[--Finalise score--]]
   --documented rewards.
   local rewards = {
