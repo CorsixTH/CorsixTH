@@ -2,7 +2,7 @@
 add_custom_command(TARGET CorsixTH POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_directory
   "${VCPKG_INSTALLED_PATH}/share/lua/socket"
-  $<TARGET_FILE_DIR:CorsixTH>/mime
+  $<TARGET_FILE_DIR:CorsixTH>/socket
 )
 
 add_custom_command(TARGET CorsixTH POST_BUILD

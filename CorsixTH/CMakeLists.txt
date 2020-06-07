@@ -26,7 +26,7 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
 endif()
 
-add_library(CorsixTH_lib STATIC "")
+add_library(CorsixTH_lib STATIC)
 
 # Declaration of the executable
 if(APPLE)
@@ -42,8 +42,10 @@ if(APPLE)
 
   set_target_properties(CorsixTH PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(CorsixTH PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
+elseif(MSVC)
+  add_executable(CorsixTH CorsixTH.rc)
 else()
-  add_executable(CorsixTH "")
+  add_executable(CorsixTH)
 endif()
 
 target_link_libraries(CorsixTH_lib RncLib)
