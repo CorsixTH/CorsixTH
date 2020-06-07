@@ -550,7 +550,7 @@ function World:spawnVIP(name)
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
-
+  vip.enter_patients = #hospital.patients
   vip.enter_explosions = hospital.num_explosions
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
