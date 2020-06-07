@@ -147,7 +147,7 @@ function Vip:getNextRoom()
     print("Finished all rooms. Exiting...")
   else
     local roll_to_visit = math.random(0,1)
-    print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+    print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not   self.next_room.room_info.vip_must_visit do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       if self.next_room == nil then
@@ -156,12 +156,12 @@ function Vip:getNextRoom()
       end
       roll_to_visit = math.random(0,1)
       print("Roll failed! My new roll is " .. roll_to_visit)
-      print("Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+      print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     end
     -- Make sure that this room is active; if not, always visit the next available room
     while self.next_room and not self.next_room.is_active do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      print("Room not active! Next room: " .. tostring(self.next_room) .. " , Room num: " .. tostring(self.next_room_no))
+      print("Room not active! Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     end
   end
   self:setNextAction(VipGoToNextRoomAction())
@@ -386,7 +386,7 @@ function Vip:setVIPRating()
     --check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
     print("num deaths " .. self.hospital.num_deaths .. " enter deaths " .. self.enter_deaths)
-    if death_diff ~= 0 then
+    if death_diff ~= 0 then --no deaths are good
       local death_ratio = visitors_diff / death_diff
       local death_ratio_rangemap = {
         {upper = 2, value = 4},
@@ -402,7 +402,7 @@ function Vip:setVIPRating()
     --check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
     print("num cures " .. self.hospital.num_cured .. " enter cures " .. self.enter_cures)
-    if cure_diff ~= 0 then
+    if cure_diff ~= 0 then --no cures are bad
       local cure_ratio = visitors_diff / cure_diff
       local cure_ratio_rangemap = {
         {upper = 2, value = -1},
@@ -412,6 +412,8 @@ function Vip:setVIPRating()
         {value = 3}
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(cure_ratio, cure_ratio_rangemap)
+    else
+      self.vip_rating = self.vip_rating + 3
     end
   else
     print("There were no patients. Why am I here???")
