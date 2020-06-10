@@ -58,6 +58,36 @@ vip_names = {
  [6] = "O Presidente da Cruz Vermelha",
 }
 
+-- An override for the squits becoming the the squits see issue 1646
+adviser.research.drug_improved_1 = "Seu Centro de Pesquisa melhorou o medicamento para %s"
+
+-- Disease overrides where there are typos
+golf_stones.cure = "Cura - Dois cirurgiöes operam para extrair os cálculos."
+ruptured_nodules.cure = "Cura - Dois cirurgiöes qualificados colocam certas partes com mäos firmes."
+slack_tongue.cause = "Causa - Fazer muita fofoca."
+slack_tongue.cure = "Cura - Coloca-se a língua no corta-línguas e elimina-se de forma rápida, eficaz e dolorosa."
+the_squits.cure = "Cura - Uma mistura pegajosa de substâncias viscosas preparada na farmácia solidifica as tripas do paciente."
+bloaty_head.cure = "Cura - Fura-se a cabeça inflada, em seguida, volta-se a inflar até o tamanho correto com uma máquina inteligente."
+
+-- Rooms overrides where there are typos
+inflation[2] = "Os pacientes que sofrem a dolorosa doença de terem a cabeça inflada devem ir à sala de inflatoterapia, será desinflada sua cabeça e em seguida vota a ser inflada à pressäo correta.//"
+staff_room[2] = "Os seus funcionários se cansam quando realizam o seu trabalho. Precisam desta sala para descansar e se refrescar. Os funcionários cansados säo mais lentos, pedem mais dinheiro e por fim väo embora. Também cometem mais erros. Vale a pena construir uma sala que tenham muitos passatempos. Assegure-se de que há lugar para vários funcionários ao mesmo tempo. "
+
+-- Staff description overrides where there are typos
+staff_descriptions.bad[14] = "Pessoa ardilosa, matreira e subversiva. "
+staff_descriptions.misc[11] = "Destila uísque. "
+
+-- Correction to a pay rise prompt with typos
+pay_rise.regular[1] = "Estou esgotado. Preciso de umas boas férias, mais um aumento de %d, se näo quiser deixo este maldito emprego."
+
+-- Level description overrides where there are typos. Note: This is the only portion of the game that SHOULD use double space after fullstops etc.
+introduction_texts.level17 = "Um último aviso. Fique de olho na sua Reputaçäo, é o que atrairá pacientes ao seu estabelecimento. Se näo matar muitas pessoas e os mantiver razoavelmente felizes näo deverá ter muitos problemas com este nível!//Agora é com você, boa sorte."
+introduction_texts.level11 = "Tem a oportunidade de construir o hospital definitivo. Esta é uma área de enorme prestígio e o Ministério quer que este seja o melhor hospital. Esperamos que ganhe muito dinheiro, alcance uma excelente reputaçäo e que se encarregue de todos os casos que sejam apresentados. Este é um trabalho importante. Terá que ser muito hábil para completá-lo. Também deve ter em conta que foram vistos OVNIs na área. Assegure-se de que os seus funcionários estejam preparados para receber algumas visitas inesperadas. O seu hospital terá que alcançar um valor de $240.000, precisará ter $500.000 no banco e uma reputaçäo de 700."
+introduction_texts.level9 = "Depois de depositar o dinheiro na conta bancária do Ministério e pagar uma nova limousine para o Ministro, agora pode dedicar a criar um bom hospital para cuidar dos doentes e necessitados. Aqui terá um montäo de problemas diferentes. Se os seus funcionários tiverem uma boa formaçäo e suficientes consultas, poderäo resolver qualquer situaçäo. O seu hospital terá que valer $200.000 e precisará ter $400.000 no banco. Se näo o conseguir näo poderá terminar o nível."
+introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes, precisará construir salas de tratamento e clínicas para curá-los. Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
+introduction_texts.level10 = "Além de dever curar todas as doenças que possa haver, o Ministério pede que empregue um pouco de tempo em aumentar a eficácia dos seus remédios.//Houve algumas queixas por parte do D. Salutíssimo, o Cachorro Guardiäo da Saúde, assim deve procurar com que todos os seus remédios sejam extremamente eficazes para ficar bem. Também, assegure-se de que o seu hospital tenha uma reputaçäo irrepreensível. Procure deixar morrer poucos pacientes. Como sugestäo, deveria deixar espaço para um banho gelatinoso. Para ganhar, os seus remédios deveräo ter uma eficácia de, pelo menos, 80%, tem que conseguir uma reputaçäo de 650 e guardar $500.000 no banco."
+introduction_texts.level12 = "Agora enfrentará o maior dos desafios. Impressionado com os seus lucros, o Ministério tem uma grande tarefa para você; querem que construa outro magnífico hospital, que tenha um excelente lucro e uma reputaçäo incrível. Também querem que compre todo o terreno que puder, cure tudo (e queremos dizer todas as doenças) e ganhe todos os prêmios. Acha que conseguirá? Ganhe $650.000, cure 750 pessoas e consiga uma reputaçäo de 800 para ganhar este nível. "
+introduction_texts.level15 = "Bem, estes säo os mecanismos básicos para pôr em funcionamento um hospital.//Os seus Médicos väo precisar de toda a ajuda que possam obter para diagnosticar alguns dos pacientes. Pode ajudá-los construindo outros equipamentos de diagnóstico como a sala de Diagnóstico Geral."
 -- A small error in the introduction text of level 2
 introduction_texts.level2 = "Há uma grande variedade de doenças nesta área. Prepare o seu hospital para tratar mais pacientes " ..
                             "e para a construçäo de um Centro de Pesquisa. Lembre-se que deve manter limpo o hospital e procurar atingir a " ..
@@ -66,8 +96,19 @@ introduction_texts.level2 = "Há uma grande variedade de doenças nesta área. P
                             "ser pesquisadas antes de as construir. Também pode comprar mais terreno para aumentar o seu hospital. " ..
                             "Para isso, utilize o mapa da cidade. Obtenha uma reputaçäo de 300 um saldo de bancário de $10,000 e 40 pessoas curadas. "
 
--- An override for the squits becoming the the squits see issue 1646
-adviser.research.drug_improved_1 = "Seu Centro de Pesquisa melhorou o medicamento para %s"
+-- Override for level progress typo
+level_progress.hospital_value_enough = "Mantenha o valor do seu hospital acima de %d e atenda os seus outros problemas para ganhar o nível."
+level_progress.cured_enough_patients = "Curou muitos pacientes, mas precisa manter o seu hospital em melhor estado para ganhar o nível."
+
+-- Override for multiplayer typos
+multiplayer.players_failed = "O(s) seguinte jogador(es) falharam ao alcançar o último objetivo: "
+multiplayer.everyone_failed = "Todos falharam ao satisfazer aquele último objetivo."
+
+-- Override for a disease patient choice typo
+disease_discovered_patient_choice.need_to_employ = "Contrate um(a) %s para corrigir esta situaçäo."
+
+--Win message override typo
+letter[12][2] = "A sua bem-sucedida carreira como o melhor diretor de hospital desde Moisés está chegando ao seu fim. Você provocou tanto efeito nos círculos médicos, que o Ministério quer lhe oferecer um salário de %s, só para inaugurar festas, navios e organizar entrevistas em nosso nome. Você seria um excelente relaçöes públicas!//"
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
@@ -113,10 +154,10 @@ menu_options = {
 menu_options_game_speed = {
   pause               = "  (%1%) PAUSAR  ",
   slowest             = "  (%1%) MUITO LENTO  ",
-  slower             = "  (%1%) LENTO  ",
+  slower              = "  (%1%) LENTO  ",
   normal              = "  (%1%) NORMAL  ",
   max_speed           = "  (%1%) RAPIDO  ",
-  and_then_some_more   = "  (%1%) MUITO RAPIDO  ",
+  and_then_some_more  = "  (%1%) MUITO RAPIDO  ",
 }
 
 menu_options_warmth_colors = {
@@ -127,20 +168,20 @@ menu_options_warmth_colors = {
 
 menu_options_wage_increase = {
   grant = "    PERMITIR ",
-  deny = "    NEGAR ",
+  deny =  "    NEGAR ",
 }
 
 -- Add F-keys to entries in charts menu (except briefing), also town_map was added.
 menu_charts = {
-  bank_manager = "  (%1%) GERENTE DO BANCO  ",
-  statement = "  (%1%) ESTADO DA CONTA  ",
+  bank_manager  = "  (%1%) GERENTE DO BANCO  ",
+  statement     = "  (%1%) ESTADO DA CONTA  ",
   staff_listing = "  (%1%) LISTA DOS FUNCIONARIOS  ",
-  town_map = "  (%1%) MAPA DA CIDADE  ",
-  casebook = "  (%1%) FICHA CLINICA  ",
-  research = "  (%1%) PESQUISA  ",
-  status = "  (%1%) ESTADO  ",
-  graphs = "  (%1%) GRAFICO  ",
-  policy = "  (%1%) NORMAS  ",
+  town_map      = "  (%1%) MAPA DA CIDADE  ",
+  casebook      = "  (%1%) FICHA CLINICA  ",
+  research      = "  (%1%) PESQUISA  ",
+  status        = "  (%1%) ESTADO  ",
+  graphs        = "  (%1%) GRAFICO  ",
+  policy        = "  (%1%) NORMAS  ",
 }
 
 menu_debug = {
@@ -175,10 +216,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 menu_player_count = {
-  players_1 = "  1 JOGADOR  ",
-  players_2 = "  2 JOGADORES  ",
-  players_3 = "  3 JOGADORES  ",
-  players_4 = "  4 JOGADORES  ",
+	players_1 = "  1 JOGADOR  ",
+	players_2 = "  2 JOGADORES  ",
+	players_3 = "  3 JOGADORES  ",
+	players_4 = "  4 JOGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Construir a sala neste local resultará em alas do hospital que näo poderäo ser acessadas.",
@@ -221,6 +262,7 @@ adviser = {
 dynamic_info.patient.actions.no_gp_available = "Esperando que construa um Consultório Geral"
 dynamic_info.staff.actions.heading_for = "Dirigindo-se para %s"
 dynamic_info.staff.actions.fired = "Despedido"
+dynamic_info.staff.actions.vaccine = "Vacinando um paciente"
 dynamic_info.patient.actions.epidemic_vaccinated = "Eu näo sou mais contagioso"
 
 progress_report.free_build = "CONSTRUÇAO LIVRE"
@@ -372,6 +414,10 @@ options_window = {
   apply = "Aplicar",
   cancel = "Cancelar",
   back = "Voltar",
+  scrollspeed = "Veloc. de Rolagem",
+  shift_scrollspeed = "Veloc. Rolagem Acel.",
+  zoom_speed = "Veloc. do Zoom",
+  hotkey = "Atalhos",
 }
 
 tooltip.options_window = {
@@ -392,6 +438,16 @@ tooltip.options_window = {
   select_language = "Selecione o idioma do jogo",
   language_dropdown_item = "Selecionar %s como idioma",
   back = "Fechar a janela de Configuraçöes",
+  scrollspeed = "Defina a velocidade de rolagem entre 1 (mais lenta) até 10 (mais rápida). O padräo é 2.",
+  shift_scrollspeed = "Defina a velocidade da rolagem enquanto a tecla Shift é pressionada. 1 (mais lento) até 10 (mais rápido). O padräo é 4.",
+  zoom_speed = "Defina a velocidade da aproximaçäo da câmera de 10 (mais lenta) até 1000 (mais rápida). O padräo é 80.",
+  apply_scrollspeed = "Aplique a velocidade de rolagem inserida.",
+  cancel_scrollspeed = "Retornar sem alterar a velocidade de rolagem.",
+  apply_shift_scrollspeed = "Aplique a velocidade de rolagem de acelerada inserida.",
+  cancel_shift_scrollspeed = "Retorne sem alterar a velocidade de rolagem acelerada.",
+  apply_zoomspeed = "Aplique a velocidade de aproximaçäo inserida.",
+  cancel_zoomspeed = "Retorne sem alterar a velocidade de aproximaçäo.",
+  hotkey = "Altere as teclas de atalho do teclado.",
 }
 
 customise_window = {
@@ -454,6 +510,124 @@ tooltip.folders_window = {
   back  = "Fechar este menu e voltar para o menu de Configuraçöes",
 }
 
+hotkey_window = {
+  caption_main = "Atribuiçäo de teclas de atalho",
+  caption_panels = "Teclas do painel",
+  button_accept = "Aceitar",
+  button_defaults = "Restaurar padröes",
+  button_cancel = "Cancelar",
+  button_back = "Voltar",
+  button_toggleKeys = "Teclas de alternância",
+  button_recallPosKeys = "Tecla de retorno de posiçäo",
+  panel_globalKeys = "Teclas globais",
+  panel_generalInGameKeys = "Teclas gerais no jogo",
+  panel_scrollKeys = "Teclas de rolagem",
+  panel_zoomKeys = "Teclas de aproximaçäo",
+  panel_gameSpeedKeys = "Teclas de velocidade do jogo",
+  panel_miscInGameKeys = "Teclas diversas no jogo",
+  panel_toggleKeys = "Teclas de alternância",
+  panel_debugKeys = "Teclas de depuraçäo",
+  panel_storePosKey = "Armazenamento de posiçäo",
+  panel_recallPosKeys = "Retorno de posiçäo",
+  panel_altPanelKeys = "Teclas de alternância do painel",
+  global_confirm = "Confirmar",
+  global_confirm_alt = "Alt. confirmar",
+  global_cancel = "Cancelar",
+  global_cancel_alt = "Alt. cancelar",
+  global_fullscreen_toggle = "Tela cheia",
+  global_exitApp = "Sair do app",
+  global_resetApp = "Reiniciar app",
+  global_releaseMouse = "Liberar mouse",
+  global_connectDebugger = "Depurar",
+  global_showLuaConsole = "Console Lua",
+  global_runDebugScript = "Script de depuraçäo",
+  global_screenshot = "Capturar tela",
+  global_stop_movie_alt = "Parar filme",
+  global_window_close_alt = "Fechar janela",
+  ingame_scroll_up = "Rolar p/ cima",
+  ingame_scroll_down = "Rolar p/ baixo",
+  ingame_scroll_left = "Rolar p/ esq.",
+  ingame_scroll_right = "Rolar p/ dir.",
+  ingame_scroll_shift = "Veloc. aceler.",
+  ingame_zoom_in = "Aproximar",
+  ingame_zoom_in_more = "Aproximar mais",
+  ingame_zoom_out = "Afastar",
+  ingame_zoom_out_more = "Afastar mais",
+  ingame_showmenubar = "Barra de menu",
+  ingame_showCheatWindow = "Menu de trapaça",
+  ingame_loadMenu = "Carregar jogo",
+  ingame_saveMenu = "Salvar jogo",
+  ingame_jukebox = "Máq. de discos",
+  ingame_openFirstMessage = "Nív. mensagem",
+  ingame_pause = "Pausa",
+  ingame_gamespeed_slowest = "Muito lento",
+  ingame_gamespeed_slower = "Lento",
+  ingame_gamespeed_normal = "Normal",
+  ingame_gamespeed_max = "Rápido",
+  ingame_gamespeed_thensome = "Muito rápido",
+  ingame_gamespeed_speedup = "Volume +",
+  ingame_panel_bankManager = "Ger. do banco",
+  ingame_panel_bankStats = "Estado da conta",
+  ingame_panel_staffManage = "Lista de funcion.",
+  ingame_panel_townMap = "Mapa da cidade",
+  ingame_panel_casebook = "Ficha clinica",
+  ingame_panel_research = "Pesquisa",
+  ingame_panel_status = "Estado",
+  ingame_panel_charts = "Gráfico",
+  ingame_panel_policy = "Normas",
+  ingame_panel_map_alt = "Mapa da cidade 2",
+  ingame_panel_research_alt = "Pesquisa 2",
+  ingame_panel_casebook_alt = "Ficha clinica 2",
+  ingame_panel_casebook_alt02 = "Ficha clinica 3",
+  ingame_panel_buildRoom = "Construir sala",
+  ingame_panel_furnishCorridor = "Mobiliar corredor",
+  ingame_panel_editRoom = "Editar sala",
+  ingame_panel_hireStaff = "Contratar",
+  ingame_rotateobject = "Girar objeto",
+  ingame_quickSave = "Salvar rapid.",
+  ingame_quickLoad = "Carregar rapid.",
+  ingame_restartLevel = "Reiniciar nível",
+  ingame_quitLevel = "Sair do nível",
+  ingame_setTransparent = "Transparente",
+  ingame_toggleAnnouncements = "Anúncios",
+  ingame_toggleSounds = "Sons",
+  ingame_toggleMusic = "Música",
+  ingame_toggleAdvisor = "Conselheiro",
+  ingame_toggleInfo = "Informaçäo",
+  ingame_poopLog = "Extrair relatório",
+  ingame_poopStrings = "Extrair textos",
+  ingame_patient_gohome = "Enviar p/ casa",
+  ingame_storePosition_1 = "1",
+  ingame_storePosition_2 = "2",
+  ingame_storePosition_3 = "3",
+  ingame_storePosition_4 = "4",
+  ingame_storePosition_5 = "5",
+  ingame_storePosition_6 = "6",
+  ingame_storePosition_7 = "7",
+  ingame_storePosition_8 = "8",
+  ingame_storePosition_9 = "9",
+  ingame_storePosition_0 = "10",
+  ingame_recallPosition_1 = "1",
+  ingame_recallPosition_2 = "2",
+  ingame_recallPosition_3 = "3",
+  ingame_recallPosition_4 = "4",
+  ingame_recallPosition_5 = "5",
+  ingame_recallPosition_6 = "6",
+  ingame_recallPosition_7 = "7",
+  ingame_recallPosition_8 = "8",
+  ingame_recallPosition_9 = "9",
+  ingame_recallPosition_0 = "10",
+}
+
+tooltip.hotkey_window = {
+  button_accept = "Aceitar e salvar atribuiçöes de teclas de atalho",
+  button_defaults = "Restaura todas as teclas de atalho para os padröes do programa",
+  button_cancel = "Cancela a atribuiçäo e volta ao menu de opçöes",
+  caption_panels = "Abre a janela para atribuir teclas do painel",
+  button_recallPosKeys = "Abre a janela para definir teclas para armazenamento e retorno da posiçöes da câmera",
+  button_back_02 = "Volta para a janela principal de teclas de atalho. As teclas de atalho alteradas nesta janela podem ser aceitas lá",
+}
+
 font_location_window = {
   caption = "Selecionar fonte (%1%)",
 }
@@ -464,7 +638,7 @@ handyman_window = {
 }
 
 tooltip.handyman_window = {
-  parcel_select = "Parcela onde o faz-tudo aceita tarefas, clique para alterar o configuraçäo"
+  parcel_select = "Parcela onde o zelador aceita tarefas, clique para alterar o configuraçäo"
 }
 
 new_game_window = {
@@ -553,7 +727,7 @@ tooltip.information = {
 totd_window = {
   tips = {
   "Todo hospital precisa de uma Recepçäo e um Consultório Geral para começar. Depois disso, dependerá do tipo de pacientes que visitará seu hospital. Entretanto ter uma farmácia é sempre uma boa ideia.",
-  "Máquinas como o Inflador precisam de constante manutençäo. Contrate um ou dois Faz-tudo para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
+  "Máquinas como o Inflador precisam de constante manutençäo. Contrate um ou dois Zeladores para reparos nestas máquinas, ou colocará seus funcionários e pacientes em risco.",
   "Depois de um certo período de trabalho, seus funcionários ficaräo cansados. Certifique-se de construir uma Sala de Descanso, para que posam relaxar.",
   "Instale Radiadores suficientes para manter seus funcionários e pacientes aquecidos, do contrário ficaräo infelizes. Use o Mapa da Cidade para localizar pontos do hospital que precisem ser aquecidos.",
   "O nível de habilidade de um médico reflete na qualidade e velocidade dos diagnósticos. Coloque um médico experiente no Consultório Geral, assim näo precisará de muitas salas de diagnósticos adicionais.",
@@ -703,6 +877,35 @@ map_editor_window = {
   }
 }
 
+fax = {
+vip_visit_result = {
+  ordered_remarks = {
+    [1] = "Que hospital eficaz! A próxima vez que estiver gravemente doente, eu venho aqui.",
+    [2] = "É isto o que eu chamo de um hospital.",
+    [3] = "É um hospital excelente. E sei o que digo; visito muitos hospitais.",
+    [4] = "Que hospital bem administrado! Obrigado pelo seu convite.",
+    [5] = "Mmmm. Certamente näo é uma má instituiçäo médica.",
+    [6] = "Gostei do seu estupendo hospital. Agora, alguém quer um curry da Casa do Curry?",
+    [7] = "Bom, já vi piores. Mas deveria fazer algumas melhoras.",
+    [8] = "Oh céus! Näo é um lugar agradável para ir se estiver doente.",
+    [9] = "Vou ser sincero, é um hospital normal. Francamente, eu esperava mais.",
+    [10] = "Por que me zanguei? Foi pior que ir ver uma ópera de quatro horas!",
+    [11] = "Estou aborrecido pelo que vi. Chama a isto um hospital? Mais parece uma pocilga!",
+    [12] = "Estou farto de atrair a atençäo pública e de visitar buracos fedorentos como este! Eu me demito.",
+    [13] = "Que lixo. Vou tentar fechá-lo.",
+    [14] = "Eu nunca vi um hospital täo ruim. Que vergonha!",
+    [15] = "Estou chocado. Você näo pode chamar isso de hospital! Näo me espere ver novamente.",
+    }
+  }
+}
+
+hotkeys_file_err = {
+  file_err_01 = "Näo foi possível carregar o arquivo hotkeys.txt. Certifique-se de que o " ..
+        "Theme Hospital tem permissäo de leitura/escrita ",
+  file_err_02 = ", ou use a opçäo linha de comando --hotkeys-file=NomeDoArquivo para especificar um arquivo gravável. " ..
+        "Para referência, o erro ao carregar o arquivo de teclas de atalho foi: ",
+}
+
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 
@@ -788,7 +991,7 @@ fax.vip_visit_result.remarks.very_bad[3] = "Estou horrorizado. Chama a isto de h
 fax.vip_visit_result.remarks.bad[1] = "Por que me zanguei? Foi pior que ir ver uma ópera de quatro horas!"
 fax.vip_visit_result.remarks.bad[2] = "Estou aborrecido pelo que vi. Chama a isto um hospital? Mais parece uma pocilga!"
 fax.vip_visit_result.remarks.bad[3] = "Estou farto de atrair a atençäo pública e de visitar buracos fedorentos como este! Demito-me."
-fax.vip_visit_result.remarks.good[1] = "Que hospital bem dirigido! Obrigado pelo seu convite."
+fax.vip_visit_result.remarks.good[1] = "Que hospital bem administrado! Obrigado pelo seu convite."
 fax.vip_visit_result.remarks.good[2] = "Mmmm. Certamente näo é uma má instituiçäo médica."
 fax.vip_visit_result.remarks.good[3] = "Gostei do seu estupendo hospital. Agora, alguém quer um curry da Casa do Curry?"
 fax.vip_visit_result.cash_grant = "Você ganhou um prêmio em dinheiro de $%d."
@@ -1289,7 +1492,6 @@ staff_descriptions.bad[10] = "Pessoa desleal e rancorosa. Cheia de ódio. "
 staff_descriptions.bad[11] = "Näo toma cuidado e provoca acidentes. "
 staff_descriptions.bad[12] = "Näo se importa com o trabalho. Perde tempo. "
 staff_descriptions.bad[13] = "Pessoa temerária e sem cuidado. "
-staff_descriptions.bad[14] = "Pessoa ardilosa, matreira e subversiva. "
 staff_descriptions.bad[15] = "Pessoa arrogante e presunçosa. "
 staff_descriptions.misc[1] = "Joga golfe. "
 staff_descriptions.misc[2] = "Pratica mergulho. "
@@ -1301,7 +1503,6 @@ staff_descriptions.misc[7] = "Coleciona latas de cerveja. "
 staff_descriptions.misc[8] = "Gosta de mergulhar no público em shows. "
 staff_descriptions.misc[9] = "Gosta de fazer surf. "
 staff_descriptions.misc[10] = "Pratica raffiting. "
-staff_descriptions.misc[11] = "Destila uísque. "
 staff_descriptions.misc[12] = "Especialista em 'faça você mesmo'. "
 staff_descriptions.misc[13] = "Gosta do cinema francês. "
 staff_descriptions.misc[14] = "Joga muito Theme Park. "
@@ -1437,7 +1638,6 @@ level_names[13] = "Vila Amistosa"
 level_names[14] = "Vila Pancadaria"
 level_names[15] = "Vila Sepultura"
 pay_rise.definite_quit = "Faça o que fizer, näo ficarei. Estou farto deste local."
-pay_rise.regular[1] = "Estou esgotado. Preciso de umas boas férias, mais um aumento de %d, se näo quiser deixo este maldito emprego."
 pay_rise.regular[2] = "Estou muito cansado. Preciso de umas férias e de um aumento salarial de %d, até um total de %d. E quero já, seu tirano!"
 pay_rise.regular[3] = "Vamos! Trabalho como um escravo. Se me der um bônus de %d, ficarei no seu hospital."
 pay_rise.regular[4] = "Estou muito descontente. Exijo um aumento de %d, e um salário final de %d, caso contrário, vou embora."
@@ -1734,7 +1934,7 @@ competitor_names[21] = "JOSHUA"
 competitor_names[22] = "DANEEL"
 competitor_names[23] = "OLIVAW"
 competitor_names[24] = "NIC"
-staff_class.handyman = "Faz-tudo"
+staff_class.handyman = "Zelador"
 staff_class.nurse = "Enfermeira"
 staff_class.surgeon = "Cirurgiäo"
 staff_class.receptionist = "Recepcionista"
@@ -1755,7 +1955,7 @@ menu_debug.lose_game_anim[5] = "  PERDER JOGO 5 ANIM        "
 menu_debug.lose_game_anim[6] = "  PERDER JOGO 6 ANIM        "
 menu_debug.lose_game_anim[7] = "  PERDER JOGO 7 ANIM        "
 menu_debug.show_help_hotspot = "  MOSTRAR AJUDAS               "
-menu_debug.porter_pagers = "  PAGINADORES DE FAZ-TUDO      "
+menu_debug.porter_pagers = "  PAGINADORES DE ZELADOR      "
 menu_debug.mapwho_checking = "  VERIFICAR LOCALIZAÇAO       "
 menu_debug.machine_pagers = "  PAGINADORES DE MAQUINA       "
 menu_debug.keep_clear_cells = "  CONSERVAR AS CELAS LIMPAS "
@@ -1790,10 +1990,10 @@ trophy_room.cleanliness.regional_bad[1] = "O seu hospital é o mais sujo da regi
 trophy_room.happy_vips.trophies[1] = "Ganhou o Prêmio Nobel de VIP Exemplares. Todos os que visitaram o seu hospital no ano passado o elogiaram muito."
 trophy_room.happy_vips.trophies[2] = "A Agência de Pessoas Famosas deseja-lhe conceder o Prêmio à Celebridade por ter agradado a todos os VIP que visitaram o seu hospital."
 trophy_room.happy_vips.trophies[3] = "Ganhou a VIAGEM VIP por melhorar a imagem dos trabalhadores aos olhos de todos os que visitaram o seu hospital. Estupendo!"
-trophy_room.gen_repairs.awards[1] = "Foi-lhe concedido um prêmio especial pela diligência dos seus faz-tudo na hora de manter as máquinas do seu hospital em bom estado. Muito bem. Tire umas férias."
-trophy_room.gen_repairs.awards[2] = "Os seus faz-tudo trabalharam melhor que os de qualquer outro hospital. Este é um importante acontecimento de felicidade."
-trophy_room.gen_repairs.awards[3] = "As suas máquinas estäo em um magnífico estado. A dedicaçäo dos seus faz-tudo foi extraordinária. Merecem este prestigioso prêmio. Um trabalho estupendo!"
-trophy_room.gen_repairs.penalty[1] = "Os seus faz-tudo näo cuidaram bem das suas máquinas. Deveria fiscalizá-los melhor ou contratar mais para que façam o trabalho melhor."
+trophy_room.gen_repairs.awards[1] = "Foi-lhe concedido um prêmio especial pela diligência dos seus zeladores na hora de manter as máquinas do seu hospital em bom estado. Muito bem. Tire umas férias."
+trophy_room.gen_repairs.awards[2] = "Os seus zeladores trabalharam melhor que os de qualquer outro hospital. Este é um importante acontecimento de felicidade."
+trophy_room.gen_repairs.awards[3] = "As suas máquinas estäo em um magnífico estado. A dedicaçäo dos seus zeladores foi extraordinária. Merecem este prestigioso prêmio. Um trabalho estupendo!"
+trophy_room.gen_repairs.penalty[1] = "Os seus zeladores näo cuidaram bem das suas máquinas. Deveria fiscalizá-los melhor ou contratar mais para que façam o trabalho melhor."
 trophy_room.gen_repairs.penalty[2] = "Näo fez uma boa manutençäo. Os seus funcionários deveriam cuidar melhor dos seus equipamentos."
 trophy_room.many_cured.penalty[1] = "O seu hospital näo cura com eficácia os pacientes que o necessitam. Tenha mais atençäo às curas para que sejam mais eficazes."
 trophy_room.many_cured.penalty[2] = "O seu hospital é o menos eficaz na hora de curar pacientes. Decepcionou o Ministério e defraudou a si mesmo. Näo diremos mais."
@@ -2002,7 +2202,7 @@ tooltip.buy_objects_window.decrease = "Comprar menos um objeto"
 tooltip.buy_objects_window.total_value = "Custo total dos objetos solicitados"
 tooltip.machine_window.status = "Estado das máquinas."
 tooltip.machine_window.close = "Cancelar caixa de diálogo"
-tooltip.machine_window.repair = "Mandar o faz-tudo reparar as máquinas."
+tooltip.machine_window.repair = "Mandar o zelador reparar as máquinas."
 tooltip.machine_window.name = "Nome"
 tooltip.machine_window.times_used = "Número de vezes que reparou as máquinas."
 tooltip.machine_window.replace = "Substituir máquinas"
@@ -2088,7 +2288,7 @@ tooltip.staff_list.nurses = "Ver a lista das enfermeiras contratadas neste hospi
 tooltip.staff_list.skills = "Outras qualificaçöes"
 tooltip.staff_list.detail = "Cuidar os detalhes"
 tooltip.staff_list.doctors = "Ver a lista dos médicos contratados neste hospital"
-tooltip.staff_list.handymen = "Ver a lista dos faz-tudo contratados neste hospital"
+tooltip.staff_list.handymen = "Ver a lista dos zeladores contratados neste hospital"
 tooltip.staff_list.researcher = "Pesquisador qualificado"
 tooltip.staff_list.psychiatrist_train = "Formado um %d%% para ser Psiquiatra"
 tooltip.place_objects_window.confirm = "Confirmar"
@@ -2222,20 +2422,20 @@ tooltip.hire_staff_window.salary = "Salário"
 tooltip.hire_staff_window.staff_ability = "Qualificaçäo dos funcionários"
 tooltip.hire_staff_window.doctors = "Ver os médicos que pode contratar"
 tooltip.hire_staff_window.next_person = "Ver pessoa seguinte"
-tooltip.hire_staff_window.handymen = "Ver os faz-tudo que pode contratar"
-tooltip.handyman_window.center_view = "Enfocar o faz-tudo"
+tooltip.hire_staff_window.handymen = "Ver os zeladores que pode contratar"
+tooltip.handyman_window.center_view = "Enfocar o zelador"
 tooltip.handyman_window.close = "Cancelar caixa de diálogo"
 tooltip.handyman_window.sack = "Despedir"
-tooltip.handyman_window.name = "Nome do faz-tudo"
+tooltip.handyman_window.name = "Nome do zelador"
 tooltip.handyman_window.pick_up = "Apanhar"
-tooltip.handyman_window.prio_litter = "Aumentar a prioridade do faz-tudo para a limpeza"
+tooltip.handyman_window.prio_litter = "Aumentar a prioridade do zelador para a limpeza"
 tooltip.handyman_window.ability = "Qualificaçäo"
-tooltip.handyman_window.prio_machines = "Aumentar a prioridade do faz-tudo para reparar as máquinas"
+tooltip.handyman_window.prio_machines = "Aumentar a prioridade do zelador para reparar as máquinas"
 tooltip.handyman_window.salary = "Salário"
-tooltip.handyman_window.face = "Face do faz-tudo"
+tooltip.handyman_window.face = "Face do zelador"
 tooltip.handyman_window.happiness = "Satisfaçäo"
 tooltip.handyman_window.tiredness = "Cansaço"
-tooltip.handyman_window.prio_plants = "Aumentar a prioridade do faz-tudo para regar as plantas"
+tooltip.handyman_window.prio_plants = "Aumentar a prioridade do zelador para regar as plantas"
 tooltip.window_general.cancel = "Cancelar"
 tooltip.window_general.confirm = "Confirmar"
 adviser.earthquake.ended = "Nossa! Acreditei que ia ser o pior de todos! Alcançou um %d na Escala Richter."
@@ -2256,7 +2456,7 @@ adviser.epidemic.hurry_up = "Se näo acabar em seguida com esta epidemia, terá 
 adviser.epidemic.multiple_epidemies = "Parece que tem mais de uma epidemia de uma vez. Isto poderia ser desastroso, sendo assim faz algo rapidamente."
 adviser.epidemic.serious_warning = "Esta doença contagiosa começa a ser grave. Tem que fazer algo brevemente!"
 adviser.warnings.patients_unhappy = "Os pacientes näo gostam do seu hospital. Deveria fazer algo para melhorá-lo."
-adviser.warnings.too_much_litter = "Há um problema de limpeza. Mais faz-tudo é a soluçäo."
+adviser.warnings.too_much_litter = "Há um problema de limpeza. Mais zeladores é a soluçäo."
 adviser.warnings.patients_very_thirsty = "Os pacientes têm muita sede. Se näo colocar logo algumas máquinas de bebidas, as pessoas iräo embora do seu hospital para tomar algum refresco."
 adviser.warnings.queue_too_long_at_reception = "Tem muitos pacientes à espera de reservas para as consultas na recepçäo. Coloque outra Recepçäo e contrate outra Recepcionista."
 adviser.warnings.patients_thirsty = "As pessoas começam a ter sede. Talvez deveria colocar máquinas de bebidas."
@@ -2267,10 +2467,10 @@ adviser.warnings.machines_falling_apart = "Suas máquinas estäo caindo aos peda
 adviser.warnings.financial_trouble3 = "O seu saldo tem um aspecto preocupante. Faça algo de efetivo. Está a %d do desastre."
 adviser.warnings.nurses_tired2 = "As suas enfermeiras estäo muito cansadas. Faça descansá-las agora mesmo."
 adviser.warnings.people_have_to_stand = "Há pacientes de pé. Faça-os sentar já!"
-adviser.warnings.handymen_tired = "Os seus faz-tudo estäo muito cansados. Mande-os descansar agora mesmo."
-adviser.warnings.change_priorities_to_plants = "Tem que alterar as prioridades dos seus faz-tudo para que empreguem mais tempo regando as suas plantas."
+adviser.warnings.handymen_tired = "Os seus zeladores estäo muito cansados. Mande-os descansar agora mesmo."
+adviser.warnings.change_priorities_to_plants = "Tem que alterar as prioridades dos seus zeladores para que empreguem mais tempo regando as suas plantas."
 adviser.warnings.staff_tired = "Os seus funcionários estäo incrivelmente cansados. Se näo os deixa descansar um momento em uma Sala de Descanso, alguns poderäo cair de esgotamento."
-adviser.warnings.some_litter = "Os faz-tudo podem recolher tudo este lixo antes de que se converta em um grave problema."
+adviser.warnings.some_litter = "Os zeladores podem recolher todo este lixo antes de que se converta em um grave problema."
 adviser.warnings.cash_low_consider_loan = "As suas finanças andam mal. Já pensou em um empréstimo?"
 adviser.warnings.reduce_staff_rest_threshold = "Tente alterar o Tempo de Descanso dos funcionários no tela de Normas para que possam descansar mais frequentemente. É só uma sugestäo."
 adviser.warnings.build_staffroom = "Construa uma Sala de Descanso o mais rápido possível. Os seus funcionários trabalham muito e estäo à beira do colapso. Vamos, seja razoável!"
@@ -2294,8 +2494,8 @@ adviser.warnings.money_very_low_take_loan = "O seu saldo bancário é muito baix
 adviser.warnings.finanical_trouble2 = "Consiga algum crédito ou estará acabado. Perderá o nível se perder outros %d."
 adviser.warnings.patients_very_cold = "Os pacientes têm muito frio. Suba o aquecimento ou coloque mais radiadores no seu hospital."
 adviser.warnings.deal_with_epidemic_now = "Se näo acabar em seguida com esta epidemia, terá muitos problemas. Despacha-se!"
-adviser.warnings.litter_catastrophy = "O problema da falta de limpeza é grave. Coloque vários faz-tudo para trabalhar agora mesmo!"
-adviser.warnings.litter_everywhere = "Há sujeira por toda parte. Coloque mais faz-tudo para trabalhar."
+adviser.warnings.litter_catastrophy = "O problema da falta de limpeza é grave. Coloque vários zeladores para trabalhar agora mesmo!"
+adviser.warnings.litter_everywhere = "Há sujeira por toda parte. Coloque mais zeladores para trabalhar."
 adviser.warnings.machinery_slightly_damaged = "A maquinaria do seu hospital está um pouco danificada. Näo se esqueça de as reparar."
 adviser.warnings.patients_getting_hot = "Os pacientes têm muito calor. Baixe o aquecimento ou retire alguns radiadores."
 adviser.warnings.no_patients_last_month = "No último mês, näo vieram novos pacientes ao seu hospital. Horrível!"
@@ -2319,27 +2519,27 @@ adviser.warnings.more_benches = "Poderia colocar mais bancos. Os doentes protest
 adviser.warnings.bankruptcy_imminent = "Ei! Vai ficar sem máquinas. Tome cuidado!"
 adviser.warnings.need_toilets = "Os pacientes precisam de banheiros. Coloque-os em um lugar acessível."
 adviser.warnings.more_toilets = "Você precisa de mais banheiros. As pessoas näo aguentam mais."
-adviser.warnings.plants_dying = "As suas plantas estäo secando. Precisam de água. Consiga mais faz-tudo para que cuidem disso. Os pacientes näo gostam das plantas mortas."
+adviser.warnings.plants_dying = "As suas plantas estäo secando. Precisam de água. Consiga mais zeladores para que cuidem disso. Os pacientes näo gostam das plantas mortas."
 adviser.warnings.people_did_it_on_the_floor = "Alguns dos seus pacientes näo podem aguentar mais. Alguém vai ter que limpar sem descanso."
 adviser.warnings.need_staffroom = "Construa uma sala de descanso para que os seus empregados possam descansar."
 adviser.warnings.plants_thirsty = "Precisa cuidar das suas plantas. Estäo secando."
 adviser.warnings.too_many_plants = "Tem muitas plantas. Isto parece uma selva."
 adviser.warnings.receptionists_tired2 = "As suas recepcionistas estäo esgotadas. Deixa que descansem agora mesmo."
 adviser.warnings.machine_severely_damaged = "%s está prestes a se quebrar."
-adviser.warnings.machinery_very_damaged = "É uma emergência! Faça com que que um faz-tudo repare as sas máquinas em seguida. Estäo a ponto de explodir!"
+adviser.warnings.machinery_very_damaged = "É uma emergência! Faça com que um zelador repare as suas máquinas em seguida. Estäo a ponto de explodir!"
 adviser.warnings.hospital_is_rubbish = "As pessoas estäo dizendo abertamente que seu hospital é lixo. Já sabe que logo iräo se queixar em outro lugar."
-adviser.warnings.handymen_tired2 = "Os seus faz-tudo estäo cansados. Mande-os descansar imediatamente."
-adviser.warnings.machinery_damaged2 = "Precisa contratar um faz-tudo para reparar as suas máquinas rapidamente."
+adviser.warnings.handymen_tired2 = "Os seus zeladores estäo cansados. Mande-os descansar imediatamente."
+adviser.warnings.machinery_damaged2 = "Precisa contratar um zelador para reparar as suas máquinas rapidamente."
 adviser.warnings.staff_very_cold = "O pessoal reclama do frio. Suba o aquecimento ou coloque mais radiadores."
-adviser.warnings.desperate_need_for_watering = "Necessita desesperadamente contratar um faz-tudo para que cuide das suas plantas."
+adviser.warnings.desperate_need_for_watering = "Necessita desesperadamente contratar um zelador para que cuide das suas plantas."
 adviser.warnings.staff_unhappy2 = "Os seus funcionários, no geral, estäo descontentes. Logo, pediräo mais dinheiro."
 adviser.staff_advice.too_many_nurses = "Está contratando muitas enfermeiras."
-adviser.staff_advice.need_handyman_litter = "Os pacientes estäo sujando o seu hospital. Contrate uma faz-tudo para se encarregar da limpeza."
+adviser.staff_advice.need_handyman_litter = "Os pacientes estäo sujando o seu hospital. Contrate um zelador para se encarregar da limpeza."
 adviser.staff_advice.need_nurses = "Contrate mais enfermeiras. Na enfermaria e na farmácia faltam enfermeiras."
 adviser.staff_advice.need_doctors = "Você precisa de mais médicos. Tente colocar os seus melhores médicos nas consultas com mais pacientes."
 adviser.staff_advice.too_many_doctors = "Tem muitos médicos. Alguns estäo desocupados neste momento."
-adviser.staff_advice.need_handyman_machines = "Terá que contratar um faz-tudo se quiser que as máquinas do seu hospital funcionem."
-adviser.staff_advice.need_handyman_plants = "Contrate um faz-tudo para regar as plantas."
+adviser.staff_advice.need_handyman_machines = "Terá que contratar um zelador se quiser que as máquinas do seu hospital funcionem."
+adviser.staff_advice.need_handyman_plants = "Contrate um zelador para regar as plantas."
 adviser.praise.few_have_to_stand = "Quase ninguém fica de pé no seu hospital. Os seus pacientes estäo contentes."
 adviser.praise.patients_cured = "%d pacientes curados."
 adviser.praise.plants_are_well = "Muito bem. Está cuidando bem das suas plantas. Estupendo."
@@ -2364,7 +2564,7 @@ adviser.research.new_available = "Já pode utilizar um novo %s."
 adviser.research.machine_improved = "O Centro de Pesquisa trouxe melhorias para %s."
 adviser.research.autopsy_discovered_rep_loss = "Foi descoberta uma máquina de autópsias. Aguarde uma reaçäo desfavorável das pessoas."
 adviser.information.emergency = "Há uma emergência! Mexa-se! Mexa-se! Mexa-se!"
-adviser.information.handyman_adjust = "Pode conseguir que o faz-tudo limpe melhor se estabelecer as suas prioridades."
+adviser.information.handyman_adjust = "Pode conseguir com que o zelador limpe melhor se estabelecer as suas prioridades."
 adviser.information.promotion_to_specialist = "Um dos seus Médicos foi promovido para %s."
 adviser.information.pay_rise = "Um funcionário ameaça se demitir. Pode atender a sua petiçäo ou despedi-lo. Clique no último ícone da esquerda para ver quem deseja demitir."
 adviser.information.first_death = "Acabou de matar o seu primeiro paciente. Como se sente?"
@@ -2384,7 +2584,7 @@ adviser.information.initial_general_advice.research_now_available = "Construiu o
 adviser.information.initial_general_advice.autopsy_available = "Foi inventada uma máquina de autópsias. Com ela, poderá se livrar dos pacientes problemáticos e investigar os seus restos. Tome cuidado, o uso desta máquina suscita muita polêmica."
 adviser.information.initial_general_advice.rats_have_arrived = "Os ratos invadiram o seu hospital. Tente eliminá-los com o mouse."
 adviser.information.initial_general_advice.surgeon_symbol = "Os médicos especializados em cirurgia levam o símbolo: {"
-adviser.information.initial_general_advice.machine_needs_repair = "Há uma máquina que precisa ser reparada. Encontre a máquina e aperte sobre ela. Em seguida, aperte no botäo do faz-tudo."
+adviser.information.initial_general_advice.machine_needs_repair = "Há uma máquina que precisa ser reparada. Encontre a máquina e aperte sobre ela. Em seguida, aperte no botäo do zelador."
 adviser.information.initial_general_advice.research_symbol = "Os médicos pesquisadores levam o símbolo: }"
 adviser.information.initial_general_advice.decrease_heating = "As pessoas têm muito calor no seu hospital. Baixe o aquecimento. Isto é feito na tela de mapa da cidade."
 adviser.information.initial_general_advice.taking_your_staff = "Alguém está subornando a sua equipe. Terá que discutir com eles para que fiquem."
@@ -2419,7 +2619,7 @@ adviser.level_progress.cured_enough_patients = "Curou muitos pacientes, mas prec
 adviser.level_progress.financial_criteria_met = "Tem satisfeito o critério financeiro deste nível. Agora mantenha o seu saldo acima de %d, enquanto assegura de que o hospital funcione eficazmente."
 adviser.level_progress.halfway_lost = "Falta 50%% para perder este nível."
 adviser.level_progress.another_patient_killed = "Oh, näo! Matou outro paciente. Agora há um total de %d mortes."
-adviser.vomit_wave.started = "Parece que tem um vírus de vômitos no seu hospital. Isto näo teria acontecido se o tivesse mantido limpo. Talvez devesse contratar um faz-tudo."
+adviser.vomit_wave.started = "Parece que tem um vírus de vômitos no seu hospital. Isto näo teria acontecido se o tivesse mantido limpo. Talvez devesse contratar um zelador."
 adviser.vomit_wave.ended = "Ufa! Parece que o vírus que causou essa epidemia de vômitos está controlado. No futuro, mantenha o seu hospital limpo."
 adviser.placement_info.staff_cannot_place = "Näo pode colocar este funcionário aqui. Desculpe."
 adviser.placement_info.room_cannot_place_2 = "Näo pode colocar a consulta aqui."
@@ -2481,21 +2681,14 @@ adviser.room_requirements.op_need_another_surgeon = "Precisa contratar um outro 
 adviser.room_requirements.gps_office_need_doctor = "Contrate um médico para atender no consultório."
 adviser.room_requirements.ward_need_nurse = "Contrate uma enfermeira para que trabalhe na enfermaria."
 adviser.room_requirements.psychiatry_need_psychiatrist = "Agora que construiu uma sala de psiquiatria, precisará de um psiquiatra."
-introduction_texts.level15 = "Bem, estes säo os mecanismos básicos para pôr em funcionamento um hospital.//Os seus Médicos väo precisar de toda a ajuda que possam obter para diagnosticar alguns dos pacientes. Pode ajudá-los construindo outros equipamentos de diagnóstico como a sala de Diagnóstico Geral."
 introduction_texts.level6 = "Utilize toda a sua capacidade para conseguir um hospital que funcione bem e consiga curar muitos pacientes e que possa tratar qualquer caso que pressentem os doentes.//Está avisado de que o ambiente, aqui, é especialmente propenso a germes e infecçöes. A menos que mantenha uma escrupulosa limpeza na sua instituiçäo, terá que fazer frente a uma série de epidemias entre os pacientes. Procure obter um lucro de $20.000 e fazer o valor do seu hospital superar os $140.000. "
 introduction_texts.level3 = "Desta vez colocará o seu hospital em uma área rica.//O Ministério da Saúde espera que consiga curar muitos pacientes. Terá que ganhar uma boa reputaçäo para começar, mas uma vez que o hospital comece a funcionar, concentre-se em ganhar todo o dinheiro que puder. Também pode haver emergências. Produzem-se quando chega muita gente que sofre da mesma doença. Se os curar dentro de um prazo determinado, conseguirá aumentar a sua reputaçäo e ganhar um grande extra. Haverá doenças, como o complexo de rei, e deverá ter orçamento para construir uma sala de operaçöes e junto a ela, uma enfermaria. Tem que ganhar $20.000 para superar este nível."
-introduction_texts.level12 = "Agora enfrentará o maior dos desafios. Impressionado com os seus lucros, o Ministério tem uma grande tarefa para você; querem que construa outro magnífico hospital, que tenha um excelente lucro e uma reputaçäo incrível. Também querem que compre todo o terreno que puder, cure tudo (e queremos dizer todas as doenças) e ganhe todos os prêmios. Acha que conseguirá? Ganhe $650.000, cure 750 pessoas e consiga uma reputaçäo de 800 para ganhar este nível. "
-introduction_texts.level9 = "Depois de depositar o dinheiro na conta bancária do Ministério e pagar uma nova limousine para o Ministro, agora pode dedicar a criar um bom hospital para cuidar dos doentes e necessitados. Aqui terá um montäo de problemas diferentes. Se os seus funcionários tiverem uma boa formaçäo e suficientes consultas, poderäo resolver qualquer situaçäo. O seu hospital terá que valer $200.000 e precisará ter $400.000 no banco. Se näo o conseguir näo poderá terminar o nível."
-introduction_texts.level11 = "Tem a oportunidade de construir o hospital definitivo. Esta é uma área de enorme prestígio e o Ministério quer que este seja o melhor hospital. Esperamos que ganhe muito dinheiro, alcance uma excelente reputaçäo e que se encarregue de todos os casos que sejam apresentados. Este é um trabalho importante. Terá que ser muito hábil para completá-lo. Também deve ter em conta que foram vistos OVNIs na área. Assegure-se de que os seus funcionários estejam preparados para receber algumas visitas inesperadas. O seu hospital terá que alcançar um valor de $240.000, precisará ter $500.000 no banco e uma reputaçäo de 700."
 introduction_texts.level14 = "Ainda tem mais um desafio: um hospital surpresa totalmente imprevisível. Se conseguir ter êxito, será o vencedor dos vencedores. E näo espere que seja fácil, porque é a tarefa mais difícil que confrontará. Boa sorte!"
-introduction_texts.level10 = "Além de dever curar todas as doenças que possa haver, o Ministério pede que empregue um pouco de tempo em aumentar a eficácia dos seus remédios.//Houve algumas queixas por parte do D. Salutíssimo, o Cachorro Guardiäo da Saúde, assim deve procurar com que todos os seus remédios sejam extremamente eficazes para ficar bem. Também, assegure-se de que o seu hospital tenha uma reputaçäo irrepreensível. Procure deixar morrer poucos pacientes. Como sugestäo, deveria deixar espaço para um banho gelatinoso. Para ganhar, os seus remédios deveräo ter uma eficácia de, pelo menos, 80%, tem que conseguir uma reputaçäo de 650 e guardar $500.000 no banco."
 introduction_texts.level5 = "Este será um hospital concorrido, que tratará casos muito variados.//Os seus médicos acabam de sair da faculdade, por isso é fundamental que construa uma sala de formaçäo para que alcancem o nível de formaçäo necessário. Só tem três especialistas para ensinar os seus funcionários inexperientes, entäo faça com que estejam contentes. Tem que ter em conta que o hospital está localizado em cima da falha geológica de San Android. Sempre há risco de terremoto. Os terremotos provocaräo danos importantes nas suas máquinas e alteraräo o bom funcionamento do seu hospital. Aumente a sua reputaçäo até 400 e consiga ganhos de $50.000 para triunfar. Também, cure 200 pacientes. "
 introduction_texts.level1 = "Bem-vindo ao seu primeiro hospital!//Para fazê-lo funcionar, coloque uma Recepçäo, construa um Consultório e contrate uma recepcionista e um médico. Em seguida, espere que cheguem os pacientes. Seria uma boa ideia construir uma consulta de psiquiatria e contratar um psiquiatra. Uma farmácia e uma enfermeira säo fundamentais para curar os seus pacientes. Cuidado com os casos malignos de cabeça inflada; eles säo solucionados na sala de inflatoterapia. Terá que curar 10 pessoas e assegurar de que a sua reputaçäo näo seja inferior a 200."
-introduction_texts.level17 = "Um último aviso. Fique de olho na sua Reputaçäo, é o que atrairá pacientes ao seu estabelecimento. Se näo matar muitas pessoas e os mantiver razoavelmente felizes näo deverá ter muitos problemas com este nível!//Agora é com você, boa sorte."
 introduction_texts.level7 = "Aqui, estará sob a estrita vigilância do Ministério da Saúde, entäo faça com que suas contas reflitam excelentes lucros e aumente a sua reputaçäo.//Näo podemos permitir que haja mortes desnecessárias; Näo beneficiam nada o negócio. Certifique-se de que os seus funcionários estejam em plena forma e de ter todos os equipamentos necessários. Obtenha uma reputaçäo de 600, e um saldo bancário de $200.000."
 introduction_texts.level4 = "Mantenha seus pacientes felizes e trate-os com a maior eficácia possível, reduzindo ao máximo o número de óbitos.//A sua reputaçäo está em jogo, portanto procure aumentá-la o máximo que puder. Näo se preocupe muito com dinheiro, pois você o ganhará mais rápido à medida em que sua reputaçäo cresce. A partir de agora, você poderá formar os seus médicos ampliando seus conhecimentos, permitindo-os curar os pacientes com enfermidades mais difíceis. Alcance uma reputaçäo acima de 500."
 introduction_texts.level18 = ""
-introduction_texts.level16 = "Uma vez que tenha diagnosticado algum dos pacientes, precisará construir salas de tratamento e clínicas para curá-los. Pode começar com uma Farmácia, onde precisará de uma Enfermeira que distribua os remédios."
 introduction_texts.level13 = "A sua incrível habilidade como diretor do hospital atraiu a atençäo da Divisäo Secreta Especial do Serviço Secreto Especial. Tenho um trabalho especial para você. Há um hospital infestado de ratos que precisa de um exterminador eficiente. Você deve matar todos os ratos que puder antes de que o pessoal de Manutençäo limpe toda a sujeira. Acha que é apto para esta missäo?"
 introduction_texts.level8 = "Só depende de você construir o hospital mais rentável e eficiente possível.//As pessoas por aqui, säo bastante ricas, entäo tente arrecadar o máximo possível. Lembre-se que curar as pessoas é uma coisa muito bonita, mas o que PRECISAMOS de verdade é do dinheiro delas. Arranque todo o dinheiro destes doentes. Acumule a enorme quantia de $300.000 para completar este nível. "
 humanoid_name_starts[1] = "GOLD"
@@ -2599,10 +2792,10 @@ room_descriptions.cardiogram[2] = "Aqui é diagnosticado e examinado os paciente
 room_descriptions.cardiogram[3] = "A sala de cardiologia requer um médico. Também precisa de manutençäo. "
 room_descriptions.decontamination[1] = "Descontaminaçäo//"
 room_descriptions.decontamination[2] = "Os pacientes que estiveram expostos à radiaçäo säo enviados rapidamente à consulta de descontaminaçäo. Esta consulta dispöe de uma ducha que os purifica de toda a horrível radioatividade e sujeira.//"
-room_descriptions.decontamination[3] = "A ducha descontaminadora requer um médico. Também precisa de um faz-tudo que se ocupe da sua manutençäo. "
+room_descriptions.decontamination[3] = "A ducha descontaminadora requer um médico. Também precisa de um zelador que se ocupe da sua manutençäo. "
 room_descriptions.jelly_vat[1] = "Banho Gelatinoso//"
 room_descriptions.jelly_vat[2] = "Os pacientes que sofrem da risível doença da gelatinitis devem ir a cambalear-se para a consulta de gelatinitis e ser inundados no banheiro gelatinoso. Isto faz com que se curem de um modo que näo resulta de tudo compreensível para a profissäo médica.//"
-room_descriptions.jelly_vat[3] = "O banho gelatinoso requer um médico. Também precisa de uma faz-tudo para a sua manutençäo. "
+room_descriptions.jelly_vat[3] = "O banho gelatinoso requer um médico. Também precisa de um zelador para a sua manutençäo. "
 room_descriptions.gp[1] = "Sala de Consultório Geral//"
 room_descriptions.gp[2] = "Esta é a consulta mais importante do seu hospital. Os novos pacientes säo enviados aqui para averiguar o que é que eles têm. Entäo, ou fazem outro diagnóstico ou mandam para uma consulta onde possam ser curados. Possivelmente queira construir outro consultório se o primeiro tiver muito trabalho. Quanto maior for o consultório e quanto mais objetos colocar nele, maior prestígio terá o médico. O mesmo acontece com todas as consultas abertas.//"
 room_descriptions.gp[3] = "O consultório geral requer um médico. "
@@ -2611,7 +2804,7 @@ room_descriptions.hair_restoration[2] = "Os pacientes que sofrem de calvície se
 room_descriptions.hair_restoration[3] = "A consulta de peloterapia requer um médico. Também precisa de manutençäo periódica. "
 room_descriptions.inflation[1] = "Inflatoterapia//"
 room_descriptions.inflation[2] = "Os pacientes que sofrem a dolorosa doença de terem a cabeça inflada devem ir à sala de inflatoterapia, será desinflada sua cabeça e em seguida vota a ser inflada à pressäo correta.//"
-room_descriptions.inflation[3] = "A Inflatoterapia requer um médico. Também precisa de um faz-tudo que se ocupe do seu bom funcionamento. "
+room_descriptions.inflation[3] = "A Inflatoterapia requer um médico. Também precisa de um zelador que se ocupe do seu bom funcionamento. "
 room_descriptions.psych[1] = "Sala de Psiquiatria//"
 room_descriptions.psych[2] = "Os pacientes que säo diagnosticados com uma doença psiquiátrica têm que ir a uma consulta de psiquiatria para receber o tratamento. Os psiquiatras também podem realizar diagnósticos para saber que tipo de doença que sofrem os pacientes, e se estas säo do tipo mental, podem tratá-los deitando-os no divä.//"
 room_descriptions.psych[3] = "A sala de psiquiatria requer um médico especializado em psiquiatria. "
@@ -2630,7 +2823,7 @@ room_descriptions.slack_tongue[2] = "Os pacientes que sejam diagnosticados com l
 room_descriptions.slack_tongue[3] = "A sala de laringologia requer um médico. Também precisa de uma manutençäo muito frequente. "
 room_descriptions.dna_fixer[1] = "Genética//"
 room_descriptions.dna_fixer[2] = "Os pacientes que foram manipulados por alienígenas, devem ter seu DNA substituído nesta sala. O reparador de DNA é uma máquina complexa e seria sensato ter um extintor na sala, só por garantia.//"
-room_descriptions.dna_fixer[3] = "O reparador de DNA requer que um faz-tudo o revise de vez em quando. Também requer um médico especializado em pesquisa para poder usá-lo. "
+room_descriptions.dna_fixer[3] = "O reparador de DNA requer que um zelador o revise de vez em quando. Também requer um médico especializado em pesquisa para poder usá-lo. "
 room_descriptions.training[1] = "Sala de Formaçäo//"
 room_descriptions.training[2] = "Os seus residentes e médicos podem obter uma valiosa qualificaçäo extra aprendendo nesta sala. Um especialista em cirurgia, pesquisa ou psiquiatria ensinará a sua especialidade aos médicos que recebem formaçäo. Os médicos que já possuem estas especialidades veräo a sua habilidade aumentar enquanto estäo aqui.//"
 room_descriptions.training[3] = "A sala de formaçäo requer um especialista. "
@@ -2653,7 +2846,7 @@ room_descriptions.scanner[2] = "É diagnosticado com precisäo os pacientes empr
 room_descriptions.scanner[3] = "O scanner requer um médico. Também precisa de manutençäo. "
 room_descriptions.electrolysis[1] = "Eletrólise//"
 room_descriptions.electrolysis[2] = "Os pacientes com peludismo säo enviados para esta consulta, onde uma máquina especial de eletrólise elimina os pelos e fecha os poros com eletricidade empregando um composto parecido ao cal.//"
-room_descriptions.electrolysis[3] = "A sala de eletrólise requer um médico. Também precisa que um faz-tudo faça a sua manutençäo. "
+room_descriptions.electrolysis[3] = "A sala de eletrólise requer um médico. Também precisa que um zelador faça a sua manutençäo. "
 staff_list.skill = "NIVEL"
 staff_list.morale = "MORAL"
 staff_list.tiredness = "CANSAÇO"
@@ -2666,4 +2859,3 @@ menu_file_load[5] = "  JOGO 5 "
 menu_file_load[6] = "  JOGO 6 "
 menu_file_load[7] = "  JOGO 7 "
 menu_file_load[8] = "  JOGO 8 "
-
