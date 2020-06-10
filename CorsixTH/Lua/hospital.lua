@@ -1299,13 +1299,6 @@ function Hospital:resolveEmergency()
     self:changeReputation("emergency_failed", emer.disease)
   end
 
-  --check if there's a VIP in the building, and if there is then let him know the outcome
-  for _, e in ipairs(self.world.entities) do
-    if class.is(e, Vip) then
-      e:evaluateEmergency(emergency_success)
-    end
-  end
-
   self.world:nextEmergency()
 end
 
@@ -1730,7 +1723,8 @@ function Hospital:hasStaffOfCategory(category)
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or
           (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
-          (category == "Consultant" and staff.profile.is_consultant) then
+          (category == "Consultant" and staff.profile.is_consultant) or
+          (category == "Junior" and staff.profile.is_junior) then
         result = (result or 0) + 1
       end
     end
@@ -1948,16 +1942,17 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
   local sum = 0
   local count = 0
   for _, staff in ipairs(self.staff) do
-    if staff.attributes[attributes] ~= nil then
-      sum = sum + staff.attributes[attribute]
-      count = count + 1
-    end
+    if staff.attributes[attribute] then
+    sum = sum + staff.attributes[attribute]
+    count = count + 1
+      end
   end
 
   if count == 0 then
     return default_value
   else
     return sum / count
+
   end
 end
 

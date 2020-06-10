@@ -148,7 +148,7 @@ function Vip:getNextRoom()
   else
     local roll_to_visit = math.random(0,1)
     print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
-    while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not   self.next_room.room_info.vip_must_visit do
+    while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not self.next_room.room_info.vip_must_visit do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       if self.next_room == nil then
         print("Finished all rooms. Exiting...")
@@ -471,14 +471,15 @@ function Vip:setVIPRating()
 --[[--Group factor 5: Rooms--]]
 -- Get number of rooms
   local count_rooms = 0
-  for _, room in ipairs(self.world.rooms) do
+  for _, room in pairs(self.world.rooms) do
     if not room.crashed then
       count_rooms = count_rooms + 1
     end
   end
+  print("counted rooms " .. count_rooms)
 -- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
   if count_rooms < 1 then
-  self.vip_rating = self.vip_rating + 4
+    self.vip_rating = self.vip_rating + 4
   else 
     if count_rooms < 3 then
       self.vip_rating = self.vip_rating + 1
@@ -590,7 +591,7 @@ function Vip:afterLoad(old, new)
     end
     print("Warning! My VIP rating was reset")
     for i, action in ipairs(self.action_queue) do
-       if action.name == 'idle' and action.loop_callback and (self.waiting > 1 or i > 1) then
+      if action.name == 'idle' and action.loop_callback and (self.waiting > 1 or i > 1) then
         action:setCount(50):setAfterUse(action.loop_callback)
         action.loop_callback = nil
         self.waiting = nil
