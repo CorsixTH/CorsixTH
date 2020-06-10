@@ -46,7 +46,7 @@ SOFTWARE. --]]
 | 5. ROOMS                                                                           |
 |  - a. If there are no active rooms, award +4                                       |
 |  - b. If rooms not crashed (exploded) <3, award +1                                 |
-|  - c. Get average room decoration score, award based on decoration level           | 
+|  - c. Get average room decoration score, award based on decoration level           |
 --------------------------------------------------------------------------------------
 General TODO:
 -Rebalancing
@@ -103,7 +103,7 @@ function Vip:tickDay()
       self.waiting = nil
     end
   end
-  
+
   self.world:findObjectNear(self, "litter", 8, function(x, y)
     local litter = self.world:getObject(x, y, "litter")
     if not litter then
@@ -361,7 +361,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + 1
     end
     print("I have assessed patient health. My rating is now" .. self.vip_rating)
-    
+
     -- do patient warmth
     local avg_warmth = self.hospital:getAveragePatientAttribute("warmth", nil)
     -- punish if too cold/hot
@@ -375,7 +375,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
       print("I have assessed patient warmth. My rating is now " .. self.vip_rating .. " points")
     end
-    
+
     -- check average patient happiness
     local avg_happiness = self.hospital:getAveragePatientAttribute("happiness", nil)
     if avg_happiness then
@@ -390,7 +390,7 @@ function Vip:setVIPRating()
     end
     print("I have assessed patient happiness. My rating is now " .. self.vip_rating .. " points")
     print("num visitors " .. self.hospital.num_visitors .. " enter visitors " .. self.enter_visitors .. " diff " .. visitors_diff)
-    
+
     --check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
     print("num deaths " .. self.hospital.num_deaths .. " enter deaths " .. self.enter_deaths)
@@ -406,7 +406,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
     end
     print("I have assessed deaths. My rating is now " .. self.vip_rating .. " points")
-    
+
     --check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
     print("num cures " .. self.hospital.num_cured .. " enter cures " .. self.enter_cures)
@@ -423,7 +423,7 @@ function Vip:setVIPRating()
     else
       self.vip_rating = self.vip_rating + 3
     end
-  
+
     -- check the seating : standing ratio of waiting patients
     -- find all the patients who are currently waiting around
     local sum_sitting, sum_standing = self.hospital:countSittingStanding()
@@ -438,7 +438,7 @@ function Vip:setVIPRating()
   else
     print("There were no patients. Why am I here???")
   end
-    
+
 --[[--Group factor 4: Doctor ratios--]]
 -- First get all doctors
   local num_docs = self.hospital:hasStaffOfCategory("Doctor")
@@ -480,7 +480,7 @@ function Vip:setVIPRating()
 -- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
   if count_rooms < 1 then
     self.vip_rating = self.vip_rating + 4
-  else 
+  else
     if count_rooms < 3 then
       self.vip_rating = self.vip_rating + 1
     end
