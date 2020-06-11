@@ -1,4 +1,4 @@
-CorsixTH is free software, distributed under the following terms:
+﻿CorsixTH is free software, distributed under the following terms:
 
 Copyright (C) 2009-2016 Peter "Corsix" Cawley
 Copyright (C) 2009-2016 Edvin "Lego3" Linge,
