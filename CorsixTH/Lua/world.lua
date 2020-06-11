@@ -551,7 +551,16 @@ function World:spawnVIP(name)
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
   vip.enter_patients = #hospital.patients
-  vip.enter_explosions = hospital.num_explosions
+  if #self.rooms > 79 then
+    local roll_ratio = #self.rooms / 40
+    local roll_ratio_rangemap = {
+      {upper = 3, value = 2},
+      {upper = 4, value = 3},
+      {upper = 5, value = 4},
+      {value = 5}
+    }
+    vip.room_visit_chance = rangeMapLookup(roll_ratio, roll_ratio_rangemap)
+  end
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))

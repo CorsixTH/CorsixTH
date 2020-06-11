@@ -39,6 +39,7 @@ SOFTWARE. --]]
 |  - e. Check if anyone has died during visit, punish based on severity              |
 |  - f. Check how many patients are cured vs. all patients, award based on %         |
 |  - g. Check seating. Award -1 for more seated than standing, else +1               |
+|  - h. Check average queues. Award based on the average length                     `|
 | 4. DOCTORS                                                                         |
 |  - a. If no doctors, award +4 and skip other checks                                |
 |  - b. If more than half doctors are consultants, award -2                          |
@@ -69,7 +70,7 @@ function Vip:Vip(...)
   self.action_string = ""
   self.name=""
   self.announced = false
-    --First we should generate an initial VIP rating
+  --First we should generate an initial VIP rating
   self.vip_rating = 8 - math.floor(math.random(0,5))
   print("My initial rating is " .. self.vip_rating)
 
@@ -85,6 +86,7 @@ function Vip:Vip(...)
   self.found_vomit = {}
   self.num_visited_rooms = 0
   self.room_eval = 0
+  self.room_visit_chance = 1
   self.waiting = 0
 
 end
@@ -96,7 +98,7 @@ function Vip:tickDay()
     self.waiting = self.waiting - 1
     if self.waiting == 0 then
       if #self.world.rooms == 0 then
-  -- No rooms have been built yet
+        -- No rooms have been built yet
         self:goHome()
       end
       self:getNextRoom()
@@ -135,26 +137,26 @@ function Vip:tickDay()
 end
 
 function Vip:getNextRoom()
-      -- First let the previous room go.
-      -- Include this when the VIP is supposed to block doors again.
-      --[[if self.next_room then
+  -- First let the previous room go.
+  -- Include this when the VIP is supposed to block doors again.
+  --[[if self.next_room then
         self.next_room.door.reserved_for = nil
         self.next_room:tryAdvanceQueue()
       end--]]
-      -- Find out which next room to visit.
+  -- Find out which next room to visit.
   self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
   if self.next_room == nil then
     print("Finished all rooms. Exiting...")
   else
-    local roll_to_visit = math.random(0,1)
+    local roll_to_visit = math.random(0, self.room_visit_chance)
     print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
-    while self.num_visited_rooms > 0 and roll_to_visit ~= 1 and not self.next_room.room_info.vip_must_visit do
+    while self.num_visited_rooms > 0 and roll_to_visit ~= self.room_visit_chance and not self.next_room.room_info.vip_must_visit do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       if self.next_room == nil then
         print("Finished all rooms. Exiting...")
         break
       end
-      roll_to_visit = math.random(0,1)
+      roll_to_visit = math.random(0, self.room_visit_chance)
       print("Roll failed! My new roll is " .. roll_to_visit)
       print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     end
@@ -202,7 +204,6 @@ function Vip:evaluateRoom()
     end
   end
   -- evaluate the room we're currently looking at
-  --debug adds self.room_extinguisher and self.room_plant
   for object, _ in pairs(room.objects) do
     if object.object_type.id == "extinguisher" then
       --check if 1 extinguisher already found in room
@@ -226,7 +227,7 @@ function Vip:evaluateRoom()
         print("Maximum plants assessed in this room")
       end
     elseif object.object_type.id == "bin" then
-      --check if 1 extinguisher already found in room
+      --check if 1 bin already found in room
       if room_bin == 0 then
         self.room_eval = self.room_eval + 1
         print("Found bin")
@@ -252,9 +253,7 @@ end
 function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
-  --debug
   print("I rate this hospital " .. self.vip_rating .. " penalty points out of 15")
-  --end-debug
   if self.world.free_build_mode then
     self.last_hospital.reputation = self.last_hospital.reputation + 20
     message = {
@@ -310,6 +309,19 @@ function Vip:announce()
 end
 
 function Vip:setVIPRating()
+  -- first do room code for later
+  local count_rooms = 0
+  local sum_queue = 0
+  for _, room in pairs(self.world.rooms) do
+    if not room.crashed then
+      count_rooms = count_rooms + 1
+    end
+    if room.door.queue then
+      sum_queue = sum_queue + room.door.queue:size()
+    end
+  end
+  print("counted rooms " .. count_rooms)
+
 --[[-- Group factor 1: Litter--]]
   if (self.num_vomit_noninducing + self.num_vomit_inducing) <= 10 then
     self.vip_rating = self.vip_rating - 1
@@ -319,23 +331,22 @@ function Vip:setVIPRating()
   print("I have assessed litter. My rating is now " .. self.vip_rating .. " points")
 
 --[[-- Group factor 2: Staff tiredness--]]
-  --First get staff members
+  -- First get staff members
   local count_staff = 0
   for _, staff in ipairs(self.hospital.staff) do
     count_staff = count_staff + 1
   end
---Count number, if only 1 staff member, exit and award 4 points
+-- Penalise where there is one or no staff by +4
   if count_staff > 1 then
-
 -- Loop through staff tiredness, if any above verytired, break loop and award 2 points
     for _, staff in ipairs(self.hospital.staff) do
       print(staff.attributes["fatigue"])
       if staff.attributes["fatigue"] ~= nil then
-          if staff.attributes["fatigue"] >= 0.7 then
-            self.vip_rating = self.vip_rating + 2
-            break --exit when triggered once
-          end
+        if staff.attributes["fatigue"] >= 0.7 then
+          self.vip_rating = self.vip_rating + 2
+          break --exit when triggered once
         end
+      end
     end
 -- Average all staff tiredness. If above tiredness level award 1, else -1
     local avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
@@ -350,7 +361,7 @@ function Vip:setVIPRating()
   end
   print("I have assessed staff tiredness. My rating is now " .. self.vip_rating)
 --[[-- Group factor 3: Patients--]]
-  --first check we had patients this visit
+  -- first check we had patients this visit
   local visitors_diff = self.hospital.num_visitors + self.enter_patients - self.enter_visitors
   if visitors_diff > 0 then
     -- Average all patient health, if below 20% award 1, else -1
@@ -362,7 +373,7 @@ function Vip:setVIPRating()
     end
     print("I have assessed patient health. My rating is now" .. self.vip_rating)
 
-    -- do patient warmth
+    -- get patient warmth
     local avg_warmth = self.hospital:getAveragePatientAttribute("warmth", nil)
     -- punish if too cold/hot
     if avg_warmth then
@@ -389,12 +400,10 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_happiness, patients_happy_ratio_rangemap)
     end
     print("I have assessed patient happiness. My rating is now " .. self.vip_rating .. " points")
-    print("num visitors " .. self.hospital.num_visitors .. " enter visitors " .. self.enter_visitors .. " diff " .. visitors_diff)
 
     --check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
-    print("num deaths " .. self.hospital.num_deaths .. " enter deaths " .. self.enter_deaths)
-    if death_diff ~= 0 then --no deaths are good
+    if death_diff ~= 0 then --no deaths are good, but also expected
       local death_ratio = visitors_diff / death_diff
       local death_ratio_rangemap = {
         {upper = 2, value = 4},
@@ -435,6 +444,21 @@ function Vip:setVIPRating()
       end
     end
     print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
+
+    -- check for the average queue length
+    if sum_queue == 0 then
+      self.vip_rating = self.vip_rating - 1
+    else
+      local queue_ratio = sum_queue / count_rooms
+      local queue_ratio_rangemap = {
+        {upper = 0.5, value = -1},
+        {upper = 1, value = 0},
+        {upper = 1.5, value = 1},
+        {value = 2}
+      }
+      self.vip_rating = self.vip_rating + rangeMapLookup(queue_ratio, queue_ratio_rangemap)
+      print("I have assessed queues, average was" .. queue_ratio)
+    end
   else
     print("There were no patients. Why am I here???")
   end
@@ -442,9 +466,8 @@ function Vip:setVIPRating()
 --[[--Group factor 4: Doctor ratios--]]
 -- First get all doctors
   local num_docs = self.hospital:hasStaffOfCategory("Doctor")
-  --if there's no doctors award +4
+  -- if there's no doctors award +4
   if not num_docs then
-    -- PROBLEM: Does not always add 4 (Lua problem?)
     self.vip_rating = self.vip_rating + 4
   else
 -- Count num. consultants, num. juniors
@@ -457,7 +480,7 @@ function Vip:setVIPRating()
       num_junior = 0
     end
 
--- If num. consultants / all doctors > 50%, award -1
+-- check consultant and junior proportions
     if num_cons / num_docs > 0.5 then
       print("Cons over 50 percent")
       self.vip_rating = self.vip_rating - 1
@@ -469,14 +492,6 @@ function Vip:setVIPRating()
   end
   print("I have assessed doctor numbers. My rating is now" .. self.vip_rating)
 --[[--Group factor 5: Rooms--]]
--- Get number of rooms
-  local count_rooms = 0
-  for _, room in pairs(self.world.rooms) do
-    if not room.crashed then
-      count_rooms = count_rooms + 1
-    end
-  end
-  print("counted rooms " .. count_rooms)
 -- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
   if count_rooms < 1 then
     self.vip_rating = self.vip_rating + 4
@@ -577,6 +592,19 @@ function Vip:afterLoad(old, new)
     --Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
     self.num_visited_rooms = 0
+    print("rooms " .. #self.world.rooms)
+    if #self.world.rooms > 79 then
+      local roll_ratio = #self.world.rooms / 40
+      local roll_ratio_rangemap = {
+      {upper = 3, value = 2},
+      {upper = 4, value = 3},
+      {upper = 5, value = 4},
+      {value = 5}
+      }
+      self.room_visit_chance = rangeMapLookup(roll_ratio, roll_ratio_rangemap)
+    else
+      self.room_visit_chance = 1
+    end
     self.enter_patients = #self.hospital.patients - self.hospital.num_visitors + self.enter_visitors
     if self.enter_patients <0 then
       self.enter_patients = 0
