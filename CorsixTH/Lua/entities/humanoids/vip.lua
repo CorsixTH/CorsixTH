@@ -71,8 +71,7 @@ function Vip:Vip(...)
   self.name=""
   self.announced = false
   --First we should generate an initial VIP rating
-  self.vip_rating = 8 - math.floor(math.random(0,5))
-  print("My initial rating is " .. self.vip_rating)
+  self.vip_rating = 8 - math.random(0,5)
 
   self.cash_reward = 0
   self.rep_reward = 0
@@ -125,10 +124,8 @@ function Vip:tickDay()
     if not alreadyFound then
       if litter:anyLitter() then
         self.num_vomit_noninducing = self.num_vomit_noninducing + 1
-          print("Found a litter")
       else
         self.num_vomit_inducing = self.num_vomit_inducing + 1
-          print("Found a vomit")
       end
     end
   end)
@@ -145,25 +142,18 @@ function Vip:getNextRoom()
       end--]]
   -- Find out which next room to visit.
   self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-  if self.next_room == nil then
-    print("Finished all rooms. Exiting...")
-  else
+  if self.next_room ~= nil then
     local roll_to_visit = math.random(0, self.room_visit_chance)
-    print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     while self.num_visited_rooms > 0 and roll_to_visit ~= self.room_visit_chance and not self.next_room.room_info.vip_must_visit do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
       if self.next_room == nil then
-        print("Finished all rooms. Exiting...")
         break
       end
       roll_to_visit = math.random(0, self.room_visit_chance)
-      print("Roll failed! My new roll is " .. roll_to_visit)
-      print("Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     end
     -- Make sure that this room is active; if not, always visit the next available room
     while self.next_room and not self.next_room.is_active do
       self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-      print("Room not active! Next room: " .. tostring(self.next_room.room_info.id) .. " , Room num: " .. tostring(self.next_room_no))
     end
   end
   self:setNextAction(VipGoToNextRoomAction())
@@ -209,7 +199,6 @@ function Vip:evaluateRoom()
       --check if 1 extinguisher already found in room
       if room_extinguisher == 0 then
         self.room_eval = self.room_eval + 1
-        print("Found fire extinguisher")
         room_extinguisher = 1
       end
     elseif object.object_type.id == "plant" then
@@ -220,23 +209,18 @@ function Vip:evaluateRoom()
         elseif object.days_left <= 3 then
           self.room_eval = self.room_eval - 1
         end
-        print("Found plant")
-        --pevent abuse of rating by placing lots of plants
+        --prevent abuse of rating by placing lots of plants
         room_plant = room_plant + 1
-      else
-        print("Maximum plants assessed in this room")
       end
     elseif object.object_type.id == "bin" then
       --check if 1 bin already found in room
       if room_bin == 0 then
         self.room_eval = self.room_eval + 1
-        print("Found bin")
         room_bin = 1
       end
     end
 
     if object.strength then
-      print("Found object with strength attr")
       if object.strength > (object.object_type.default_strength / 2) then
         self.room_eval = self.room_eval + 1
       else
@@ -244,7 +228,6 @@ function Vip:evaluateRoom()
       end
     end
   end
-  print("After assessing this room, my evaluation of rooms is currently " .. self.room_eval .. " points")
   self:getNextRoom()
 end
 
@@ -253,7 +236,6 @@ end
 function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
-  print("I rate this hospital " .. self.vip_rating .. " penalty points out of 15")
   if self.world.free_build_mode then
     self.last_hospital.reputation = self.last_hospital.reputation + 20
     message = {
@@ -320,7 +302,6 @@ function Vip:setVIPRating()
       sum_queue = sum_queue + room.door.queue:size()
     end
   end
-  print("counted rooms " .. count_rooms)
 
 --[[-- Group factor 1: Litter--]]
   if (self.num_vomit_noninducing + self.num_vomit_inducing) <= 10 then
@@ -328,50 +309,41 @@ function Vip:setVIPRating()
   else
     self.vip_rating = self.vip_rating + 1
   end
-  print("I have assessed litter. My rating is now " .. self.vip_rating .. " points")
 
 --[[-- Group factor 2: Staff tiredness--]]
   -- First get staff members
-  local count_staff = 0
-  for _, staff in ipairs(self.hospital.staff) do
-    count_staff = count_staff + 1
-  end
--- Penalise where there is one or no staff by +4
+  local count_staff = #self.hospital.staff
   if count_staff > 1 then
--- Loop through staff tiredness, if any above verytired, break loop and award 2 points
+    -- Loop through staff tiredness, if any above verytired, break loop
     for _, staff in ipairs(self.hospital.staff) do
-      print(staff.attributes["fatigue"])
-      if staff.attributes["fatigue"] ~= nil then
-        if staff.attributes["fatigue"] >= 0.7 then
-          self.vip_rating = self.vip_rating + 2
-          break --exit when triggered once
-        end
+      if staff.attributes["fatigue"] ~= nil and staff.attributes["fatigue"] >= 0.7 then
+        self.vip_rating = self.vip_rating + 2
+        break
       end
     end
--- Average all staff tiredness. If above tiredness level award 1, else -1
+    -- Average all staff tiredness. If above tiredness level award 1, else -1
     local avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
-    print(avg_tired .. " avg_tired")
     if avg_tired >= 0.5 then
       self.vip_rating = self.vip_rating + 1
     else
       self.vip_rating = self.vip_rating - 1
     end
   else
+    -- Penalise where there is one or no staff
     self.vip_rating = self.vip_rating + 4
   end
-  print("I have assessed staff tiredness. My rating is now " .. self.vip_rating)
+
 --[[-- Group factor 3: Patients--]]
   -- first check we had patients this visit
   local visitors_diff = self.hospital.num_visitors + self.enter_patients - self.enter_visitors
   if visitors_diff > 0 then
-    -- Average all patient health, if below 20% award 1, else -1
+    -- Average all patient health
     local avg_health = self.hospital:getAveragePatientAttribute("health", 0.19)
     if avg_health >= 0.2 then
       self.vip_rating = self.vip_rating - 1
     else
       self.vip_rating = self.vip_rating + 1
     end
-    print("I have assessed patient health. My rating is now" .. self.vip_rating)
 
     -- get patient warmth
     local avg_warmth = self.hospital:getAveragePatientAttribute("warmth", nil)
@@ -384,7 +356,6 @@ function Vip:setVIPRating()
         {value = 2}
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
-      print("I have assessed patient warmth. My rating is now " .. self.vip_rating .. " points")
     end
 
     -- check average patient happiness
@@ -399,7 +370,6 @@ function Vip:setVIPRating()
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_happiness, patients_happy_ratio_rangemap)
     end
-    print("I have assessed patient happiness. My rating is now " .. self.vip_rating .. " points")
 
     --check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
@@ -414,11 +384,9 @@ function Vip:setVIPRating()
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
     end
-    print("I have assessed deaths. My rating is now " .. self.vip_rating .. " points")
 
     --check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
-    print("num cures " .. self.hospital.num_cured .. " enter cures " .. self.enter_cures)
     if cure_diff ~= 0 then --no cures are bad
       local cure_ratio = visitors_diff / cure_diff
       local cure_ratio_rangemap = {
@@ -434,7 +402,6 @@ function Vip:setVIPRating()
     end
 
     -- check the seating : standing ratio of waiting patients
-    -- find all the patients who are currently waiting around
     local sum_sitting, sum_standing = self.hospital:countSittingStanding()
     if (sum_sitting + sum_standing) ~= 0 then
       if sum_sitting >= sum_standing or sum_standing == 0 then
@@ -443,7 +410,6 @@ function Vip:setVIPRating()
         self.vip_rating = self.vip_rating + 1
       end
     end
-    print("I have assessed seating. My rating is now " .. self.vip_rating .. " points")
 
     -- check for the average queue length
     if sum_queue == 0 then
@@ -457,20 +423,17 @@ function Vip:setVIPRating()
         {value = 2}
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(queue_ratio, queue_ratio_rangemap)
-      print("I have assessed queues, average was" .. queue_ratio)
     end
-  else
-    print("There were no patients. Why am I here???")
   end
 
 --[[--Group factor 4: Doctor ratios--]]
--- First get all doctors
+  -- First get all doctors
   local num_docs = self.hospital:hasStaffOfCategory("Doctor")
-  -- if there's no doctors award +4
+  -- not doctors are bad
   if not num_docs then
     self.vip_rating = self.vip_rating + 4
   else
--- Count num. consultants, num. juniors
+    -- Count num. consultants, num. juniors
     local num_cons = self.hospital:hasStaffOfCategory("Consultant")
     if not num_cons then
       num_cons = 0
@@ -480,19 +443,16 @@ function Vip:setVIPRating()
       num_junior = 0
     end
 
--- check consultant and junior proportions
+    -- check consultant and junior proportions
     if num_cons / num_docs > 0.5 then
-      print("Cons over 50 percent")
       self.vip_rating = self.vip_rating - 1
--- If num. juniors / all doctors > 50%, award 1
     elseif num_junior / num_docs > 0.5 then
-      print("Junior over 50 percent")
       self.vip_rating = self.vip_rating + 1
     end
   end
-  print("I have assessed doctor numbers. My rating is now" .. self.vip_rating)
+
 --[[--Group factor 5: Rooms--]]
--- If number of rooms is nil, award 4. If number of rooms <3, award 1. Else award 0
+  -- Low room numbers incur a penalty
   if count_rooms < 1 then
     self.vip_rating = self.vip_rating + 4
   else
@@ -508,10 +468,8 @@ function Vip:setVIPRating()
       {value = -1}
     }
     if self.num_visited_rooms ~= 0 then
-      print("My room evaluation score is " .. self.room_eval .. " points")
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_room_eval, room_eval_rangemap)
     end
-  print("I have assessed rooms. My rating is now" .. self.vip_rating)
   end
 
 --[[--Finalise score--]]
@@ -552,7 +510,6 @@ function Vip:setVIPRating()
   else
     self.cash_reward = rewards[self.vip_rating]
   end
-  print("cash reward " .. self.cash_reward)
   if self.vip_rating >= 15 then
     self.rep_reward = rep_change[15]
   elseif self.vip_rating <= 1 then
@@ -560,7 +517,6 @@ function Vip:setVIPRating()
   else
     self.rep_reward = rep_change[self.vip_rating]
   end
-  print("rep reward " .. self.rep_reward)
   if self.vip_rating <= 1 then
   self.vip_message = 1
   elseif self.vip_rating >= 15 then
@@ -568,7 +524,6 @@ function Vip:setVIPRating()
   else
     self.vip_message = self.vip_rating
   end
-  print("message number: " .. self.vip_message)
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
 
@@ -588,11 +543,10 @@ function Vip:afterLoad(old, new)
     self.name = self.hospital.visitingVIP
   end
   if old < 139 then
-    self.vip_rating = 8 - math.floor(math.random(0,5))
+    self.vip_rating = 8 - math.random(0,5)
     --Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
     self.num_visited_rooms = 0
-    print("rooms " .. #self.world.rooms)
     if #self.world.rooms > 79 then
       local roll_ratio = #self.world.rooms / 40
       local roll_ratio_rangemap = {
@@ -610,14 +564,12 @@ function Vip:afterLoad(old, new)
       self.enter_patients = 0
     end
     if self.going_home then
-      --ratings always come out as max reward if we try to reasses, so use that
+      --award max from old code if VIP leaving
       self.vip_rating = 2
       self.cash_reward = 2000
       self.rep_reward = 45
       self.vip_message = 2
-      print("VIP was leaving in old save. Max rewards given")
     end
-    print("Warning! My VIP rating was reset")
     for i, action in ipairs(self.action_queue) do
       if action.name == 'idle' and action.loop_callback and (self.waiting > 1 or i > 1) then
         action:setCount(50):setAfterUse(action.loop_callback)
