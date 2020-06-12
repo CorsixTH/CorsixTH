@@ -1712,7 +1712,7 @@ end
 --! Checks if the hospital employs staff of a given category.
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
---! "Surgeon", "Researcher" or "Consultant"
+--! "Surgeon", "Researcher", "Junior" or "Consultant"
 --! returns false if none, else number of that type employed
 function Hospital:hasStaffOfCategory(category)
   local result = false
@@ -1945,7 +1945,7 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
     if staff.attributes[attribute] then
     sum = sum + staff.attributes[attribute]
     count = count + 1
-      end
+    end
   end
 
   if count == 0 then

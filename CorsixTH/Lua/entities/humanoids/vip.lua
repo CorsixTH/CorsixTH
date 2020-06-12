@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---[[ Section is my general notes and will be removed eventually.
+--[[
 ---------------------------------- VIP Rating System ---------------------------------
 | Vip rating is calculated between 0 and 15                                          |
 | If rating exceeds values, it will be capped as necessary                           |
@@ -78,6 +78,7 @@ function Vip:Vip(...)
   self.vip_message = 0
   self.enter_deaths = 0
   self.enter_visitors = 0
+  -- patients in the hospital when VIP arrives
   self.enter_patients = 0
   self.enter_explosions = 0
   self.num_vomit_noninducing = 0
@@ -85,6 +86,7 @@ function Vip:Vip(...)
   self.found_vomit = {}
   self.num_visited_rooms = 0
   self.room_eval = 0
+  -- sets the chance VIP visits each room, default is 50% or 1/2. For every 40 rooms in a hospital over 79 we increase n by 1 and chance is 1/n+1 
   self.room_visit_chance = 1
   self.waiting = 0
 
@@ -195,29 +197,23 @@ function Vip:evaluateRoom()
   end
   -- evaluate the room we're currently looking at
   for object, _ in pairs(room.objects) do
-    if object.object_type.id == "extinguisher" then
-      --check if 1 extinguisher already found in room
-      if room_extinguisher == 0 then
+    if object.object_type.id == "extinguisher" and room_extinguisher == 0 then
+      self.room_eval = self.room_eval + 1
+      -- only count this object type once
+      room_extinguisher = 1
+    elseif object.object_type.id == "plant" and room_plant < 3 then
+      -- check if more than 3 plants assessed
+      if object.days_left >= 10 then
         self.room_eval = self.room_eval + 1
-        room_extinguisher = 1
+      elseif object.days_left <= 3 then
+        self.room_eval = self.room_eval - 1
       end
-    elseif object.object_type.id == "plant" then
-      --check if more than 3 plants assessed
-      if room_plant < 3 then
-        if object.days_left >= 10 then
-          self.room_eval = self.room_eval + 1
-        elseif object.days_left <= 3 then
-          self.room_eval = self.room_eval - 1
-        end
-        --prevent abuse of rating by placing lots of plants
-        room_plant = room_plant + 1
-      end
-    elseif object.object_type.id == "bin" then
-      --check if 1 bin already found in room
-      if room_bin == 0 then
-        self.room_eval = self.room_eval + 1
-        room_bin = 1
-      end
+      --prevent abuse of rating by placing lots of plants
+      room_plant = room_plant + 1
+    elseif object.object_type.id == "bin" and room_bin == 0 then
+      self.room_eval = self.room_eval + 1
+      -- only count this object type once
+      room_bin = 1
     end
 
     if object.strength then
@@ -247,29 +243,29 @@ function Vip:onDestroy()
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        {text = _S.fax.vip_visit_result.rep_boost},
-        {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
+    message = {
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
+      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.rep_boost},
+      {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
+      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
+    }
   elseif self.vip_rating >=8 and self.vip_rating < 11 then
     -- dont tell player about any rep change in this range
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
+    message = {
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
+      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
+    }
   else
     self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
-      message = {
-        {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-        {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
-        {text = _S.fax.vip_visit_result.rep_loss},
-        choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
-      }
+    message = {
+      {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
+      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.rep_loss},
+      choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
+    }
   end
   self.world.ui.bottom_panel:queueMessage("report", message, nil, 24 * 20, 1)
 
@@ -335,8 +331,8 @@ function Vip:setVIPRating()
 
 --[[-- Group factor 3: Patients--]]
   -- first check we had patients this visit
-  local visitors_diff = self.hospital.num_visitors + self.enter_patients - self.enter_visitors
-  if visitors_diff > 0 then
+  local patients_this_visit = self.enter_patients + self.hospital.num_visitors - self.enter_visitors
+  if patients_this_visit > 0 then
     -- Average all patient health
     local avg_health = self.hospital:getAveragePatientAttribute("health", 0.19)
     if avg_health >= 0.2 then
@@ -374,7 +370,7 @@ function Vip:setVIPRating()
     --check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
     if death_diff ~= 0 then --no deaths are good, but also expected
-      local death_ratio = visitors_diff / death_diff
+      local death_ratio = patients_this_visit / death_diff
       local death_ratio_rangemap = {
         {upper = 2, value = 4},
         {upper = 4, value = 3},
@@ -388,7 +384,7 @@ function Vip:setVIPRating()
     --check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
     if cure_diff ~= 0 then --no cures are bad
-      local cure_ratio = visitors_diff / cure_diff
+      local cure_ratio = patients_this_visit / cure_diff
       local cure_ratio_rangemap = {
         {upper = 2, value = -1},
         {upper = 3, value = 0},
@@ -502,28 +498,12 @@ function Vip:setVIPRating()
     [14] = -20,
     [15] = -25,
   }
-  -- apply caps
-  if self.vip_rating >= 8 then
-    self.cash_reward = rewards[8]
-  elseif self.vip_rating <= 1 then
-    self.cash_reward = rewards[1]
-  else
-    self.cash_reward = rewards[self.vip_rating]
-  end
-  if self.vip_rating >= 15 then
-    self.rep_reward = rep_change[15]
-  elseif self.vip_rating <= 1 then
-    self.rep_reward = rep_change[1]
-  else
-    self.rep_reward = rep_change[self.vip_rating]
-  end
-  if self.vip_rating <= 1 then
-  self.vip_message = 1
-  elseif self.vip_rating >= 15 then
-    self.vip_message = 15
-  else
-    self.vip_message = self.vip_rating
-  end
+  -- set rewards
+  self.vip_rating = self.vip_rating > 15 and 15 or self.vip_rating
+  self.vip_rating = self.vip_rating < 1 and 1 or self.vip_rating
+  self.cash_reward = rewards[self.vip_rating] or 0
+  self.rep_reward = rep_change[self.vip_rating]
+  self.vip_message = self.vip_rating
   self.hospital.num_vips_ty = self.hospital.num_vips_ty + 1
 end
 
@@ -548,18 +528,12 @@ function Vip:afterLoad(old, new)
     self.room_eval = 0
     self.num_visited_rooms = 0
     if #self.world.rooms > 79 then
-      local roll_ratio = #self.world.rooms / 40
-      local roll_ratio_rangemap = {
-      {upper = 3, value = 2},
-      {upper = 4, value = 3},
-      {upper = 5, value = 4},
-      {value = 5}
-      }
-      self.room_visit_chance = rangeMapLookup(roll_ratio, roll_ratio_rangemap)
+      self.room_visit_chance = math.floor(#self.world.rooms / 40)
     else
       self.room_visit_chance = 1
     end
-    self.enter_patients = #self.hospital.patients - self.hospital.num_visitors + self.enter_visitors
+    -- if our hospital has more patients than counted visitors adjust enter_patients
+    self.enter_patients = #self.hospital.patients + self.enter_visitors - self.hospital.num_visitors 
     if self.enter_patients <0 then
       self.enter_patients = 0
     end
