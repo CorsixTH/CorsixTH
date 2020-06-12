@@ -86,7 +86,7 @@ function Vip:Vip(...)
   self.found_vomit = {}
   self.num_visited_rooms = 0
   self.room_eval = 0
-  -- sets the chance VIP visits each room, default is 50% or 1/2. For every 40 rooms in a hospital over 79 we increase n by 1 and chance is 1/n+1 
+  -- sets the chance VIP visits each room, default is 50% or 1/2. For every 40 rooms in a hospital over 79 we increase n by 1 and chance is 1/n+1
   self.room_visit_chance = 1
   self.waiting = 0
 
@@ -533,7 +533,7 @@ function Vip:afterLoad(old, new)
       self.room_visit_chance = 1
     end
     -- if our hospital has more patients than counted visitors adjust enter_patients
-    self.enter_patients = #self.hospital.patients + self.enter_visitors - self.hospital.num_visitors 
+    self.enter_patients = #self.hospital.patients + self.enter_visitors - self.hospital.num_visitors
     if self.enter_patients <0 then
       self.enter_patients = 0
     end
