@@ -551,7 +551,7 @@ function World:spawnVIP(name)
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
   vip.enter_patients = #hospital.patients
-  if #self.world.rooms > 79 then
+  if #self.rooms > 79 then
     self.room_visit_chance = math.floor(#self.rooms / 40)
   end
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
