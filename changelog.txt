@@ -1,11 +1,11 @@
 -------------------------------------------------------------------------------
-Version 0.64 - released TBD
+Version 0.64 - released June 2020
 -------------------------------------------------------------------------------
 # New Features
 * EXPERIMENTAL: ISO images may be used as a Theme Hospital data source. Known
   limitations of using ISOs are that the in game movies will not play, and the
-	first time Windows install will not allow selecting the ISO file in the file
-	dialog.
+  first time Windows install will not allow selecting the ISO file in the file
+  dialog.
 
 # Bug Fixes
 * Confirm dialogs are now sized properly in all languages
