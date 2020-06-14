@@ -19,7 +19,7 @@ Version 0.64 - released June 2020
 * Earthquake cheat now breaks your hospital instead of the game.
 
 # Translations
-* Updated translations for Chinese, French, Brazillian Portugese.
+* Updated translations for Chinese, French, Brazilian Portugese.
 
 -------------------------------------------------------------------------------
 Version 0.63 - released May 2019
