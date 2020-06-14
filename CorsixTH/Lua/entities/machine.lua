@@ -112,7 +112,6 @@ function Machine:machineUsed(room)
     end
     -- Extinguisher failed to save the room
     if self.saved_by_extinguisher == 0 then
-      print("machine lost!")
       -- Clean up any task of handyman coming to repair the machine
       self.hospital:removeHandymanTask(taskIndex, "repairing")
       -- Blow up the room
@@ -133,8 +132,7 @@ function Machine:machineUsed(room)
       self:setRepairing(nil)
       return true
     else
-      -- Extinguisher saved room, machine sure a handyman has been called
-      print("machine saved!")
+      -- Extinguisher saved room, make sure a handyman has been called
       if taskIndex == -1 then
         local call = self.world.dispatcher:callForRepair(self, true, false, true)
         self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
