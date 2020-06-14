@@ -181,7 +181,7 @@ function Machine:calculateSmoke(room)
     -- Display smoke, up to three animations per machine
     -- i.e. < 4 one plume, < 3 two plumes or < 2 three plumes of smoke
     setSmoke(self, true)
-    -- turn on additional ldayers of the animation for extra smoke plumes, depending on how damaged the machine is
+    -- turn on additional layers of the animation for extra smoke plumes, depending on how damaged the machine is
     if threshold < 3 then
       self.smokeInfo:setLayer(11, 2)
     end
