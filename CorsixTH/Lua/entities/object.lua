@@ -55,6 +55,7 @@ function Object:Object(world, object_type, x, y, direction, etc)
   self.hospital = world:getLocalPlayerHospital()
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
+  self.saved_by_extinguisher = 0
   self:updateDynamicInfo()
   self:initOrientation(direction)
   self:setTile(x, y)
