@@ -100,46 +100,40 @@ function Machine:machineUsed(room)
   -- Find a queued task for a handyman coming to repair this machine
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   -- extinguisher check must be reset after each use
-  self.saved_by_extinguisher = 0
+  local saved_by_extinguisher = 0
+  local explode = false
   -- Room is set to explode
   if threshold < 1 then
     -- If a fire extinguisher in the room, make explosion chance 50%
     for object, _ in pairs(room.objects) do
       if object.object_type.id == "extinguisher" then
-        self.saved_by_extinguisher = math.random(0,1)
+        saved_by_extinguisher = math.random(0,1)
         break
       end
     end
-    -- Extinguisher failed to save the room
-    if self.saved_by_extinguisher == 0 then
-      -- Clean up any task of handyman coming to repair the machine
-      self.hospital:removeHandymanTask(taskIndex, "repairing")
-      -- Blow up the room
-      room:crashRoom()
-      self:setCrashedAnimation()
-      -- No special cursor required when hovering over the crashed room
-      self.hover_cursor = nil
-      -- Clear dynamic info (tracks machine usage which is no longer required)
-      self:clearDynamicInfo()
-      -- Prevent the machine from smoking, it's now just a pile of rubble
-      setSmoke(self, false)
-      -- If we have the window for this machine open, close it
-      local window = self.world.ui:getWindow(UIMachine)
-      if window and window.machine == self then
-        window:close()
-      end
-      -- Clear the icon showing a handyman is coming to repair the machine
-      self:setRepairing(nil)
-      return true
-    else
-      -- Extinguisher saved room, make sure a handyman has been called
-      if taskIndex == -1 then
-        local call = self.world.dispatcher:callForRepair(self, true, false, true)
-        self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
-      else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
-        self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
-      end
+    explode = saved_by_extinguisher == 0
+  end
+  -- Fire extinguisher failed to save the room or none were present
+  if explode then
+    -- Clean up any task of handyman coming to repair the machine
+    self.hospital:removeHandymanTask(taskIndex, "repairing")
+    -- Blow up the room
+    room:crashRoom()
+    self:setCrashedAnimation()
+    -- No special cursor required when hovering over the crashed room
+    self.hover_cursor = nil
+    -- Clear dynamic info (tracks machine usage which is no longer required)
+    self:clearDynamicInfo()
+    -- Prevent the machine from smoking, it's now just a pile of rubble
+    setSmoke(self, false)
+    -- If we have the window for this machine open, close it
+    local window = self.world.ui:getWindow(UIMachine)
+    if window and window.machine == self then
+      window:close()
     end
+    -- Clear the icon showing a handyman is coming to repair the machine
+    self:setRepairing(nil)
+    return true
   -- Else if urgent repair needed or extinguisher saved the room
   elseif threshold < 4 then
     -- If the job of repairing the machine isn't queued, queue it now (higher priority)
@@ -172,12 +166,8 @@ function Machine:calculateSmoke(room)
   -- How many uses this machine has left until it explodes
   local threshold = self:getRemainingUses()
 
-  -- If now exploding, clear any smoke
-  if threshold < 1 and self.saved_by_extinguisher == 0 then
-    setSmoke(self, false)
-    return
-  -- Else if urgent repair needed
-  elseif threshold < 4 then
+  -- Machines needing urgent repair show smoke
+  if threshold < 4 then
     -- Display smoke, up to three animations per machine
     -- i.e. < 4 one plume, < 3 two plumes or < 2 three plumes of smoke
     setSmoke(self, true)
