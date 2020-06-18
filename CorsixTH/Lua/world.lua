@@ -104,7 +104,7 @@ function World:World(app)
   self.tick_timer = 0
   self.game_date = Date()
 
-  self.room_information_dialogs_off = app.config.debug
+  self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
@@ -295,7 +295,7 @@ function World:initLevel(app, avail_rooms)
 end
 
 function World:toggleInformation()
-  self.room_information_dialogs_off = not self.room_information_dialogs_off
+  self.room_information_dialogs = not self.room_information_dialogs
 end
 
 --! Load goals to win and lose from the map, and store them in 'self.goals'.

@@ -173,3 +173,9 @@ warmth_colors_display_default = 1
 -- FFMPEG library.
 movies = true 
 -------------------------------------------------------------------------------
+
+-------------------------------------------------------------------------------
+-- Room information dialogs: Information about new rooms, important for
+-- additional rooms in later levels. Affects campaign only.
+room_information_dialogs = true
+-------------------------------------------------------------------------------
