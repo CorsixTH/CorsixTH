@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("English", "en", "eng")
+Language("English", "English", "en", "eng")
 Inherit("original_strings", 0)
 
 --Note: All strings should use a single space after full-stops. Only exception is level descriptions.
