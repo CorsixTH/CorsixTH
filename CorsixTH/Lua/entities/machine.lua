@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+corsixth.require("announcer")
+local AnnouncementPriority = _G["AnnouncementPriority"]
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
@@ -99,19 +101,25 @@ function Machine:machineUsed(room)
   local threshold = self:getRemainingUses()
   -- Find a queued task for a handyman coming to repair this machine
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-  -- extinguisher check must be reset after each use
-  local saved_by_extinguisher = 0
+  local num_extinguishers = 0
+  local explosion_chance = 1
   local explode = false
   -- Room is set to explode
   if threshold < 1 then
-    -- If a fire extinguisher in the room, make explosion chance 50%
+    -- If a fire extinguisher in the room, room has chance not to explode
     for object, _ in pairs(room.objects) do
       if object.object_type.id == "extinguisher" then
-        saved_by_extinguisher = math.random(0,1)
-        break
+        num_extinguishers = num_extinguishers + 1
       end
     end
-    explode = saved_by_extinguisher == 0
+    if num_extinguishers == 0 or threshold < -3 then
+      -- If no extinguisher in room, or machine used 5 times over its strength always explode
+      explode = true
+    else
+      -- Explosion chance increaes 20% with every use over strength, and reduced by 5% for every additional extinguisher in the room bar the first one
+      explosion_chance = 0.25 + (threshold * -0.2) - (num_extinguishers * 0.05)
+      explode = math.random() < explosion_chance
+    end
   end
   -- Fire extinguisher failed to save the room or none were present
   if explode then
