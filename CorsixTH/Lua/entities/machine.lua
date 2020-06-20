@@ -20,8 +20,6 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
-corsixth.require("announcer")
-local AnnouncementPriority = _G["AnnouncementPriority"]
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
@@ -102,7 +100,7 @@ function Machine:machineUsed(room)
   -- Find a queued task for a handyman coming to repair this machine
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
   local num_extinguishers = 0
-  local explosion_chance = 1
+  local explosion_chance
   local explode = false
   -- Room is set to explode
   if threshold < 1 then
