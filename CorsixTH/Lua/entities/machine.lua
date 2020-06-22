@@ -115,7 +115,10 @@ function Machine:machineUsed(room)
       explode = true
     else
       -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher in the room bar the first one
-      explosion_chance = 0.25 + (threshold * -0.2) - (num_extinguishers * 0.05)
+      explosion_chance = (2 / self.strength) + (threshold * -0.2) - (num_extinguishers * 0.05) + 0.05
+      -- Cap it until guaranteed explosion
+      explosion_chance = explosion_chance > 0.95 and 0.95 or explosion_chance
+      explosion_chance = explosion_chance < 0.05 and 0.05 or explosion_chance
       explode = math.random() < explosion_chance
     end
   end
