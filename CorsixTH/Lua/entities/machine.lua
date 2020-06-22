@@ -106,7 +106,7 @@ function Machine:machineUsed(room)
   if threshold < 1 then
     -- If a fire extinguisher in the room, room has chance not to explode
     for object, _ in pairs(room.objects) do
-      if object.object_type.id == "extinguisher" then
+      if object.object_type.id == "extinguisher" and num_extinguishers < 4 then
         num_extinguishers = num_extinguishers + 1
       end
     end
