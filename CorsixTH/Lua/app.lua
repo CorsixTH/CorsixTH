@@ -121,10 +121,13 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("audio", "video", "timer") then
+  if not SDL.init("video", "timer") then
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
+  if compile_opts.audio then
+    SDL.init("audio")
+  end
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
