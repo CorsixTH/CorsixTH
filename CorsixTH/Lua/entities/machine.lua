@@ -114,7 +114,7 @@ function Machine:machineUsed(room)
       -- If no extinguisher in room, or machine used 5 times over its strength always explode
       explode = true
     else
-      -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher in the room bar the first one
+      -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher (up to 3 extra) in the room bar the first one
       explosion_chance = (2 / self.strength) + (threshold * -0.2) - (num_extinguishers * 0.05) + 0.05
       -- Cap it until guaranteed explosion
       explosion_chance = explosion_chance > 0.95 and 0.95 or explosion_chance
@@ -122,7 +122,7 @@ function Machine:machineUsed(room)
       explode = math.random() < explosion_chance
     end
   end
-  -- Fire extinguisher failed to save the room or none were present
+  -- Room failed to be saved, or no extinguishers were present
   if explode then
     -- Clean up any task of handyman coming to repair the machine
     self.hospital:removeHandymanTask(taskIndex, "repairing")
@@ -143,7 +143,7 @@ function Machine:machineUsed(room)
     -- Clear the icon showing a handyman is coming to repair the machine
     self:setRepairing(nil)
     return true
-  -- Else if urgent repair needed or extinguisher saved the room
+  -- Else if urgent repair needed or room didn't explode
   elseif threshold < 4 then
     -- If the job of repairing the machine isn't queued, queue it now (higher priority)
     if taskIndex == -1 then
