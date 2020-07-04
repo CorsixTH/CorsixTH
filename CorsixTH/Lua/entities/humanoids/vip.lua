@@ -19,38 +19,36 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 --[[
----------------------------------- VIP Rating System ---------------------------------
-| Vip rating is calculated between 0 and 15                                          |
-| If rating exceeds values, it will be capped as necessary                           |
-| 1. LITTER OBJECTS                                                                  |
-|  - a. General litter and vomit 'litter' is counted                                 |
-|  - b. At end of visit, if number <=10 award -1                                     |
-|  - c. Otherwise, award +1                                                          |
-| 2. STAFF TIREDNESS                                                                 |
-|  - a. If staff <=1, award +4 and skip other checks                                 |
-|  - b. If any staff member very tired (over 0.7), award 2                           |
-|  - c. If average staff tiredness over tired (0.5), award 1                         |
-|  - d. Else award -1                                                                |
-| 3. PATIENTS                                                                        |
-|  - a. If average patient health >= 0.2, award -1                                   |
-|  - b. If average patient health < 0.2, award +1                                    |
-|  - c. Assess patient warmth, too hot/cold award +2, perfect -1, just over 1        |
-|  - d. Average happiness, award 3 if <0.2; 2 if <0.4, 1 if <0.6, 0 if <0.8, else -1 |
-|  - e. Check if anyone has died during visit, punish based on severity              |
-|  - f. Check how many patients are cured vs. all patients, award based on %         |
-|  - g. Check seating. Award -1 for more seated than standing, else +1               |
-|  - h. Check average queues. Award based on the average length                     `|
-| 4. DOCTORS                                                                         |
-|  - a. If no doctors, award +4 and skip other checks                                |
-|  - b. If more than half doctors are consultants, award -2                          |
-|  - c. If more than half doctors are juniors, award +2                              |
-| 5. ROOMS                                                                           |
-|  - a. If there are no active rooms, award +4                                       |
-|  - b. If rooms not crashed (exploded) <3, award +1                                 |
-|  - c. Get average room decoration score, award based on decoration level           |
---------------------------------------------------------------------------------------
-General TODO:
--Rebalancing
+---------------------------------- VIP Rating System --------------------------------
+Vip rating is calculated between 0 and 15
+If rating exceeds values, it will be capped as necessary
+1. LITTER OBJECTS
+ - a. General litter and vomit 'litter' is counted
+ - b. At end of visit, if number <=10 award -1
+ - c. Otherwise, award +1
+2. STAFF TIREDNESS
+ - a. If staff <=1, award +4 and skip other checks
+ - b. If any staff member very tired (over 0.7), award 2
+ - c. If average staff tiredness over tired (0.5), award 1
+ - d. Else award -1
+3. PATIENTS
+ - a. If average patient health >= 0.2, award -1
+ - b. If average patient health < 0.2, award +1
+ - c. Assess patient warmth, too hot/cold award +2, perfect -1, just over 1
+ - d. Average happiness, award 3 if <0.2; 2 if <0.4, 1 if <0.6, 0 if <0.8, else -1
+ - e. Check if anyone has died during visit, punish based on severity
+ - f. Check how many patients are cured vs. all patients, award based on %
+ - g. Check seating. Award -1 for more seated than standing, else +1
+ - h. Check average queues. Award based on the average length
+4. DOCTOR
+ - a. If no doctors, award +4 and skip other checks
+ - b. If more than half doctors are consultants, award -2
+ - c. If more than half doctors are juniors, award +2
+5. ROOMS
+ - a. If there are no active rooms, award +4
+ - b. If rooms not crashed (exploded) <3, award +1
+ - c. Get average room evaluation score, award based on average level
+-------------------------------------------------------------------------------------
 --]]
 
 --[[ initialisation --]]
@@ -71,7 +69,7 @@ function Vip:Vip(...)
   self.name=""
   self.announced = false
   --First we should generate an initial VIP rating
-  self.vip_rating = 8 - math.random(0,5)
+  self.vip_rating = 12 - math.random(0,5)
 
   self.cash_reward = 0
   self.rep_reward = 0
@@ -201,15 +199,12 @@ function Vip:evaluateRoom()
       self.room_eval = self.room_eval + 1
       -- only count this object type once
       room_extinguisher = 1
-    elseif object.object_type.id == "plant" and room_plant < 3 then
-      -- check if more than 3 plants assessed
+    elseif object.object_type.id == "plant" then
       if object.days_left >= 10 then
-        self.room_eval = self.room_eval + 1
+        room_plant = room_plant + 1
       elseif object.days_left <= 3 then
-        self.room_eval = self.room_eval - 1
+        room_plant = room_plant - 1
       end
-      --prevent abuse of rating by placing lots of plants
-      room_plant = room_plant + 1
     elseif object.object_type.id == "bin" and room_bin == 0 then
       self.room_eval = self.room_eval + 1
       -- only count this object type once
@@ -223,6 +218,12 @@ function Vip:evaluateRoom()
         self.room_eval = self.room_eval - 1
       end
     end
+  end
+  --check whether we had more good or bad plants
+  if room_plant < 0 then
+    self.room_eval = self.room_eval - 1
+  elseif room_plant > 0 then
+    self.room_eval = self.room_eval + 1
   end
   self:getNextRoom()
 end
@@ -458,9 +459,9 @@ function Vip:setVIPRating()
     -- Room decor average
     local avg_room_eval = self.room_eval / self.num_visited_rooms
     local room_eval_rangemap = {
-      {upper = 2, value = 3},
-      {upper = 3, value = 1},
-      {upper = 4, value = 0},
+      {upper = 1.5, value = 3},
+      {upper = 2, value = 1},
+      {upper = 3, value = 0},
       {value = -1}
     }
     if self.num_visited_rooms ~= 0 then
