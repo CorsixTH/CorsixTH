@@ -79,6 +79,7 @@ function Vip:Vip(...)
   -- patients in the hospital when VIP arrives
   self.enter_patients = 0
   self.enter_explosions = 0
+  self.enter_cures = 0
   self.num_vomit_noninducing = 0
   self.num_vomit_inducing = 0
   self.found_vomit = {}
