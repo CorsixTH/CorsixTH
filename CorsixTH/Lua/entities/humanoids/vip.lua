@@ -348,7 +348,7 @@ function Vip:setVIPRating()
     -- punish if too cold/hot
     if avg_warmth then
       local patients_warmth_ratio_rangemap = {
-        {upper = 0.21, value = 2},
+        {upper = 0.22, value = 2},
         {upper = 0.36, value = -1},
         {value = 2}
       }
