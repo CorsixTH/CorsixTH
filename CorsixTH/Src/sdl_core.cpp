@@ -262,7 +262,7 @@ int l_mainloop(lua_State* L) {
           break;
       }
       if (nargs != 0) {
-        if (luaT_resume(dispatcher, dispatcher, nargs, &resume_stack_size) !=
+        if (luaT_resume(dispatcher, L, nargs, &resume_stack_size) !=
             LUA_YIELD) {
           goto leave_loop;
         }
@@ -272,8 +272,7 @@ int l_mainloop(lua_State* L) {
     } while (SDL_PollEvent(&e) != 0);
     if (do_timer) {
       lua_pushliteral(dispatcher, "timer");
-      if (luaT_resume(dispatcher, dispatcher, 1, &resume_stack_size) !=
-          LUA_YIELD) {
+      if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
         break;
       }
       do_frame = do_frame || (lua_toboolean(dispatcher, 1) != 0);
@@ -285,8 +284,7 @@ int l_mainloop(lua_State* L) {
           fps_control->count_frame();
         }
         lua_pushliteral(dispatcher, "frame");
-        if (luaT_resume(dispatcher, dispatcher, 1, &resume_stack_size) !=
-            LUA_YIELD) {
+        if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
           goto leave_loop;
         }
         lua_pop(dispatcher, resume_stack_size);
