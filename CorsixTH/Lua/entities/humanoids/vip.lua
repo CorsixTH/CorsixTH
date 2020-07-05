@@ -39,7 +39,7 @@ If rating exceeds values, it will be capped as necessary
  - e. Check if anyone has died during visit, punish based on severity
  - f. Check how many patients are cured vs. all patients, award based on %
  - g. Check seating. Award -1 for more seated than standing, else +1
- - h. Check average queues. Award based on the average length
+ - h. Check maximum queue size. Award based on the longest queue
 4. DOCTOR
  - a. If no doctors, award +4 and skip other checks
  - b. If more than half doctors are consultants, award -2
@@ -105,32 +105,32 @@ function Vip:tickDay()
       self.waiting = nil
     end
   end
-
-  self.world:findObjectNear(self, "litter", 8, function(x, y)
-    local litter = self.world:getObject(x, y, "litter")
-    if not litter then
-      return
-    end
-
-    local alreadyFound = false
-    for i=1, (self.num_vomit_noninducing + self.num_vomit_inducing) do
-      if self.found_vomit[i] == litter then
-        alreadyFound = true
-        break
+  if not self.going_home then
+    self.world:findObjectNear(self, "litter", 8, function(x, y)
+      local litter = self.world:getObject(x, y, "litter")
+      if not litter then
+        return
       end
-    end
 
-    self.found_vomit[(self.num_vomit_noninducing + self.num_vomit_inducing + 1)] = litter
-
-    if not alreadyFound then
-      if litter:anyLitter() then
-        self.num_vomit_noninducing = self.num_vomit_noninducing + 1
-      else
-        self.num_vomit_inducing = self.num_vomit_inducing + 1
+      local alreadyFound = false
+      for i=1, (self.num_vomit_noninducing + self.num_vomit_inducing) do
+        if self.found_vomit[i] == litter then
+          alreadyFound = true
+          break
+        end
       end
-    end
-  end)
 
+      self.found_vomit[(self.num_vomit_noninducing + self.num_vomit_inducing + 1)] = litter
+
+      if not alreadyFound then
+        if litter:anyLitter() then
+          self.num_vomit_noninducing = self.num_vomit_noninducing + 1
+        else
+          self.num_vomit_inducing = self.num_vomit_inducing + 1
+        end
+      end
+    end)
+  end
   return Humanoid.tickDay(self)
 end
 
@@ -291,13 +291,13 @@ end
 function Vip:setVIPRating()
   -- first do room code for later
   local count_rooms = 0
-  local sum_queue = 0
+  local max_queue = 0
   for _, room in pairs(self.world.rooms) do
     if not room.crashed then
       count_rooms = count_rooms + 1
     end
     if room.door.queue then
-      sum_queue = sum_queue + room.door.queue:size()
+      max_queue = max_queue < room.door.queue:size() and room.door.queue:size() or max_queue
     end
   end
 
@@ -410,17 +410,16 @@ function Vip:setVIPRating()
     end
 
     -- check for the average queue length
-    if sum_queue == 0 then
+    if max_queue == 0 then
       self.vip_rating = self.vip_rating - 1
     else
-      local queue_ratio = sum_queue / count_rooms
       local queue_ratio_rangemap = {
-        {upper = 0.5, value = -1},
-        {upper = 1, value = 0},
-        {upper = 1.5, value = 1},
+        {upper = 3, value = -1},
+        {upper = 6, value = 0},
+        {upper = 9, value = 1},
         {value = 2}
       }
-      self.vip_rating = self.vip_rating + rangeMapLookup(queue_ratio, queue_ratio_rangemap)
+      self.vip_rating = self.vip_rating + rangeMapLookup(max_queue, queue_ratio_rangemap)
     end
   end
 
