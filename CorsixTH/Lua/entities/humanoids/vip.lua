@@ -34,13 +34,13 @@ If rating exceeds values, it will be capped as necessary
 3. PATIENTS
  - a. If average patient health >= 0.2, award -1
  - b. If average patient health < 0.2, award +1
- - c. Assess patient warmth, too hot/cold award +2, perfect -1, just over 1
+ - c. Assess patient warmth, too hot/cold award +2, perfect -1
  - d. Average happiness, award 3 if <0.2; 2 if <0.4, 1 if <0.6, 0 if <0.8, else -1
  - e. Check if anyone has died during visit, punish based on severity
  - f. Check how many patients are cured vs. all patients, award based on %
  - g. Check seating. Award -1 for more seated than standing, else +1
  - h. Check maximum queue size. Award based on the longest queue
-4. DOCTOR
+4. DOCTORS
  - a. If no doctors, award +4 and skip other checks
  - b. If more than half doctors are consultants, award -2
  - c. If more than half doctors are juniors, award +2
@@ -350,7 +350,6 @@ function Vip:setVIPRating()
       local patients_warmth_ratio_rangemap = {
         {upper = 0.21, value = 2},
         {upper = 0.36, value = -1},
-        {upper = 0.43, value = 1},
         {value = 2}
       }
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
