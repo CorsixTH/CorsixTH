@@ -84,11 +84,7 @@ function FileSystem:setRoot(physical_path)
   if physical_path:match"%.[iI][sS][oO]$" or physical_path:match"%.[iI][sS][oO]9660$" then
     self.provider = ISO_FS()
     self.provider:setPathSeparator(pathsep)
-    local file, err = io.open(physical_path, "rb")
-    if not file then
-      return nil, err
-    end
-    return self.provider:setRoot(file)
+    return self.provider:setRoot(physical_path)
   end
 
   if physical_path:sub(-1) == pathsep then

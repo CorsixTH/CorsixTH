@@ -41,8 +41,8 @@ int l_isofs_set_path_separator(lua_State* L) {
 
 int l_isofs_set_root(lua_State* L) {
   iso_filesystem* pSelf = luaT_testuserdata<iso_filesystem>(L);
-  std::FILE* fIso = *luaT_testuserdata<std::FILE*>(L, 2, false);
-  if (pSelf->initialise(fIso)) {
+  const char* path = luaL_checkstring(L, 2);
+  if (pSelf->initialise(path)) {
     lua_pushvalue(L, 2);
     luaT_setenvfield(L, 1, "file");
     lua_settop(L, 1);

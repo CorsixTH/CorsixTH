@@ -317,16 +317,12 @@ struct luaT_classinfo<iso_filesystem> {
   static inline const char* name() { return "ISO Filesystem"; }
 };
 
-template <>
-struct luaT_classinfo<std::FILE*> {
-  static inline const char* name() { return "file"; }
-};
-
 template <class T>
 T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
   // Turn mt_idx into an absolute index, as the stack size changes.
-  if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
+  if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0) {
     mt_idx = lua_gettop(L) + mt_idx + 1;
+  }
 
   void* ud = lua_touserdata(L, idx);
   if (ud != nullptr && lua_getmetatable(L, idx) != 0) {
