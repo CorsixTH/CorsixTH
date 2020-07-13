@@ -40,5 +40,5 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 ## Contact
 
 - Follow us on [Reddit](https://www.reddit.com/r/corsixth), Twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)), and on [Facebook](https://facebook.com/CorsixTH)
-- IRC #Corsix-TH on irc.freenode.net
+- IRC [#Corsix-TH](https://webchat.freenode.net/#corsix-th) on irc.freenode.net
 - Subscribe to our [Google Developer group](http://groups.google.com/group/corsix-th-dev)
