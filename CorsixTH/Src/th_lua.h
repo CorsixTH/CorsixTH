@@ -408,6 +408,10 @@ void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
 
 void luaT_pushtablebool(lua_State* L, const char* k, bool v);
 
+// Print debugging helper functions
+
+void luaT_printvalue(lua_State* L, int idx);
+
 void luaT_printstack(lua_State* L);
 
 void luaT_printrawtable(lua_State* L, int idx);
