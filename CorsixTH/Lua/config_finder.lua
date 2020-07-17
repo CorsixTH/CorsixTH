@@ -489,6 +489,13 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- ]=] .. '\n' ..
 'room_information_dialogs = ' .. tostring(config_values.room_information_dialogs)  .. '\n' .. [=[
 
+-------------------------------------------------------------------------------------------------------------------------
+-- If true, parts of the hospital can be made inaccessible by blocking the path
+-- with rooms or objects. If false, all parts of the hospital must be kept
+-- accessible, the game will disallow any attempt to blocking the path.
+-- ]=] .. '\n' ..
+'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
+
 
 -------------------------------------------------------------------------------------------------------------------------
 
