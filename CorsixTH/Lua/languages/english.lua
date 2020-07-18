@@ -59,16 +59,16 @@ vip_names = {
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 
 -- Disease overrides where there are typos
-golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
-ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
-slack_tongue.cause = "Cause - Chronic over-discussion of soap operas."
-slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
-the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
-bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
+diseases.golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
+diseases.ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
+diseases.slack_tongue.cause = "Cause - Chronic over-discussion of soap operas."
+diseases.slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
+diseases.the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
+diseases.bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
 
 -- Rooms overrides where there are typos
-inflation[2] = "Patients with the painful-yet-humorous condition of Bloaty Head must come to the Inflation Clinic, where the overlarge cranium will be popped and instantly re-inflated to the correct pressure.//"
-staff_room[2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money, and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. "
+room_descriptions.inflation[2] = "Patients with the painful-yet-humorous condition of Bloaty Head must come to the Inflation Clinic, where the overlarge cranium will be popped and instantly re-inflated to the correct pressure.//"
+room_descriptions.staff_room[2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money, and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. "
 
 -- Staff description overrides where there are typos
 staff_descriptions.bad[14] = "Sly, cunning, and subversive. "
