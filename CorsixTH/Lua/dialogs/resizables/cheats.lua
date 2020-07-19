@@ -134,7 +134,7 @@ function UICheats:buttonClicked(num)
     if self.cheats[num].name ~= "lose_level" then
       local announcements = self.ui.app.world.cheat_announcements
       if announcements then
-        self.ui:playSound(announcements[math.random(1, #announcements)])
+       self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
       end
       self.ui.hospital.cheated = true
       self:updateCheatedStatus()
