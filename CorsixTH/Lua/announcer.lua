@@ -149,13 +149,17 @@ function Announcer:playAnnouncement(name, priority, decay_hours, played_callback
   entry.played_callback = played_callback
   entry.played_callback_delay = played_callback_delay
 
-  self.entries:push(new_priority, entry)
+  if self.app.world:getLocalPlayerHospital():hasStaffedDesk() or priority == AnnouncementPriority.Critical then
+    self.entries:push(new_priority, entry)
+  end
 end
 
 --! The announcer's (game) tick handler.
 -- Plays the actual sound of the announcements, if available.
 -- Also queues random announcements if no announcements have been played for a while.
 function Announcer:onTick()
+  local staffedDesk = self.app.world:getLocalPlayerHospital():hasStaffedDesk()
+  local criticalAnnounces = #self.entries.priorities[AnnouncementPriority.Critical]
   if not self.app.world:isCurrentSpeed("Pause") then
     local ticks_since_last_announcement = self.ticks_since_last_announcement
     if ticks_since_last_announcement >= self.random_announcement_ticks_target then
@@ -164,19 +168,28 @@ function Announcer:onTick()
     else
       self.ticks_since_last_announcement = ticks_since_last_announcement + 1
     end
-  end
 
-  -- Delay until someone is available at the desk
-  if self.app.world:getLocalPlayerHospital():hasStaffedDesk() then
-    while not self.playing and not self.entries:isEmpty() do
-      local entry = self.entries:pop()
-      local game_date = self.app.world.game_date
+  -- Wait for an occupied desk or announcement is critical
+    if staffedDesk or criticalAnnounces > 0 then
+      while not self.playing and not self.entries:isEmpty() do
+        local entry = self.entries:pop()
+        local game_date = self.app.world.game_date
 
-      if entry.decay_hours == -1 or game_date <= entry.created_date:plusHours(entry.decay_hours) then
-        if self.app.config.play_announcements then
-          self:_play(entry)
+        if entry.decay_hours == -1 or game_date <= entry.created_date:plusHours(entry.decay_hours) then
+          if self.app.config.play_announcements then
+            self:_play(entry)
+          end
+          -- Drain the queue otherwise
         end
-        -- Drain the queue otherwise
+      end
+    end
+  -- The game is paused
+  else
+    -- Only play critical announcements when paused
+    while not self.playing and not self.entries:isEmpty() and criticalAnnounces > 0 do
+      local entry = self.entries:pop()
+      if self.app.config.play_announcements then
+        self:_play(entry)
       end
     end
   end
