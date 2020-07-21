@@ -173,7 +173,7 @@ describe("Announcer", function()
     announcer:onTick()
     assert.equal(0, #app_mock.audio.__played_sounds__)
   end)
-  
+
   it("only critical announcements play when paused", function()
     local app_mock = create_app_mock(true, true)
     local announcer = Announcer(app_mock)
