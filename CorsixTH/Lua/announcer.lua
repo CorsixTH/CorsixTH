@@ -169,7 +169,7 @@ function Announcer:onTick()
       self.ticks_since_last_announcement = ticks_since_last_announcement + 1
     end
 
-  -- Wait for an occupied desk or announcement is critical
+    -- Wait for an occupied desk or announcement is critical
     if staffedDesk or criticalAnnounces > 0 then
       while not self.playing and not self.entries:isEmpty() do
         local entry = self.entries:pop()
