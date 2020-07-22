@@ -282,7 +282,7 @@ function UIFax:close()
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
-  if world and world:isCurrentSpeed("Pause") then
+  if world and world:isCurrentSpeed("Pause") and #self.ui:getWindows(UIStaffRise) == 0 then
     world:setSpeed(world.prev_speed)
   end
 end

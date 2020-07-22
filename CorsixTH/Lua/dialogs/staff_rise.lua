@@ -173,7 +173,7 @@ function UIStaffRise:fireStaff()
   self.staff:fire()
   self:close()
   local world = self.ui.app.world
-  if world and world:isCurrentSpeed("Pause") then
+  if world and world:isCurrentSpeed("Pause") and #self.ui:getWindows(UIFax) == 0 then
     world:setSpeed(world.prev_speed)
   end
 end
@@ -184,7 +184,7 @@ function UIStaffRise:increaseSalary()
   self.staff.quitting_in = nil
   self:close()
   local world = self.ui.app.world
-  if world and world:isCurrentSpeed("Pause") then
+  if world and world:isCurrentSpeed("Pause") and #self.ui:getWindows(UIFax) == 0 then
     world:setSpeed(world.prev_speed)
   end
 end
