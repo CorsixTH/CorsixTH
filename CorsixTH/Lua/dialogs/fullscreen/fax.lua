@@ -88,6 +88,11 @@ function UIFax:UIFax(ui, icon)
   self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button("#"))
 end
 
+-- Faxes pause the game
+function UIFax:mustPause()
+  return true
+end
+
 function UIFax:updateChoices()
   local choices = self.message.choices
   for i, button in ipairs(self.choice_buttons) do
@@ -282,9 +287,6 @@ function UIFax:close()
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
-  if world and world:isCurrentSpeed("Pause") and #self.ui:getWindows(UIStaffRise) == 0 then
-    world:setSpeed(world.prev_speed)
-  end
 end
 
 function UIFax:afterLoad(old, new)

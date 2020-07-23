@@ -1029,19 +1029,34 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
+  if window:mustPause() then
+    self.app.world:setSpeed("Pause")
+  end
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)
 end
 
-function UI:removeWindow(window)
-  if Window.removeWindow(self, window) then
-    local class = window.modal_class
-    if class and self.modal_windows[class] == window then
+function UI:removeWindow(closing_window)
+  if Window.removeWindow(self, closing_window) then
+    local pauseGame = false
+    local class = closing_window.modal_class
+    if class and self.modal_windows[class] == closing_window then
       self.modal_windows[class] = nil
     end
-    if window.modal_class == "main" or window.modal_class == "fullscreen" then
+    if self.app.world and self.app.world:isCurrentSpeed("Pause") then
+      for i in pairs(self.windows) do
+        if self.windows[i].mustPause() then
+          pauseGame = true
+          break
+        end
+      end
+      if not pauseGame then
+        self.app.world:setSpeed(self.app.world.prev_speed)
+      end
+    end
+    if closing_window.modal_class == "main" or closing_window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
     return true
