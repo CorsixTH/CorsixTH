@@ -283,7 +283,6 @@ function UIFax:appendNumber(number)
 end
 
 function UIFax:close()
-  local world = self.ui.app.world
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
