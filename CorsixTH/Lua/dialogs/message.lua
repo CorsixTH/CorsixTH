@@ -108,9 +108,6 @@ function UIMessage:openMessage()
   if TheApp.world:isCurrentSpeed("Speed Up") then
     TheApp.world:previousSpeed()
   end
-  if not TheApp.world:isCurrentSpeed("Pause") then
-    TheApp.world:setSpeed("Pause")
-  end
   if self.type == "strike" then -- strikes are special cases, as they are not faxes
     self.ui:addWindow(UIStaffRise(self.ui, self.owner, self.message))
     self:removeMessage()

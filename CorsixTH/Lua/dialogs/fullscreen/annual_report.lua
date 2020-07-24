@@ -160,11 +160,12 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     table.sort(self.value_sort, desc_order)
     table.sort(self.salary_sort, desc_order)
 
-  -- Pause the game to allow the player plenty of time to check all statistics and trophies won
-  if world and not world:isCurrentSpeed("Pause") then
-    world:setSpeed("Pause")
-  end
   TheApp.video:setBlueFilterActive(false)
+end
+
+-- Make sure this window pauses the game, we want to let the player browse their awards
+function UIAnnualReport:mustPause()
+  return true
 end
 
 --! Finds out which awards and/or trophies the player has been awarded this year.
@@ -445,17 +446,8 @@ end
 --! Overridden close function. The game should be unpaused again when closing the dialog.
 function UIAnnualReport:close()
   if TheApp.world:getLocalPlayerHospital().game_won then
-    if not TheApp.world:isCurrentSpeed("Pause") then
-      TheApp.world:setSpeed("Pause")
-      TheApp.video:setBlueFilterActive(false)
-    end
+    TheApp.video:setBlueFilterActive(false)
     TheApp.world.ui.bottom_panel:openLastMessage()
-  elseif TheApp.world:isCurrentSpeed("Pause") then
-    if TheApp.ui.speed_up_key_pressed then
-      TheApp.world:setSpeed("Speed Up")
-    else
-      TheApp.world:setSpeed(TheApp.world.prev_speed)
-    end
   end
   self:updateAwards()
   Window.close(self)

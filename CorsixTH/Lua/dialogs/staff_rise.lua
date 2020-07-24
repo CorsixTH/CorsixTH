@@ -102,6 +102,11 @@ function UIStaffRise:UIStaffRise(ui, staff, rise_amount)
   end
 end
 
+-- Staff raise requests pause game
+function UIStaffRise:mustPause()
+  return true
+end
+
 function UIStaffRise:getStaffPosition(dx, dy)
   local staff = self.staff
   local x, y = self.ui.app.map:WorldToScreen(staff.tile_x, staff.tile_y)
@@ -172,10 +177,6 @@ function UIStaffRise:fireStaff()
   self.staff.message_callback = nil
   self.staff:fire()
   self:close()
-  local world = self.ui.app.world
-  if world and world:isCurrentSpeed("Pause") then
-    world:setSpeed(world.prev_speed)
-  end
 end
 
 function UIStaffRise:increaseSalary()
@@ -183,10 +184,6 @@ function UIStaffRise:increaseSalary()
   self.staff:increaseWage(self.rise_amount)
   self.staff.quitting_in = nil
   self:close()
-  local world = self.ui.app.world
-  if world and world:isCurrentSpeed("Pause") then
-    world:setSpeed(world.prev_speed)
-  end
 end
 
 function UIStaffRise:afterLoad(old, new)
