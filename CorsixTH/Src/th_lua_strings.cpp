@@ -412,24 +412,24 @@ int l_str_lt(lua_State* L) {
 
 // __persist metamethod handler
 int l_str_persist(lua_State* L) {
-  lua_settop(L, 2);
-  lua_insert(L, 1);
+  luaT_rotate(L, 1, -1);
   lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
+  int self_index = 3;
 
   // Recreation instructions are stored in the environment, which is written
   // automatically. For compatibility, we write a simple boolean.
   lua_pushboolean(L, 1);
-  pWriter->write_stack_object(3);
-  lua_getfenv(L, 2);
+  pWriter->write_stack_object(4);
+  lua_getfenv(L, self_index);
 
   // If there were no instructions (i.e. for the root object) then write the
   // value as well.
   if (lua_objlen(L, -1) == 0) {
     lua_pop(L, 2);
     aux_push_weak_table(L, 0);
-    lua_pushvalue(L, 2);
-    lua_rawget(L, 3);
-    pWriter->write_stack_object(4);
+    lua_pushvalue(L, self_index);
+    lua_rawget(L, 4);                // lookup self in the weak table
+    pWriter->write_stack_object(5);  // write that value
   }
   return 0;
 }

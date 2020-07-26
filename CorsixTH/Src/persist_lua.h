@@ -60,6 +60,8 @@ class lua_persist_writer {
   // Endian independent and underlying type size independent
   template <class T>
   void write_uint(T tValue) {
+    static_assert(std::is_integral<T>::value, "T must be an integer type");
+
     T tTemp(tValue);
     int iNumBytes;
     for (iNumBytes = 1; tTemp >= (T)0x80; tTemp /= (T)0x80) ++iNumBytes;

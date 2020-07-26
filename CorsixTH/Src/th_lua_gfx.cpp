@@ -471,9 +471,7 @@ int l_layers_set(lua_State* L) {
 
 int l_layers_persist(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
-  lua_settop(L, 2);
-  lua_insert(L, 1);
-  lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
+  lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 2);
 
   int iNumLayers = 13;
   for (; iNumLayers >= 1; --iNumLayers) {
@@ -798,9 +796,7 @@ int l_line_draw(lua_State* L) {
 
 int l_line_persist(lua_State* L) {
   line* pLine = luaT_testuserdata<line>(L);
-  lua_settop(L, 2);
-  lua_insert(L, 1);
-  lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 1);
+  lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 2);
   pLine->persist(pWriter);
   return 0;
 }

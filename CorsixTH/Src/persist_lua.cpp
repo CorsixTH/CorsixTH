@@ -31,6 +31,8 @@ SOFTWARE.
 #include <cstring>
 #include <string>
 #include <vector>
+
+#include "th_lua.h"
 #ifdef _MSC_VER
 #pragma warning( \
     disable : 4996)  // Disable "std::strcpy unsafe" warnings under MSVC
@@ -57,8 +59,6 @@ enum persist_type {
   PERSIST_TRESERVED2,  // Not currently used
   PERSIST_TCOUNT,      // must equal 16 (for compatibility)
 };
-
-int l_writer_mt_index(lua_State* L);
 
 template <class T>
 int l_crude_gc(lua_State* L) {
@@ -112,22 +112,19 @@ class load_multi_buffer {
   }
 };
 
-//! Basic implementation of persistance interface
+//! Basic implementation of persistence interface
 /*!
     self - Instance of lua_persist_basic_writer allocated as a Lua userdata
     self metatable:
       `__gc` - ~lua_persist_basic_writer (via l_crude_gc)
       `<file>:<line>` - index of function prototype in already written data
-      [1] - pre-populated prototype persistance names
+      [1] - pre-populated prototype persistence names
         `<file>:<line>` - `<name>`
       err - an object which could not be persisted
     self environment:
       `<object>` - index of object in already written data
       [1] - permanents table
-    self environment metatable:
-      `__index` - writeObjectRaw (via l_writer_mt_index)
-        upvalue 1 - permanents table
-        upvalue 2 - self
+    self environment metatable
 */
 class lua_persist_basic_writer : public lua_persist_writer {
  public:
@@ -142,16 +139,12 @@ class lua_persist_basic_writer : public lua_persist_writer {
     lua_pushvalue(L, 2);       // Permanent objects
     lua_rawseti(L, -2, 1);
     lua_createtable(L, 1, 0);  // Environment metatable
-    lua_pushvalue(L, 2);       // Permanent objects
-    lua_pushvalue(L, 1);       // self
-    luaT_pushcclosure(L, l_writer_mt_index, 2);
-    lua_setfield(L, -2, "__index");
     lua_setmetatable(L, -2);
     lua_setfenv(L, 1);
     lua_createtable(L, 1, 4);  // Metatable
     luaT_pushcclosure(L, l_crude_gc<lua_persist_basic_writer>, 0);
     lua_setfield(L, -2, "__gc");
-    lua_pushvalue(L, luaT_upvalueindex(1));  // Prototype persistance names
+    lua_pushvalue(L, luaT_upvalueindex(1));  // Prototype persistence names
     lua_rawseti(L, -2, 1);
     lua_setmetatable(L, 1);
 
@@ -236,6 +229,10 @@ class lua_persist_basic_writer : public lua_persist_writer {
     if (iIndex < 0 && iIndex > LUA_REGISTRYINDEX)
       iIndex = lua_gettop(L) + 1 + iIndex;
 
+    if (lua_type(L, 2) != LUA_TTABLE) {
+      luaL_error(L, "Permanents table was lost!");
+    }
+
     // Basic types always have their value written
     int iType = lua_type(L, iIndex);
     if (iType == LUA_TNIL || iType == LUA_TNONE) {
@@ -270,217 +267,194 @@ class lua_persist_basic_writer : public lua_persist_writer {
       // things).
       lua_getfenv(L, 1);
       lua_pushvalue(L, iIndex);
-      lua_gettable(L, -2);  // Might (indirectly) call writeObjectRaw
-      uint64_t iValue = (uint64_t)lua_tonumber(L, -1);
-      lua_pop(L, 2);
+
+      lua_rawget(L, -2);
+      uint64_t iValue = static_cast<uint64_t>(lua_tonumber(L, -1));
       if (iValue != 0) {
+        lua_pop(L, 2);
         // If the value has not previously been written, then
-        // writeObjectRaw would have been called, and the appropriate
+        // write_object_raw would have been called, and the appropriate
         // data written, and 0 would be returned. Otherwise, the index
         // would be returned, which we offset by the number of types,
         // and then write.
         write_uint(iValue + PERSIST_TCOUNT - 1);
+      } else {
+        lua_pop(L, 1);
+
+        // Save the index to the cache
+        lua_pushvalue(L, iIndex);
+        lua_pushnumber(L, static_cast<lua_Number>(next_index++));
+        lua_rawset(L, -3);
+
+        // Remove the fenv and add the item back to the top
+        lua_pop(L, 1);
+        lua_pushvalue(L, iIndex);
+
+        // write the item and restore the stack to the start state
+        write_object_raw();
+        lua_pop(L, 1);
       }
     }
   }
 
-  int write_object_raw() {
-    uint8_t iType;
+  void write_object_raw() {
+    int top = lua_gettop(L);
+    int item_index = top;      // same position in write_stack_object
+    int self_index = 1;        // index 1 in write_stack_object
+    int permanents_index = 2;  // also in fenv self [1]
+    uint8_t item_type = lua_type(L, item_index);
 
-    // Save the index to the cache
-    lua_pushvalue(L, 2);
-    lua_pushnumber(L, (lua_Number)(next_index++));
-    lua_settable(L, 1);
+    lua_checkstack(L, top + 5);
 
     // Lookup the object in the permanents table
-    lua_pushvalue(L, 2);
-    lua_gettable(L, luaT_upvalueindex(1));
+    lua_pushvalue(L, item_index);
+    lua_gettable(L, permanents_index);
     if (lua_type(L, -1) != LUA_TNIL) {
       // Object is in the permanents table.
-
-      uint8_t iType = PERSIST_TPERMANENT;
-      write_byte_stream(&iType, 1);
-
-      // Replace self's environment with self (for call to
-      // writeStackObject)
-      lua_pushvalue(L, luaT_upvalueindex(2));
-      lua_replace(L, 1);
+      uint8_t item_type = PERSIST_TPERMANENT;
+      write_byte_stream(&item_type, 1);
 
       // Write the key corresponding to the permanent object
       write_stack_object(-1);
+      lua_pop(L, 1);
     } else {
       // Object is not in the permanents table.
       lua_pop(L, 1);
 
-      switch (lua_type(L, 2)) {
-          // LUA_TNIL handled in writeStackObject
-          // LUA_TBOOLEAN handled in writeStackObject
-          // LUA_TNUMBER handled in writeStackObject
+      switch (item_type) {
+          // LUA_TNIL handled in write_stack_object
+          // LUA_TBOOLEAN handled in write_stack_object
+          // LUA_TNUMBER handled in write_stack_object
 
         case LUA_TSTRING: {
-          iType = LUA_TSTRING;
-          write_byte_stream(&iType, 1);
+          write_byte_stream(&item_type, 1);
           // Strings are simple: length and then bytes (not null
           // terminated)
           size_t iLength;
-          const char* sString = lua_tolstring(L, 2, &iLength);
+          const char* sString = lua_tolstring(L, item_index, &iLength);
           write_uint(iLength);
           write_byte_stream(reinterpret_cast<const uint8_t*>(sString), iLength);
           break;
         }
 
         case LUA_TTABLE: {
-          // Replace self's environment with self (for calls to
-          // writeStackObject)
-          lua_pushvalue(L, luaT_upvalueindex(2));
-          lua_replace(L, 1);
-
           // Save env and insert prior to table
-          lua_getfenv(L, 1);
-          lua_insert(L, 2);
-
-          int iTable = 3;
-        table_reentry:
+          lua_getfenv(L, self_index);
+          lua_insert(L, item_index);
+          int table_env_index = item_index;
+          item_index += 1;
 
           // Handle the metatable
-          if (lua_getmetatable(L, iTable)) {
-            iType = PERSIST_TTABLE_WITH_META;
-            write_byte_stream(&iType, 1);
+          if (lua_getmetatable(L, item_index)) {
+            item_type = PERSIST_TTABLE_WITH_META;
+            write_byte_stream(&item_type, 1);
             write_stack_object(-1);
             lua_pop(L, 1);
           } else {
-            iType = LUA_TTABLE;
-            write_byte_stream(&iType, 1);
+            write_byte_stream(&item_type, 1);
           }
 
           // Write the children as key, value pairs
           lua_pushnil(L);
-          while (lua_next(L, iTable)) {
-            write_stack_object(-2);
-            // The naive thing to do now would be
-            // writeStackObject(-1) but this can easily lead to
-            // Lua's C call stack limit being hit. To reduce the
-            // likelihood of this happening, we check to see if
-            // about to write another table.
-            if (lua_type(L, -1) == LUA_TTABLE) {
-              lua_pushvalue(L, -1);
-              lua_rawget(L, 2);
-              lua_pushvalue(L, -2);
-              lua_gettable(L, luaT_upvalueindex(1));
-              if (lua_isnil(L, -1) && lua_isnil(L, -2)) {
-                lua_pop(L, 2);
-                lua_checkstack(L, 10);
-                iTable += 2;
-                lua_pushvalue(L, iTable);
-                lua_pushnumber(L, (lua_Number)(next_index++));
-                lua_settable(L, 2);
-                goto table_reentry;
-              table_resume:
-                iTable -= 2;
-              } else {
-                lua_pop(L, 2);
-                write_stack_object(-1);
-              }
-            } else
-              write_stack_object(-1);
-            lua_pop(L, 1);
+          while (lua_next(L, item_index)) {
+            write_stack_object(-2);  // write the key
+            write_stack_object(-1);  // write the value
+            lua_pop(L, 1);           // remove the value
+            // key is passed back to lua_next
           }
 
           // Write a nil to mark the end of the children (as nil is
           // the only value which cannot be used as a key in a table).
-          iType = LUA_TNIL;
-          write_byte_stream(&iType, 1);
-          if (iTable != 3) goto table_resume;
-          break;
-        }
+          uint8_t nil_type = LUA_TNIL;
+          write_byte_stream(&nil_type, 1);
+
+          lua_remove(L, table_env_index);
+        } break;
 
         case LUA_TFUNCTION:
-          if (lua_iscfunction(L, 2)) {
-            set_error_object(2);
+          if (lua_iscfunction(L, item_index)) {
+            set_error_object(item_index, self_index);
             set_error("Cannot persist C functions");
-          } else {
-            iType = LUA_TFUNCTION;
-            write_byte_stream(&iType, 1);
+            break;
+          }
+          write_byte_stream(&item_type, 1);
 
-            // Replace self's environment with self (for calls to
-            // writeStackObject)
-            lua_pushvalue(L, luaT_upvalueindex(2));
-            lua_replace(L, 1);
+          // Write the prototype (the part of a function which is
+          // common across multiple closures - see LClosure /
+          // Proto in Lua's lobject.h).
+          lua_Debug proto_info;
+          lua_pushvalue(L, item_index);
+          lua_getinfo(L, ">Su", &proto_info);
+          write_prototype(&proto_info, item_index);
 
-            // Write the prototype (the part of a function which is
-            // common across multiple closures - see LClosure /
-            // Proto in Lua's lobject.h).
-            lua_Debug proto_info;
-            lua_pushvalue(L, 2);
-            lua_getinfo(L, ">Su", &proto_info);
-            write_prototype(&proto_info, 2);
-
-            // Write the values of the upvalues
-            // If available, also write the upvalue IDs (so that in
-            // the future, we could hypothetically rejoin shared
-            // upvalues). An ID is just an opaque sequence of bytes.
-            write_uint(proto_info.nups);
+          // Write the values of the upvalues
+          // If available, also write the upvalue IDs (so that in
+          // the future, we could hypothetically rejoin shared
+          // upvalues). An ID is just an opaque sequence of bytes.
+          write_uint(proto_info.nups);
 #if LUA_VERSION_NUM >= 502
-            write_uint(sizeof(void*));
+          write_uint(sizeof(void*));
 #else
-            write_uint(0);
+          write_uint(0);
 #endif
-            for (int i = 1; i <= proto_info.nups; ++i) {
-              lua_getupvalue(L, 2, i);
-              write_stack_object(-1);
-#if LUA_VERSION_NUM >= 502
-              void* pUpvalueID = lua_upvalueid(L, 2, i);
-              write_byte_stream((uint8_t*)&pUpvalueID, sizeof(void*));
-#endif
-            }
-
-            // Write the environment table
-            lua_getfenv(L, 2);
+          for (int i = 1; i <= proto_info.nups; ++i) {
+            lua_getupvalue(L, item_index, i);
             write_stack_object(-1);
+#if LUA_VERSION_NUM >= 502
+            void* pUpvalueID = lua_upvalueid(L, item_index, i);
+            write_byte_stream((uint8_t*)&pUpvalueID, sizeof(void*));
+#endif
             lua_pop(L, 1);
           }
+
+          // Write the environment table
+          lua_getfenv(L, item_index);
+          write_stack_object(-1);
+          lua_pop(L, 1);
           break;
 
         case LUA_TUSERDATA:
-          if (!check_that_userdata_can_be_depersisted(2)) break;
-
-          // Replace self's environment with self (for calls to
-          // writeStackObject)
-          lua_pushvalue(L, luaT_upvalueindex(2));
-          lua_replace(L, 1);
+          if (!check_that_userdata_can_be_depersisted(item_index)) {
+            break;
+          }
 
           // Write type, metatable, and then environment
-          iType = LUA_TUSERDATA;
-          write_byte_stream(&iType, 1);
+          write_byte_stream(&item_type, 1);
           write_stack_object(-1);
-          lua_getfenv(L, 2);
+          lua_getfenv(L, item_index);
           write_stack_object(-1);
           lua_pop(L, 1);
 
           // Write the raw data
           if (lua_type(L, -1) == LUA_TTABLE) {
             lua_getfield(L, -1, "__persist");
-            if (lua_isnil(L, -1))
+            if (lua_isnil(L, -1)) {
               lua_pop(L, 1);
-            else {
-              lua_pushvalue(L, 2);
-              lua_pushvalue(L, luaT_upvalueindex(2));
-              lua_call(L, 2, 0);
+            } else {
+              lua_pushvalue(L, item_index);
+              lua_pushvalue(L, self_index);
+              lua_pushvalue(L, permanents_index);
+              lua_call(L, 3, 0);
             }
           }
+          lua_pop(L, 1);               // remove userdata metatable
           write_uint((uint64_t)0x42);  // sync marker
           break;
 
         default:
           set_error(lua_pushfstring(L, "Cannot persist %s values",
-                                    luaL_typename(L, 2)));
-          break;
+                                    luaL_typename(L, item_type)));
       }
     }
-    lua_pushnumber(L, 0);
-    return 1;
+
+    if (had_error) {
+      luaL_error(L, get_error());
+    }
   }
 
+  // Checks if userdata can be persisted to file, that is if it has a size
+  // of zero, or has a metatable with a __depersist_size, __persist, and
+  // __depersist function. The metatable is pushed to the top of the stack.
   bool check_that_userdata_can_be_depersisted(int iIndex) {
     if (lua_getmetatable(L, iIndex)) {
       lua_getfield(L, -1, "__depersist_size");
@@ -536,7 +510,7 @@ class lua_persist_basic_writer : public lua_persist_writer {
       return;
     }
     if (std::strcmp(pProtoInfo->what, "Lua") != 0) {
-      // what == "C" should have been caught by writeObjectRaw().
+      // what == "C" should have been caught by write_object_raw().
       // what == "tail" should be impossible.
       // Hence "Lua" and "main" should be the only values seen.
       // NB: Chunks are not functions defined *in* source files, because
@@ -617,11 +591,11 @@ class lua_persist_basic_writer : public lua_persist_writer {
     data.assign(sError);
   }
 
-  void set_error_object(int iStackObject) {
+  void set_error_object(int iStackObject, int self_index) {
     if (had_error) return;
 
     lua_pushvalue(L, iStackObject);
-    lua_getmetatable(L, luaT_upvalueindex(2));
+    lua_getmetatable(L, self_index);
     lua_insert(L, -2);
     lua_setfield(L, -2, "err");
     lua_pop(L, 1);
@@ -642,24 +616,14 @@ class lua_persist_basic_writer : public lua_persist_writer {
   bool had_error;
 };
 
-namespace {
-
-int l_writer_mt_index(lua_State* L) {
-  return reinterpret_cast<lua_persist_basic_writer*>(
-             lua_touserdata(L, luaT_upvalueindex(2)))
-      ->write_object_raw();
-}
-
-}  // namespace
-
-//! Basic implementation of depersistance interface
+//! Basic implementation of depersistence interface
 /*!
     self - Instance of lua_persist_basic_reader allocated as a Lua userdata
     self environment:
       [-3] - self
-      [-2] - pre-populated prototype persistance code
+      [-2] - pre-populated prototype persistence code
         `<name>` - `<code>`
-      [-1] - pre-populated prototype persistance filenames
+      [-1] - pre-populated prototype persistence filenames
         `<name>` - `<filename>`
       [ 0] - permanents table
       `<index>` - object already depersisted
@@ -1016,7 +980,7 @@ class lua_persist_basic_reader : public lua_persist_reader {
       if (!read_stack_object()) return false;
       // NB: lua_rawset used rather than lua_settable to avoid invoking
       // any metamethods, as they may not have been designed to be called
-      // during depersistance.
+      // during depersistence.
       lua_rawset(L, -3);
     }
   }

@@ -222,9 +222,9 @@ int l_anim_new(lua_State* L) {
 template <typename T>
 int l_anim_persist(lua_State* L) {
   T* pAnimation;
-  if (lua_gettop(L) == 2) {
+  if (lua_gettop(L) == 3) {
     pAnimation = luaT_testuserdata<T>(L, 1, luaT_environindex, false);
-    lua_insert(L, 1);
+    luaT_rotate(L, 1, -1);
   } else {
     // Fast __persist call
     pAnimation = (T*)lua_touserdata(L, -1);

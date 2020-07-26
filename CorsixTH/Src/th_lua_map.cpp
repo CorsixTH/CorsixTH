@@ -49,8 +49,7 @@ int l_map_set_sheet(lua_State* L) {
 
 int l_map_persist(lua_State* L) {
   level_map* pMap = luaT_testuserdata<level_map>(L);
-  lua_settop(L, 2);
-  lua_insert(L, 1);
+  luaT_rotate(L, 1, -1);
   pMap->persist((lua_persist_writer*)lua_touserdata(L, 1));
   return 0;
 }
@@ -875,9 +874,7 @@ int l_path_set_map(lua_State* L) {
 
 int l_path_persist(lua_State* L) {
   pathfinder* pPathfinder = luaT_testuserdata<pathfinder>(L);
-  lua_settop(L, 2);
-  lua_insert(L, 1);
-  pPathfinder->persist((lua_persist_writer*)lua_touserdata(L, 1));
+  pPathfinder->persist((lua_persist_writer*)lua_touserdata(L, 2));
   return 0;
 }
 
