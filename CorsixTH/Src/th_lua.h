@@ -33,6 +33,23 @@ SOFTWARE.
 
 int luaopen_th(lua_State* L);
 
+inline void luaT_rotate(lua_State* L, int idx, int n) {
+#if LUA_VERSION_NUM >= 503
+  lua_rotate(L, idx, n);
+#else
+  if (n < 0) {
+    if (idx < 0) {
+      idx = lua_gettop(L) + idx + 1;
+    }
+    n = lua_gettop(L) - idx + 1 + n;
+  }
+
+  for (int i = 0; i < n; i++) {
+    lua_insert(L, idx);
+  }
+#endif
+}
+
 // Compatibility layer for removal of environments in 5.2
 #if LUA_VERSION_NUM >= 502
 const int luaT_environindex = lua_upvalueindex(1);
@@ -107,7 +124,7 @@ inline int luaT_load(lua_State* L, lua_Reader r, void* d, const char* s,
 }
 
 // Compatibility for older versions of lua_resume
-inline int luaT_resume(lua_State* L, lua_State* f, int n, int *nresults) {
+inline int luaT_resume(lua_State* L, lua_State* f, int n, int* nresults) {
 #if LUA_VERSION_NUM >= 504
   return lua_resume(L, f, n, nresults);
 #elif LUA_VERSION_NUM >= 502
