@@ -200,11 +200,7 @@ function Vip:evaluateRoom()
       -- only count this object type once
       room_extinguisher = 1
     elseif object.object_type.id == "plant" then
-      if object.days_left >= 10 then
-        room_plant = room_plant + 1
-      elseif object.days_left <= 3 then
-        room_plant = room_plant - 1
-      end
+      room_plant = object:isDying() and room_plant - 1 or room_plant + 1
     elseif object.object_type.id == "bin" and room_bin == 0 then
       self.room_eval = self.room_eval + 1
       -- only count this object type once
