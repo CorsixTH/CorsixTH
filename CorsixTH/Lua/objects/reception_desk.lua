@@ -135,6 +135,16 @@ function ReceptionDesk:tick()
         queue_front.has_passed_reception = true
       end
     end
+  -- A reception desk with patients has become unmanned, make sure we reroute patients
+  -- If there are no manned desks available, let patients meander until one is available
+  elseif not self.receptionist and self.queue:size() > 0 then
+    local hospital = self.hospital
+    for _, staff in ipairs(hospital.staff) do
+      if staff.humanoid_class == "Receptionist" and staff.associated_desk then
+        self.queue:rerouteAllPatients(SeekReceptionAction(), self)
+        break
+      end
+    end
   end
   if reset_timer then
     self.queue_advance_timer = 0
@@ -207,7 +217,7 @@ function ReceptionDesk:onDestroy()
       end
     end)
   end
-  self.queue:rerouteAllPatients(SeekReceptionAction())
+  self.queue:rerouteAllPatients(SeekReceptionAction(), self)
 
   self.being_destroyed = nil
   return Object.onDestroy(self)
