@@ -318,7 +318,7 @@ function Vip:setVIPRating()
         break
       end
     end
-    -- Average all staff tiredness. If above tiredness level award 1, else -1
+    -- Average all staff tiredness
     local avg_tired = self.hospital:getAverageStaffAttribute("fatigue", 1)
     if avg_tired >= 0.5 then
       self.vip_rating = self.vip_rating + 1
@@ -381,7 +381,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
     end
 
-    --check the visitor to patient cure ratio
+    -- Check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
     if cure_diff ~= 0 then --no cures are bad
       local cure_ratio = patients_this_visit / cure_diff
@@ -397,7 +397,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + 3
     end
 
-    -- check the seating : standing ratio of waiting patients
+    -- Check the seating : standing ratio of waiting patients
     local sum_sitting, sum_standing = self.hospital:countSittingStanding()
     if (sum_sitting + sum_standing) ~= 0 then
       if sum_sitting >= sum_standing or sum_standing == 0 then
@@ -407,7 +407,7 @@ function Vip:setVIPRating()
       end
     end
 
-    -- check for the average queue length
+    -- Check the maximum queue length
     if max_queue == 0 then
       self.vip_rating = self.vip_rating - 1
     else
@@ -424,7 +424,7 @@ function Vip:setVIPRating()
 --[[--Group factor 4: Doctor ratios--]]
   -- First get all doctors
   local num_docs = self.hospital:hasStaffOfCategory("Doctor")
-  -- not doctors are bad
+  -- No doctors are bad
   if not num_docs then
     self.vip_rating = self.vip_rating + 4
   else
@@ -468,7 +468,7 @@ function Vip:setVIPRating()
   end
 
 --[[--Finalise score--]]
-  --documented rewards.
+  -- Documented rewards
   local rewards = {
     [1] = 4000,
     [2] = 2000,
@@ -479,7 +479,7 @@ function Vip:setVIPRating()
     [7] = 200,
     [8] = 0,
   }
---documented reps
+  -- Documented reps
   local rep_change = {
     [1] = 50,
     [2] = 45,
@@ -497,7 +497,7 @@ function Vip:setVIPRating()
     [14] = -20,
     [15] = -25,
   }
-  -- set rewards
+  -- Set rewards
   self.vip_rating = self.vip_rating > 15 and 15 or self.vip_rating
   self.vip_rating = self.vip_rating < 1 and 1 or self.vip_rating
   self.cash_reward = rewards[self.vip_rating] or 0
@@ -523,7 +523,7 @@ function Vip:afterLoad(old, new)
   end
   if old < 139 then
     self.vip_rating = 12 - math.random(0,5)
-    --Make sure we only rate rooms from now on if a VIP was visiting
+    -- Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
     self.num_visited_rooms = 0
     if #self.world.rooms > 79 then
@@ -531,9 +531,9 @@ function Vip:afterLoad(old, new)
     else
       self.room_visit_chance = 1
     end
-    -- if our hospital has more patients than counted visitors adjust enter_patients
+    -- If our hospital has more patients than counted visitors adjust enter_patients
     self.enter_patients = #self.hospital.patients + self.enter_visitors - self.hospital.num_visitors
-    if self.enter_patients <0 then
+    if self.enter_patients < 0 then
       self.enter_patients = 0
     end
     if self.going_home then
