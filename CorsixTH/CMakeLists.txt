@@ -277,7 +277,12 @@ if(NOT USE_SOURCE_DATADIRS)
     install(CODE "
       INCLUDE(BundleUtilities)
       SET(BU_CHMOD_BUNDLE_ITEMS ON)
-      FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
+      FIXUP_BUNDLE(\"${CMAKE_INSTALL_PREFIX}/CorsixTH.app\" \"\" \"\")
       ")
+    if(WITH_LUAROCKS)
+      install(CODE "execute_process(
+        COMMAND bash \"${CMAKE_SOURCE_DIR}/scripts/macos_luarocks\" \"${CMAKE_INSTALL_PREFIX}\")
+      ")
+    endif()
   endif()
 endif()
