@@ -46,13 +46,13 @@ local function create_room(name, args)
 
   if args.alive_plants then
     for i=1,args.alive_plants do
-      room.objects[{object_type = {id = "plant"}, days_left=11}] = true
+      room.objects[{object_type = {id = "plant"}, isDying = function() return false end}] = true
     end
   end
 
   if args.dying_plants then
     for i=1,args.dying_plants do
-      room.objects[{object_type = {id = "plant"}, days_left=1}] = true
+      room.objects[{object_type = {id = "plant"}, isDying = function() return true end}] = true
     end
   end
 
