@@ -80,7 +80,7 @@ function ReceptionDesk:ReceptionDesk(...)
   self.queue:setMaxQueue(20) -- larger queues for reception desk
   self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
   self.queue_advance_timer = 0
-  self.rerouted = false -- helps prevent multiple reroute actions in tick
+  self.queue_rerouted = false -- helps prevent multiple reroute actions in tick
 end
 
 function ReceptionDesk:onClick(ui, button)
@@ -95,52 +95,57 @@ end
 function ReceptionDesk:tick()
   local queue_front = self.queue:front()
   local reset_timer = true
-  if self.receptionist and queue_front then
-    -- If we interrupted a patient at the front of the queue they get use_object instead of idle
-    if queue_front:getCurrentAction().name == "idle" or queue_front:getCurrentAction().name == "use_object" then
-      self.queue_rerouted = false
-      self.queue_advance_timer = self.queue_advance_timer + 1
-      reset_timer = false
-      if self.queue_advance_timer >= 4 + Date.hoursPerDay() * (1.0 - self.receptionist.profile.skill) then
+  if self.receptionist then
+    if queue_front then
+      -- If we interrupted a patient at the front of the queue they get use_object instead of idle
+      if queue_front:getCurrentAction().name == "idle" or queue_front:getCurrentAction().name == "use_object" then
+        self.queue_advance_timer = self.queue_advance_timer + 1
+        reset_timer = false
+        if self.queue_advance_timer >= 4 + Date.hoursPerDay() * (1.0 - self.receptionist.profile.skill) then
         reset_timer = true
-        if queue_front.next_room_to_visit then
-          queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
-        else
-          if class.is(queue_front, Inspector) then
-            local inspector = queue_front
-            if not inspector.going_home  then
-              local epidemic = self.world:getLocalPlayerHospital().epidemic
-              if epidemic then
-                -- The result of the epidemic may already by determined
-                -- i.e if an infected patient has left the hospital
-                if not epidemic.result_determined then
-                  epidemic:finishCoverUp()
-                end
-                epidemic:applyOutcome()
-                inspector:goHome()
-              end
-            end
-            -- VIP has his own list, don't add the gp office twice
-          elseif queue_front.humanoid_class ~= "VIP" then
-            if queue_front:agreesToPay("diag_gp") then
-              queue_front:queueAction(SeekRoomAction("gp"))
-            else
-              queue_front:goHome("over_priced", "diag_gp")
-            end
+          if queue_front.next_room_to_visit then
+            queue_front:queueAction(SeekRoomAction(queue_front.next_room_to_visit.room_info.id))
           else
-            -- the VIP will realise that he is idle, and start going round rooms
-            queue_front:queueAction(IdleAction())
-            queue_front.waiting = 1
+            if class.is(queue_front, Inspector) then
+              local inspector = queue_front
+              if not inspector.going_home  then
+                local epidemic = self.world:getLocalPlayerHospital().epidemic
+                if epidemic then
+                  -- The result of the epidemic may already by determined
+                  -- i.e if an infected patient has left the hospital
+                  if not epidemic.result_determined then
+                    epidemic:finishCoverUp()
+                  end
+                  epidemic:applyOutcome()
+                  inspector:goHome()
+                end
+              end
+              -- VIP has his own list, don't add the gp office twice
+            elseif queue_front.humanoid_class ~= "VIP" then
+              if queue_front:agreesToPay("diag_gp") then
+                queue_front:queueAction(SeekRoomAction("gp"))
+              else
+                queue_front:goHome("over_priced", "diag_gp")
+              end
+            else
+              -- the VIP will realise that he is idle, and start going round rooms
+              queue_front:queueAction(IdleAction())
+              queue_front.waiting = 1
+            end
           end
+          self.queue:pop()
+          self.queue.visitor_count = self.queue.visitor_count + 1
+          queue_front.has_passed_reception = true
         end
-        self.queue:pop()
-        self.queue.visitor_count = self.queue.visitor_count + 1
-        queue_front.has_passed_reception = true
       end
     end
+    if self.queue_rerouted then -- once a receptionist is back we can reset
+      self.queue_rerouted = false
+    end
+
   -- A reception desk with patients has become unstaffed, make sure we reroute patients
   -- If there are no staffed desks available, let patients meander until one is available
-  elseif not self.receptionist and self.queue:size() > 0 and not self.queue_rerouted then
+  elseif not self.queue_rerouted and self.queue:size() > 0 then
     local hospital = self.hospital
     for _, staff in ipairs(hospital.staff) do
       if staff.humanoid_class == "Receptionist" and staff.associated_desk then
@@ -149,8 +154,6 @@ function ReceptionDesk:tick()
         break
       end
     end
-  elseif self.receptionist and self.queue_rerouted then
-    self.queue_rerouted = false
   end
   if reset_timer then
     self.queue_advance_timer = 0
