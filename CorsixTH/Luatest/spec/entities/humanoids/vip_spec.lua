@@ -79,17 +79,17 @@ local function create_room(name, args)
   return room
 end
 
-
-before_each(function()
-    _G.vip = getVip()
-    vip.humanoid_class =  'vip'
-    base_rating = vip.vip_rating
-    -- Base rating range to account for randomness
-    assert.True(base_rating <= 12 and base_rating >= 7)
-    assert.are.equal(0, vip.room_eval)
-end)
-
 describe("Vip", function()
+    local vip
+
+    before_each(function()
+        vip = getVip()
+        vip.humanoid_class =  'vip'
+        base_rating = vip.vip_rating
+        -- Base rating range to account for randomness
+        assert.True(base_rating <= 12 and base_rating >= 7)
+        assert.are.equal(0, vip.room_eval)
+    end)
 
   it("Can represent vip as a string", function()
 
@@ -100,8 +100,8 @@ describe("Vip", function()
   end)
 
   it("Single room evaluation", function()
-    vip.next_room = create_room("research", 
-                                {dying_plants=2, 
+    vip.next_room = create_room("research",
+                                {dying_plants=2,
                                  alive_plants=1,
                                  bin=true,
                                  extinguisher=true,
@@ -109,7 +109,7 @@ describe("Vip", function()
 
 
     vip:evaluateRoom()
-   
+
     -- Total rating unchanged
     assert.are.equal(base_rating, vip.vip_rating)
     -- Room eval has changed: plants -1, bin +1, extinguisher: +1
@@ -131,7 +131,7 @@ describe("Vip", function()
       vip.next_room = room
       vip:evaluateRoom()
     end
-    
+
     assert.are.equal(base_rating+6, vip.vip_rating)
     -- Room eval has changed: plants -1, bin +1, extinguisher: +1
     assert.are.equal(1, vip.room_eval)
