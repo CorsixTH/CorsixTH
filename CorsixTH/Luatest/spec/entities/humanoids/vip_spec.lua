@@ -27,12 +27,7 @@ require("entities.humanoids.vip")
 
 local function getVip()
   local animation = {setHitTestResult = function() end}
-  vip = Vip(animation)
-
-  -- We'll set the next room manually so stub this function
-  stub(vip, "getNextRoom")
-
-  return vip
+  return Vip(animation)
 end
 
 local function create_room(name, args)
@@ -45,25 +40,25 @@ local function create_room(name, args)
   }
 
   if args.alive_plants then
-    for i=1,args.alive_plants do
+    for _=1,args.alive_plants do
       room.objects[{object_type = {id = "plant"}, isDying = function() return false end}] = true
     end
   end
 
   if args.dying_plants then
-    for i=1,args.dying_plants do
+    for _=1,args.dying_plants do
       room.objects[{object_type = {id = "plant"}, isDying = function() return true end}] = true
     end
   end
 
   if args.working_machines then
-    for i=1,args.working_machines do
+    for _=1,args.working_machines do
       room.objects[{object_type = {id = "machine", default_strength=12}, strength=10}] = true
     end
   end
 
   if args.breaking_machines then
-    for i=1,args.breaking_machines do
+    for _=1,args.breaking_machines do
       room.objects[{object_type = {id = "machine", default_strength=12}, strength=2}] = true
     end
   end
@@ -81,9 +76,13 @@ end
 
 describe("Vip", function()
     local vip
+    local base_rating
 
     before_each(function()
         vip = getVip()
+        -- We'll set the next room manually so stub this function
+        stub(vip, "getNextRoom")
+
         vip.humanoid_class =  'vip'
         base_rating = vip.vip_rating
         -- Base rating range to account for randomness
