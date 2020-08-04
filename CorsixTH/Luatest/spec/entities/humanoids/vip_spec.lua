@@ -81,7 +81,7 @@ end
 
 
 before_each(function()
-    local vip = getVip()
+    _G.vip = getVip()
     vip.humanoid_class =  'vip'
     base_rating = vip.vip_rating
     -- Base rating range to account for randomness
