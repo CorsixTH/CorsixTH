@@ -80,6 +80,7 @@ function ReceptionDesk:ReceptionDesk(...)
   self.queue:setMaxQueue(20) -- larger queues for reception desk
   self.hover_cursor = TheApp.gfx:loadMainCursor("queue")
   self.queue_advance_timer = 0
+  self.rerouted = false -- helps prevent multiple reroute actions in tick
 end
 
 function ReceptionDesk:onClick(ui, button)
@@ -91,15 +92,13 @@ function ReceptionDesk:onClick(ui, button)
   end
 end
 
-local queue_rerouted = false
-
 function ReceptionDesk:tick()
   local queue_front = self.queue:front()
   local reset_timer = true
   if self.receptionist and queue_front then
     -- If we interrupted a patient at the front of the queue they get use_object instead of idle
     if queue_front:getCurrentAction().name == "idle" or queue_front:getCurrentAction().name == "use_object" then
-      queue_rerouted = false
+      self.queue_rerouted = false
       self.queue_advance_timer = self.queue_advance_timer + 1
       reset_timer = false
       if self.queue_advance_timer >= 4 + Date.hoursPerDay() * (1.0 - self.receptionist.profile.skill) then
@@ -139,17 +138,19 @@ function ReceptionDesk:tick()
         queue_front.has_passed_reception = true
       end
     end
-  -- A reception desk with patients has become unmanned, make sure we reroute patients
-  -- If there are no manned desks available, let patients meander until one is available
-  elseif not self.receptionist and self.queue:size() > 0 and not queue_rerouted then
+  -- A reception desk with patients has become unstaffed, make sure we reroute patients
+  -- If there are no staffed desks available, let patients meander until one is available
+  elseif not self.receptionist and self.queue:size() > 0 and not self.queue_rerouted then
     local hospital = self.hospital
     for _, staff in ipairs(hospital.staff) do
       if staff.humanoid_class == "Receptionist" and staff.associated_desk then
         self.queue:rerouteAllPatients(SeekReceptionAction(), object)
-        queue_rerouted = true
+        self.queue_rerouted = true
         break
       end
     end
+  elseif self.receptionist and self.queue_rerouted then
+    self.queue_rerouted = false
   end
   if reset_timer then
     self.queue_advance_timer = 0

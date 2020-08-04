@@ -321,7 +321,7 @@ function Queue:movePatient(index, new_index)
   self:move(first_patient_index + index - 1, new_index)
 end
 
---! Called when reception desk is destroyed (or unmanned), or when a room is destroyed from a crashed machine.
+--! Called when reception desk is destroyed (or unstaffed), or when a room is destroyed from a crashed machine.
 --!param action (function) What should the patient do now
 --!param origin The room or object, if needed
 function Queue:rerouteAllPatients(action, origin)
