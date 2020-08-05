@@ -1580,7 +1580,7 @@ function App:checkForUpdates()
   local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
-  local trusted_domains = { 'corsixth.com', 'code.google.com' }
+  local trusted_domains = { 'corsixth.com', 'github.com' }
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
