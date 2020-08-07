@@ -2087,12 +2087,11 @@ function World:objectPlaced(entity, id)
     end
   end
   if id == "reception_desk" then
-    if not self.ui.start_tutorial and
-        self.hospitals[1]:countStaffOfCategory("Receptionist") == 0 then
+    local numReceptionists = self.hospitals[1]:countStaffOfCategory("Receptionist")
+    if not self.ui.start_tutorial and numReceptionists == 0 then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:countStaffOfCategory("Receptionist") > 0 and
-        self.object_counts["reception_desk"] == 1 and
+    elseif numReceptionists > 0 and self.object_counts["reception_desk"] == 1 and
         not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
