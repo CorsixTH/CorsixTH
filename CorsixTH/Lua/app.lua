@@ -455,7 +455,19 @@ function App:initLanguage()
     success = false
   end
 
-  local strings, speech_file = self.strings:load(language)
+  local strings, speech_file
+  strings, speech_file = self.strings:load(language)
+  -- Test for 'dutch', except it doesn't work, as "parse_lang.parse_file" doesn't fly
+  -- and I don't know how to fix that.
+  if language == "dutch" then
+    -- The '/' is obviously fixable, but no point in that until you can call the function.
+    local transl, errors = parse_lang.parse_file("languages/" .. language .. ".lang")
+    local strings2 = transl:create_nested_table(errors)
+    --speech_file = nil
+    errors:dump() -- Dump errors?!
+    serialize(strings2)
+  end
+
   strict_declare_global "_S"
   strict_declare_global "_A"
   local old_S = _S
