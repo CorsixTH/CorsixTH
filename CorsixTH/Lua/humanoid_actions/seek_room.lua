@@ -135,7 +135,8 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
   local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
   local research_enabled = false
   if req then
-    research_enabled = humanoid.hospital:hasRoomOfType("research") and humanoid.hospital:hasStaffOfCategory("Researcher")
+    research_enabled = (humanoid.hospital:hasRoomOfType("research") and
+                        humanoid.hospital:countStaffOfCategory("Researcher") > 0)
     if #req.rooms == 1 then
       local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(req.rooms[1])
       if req.staff[required_staff] or 0 > 0 then

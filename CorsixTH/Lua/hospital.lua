@@ -1225,7 +1225,7 @@ function Hospital:createEmergency(emergency)
     local room_name, required_staff, staff_name =
       self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
 
-    local staff_available = self:hasStaffOfCategory(required_staff)
+    local staff_available = self:countStaffOfCategory(required_staff) > 0
     -- Check so that all rooms in the list are available
     if self:hasRoomOfType(emergency.disease.treatment_rooms[no_rooms]) then
       room_name = nil
@@ -1720,18 +1720,18 @@ end
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
 --! "Surgeon", "Researcher" or "Consultant"
---! returns false if none, else number of that type employed
-function Hospital:hasStaffOfCategory(category)
-  local result = false
+--! returns Number of that type employed
+function Hospital:countStaffOfCategory(category)
+  local result = 0
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == category then
-      result = (result or 0) + 1
+      result = result + 1
     elseif staff.humanoid_class == "Doctor" then
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or
           (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
           (category == "Consultant" and staff.profile.is_consultant) then
-        result = (result or 0) + 1
+        result = result + 1
       end
     end
   end
@@ -1980,7 +1980,7 @@ function Hospital:checkDiseaseRequirements(disease)
 
     -- Get staff for room
     for staff_class, amount in pairs(TheApp.rooms[room_id].required_staff) do
-      local available = self:hasStaffOfCategory(staff_class) or 0
+      local available = self:countStaffOfCategory(staff_class)
       if available < amount then
         -- Don't add up the staff requirements of different rooms, but take the maximum
         staff[staff_class] = math.max(staff[staff_class] or 0, amount - available)
