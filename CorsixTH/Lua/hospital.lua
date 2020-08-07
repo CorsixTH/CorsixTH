@@ -713,11 +713,11 @@ function Hospital:checkFacilities()
   -- All messages are shown after first 4 months if respective conditions are met
   if self:isPlayerHospital() and current_date >= Date(1,5) then
     -- If there is no staff room, remind player of the need to build one
-    if not self.staff_room_msg and day == 3 and not self:hasRoomOfType("staff_room") then
+    if not self.staff_room_msg and day == 3 and self:countRoomOfType("staff_room") == 0 then
       self:noStaffroom_msg()
     end
     -- If there is no toilet, remind player of the need to build one
-    if not self.toilet_msg and day == 8 and not self:hasRoomOfType("toilets") then
+    if not self.toilet_msg and day == 8 and self:countRoomOfType("toilets") == 0 then
       self:noToilet_msg()
     end
 
@@ -819,7 +819,7 @@ function Hospital:tick()
   } -- ispot026 and ispot027 are both toilet related sounds
 -- wait until there are some patients in the hospital and a room, otherwise you will wonder who is coughing or who is the
 -- receptionist telephoning! opted for gp as you can't run the hospital without one.
-  if self:hasRoomOfType("gp") and self.patientcount > 2 then
+  if self:countRoomOfType("gp") > 0 and self.patientcount > 2 then
     if math.random(1, 100) == 3 then
       local sound_to_play = sounds[math.random(1, #sounds)]
       if TheApp.audio:soundExists(sound_to_play) then
@@ -1227,7 +1227,7 @@ function Hospital:createEmergency(emergency)
 
     local staff_available = self:countStaffOfCategory(required_staff) > 0
     -- Check so that all rooms in the list are available
-    if self:hasRoomOfType(emergency.disease.treatment_rooms[no_rooms]) then
+    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms]) > 0 then
       room_name = nil
     end
 
@@ -1740,13 +1740,13 @@ end
 
 --! Checks if the hospital has a room of a given type.
 --!param type (string) A room_info.id, e.g. "ward".
---! Returns false if none, else number of that type found
-function Hospital:hasRoomOfType(type)
+--! Returns Number of that type found
+function Hospital:countRoomOfType(type)
   -- Check how many rooms there are.
-  local result = false
+  local result = 0
   for _, room in pairs(self.world.rooms) do
     if room.hospital == self and room.room_info.id == type and room.is_active then
-      result = (result or 0) + 1
+      result = result + 1
     end
   end
   return result
@@ -1972,7 +1972,7 @@ function Hospital:checkDiseaseRequirements(disease)
   local staff = {}
   local any = false
   for _, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
-    local found = self:hasRoomOfType(room_id)
+    local found = self:countRoomOfType(room_id) > 0
     if not found then
       rooms[#rooms + 1] = room_id
       any = true
