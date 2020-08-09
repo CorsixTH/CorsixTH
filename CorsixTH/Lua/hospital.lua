@@ -1713,19 +1713,19 @@ end
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
 --! "Surgeon", "Researcher", "Junior" or "Consultant"
---! returns false if none, else number of that type employed
-function Hospital:hasStaffOfCategory(category)
-  local result = false
+--! returns Number of that type employed
+function Hospital:countStaffOfCategory(category)
+  local result = 0
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == category then
-      result = (result or 0) + 1
+      result = result + 1
     elseif staff.humanoid_class == "Doctor" then
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or
           (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
           (category == "Consultant" and staff.profile.is_consultant) or
           (category == "Junior" and staff.profile.is_junior) then
-        result = (result or 0) + 1
+        result = result + 1
       end
     end
   end

@@ -419,20 +419,14 @@ function Vip:setVIPRating()
 
 --[[--Group factor 4: Doctor ratios--]]
   -- First get all doctors
-  local num_docs = self.hospital:hasStaffOfCategory("Doctor")
+  local num_docs = self.hospital:countStaffOfCategory("Doctor")
   -- No doctors are bad
-  if not num_docs then
+  if num_docs == 0 then
     self.vip_rating = self.vip_rating + 4
   else
     -- Count num. consultants, num. juniors
-    local num_cons = self.hospital:hasStaffOfCategory("Consultant")
-    if not num_cons then
-      num_cons = 0
-    end
-    local num_junior = self.hospital:hasStaffOfCategory("Junior")
-    if not num_junior then
-      num_junior = 0
-    end
+    local num_cons = self.hospital:countStaffOfCategory("Consultant")
+    local num_junior = self.hospital:countStaffOfCategory("Junior")
 
     -- check consultant and junior proportions
     if num_cons / num_docs > 0.5 then
