@@ -71,14 +71,14 @@ function InstallDirTreeNode:createNewNode(path)
   return InstallDirTreeNode(path)
 end
 
---! Test if file name has an .iso extension
+--! Test if file name has an .iso or .dmg extension
 local function isIso(name)
   if name == nil then
     return false
   end
 
-  local ext = 'iso'
-  return string.sub(name:lower(), -string.len(ext)) == ext
+  local ext = name:match("^.+(%..+)$")
+  return ext == '.iso' or ext == '.dmg'
 end
 
 --! Test whether this file node is a directory or iso file.
