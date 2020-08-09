@@ -200,7 +200,7 @@ function GPRoom:onHumanoidLeave(humanoid)
 end
 
 function GPRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Doctor") and
+  if self.hospital:countStaffOfCategory("Doctor") == 0 and
       not self.world.ui.start_tutorial then
     self.world.ui.adviser:say(_A.room_requirements.gps_office_need_doctor)
   end

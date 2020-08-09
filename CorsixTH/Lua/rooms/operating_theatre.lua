@@ -68,12 +68,13 @@ function OperatingTheatreRoom:roomFinished()
     end
   end
   -- Tell the player what is missing, if anything.
-  if not self.hospital:hasRoomOfType("ward") then
+  if self.hospital:countRoomOfType("ward") == 0 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_ward)
   end
-  if not self.hospital:hasStaffOfCategory("Surgeon") then
+  local numSurgeons = self.hospital:countStaffOfCategory("Surgeon")
+  if numSurgeons == 0 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_two_surgeons)
-  elseif self.hospital:hasStaffOfCategory("Surgeon") == 1 then
+  elseif numSurgeons == 1 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_another_surgeon)
   end
   return Room.roomFinished(self)

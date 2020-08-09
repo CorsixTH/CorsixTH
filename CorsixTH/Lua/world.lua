@@ -1876,7 +1876,7 @@ function World:newObject(id, ...)
   elseif object_type.default_strength then
     entity = Machine(self, object_type, ...)
     -- Tell the player if there is no handyman to take care of the new machinery.
-    if not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+    if self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
@@ -2087,19 +2087,18 @@ function World:objectPlaced(entity, id)
     end
   end
   if id == "reception_desk" then
-    if not self.ui.start_tutorial and
-        not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
+    local numReceptionists = self.hospitals[1]:countStaffOfCategory("Receptionist")
+    if not self.ui.start_tutorial and numReceptionists == 0 then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
-        self.object_counts["reception_desk"] == 1 and
+    elseif numReceptionists > 0 and self.object_counts["reception_desk"] == 1 and
         not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
   end
   -- If it is a plant it might be advisable to hire a handyman
-  if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+  if id == "plant" and self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
     self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
   end
   if id == "gates_to_hell" then
