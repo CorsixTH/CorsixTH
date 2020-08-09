@@ -104,7 +104,7 @@ function World:World(app)
   self.tick_timer = 0
   self.game_date = Date()
 
-  self.room_information_dialogs_off = app.config.debug
+  self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
@@ -295,7 +295,7 @@ function World:initLevel(app, avail_rooms)
 end
 
 function World:toggleInformation()
-  self.room_information_dialogs_off = not self.room_information_dialogs_off
+  self.room_information_dialogs = not self.room_information_dialogs
 end
 
 --! Load goals to win and lose from the map, and store them in 'self.goals'.
@@ -1877,7 +1877,7 @@ function World:newObject(id, ...)
   elseif object_type.default_strength then
     entity = Machine(self, object_type, ...)
     -- Tell the player if there is no handyman to take care of the new machinery.
-    if not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+    if self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
@@ -2088,19 +2088,18 @@ function World:objectPlaced(entity, id)
     end
   end
   if id == "reception_desk" then
-    if not self.ui.start_tutorial and
-        not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
+    local numReceptionists = self.hospitals[1]:countStaffOfCategory("Receptionist")
+    if not self.ui.start_tutorial and numReceptionists == 0 then
       -- TODO: Will not work correctly for multiplayer
       self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
-        self.object_counts["reception_desk"] == 1 and
+    elseif numReceptionists > 0 and self.object_counts["reception_desk"] == 1 and
         not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
       self.ui.adviser:say(_A.warnings.no_desk_5)
       self.hospitals[1].receptionist_msg = true
     end
   end
   -- If it is a plant it might be advisable to hire a handyman
-  if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+  if id == "plant" and self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
     self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
   end
   if id == "gates_to_hell" then

@@ -40,10 +40,8 @@ function Receptionist:tickDay()
 end
 
 function Receptionist:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-
   local receptionist_leave_sounds = {"sack007.wav", "sack008.wav",}
-  self.world.ui:playAnnouncement(receptionist_leave_sounds[math.random(1, #receptionist_leave_sounds)], announcement_priority)
+  self.world.ui:playAnnouncement(receptionist_leave_sounds[math.random(1, #receptionist_leave_sounds)], AnnouncementPriority.Critical) -- must always be played even without receptionist
 end
 
 function Receptionist:isTiring()

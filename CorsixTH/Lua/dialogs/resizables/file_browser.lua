@@ -88,12 +88,16 @@ function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_
 
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
 
+  -- Magic numbers used to find a static position across different screen resolutions.
+  local button1x = math.floor(TheApp.ui.app.config.width / 2 - 90)
+  local button2x = button1x + 210
+  local buttony = math.floor(TheApp.ui.app.config.height / 4 - 95)
   -- Add the two column headers and make buttons on them.
   if show_dates then
     self:addBevelPanel(1, 1, width - 170, 13, col_bg):setLabel(_S.menu_list_window.name)
-    :makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name)
+    :makeButton(0, 0, width - 170, 13, nil, self.sortByName):setTooltip(_S.tooltip.menu_list_window.name, button1x, buttony)
     self:addBevelPanel(width - 169, 1, 150, 13, col_bg):setLabel(_S.menu_list_window.save_date)
-    :makeButton(0, 0, 150, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date)
+    :makeButton(0, 0, 150, 13, nil, self.sortByDate):setTooltip(_S.tooltip.menu_list_window.save_date, button2x, buttony)
   end
   self.show_dates = show_dates
 end

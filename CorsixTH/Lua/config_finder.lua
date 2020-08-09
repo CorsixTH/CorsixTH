@@ -138,6 +138,7 @@ local config_defaults = {
   new_graphics_folder = nil,
   use_new_graphics = false,
   check_for_updates = true,
+  room_information_dialogs = true
 }
 
 fi = io.open(config_filename, "r")
@@ -172,9 +173,7 @@ else
 end
 
 if needs_rewrite then
-  fi = io.open(config_filename, "w")
-  if fi then
-    fi:write([=[
+  local string_01 = [=[
 ----------------------------------------- CorsixTH configuration file -------------------------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -359,7 +358,9 @@ if needs_rewrite then
 -- By default the player selects any extra objects they want for each room they build.
 -- If you would like the game to remember what you usually add, then change this option to true.
 -- ]=] .. '\n' ..
-'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
+'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n'
+
+  local string_02 = [=[
 
 ----------------------------------------------- FOLDER SETTINGS ----------------------------------------------
 -- These settings can also be changed from the Folders Menu
@@ -482,6 +483,19 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
 'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
+-------------------------------------------------------------------------------------------------------------------------
+-- Room information dialogs: Information about new rooms, important for
+-- additional rooms in later levels. Affects campaign only.
+-- ]=] .. '\n' ..
+'room_information_dialogs = ' .. tostring(config_values.room_information_dialogs)  .. '\n' .. [=[
+
+-------------------------------------------------------------------------------------------------------------------------
+-- If true, parts of the hospital can be made inaccessible by blocking the path
+-- with rooms or objects. If false, all parts of the hospital must be kept
+-- accessible, the game will disallow any attempt to blocking the path.
+-- ]=] .. '\n' ..
+'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
+
 
 -------------------------------------------------------------------------------------------------------------------------
 
@@ -497,8 +511,11 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- you play the game.
 -------------------------------------------------------------------------------------------------------------------------
 
-]=])
-    fi:close()
+]=]
+  fi = io.open(config_filename, "w")
+  if fi then
+    fi:write(string_01 .. string_02)
+  fi:close()
   end
 end
 

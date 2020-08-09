@@ -76,9 +76,8 @@ function WardRoom:roomFinished()
     Nurse = desks,
   }
   self.maximum_patients = beds
-  if not self.hospital:hasStaffOfCategory("Nurse") then
-    self.world.ui.adviser
-    :say(_A.room_requirements.ward_need_nurse)
+  if self.hospital:countStaffOfCategory("Nurse") == 0 then
+    self.world.ui.adviser:say(_A.room_requirements.ward_need_nurse)
   end
   Room.roomFinished(self)
 end

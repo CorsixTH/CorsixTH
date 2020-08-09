@@ -11,6 +11,7 @@
 #   - WITH_VLD    	: Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
+#   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
 #   - BUILD_ANIMVIEWER : Generate AnimViewer build files (no)
@@ -51,6 +52,10 @@ endif()
 # Dependency management
 if(UNIX AND CMAKE_COMPILER_IS_GNU)
   option(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
+endif()
+
+if(APPLE)
+  option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
 endif()
 
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)

@@ -864,12 +864,16 @@ function UIEditRoom:enterDoorPhase()
 
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
-    -- undo passable flags and go back to walls phase
-    self.phase = "walls"
-    self:returnToWallPhase(true)
-    self.ui:playSound("wrong2.wav")
-    self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
-    return
+    if self.world.app.config.allow_blocking_off_areas then
+      print("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
+    else
+      -- undo passable flags and go back to walls phase
+      self.phase = "walls"
+      self:returnToWallPhase(true)
+      self.ui:playSound("wrong2.wav")
+      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
+      return
+    end
   end
 
   self.desc_text = _S.place_objects_window.place_door

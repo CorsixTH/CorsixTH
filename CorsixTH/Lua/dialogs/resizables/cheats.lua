@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! A dialog for activating cheats
 class "UICheats" (UIResizable)
 
@@ -134,7 +138,7 @@ function UICheats:buttonClicked(num)
     if self.cheats[num].name ~= "lose_level" then
       local announcements = self.ui.app.world.cheat_announcements
       if announcements then
-        self.ui:playSound(announcements[math.random(1, #announcements)])
+        self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
       end
       self.ui.hospital.cheated = true
       self:updateCheatedStatus()

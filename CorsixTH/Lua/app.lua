@@ -121,10 +121,13 @@ function App:init()
   self:initScreenshotsDir()
 
   -- Create the window
-  if not SDL.init("audio", "video", "timer") then
+  if not SDL.init("video", "timer") then
     return false, "Cannot initialise SDL"
   end
   local compile_opts = TH.GetCompileOptions()
+  if compile_opts.audio then
+    SDL.init("audio")
+  end
   local api_version = corsixth.require("api_version")
   if api_version ~= compile_opts.api_version then
     api_version = api_version or 0
@@ -730,7 +733,7 @@ function App:dumpStrings()
 
   self:checkMissingStringsInLanguage(dir, self.config.language)
   -- Uncomment these lines to get diffs for all languages in the game
-  -- for _, lang in ipairs(self.strings.languages_english) do
+  -- for _, lang in pairs(self.strings.languages_english) do
   --   self:checkMissingStringsInLanguage(dir, lang)
   -- end
   print("")
@@ -746,7 +749,6 @@ end
 --!param dir The directory where the file to write to should be.
 --!param language The language to check against.
 function App:checkMissingStringsInLanguage(dir, language)
-
   -- Accessors to reach through the userdata proxies on strings
   local LUT = debug.getregistry().StringProxyValues
   local function val(o)
@@ -788,7 +790,7 @@ function App:checkMissingStringsInLanguage(dir, language)
 
     -- if possible, use the English name of the language for the file name.
     local language_english = language
-    for _, lang_eng in ipairs(self.strings.languages_english) do
+    for _, lang_eng in pairs(self.strings.languages_english) do
       if ltc[language] == ltc[lang_eng:lower()] then
         language_english = lang_eng
         break
@@ -1403,7 +1405,7 @@ function App:getVersion(version)
   if ver > 138 then
     return "Trunk"
   elseif ver > 134 then
-    return "v0.64-rc1"
+    return "v0.64"
   elseif ver > 127 then
     return "v0.63"
   elseif ver > 122 then
