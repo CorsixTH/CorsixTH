@@ -864,7 +864,7 @@ function UIEditRoom:enterDoorPhase()
 
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
-    if self.world.app.config.allow_blocking_off_areas then
+    if self.ui.app.config.allow_blocking_off_areas then
       print("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
     else
       -- undo passable flags and go back to walls phase
