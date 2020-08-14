@@ -427,9 +427,11 @@ local configuration = {
     PlantBonus = 5,
     -- Bonus - MIN 0 MAX 255 (REP BONUS)
     TrophyStaffHappinessBonus = 5,
+    -- Bonus to money for curing every patient, no deaths or send-homes (MONEY BONUS)
+    TrophyAllCuredBonus = 20000,
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
-    -- Bonus to money for approximately 100% Cure Rate in the year (MONEY BONUS)
+    -- Bonus to money for over 90% Cure Rate in the year (MONEY BONUS)
     TrophyCuresBonus = 6000,
     -- Bonus to reputation for pleasing VIPs in the year (REPUTATION BONUS)
     TrophyMayorBonus = 5,
@@ -494,6 +496,8 @@ local configuration = {
     CuresBonus = 2000,
     -- MIN -32000 MAX +32000 - MONEY
     CuresPenalty = -3000,
+    -- MIN -32000 MAX +32000 - MONEY
+    AllCuresBonus = 5000,
     -- MIN -32000 MAX +32000 - MONEY
     DeathsBonus = 3000,
     -- MIN -32000 MAX +32000 - MONEY

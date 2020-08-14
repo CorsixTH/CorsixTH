@@ -1142,9 +1142,9 @@ trophy_room = {
       S[55][ 7],
     },
   },
-  all_cured = {         -- not implemented
+  all_cured = {
     awards = {
-      S[27][29],          -- for 100% treat rate (does that mean none sent home or killed?)
+      S[27][29],          -- for 100% treat rate (none sent home or killed)
     },
     trophies = {
       S[27][30],          -- for 100% cure rate
