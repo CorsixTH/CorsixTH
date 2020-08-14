@@ -627,6 +627,7 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
       world = {
         room_built = self.world.room_built,
         campaign_info = self.world.campaign_info,
+        debug_disable_salary_raise = self.world.debug_disable_salary_raise,
         },
       hospital = {
         player_salary = self.ui.hospital.player_salary,
