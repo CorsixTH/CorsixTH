@@ -424,6 +424,10 @@ function World:initFromPreviousLevel(carry)
       for key, value in pairs(tab) do
         self.hospitals[1][key] = value
       end
+    elseif object == "policy" then
+      for key, value in pairs(tab) do
+        self.hospitals[1].policies[key] = value
+      end
     end
   end
 end

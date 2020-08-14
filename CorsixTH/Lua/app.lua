@@ -628,13 +628,19 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
         room_built = self.world.room_built,
         campaign_info = self.world.campaign_info,
         debug_disable_salary_raise = self.world.debug_disable_salary_raise,
-        },
+      },
       hospital = {
         player_salary = self.ui.hospital.player_salary,
         message_popup = self.ui.hospital.message_popup,
         handyman_popup = self.ui.hospital.handyman_popup,
         hospital_littered = self.ui.hospital.hospital_littered,
         has_seen_pay_rise = self.ui.hospital.has_seen_pay_rise,
+      },
+      policy = {
+        guess_cure = self.ui.hospital.policies["guess_cure"],
+        send_home = self.ui.hospital.policies["send_home"],
+        stop_procedure = self.ui.hospital.policies["stop_procedure"],
+        goto_staffroom = self.ui.hospital.policies["goto_staffroom"],
       },
     }
   end
