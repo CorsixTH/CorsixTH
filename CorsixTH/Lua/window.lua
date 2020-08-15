@@ -948,7 +948,7 @@ function Textbox:drawCursor(canvas, x, y)
     cursor_y = cursor_y - 3
     -- Add x separation, but only if there was actually some text in this line.
     if self.text[self.cursor_pos[1]] ~= "" then
-      cursor_x = cursor_x + 1 -- TODO font:getSeparation?
+      cursor_x = cursor_x + 1
     end
     canvas:drawRect(col, cursor_x, cursor_y, w, 1)
   end

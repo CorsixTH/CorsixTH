@@ -69,8 +69,6 @@ function ResearchDepartment:initResearch()
           diagnosis = object
         end
       end
-      -- TODO: Do we want some kind of specific order here, e.g.
-      -- the same as in the original?
       if object.default_strength and cfg_objects[object.thob].StartAvail == 1 then
         improve = object
       end
