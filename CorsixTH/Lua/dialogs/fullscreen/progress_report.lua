@@ -25,7 +25,6 @@ class "UIProgressReport" (UIFullscreen)
 local UIProgressReport = _G["UIProgressReport"]
 
 function UIProgressReport:UIProgressReport(ui)
-  -- TODO: Refactor this file!
   self:UIFullscreen(ui)
 
   local world = self.ui.app.world

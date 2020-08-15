@@ -93,8 +93,6 @@ function Patient:setDisease(disease)
   for i, room in ipairs(self.disease.diagnosis_rooms) do
     self.available_diagnosis_rooms[i] = room
   end
-  -- Decide an insurance company, one out of four patients have one.
-  -- TODO: May need some balancing, but it is roughly the same as in TH.
   local company = math.random(1,12)
   if company < 4 then
     self.insurance_company = company
