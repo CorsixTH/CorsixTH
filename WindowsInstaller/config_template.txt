@@ -138,7 +138,7 @@ audio_buffer_size = 2048
 --  3) If you want to change the names of songs ingame, make a file called
 --     "names.txt" and write the file name on one row, followed by the desired
 --     ingame name on the next row.
--- audio_mp3 = [[X:\ThemeHospital\Music]]
+-- audio_music = [[X:\ThemeHospital\Music]]
 -------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
