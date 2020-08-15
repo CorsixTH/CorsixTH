@@ -141,9 +141,6 @@ function App:init()
   end
 
   local modes = {}
-  if compile_opts.renderer == "OpenGL" then
-    modes[#modes + 1] = "opengl"
-  end
   self.fullscreen = false
   if self.config.fullscreen then
     self.fullscreen = true
