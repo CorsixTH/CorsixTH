@@ -133,6 +133,20 @@ describe("Announcer", function()
     assert.equal(0, #app_mock.audio.__played_sounds__)
   end)
 
+  it("duplicate announcements should be discarded", function()
+    local app_mock = create_app_mock(false, true)
+    local announcer = Announcer(app_mock)
+
+    announcer:playAnnouncement("sound.wav")
+    announcer:playAnnouncement("sound.wav")
+    announcer:playAnnouncement("sound.wav")
+
+    announcer:onTick()
+    announcer:onTick()
+    announcer:onTick()
+    assert.equal(1, #app_mock.audi.__played_sounds__)
+  end)
+
   it("announcements are played priority-wise", function()
     local app_mock = create_app_mock(false, true)
     local announcer = Announcer(app_mock)

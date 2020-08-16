@@ -33,9 +33,9 @@ local default_announcement_priority = AnnouncementPriority.Normal
 
 local default_announcement_decay_hours = {
   [AnnouncementPriority.Critical] = -1, -- never decay
-  [AnnouncementPriority.High] = 365*24,
-  [AnnouncementPriority.Normal] = 31*24,
-  [AnnouncementPriority.Low] = 7*24
+  [AnnouncementPriority.High] = 31*50,
+  [AnnouncementPriority.Normal] = 7*50,
+  [AnnouncementPriority.Low] = 3*50
 }
 
 --! An announcement queue based on priority
@@ -84,6 +84,23 @@ function AnnouncementQueue:isEmpty()
   return self.count == 0
 end
 
+--! Checks for duplicates in the announcement queue and refreshes the announcement's created_date
+--!param announcer (self.entries) the announcement queue in use
+--!param sound the announcement to check
+function AnnouncementQueue:checkForDuplicates(announcer, sound)
+  for _, entries in ipairs(announcer.entries.priorities) do
+    for _, entry in ipairs(entries) do
+      if entry.name == sound then
+        entry.created_date = announcer.app.world.game_date:clone()
+        return true
+      end
+    end
+  end
+
+  return false
+end
+
+
 --! An announcement.
 class "AnnouncementEntry"
 
@@ -94,8 +111,8 @@ local AnnouncementEntry = _G["AnnouncementEntry"]
 function AnnouncementEntry:AnnouncementEntry()
   self.name = nil -- filename to play
   self.priority = default_announcement_priority
-  self.created_tick = nil -- when it has been created
-  self.decay_ticks = nil -- how long until the announcement isn't relevant anymore
+  self.created_date = nil -- when it has been created
+  self.decay_horus = nil -- how long until the announcement isn't relevant anymore
   self.played_callback = nil -- call me whenever the sound was played, ...
   self.played_callback_delay = nil -- but not until delay has passed
 end
@@ -136,6 +153,12 @@ function Announcer:playAnnouncement(name, priority, decay_hours, played_callback
   -- actually start it, as more important announcements must be played before that.
   -- It doesn't make sense to play the sacked announcement when the employee
   -- already has had several other jobs and has died already [joke].
+
+  -- Check for duplicate announcements, if there is we refresh the existing one
+  local duplicate_announcement = AnnouncementQueue:checkForDuplicates(self, name)
+  if duplicate_announcement then
+    return
+  end
 
   local new_priority = priority or default_announcement_priority
   local created_date = self.app.world.game_date:clone()
