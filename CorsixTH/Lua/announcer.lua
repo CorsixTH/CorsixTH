@@ -112,7 +112,7 @@ function AnnouncementEntry:AnnouncementEntry()
   self.name = nil -- filename to play
   self.priority = default_announcement_priority
   self.created_date = nil -- when it has been created
-  self.decay_horus = nil -- how long until the announcement isn't relevant anymore
+  self.decay_hours = nil -- how long until the announcement isn't relevant anymore
   self.played_callback = nil -- call me whenever the sound was played, ...
   self.played_callback_delay = nil -- but not until delay has passed
 end
