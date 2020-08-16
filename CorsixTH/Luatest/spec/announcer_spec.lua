@@ -144,7 +144,7 @@ describe("Announcer", function()
     announcer:onTick()
     announcer:onTick()
     announcer:onTick()
-    assert.equal(1, #app_mock.audi.__played_sounds__)
+    assert.equal(1, #app_mock.audio.__played_sounds__)
   end)
 
   it("announcements are played priority-wise", function()
