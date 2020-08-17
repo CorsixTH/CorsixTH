@@ -1217,18 +1217,14 @@ function Hospital:createEmergency(emergency)
     end
 
     self.emergency = emergency
-    -- The last room in the list of treatment rooms is considered when checking for availability.
-    -- It works for all original diseases, but if we introduce new multiple room diseases it might break.
-    -- TODO: Make it work for all kinds of lists of treatment rooms.
-    -- TODO: Change to make use of Hospital:checkDiseaseRequirements
-    local no_rooms = #emergency.disease.treatment_rooms
-    local room_name, required_staff, staff_name =
-      self.world:getRoomNameAndRequiredStaffName(emergency.disease.treatment_rooms[no_rooms])
 
-    local staff_available = self:countStaffOfCategory(required_staff) > 0
-    -- Check so that all rooms in the list are available
-    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms]) > 0 then
-      room_name = nil
+    -- Check needed rooms and staff.
+    local room_name, staff_name
+    local required = self:checkDiseaseRequirements(emergency.disease.id)
+    if required then
+      if #required.rooms > 0 then room_name = required.rooms[1] end -- Take the first missing room
+
+      for sn, _ in pairs(required.staff) do staff_name = sn; break; end
     end
 
     local casebook = self.disease_casebook[random_disease.id]
@@ -1236,13 +1232,13 @@ function Hospital:createEmergency(emergency)
         _S.fax.emergency.cure_possible_drug_name_efficiency:format(emergency.disease.name, casebook.cure_effectiveness)
         or _S.fax.emergency.cure_possible
     if room_name then
-      if staff_available then
-        added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
+      if staff_name then
+        added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, translateStaffClass(staff_name)) .. "."
       else
-        added_info = _S.fax.emergency.cure_not_possible_build_and_employ:format(room_name, staff_name) .. "."
+        added_info = _S.fax.emergency.cure_not_possible_build:format(room_name) .. "."
       end
-    elseif not staff_available then
-      added_info = _S.fax.emergency.cure_not_possible_employ:format(staff_name) .. "."
+    elseif staff_name then
+      added_info = _S.fax.emergency.cure_not_possible_employ:format(translateStaffClass(staff_name)) .. "."
     end
 
     local one_or_many_victims_msg
@@ -1253,9 +1249,10 @@ function Hospital:createEmergency(emergency)
     end
     local message = {
       {text = _S.fax.emergency.location:format(_S.fax.emergency.locations[math.random(1,9)])},
-      {text = one_or_many_victims_msg },
+      {text = one_or_many_victims_msg},
       {text = added_info},
-      {text = self.world.free_build_mode and _S.fax.emergency.free_build or _S.fax.emergency.bonus:format(emergency.bonus*emergency.victims)},
+      {text = (self.world.free_build_mode and _S.fax.emergency.free_build)
+            or _S.fax.emergency.bonus:format(emergency.bonus * emergency.victims)},
       choices = {
         {text = _S.fax.emergency.choices.accept, choice = "accept_emergency"},
         {text = _S.fax.emergency.choices.refuse, choice = "refuse_emergency"},
