@@ -319,6 +319,18 @@ function App:init()
           "Please make sure you have specified a font file in the config file."}))
     end
 
+    -- If the player wants to continue then load the youngest file in the Autosaves folder
+    -- If they give a month number then load that month's autosave
+    if self.command_line.continue then
+      local num = self.command_line.continue
+      local file = "Autosaves" .. pathsep .. "Autosave" .. num .. ".sav"
+      if num >= "1" and num <= "12" and lfs.attributes(self.savegame_dir .. file, "size") then
+        self.command_line.load = file
+      else
+        self.command_line.load = "Autosaves" .. pathsep ..
+          FileTreeNode(self.savegame_dir .. "Autosaves"):getMostRecentlyModifiedChildFile(".sav").label
+      end
+    end
     -- If a savegame was specified, load it
     if self.command_line.load then
       local status, err = pcall(self.load, self, self.savegame_dir .. self.command_line.load)
