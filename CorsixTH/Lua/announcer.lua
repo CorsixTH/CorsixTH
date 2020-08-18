@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("date")
+
 --! Pr
 local AnnouncementPriority = {
   Critical = 1,
@@ -30,12 +32,13 @@ strict_declare_global "AnnouncementPriority"
 _G["AnnouncementPriority"] = AnnouncementPriority
 
 local default_announcement_priority = AnnouncementPriority.Normal
+local hoursPerDay = Date.hoursPerDay()
 
 local default_announcement_decay_hours = {
   [AnnouncementPriority.Critical] = -1, -- never decay
-  [AnnouncementPriority.High] = 31*50,
-  [AnnouncementPriority.Normal] = 7*50,
-  [AnnouncementPriority.Low] = 3*50
+  [AnnouncementPriority.High] = 31 * hoursPerDay,
+  [AnnouncementPriority.Normal] = 7 * hoursPerDay,
+  [AnnouncementPriority.Low] = 3 * hoursPerDay
 }
 
 --! An announcement queue based on priority
@@ -85,18 +88,17 @@ function AnnouncementQueue:isEmpty()
 end
 
 --! Checks for duplicates in the announcement queue and refreshes the announcement's created_date
---!param announcer (self.entries) the announcement queue in use
 --!param sound the announcement to check
-function AnnouncementQueue:checkForDuplicates(announcer, sound)
-  for _, entries in ipairs(announcer.entries.priorities) do
+--!param date the date to use, usually the current date
+function AnnouncementQueue:checkForDuplicates(sound, date)
+  for _, entries in ipairs(self.priorities) do
     for _, entry in ipairs(entries) do
       if entry.name == sound then
-        entry.created_date = announcer.app.world.game_date:clone()
+        entry.created_date = date
         return true
       end
     end
   end
-
   return false
 end
 
@@ -155,13 +157,14 @@ function Announcer:playAnnouncement(name, priority, decay_hours, played_callback
   -- already has had several other jobs and has died already [joke].
 
   -- Check for duplicate announcements, if there is we refresh the existing one
-  local duplicate_announcement = AnnouncementQueue:checkForDuplicates(self, name)
+  local created_date = self.app.world.game_date:clone()
+  local duplicate_announcement = self.entries:checkForDuplicates(name, created_date)
   if duplicate_announcement then
     return
   end
 
   local new_priority = priority or default_announcement_priority
-  local created_date = self.app.world.game_date:clone()
+
   local new_decay_hours = decay_hours or default_announcement_decay_hours[new_priority]
 
   local entry = AnnouncementEntry()
