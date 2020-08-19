@@ -1,8 +1,8 @@
+require("corsixth")
+
 require("class_test_base")
 
 require("announcer")
-
-require("date")
 
 local Announcer = _G["Announcer"]
 local AnnouncementPriority = _G["AnnouncementPriority"]
