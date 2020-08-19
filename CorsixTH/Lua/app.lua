@@ -1719,3 +1719,8 @@ end
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end
+
+function App:isAudioEnabled()
+  local compile_opts = TH.GetCompileOptions()
+  return compile_opts.audio
+end
