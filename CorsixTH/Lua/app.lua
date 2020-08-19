@@ -619,6 +619,7 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
       hospital = {
         player_salary = self.ui.hospital.player_salary,
         message_popup = self.ui.hospital.message_popup,
+        handyman_popup = self.ui.hospital.handyman_popup,
         hospital_littered = self.ui.hospital.hospital_littered,
         has_seen_pay_rise = self.ui.hospital.has_seen_pay_rise,
       },
