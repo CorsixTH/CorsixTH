@@ -339,6 +339,7 @@ function UIOptions:buttonAudioGlobal(checked)
   app.config.audio = not app.config.audio
   app:saveConfig()
   self.volume_button:setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+  if not App:isAudioEnabled() then return end
   -- Reinit audio
   app.audio:stopBackgroundTrack()
   app.audio.has_bg_music = false
