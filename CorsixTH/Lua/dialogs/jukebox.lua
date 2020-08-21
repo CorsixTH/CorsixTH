@@ -175,3 +175,9 @@ function UIJukebox:draw(canvas, x, y)
     end
   end
 end
+
+function UIJukebox:afterLoad()
+  if self.ui:getWindow(UIJukebox) and not (self.app:isAudioEnabled() and self.app.config.audio) then
+    self:close()
+  end
+end
