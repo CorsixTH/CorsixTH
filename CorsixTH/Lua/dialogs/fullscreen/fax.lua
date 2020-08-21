@@ -226,6 +226,8 @@ function UIFax:choice(choice_number)
   elseif choice == "return_to_main_menu" then
     self.ui.app.moviePlayer:playWinMovie()
     self.ui.app:loadMainMenu()
+  elseif choice == "stay_on_level" then
+    self.ui.hospital.win_declined = true
   end
   self.icon:removeMessage()
   self:close()

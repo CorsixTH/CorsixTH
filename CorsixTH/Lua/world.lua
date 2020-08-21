@@ -1178,15 +1178,15 @@ end
 -- Called immediately prior to the ingame month changing.
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
-  -- Check if a player has won the level if the year hasn't ended, if it has the
-  -- annual report window will perform this check when it has been closed.
-
-  -- TODO.... this is a step closer to the way TH would check.
-  -- What is missing is that if offer is declined then the next check should be
-  -- either 6 months later or at the end of month 12 and then every 6 months
-  if self.game_date:monthOfYear() % 3 == 0 and self.game_date:monthOfYear() < 12 then
-    self:checkIfGameWon()
-  end
+  -- Check if a player has won the level at months 3, 6 and 9. The annual report
+  -- window will perform this check at month 12 when it has been closed.
+  -- If the offer is declined then the next check is at month 6 and the annual report.
+  local check_months = {
+    [3] = not self.hospitals[1].win_declined,
+    [6] = true,
+    [9] = not self.hospitals[1].win_declined
+  }
+  if check_months[self.game_date:monthOfYear()] then self:checkIfGameWon() end
 
   local local_hospital = self:getLocalPlayerHospital()
   local_hospital.population = 0.25
@@ -1480,7 +1480,7 @@ end
 function World:getCampaignWinningText(player_no)
   local text = {}
   local choice_text, choice
-  local repeated_offer = false -- TODO whether player was asked previously to advance and declined
+  local repeated_offer = self.hospitals[1].win_declined
   local has_next = false
   if type(self.map.level_number) == "number" then
     local no = tonumber(self.map.level_number)
