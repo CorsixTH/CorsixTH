@@ -63,7 +63,6 @@ end
 --! Returns true if a machine is smoking/needs repair
 function Machine:isBreaking()
   local threshold = self:getRemainingUses()
-  print(threshold)
   return threshold < 4
 end
 
