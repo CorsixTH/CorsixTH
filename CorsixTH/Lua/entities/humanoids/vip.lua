@@ -208,11 +208,7 @@ function Vip:evaluateRoom()
     end
 
     if object.strength then
-      if object.strength > (object.object_type.default_strength / 2) then
-        self.room_eval = self.room_eval + 1
-      else
-        self.room_eval = self.room_eval - 1
-      end
+      self.room_eval = object:isBreaking() and self.room_eval - 1 or self.room_eval + 1
     end
   end
   --check whether we had more good or bad plants
