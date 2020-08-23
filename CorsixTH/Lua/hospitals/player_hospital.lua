@@ -299,6 +299,17 @@ function PlayerHospital:onEndDay()
     self:dailyAdviceChecks()
   end
 
+  -- Occasionally unstaffed rooms with a queue will call for staff
+  for _, room in pairs(self.world.rooms) do
+    if math.random(1, 20) == 1 and #room.door.queue > 0 and not room.staff_member and
+        not room:testStaffCriteria(room:getRequiredStaffCriteria()) then
+          self.world.dispatcher:callForStaff(room)
+          break
+    end
+  end
+
+  -- TODO: Do other regular things? Such as making plants need water.
+
   Hospital.onEndDay(self)
 end
 
