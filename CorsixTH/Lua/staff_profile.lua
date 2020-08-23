@@ -143,8 +143,20 @@ function StaffProfile:randomise(month)
 end
 
 function StaffProfile:randomiseOrganical()
-  -- TODO: Randomise a letter from the current language's alphabet.
-  self.name = "" -- string.char(string.byte"A" + math.random(0, 25)) .. ". "
+  local letters = tostring(our_concat(_S.humanoid_name_starts) .. our_concat(_S.humanoid_name_ends)):sub(33)
+  -- If UTF8 then make a table of the letters and pick a random one
+  if letters:find("([%z\1-\127\194-\244][\128-\191]*)") then
+    local initials = {}
+    for uchar in string.gmatch(letters,
+      "([%z\1-\127\194-\244][\128-\191]*)") do
+      initials[#initials+1] = uchar
+    end
+    self.name = initials[math.random(1, #initials)] .. ". "
+  else
+    local num = math.random(1, letters:len())
+    self.name = letters:sub(num, num) .. ". "
+  end
+
   for _, part_table in ipairs(name_parts) do
     self.name = self.name .. part_table.__random
   end
