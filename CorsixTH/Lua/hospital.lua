@@ -36,15 +36,19 @@ function Hospital:Hospital(world, avail_rooms, name)
   local reputation_min = 0
   local reputation_max = 1000
   local reputation = math.round((reputation_min + reputation_max) / 2)
+  -- The difference between the normal and overdraft interest rates, multiplied by 10000
+  local overdraft_differential = 200
   if level_config then
     if level_config.towns and level_config.towns[level] then
       balance = level_config.towns[level].StartCash
       interest_rate = level_config.towns[level].InterestRate / 10000
       reputation = level_config.towns[level].StartRep or reputation
+      overdraft_differential = level_config.towns[level].OverdraftDiff or overdraft_differential
     elseif level_config.town then
       balance = level_config.town.StartCash
       interest_rate = level_config.town.InterestRate / 10000
       reputation = level_config.town.StartRep or reputation
+      overdraft_differential = level_config.town.OverdraftDiff or overdraft_differential
     end
   end
   self.name = name or "PLAYER"
@@ -84,6 +88,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initial values
   self.interest_rate = interest_rate
   self.inflation_rate = 0.045
+  self.overdraft_interest_rate = interest_rate + overdraft_differential / 10000
   self.salary_incr = level_config.gbv.ScoreMaxInc or 300
   self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
   self.reputation = reputation
@@ -890,8 +895,7 @@ function Hospital:onEndDay()
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
   self.msg_counter = self.msg_counter + 1
   if self.balance < 0 then
-    -- TODO: Add the extra interest rate to level configuration.
-    local overdraft_interest = self.interest_rate + 0.02
+    local overdraft_interest = self.overdraft_interest_rate
     local overdraft = math.abs(self.balance)
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment

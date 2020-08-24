@@ -28,7 +28,8 @@ local configuration = {
   town = {
     InterestRate = 0.01,
     StartCash = 40000,
-    StartRep = 500
+    StartRep = 500,
+    OverdraftDiff = 200,
   },
 
   -- New value, but should only be defined if starting staff is included.
