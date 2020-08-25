@@ -18,6 +18,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("date")
+
 --! Pr
 local AnnouncementPriority = {
   Critical = 1,
@@ -30,12 +32,13 @@ strict_declare_global "AnnouncementPriority"
 _G["AnnouncementPriority"] = AnnouncementPriority
 
 local default_announcement_priority = AnnouncementPriority.Normal
+local hoursPerDay = Date.hoursPerDay()
 
 local default_announcement_decay_hours = {
   [AnnouncementPriority.Critical] = -1, -- never decay
-  [AnnouncementPriority.High] = 365*24,
-  [AnnouncementPriority.Normal] = 31*24,
-  [AnnouncementPriority.Low] = 7*24
+  [AnnouncementPriority.High] = 31 * hoursPerDay,
+  [AnnouncementPriority.Normal] = 7 * hoursPerDay,
+  [AnnouncementPriority.Low] = 3 * hoursPerDay
 }
 
 --! An announcement queue based on priority
@@ -84,6 +87,22 @@ function AnnouncementQueue:isEmpty()
   return self.count == 0
 end
 
+--! Checks for duplicates in the announcement queue and refreshes the announcement's created_date
+--!param sound the announcement to check
+--!param date the date to use, usually the current date
+function AnnouncementQueue:checkForDuplicates(sound, date)
+  for _, entries in ipairs(self.priorities) do
+    for _, entry in ipairs(entries) do
+      if entry.name == sound then
+        entry.created_date = date
+        return true
+      end
+    end
+  end
+  return false
+end
+
+
 --! An announcement.
 class "AnnouncementEntry"
 
@@ -94,8 +113,8 @@ local AnnouncementEntry = _G["AnnouncementEntry"]
 function AnnouncementEntry:AnnouncementEntry()
   self.name = nil -- filename to play
   self.priority = default_announcement_priority
-  self.created_tick = nil -- when it has been created
-  self.decay_ticks = nil -- how long until the announcement isn't relevant anymore
+  self.created_date = nil -- when it has been created
+  self.decay_hours = nil -- how long until the announcement isn't relevant anymore
   self.played_callback = nil -- call me whenever the sound was played, ...
   self.played_callback_delay = nil -- but not until delay has passed
 end
@@ -137,8 +156,15 @@ function Announcer:playAnnouncement(name, priority, decay_hours, played_callback
   -- It doesn't make sense to play the sacked announcement when the employee
   -- already has had several other jobs and has died already [joke].
 
-  local new_priority = priority or default_announcement_priority
+  -- Check for duplicate announcements, if there is we refresh the existing one
   local created_date = self.app.world.game_date:clone()
+  local duplicate_announcement = self.entries:checkForDuplicates(name, created_date)
+  if duplicate_announcement then
+    return
+  end
+
+  local new_priority = priority or default_announcement_priority
+
   local new_decay_hours = decay_hours or default_announcement_decay_hours[new_priority]
 
   local entry = AnnouncementEntry()
