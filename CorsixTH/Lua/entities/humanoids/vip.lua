@@ -1,4 +1,5 @@
---[[ Copyright (c) 2011-2020 John Pirie, lewri
+--[[ Copyright (c) 2011 John Pirie
+Copyright (c) 2020 lewri
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in

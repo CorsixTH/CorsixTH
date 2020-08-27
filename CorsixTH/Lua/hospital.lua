@@ -1943,17 +1943,12 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
   local count = 0
   for _, staff in ipairs(self.staff) do
     if staff.attributes[attribute] then
-    sum = sum + staff.attributes[attribute]
-    count = count + 1
-    end
+      sum = sum + staff.attributes[attribute]
+      count = count + 1
+      end
   end
 
-  if count == 0 then
-    return default_value
-  else
-    return sum / count
-
-  end
+  return count == 0 and default_value or sum / count
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.
