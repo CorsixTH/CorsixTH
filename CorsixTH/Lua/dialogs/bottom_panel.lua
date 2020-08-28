@@ -863,13 +863,10 @@ function UIBottomPanel:afterLoad(old, new)
     end
     self.bank_button = self.buttons[1]:makeToggle()
   end
-  if old < 139 then
-    -- Reset the moneybar font to always use the default
-    self.money_font = self.ui.app.gfx:loadFont("QData", "Font05V")
-  end
+  -- Hotfix to force re-calculation of the money font (see issue #1193)
+  self.money_font = self.ui.app.gfx:loadFont("QData", "Font05V")
 
   self:registerKeyHandlers()
 
   Window.afterLoad(self, old, new)
 end
-
