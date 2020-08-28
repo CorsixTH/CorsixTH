@@ -1809,17 +1809,27 @@ function Hospital:changeReputation(reason, disease, valueChange)
     amount = reputation_changes[reason]
   end
   if self:isReputationChangeAllowed(amount) then
-    self.reputation = self.reputation + amount
+    self:unconditionalChangeReputation(amount)
   end
   if disease then
     local casebook = self.disease_casebook[disease.id]
     casebook.reputation = casebook.reputation + amount
   end
+end
+
+--! Unconditionally change the reputation.
+--! In most cases the better entry point for changing reputation is
+--! 'Hospital:changeReputation'.
+--!param valueChange (integer) Amount of change.
+function Hospital:unconditionalChangeReputation(valueChange)
+  self.reputation = self.reputation + amount
+
   if self.reputation < self.reputation_min then
     self.reputation = self.reputation_min
   elseif self.reputation > self.reputation_max then
     self.reputation = self.reputation_max
   end
+
   -- Check if criteria for trophy is still met
   if self.reputation_above_threshold then self:checkReputation() end
 end
