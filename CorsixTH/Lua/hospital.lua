@@ -668,6 +668,11 @@ function Hospital:afterLoad(old, new)
     self.discover_autopsy_risk = nil
   end
 
+  if old < 140 then
+    self.hasImpressiveReputation = self.reputation_above_threshold and true or false
+    self.unconditionalChangeReputation(0) -- Setup 'hasImpressiveReputation'
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
