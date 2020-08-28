@@ -135,8 +135,10 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.money_out = 0
 
   -- Other statistics, back to zero each year
+  self.hasImpressiveReputation = true
+  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
+
   self.sodas_sold = 0
-  self:checkReputation() -- Reset self.reputation_above_threshold
   self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
   self.pleased_vips_ty  = 0
   self.num_cured_ty = 0
@@ -1184,7 +1186,9 @@ function Hospital:onEndYear()
   self.sodas_sold = 0
   self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
-  self:checkReputation()
+
+  self.hasImpressiveReputation = true
+  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
 
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. I have still to check other levels above 5 to
@@ -1818,8 +1822,8 @@ function Hospital:changeReputation(reason, disease, valueChange)
 end
 
 --! Unconditionally change the reputation.
---! In most cases the better entry point for changing reputation is
---! 'Hospital:changeReputation'.
+--! In most cases, the better entry point for changing reputation
+--! is 'Hospital:changeReputation'.
 --!param valueChange (integer) Amount of change.
 function Hospital:unconditionalChangeReputation(valueChange)
   self.reputation = self.reputation + amount
@@ -1831,18 +1835,15 @@ function Hospital:unconditionalChangeReputation(valueChange)
   end
 
   -- Check if criteria for trophy is still met
-  if self.reputation_above_threshold then self:checkReputation() end
-end
-
---! Check whether the reputation is still above the threshold.
-function Hospital:checkReputation()
-  local level_config = self.world.map.level_config
-  if level_config.awards_trophies then
-    local min_repuration = level_config.awards_trophies.Reputation
-    self.reputation_above_threshold = min_repuration < self.reputation
-    return
+  if self.hasImpressiveReputation then
+    local level_config = self.world.map.level_config
+    if level_config.awards_trophies then
+      local min_repuration = level_config.awards_trophies.Reputation
+      self.hasImpressiveReputation = min_repuration < self.reputation
+      return
+    end
+    self.hasImpressiveReputation = false
   end
-  self.reputation_above_threshold = false
 end
 
 --! Decide whether a reputation change is effective or not. As we approach 1000,
