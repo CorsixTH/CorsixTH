@@ -1832,7 +1832,7 @@ end
 --! is 'Hospital:changeReputation'.
 --!param valueChange (integer) Amount of change.
 function Hospital:unconditionalChangeReputation(valueChange)
-  self.reputation = self.reputation + amount
+  self.reputation = self.reputation + valueChange
 
   if self.reputation < self.reputation_min then
     self.reputation = self.reputation_min
