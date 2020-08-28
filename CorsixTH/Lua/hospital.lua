@@ -670,6 +670,7 @@ function Hospital:afterLoad(old, new)
 
   if old < 140 then
     self.hasImpressiveReputation = self.reputation_above_threshold and true or false
+    self.reputation_above_threshold = nil
     self.unconditionalChangeReputation(0) -- Setup 'hasImpressiveReputation'
   end
 
