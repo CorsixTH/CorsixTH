@@ -1945,7 +1945,7 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
     if staff.attributes[attribute] then
       sum = sum + staff.attributes[attribute]
       count = count + 1
-      end
+    end
   end
 
   return count == 0 and default_value or sum / count
