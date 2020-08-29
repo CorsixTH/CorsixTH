@@ -753,17 +753,18 @@ function Hospital:checkFacilities()
 
         -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
         local show_praise = math.random(1, 4) == 4
-        if self.world.object_counts.bench > self.patientcount and show_praise then
+        local num_benches = self:countBenches()
+        if num_benches > self.patientcount and show_praise then
           self:praiseBench()
         -- Are there enough benches for the volume of patients in your hospital?
-        elseif self.world.object_counts.bench < self.patientcount then
+        elseif num_benches < self.patientcount then
           self:warningBench()
         end
       end
     end
 
     -- Make players more aware of the need for radiators
-    if self.world.object_counts.radiator == 0 then
+    if self:countRadiators() == 0 then
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
 
@@ -1030,9 +1031,10 @@ function Hospital:onEndDay()
   end
 
   -- Is the boiler working today?
+  local num_radiators = self:countRadiators()
   local breakdown = math.random(1, 240)
   if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
-      self.world.object_counts.radiator > 0 then
+      num_radiators > 0 then
     if tonumber(self.world.map.level_number) then
       if self.world.map.level_number == 1 and (self.world:date() >= Date(1,6)) then
         self:boilerBreakdown()
@@ -1045,8 +1047,7 @@ function Hospital:onEndDay()
   end
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
-  local radiators = self.world.object_counts.radiator
-  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
+  local heating_costs = (self.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
   if self:isPlayerHospital() then dailyUpdateRatholes(self) end
@@ -1142,7 +1143,7 @@ function Hospital:onEndMonth()
     if self.receptionist_count ~= 0 and current_month > 2 and not self.receptionist_msg then
       self.world.ui.adviser:say(_A.warnings.no_desk_6)
       self.receptionist_msg = true
-    elseif self.receptionist_count == 0 and current_month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
+    elseif self.receptionist_count == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
       self.world.ui.adviser:say(_A.warnings.no_desk_7)
     --  self.receptionist_msg = true
     elseif current_month == 3 then
@@ -1176,6 +1177,7 @@ end
 --! Collect the reception desks in the hospital.
 --!return (list) The reception desks in the hospital.
 function Hospital:findReceptionDesks()
+  -- TODO Breaks in multiplayer mode.
   local reception_desks = {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
@@ -1760,6 +1762,48 @@ function Hospital:countRoomOfType(type)
     end
   end
   return result
+end
+
+--! Get the number of reception desks in the hospital.
+--!return (int) Number of reception desks in the hospital.
+function Hospital:countReceptionDesks()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["reception_desk"]
+end
+
+--! Get the number of benches in the hospital.
+--!return (int) Number of benches in the hospital.
+function Hospital:countBenches()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["bench"]
+end
+
+--! Get the number of radiators in the hospital.
+--!return (int) Number of radiators in the hospital.
+function Hospital:countRadiators()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["radiator"]
+end
+
+--! Get the number of plants in the hospital.
+--!return (int) Number of plants in the hospital.
+function Hospital:countPlants()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["plant"]
+end
+
+--! Get the number of fire extinguishers in the hospital.
+--!return (int) Number of fire extinguishers in the hospital.
+function Hospital:countFireExtinguishers()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["extinguisher"]
+end
+
+--! Get the number of general objects in the hospital.
+--!return (int) Number of general objects in the hospital.
+function Hospital:countGeneralObjects()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["general"]
 end
 
 --! Remove the first entry with a given value from a table.
