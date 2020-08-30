@@ -227,7 +227,7 @@ function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
   if self.world.free_build_mode then
-    self.last_hospital.reputation = self.last_hospital.reputation + 20
+    self.last_hospital:unconditionalChangeReputation(20)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.remarks.free_build[math.random(1, 3)]},
@@ -235,7 +235,7 @@ function Vip:onDestroy()
     }
   elseif self.vip_rating <= 7 then
     self.last_hospital:receiveMoney(self.cash_reward, _S.transactions.vip_award)
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
+    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
@@ -246,14 +246,14 @@ function Vip:onDestroy()
     }
   elseif self.vip_rating >=8 and self.vip_rating < 11 then
     -- dont tell player about any rep change in this range
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
+    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   else
-    self.last_hospital.reputation = self.last_hospital.reputation + self.rep_reward
+    self.last_hospital:unconditionalChangeReputation(sekf.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
