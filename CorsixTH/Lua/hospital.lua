@@ -135,8 +135,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.money_out = 0
 
   -- Other statistics, back to zero each year
-  self.hasImpressiveReputation = true
-  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
+  self.has_impressive_reputation = true
+  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   self.sodas_sold = 0
   self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
@@ -669,9 +669,9 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 140 then
-    self.hasImpressiveReputation = self.reputation_above_threshold and true or false
+    self.has_impressive_reputation = self.reputation_above_threshold and true or false
     self.reputation_above_threshold = nil
-    self.unconditionalChangeReputation(0) -- Setup 'hasImpressiveReputation'
+    self:unconditionalChangeReputation(0) -- Setup 'has_impressive_reputation'
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -1193,8 +1193,8 @@ function Hospital:onEndYear()
   self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
 
-  self.hasImpressiveReputation = true
-  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
+  self.has_impressive_reputation = true
+  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. I have still to check other levels above 5 to
@@ -1841,14 +1841,14 @@ function Hospital:unconditionalChangeReputation(valueChange)
   end
 
   -- Check if criteria for trophy is still met
-  if self.hasImpressiveReputation then
+  if self.has_impressive_reputation then
     local level_config = self.world.map.level_config
     if level_config.awards_trophies then
       local min_repuration = level_config.awards_trophies.Reputation
-      self.hasImpressiveReputation = min_repuration < self.reputation
+      self.has_impressive_reputation = min_repuration < self.reputation
       return
     end
-    self.hasImpressiveReputation = false
+    self.has_impressive_reputation = false
   end
 end
 

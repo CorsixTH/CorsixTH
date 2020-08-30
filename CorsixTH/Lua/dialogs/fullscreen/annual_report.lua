@@ -201,7 +201,7 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
       self.rep_amount = self.rep_amount + win_value
     end
     -- Impressive Reputation in the year (above a threshold throughout the year)
-    if hosp.hasImpressiveReputation then
+    if hosp.has_impressive_reputation then
       self:addTrophy(_S.trophy_room.consistant_rep.trophies[math.random(1, 2)], "money", prices.TrophyReputationBonus)
       self.won_amount = self.won_amount + prices.TrophyReputationBonus
     end
