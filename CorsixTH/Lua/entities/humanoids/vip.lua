@@ -253,7 +253,7 @@ function Vip:onDestroy()
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   else
-    self.last_hospital:unconditionalChangeReputation(sekf.rep_reward)
+    self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
       {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
