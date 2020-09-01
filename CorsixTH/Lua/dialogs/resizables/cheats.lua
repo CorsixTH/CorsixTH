@@ -62,21 +62,23 @@ local col_cheated_yes = {
 !param ui (UI) The active ui.
 ]]
 function UICheats:UICheats(ui)
-  self.cheats = {
-    {name = "money",          func = self.cheatMoney},
-    {name = "all_research",   func = self.cheatResearch},
-    {name = "emergency",      func = self.cheatEmergency},
-    {name = "epidemic",       func = self.cheatEpidemic},
-    {name = "toggle_infected", func = self.cheatToggleInfected},
-    {name = "vip",            func = self.cheatVip},
-    {name = "earthquake",     func = self.cheatEarthquake},
-    {name = "create_patient", func = self.cheatPatient},
-    {name = "end_month",      func = self.cheatMonth},
-    {name = "end_year",       func = self.cheatYear},
-    {name = "lose_level",     func = self.cheatLose},
-    {name = "win_level",      func = self.cheatWin},
-    {name = "increase_prices", func = self.cheatIncreasePrices},
-    {name = "decrease_prices", func = self.cheatDecreasePrices},
+  self.cheats = ui.hospital.hosp_cheats
+  self.cheatList = {
+    {name = "money",          func = self.cheats.cheatMoney},
+    {name = "all_research",   func = self.cheats.cheatResearch},
+    {name = "emergency",      func = self.cheats.cheatEmergency},
+    {name = "epidemic",       func = self.cheats.cheatEpidemic},
+    {name = "toggle_infected", func = self.cheats.cheatToggleInfected},
+    {name = "vip",            func = self.cheats.cheatVip},
+    {name = "earthquake",     func = self.cheats.cheatEarthquake},
+    {name = "create_patient", func = self.cheats.cheatPatient},
+    {name = "end_month",      func = self.cheats.cheatMonth},
+    {name = "end_year",       func = self.cheats.cheatYear},
+    {name = "lose_level",     func = self.cheats.cheatLose},
+    {name = "win_level",      func = self.cheats.cheatWin},
+    {name = "increase_prices", func = self.cheats.cheatIncreasePrices},
+    {name = "decrease_prices", func = self.cheats.cheatDecreasePrices},
+    {name = "decrease_prices", func = self.cheats.cheatDecreasePrices},
   }
 
 
@@ -109,11 +111,11 @@ function UICheats:UICheats(ui)
   self.item_buttons = {}
 
   y = y + 30
-  for num = 1, #self.cheats do
+  for num = 1, #self.cheatList do
     self.item_panels[num] = self:addBevelPanel(20, y, 260, 20, col_bg)
-      :setLabel(_S.cheats_window.cheats[self.cheats[num].name])
+      :setLabel(_S.cheats_window.cheats[self.cheatList[num].name])
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 260, 20, nil, button_clicked(num))
-      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheats[num].name])
+      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheatList[num].name])
     y = y + 20
   end
 
@@ -134,13 +136,9 @@ end
 
 function UICheats:buttonClicked(num)
   -- Only the cheats that may fail return false in that case. All others return nothing.
-  if self.cheats[num].func(self) ~= false then
-    if self.cheats[num].name ~= "lose_level" then
-      local announcements = self.ui.app.world.cheat_announcements
-      if announcements then
-        self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
-      end
-      self.ui.hospital.cheated = true
+  if self.cheatList[num].func(self) ~= false then
+    if self.cheatList[num].name ~= "lose_level" then
+      self.cheats:isCheating()
       self:updateCheatedStatus()
     end
   else
@@ -149,12 +147,32 @@ function UICheats:buttonClicked(num)
   end
 end
 
-function UICheats:cheatMoney()
-  self.ui.hospital:receiveMoney(10000, _S.transactions.cheat)
+function UICheats:buttonBack()
+  self:close()
 end
 
-function UICheats:cheatResearch()
-  local hosp = self.ui.hospital
+class "Cheats"
+local Cheats = _G["Cheats"]
+
+function Cheats:Cheats(world, hospital)
+  self.world = world
+  self.hospital = hospital
+end
+
+function Cheats:isCheating()
+  local announcements = self.world.cheat_announcements
+  if announcements then
+    self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
+  end
+  self.ui.hospital.cheated = true
+end
+
+function Cheats:cheatMoney()
+  self.hospital:receiveMoney(10000, _S.transactions.cheat)
+end
+
+function Cheats:cheatResearch()
+  local hosp = self.hospital
   for _, cat in ipairs({"diagnosis", "cure"}) do
     while hosp.research.research_policy[cat].current do
       hosp.research:discoverObject(hosp.research.research_policy[cat].current)
@@ -162,23 +180,23 @@ function UICheats:cheatResearch()
   end
 end
 
-function UICheats:cheatEmergency()
-  if not self.ui.hospital:createEmergency() then
+function Cheats:cheatEmergency()
+  if not self.hospital:createEmergency() then
     self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
   end
 end
 
 --[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
-function UICheats:cheatEpidemic()
-  self.ui.hospital:spawnContagiousPatient()
+function Cheats:cheatEpidemic()
+  self.hospital:spawnContagiousPatient()
 end
 
 --[[ Before an epidemic has been revealed toggle the infected icons
 to easily distinguish the infected patients -- will toggle icons
 for ALL future epidemics you cannot distinguish between epidemics
 by disease ]]
-function UICheats:cheatToggleInfected()
-  local hospital = self.ui.hospital
+function Cheats:cheatToggleInfected()
+  local hospital = self.hospital
   if hospital.future_epidemics_pool and #hospital.future_epidemics_pool > 0 then
     for _, future_epidemic in ipairs(hospital.future_epidemics_pool) do
       local show_mood = future_epidemic.cheat_always_show_mood
@@ -193,36 +211,36 @@ function UICheats:cheatToggleInfected()
   end
 end
 
-function UICheats:cheatVip()
-  self.ui.hospital:createVip()
+function Cheats:cheatVip()
+  self.hospital:createVip()
 end
 
-function UICheats:cheatEarthquake()
-  return self.ui.app.world:createEarthquake()
+function Cheats:cheatEarthquake()
+  return self.world:createEarthquake()
 end
 
-function UICheats:cheatPatient()
-  self.ui.app.world:spawnPatient()
+function Cheats:cheatPatient()
+  self.world:spawnPatient()
 end
 
-function UICheats:cheatMonth()
-  self.ui.app.world:setEndMonth()
+function Cheats:cheatMonth()
+  self.world:setEndMonth()
 end
 
-function UICheats:cheatYear()
-  self.ui.app.world:setEndYear()
+function Cheats:cheatYear()
+  self.world:setEndYear()
 end
 
-function UICheats:cheatLose()
-  self.ui.app.world:loseGame(1) -- TODO adjust for multiplayer
+function Cheats:cheatLose()
+  self.world:loseGame(1) -- TODO adjust for multiplayer
 end
 
-function UICheats:cheatWin()
-  self.ui.app.world:winGame(1) -- TODO adjust for multiplayer
+function Cheats:cheatWin()
+  self.world:winGame(1) -- TODO adjust for multiplayer
 end
 
-function UICheats:cheatIncreasePrices()
-  local hosp = self.ui.app.world.hospitals[1]
+function Cheats:cheatIncreasePrices()
+  local hosp = self.world.hospitals[1]
   for _, casebook in pairs(hosp.disease_casebook) do
     local new_price = casebook.price + 0.5
     if new_price > 2 then
@@ -233,8 +251,8 @@ function UICheats:cheatIncreasePrices()
   end
 end
 
-function UICheats:cheatDecreasePrices()
-  local hosp = self.ui.app.world.hospitals[1]
+function Cheats:cheatDecreasePrices()
+  local hosp = self.world.hospitals[1]
   for _, casebook in pairs(hosp.disease_casebook) do
     local new_price = casebook.price - 0.5
     if new_price < 0.5 then
@@ -245,6 +263,3 @@ function UICheats:cheatDecreasePrices()
   end
 end
 
-function UICheats:buttonBack()
-  self:close()
-end

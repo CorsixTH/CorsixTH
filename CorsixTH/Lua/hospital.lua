@@ -29,6 +29,7 @@ local Hospital = _G["Hospital"]
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
+  self.hosp_cheats = Cheats(self.world, self)
   local level_config = world.map.level_config
   local level = world.map.level_number
   local balance = 40000
@@ -672,6 +673,10 @@ function Hospital:afterLoad(old, new)
     self.has_impressive_reputation = self.reputation_above_threshold and true or false
     self.reputation_above_threshold = nil
     self:unconditionalChangeReputation(0) -- Setup 'has_impressive_reputation'
+  end
+  
+  if old < 141 then
+    self.hosp_cheats = Cheats(self.world, self)
   end
 
   -- Update other objects in the hospital (added in version 106).
