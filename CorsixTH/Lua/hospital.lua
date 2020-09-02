@@ -999,11 +999,12 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-  local hosp = self.world.hospitals[1]
-  hosp.receptionist_count = 0
+
+  -- Count receptionists.
+  self.receptionist_count = 0
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == "Receptionist" then
-      hosp.receptionist_count = hosp.receptionist_count + 1
+      self.receptionist_count = self.receptionist_count + 1
     end
   end
 
