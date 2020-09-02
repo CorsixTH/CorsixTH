@@ -1806,6 +1806,59 @@ function Hospital:countGeneralObjects()
   return self.world.object_counts["general"]
 end
 
+--! A new object has been placed in the hospital.
+--!param entity (Entity) The entity that was just placed.
+--!param id (string) That entity's id.
+function Hospital:objectPlaced(entity, id)
+  -- If it is a bench we're placing, notify queueing patients in the vicinity
+  if id == "bench" then
+    local notify_distance = 6
+    local w, h = self.world.map.th:size()
+    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+          if class.is(patient, Patient) then
+            patient:notifyNewObject(id)
+          end
+        end
+      end
+    end
+  end
+
+  if id == "reception_desk" then
+    if self:isPlayerHospital() then
+      local numReceptionists = self:countStaffOfCategory("Receptionist")
+      if not self.world.ui.start_tutorial and numReceptionists == 0 then
+        self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
+      elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
+          not self.receptionist_msg and self.game_date:monthOfGame() > 3 then
+        self.world.ui.adviser:say(_A.warnings.no_desk_5)
+        self.receptionist_msg = true
+      end
+    end
+  end
+
+  -- If it is a plant it might be advisable to hire a handyman
+  if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
+    if self:isPlayerHospital() then
+      self.world.ui.adviser:say(_A.staff_advice.need_handyman_plants)
+    end
+  end
+
+  if id == "gates_to_hell" then
+    if self:isPlayerHospital() then
+      entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
+          {0,1450,1250,1050,850,450}, 40)
+      entity:setTimer(entity.world:getAnimLength(2550),
+                      --[[persistable:lava_hole_spawn_animation_end]]
+                      function(anim_entity)
+                        anim_entity:setAnimation(1602)
+                      end)
+      entity:setAnimation(2550)
+    end
+  end
+end
+
 --! Remove the first entry with a given value from a table.
 --! Only works reliably for lists.
 --!param t Table to search for the value, and update.
