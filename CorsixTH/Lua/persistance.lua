@@ -255,7 +255,13 @@ end
 --!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
-  local f = assert(io.open(filename, "wb"))
+  local f, err = io.open(filename, "wb")
+  if err then
+    local file = os.tmpname()
+    f = io.open(file, "wb")
+    TheApp.ui:addWindow(UIInformation(TheApp.ui, {"Saved to " .. file, "Error:", err}))
+  end
+  assert(f)
   f:write(data)
   f:close()
 end
