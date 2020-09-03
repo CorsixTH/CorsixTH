@@ -151,10 +151,21 @@ function UICheats:buttonBack()
   self:close()
 end
 
+function UICheats:afterLoad(old, new)
+  if old < 141 then
+    local cheatWindow = self.ui:getWindow(UICheats)
+    -- If cheats window is open, reload it
+    if cheatWindow then
+      cheatWindow:close()
+      self.ui:addWindow(UICheats(self.ui))
+    end
+  end
+end
+
 --! A holder for all cheats in the game
 class "Cheats"
 
---@type Cheats
+---@type Cheats
 local Cheats = _G["Cheats"]
 
 -- Cheats only needs UI to function

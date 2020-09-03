@@ -1212,6 +1212,7 @@ end
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
 function World:updateSpawnDates()
+  local local_hospital = self:getLocalPlayerHospital()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
   -- If Roujin's Challenge is on, override spawn rate

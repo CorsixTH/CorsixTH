@@ -675,7 +675,7 @@ function Hospital:afterLoad(old, new)
     self.reputation_above_threshold = nil
     self:unconditionalChangeReputation(0) -- Setup 'has_impressive_reputation'
   end
-  
+
   if old < 141 then
     self.hosp_cheats = Cheats(self.world.ui)
   end
