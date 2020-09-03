@@ -127,6 +127,8 @@ function Graphics:loadFontFile()
     local windir = os.getenv("WINDIR")
     if windir and windir ~= "" then
       font_file = windir .. pathsep .. "Fonts" .. pathsep .. "ARIALUNI.TTF"
+    elseif self.app.os == "macos" then
+      font_file = "/Library/Fonts/Arial Unicode.ttf"
     else
       font_file = "/usr/share/fonts/truetype/arphic/uming.ttc"
     end

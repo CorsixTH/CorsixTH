@@ -139,6 +139,19 @@ function App:init()
     end
   end
 
+  if pathsep == "\\" then
+    self.os = "windows"
+  else
+    local handle = io.popen('uname')
+    local result = handle:read("*a")
+    if result == "Darwin\n" then
+      self.os = "macos"
+    else
+      self.os = "unix"
+    end
+    handle:close()
+  end
+
   local modes = {}
   self.fullscreen = false
   if self.config.fullscreen then

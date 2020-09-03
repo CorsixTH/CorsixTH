@@ -69,19 +69,6 @@ function UIUpdate:UIUpdate(ui, this_version, new_version, brief_description, dow
   self.white_font = app.gfx:loadFont("QData", "Font01V")
   self.download_url = download_url
 
-  local pathsep = package.config:sub(1, 1)
-  local handle = io.popen('uname')
-  local result = handle:read("*a")
-  handle:close()
-
-  if pathsep == "\\" then
-    self.os = "windows"
-  elseif result == "Darwin\n" then
-    self.os = "macos"
-  else
-    self.os = "unix"
-  end
-
   self:addBevelPanel(20, 50, 140, 20, col_shadow, col_bg, col_bg)
     :setLabel(_S.update_window.current_version).lowered = true
   self:addBevelPanel(20, 70, 140, 20, col_shadow, col_bg, col_bg)
@@ -114,9 +101,9 @@ end
 
 function UIUpdate:buttonDownload()
 
-  if self.os == "windows" then
+  if self.app.os == "windows" then
     os.execute("start " .. self.download_url)
-  elseif self.os == "macos" then
+  elseif self.app.os == "macos" then
     os.execute("open " .. self.download_url)
   else
     os.execute("xdg-open " .. self.download_url)
