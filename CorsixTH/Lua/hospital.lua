@@ -29,7 +29,8 @@ local Hospital = _G["Hospital"]
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
-  self.hosp_cheats = Cheats(self.world, self)
+  -- Initialise Cheats inside the player hospital
+  self.hosp_cheats = Cheats(self.world.ui)
   local level_config = world.map.level_config
   local level = world.map.level_number
   local balance = 40000
@@ -676,7 +677,7 @@ function Hospital:afterLoad(old, new)
   end
   
   if old < 141 then
-    self.hosp_cheats = Cheats(self.world, self)
+    self.hosp_cheats = Cheats(self.world.ui)
   end
 
   -- Update other objects in the hospital (added in version 106).
