@@ -1840,8 +1840,8 @@ function Hospital:objectPlaced(entity, id)
   end
 
   -- If it is a plant it might be advisable to hire a handyman
-  if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
-    if self:isPlayerHospital() then
+  if self:isPlayerHospital() then
+    if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
       self.world.ui.adviser:say(_A.staff_advice.need_handyman_plants)
     end
   end
