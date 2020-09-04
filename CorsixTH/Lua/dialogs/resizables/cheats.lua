@@ -154,10 +154,9 @@ end
 function UICheats:afterLoad(old, new)
   if old < 141 then
     local cheatWindow = self.ui:getWindow(UICheats)
-    -- If cheats window is open, reload it
     if cheatWindow then
       cheatWindow:close()
-      self.ui:addWindow(UICheats(self.ui))
+      self.ui.app.world:gameLog("Cheats window closed due to compatibility update at savegame version 141. You will need to reopen this window.")
     end
   end
 end
