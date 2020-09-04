@@ -159,6 +159,7 @@ function UICheats:afterLoad(old, new)
       self.ui.app.world:gameLog("Cheats window closed due to compatibility update at savegame version 141. You will need to reopen this window.")
     end
   end
+  UIResizable.afterLoad(self, old, new)
 end
 
 --! A holder for all cheats in the game
