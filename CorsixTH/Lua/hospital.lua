@@ -56,7 +56,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initial value: hospital tile count * tile value + 20000
   self.value = world.map:getParcelPrice(self:getPlayerIndex()) + 20000
 
-  -- TODO: With the fame/shame screen and scoring comes salary.
   self.player_salary = 10000
   self.salary_offer = 0
 
@@ -1060,9 +1059,8 @@ function Hospital:onEndYear()
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   -- On third year of level 3 there is the large increase to salary
-  -- this will replicate that. I have still to check other levels above 5 to
+  -- this will replicate that. TODO: check other levels above 5 to
   -- see if there are other large increases.
-  -- TODO Hall of fame and shame
   if self.world:date():year() == 3 and self.world.map.level_number == 3 then
     -- adds the extra to salary in level 3 year 3
     self.player_salary = self.player_salary + math.random(8000,20000)
