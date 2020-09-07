@@ -1205,6 +1205,21 @@ function App:onMultiGesture(...)
   return self.ui:onMultiGesture(...)
 end
 
+function App:isThemeHospitalPath(path)
+  local ngot = 0
+  for obj, _ in lfs.dir(path) do
+    for _, thing in ipairs({"data", "levels", "qdata"}) do
+      if obj:lower() == thing and
+        lfs.attributes(path .. pathsep .. obj, "mode") == "directory" then
+          ngot = ngot + 1
+      end
+    end
+  end
+  if ngot == 3 then
+    return true
+  end
+end
+
 function App:checkInstallFolder()
   self.fs = FileSystem()
   local status, _
@@ -1215,10 +1230,36 @@ function App:checkInstallFolder()
       " a valid copy of the data files from the original game," ..
       " as said files are required for graphics and sounds."
   if not status then
-    -- If the given directory didn't exist, then likely the config file hasn't
-    -- been changed at all from the default, so we continue to initialise the
-    -- app, and give the user a dialog asking for the correct directory.
-    return false
+    -- Table of predictable places. First three are platform independent,
+    -- then macOS GOG bundle, then linux Filesystem Hierarchy Standard, then Windows
+    local possible_locations = { os.getenv( "HOME" ), os.getenv( "HOME" ) .. pathsep ..  "Documents",
+      select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
+      "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
+        "Contents/Resources/Theme Hospital.boxer/C.harddisk",
+      "/usr/share/games/corsix-th", "/usr/local/share/games/corsix-th",
+      os.getenv("%ProgramFiles%"), os.getenv("%ProgramFiles(x86)%") }
+    local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
+      [[GOG.com\Theme Hospital]], [[Origin Games\Theme Hospital\data\Game]] }
+    for _, dir in ipairs(possible_locations) do
+      if status then break end
+      for _, folder in ipairs(possible_folders) do
+        local path = dir .. pathsep .. folder
+        if lfs.attributes(path, "mode") == "directory" and self:isThemeHospitalPath(path) then
+          print("Game data found at: " .. path)
+          print("This will be written to the config file")
+          self.config.theme_hospital_install = path
+          status, _ = self.fs:setRoot(path)
+          break
+        end
+      end
+    end
+    if not status then
+      -- If the given directory didn't exist, then likely the config file hasn't
+      -- been changed at all from the default, and we looked unsuccessfully in
+      -- some likely folders for the game data, so we continue to initialise the
+      -- app, and give the user a dialog asking for the correct directory.
+	  return false
+    end
   end
 
   -- Check that a few core files are present
