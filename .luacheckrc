@@ -42,6 +42,7 @@ globals = { -- Globals
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
             "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
+            "Cheats",
 
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",

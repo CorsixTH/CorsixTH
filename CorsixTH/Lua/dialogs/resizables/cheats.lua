@@ -153,10 +153,10 @@ end
 
 function UICheats:afterLoad(old, new)
   if old < 141 then
+    -- Window must be closed if open for compatibility
     local cheatWindow = self.ui:getWindow(UICheats)
     if cheatWindow then
       cheatWindow:close()
-      self.ui.app.world:gameLog("Cheats window closed due to compatibility update at savegame version 141. You will need to reopen this window.")
     end
   end
   UIResizable.afterLoad(self, old, new)
@@ -221,7 +221,7 @@ function Cheats:cheatToggleInfected()
       end
     end
   else
-    print("Unable to toggle icons - no epidemics in progress that are not revealed")
+    self.ui.app.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
   end
 end
 
