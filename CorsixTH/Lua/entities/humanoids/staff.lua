@@ -97,8 +97,23 @@ function Staff:tickDay()
    self:changeAttribute("happiness", 0.05)
   end
 
-  --TODO windows in your work space and a large space to work in add to happiness
-  -- working in a small space makes you unhappy
+  local room = self:getRoom()
+  if room then
+    -- It always makes you happy to see the outdoors (or windows to anywhere)
+    local count = room:countWindows()
+    if room.room_info.id == "staff_room" then -- Pleased another bit
+      count = count * 2
+    end
+    if count > 0 then
+      -- More windows help but in smaller increments
+      self:changeAttribute("happiness", math.round(math.log(count)) / 1000)
+    end
+
+    -- Extra space in the room you are in adds to your happiness
+    local extraspace = (room.width * room.height) / (room.room_info.minimum_size * room.room_info.minimum_size)
+    -- Greater space helps but in smaller increments
+    self:changeAttribute("happiness", math.round(math.log(extraspace)) / 1000)
+  end
 end
 
 function Staff:tick()

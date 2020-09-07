@@ -20,7 +20,7 @@
 .\"
 .\" This manpage is written in mdoc(7).
 .\" Language reference: https://man.openbsd.org/mdoc.7
-.Dd August 22, 2018
+.Dd August 26, 2020
 .Dt CORSIX-TH 6
 .Os
 .Sh NAME
@@ -31,6 +31,7 @@
 .Op Fl -bitmap-dir Ns = Ns Ar path
 .Op Fl -config-file Ns = Ns Ar path
 .Op Fl -connect-lua-dbgp
+.Op Fl -continue Ns = Ns Ar number
 .Op Fl -dump=strings
 .Op Fl -interpreter Ns = Ns Ar path
 .Op Fl -load Ns = Ns Ar savegame
@@ -55,6 +56,9 @@ for loading in game bitmaps.
 Use the specified config file instead of the default one.
 .It Fl -connect-lua-dbgp
 Connect to a Lua DBGp server.
+.It Fl -continue Ns = Ns Ar number
+If a number is given load that month's autosave.
+Otherwise load the youngest autosave
 .It Fl -dump=strings
 Dumps all of the game strings to the config directory.
 .It Fl -interpreter Ns = Ns Ar path
@@ -91,4 +95,4 @@ Copyright CorsixTH contributors.
 CorsixTH is available under the MIT license.
 .Pp
 For the full license text see:
-.Lk https://raw.githubusercontent.com/CorsixTH/CorsixTH/v0.62/LICENSE.txt
+.Lk https://raw.githubusercontent.com/CorsixTH/CorsixTH/v0.64/LICENSE.txt

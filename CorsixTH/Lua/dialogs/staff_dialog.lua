@@ -327,6 +327,12 @@ function UIStaff:changeHandymanAttributes(increased)
     return
   end
 
+  -- Show a helpful message if this dialog hasn't been opened yet
+  if not self.ui.hospital.handyman_popup then
+    self.ui.adviser:say(_A.information.handyman_adjust)
+    self.ui.hospital.handyman_popup = true
+  end
+
   local incr_value = 0.1  -- Increase of 'increased'
   local smallest_decr = 0.05 -- Smallest decrement that can be performed.
   local decr_attrs = {}
