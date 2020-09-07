@@ -63,7 +63,7 @@ local col_cheated_yes = {
 ]]
 function UICheats:UICheats(ui)
   self.cheats = ui.hospital.hosp_cheats
-  self.cheatList = {
+  self.cheat_list = {
     {name = "money",          func = self.cheats.cheatMoney},
     {name = "all_research",   func = self.cheats.cheatResearch},
     {name = "emergency",      func = self.cheats.cheatEmergency},
@@ -111,11 +111,11 @@ function UICheats:UICheats(ui)
   self.item_buttons = {}
 
   y = y + 30
-  for num = 1, #self.cheatList do
+  for num = 1, #self.cheat_list do
     self.item_panels[num] = self:addBevelPanel(20, y, 260, 20, col_bg)
-      :setLabel(_S.cheats_window.cheats[self.cheatList[num].name])
+      :setLabel(_S.cheats_window.cheats[self.cheat_list[num].name])
     self.item_buttons[num] = self.item_panels[num]:makeButton(0, 0, 260, 20, nil, button_clicked(num))
-      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheatList[num].name])
+      :setTooltip(_S.tooltip.cheats_window.cheats[self.cheat_list[num].name])
     y = y + 20
   end
 
@@ -136,8 +136,8 @@ end
 
 function UICheats:buttonClicked(num)
   -- Only the cheats that may fail return false in that case. All others return nothing.
-  if self.cheatList[num].func(self) ~= false then
-    if self.cheatList[num].name ~= "lose_level" then
+  if self.cheat_list[num].func(self) ~= false then
+    if self.cheat_list[num].name ~= "lose_level" then
       self.cheats:isCheating()
       self:updateCheatedStatus()
     end
