@@ -32,6 +32,7 @@ corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
+corsixth.require("cheats")
 corsixth.require("epidemic")
 corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
@@ -1212,8 +1213,13 @@ end
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
 function World:updateSpawnDates()
+  local local_hospital = self:getLocalPlayerHospital()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
+  -- If Roujin's Challenge is on, override spawn rate
+  if local_hospital.spawn_rate_cheat then
+    no_of_spawns = 40
+  end
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}

@@ -253,8 +253,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",
-    roujin_on_cheat = "Roujin's challenge activated! Good luck...",
-    roujin_off_cheat = "Roujin's challenge deactivated.",
+    roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
+    roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
   },
 }
 
