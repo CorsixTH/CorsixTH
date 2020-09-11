@@ -273,6 +273,16 @@ function Cheats:noRestOff()
   self.active_cheats["no_rest_cheat"] = nil
 end
 
+--! Enable queue jump cheat (for nearly dead patients)
+function Cheats:queueJumpOn()
+  self.active_cheats.queuejump = true
+end
+
+--! Disable queue jump cheat (for nearly dead patients)
+function Cheats:queueJumpOff()
+  self.active_cheats.queuejump = false
+end
+
 --[[End toggle-based cheat functions]]
 
 --[[ The toggle_cheats list (code operated cheats)
@@ -295,6 +305,14 @@ local toggle_cheats = {
     disableAnnouncement = _A.cheats.norest_off_cheat,
     lower = 185.5,
     upper = 185.6,
+  },
+  queuejump = {
+    enable = Cheats.queueJumpOn,
+    disable = Cheats.queueJumpOff,
+    enableAnnouncement = _A.cheats.queuejump_on_cheat,
+    disableAnnouncement = _A.cheats.queuejump_off_cheat,
+    lower = 200.5,
+    upper = 200.6,
   },
 }
 
