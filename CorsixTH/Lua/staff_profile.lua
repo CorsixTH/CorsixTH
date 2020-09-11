@@ -94,50 +94,54 @@ function StaffProfile:randomise(month)
   --self.skill_level_modifier = math.random(-50, 50) / 1000 -- [-0.05, +0.05]
 
   if self.humanoid_class == "Doctor" then
-    -- find the correct config line (based on month) for generation of the doctor
-    local i = 0
-    while i < #level_config.staff_levels and
-    level_config.staff_levels[i+1].Month <= month do
-      i = i+1
-    end
-
-    -- list of level_config values and the corresponding staff modifiers, plus the value set for "no"
-    local mods = {
-      {"ShrkRate", "is_psychiatrist", 0},
-      {"SurgRate", "is_surgeon",      0},
-      {"RschRate", "is_researcher",   0},
-      {"JrRate",   "is_junior",     nil},
-      {"ConsRate", "is_consultant", nil},
-    }
-
-    -- The following assumes ascending month order of the staff_levels table.
-    -- TODO don't assume this but sort when loading map config
-    for _, m in ipairs(mods) do
-      local rate
-      local ind = i
-      while not rate do
-        assert(ind >= 0, "Staff modifier " .. m[1] .. " not existent (should at least be given by base_config).")
-        rate = level_config.staff_levels[ind][m[1]]
-        ind = ind - 1
-      end
-      -- 0 means none. Other values x mean "one in x"; thus 1 means "one in one" aka "all"
-      rate = (rate == 0) and 0 or 1 / rate
-      self[m[2]] = math.random() < rate and 1.0 or m[3]
-    end
-
-    -- is_consultant is forced to nil if is_junior is already 1
-    self.is_consultant = not self.is_junior and self.is_consultant or nil
-
     local jr_limit = level_config.gbv.DoctorThreshold / 1000
     local cons_limit = level_config.gbv.ConsultantThreshold / 1000
 
-    -- put the doctor in the right skill level box
-    if self.is_junior then
-      self.skill = jr_limit * self.skill
-    elseif self.is_consultant then
-      self.skill = cons_limit + ((1 - cons_limit) * self.skill)
+    if self.world:getLocalPlayerHospital().hosp_cheats:isCheatActive("super_doctor") then
+      self:initDoctor(1, 1, 1, false, true, math.random(cons_limit * 1000, 1000) / 1000)
     else
-      self.skill = jr_limit + ((cons_limit - jr_limit) * self.skill)
+      -- find the correct config line (based on month) for generation of the doctor
+      local i = 0
+      while i < #level_config.staff_levels and
+      level_config.staff_levels[i+1].Month <= month do
+        i = i+1
+      end
+
+      -- list of level_config values and the corresponding staff modifiers, plus the value set for "no"
+      local mods = {
+        {"ShrkRate", "is_psychiatrist", 0},
+        {"SurgRate", "is_surgeon",      0},
+        {"RschRate", "is_researcher",   0},
+        {"JrRate",   "is_junior",     nil},
+        {"ConsRate", "is_consultant", nil},
+      }
+
+      -- The following assumes ascending month order of the staff_levels table.
+      -- TODO don't assume this but sort when loading map config
+      for _, m in ipairs(mods) do
+        local rate
+        local ind = i
+        while not rate do
+          assert(ind >= 0, "Staff modifier " .. m[1] .. " not existent (should at least be given by base_config).")
+          rate = level_config.staff_levels[ind][m[1]]
+          ind = ind - 1
+        end
+        -- 0 means none. Other values x mean "one in x"; thus 1 means "one in one" aka "all"
+        rate = (rate == 0) and 0 or 1 / rate
+        self[m[2]] = math.random() < rate and 1.0 or m[3]
+      end
+
+      -- is_consultant is forced to nil if is_junior is already 1
+      self.is_consultant = not self.is_junior and self.is_consultant or nil
+
+      -- put the doctor in the right skill level box
+      if self.is_junior then
+        self.skill = jr_limit * self.skill
+      elseif self.is_consultant then
+        self.skill = cons_limit + ((1 - cons_limit) * self.skill)
+      else
+        self.skill = jr_limit + ((cons_limit - jr_limit) * self.skill)
+      end
     end
   end
   self.wage = self:getFairWage()

@@ -283,6 +283,18 @@ function Cheats:queueJumpOff()
   self.active_cheats.queuejump = false
 end
 
+--! Enable super doctors cheat (all doctors for hire have maximum skills)
+function Cheats:superDoctorOn()
+  self.active_cheats.super_doctor = true
+  self.hospital.world:makeAvailableStaff(self.hospital.world.game_date:monthOfGame())
+end
+
+--! Disable super doctors cheat (all doctors for hire have maximum skills)
+function Cheats:superDoctorOff()
+  self.active_cheats.super_doctor = false
+  -- Available staff are returned to normal in World:onEndMonth.
+end
+
 --[[End toggle-based cheat functions]]
 
 --[[ The toggle_cheats list (code operated cheats)
@@ -313,6 +325,14 @@ local toggle_cheats = {
     disableAnnouncement = _A.cheats.queuejump_off_cheat,
     lower = 200.5,
     upper = 200.6,
+  },
+  super_doctor = {
+    enable = Cheats.superDoctorOn,
+    disable = Cheats.superDoctorOff,
+    enableAnnouncement = _A.cheats.superdoctor_on_cheat,
+    disableAnnouncement = _A.cheats.superdoctor_off_cheat,
+    lower = 301.5,
+    upper = 301.6,
   },
 }
 
