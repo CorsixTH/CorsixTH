@@ -508,7 +508,7 @@ function Vip:afterLoad(old, new)
   if old < 79 then
     self.name = self.hospital.visitingVIP
   end
-  if old < 139 then
+  if old < 142 then
     self.vip_rating = 12 - math.random(0,5)
     -- Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
