@@ -2290,29 +2290,6 @@ function Hospital:removeRatholeXY(x, y)
   end
 end
 
-class "AIHospital" (Hospital)
-
----@type AIHospital
-local AIHospital = _G["AIHospital"]
-
-function AIHospital:AIHospital(competitor, ...)
-  self:Hospital(...)
-  if _S.competitor_names[competitor] then
-    self.name = _S.competitor_names[competitor]
-  else
-    self.name = "NONAME"
-  end
-  self.is_in_world = false
-end
-
-function AIHospital:spawnPatient()
-  -- TODO: Simulate patient
-end
-
-function AIHospital:logTransaction()
-  -- AI doesn't need a log of transactions, as it is only used for UI purposes
-end
-
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
