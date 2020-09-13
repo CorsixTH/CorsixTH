@@ -144,8 +144,19 @@ function World:World(app)
   -- Initialize available diseases and winning conditions.
   self:initLevel(app, avail_rooms)
 
-  self.hospitals[1] = Hospital(self, avail_rooms, app.config.player_name) -- Player's hospital
-  self:initCompetitors(avail_rooms)
+  -- Construct hospitals.
+  self.hospitals[1] = PlayerHospital(self, avail_rooms, app.config.player_name)
+
+  -- Add computer players
+  -- TODO: Right now they're only names
+  local level_config = self.map.level_config
+  for key, value in pairs(level_config.computer) do
+    if value.Playing == 1 then
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
+    end
+  end
+
+  -- Setup research.
   for _, hospital in ipairs(self.hospitals) do
     hospital.research:setResearchConcentration()
   end
@@ -400,19 +411,6 @@ function World:getAvailableRooms()
     end
   end
   return avail_rooms
-end
-
---! Initialize competing hospitals
---!param avail_rooms (list) Available rooms in the level.
-function World:initCompetitors(avail_rooms)
-  -- Add computer players
-  -- TODO: Right now they're only names
-  local level_config = self.map.level_config
-  for key, value in pairs(level_config.computer) do
-    if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
-    end
-  end
 end
 
 --! Initializes variables carried from previous levels
