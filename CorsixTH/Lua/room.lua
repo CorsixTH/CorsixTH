@@ -1030,3 +1030,19 @@ function Room:getStaffServiceQuality()
 
   return quality
 end
+
+--! Count the number of windows in the room
+--!return (int) Number of windows
+function Room:countWindows()
+  local window_tile = {[116]=true, [117]=true, [118]=true, [119]=true,
+   [124]=true, [125]=true, [126]=true, [127]=true}
+  local map, count = self.world.ui.app.map.th, 0
+  for x = self.x, self.x + self.width do
+    for y = self.y, self.y + self.height do
+      if window_tile[map:getCell(x, y, 2)] or window_tile[map:getCell(x, y, 3)] then
+        count = count + 1
+      end
+    end
+  end
+  return count
+end

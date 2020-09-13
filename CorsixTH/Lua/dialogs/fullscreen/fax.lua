@@ -264,8 +264,11 @@ function UIFax:validate()
     if not hosp.spawn_rate_cheat then
       self.ui.adviser:say(_A.cheats.roujin_on_cheat)
       hosp.spawn_rate_cheat = true
+      self:cheatByFax()
     else
       self.ui.adviser:say(_A.cheats.roujin_off_cheat)
+      -- Clear the current month's spawns to give the player a break
+      self.ui.app.world.spawn_dates = {}
       hosp.spawn_rate_cheat = nil
     end
   else
@@ -276,6 +279,16 @@ function UIFax:validate()
   self.ui:playSound("fax_yes.wav")
 
   -- TODO: Other cheats (preferably with slight obfuscation, as above)
+end
+
+function UIFax:cheatByFax()
+  local cheatWindow = self.ui:getWindow(UICheats)
+  local cheat = self.ui.hospital.hosp_cheats
+  cheat:announceCheat()
+  -- If a cheats window is open, make sure the UI is updated
+  if cheatWindow then
+    cheatWindow:updateCheatedStatus()
+  end
 end
 
 function UIFax:appendNumber(number)

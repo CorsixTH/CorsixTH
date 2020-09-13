@@ -201,12 +201,15 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
       self.rep_amount = self.rep_amount + win_value
     end
     -- Impressive Reputation in the year (above a threshold throughout the year)
-    if hosp.hasImpressiveReputation then
+    if hosp.has_impressive_reputation then
       self:addTrophy(_S.trophy_room.consistant_rep.trophies[math.random(1, 2)], "money", prices.TrophyReputationBonus)
       self.won_amount = self.won_amount + prices.TrophyReputationBonus
     end
-    -- No deaths or around a 100% Cure rate in the year
-    if hosp.num_deaths_this_year == 0 then
+    -- Everyone treated successfully, no deaths, or around a 100% Cure rate in the year
+    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      self:addTrophy(_S.trophy_room.all_cured.trophies[math.random(1, 2)], "money", prices.TrophyAllCuredBonus)
+      self.won_amount = self.won_amount + prices.TrophyAllCuredBonus
+    elseif hosp.num_deaths_this_year == 0 then
       self:addTrophy(_S.trophy_room.no_deaths.trophies[math.random(1, 3)], "money", prices.TrophyDeathBonus)
       self.won_amount = self.won_amount + prices.TrophyDeathBonus
     elseif hosp.num_cured_ty > (hosp.not_cured_ty * 0.9)  then
@@ -252,7 +255,10 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
     end
 
     -- Deaths
-    if hosp.num_deaths_this_year < prices.DeathsAward then
+    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      self:addAward(_S.trophy_room.no_deaths.awards[1], "money", prices.AllCuresBonus)
+      self.award_won_amount = self.award_won_amount + prices.AllCuresBonus
+    elseif hosp.num_deaths_this_year < prices.DeathsAward then
       self:addAward(_S.trophy_room.no_deaths.awards[math.random(1, 2)], "money", prices.DeathsBonus)
       self.award_won_amount = self.award_won_amount + prices.DeathsBonus
     elseif hosp.num_deaths_this_year > prices.DeathsPoor then

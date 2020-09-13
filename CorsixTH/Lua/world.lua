@@ -32,6 +32,7 @@ corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
+corsixth.require("cheats")
 corsixth.require("epidemic")
 corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
@@ -1213,8 +1214,13 @@ end
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
 function World:updateSpawnDates()
+  local local_hospital = self:getLocalPlayerHospital()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
+  -- If Roujin's Challenge is on, override spawn rate
+  if local_hospital.spawn_rate_cheat then
+    no_of_spawns = 40
+  end
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
@@ -2063,7 +2069,7 @@ end
 --! Notifies the world that an object has been placed, notifying
 --  interested entities in the vicinity of the new arrival.
 --!param entity (Entity) The entity that was just placed.
---!param id (string) That entity's id.
+--!param id (optional string) That entity's id.
 function World:objectPlaced(entity, id)
   -- If id is not supplied, we can use the entities internal id if it exists
   -- This is so the bench check below works
@@ -2073,45 +2079,11 @@ function World:objectPlaced(entity, id)
   end
 
   self.entities[#self.entities + 1] = entity
-  -- If it is a bench we're placing, notify queueing patients in the vicinity
-  if id == "bench" and entity.tile_x and entity.tile_y then
-    local notify_distance = 6
-    local w, h = self.map.th:size()
-    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
-      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
-          if class.is(patient, Patient) then
-            patient:notifyNewObject(id)
-          end
-        end
-      end
-    end
-  end
-  if id == "reception_desk" then
-    local numReceptionists = self.hospitals[1]:countStaffOfCategory("Receptionist")
-    if not self.ui.start_tutorial and numReceptionists == 0 then
-      -- TODO: Will not work correctly for multiplayer
-      self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif numReceptionists > 0 and self.object_counts["reception_desk"] == 1 and
-        not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
-      self.ui.adviser:say(_A.warnings.no_desk_5)
-      self.hospitals[1].receptionist_msg = true
-    end
-  end
-  -- If it is a plant it might be advisable to hire a handyman
-  if id == "plant" and self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
-    self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
-  end
-  if id == "gates_to_hell" then
-    entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
-        {0,1450,1250,1050,850,450}, 40)
-    entity:setTimer(entity.world:getAnimLength(2550),
-                    --[[persistable:lava_hole_spawn_animation_end]]
-                    function(anim_entity)
-                      anim_entity:setAnimation(1602)
-                    end)
-    entity:setAnimation(2550)
-  end
+
+  -- Warn a hospital if that is possible.
+  if not entity.tile_x or not entity.tile_y then return end
+  local hosp = self:getHospital(entity.tile_x, entity.tile_y)
+  if hosp then hosp:objectPlaced(entity, id) end
 end
 
 --! Notify the world of an object being removed from a tile

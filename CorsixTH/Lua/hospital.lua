@@ -29,6 +29,8 @@ local Hospital = _G["Hospital"]
 
 function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
+  -- Initialise Cheats inside the player hospital
+  self.hosp_cheats = Cheats(self.world.ui)
   local level_config = world.map.level_config
   local level = world.map.level_number
   local balance = 40000
@@ -135,8 +137,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.money_out = 0
 
   -- Other statistics, back to zero each year
-  self.hasImpressiveReputation = true
-  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
+  self.has_impressive_reputation = true
+  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   self.sodas_sold = 0
   self.num_vips_ty  = 0 -- used to count how many VIP visits in the year for an award
@@ -363,21 +365,21 @@ end
 
 -- Remind the player when cash is low that a loan might be available
 function Hospital:cashLow()
-  -- Don't remind in free build mode.
-  if self.world.free_build_mode then
+  -- Don't remind in free build mode or when not controlled by the user.
+  if self.world.free_build_mode or not self:isPlayerHospital() then
     return
   end
-  local hosp = self.world.hospitals[1]
+
   local cashlowmessage = {
     (_A.warnings.money_low),
     (_A.warnings.money_very_low_take_loan),
     (_A.warnings.cash_low_consider_loan),
   }
-  if hosp.balance < 2000 and hosp.balance >= -500 then
-    hosp.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
-  elseif hosp.balance < -2000 and hosp.world:date():monthOfYear() > 8 then
+  if self.balance < 2000 and self.balance >= -500 then
+    self.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
+  elseif self.balance < -2000 and self.world:date():monthOfYear() > 8 then
     -- ideally this should be linked to the lose criteria for balance
-    hosp.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
+    self.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
   end
 end
 
@@ -669,9 +671,13 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 140 then
-    self.hasImpressiveReputation = self.reputation_above_threshold and true or false
+    self.has_impressive_reputation = self.reputation_above_threshold and true or false
     self.reputation_above_threshold = nil
-    self.unconditionalChangeReputation(0) -- Setup 'hasImpressiveReputation'
+    self:unconditionalChangeReputation(0) -- Setup 'has_impressive_reputation'
+  end
+
+  if old < 141 then
+    self.hosp_cheats = Cheats(self.world.ui)
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -753,17 +759,18 @@ function Hospital:checkFacilities()
 
         -- We don't want to see praise messages about seating every month, so randomise the chances of it being shown
         local show_praise = math.random(1, 4) == 4
-        if self.world.object_counts.bench > self.patientcount and show_praise then
+        local num_benches = self:countBenches()
+        if num_benches > self.patientcount and show_praise then
           self:praiseBench()
         -- Are there enough benches for the volume of patients in your hospital?
-        elseif self.world.object_counts.bench < self.patientcount then
+        elseif num_benches < self.patientcount then
           self:warningBench()
         end
       end
     end
 
     -- Make players more aware of the need for radiators
-    if self.world.object_counts.radiator == 0 then
+    if self:countRadiators() == 0 then
       self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
     end
 
@@ -998,11 +1005,12 @@ function Hospital:onEndDay()
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
   end
-  local hosp = self.world.hospitals[1]
-  hosp.receptionist_count = 0
+
+  -- Count receptionists.
+  self.receptionist_count = 0
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == "Receptionist" then
-      hosp.receptionist_count = hosp.receptionist_count + 1
+      self.receptionist_count = self.receptionist_count + 1
     end
   end
 
@@ -1030,9 +1038,10 @@ function Hospital:onEndDay()
   end
 
   -- Is the boiler working today?
+  local num_radiators = self:countRadiators()
   local breakdown = math.random(1, 240)
   if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
-      self.world.object_counts.radiator > 0 then
+      num_radiators > 0 then
     if tonumber(self.world.map.level_number) then
       if self.world.map.level_number == 1 and (self.world:date() >= Date(1,6)) then
         self:boilerBreakdown()
@@ -1045,8 +1054,7 @@ function Hospital:onEndDay()
   end
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
-  local radiators = self.world.object_counts.radiator
-  local heating_costs = (((self.radiator_heat * 10) * radiators) * 7.50) / self.world:date():lastDayOfMonth()
+  local heating_costs = (self.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
   if self:isPlayerHospital() then dailyUpdateRatholes(self) end
@@ -1142,7 +1150,7 @@ function Hospital:onEndMonth()
     if self.receptionist_count ~= 0 and current_month > 2 and not self.receptionist_msg then
       self.world.ui.adviser:say(_A.warnings.no_desk_6)
       self.receptionist_msg = true
-    elseif self.receptionist_count == 0 and current_month > 2 and self.world.object_counts["reception_desk"] ~= 0  then
+    elseif self.receptionist_count == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
       self.world.ui.adviser:say(_A.warnings.no_desk_7)
     --  self.receptionist_msg = true
     elseif current_month == 3 then
@@ -1176,6 +1184,7 @@ end
 --! Collect the reception desks in the hospital.
 --!return (list) The reception desks in the hospital.
 function Hospital:findReceptionDesks()
+  -- TODO Breaks in multiplayer mode.
   local reception_desks = {}
   for _, obj_list in pairs(self.world.objects) do
     for _, obj in ipairs(obj_list) do
@@ -1193,8 +1202,8 @@ function Hospital:onEndYear()
   self.num_vips_ty  = 0
   self.num_deaths_this_year = 0
 
-  self.hasImpressiveReputation = true
-  self.unconditionalChangeReputation(0) -- Reset self.hasImpressiveReputation
+  self.has_impressive_reputation = true
+  self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   -- On third year of level 3 there is the large increase to salary
   -- this will replicate that. I have still to check other levels above 5 to
@@ -1756,6 +1765,101 @@ function Hospital:countRoomOfType(type)
   return result
 end
 
+--! Get the number of reception desks in the hospital.
+--!return (int) Number of reception desks in the hospital.
+function Hospital:countReceptionDesks()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["reception_desk"]
+end
+
+--! Get the number of benches in the hospital.
+--!return (int) Number of benches in the hospital.
+function Hospital:countBenches()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["bench"]
+end
+
+--! Get the number of radiators in the hospital.
+--!return (int) Number of radiators in the hospital.
+function Hospital:countRadiators()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["radiator"]
+end
+
+--! Get the number of plants in the hospital.
+--!return (int) Number of plants in the hospital.
+function Hospital:countPlants()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["plant"]
+end
+
+--! Get the number of fire extinguishers in the hospital.
+--!return (int) Number of fire extinguishers in the hospital.
+function Hospital:countFireExtinguishers()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["extinguisher"]
+end
+
+--! Get the number of general objects in the hospital.
+--!return (int) Number of general objects in the hospital.
+function Hospital:countGeneralObjects()
+  -- TODO Breaks in multiplayer mode.
+  return self.world.object_counts["general"]
+end
+
+--! A new object has been placed in the hospital.
+--!param entity (Entity) The entity that was just placed.
+--!param id (string) That entity's id.
+function Hospital:objectPlaced(entity, id)
+  -- If it is a bench we're placing, notify queueing patients in the vicinity
+  if id == "bench" then
+    local notify_distance = 6
+    local w, h = self.world.map.th:size()
+    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
+      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
+        for _, patient in ipairs(self.world.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
+          if class.is(patient, Patient) then
+            patient:notifyNewObject(id)
+          end
+        end
+      end
+    end
+  end
+
+  if id == "reception_desk" then
+    if self:isPlayerHospital() then
+      local numReceptionists = self:countStaffOfCategory("Receptionist")
+      if not self.world.ui.start_tutorial and numReceptionists == 0 then
+        self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
+      elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
+          not self.receptionist_msg and self.game_date:monthOfGame() > 3 then
+        self.world.ui.adviser:say(_A.warnings.no_desk_5)
+        self.receptionist_msg = true
+      end
+    end
+  end
+
+  -- If it is a plant it might be advisable to hire a handyman
+  if self:isPlayerHospital() then
+    if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
+      self.world.ui.adviser:say(_A.staff_advice.need_handyman_plants)
+    end
+  end
+
+  if id == "gates_to_hell" then
+    if self:isPlayerHospital() then
+      entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
+          {0,1450,1250,1050,850,450}, 40)
+      entity:setTimer(entity.world:getAnimLength(2550),
+                      --[[persistable:lava_hole_spawn_animation_end]]
+                      function(anim_entity)
+                        anim_entity:setAnimation(1602)
+                      end)
+      entity:setAnimation(2550)
+    end
+  end
+end
+
 --! Remove the first entry with a given value from a table.
 --! Only works reliably for lists.
 --!param t Table to search for the value, and update.
@@ -1835,14 +1939,14 @@ function Hospital:unconditionalChangeReputation(valueChange)
   end
 
   -- Check if criteria for trophy is still met
-  if self.hasImpressiveReputation then
+  if self.has_impressive_reputation then
     local level_config = self.world.map.level_config
     if level_config.awards_trophies then
       local min_repuration = level_config.awards_trophies.Reputation
-      self.hasImpressiveReputation = min_repuration < self.reputation
+      self.has_impressive_reputation = min_repuration < self.reputation
       return
     end
-    self.hasImpressiveReputation = false
+    self.has_impressive_reputation = false
   end
 end
 

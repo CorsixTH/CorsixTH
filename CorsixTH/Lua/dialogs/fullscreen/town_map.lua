@@ -169,15 +169,15 @@ function UITownMap:draw(canvas, x, y)
     config = self:initRuntimeConfig()
   end
 
-  -- We need to draw number of people, plants, fire extinguisers, other objects
+  -- We need to draw number of people, plants, fire extinguishers, other objects
   -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
   local patientcount = hospital.patientcount
-  local plants = world.object_counts.plant
-  local fireext = world.object_counts.extinguisher
-  local objs = world.object_counts.general
-  local radiators = world.object_counts.radiator
+  local plants = hospital:countPlants()
+  local fireext = hospital:countFireExtinguishers()
+  local objs = hospital:countGeneralObjects()
+  local radiators = hospital:countRadiators()
 
   self.info_font:draw(canvas, patientcount, x +  95, y +  57)
   self.info_font:draw(canvas, plants,       x +  95, y + 110)

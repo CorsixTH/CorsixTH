@@ -648,8 +648,8 @@ adviser = {
     patient_abducted              = S[11][111], -- what the heck is this? I never got that far in the original...
     patient_leaving_too_expensive = S[11][118],
 
-    pay_rise                      = S[11][ 29], -- TODO only in tutorial / first time?
-    handyman_adjust               = S[11][ 71], -- TODO only in tutorial / first time?
+    pay_rise                      = S[11][ 29], -- Once only
+    handyman_adjust               = S[11][ 71], -- Once only
     fax_received                  = S[11][136], -- Once only
 
     vip_arrived                   = S[21][  9], -- %s (name of VIP)
@@ -1142,9 +1142,9 @@ trophy_room = {
       S[55][ 7],
     },
   },
-  all_cured = {         -- not implemented
+  all_cured = {
     awards = {
-      S[27][29],          -- for 100% treat rate (does that mean none sent home or killed?)
+      S[27][29],          -- for 100% treat rate (none sent home or killed)
     },
     trophies = {
       S[27][30],          -- for 100% cure rate
