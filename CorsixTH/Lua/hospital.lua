@@ -98,7 +98,16 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.over_priced_threshold = 0.3
 
-  self.radiator_heat = 0.5
+  -- (int) Number of days until the next boiler or vomit wave disaster.
+  -- TODO: Implement the vomit wave.
+  self.disasterless_days = self:daysTillNextDisaster()
+
+  self.curr_setting = nil -- (float) Saved radiator heat when boiler has broken down.
+  self.boiler_can_break = nil -- (bool) Prevents boiler breakdown before the hospital is open.
+  self.heating_broke = nil -- (bool) Whether the boiler is broken down currently.
+  self.boiler_countdown = nil -- (int) Number of days before the heating works properly again.
+  self.radiator_heat = 0.5 -- (float) [0..1] fraction of heating by a radiator.
+
   self.num_visitors = 0
   self.num_deaths = 0
   self.num_deaths_this_year = 0
@@ -150,7 +159,7 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.ownedPlots = {1} -- Plots owned by the hospital
   self.ratholes = {} -- List of table {x, y, wall, parcel, optional object} for ratholes in the hospital corridors.
   self.is_in_world = true -- Whether the hospital is in this world (AI hospitals are not)
-  self.opened = false
+  self.opened = false -- Whether the hospital is opened (timer was cleared or ended).
   self.transactions = {}
   self.staff = {}
   self.patients = {}
@@ -680,6 +689,10 @@ function Hospital:afterLoad(old, new)
     self.hosp_cheats = Cheats(self.world.ui)
   end
 
+  if old < 142 then
+    self.disasterless_days = self:daysTillNextDisaster()
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -915,13 +928,30 @@ function Hospital:hotWarning()
     self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Normal)
   end
 end
--- Called when the hospitals's boiler has broken down.
--- It will remain broken for a certain period of time.
-function Hospital:boilerBreakdown()
-  self.curr_setting = self.radiator_heat
-  self.radiator_heat = math.random(0, 1)
-  self.boiler_countdown = math.random(7, 25)
 
+--! Decide how many days the hospital functions within specification.
+--!return (int) Number of disaster-free days in the hospital.
+function Hospital:daysTillNextDisaster()
+  local disaster_free_days = {300, 200, 150}
+  -- Original doesn't use random, see Github #490.
+  return disaster_free_days[self.world.map:getDifficulty()] + math.random(1, 21) - 11
+end
+
+--! Boiler should break down.
+--!param broken_heat (0 or 1) Amount of heat to output due to being broken.
+function Hospital:boilerBreakdown(broken_heat)
+  if not self.opened or not self.boiler_can_break then return end -- Boiler cannot break.
+  if self.heating_broke then return end -- Still broken, don't break it again.
+
+  local num_radiators = self:countRadiators()
+  if num_radiators == 0 then return end -- No radiators, don't bother to break the boiler.
+
+  local num_handyman = self:countStaffOfCategory("Handyman")
+  if num_radiators <= 8 * num_handyman then return end -- Enough handyman to maintain the heating system.
+
+  self.curr_setting = self.radiator_heat
+  self.radiator_heat = broken_heat
+  self.boiler_countdown = math.random(10, 30)
   self.heating_broke = true
 
   -- Only show the message when relevant to the local player's hospital.
@@ -936,12 +966,30 @@ function Hospital:boilerBreakdown()
   end
 end
 
--- When the boiler has been repaired this function is called.
-function Hospital:boilerFixed()
-  self.radiator_heat = self.curr_setting
-  self.heating_broke = false
-  if self:isPlayerHospital() then
-    self.world.ui.adviser:say(_A.boiler_issue.resolved)
+--! Boiler broke down and work is done to get it fixed.
+function Hospital:_fixBoiler()
+  if not self.heating_broke then return end -- Not broken, done!
+
+  -- Repair the boiler or radiators, more handyman speeds up repair, see also github #490
+  local num_radiators = self:countRadiators()
+  local num_handyman = self:countStaffOfCategory("Handyman")
+  if num_radiators < 5 * num_handyman then
+    self.boiler_countdown = self.boiler_countdown - 3
+  elseif num_radiators < 8 * num_handyman then
+    self.boiler_countdown = self.boiler_countdown - 2
+  elseif num_handyman > 0 then
+    self.boiler_countdown = self.boiler_countdown - 1
+  end
+  -- No repair without handyman!
+
+  if self.boiler_countdown <= 0 then
+    -- It's fixed, restore previous settings.
+    self.radiator_heat = self.curr_setting
+    self.heating_broke = false
+    if num_radiators > 0 and self:isPlayerHospital() then
+      -- Only tell the player about fix if there is at least one radiator.
+      self.world.ui.adviser:say(_A.boiler_issue.resolved)
+    end
   end
 end
 
@@ -1029,31 +1077,25 @@ function Hospital:onEndDay()
     end
   end
 
-  -- Countdown for boiler breakdowns
-  if self.heating_broke then
-    self.boiler_countdown = self.boiler_countdown - 1
-    if self.boiler_countdown == 0 then
-      self:boilerFixed()
-    end
-  end
+  self:_fixBoiler() -- Boiler always needs work (especially if broken).
 
-  -- Is the boiler working today?
-  local num_radiators = self:countRadiators()
-  local breakdown = math.random(1, 240)
-  if breakdown == 1 and not self.heating_broke and self.boiler_can_break and
-      num_radiators > 0 then
-    if tonumber(self.world.map.level_number) then
-      if self.world.map.level_number == 1 and (self.world:date() >= Date(1,6)) then
-        self:boilerBreakdown()
-      elseif self.world.map.level_number > 1 then
-        self:boilerBreakdown()
-      end
-    else
-      self:boilerBreakdown()
+  -- Do we have a disaster?
+  self.disasterless_days = self.disasterless_days - 1
+  if self.disasterless_days <= 0 then
+    self.disasterless_days = self:daysTillNextDisaster()
+
+    local disaster_type = math.random(1, 3) -- TODO: Set to 3 until the vomit wave is implemented.
+    -- disaster_type == 1 is for skipping the disaster, nothing happens.
+    if disaster_type == 2 then
+      self:boilerBreakdown(1) -- max heat
+    elseif disaster_type == 3 then
+      self:boilerBreakdown(0) -- min heat
     end
+    -- TODO: Implement vomit wave disaster for disaster_type == 4
   end
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
+  local num_radiators = self:countRadiators()
   local heating_costs = (self.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
