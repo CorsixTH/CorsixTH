@@ -98,15 +98,17 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- level; e.g. Easy: 0.4 / Difficult: 0.2)
   self.over_priced_threshold = 0.3
 
-  -- (int) Number of days until the next boiler or vomit wave disaster.
+  -- (int) Number of days until the next heating or vomit wave disaster.
   -- TODO: Implement the vomit wave.
   self.disasterless_days = self:daysTillNextDisaster()
 
-  self.curr_setting = nil -- (float) Saved radiator heat when boiler has broken down.
-  self.boiler_can_break = nil -- (bool) Prevents boiler breakdown before the hospital is open.
-  self.heating_broke = nil -- (bool) Whether the boiler is broken down currently.
-  self.boiler_countdown = nil -- (int) Number of days before the heating works properly again.
-  self.radiator_heat = 0.5 -- (float) [0..1] fraction of heating by a radiator.
+  -- Heating system variables.
+  self.heating = {
+    radiator_heat = 0.5, -- (float) [0..1] fraction of heating by a radiator.
+    saved_radiator_heat = nil, -- (float) Saved radiator heat when boiler has broken down.
+    boiler_repair_count = nil, -- (int) Number of items to repair.
+    heating_broke = false -- (bool) Whether the heating system is broken down currently.
+  }
 
   self.num_visitors = 0
   self.num_deaths = 0
@@ -691,6 +693,18 @@ function Hospital:afterLoad(old, new)
 
   if old < 142 then
     self.disasterless_days = self:daysTillNextDisaster()
+
+    self.heating = {
+      radiator_heat = self.radiator_heat or 0.5,
+      saved_radiator_heat = self.curr_setting or 0.5,
+      boiler_repair_count = self.boiler_countdown or 0,
+      heating_broke = self.heating_broke or false
+    }
+    self.radiator_heat = nil
+    self.curr_setting = nil
+    self.boiler_countdown = nil
+    self.boiler_can_break = nil -- Equivalent to self.opened.
+    self.heating_broke = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -790,7 +804,7 @@ function Hospital:checkFacilities()
     -- Now to check how warm or cold patients and staff are. So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
-    if not self.warmth_msg and not self.heating_broke then
+    if not self.warmth_msg and not self.heating.heating_broke then
       if day == 15 then
         local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
         if warmth < 0.22 then
@@ -940,8 +954,10 @@ end
 --! Boiler should break down.
 --!param broken_heat (0 or 1) Amount of heat to output due to being broken.
 function Hospital:boilerBreakdown(broken_heat)
-  if not self.opened or not self.boiler_can_break then return end -- Boiler cannot break.
-  if self.heating_broke then return end -- Still broken, don't break it again.
+  local heat_vars = self.heating
+
+  if not self.opened then return end -- Boiler cannot break if hospital is closed.
+  if heat_vars.heating_broke then return end -- Still broken, don't break it again.
 
   local num_radiators = self:countRadiators()
   if num_radiators == 0 then return end -- No radiators, don't bother to break the boiler.
@@ -949,14 +965,14 @@ function Hospital:boilerBreakdown(broken_heat)
   local num_handyman = self:countStaffOfCategory("Handyman")
   if num_radiators <= 8 * num_handyman then return end -- Enough handyman to maintain the heating system.
 
-  self.curr_setting = self.radiator_heat
-  self.radiator_heat = broken_heat
-  self.boiler_countdown = math.random(10, 30)
-  self.heating_broke = true
+  heat_vars.saved_radiator_heat = heat_vars.radiator_heat
+  heat_vars.radiator_heat = broken_heat
+  heat_vars.boiler_repair_count = math.random(10, 30)
+  heat_vars.heating_broke = true
 
   -- Only show the message when relevant to the local player's hospital.
   if self:isPlayerHospital() then
-    if self.radiator_heat == 0 then
+    if heat_vars.radiator_heat == 0 then
       self.world.ui.adviser:say(_A.boiler_issue.minimum_heat)
       self:coldWarning()
     else
@@ -968,24 +984,26 @@ end
 
 --! Boiler broke down and work is done to get it fixed.
 function Hospital:_fixBoiler()
-  if not self.heating_broke then return end -- Not broken, done!
+  local heat_vars = self.heating
+
+  if not heat_vars.heating_broke then return end -- Not broken, done!
 
   -- Repair the boiler or radiators, more handyman speeds up repair, see also github #490
   local num_radiators = self:countRadiators()
   local num_handyman = self:countStaffOfCategory("Handyman")
   if num_radiators < 5 * num_handyman then
-    self.boiler_countdown = self.boiler_countdown - 3
+    heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 3
   elseif num_radiators < 8 * num_handyman then
-    self.boiler_countdown = self.boiler_countdown - 2
+    heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 2
   elseif num_handyman > 0 then
-    self.boiler_countdown = self.boiler_countdown - 1
+    heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 1
   end
   -- No repair without handyman!
 
-  if self.boiler_countdown <= 0 then
+  if heat_vars.boiler_repair_count <= 0 then
     -- It's fixed, restore previous settings.
-    self.radiator_heat = self.curr_setting
-    self.heating_broke = false
+    heat_vars.radiator_heat = heat_vars.saved_radiator_heat
+    heat_vars.heating_broke = false
     if num_radiators > 0 and self:isPlayerHospital() then
       -- Only tell the player about fix if there is at least one radiator.
       self.world.ui.adviser:say(_A.boiler_issue.resolved)
@@ -1096,7 +1114,7 @@ function Hospital:onEndDay()
 
   -- Calculate heating cost daily.  Divide the monthly cost by the number of days in that month
   local num_radiators = self:countRadiators()
-  local heating_costs = (self.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
+  local heating_costs = (self.heating.radiator_heat * 10 * num_radiators * 7.50) / self.world:date():lastDayOfMonth()
   self.acc_heating = self.acc_heating + heating_costs
 
   if self:isPlayerHospital() then dailyUpdateRatholes(self) end
