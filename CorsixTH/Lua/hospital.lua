@@ -100,7 +100,7 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   -- (int) Number of days until the next heating or vomit wave disaster.
   -- TODO: Implement the vomit wave.
-  self.disasterless_days = self:daysTillNextDisaster()
+  self.disasterless_days = self:daysUntilNextDisaster()
 
   -- Heating system variables.
   self.heating = {
@@ -692,7 +692,7 @@ function Hospital:afterLoad(old, new)
   end
 
   if old < 142 then
-    self.disasterless_days = self:daysTillNextDisaster()
+    self.disasterless_days = self:daysUntilNextDisaster()
 
     self.heating = {
       radiator_heat = self.radiator_heat or 0.5,
@@ -945,7 +945,7 @@ end
 
 --! Decide how many days the hospital functions within specification.
 --!return (int) Number of disaster-free days in the hospital.
-function Hospital:daysTillNextDisaster()
+function Hospital:daysUntilNextDisaster()
   local disaster_free_days = {300, 200, 150}
   -- Original doesn't use random, see Github #490.
   return disaster_free_days[self.world.map:getDifficulty()] + math.random(1, 21) - 11
@@ -988,17 +988,16 @@ function Hospital:_fixBoiler()
 
   if not heat_vars.heating_broke then return end -- Not broken, done!
 
-  -- Repair the boiler or radiators, more handyman speeds up repair, see also github #490
+  -- Repair the boiler or radiators, more handy men speeds up repair, see also github #490
   local num_radiators = self:countRadiators()
   local num_handyman = self:countStaffOfCategory("Handyman")
   if num_radiators < 5 * num_handyman then
     heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 3
   elseif num_radiators < 8 * num_handyman then
     heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 2
-  elseif num_handyman > 0 then
+  else
     heat_vars.boiler_repair_count = heat_vars.boiler_repair_count - 1
   end
-  -- No repair without handyman!
 
   if heat_vars.boiler_repair_count <= 0 then
     -- It's fixed, restore previous settings.
@@ -1100,7 +1099,7 @@ function Hospital:onEndDay()
   -- Do we have a disaster?
   self.disasterless_days = self.disasterless_days - 1
   if self.disasterless_days <= 0 then
-    self.disasterless_days = self:daysTillNextDisaster()
+    self.disasterless_days = self:daysUntilNextDisaster()
 
     local disaster_type = math.random(1, 3) -- TODO: Set to 3 until the vomit wave is implemented.
     -- disaster_type == 1 is for skipping the disaster, nothing happens.
