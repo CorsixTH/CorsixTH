@@ -88,15 +88,16 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.reputation_min = 0
   self.reputation_max = 1000
 
+  local difficulty = self.world.map:getDifficulty()
   -- Price distortion level under which the patients might consider the
-  -- treatment to be under-priced (TODO: This could depend on difficulty and/or
-  -- level; e.g. Easy: -0.3 / Difficult: -0.5)
-  self.under_priced_threshold = -0.4
+  -- treatment to be under-priced.
+  local under_priced_thresholds = {-0.3, -0.4, -0.5}
+  self.under_priced_threshold = under_priced_thresholds[difficulty]
 
   -- Price distortion level over which the patients might consider the
-  -- treatment to be over-priced (TODO: This could depend on difficulty and/or
-  -- level; e.g. Easy: 0.4 / Difficult: 0.2)
-  self.over_priced_threshold = 0.3
+  -- treatment to be over-priced.
+  local over_priced_thresholds = {0.4, 0.3, 0.2}
+  self.over_priced_threshold = over_priced_thresholds[difficulty]
 
   -- (int) Number of days until the next heating or vomit wave disaster.
   -- TODO: Implement the vomit wave.
