@@ -20,7 +20,7 @@ SOFTWARE. --]]
 
 class "PlayerHospital" (Hospital)
 
---@type PlayerHospital
+---@type PlayerHospital
 local PlayerHospital = _G["PlayerHospital"]
 
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
