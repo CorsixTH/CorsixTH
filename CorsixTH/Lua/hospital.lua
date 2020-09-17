@@ -394,6 +394,9 @@ function Hospital:cashLow()
   end
 end
 
+--! Update the loaded game with version 'old' to the version 'new'.
+--!param old Version of the loaded game.
+--!param new Version of the code being executed.
 function Hospital:afterLoad(old, new)
   if old < 8 then
     -- The list of discovered rooms was not saved. The best we can do is make everything
@@ -705,6 +708,17 @@ function Hospital:afterLoad(old, new)
     self.boiler_countdown = nil
     self.boiler_can_break = nil -- Equivalent to self.opened.
     self.heating_broke = nil
+  end
+
+  if old < 143 and new >= 143 then
+    if self:isPlayerHospital() then
+      setmetatable(self, PlayerHospital._metatable)
+    end
+
+    -- To avoid recursion, apply the remaining changes asif the game was
+    -- started from version 143.
+    self:afterLoad(143, new)
+    return
   end
 
   -- Update other objects in the hospital (added in version 106).
