@@ -112,20 +112,9 @@ function InstallDirTreeNode:getHighlightColour(canvas)
       -- Assume root-level things are not TH directories, unless we've already
       -- got a list of their children.
       highlight_colour = nil
-    elseif self:getChildCount() >= 3 then
-      local ngot = 0
-      local things_to_check = {"data", "levels", "qdata"}
-      for _, thing in ipairs(things_to_check) do
-        if not self.children[thing:lower()] then
-          break
-        else
-          ngot = ngot + 1
-        end
-      end
-      if ngot == 3 then
-        highlight_colour = canvas:mapRGB(0, 255, 0)
-        self.is_valid_directory = true
-      end
+    elseif self:getChildCount() >= 3 and TheApp:isThemeHospitalPath(self.path) then
+      highlight_colour = canvas:mapRGB(0, 255, 0)
+      self.is_valid_directory = true
     elseif isIso(self.path) then
       local file = io.open(self.path, "rb")
       if not file then return nil end
