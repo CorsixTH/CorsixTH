@@ -395,6 +395,9 @@ function Hospital:cashLow()
   end
 end
 
+--! Update the loaded game with version 'old' to the version 'new'.
+--!param old Version of the loaded game.
+--!param new Version of the code being executed.
 function Hospital:afterLoad(old, new)
   if old < 8 then
     -- The list of discovered rooms was not saved. The best we can do is make everything
@@ -706,6 +709,17 @@ function Hospital:afterLoad(old, new)
     self.boiler_countdown = nil
     self.boiler_can_break = nil -- Equivalent to self.opened.
     self.heating_broke = nil
+  end
+
+  if old < 143 and new >= 143 then
+    if self:isPlayerHospital() then
+      setmetatable(self, PlayerHospital._metatable)
+    end
+
+    -- To avoid recursion, apply the remaining changes asif the game was
+    -- started from version 143.
+    self:afterLoad(143, new)
+    return
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -2289,29 +2303,6 @@ function Hospital:removeRatholeXY(x, y)
       if rathole.object then self.world:destroyEntity(rathole.object) end
     end
   end
-end
-
-class "AIHospital" (Hospital)
-
----@type AIHospital
-local AIHospital = _G["AIHospital"]
-
-function AIHospital:AIHospital(competitor, ...)
-  self:Hospital(...)
-  if _S.competitor_names[competitor] then
-    self.name = _S.competitor_names[competitor]
-  else
-    self.name = "NONAME"
-  end
-  self.is_in_world = false
-end
-
-function AIHospital:spawnPatient()
-  -- TODO: Simulate patient
-end
-
-function AIHospital:logTransaction()
-  -- AI doesn't need a log of transactions, as it is only used for UI purposes
 end
 
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
