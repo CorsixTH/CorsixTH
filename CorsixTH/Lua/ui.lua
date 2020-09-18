@@ -1031,6 +1031,7 @@ function UI:addWindow(window)
   end
   if window:mustPause() then
     self.app.world:setSpeed("Pause")
+    self.app.video:setBlueFilterActive(false) -- mustPause windows shouldn't cause tainting
   end
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
