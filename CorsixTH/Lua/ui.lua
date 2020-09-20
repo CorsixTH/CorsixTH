@@ -139,6 +139,7 @@ function UI:UI(app, minimal)
   self:Window()
   self:initKeyAndButtonCodes()
   self.app = app
+  self.hosp_cheats = Cheats(self)
   self.screen_offset_x = 0
   self.screen_offset_y = 0
   self.cursor = nil
@@ -1172,3 +1173,10 @@ end
 
 -- Stub for compatibility with savegames r1896-1921
 function UI:stopVideo() end
+
+function UI:afterLoad(old, new)
+  if old < 144 then
+    self.hosp_cheats = Cheats(self)
+  end
+  Window.afterLoad(self, old, new)
+end
