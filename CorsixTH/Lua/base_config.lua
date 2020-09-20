@@ -372,21 +372,21 @@ local configuration = {
     [0] = {StartMonth = 0, EndMonth = 0, Min = 0, Max = 0, Illness = 0, PercWin = 0, Bonus = 0},
   },
   computer = {
-    [0] = {Playing = 0}, -- ORAC
-    {Playing = 0}, -- COLOSSUS
-    {Playing = 0}, -- HAL
-    {Playing = 0}, -- MULTIVAC
-    {Playing = 0}, -- HOLLY
-    {Playing = 0}, -- DEEP THOUGHT
-    {Playing = 0}, -- ZEN
-    {Playing = 0}, -- SKYNET
-    {Playing = 0}, -- MARVIN
-    {Playing = 0}, -- CEREBRO
-    {Playing = 0}, -- MOTHER
-    {Playing = 0}, -- JAYNE
-    {Playing = 0}, -- CORSIX
-    {Playing = 0}, -- ROUJIN
-    {Playing = 0}, -- EDVIN
+    [0] = {Playing = 0, Name = "ORAC"},
+    {Playing = 0, Name = "COLOSSUS"},
+    {Playing = 0, Name = "HAL"},
+    {Playing = 0, Name = "MULTIVAC"},
+    {Playing = 0, Name = "HOLLY"},
+    {Playing = 0, Name = "DEEP THOUGHT"},
+    {Playing = 0, Name = "ZEN"},
+    {Playing = 0, Name = "SKYNET"},
+    {Playing = 0, Name = "MARVIN"},
+    {Playing = 0, Name = "CEREBRO"},
+    {Playing = 0, Name = "MOTHER"},
+    {Playing = 0, Name = "JAYNE"},
+    {Playing = 0, Name = "CORSIX"},
+    {Playing = 0, Name = "ROUJIN"},
+    {Playing = 0, Name = "EDVIN"},
   },
   awards_trophies = {
 
