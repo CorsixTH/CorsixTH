@@ -372,7 +372,7 @@ But we don't want any such conditions on the example level!
 
 --------------------- Competitor Information -----------------------
 
-| Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
-#computer[12].Playing 1 Corsix
-#computer[13].Playing 1 Roujin
-#computer[14].Playing 1 Edvin
+| Index in the away "computer" | Is that opponent playing? 1 is yes, 0 no | Name |
+#computer[12].Playing.Name 1 Corsix
+#computer[13].Playing.Name 1 Roujin
+#computer[14].Playing.Name 1 Edvin

@@ -55,7 +55,7 @@ InterestRate is defined as centiprocent to allow for two decimals precision, i.e
 -------------------- Disease Configuration -------------------------
 
 When a drug is researched, what effectiveness does it have
-#gbv.StartRating 100 
+#gbv.StartRating 100
 
 The following table contains all diagnoses and treatments that shows up in the drug casebook
 in the game. Known specifies whether it should show up from the beginning of the level and
@@ -230,10 +230,10 @@ But we don't want any such conditions on the example level!
 
 --------------------- Competitor Information -----------------------
 
-| Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
-#computer[12].Playing 1 CORSIX
-#computer[13].Playing 1 ROUJIN
-#computer[14].Playing 1 EDVIN
+| Index in the away "computer" | Is that opponent playing? 1 is yes, 0 no | Name |
+#computer[12].Playing 1.Name CORSIX
+#computer[13].Playing 1.Name ROUJIN
+#computer[14].Playing 1.Name EDVIN
 
 ----------------------- Emergency Control --------------------------
 
