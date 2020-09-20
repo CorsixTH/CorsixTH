@@ -188,18 +188,24 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
   self.policies["grant_wage_increase"] = TheApp.config.grant_wage_increase
+
   -- Randomly select three insurance companies to use, only different by name right now.
-  -- The first ones are more likely to come
+  -- The companies in the first quarter of the list are more likely to be selected
   self.insurance = {}
+  -- Make a local writeable copy table of the translated company names.
+  local companies = {}
   for no, local_name in ipairs(_S.insurance_companies) do
-    -- NOTE: Will not work if more companies are added
-    if math.random(1, 11) < 4 or 11 - no < #self.insurance + 3 then
-      self.insurance[#self.insurance + 1] = local_name
-    end
-    if #self.insurance > 2 then
-      break
-    end
+    companies[no] = local_name
   end
+  repeat
+    local num = math.random(1, 2) == 1 and math.random(1, math.ceil(#companies / 4)) or
+        math.random(1, #companies)
+    if companies[num] then
+      self.insurance[#self.insurance + 1] = companies[num]
+      table.remove(companies, num)
+    end
+  until #self.insurance > 2 or #companies < 1
+
   -- A list of how much each insurance company owes you. The first entry for
   -- each company is the current month's dept, the second the previous
   -- month and the third the month before that.
