@@ -59,8 +59,8 @@ local col_cheated_yes = {
 !param ui (UI) The active ui.
 ]]
 function UICheats:UICheats(ui)
-  self.cheats = ui.hospital.hosp_cheats
-  self.cheat_list = ui.hospital.hosp_cheats.cheat_list
+  self.cheats = ui.hosp_cheats
+  self.cheat_list = ui.hosp_cheats.cheat_list
 
   self:UIResizable(ui, 300, 200, col_bg)
 
@@ -132,7 +132,7 @@ function UICheats:buttonBack()
 end
 
 function UICheats:afterLoad(old, new)
-  if old < 141 then
+  if old < 144 then
     -- Window must be closed if open for compatibility
     local cheatWindow = self.ui:getWindow(UICheats)
     if cheatWindow then
