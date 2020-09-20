@@ -152,6 +152,9 @@ function World:World(app)
   for key, value in pairs(level_config.computer) do
     if value.Playing == 1 then
       self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
+      if value.Name then
+        self.hospitals[#self.hospitals].name = value.Name
+      end
     end
   end
 
