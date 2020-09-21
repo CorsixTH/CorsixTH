@@ -19,6 +19,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+
 --! A dialog for activating cheats
 class "UICheats" (UIResizable)
 
@@ -118,7 +119,7 @@ function UICheats:buttonClicked(num)
   -- Only the cheats that may fail return false in that case. All others return nothing.
   if self.cheat_list[num].func(self) ~= false then
     if self.cheat_list[num].name ~= "lose_level" then
-      self.cheats:announceCheat()
+      self.cheats.announceCheat(self.ui)
       self:updateCheatedStatus()
     end
   else
@@ -132,7 +133,7 @@ function UICheats:buttonBack()
 end
 
 function UICheats:afterLoad(old, new)
-  if old < 141 then
+  if old < 144 then
     -- Window must be closed if open for compatibility
     local cheatWindow = self.ui:getWindow(UICheats)
     if cheatWindow then

@@ -25,4 +25,14 @@ local PlayerHospital = _G["PlayerHospital"]
 
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
+  -- The player hospital in single player can access the Cheat System should they wish to
+  self.hosp_cheats = Cheats(self)
+end
+
+function PlayerHospital:afterLoad(old, new)
+  if old < 144 then
+    self.hosp_cheats = Cheats(self)
+  end
+
+  Hospital.afterLoad(self, old, new)
 end

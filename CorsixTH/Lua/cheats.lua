@@ -29,42 +29,43 @@ class "Cheats"
 ---@type Cheats
 local Cheats = _G["Cheats"]
 
--- Cheats only needs UI to function
-function Cheats:Cheats(ui)
-  self.ui = ui
+-- Cheats System
+function Cheats:Cheats(hospital)
+  self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
+  -- New cheats require a persistable and a wrapped function in func
   self.cheat_list = {
-    {name = "money",          func = self.cheatMoney},
-    {name = "all_research",   func = self.cheatResearch},
-    {name = "emergency",      func = self.cheatEmergency},
-    {name = "epidemic",       func = self.cheatEpidemic},
-    {name = "toggle_infected", func = self.cheatToggleInfected},
-    {name = "vip",            func = self.cheatVip},
-    {name = "earthquake",     func = self.cheatEarthquake},
-    {name = "create_patient", func = self.cheatPatient},
-    {name = "end_month",      func = self.cheatMonth},
-    {name = "end_year",       func = self.cheatYear},
-    {name = "lose_level",     func = self.cheatLose},
-    {name = "win_level",      func = self.cheatWin},
-    {name = "increase_prices", func = self.cheatIncreasePrices},
-    {name = "decrease_prices", func = self.cheatDecreasePrices},
+    {name = "money",          func = --[[persistable:cheatMoney]] function() self:cheatMoney() end},
+    {name = "all_research",   func = --[[persistable:cheatResearch]] function() self:cheatResearch() end},
+    {name = "emergency",      func = --[[persistable:cheatEmergency]] function() self:cheatEmergency() end},
+    {name = "epidemic",       func = --[[persistable:CheatEpidemic]] function() self:cheatEpidemic() end},
+    {name = "toggle_infected", func = --[[persistable:cheatToggleInfected]] function() self:cheatToggleInfected() end},
+    {name = "vip",            func = --[[persistable:cheatVip]] function() self:cheatVip() end},
+    {name = "earthquake",     func = --[[persistable:cheatEarthquake]] function() self:cheatEarthquake() end},
+    {name = "create_patient", func = --[[persistable:cheatPatient]] function() self:cheatPatient() end},
+    {name = "end_month",      func = --[[persistable:cheatMonth]] function() self:cheatMonth() end},
+    {name = "end_year",       func = --[[persistable:cheatYear]] function() self:cheatYear() end},
+    {name = "lose_level",     func = --[[persistable:cheatLose]] function() self:cheatLose() end},
+    {name = "win_level",      func = --[[persistable:cheatWin]] function() self:cheatWin() end},
+    {name = "increase_prices", func = --[[persistable:cheatIncreasePrices]] function() self:cheatIncreasePrices() end},
+    {name = "decrease_prices", func = --[[persistable:cheatDecreasePrices]] function() self:cheatDecreasePrices() end},
   }
 end
 
 function Cheats:announceCheat()
-  local announcements = self.ui.app.world.cheat_announcements
+  local announcements = self.hospital.world.cheat_announcements
   if announcements then
-    self.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
+    self.hospital.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Critical)
   end
-  self.ui.hospital.cheated = true
+  self.hospital.cheated = true
 end
 
 function Cheats:cheatMoney()
-  self.ui.hospital:receiveMoney(10000, _S.transactions.cheat)
+  self.hospital:receiveMoney(10000, _S.transactions.cheat)
 end
 
 function Cheats:cheatResearch()
-  local hosp = self.ui.hospital
+  local hosp = self.hospital
   for _, cat in ipairs({"diagnosis", "cure"}) do
     while hosp.research.research_policy[cat].current do
       hosp.research:discoverObject(hosp.research.research_policy[cat].current)
@@ -73,14 +74,14 @@ function Cheats:cheatResearch()
 end
 
 function Cheats:cheatEmergency()
-  if not self.ui.hospital:createEmergency() then
-    self.ui:addWindow(UIInformation(self.ui, {_S.misc.no_heliport}))
+  if not self.hospital:createEmergency() then
+    self.hospital.world.ui:addWindow(UIInformation(self.hospital.world.ui, {_S.misc.no_heliport}))
   end
 end
 
 --[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
 function Cheats:cheatEpidemic()
-  self.ui.hospital:spawnContagiousPatient()
+  self.hospital:spawnContagiousPatient()
 end
 
 --[[ Before an epidemic has been revealed toggle the infected icons
@@ -88,9 +89,9 @@ to easily distinguish the infected patients -- will toggle icons
 for ALL future epidemics you cannot distinguish between epidemics
 by disease ]]
 function Cheats:cheatToggleInfected()
-  local hospital = self.ui.hospital
-  if hospital.future_epidemics_pool and #hospital.future_epidemics_pool > 0 then
-    for _, future_epidemic in ipairs(hospital.future_epidemics_pool) do
+  local hosp = self.hospital
+  if hosp.future_epidemics_pool and #hosp.future_epidemics_pool > 0 then
+    for _, future_epidemic in ipairs(hosp.future_epidemics_pool) do
       local show_mood = future_epidemic.cheat_always_show_mood
       future_epidemic.cheat_always_show_mood = not show_mood
       local mood_action = show_mood and "deactivate" or "activate"
@@ -99,40 +100,40 @@ function Cheats:cheatToggleInfected()
       end
     end
   else
-    self.ui.app.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
+    self.hospital.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
   end
 end
 
 function Cheats:cheatVip()
-  self.ui.hospital:createVip()
+  self.hospital:createVip()
 end
 
 function Cheats:cheatEarthquake()
-  return self.ui.app.world:createEarthquake()
+  return self.hospital.world:createEarthquake()
 end
 
 function Cheats:cheatPatient()
-  self.ui.app.world:spawnPatient()
+  self.hospital.world:spawnPatient()
 end
 
 function Cheats:cheatMonth()
-  self.ui.app.world:setEndMonth()
+  self.hospital.world:setEndMonth()
 end
 
 function Cheats:cheatYear()
-  self.ui.app.world:setEndYear()
+  self.hospital.world:setEndYear()
 end
 
 function Cheats:cheatLose()
-  self.ui.app.world:loseGame(1) -- TODO adjust for multiplayer
+  self.hospital.world:loseGame(1) -- TODO adjust for multiplayer
 end
 
 function Cheats:cheatWin()
-  self.ui.app.world:winGame(1) -- TODO adjust for multiplayer
+  self.hospital.world:winGame(1) -- TODO adjust for multiplayer
 end
 
 function Cheats:cheatIncreasePrices()
-  local hosp = self.ui.app.world.hospitals[1]
+  local hosp = self.hospital
   for _, casebook in pairs(hosp.disease_casebook) do
     local new_price = casebook.price + 0.5
     if new_price > 2 then
@@ -144,7 +145,7 @@ function Cheats:cheatIncreasePrices()
 end
 
 function Cheats:cheatDecreasePrices()
-  local hosp = self.ui.app.world.hospitals[1]
+  local hosp = self.hospital
   for _, casebook in pairs(hosp.disease_casebook) do
     local new_price = casebook.price - 0.5
     if new_price < 0.5 then
