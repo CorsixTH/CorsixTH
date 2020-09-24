@@ -508,13 +508,15 @@ function Vip:afterLoad(old, new)
   if old < 79 then
     self.name = self.hospital.visitingVIP
   end
-  if old < 142 then
+  if old < 144 then
     self.vip_rating = 12 - math.random(0,5)
     -- Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
     self.num_visited_rooms = 0
-    if #self.world.rooms > 79 then
-      self.room_visit_chance = math.floor(#self.world.rooms / 40)
+    -- VIP's room visit chance is 50% (1/2) if total rooms in hospital is less than 80, else decided by total rooms / 40 (1/3, 1/4 etc)
+    local rooms_threshold = 79
+    if #self.world.rooms > rooms_threshold then
+      vip.room_visit_chance = math.floor(#self.rooms / 40)
     else
       self.room_visit_chance = 1
     end

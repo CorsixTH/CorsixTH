@@ -552,9 +552,12 @@ function World:spawnVIP(name)
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
   vip.enter_patients = #hospital.patients
-  if #self.rooms > 79 then
+  -- VIP's room visit chance is 50% (1/2) if total rooms in hospital is less than 80, else decided by total rooms / 40 (1/3, 1/4 etc)
+  local rooms_threshold = 79
+  if #self.rooms > rooms_threshold then
     vip.room_visit_chance = math.floor(#self.rooms / 40)
   end
+
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))
   vip:setHospital(hospital)
