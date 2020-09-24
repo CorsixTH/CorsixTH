@@ -615,6 +615,9 @@ void iso_filesystem::set_error(const char* sFormat, ...) {
   }
   va_list a;
   va_start(a, sFormat);
+  // The valist test is buggy in this environment
+  // (https://bugs.llvm.org/show_bug.cgi?id=41311)
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized)
   std::vsnprintf(error, 1024, sFormat, a);
   va_end(a);
 }

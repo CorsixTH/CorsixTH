@@ -701,8 +701,8 @@ end
 
 --[[ Register a callback for when `Humanoid`s enter or leave a given tile.
 ! Note that only one callback may be registered to each tile.
-!param x (integer) The 1-based X co-ordinate of the tile to monitor.
-!param y (integer) The 1-based Y co-ordinate of the tile to monitor.
+!param x (integer) The 1-based X coordinate of the tile to monitor.
+!param y (integer) The 1-based Y coordinate of the tile to monitor.
 !param object (Object) Something with an `onOccupantChange` method, which will
 be called whenever a `Humanoid` enters or leaves the given tile. The method
 will receive one argument (after `self`), which will be `1` for an enter event
@@ -1565,10 +1565,10 @@ end
 -- Calculate the distance of the shortest path (along passable tiles) between
 -- the two given map tiles. This operation is commutative (swapping (x1, y1)
 -- with (x2, y2) has no effect on the result) if both tiles are passable.
---!param x1 (integer) X-cordinate of first tile's Lua tile co-ordinates.
---!param y1 (integer) Y-cordinate of first tile's Lua tile co-ordinates.
---!param x2 (integer) X-cordinate of second tile's Lua tile co-ordinates.
---!param y2 (integer) Y-cordinate of second tile's Lua tile co-ordinates.
+--!param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
+--!param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
+--!param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
+--!param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
 --!return (integer, boolean) The distance of the shortest path, or false if
 -- there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
