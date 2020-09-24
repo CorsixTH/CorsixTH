@@ -21,9 +21,13 @@ SOFTWARE.
 */
 
 #include "../Src/main.h"
+
 #include "config.h"
+
 #include <SDL.h>
+
 #include <stack>
+
 #include "../Src/bootstrap.h"
 #ifdef CORSIX_TH_USE_SDL_MIXER
 #include <SDL_mixer.h>

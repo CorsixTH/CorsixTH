@@ -30,7 +30,7 @@ set(_DEPS_GIT_URL "https://github.com/CorsixTH/deps.git")
 # Select the optimal dependencies commit regardless where master is.
 set(_DEPS_GIT_SHA "a23eb28bb8998b93215eccf805ee5462d75a57f2")
 
-ExternalProject_Add(${_DEPS_PROJECT_NAME}
+externalproject_add(${_DEPS_PROJECT_NAME}
   PREFIX ${PRECOMPILED_DEPS_BASE_DIR}
   GIT_REPOSITORY ${_DEPS_GIT_URL}
   GIT_TAG ${_DEPS_GIT_SHA}

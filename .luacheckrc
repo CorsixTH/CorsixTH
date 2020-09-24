@@ -38,7 +38,7 @@ globals = { -- Globals
             "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
-            "Patient", "Plant", "Queue", "ResearchDepartment", "Room",
+            "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
             "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
@@ -239,3 +239,4 @@ add_ignore("CorsixTH/Lua/window.lua", "542")
 add_ignore("CorsixTH/Lua/world.lua", "212")
 add_ignore("CorsixTH/Lua/world.lua", "542")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
+add_ignore("CorsixTH/Luatest/spec/utility_spec.lua", "121")

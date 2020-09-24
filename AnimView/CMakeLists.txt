@@ -34,7 +34,7 @@ if(APPLE)
   )
   set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
 
-  add_executable( 
+  add_executable(
     AnimView
     MACOSX_BUNDLE
     ${animview_source_files}
@@ -44,8 +44,8 @@ if(APPLE)
   set_target_properties(AnimView PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(AnimView PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 else()
-  add_executable( 
-    AnimView 
+  add_executable(
+    AnimView
     WIN32 # This prevents the dos console showing up
     ${animview_source_files}
   )
@@ -81,7 +81,7 @@ endif()
 
 if(APPLE)
   install(TARGETS AnimView BUNDLE DESTINATION .)
-  
+
   # Fix the OS X bundle to include required libraries (create a redistributable app)
   install(CODE "
     INCLUDE(BundleUtilities)
@@ -90,5 +90,5 @@ if(APPLE)
     ")
 else()
   install(TARGETS AnimView RUNTIME DESTINATION AnimView)
-  install(FILES LICENSE.txt DESTINATION AnimView )
+  install(FILES LICENSE.txt DESTINATION AnimView)
 endif()
