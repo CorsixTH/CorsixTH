@@ -1,4 +1,7 @@
 require("utility")
+if _VERSION ~= "Lua 5.1" then
+  loadstring = load
+end
 
 describe("serialize", function()
   it("serializes a basic string", function()

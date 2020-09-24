@@ -32,6 +32,8 @@ corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
+corsixth.require("hospitals.player_hospital")
+corsixth.require("hospitals.ai_hospital")
 corsixth.require("cheats")
 corsixth.require("epidemic")
 corsixth.require("calls_dispatcher")
@@ -142,8 +144,19 @@ function World:World(app)
   -- Initialize available diseases and winning conditions.
   self:initLevel(app, avail_rooms)
 
-  self.hospitals[1] = Hospital(self, avail_rooms, app.config.player_name) -- Player's hospital
-  self:initCompetitors(avail_rooms)
+  -- Construct hospitals.
+  self.hospitals[1] = PlayerHospital(self, avail_rooms, app.config.player_name)
+
+  -- Add computer players
+  -- TODO: Right now they're only names
+  local level_config = self.map.level_config
+  for key, value in pairs(level_config.computer) do
+    if value.Playing == 1 then
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
+    end
+  end
+
+  -- Setup research.
   for _, hospital in ipairs(self.hospitals) do
     hospital.research:setResearchConcentration()
   end
@@ -398,19 +411,6 @@ function World:getAvailableRooms()
     end
   end
   return avail_rooms
-end
-
---! Initialize competing hospitals
---!param avail_rooms (list) Available rooms in the level.
-function World:initCompetitors(avail_rooms)
-  -- Add computer players
-  -- TODO: Right now they're only names
-  local level_config = self.map.level_config
-  for key, value in pairs(level_config.computer) do
-    if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
-    end
-  end
 end
 
 --! Initializes variables carried from previous levels
@@ -705,8 +705,8 @@ end
 
 --[[ Register a callback for when `Humanoid`s enter or leave a given tile.
 ! Note that only one callback may be registered to each tile.
-!param x (integer) The 1-based X co-ordinate of the tile to monitor.
-!param y (integer) The 1-based Y co-ordinate of the tile to monitor.
+!param x (integer) The 1-based X coordinate of the tile to monitor.
+!param y (integer) The 1-based Y coordinate of the tile to monitor.
 !param object (Object) Something with an `onOccupantChange` method, which will
 be called whenever a `Humanoid` enters or leaves the given tile. The method
 will receive one argument (after `self`), which will be `1` for an enter event
@@ -1050,7 +1050,7 @@ function World:onTick()
       self.current_tick_entity = nil
       self.map:onTick()
       self.map.th:updateTemperatures(outside_temperatures[self.game_date:monthOfYear()],
-          0.25 + self.hospitals[1].radiator_heat * 0.3)
+          0.25 + self.hospitals[1].heating.radiator_heat * 0.3)
       if self.ui then
         self.ui:onWorldTick()
       end
@@ -1569,10 +1569,10 @@ end
 -- Calculate the distance of the shortest path (along passable tiles) between
 -- the two given map tiles. This operation is commutative (swapping (x1, y1)
 -- with (x2, y2) has no effect on the result) if both tiles are passable.
---!param x1 (integer) X-cordinate of first tile's Lua tile co-ordinates.
---!param y1 (integer) Y-cordinate of first tile's Lua tile co-ordinates.
---!param x2 (integer) X-cordinate of second tile's Lua tile co-ordinates.
---!param y2 (integer) Y-cordinate of second tile's Lua tile co-ordinates.
+--!param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
+--!param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
+--!param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
+--!param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
 --!return (integer, boolean) The distance of the shortest path, or false if
 -- there is no path.
 function World:getPathDistance(x1, y1, x2, y2)

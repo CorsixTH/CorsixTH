@@ -77,7 +77,7 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
   include(CopyVcpkgSdlMixerBackends)
-ENDIF()
+endif()
 
 ## Finding libraries
 

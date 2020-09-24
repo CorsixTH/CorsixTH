@@ -63,7 +63,7 @@ public class Main {
  * > cancel, the program should not close.
  * 
  * TODO improvements TabEmergencies: it should not be possible to choose
- * non-existant diseases TabDiseases: if disease is set to non-existant, set the
+ * non-existent diseases TabDiseases: if disease is set to non-existent, set the
  * other fields to uneditable. textfields: option to reset to default
  * individually give warning when there is no way a disease can be cured. should
  * only ask for saving changes on exit if changes have been made. show current
