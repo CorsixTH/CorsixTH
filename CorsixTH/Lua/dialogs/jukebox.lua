@@ -129,6 +129,7 @@ end
 function UIJukebox:loopTrack()
   local index = self.audio:findIndexOfCurrentTrack()
   local playlist = self.audio.background_playlist
+  if not playlist[index] then return end
 
   if playlist[index].loop then
     playlist[index].loop = false
