@@ -216,10 +216,10 @@ menu_debug_overlay = {
   parcel                      = "  PARCELA  ",
 }
 menu_player_count = {
-	players_1 = "  1 JOGADOR  ",
-	players_2 = "  2 JOGADORES  ",
-	players_3 = "  3 JOGADORES  ",
-	players_4 = "  4 JOGADORES  ",
+  players_1 = "  1 JOGADOR  ",
+  players_2 = "  2 JOGADORES  ",
+  players_3 = "  3 JOGADORES  ",
+  players_4 = "  4 JOGADORES  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "Construir a sala neste local resultará em alas do hospital que näo poderäo ser acessadas.",

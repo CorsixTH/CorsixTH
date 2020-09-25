@@ -2940,10 +2940,10 @@ menu_debug_overlay = {
   parcel                      = "  地區  ",
 }
 menu_player_count = {
-	players_1 = "  1 玩家  ",
-	players_2 = "  2 玩家  ",
-	players_3 = "  3 玩家  ",
-	players_4 = "  4 玩家  ",
+  players_1 = "  1 玩家  ",
+  players_2 = "  2 玩家  ",
+  players_3 = "  3 玩家  ",
+  players_4 = "  4 玩家  ",
 }
 adviser = {
   room_forbidden_non_reachable_parts = "在這個地方放置房間會導致醫院的部分空間無法到達。",

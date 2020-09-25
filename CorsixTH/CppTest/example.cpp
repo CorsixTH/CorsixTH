@@ -2,5 +2,5 @@
 
 TEST_CASE("Example Test", "[example]")
 {
-	REQUIRE(true);
+  REQUIRE(true);
 }

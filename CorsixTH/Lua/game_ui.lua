@@ -107,7 +107,7 @@ function GameUI:setupGlobalKeyHandlers()
      [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
      [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
      [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = 10, y = 0},
   }
 
   -- This is the long version of the shift speed key.
