@@ -135,27 +135,27 @@ function Vip:tickDay()
 end
 
 function Vip:getNextRoom()
-  -- First let the previous room go.
-  -- Include this when the VIP is supposed to block doors again.
-  --[[if self.next_room then
-        self.next_room.door.reserved_for = nil
-        self.next_room:tryAdvanceQueue()
-      end--]]
-  -- Find out which next room to visit.
+  -- Find out the next room to visit.
   self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-  if self.next_room ~= nil then
+  if self.next_room == nil then
+    return self:setNextAction(VipGoToNextRoomAction())
+  end
+  -- Always visit the first room.
+  if self.num_visited_rooms > 0 then
     local roll_to_visit = math.random(0, self.room_visit_chance)
-    while self.num_visited_rooms > 0 and roll_to_visit ~= self.room_visit_chance and not self.next_room.room_info.vip_must_visit do
-      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
+    -- Run a loop until roll_to_visit passes, or we hit a room the VIP must visit
+    while roll_to_visit ~= self.room_visit_chance and not self.next_room.room_info.vip_must_visit do
+      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no) -- get new room
       if self.next_room == nil then
+        -- We ran out of rooms, time to leave
         break
       end
       roll_to_visit = math.random(0, self.room_visit_chance)
     end
-    -- Make sure that this room is active; if not, always visit the next available room
-    while self.next_room and not self.next_room.is_active do
-      self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
-    end
+  end
+  -- Make sure room is active. If not, always visit the next available room.
+  while self.next_room and not self.next_room.is_active do
+    self.next_room_no, self.next_room = next(self.world.rooms, self.next_room_no)
   end
   self:setNextAction(VipGoToNextRoomAction())
 end
@@ -188,23 +188,23 @@ function Vip:evaluateRoom()
   -- Another room visited.
   self.num_visited_rooms = self.num_visited_rooms + 1
   local room = self.next_room
-  -- if the player is about to kill a live patient for research, punish hard
+  -- If the player is about to kill a live patient for research, punish hard
   if room.room_info.id == "research" then
     if room:getPatient() then
       self.vip_rating = self.vip_rating + 6
     end
   end
-  -- evaluate the room we're currently looking at
+  -- Evaluate the room we're currently looking at
   for object, _ in pairs(room.objects) do
     if object.object_type.id == "extinguisher" and room_extinguisher == 0 then
       self.room_eval = self.room_eval + 1
-      -- only count this object type once
+      -- Only count this object type once
       room_extinguisher = 1
     elseif object.object_type.id == "plant" then
       room_plant = object:isDying() and room_plant - 1 or room_plant + 1
     elseif object.object_type.id == "bin" and room_bin == 0 then
       self.room_eval = self.room_eval + 1
-      -- only count this object type once
+      -- Only count this object type once
       room_bin = 1
     end
 
@@ -212,7 +212,7 @@ function Vip:evaluateRoom()
       self.room_eval = object:isBreaking() and self.room_eval - 1 or self.room_eval + 1
     end
   end
-  --check whether we had more good or bad plants
+  -- Check whether we had more good or bad plants
   if room_plant < 0 then
     self.room_eval = self.room_eval - 1
   elseif room_plant > 0 then
@@ -222,7 +222,7 @@ function Vip:evaluateRoom()
 end
 
 --[[--VIP has left--]]
--- called when the vip is out of the hospital grounds
+-- Called when the vip is out of the hospital grounds
 function Vip:onDestroy()
   local message
   -- First of all there's a special message if we're in free build mode.
@@ -245,7 +245,7 @@ function Vip:onDestroy()
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   elseif self.vip_rating >=8 and self.vip_rating < 11 then
-    -- dont tell player about any rep change in this range
+    -- Dont tell player about any rep change in this range
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
@@ -281,7 +281,7 @@ function Vip:announce()
 end
 
 function Vip:setVIPRating()
-  -- first do room code for later
+  -- First do room code for later
   local count_rooms = 0
   local max_queue = 0
   for _, room in pairs(self.world.rooms) do
@@ -324,7 +324,7 @@ function Vip:setVIPRating()
   end
 
 --[[-- Group factor 3: Patients--]]
-  -- first check we had patients this visit
+  -- First check we had patients this visit
   local patients_this_visit = self.enter_patients + self.hospital.num_visitors - self.enter_visitors
   if patients_this_visit > 0 then
     -- Average all patient health
@@ -335,9 +335,9 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + 1
     end
 
-    -- get patient warmth
+    -- Get patient warmth
     local avg_warmth = self.hospital:getAveragePatientAttribute("warmth", nil)
-    -- punish if too cold/hot
+    -- Punish if too cold/hot
     if avg_warmth then
       local patients_warmth_ratio_rangemap = {
         {upper = 0.22, value = 2},
@@ -347,7 +347,7 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_warmth, patients_warmth_ratio_rangemap)
     end
 
-    -- check average patient happiness
+    -- Check average patient happiness
     local avg_happiness = self.hospital:getAveragePatientAttribute("happiness", nil)
     if avg_happiness then
       local patients_happy_ratio_rangemap = {
@@ -360,9 +360,9 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(avg_happiness, patients_happy_ratio_rangemap)
     end
 
-    --check the visitor to patient death ratio
+    -- Check the visitor to patient death ratio
     local death_diff = self.hospital.num_deaths - self.enter_deaths
-    if death_diff ~= 0 then --no deaths are good, but also expected
+    if death_diff ~= 0 then -- no deaths are good, but also expected
       local death_ratio = patients_this_visit / death_diff
       local death_ratio_rangemap = {
         {upper = 2, value = 4},
@@ -376,7 +376,7 @@ function Vip:setVIPRating()
 
     -- Check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
-    if cure_diff ~= 0 then --no cures are bad
+    if cure_diff ~= 0 then -- no cures are bad
       local cure_ratio = patients_this_visit / cure_diff
       local cure_ratio_rangemap = {
         {upper = 2, value = -1},
@@ -425,7 +425,7 @@ function Vip:setVIPRating()
     local num_cons = self.hospital:countStaffOfCategory("Consultant")
     local num_junior = self.hospital:countStaffOfCategory("Junior")
 
-    -- check consultant and junior proportions
+    -- Check consultant and junior proportions
     if num_cons / num_docs > 0.5 then
       self.vip_rating = self.vip_rating - 1
     elseif num_junior / num_docs > 0.5 then
@@ -513,7 +513,8 @@ function Vip:afterLoad(old, new)
     -- Make sure we only rate rooms from now on if a VIP was visiting
     self.room_eval = 0
     self.num_visited_rooms = 0
-    -- VIP's room visit chance is 50% (1/2) if total rooms in hospital is less than 80, else decided by total rooms / 40 (1/3, 1/4 etc)
+    -- VIP's room visit chance is 50% if total rooms in hospital is less than 80 (makes a math.random with 0 and 1 possibilities).
+    -- Else decided by total rooms / 40 (0, 1, 2 [33%]; 0, 1, 2, 3 [25%] etc)
     local rooms_threshold = 79
     if #self.world.rooms > rooms_threshold then
       self.room_visit_chance = math.floor(#self.world.rooms / 40)
