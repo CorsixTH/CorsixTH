@@ -204,7 +204,7 @@ describe("Vip", function()
     vip.room_eval = 9
     vip.num_visited_rooms = 3
 
-    base_vips = vip.hospital.num_vips_ty
+    local base_vips = vip.hospital.num_vips_ty
 
     -- Calculate VIP rating
     vip:setVIPRating()
