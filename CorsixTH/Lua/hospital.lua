@@ -1912,7 +1912,7 @@ function Hospital:objectPlaced(entity, id)
       if not self.world.ui.start_tutorial and numReceptionists == 0 then
         self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
       elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
-          not self.receptionist_msg and self.game_date:monthOfGame() > 3 then
+          not self.receptionist_msg and self.world:date():monthOfGame() > 3 then
         self.world.ui.adviser:say(_A.warnings.no_desk_5)
         self.receptionist_msg = true
       end
