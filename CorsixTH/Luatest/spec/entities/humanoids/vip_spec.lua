@@ -30,8 +30,10 @@ local function getVip()
   return Vip(animation)
 end
 
+
 local function create_room(name, args)
 
+  args = args or {}
   local room = {
     door = {queue = nil},
     room_info = {id = name},
@@ -73,6 +75,50 @@ local function create_room(name, args)
 
   return room
 end
+
+local function create_world(args)
+  local world = {
+    rooms = {}
+  }
+
+  for i=1, args.num_rooms do
+    world.rooms[i] = create_room("room" .. i)
+  end
+
+  return world
+end
+
+local function create_hospital(args)
+
+  args = args or {}
+
+  local hospital = {
+    num_vips_ty = 0,
+    staff = {
+
+    },
+    -- Always return default value for average attribute
+    getAveragePatientAttribute = function(_, attribute, default) return default end,
+    countSittingStanding = function(_)
+      sitting = args.sitting_patients or 0
+      standing = args.standing_patients or 0
+      return sitting,standing
+    end,
+    countStaffOfCategory = function(_, category)
+      if category == "Doctor" then
+        return args.doctors or 0
+      elseif category == "Consultant" then
+        return args.consultants or 0
+      elseif category == "Junior" then
+        return args.juniors or 0
+      end
+  end
+  }
+
+  return hospital
+
+end
+
 
 describe("Vip", function()
     local vip
@@ -135,6 +181,40 @@ describe("Vip", function()
     -- Room eval has changed: plants -1, bin +1, extinguisher: +1
     assert.are.equal(1, vip.room_eval)
     assert.stub(vip.getNextRoom).was.called(3)
+
+  end)
+
+
+  it("Calculate simple VIP rating", function()
+
+    -- Create a new world + hospital for each case to test variation in VIP rating
+    vip.world = create_world({num_rooms = 10})
+    vip.hospital = create_hospital({
+      doctors = 5,
+      juniors = 5,
+      consultants = 3,
+      sitting_patients = 10,
+      standing_patients = 5,
+    })
+    vip.hospital.num_visitors = 10
+    vip.hospital.num_deaths = 10
+    vip.hospital.num_cured = 30
+
+    -- Establish internal VIP count
+    vip.room_eval = 9
+    vip.num_visited_rooms = 3
+
+    base_vips = vip.hospital.num_vips_ty
+
+    -- Calculate VIP rating
+    vip:setVIPRating()
+
+    -- Check result
+    assert.are.equal(12, vip.vip_rating)
+    assert.are.equal(0,  vip.cash_reward)
+    assert.are.equal(-10, vip.rep_reward)
+    assert.are.equal(12, vip.vip_message)
+    assert.are.equal(base_vips + 1, vip.hospital.num_vips_ty)
 
   end)
 end)
