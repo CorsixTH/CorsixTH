@@ -375,7 +375,6 @@ function Vip:setVIPRating()
       self.vip_rating = self.vip_rating + rangeMapLookup(death_ratio, death_ratio_rangemap)
     end
 
-
     -- Check the visitor to patient cure ratio
     local cure_diff = self.hospital.num_cured - self.enter_cures
     if cure_diff ~= 0 then -- no cures are bad

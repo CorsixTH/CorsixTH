@@ -30,9 +30,7 @@ local function getVip()
   return Vip(animation)
 end
 
-
 local function create_room(name, args)
-
   args = args or {}
   local room = {
     door = {queue = nil},
@@ -89,14 +87,12 @@ local function create_world(args)
 end
 
 local function create_hospital(args)
-
   args = args or {}
 
   local hospital = {
     num_vips_ty = 0,
-    staff = {
+    staff = {},
 
-    },
     -- Always return default value for average attribute
     getAveragePatientAttribute = function(_, _, default) return default end,
     countSittingStanding = function(_)
@@ -104,6 +100,7 @@ local function create_hospital(args)
       local standing = args.standing_patients or 0
       return sitting,standing
     end,
+
     countStaffOfCategory = function(_, category)
       if category == "Doctor" then
         return args.doctors or 0
@@ -112,13 +109,10 @@ local function create_hospital(args)
       elseif category == "Junior" then
         return args.juniors or 0
       end
-  end
+    end
   }
-
   return hospital
-
 end
-
 
 describe("Vip", function()
     local vip
@@ -165,7 +159,6 @@ describe("Vip", function()
   end)
 
   it("Evaluate multiple rooms", function()
-
     local rooms = {
         create_room("gp", {alive_plants=3, dying_plants=1}), -- +1 to room rating
         create_room("research",{has_patient=true}),  -- +6 to vip rating (about to kill a live patient)
@@ -181,12 +174,10 @@ describe("Vip", function()
     -- Room eval has changed: plants -1, bin +1, extinguisher: +1
     assert.are.equal(1, vip.room_eval)
     assert.stub(vip.getNextRoom).was.called(3)
-
   end)
 
 
   it("Calculate simple VIP rating", function()
-
     -- Create a new world + hospital for each case to test variation in VIP rating
     vip.world = create_world({num_rooms = 10})
     vip.hospital = create_hospital({
@@ -215,6 +206,5 @@ describe("Vip", function()
     assert.are.equal(-25, vip.rep_reward)
     assert.are.equal(15, vip.vip_message)
     assert.are.equal(base_vips + 1, vip.hospital.num_vips_ty)
-
   end)
 end)
