@@ -98,10 +98,10 @@ local function create_hospital(args)
 
     },
     -- Always return default value for average attribute
-    getAveragePatientAttribute = function(_, attribute, default) return default end,
+    getAveragePatientAttribute = function(_, _, default) return default end,
     countSittingStanding = function(_)
-      sitting = args.sitting_patients or 0
-      standing = args.standing_patients or 0
+      local sitting = args.sitting_patients or 0
+      local standing = args.standing_patients or 0
       return sitting,standing
     end,
     countStaffOfCategory = function(_, category)
@@ -210,10 +210,10 @@ describe("Vip", function()
     vip:setVIPRating()
 
     -- Check result
-    assert.are.equal(12, vip.vip_rating)
+    assert.are.equal(15, vip.vip_rating)
     assert.are.equal(0,  vip.cash_reward)
-    assert.are.equal(-10, vip.rep_reward)
-    assert.are.equal(12, vip.vip_message)
+    assert.are.equal(-25, vip.rep_reward)
+    assert.are.equal(15, vip.vip_message)
     assert.are.equal(base_vips + 1, vip.hospital.num_vips_ty)
 
   end)
