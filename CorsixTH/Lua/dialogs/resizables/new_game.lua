@@ -197,6 +197,8 @@ end
 
 function UINewGame:startGame(difficulty)
   self.ui.app:loadLevel(1, difficulty)
+  self.ui.app.moviePlayer:playAdvanceMovie(1)
+
   -- Initiate campaign progression. The UI above may now have changed.
   if not TheApp.using_demo_files then
     TheApp.world.campaign_info = "TH.campaign"
