@@ -2642,6 +2642,9 @@ function World:afterLoad(old, new)
     self:resetSideObjects()
   end
 
+  -- Cancel any saved screen movement from edge scrolling
+  self.ui.tick_scroll_amount_mouse = nil
+
   self.savegame_version = new
 end
 
