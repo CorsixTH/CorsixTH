@@ -229,7 +229,8 @@ function Plant:createHandymanActions(handyman)
   handyman:queueAction(AnswerCallAction())
 end
 
---! When a handyman should go to the plant he should approach it from the closest reachable tile.
+--! When a handyman should go to the plant he should approach it from the
+-- closest reachable tile within hospital buildings.
 --!param from_x (integer) The x coordinate of tile to calculate from.
 --!param from_y (integer) The y coordinate of tile to calculate from.
 function Plant:getBestUsageTileXY(from_x, from_y)
@@ -243,8 +244,8 @@ function Plant:getBestUsageTileXY(from_x, from_y)
   for _, point in ipairs(access_points) do
     local dest_x, dest_y = self.tile_x + point.dx, self.tile_y + point.dy
     local room_there = self.world:getRoom(dest_x, dest_y)
-    if room_here == room_there then
-      local distance = self.world:getPathDistance(from_x, from_y, self.tile_x + point.dx, self.tile_y + point.dy)
+    if room_here == room_there and self.hospital:isInHospital(dest_x, dest_y) then
+      local distance = self.world:getPathDistance(from_x, from_y, dest_x, dest_y)
       if distance and (not best_point or shortest > distance) then
         best_point = point
         shortest = distance
