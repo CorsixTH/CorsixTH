@@ -608,7 +608,7 @@ end
 -- Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
-function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
+function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor, skip_movie)
   if self.world then
     self:worldExited()
   end
@@ -662,7 +662,7 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   self.ui = GameUI(self, self.world:getLocalPlayerHospital(), map_editor)
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 
-  if tonumber(level) then
+  if tonumber(level) and not skip_movie then
     self.moviePlayer:playAdvanceMovie(level)
   end
 
@@ -1534,7 +1534,7 @@ function App:restart()
       self.ui:addWindow(UIInformation(self.ui, {_S.information.cannot_restart}))
       return
     end
-    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file, intro)
+    local status, err = pcall(self.loadLevel, self, level, difficulty, name, file, intro, nil, true)
     if not status then
       err = "Error while loading level: " .. err
       print(err)
