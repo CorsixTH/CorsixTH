@@ -657,7 +657,10 @@ function UIMenuBar:makeGameMenu(app)
   -- Edge Scrolling
   options:appendCheckItem(_S.menu_options.edge_scrolling,
     not app.config.prevent_edge_scrolling,
-    function(item) app.config.prevent_edge_scrolling = not item.checked end,
+    function(item)
+      app.config.prevent_edge_scrolling = not item.checked
+      app:saveConfig()
+    end,
     nil,
     function() return not app.config.prevent_edge_scrolling end)
 
