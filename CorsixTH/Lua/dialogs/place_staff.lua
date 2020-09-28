@@ -77,15 +77,26 @@ end
 
 local flag_cache = {}
 local flag_altpal = 16
+-- Is this coordinate a valid tile for this staff member?
+local function isValidPlace(self)
+  self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
+  local room = self.world:getRoom(self.tile_x, self.tile_y)
+  -- Is the tile inside the player's hospital building?
+  local isplayer = self.ui.hospital:getPlayerIndex() == flag_cache.owner and flag_cache.hospital
+  -- On a tile humanoids can walk on?
+  local walkable = flag_cache.passable and (not room and true or not room.crashed)
+  -- and in an area the regular staff (doctors, nurses and handymen) can go?
+  local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
+  local valid = walkable and staffable
+  -- Or is it a receptionist placed on the centre tile of an unstaffed desk?
+  local reception = self.staff and self.staff.profile.humanoid_class == "Receptionist" and
+      self.world:getObject(self.tile_x, self.tile_y, "reception_desk")
+  return isplayer and (reception or valid)
+end
+
 function UIPlaceStaff:draw(canvas)
   if self.world.user_actions_allowed then
-    self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-    local room = self.world:getRoom(self.tile_x, self.tile_y)
-    local player_id = self.ui.hospital:getPlayerIndex()
-    local valid = flag_cache.hospital and flag_cache.passable and
-        (self.allow_in_rooms or flag_cache.roomId == 0) and
-        (not room and true or not room.crashed) and
-        flag_cache.owner == player_id
+    local valid = isValidPlace(self)
     self.anim:setFlag(valid and 0 or flag_altpal)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
@@ -107,13 +118,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       return true
     elseif button == "left" then
       self:onMouseMove(x, y)
-      self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-      local room = self.world:getRoom(self.tile_x, self.tile_y)
-      local player_id = self.ui.hospital:getPlayerIndex()
-      if flag_cache.hospital and flag_cache.passable and
-          (self.allow_in_rooms or flag_cache.roomId == 0) and
-          (not room or not room.crashed) and
-          flag_cache.owner == player_id then
+      if isValidPlace(self) then
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else
