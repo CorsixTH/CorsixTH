@@ -104,8 +104,13 @@ multiplayer.everyone_failed = "Everyone failed to satisfy that last objective. S
 -- Override for a disease patient choice typo
 disease_discovered_patient_choice.need_to_employ = "Employ a %s to be able to handle this situation."
 
---Win message override typo
-letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. However, such has been your impact on the cosy world of medicine, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. The whole world is clamouring for you, and it would be great PR for us all!//"
+-- Override for shorter messages and a typo in 12.2
+letter[9][2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the honorary post of Supreme Chief of All Hospitals. This comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//"
+letter[10][2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, and all we ask is that you travel, for free, around the nation, promoting the work of all hospitals to your adoring public.//"
+letter[11][2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals so well. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//"
+letter[11][3] = "You are an example to every wise person, and without exception, everybody in the world regards you as a supreme asset.//"
+letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. Befitting your impact on the nation, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. It would be great PR for us all!//"
+
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
