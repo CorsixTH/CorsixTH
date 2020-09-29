@@ -105,7 +105,7 @@ function World:World(app)
   self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
-  self.game_date = Date()
+  self.game_date = Date() -- Current date in the game.
 
   self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
@@ -2691,6 +2691,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
   return true
 end
 
+--! Get todays date.
+--!return (Date) Current game date.
 function World:date()
   return self.game_date:clone()
 end

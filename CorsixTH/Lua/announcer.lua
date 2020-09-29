@@ -157,7 +157,7 @@ function Announcer:playAnnouncement(name, priority, decay_hours, played_callback
   -- already has had several other jobs and has died already [joke].
 
   -- Check for duplicate announcements, if there is we refresh the existing one
-  local created_date = self.app.world.game_date:clone()
+  local created_date = self.app.world:date()
   local duplicate_announcement = self.entries:checkForDuplicates(name, created_date)
   if duplicate_announcement then
     return
@@ -199,7 +199,7 @@ function Announcer:onTick()
     if staffedDesk or criticalAnnounces > 0 then
       while not self.playing and not self.entries:isEmpty() do
         local entry = self.entries:pop()
-        local game_date = self.app.world.game_date
+        local game_date = self.app.world:date()
 
         if entry.decay_hours == -1 or game_date <= entry.created_date:plusHours(entry.decay_hours) then
           if self.app.config.play_announcements then

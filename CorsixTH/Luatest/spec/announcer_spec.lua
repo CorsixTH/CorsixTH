@@ -39,15 +39,15 @@ end
 local create_date_mock = create_date_mock_type()
 
 local function create_app_mock(speed_set, desk_set)
-  local world_mock = {
-    game_date = create_date_mock(),
-    isCurrentSpeed = function() return speed_set end,
-    getLocalPlayerHospital = function()
-      return {
-        hasStaffedDesk = function() return desk_set end
-      }
-    end
-  }
+  local world_mock = {}
+  world_mock.mock_game_date = create_date_mock()
+  world_mock.date = function() return world_mock.mock_game_date end
+  world_mock.isCurrentSpeed = function() return speed_set end
+  world_mock.getLocalPlayerHospital = function()
+    return {
+      hasStaffedDesk = function() return desk_set end
+    }
+  end
 
   local config_mock = {
     play_announcements = true
@@ -184,7 +184,7 @@ describe("Announcer", function()
     local announcer = Announcer(app_mock)
 
     announcer:playAnnouncement("normal.wav")
-    app_mock.world.game_date = app_mock.world.game_date:plusHours(1000) -- time must be after announcement
+    app_mock.world.mock_game_date = app_mock.world.mock_game_date:plusHours(1000) -- time must be after announcement
 
     announcer:onTick()
     assert.equal(0, #app_mock.audio.__played_sounds__)
