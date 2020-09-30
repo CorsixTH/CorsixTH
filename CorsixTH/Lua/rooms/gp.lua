@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "gp"
+room.vip_must_visit = false
 room.level_config_id = 7
 room.class = "GPRoom"
 room.name = _S.rooms_short.gps_office

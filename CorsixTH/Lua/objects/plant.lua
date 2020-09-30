@@ -300,6 +300,14 @@ function Plant:isPleasing()
   end
 end
 
+--! Check if a plant is dying or about to start dying
+function Plant:isDying()
+  if self.current_state ~= 0 or self.days_left < 3 then
+    return true
+  end
+  return false
+end
+
 function Plant:onDestroy()
   local index = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "watering")
   if index ~= -1 then
