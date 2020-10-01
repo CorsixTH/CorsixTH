@@ -107,7 +107,7 @@ function GameUI:setupGlobalKeyHandlers()
      [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
      [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
      [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = 10, y = 0},
   }
 
   -- This is the long version of the shift speed key.
@@ -643,10 +643,27 @@ function GameUI:onMouseUp(code, x, y)
     else -- No room chosen yet, but about to edit one.
       if button == "left" then -- Take the clicked one.
         local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
-        if room and not room.crashed then
-          self:setCursor(self.waiting_cursor)
-          self.edit_room = room
-          room:tryToEdit()
+        if room then
+          if not room.crashed then
+            self:setCursor(self.waiting_cursor)
+            self.edit_room = room
+            room:tryToEdit()
+          else
+            if self.app.config.remove_destroyed_rooms then
+              local room_cost = room:calculateRemovalCost()
+              self:setEditRoom(false)
+              -- show confirmation dialog for removing the room
+              self:addWindow(UIConfirmDialog(self,_S.confirmation.remove_destroyed_room:format(room_cost),
+              --[[persistable:remove_destroyed_room_confirm_dialog]]function()
+                local world = room.world
+                UIEditRoom:removeRoom(false, room, world)
+                world:resetSideObjects()
+                world.rooms[room.id] = nil
+                self.hospital:spendMoney(room_cost, _S.transactions.remove_room)
+                end
+              ))
+            end
+          end
         end
       else -- right click, we don't want to edit a room after all.
         self:setEditRoom(false)

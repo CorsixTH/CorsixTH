@@ -461,6 +461,7 @@ customise_window = {
   aliens = "Alien Patients",
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
+  remove_destroyed_rooms = "Remove destroyed rooms",
 }
 
 tooltip.customise_window = {
@@ -471,6 +472,7 @@ tooltip.customise_window = {
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
+  remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -700,6 +702,7 @@ confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
   maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
+  remove_destroyed_room = "Would you like to remove the room for $%d?",
 }
 
 information = {
@@ -905,6 +908,7 @@ hotkeys_file_err = {
         "For reference, the error loading the hotkeys file was: ",
 }
 
+transactions.remove_room = "Build: Remove destroyed room"
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 

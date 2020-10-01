@@ -1972,6 +1972,7 @@ local reputation_changes = {
   ["emergency_failed"] = -20,
   ["over_priced"] = -2,
   ["under_priced"] = 1,
+  ["room_crash"] = -50,
 }
 
 --! Normally reputation is changed based on a reason, and the affected
@@ -2540,4 +2541,10 @@ function Hospital:notifyOfStaffChange(staff)
   for _, patient in pairs(self.patients) do
     patient:notifyOfStaffChange(staff)
   end
+end
+
+--! Change the hospital value by an amount independent of a cost being incurred
+--!param changeValue (int) The amount the hospital value should change by
+function Hospital:changeValue(changeValue)
+  self.value = self.value + changeValue
 end

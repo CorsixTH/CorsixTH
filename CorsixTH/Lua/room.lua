@@ -23,6 +23,8 @@ class "Room"
 ---@type Room
 local Room = _G["Room"]
 
+local COST_RECOVERY = 0.40 -- Percentage cost recovery of destroyed room items
+
 function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world
@@ -865,6 +867,9 @@ function Room:crashRoom()
 
   self.hospital.num_explosions = self.hospital.num_explosions + 1
 
+  local value_change = self.hospital.research.research_progress[self.room_info].build_cost
+  self.hospital:changeValue(value_change * -1)
+  self.hospital:changeReputation("room_crash")
   self.crashed = true
   self:deactivate()
 end
@@ -1045,4 +1050,21 @@ function Room:countWindows()
     end
   end
   return count
+end
+
+--! Get the removal cost
+--!return (int) cost of the room
+function Room:calculateRemovalCost()
+  -- Charge double to clean it up
+  local progress = self.hospital.research.research_progress
+  local cost = math.floor(progress[self.room_info].build_cost * 2)
+
+  -- Recover some cost as scrap
+  for obj, _ in pairs(self.room_info.objects_needed) do
+    -- Get how much this item costs.
+    local obj_cost = self.hospital:getObjectBuildCost(obj)
+    -- recover a percentage of cost as scrap value
+    cost = cost - math.floor(obj_cost * COST_RECOVERY)
+  end
+  return cost
 end
