@@ -20,6 +20,10 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
