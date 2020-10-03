@@ -45,7 +45,7 @@ function AIHospital:logTransaction()
 end
 
 function AIHospital:afterLoad(old, new)
-  if old < 144 then
+  if old < 145 then
     self.hosp_cheats = nil
   end
 

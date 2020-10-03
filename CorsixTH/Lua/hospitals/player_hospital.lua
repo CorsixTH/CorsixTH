@@ -30,7 +30,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
 end
 
 function PlayerHospital:afterLoad(old, new)
-  if old < 144 then
+  if old < 145 then
     self.hosp_cheats = Cheats(self)
   end
 
