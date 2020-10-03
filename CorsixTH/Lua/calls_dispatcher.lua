@@ -121,11 +121,19 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
 
   if not manual and urgent then
+    local earthquake = object.world.next_earthquake
     local room = object:getRoom()
     local sound = room.room_info.handyman_call_sound
     if sound then
-      ui:playAnnouncement(sound, AnnouncementPriority.High)
-      ui:playSound("machwarn.wav")
+      if earthquake.active and earthquake.warning_timer == 0 then
+        if not earthquake.machwarn_trigger then
+          ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+          earthquake.machwarn_trigger = true
+        end
+      else
+        ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+        ui:playAnnouncement(sound, AnnouncementPriority.Critical)
+      end
     end
     message = _A.warnings.machines_falling_apart
   end

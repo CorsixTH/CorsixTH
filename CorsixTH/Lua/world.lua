@@ -647,6 +647,7 @@ function World:tickEarthquake()
 
       self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
+      self.next_earthquake.machwarn_trigger = false
     end
 
     local hospital = self:getLocalPlayerHospital()
@@ -1348,6 +1349,7 @@ function World:nextEarthquake()
     self.next_earthquake.damage_timer = earthquake_damage_time
     self.next_earthquake.warning_timer = earthquake_warning_period
     self.current_map_earthquake = self.current_map_earthquake + 1
+    self.next_earthquake.machwarn_trigger = false
   end
 end
 
@@ -1363,6 +1365,7 @@ function World:createEarthquake()
       self.next_earthquake.remaining_damage = self.next_earthquake.size
       self.next_earthquake.damage_timer = earthquake_damage_time
       self.next_earthquake.warning_timer = earthquake_warning_period
+      self.next_earthquake.machwarn_trigger = false
     end
   end
 end
