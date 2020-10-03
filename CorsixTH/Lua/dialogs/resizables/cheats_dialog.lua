@@ -116,14 +116,10 @@ function UICheats:updateCheatedStatus()
 end
 
 function UICheats:buttonClicked(num)
-  -- Only the cheats that may fail return false in that case. All others return nothing.
-  if self.cheat_list[num].func(self) ~= false then
-    if self.cheat_list[num].name ~= "lose_level" then
-      self.cheats.announceCheat(self.ui)
-      self:updateCheatedStatus()
-    end
+  if self.cheats:performCheat(num) then
+    self.cheats.announceCheat(self.ui)
+    self:updateCheatedStatus()
   else
-    -- It was not possible to use this cheat.
     self.ui:addWindow(UIInformation(self.ui, {_S.information.cheat_not_possible}))
   end
 end

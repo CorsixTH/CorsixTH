@@ -34,24 +34,33 @@ function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
   -- New cheats require a persistable and a wrapped function in func
-  self.cheat_list = {
-    {name = "money",          func = --[[persistable:cheatMoney]] function() self:cheatMoney() end},
-    {name = "all_research",   func = --[[persistable:cheatResearch]] function() self:cheatResearch() end},
-    {name = "emergency",      func = --[[persistable:cheatEmergency]] function() self:cheatEmergency() end},
-    {name = "epidemic",       func = --[[persistable:CheatEpidemic]] function() self:cheatEpidemic() end},
-    {name = "toggle_infected", func = --[[persistable:cheatToggleInfected]] function() self:cheatToggleInfected() end},
-    {name = "vip",            func = --[[persistable:cheatVip]] function() self:cheatVip() end},
-    {name = "earthquake",     func = --[[persistable:cheatEarthquake]] function() self:cheatEarthquake() end},
-    {name = "create_patient", func = --[[persistable:cheatPatient]] function() self:cheatPatient() end},
-    {name = "end_month",      func = --[[persistable:cheatMonth]] function() self:cheatMonth() end},
-    {name = "end_year",       func = --[[persistable:cheatYear]] function() self:cheatYear() end},
-    {name = "lose_level",     func = --[[persistable:cheatLose]] function() self:cheatLose() end},
-    {name = "win_level",      func = --[[persistable:cheatWin]] function() self:cheatWin() end},
-    {name = "increase_prices", func = --[[persistable:cheatIncreasePrices]] function() self:cheatIncreasePrices() end},
-    {name = "decrease_prices", func = --[[persistable:cheatDecreasePrices]] function() self:cheatDecreasePrices() end},
+   self.cheat_list = {
+    {name = "money",          func = self.cheatMoney},
+    {name = "all_research",   func = self.cheatResearch},
+    {name = "emergency",      func = self.cheatEmergency},
+    {name = "epidemic",       func = self.cheatEpidemic},
+    {name = "toggle_infected", func = self.cheatToggleInfected},
+    {name = "vip",            func = self.cheatVip},
+    {name = "earthquake",     func = self.cheatEarthquake},
+    {name = "create_patient", func = self.cheatPatient},
+    {name = "end_month",      func = self.cheatMonth},
+    {name = "end_year",       func = self.cheatYear},
+    {name = "lose_level",     func = self.cheatLose},
+    {name = "win_level",      func = self.cheatWin},
+    {name = "increase_prices", func = self.cheatIncreasePrices},
+    {name = "decrease_prices", func = self.cheatDecreasePrices},
   }
 end
 
+--! Performs a cheat from the cheat_list
+--!param num The cheat from the cheat_list called
+--!return true if cheat was successful, false otherwise
+function Cheats:performCheat(num)
+  local cheat_success = self.cheat_list[num].func(self) ~= false
+  return cheat_success and self.cheat_list[num].name ~= "lose_level"
+end
+
+--! Updates the cheated status of the player, with a matching announcement
 function Cheats:announceCheat()
   local announcements = self.hospital.world.cheat_announcements
   if announcements then
