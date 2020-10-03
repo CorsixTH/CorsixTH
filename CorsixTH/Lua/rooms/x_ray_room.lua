@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "x_ray"
+room.vip_must_visit = false
 room.level_config_id = 16
 room.class = "XRayRoom"
 room.name = _S.rooms_short.x_ray

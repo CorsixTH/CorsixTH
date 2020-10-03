@@ -105,7 +105,7 @@ function World:World(app)
   self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
-  self.game_date = Date()
+  self.game_date = Date() -- Current date in the game.
 
   self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
@@ -551,8 +551,13 @@ function World:spawnVIP(name)
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
-
-  vip.enter_explosions = hospital.num_explosions
+  vip.enter_patients = #hospital.patients
+  -- VIP's room visit chance is 50% if total rooms in hospital is less than 80 (makes a math.random with 0 and 1 possibilities).
+  -- Else decided by total rooms / 40 (0, 1, 2 [33%]; 0, 1, 2, 3 [25%] etc)
+  local rooms_threshold = 79
+  if #self.rooms > rooms_threshold then
+    vip.room_visit_chance = math.floor(#self.rooms / 40)
+  end
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))
@@ -701,8 +706,8 @@ end
 
 --[[ Register a callback for when `Humanoid`s enter or leave a given tile.
 ! Note that only one callback may be registered to each tile.
-!param x (integer) The 1-based X co-ordinate of the tile to monitor.
-!param y (integer) The 1-based Y co-ordinate of the tile to monitor.
+!param x (integer) The 1-based X coordinate of the tile to monitor.
+!param y (integer) The 1-based Y coordinate of the tile to monitor.
 !param object (Object) Something with an `onOccupantChange` method, which will
 be called whenever a `Humanoid` enters or leaves the given tile. The method
 will receive one argument (after `self`), which will be `1` for an enter event
@@ -1565,10 +1570,10 @@ end
 -- Calculate the distance of the shortest path (along passable tiles) between
 -- the two given map tiles. This operation is commutative (swapping (x1, y1)
 -- with (x2, y2) has no effect on the result) if both tiles are passable.
---!param x1 (integer) X-cordinate of first tile's Lua tile co-ordinates.
---!param y1 (integer) Y-cordinate of first tile's Lua tile co-ordinates.
---!param x2 (integer) X-cordinate of second tile's Lua tile co-ordinates.
---!param y2 (integer) Y-cordinate of second tile's Lua tile co-ordinates.
+--!param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
+--!param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
+--!param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
+--!param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
 --!return (integer, boolean) The distance of the shortest path, or false if
 -- there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
@@ -2691,6 +2696,8 @@ function World:isTileExclusivelyPassable(x, y, distance)
   return true
 end
 
+--! Get todays date.
+--!return (Date) Current game date.
 function World:date()
   return self.game_date:clone()
 end

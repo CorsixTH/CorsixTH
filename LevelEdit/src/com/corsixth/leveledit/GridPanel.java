@@ -193,7 +193,7 @@ public class GridPanel extends JPanel {
     }
 
     /**
-     * Skips 'times' cells in the grid so that the next component will be added furhter down.
+     * Skips 'times' cells in the grid so that the next component will be added further down.
      * @param times how many cells to skip.
      */
     public void next(int times) {

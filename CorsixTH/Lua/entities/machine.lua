@@ -60,6 +60,12 @@ function Machine:getRemainingUses()
   return self.strength - self.times_used
 end
 
+--! Returns true if a machine is smoking/needs repair
+function Machine:isBreaking()
+  local threshold = self:getRemainingUses()
+  return threshold < 4
+end
+
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine

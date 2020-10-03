@@ -114,7 +114,7 @@ class lua_class_binding final {
   lua_class_binding operator=(lua_class_binding&&) = delete;
 
   /**
-   * Inititate class bindings for lua.
+   * Initiate class bindings for lua.
    *
    * @param pState The lua environment to bind to.
    * @param name The name to give this lua 'class'.

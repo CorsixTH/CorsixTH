@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "inflation"
+room.vip_must_visit = false
 room.level_config_id = 17
 room.class = "InflationRoom"
 room.name = _S.rooms_short.inflation

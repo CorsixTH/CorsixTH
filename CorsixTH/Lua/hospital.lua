@@ -1386,13 +1386,6 @@ function Hospital:resolveEmergency()
     self:changeReputation("emergency_failed", emer.disease)
   end
 
-  --check if there's a VIP in the building, and if there is then let him know the outcome
-  for _, e in ipairs(self.world.entities) do
-    if class.is(e, Vip) then
-      e:evaluateEmergency(emergency_success)
-    end
-  end
-
   self.world:nextEmergency()
 end
 
@@ -1806,7 +1799,7 @@ end
 --! Checks if the hospital employs staff of a given category.
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
---! "Surgeon", "Researcher" or "Consultant"
+--! "Surgeon", "Researcher", "Junior" or "Consultant"
 --! returns Number of that type employed
 function Hospital:countStaffOfCategory(category)
   local result = 0
@@ -1817,7 +1810,8 @@ function Hospital:countStaffOfCategory(category)
       if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or
           (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or
           (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
-          (category == "Consultant" and staff.profile.is_consultant) then
+          (category == "Consultant" and staff.profile.is_consultant) or
+          (category == "Junior" and staff.profile.is_junior) then
         result = result + 1
       end
     end
@@ -1906,7 +1900,7 @@ function Hospital:objectPlaced(entity, id)
       if not self.world.ui.start_tutorial and numReceptionists == 0 then
         self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
       elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
-          not self.receptionist_msg and self.game_date:monthOfGame() > 3 then
+          not self.receptionist_msg and self.world:date():monthOfGame() > 3 then
         self.world.ui.adviser:say(_A.warnings.no_desk_5)
         self.receptionist_msg = true
       end
@@ -2137,15 +2131,13 @@ function Hospital:getAverageStaffAttribute(attribute, default_value)
   local sum = 0
   local count = 0
   for _, staff in ipairs(self.staff) do
-    sum = sum + staff.attributes[attribute]
-    count = count + 1
+    if staff.attributes[attribute] then
+      sum = sum + staff.attributes[attribute]
+      count = count + 1
+    end
   end
 
-  if count == 0 then
-    return default_value
-  else
-    return sum / count
-  end
+  return count == 0 and default_value or sum / count
 end
 
 --! Checks if the requirements for the given disease are met in the hospital and returns the ones missing.

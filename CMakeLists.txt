@@ -1,14 +1,14 @@
 # Cmake File for CorsixTH
 # OPTIONS AVAILABLE:
 # Any of the following: (default)
-#   - WITH_AUDIO   	: Activate sound (yes)
-#   - WITH_FREETYPE2	: Active support for non-Latin script alphabets (yes)
-#   - WITH_MOVIES  	: Activate movies (requires with_audio, FFmpeg) (yes)
-#   - WITH_LUAJIT 	: Use LuaJIT instead of Lua (must specify library path) (no)
-#   - WITH_LIBAV  	: Use Libav instead of FFmpeg when building movies (no)
+#   - WITH_AUDIO      : Activate sound (yes)
+#   - WITH_FREETYPE2  : Active support for non-Latin script alphabets (yes)
+#   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
+#   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
+#   - WITH_LIBAV      : Use Libav instead of FFmpeg when building movies (no)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
 
-#   - WITH_VLD    	: Build with Visual Leak Detector (requires Visual Studio) (no)
+#   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)

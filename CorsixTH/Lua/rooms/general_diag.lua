@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "general_diag"
+room.vip_must_visit = false
 room.level_config_id = 27
 room.class = "GeneralDiagRoom"
 room.name = _S.rooms_short.general_diag
