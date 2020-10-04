@@ -23,6 +23,9 @@ class "PlayerHospital" (Hospital)
 ---@type PlayerHospital
 local PlayerHospital = _G["PlayerHospital"]
 
+local NUM_SITTING_RATIOS = 15 -- Number of stored recent sitting ratio measurements.
+local RATIO_INTERVAL = 2 -- Measurement interval in days.
+
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
   -- The player hospital in single player can access the Cheat System should they wish to.
@@ -30,6 +33,9 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
 
   self.advise_data = { -- Variables handling player advises.
     temperature_advise = nil, -- Whether the player received advise about room temp.
+
+    sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
+    sitting_index = 1 -- Next entry in 'sitting_ratios' to update.
   }
 end
 
@@ -121,6 +127,55 @@ function PlayerHospital:dailyAdvisePlayer()
     end
   end
 
+  -- Track sitting / standing ratio of patients.
+  if day % RATIO_INTERVAL == 0 then
+    -- Compute the ratio of today.
+    local num_sitting, num_standing = self:countSittingStanding()
+    local ratio = (num_sitting + num_standing > 10)
+        and num_sitting / (num_sitting + num_standing) or nil
+
+    -- Store the measured ratio.
+    self.advise_data.sitting_ratios[self.advise_data.sitting_index] = ratio
+    self.advise_data.sitting_index = (self.advise_data.sitting_index >= NUM_SITTING_RATIOS)
+        and 1 or self.advise_data.sitting_index + 1
+  end
+
+  -- Check for enough (well-placed) benches.
+  if day == 12 then
+    -- Compute average sitting ratio.
+    local sum_ratios = 0
+    local index = 1
+    while index <= NUM_SITTING_RATIOS do
+      local ratio = self.advise_data.sitting_ratios[index]
+      if ratio == nil then
+        sum_ratios = nil
+        break
+      else
+        sum_ratios = sum_ratios + ratio
+      end
+
+      index = index + 1
+    end
+
+    if sum_ratios ~= nil then -- Sufficient data available.
+      local ratio = sum_ratios / NUM_SITTING_RATIOS
+      if ratio < 0.7 then -- At least 30% standing.
+        local bench_advises = {
+          _A.warnings.more_benches, _A.warnings.people_have_to_stand,
+        }
+        self:sayAdvise(bench_advises)
+
+      elseif ratio > 0.9 then
+        -- Praise having enough well placed seats about once a year.
+        local bench_advises = {
+          _A.praise.many_benches, _A.praise.plenty_of_benches,
+          _A.praise.few_have_to_stand,
+        }
+        self:sayAdvise(bench_advises, 1/12)
+      end
+    end
+  end
+
   -- Reset advise flags at the end of the month.
   if day == 28 then
     self.advise_data.temperature_advise = false
@@ -158,6 +213,8 @@ function PlayerHospital:afterLoad(old, new)
   if old < 146 then
     self.advise_data = {
       temperature_advise = nil,
+      sitting_ratios = {},
+      sitting_index = 1
     }
   end
 
