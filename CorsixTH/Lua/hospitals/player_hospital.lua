@@ -104,6 +104,23 @@ function PlayerHospital:dailyAdvisePlayer()
     end
   end
 
+  -- Are there sufficient drinks available?
+  if day == 24 then
+    -- Check patients thirst, default value does not result in a message.
+    local thirst = self:getAveragePatientAttribute("thirst", 0)
+
+    -- Increase need after the first year.
+    local threshold = current_date:year() == 1 and 0.9 or 0.8
+    if thirst > threshold then
+      self:sayAdvise({_A.warnings.patients_very_thirsty})
+    elseif thirst > 0.6 then
+      local thirst_advises = {
+        _A.warnings.patients_thirsty, _A.warnings.patients_thirsty2,
+      }
+      self:sayAdvise(thirst_advises)
+    end
+  end
+
   -- Reset advise flags at the end of the month.
   if day == 28 then
     self.advise_data.temperature_advise = false

@@ -310,17 +310,6 @@ function Hospital:warningBench()
   end
 end
 
-function Hospital:warningThirst()
-  local thirst_msg = {
-    (_A.warnings.patients_thirsty),
-    (_A.warnings.patients_thirsty2),
-  }
-  if thirst_msg then
-    self.world.ui.adviser:say(thirst_msg[math.random(1, #thirst_msg)])
-    self.thirst_msg = true
-  end
-end
-
 -- Remind the player when cash is low that a loan might be available
 function Hospital:cashLow()
   -- Don't remind in free build mode or when not controlled by the user.
@@ -668,6 +657,7 @@ function Hospital:afterLoad(old, new)
     self.staff_room_msg = nil
     self.toilet_msg = nil
     self.warmth_msg = nil
+    self.thirst_msg = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -747,17 +737,6 @@ function Hospital:checkFacilities()
         elseif num_benches < self.patientcount then
           self:warningBench()
         end
-      end
-    end
-
-    -- Are the patients in need of a drink
-    if not self.thirst_msg and day == 24 then
-      local thirst = self:getAveragePatientAttribute("thirst", 0) -- Default value does not result in a message.
-      local thirst_threshold = current_date:year() == 1 and 0.8 or 0.9
-      if thirst > thirst_threshold then
-        self.world.ui.adviser:say(_A.warnings.patients_very_thirsty)
-      elseif thirst > 0.6 then
-        self:warningThirst()
       end
     end
 
