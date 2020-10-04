@@ -310,32 +310,6 @@ function Hospital:warningBench()
   end
 end
 
--- Warn when it is too hot
-function Hospital:warningTooHot()
-  local hot_msg = {
-    (_A.information.initial_general_advice.decrease_heating),
-    (_A.warnings.patients_too_hot),
-    (_A.warnings.patients_getting_hot),
-  }
-  if hot_msg then
-    self.world.ui.adviser:say(hot_msg[math.random(1, #hot_msg)])
-    self.warmth_msg = true
-  end
-end
-
--- Warn when it is too cold
-function Hospital:warningTooCold()
-  local cold_msg = {
-    (_A.information.initial_general_advice.increase_heating),
-    (_A.warnings.patients_very_cold),
-    (_A.warnings.people_freezing),
-  }
-  if cold_msg then
-    self.world.ui.adviser:say(cold_msg[math.random(1, #cold_msg)])
-    self.warmth_msg = true
-  end
-end
-
 function Hospital:warningThirst()
   local thirst_msg = {
     (_A.warnings.patients_thirsty),
@@ -782,9 +756,9 @@ function Hospital:checkFacilities()
       if day == 15 then
         local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
         if warmth < 0.22 then
-          self:warningTooCold()
+          self.warmth_msg = true -- Preserve link between patients and staff warmth warnings.
         elseif warmth >= 0.36 then
-          self:warningTooHot()
+          self.warmth_msg = true -- Preserve link between patients and staff warmth warnings.
         end
       end
       -- Are the staff warm enough?

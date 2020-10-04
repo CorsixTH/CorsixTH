@@ -25,16 +25,12 @@ local PlayerHospital = _G["PlayerHospital"]
 
 function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self:Hospital(world, avail_rooms, name)
-  -- The player hospital in single player can access the Cheat System should they wish to
+  -- The player hospital in single player can access the Cheat System should they wish to.
   self.hosp_cheats = Cheats(self)
-end
 
-function PlayerHospital:afterLoad(old, new)
-  if old < 145 then
-    self.hosp_cheats = Cheats(self)
-  end
-
-  Hospital.afterLoad(self, old, new)
+  self.advise_data = { -- Variables handling player advises.
+    temperature_advise = nil, -- Whether the player received advise about room temp.
+  }
 end
 
 --! Give advise to the player at the end of a day.
@@ -69,6 +65,34 @@ function PlayerHospital:dailyAdvisePlayer()
   if self:countRadiators() == 0 then
     self:sayAdvise({_A.information.initial_general_advice.place_radiators})
   end
+
+  -- Verify patients well-being with respect to room temperature.
+  if day == 15 and not self.advise_data.temperature_advise
+      and not self.heating.heating_broke then
+    -- Check patients warmth, default value does not result in a message.
+    local warmth = self:getAveragePatientAttribute("warmth", 0.3)
+    if warmth < 0.22 then
+      local cold_advises = {
+        _A.information.initial_general_advice.increase_heating,
+        _A.warnings.patients_very_cold, _A.warnings.people_freezing,
+      }
+      self:sayAdvise(cold_advises)
+      self.advise_data.temperature_advise = true
+
+    elseif warmth >= 0.36 then
+      local hot_advises = {
+        _A.information.initial_general_advice.decrease_heating,
+        _A.warnings.patients_too_hot, _A.warnings.patients_getting_hot,
+      }
+      self:sayAdvise(hot_advises)
+      self.advise_data.temperature_advise = true
+    end
+  end
+
+  -- Reset advise flags at the end of the month.
+  if day == 28 then
+    self.advise_data.temperature_advise = false
+  end
 end
 
 --! Give an advise to the player.
@@ -93,4 +117,17 @@ function PlayerHospital:onEndDay()
   end
 
   Hospital.onEndDay(self)
+end
+
+function PlayerHospital:afterLoad(old, new)
+  if old < 145 then
+    self.hosp_cheats = Cheats(self)
+  end
+  if old < 146 then
+    self.advise_data = {
+      temperature_advise = nil,
+    }
+  end
+
+  Hospital.afterLoad(self, old, new)
 end
