@@ -258,20 +258,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   end
 end
 
--- Seasoned players will know these things, but it does not harm to be reminded if there is no staff room or toilet!
-function Hospital:noStaffroom_msg()
-  local staffroom_msg = {
-    (_A.warnings.build_staffroom),
-    (_A.warnings.need_staffroom),
-    (_A.warnings.staff_overworked),
-    (_A.warnings.staff_tired),
-  }
-  if staffroom_msg then
-    self.world.ui.adviser:say(staffroom_msg[math.random(1, #staffroom_msg)])
-    self.staff_room_msg = true
-  end
-end
-
 function Hospital:noToilet_msg()
   local toilet_msg = {
     (_A.warnings.need_toilets),
@@ -716,6 +702,10 @@ function Hospital:afterLoad(old, new)
     return
   end
 
+  if old < 145 then
+    self.staff_room_msg = nil
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -762,10 +752,6 @@ function Hospital:checkFacilities()
   local day = current_date:dayOfMonth()
   -- All messages are shown after first 4 months if respective conditions are met
   if self:isPlayerHospital() and current_date >= Date(1,5) then
-    -- If there is no staff room, remind player of the need to build one
-    if not self.staff_room_msg and day == 3 and self:countRoomOfType("staff_room") == 0 then
-      self:noStaffroom_msg()
-    end
     -- If there is no toilet, remind player of the need to build one
     if not self.toilet_msg and day == 8 and self:countRoomOfType("toilets") == 0 then
       self:noToilet_msg()
@@ -846,7 +832,6 @@ function Hospital:checkFacilities()
 
     -- reset all the messages on 28th of each month
     if day == 28 then
-      self.staff_room_msg = false
       self.toilet_msg = false
       self.bench_msg = false
       self.cash_msg = false

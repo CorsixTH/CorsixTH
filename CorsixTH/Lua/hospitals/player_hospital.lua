@@ -36,3 +36,47 @@ function PlayerHospital:afterLoad(old, new)
 
   Hospital.afterLoad(self, old, new)
 end
+
+--! Give advise to the player at the end of a day.
+function PlayerHospital:dailyAdvisePlayer()
+  local current_date = self.world:date()
+  local day = current_date:dayOfMonth()
+
+  -- Wait with all advises until the game has somewhat started.
+  if current_date < Date(1, 5) then
+    return
+  end
+
+  -- Warn about lack of a staff room.
+  if day == 3 and self:countRoomOfType("staff_room") == 0 then
+    local staffroom_advises = {
+      _A.warnings.build_staffroom, _A.warnings.need_staffroom,
+      _A.warnings.staff_overworked, _A.warnings.staff_tired,
+    }
+    self:sayAdvise(staffroom_advises)
+  end
+end
+
+--! Give an advise to the player.
+--!param msgs (array of string) Messages to select from.
+--!param rnd_frac (optional float in range (0, 1]) Fraction of times that the call actually says something.
+function PlayerHospital:sayAdvise(msgs, rnd_frac)
+  local max_rnd = #msgs
+  if rnd_frac and rnd_frac > 0 and rnd_frac < 1 then
+    -- Scale by the fraction.
+    max_rnd = math.floor(max_rnd / rnd_frac)
+  end
+
+  local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
+  if index <= #msgs then self.world.ui.adviser:say(msgs[index]) end
+end
+
+--! Called at the end of each day.
+function PlayerHospital:onEndDay()
+  -- Advise the player.
+  if self:hasStaffedDesk() then
+    self:dailyAdvisePlayer()
+  end
+
+  Hospital.onEndDay(self)
+end
