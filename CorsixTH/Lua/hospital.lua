@@ -667,6 +667,7 @@ function Hospital:afterLoad(old, new)
   if old < 145 then
     self.staff_room_msg = nil
     self.toilet_msg = nil
+    self.warmth_msg = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -749,29 +750,6 @@ function Hospital:checkFacilities()
       end
     end
 
-    -- Now to check how warm or cold patients and staff are. So that we are not bombarded with warmth
-    -- messages if we are told about patients then we won't be told about staff as well in the same month
-    -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!
-    if not self.warmth_msg and not self.heating.heating_broke then
-      if day == 15 then
-        local warmth = self:getAveragePatientAttribute("warmth", 0.3) -- Default value does not result in a message.
-        if warmth < 0.22 then
-          self.warmth_msg = true -- Preserve link between patients and staff warmth warnings.
-        elseif warmth >= 0.36 then
-          self.warmth_msg = true -- Preserve link between patients and staff warmth warnings.
-        end
-      end
-      -- Are the staff warm enough?
-      if day == 20 then
-        local avgWarmth = self:getAverageStaffAttribute("warmth", 0.25) -- Default value does not result in a message.
-        if avgWarmth < 0.22 then
-          self.world.ui.adviser:say(_A.warnings.staff_very_cold)
-        elseif avgWarmth >= 0.36 then
-          self.world.ui.adviser:say(_A.warnings.staff_too_hot)
-        end
-      end
-    end
-
     -- Are the patients in need of a drink
     if not self.thirst_msg and day == 24 then
       local thirst = self:getAveragePatientAttribute("thirst", 0) -- Default value does not result in a message.
@@ -787,7 +765,6 @@ function Hospital:checkFacilities()
     if day == 28 then
       self.bench_msg = false
       self.cash_msg = false
-      self.warmth_msg = false
       self.thirst_msg = false
       self.seating_warning = 0
     end

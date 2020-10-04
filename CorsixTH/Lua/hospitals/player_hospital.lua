@@ -89,6 +89,21 @@ function PlayerHospital:dailyAdvisePlayer()
     end
   end
 
+  -- Verify staff well-being with respect to room temperature.
+  if day == 20 and not self.advise_data.temperature_advise
+      and not self.heating.heating_broke then
+    -- Check staff warmth, default value does not result in a message.
+    local warmth = self:getAverageStaffAttribute("warmth", 0.25)
+    if warmth < 0.22 then
+      self:sayAdvise({_A.warnings.staff_very_cold})
+      self.advise_data.temperature_advise = true
+
+    elseif warmth >= 0.36 then
+      self:sayAdvise({_A.warnings.staff_too_hot})
+      self.advise_data.temperature_advise = true
+    end
+  end
+
   -- Reset advise flags at the end of the month.
   if day == 28 then
     self.advise_data.temperature_advise = false
