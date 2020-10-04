@@ -775,11 +775,6 @@ function Hospital:checkFacilities()
       end
     end
 
-    -- Make players more aware of the need for radiators
-    if self:countRadiators() == 0 then
-      self.world.ui.adviser:say(_A.information.initial_general_advice.place_radiators)
-    end
-
     -- Now to check how warm or cold patients and staff are. So that we are not bombarded with warmth
     -- messages if we are told about patients then we won't be told about staff as well in the same month
     -- And unlike TH we don't want to be told that anyone is too hot or cold when the boiler is broken do we!

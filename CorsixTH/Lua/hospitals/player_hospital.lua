@@ -64,6 +64,11 @@ function PlayerHospital:dailyAdvisePlayer()
     }
     self:sayAdvise(toilet_advises)
   end
+
+  -- Make players more aware of the need for radiators
+  if self:countRadiators() == 0 then
+    self:sayAdvise({_A.information.initial_general_advice.place_radiators})
+  end
 end
 
 --! Give an advise to the player.
