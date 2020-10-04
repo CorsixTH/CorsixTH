@@ -182,6 +182,26 @@ function PlayerHospital:dailyAdvisePlayer()
   end
 end
 
+--! Give advise to the player at the end of a month.
+function PlayerHospital:monthlyAdvisePlayer()
+  if not self.world.free_build_mode then
+    if self.balance < 2000 and self.balance >= -500 then
+      local cashlow_advises = {
+        _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
+        _A.warnings.cash_low_consider_loan,
+      }
+      self:sayAdvise(cashlow_advises)
+
+    elseif self.balance < -2000 and self.world:date():monthOfYear() > 8 then
+      -- TODO: Ideally this should be linked to the lose criteria for balance.
+      self:sayAdvise({_A.warnings.bankruptcy_imminent})
+
+    elseif self.balance > 6000 and self.loan > 0 then
+      self:sayAdvise({_A.warnings.pay_back_loan})
+    end
+  end
+end
+
 --! Give an advise to the player.
 --!param msgs (array of string) Messages to select from.
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the call actually says something.
@@ -204,6 +224,16 @@ function PlayerHospital:onEndDay()
   end
 
   Hospital.onEndDay(self)
+end
+
+-- Called at the end of each day.
+function PlayerHospital:onEndMonth()
+  -- Advise the player on cash flow.
+  if self:hasStaffedDesk() then
+    self:monthlyAdvisePlayer()
+  end
+
+  Hospital.onEndMonth(self)
 end
 
 function PlayerHospital:afterLoad(old, new)

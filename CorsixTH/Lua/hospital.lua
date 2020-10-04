@@ -630,6 +630,7 @@ function Hospital:afterLoad(old, new)
     self.warmth_msg = nil
     self.thirst_msg = nil
     self.seating_warning = nil
+    self.cash_msg = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -669,20 +670,6 @@ function Hospital:countSittingStanding()
     end
   end
   return numberSitting, numberStanding
-end
-
-
--- A range of checks to help a new player. These are set days apart and will show no more than once a month
-function Hospital:checkFacilities()
-  local current_date = self.world:date()
-  local day = current_date:dayOfMonth()
-  -- All messages are shown after first 4 months if respective conditions are met
-  if self:isPlayerHospital() and current_date >= Date(1,5) then
-    -- reset all the messages on 28th of each month
-    if day == 28 then
-      self.cash_msg = false
-    end
-  end
 end
 
 --! Called each tick, also called 'hours'. Check hours_per_day in
@@ -895,9 +882,7 @@ function Hospital:onEndDay()
   local pay_this = self.loan*self.interest_rate/365 -- No leap years
   self.acc_loan_interest = self.acc_loan_interest + pay_this
   self.research:researchCost()
-  if self:hasStaffedDesk() then
-    self:checkFacilities()
-  end
+
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
   self.msg_counter = self.msg_counter + 1
   if self.balance < 0 then
@@ -971,15 +956,6 @@ function Hospital:onEndMonth()
   if math.round(self.acc_heating) > 0 then
     self:spendMoney(math.round(self.acc_heating), _S.transactions.heating)
     self.acc_heating = 0
-  end
-  -- how is the bank balance
-  if self:isPlayerHospital() then
-    if self.balance < 1000 and not self.cash_msg then
-      self:cashLow()
-    elseif self.balance > 6000 and self.loan > 0 and not self.cash_ms then
-      self.world.ui.adviser:say(_A.warnings.pay_back_loan)
-    end
-    self.cash_msg = true
   end
   -- Pay interest on loans
   if math.round(self.acc_loan_interest) > 0 then
