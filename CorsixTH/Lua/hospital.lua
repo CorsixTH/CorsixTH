@@ -258,18 +258,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   end
 end
 
-function Hospital:noToilet_msg()
-  local toilet_msg = {
-    (_A.warnings.need_toilets),
-    (_A.warnings.build_toilets),
-    (_A.warnings.build_toilet_now),
-  }
-  if toilet_msg then
-    self.world.ui.adviser:say(toilet_msg[math.random(1, #toilet_msg)])
-    self.toilet_msg = true
-  end
-end
-
 -- Give praise where it is due
 function Hospital:praiseBench()
   local bench_msg = {
@@ -704,6 +692,7 @@ function Hospital:afterLoad(old, new)
 
   if old < 145 then
     self.staff_room_msg = nil
+    self.toilet_msg = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -752,11 +741,6 @@ function Hospital:checkFacilities()
   local day = current_date:dayOfMonth()
   -- All messages are shown after first 4 months if respective conditions are met
   if self:isPlayerHospital() and current_date >= Date(1,5) then
-    -- If there is no toilet, remind player of the need to build one
-    if not self.toilet_msg and day == 8 and self:countRoomOfType("toilets") == 0 then
-      self:noToilet_msg()
-    end
-
     if not self.bench_msg then
       -- How are we for seating, if there are plenty then praise is due, if not the player is warned
       -- check the seating : standing ratio of waiting patients
@@ -832,7 +816,6 @@ function Hospital:checkFacilities()
 
     -- reset all the messages on 28th of each month
     if day == 28 then
-      self.toilet_msg = false
       self.bench_msg = false
       self.cash_msg = false
       self.warmth_msg = false

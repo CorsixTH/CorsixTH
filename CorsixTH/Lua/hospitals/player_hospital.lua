@@ -55,6 +55,15 @@ function PlayerHospital:dailyAdvisePlayer()
     }
     self:sayAdvise(staffroom_advises)
   end
+
+  -- Warn about lack of toilets.
+  if day == 8 and self:countRoomOfType("toilets") == 0 then
+    local toilet_advises = {
+      _A.warnings.need_toilets, _A.warnings.build_toilets,
+      _A.warnings.build_toilet_now,
+    }
+    self:sayAdvise(toilet_advises)
+  end
 end
 
 --! Give an advise to the player.
