@@ -2303,13 +2303,17 @@ end
 --!param priority Task priority: 1 is low, 2 is high
 --!param x co-ordinate
 --!param y co-ordinate
---!param call The call added to the disptacher
+--!param call The call added to the dispatcher
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
   local subTable = self:findHandymanTaskSubtable(taskType)
   table.insert(subTable, {["object"] = object, ["priority"] = priority, ["tile_x"] = x, ["tile_y"] = y, ["parcelId"] = parcelId, ["call"] = call})
 end
 
+--! Queries the priority of an existing handyman task
+--!param taskIndex (integer) Number of task
+--!param taskType The handyman task type: repairing, watering, cleaning
+--!return Priority of task
 function Hospital:getHandymanTaskPriority(taskIndex, taskType)
   local subTable = self:findHandymanTaskSubtable(taskType)
   return subTable[taskIndex].priority
