@@ -82,6 +82,7 @@ function Machine:announceRepair(room)
       earthquake.machwarn_trigger = true -- resets with each damage phase
     end
   else
+    -- TODO: Don't announce handyman call sound if there are no handymen
     -- Must be same priority
     self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
     if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
