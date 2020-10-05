@@ -87,7 +87,7 @@ function Machine:announceRepair(room)
     if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
   end
 end
-  
+
 --! Set whether the smoke animation should be showing
 local function setSmoke(self, isSmoking)
   -- If turning smoke on for this machine
@@ -179,8 +179,8 @@ function Machine:machineUsed(room)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
       self:announceRepair(room)
     else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
-      local subTable = self.hospital:findHandymanTaskSubtable("repairing")
-      if subTable[taskIndex].priority == 1 then
+       -- Upgrades task from low (1) priority to high (2) priority
+      if self.hospital:getHandymanTaskPriority(taskIndex, "repairing") == 1 then
         self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
         self:announceRepair(room)
       end
