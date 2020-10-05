@@ -34,7 +34,7 @@ function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
   -- New cheats require a persistable and a wrapped function in func
-   self.cheat_list = {
+  self.cheat_list = {
     {name = "money",          func = self.cheatMoney},
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
@@ -53,7 +53,7 @@ function Cheats:Cheats(hospital)
 end
 
 --! Performs a cheat from the cheat_list
---!param num The cheat from the cheat_list called
+--!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
 function Cheats:performCheat(num)
   local cheat_success = self.cheat_list[num].func(self) ~= false
