@@ -99,7 +99,7 @@ function World:World(app)
   -- remaining_damage (integer) The amount of damage this earthquake has yet to inflict.
   -- damage_timer (integer) The number of hours until the earthquake next inflicts damage if active.
   -- warning_timer (integer) The number of hours left until the real damaging earthquake begins.
-  -- machwarn_trigger (boolean) True if a machine has already announced it is breaking during a damage phase (resets each phase)
+  -- machwarn_trigger (boolean) True if any machine has already announced it is breaking during a damage phase (resets each phase)
   self.next_earthquake = { active = false }
 
   -- Time
