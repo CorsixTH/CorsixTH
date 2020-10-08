@@ -127,7 +127,6 @@ function World:World(app)
   self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
   self.floating_dollars = {}
-  self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
@@ -220,7 +219,7 @@ function World:World(app)
     "cheat001.wav", "cheat002.wav", "cheat003.wav",
   }
 
-  self:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
+  self.app:gameLog("Created game with savegame version " .. self.savegame_version .. ".")
 end
 
 --! Register key shortcuts for controlling the world (game speed, etc.)
@@ -2271,34 +2270,6 @@ function World:getRoomNameAndRequiredStaffName(room_id)
   return room_name, required_staff, staff_name
 end
 
---! Append a message to the game log.
---!param message (string) The message to add.
-function World:gameLog(message)
-  self.game_log[#self.game_log + 1] = message
-  -- If in debug mode also show it in the command prompt
-  if TheApp.config.debug then
-    print(message)
-  end
-end
-
---! Dump the contents of the game log into a file.
--- This is automatically done on each error.
-function World:dumpGameLog()
-  local config_path = TheApp.command_line["config-file"] or ""
-  local pathsep = package.config:sub(1, 1)
-  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
-  local gamelog_path = config_path .. "gamelog.txt"
-  local fi, err = io.open(gamelog_path, "w")
-  if fi then
-    for _, str in ipairs(self.game_log) do
-      fi:write(str .. "\n")
-    end
-    fi:close()
-  else
-    print("Warning: Cannot dump game log: " .. tostring(err))
-  end
-end
-
 --! Because the save file only saves one thob per tile if they are more that information
 -- will be lost. To solve this after a load we need to set again all the thobs on each tile.
 function World:resetAnimations()
@@ -2541,7 +2512,7 @@ function World:afterLoad(old, new)
               end
             end
             if not found then
-              self:gameLog("Unreserved an object: " .. obj.object_type.id .. " at " .. obj.tile_x .. ":" .. obj.tile_y)
+              self.app.gameLog("Unreserved an object: " .. obj.object_type.id .. " at " .. obj.tile_x .. ":" .. obj.tile_y)
               obj.reserved_for = nil
             end
           end
@@ -2642,6 +2613,12 @@ function World:afterLoad(old, new)
   if old < 120 then
     -- Issue #1105 updates to fix any broken saves with travel<dir> flags for side objects
     self:resetSideObjects()
+  end
+
+  if old < 144 and self.game_log then
+    -- Move game_log to world
+    self.app.game_log = self.game_log or {}
+    self.game_log = nil
   end
 
   self.savegame_version = new

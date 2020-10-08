@@ -65,6 +65,7 @@ function App:App()
   self.strings = {}
   self.savegame_version = SAVEGAME_VERSION
   self.check_for_updates = true
+  self.game_log = {} -- saves list of useful debugging information
 end
 
 --! Starts a Lua DBGp client & connects it to a DBGp server.
@@ -168,8 +169,7 @@ function App:init()
   if compile_opts.arch_64 then
     caption_descs[#caption_descs + 1] = "64 bit"
   end
-  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
-  self.video:setCaption(self.caption)
+  self:gameLog("Compiled with - SDL2 renderer " .. table.concat(caption_descs, ", "))
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
@@ -1066,9 +1066,9 @@ function App:run()
     print(debug.traceback(co, e, 0))
     print("")
     if self.world then
-      self.world:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
-      self.world:gameLog(debug.traceback(co, e, 0))
-      self.world:dumpGameLog()
+      self:gameLog("Error in " .. self.last_dispatch_type .. " handler: ")
+      self:gameLog(debug.traceback(co, e, 0))
+      self:dumpGameLog()
     end
     if self.world and self.last_dispatch_type == "timer" and self.world.current_tick_entity then
       -- Disconnecting the tick handler is quite a drastic measure, so give
@@ -1086,7 +1086,7 @@ function App:run()
           "Sorry, but an error has occurred. There can be many reasons - see the " ..
           "log window for details. Would you like to attempt a recovery?",
           --[[persistable:app_attempt_recovery]] function()
-            self.world:gameLog("Recovering from error in timer handler...")
+            self:gameLog("Recovering from error in timer handler...")
             entity.ticks = false
             self.eventHandlers.timer = handler
           end
@@ -1568,25 +1568,25 @@ function App:afterLoad()
 
   if old == 0 then
     -- Game log was not present before introduction of savegame versions, so create it now.
-    self.world.game_log = {}
-    self.world:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
+    self.game_log = {}
+    self:gameLog("Created Gamelog on load of old (pre-versioning) savegame.")
   end
   if not self.world.original_savegame_version then
     self.world.original_savegame_version = old
   end
   local first = self.world.original_savegame_version
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
+    self:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
         "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
     self.world:playLoadedEntitySounds()
   elseif new > old then
-    self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
+    self:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
                        ") to " .. new .. " (" .. self:getVersion() ..
                        "). The save was created using " .. first ..
                        " (" .. self:getVersion(first) .. ")")
   else
     -- TODO: This should maybe be forbidden completely.
-    self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
+    self:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
                        ")" .. " in older version " .. new .. " (" .. self:getVersion() .. ").")
   end
   self.world.savegame_version = new
@@ -1716,4 +1716,31 @@ end
 function App:isAudioEnabled()
   local compile_opts = TH.GetCompileOptions()
   return compile_opts.audio
+end
+
+--! Append a message to the game log.
+--!param message (string) The message to add.
+function App:gameLog(message)
+  self.game_log[#self.game_log + 1] = message
+  -- If in debug mode also show it in the command prompt
+  if TheApp.config.debug then
+    print(message)
+  end
+end
+
+--! Dump the contents of the game log into a file.
+-- This is automatically done on each error.
+function App:dumpGameLog()
+  local config_path = TheApp.command_line["config-file"] or ""
+  config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
+  local gamelog_path = config_path .. "gamelog.txt"
+  local fi, err = io.open(gamelog_path, "w")
+  if fi then
+    for _, str in ipairs(self.game_log) do
+      fi:write(str .. "\n")
+    end
+    fi:close()
+  else
+    print("Warning: Cannot dump game log: " .. tostring(err))
+  end
 end

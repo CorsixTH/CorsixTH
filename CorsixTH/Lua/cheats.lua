@@ -109,7 +109,7 @@ function Cheats:cheatToggleInfected()
       end
     end
   else
-    self.hospital.world:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
+    self.ui.app:gameLog("Unable to toggle icons - no epidemics in progress that are not revealed")
   end
 end
 

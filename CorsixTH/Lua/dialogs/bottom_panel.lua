@@ -265,10 +265,10 @@ end
 --! }
 function UIBottomPanel:setDynamicInfo(info)
   if info and not info["text"] then
-    self.world:gameLog("")
-    self.world:gameLog("Dynamic info is missing text!")
-    self.world:gameLog("Please report this issue including the call stack below.")
-    self.world:gameLog(debug.traceback())
+    self.ui.app:gameLog("")
+    self.ui.app:gameLog("Dynamic info is missing text!")
+    self.ui.app:gameLog("Please report this issue including the call stack below.")
+    self.ui.app:gameLog(debug.traceback())
 
     return
   end

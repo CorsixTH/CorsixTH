@@ -284,7 +284,7 @@ function Audio:playSound(name, where, is_announcement, played_callback, played_c
 
     if warning then
       -- Indicates something happened
-      self.app.world:gameLog("Audio:playSound - Warning: " .. warning)
+      self.app:gameLog("Audio:playSound - Warning: " .. warning)
     end
   end
 end

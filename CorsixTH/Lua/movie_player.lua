@@ -187,11 +187,7 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   success, warning = self.moviePlayer:load(filename)
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
-    if self.app.world then
-      self.app.world:gameLog(message)
-    elseif self.app.config.debug then
-      print(message)
-    end
+    self.app:gameLog(message)
   end
   if not success then
     -- Indicates failure to load movie
@@ -233,11 +229,7 @@ function MoviePlayer:playMovie(filename, wait_for_stop, can_skip, callback)
   warning = self.moviePlayer:play(self.channel)
   if warning ~= nil and warning ~= "" then
     local message = "MoviePlayer:playMovie - Warning: " .. warning
-    if self.app.world then
-      self.app.world:gameLog(message)
-    elseif self.app.config.debug then
-      print(message)
-    end
+    self.app:gameLog(message)
   end
   self.playing = true
 end

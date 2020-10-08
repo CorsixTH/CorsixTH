@@ -529,7 +529,7 @@ function Object:removeUser(user)
       end
     end
     if not found then
-      self.world:gameLog("Warning: Could not find a humanoid to remove from the user list")
+      self.world.app:gameLog("Warning: Could not find a humanoid to remove from the user list")
     end
     if #self.user_list == 0 then
       -- No users left, make the object visible again.
@@ -578,7 +578,7 @@ function Object:removeReservedUser(user)
       end
     end
     if not found then
-      self.world:gameLog("Warning: Could not find a humanoid to remove from the reserved user list")
+      self.world.app:gameLog("Warning: Could not find a humanoid to remove from the reserved user list")
     end
     if #self.reserved_for_list == 0 then
       -- No users left, set reserved_for to nil.

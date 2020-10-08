@@ -465,7 +465,7 @@ function Patient:goHome(reason, disease_id)
   if self.going_home then
     -- The patient should be going home already! Anything related to the hospital
     -- will not be updated correctly, but we still want to try to get the patient to go home.
-    TheApp.world:gameLog("Warning: goHome called when the patient is already going home")
+    TheApp:gameLog("Warning: goHome called when the patient is already going home")
     self:despawn()
     return
   end
@@ -497,7 +497,7 @@ function Patient:goHome(reason, disease_id)
     self:setMood("exit","activate")
 
   else
-    TheApp.world:gameLog("Error: unknown reason " .. reason .. "!")
+    TheApp:gameLog("Error: unknown reason " .. reason .. "!")
   end
 
   hosp:updatePercentages()
@@ -840,7 +840,7 @@ function Patient:tickDay()
       if not self.noqueue_ticks then
         self.noqueue_ticks = 1
       elseif self.noqueue_ticks > 2 then
-        self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
+        TheApp:gameLog("A patient has a queue action, but is not in the corresponding queue")
         self:setNextAction(SeekReceptionAction())
       else
         self.noqueue_ticks = self.noqueue_ticks + 1

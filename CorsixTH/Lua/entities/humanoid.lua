@@ -496,10 +496,10 @@ local function Humanoid_startAction(self)
     self.world:setSpeed("Pause")
 
     -- Tell the player what just happened.
-    self.world:gameLog("")
-    self.world:gameLog("Empty action queue!")
-    self.world:gameLog("Last action: " .. self.previous_action.name)
-    self.world:gameLog(debug.traceback())
+    self.world.app:gameLog("")
+    self.world.app:gameLog("Empty action queue!")
+    self.world.app:gameLog("Last action: " .. self.previous_action.name)
+    self.world.app:gameLog(debug.traceback())
 
     ui:addWindow(UIConfirmDialog(ui,
       "Sorry, a humanoid just had an empty action queue,"..
@@ -509,7 +509,7 @@ local function Humanoid_startAction(self)
       "the offending humanoid has been opened. "..
       "Would you like him/her to leave the hospital?",
       --[[persistable:humanoid_leave_hospital]] function()
-        self.world:gameLog("The humanoid was told to leave the hospital...")
+        self.world.app:gameLog("The humanoid was told to leave the hospital...")
         if class.is(self, Staff) then
           self:fire()
         else
@@ -812,7 +812,7 @@ function Humanoid:registerRoomBuildCallback(callback)
   if not self.build_callbacks[callback] then
     self.build_callbacks[callback] = true
   else
-    self.world:gameLog("Warning: Trying to re-add room build callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to re-add room build callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -822,7 +822,7 @@ function Humanoid:unregisterRoomBuildCallback(callback)
   if self.build_callbacks[callback] then
     self.build_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistent room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to remove nonexistent room build callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -845,7 +845,7 @@ function Humanoid:registerRoomRemoveCallback(callback)
     self.world:registerRoomRemoveCallback(callback)
     self.remove_callbacks[callback] = true
   else
-    self.world:gameLog("Warning: Trying to re-add room remove callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to re-add room remove callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -856,7 +856,7 @@ function Humanoid:unregisterRoomRemoveCallback(callback)
     self.world:unregisterRoomRemoveCallback(callback)
     self.remove_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistent room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to remove nonexistent room remove callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -867,7 +867,7 @@ function Humanoid:registerStaffChangeCallback(callback)
   if self.staff_change_callbacks and not self.staff_change_callbacks[callback] then
     self.staff_change_callbacks[callback] = true
   else
-    self.world:gameLog("Warning: Trying to re-add staff callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to re-add staff callback (" .. tostring(callback) .. ") for humanoid (" .. tostring(self) .. ").")
   end
 end
 
@@ -878,7 +878,7 @@ function Humanoid:unregisterStaffChangeCallback(callback)
   if self.staff_change_callbacks and self.staff_change_callbacks[callback] then
     self.staff_change_callbacks[callback] = nil
   else
-    self.world:gameLog("Warning: Trying to remove nonexistent staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
+    self.world.app:gameLog("Warning: Trying to remove nonexistent staff callback (" .. tostring(callback) .. ") from humanoid (" .. tostring(self) .. ").")
   end
 end
 
