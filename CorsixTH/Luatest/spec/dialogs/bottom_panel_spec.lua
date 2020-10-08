@@ -33,7 +33,7 @@ describe("Bottom Panel:", function()
   end)
 
   before_each(function()
-    TheApp.world.gameLog = function() end
+    TheApp.gameLog = function() end
 
     font = {
       draw = function() end,
@@ -51,14 +51,14 @@ describe("Bottom Panel:", function()
 
     mock(font, 'draw')
     mock(font, 'drawWrapped')
-    mock(TheApp.world, 'gameLog')
+    mock(TheApp, 'gameLog')
   end)
 
   it("Set nil dynamic info", function()
     bottom_panel:setDynamicInfo(nil)
     bottom_panel:drawDynamicInfo(mock_canvas, 0, 0)
 
-    assert.stub(TheApp.world.gameLog).was_not.called_with(TheApp.world, "Dynamic info is missing text!")
+    assert.stub(TheApp.gameLog).was_not.called_with(TheApp, "Dynamic info is missing text!")
   end)
 
   it("Set dynamic info without text", function()
@@ -67,7 +67,7 @@ describe("Bottom Panel:", function()
     bottom_panel:setDynamicInfo(dynamic_info)
     bottom_panel:drawDynamicInfo(mock_canvas, 0, 0)
 
-  assert.stub(TheApp.world.gameLog).was.called_with(TheApp.world, "Dynamic info is missing text!")
+  assert.stub(TheApp.gameLog).was.called_with(TheApp, "Dynamic info is missing text!")
   end)
 
   it("Set dynamic info with text", function()
@@ -76,7 +76,7 @@ describe("Bottom Panel:", function()
     bottom_panel:setDynamicInfo(dynamic_info)
     bottom_panel:drawDynamicInfo(mock_canvas, 0, 0)
 
-    assert.stub(TheApp.world.gameLog).was_not.called_with(TheApp.world, "Dynamic info is missing text!")
+    assert.stub(TheApp.gameLog).was_not.called_with(TheApp, "Dynamic info is missing text!")
     assert.stub(font.drawWrapped).was.called_with(font, mock_canvas, "test text", 20, 10, 240)
   end)
 end)
