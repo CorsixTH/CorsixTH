@@ -31,6 +31,9 @@ function AIHospital:AIHospital(competitor, ...)
     self.name = "NONAME"
   end
   self.is_in_world = false
+
+  -- AI Hospitals can't cheat, so don't let them
+  self.hosp_cheats = nil
 end
 
 function AIHospital:spawnPatient()
@@ -39,4 +42,12 @@ end
 
 function AIHospital:logTransaction()
   -- AI doesn't need a log of transactions, as it is only used for UI purposes
+end
+
+function AIHospital:afterLoad(old, new)
+  if old < 145 then
+    self.hosp_cheats = nil
+  end
+
+  Hospital.afterLoad(self, old, new)
 end
