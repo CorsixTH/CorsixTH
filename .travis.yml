@@ -24,7 +24,7 @@ addons:
 before_install:
   # Bionic does not have catch2 in its repo so clone and install locally
   - cd $HOME
-  - git clone https://github.com/catchorg/Catch2.git --depth=1
+  - git clone https://github.com/catchorg/Catch2.git -b v2.13.2 --depth=1
   - cd Catch2
   - cmake -Bbuild -H. -DBUILD_TESTING=OFF
   - cd build && sudo make install
