@@ -284,26 +284,6 @@ function Hospital:msgKilled()
   end
 end
 
--- Remind the player when cash is low that a loan might be available
-function Hospital:cashLow()
-  -- Don't remind in free build mode or when not controlled by the user.
-  if self.world.free_build_mode or not self:isPlayerHospital() then
-    return
-  end
-
-  local cashlowmessage = {
-    (_A.warnings.money_low),
-    (_A.warnings.money_very_low_take_loan),
-    (_A.warnings.cash_low_consider_loan),
-  }
-  if self.balance < 2000 and self.balance >= -500 then
-    self.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
-  elseif self.balance < -2000 and self.world:date():monthOfYear() > 8 then
-    -- ideally this should be linked to the lose criteria for balance
-    self.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
-  end
-end
-
 --! Update the loaded game with version 'old' to the version 'new'.
 --!param old Version of the loaded game.
 --!param new Version of the code being executed.
