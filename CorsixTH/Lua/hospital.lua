@@ -615,6 +615,7 @@ function Hospital:afterLoad(old, new)
 
   if old < 147 then
     self.patientcount = nil
+    self.receptionist_msg = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -912,7 +913,6 @@ end
 function Hospital:onEndMonth()
   -- Spend wages
   local wages = 0
-  local current_month = self.world:date():monthOfYear()
   for _, staff in ipairs(self.staff) do
     wages = wages + staff.profile.wage
   end
@@ -983,27 +983,6 @@ function Hospital:onEndMonth()
   }
   self.money_in = 0
   self.money_out = 0
-
-  -- make players aware of the need for a receptionist and desk.
-  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world:date():year() == 1 then
-    if self.receptionist_count ~= 0 and current_month > 2 and not self.receptionist_msg then
-      self.world.ui.adviser:say(_A.warnings.no_desk_6)
-      self.receptionist_msg = true
-    elseif self.receptionist_count == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
-      self.world.ui.adviser:say(_A.warnings.no_desk_7)
-    --  self.receptionist_msg = true
-    elseif current_month == 3 then
-      self.world.ui.adviser:say(_A.warnings.no_desk, true)
-    elseif current_month == 8 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
-    elseif current_month == 11 then
-      if self.visitors == 0 then
-        self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
-      else
-        self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
-      end
-    end
-  end
 end
 
 --! Returns whether this hospital is controlled by a real person or not.
@@ -1659,16 +1638,8 @@ function Hospital:objectPlaced(entity, id)
   end
 
   if id == "reception_desk" then
-    if self:isPlayerHospital() then
-      local numReceptionists = self:countStaffOfCategory("Receptionist")
-      if not self.world.ui.start_tutorial and numReceptionists == 0 then
-        self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-      elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
-          not self.receptionist_msg and self.world:date():monthOfGame() > 3 then
-        self.world.ui.adviser:say(_A.warnings.no_desk_5)
-        self.receptionist_msg = true
-      end
-    end
+    self:msgReceptionDesk()
+    return
   end
 
   -- If it is a plant it might be advisable to hire a handyman
@@ -1690,6 +1661,11 @@ function Hospital:objectPlaced(entity, id)
       entity:setAnimation(2550)
     end
   end
+end
+
+--! Give advice to the user about having bought a reception desk.
+function Hospital:msgReceptionDesk()
+  -- Nothing to do, override in a sub-class.
 end
 
 --! Remove the first entry with a given value from a table.
