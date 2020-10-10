@@ -613,6 +613,10 @@ function Hospital:afterLoad(old, new)
     self.cash_msg = nil
   end
 
+  if old < 147 then
+    self.patientcount = nil
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -621,19 +625,20 @@ function Hospital:afterLoad(old, new)
   self.research.afterLoad(old, new)
 end
 
---! Update the Hospital.patientcount variable.
-function Hospital:countPatients()
-  -- I have taken the patient count out of town map, from memory it does not work the other way round.
-  -- i.e. calling it from town map to use here
-  -- so Town map now takes this information from here.  (If I am wrong, put it back)
-  self.patientcount = 0
+--! Count the number of patients in the hospital.
+--!param max_count (optional integer) If provided, non-negative maximum count to return.
+--!return The number of patients in the hospital, at most max_count is returned if provided.
+function Hospital:countPatients(max_count)
+  local count = 0
   for _, patient in ipairs(self.patients) do
-  -- only count patients that are in the hospital
+    -- Only count patients that are in the hospital.
     local tx, ty = patient.tile_x, patient.tile_y
     if tx and ty and self:isInHospital(tx, ty) then
-      self.patientcount = self.patientcount + 1
+      count = count + 1
+      if max_count ~= nil and count >= max_count then break end
     end
   end
+  return count
 end
 
 --! Count number of sitting and standing patients in the hospital.
@@ -656,7 +661,6 @@ end
 --! date.lua to see how many times per day this is.
 function Hospital:tick()
 -- add some random background sounds, ringing phones, coughing, belching etc
-  self:countPatients()
   local sounds = {
   "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav", "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
   "ispot009.wav", "ispot010.wav", "ispot011.wav", "ispot012.wav", "ispot013.wav", "ispot014.wav", "ispot015.wav", "ispot016.wav",
@@ -665,7 +669,7 @@ function Hospital:tick()
   } -- ispot026 and ispot027 are both toilet related sounds
 -- wait until there are some patients in the hospital and a room, otherwise you will wonder who is coughing or who is the
 -- receptionist telephoning! opted for gp as you can't run the hospital without one.
-  if self:countRoomOfType("gp") > 0 and self.patientcount > 2 then
+  if self:countRoomOfType("gp") > 0 and self:countPatients(3) > 2 then
     if math.random(1, 100) == 3 then
       local sound_to_play = sounds[math.random(1, #sounds)]
       if TheApp.audio:soundExists(sound_to_play) then
