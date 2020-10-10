@@ -660,23 +660,6 @@ end
 --! Called each tick, also called 'hours'. Check hours_per_day in
 --! date.lua to see how many times per day this is.
 function Hospital:tick()
--- add some random background sounds, ringing phones, coughing, belching etc
-  local sounds = {
-  "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav", "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
-  "ispot009.wav", "ispot010.wav", "ispot011.wav", "ispot012.wav", "ispot013.wav", "ispot014.wav", "ispot015.wav", "ispot016.wav",
-  "ispot017.wav", "ispot018.wav", "ispot019.wav", "ispot020.wav", "ispot021.wav", "ispot022.wav", "ispot023.wav", "ispot024.wav",
-  "ispot025.wav"
-  } -- ispot026 and ispot027 are both toilet related sounds
--- wait until there are some patients in the hospital and a room, otherwise you will wonder who is coughing or who is the
--- receptionist telephoning! opted for gp as you can't run the hospital without one.
-  if self:countRoomOfType("gp") > 0 and self:countPatients(3) > 2 then
-    if math.random(1, 100) == 3 then
-      local sound_to_play = sounds[math.random(1, #sounds)]
-      if TheApp.audio:soundExists(sound_to_play) then
-        self.world.ui:playSound(sound_to_play)
-      end
-    end
-  end
   self:manageEpidemics()
 end
 
