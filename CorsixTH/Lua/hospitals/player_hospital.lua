@@ -262,6 +262,20 @@ function PlayerHospital:msgPlant()
   end
 end
 
+--! Show the 'Gates to hell' animation.
+--!param entity (Entity) Gates to hell.
+function PlayerHospital:showGatesToHell(entity)
+  local anim_func = --[[persistable:lava_hole_spawn_animation_end]]
+    function(anim_entity)
+      anim_entity:setAnimation(1602)
+    end
+
+  entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
+      {0,1450,1250,1050,850,450}, 40)
+  entity:setTimer(entity.world:getAnimLength(2550), anim_func)
+  entity:setAnimation(2550)
+end
+
 --! Advises the player.
 --!param msgs (array of string) Messages to select from.
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the

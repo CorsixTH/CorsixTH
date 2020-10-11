@@ -1635,6 +1635,7 @@ function Hospital:objectPlaced(entity, id)
         end
       end
     end
+    return
   end
 
   if id == "reception_desk" then
@@ -1648,16 +1649,8 @@ function Hospital:objectPlaced(entity, id)
   end
 
   if id == "gates_to_hell" then
-    if self:isPlayerHospital() then
-      entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
-          {0,1450,1250,1050,850,450}, 40)
-      entity:setTimer(entity.world:getAnimLength(2550),
-                      --[[persistable:lava_hole_spawn_animation_end]]
-                      function(anim_entity)
-                        anim_entity:setAnimation(1602)
-                      end)
-      entity:setAnimation(2550)
-    end
+    self:showGatesToHell(entity)
+    return
   end
 end
 
@@ -1668,6 +1661,12 @@ end
 
 --! Give advice to the user about maintenance of plants.
 function Hospital:msgPlant()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Show the 'Gates to hell' animation.
+--!param _entity (Entity) Gates to hell.
+function Hospital:showGatesToHell(_entity)
   -- Nothing to do, override in a sub-class.
 end
 
