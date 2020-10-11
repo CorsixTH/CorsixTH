@@ -1642,11 +1642,9 @@ function Hospital:objectPlaced(entity, id)
     return
   end
 
-  -- If it is a plant it might be advisable to hire a handyman
-  if self:isPlayerHospital() then
-    if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
-      self.world.ui.adviser:say(_A.staff_advice.need_handyman_plants)
-    end
+  if id == "plant" then
+    self:msgPlant()
+    return
   end
 
   if id == "gates_to_hell" then
@@ -1665,6 +1663,11 @@ end
 
 --! Give advice to the user about having bought a reception desk.
 function Hospital:msgReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Give advice to the user about maintenance of plants.
+function Hospital:msgPlant()
   -- Nothing to do, override in a sub-class.
 end
 

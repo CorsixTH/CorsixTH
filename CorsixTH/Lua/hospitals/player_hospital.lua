@@ -253,6 +253,15 @@ function PlayerHospital:msgReceptionDesk()
   end
 end
 
+--! Give advice to the user about maintenance of plants.
+function PlayerHospital:msgPlant()
+  local num_handyman = self:countStaffOfCategory("Handyman")
+
+  if num_handyman == 0 then
+    self:giveAdvice({_A.staff_advice.need_handyman_plants})
+  end
+end
+
 --! Advises the player.
 --!param msgs (array of string) Messages to select from.
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the
