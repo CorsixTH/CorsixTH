@@ -257,14 +257,17 @@ function Hospital:Hospital(world, avail_rooms, name)
   end
 end
 
---! Messages regarding numbers cured and killed
+--! Give the user possibly a message about a cured patient.
 function Hospital:msgCured()
-  local msg_chance = math.random(1, 15)
-  if self.num_cured > 1 then
-    if msg_chance == 3 and self.msg_counter > 10 then
+  if self.num_cured < 1 then -- First cure is always reported.
+    self.world.ui.adviser:say(_A.information.first_cure)
+
+  elseif self.num_cured > 1 and self.msg_counter > 10 then
+    local msg_chance = math.random(1, 15)
+    if msg_chance == 3 then
       self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
       self.msg_counter = 0
-    elseif msg_chance == 12 and self.msg_counter > 10 then
+    elseif msg_chance == 12 then
       self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
       self.msg_counter = 0
     end
@@ -1830,9 +1833,6 @@ function Hospital:updateCuredCounts(patient)
     self:changeReputation("cured", patient.disease)
   end
 
-  if self.num_cured < 1 then
-    self.world.ui.adviser:say(_A.information.first_cure)
-  end
   self.num_cured = self.num_cured + 1
   self.num_cured_ty = self.num_cured_ty + 1
 
