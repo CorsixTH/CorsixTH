@@ -469,10 +469,8 @@ function Patient:goHome(reason, disease_id)
   if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
-    self.world.ui:playSound("cheer.wav") -- This sound is always heard
     self.hospital:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
-    self.hospital:msgCured()
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")

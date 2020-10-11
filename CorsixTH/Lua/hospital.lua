@@ -259,6 +259,8 @@ end
 
 --! Give the user possibly a message about a cured patient.
 function Hospital:msgCured()
+  self.world.ui:playSound("cheer.wav") -- This sound is always heard
+
   if self.num_cured < 1 then -- First cure is always reported.
     self.world.ui.adviser:say(_A.information.first_cure)
 
@@ -1833,6 +1835,8 @@ end
 --! Update the 'cured' counts of the hospital.
 --!param patient Patient that was cured.
 function Hospital:updateCuredCounts(patient)
+  self:msgCured()
+
   if not patient.is_debug then
     self:changeReputation("cured", patient.disease)
   end
