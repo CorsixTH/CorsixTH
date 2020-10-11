@@ -316,9 +316,6 @@ function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up.
   local hospital = self.hospital
 
-  if hospital.num_deaths < 1 then
-    self.world.ui.adviser:say(_A.information.first_death)
-  end
   hospital:humanoidDeath(self)
   if not self.is_debug then
     local casebook = hospital.disease_casebook[self.disease.id]

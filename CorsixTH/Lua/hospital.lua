@@ -273,14 +273,18 @@ function Hospital:msgCured()
     end
   end
 end
---! So the messages don't show too often there will need to be at least 10 days before one can show again.
+
+--! Give the user possibly a message about a dead patient.
 function Hospital:msgKilled()
-  local msg_chance = math.random(1, 10)
-  if self.num_deaths > 1 then
-    if msg_chance < 4 and self.msg_counter > 10 then
+  if self.num_deaths < 1 then -- First death is always reported.
+    self.world.ui.adviser:say(_A.information.first_death)
+
+  elseif self.num_deaths > 1 and self.msg_counter > 10 then
+    local msg_chance = math.random(1, 10)
+    if msg_chance < 4 then
       self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
       self.msg_counter = 0
-    elseif msg_chance > 7 and self.msg_counter > 10 then
+    elseif msg_chance > 7 then
       self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
       self.msg_counter = 0
     end
