@@ -623,7 +623,7 @@ function Hospital:afterLoad(old, new)
     return
   end
 
-  if old < 145 then
+  if old < 146 then
     self.staff_room_msg = nil
     self.toilet_msg = nil
     self.bench_msg = nil
