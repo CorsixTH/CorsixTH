@@ -292,34 +292,6 @@ function PlayerHospital:giveAdvice(msgs, rnd_frac, stay_up)
   if index <= #msgs then self.world.ui.adviser:say(msgs[index], stay_up) end
 end
 
--- Update the hospital each tick.
-function PlayerHospital:tick()
-  -- Add some random background sounds, ringing phones, coughing, belching etc.
-  if math.random(1, 100) == 3 then
-    -- Wait until there are some patients in the hospital and a room, otherwise you
-    -- will wonder who is coughing or who is the receptionist telephoning!
-    -- Opted for gp as you can't run the hospital without one.
-    if self:countRoomOfType("gp") > 0 and self:countPatients(3) > 2 then
-      local sounds = {
-        "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav",
-        "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
-        "ispot009.wav", "ispot010.wav", "ispot011.wav", "ispot012.wav",
-        "ispot013.wav", "ispot014.wav", "ispot015.wav", "ispot016.wav",
-        "ispot017.wav", "ispot018.wav", "ispot019.wav", "ispot020.wav",
-        "ispot021.wav", "ispot022.wav", "ispot023.wav", "ispot024.wav",
-        "ispot025.wav"
-      } -- ispot026 and ispot027 are both toilet related sounds.
-
-      local sound_to_play = sounds[math.random(1, #sounds)]
-      if TheApp.audio:soundExists(sound_to_play) then
-        self.world.ui:playSound(sound_to_play)
-      end
-    end
-  end
-
-  Hospital.tick(self)
-end
-
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
   -- Advise the player.
