@@ -278,6 +278,8 @@ end
 
 --! Give the user possibly a message about a dead patient.
 function Hospital:msgKilled()
+  self.world.ui:playSound("boo.wav") -- this sound is always heard
+
   if self.num_deaths < 1 then -- First death is always reported.
     self.world.ui.adviser:say(_A.information.first_death)
 
@@ -1573,12 +1575,20 @@ function Hospital:addPatient(patient)
   self:determineIfContagious(patient)
 end
 
+--! Humanoid has died, record the incident.
+--!param humanoid The deceased.
 function Hospital:humanoidDeath(humanoid)
+  self:msgKilled()
+
   self.num_deaths = self.num_deaths + 1
   self.num_deaths_this_year = self.num_deaths_this_year + 1
 
   self:changeReputation("death", humanoid.disease)
   self:updatePercentages()
+
+  if humanoid.is_emergency then
+    self.emergency.killed_emergency_patients = self.emergency.killed_emergency_patients + 1
+  end
 end
 
 --! Checks if the hospital employs staff of a given category.

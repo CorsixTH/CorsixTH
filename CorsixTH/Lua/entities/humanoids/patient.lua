@@ -321,9 +321,7 @@ function Patient:die()
     local casebook = hospital.disease_casebook[self.disease.id]
     casebook.fatalities = casebook.fatalities + 1
   end
-  hospital:msgKilled()
   self:setMood("dead", "activate")
-  self.world.ui:playSound("boo.wav") -- this sound is always heard
 
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
@@ -333,9 +331,6 @@ function Patient:die()
     self:queueAction(MeanderAction():setCount(1))
   else
     self:setNextAction(MeanderAction():setCount(1))
-  end
-  if self.is_emergency then
-    hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction(DieAction())
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
