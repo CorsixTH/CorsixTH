@@ -312,15 +312,10 @@ function Patient:cure()
   self.attributes["health"] = 1
 end
 
+--! Patient died, process the event.
 function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up.
-  local hospital = self.hospital
-
-  hospital:humanoidDeath(self)
-  if not self.is_debug then
-    local casebook = hospital.disease_casebook[self.disease.id]
-    casebook.fatalities = casebook.fatalities + 1
-  end
+  self.hospital:humanoidDeath(self)
   self:setMood("dead", "activate")
 
   -- Remove any messages and/or callbacks related to the patient.

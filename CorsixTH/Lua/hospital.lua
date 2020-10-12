@@ -1576,17 +1576,21 @@ function Hospital:addPatient(patient)
 end
 
 --! Humanoid has died, record the incident.
---!param humanoid The deceased.
-function Hospital:humanoidDeath(humanoid)
+--!param patient The deceased.
+function Hospital:humanoidDeath(patient)
   self:msgKilled()
 
+  if not patient.is_debug then
+    local case = self.disease_casebook[patient.disease.id]
+    case.fatalities = case.fatalities + 1
+  end
   self.num_deaths = self.num_deaths + 1
   self.num_deaths_this_year = self.num_deaths_this_year + 1
 
-  self:changeReputation("death", humanoid.disease)
+  self:changeReputation("death", patient.disease)
   self:updatePercentages()
 
-  if humanoid.is_emergency then
+  if patient.is_emergency then
     self.emergency.killed_emergency_patients = self.emergency.killed_emergency_patients + 1
   end
 end
