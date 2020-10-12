@@ -1,0 +1,129 @@
+---
+name: Linux and Tests
+
+on:  # yamllint disable-line rule:trurhy
+  push:
+    branches-ignore:
+      - 'gh-pages'
+  pull_request:
+
+jobs:
+  Linux:
+    runs-on: ubuntu-20.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - lua: LuaJIT
+            luac: luac5.1
+            packages: libluajit-5.1-dev luajit
+            cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so'
+          - lua: Lua 5.1
+            luac: luac5.1
+            packages: liblua5.1-dev lua5.1
+          - lua: Lua 5.3
+            luac: luac5.3
+            packages: liblua5.3-dev lua5.3
+    name: Linux and Tests on ${{ matrix.lua }}
+    steps:
+      - uses: actions/checkout@v2  # Keeps the git OAuth token after checkout
+      - name: Install ${{ matrix.lua }}
+        run: |
+          sudo apt-get install ${{ matrix.packages }} luarocks
+          # Required for LDocGen
+          sudo luarocks install lpeg
+          # Required for lua lint check
+          sudo luarocks install luacheck
+          # Required for lua unit tests
+          sudo luarocks install busted
+      - name: Install requirements
+        run: |
+          sudo apt-get install doxygen yamllint clang-tidy-9 libsdl2-dev \
+           libsdl2-mixer-dev libwxgtk3.0-gtk3-dev libavcodec-dev \
+           libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+
+          sudo pip3 install -I codespell==2.0 cmakelint==1.4
+
+          # Build catch2
+          git clone --quiet https://github.com/catchorg/Catch2 \
+           --branch v2.13.2 --depth=1
+          cd Catch2
+          cmake . -Bbuild -DBUILD_TESTING=OFF
+          cd build
+          sudo make install
+          cd ../../
+          rm -rf Catch2
+      - name: Create CorsixTH and AnimView makefiles with ${{ matrix.lua }}
+        run: |
+          cmake . -G"Unix Makefiles" -Bbuild --debug-output \
+           -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DBUILD_ANIMVIEWER=ON \
+           -DENABLE_UNIT_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+           ${{ matrix.cmakejit }}
+      - name: Build CorsixTH with ${{ matrix.lua }} and AnimView
+        run: |
+          cmake --build build/ -- VERBOSE=1
+          sudo cmake --build build/ -- install
+      - name: Run ${{ matrix.lua }} tests
+        run: |
+          # Validate lua files
+          find CorsixTH -name '*.lua' -print0 | xargs -0 -I{} ${{ matrix.luac }} -p {}
+          # Run lua lint check
+          luacheck --quiet --codes --ranges CorsixTH
+          # Run lua unit tests
+          busted --verbose --directory=CorsixTH/Luatest
+      - name: Run simple code tests
+        if: matrix.lua == 'Lua 5.3'
+        run: |
+          # Check if there are trailing whitespaces.
+          python3 scripts/check_trailing_whitespaces.py
+          # Check for incorrectly encoded files.
+          python3 scripts/check_language_files_not_BOM.py
+          # Check if there are lua classes with invalid/improper declarations.
+          python3 scripts/check_lua_classes.py
+          # Run CPP Tests
+          cd build/CorsixTH
+          ctest --extra-verbose --build-config Release --output-on-failure
+          cd ../..
+          # Build and package LevelEdit
+          ant -buildfile LevelEdit/build.xml dist
+          # Run codespell
+          codespell --enable-colors --quiet-level 2 --skip="languages,corsix-th.6" \
+            -L sav,unexpect,persistance,defin,uint,inout,currenty,blong \
+            AnimView CorsixTH CorsixTH/Lua/languages/english.lua LevelEdit libs
+          # Cmake file linter
+          cmakelint --filter=-linelength AnimView/CMakeLists.txt CMakeLists.txt CorsixTH/CMakeLists.txt \
+            CorsixTH/CppTest/CMakeLists.txt CorsixTH/Src/CMakeLists.txt CorsixTH/SrcUnshared/CMakeLists.txt \
+            libs/CMakeLists.txt libs/rnc/CMakeLists.txt \
+            CMake/GenerateDoc.cmake CMake/PrecompiledDeps.cmake CMake/VcpkgDeps.cmake
+          # Validate these build files
+          yamllint --config-data "rules: {line-length: disable}" .github/workflows/Linux.yml
+          shellcheck --shell sh scripts/macos_luarocks
+      - name: Run clang code tests
+        if: matrix.lua == 'Lua 5.3'
+        run: |
+          # Check cpp format
+          clang-format-9 -i CorsixTH/Src/*.cpp CorsixTH/Src/*.h AnimView/*.cpp \
+            AnimView/*.h libs/rnc/*.cpp libs/rnc/*.h CorsixTH/SrcUnshared/main.cpp
+          git diff --exit-code
+          # Clang-tidy linter
+          clang-tidy-9 -p build --warnings-as-errors=\* \
+            CorsixTH/Src/*.c CorsixTH/Src/*.cpp libs/rnc/*.cpp CorsixTH/SrcUnshared/main.cpp
+      - name: Generate documentation
+        if: matrix.lua == 'Lua 5.3'
+        run: |
+          cmake --build build/ --target -- doc
+      - name: Upload documentation
+        if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.lua == 'Lua 5.3'
+        run: |
+          git config user.email "documentationbot@corsixth.com"
+          git config user.name "Docs Bot"
+          git fetch origin gh-pages
+          git checkout --force gh-pages
+          rsync --recursive build/doc/ .
+          git add animview/ corsixth_engine/ corsixth_lua/ index.html leveledit/
+          if ! git diff --cached --exit-code; then
+            git commit --message "Documentation from $(git rev-parse --short master) [no CI]"
+            git push origin gh-pages
+          else
+            echo "No change to documentation."
+          fi
