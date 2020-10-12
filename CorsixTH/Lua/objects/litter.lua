@@ -94,7 +94,7 @@ end
 
 --! Remove the litter from the world.
 function Litter:remove()
-  assert(self:isCleanable())
+  assert(self:isCleanable()or TheApp.config.remove_destroyed_rooms)
 
   if self.tile_x then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)

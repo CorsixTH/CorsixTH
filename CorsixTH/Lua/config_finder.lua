@@ -120,6 +120,7 @@ local config_defaults = {
   alien_dna_can_knock_on_doors = false,
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
+  remove_destroyed_rooms = false,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -358,7 +359,12 @@ if needs_rewrite then
 -- By default the player selects any extra objects they want for each room they build.
 -- If you would like the game to remember what you usually add, then change this option to true.
 -- ]=] .. '\n' ..
-'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n'
+'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
+-------------------------------------------------------------------------------------------------------------------------
+-- By default destroyed rooms can't be removed.
+-- If you would like the game to give you the option of removing a destroyed room change this option to true.
+-- ]=] .. '\n' ..
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
 
   local string_02 = [=[
 
