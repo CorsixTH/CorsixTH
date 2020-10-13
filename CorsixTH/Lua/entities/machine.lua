@@ -75,18 +75,11 @@ end
 function Machine:announceRepair(room)
   local sound = room.room_info.handyman_call_sound
   local earthquake = self.world.next_earthquake
-  -- If an earthquake is happening limit the amount of machine warnings
-  if earthquake.active and earthquake.warning_timer == 0 then
-    if not earthquake.machwarn_trigger then
-      self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
-      earthquake.machwarn_trigger = true -- resets with each damage phase
-    end
-  else
-    -- TODO: Don't announce handyman call sound if there are no handymen
-    -- Must be same priority
-    self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
-    if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
-  end
+  self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+  -- If an earthquake is happening don't play the call sound to prevent spamming
+  if earthquake.active and earthquake.warning_timer == 0 then return end
+  -- TODO: Don't announce handyman call sound if there are no handymen
+  if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
 end
 
 --! Set whether the smoke animation should be showing

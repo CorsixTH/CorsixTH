@@ -99,7 +99,6 @@ function World:World(app)
   -- remaining_damage (integer) The amount of damage this earthquake has yet to inflict.
   -- damage_timer (integer) The number of hours until the earthquake next inflicts damage if active.
   -- warning_timer (integer) The number of hours left until the real damaging earthquake begins.
-  -- machwarn_trigger (boolean) True if any machine has already announced it is breaking during a damage phase (resets each phase)
   self.next_earthquake = { active = false }
 
   -- Time
@@ -648,7 +647,6 @@ function World:tickEarthquake()
 
       self.next_earthquake.remaining_damage = self.next_earthquake.remaining_damage - 1
       self.next_earthquake.damage_timer = self.next_earthquake.damage_timer + earthquake_damage_time
-      self.next_earthquake.machwarn_trigger = false
     end
 
     local hospital = self:getLocalPlayerHospital()
@@ -1350,7 +1348,6 @@ function World:nextEarthquake()
     self.next_earthquake.damage_timer = earthquake_damage_time
     self.next_earthquake.warning_timer = earthquake_warning_period
     self.current_map_earthquake = self.current_map_earthquake + 1
-    self.next_earthquake.machwarn_trigger = false
   end
 end
 
@@ -1366,7 +1363,6 @@ function World:createEarthquake()
       self.next_earthquake.remaining_damage = self.next_earthquake.size
       self.next_earthquake.damage_timer = earthquake_damage_time
       self.next_earthquake.warning_timer = earthquake_warning_period
-      self.next_earthquake.machwarn_trigger = false
     end
   end
 end
