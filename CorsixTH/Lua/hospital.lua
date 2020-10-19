@@ -284,26 +284,6 @@ function Hospital:msgKilled()
   end
 end
 
--- Remind the player when cash is low that a loan might be available
-function Hospital:cashLow()
-  -- Don't remind in free build mode or when not controlled by the user.
-  if self.world.free_build_mode or not self:isPlayerHospital() then
-    return
-  end
-
-  local cashlowmessage = {
-    (_A.warnings.money_low),
-    (_A.warnings.money_very_low_take_loan),
-    (_A.warnings.cash_low_consider_loan),
-  }
-  if self.balance < 2000 and self.balance >= -500 then
-    self.world.ui.adviser:say(cashlowmessage[math.random(1, #cashlowmessage)])
-  elseif self.balance < -2000 and self.world:date():monthOfYear() > 8 then
-    -- ideally this should be linked to the lose criteria for balance
-    self.world.ui.adviser:say(_A.warnings.bankruptcy_imminent)
-  end
-end
-
 --! Update the loaded game with version 'old' to the version 'new'.
 --!param old Version of the loaded game.
 --!param new Version of the code being executed.
@@ -633,6 +613,11 @@ function Hospital:afterLoad(old, new)
     self.cash_msg = nil
   end
 
+  if old < 147 then
+    self.patientcount = nil
+    self.receptionist_msg = nil
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -641,19 +626,20 @@ function Hospital:afterLoad(old, new)
   self.research.afterLoad(old, new)
 end
 
---! Update the Hospital.patientcount variable.
-function Hospital:countPatients()
-  -- I have taken the patient count out of town map, from memory it does not work the other way round.
-  -- i.e. calling it from town map to use here
-  -- so Town map now takes this information from here.  (If I am wrong, put it back)
-  self.patientcount = 0
+--! Count the number of patients in the hospital.
+--!param max_count (optional integer) If provided, non-negative maximum count to return.
+--!return The number of patients in the hospital, at most max_count is returned if provided.
+function Hospital:countPatients(max_count)
+  local count = 0
   for _, patient in ipairs(self.patients) do
-  -- only count patients that are in the hospital
+    -- Only count patients that are in the hospital.
     local tx, ty = patient.tile_x, patient.tile_y
     if tx and ty and self:isInHospital(tx, ty) then
-      self.patientcount = self.patientcount + 1
+      count = count + 1
+      if max_count ~= nil and count >= max_count then break end
     end
   end
+  return count
 end
 
 --! Count number of sitting and standing patients in the hospital.
@@ -675,24 +661,32 @@ end
 --! Called each tick, also called 'hours'. Check hours_per_day in
 --! date.lua to see how many times per day this is.
 function Hospital:tick()
--- add some random background sounds, ringing phones, coughing, belching etc
-  self:countPatients()
-  local sounds = {
-  "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav", "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
-  "ispot009.wav", "ispot010.wav", "ispot011.wav", "ispot012.wav", "ispot013.wav", "ispot014.wav", "ispot015.wav", "ispot016.wav",
-  "ispot017.wav", "ispot018.wav", "ispot019.wav", "ispot020.wav", "ispot021.wav", "ispot022.wav", "ispot023.wav", "ispot024.wav",
-  "ispot025.wav"
-  } -- ispot026 and ispot027 are both toilet related sounds
--- wait until there are some patients in the hospital and a room, otherwise you will wonder who is coughing or who is the
--- receptionist telephoning! opted for gp as you can't run the hospital without one.
-  if self:countRoomOfType("gp") > 0 and self.patientcount > 2 then
-    if math.random(1, 100) == 3 then
+  -- Add some random background sounds, ringing phones, coughing, belching etc.
+  --
+  -- TODO: Background noises of other hospitals are heard in multi-player,
+  -- TODO: decide where this should go.
+  if math.random(1, 100) == 3 then
+    -- Wait until there are some patients in the hospital and a room, otherwise you
+    -- will wonder who is coughing or who is the receptionist telephoning!
+    -- Opted for gp as you can't run the hospital without one.
+    if self:countRoomOfType("gp") > 0 and self:countPatients(3) > 2 then
+      local sounds = {
+        "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav",
+        "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
+        "ispot009.wav", "ispot010.wav", "ispot011.wav", "ispot012.wav",
+        "ispot013.wav", "ispot014.wav", "ispot015.wav", "ispot016.wav",
+        "ispot017.wav", "ispot018.wav", "ispot019.wav", "ispot020.wav",
+        "ispot021.wav", "ispot022.wav", "ispot023.wav", "ispot024.wav",
+        "ispot025.wav"
+      } -- ispot026 and ispot027 are both toilet related sounds.
+
       local sound_to_play = sounds[math.random(1, #sounds)]
       if TheApp.audio:soundExists(sound_to_play) then
         self.world.ui:playSound(sound_to_play)
       end
     end
   end
+
   self:manageEpidemics()
 end
 
@@ -945,7 +939,6 @@ end
 function Hospital:onEndMonth()
   -- Spend wages
   local wages = 0
-  local current_month = self.world:date():monthOfYear()
   for _, staff in ipairs(self.staff) do
     wages = wages + staff.profile.wage
   end
@@ -1016,27 +1009,6 @@ function Hospital:onEndMonth()
   }
   self.money_in = 0
   self.money_out = 0
-
-  -- make players aware of the need for a receptionist and desk.
-  if (self:isPlayerHospital() and not self:hasStaffedDesk()) and self.world:date():year() == 1 then
-    if self.receptionist_count ~= 0 and current_month > 2 and not self.receptionist_msg then
-      self.world.ui.adviser:say(_A.warnings.no_desk_6)
-      self.receptionist_msg = true
-    elseif self.receptionist_count == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
-      self.world.ui.adviser:say(_A.warnings.no_desk_7)
-    --  self.receptionist_msg = true
-    elseif current_month == 3 then
-      self.world.ui.adviser:say(_A.warnings.no_desk, true)
-    elseif current_month == 8 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_1, true)
-    elseif current_month == 11 then
-      if self.visitors == 0 then
-        self.world.ui.adviser:say(_A.warnings.no_desk_2, true)
-      else
-        self.world.ui.adviser:say(_A.warnings.no_desk_3, true)
-      end
-    end
-  end
 end
 
 --! Returns whether this hospital is controlled by a real person or not.
@@ -1689,40 +1661,39 @@ function Hospital:objectPlaced(entity, id)
         end
       end
     end
+    return
   end
 
   if id == "reception_desk" then
-    if self:isPlayerHospital() then
-      local numReceptionists = self:countStaffOfCategory("Receptionist")
-      if not self.world.ui.start_tutorial and numReceptionists == 0 then
-        self.world.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-      elseif numReceptionists > 0 and self:countReceptionDesks() == 1 and
-          not self.receptionist_msg and self.world:date():monthOfGame() > 3 then
-        self.world.ui.adviser:say(_A.warnings.no_desk_5)
-        self.receptionist_msg = true
-      end
-    end
+    self:msgReceptionDesk()
+    return
   end
 
-  -- If it is a plant it might be advisable to hire a handyman
-  if self:isPlayerHospital() then
-    if id == "plant" and self:countStaffOfCategory("Handyman") == 0 then
-      self.world.ui.adviser:say(_A.staff_advice.need_handyman_plants)
-    end
+  if id == "plant" then
+    self:msgPlant()
+    return
   end
 
   if id == "gates_to_hell" then
-    if self:isPlayerHospital() then
-      entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
-          {0,1450,1250,1050,850,450}, 40)
-      entity:setTimer(entity.world:getAnimLength(2550),
-                      --[[persistable:lava_hole_spawn_animation_end]]
-                      function(anim_entity)
-                        anim_entity:setAnimation(1602)
-                      end)
-      entity:setAnimation(2550)
-    end
+    self:showGatesToHell(entity)
+    return
   end
+end
+
+--! Give advice to the user about having bought a reception desk.
+function Hospital:msgReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Give advice to the user about maintenance of plants.
+function Hospital:msgPlant()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Show the 'Gates to hell' animation.
+--!param _entity (Entity) Gates to hell.
+function Hospital:showGatesToHell(_entity)
+  -- Nothing to do, override in a sub-class.
 end
 
 --! Remove the first entry with a given value from a table.

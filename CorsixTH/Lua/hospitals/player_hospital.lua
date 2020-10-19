@@ -33,6 +33,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
 
   self.adviser_data = { -- Variables handling player advice.
     temperature_advice = nil, -- Whether the player received advice about room temp.
+    reception_advice = nil, -- Whether advice was given about building the reception.
 
     sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
     sitting_index = 1 -- Next entry in 'sitting_ratios' to update.
@@ -184,6 +185,11 @@ end
 
 --! Give advice to the player at the end of a month.
 function PlayerHospital:monthlyAdviceChecks()
+  local today = self.world:date()
+  local current_month = today:monthOfYear()
+  local current_year = today:year()
+
+  -- Check for advice on money.
   if not self.world.free_build_mode then
     if self.balance < 2000 and self.balance >= -500 then
       local cashlow_advice = {
@@ -192,7 +198,7 @@ function PlayerHospital:monthlyAdviceChecks()
       }
       self:giveAdvice(cashlow_advice)
 
-    elseif self.balance < -2000 and self.world:date():monthOfYear() > 8 then
+    elseif self.balance < -2000 and current_month > 8 then
       -- TODO: Ideally this should be linked to the lose criteria for balance.
       self:giveAdvice({_A.warnings.bankruptcy_imminent})
 
@@ -200,13 +206,82 @@ function PlayerHospital:monthlyAdviceChecks()
       self:giveAdvice({_A.warnings.pay_back_loan})
     end
   end
+
+  self:checkReceptionAdvice(current_month, current_year)
+end
+
+--! Make players aware of the need for a receptionist and desk.
+--!param current_month (int) Month of the year.
+--!param current_year (int) Current game year.
+function PlayerHospital:checkReceptionAdvice(current_month, current_year)
+  if current_year > 1 then return end -- Playing too long.
+  if self:hasStaffedDesk() then return end -- Staffed desk available, all done.
+
+  local num_receptionists = self:countStaffOfCategory("Receptionist")
+  if num_receptionists ~= 0 and current_month > 2 and not self.adviser_data.reception_advice then
+    self:giveAdvice({_A.warnings.no_desk_6})
+    self.adviser_data.reception_advice = true
+
+  elseif num_receptionists == 0 and current_month > 2 and self:countReceptionDesks() ~= 0  then
+    self:giveAdvice({_A.warnings.no_desk_7})
+
+  elseif current_month == 3 then
+    self:giveAdvice({_A.warnings.no_desk}, 1, true)
+
+  elseif current_month == 8 then
+    self:giveAdvice({_A.warnings.no_desk_1}, 1, true)
+
+  elseif current_month == 11 then
+    if self.visitors == 0 then
+      self:giveAdvice({_A.warnings.no_desk_2}, 1, true)
+    else
+      self:giveAdvice({_A.warnings.no_desk_3}, 1, true)
+    end
+  end
+end
+
+--! Give advice to the user about having bought a reception desk.
+function PlayerHospital:msgReceptionDesk()
+  local num_receptionists = self:countStaffOfCategory("Receptionist")
+
+  if not self.world.ui.start_tutorial and num_receptionists == 0 then
+    self:giveAdvice({_A.room_requirements.reception_need_receptionist})
+  elseif num_receptionists > 0 and self:countReceptionDesks() == 1 and
+      not self.adviser_data.reception_advice and self.world:date():monthOfGame() > 3 then
+    self:giveAdvice({_A.warnings.no_desk_5})
+    self.adviser_data.reception_advice = true
+  end
+end
+
+--! Give advice to the user about maintenance of plants.
+function PlayerHospital:msgPlant()
+  local num_handyman = self:countStaffOfCategory("Handyman")
+
+  if num_handyman == 0 then
+    self:giveAdvice({_A.staff_advice.need_handyman_plants})
+  end
+end
+
+--! Show the 'Gates to hell' animation.
+--!param entity (Entity) Gates to hell.
+function PlayerHospital:showGatesToHell(entity)
+  local anim_func = --[[persistable:lava_hole_spawn_animation_end]]
+    function(anim_entity)
+      anim_entity:setAnimation(1602)
+    end
+
+  entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
+      {0,1450,1250,1050,850,450}, 40)
+  entity:setTimer(entity.world:getAnimLength(2550), anim_func)
+  entity:setAnimation(2550)
 end
 
 --! Advises the player.
 --!param msgs (array of string) Messages to select from.
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the
 --    call actually says something.
-function PlayerHospital:giveAdvice(msgs, rnd_frac)
+--!param stay_up (bool) If true, let the adviser remain visible afterwards.
+function PlayerHospital:giveAdvice(msgs, rnd_frac, stay_up)
   local max_rnd = #msgs
   if rnd_frac and rnd_frac > 0 and rnd_frac < 1 then
     -- Scale by the fraction.
@@ -214,7 +289,7 @@ function PlayerHospital:giveAdvice(msgs, rnd_frac)
   end
 
   local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
-  if index <= #msgs then self.world.ui.adviser:say(msgs[index]) end
+  if index <= #msgs then self.world.ui.adviser:say(msgs[index], stay_up) end
 end
 
 --! Called at the end of each day.
@@ -247,6 +322,11 @@ function PlayerHospital:afterLoad(old, new)
       sitting_ratios = {},
       sitting_index = 1
     }
+  end
+
+  if old < 147 then
+    -- Copy value of the previous name of the variable.
+    self.adviser_data.reception_advice = self.receptionist_msg
   end
 
   Hospital.afterLoad(self, old, new)

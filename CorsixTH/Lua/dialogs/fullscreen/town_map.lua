@@ -173,7 +173,7 @@ function UITownMap:draw(canvas, x, y)
   -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
-  local patientcount = hospital.patientcount
+  local patientcount = hospital:countPatients()
   local plants = hospital:countPlants()
   local fireext = hospital:countFireExtinguishers()
   local objs = hospital:countGeneralObjects()
