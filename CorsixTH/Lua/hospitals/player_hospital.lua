@@ -208,6 +208,21 @@ function PlayerHospital:monthlyAdviceChecks()
   end
 
   self:checkReceptionAdvice(current_month, current_year)
+
+  -- Once a month the advisor will warn about long queues.
+  -- Warnings are less likely for the diagnosis rooms to keep the quantity of warnings down
+  for _, room in pairs(self.world.rooms) do
+    if #room.door.queue > 5 then
+      local info = room.room_info
+      if math.random(1, 3) == 1 and info.required_staff["Doctor"] and info.categories["diagnosis"] then
+        self:giveAdvice({_A.warnings.queue_too_long_send_doctor:format(info.name)})
+        break
+      elseif info.categories["treatment"] or info.categories["clinics"] then
+        self:giveAdvice({_A.warnings.queues_too_long})
+        break
+      end
+    end
+  end
 end
 
 --! Make players aware of the need for a receptionist and desk.
