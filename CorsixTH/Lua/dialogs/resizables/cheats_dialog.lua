@@ -122,11 +122,13 @@ function UICheats:buttonClicked(num)
     --TODO: Prevent selectx.wav playing with this
     return self.ui:playSound("wrong2.wav")
   end
-  if self.cheats:performCheat(num) then
+  local success, message = self.cheats:performCheat(num)
+  if success then
     self.cheats.announceCheat(self.ui)
     self:updateCheatedStatus()
-  else
-    self.ui:addWindow(UIInformation(self.ui, {_S.information.cheat_not_possible}))
+  end
+  if message then
+    self.ui:addWindow(UIInformation(self.ui, {message or _S.information.cheat_not_possible}))
   end
 end
 

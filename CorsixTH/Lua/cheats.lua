@@ -39,8 +39,10 @@ function Cheats:Cheats(hospital)
     {name = "emergency",      func = self.cheatEmergency},
     {name = "show_infected",  func = self.cheatShowInfected},
     {name = "epidemic",       func = self.cheatEpidemic},
-    {name = "vip",            func = self.cheatVip},
+    {name = "toggle_epidemic", func = self.cheatToggleEpidemic},
     {name = "earthquake",     func = self.cheatEarthquake},
+    {name = "toggle_earthquake", func = self.cheatToggleEarthquake},
+    {name = "vip",            func = self.cheatVip},
     {name = "create_patient", func = self.cheatPatient},
     {name = "end_month",      func = self.cheatMonth},
     {name = "end_year",       func = self.cheatYear},
@@ -59,9 +61,11 @@ end
 --! Performs a cheat from the cheat_list (menu cheats)
 --!param num (integer) The cheat from the cheat_list called
 --!return true if cheat was successful, false otherwise
+--!return message (optional string) The text message of the cheat.
 function Cheats:performCheat(num)
-  local cheat_success = self.cheat_list[num].func(self) ~= false
-  return cheat_success and self.cheat_list[num].name ~= "lose_level"
+  local cheat_success, message = self.cheat_list[num].func(self)
+  cheat_success = cheat_success ~= false
+  return cheat_success and self.cheat_list[num].name ~= "lose_level", message
 end
 
 --! Updates the cheated status of the player, with a matching announcement
@@ -93,11 +97,10 @@ end
 
 function Cheats:cheatEmergency()
   local err = self.hospital:createEmergency()
-  local ui = self.hospital.world.ui
   if err == "undiscovered_disease" then
-    ui:addWindow(UIInformation(ui, {_S.misc.cant_treat_emergency}))
+    return false, _S.misc.cant_treat_emergency
   elseif err == "no_heliport" then
-    ui:addWindow(UIInformation(ui, {_S.misc.no_heliport}))
+    return false, _S.misc.no_heliport
   -- else 'err == nil', meaning success. The case doesn't need special handling
   end
 end
@@ -124,15 +127,43 @@ end
 
 --[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
 function Cheats:cheatEpidemic()
-  self.hospital:spawnContagiousPatient()
+  if not self.hospital.epidemics_disabled then
+    return self.hospital:spawnContagiousPatient()
+  end
+end
+
+--! Toggles the possibility of epidemics
+function Cheats:cheatToggleEpidemic()
+  local hosp, msg = self.hospital
+  if hosp.epidemics_disabled then
+    msg = _S.misc.epidemics_on
+  else
+    msg = _S.misc.epidemics_off
+  end
+  hosp.epidemics_disabled = not hosp.epidemics_disabled
+  return true, msg
+end
+
+function Cheats:cheatEarthquake()
+  if not self.hospital.earthquakes_disabled then
+    self.hospital.world:createEarthquake()
+  end
+end
+
+--! Toggles the possibility of earthquakes
+function Cheats:cheatToggleEarthquake()
+  local world, msg = self.hospital.world
+  if world.earthquakes_disabled then
+    msg = _S.misc.earthquakes_on
+  else
+    msg = _S.misc.earthquakes_off
+  end
+  world.earthquakes_disabled = not world.earthquakes_disabled
+  return true, msg
 end
 
 function Cheats:cheatVip()
   self.hospital:createVip()
-end
-
-function Cheats:cheatEarthquake()
-  return self.hospital.world:createEarthquake()
 end
 
 function Cheats:cheatPatient()
