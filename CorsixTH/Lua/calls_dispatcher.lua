@@ -121,12 +121,6 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   end
 
   if not manual and urgent then
-    local room = object:getRoom()
-    local sound = room.room_info.handyman_call_sound
-    if sound then
-      ui:playAnnouncement(sound, AnnouncementPriority.High)
-      ui:playSound("machwarn.wav")
-    end
     message = _A.warnings.machines_falling_apart
   end
   if message then
