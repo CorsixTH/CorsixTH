@@ -1096,6 +1096,10 @@ function UI:afterLoad(old, new)
     self.editing_allowed = true
   end
   self:setupGlobalKeyHandlers()
+
+  -- Cancel any saved screen movement from edge scrolling
+  self.tick_scroll_amount_mouse = nil
+
   Window.afterLoad(self, old, new)
 end
 
