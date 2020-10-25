@@ -34,6 +34,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   self.adviser_data = { -- Variables handling player advice.
     temperature_advice = nil, -- Whether the player received advice about room temp.
     reception_advice = nil, -- Whether advice was given about building the reception.
+    cured_died_message = nil, -- Whether the adviser reported about a cure or death.
 
     sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
     sitting_index = 1 -- Next entry in 'sitting_ratios' to update.
@@ -281,6 +282,7 @@ end
 --!param rnd_frac (optional float in range (0, 1]) Fraction of times that the
 --    call actually says something.
 --!param stay_up (bool) If true, let the adviser remain visible afterwards.
+--!return (boolean) Whether a message was given to the user.
 function PlayerHospital:giveAdvice(msgs, rnd_frac, stay_up)
   local max_rnd = #msgs
   if rnd_frac and rnd_frac > 0 and rnd_frac < 1 then
@@ -289,7 +291,43 @@ function PlayerHospital:giveAdvice(msgs, rnd_frac, stay_up)
   end
 
   local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
-  if index <= #msgs then self.world.ui.adviser:say(msgs[index], stay_up) end
+  if index <= #msgs then
+    self.world.ui.adviser:say(msgs[index], stay_up)
+    return true
+  end
+  return false
+end
+
+--! Give the user possibly a message about a cured patient.
+function PlayerHospital:msgCured()
+  self.world.ui:playSound("cheer.wav") -- This sound is always heard
+
+  if self.num_cured < 1 then -- First cure is always reported.
+    self:giveAdvice({_A.information.first_cure})
+
+  elseif self.num_cured > 1 and not self.adviser_data.cured_died_message then
+    local cured_msgs = {
+      _A.level_progress.another_patient_cured:format(self.num_cured),
+      _A.praise.patients_cured:format(self.num_cured)
+    }
+    self.adviser_data.cured_died_message = self:giveAdvice(cured_msgs, 2/15)
+  end
+end
+
+--! Give the user possibly a message about a dead patient.
+function PlayerHospital:msgKilled()
+  self.world.ui:playSound("boo.wav") -- this sound is always heard
+
+  if self.num_deaths < 1 then -- First death is always reported.
+    self:giveAdvice({_A.information.first_death})
+
+  elseif self.num_deaths > 1 and not self.adviser_data.cured_died_message then
+    local died_msgs = {
+      _A.warnings.many_killed:format(self.num_deaths),
+      _A.level_progress.another_patient_killed:format(self.num_deaths)
+    }
+    self.adviser_data.cured_died_message = self:giveAdvice(died_msgs, 6/10)
+  end
 end
 
 --! Called at the end of each day.
@@ -308,6 +346,7 @@ function PlayerHospital:onEndMonth()
   if self:hasStaffedDesk() then
     self:monthlyAdviceChecks()
   end
+  self.adviser_data.cured_died_message = nil -- Enable the message again.
 
   Hospital.onEndMonth(self)
 end
@@ -327,6 +366,9 @@ function PlayerHospital:afterLoad(old, new)
   if old < 147 then
     -- Copy value of the previous name of the variable.
     self.adviser_data.reception_advice = self.receptionist_msg
+  end
+  if old < 148 then
+    self.adviser_data.cured_died_message = nil
   end
 
   Hospital.afterLoad(self, old, new)

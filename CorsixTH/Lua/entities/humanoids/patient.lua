@@ -312,21 +312,11 @@ function Patient:cure()
   self.attributes["health"] = 1
 end
 
+--! Patient died, process the event.
 function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up.
-  local hospital = self.hospital
-
-  if hospital.num_deaths < 1 then
-    self.world.ui.adviser:say(_A.information.first_death)
-  end
-  hospital:humanoidDeath(self)
-  if not self.is_debug then
-    local casebook = hospital.disease_casebook[self.disease.id]
-    casebook.fatalities = casebook.fatalities + 1
-  end
-  hospital:msgKilled()
+  self.hospital:humanoidDeath(self)
   self:setMood("dead", "activate")
-  self.world.ui:playSound("boo.wav") -- this sound is always heard
 
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
@@ -336,9 +326,6 @@ function Patient:die()
     self:queueAction(MeanderAction():setCount(1))
   else
     self:setNextAction(MeanderAction():setCount(1))
-  end
-  if self.is_emergency then
-    hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction(DieAction())
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
@@ -472,10 +459,8 @@ function Patient:goHome(reason, disease_id)
   if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
-    self.world.ui:playSound("cheer.wav") -- This sound is always heard
     self.hospital:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
-    self.hospital:msgCured()
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")

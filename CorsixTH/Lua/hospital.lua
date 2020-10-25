@@ -120,7 +120,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
-  self.msg_counter = 0
   self.population = 0.25 -- TODO: Percentage showing how much of
   -- the total population that goes to the player's hospital,
   -- used for one of the goals. Change when competitors are there.
@@ -257,31 +256,14 @@ function Hospital:Hospital(world, avail_rooms, name)
   end
 end
 
---! Messages regarding numbers cured and killed
+--! Give the user possibly a message about a cured patient.
 function Hospital:msgCured()
-  local msg_chance = math.random(1, 15)
-  if self.num_cured > 1 then
-    if msg_chance == 3 and self.msg_counter > 10 then
-      self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
-      self.msg_counter = 0
-    elseif msg_chance == 12 and self.msg_counter > 10 then
-      self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
-      self.msg_counter = 0
-    end
-  end
+  -- Nothing to do, override in a derived class.
 end
---! So the messages don't show too often there will need to be at least 10 days before one can show again.
+
+--! Give the user possibly a message about a dead patient.
 function Hospital:msgKilled()
-  local msg_chance = math.random(1, 10)
-  if self.num_deaths > 1 then
-    if msg_chance < 4 and self.msg_counter > 10 then
-      self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
-      self.msg_counter = 0
-    elseif msg_chance > 7 and self.msg_counter > 10 then
-      self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
-      self.msg_counter = 0
-    end
-  end
+  -- Nothing to do, override in a derived class.
 end
 
 --! Update the loaded game with version 'old' to the version 'new'.
@@ -535,9 +517,6 @@ function Hospital:afterLoad(old, new)
   if old < 56 then
     self.research_dep_built = false
   end
-  if old < 76 then
-    self.msg_counter = 0
-  end
   if old < 84 then
     self.vip_declined = 0
   end
@@ -616,6 +595,9 @@ function Hospital:afterLoad(old, new)
   if old < 147 then
     self.patientcount = nil
     self.receptionist_msg = nil
+  end
+  if old < 148 then
+    self.msg_counter = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -878,7 +860,6 @@ function Hospital:onEndDay()
   self.research:researchCost()
 
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
-  self.msg_counter = self.msg_counter + 1
   if self.balance < 0 then
     -- TODO: Add the extra interest rate to level configuration.
     local overdraft_interest = self.interest_rate + 0.02
@@ -1564,12 +1545,24 @@ function Hospital:addPatient(patient)
   self:determineIfContagious(patient)
 end
 
-function Hospital:humanoidDeath(humanoid)
+--! Humanoid has died, record the incident.
+--!param patient The deceased.
+function Hospital:humanoidDeath(patient)
+  self:msgKilled()
+
+  if not patient.is_debug then
+    local case = self.disease_casebook[patient.disease.id]
+    case.fatalities = case.fatalities + 1
+  end
   self.num_deaths = self.num_deaths + 1
   self.num_deaths_this_year = self.num_deaths_this_year + 1
 
-  self:changeReputation("death", humanoid.disease)
+  self:changeReputation("death", patient.disease)
   self:updatePercentages()
+
+  if patient.is_emergency then
+    self.emergency.killed_emergency_patients = self.emergency.killed_emergency_patients + 1
+  end
 end
 
 --! Checks if the hospital employs staff of a given category.
@@ -1826,13 +1819,12 @@ end
 --! Update the 'cured' counts of the hospital.
 --!param patient Patient that was cured.
 function Hospital:updateCuredCounts(patient)
+  self:msgCured()
+
   if not patient.is_debug then
     self:changeReputation("cured", patient.disease)
   end
 
-  if self.num_cured < 1 then
-    self.world.ui.adviser:say(_A.information.first_cure)
-  end
   self.num_cured = self.num_cured + 1
   self.num_cured_ty = self.num_cured_ty + 1
 
