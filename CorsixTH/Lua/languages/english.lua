@@ -824,6 +824,8 @@ cheats_window = {
     win_level = "Win Level",
     increase_prices = "Increase prices",
     decrease_prices = "Decrease prices",
+    reset_death_count = "Reset death count",
+    max_reputation = "Max reputation",
   },
   close = "Close",
 }
@@ -845,6 +847,8 @@ tooltip.cheats_window = {
     win_level = "Win the current level",
     increase_prices = "Increase all prices by 50% (max. 200%)",
     decrease_prices = "Decrease all prices by 50% (min. 50%)",
+    reset_death_count = "Reset the hospital death count to zero",
+    max_reputation = "Set the hospital reputation to the maximum",
   }
 }
 

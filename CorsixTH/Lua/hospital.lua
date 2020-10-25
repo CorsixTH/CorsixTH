@@ -2391,6 +2391,13 @@ function Hospital:hadPatients()
   return self.num_visitors > 0
 end
 
+--! Reset the death counts. This is used by a cheat to reset key lose conditions.
+function Hospital:resetDeathCount()
+  self.num_deaths = 0
+  self.num_deaths_this_year = 0
+  self.statistics.deaths = 0
+end
+
 ---- Stubs section - these functions have nothing to do here, are overridden in a derived class.
 
 --! Give advice to the user about the need to buy the first reception desk.

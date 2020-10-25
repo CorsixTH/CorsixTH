@@ -49,6 +49,8 @@ function Cheats:Cheats(hospital)
     {name = "win_level",      func = self.cheatWin},
     {name = "increase_prices", func = self.cheatIncreasePrices},
     {name = "decrease_prices", func = self.cheatDecreasePrices},
+    {name = "reset_death_count", func = self.cheatResetDeathCount},
+    {name = "max_reputation",  func = self.cheatMaxReputation},
   }
 
   self.active_cheats = {} -- Toggle cheat status
@@ -275,4 +277,13 @@ function Cheats:toggleCheat(name)
   if cheatWindow then
     cheatWindow:updateCheatedStatus()
   end
+end
+
+function Cheats:cheatResetDeathCount()
+  self.hospital:resetDeathCount()
+end
+
+function Cheats:cheatMaxReputation()
+  local hosp = self.hospital
+  hosp:unconditionalChangeReputation(hosp.reputation_max)
 end
