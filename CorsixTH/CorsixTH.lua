@@ -9,6 +9,12 @@ if (package and package.preload and package.preload.TH) == nil then
   error "This file must be invoked by the CorsixTH executable"
 end
 
+-- Set a large enough cstacklimit to load complex saves in stack based
+-- versions of lua, such as 5.4.[01]
+if debug.setcstacklimit then
+  debug.setcstacklimit(30000)
+end
+
 -- Parse script parameters:
 local run_debugger = false
 for _, arg in ipairs({...}) do
