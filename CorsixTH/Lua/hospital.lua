@@ -259,40 +259,12 @@ end
 
 --! Give the user possibly a message about a cured patient.
 function Hospital:msgCured()
-  self.world.ui:playSound("cheer.wav") -- This sound is always heard
-
-  if self.num_cured < 1 then -- First cure is always reported.
-    self.world.ui.adviser:say(_A.information.first_cure)
-
-  elseif self.num_cured > 1 and self.msg_counter > 10 then
-    local msg_chance = math.random(1, 15)
-    if msg_chance == 3 then
-      self.world.ui.adviser:say(_A.level_progress.another_patient_cured:format(self.num_cured))
-      self.msg_counter = 0
-    elseif msg_chance == 12 then
-      self.world.ui.adviser:say(_A.praise.patients_cured:format(self.num_cured))
-      self.msg_counter = 0
-    end
-  end
+  -- Nothing to do, override in a derived class.
 end
 
 --! Give the user possibly a message about a dead patient.
 function Hospital:msgKilled()
-  self.world.ui:playSound("boo.wav") -- this sound is always heard
-
-  if self.num_deaths < 1 then -- First death is always reported.
-    self.world.ui.adviser:say(_A.information.first_death)
-
-  elseif self.num_deaths > 1 and self.msg_counter > 10 then
-    local msg_chance = math.random(1, 10)
-    if msg_chance < 4 then
-      self.world.ui.adviser:say(_A.warnings.many_killed:format(self.num_deaths))
-      self.msg_counter = 0
-    elseif msg_chance > 7 then
-      self.world.ui.adviser:say(_A.level_progress.another_patient_killed:format(self.num_deaths))
-      self.msg_counter = 0
-    end
-  end
+  -- Nothing to do, override in a derived class.
 end
 
 --! Update the loaded game with version 'old' to the version 'new'.
