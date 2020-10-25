@@ -106,12 +106,18 @@ inline int luaT_load(lua_State* L, lua_Reader r, void* d, const char* s,
 #endif
 }
 
-// Compatibility for missing from argument on lua_resume in 5.1
-inline int luaT_resume(lua_State* L, lua_State* f, int n) {
-#if LUA_VERSION_NUM >= 502
-  return lua_resume(L, f, n);
+// Compatibility for older versions of lua_resume
+inline int luaT_resume(lua_State* L, lua_State* f, int n, int *nresults) {
+#if LUA_VERSION_NUM >= 504
+  return lua_resume(L, f, n, nresults);
+#elif LUA_VERSION_NUM >= 502
+  int res = lua_resume(L, f, n);
+  *nresults = lua_gettop(L);
+  return res;
 #else
-  return lua_resume(L, n);
+  int res = lua_resume(L, n);
+  *nresults = lua_gettop(L);
+  return res;
 #endif
 }
 
