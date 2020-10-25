@@ -1284,7 +1284,7 @@ end
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
-  if patient.is_emergency or not patient.disease.contagious then
+  if patient.is_emergency or not patient.disease.contagious or self.epidemics_off then
     return false
   end
   -- ContRate treated like a percentage with ContRate% of patients with

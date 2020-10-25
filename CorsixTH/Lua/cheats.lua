@@ -39,9 +39,11 @@ function Cheats:Cheats(hospital)
     {name = "all_research",   func = self.cheatResearch},
     {name = "emergency",      func = self.cheatEmergency},
     {name = "epidemic",       func = self.cheatEpidemic},
+    {name = "toggle_epidemic", func = self.cheatToggleEpidemic},
     {name = "toggle_infected", func = self.cheatToggleInfected},
     {name = "vip",            func = self.cheatVip},
     {name = "earthquake",     func = self.cheatEarthquake},
+    {name = "toggle_earthquake", func = self.cheatToggleEarthquake},
     {name = "create_patient", func = self.cheatPatient},
     {name = "end_month",      func = self.cheatMonth},
     {name = "end_year",       func = self.cheatYear},
@@ -93,9 +95,21 @@ function Cheats:cheatEmergency()
   end
 end
 
+--! Toggles the possibility of epidemics
+function Cheats:cheatToggleEpidemic()
+  local hosp = self.hospital
+  local ui = hosp.world.ui
+  if hosp.epidemics_disabled then
+    ui:addWindow(UIInformation(ui, {_S.adviser.cheats.epidemics_on}))
+  else
+    ui:addWindow(UIInformation(ui, {_S.adviser.cheats.epidemics_off}))
+  end
+  hosp.epidemics_disabled = not hosp.epidemics_disabled
+end
+
 --[[ Creates a new contagious patient in the hospital - potentially an epidemic]]
 function Cheats:cheatEpidemic()
-  self.hospital:spawnContagiousPatient()
+  return not self.hospital.epidemics_disabled and self.hospital:spawnContagiousPatient()
 end
 
 --[[ Before an epidemic has been revealed toggle the infected icons
@@ -122,8 +136,20 @@ function Cheats:cheatVip()
   self.hospital:createVip()
 end
 
+--! Toggles the possibility of earthquakes
+function Cheats:cheatToggleEarthquake()
+  local world = self.hospital.world
+  local ui = world.ui
+  if world.earthquakes_disabled then
+    ui:addWindow(UIInformation(ui, {_S.adviser.cheats.earthquakes_on}))
+  else
+    ui:addWindow(UIInformation(ui, {_S.adviser.cheats.earthquakes_off}))
+  end
+  world.earthquakes_disabled = not world.earthquakes_disabled
+end
+
 function Cheats:cheatEarthquake()
-  return self.hospital.world:createEarthquake()
+  return not self.hospital.earthquakes_disabled and self.hospital.world:createEarthquake()
 end
 
 function Cheats:cheatPatient()

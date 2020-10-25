@@ -1417,17 +1417,18 @@ end
 
 -- Earthquake override from cheat menu
 function World:createEarthquake()
-  --make sure an earthquake isn't already happening
-  if not self.next_earthquake.active then
-    self.next_earthquake.start_day = self.game_date:dayOfMonth()
-    self.next_earthquake.start_month = self.game_date:monthOfGame()
-    if self.next_earthquake.size == nil then
-      --forcefully make an earthquake if none left in level file
-      self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
-      self.next_earthquake.remaining_damage = self.next_earthquake.size
-      self.next_earthquake.damage_timer = earthquake_damage_time
-      self.next_earthquake.warning_timer = earthquake_warning_period
-    end
+  -- Make sure an earthquake isn't already happening, or if they're turned off in cheats
+  if self.next_earthquake.active or self.earthquakes_disabled then
+    return
+  end
+  self.next_earthquake.start_day = self.game_date:dayOfMonth()
+  self.next_earthquake.start_month = self.game_date:monthOfGame()
+  if self.next_earthquake.size == nil then
+    --forcefully make an earthquake if none left in level file
+    self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
+    self.next_earthquake.remaining_damage = self.next_earthquake.size
+    self.next_earthquake.damage_timer = earthquake_damage_time
+    self.next_earthquake.warning_timer = earthquake_warning_period
   end
 end
 
