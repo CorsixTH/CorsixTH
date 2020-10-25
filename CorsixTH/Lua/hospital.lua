@@ -2431,3 +2431,10 @@ end
 function Hospital:announceRepair()
   -- Nothing to do, override in a derived class.
 end
+
+--! Reset the death counts (key losing conditions)
+function Hospital:resetDeathCount()
+  self.num_deaths = 0
+  self.num_deaths_this_year = 0
+  self.statistics.deaths = 0
+end

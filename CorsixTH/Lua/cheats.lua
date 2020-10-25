@@ -51,6 +51,8 @@ function Cheats:Cheats(hospital)
     {name = "win_level",      func = self.cheatWin},
     {name = "increase_prices", func = self.cheatIncreasePrices},
     {name = "decrease_prices", func = self.cheatDecreasePrices},
+    {name = "reset_death_count", func = self.cheatResetDeathCount},
+    {name = "max_reputation",  func = self.cheatMaxReputation},
   }
 end
 
@@ -194,4 +196,12 @@ function Cheats:cheatDecreasePrices()
       casebook.price = new_price
     end
   end
+end
+
+function Cheats:cheatResetDeathCount()
+  self.hospital:resetDeathCount()
+end
+
+function Cheats:cheatMaxReputation()
+  self.hospital:unconditionalChangeReputation(1000)
 end
