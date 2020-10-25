@@ -120,7 +120,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
   self.percentage_killed = 0
-  self.msg_counter = 0
   self.population = 0.25 -- TODO: Percentage showing how much of
   -- the total population that goes to the player's hospital,
   -- used for one of the goals. Change when competitors are there.
@@ -518,9 +517,6 @@ function Hospital:afterLoad(old, new)
   if old < 56 then
     self.research_dep_built = false
   end
-  if old < 76 then
-    self.msg_counter = 0
-  end
   if old < 84 then
     self.vip_declined = 0
   end
@@ -599,6 +595,9 @@ function Hospital:afterLoad(old, new)
   if old < 147 then
     self.patientcount = nil
     self.receptionist_msg = nil
+  end
+  if old < 148 then
+    self.msg_counter = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
@@ -861,7 +860,6 @@ function Hospital:onEndDay()
   self.research:researchCost()
 
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
-  self.msg_counter = self.msg_counter + 1
   if self.balance < 0 then
     -- TODO: Add the extra interest rate to level configuration.
     local overdraft_interest = self.interest_rate + 0.02
