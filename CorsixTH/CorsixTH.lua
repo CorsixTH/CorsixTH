@@ -82,7 +82,7 @@ end
 
 -- Check Lua version
 if _VERSION ~= "Lua 5.1" then
-  if _VERSION == "Lua 5.2" or _VERSION == "Lua 5.3" then
+  if _VERSION == "Lua 5.2" or _VERSION == "Lua 5.3" or _VERSION == "Lua 5.4" then
     -- Compatibility: Keep the global unpack function
     unpack = table.unpack
     -- Compatibility: Provide a replacement for deprecated ipairs()
