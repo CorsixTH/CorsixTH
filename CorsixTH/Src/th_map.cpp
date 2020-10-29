@@ -1319,8 +1319,8 @@ namespace {
     \param ratio Weight of the old node temperature, \c N-1 parts of
         the node temperature and \c 1 part of the external temperature.
 */
-void merge_temperatures(map_tile& node, size_t temp_idx,
-                        uint32_t other_temp, double ratio) {
+void merge_temperatures(map_tile& node, size_t temp_idx, uint32_t other_temp,
+                        double ratio) {
   const uint32_t node_temp = node.aiTemperature[temp_idx];
   node.aiTemperature[temp_idx] =
       static_cast<uint16_t>(((node_temp * (ratio - 1)) + other_temp) / ratio);
@@ -1364,21 +1364,20 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
       }
       if (hasRadiator) {
         iMergeTemp = iRadiatorTemperature;
-        mergeRatio = 2; // Merge 50% against radiator temperature.
+        mergeRatio = 2;  // Merge 50% against radiator temperature.
       } else {
         iMergeTemp = 0;
-        mergeRatio = 1000; // Generally dissipate 0.1% of temperature.
+        mergeRatio = 1000;  // Generally dissipate 0.1% of temperature.
       }
     } else {
       iMergeTemp = iAirTemperature;
-      mergeRatio = 100; // Merge 1% against air temperature.
+      mergeRatio = 100;  // Merge 1% against air temperature.
     }
 
     // Diffuse 25% with neighbours
     pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
     if (iNeighbourCount != 0) {
-      merge_temperatures(
-          *pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
+      merge_temperatures(*pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
     }
 
     merge_temperatures(*pNode, iNewTemp, iMergeTemp, mergeRatio);
