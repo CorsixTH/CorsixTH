@@ -26,8 +26,6 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
 endif()
 
-add_library(CorsixTH_lib STATIC)
-
 # Declaration of the executable
 if(APPLE)
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
@@ -48,6 +46,13 @@ else()
   add_executable(CorsixTH)
 endif()
 
+# Ensure config.h is picked up by cmake - moving this into subdir cmake files will
+# prevent it applying to the CorsixTH project
+set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
+
+target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
+
 target_link_libraries(CorsixTH_lib RncLib)
 target_link_libraries(CorsixTH CorsixTH_lib)
 
@@ -59,10 +64,6 @@ endif()
 # Note: Done after generating targets
 add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
-
-# Ensure config.h is picked up by cmake - moving this into subdir cmake files will
-# prevent it applying to the CorsixTH project
-target_include_directories(CorsixTH_lib PUBLIC ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Set language standard
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
