@@ -1311,10 +1311,18 @@ uint32_t level_map::thermal_neighbour(uint32_t& iNeighbourSum, bool canTravel,
 
 namespace {
 
-void merge_temperatures(map_tile& node, size_t new_temp_idx,
-                        uint32_t other_temp, double ratio) {
-  const uint32_t node_temp = node.aiTemperature[new_temp_idx];
-  node.aiTemperature[new_temp_idx] =
+//! Merge temperature at a tile with the external merge temperature.
+/*!
+    \param node Tile node to update.
+    \param temp_idx Index of the temperature to update at the tile.
+    \param other_temp External temperature to merge.
+    \param ratio Weight of the old node temperature, \c N-1 parts of
+        the node temperature and \c 1 part of the external temperature.
+*/
+void merge_temperatures(map_tile& node, size_t temp_idx, uint32_t other_temp,
+                        double ratio) {
+  const uint32_t node_temp = node.aiTemperature[temp_idx];
+  node.aiTemperature[temp_idx] =
       static_cast<uint16_t>(((node_temp * (ratio - 1)) + other_temp) / ratio);
 }
 
@@ -1344,37 +1352,35 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
     iNeighbourCount += thermal_neighbour(
         iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
 
-    uint32_t iRadiatorNumber = 0;
-    // Merge 1% against air temperature
-    // or 50% against radiator temperature
-    // or generally dissipate 0.1% of temperature.
     uint32_t iMergeTemp = 0;
-    double iMergeRatio = 100;
+    double mergeRatio = 100;
     if (pNode->flags.hospital) {
+      bool hasRadiator = false;
       for (auto thob : pNode->objects) {
         if (thob == object_type::radiator) {
-          iRadiatorNumber++;
+          hasRadiator = true;
+          break;
         }
       }
-      if (iRadiatorNumber > 0) {
+      if (hasRadiator) {
         iMergeTemp = iRadiatorTemperature;
-        iMergeRatio = 2 - (iRadiatorNumber - 1) * 0.5;
+        mergeRatio = 2;  // Merge 50% against radiator temperature.
       } else {
-        iMergeRatio = 1000;
+        iMergeTemp = 0;
+        mergeRatio = 1000;  // Generally dissipate 0.1% of temperature.
       }
     } else {
       iMergeTemp = iAirTemperature;
+      mergeRatio = 100;  // Merge 1% against air temperature.
     }
 
     // Diffuse 25% with neighbours
     pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
     if (iNeighbourCount != 0) {
-      merge_temperatures(
-          *pNode, iNewTemp, iNeighbourSum / iNeighbourCount,
-          4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
+      merge_temperatures(*pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
     }
 
-    merge_temperatures(*pNode, iNewTemp, iMergeTemp, iMergeRatio);
+    merge_temperatures(*pNode, iNewTemp, iMergeTemp, mergeRatio);
   }
 }
 
