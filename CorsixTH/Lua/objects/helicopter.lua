@@ -47,7 +47,7 @@ function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
   self:Object(world, object_type, x, y, direction, etc)
   self.th:makeInvisible()
   self:setPosition(0, -600)
-  self.phase = -60
+  self.phase = -120
   self.hospital = hospital
   -- TODO: Shadow: 3918
   hospital.emergency_patients = {}
@@ -61,7 +61,7 @@ function Helicopter:tick()
   elseif phase == 60 then
     self:setSpeed(0, 0)
     self.spawned_patients = 0
-  elseif phase == 80 then
+  elseif phase == 85 then
     if self.spawned_patients < self.hospital.emergency.victims then
       self:spawnPatient()
       phase = 60
@@ -82,17 +82,22 @@ function Helicopter:spawnPatient()
   local patient = self.world:newEntity("Patient", 2)
   patient:setDisease(hospital.emergency.disease)
   patient.diagnosis_progress = 1
+  patient.is_emergency = self.spawned_patients
   patient:setDiagnosed()
   patient:setMood("emergency", "activate")
-  patient.is_emergency = self.spawned_patients
-  hospital.emergency_patients[#hospital.emergency_patients + 1] = patient
+  hospital.emergency_patients[self.spawned_patients] = patient
   local x, y = hospital:getHeliportSpawnPosition()
   patient:setNextAction(SpawnAction("spawn", {x = x, y = y}):setOffset({y = 1}))
   patient:setHospital(hospital)
   -- TODO: If new combined diseases are added this will not work correctly anymore.
   patient.cure_rooms_visited = #patient.disease.treatment_rooms - 1
   local no_of_rooms = #patient.disease.treatment_rooms
-  patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[no_of_rooms]))
+  -- a spawning emergency patient might rather leave than pay
+  if not patient:agreesToPay(patient.disease.id) then
+    patient:goHome("over_priced", patient.disease.id)
+  else
+    patient:queueAction(SeekRoomAction(patient.disease.treatment_rooms[no_of_rooms]))
+  end
 end
 
 return object

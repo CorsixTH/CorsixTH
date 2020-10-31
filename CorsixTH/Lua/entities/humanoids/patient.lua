@@ -459,12 +459,12 @@ function Patient:goHome(reason, disease_id)
   if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
-    self.hospital:updateCuredCounts(self)
+    hosp:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
-    self.hospital:updateNotCuredCounts(self, reason)
+    hosp:updateNotCuredCounts(self, reason)
 
   elseif reason == "over_priced" then
     self:setMood("sad_money", "activate")
@@ -472,13 +472,13 @@ function Patient:goHome(reason, disease_id)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
     self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
-    self.hospital:updateNotCuredCounts(self, reason)
+    hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
+    self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
 
   elseif reason == "evacuated" then
     self:clearDynamicInfo()
-    self:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
+    self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.epidemic_sent_home})
     self:setMood("exit","activate")
 
   else
@@ -499,6 +499,11 @@ function Patient:goHome(reason, disease_id)
   -- Remove any vaccination calls from patient
   if not self.vaccinated then
     self.world.dispatcher:dropFromQueue(self)
+  end
+
+  -- allow timer to end early and after going_home is set
+  if self.is_emergency then
+    hosp:checkEmergencyOver()
   end
 
   local room = self:getRoom()
@@ -936,7 +941,11 @@ function Patient:updateDynamicInfo(action_string)
       -- The cure was guessed
       info = _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)
     else
-      info = _S.dynamic_info.patient.diagnosed:format(self.disease.name)
+      if self.is_emergency then
+        info = _S.dynamic_info.patient.emergency:format(self.disease.name)
+      else
+        info = _S.dynamic_info.patient.diagnosed:format(self.disease.name)
+      end
     end
     self:setDynamicInfo('progress', nil)
   else
@@ -960,6 +969,8 @@ function Patient:updateDynamicInfo(action_string)
     elseif self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
+    else
+      self:setDynamicInfo('text', {action_string, "", info})
     end
   else
     self:setDynamicInfo('text', {action_string, "", info})

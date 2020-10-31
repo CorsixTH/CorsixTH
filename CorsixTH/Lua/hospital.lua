@@ -1116,7 +1116,8 @@ function Hospital:resolveEmergency()
   local emer = self.emergency
   local rescued_patients = emer.cured_emergency_patients
   for _, patient in ipairs(self.emergency_patients) do
-    if patient and not patient.cured and not patient.dead and not patient:getRoom() then
+    if patient and not patient.cured and not patient.dead
+        and not patient.going_home and not patient:getRoom() then
       patient:die()
     end
   end
@@ -1851,6 +1852,11 @@ function Hospital:updateNotCuredCounts(patient, reason)
   if reason == "kicked" then
     local casebook = self.disease_casebook[patient.disease.id]
     casebook.turned_away = casebook.turned_away + 1
+  end
+
+  -- though not killed allows timer to close early
+  if patient.is_emergency then
+    self.emergency.killed_emergency_patients = self.emergency.killed_emergency_patients + 1
   end
 end
 
