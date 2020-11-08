@@ -28,8 +28,11 @@ add_custom_target(AllTests)
 include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 add_executable(UnitTests "")
-target_link_libraries(UnitTests Catch2::Catch2)
-target_link_libraries(UnitTests CorsixTH_lib)
+target_link_libraries(UnitTests
+  Catch2::Catch2
+  CorsixTH_lib
+  ${LUA_LIBRARY}
+  ${CMAKE_DL_LIBS})
 
 set_property(TARGET UnitTests PROPERTY CXX_STANDARD 14)
 set_property(TARGET UnitTests PROPERTY CXX_EXTENSIONS OFF)
@@ -46,5 +49,9 @@ add_dependencies(AllTests UnitTests)
 target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/example.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
 )
+
+include(CTest)
+include(Catch)
+catch_discover_tests(UnitTests)

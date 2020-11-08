@@ -26,7 +26,7 @@ strict_declare_global "unpermanent"
 
 local th_getfenv
 local th_getupvalue
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
   th_getfenv = function(f)
     local _, val = nil, nil
     if type(f) == "function" then

@@ -33,6 +33,10 @@ local function create_date_mock_type()
     return left.value < right.value
   end
 
+  function date_mock_mt.__le(left, right)
+    return left.value <= right.value
+  end
+
   return date_mock.new
 end
 

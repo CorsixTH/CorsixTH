@@ -261,16 +261,17 @@ function Date_mt.__eq(one, other)
 end
 
 function Date_mt.__lt(one, other)
-  if one._year == other._year then
-    if one._month == other._month then
-      if one._day == other._day then
-        return one._hour < other._hour
-      end
-      return one._day < other._day
-    end
-    return one._month < other._month
-  end
-  return one._year < other._year
+  if one._year ~= other._year then return one._year < other._year end
+  if one._month ~= other._month then return one._month < other._month end
+  if one._day ~= other._day then return one._day < other._day end
+  return one._hour < other._hour
+end
+
+function Date_mt.__le(one, other)
+  if one._year ~= other._year then return one._year < other._year end
+  if one._month ~= other._month then return one._month < other._month end
+  if one._day ~= other._day then return one._day < other._day end
+  return one._hour <= other._hour
 end
 
 -- PRIVATE

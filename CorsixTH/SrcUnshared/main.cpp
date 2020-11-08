@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include <SDL.h>
 
+#include <cstdio>
 #include <stack>
 
 #include "../Src/bootstrap.h"
@@ -82,9 +83,9 @@ int main(int argc, char** argv) {
 
     L = luaL_newstate();
     if (L == nullptr) {
-      fprintf(stderr,
-              "Fatal error starting CorsixTH: "
-              "Cannot open Lua state.\n");
+      std::fprintf(stderr,
+                   "Fatal error starting CorsixTH: "
+                   "Cannot open Lua state.\n");
       return 0;
     }
     lua_atpanic(L, lua_panic);
@@ -102,16 +103,16 @@ int main(int argc, char** argv) {
     if (lua_pcall(L, argc, 0, 1) != 0) {
       const char* err = lua_tostring(L, -1);
       if (err != nullptr) {
-        fprintf(stderr, "%s\n", err);
+        std::fprintf(stderr, "%s\n", err);
       } else {
-        fprintf(stderr,
-                "An error has occurred in CorsixTH:\n"
-                "Uncaught non-string Lua error\n");
+        std::fprintf(stderr,
+                     "An error has occurred in CorsixTH:\n"
+                     "Uncaught non-string Lua error\n");
       }
       lua_pushcfunction(L, bootstrap_lua_error_report);
       lua_insert(L, -2);
       if (lua_pcall(L, 1, 0, 0) != 0) {
-        fprintf(stderr, "%s\n", lua_tostring(L, -1));
+        std::fprintf(stderr, "%s\n", lua_tostring(L, -1));
       }
     }
 
@@ -121,7 +122,7 @@ int main(int argc, char** argv) {
     cleanup(L);
 
     if (bRun) {
-      printf("\n\nRestarting...\n\n\n");
+      std::printf("\n\nRestarting...\n\n\n");
     }
   }
   return 0;

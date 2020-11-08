@@ -133,6 +133,7 @@ int l_get_key_modifiers(lua_State* L) {
 int l_mainloop(lua_State* L) {
   luaL_checktype(L, 1, LUA_TTHREAD);
   lua_State* dispatcher = lua_tothread(L, 1);
+  int resume_stack_size = 0;
 
   fps_ctrl* fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
   SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, nullptr);
@@ -261,20 +262,21 @@ int l_mainloop(lua_State* L) {
           break;
       }
       if (nargs != 0) {
-        if (luaT_resume(dispatcher, dispatcher, nargs) != LUA_YIELD) {
+        if (luaT_resume(dispatcher, L, nargs, &resume_stack_size) !=
+            LUA_YIELD) {
           goto leave_loop;
         }
         do_frame = do_frame || (lua_toboolean(dispatcher, 1) != 0);
-        lua_settop(dispatcher, 0);
+        lua_pop(dispatcher, resume_stack_size);
       }
     } while (SDL_PollEvent(&e) != 0);
     if (do_timer) {
       lua_pushliteral(dispatcher, "timer");
-      if (luaT_resume(dispatcher, dispatcher, 1) != LUA_YIELD) {
+      if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
         break;
       }
       do_frame = do_frame || (lua_toboolean(dispatcher, 1) != 0);
-      lua_settop(dispatcher, 0);
+      lua_pop(dispatcher, resume_stack_size);
     }
     if (do_frame || !fps_control->limit_fps) {
       do {
@@ -282,10 +284,10 @@ int l_mainloop(lua_State* L) {
           fps_control->count_frame();
         }
         lua_pushliteral(dispatcher, "frame");
-        if (luaT_resume(dispatcher, dispatcher, 1) != LUA_YIELD) {
+        if (luaT_resume(dispatcher, L, 1, &resume_stack_size) != LUA_YIELD) {
           goto leave_loop;
         }
-        lua_settop(dispatcher, 0);
+        lua_pop(dispatcher, resume_stack_size);
       } while (fps_control->limit_fps == false && SDL_PollEvent(nullptr) == 0);
     }
 
