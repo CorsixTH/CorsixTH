@@ -1111,7 +1111,7 @@ function Hospital:createEmergency(emergency)
       },
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2) -- automatically refuse after 16 days
-    return -- sucessfully created
+    return -- successfully created
   end
   return "no heliport"
 end
@@ -2067,8 +2067,8 @@ end
 --!param object The object needing attention
 --!param taskType The handyman task type: repairing, watering, cleaning
 --!param priority Task priority: 1 is low, 2 is high
---!param x co-ordinate
---!param y co-ordinate
+--!param x coordinate
+--!param y coordinate
 --!param call The call added to the dispatcher
 function Hospital:addHandymanTask(object, taskType, priority, x, y, call)
   local parcelId = self.world.map.th:getCellFlags(x, y).parcelId
