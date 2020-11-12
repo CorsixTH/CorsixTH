@@ -44,7 +44,7 @@ int l_isofs_set_root(lua_State* L) {
   const char* path = luaL_checkstring(L, 2);
   if (pSelf->initialise(path)) {
     lua_pushvalue(L, 2);
-    luaT_setenvfield(L, 1, "file");
+    luaT_setenvfield(L, 1, "string");
     lua_settop(L, 1);
     return 1;
   } else {
