@@ -45,6 +45,9 @@ enum class scaled_items;
 //! 32bpp ARGB colour. See #palette::pack_argb
 typedef uint32_t argb_colour;
 
+// Function that receives RGBA and a tick count and it applies a transformation
+typedef uint32_t (*transformation_function)(uint8_t, uint8_t, uint8_t, uint8_t, uint32_t);
+
 //! 8bpp palette class.
 class palette {
  public:  // External API
@@ -173,7 +176,7 @@ class full_colour_renderer {
       @return Decoding was successful.
   */
   void decode_image(const uint8_t* pImg, const ::palette* pPalette,
-                    uint32_t iSpriteFlags);
+                    uint32_t iSpriteFlags, transformation_function tFn = nullptr, uint32_t ticks = 0);
 
  private:
   //! Store a decoded pixel. Use x and y if necessary.
@@ -330,7 +333,7 @@ class render_target {
   SDL_Texture* create_palettized_texture(int iWidth, int iHeight,
                                          const uint8_t* pPixels,
                                          const ::palette* pPalette,
-                                         uint32_t iSpriteFlags) const;
+                                         uint32_t iSpriteFlags, transformation_function tFn = nullptr, uint32_t tickNumber = 0) const;
   SDL_Texture* create_texture(int iWidth, int iHeight,
                               const uint32_t* pPixels) const;
   void draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
@@ -524,7 +527,7 @@ class sprite_sheet {
       @param iFlags Flags to apply for drawing.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
-                   uint32_t iFlags);
+                   uint32_t iFlags, transformation_function tFn = nullptr, uint32_t tickNumber = 0);
 
   //! Test whether a sprite was hit.
   /*!

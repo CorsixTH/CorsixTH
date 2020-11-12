@@ -135,7 +135,7 @@ const uint32_t* palette::get_argb_data() const {
 
 void full_colour_renderer::decode_image(const uint8_t* pImg,
                                         const palette* pPalette,
-                                        uint32_t iSpriteFlags) {
+                                        uint32_t iSpriteFlags, transformation_function tFn, uint32_t ticks) {
   if (width <= 0) {
     throw std::logic_error("width cannot be <= 0 when decoding an image");
   }
@@ -159,6 +159,12 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
             iColour = makeGreyScale(0xFF, pImg[0], pImg[1], pImg[2]);
           else
             iColour = palette::pack_argb(0xFF, pImg[0], pImg[1], pImg[2]);
+
+          if (tFn != nullptr) {
+            std::cout << "Applying Transformation\n";
+            iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
+          }
+
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -176,6 +182,12 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
             iColour = makeGreyScale(iOpacity, pImg[0], pImg[1], pImg[2]);
           else
             iColour = palette::pack_argb(iOpacity, pImg[0], pImg[1], pImg[2]);
+
+          if (tFn != nullptr) {
+            std::cout << "Fixed partially transparent 32bpp pixels\n";
+            iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
+          }
+
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -196,12 +208,19 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 3:  // Recolour layer
       {
         uint8_t iTable = *pImg++;
+        uint32_t iColour;
         pImg++;  // Skip reading the opacity for now.
         if (iTable == 0xFF) {
           // Legacy sprite data. Use the palette to recolour the
           // layer. Note that the iOpacity is ignored here.
           while (iLength > 0) {
-            push_pixel(pColours[*pImg++]);
+            iColour = pColours[*pImg++];
+
+            if (tFn != nullptr) {
+              iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
+            }
+            
+            push_pixel(iColour);
             iLength--;
           }
         } else {
@@ -610,11 +629,12 @@ uint8_t* convertLegacySprite(const uint8_t* pPixelData,
 
 SDL_Texture* render_target::create_palettized_texture(
     int iWidth, int iHeight, const uint8_t* pPixels, const palette* pPalette,
-    uint32_t iSpriteFlags) const {
+    uint32_t iSpriteFlags, transformation_function tFn, uint32_t tickNumber) const {
   uint32_t* pARGBPixels = new uint32_t[iWidth * iHeight];
 
+  std::cout << "Creating palettized texture\n";
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
-  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
+  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags, tFn, tickNumber);
 
   SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
   delete[] pARGBPixels;
@@ -1020,7 +1040,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags) {
+                               int iY, uint32_t iFlags, transformation_function tFn, uint32_t tickNumber) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1033,7 +1053,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     uint32_t iSprFlags =
         (sprite.sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
     pTexture = target->create_palettized_texture(
-        sprite.width, sprite.height, sprite.data, palette, iSprFlags);
+        sprite.width, sprite.height, sprite.data, palette, iSprFlags, tFn, tickNumber);
     sprite.texture = pTexture;
   }
   if (iFlags & thdf_alt_palette) {

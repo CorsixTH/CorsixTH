@@ -80,6 +80,16 @@ enum draw_flags : uint32_t {
   thdf_crop = 1 << 13,
 };
 
+//! Animation Overlay Flags for drawing an overlay on top of all the frame
+enum animation_overlay_flags : uint32_t {
+  //! No Overlay
+  thaof_none = 0,
+  //! Serious Radiation Overlay
+  thaof_glowing = 1 << 0,
+  //! Jellyitis animation
+  thaof_jelly = 1 << 1,
+};
+
 /** Helper structure with parameters to create a #render_target. */
 struct render_target_creation_params {
   int width;               ///< Expected width of the render target.
@@ -331,7 +341,7 @@ class animation_manager {
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY,
-                  uint32_t iFlags) const;
+                  uint32_t iFlags, transformation_function tFn = nullptr, uint32_t tickNumber = 0) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -568,6 +578,8 @@ class animation : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
+  void set_overlay(animation_overlay_flags flags);
+
   animation_manager* get_animation_manager() { return manager; }
 
  private:
@@ -584,6 +596,10 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
+  bool tick_aware_overlay;
+  uint32_t tick_count;
+
+  void reset_tick_count();
 };
 
 class sprite_render_list : public animation_base {
