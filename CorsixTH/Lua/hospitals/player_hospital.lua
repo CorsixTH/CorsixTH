@@ -39,6 +39,8 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
     sitting_ratios = {}, -- Measurements of recent sitting/standing ratios.
     sitting_index = 1 -- Next entry in 'sitting_ratios' to update.
   }
+
+  self.win_declined = false -- Has not yet declined the level win fax
 end
 
 --! Give advice to the player at the end of a day.
@@ -348,6 +350,16 @@ function PlayerHospital:onEndMonth()
   end
   self.adviser_data.cured_died_message = nil -- Enable the message again.
 
+  -- Check if a player has won the level at months 3, 6 and 9. The annual report
+  -- window will perform this check at month 12 when it has been closed.
+  -- If the offer is declined then the next check is at month 6 and the annual report.
+  local check_months = {
+    [3] = not self.win_declined,
+    [6] = true,
+    [9] = not self.win_declined
+  }
+  if check_months[self.world.game_date:monthOfYear()] then self.world:checkIfGameWon() end
+
   Hospital.onEndMonth(self)
 end
 
@@ -369,6 +381,9 @@ function PlayerHospital:afterLoad(old, new)
   end
   if old < 148 then
     self.adviser_data.cured_died_message = nil
+  end
+  if old < 149 then
+    self.win_declined = false -- Has not yet declined the level win fax
   end
 
   Hospital.afterLoad(self, old, new)
