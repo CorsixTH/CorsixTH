@@ -37,6 +37,8 @@ SOFTWARE.
 
 #include "th_map.h"
 
+#define PI 3.14159265
+
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
     : width(iWidth), height(iHeight) {
   x = 0;
@@ -634,7 +636,7 @@ SDL_Texture* render_target::create_palettized_texture(
 
   std::cout << "Creating palettized texture\n";
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
-  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags, tFn, tickNumber);
+  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags, nullptr, 0);
 
   SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
   delete[] pARGBPixels;
@@ -1041,6 +1043,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
                                int iY, uint32_t iFlags, transformation_function tFn, uint32_t tickNumber) {
+  int err = 0;
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1053,7 +1056,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     uint32_t iSprFlags =
         (sprite.sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
     pTexture = target->create_palettized_texture(
-        sprite.width, sprite.height, sprite.data, palette, iSprFlags, tFn, tickNumber);
+        sprite.width, sprite.height, sprite.data, palette, iSprFlags);
     sprite.texture = pTexture;
   }
   if (iFlags & thdf_alt_palette) {
@@ -1064,10 +1067,27 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
+  if (tFn != nullptr) {
+    // We want this to vary between 155 -> 205 -> 255.
+    // We're using increments of 10 degrees within the Sin function and converting them to rad
+    err = SDL_SetTextureColorMod(pTexture, 0x0F, 0xCD + sin(tickNumber*10*PI/180) * 50, 0x0F);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
   SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
   SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
 
   pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+
+  if (tFn != nullptr) {
+    // Reset back to original values
+    err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
 }
 
 void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,
