@@ -151,7 +151,7 @@ function UI:UI(app, minimal)
   else
     local palette = app.gfx:loadPalette("QData", "PREF01V.PAL")
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-    self.tooltip_font = app.gfx:loadFont("QData", "Font00V", false, palette)
+    self.tooltip_font = app.gfx:loadFont("QData", "FONT00V", false, palette)
   end
   self.tooltip = nil
   self.tooltip_counter = 0

@@ -43,12 +43,12 @@ function UIGraphs:UIGraphs(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
   if not pcall(function()
-    self.background = gfx:loadRaw("Graph01V", 640, 480)
-    local palette = gfx:loadPalette("QData", "Graph01V.pal")
+    self.background = gfx:loadRaw("GRAPH01V", 640, 480)
+    local palette = gfx:loadPalette("QData", "GRAPH01V.PAL")
     palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Graph02V", true, palette)
-    self.white_font = gfx:loadFont("QData", "Font01V", false, palette)
-    self.black_font = gfx:loadFont("QData", "Font00V", false, palette)
+    self.panel_sprites = gfx:loadSpriteTable("QData", "GRAPH02V", true, palette)
+    self.white_font = gfx:loadFont("QData", "FONT01V", false, palette)
+    self.black_font = gfx:loadFont("QData", "FONT00V", false, palette)
   end) then
     ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
     self:close()

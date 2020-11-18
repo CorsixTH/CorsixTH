@@ -52,7 +52,7 @@ frmSprites::frmSprites()
                   wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   pFilesGrid->Add(
       m_txtTable = new wxTextCtrl(
-          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\QData\\Font00V.tab"),
+          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\QData\\FONT00V.TAB"),
       1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_TABLE, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
@@ -66,7 +66,7 @@ frmSprites::frmSprites()
                   wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
   pFilesGrid->Add(
       m_txtPalette = new wxTextCtrl(
-          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\Data\\MPalette.dat"),
+          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\Data\\MPalette.DAT"),
       1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
@@ -200,18 +200,18 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt) {
 
 void frmSprites::_onBrowseTable(wxCommandEvent& WXUNUSED(evt)) {
   m_txtTable->SetValue(::wxFileSelector(
-      L"Select location of Font00V.tab (DATA)", m_txtTable->GetValue(),
-      L"Font00V.tab", L"tab", L"Tab files (*.tab)|*.[tT][aA][bB]", 0, this));
+      L"Select location of FONT00V.TAB (DATA)", m_txtTable->GetValue(),
+      L"FONT00V.TAB", L"TAB", L"TAB files (*.TAB)|*.TAB", 0, this));
 }
 void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt)) {
   m_txtData->SetValue(::wxFileSelector(
-      L"Choose Theme Hospital data file", m_txtData->GetValue(), L"", L"dat",
-      L"Dat files (*.dat)|*.[dD][aA][tT]", 0, this));
+      L"Choose Theme Hospital data file", m_txtData->GetValue(), L"", L"DAT",
+      L"DAT files (*.DAT)|*.DAT", 0, this));
 }
 void frmSprites::_onBrowsePalette(wxCommandEvent& WXUNUSED(evt)) {
   m_txtPalette->SetValue(::wxFileSelector(
-      L"Select location of MPalette.dat (QDATA)", m_txtPalette->GetValue(),
-      L"MPalette.dat", L"dat",
-      L"Dat or Pal files (*.dat, *.pal)|*.[dD][aA][tT];*.[pP][aA][lL]", 0,
+      L"Select location of MPALETTE.DAT (QDATA)", m_txtPalette->GetValue(),
+      L"MPALETTE", L"DAT",
+      L"DAT files (*.DAT)|*.DAT|PAL files (*.PAL)|*.PAL", 0,
       this));
 }
