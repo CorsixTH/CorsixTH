@@ -1082,6 +1082,7 @@ end
 
 -- Called immediately prior to the ingame day changing.
 function World:onEndDay()
+  local local_hospital = self:getLocalPlayerHospital()
   for _, entity in ipairs(self.entities) do
     if entity.ticks and class.is(entity, Humanoid) then
       self.current_tick_entity = entity
@@ -1095,7 +1096,7 @@ function World:onEndDay()
   --check if it's time for a VIP visit
   if self.game_date:isSameDay(self.next_vip_date) then
     if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
-      self.hospitals[1]:createVip()
+      local_hospital:createVip()
     else
       self.next_vip_date = self:_generateNextVipDate()
     end
@@ -1121,7 +1122,7 @@ function World:onEndDay()
       local control = self.map.level_config.emergency_control
       if control[0].Mean or control[0].Random then
         -- The level uses random emergencies, so just create one.
-        self.hospitals[1]:createEmergency()
+        local_hospital:createEmergency()
       else
         control = control[self.next_emergency_no]
         -- Find out which disease the emergency patients have.
@@ -1134,7 +1135,7 @@ function World:onEndDay()
         end
         if not disease then
           -- Unknown disease! Create a random one instead.
-          self.hospitals[1]:createEmergency()
+          local_hospital:createEmergency()
         else
           local emergency = {
             disease = disease,
@@ -1144,7 +1145,7 @@ function World:onEndDay()
             killed_emergency_patients = 0,
             cured_emergency_patients = 0,
           }
-          self.hospitals[1]:createEmergency(emergency)
+          local_hospital:createEmergency(emergency)
         end
       end
     end
