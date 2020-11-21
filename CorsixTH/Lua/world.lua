@@ -1095,7 +1095,7 @@ function World:onEndDay()
 
   --check if it's time for a VIP visit
   if self.game_date:isSameDay(self.next_vip_date) then
-    if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
+    if #self.rooms > 0 and local_hospital:hasStaffedDesk() then
       local_hospital:createVip()
     else
       self.next_vip_date = self:_generateNextVipDate()

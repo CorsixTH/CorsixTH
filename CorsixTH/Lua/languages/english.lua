@@ -306,7 +306,7 @@ install = {
 
 misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist"
-misc.cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again, cheater."
+misc.cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again."
 
 main_menu = {
   new_game = "Campaign",
