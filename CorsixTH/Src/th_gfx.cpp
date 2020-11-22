@@ -1295,7 +1295,7 @@ bool THAnimation_is_multiple_frame_animation(drawable* pSelf) {
 
 }  // namespace
 
-animation_base::animation_base() {
+animation_base::animation_base() : drawable() {
   x_relative_to_tile = 0;
   y_relative_to_tile = 0;
   for (int i = 0; i < 13; ++i) {
@@ -1305,7 +1305,8 @@ animation_base::animation_base() {
 }
 
 animation::animation()
-    : manager(nullptr),
+    : animation_base(),
+      manager(nullptr),
       morph_target(nullptr),
       animation_index(0),
       frame_index(0),
@@ -1513,7 +1514,7 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
 
   this->set_drawing_layer(layer);
 
-  while (pList->next && pList->next->get_drawing_layer() < layer) {
+  while (pList->next && ((drawable*)pList->next)->get_drawing_layer() < layer) {
     pList = pList->next;
   }
 
@@ -1692,7 +1693,7 @@ bool THSpriteRenderList_is_multiple_frame_animation(drawable* pSelf) {
 
 }  // namespace
 
-sprite_render_list::sprite_render_list() {
+sprite_render_list::sprite_render_list() : animation_base() {
   draw_fn = THSpriteRenderList_draw;
   hit_test_fn = THSpriteRenderList_hit_test;
   is_multiple_frame_animation_fn =
