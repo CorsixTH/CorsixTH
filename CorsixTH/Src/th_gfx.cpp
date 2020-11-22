@@ -1508,7 +1508,7 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
   if (flags & thdf_early_list) {
     pList = &pMapNode->oEarlyEntities;
   } else {
-    pList = pMapNode;
+    pList = &pMapNode->entities;
   }
 
   this->set_drawing_layer(layer);

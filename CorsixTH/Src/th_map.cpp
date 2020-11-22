@@ -997,9 +997,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   }
   pCanvas->finish_nonoverlapping_draws();
 
+  // 2nd pass
   bool bFirst = true;
   map_scanline_iterator formerIterator;
-  // 2nd pass
   for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode2; ++itrNode2) {
     if (itrNode2->flags.shadow_full) {
@@ -1088,7 +1088,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
       bool bRedrawAnimations = false;
 
-      drawable* pItem = (drawable*)(itrNode->next);
+      drawable* pItem = (drawable*)(itrNode->entities.next);
       while (pItem) {
         pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
         if (pItem->is_multiple_frame_animation_fn(pItem)) {
@@ -1110,7 +1110,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
         // check if an object in the adjacent tile to the left of the
         // current tile needs to be redrawn and if necessary draw it
-        pItem = (drawable*)(formerIterator.get_previous_tile()->next);
+        pItem = (drawable*)(formerIterator.get_previous_tile()->entities.next);
         while (pItem) {
           if (pItem->get_drawing_layer() == 9) {
             pItem->draw_fn(pItem, pCanvas, formerIterator.x() - 64,
@@ -1122,7 +1122,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
         // check if an object in the adjacent tile above the current
         // tile needs to be redrawn and if necessary draw it
-        pItem = formerIterator ? (drawable*)(formerIterator->next) : nullptr;
+        pItem = formerIterator ? (drawable*)(formerIterator->entities.next)
+                               : nullptr;
         while (pItem) {
           if (pItem->get_drawing_layer() == 8) {
             pItem->draw_fn(pItem, pCanvas, formerIterator.x(),
@@ -1162,7 +1163,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
             pItem = (drawable*)(pItem->next);
           }
 
-          pItem = (drawable*)(itrNode.get_previous_tile())->next;
+          pItem = (drawable*)(itrNode.get_previous_tile())->entities.next;
           for (; pItem; pItem = (drawable*)(pItem->next)) {
             pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
           }
@@ -1209,9 +1210,9 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
     for (map_scanline_iterator itrNode(
              itrNode2, map_scanline_iterator_direction::backward);
          itrNode; ++itrNode) {
-      if (itrNode->next != nullptr) {
-        drawable* pResult =
-            hit_test_drawables(itrNode->next, itrNode.x(), itrNode.y(), 0, 0);
+      if (itrNode->entities.next != nullptr) {
+        drawable* pResult = hit_test_drawables(itrNode->entities.next,
+                                               itrNode.x(), itrNode.y(), 0, 0);
         if (pResult) {
           return pResult;
         }
@@ -1501,7 +1502,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_uint(pNode->aiTemperature[1]);
 
     lua_rawgeti(L, luaT_upvalueindex(1), 2);
-    lua_pushlightuserdata(L, pNode->next);
+    lua_pushlightuserdata(L, pNode->entities.next);
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 1);
@@ -1600,12 +1601,12 @@ void level_map::depersist(lua_persist_reader* pReader) {
     if (!pReader->read_stack_object()) {
       return;
     }
-    pNode->next = (link_list*)lua_touserdata(L, -1);
-    if (pNode->next) {
-      if (pNode->next->prev != nullptr) {
+    pNode->entities.next = (link_list*)lua_touserdata(L, -1);
+    if (pNode->entities.next) {
+      if (pNode->entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
-      pNode->next->prev = pNode;
+      pNode->entities.next->prev = &pNode->entities;
     }
     lua_pop(L, 1);
     if (!pReader->read_stack_object()) return;
