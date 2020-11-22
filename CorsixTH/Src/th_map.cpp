@@ -1157,10 +1157,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
               pCanvas->set_clip_rect(&rcOldClip);
             }
           }
+
           pItem = (drawable*)(itrNode.get_previous_tile()->oEarlyEntities.next);
-          while (pItem) {
+          for (; pItem; pItem = (drawable*)(pItem->next)) {
             pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
-            pItem = (drawable*)(pItem->next);
           }
 
           pItem = (drawable*)(itrNode.get_previous_tile())->entities.next;
@@ -1587,10 +1587,12 @@ void level_map::depersist(lua_persist_reader* pReader) {
       return;
     }
   }
+
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     uint32_t f;
     if (!pReader->read_uint(f)) return;
+
     pNode->flags = f;
     if (iVersion >= 4) {
       if (!pReader->read_uint(pNode->aiTemperature[0]) ||
@@ -1598,9 +1600,8 @@ void level_map::depersist(lua_persist_reader* pReader) {
         return;
       }
     }
-    if (!pReader->read_stack_object()) {
-      return;
-    }
+
+    if (!pReader->read_stack_object()) return;
     pNode->entities.next = (link_list*)lua_touserdata(L, -1);
     if (pNode->entities.next) {
       if (pNode->entities.next->prev != nullptr) {
@@ -1609,6 +1610,7 @@ void level_map::depersist(lua_persist_reader* pReader) {
       pNode->entities.next->prev = &pNode->entities;
     }
     lua_pop(L, 1);
+
     if (!pReader->read_stack_object()) return;
     pNode->oEarlyEntities.next = (link_list*)lua_touserdata(L, -1);
     if (pNode->oEarlyEntities.next) {
