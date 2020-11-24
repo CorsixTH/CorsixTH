@@ -36,13 +36,6 @@ class link_list {
   link_list* next;
 
   void remove_from_list();
-
-  // TODO: drawing layer doesn't belong in a generic link list.
-  int get_drawing_layer() { return drawing_layer; }
-  void set_drawing_layer(int layer) { drawing_layer = layer; }
-
- private:
-  int drawing_layer;
 };
 
 //! \brief Theme Hospital localised string list

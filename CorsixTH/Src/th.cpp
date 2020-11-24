@@ -28,7 +28,6 @@ SOFTWARE.
 #include <stdexcept>
 
 link_list::link_list() {
-  drawing_layer = 0;
   prev = nullptr;
   next = nullptr;
 }
