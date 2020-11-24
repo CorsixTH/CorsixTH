@@ -1450,7 +1450,7 @@ void animation::depersist(lua_persist_reader* pReader) {
       if (!pReader->read_int(speed.dy)) break;
     } else {
       if (!pReader->read_stack_object()) break;
-      parent = (animation*)lua_touserdata(L, -1);
+      parent = static_cast<animation*>(lua_touserdata(L, -1));
       lua_pop(L, 1);
     }
 
@@ -1470,7 +1470,7 @@ void animation::depersist(lua_persist_reader* pReader) {
 
     // Fix the m_pAnimator field
     luaT_getenvfield(L, 2, "animator");
-    manager = (animation_manager*)lua_touserdata(L, -1);
+    manager = static_cast<animation_manager*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
 
     return;
@@ -1514,7 +1514,8 @@ void animation_base::attach_to_tile(map_tile* pMapNode, int layer) {
 
   this->set_drawing_layer(layer);
 
-  while (pList->next && ((drawable*)pList->next)->get_drawing_layer() < layer) {
+  while (pList->next &&
+         static_cast<drawable*>(pList->next)->get_drawing_layer() < layer) {
     pList = pList->next;
   }
 
@@ -1860,6 +1861,6 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
 
   // Fix the sheet field
   luaT_getenvfield(L, 2, "sheet");
-  sheet = (sprite_sheet*)lua_touserdata(L, -1);
+  sheet = static_cast<sprite_sheet*>(lua_touserdata(L, -1));
   lua_pop(L, 1);
 }
