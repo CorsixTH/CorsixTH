@@ -83,8 +83,13 @@ function Cheats:cheatResearch()
 end
 
 function Cheats:cheatEmergency()
-  if not self.hospital:createEmergency() then
-    self.hospital.world.ui:addWindow(UIInformation(self.hospital.world.ui, {_S.misc.no_heliport}))
+  local err = self.hospital:createEmergency()
+  local ui = self.hospital.world.ui
+  if err == "undiscovered_disease" then
+    ui:addWindow(UIInformation(ui, {_S.misc.cant_treat_emergency}))
+  elseif err == "no_heliport" then
+    ui:addWindow(UIInformation(ui, {_S.misc.no_heliport}))
+  -- else 'err == nil', meaning success. The case doesn't need special handling
   end
 end
 

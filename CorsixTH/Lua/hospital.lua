@@ -1042,8 +1042,8 @@ end
 
 -- Creates complete emergency with patients, what disease they have, what's needed
 -- to cure them and the fax.
+--!return (optional string) Textual reason for failure, else nil
 function Hospital:createEmergency(emergency)
-  local created_one = false
   local random_disease = self.world.available_diseases[math.random(1, #self.world.available_diseases)]
   local disease = TheApp.diseases[random_disease.id]
   local number = math.random(2, disease.emergency_number)
@@ -1058,6 +1058,11 @@ function Hospital:createEmergency(emergency)
         killed_emergency_patients = 0,
         cured_emergency_patients = 0,
       }
+    end
+
+    -- If disease chosen isn't discovered, cancel emergency
+    if not self.disease_casebook[emergency.disease.id].discovered then
+      return "undiscovered_disease"
     end
 
     self.emergency = emergency
@@ -1106,9 +1111,9 @@ function Hospital:createEmergency(emergency)
       },
     }
     self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2) -- automatically refuse after 16 days
-    created_one = true
+    return -- sucessfully created
   end
-  return created_one
+  return "no heliport"
 end
 
 -- Called when the timer runs out during an emergency or when all emergency patients are cured or dead.
