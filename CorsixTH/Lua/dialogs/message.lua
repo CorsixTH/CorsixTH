@@ -105,6 +105,11 @@ function UIMessage:adjustToggle()
 end
 
 function UIMessage:openMessage()
+  if TheApp.world:checkPauseBehaviour() and not self.ui:checkForMustPauses() then
+    self.ui:playSound("wrong2.wav")
+    self:adjustToggle()
+    return
+  end
   if TheApp.world:isCurrentSpeed("Speed Up") then
     TheApp.world:previousSpeed()
   end

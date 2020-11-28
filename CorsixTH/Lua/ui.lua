@@ -1066,6 +1066,14 @@ function UI:removeWindow(closing_window)
   end
 end
 
+--! Function to check if we have any must pause windows open
+--!return (bool) Returns true if a must pause window is found
+function UI:checkForMustPauses()
+  for i in pairs(self.windows) do
+    if self.windows[i].mustPause() then return true end
+  end
+end
+
 function UI:getCursorPosition(window)
   -- Given no argument, returns the cursor position in screen space
   -- Otherwise, returns the cursor position in the space of the given window
