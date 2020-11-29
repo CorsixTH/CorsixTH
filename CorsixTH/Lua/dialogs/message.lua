@@ -104,8 +104,9 @@ function UIMessage:adjustToggle()
   end
 end
 
+--! Displays the fax/strike message to the player when opened from the bottom_panel.
 function UIMessage:openMessage()
-  if TheApp.world:checkPauseBehaviour() and not self.ui:checkForMustPauses() then
+  if TheApp.world:checkPauseBehaviour() and not self.ui:checkForMustPauseWindows() then
     self.ui:playSound("wrong2.wav")
     self:adjustToggle()
     return

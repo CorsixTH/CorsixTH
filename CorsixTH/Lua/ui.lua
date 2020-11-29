@@ -1068,10 +1068,11 @@ end
 
 --! Function to check if we have any must pause windows open
 --!return (bool) Returns true if a must pause window is found
-function UI:checkForMustPauses()
+function UI:checkForMustPauseWindows()
   for i in pairs(self.windows) do
     if self.windows[i].mustPause() then return true end
   end
+  return false
 end
 
 function UI:getCursorPosition(window)

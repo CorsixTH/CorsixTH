@@ -956,10 +956,8 @@ end
 
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
-function World:checkPauseBehaviour()
-  if self:isCurrentSpeed("Pause") and not self.user_actions_allowed then
-    return true
-  end
+function World:preventActionsWhenPaused()
+  return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
 -- Outside (air) temperatures based on climate data for Oxford, taken from
