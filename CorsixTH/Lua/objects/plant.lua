@@ -77,8 +77,9 @@ object.orientations = {
 -- * dying: 1953
 -- * dead: 1954
 
-
-local days_between_states = 75
+-- TH uses rough 50 days between state transitions
+-- to approximate that same average rate at ideal temperatures
+local days_between_states = 64
 
 -- days before we reannouncing our watering status if we were unreachable
 local days_unreachable = 10
@@ -98,6 +99,7 @@ function Plant:Plant(world, object_type, x, y, direction, etc)
   self.days_left = days_between_states
   self.unreachable = false
   self.unreachable_counter = days_unreachable
+  self.phases = 5
 end
 
 --! Goes one step forward (or backward) in the states of the plant.
@@ -107,7 +109,7 @@ function Plant:setNextState(restoring)
     if self.current_state > 0 then
       self.current_state = self.current_state - 1
     end
-  elseif self.current_state < 5 then
+  elseif self.current_state < self.phases - 1 then
     self.current_state = self.current_state + 1
   end
 
@@ -157,13 +159,7 @@ end
 
 --! Returns whether the plant is in need of watering right now.
 function Plant:needsWatering()
-  if self.current_state == 0 then
-    if self.days_left < 10 then
-      return true
-    end
-  else
-    return true
-  end
+  return self.current_state ~= 0
 end
 
 --! When the plant needs water it periodically calls for a nearby handyman.
@@ -293,12 +289,10 @@ function Plant:onClick(ui, button)
   Object.onClick(self, ui, button)
 end
 
-function Plant:isPleasing()
-  if not self.ticks then
-    return true
-  else
-   return false
-  end
+--! Plant health/state should be used on evaluations of pleasantness
+--! returns (integer) score of this plants health, 1 to 5 (best)
+function Plant:isPleasingFactor()
+  return self.phases - self.current_state
 end
 
 --! Check if a plant is dying or about to start dying
@@ -321,6 +315,11 @@ function Plant:afterLoad(old, new)
   if old < 52 then
     self.hospital = self.world:getLocalPlayerHospital()
   end
+
+  if old < 150 then
+    self.phases = 5
+  end
+
   Object.afterLoad(self, old, new)
 end
 

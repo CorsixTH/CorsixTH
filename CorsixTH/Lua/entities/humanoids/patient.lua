@@ -681,13 +681,8 @@ function Patient:tickDay()
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
-  if not plant then
-    return
-  end
-    if plant:isPleasing() then
-      self:changeAttribute("happiness", 0.0002)
-    else
-      self:changeAttribute("happiness", -0.0002)
+    if plant then
+      self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
     end
   end)
   -- It always makes you happy to see you are in safe place
