@@ -62,11 +62,7 @@ function Staff:tickDay()
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
     if plant then
-      if plant:isPleasing() then
-        self:changeAttribute("happiness", 0.002)
-      else
-        self:changeAttribute("happiness", -0.003)
-      end
+      self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
     end
   end)
   -- It always makes you happy to see you are in safe place
