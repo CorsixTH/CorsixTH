@@ -1041,7 +1041,7 @@ end
 
 function UI:removeWindow(closing_window)
   if Window.removeWindow(self, closing_window) then
-    local pauseGame = false
+    local pauseGame
     local class = closing_window.modal_class
     if class and self.modal_windows[class] == closing_window then
       self.modal_windows[class] = nil
