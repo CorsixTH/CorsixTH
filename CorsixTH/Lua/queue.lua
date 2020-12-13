@@ -168,11 +168,11 @@ function Queue:push(humanoid, callbacks_on)
       increment_reported_size = false
     end
   end
-  if class.is(humanoid, Staff) then
+  if increment_reported_size and class.is(humanoid, Staff) then
     -- Give staff priority over patients
     while index > 1 do
       local before = self[index - 1]
-      if class.is(before, Staff) then
+      if class.is(before, Staff) or (self.same_room_priority and self.same_room_priority:getRoom() == before:getRoom()) then
         break
       end
       index = index - 1
@@ -180,10 +180,10 @@ function Queue:push(humanoid, callbacks_on)
     increment_reported_size = false
   end
   -- Emergencies and any VIP's get put before all the other patients, but AFTER currently queued emergencies.
-  if humanoid.is_emergency or class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
+  if increment_reported_size and humanoid.is_emergency or class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
     while index > 1 do
       local before = self[index - 1]
-      if before.is_emergency then
+      if before.is_emergency or class.is(before, Staff) or (self.same_room_priority and self.same_room_priority:getRoom() == before:getRoom()) then
         break
       end
       index = index - 1
