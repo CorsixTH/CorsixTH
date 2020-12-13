@@ -1517,8 +1517,30 @@ function Hospital:initStaff()
       if added_staff then
         local staff = self.world:newEntity(profile.humanoid_class, 2)
         staff:setProfile(profile)
-        -- TODO: Make a somewhat "nicer" placing algorithm.
-        staff:setTile(self.world.map.th:getCameraTile(1))
+
+        -- Identify a safe starting place and
+        -- try to place the staff member randomly near it or on it
+        local map = self.world.map.th
+        local map_x_length, map_y_length = map:size()
+        local map_offset = 10
+        local x, y = map:getCameraTile(self:getPlayerIndex())
+        -- Make sure the random numbers (x_attempt, y_attempt) will be safely within the map
+        local x_safe = math.max(map_offset + 1, math.min(x, map_x_length - map_offset))
+        local y_safe = math.max(map_offset + 1, math.min(y, map_y_length - map_offset))
+        local x_attempt, y_attempt
+        local attempts = 0
+        repeat
+          x_attempt = x_safe + math.random(-map_offset, map_offset)
+          y_attempt = y_safe + math.random(-map_offset, map_offset)
+          attempts = attempts + 1
+        until attempts > 100 or self:isInHospital(x_attempt, y_attempt)
+        if attempts <= 100 then
+          staff:setTile(x_attempt, y_attempt)
+        elseif self:isInHospital(x, y) then
+          staff:setTile(x, y)
+        else
+          staff:setTile(map_x_length / 2, map_y_length / 2)
+        end
         staff:onPlaceInCorridor()
         self.staff[#self.staff + 1] = staff
         staff:setHospital(self)
