@@ -1047,7 +1047,7 @@ function UI:removeWindow(closing_window)
     end
     if self.app.world and self.app.world:isCurrentSpeed("Pause") then
       local pauseGame = self:checkForMustPauseWindows()
-      if not pauseGame and closing_window.mustPause() then
+      if not pauseGame and closing_window:mustPause() then
         self.app.world:setSpeed(self.app.world.prev_speed)
       end
     end
