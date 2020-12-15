@@ -1016,7 +1016,7 @@ int movie_player::decode_audio_frame(bool fFirst) {
 #endif
   return iSampleSize;
 }
-#else  // CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
+#else   // CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
 movie_player::movie_player() {}
 movie_player::~movie_player() {}
 void movie_player::set_renderer(SDL_Renderer* renderer) {}
