@@ -608,7 +608,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     --map.th:setCell(highlight_x, highlight_y, 4, 0)
     highlight_x = nil
   end
-  if 1 <= wx and wx <= 128 and 1 <= wy and wy <= 128 then
+  local map_width, map_height = map.th:size()
+  if 1 <= wx and wx <= map_width and 1 <= wy and wy <= map_height then
     if map.th:getCellFlags(wx, wy).passable then
       --map.th:setCell(wx, wy, 4, 24 + 8 * 256)
       highlight_x = wx

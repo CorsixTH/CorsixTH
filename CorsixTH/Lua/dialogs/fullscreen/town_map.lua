@@ -112,8 +112,9 @@ function UITownMap:onMouseMove(x, y)
   local tx = math.floor((x - 227) / 3)
   local ty = math.floor((y - 25) / 3)
   self.hover_plot = nil
-  if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
-    local map = self.ui.hospital.world.map.th
+  local map = self.ui.hospital.world.map.th
+  local width, height = map:size()
+  if 0 <= tx and tx < width and 0 <= ty and ty < height then
     self.hover_plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
   end
   return UIFullscreen.onMouseMove(self, x, y)
@@ -124,8 +125,9 @@ function UITownMap:onMouseUp(button, x, y)
   if button == "left" then
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
-    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
-      local map = self.ui.hospital.world.map.th
+    local map = self.ui.hospital.world.map.th
+    local width, height = map:size()
+    if 0 <= tx and tx < width and 0 <= ty and ty < height then
       local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
       if plot ~= 0 then
         if self.ui.hospital:purchasePlot(plot) then
@@ -140,7 +142,8 @@ function UITownMap:onMouseUp(button, x, y)
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
     local map = self.ui.hospital.world.map.th
-    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
+    local width, height = map:size()
+    if 0 <= tx and tx < width and 0 <= ty and ty < height then
       local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
       if plot ~= 0 then
         local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)

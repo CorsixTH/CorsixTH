@@ -40,6 +40,8 @@ SOFTWARE.
 #include "th_map_overlays.h"
 
 constexpr int max_player_count = 4;
+constexpr int default_width = 128;
+constexpr int default_height = 128;
 
 map_tile_flags& map_tile_flags::operator=(uint32_t raw) {
   using flags = map_tile_flags::key;
@@ -362,7 +364,7 @@ void level_map::write_tile_index(uint8_t* pData, int iX, int iY) const {
 }
 
 bool level_map::load_blank() {
-  if (!set_size(128, 128)) {
+  if (!set_size(default_width, default_height)) {
     return false;
   }
 
@@ -402,7 +404,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   const size_t heliport_offset = 163884;
   const size_t parcel_offset = 131106;
 
-  if (iDataLength < 163948 || !set_size(128, 128)) {
+  if (iDataLength < 163948 || !set_size(default_width, default_height)) {
     return false;
   }
 
@@ -451,7 +453,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         // and replace the floor with something similar (pond base).
         if (71 <= iBaseTile && iBaseTile <= 73) {
           pNode->iBlock[1] = iBaseTile;
-          pNode->iBlock[0] = iBaseTile = 69;
+          pNode->iBlock[0] = 69;
         } else {
           pNode->iBlock[1] = 0;
         }
@@ -459,7 +461,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
-          pNode[-128].flags.can_travel_s = false;
+          pNode[-this->width].flags.can_travel_s = false;
         }
       }
       if (pData[4] == 0 || is_divider_wall(pData[4])) {
@@ -674,8 +676,8 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
   map_tile* pNode = cells;
   const map_tile* pOriginalNode = original_cells;
 
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode, ++pOriginalNode) {
       if (pNode->iParcelId == iParcelId) {
         if (iOwner != 0) {
           pNode->iBlock[0] = pOriginalNode->iBlock[0];
@@ -701,7 +703,7 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
                                 iParcelId)) {
         vSplitTiles.push_back(std::make_pair(iX, iY));
       }
-      if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, 128, 1,
+      if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, this->width, 1,
                                 iParcelId)) {
         vSplitTiles.push_back(std::make_pair(iX, iY));
       }
@@ -743,11 +745,12 @@ void level_map::make_adjacency_matrix() {
   }
 
   const map_tile* pOriginalNode = original_cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX) {
       ++pOriginalNode;
       test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iX, 1);
-      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY, 128);
+      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY,
+               this->width);
     }
   }
 }
@@ -1391,8 +1394,8 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
 
 void level_map::update_pathfinding() {
   map_tile* pNode = cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode) {
       pNode->flags.can_travel_n = true;
       pNode->flags.can_travel_e = true;
       pNode->flags.can_travel_s = true;
@@ -1413,7 +1416,7 @@ void level_map::update_pathfinding() {
       if (pNode->iBlock[1] & 0xFF) {
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
-          pNode[-128].flags.can_travel_s = false;
+          pNode[-this->width].flags.can_travel_s = false;
         }
       }
       if (pNode->iBlock[2] & 0xFF) {
@@ -1440,8 +1443,8 @@ bool is_wall(map_tile* tile, size_t block, bool flag) {
 
 void level_map::update_shadows() {
   map_tile* pNode = cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode) {
       pNode->flags.shadow_full = false;
       pNode->flags.shadow_half = false;
       pNode->flags.shadow_wall = false;
@@ -1450,7 +1453,7 @@ void level_map::update_shadows() {
         if (is_wall(pNode, 1, pNode->flags.tall_north)) {
           pNode->flags.shadow_wall = true;
         } else if (iY != 0) {
-          map_tile* pNeighbour = pNode - 128;
+          map_tile* pNeighbour = pNode - this->width;
           pNeighbour->flags.shadow_full = true;
           if (iX != 0 && !is_wall(pNeighbour, 2, pNode->flags.tall_west)) {
             // Wrap the shadow around a corner (no need to continue
