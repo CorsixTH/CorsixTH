@@ -59,7 +59,7 @@ function Window:Window()
   self.draggable = true
 end
 
--- Most windows don't pause the game. Specific windows: fax, annual report, staff rise do pause and are set in the specific files
+-- Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files
 function Window:mustPause()
   return false
 end

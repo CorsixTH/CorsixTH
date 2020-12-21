@@ -69,6 +69,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:registerKeyHandlers()
 end
 
+-- Confirm dialogs are used for errors and require the game to pause
 function UIConfirmDialog:mustPause()
   return true
 end
