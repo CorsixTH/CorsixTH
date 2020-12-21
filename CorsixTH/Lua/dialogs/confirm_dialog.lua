@@ -69,6 +69,10 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self:registerKeyHandlers()
 end
 
+function UIConfirmDialog:mustPause()
+  return true
+end
+
 function UIConfirmDialog:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.ok)
   self:addKeyHandler("global_confirm_alt", self.ok)
