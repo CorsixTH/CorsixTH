@@ -727,26 +727,28 @@ local flag_cache = {}
 function World:createMapObjects(objects)
   self.delayed_map_objects = {}
   local map = self.map.th
-  for _, object in ipairs(objects) do repeat
+  for _, object in ipairs(objects) do
     local x, y, thob, flags = unpack(object)
     local object_id = self.object_id_by_thob[thob]
     if not object_id then
       print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
-      break -- continue
-    end
-    local object_type = self.object_types[object_id]
-    if not object_type or not object_type.supports_creation_for_map then
-      print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
-      break -- continue
-    end
-    -- Delay making objects which are on plots which haven't been purchased yet
-    local parcel = map:getCellFlags(x, y, flag_cache).parcelId
-    if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
-      self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
+      -- Ignore object.
     else
-      self:newObject(object_id, x, y, flags, "map object")
+      local object_type = self.object_types[object_id]
+      if not object_type or not object_type.supports_creation_for_map then
+        print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
+        -- Ignore object.
+      else
+        -- Delay making objects which are on plots which haven't been purchased yet
+        local parcel = map:getCellFlags(x, y, flag_cache).parcelId
+        if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
+          self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
+        else
+          self:newObject(object_id, x, y, flags, "map object")
+        end
+      end
     end
-  until true end
+  end -- for
 end
 
 --! Change owner of a plot.
