@@ -1872,20 +1872,26 @@ end
 --! Creates a new object by finding the object_type from the "id" variable and
 --  calls its class constructor.
 --!param id (string) The unique id of the object to be created.
+--!param x X position of the new object.
+--!param y Y position of the new object.
+--!param flags Flags of the new object.
+--!param name Name of the new object.
 --!return The created object.
-function World:newObject(id, ...)
+function World:newObject(id, x, y, flags, name)
   local object_type = self.object_types[id]
+  local hospital = self:getLocalPlayerHospital()
+
   local entity
   if object_type.class then
-    entity = _G[object_type.class](self, object_type, ...)
+    entity = _G[object_type.class](hospital, object_type, x, y, flags, name)
   elseif object_type.default_strength then
-    entity = Machine(self, object_type, ...)
+    entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
-    entity = Object(self, object_type, ...)
+    entity = Object(hospital, object_type, x, y, flags, name)
   end
   self:objectPlaced(entity, id)
   return entity

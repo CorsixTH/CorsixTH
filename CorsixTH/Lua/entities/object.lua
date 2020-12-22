@@ -37,7 +37,9 @@ function Object:getDrawingLayer()
   return 4
 end
 
-function Object:Object(world, object_type, x, y, direction, etc)
+function Object:Object(hospital, object_type, x, y, direction, etc)
+  assert(class.is(hospital, Hospital), "First argument is not a Hospital instance.")
+
   local th = TH.animation()
   self:Entity(th)
 
@@ -51,8 +53,8 @@ function Object:Object(world, object_type, x, y, direction, etc)
 
   self.ticks = object_type.ticks
   self.object_type = object_type
-  self.world = world
-  self.hospital = world:getLocalPlayerHospital()
+  self.hospital = hospital
+  self.world = hospital.world
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
   self:updateDynamicInfo()

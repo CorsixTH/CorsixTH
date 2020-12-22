@@ -36,22 +36,22 @@ class "EntranceDoor" (Object)
 ---@type EntranceDoor
 local EntranceDoor = _G["EntranceDoor"]
 
-function EntranceDoor:EntranceDoor(world, object_type, x, y, direction, etc)
+function EntranceDoor:EntranceDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
-  self:Object(world, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.occupant_count = 0
   self.is_open = false
   -- We need to link the master to the slave but we don't know in which order they will be initialized
   if self.is_master then -- The master will check for an adjacent slave
     local slave_type = "entrance_left_door"
-    self.slave = world:getObject(x - 1, y, slave_type) or world:getObject(x, y - 1, slave_type) or nil
+    self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type) or nil
 
     if self.slave then
       self.slave.master = self
     end
   else -- The slave will check for an adjacent master
     local master_type = "entrance_right_door"
-    self.master = world:getObject(x + 1, y, master_type) or world:getObject(x, y + 1, master_type) or nil
+    self.master = self.world:getObject(x + 1, y, master_type) or self.world:getObject(x, y + 1, master_type) or nil
 
     if self.master then
       self.master.slave = self

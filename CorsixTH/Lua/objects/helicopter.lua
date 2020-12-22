@@ -34,17 +34,17 @@ object.orientations = {
   },
 }
 
---! An `Object` which drops of emergency patients.
+--! An `Object` which drops off emergency patients.
 class "Helicopter" (Object)
 
 ---@type Helicopter
 local Helicopter = _G["Helicopter"]
 
-function Helicopter:Helicopter(world, object_type, hospital, direction, etc)
+function Helicopter:Helicopter(hospital, object_type, direction, etc)
   local x, y = hospital:getHeliportPosition()
-  -- Helicoptor needs to land below tile to be positioned correctly
+  -- Helicopter needs to land below tile to be positioned correctly
   y = y + 1
-  self:Object(world, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.th:makeInvisible()
   self:setPosition(0, -600)
   self.phase = -120

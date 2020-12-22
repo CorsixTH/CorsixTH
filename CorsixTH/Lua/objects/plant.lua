@@ -90,10 +90,10 @@ class "Plant" (Object)
 ---@type Plant
 local Plant = _G["Plant"]
 
-function Plant:Plant(world, object_type, x, y, direction, etc)
+function Plant:Plant(hospital, object_type, x, y, direction, etc)
   -- It doesn't matter which direction the plant is facing. It will be rotated so that an approaching
   -- handyman uses the correct usage animation when appropriate.
-  self:Object(world, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
   self.current_state = 0
   self.base_frame = self.th:getFrame()
   self.days_left = days_between_states
