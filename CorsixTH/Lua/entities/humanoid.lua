@@ -492,8 +492,6 @@ local function Humanoid_startAction(self)
     elseif class.is(self, Staff) then
       ui:addWindow(UIStaff(ui, self))
     end
-    -- Pause the game.
-    self.world:setSpeed("Pause")
 
     -- Tell the player what just happened.
     self.world:gameLog("")
