@@ -137,11 +137,6 @@ function Litter:anyLitter()
 end
 
 function Litter:afterLoad(old, new)
-  if old < 151 then
-    -- Set first, so next afterloads can use this hospital.
-    self.hospital = self.world:getHospital(self.tile_x, self.tile_y)
-  end
-
   if old < 52 then
     if self.tile_x then
       self.hospital:addHandymanTask(self, "cleaning", 1, self.tile_x, self.tile_y)
@@ -159,6 +154,10 @@ function Litter:afterLoad(old, new)
 
   if old < 121 then
     self.ticks = object.ticks
+  end
+
+  if old < 151 then
+    self.hospital = self.world:getHospital(self.tile_x, self.tile_y)
   end
 end
 

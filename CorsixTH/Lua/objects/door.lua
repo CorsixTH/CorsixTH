@@ -166,8 +166,8 @@ function Door:checkForDeadlock()
     for _, action in ipairs(self.reserved_for.action_queue) do
       if action.name == "queue" then
         if action.queue ~= self.queue or self.queue[1] ~= self.reserved_for then
-          print("Warning: Trying to resolve door deadlock at ("
-              .. self.tile_x .. ", " .. self.tile_y .. ")")
+          self.world:gameLog("Warning: Trying to resolve door deadlock at ("
+              .. tostring(self.tile_x) .. ", " .. tostring(self.tile_y) .. ")")
           self.reserved_for = nil
           self:getRoom():tryAdvanceQueue()
         end
