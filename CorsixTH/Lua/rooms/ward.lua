@@ -140,6 +140,7 @@ function WardRoom:commandEnteringPatient(patient)
     local length = (math.random(200, 800) * (1.5 - staff.profile.skill))  / self.nursecount -- reduce time in ward if there is more than one nurse on duty
     local --[[persistable:ward_loop_callback]] function loop_callback(action)
     -- TODO Perhaps it should take longer if there are more used beds!
+      if not (next(self.staff_member_set) or self.staff_member) then return end
       if length <= 0 then
         action.prolonged_usage = false
       end
