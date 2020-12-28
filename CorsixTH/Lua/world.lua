@@ -123,6 +123,7 @@ function World:World(app)
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
+  self.delayed_map_objects = {} -- Initial objects in the map for parcels without owner.
   self.room_remove_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
@@ -723,30 +724,44 @@ function World:getObjectToNotifyOfOccupants(x, y)
   return self.objects_notify_occupants[idx]
 end
 
-local flag_cache = {}
+--! Place objects from a map file onto the map.
+--!param objects Objects to place.
 function World:createMapObjects(objects)
   self.delayed_map_objects = {}
+
+  for _, object in ipairs(objects) do
+    self:_createMapObject(object)
+  end
+end
+
+local flag_cache = {}
+--! Internal function for placing an object from the map file.
+--!param object Object to place.
+function World:_createMapObject(object)
+  local x, y, thob, flags = unpack(object)
+  local object_id = self.object_id_by_thob[thob]
+  if not object_id then
+    print("Warning: Map contained object with unrecognised THOB (" .. thob
+        .. ") at " .. x .. "," .. y)
+    return
+  end
+
+  local object_type = self.object_types[object_id]
+  if not object_type or not object_type.supports_creation_for_map then
+    print("Warning: Unable to create map object " .. object_id .. " at "
+        .. x .. "," .. y)
+    return
+  end
+
   local map = self.map.th
-  for _, object in ipairs(objects) do repeat
-    local x, y, thob, flags = unpack(object)
-    local object_id = self.object_id_by_thob[thob]
-    if not object_id then
-      print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
-      break -- continue
-    end
-    local object_type = self.object_types[object_id]
-    if not object_type or not object_type.supports_creation_for_map then
-      print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
-      break -- continue
-    end
+  local parcel = map:getCellFlags(x, y, flag_cache).parcelId
+  if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
     -- Delay making objects which are on plots which haven't been purchased yet
-    local parcel = map:getCellFlags(x, y, flag_cache).parcelId
-    if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
-      self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
-    else
-      self:newObject(object_id, x, y, flags, "map object")
-    end
-  until true end
+    self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
+
+  else
+    self:newObject(object_id, x, y, flags, "map object")
+  end
 end
 
 --! Change owner of a plot.
@@ -1870,20 +1885,26 @@ end
 --! Creates a new object by finding the object_type from the "id" variable and
 --  calls its class constructor.
 --!param id (string) The unique id of the object to be created.
+--!param x X position of the new object.
+--!param y Y position of the new object.
+--!param flags Flags of the new object.
+--!param name Name of the new object.
 --!return The created object.
-function World:newObject(id, ...)
+function World:newObject(id, x, y, flags, name)
   local object_type = self.object_types[id]
+  local hospital = self:getLocalPlayerHospital()
+
   local entity
   if object_type.class then
-    entity = _G[object_type.class](self, object_type, ...)
+    entity = _G[object_type.class](hospital, object_type, x, y, flags, name)
   elseif object_type.default_strength then
-    entity = Machine(self, object_type, ...)
+    entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
     if self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
-    entity = Object(self, object_type, ...)
+    entity = Object(hospital, object_type, x, y, flags, name)
   end
   self:objectPlaced(entity, id)
   return entity

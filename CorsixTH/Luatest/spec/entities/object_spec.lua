@@ -25,6 +25,9 @@ require("entities.object")
 
 describe("object.lua: ", function()
   local stub_world = {map = {}}
+  local stub_hospital = {world = stub_world}
+  _G["Hospital"] = stub_hospital
+
   local fake_object_type = {ticks = false, idle_animations = {west = true}}
   local tile_x, tile_y, direction = 10, 10, "west"
 
@@ -32,7 +35,7 @@ describe("object.lua: ", function()
     stub(stub_world, "getLocalPlayerHospital")
     stub(stub_world, "addObjectToTile")
     stub(stub_world, "clearCaches")
-    return Object(stub_world, fake_object_type, tile_x, tile_y, direction)
+    return Object(stub_hospital, fake_object_type, tile_x, tile_y, direction)
   end
 
   it("can create Object objects", function()

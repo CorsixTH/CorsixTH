@@ -106,7 +106,7 @@ function ReceptionDesk:tick()
           if class.is(queue_front, Inspector) then
             local inspector = queue_front
             if not inspector.going_home  then
-              local epidemic = self.world:getLocalPlayerHospital().epidemic
+              local epidemic = self.hospital.epidemic
               if epidemic then
                 -- The result of the epidemic may already by determined
                 -- i.e if an infected patient has left the hospital
@@ -151,11 +151,10 @@ function ReceptionDesk:checkForNearbyStaff()
   end
 
   local nearest_staff, nearest_d
-  local world = self.world
   local use_x, use_y = self:getSecondaryUsageTile()
   for _, entity in ipairs(self.world.entities) do
     if entity.humanoid_class == "Receptionist" and not entity.associated_desk and not entity.fired then
-      local distance = world.pathfinder:findDistance(entity.tile_x, entity.tile_y, use_x, use_y)
+      local distance = self.world.pathfinder:findDistance(entity.tile_x, entity.tile_y, use_x, use_y)
       if not nearest_d or distance < nearest_d then
         nearest_staff = entity
         nearest_d = distance
@@ -198,14 +197,14 @@ function ReceptionDesk:onDestroy()
     self.reserved_for = nil
 
     -- Find a new reception desk for the receptionist
-    local world = receptionist.world
-    world:findObjectNear(receptionist, "reception_desk", nil, function(x, y)
-      local obj = world:getObject(x, y, "reception_desk")
-      -- Make sure we are not selecting the same desk again
-      if obj and obj ~= self then
-        return obj:occupy(receptionist)
-      end
-    end)
+    self.world:findObjectNear(receptionist, "reception_desk", nil,
+        function(x, y)
+          local obj = self.world:getObject(x, y, "reception_desk")
+          -- Make sure we are not selecting the same desk again
+          if obj and obj ~= self then
+            return obj:occupy(receptionist)
+          end
+        end)
   end
   self.queue:rerouteAllPatients(SeekReceptionAction())
 
