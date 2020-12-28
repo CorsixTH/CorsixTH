@@ -1029,7 +1029,7 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
-  if window:mustPause() then
+  if self.app.world and window:mustPause() then
     self.app.world:setSpeed("Pause")
     self.app.video:setBlueFilterActive(false) -- mustPause windows shouldn't cause tainting
   end
