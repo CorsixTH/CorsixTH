@@ -43,7 +43,7 @@ if(APPLE)
 elseif(MSVC)
   add_executable(CorsixTH CorsixTH.rc)
 else()
-  add_executable(CorsixTH)
+  add_executable(CorsixTH "")
 endif()
 
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
