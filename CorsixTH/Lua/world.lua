@@ -116,10 +116,10 @@ function World:World(app)
     self.free_build_mode = false
   else
     self.free_build_mode = app.config.free_build_mode
-    self.debug_disable_salary_raise = self.free_build_mode
   end
 
-  self.debug_disable_salary_raise = false
+  -- If set, do not create salary raise requests.
+  self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
@@ -671,6 +671,8 @@ function World:tickEarthquake()
   end
 end
 
+--! Enable or disable salary raise events.
+--!param mode (boolean) If true, do not create salary raise events.
 function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
