@@ -1050,6 +1050,7 @@ function App:run()
   local e, where = SDL.mainloop(co)
   debug.sethook(co, nil)
   self.running = false
+  self.video:setCaptureMouse(false) -- Free the mouse, so the user can eg close the window.
   if e ~= nil then
     if where then
       -- Errors from an asynchronous callback done on the dispatcher coroutine
