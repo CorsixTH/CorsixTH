@@ -1517,6 +1517,26 @@ function App:quickLoad()
   end
 end
 
+--! Function to check the savegame version matches or is older than the installation of CorsixTH
+--!param save_version (num)
+--!param save_release (string) Game's human readable game version
+--!return true if compatible, otherwise false
+function App:checkCompatibility(save_version, save_release)
+  local app_version = self.savegame_version
+  local version_name = self:getVersion(app_version)
+  local save_release_ver = save_release or "Trunk" -- For compatibility
+  local app_version_humanize = tostring(version_name .. " [" .. app_version .. "]")
+  local save_version_humanize = tostring(save_release_ver .. " [" .. save_version .. "]")
+
+  if app_version >= save_version or self.config.debug then
+    return true
+  else
+    local err = _S.errors.compatibility_error:format(save_version_humanize, app_version_humanize)
+    UILoadGame:loadError(err)
+    return false
+  end
+end
+
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
@@ -1585,11 +1605,12 @@ function App:afterLoad()
                        ") to " .. new .. " (" .. self:getVersion() ..
                        "). The save was created using " .. first ..
                        " (" .. self:getVersion(first) .. ")")
-  else
-    -- TODO: This should maybe be forbidden completely.
+  else -- Save is newer than the game and can only proceed in debug mode
     self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
                        ")" .. " in older version " .. new .. " (" .. self:getVersion() .. ").")
+    self.ui:addWindow(UIInformation(self.ui, {_S.warnings.newersave}))
   end
+  self.world.release_version = self:getVersion()
   self.world.savegame_version = new
 
   if old < 87 then

@@ -130,6 +130,7 @@ function World:World(app)
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
   self.savegame_version = app.savegame_version
+  self.release_version = app:getVersion(self.savegame_version)
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
@@ -2660,6 +2661,7 @@ function World:afterLoad(old, new)
   end
 
   self.savegame_version = new
+  self.release_version = TheApp:getVersion(new)
 end
 
 function World:playLoadedEntitySounds()

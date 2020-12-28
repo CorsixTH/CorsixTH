@@ -41,10 +41,14 @@ function UILoadGame:choiceMade(name)
   local status, err = pcall(app.load, app, name)
   if not status then
     err = _S.errors.load_prefix .. err
-    print(err)
-    app:loadMainMenu()
-    app.ui:addWindow(UIInformation(self.ui, {err}))
+    self:loadError(err)
   end
+end
+
+function UILoadGame:loadError(err)
+  print(err)
+  TheApp:loadMainMenu()
+  TheApp.ui:addWindow(UIInformation(TheApp.ui, {err}))
 end
 
 function UILoadGame:close()
