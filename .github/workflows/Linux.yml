@@ -14,19 +14,32 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - lua: LuaJIT
+          - static_analysis: 0
+            docs: 0
+            cmake:
+            lua: LuaJIT
             luac: luac5.1
             packages: libluajit-5.1-dev luajit
             cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so'
-          - lua: Lua 5.1
+          - static_analysis: 0
+            docs: 0
+            cmake:
+            lua: Lua 5.1
             luac: luac5.1
             packages: liblua5.1-dev lua5.1
-          - lua: Lua 5.3
+          - static_analysis: 1
+            docs: 1
+            cmake: 3.5
+            lua: Lua 5.3
             luac: luac5.3
             packages: liblua5.3-dev lua5.3
     name: Linux and Tests on ${{ matrix.lua }}
     steps:
       - uses: actions/checkout@v2  # Keeps the git OAuth token after checkout
+      - name: Setup CMake
+        uses: jwlawson/actions-setup-cmake@v1.5
+        with:
+          cmake-version: ${{ matrix.cmake }}
       - name: Install ${{ matrix.lua }}
         run: |
           sudo apt-get install ${{ matrix.packages }} luarocks
@@ -72,7 +85,7 @@ jobs:
           # Run lua unit tests
           busted --verbose --directory=CorsixTH/Luatest
       - name: Run simple code tests
-        if: matrix.lua == 'Lua 5.3'
+        if: matrix.static_analysis
         run: |
           # Check if there are trailing whitespaces.
           python3 scripts/check_trailing_whitespaces.py
@@ -99,7 +112,7 @@ jobs:
           yamllint --config-data "rules: {line-length: disable}" .github/workflows/Linux.yml
           shellcheck --shell sh scripts/macos_luarocks
       - name: Run clang code tests
-        if: matrix.lua == 'Lua 5.3'
+        if: matrix.static_analysis
         run: |
           # Check cpp format
           clang-format-9 -i CorsixTH/Src/*.cpp CorsixTH/Src/*.h AnimView/*.cpp \
@@ -109,11 +122,11 @@ jobs:
           clang-tidy-9 -p build --warnings-as-errors=\* \
             CorsixTH/Src/*.c CorsixTH/Src/*.cpp libs/rnc/*.cpp CorsixTH/SrcUnshared/main.cpp
       - name: Generate documentation
-        if: matrix.lua == 'Lua 5.3'
+        if: matrix.docs
         run: |
           cmake --build build/ --target -- doc
       - name: Upload documentation
-        if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.lua == 'Lua 5.3'
+        if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.docs
         run: |
           git config user.email "documentationbot@corsixth.com"
           git config user.name "Docs Bot"
