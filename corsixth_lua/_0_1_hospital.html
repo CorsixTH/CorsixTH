@@ -1,0 +1,1856 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Hospital Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Hospital Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L25">line 25 of Lua/hospital.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_a_i_hospital.html">AIHospital</a>, <a href="_0_1_player_hospital.html">PlayerHospital</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1__fix_boiler">_fixBoiler</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_handyman_task">addHandymanTask</a>(<span class="p">object</span>, <span class="p">taskType</span>, <span class="p">priority</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">call</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_insurance_money">addInsuranceMoney</a>(<span class="p">company</span>, <span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_patient">addPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_rathole">addRathole</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">wall</span>, <span class="p">parcel</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_staff">addStaff</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_to_epidemic">addToEpidemic</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1assign_handyman_to_task">assignHandymanToTask</a>(<span class="p">handyman</span>, <span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1boiler_breakdown">boilerBreakdown</a>(<span class="p">broken_heat</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1can_concentrate_research">canConcentrateResearch</a>(<span class="p">disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1change_reputation">changeReputation</a>(<span class="p">reason</span>, <span class="p">disease</span>, <span class="p">valueChange</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1change_value">changeValue</a>(<span class="p">changeValue</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1check_disease_requirements">checkDiseaseRequirements</a>(<span class="p">disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1check_emergency_over">checkEmergencyOver</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1cold_warning">coldWarning</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1compute_price_level_impact">computePriceLevelImpact</a>(<span class="p">patient</span>, <span class="p">casebook</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_epidemics">countEpidemics</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_fire_extinguishers">countFireExtinguishers</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_general_objects">countGeneralObjects</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_patients">countPatients</a>(<span class="p">max_count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_plants">countPlants</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_radiators">countRadiators</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_reception_desks">countReceptionDesks</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_room_of_type">countRoomOfType</a>(<span class="p">type</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_sitting_standing">countSittingStanding</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_staff_of_category">countStaffOfCategory</a>(<span class="p">category</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1create_emergency">createEmergency</a>(<span class="p">emergency</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1create_vip">createVip</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1days_until_next_disaster">daysUntilNextDisaster</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1determine_if_contagious">determineIfContagious</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1find_handyman_task_subtable">findHandymanTaskSubtable</a>(<span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1find_reception_desks">findReceptionDesks</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_average_patient_attribute">getAveragePatientAttribute</a>(<span class="p">attribute</span>, <span class="p">default_value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_average_staff_attribute">getAverageStaffAttribute</a>(<span class="p">attribute</span>, <span class="p">default_value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_debug_patient">getDebugPatient</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_handyman_task_priority">getHandymanTaskPriority</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_heliport_position">getHeliportPosition</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_heliport_spawn_position">getHeliportSpawnPosition</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_index_of_task">getIndexOfTask</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">taskType</span>, <span class="p">obj</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_object_build_cost">getObjectBuildCost</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_player_index">getPlayerIndex</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_reputation_change_likelihood">getReputationChangeLikelihood</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_task_object">getTaskObject</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_treatment_price">getTreatmentPrice</a>(<span class="p">disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_walls_around">getWallsAround</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1has_staffed_desk">hasStaffedDesk</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1hot_warning">hotWarning</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1humanoid_death">humanoidDeath</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1init_owned_plots">initOwnedPlots</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1init_staff">initStaff</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_in_hospital">isInHospital</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_player_hospital">isPlayerHospital</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_reputation_change_allowed">isReputationChangeAllowed</a>(<span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1log_transaction">logTransaction</a>(<span class="p">transaction</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1manage_epidemics">manageEpidemics</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1modify_handyman_task_priority">modifyHandymanTaskPriority</a>(<span class="p">taskIndex</span>, <span class="p">newPriority</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_cured">msgCured</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_killed">msgKilled</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_plant">msgPlant</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_reception_desk">msgReceptionDesk</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1notify_of_staff_change">notifyOfStaffChange</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1object_placed">objectPlaced</a>(<span class="p">entity</span>, <span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_day">onEndDay</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_month">onEndMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_year">onEndYear</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1pay_supplier_for_drug">paySupplierForDrug</a>(<span class="p">disease_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1purchase_plot">purchasePlot</a>(<span class="p">plot_number</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money">receiveMoney</a>(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money_for_product">receiveMoneyForProduct</a>(<span class="p">patient</span>, <span class="p">amount</span>, <span class="p">reason</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money_for_treatment">receiveMoneyForTreatment</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_debug_patient">removeDebugPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_handyman_task">removeHandymanTask</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_patient">removePatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_rathole">removeRathole</a>(<span class="p">hole</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_rathole_x_y">removeRatholeXY</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_ratholes_around_room">removeRatholesAroundRoom</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_staff">removeStaff</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1resolve_emergency">resolveEmergency</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1room_not_yet_researched">roomNotYetResearched</a>(<span class="p">disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1search_for_handyman_task">searchForHandymanTask</a>(<span class="p">handyman</span>, <span class="p">taskType</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1sell_soda_to_patient">sellSodaToPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1show_gates_to_hell">showGatesToHell</a>(<span class="p">_entity</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1spawn_contagious_patient">spawnContagiousPatient</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1spawn_patient">spawnPatient</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1spend_money">spendMoney</a>(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1tick">tick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1unconditional_change_reputation">unconditionalChangeReputation</a>(<span class="p">valueChange</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_cured_counts">updateCuredCounts</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_not_cured_counts">updateNotCuredCounts</a>(<span class="p">patient</span>, <span class="p">reason</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_percentages">updatePercentages</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">_initResearch</span>
+ </li>
+ <li><span class="p">acc_heating</span>
+ </li>
+ <li><span class="p">acc_loan_interest</span>
+ </li>
+ <li><span class="p">acc_overdraft</span>
+ </li>
+ <li><span class="p">acc_research_cost</span>
+ </li>
+ <li><span class="p">announce_vip</span>
+ </li>
+ <li><span class="p">autopsy_discovered</span>
+ </li>
+ <li><span class="p">balance</span>
+ </li>
+ <li><span class="p">bench_msg</span>
+ </li>
+ <li><span class="p">boiler_can_break</span>
+ </li>
+ <li><span class="p">boiler_countdown</span>
+ </li>
+ <li><span class="p">cash_msg</span>
+ </li>
+ <li><span class="p">concurrent_epidemic_limit</span>
+ </li>
+ <li><span class="p">curr_setting</span>
+ </li>
+ <li><span class="p">debug_patients</span>
+ </li>
+ <li><span class="p">disasterless_days</span>
+ </li>
+ <li><span class="p">discover_autopsy_risk</span>
+ </li>
+ <li><span class="p">discovered_diseases</span>
+ </li>
+ <li><span class="p">discovered_rooms</span>
+ </li>
+ <li><span class="p">disease_casebook</span>
+ </li>
+ <li><span class="p">emergency</span>
+ </li>
+ <li><span class="p">emergency_patients</span>
+ </li>
+ <li><span class="p">epidemic</span>
+ </li>
+ <li><span class="p">free_build_mode</span>
+ </li>
+ <li><span class="p">future_epidemics_pool</span>
+ </li>
+ <li><span class="p">handymanTasks</span>
+ </li>
+ <li><span class="p">has_impressive_reputation</span>
+ </li>
+ <li><span class="p">heating</span>
+ </li>
+ <li><span class="p">heating_broke</span>
+ </li>
+ <li><span class="p">inflation_rate</span>
+ </li>
+ <li><span class="p">initial_grace</span>
+ </li>
+ <li><span class="p">insurance</span>
+ </li>
+ <li><span class="p">insurance_balance</span>
+ </li>
+ <li><span class="p">interest_rate</span>
+ </li>
+ <li><span class="p">is_in_world</span>
+ </li>
+ <li><span class="p">loan</span>
+ </li>
+ <li><span class="p">money_in</span>
+ </li>
+ <li><span class="p">money_out</span>
+ </li>
+ <li><span class="p">msg_counter</span>
+ </li>
+ <li><span class="p">name</span>
+ </li>
+ <li><span class="p">not_cured</span>
+ </li>
+ <li><span class="p">not_cured_ty</span>
+ </li>
+ <li><span class="p">num_cured</span>
+ </li>
+ <li><span class="p">num_cured_ty</span>
+ </li>
+ <li><span class="p">num_deaths</span>
+ </li>
+ <li><span class="p">num_deaths_this_year</span>
+ </li>
+ <li><span class="p">num_explosions</span>
+ </li>
+ <li><span class="p">num_vips</span>
+ </li>
+ <li><span class="p">num_vips_ty</span>
+ </li>
+ <li><span class="p">num_visitors</span>
+ </li>
+ <li><span class="p">num_visitors_ty</span>
+ </li>
+ <li><span class="p">opened</span>
+ </li>
+ <li><span class="p">over_priced_threshold</span>
+ </li>
+ <li><span class="p">ownedPlots</span>
+ </li>
+ <li><span class="p">patientcount</span>
+ </li>
+ <li><span class="p">patients</span>
+ </li>
+ <li><span class="p">percentage_cured</span>
+ </li>
+ <li><span class="p">percentage_killed</span>
+ </li>
+ <li><span class="p">player_salary</span>
+ </li>
+ <li><span class="p">pleased_vips_ty</span>
+ </li>
+ <li><span class="p">policies</span>
+ </li>
+ <li><span class="p">population</span>
+ </li>
+ <li><span class="p">radiator_heat</span>
+ </li>
+ <li><span class="p">ratholes</span>
+ </li>
+ <li><span class="p">reception_desks</span>
+ </li>
+ <li><span class="p">receptionist_count</span>
+ </li>
+ <li><span class="p">receptionist_msg</span>
+ </li>
+ <li><span class="p">reputation</span>
+ </li>
+ <li><span class="p">reputation_above_threshold</span>
+ </li>
+ <li><span class="p">reputation_max</span>
+ </li>
+ <li><span class="p">reputation_min</span>
+ </li>
+ <li><span class="p">research</span>
+ </li>
+ <li><span class="p">research_dep_built</span>
+ </li>
+ <li><span class="p">research_rooms</span>
+ </li>
+ <li><span class="p">sal_min</span>
+ </li>
+ <li><span class="p">salary_incr</span>
+ </li>
+ <li><span class="p">salary_offer</span>
+ </li>
+ <li><span class="p">seating_warning</span>
+ </li>
+ <li><span class="p">show_progress_screen_warnings</span>
+ </li>
+ <li><span class="p">sodas_sold</span>
+ </li>
+ <li><span class="p">staff</span>
+ </li>
+ <li><span class="p">staff_room_msg</span>
+ </li>
+ <li><span class="p">statistics</span>
+ </li>
+ <li><span class="p">thirst_msg</span>
+ </li>
+ <li><span class="p">toilet_msg</span>
+ </li>
+ <li><span class="p">transactions</span>
+ </li>
+ <li><span class="p">under_priced_threshold</span>
+ </li>
+ <li><span class="p">undiscovered_rooms</span>
+ </li>
+ <li><span class="p">value</span>
+ </li>
+ <li><span class="p">vip_declined</span>
+ </li>
+ <li><span class="p">warmth_msg</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_hospital_1_hospital">function Hospital:Hospital(<span class="p">world</span>, <span class="p">avail_rooms</span>, <span class="p">name</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">avail_rooms</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L30">line 30 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1__fix_boiler">function Hospital:_fixBoiler()</a></h5>
+ <p>
+ Boiler broke down and work is done to get it fixed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L785">line 785 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_handyman_task">function Hospital:addHandymanTask(<span class="p">object</span>, <span class="p">taskType</span>, <span class="p">priority</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">call</span>)</a></h5>
+ <p>
+ Adds a handyman task<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">The object needing attention</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">The handyman task type: repairing, watering, cleaning</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">?</td>
+ <td class="d">Task priority: 1 is low, 2 is high</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">coordinate</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">coordinate</td>
+ </tr>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">The call added to the dispatcher</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2088">line 2088 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_insurance_money">function Hospital:addInsuranceMoney(<span class="p">company</span>, <span class="p">amount</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">company</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1449">line 1449 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_patient">function Hospital:addPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1566">line 1566 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_rathole">function Hospital:addRathole(<span class="p">x</span>, <span class="p">y</span>, <span class="p">wall</span>, <span class="p">parcel</span>)</a></h5>
+ <p>
+ Add a rathole to the room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the tile containing the rathole.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the tile containing the rathole.</td>
+ </tr>
+ <tr>
+ <td class="n">wall</td>
+ <td class="t">string</td>
+ <td class="d"> Wall containing the hole (north, west, south, east)</td>
+ </tr>
+ <tr>
+ <td class="n">parcel</td>
+ <td class="t">int</td>
+ <td class="d"> Parcel number of the xy position.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2042">line 2042 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_staff">function Hospital:addStaff(<span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1559">line 1559 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1add_to_epidemic">function Hospital:addToEpidemic(<span class="p">patient</span>)</a></h5>
+ <p>
+ Determines if there is a suitable epidemic the contagious patient can
+ belong to and adds them to it if possible. N.B. a patient isn't actually
+ contagious until they belong to an epidemic. So if it isn't possible to add a
+ patient to an epidemic they are just treated as a normal patient.
+ @param patient (Patient) patient to attempt to add to an epidemic<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1283">line 1283 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1after_load">function Hospital:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Update the loaded game with version 'old' to the version 'new'.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">Version of the loaded game.</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">Version of the code being executed.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L269">line 269 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1assign_handyman_to_task">function Hospital:assignHandymanToTask(<span class="p">handyman</span>, <span class="p">taskIndex</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskIndex</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2144">line 2144 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1boiler_breakdown">function Hospital:boilerBreakdown(<span class="p">broken_heat</span>)</a></h5>
+ <p>
+ Boiler should break down.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">broken_heat</td>
+ <td class="t">0&nbsp;or&nbsp;or&nbsp;or&nbsp;1</td>
+ <td class="d"> Amount of heat to output due to being broken.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L754">line 754 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1can_concentrate_research">function Hospital:canConcentrateResearch(<span class="p">disease</span>)</a></h5>
+ <p>
+ Function that returns true if concentrating research on the disease is possible.<br/><br/>
+ @param disease (string): the disease to be checked.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2282">line 2282 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1change_reputation">function Hospital:changeReputation(<span class="p">reason</span>, <span class="p">disease</span>, <span class="p">valueChange</span>)</a></h5>
+ <p>
+ Normally reputation is changed based on a reason, and the affected<br/><br/>
+ disease also has its own reputation meter.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d"> The reason for changing reputation, for example "cured" or "death".</td>
+ </tr>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">The disease, if any, that should be affected.</td>
+ </tr>
+ <tr>
+ <td class="n">valueChange</td>
+ <td class="t">integer</td>
+ <td class="d"> In some cases, for example at year end, the amount varies a lot.
+Then it is specified here.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1761">line 1761 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1change_value">function Hospital:changeValue(<span class="p">changeValue</span>)</a></h5>
+ <p>
+ Change the hospital value by an amount independent of a cost being incurred<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">changeValue</td>
+ <td class="t">int</td>
+ <td class="d"> The amount the hospital value should change by</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2349">line 2349 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1check_disease_requirements">function Hospital:checkDiseaseRequirements(<span class="p">disease</span>)</a></h5>
+ <p>
+ i.e. a list of rooms (ordered the same as disease.treatment_rooms), and a set of humanoid_classes with<br/><br/>
+ the needed amount of that class as the value<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">String</td>
+ <td class="d"> The disease to check the requirements for</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1937">line 1937 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1check_emergency_over">function Hospital:checkEmergencyOver()</a></h5>
+ <p>
+ Determine if all of the patients in the emergency have been cured or killed.<br/><br/>
+ If they have end the emergency timer.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1155">line 1155 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1cold_warning">function Hospital:coldWarning()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L729">line 729 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1compute_price_level_impact">function Hospital:computePriceLevelImpact(<span class="p">patient</span>, <span class="p">casebook</span>)</a></h5>
+ <p>
+ is adjusted.<br/><br/>
+ localised disease name when Adviser tells the warning message.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">patient</td>
+ <td class="d"> The patient paying the bill. His/her happiness level</td>
+ </tr>
+ <tr>
+ <td class="n">casebook</td>
+ <td class="t">object</td>
+ <td class="d"> Disease casebook entry. It's used to display the</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2314">line 2314 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_epidemics">function Hospital:countEpidemics()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1215">line 1215 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_fire_extinguishers">function Hospital:countFireExtinguishers()</a></h5>
+ <p>
+ Get the number of fire extinguishers in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1654">line 1654 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_general_objects">function Hospital:countGeneralObjects()</a></h5>
+ <p>
+ Get the number of general objects in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1661">line 1661 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_patients">function Hospital:countPatients(<span class="p">max_count</span>)</a></h5>
+ <p>
+ Count the number of patients in the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">max_count</td>
+ <td class="t">optional&nbsp;or&nbsp;integer</td>
+ <td class="d"> If provided, non-negative maximum count to return.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L611">line 611 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_plants">function Hospital:countPlants()</a></h5>
+ <p>
+ Get the number of plants in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1647">line 1647 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_radiators">function Hospital:countRadiators()</a></h5>
+ <p>
+ Get the number of radiators in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1640">line 1640 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_reception_desks">function Hospital:countReceptionDesks()</a></h5>
+ <p>
+ Get the number of reception desks in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1633">line 1633 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_room_of_type">function Hospital:countRoomOfType(<span class="p">type</span>)</a></h5>
+ <p>
+ Checks if the hospital has a room of a given type.<br/><br/>
+ Returns Number of that type found<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">type</td>
+ <td class="t">string</td>
+ <td class="d"> A room_info.id, e.g. "ward".</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1619">line 1619 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_sitting_standing">function Hospital:countSittingStanding()</a></h5>
+ <p>
+ Count number of sitting and standing patients in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L627">line 627 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1count_staff_of_category">function Hospital:countStaffOfCategory(<span class="p">category</span>)</a></h5>
+ <p>
+ "Surgeon", "Researcher", "Junior" or "Consultant"<br/><br/>
+ returns Number of that type employed<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">category</td>
+ <td class="t">string</td>
+ <td class="d"> A humanoid_class or one of the specialists, i.e.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1596">line 1596 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1create_emergency">function Hospital:createEmergency(<span class="p">emergency</span>)</a></h5>
+ <p>
+ Creates complete emergency with patients, what disease they have, what's needed
+to cure them and the fax.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">emergency</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1043">line 1043 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1create_vip">function Hospital:createVip()</a></h5>
+ <p>
+ Creates VIP and sends a FAX to query the user.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1168">line 1168 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1days_until_next_disaster">function Hospital:daysUntilNextDisaster()</a></h5>
+ <p>
+ Decide how many days the hospital functions within specification.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L746">line 746 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1determine_if_contagious">function Hospital:determineIfContagious(<span class="p">patient</span>)</a></h5>
+ <p>
+ Determines if a patient is contagious and then attempts to add them the
+ appropriate epidemic if so.
+ @param patient (Patient) patient to determine if contagious<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1256">line 1256 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1find_handyman_task_subtable">function Hospital:findHandymanTaskSubtable(<span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2130">line 2130 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1find_reception_desks">function Hospital:findReceptionDesks()</a></h5>
+ <p>
+ Collect the reception desks in the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1009">line 1009 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_average_patient_attribute">function Hospital:getAveragePatientAttribute(<span class="p">attribute</span>, <span class="p">default_value</span>)</a></h5>
+ <p>
+ Compute average of an attribute for all patients in the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">str</td>
+ <td class="d"> Name of the attribute.</td>
+ </tr>
+ <tr>
+ <td class="n">default_value</td>
+ <td class="t">?</td>
+ <td class="d">Value to return if there are no patients.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1897">line 1897 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_average_staff_attribute">function Hospital:getAverageStaffAttribute(<span class="p">attribute</span>, <span class="p">default_value</span>)</a></h5>
+ <p>
+ Compute average of an attribute for all staff in the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">str</td>
+ <td class="d"> Name of the attribute.</td>
+ </tr>
+ <tr>
+ <td class="n">default_value</td>
+ <td class="t">?</td>
+ <td class="d">Value to return if there is no staff.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1920">line 1920 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_debug_patient">function Hospital:getDebugPatient()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1332">line 1332 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_handyman_task_priority">function Hospital:getHandymanTaskPriority(<span class="p">taskIndex</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ Queries the priority of an existing handyman task<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">taskIndex</td>
+ <td class="t">integer</td>
+ <td class="d"> Number of task</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">The handyman task type: repairing, watering, cleaning</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2101">line 2101 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_heliport_position">function Hospital:getHeliportPosition()</a></h5>
+ <p>
+ Returns the heliport x and y coordinates or nil if none exist.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L700">line 700 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_heliport_spawn_position">function Hospital:getHeliportSpawnPosition()</a></h5>
+ <p>
+ Returns the tile on which patients should spawn when getting out of the helicopter.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L712">line 712 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_index_of_task">function Hospital:getIndexOfTask(<span class="p">x</span>, <span class="p">y</span>, <span class="p">taskType</span>, <span class="p">obj</span>)</a></h5>
+ <p>
+ Find a handyman task by task type, position, and possibly the used object.<br/><br/>
+ Since multiple litter objects may exist at the same tile, the object must be given when cleaning.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> The X coordinate of the position.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> The Y coordinate of the position.</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">Type of the task.</td>
+ </tr>
+ <tr>
+ <td class="n">obj</td>
+ <td class="t">Object</td>
+ <td class="d"> If specified, the object used for doing the task.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2231">line 2231 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_object_build_cost">function Hospital:getObjectBuildCost(<span class="p">name</span>)</a></h5>
+ <p>
+ Returns how much a given object currently costs to purchase. The cost
+may be affected by research progress.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> The name (id) of the object to investigate.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1341">line 1341 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_player_index">function Hospital:getPlayerIndex()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L695">line 695 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_reputation_change_likelihood">function Hospital:getReputationChangeLikelihood()</a></h5>
+ <p>
+ Compute the likelihood for a reputation change to be effective.<br/><br/>
+ Likelihood gets smaller as hospital reputation gets closer to extreme values.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1823">line 1823 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_task_object">function Hospital:getTaskObject(<span class="p">taskIndex</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">taskIndex</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2140">line 2140 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_treatment_price">function Hospital:getTreatmentPrice(<span class="p">disease</span>)</a></h5>
+ <p>
+ Function to determine the price for a treatment, modified by reputation and percentage
+Treatment charge should never be less than the starting price if reputation falls below 500<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1436">line 1436 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1get_walls_around">function Hospital:getWallsAround(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Get the set of walls around a tile position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the queried tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the queried tile.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1970">line 1970 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1has_staffed_desk">function Hospital:hasStaffedDesk()</a></h5>
+ <p>
+ Does the hospital have a working reception?<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1000">line 1000 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1hot_warning">function Hospital:hotWarning()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L737">line 737 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1humanoid_death">function Hospital:humanoidDeath(<span class="p">patient</span>)</a></h5>
+ <p>
+ Humanoid has died, record the incident.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">The deceased.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1576">line 1576 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1init_owned_plots">function Hospital:initOwnedPlots()</a></h5>
+ <p>
+ Afterload function to initialize the owned plots.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2247">line 2247 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1init_staff">function Hospital:initStaff()</a></h5>
+ <p>
+ Initialize hospital staff from the level config.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1483">line 1483 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1is_in_hospital">function Hospital:isInHospital(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Test if a given map tile is part of this hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based X coordinate of the tile to test.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based Y coordinate of the tile to test.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L721">line 721 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1is_player_hospital">function Hospital:isPlayerHospital()</a></h5>
+ <p>
+ Returns whether this hospital is controlled by a real person or not.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L995">line 995 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1is_reputation_change_allowed">function Hospital:isReputationChangeAllowed(<span class="p">amount</span>)</a></h5>
+ <p>
+ a gain is less likely. As we approach 0, a loss is less likely.<br/><br/>
+ Under 500, a gain is always effective. Over 500, a loss is always effective.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">int</td>
+ <td class="d">: The amount of reputation change.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1811">line 1811 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1log_transaction">function Hospital:logTransaction(<span class="p">transaction</span>)</a></h5>
+ <p>
+ Add a transaction to the hospital's transaction log.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">transaction</td>
+ <td class="t">table</td>
+ <td class="d"> A table containing a string field called `desc`, and
+at least one of the following integer fields: `spend`, `receive`.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1469">line 1469 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1manage_epidemics">function Hospital:manageEpidemics()</a></h5>
+ <p>
+ Make the active epidemic (if exists) and any future epidemics tick. If there
+is no current epidemic determines if any epidemic in the pool of future
+epidemics can become the active one. Also removes any epidemics from the
+future pool which have no infected patients and thus, will have no effect on
+the hospital.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1222">line 1222 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1modify_handyman_task_priority">function Hospital:modifyHandymanTaskPriority(<span class="p">taskIndex</span>, <span class="p">newPriority</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">taskIndex</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">newPriority</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2110">line 2110 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1msg_cured">function Hospital:msgCured()</a></h5>
+ <p>
+ Give the user possibly a message about a cured patient.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L259">line 259 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1msg_killed">function Hospital:msgKilled()</a></h5>
+ <p>
+ Give the user possibly a message about a dead patient.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L264">line 264 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1msg_plant">function Hospital:msgPlant()</a></h5>
+ <p>
+ Give advice to the user about maintenance of plants.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1709">line 1709 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1msg_reception_desk">function Hospital:msgReceptionDesk()</a></h5>
+ <p>
+ Give advice to the user about having bought a reception desk.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1704">line 1704 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1notify_of_staff_change">function Hospital:notifyOfStaffChange(<span class="p">staff</span>)</a></h5>
+ <p>
+ Notify patients of a change to hospital staff members<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">Staff</td>
+ <td class="d"> Changed staff member subject of notification</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2341">line 2341 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1object_placed">function Hospital:objectPlaced(<span class="p">entity</span>, <span class="p">id</span>)</a></h5>
+ <p>
+ A new object has been placed in the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">Entity</td>
+ <td class="d"> The entity that was just placed.</td>
+ </tr>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">string</td>
+ <td class="d"> That entity's id.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1668">line 1668 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1on_end_day">function Hospital:onEndDay()</a></h5>
+ <p>
+ Called at the end of each day.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L856">line 856 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1on_end_month">function Hospital:onEndMonth()</a></h5>
+ <p>
+ Called at the end of each month.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L919">line 919 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1on_end_year">function Hospital:onEndYear()</a></h5>
+ <p>
+ Called at the end of each year<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1024">line 1024 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1pay_supplier_for_drug">function Hospital:paySupplierForDrug(<span class="p">disease_id</span>)</a></h5>
+ <p>
+ Pay drug if drug has been purchased to treat a patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease_id</td>
+ <td class="t">?</td>
+ <td class="d">Disease that was treated.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1459">line 1459 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1purchase_plot">function Hospital:purchasePlot(<span class="p">plot_number</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">plot_number</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L675">line 675 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1receive_money">function Hospital:receiveMoney(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)</a></h5>
+ <p>
+ Increases the player's money by the given amount and logs the transaction.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">integer</td>
+ <td class="d"> The (positive) amount to receive.</td>
+ </tr>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d"> A string that tells what happened. Should be one of the strings
+in _S.transactions.</td>
+ </tr>
+ <tr>
+ <td class="n">changeValue</td>
+ <td class="t">integer</td>
+ <td class="d"> The (positive) amount the hospital value should be decreased</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1380">line 1380 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1receive_money_for_product">function Hospital:receiveMoneyForProduct(<span class="p">patient</span>, <span class="p">amount</span>, <span class="p">reason</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1454">line 1454 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1receive_money_for_treatment">function Hospital:receiveMoneyForTreatment(<span class="p">patient</span>)</a></h5>
+ <p>
+ Determines how much the player should receive after a patient is treated in a room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">Patient</td>
+ <td class="d"> The patient that just got treated.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1398">line 1398 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_debug_patient">function Hospital:removeDebugPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1322">line 1322 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_handyman_task">function Hospital:removeHandymanTask(<span class="p">taskIndex</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">taskIndex</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2117">line 2117 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_patient">function Hospital:removePatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ Remove a patient from the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">Patient</td>
+ <td class="d"> Patient to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1743">line 1743 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_rathole">function Hospital:removeRathole(<span class="p">hole</span>)</a></h5>
+ <p>
+ Remove the provided rathole.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hole</td>
+ <td class="t">table&nbsp;or&nbsp;x&nbsp;or&nbsp;y&nbsp;or&nbsp;wall&nbsp;or&nbsp;optional&nbsp;or&nbsp;object</td>
+ <td class="d"> Hole to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2060">line 2060 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_rathole_x_y">function Hospital:removeRatholeXY(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Remove any rathole from the given position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">X position of the tile that should not have ratholes.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">Y position of the tile that should not have ratholes.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2075">line 2075 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_ratholes_around_room">function Hospital:removeRatholesAroundRoom(<span class="p">room</span>)</a></h5>
+ <p>
+ Remove the ratholes that use the walls of the provided room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">Room</td>
+ <td class="d"> Room being de-activated.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2028">line 2028 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1remove_staff">function Hospital:removeStaff(<span class="p">staff</span>)</a></h5>
+ <p>
+ Remove a staff member from the hospital staff.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">Staff</td>
+ <td class="d"> Staff member to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1735">line 1735 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1resolve_emergency">function Hospital:resolveEmergency()</a></h5>
+ <p>
+ Called when the timer runs out during an emergency or when all emergency patients are cured or dead.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1119">line 1119 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1room_not_yet_researched">function Hospital:roomNotYetResearched(<span class="p">disease</span>)</a></h5>
+ <p>
+ has not been researched yet.<br/><br/>
+ param disease (string): the disease to be checked.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2267">line 2267 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1search_for_handyman_task">function Hospital:searchForHandymanTask(<span class="p">handyman</span>, <span class="p">taskType</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">taskType</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2157">line 2157 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1sell_soda_to_patient">function Hospital:sellSodaToPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ Sell a soda to a patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">patient</td>
+ <td class="d"> The patient buying the soda.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1429">line 1429 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1show_gates_to_hell">function Hospital:showGatesToHell(<span class="p">_entity</span>)</a></h5>
+ <p>
+ Show the 'Gates to hell' animation.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">_entity</td>
+ <td class="t">Entity</td>
+ <td class="d"> Gates to hell.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1714">line 1714 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1spawn_contagious_patient">function Hospital:spawnContagiousPatient()</a></h5>
+ <p>
+ Creates a new epidemic by creating a new contagious patient with
+ a random disease - this is NOT typically how epidemics are started (mainly for cheat use)
+ see @Hospital:determineIfContagious() to see how epidemics are typically started<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1180">line 1180 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1spawn_patient">function Hospital:spawnPatient()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1318">line 1318 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1spend_money">function Hospital:spendMoney(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)</a></h5>
+ <p>
+ Lowers the player's money by the given amount and logs the transaction.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">integer</td>
+ <td class="d"> The (positive) amount to spend.</td>
+ </tr>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d"> A string that shows what happened. Should be one of the strings
+in _S.transactions.</td>
+ </tr>
+ <tr>
+ <td class="n">changeValue</td>
+ <td class="t">integer</td>
+ <td class="d"> The (positive) amount the hospital value should be increased</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1362">line 1362 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1tick">function Hospital:tick()</a></h5>
+ <p>
+ Called each tick, also called 'hours'. Check hours_per_day in<br/><br/>
+ date.lua to see how many times per day this is.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L643">line 643 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1unconditional_change_reputation">function Hospital:unconditionalChangeReputation(<span class="p">valueChange</span>)</a></h5>
+ <p>
+ In most cases, the better entry point for changing reputation<br/><br/>
+ is 'Hospital:changeReputation'.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">valueChange</td>
+ <td class="t">integer</td>
+ <td class="d"> Amount of change.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1786">line 1786 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1update_cured_counts">function Hospital:updateCuredCounts(<span class="p">patient</span>)</a></h5>
+ <p>
+ Update the 'cured' counts of the hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">Patient that was cured.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1847">line 1847 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1update_not_cured_counts">function Hospital:updateNotCuredCounts(<span class="p">patient</span>, <span class="p">reason</span>)</a></h5>
+ <p>
+ -"kicked": Patient goes home early (manually sent, no treatment room, etc).<br/><br/>
+ -"over_priced": Patient considers the price too high.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">Patient that was not cured.</td>
+ </tr>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d"> the reason why the patient is not cured.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1867">line 1867 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1update_percentages">function Hospital:updatePercentages()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1890">line 1890 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

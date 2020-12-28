@@ -1,0 +1,740 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>AIHospital Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">AIHospital Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/ai_hospital.lua#L21">line 21 of Lua/hospitals/ai_hospital.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_a_i_hospital.html">AIHospital</a>
+ » <a href="_0_1_hospital.html">Hospital</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1__fix_boiler">_fixBoiler</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_handyman_task">addHandymanTask</a>(<span class="p">object</span>, <span class="p">taskType</span>, <span class="p">priority</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">call</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_insurance_money">addInsuranceMoney</a>(<span class="p">company</span>, <span class="p">amount</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_patient">addPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_rathole">addRathole</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">wall</span>, <span class="p">parcel</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_staff">addStaff</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1add_to_epidemic">addToEpidemic</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_a_i_hospital.html#_0_1_a_i_hospital_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1after_load">Hospital:afterLoad</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1assign_handyman_to_task">assignHandymanToTask</a>(<span class="p">handyman</span>, <span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1boiler_breakdown">boilerBreakdown</a>(<span class="p">broken_heat</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1can_concentrate_research">canConcentrateResearch</a>(<span class="p">disease</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1change_reputation">changeReputation</a>(<span class="p">reason</span>, <span class="p">disease</span>, <span class="p">valueChange</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1change_value">changeValue</a>(<span class="p">changeValue</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1check_disease_requirements">checkDiseaseRequirements</a>(<span class="p">disease</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1check_emergency_over">checkEmergencyOver</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1cold_warning">coldWarning</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1compute_price_level_impact">computePriceLevelImpact</a>(<span class="p">patient</span>, <span class="p">casebook</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_epidemics">countEpidemics</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_fire_extinguishers">countFireExtinguishers</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_general_objects">countGeneralObjects</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_patients">countPatients</a>(<span class="p">max_count</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_plants">countPlants</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_radiators">countRadiators</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_reception_desks">countReceptionDesks</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_room_of_type">countRoomOfType</a>(<span class="p">type</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_sitting_standing">countSittingStanding</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1count_staff_of_category">countStaffOfCategory</a>(<span class="p">category</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1create_emergency">createEmergency</a>(<span class="p">emergency</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1create_vip">createVip</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1days_until_next_disaster">daysUntilNextDisaster</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1determine_if_contagious">determineIfContagious</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1find_handyman_task_subtable">findHandymanTaskSubtable</a>(<span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1find_reception_desks">findReceptionDesks</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_average_patient_attribute">getAveragePatientAttribute</a>(<span class="p">attribute</span>, <span class="p">default_value</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_average_staff_attribute">getAverageStaffAttribute</a>(<span class="p">attribute</span>, <span class="p">default_value</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_debug_patient">getDebugPatient</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_handyman_task_priority">getHandymanTaskPriority</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_heliport_position">getHeliportPosition</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_heliport_spawn_position">getHeliportSpawnPosition</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_index_of_task">getIndexOfTask</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">taskType</span>, <span class="p">obj</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_object_build_cost">getObjectBuildCost</a>(<span class="p">name</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_player_index">getPlayerIndex</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_reputation_change_likelihood">getReputationChangeLikelihood</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_task_object">getTaskObject</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_treatment_price">getTreatmentPrice</a>(<span class="p">disease</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_walls_around">getWallsAround</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1has_staffed_desk">hasStaffedDesk</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1hot_warning">hotWarning</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1humanoid_death">humanoidDeath</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1init_owned_plots">initOwnedPlots</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1init_staff">initStaff</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_in_hospital">isInHospital</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_player_hospital">isPlayerHospital</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1is_reputation_change_allowed">isReputationChangeAllowed</a>(<span class="p">amount</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_a_i_hospital.html#_0_1_a_i_hospital_1log_transaction">logTransaction</a>()
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1log_transaction">Hospital:logTransaction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1manage_epidemics">manageEpidemics</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1modify_handyman_task_priority">modifyHandymanTaskPriority</a>(<span class="p">taskIndex</span>, <span class="p">newPriority</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_cured">msgCured</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_killed">msgKilled</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_plant">msgPlant</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1msg_reception_desk">msgReceptionDesk</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1notify_of_staff_change">notifyOfStaffChange</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1object_placed">objectPlaced</a>(<span class="p">entity</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_day">onEndDay</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_month">onEndMonth</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1on_end_year">onEndYear</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1pay_supplier_for_drug">paySupplierForDrug</a>(<span class="p">disease_id</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1purchase_plot">purchasePlot</a>(<span class="p">plot_number</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money">receiveMoney</a>(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money_for_product">receiveMoneyForProduct</a>(<span class="p">patient</span>, <span class="p">amount</span>, <span class="p">reason</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1receive_money_for_treatment">receiveMoneyForTreatment</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_debug_patient">removeDebugPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_handyman_task">removeHandymanTask</a>(<span class="p">taskIndex</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_patient">removePatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_rathole">removeRathole</a>(<span class="p">hole</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_rathole_x_y">removeRatholeXY</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_ratholes_around_room">removeRatholesAroundRoom</a>(<span class="p">room</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1remove_staff">removeStaff</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1resolve_emergency">resolveEmergency</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1room_not_yet_researched">roomNotYetResearched</a>(<span class="p">disease</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1search_for_handyman_task">searchForHandymanTask</a>(<span class="p">handyman</span>, <span class="p">taskType</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1sell_soda_to_patient">sellSodaToPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1show_gates_to_hell">showGatesToHell</a>(<span class="p">_entity</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1spawn_contagious_patient">spawnContagiousPatient</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_a_i_hospital.html#_0_1_a_i_hospital_1spawn_patient">spawnPatient</a>()
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1spawn_patient">Hospital:spawnPatient</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1spend_money">spendMoney</a>(<span class="p">amount</span>, <span class="p">reason</span>, <span class="p">changeValue</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1tick">tick</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1unconditional_change_reputation">unconditionalChangeReputation</a>(<span class="p">valueChange</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_cured_counts">updateCuredCounts</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_not_cured_counts">updateNotCuredCounts</a>(<span class="p">patient</span>, <span class="p">reason</span>)
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_hospital.html#_0_1_hospital_1update_percentages">updatePercentages</a>()
+ (inherited from <a href="_0_1_hospital.html">Hospital</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">_initResearch</span>
+ (*)
+ </li>
+ <li><span class="p">acc_heating</span>
+ (*)
+ </li>
+ <li><span class="p">acc_loan_interest</span>
+ (*)
+ </li>
+ <li><span class="p">acc_overdraft</span>
+ (*)
+ </li>
+ <li><span class="p">acc_research_cost</span>
+ (*)
+ </li>
+ <li><span class="p">announce_vip</span>
+ (*)
+ </li>
+ <li><span class="p">autopsy_discovered</span>
+ (*)
+ </li>
+ <li><span class="p">balance</span>
+ (*)
+ </li>
+ <li><span class="p">bench_msg</span>
+ (*)
+ </li>
+ <li><span class="p">boiler_can_break</span>
+ (*)
+ </li>
+ <li><span class="p">boiler_countdown</span>
+ (*)
+ </li>
+ <li><span class="p">cash_msg</span>
+ (*)
+ </li>
+ <li><span class="p">concurrent_epidemic_limit</span>
+ (*)
+ </li>
+ <li><span class="p">curr_setting</span>
+ (*)
+ </li>
+ <li><span class="p">debug_patients</span>
+ (*)
+ </li>
+ <li><span class="p">disasterless_days</span>
+ (*)
+ </li>
+ <li><span class="p">discover_autopsy_risk</span>
+ (*)
+ </li>
+ <li><span class="p">discovered_diseases</span>
+ (*)
+ </li>
+ <li><span class="p">discovered_rooms</span>
+ (*)
+ </li>
+ <li><span class="p">disease_casebook</span>
+ (*)
+ </li>
+ <li><span class="p">emergency</span>
+ (*)
+ </li>
+ <li><span class="p">emergency_patients</span>
+ (*)
+ </li>
+ <li><span class="p">epidemic</span>
+ (*)
+ </li>
+ <li><span class="p">free_build_mode</span>
+ (*)
+ </li>
+ <li><span class="p">future_epidemics_pool</span>
+ (*)
+ </li>
+ <li><span class="p">handymanTasks</span>
+ (*)
+ </li>
+ <li><span class="p">has_impressive_reputation</span>
+ (*)
+ </li>
+ <li><span class="p">heating</span>
+ (*)
+ </li>
+ <li><span class="p">heating_broke</span>
+ (*)
+ </li>
+ <li><span class="p">hosp_cheats</span>
+ </li>
+ <li><span class="p">inflation_rate</span>
+ (*)
+ </li>
+ <li><span class="p">initial_grace</span>
+ (*)
+ </li>
+ <li><span class="p">insurance</span>
+ (*)
+ </li>
+ <li><span class="p">insurance_balance</span>
+ (*)
+ </li>
+ <li><span class="p">interest_rate</span>
+ (*)
+ </li>
+ <li><span class="p">is_in_world</span>
+ </li>
+ <li><span class="p">loan</span>
+ (*)
+ </li>
+ <li><span class="p">money_in</span>
+ (*)
+ </li>
+ <li><span class="p">money_out</span>
+ (*)
+ </li>
+ <li><span class="p">msg_counter</span>
+ (*)
+ </li>
+ <li><span class="p">name</span>
+ </li>
+ <li><span class="p">not_cured</span>
+ (*)
+ </li>
+ <li><span class="p">not_cured_ty</span>
+ (*)
+ </li>
+ <li><span class="p">num_cured</span>
+ (*)
+ </li>
+ <li><span class="p">num_cured_ty</span>
+ (*)
+ </li>
+ <li><span class="p">num_deaths</span>
+ (*)
+ </li>
+ <li><span class="p">num_deaths_this_year</span>
+ (*)
+ </li>
+ <li><span class="p">num_explosions</span>
+ (*)
+ </li>
+ <li><span class="p">num_vips</span>
+ (*)
+ </li>
+ <li><span class="p">num_vips_ty</span>
+ (*)
+ </li>
+ <li><span class="p">num_visitors</span>
+ (*)
+ </li>
+ <li><span class="p">num_visitors_ty</span>
+ (*)
+ </li>
+ <li><span class="p">opened</span>
+ (*)
+ </li>
+ <li><span class="p">over_priced_threshold</span>
+ (*)
+ </li>
+ <li><span class="p">ownedPlots</span>
+ (*)
+ </li>
+ <li><span class="p">patientcount</span>
+ (*)
+ </li>
+ <li><span class="p">patients</span>
+ (*)
+ </li>
+ <li><span class="p">percentage_cured</span>
+ (*)
+ </li>
+ <li><span class="p">percentage_killed</span>
+ (*)
+ </li>
+ <li><span class="p">player_salary</span>
+ (*)
+ </li>
+ <li><span class="p">pleased_vips_ty</span>
+ (*)
+ </li>
+ <li><span class="p">policies</span>
+ (*)
+ </li>
+ <li><span class="p">population</span>
+ (*)
+ </li>
+ <li><span class="p">radiator_heat</span>
+ (*)
+ </li>
+ <li><span class="p">ratholes</span>
+ (*)
+ </li>
+ <li><span class="p">reception_desks</span>
+ (*)
+ </li>
+ <li><span class="p">receptionist_count</span>
+ (*)
+ </li>
+ <li><span class="p">receptionist_msg</span>
+ (*)
+ </li>
+ <li><span class="p">reputation</span>
+ (*)
+ </li>
+ <li><span class="p">reputation_above_threshold</span>
+ (*)
+ </li>
+ <li><span class="p">reputation_max</span>
+ (*)
+ </li>
+ <li><span class="p">reputation_min</span>
+ (*)
+ </li>
+ <li><span class="p">research</span>
+ (*)
+ </li>
+ <li><span class="p">research_dep_built</span>
+ (*)
+ </li>
+ <li><span class="p">research_rooms</span>
+ (*)
+ </li>
+ <li><span class="p">sal_min</span>
+ (*)
+ </li>
+ <li><span class="p">salary_incr</span>
+ (*)
+ </li>
+ <li><span class="p">salary_offer</span>
+ (*)
+ </li>
+ <li><span class="p">seating_warning</span>
+ (*)
+ </li>
+ <li><span class="p">show_progress_screen_warnings</span>
+ (*)
+ </li>
+ <li><span class="p">sodas_sold</span>
+ (*)
+ </li>
+ <li><span class="p">staff</span>
+ (*)
+ </li>
+ <li><span class="p">staff_room_msg</span>
+ (*)
+ </li>
+ <li><span class="p">statistics</span>
+ (*)
+ </li>
+ <li><span class="p">thirst_msg</span>
+ (*)
+ </li>
+ <li><span class="p">toilet_msg</span>
+ (*)
+ </li>
+ <li><span class="p">transactions</span>
+ (*)
+ </li>
+ <li><span class="p">under_priced_threshold</span>
+ (*)
+ </li>
+ <li><span class="p">undiscovered_rooms</span>
+ (*)
+ </li>
+ <li><span class="p">value</span>
+ (*)
+ </li>
+ <li><span class="p">vip_declined</span>
+ (*)
+ </li>
+ <li><span class="p">warmth_msg</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_a_i_hospital_1_a_i_hospital">function AIHospital:AIHospital(<span class="p">competitor</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">competitor</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/ai_hospital.lua#L26">line 26 of Lua/hospitals/ai_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_a_i_hospital_1after_load">function AIHospital:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1after_load">Hospital:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/ai_hospital.lua#L47">line 47 of Lua/hospitals/ai_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_a_i_hospital_1log_transaction">function AIHospital:logTransaction()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1log_transaction">Hospital:logTransaction</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/ai_hospital.lua#L43">line 43 of Lua/hospitals/ai_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_a_i_hospital_1spawn_patient">function AIHospital:spawnPatient()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1spawn_patient">Hospital:spawnPatient</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/ai_hospital.lua#L39">line 39 of Lua/hospitals/ai_hospital.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

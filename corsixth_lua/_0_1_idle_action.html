@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>IdleAction Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">IdleAction Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/idle.lua#L21">line 21 of Lua/humanoid_actions/idle.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_idle_action.html">IdleAction</a>
+ » <a href="_0_1_humanoid_action.html">HumanoidAction</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1disable_truncate">disableTruncate</a>()
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_after_use">setAfterUse</a>(<span class="p">after_use</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_count">setCount</a>(<span class="p">count</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_idle_action.html#_0_1_idle_action_1set_direction">setDirection</a>(<span class="p">direction</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_is_leaving">setIsLeaving</a>(<span class="p">is_leaving</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_loop_callback">setLoopCallback</a>(<span class="p">loop_callback</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_must_happen">setMustHappen</a>(<span class="p">must_happen</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_idle_action.html#_0_1_idle_action_1set_on_interrupt">setOnInterrupt</a>(<span class="p">on_interrupt</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">after_use</span>
+ (*)
+ </li>
+ <li><span class="p">count</span>
+ (*)
+ </li>
+ <li><span class="p">direction</span>
+ </li>
+ <li><span class="p">idle_must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">is_entering</span>
+ (*)
+ </li>
+ <li><span class="p">is_leaving</span>
+ (*)
+ </li>
+ <li><span class="p">loop_callback</span>
+ (*)
+ </li>
+ <li><span class="p">must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">name</span>
+ (*)
+ </li>
+ <li><span class="p">no_truncate</span>
+ (*)
+ </li>
+ <li><span class="p">on_interrupt</span>
+ </li>
+ <li><span class="p">saved_must_happen</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_idle_action_1_idle_action">function IdleAction:IdleAction()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/idle.lua#L26">line 26 of Lua/humanoid_actions/idle.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_idle_action_1set_direction">function IdleAction:setDirection(<span class="p">direction</span>)</a></h5>
+ <p>
+ Set the direction of facing while standing idle.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">string</td>
+ <td class="d"> Direction of facing.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/idle.lua#L32">line 32 of Lua/humanoid_actions/idle.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_idle_action_1set_on_interrupt">function IdleAction:setOnInterrupt(<span class="p">on_interrupt</span>)</a></h5>
+ <p>
+ Set the function to call on interrupt.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">on_interrupt</td>
+ <td class="t">function</td>
+ <td class="d"> Function to call on interrupt.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/idle.lua#L45">line 45 of Lua/humanoid_actions/idle.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

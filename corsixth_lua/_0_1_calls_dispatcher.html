@@ -1,0 +1,759 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>CallsDispatcher Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">CallsDispatcher Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L25">line 25 of Lua/calls_dispatcher.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1action_interrupt_handler">actionInterruptHandler</a>(<span class="p">action</span>, <span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1add_change_callback">addChangeCallback</a>(<span class="p">callback</span>, <span class="p">self_value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1answer_call">answerCall</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_repair">callForRepair</a>(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>, <span class="p">lock_room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_staff">callForStaff</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_staff_each_room">callForStaffEachRoom</a>(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">key</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_for_watering">callForWatering</a>(<span class="p">plant</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1call_nurse_for_vaccination">callNurseForVaccination</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1drop_from_queue">dropFromQueue</a>(<span class="p">object</span>, <span class="p">key</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1dump">dump</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1dump_call">dumpCall</a>(<span class="p">call</span>, <span class="p">message</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1enqueue">enqueue</a>(<span class="p">object</span>, <span class="p">key</span>, <span class="p">description</span>, <span class="p">verification</span>, <span class="p">priority</span>, <span class="p">execute</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1execute_call">executeCall</a>(<span class="p">call</span>, <span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1find_suitable_staff">findSuitableStaff</a>(<span class="p">call</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1get_priority_for_room">getPriorityForRoom</a>(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1get_priority_for_vaccination">getPriorityForVaccination</a>(<span class="p">patient</span>, <span class="p">nurse</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1on_change">onChange</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1on_checkpoint_completed">onCheckpointCompleted</a>(<span class="p">call</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1queue_call_checkpoint_action">queueCallCheckpointAction</a>(<span class="p">humanoid</span>, <span class="p">interrupt_handler</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1remove_change_callback">removeChangeCallback</a>(<span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1send_nurse_to_vaccinate">sendNurseToVaccinate</a>(<span class="p">patient</span>, <span class="p">nurse</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1send_staff_to_repair">sendStaffToRepair</a>(<span class="p">object</span>, <span class="p">handyman</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1send_staff_to_room">sendStaffToRoom</a>(<span class="p">room</span>, <span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1send_staff_to_watering">sendStaffToWatering</a>(<span class="p">plant</span>, <span class="p">handyman</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1staff_action_interrupt_handler">staffActionInterruptHandler</a>(<span class="p">action</span>, <span class="p">humanoid</span>, <span class="p">high_priority</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1unassign_call">unassignCall</a>(<span class="p">call</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1verify_staff_for_room">verifyStaffForRoom</a>(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_calls_dispatcher.html#_0_1_calls_dispatcher_1verify_staff_for_vaccination">verifyStaffForVaccination</a>(<span class="p">patient</span>, <span class="p">staff</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">call_queue</span>
+ </li>
+ <li><span class="p">change_callback</span>
+ </li>
+ <li><span class="p">tick</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1_calls_dispatcher">function CallsDispatcher:CallsDispatcher(<span class="p">world</span>)</a></h5>
+ <p>
+ Turn on for debug message<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L30">line 30 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1action_interrupt_handler">function CallsDispatcher.actionInterruptHandler(<span class="p">action</span>, <span class="p">humanoid</span>)</a></h5>
+ <p>
+ Default checkpoint interrupt handler
+Reset the assigned status, and find an replacement staff<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L421">line 421 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1add_change_callback">function CallsDispatcher:addChangeCallback(<span class="p">callback</span>, <span class="p">self_value</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">self_value</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L43">line 43 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1answer_call">function CallsDispatcher:answerCall(<span class="p">staff</span>)</a></h5>
+ <p>
+ Find the best call for a staff to work on.
+When a staff goes to meandering mode, it should call this function to look for new call
+Return true if a call is answered. False if there is no suitable call waiting and the staff is really free.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L330">line 330 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1call_for_repair">function CallsDispatcher:callForRepair(<span class="p">object</span>, <span class="p">urgent</span>, <span class="p">manual</span>, <span class="p">lock_room</span>)</a></h5>
+ <p>
+ Call for repair<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">urgent</td>
+ <td class="t">?</td>
+ <td class="d">Announcement should be made</td>
+ </tr>
+ <tr>
+ <td class="n">manual</td>
+ <td class="t">?</td>
+ <td class="d">This call should not trigger advisor for "your machine is failing"</td>
+ </tr>
+ <tr>
+ <td class="n">lock_room</td>
+ <td class="t">?</td>
+ <td class="d">This is a minor maintence. Rooms needed not to be locked.
+If urgent or manual is specified, lock_room will be true automatically</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L94">line 94 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1call_for_staff">function CallsDispatcher:callForStaff(<span class="p">room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L57">line 57 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1call_for_staff_each_room">function CallsDispatcher:callForStaffEachRoom(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">key</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">key</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L73">line 73 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1call_for_watering">function CallsDispatcher:callForWatering(<span class="p">plant</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">plant</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L137">line 137 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1call_nurse_for_vaccination">function CallsDispatcher:callNurseForVaccination(<span class="p">patient</span>)</a></h5>
+ <p>
+ Queues a call for vaccination of a patient
+ @param patient (Patient) the patient who wishes to be vaccinated
+ @return call (table) the call which was queued<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L159">line 159 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1drop_from_queue">function CallsDispatcher:dropFromQueue(<span class="p">object</span>, <span class="p">key</span>)</a></h5>
+ <p>
+ Drop any call associated with the object (and/or key).
+Expected to be called when the call is no longer needed
+(like a machine that needed repaired were replaced),
+or when the object is destroyed, etc.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">key</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L451">line 451 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1dump">function CallsDispatcher:dump()</a></h5>
+ <p>
+ Dump the current call table for debugging<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L376">line 376 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1dump_call">function CallsDispatcher.dumpCall(<span class="p">call</span>, <span class="p">message</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">message</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L387">line 387 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1enqueue">function CallsDispatcher:enqueue(<span class="p">object</span>, <span class="p">key</span>, <span class="p">description</span>, <span class="p">verification</span>, <span class="p">priority</span>, <span class="p">execute</span>)</a></h5>
+ <p>
+ Enqueue the call
+returns: True if the call is inserted and queued, but not served
+False if the call is served right away, or has been queued and assigned<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">key</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">description</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">verification</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">execute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L266">line 266 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1execute_call">function CallsDispatcher:executeCall(<span class="p">call</span>, <span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L441">line 441 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1find_suitable_staff">function CallsDispatcher:findSuitableStaff(<span class="p">call</span>)</a></h5>
+ <p>
+ Find suitable (best) staff for working on a specific call
+True<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L292">line 292 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1get_priority_for_room">function CallsDispatcher.getPriorityForRoom(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L502">line 502 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1get_priority_for_vaccination">function CallsDispatcher.getPriorityForVaccination(<span class="p">patient</span>, <span class="p">nurse</span>)</a></h5>
+ <p>
+ Determine which nurse has the highest priority to vaccinate a patient
+ the patient should be easily reachable from the nurse
+ @param patient (Patient) the patient calling for vaccination
+ @param nurse (Staff, humanoid_class Nurse) the nurse to verify if they
+ have priority to vaccinate
+ @return score (Integer) lowest score has higher priority to vaccinate<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">nurse</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L218">line 218 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1on_change">function CallsDispatcher:onChange()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L51">line 51 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1on_checkpoint_completed">function CallsDispatcher.onCheckpointCompleted(<span class="p">call</span>)</a></h5>
+ <p>
+ Called when a call is completed successfully.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L431">line 431 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1on_tick">function CallsDispatcher:onTick()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L39">line 39 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1queue_call_checkpoint_action">function CallsDispatcher.queueCallCheckpointAction(<span class="p">humanoid</span>, <span class="p">interrupt_handler</span>)</a></h5>
+ <p>
+ Add checkpoint action
+All call execution method should add this action in appropriate place to signify
+the job is finished.
+A interrupt handler could be supplied if special handling is needed.
+If not, the default would be reinsert the call into the queue<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">interrupt_handler</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L411">line 411 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1remove_change_callback">function CallsDispatcher:removeChangeCallback(<span class="p">callback</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L47">line 47 of Lua/calls_dispatcher.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1send_nurse_to_vaccinate">function CallsDispatcher.sendNurseToVaccinate(<span class="p">patient</span>, <span class="p">nurse</span>)</a></h5>
+ <p>
+ Once a nurse has been verified and priority decided do the actions to
+ perform the actually vaccination, delegated to Epidemic class (@see
+ Epidemic:createVaccinationActions) @param patient (Patient) the patient calling
+ for vaccination @param nurse (Staff, humanoid_class Nurse) the nurse to perform
+ the vaccination actions<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">nurse</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L244">line 244 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1send_staff_to_repair">function CallsDispatcher.sendStaffToRepair(<span class="p">object</span>, <span class="p">handyman</span>)</a></h5>
+ <p>
+ 'execute' callback for repairing an object (eg a machine).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">Object to repair.</td>
+ </tr>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">Staff to use.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L555">line 555 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1send_staff_to_room">function CallsDispatcher.sendStaffToRoom(<span class="p">room</span>, <span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L533">line 533 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1send_staff_to_watering">function CallsDispatcher.sendStaffToWatering(<span class="p">plant</span>, <span class="p">handyman</span>)</a></h5>
+ <p>
+ 'execute' callback for watering a plant.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">plant</td>
+ <td class="t">?</td>
+ <td class="d">Plant to give water.</td>
+ </tr>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">Staff to use.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L562">line 562 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1staff_action_interrupt_handler">function CallsDispatcher.staffActionInterruptHandler(<span class="p">action</span>, <span class="p">humanoid</span>, <span class="p">high_priority</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">high_priority</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L545">line 545 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1unassign_call">function CallsDispatcher.unassignCall(<span class="p">call</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">call</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L479">line 479 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1verify_staff_for_room">function CallsDispatcher.verifyStaffForRoom(<span class="p">room</span>, <span class="p">attribute</span>, <span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L487">line 487 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_calls_dispatcher_1verify_staff_for_vaccination">function CallsDispatcher.verifyStaffForVaccination(<span class="p">patient</span>, <span class="p">staff</span>)</a></h5>
+ <p>
+ Determines if a member of staff is suitable to vaccinate a patient they
+ must be a nurse and not busy or too far away.
+ @param patient (Patient) the patient calling for vaccination
+ @param staff (Staff) staff member to verify if suitable to vaccinate
+ @return true if suitable for vaccination false otherwise (boolean)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/calls_dispatcher.lua#L190">line 190 of Lua/calls_dispatcher.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

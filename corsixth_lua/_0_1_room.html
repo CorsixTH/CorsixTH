@@ -1,0 +1,782 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Room Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Room Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L21">line 21 of Lua/room.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_blood_machine_room.html">BloodMachineRoom</a>, <a href="_0_1_cardiogram_room.html">CardiogramRoom</a>, <a href="_0_1_d_n_a_fixer_room.html">DNAFixerRoom</a>, <a href="_0_1_decontamination_room.html">DecontaminationRoom</a>, <a href="_0_1_electrolysis_room.html">ElectrolysisRoom</a>, <a href="_0_1_fracture_room.html">FractureRoom</a>, <a href="_0_1_g_p_room.html">GPRoom</a>, <a href="_0_1_general_diag_room.html">GeneralDiagRoom</a>, <a href="_0_1_hair_restoration_room.html">HairRestorationRoom</a>, <a href="_0_1_inflation_room.html">InflationRoom</a>, <a href="_0_1_jelly_vat_room.html">JellyVatRoom</a>, <a href="_0_1_operating_theatre_room.html">OperatingTheatreRoom</a>, <a href="_0_1_pharmacy_room.html">PharmacyRoom</a>, <a href="_0_1_psych_room.html">PsychRoom</a>, <a href="_0_1_research_room.html">ResearchRoom</a>, <a href="_0_1_scanner_room.html">ScannerRoom</a>, <a href="_0_1_slack_tongue_room.html">SlackTongueRoom</a>, <a href="_0_1_staff_room.html">StaffRoom</a>, <a href="_0_1_toilet_room.html">ToiletRoom</a>, <a href="_0_1_training_room.html">TrainingRoom</a>, <a href="_0_1_ultrascan_room.html">UltrascanRoom</a>, <a href="_0_1_ward_room.html">WardRoom</a>, <a href="_0_1_x_ray_room.html">XRayRoom</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1calculate_removal_cost">calculateRemovalCost</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">canHumanoidEnter</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1command_entering_patient">commandEnteringPatient</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1command_entering_staff">commandEnteringStaff</a>(<span class="p">humanoid</span>, <span class="p">already_initialized</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1count_windows">countWindows</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1crash_room">crashRoom</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1create_dealt_with_patient_callback">createDealtWithPatientCallback</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1create_enter_action">createEnterAction</a>(<span class="p">humanoid_entering</span>, <span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1create_leave_action">createLeaveAction</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1deactivate">deactivate</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1dealt_with_patient">dealtWithPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1find_work_for_staff">findWorkForStaff</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_entrance_x_y">getEntranceXY</a>(<span class="p">inside</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_maximum_staff_criteria">getMaximumStaffCriteria</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_missing_staff">getMissingStaff</a>(<span class="p">criteria</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_patient">getPatient</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_patient_count">getPatientCount</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_required_staff_criteria">getRequiredStaffCriteria</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_staff_member">getStaffMember</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_staff_service_quality">getStaffServiceQuality</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1get_usage_score">getUsageScore</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1has_queue_dialog">hasQueueDialog</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1init_room">initRoom</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">door</span>, <span class="p">door2</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1is_diagnosis_room_for_patient">isDiagnosisRoomForPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_dress_if_necessary_and_then_leave">makeHumanoidDressIfNecessaryAndThenLeave</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_leave">makeHumanoidLeave</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">onHumanoidEnter</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">onHumanoidLeave</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1room_finished">roomFinished</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1set_staff_member">setStaffMember</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">setStaffMembersAttribute</a>(<span class="p">attribute</span>, <span class="p">value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1should_have_patient_reenter">shouldHavePatientReenter</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1staff_fits_in_room">staffFitsInRoom</a>(<span class="p">staff</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1staff_meets_room_requirements">staffMeetsRoomRequirements</a>(<span class="p">humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1test_staff_criteria">testStaffCriteria</a>(<span class="p">criteria</span>, <span class="p">extra_humanoid</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1try_advance_queue">tryAdvanceQueue</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1try_to_edit">tryToEdit</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_room.html#_0_1_room_1try_to_find_nearby_patients">tryToFindNearbyPatients</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active</span>
+ </li>
+ <li><span class="p">built</span>
+ </li>
+ <li><span class="p">crashed</span>
+ </li>
+ <li><span class="p">dealt_patient_callback</span>
+ </li>
+ <li><span class="p">door</span>
+ </li>
+ <li><span class="p">door2</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">humanoids</span>
+ </li>
+ <li><span class="p">humanoids_enroute</span>
+ </li>
+ <li><span class="p">id</span>
+ </li>
+ <li><span class="p">is_active</span>
+ </li>
+ <li><span class="p">maximum_patients</span>
+ </li>
+ <li><span class="p">needs_repair</span>
+ </li>
+ <li><span class="p">objects</span>
+ </li>
+ <li><span class="p">room_info</span>
+ </li>
+ <li><span class="p">sound_played</span>
+ </li>
+ <li><span class="p">staff_member</span>
+ </li>
+ <li><span class="p">staff_member_set</span>
+ </li>
+ <li><span class="p">waiting_staff_member</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_room_1_room">function Room:Room(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">id</span>, <span class="p">room_info</span>, <span class="p">world</span>, <span class="p">hospital</span>, <span class="p">door</span>, <span class="p">door2</span>)</a></h5>
+ <p>
+ Percentage cost recovery of destroyed room items<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">room_info</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">door</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">door2</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L26">line 26 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1after_load">function Room:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Stub to be extended in subclasses, if needed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L966">line 966 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1calculate_removal_cost">function Room:calculateRemovalCost()</a></h5>
+ <p>
+ Get the removal cost<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1055">line 1055 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1can_humanoid_enter">function Room:canHumanoidEnter(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L632">line 632 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1command_entering_patient">function Room:commandEnteringPatient(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L486">line 486 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1command_entering_staff">function Room:commandEnteringStaff(<span class="p">humanoid</span>, <span class="p">already_initialized</span>)</a></h5>
+ <p>
+ When a valid member of staff enters the room this function is called.
+Can be extended in derived classes.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">The staff in question</td>
+ </tr>
+ <tr>
+ <td class="n">already_initialized</td>
+ <td class="t">?</td>
+ <td class="d">If true, this means that the staff has already got order
+what to do.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L467">line 467 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1count_windows">function Room:countWindows()</a></h5>
+ <p>
+ Count the number of windows in the room<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1039">line 1039 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1crash_room">function Room:crashRoom()</a></h5>
+ <p>
+ Explode the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L767">line 767 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1create_dealt_with_patient_callback">function Room:createDealtWithPatientCallback(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L409">line 409 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1create_enter_action">function Room:createEnterAction(<span class="p">humanoid_entering</span>, <span class="p">callback</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid_entering</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L94">line 94 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1create_leave_action">function Room:createLeaveAction()</a></h5>
+ <p>
+ Construct an 'walk' action to the tile next to the door, just outside the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L87">line 87 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1deactivate">function Room:deactivate()</a></h5>
+ <p>
+ Deactivate the room from the world.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L921">line 921 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1dealt_with_patient">function Room:dealtWithPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L156">line 156 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1find_work_for_staff">function Room:findWorkForStaff()</a></h5>
+ <p>
+ Checks if the room still needs the staff in it and otherwise
+sends them away if they're needed somewhere else.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L209">line 209 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_entrance_x_y">function Room:getEntranceXY(<span class="p">inside</span>)</a></h5>
+ <p>
+ Get the tile next to the door.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">inside</td>
+ <td class="t">bool</td>
+ <td class="d"> If set, get the tile inside the room, else get the tile outside.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L71">line 71 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_maximum_staff_criteria">function Room:getMaximumStaffCriteria()</a></h5>
+ <p>
+ Constant denoting 'no staff at all' in a room.<br/><br/>
+ Get the type and number of maximum staff for the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L280">line 280 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_missing_staff">function Room:getMissingStaff(<span class="p">criteria</span>)</a></h5>
+ <p>
+ Given any type of staff criteria (required/maximum), subtract the staff in the room and return the result<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">criteria</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L227">line 227 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_patient">function Room:getPatient()</a></h5>
+ <p>
+ Get a patient in the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L126">line 126 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_patient_count">function Room:getPatientCount()</a></h5>
+ <p>
+ Count the number of patients in the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L136">line 136 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_required_staff_criteria">function Room:getRequiredStaffCriteria()</a></h5>
+ <p>
+ Get the type and number of required staff for the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L290">line 290 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_staff_member">function Room:getStaffMember()</a></h5>
+ <p>
+ Get the current staff member.
+Can be overridden in rooms with multiple staff members to return the desired one.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L431">line 431 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_staff_service_quality">function Room:getStaffServiceQuality()</a></h5>
+ <p>
+ Get the average service quality of the staff members in the room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1016">line 1016 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1get_usage_score">function Room:getUsageScore()</a></h5>
+ <p>
+ how many tiles further are we willing to walk if the room has all the required staff<br/><br/>
+ Score function to decide how desirable a room is for a patient.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L614">line 614 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1has_queue_dialog">function Room:hasQueueDialog()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L962">line 962 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1init_room">function Room:initRoom(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">door</span>, <span class="p">door2</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">door</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">door2</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L37">line 37 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1is_diagnosis_room_for_patient">function Room:isDiagnosisRoomForPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ Is the room one of the diagnosis rooms for the patient?
+-- This used for epidemics when the disease and therefore the diagnosis
+-- rooms of a patient may change.
+-- @param patient (Patient) patient to verify if treatment room<br/><br/>
+ @return result (boolean) true if is suitable diagnosis room, false otherwise<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L998">line 998 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1make_humanoid_dress_if_necessary_and_then_leave">function Room:makeHumanoidDressIfNecessaryAndThenLeave(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L884">line 884 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1make_humanoid_leave">function Room:makeHumanoidLeave(<span class="p">patient</span>)</a></h5>
+ <p>
+ Tells a humanoid in the room to leave it. This can be overridden for special
+handling, e.g. if the humanoid needs to change before leaving the room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L877">line 877 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1on_humanoid_enter">function Room:onHumanoidEnter(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L296">line 296 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1on_humanoid_leave">function Room:onHumanoidLeave(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L527">line 527 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1room_finished">function Room:roomFinished()</a></h5>
+ <p>
+ Function stub for rooms to implement. Called when the final confirm
+button has been pressed when building/editing a room.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L650">line 650 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1set_staff_member">function Room:setStaffMember(<span class="p">staff</span>)</a></h5>
+ <p>
+ Set the current staff member.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">staff</td>
+ <td class="d"> Staff member to denote as current staff.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L438">line 438 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1set_staff_members_attribute">function Room:setStaffMembersAttribute(<span class="p">attribute</span>, <span class="p">value</span>)</a></h5>
+ <p>
+ function that sets a given attribute to a given value for all staff members.
+Should be overridden for rooms that have more than one staff member.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L148">line 148 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1should_have_patient_reenter">function Room:shouldHavePatientReenter(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L609">line 609 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1staff_fits_in_room">function Room:staffFitsInRoom(<span class="p">staff</span>)</a></h5>
+ <p>
+ Does the given staff member fit in the room?
+Returns false if the room is already full of staff or if the given member of staff cannot help out.
+Otherwise returns true.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L444">line 444 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1staff_meets_room_requirements">function Room:staffMeetsRoomRequirements(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ Returns true if the humanoid meets (one of) the required staff criteria of the room<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L456">line 456 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1test_staff_criteria">function Room:testStaffCriteria(<span class="p">criteria</span>, <span class="p">extra_humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">criteria</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">extra_humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L250">line 250 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1try_advance_queue">function Room:tryAdvanceQueue()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L501">line 501 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1try_to_edit">function Room:tryToEdit()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L934">line 934 of Lua/room.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_room_1try_to_find_nearby_patients">function Room:tryToFindNearbyPatients()</a></h5>
+ <p>
+ Try to find new patients for this room by 'stealing' them from other rooms nearby.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L744">line 744 of Lua/room.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

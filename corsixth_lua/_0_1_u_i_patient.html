@@ -1,0 +1,688 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>UIPatient Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">UIPatient Class</h2>
+<h3 class="class">Individual patient information dialog</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L28">line 28 of Lua/dialogs/patient.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_patient.html">UIPatient</a>
+ » <a href="_0_1_window.html">Window</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x_</span>, <span class="p">y_</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1draw_bar">drawBar</a>(<span class="p">canvas</span>, <span class="p">xbase</span>, <span class="p">ybase</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1draw_health_history">drawHealthHistory</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1draw_treatment_history">drawTreatmentHistory</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1go_home">goHome</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1guess_disease">guessDisease</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1normalise_warmth">normaliseWarmth</a>(<span class="p">warmth</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1register_key_handlers">registerKeyHandlers</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1scroll_to_patient">scrollToPatient</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1update_information">updateInformation</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1view_diseases">viewDiseases</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_patient.html#_0_1_u_i_patient_1view_queue">viewQueue</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ (*)
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_x</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">disease_blanker</span>
+ </li>
+ <li><span class="p">disease_button</span>
+ </li>
+ <li><span class="p">do_scroll</span>
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">esc_closes</span>
+ </li>
+ <li><span class="p">font</span>
+ </li>
+ <li><span class="p">guess_blanker</span>
+ </li>
+ <li><span class="p">guess_button</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">history_panel</span>
+ </li>
+ <li><span class="p">home_blanker</span>
+ </li>
+ <li><span class="p">home_button</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">modal_class</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">patient</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">visible_diamond</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">windows</span>
+ (*)
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1_u_i_patient">function UIPatient:UIPatient(<span class="p">ui</span>, <span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L34">line 34 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1after_load">function UIPatient:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L351">line 351 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1draw">function UIPatient:draw(<span class="p">canvas</span>, <span class="p">x_</span>, <span class="p">y_</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x_</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y_</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L133">line 133 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1draw_bar">function UIPatient:drawBar(<span class="p">canvas</span>, <span class="p">xbase</span>, <span class="p">ybase</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">value</span>)</a></h5>
+ <p>
+ Draw a bar in the patient dialogue window.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">Canvas to draw at.</td>
+ </tr>
+ <tr>
+ <td class="n">xbase</td>
+ <td class="t">?</td>
+ <td class="d">Horizontal base position.</td>
+ </tr>
+ <tr>
+ <td class="n">ybase</td>
+ <td class="t">?</td>
+ <td class="d">Vertical base position.</td>
+ </tr>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">?</td>
+ <td class="d">Horizontal offset.</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">?</td>
+ <td class="d">Vertical offset.</td>
+ </tr>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">?</td>
+ <td class="d">Fraction to draw.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L119">line 119 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1draw_health_history">function UIPatient:drawHealthHistory(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Draw the health graph of the patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">Destination to draw on.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the top-left of the graph.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the top-left of the graph.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L184">line 184 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1draw_treatment_history">function UIPatient:drawTreatmentHistory(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ List the treatments that were performed on the patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">Destination to draw on.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the top of the list.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the top of the list.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L174">line 174 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1go_home">function UIPatient:goHome()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L315">line 315 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1guess_disease">function UIPatient:guessDisease()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L330">line 330 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1hit_test">function UIPatient:hitTest(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L347">line 347 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1normalise_warmth">function UIPatient.normaliseWarmth(<span class="p">warmth</span>)</a></h5>
+ <p>
+ Normalise warmth of a patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">warmth</td>
+ <td class="t">number&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> If given, the fraction of warmth of the patient.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L103">line 103 of Lua/dialogs/patient.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1on_mouse_down">function UIPatient:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L222">line 222 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1on_mouse_move">function UIPatient:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L252">line 252 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1on_mouse_up">function UIPatient:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L227">line 227 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1on_tick">function UIPatient:onTick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L266">line 266 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1register_key_handlers">function UIPatient:registerKeyHandlers()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L96">line 96 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1scroll_to_patient">function UIPatient:scrollToPatient()</a></h5>
+ <p>
+ Scrolls the map to the position of the patient which this dialog belongs to<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L257">line 257 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1update_information">function UIPatient:updateInformation()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L273">line 273 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1view_diseases">function UIPatient:viewDiseases()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L325">line 325 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_patient_1view_queue">function UIPatient:viewQueue()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/patient.lua#L304">line 304 of Lua/dialogs/patient.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

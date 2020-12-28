@@ -1,0 +1,572 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Epidemic Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Epidemic Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L25">line 25 of Lua/epidemic.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1add_contagious_patient">addContagiousPatient</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1announce_end_of_epidemic">announceEndOfEpidemic</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1announce_start_of_epidemic">announceStartOfEpidemic</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1apply_outcome">applyOutcome</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1calculate_infected_fine">calculateInfectedFine</a>(<span class="p">infected_count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1check_if_ready_to_reveal">checkIfReadyToReveal</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1check_no_infected_player_has_left">checkNoInfectedPlayerHasLeft</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1check_patients_for_removal">checkPatientsForRemoval</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1clear_all_infected_patients">clearAllInfectedPatients</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1count_infected_patients">countInfectedPatients</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1create_vaccination_actions">createVaccinationActions</a>(<span class="p">patient</span>, <span class="p">nurse</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1determine_fax_and_fines">determineFaxAndFines</a>(<span class="p">still_infected</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1evacuate_hospital">evacuateHospital</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1finish_cover_up">finishCoverUp</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1get_best_vaccination_tile">getBestVaccinationTile</a>(<span class="p">nurse</span>, <span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1has_no_infected_patients">hasNoInfectedPatients</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1infect_other_patients">infectOtherPatients</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1interrupt_vaccination_actions">interruptVaccinationActions</a>(<span class="p">nurse</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1mark_for_vaccination">markForVaccination</a>(<span class="p">patient</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1mark_patients_as_passed_reception">markPatientsAsPassedReception</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1marked_patients_call_for_vaccination">markedPatientsCallForVaccination</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1resolve_declaration">resolveDeclaration</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1reveal_epidemic">revealEpidemic</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1send_initial_fax">sendInitialFax</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1send_result_fax">sendResultFax</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1show_appropriate_advice_messages">showAppropriateAdviceMessages</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1spawn_inspector">spawnInspector</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1start_cover_up">startCoverUp</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1tick">tick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1toggle_vaccination_mode">toggleVaccinationMode</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_epidemic.html#_0_1_epidemic_1try_announce_inspector">tryAnnounceInspector</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">attempted_infections</span>
+ </li>
+ <li><span class="p">cheat_always_show_mood</span>
+ </li>
+ <li><span class="p">compensation</span>
+ </li>
+ <li><span class="p">countdown_intervals</span>
+ </li>
+ <li><span class="p">cover_up_result_fax</span>
+ </li>
+ <li><span class="p">coverup_fine</span>
+ </li>
+ <li><span class="p">coverup_in_progress</span>
+ </li>
+ <li><span class="p">declare_fine</span>
+ </li>
+ <li><span class="p">disease</span>
+ </li>
+ <li><span class="p">evacuation_minimum</span>
+ </li>
+ <li><span class="p">has_said_hurry_up</span>
+ </li>
+ <li><span class="p">has_said_serious</span>
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">infected_patients</span>
+ </li>
+ <li><span class="p">inspector</span>
+ </li>
+ <li><span class="p">level_config</span>
+ </li>
+ <li><span class="p">ready_to_reveal</span>
+ </li>
+ <li><span class="p">reputation_hit</span>
+ </li>
+ <li><span class="p">reputation_loss_minimum</span>
+ </li>
+ <li><span class="p">result_determined</span>
+ </li>
+ <li><span class="p">revealed</span>
+ </li>
+ <li><span class="p">spread_factor</span>
+ </li>
+ <li><span class="p">timer</span>
+ </li>
+ <li><span class="p">total_infections</span>
+ </li>
+ <li><span class="p">vaccination_mode_active</span>
+ </li>
+ <li><span class="p">will_be_evacuated</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1_epidemic">function Epidemic:Epidemic(<span class="p">hospital</span>, <span class="p">contagious_patient</span>)</a></h5>
+ <p>
+ Manages the epidemics that occur in hospitals. Generally, any epidemic
+logic that happens outside this class will call functions contained here.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">contagious_patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L30">line 30 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1add_contagious_patient">function Epidemic:addContagiousPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ Adds a new patient to the epidemic who is actively contagious: infected but
+ not vaccinated or cured<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L122">line 122 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1after_load">function Epidemic:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L700">line 700 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1announce_end_of_epidemic">function Epidemic:announceEndOfEpidemic()</a></h5>
+ <p>
+ Plays the announcement for the end of the epidemic<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L236">line 236 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1announce_start_of_epidemic">function Epidemic:announceStartOfEpidemic()</a></h5>
+ <p>
+ Plays the announcement for the start of the epidemic<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L227">line 227 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1apply_outcome">function Epidemic:applyOutcome()</a></h5>
+ <p>
+ Apply the compensation or fines where appropriate to the player as
+determined when the cover up was completed (@see finishCoverUp)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L471">line 471 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1calculate_infected_fine">function Epidemic:calculateInfectedFine(<span class="p">infected_count</span>)</a></h5>
+ <p>
+ Calculate the fine for having a given number of infected patients
+--Used to determine the initial declaration fine as the cover up fine.
+--@param infected_count (Integer) number of patients still infected
+--@return fine (Integer) the fine amount<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">infected_count</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L337">line 337 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1check_if_ready_to_reveal">function Epidemic:checkIfReadyToReveal()</a></h5>
+ <p>
+ The epidemic is ready to be revealed to the player if any infected patient
+ is fully diagnosed. N.B. because multiple epidemics are queued to become
+ the "active" one, being ready to reveal does NOT guarantee an epidemic
+ WILL be revealed to the player and may even terminate before they are even
+ aware it existed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L203">line 203 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1check_no_infected_player_has_left">function Epidemic:checkNoInfectedPlayerHasLeft()</a></h5>
+ <p>
+ Checks for conditions that could end the epidemic earlier than
+ the length of the timer. If an infected patient leaves the
+ hospital it's discovered instantly and will result in a fail.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L244">line 244 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1check_patients_for_removal">function Epidemic:checkPatientsForRemoval()</a></h5>
+ <p>
+ Remove any patients which were already on their way out or died before the
+epidemic was started to be fair on the players so they don't instantly fail.
+Additionally if any patients die during an epidemic we also remove them,
+otherwise a player may never win the epidemic in such a case.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L267">line 267 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1clear_all_infected_patients">function Epidemic:clearAllInfectedPatients()</a></h5>
+ <p>
+ Remove all infected patients by vaccinating from the hospital and clear
+ any epidemic-specific icons from their heads.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L371">line 371 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1count_infected_patients">function Epidemic:countInfectedPatients()</a></h5>
+ <p>
+ Counts the number of patients that have been infected that are still
+-- infected
+-- @return infected_count (Integer) the number of patients still infected.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L305">line 305 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1create_vaccination_actions">function Epidemic:createVaccinationActions(<span class="p">patient</span>, <span class="p">nurse</span>)</a></h5>
+ <p>
+ In response to a vaccination call by the vaccination candidate
+ (@see makeVaccinationCandidateCallForNurse) perform the vaccination
+ actions or deal with call if unable to vaccinate.
+ @param patient (Patient) the patient who make the original call
+ @param nurse (Nurse) the nurse attempting to vaccinate the patient<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">nurse</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L566">line 566 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1determine_fax_and_fines">function Epidemic:determineFaxAndFines(<span class="p">still_infected</span>)</a></h5>
+ <p>
+ Calculates the contents of the fax and the appropriate fines based on the
+result of a cover up, results are stored globally to the class to be applied later.
+ @param still_infected (Integer) the number of patients still infected<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">still_infected</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L420">line 420 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1evacuate_hospital">function Epidemic:evacuateHospital()</a></h5>
+ <p>
+ Forces evacuation of the hospital - it makes ALL patients leave and storm out.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L516">line 516 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1finish_cover_up">function Epidemic:finishCoverUp()</a></h5>
+ <p>
+ Ends the cover up of the epidemic with the result to be applied
+later (@see applyOutcome)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L403">line 403 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1get_best_vaccination_tile">function Epidemic:getBestVaccinationTile(<span class="p">nurse</span>, <span class="p">patient</span>)</a></h5>
+ <p>
+ Find the best tile to stand on to vaccinate a patient
+ @param nurse (Nurse) the nurse performing the vaccination
+ @param patient (Patient) the patient to be vaccinated
+ @return best_x,best_y (Integer,nil) the best tiles to vaccinate from.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">nurse</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L594">line 594 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1has_no_infected_patients">function Epidemic:hasNoInfectedPatients()</a></h5>
+ <p>
+ Are no infected patients, cured or still infected in the hospital?
+@returns true if so, false otherwise. (boolean)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L685">line 685 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1infect_other_patients">function Epidemic:infectOtherPatients()</a></h5>
+ <p>
+ Goes through all infected patients checking if there are any other patients
+ in adjacent squares that can be infected, and if so infects them turning
+ them into an infected patient too.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L133">line 133 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1interrupt_vaccination_actions">function Epidemic:interruptVaccinationActions(<span class="p">nurse</span>)</a></h5>
+ <p>
+ When the nurse is interrupted unreserve the patient and unassign the call.
+ @param nurse (Nurse) the nurse whose vaccination actions we are interrupting<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">nurse</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L649">line 649 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1mark_for_vaccination">function Epidemic:markForVaccination(<span class="p">patient</span>)</a></h5>
+ <p>
+ Show a patient is able to be vaccinated, this is shown to the player by
+ changing the icon, once a player has been marked for vaccination they may
+ possibly become a vaccination candidate. Marking is done by clicking
+ the player and can only happen during a cover up.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L290">line 290 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1mark_patients_as_passed_reception">function Epidemic:markPatientsAsPassedReception()</a></h5>
+ <p>
+ For compatibility. Mark all the current patients who are in the hospital
+--but not in the reception queues as being "passed reception" used to decide
+--who is evacuated @see evacuateHospital. For new patients they are marked
+--as they leave the reception desks.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L494">line 494 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1marked_patients_call_for_vaccination">function Epidemic:markedPatientsCallForVaccination()</a></h5>
+ <p>
+ During a cover up every patient marked for vaccination (clicked)
+ creates a call to be vaccinated by a nurse - patients must also be static
+ (seated or standing queuing)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L554">line 554 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1resolve_declaration">function Epidemic:resolveDeclaration()</a></h5>
+ <p>
+ When the player chooses to declare the epidemic instead of trying
+ to cover up it from the initial faxes - ends the epidemic immediately
+ after applying fine.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L357">line 357 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1reveal_epidemic">function Epidemic:revealEpidemic()</a></h5>
+ <p>
+ Show the player the have an epidemic - send a fax
+ This happens when the epidemic is chosen to the be
+ the "active" epidemic out of all the queued ones.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L217">line 217 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1send_initial_fax">function Epidemic:sendInitialFax()</a></h5>
+ <p>
+ Sends the initial fax to the player when the epidemic is revealed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L318">line 318 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1send_result_fax">function Epidemic:sendResultFax()</a></h5>
+ <p>
+ Send the results of the cover up to the player - will be a
+success/compensation or fail/fines + reputation hit<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L525">line 525 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1show_appropriate_advice_messages">function Epidemic:showAppropriateAdviceMessages()</a></h5>
+ <p>
+ Make the advisor show appropriate messages under certain
+ conditions of the epidemic.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L665">line 665 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1spawn_inspector">function Epidemic:spawnInspector()</a></h5>
+ <p>
+ Spawns the inspector who will walk to the reception desk.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L532">line 532 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1start_cover_up">function Epidemic:startCoverUp()</a></h5>
+ <p>
+ When the player chooses to begin the cover up over declaring from the
+ initial fax (@see sendInitialFax)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L387">line 387 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1tick">function Epidemic:tick()</a></h5>
+ <p>
+ The epidemic tick - currently the same rate as the hospital's tick but
+not necessary dependent on it - could potentially be reduced for performance.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L101">line 101 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1toggle_vaccination_mode">function Epidemic:toggleVaccinationMode()</a></h5>
+ <p>
+ Toggle the vaccination mode changes how the cursor interacts with
+ the hospital. Toggled by pressing the button on the watch
+(@see UIWatch:UIWatch)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L281">line 281 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_epidemic_1try_announce_inspector">function Epidemic:tryAnnounceInspector()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/epidemic.lua#L691">line 691 of Lua/epidemic.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>ReceptionDesk Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">ReceptionDesk Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L71">line 71 of Lua/objects/reception_desk.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_reception_desk.html">ReceptionDesk</a>
+ » <a href="_0_1_object.html">Object</a>
+ » <a href="_0_1_entity.html">Entity</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1add_reserved_user">addReservedUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1check_for_nearby_staff">checkForNearbyStaff</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_render_attach_tile">getRenderAttachTile</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_room">getRoom</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_secondary_usage_tile">getSecondaryUsageTile</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_state">getState</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1get_usage_score">getUsageScore</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_walkable_tiles">getWalkableTiles</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1init_orientation">initOrientation</a>(<span class="p">direction</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1is_reserved_for">isReservedFor</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1occupy">occupy</a>(<span class="p">receptionist</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1on_destroy">onDestroy</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1process_type_definition">processTypeDefinition</a>(<span class="p">object_type</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1remove_reserved_user">removeReservedUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1remove_user">removeUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1reset_animation">resetAnimation</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_state">setState</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1set_tile">Object:setTile</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_user">setUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1slave_mixin_class">slaveMixinClass</a>(<span class="p">class_method_table</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_reception_desk.html#_0_1_reception_desk_1tick">tick</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1tick">Object:tick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick_day">tickDay</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1update_dynamic_info">updateDynamicInfo</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">animation_flags</span>
+ (*)
+ </li>
+ <li><span class="p">animation_idx</span>
+ (*)
+ </li>
+ <li><span class="p">being_destroyed</span>
+ </li>
+ <li><span class="p">direction</span>
+ (*)
+ </li>
+ <li><span class="p">dynamic_info</span>
+ (*)
+ </li>
+ <li><span class="p">footprint</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">hover_cursor</span>
+ </li>
+ <li><span class="p">init_anim_flags</span>
+ (*)
+ </li>
+ <li><span class="p">layers</span>
+ (*)
+ </li>
+ <li><span class="p">mood_info</span>
+ (*)
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ (*)
+ </li>
+ <li><span class="p">object_type</span>
+ (*)
+ </li>
+ <li><span class="p">orientation_before</span>
+ (*)
+ </li>
+ <li><span class="p">permanent_flags</span>
+ (*)
+ </li>
+ <li><span class="p">picked_up</span>
+ (*)
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ (*)
+ </li>
+ <li><span class="p">queue</span>
+ </li>
+ <li><span class="p">queue_advance_timer</span>
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ (*)
+ </li>
+ <li><span class="p">receptionist</span>
+ </li>
+ <li><span class="p">reserved_for</span>
+ </li>
+ <li><span class="p">reserved_for_list</span>
+ (*)
+ </li>
+ <li><span class="p">set_passable_flags</span>
+ (*)
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ (*)
+ </li>
+ <li><span class="p">slow_animation</span>
+ (*)
+ </li>
+ <li><span class="p">split_anim_positions</span>
+ (*)
+ </li>
+ <li><span class="p">split_anims</span>
+ (*)
+ </li>
+ <li><span class="p">th</span>
+ (*)
+ </li>
+ <li><span class="p">ticks</span>
+ (*)
+ </li>
+ <li><span class="p">tile_x</span>
+ (*)
+ </li>
+ <li><span class="p">tile_y</span>
+ (*)
+ </li>
+ <li><span class="p">timer_function</span>
+ (*)
+ </li>
+ <li><span class="p">timer_time</span>
+ (*)
+ </li>
+ <li><span class="p">times_used</span>
+ (*)
+ </li>
+ <li><span class="p">user</span>
+ (*)
+ </li>
+ <li><span class="p">user_list</span>
+ (*)
+ </li>
+ <li><span class="p">user_of</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1_reception_desk">function ReceptionDesk:ReceptionDesk(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L76">line 76 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1check_for_nearby_staff">function ReceptionDesk:checkForNearbyStaff()</a></h5>
+ <p>
+ Reception desk looks for a receptionist.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L145">line 145 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1get_usage_score">function ReceptionDesk:getUsageScore()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L174">line 174 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1occupy">function ReceptionDesk:occupy(<span class="p">receptionist</span>)</a></h5>
+ <p>
+ Create orders for the specified receptionist to walk to and then staff the reception desk,
+if not already staffed or someone is on the way<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">receptionist</td>
+ <td class="t">Staff</td>
+ <td class="d"> the receptionist to occupy this desk</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L215">line 215 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1on_click">function ReceptionDesk:onClick(<span class="p">ui</span>, <span class="p">button</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L85">line 85 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1on_destroy">function ReceptionDesk:onDestroy()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L191">line 191 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1set_tile">function ReceptionDesk:setTile(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1set_tile">Object:setTile</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L183">line 183 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_reception_desk_1tick">function ReceptionDesk:tick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1tick">Object:tick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/reception_desk.lua#L94">line 94 of Lua/objects/reception_desk.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

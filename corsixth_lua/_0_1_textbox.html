@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Textbox Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Textbox Class</h2>
+<h3 class="class">A window element used to enter text</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L902">line 902 of Lua/window.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1abort">abort</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1allowed_input">allowedInput</a>(<span class="p">types</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1character_limit">characterLimit</a>(<span class="p">limit</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1clicked">clicked</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1confirm">confirm</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1draw_cursor">drawCursor</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1key_input">keyInput</a>(<span class="p">char</span>, <span class="p">rawchar</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1set_active">setActive</a>(<span class="p">active</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1set_text">setText</a>(<span class="p">text</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_textbox.html#_0_1_textbox_1text_input">textInput</a>(<span class="p">text</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">abort_callback</span>
+ </li>
+ <li><span class="p">active</span>
+ </li>
+ <li><span class="p">allowed_input</span>
+ </li>
+ <li><span class="p">button</span>
+ </li>
+ <li><span class="p">char_limit</span>
+ </li>
+ <li><span class="p">confirm_callback</span>
+ </li>
+ <li><span class="p">cursor_counter</span>
+ </li>
+ <li><span class="p">cursor_pos</span>
+ </li>
+ <li><span class="p">cursor_state</span>
+ </li>
+ <li><span class="p">enabled</span>
+ </li>
+ <li><span class="p">panel</span>
+ </li>
+ <li><span class="p">text</span>
+ </li>
+ <li><span class="p">visible</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_textbox_1_textbox">function Textbox:Textbox()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L908">line 908 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1abort">function Textbox:abort()</a></h5>
+ <p>
+ Set the box to not active and run abort callback, if any<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L965">line 965 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1allowed_input">function Textbox:allowedInput(<span class="p">types</span>)</a></h5>
+ <p>
+ "misc": other characters, currently space and hyphen<br/><br/>
+ "all": experimental category that allows, theoretically, all input<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">types</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> One of, or an table of any number of input types</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1219">line 1219 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1character_limit">function Textbox:characterLimit(<span class="p">limit</span>)</a></h5>
+ <p>
+ Limit input to a maximum of [limit] characters.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">limit</td>
+ <td class="t">integer&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> Number of characters until the textbox will stop accepting input, or nil to deactivate limit.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1236">line 1236 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1clicked">function Textbox:clicked()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1003">line 1003 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1confirm">function Textbox:confirm()</a></h5>
+ <p>
+ Set the box to not active and run confirm callback, if any<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L957">line 957 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1draw_cursor">function Textbox:drawCursor(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L939">line 939 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1key_input">function Textbox:keyInput(<span class="p">char</span>, <span class="p">rawchar</span>)</a></h5>
+ <p>
+ Handles special characters such as Enter. Normal text input is processed in the textInput function.<br/><br/>
+ Note though that this function still returns true if it appears to be a characters being entered.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">char</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1016">line 1016 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1on_tick">function Textbox:onTick()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L927">line 927 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1set_active">function Textbox:setActive(<span class="p">active</span>)</a></h5>
+ <p>
+ Set the textbox active status to true or false, taking care of any
+additional things that need to be done: deactivate any other textboxes,
+handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">active</td>
+ <td class="t">boolean</td>
+ <td class="d"> whether to activate (true) or deactivate (false) the box</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L973">line 973 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1set_position">function Textbox:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1255">line 1255 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1set_size">function Textbox:setSize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1259">line 1259 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1set_text">function Textbox:setText(<span class="p">text</span>)</a></h5>
+ <p>
+ Use empty string to make textbox a single line textbox (default).<br/><br/>
+ Use table with empty string {""} to make it a multiline textbox.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> The string or list of strings the textbox should contain.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1244">line 1244 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_textbox_1text_input">function Textbox:textInput(<span class="p">text</span>)</a></h5>
+ <p>
+ Handles actual text input.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1199">line 1199 of Lua/window.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>AnnouncementQueue Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">AnnouncementQueue Class</h2>
+<h3 class="class">An announcement queue based on priority</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L44">line 44 of Lua/announcer.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_announcement_queue.html#_0_1_announcement_queue_1check_for_duplicates">checkForDuplicates</a>(<span class="p">sound</span>, <span class="p">date</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_announcement_queue.html#_0_1_announcement_queue_1is_empty">isEmpty</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_announcement_queue.html#_0_1_announcement_queue_1pop">pop</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_announcement_queue.html#_0_1_announcement_queue_1push">push</a>(<span class="p">priority</span>, <span class="p">entry</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">count</span>
+ </li>
+ <li><span class="p">priorities</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_announcement_queue_1_announcement_queue">function AnnouncementQueue:AnnouncementQueue()</a></h5>
+ <p>
+ Creates an announcement queue: a collection of announcements with queue semantics.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L50">line 50 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcement_queue_1check_for_duplicates">function AnnouncementQueue:checkForDuplicates(<span class="p">sound</span>, <span class="p">date</span>)</a></h5>
+ <p>
+ Checks for duplicates in the announcement queue and refreshes the announcement's created_date<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sound</td>
+ <td class="t">?</td>
+ <td class="d">the announcement to check</td>
+ </tr>
+ <tr>
+ <td class="n">date</td>
+ <td class="t">?</td>
+ <td class="d">the date to use, usually the current date</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L90">line 90 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcement_queue_1is_empty">function AnnouncementQueue:isEmpty()</a></h5>
+ <p>
+ Returns true if the queue is empty, false otherwise.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L85">line 85 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcement_queue_1pop">function AnnouncementQueue:pop()</a></h5>
+ <p>
+ Dequeues the announcement with the highest priority, nil if the queue is empty.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L72">line 72 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcement_queue_1push">function AnnouncementQueue:push(<span class="p">priority</span>, <span class="p">entry</span>)</a></h5>
+ <p>
+ Adds the announcement entry to the queue.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">int</td>
+ <td class="d"> the priority of the announcement</td>
+ </tr>
+ <tr>
+ <td class="n">entry</td>
+ <td class="t">AnnouncementEntry</td>
+ <td class="d"> the announcement entry</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L63">line 63 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

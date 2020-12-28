@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Panel Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Panel Class</h2>
+<h3 class="class">The basic component which makes up most `Window`s.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L150">line 150 of Lua/window.lua</a>.
+ <br/><strong>Full description:</strong><br/> The visual parts of most ingame dialogs are sprites from a sprite sheet.
+A `Panel` is an instance of a particular sprite, consisting of a sprite
+index and a position. It is advantageous to construct dialogs out of panels
+(using `Window:addPanel`) as the common operations on panels (like drawing
+them and hit-testing against them) are implemented in the `Window` class,
+thus reducing the amount of work that each individual dialog has to do. 
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1clip_line">clipLine</a>(<span class="p">line</span>, <span class="p">limit</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1draw_label">drawLabel</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">limit</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_button">makeButton</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_hotkey_box">makeHotkeyBox</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_repeat_button">makeRepeatButton</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_scrollbar">makeScrollbar</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_textbox">makeTextbox</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1make_toggle_button">makeToggleButton</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_auto_clip">setAutoClip</a>(<span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_colour">setColour</a>(<span class="p">col</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_dynamic_tooltip">setDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_label">setLabel</a>(<span class="p">label</span>, <span class="p">font</span>, <span class="p">align</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_tooltip">setTooltip</a>(<span class="p">tooltip</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_panel.html#_0_1_panel_1set_visible">setVisible</a>(<span class="p">visibility</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">align</span>
+ </li>
+ <li><span class="p">auto_clip</span>
+ </li>
+ <li><span class="p">colour</span>
+ </li>
+ <li><span class="p">custom_draw</span>
+ </li>
+ <li><span class="p">disabled_colour</span>
+ </li>
+ <li><span class="p">h</span>
+ </li>
+ <li><span class="p">highlight_colour</span>
+ </li>
+ <li><span class="p">label</span>
+ </li>
+ <li><span class="p">label_font</span>
+ </li>
+ <li><span class="p">shadow_colour</span>
+ </li>
+ <li><span class="p">tooltip</span>
+ </li>
+ <li><span class="p">visible</span>
+ </li>
+ <li><span class="p">w</span>
+ </li>
+ <li><span class="p">window</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_panel_1_panel">function Panel:Panel()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L162">line 162 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1clip_line">function Panel:clipLine(<span class="p">line</span>, <span class="p">limit</span>)</a></h5>
+ <p>
+ Checks if a given line drawn with the panel's label font would be longer than the given limit<br/><br/>
+ and if so, shortens it enough to fit including "..." at the end<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">line</td>
+ <td class="t">string</td>
+ <td class="d"> the line to modify</td>
+ </tr>
+ <tr>
+ <td class="n">limit</td>
+ <td class="t">int</td>
+ <td class="d"> the maximum length in pixels the line should have</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L271">line 271 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1draw_label">function Panel:drawLabel(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">limit</span>)</a></h5>
+ <p>
+ Draw function for the label on a panel<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">The canvas to draw on (can be nil for test)</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">x position to start drawing on</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">y position to start drawing on</td>
+ </tr>
+ <tr>
+ <td class="n">limit</td>
+ <td class="t">nil&nbsp;or&nbsp;or&nbsp;or&nbsp;int&nbsp;or&nbsp;int</td>
+ <td class="d"> limit after which line and with character on that line to stop drawing</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L289">line 289 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_button">function Panel:makeButton(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L176">line 176 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_hotkey_box">function Panel:makeHotkeyBox(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L196">line 196 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_repeat_button">function Panel:makeRepeatButton(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L184">line 184 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_scrollbar">function Panel:makeScrollbar(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L188">line 188 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_textbox">function Panel:makeTextbox(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L192">line 192 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1make_toggle_button">function Panel:makeToggleButton(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L180">line 180 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_auto_clip">function Panel:setAutoClip(<span class="p">mode</span>)</a></h5>
+ <p>
+ Specifies whether auto clip (clipping text at the end so it fits) is enabled for this panel<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">boolean</td>
+ <td class="d"> true to activate, false to deactivate.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L264">line 264 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_colour">function Panel:setColour(<span class="p">col</span>)</a></h5>
+ <p>
+ Set the colour of a panel<br/><br/>
+ Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">col</td>
+ <td class="t">table</td>
+ <td class="d"> Colour given as a table with three fields red, green and blue, each an integer value in [0, 255].</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L209">line 209 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_dynamic_tooltip">function Panel:setDynamicTooltip(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L242">line 242 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_label">function Panel:setLabel(<span class="p">label</span>, <span class="p">font</span>, <span class="p">align</span>)</a></h5>
+ <p>
+ Specify a label to be drawn on top of the panel.
+Note: This works only with ColourPanel and BevelPanel, not normal (sprite) panels.<br/><br/>
+ can be either of "left", "center", "right"<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">label</td>
+ <td class="t">string</td>
+ <td class="d"> The text to be drawn on top of the label.</td>
+ </tr>
+ <tr>
+ <td class="n">font</td>
+ <td class="t">font</td>
+ <td class="d"> [optional] The font to use. Default is Font01V in QData.</td>
+ </tr>
+ <tr>
+ <td class="n">align</td>
+ <td class="t">string</td>
+ <td class="d"> [optional] Alignment for non-multiline labels (multiline is always left)</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L251">line 251 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_position">function Panel:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Set the position of a panel.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> New horizontal position of the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> New vertical position of the panel.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L334">line 334 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_size">function Panel:setSize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ Set the size of a panel.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">int</td>
+ <td class="d"> New width of the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">int</td>
+ <td class="d"> New height of the panel.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L342">line 342 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_tooltip">function Panel:setTooltip(<span class="p">tooltip</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Specify a tooltip to be displayed when hovering this panel.
+x and y are optional position of bottom left of the tooltip.
+If not specified, will default to mouse position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">tooltip</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L230">line 230 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_panel_1set_visible">function Panel:setVisible(<span class="p">visibility</span>)</a></h5>
+ <p>
+ Set the visibility of the panel.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">visibility</td>
+ <td class="t">bool</td>
+ <td class="d"> New visibility of the panel.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L350">line 350 of Lua/window.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

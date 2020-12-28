@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Announcer Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Announcer Class</h2>
+<h3 class="class">Announces audible messages to the player.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L122">line 122 of Lua/announcer.lua</a>.
+ <br/><strong>Full description:</strong><br/> The announcer plays announcements based on their priority. If the caller requests an
+announcement to be played, it will be played directly if there are no announcements
+currently being announced. Note that announcements are only played if there is
+a worker at the reception desk and announcements are enabled in the settings. 
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_announcer.html#_0_1_announcer_1__on_played">_onPlayed</a>(<span class="p">entry</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_announcer.html#_0_1_announcer_1__play">_play</a>(<span class="p">entry</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_announcer.html#_0_1_announcer_1__set_random_announcement_target">_setRandomAnnouncementTarget</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_announcer.html#_0_1_announcer_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_announcer.html#_0_1_announcer_1play_announcement">playAnnouncement</a>(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">decay_hours</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">entries</span>
+ </li>
+ <li><span class="p">playing</span>
+ </li>
+ <li><span class="p">random_announcement_ticks_target</span>
+ </li>
+ <li><span class="p">ticks_since_last_announcement</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_announcer_1_announcer">function Announcer:Announcer(<span class="p">app</span>)</a></h5>
+ <p>
+ Constructor.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">App</td>
+ <td class="d"> The CorsixTH app</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L132">line 132 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcer_1__on_played">function Announcer:_onPlayed(<span class="p">entry</span>)</a></h5>
+ <p>
+ Private function. Handles the playSound completed event. Also calls the callback of the announcement.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entry</td>
+ <td class="t">AnnouncementEntry</td>
+ <td class="d"> The announcement that has been played.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L241">line 241 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcer_1__play">function Announcer:_play(<span class="p">entry</span>)</a></h5>
+ <p>
+ Private function. Plays the actual sound of an announcement.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entry</td>
+ <td class="t">AnnouncementEntry</td>
+ <td class="d"> The announcement to play.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L233">line 233 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcer_1__set_random_announcement_target">function Announcer:_setRandomAnnouncementTarget()</a></h5>
+ <p>
+ Private function. Sets the new time (in ticks) when a random announcement should be played.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L224">line 224 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcer_1on_tick">function Announcer:onTick()</a></h5>
+ <p>
+ The announcer's (game) tick handler.
+Plays the actual sound of the announcements, if available.
+Also queues random announcements if no announcements have been played for a while.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L183">line 183 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_announcer_1play_announcement">function Announcer:playAnnouncement(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">decay_hours</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ Requests the announcer to play an announcement.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> The filename to play.</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">int&nbsp;or&nbsp;nil</td>
+ <td class="d"> The priority of the announcement. See AnnouncementPriority.</td>
+ </tr>
+ <tr>
+ <td class="n">decay_hours</td>
+ <td class="t">float&nbsp;or&nbsp;nil</td>
+ <td class="d"> After this amount of hours the announcement should be considered irrelevant.
+Provide nil for a decay time based on the provided priority.</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">function&nbsp;or&nbsp;nil</td>
+ <td class="d"> The callback to trigger when the announcement was successfully played.</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">int&nbsp;or&nbsp;nil</td>
+ <td class="d"> Delay the callback with this amount of milliseconds.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/announcer.lua#L143">line 143 of Lua/announcer.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>OperatingTheatreRoom Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">OperatingTheatreRoom Class</h2>
+<h3 class="class">TODO: There is also an unused sound
+"Another surgeon needed [...]", reqd011.wav
+room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L47">line 47 of Lua/rooms/operating_theatre.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_operating_theatre_room.html">OperatingTheatreRoom</a>
+ » <a href="_0_1_room.html">Room</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1__build_table_action2">_buildTableAction2</a>(<span class="p">multi_use</span>, <span class="p">operation_table_b</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1build_table_action1">buildTableAction1</a>(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1calculate_removal_cost">calculateRemovalCost</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1can_humanoid_enter">canHumanoidEnter</a>(<span class="p">humanoid</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">Room:canHumanoidEnter</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1command_entering_patient">commandEnteringPatient</a>(<span class="p">patient</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1command_entering_staff">commandEnteringStaff</a>(<span class="p">staff</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1command_entering_staff">Room:commandEnteringStaff</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1count_windows">countWindows</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1crash_room">crashRoom</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_dealt_with_patient_callback">createDealtWithPatientCallback</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_enter_action">createEnterAction</a>(<span class="p">humanoid_entering</span>, <span class="p">callback</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_leave_action">createLeaveAction</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1deactivate">deactivate</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1dealt_with_patient">dealtWithPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1find_work_for_staff">findWorkForStaff</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_entrance_x_y">getEntranceXY</a>(<span class="p">inside</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_maximum_staff_criteria">getMaximumStaffCriteria</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_missing_staff">getMissingStaff</a>(<span class="p">criteria</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_patient">getPatient</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_patient_count">getPatientCount</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_required_staff_criteria">getRequiredStaffCriteria</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1get_staff_member">getStaffMember</a>()
+ (overrides <a href="_0_1_room.html#_0_1_room_1get_staff_member">Room:getStaffMember</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_staff_service_quality">getStaffServiceQuality</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_usage_score">getUsageScore</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1has_queue_dialog">hasQueueDialog</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1init_room">initRoom</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">door</span>, <span class="p">door2</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1is_diagnosis_room_for_patient">isDiagnosisRoomForPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1is_operating">isOperating</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_dress_if_necessary_and_then_leave">makeHumanoidDressIfNecessaryAndThenLeave</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_leave">makeHumanoidLeave</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">onHumanoidEnter</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1on_humanoid_leave">onHumanoidLeave</a>(<span class="p">humanoid</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">Room:onHumanoidLeave</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1queue_wash_hands">queueWashHands</a>(<span class="p">surgeon</span>, <span class="p">at_front</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1room_finished">roomFinished</a>()
+ (overrides <a href="_0_1_room.html#_0_1_room_1room_finished">Room:roomFinished</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1set_staff_member">setStaffMember</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1set_staff_members_attribute">setStaffMembersAttribute</a>(<span class="p">attribute</span>, <span class="p">value</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">Room:setStaffMembersAttribute</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_operating_theatre_room.html#_0_1_operating_theatre_room_1set_x_ray_on">setXRayOn</a>(<span class="p">turn_on</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1should_have_patient_reenter">shouldHavePatientReenter</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1staff_fits_in_room">staffFitsInRoom</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1staff_meets_room_requirements">staffMeetsRoomRequirements</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1test_staff_criteria">testStaffCriteria</a>(<span class="p">criteria</span>, <span class="p">extra_humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_advance_queue">tryAdvanceQueue</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_to_edit">tryToEdit</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_to_find_nearby_patients">tryToFindNearbyPatients</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active</span>
+ (*)
+ </li>
+ <li><span class="p">built</span>
+ (*)
+ </li>
+ <li><span class="p">crashed</span>
+ (*)
+ </li>
+ <li><span class="p">dealt_patient_callback</span>
+ (*)
+ </li>
+ <li><span class="p">door</span>
+ (*)
+ </li>
+ <li><span class="p">door2</span>
+ (*)
+ </li>
+ <li><span class="p">height</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">humanoids</span>
+ (*)
+ </li>
+ <li><span class="p">humanoids_enroute</span>
+ (*)
+ </li>
+ <li><span class="p">id</span>
+ (*)
+ </li>
+ <li><span class="p">is_active</span>
+ (*)
+ </li>
+ <li><span class="p">maximum_patients</span>
+ (*)
+ </li>
+ <li><span class="p">needs_repair</span>
+ (*)
+ </li>
+ <li><span class="p">objects</span>
+ (*)
+ </li>
+ <li><span class="p">room_info</span>
+ (*)
+ </li>
+ <li><span class="p">sound_played</span>
+ (*)
+ </li>
+ <li><span class="p">staff_member</span>
+ (*)
+ </li>
+ <li><span class="p">staff_member_set</span>
+ </li>
+ <li><span class="p">waiting_staff_member</span>
+ (*)
+ </li>
+ <li><span class="p">width</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">x</span>
+ (*)
+ </li>
+ <li><span class="p">x_ray_viewer</span>
+ </li>
+ <li><span class="p">y</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1_operating_theatre_room">function OperatingTheatreRoom:OperatingTheatreRoom(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L56">line 56 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1__build_table_action2">function OperatingTheatreRoom._buildTableAction2(<span class="p">multi_use</span>, <span class="p">operation_table_b</span>)</a></h5>
+ <p>
+ Note: Must be part of OperatingTheatreRoom and not a local function<br/><br/>
+ because of the use in the persisted callback function operation_standby.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">multi_use</td>
+ <td class="t">action</td>
+ <td class="d">: the first operation action (built with via buildTableAction1()).</td>
+ </tr>
+ <tr>
+ <td class="n">operation_table_b</td>
+ <td class="t">OperatingTable</td>
+ <td class="d">: slave object representing the operation table.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L109">line 109 of Lua/rooms/operating_theatre.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1build_table_action1">function OperatingTheatreRoom:buildTableAction1(<span class="p">surgeon1</span>, <span class="p">patient</span>, <span class="p">operation_table</span>)</a></h5>
+ <p>
+ be the same as the surgeon who gets the action on his queue.<br/><br/>
+ the operation table.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">surgeon1</td>
+ <td class="t">Staff</td>
+ <td class="d">: the surgeon who does this operation action. He must</td>
+ </tr>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">Patient</td>
+ <td class="d">: the patient to be operated.</td>
+ </tr>
+ <tr>
+ <td class="n">operation_table</td>
+ <td class="t">OperatingTable</td>
+ <td class="d">: master object representing</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L195">line 195 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1can_humanoid_enter">function OperatingTheatreRoom:canHumanoidEnter(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">Room:canHumanoidEnter</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L359">line 359 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1command_entering_patient">function OperatingTheatreRoom:commandEnteringPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L249">line 249 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1command_entering_staff">function OperatingTheatreRoom:commandEnteringStaff(<span class="p">staff</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_staff">Room:commandEnteringStaff</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L135">line 135 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1get_staff_member">function OperatingTheatreRoom:getStaffMember()</a></h5>
+ <p>
+ Returns the current staff member. if there are currently two surgeons it returns
+the one with higher tiredness.<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1get_staff_member">Room:getStaffMember</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L177">line 177 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1is_operating">function OperatingTheatreRoom:isOperating()</a></h5>
+ <p>
+ Returns true if an operation is ongoing<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L98">line 98 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1on_humanoid_leave">function OperatingTheatreRoom:onHumanoidLeave(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">Room:onHumanoidLeave</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L339">line 339 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1queue_wash_hands">function OperatingTheatreRoom:queueWashHands(<span class="p">surgeon</span>, <span class="p">at_front</span>)</a></h5>
+ <p>
+ Add the actions at the end of the queue otherwise.<br/><br/>
+ Default value is true.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">surgeon</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">at_front</td>
+ <td class="t">boolean</td>
+ <td class="d">: If true, add the actions at the front the action queue.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L221">line 221 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1room_finished">function OperatingTheatreRoom:roomFinished()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1room_finished">Room:roomFinished</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L61">line 61 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1set_staff_members_attribute">function OperatingTheatreRoom:setStaffMembersAttribute(<span class="p">attribute</span>, <span class="p">value</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">attribute</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">Room:setStaffMembersAttribute</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L171">line 171 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_operating_theatre_room_1set_x_ray_on">function OperatingTheatreRoom:setXRayOn(<span class="p">turn_on</span>)</a></h5>
+ <p>
+ Turn on/off x-ray viewer - if it's been found<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">turn_on</td>
+ <td class="t">boolean</td>
+ <td class="d">: true to switch on and false to switch off</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/operating_theatre.lua#L241">line 241 of Lua/rooms/operating_theatre.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

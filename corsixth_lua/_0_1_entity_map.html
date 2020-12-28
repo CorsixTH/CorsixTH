@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>EntityMap Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">EntityMap Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L21">line 21 of Lua/entity_map.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1add_entity">addEntity</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_adjacent_free_tiles">getAdjacentFreeTiles</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_adjacent_squares">getAdjacentSquares</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_entities_at_coordinate">getEntitiesAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_humanoids_at_coordinate">getHumanoidsAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_objects_at_coordinate">getObjectsAtCoordinate</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1get_patients_in_adjacent_squares">getPatientsInAdjacentSquares</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity_map.html#_0_1_entity_map_1remove_entity">removeEntity</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">entity_map</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1_entity_map">function EntityMap:EntityMap(<span class="p">map</span>)</a></h5>
+ <p>
+ An entity map is a structure is a 2 dimensional structure created from a
+game map, it has the same dimensions as the game map which intitalises it.
+The purpose of the map is store the location of entities in the map in
+real-time. Each cell given by an (x, y) coordinate is a
+table {humanoids ={}, objects = {}} where the tables of humanoids/objects
+may be empty or contain the entity/entities that currently exist in that tile.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">map</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L26">line 26 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1add_entity">function EntityMap:addEntity(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)</a></h5>
+ <p>
+ Adds an entity to the entity map in a specified location
+@param x (integer) the x coordinate of the entity
+@param y (integer) the y coordinate of the entity
+@param entity (Entity) the entity to be added to the map in the (x, y) position<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L47">line 47 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_adjacent_free_tiles">function EntityMap:getAdjacentFreeTiles(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} of
+the adjacent tiles (no diagonals) which do not contain any humanoids or objects
+does NOT determine if the tile is reachable from (x, y) may even be in a
+different room
+@param x (integer) the x coordinate to obtain free tiles from
+@param y (integer) the y coordinate to obtain free tiles from<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L177">line 177 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_adjacent_squares">function EntityMap:getAdjacentSquares(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a map of coordinates {{x1, y1}, ... {xn, yn}} directly
+adjacent to a given (x, y) coordinate - no diagonals
+@param x (integer) the x coordinate to obtain adjacent tiles from
+@param y (integer) the y coordinate to obtain adjacent tiles from<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L137">line 137 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_entities_at_coordinate">function EntityMap:getEntitiesAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a map of all entities (objects and humanoids) at a specified coordinate
+@param x (integer) the x coordinate to retrieve entities from
+@param y (integer) the y coordinate to retrieve entities from
+@return entity_map (table) containing the entities at the (x, y) coordinate<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L97">line 97 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_humanoids_at_coordinate">function EntityMap:getHumanoidsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a table of all humanoids at a specified coordinate
+@param x (integer) the x coordinate to retrieve entities from
+@param y (integer) the y coordinate to retrieve entities from
+@return (table) containing the humanoids at the (x, y) coordinate<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L116">line 116 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_objects_at_coordinate">function EntityMap:getObjectsAtCoordinate(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns a table of all objects at a specified coordinate
+@param x (integer) the x coordinate to retrieve entities from
+@param y (integer) the y coordinate to retrieve entities from
+@return (table) containing the objects at the (x, y) coordinate<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L126">line 126 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1get_patients_in_adjacent_squares">function EntityMap:getPatientsInAdjacentSquares(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Returns all the entities which are patients in the squares directly adjacent
+to the given (x, y) coordinate - diagonals are not considered
+@param x (integer) the x coordinate to obtain adjacent patients from
+@param y (integer) the y coordinate to obtain adjacent patients from<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L161">line 161 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_map_1remove_entity">function EntityMap:removeEntity(<span class="p">x</span>, <span class="p">y</span>, <span class="p">entity</span>)</a></h5>
+ <p>
+ Removes an entity from the entity map given specified location
+Assumes the entity already has been added in the (x, y) position or will cause
+the assertion that the entity is contained in the map to fail.
+@param x (integer) the x coordinate of the entity
+@param y (integer) the y coordinate of the entity
+@param entity (Entity) the entity to be removed from the map in the (x, y) position<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity_map.lua#L78">line 78 of Lua/entity_map.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

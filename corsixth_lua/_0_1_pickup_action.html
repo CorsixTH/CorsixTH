@@ -1,0 +1,141 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>PickupAction Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">PickupAction Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/pickup.lua#L21">line 21 of Lua/humanoid_actions/pickup.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_pickup_action.html">PickupAction</a>
+ » <a href="_0_1_humanoid_action.html">HumanoidAction</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1disable_truncate">disableTruncate</a>()
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_after_use">setAfterUse</a>(<span class="p">after_use</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_count">setCount</a>(<span class="p">count</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_is_leaving">setIsLeaving</a>(<span class="p">is_leaving</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_loop_callback">setLoopCallback</a>(<span class="p">loop_callback</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_must_happen">setMustHappen</a>(<span class="p">must_happen</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_pickup_action.html#_0_1_pickup_action_1set_todo_close">setTodoClose</a>(<span class="p">dialog</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">after_use</span>
+ (*)
+ </li>
+ <li><span class="p">count</span>
+ (*)
+ </li>
+ <li><span class="p">idle_must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">is_entering</span>
+ (*)
+ </li>
+ <li><span class="p">is_leaving</span>
+ (*)
+ </li>
+ <li><span class="p">loop_callback</span>
+ (*)
+ </li>
+ <li><span class="p">must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">name</span>
+ (*)
+ </li>
+ <li><span class="p">no_truncate</span>
+ (*)
+ </li>
+ <li><span class="p">saved_must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">todo_close</span>
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_pickup_action_1_pickup_action">function PickupAction:PickupAction(<span class="p">ui</span>)</a></h5>
+ <p>
+ Construct a pick-up action<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">User interface</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/pickup.lua#L26">line 26 of Lua/humanoid_actions/pickup.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_pickup_action_1set_todo_close">function PickupAction:setTodoClose(<span class="p">dialog</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dialog</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/pickup.lua#L37">line 37 of Lua/humanoid_actions/pickup.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

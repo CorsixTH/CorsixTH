@@ -1,0 +1,800 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Map Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Map Class</h2>
+<h3 class="class">Lua extensions to the C++ THMap class</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L21">line 21 of Lua/map.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1_screen_to_world">ScreenToWorld</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1_world_to_screen">WorldToScreen</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1after_save">afterSave</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1clear_debug_text">clearDebugText</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">sx</span>, <span class="p">sy</span>, <span class="p">sw</span>, <span class="p">sh</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_cell_flag">getCellFlag</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">flag</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_difficulty">getDifficulty</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_parcel_price">getParcelPrice</a>(<span class="p">parcel</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_parcel_tile_count">getParcelTileCount</a>(<span class="p">parcel</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_player_count">getPlayerCount</a>(<span class="p">count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_raw_data">getRawData</a>(<span class="p">map_file</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1get_room_id">getRoomId</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1load">load</a>(<span class="p">level</span>, <span class="p">difficulty</span>, <span class="p">level_name</span>, <span class="p">map_file</span>, <span class="p">level_intro</span>, <span class="p">map_editor</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1load_debug_text">loadDebugText</a>(<span class="p">base_offset</span>, <span class="p">xy_offset</span>, <span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1load_map_config">loadMapConfig</a>(<span class="p">filename</span>, <span class="p">config</span>, <span class="p">custom</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1prepare_for_save">prepareForSave</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1register_temperature_display_method">registerTemperatureDisplayMethod</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1save">save</a>(<span class="p">filename</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_blocks">setBlocks</a>(<span class="p">blocks</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_camera_tile">setCameraTile</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">player</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_cell_flags">setCellFlags</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_debug_font">setDebugFont</a>(<span class="p">font</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_debug_text">setDebugText</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">msg</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_heliport_tile">setHeliportTile</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">player</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_player_count">setPlayerCount</a>(<span class="p">count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_plot_owner">setPlotOwner</a>(<span class="p">plot_number</span>, <span class="p">new_owner</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1set_temperature_display_method">setTemperatureDisplayMethod</a>(<span class="p">method</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1update_debug_overlay_camera">updateDebugOverlayCamera</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1update_debug_overlay_flags">updateDebugOverlayFlags</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1update_debug_overlay_heat">updateDebugOverlayHeat</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1update_debug_overlay_heliport">updateDebugOverlayHeliport</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_map.html#_0_1_map_1update_debug_overlay_parcels">updateDebugOverlayParcels</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">blocks</span>
+ </li>
+ <li><span class="p">cell_outline</span>
+ </li>
+ <li><span class="p">debug_flags</span>
+ </li>
+ <li><span class="p">debug_font</span>
+ </li>
+ <li><span class="p">debug_text</span>
+ </li>
+ <li><span class="p">debug_tick_timer</span>
+ </li>
+ <li><span class="p">difficulty</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">level_config</span>
+ </li>
+ <li><span class="p">level_intro</span>
+ </li>
+ <li><span class="p">level_name</span>
+ </li>
+ <li><span class="p">level_number</span>
+ </li>
+ <li><span class="p">map_file</span>
+ </li>
+ <li><span class="p">parcelTileCounts</span>
+ </li>
+ <li><span class="p">temperature_display_method</span>
+ </li>
+ <li><span class="p">th</span>
+ </li>
+ <li><span class="p">thData</span>
+ </li>
+ <li><span class="p">updateDebugOverlay</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_map_1_map">function Map:Map(<span class="p">app</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L32">line 32 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1_screen_to_world">function Map:ScreenToWorld(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L128">line 128 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1_world_to_screen">function Map:WorldToScreen(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Convert between world coordinates and screen coordinates
+World coordinates are (at least for standard maps) in the range [1, 128)
+for both x and y, with the floor of the values giving the cell index.
+Screen coordinates are pixels relative to the map origin - NOT relative to
+the top-left corner of the screen (use UI:WorldToScreen and UI:ScreenToWorld
+for this).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L111">line 111 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1after_load">function Map:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L741">line 741 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1after_save">function Map:afterSave()</a></h5>
+ <p>
+ Restore the temporarily stored debug information after saving<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L431">line 431 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1clear_debug_text">function Map:clearDebugText()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L443">line 443 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1draw">function Map:draw(<span class="p">canvas</span>, <span class="p">sx</span>, <span class="p">sy</span>, <span class="p">sw</span>, <span class="p">sh</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ Draws the rectangle of the map given by (sx, sy, sw, sh) at position (dx, dy) on the canvas<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d"></td>
+ </tr>
+ <tr>
+ <td class="n">sx</td>
+ <td class="t">?</td>
+ <td class="d">Horizontal start position at the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">sy</td>
+ <td class="t">?</td>
+ <td class="d">Vertical start position at the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">sw</td>
+ <td class="t">int</td>
+ <td class="d"> Width of the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">sh</td>
+ <td class="t">int</td>
+ <td class="d"> Height of the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">jnt</td>
+ <td class="d"> Horizontal destination at the canvas.</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical destination at the canvas.
+]]</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L626">line 626 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_cell_flag">function Map:getCellFlag(<span class="p">x</span>, <span class="p">y</span>, <span class="p">flag</span>)</a></h5>
+ <p>
+ Get the value of the given flag from the tile at x, y in the map.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the tile to query in the map.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">flag</td>
+ <td class="t">string</td>
+ <td class="d"> Name of the queried flag.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L50">line 50 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_difficulty">function Map:getDifficulty()</a></h5>
+ <p>
+ Get the difficulty of the level. Custom levels and campaign always have medium difficulty.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L284">line 284 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_parcel_price">function Map:getParcelPrice(<span class="p">parcel</span>)</a></h5>
+ <p>
+ Get the price of a parcel<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">parcel</td>
+ <td class="t">int</td>
+ <td class="d"> Parcel number being queried.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L724">line 724 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_parcel_tile_count">function Map:getParcelTileCount(<span class="p">parcel</span>)</a></h5>
+ <p>
+ Get the number of tiles in a parcel.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">parcel</td>
+ <td class="t">int</td>
+ <td class="d"> Parcel number being queried.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L734">line 734 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_player_count">function Map:getPlayerCount(<span class="p">count</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">count</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L71">line 71 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_raw_data">function Map:getRawData(<span class="p">map_file</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">map_file</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L449">line 449 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1get_room_id">function Map:getRoomId(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Get the ID of the room of the tile at x, y in the map.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the tile to query in the map.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L59">line 59 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1load">function Map:load(<span class="p">level</span>, <span class="p">difficulty</span>, <span class="p">level_name</span>, <span class="p">map_file</span>, <span class="p">level_intro</span>, <span class="p">map_editor</span>)</a></h5>
+ <p>
+ Loads the specified level. If a string is passed it looks for the file with the same name
+ in the "Levels" and/or "Campaigns" folder of CorsixTH, if it is a number it tries to load
+ that level from the original game.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">level</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;int</td>
+ <td class="d"> The name (or number) of the level to load. If this is a number the game assumes
+the original game levels are considered.</td>
+ </tr>
+ <tr>
+ <td class="n">difficulty</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">level_name</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the actual map/area/hospital as written in the config file.</td>
+ </tr>
+ <tr>
+ <td class="n">map_file</td>
+ <td class="t">string</td>
+ <td class="d"> The path to the map file as supplied by the config file.</td>
+ </tr>
+ <tr>
+ <td class="n">level_intro</td>
+ <td class="t">string</td>
+ <td class="d"> If loading a custom level this message will be shown as soon as the level
+has been loaded.</td>
+ </tr>
+ <tr>
+ <td class="n">map_editor</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L162">line 162 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1load_debug_text">function Map:loadDebugText(<span class="p">base_offset</span>, <span class="p">xy_offset</span>, <span class="p">first</span>, <span class="p">last</span>, <span class="p">bits_</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">base_offset</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">xy_offset</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">first</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">last</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">bits_</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L528">line 528 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1load_map_config">function Map:loadMapConfig(<span class="p">filename</span>, <span class="p">config</span>, <span class="p">custom</span>)</a></h5>
+ <p>
+ Loads map configurations from files. Returns nil as first result
+if no configuration could be loaded and config as second result no matter what.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">filename</td>
+ <td class="t">string</td>
+ <td class="d"> The absolute path to the config file to load</td>
+ </tr>
+ <tr>
+ <td class="n">config</td>
+ <td class="t">string</td>
+ <td class="d"> If a base config already exists and only some values should be overridden
+this is the base config</td>
+ </tr>
+ <tr>
+ <td class="n">custom</td>
+ <td class="t">?</td>
+ <td class="d">If true The configuration file is searched for where filename points, otherwise
+it is assumed that we're looking in the theme_hospital_install path.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L357">line 357 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1on_tick">function Map:onTick()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L582">line 582 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1prepare_for_save">function Map:prepareForSave()</a></h5>
+ <p>
+ Keep debug information in temporary local vars, do not save them<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L419">line 419 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1register_temperature_display_method">function Map:registerTemperatureDisplayMethod()</a></h5>
+ <p>
+ Copy the temperature display method from the Lua data, if available, else use the default.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L103">line 103 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1save">function Map:save(<span class="p">filename</span>)</a></h5>
+ <p>
+ Saves the map to a .map file<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">filename</td>
+ <td class="t">string</td>
+ <td class="d"> Name of the file to save the map in</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L350">line 350 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_blocks">function Map:setBlocks(<span class="p">blocks</span>)</a></h5>
+ <p>
+ Set the sprites to be used by the map.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">blocks</td>
+ <td class="t">object</td>
+ <td class="d"> Sprite sheet for the map.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L593">line 593 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_camera_tile">function Map:setCameraTile(<span class="p">x</span>, <span class="p">y</span>, <span class="p">player</span>)</a></h5>
+ <p>
+ Set the camera tile for the given player on the map<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal position of tile to set camera on</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the tile to set the camera on</td>
+ </tr>
+ <tr>
+ <td class="n">player</td>
+ <td class="t">int</td>
+ <td class="d"> Player number (1-4)</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L75">line 75 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_cell_flags">function Map:setCellFlags(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L600">line 600 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_debug_font">function Map:setDebugFont(<span class="p">font</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">font</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L604">line 604 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_debug_text">function Map:setDebugText(<span class="p">x</span>, <span class="p">y</span>, <span class="p">msg</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">msg</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L609">line 609 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_heliport_tile">function Map:setHeliportTile(<span class="p">x</span>, <span class="p">y</span>, <span class="p">player</span>)</a></h5>
+ <p>
+ Set the heliport tile for the given player on the map<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal position of tile to set heliport on</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the tile to set the heliport on</td>
+ </tr>
+ <tr>
+ <td class="n">player</td>
+ <td class="t">int</td>
+ <td class="d"> Player number (1-4)</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L83">line 83 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_player_count">function Map:setPlayerCount(<span class="p">count</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">count</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L67">line 67 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_plot_owner">function Map:setPlotOwner(<span class="p">plot_number</span>, <span class="p">new_owner</span>)</a></h5>
+ <p>
+ Sets the plot owner of the given plot number to the given new owner. Makes sure
+ that any room adjacent to the new plot have walls in all directions after the purchase.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">plot_number</td>
+ <td class="t">int</td>
+ <td class="d"> Number of the plot to change owner of. Plot 0 is the outside and
+ should never change owner.</td>
+ </tr>
+ <tr>
+ <td class="n">new_owner</td>
+ <td class="t">int</td>
+ <td class="d"> The player number that should own plot_number. 0 means no owner.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L292">line 292 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1set_temperature_display_method">function Map:setTemperatureDisplayMethod(<span class="p">method</span>)</a></h5>
+ <p>
+ Set how to display the room temperature in the hospital map.<br/><br/>
+ 1=red gradients, 2=blue/green/red colour shifts, 3=yellow/orange/red colour shifts<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">method</td>
+ <td class="t">int</td>
+ <td class="d"> Way of displaying the temperature. See also THMapTemperatureDisplay enum.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L91">line 91 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1update_debug_overlay_camera">function Map:updateDebugOverlayCamera()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L496">line 496 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1update_debug_overlay_flags">function Map:updateDebugOverlayFlags()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L466">line 466 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1update_debug_overlay_heat">function Map:updateDebugOverlayHeat()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L475">line 475 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1update_debug_overlay_heliport">function Map:updateDebugOverlayHeliport()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L512">line 512 of Lua/map.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_map_1update_debug_overlay_parcels">function Map:updateDebugOverlayParcels()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/map.lua#L484">line 484 of Lua/map.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

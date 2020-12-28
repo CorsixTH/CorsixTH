@@ -1,0 +1,2154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>World Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">World Class</h2>
+<h3 class="class">Manages entities, rooms, and the date.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L47">line 47 of Lua/world.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1__create_map_object">_createMapObject</a>(<span class="p">object</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1__generate_next_vip_date">_generateNextVipDate</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1add_object_to_tile">addObjectToTile</a>(<span class="p">object</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1adjust_zoom">adjustZoom</a>(<span class="p">delta</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1calculate_spawn_tiles">calculateSpawnTiles</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1can_non_side_object_be_spawned_at">canNonSideObjectBeSpawnedAt</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">objects_id</span>, <span class="p">orientation</span>, <span class="p">spawn_rooms_id</span>, <span class="p">player_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1check_if_game_won">checkIfGameWon</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1check_winning_conditions">checkWinningConditions</a>(<span class="p">player_no</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1clear_caches">clearCaches</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1create_earthquake">createEarthquake</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1create_map_objects">createMapObjects</a>(<span class="p">objects</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1date">date</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1debug_disable_salary_raise">debugDisableSalaryRaise</a>(<span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1destroy_entity">destroyEntity</a>(<span class="p">entity</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1determine_winning_conditions">determineWinningConditions</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1dump_game_log">dumpGameLog</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1find_all_objects_near">findAllObjectsNear</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>, <span class="p">object_type_name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1find_free_object_near_to_use">findFreeObjectNearToUse</a>(<span class="p">humanoid</span>, <span class="p">object_type_name</span>, <span class="p">which</span>, <span class="p">current_object</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1find_object_near">findObjectNear</a>(<span class="p">humanoid</span>, <span class="p">object_type_name</span>, <span class="p">distance</span>, <span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1find_room_near">findRoomNear</a>(<span class="p">humanoid</span>, <span class="p">room_type_id</span>, <span class="p">distance</span>, <span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1game_log">gameLog</a>(<span class="p">message</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_anim_length">getAnimLength</a>(<span class="p">anim</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_available_rooms">getAvailableRooms</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_campaign_winning_text">getCampaignWinningText</a>(<span class="p">player_no</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_current_speed">getCurrentSpeed</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_date">getDate</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_free_bench">getFreeBench</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_hospital">getHospital</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_idle_tile">getIdleTile</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">idx</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_local_player_hospital">getLocalPlayerHospital</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_object">getObject</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_object_to_notify_of_occupants">getObjectToNotifyOfOccupants</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_objects">getObjects</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_path">getPath</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dest_x</span>, <span class="p">dest_y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_path_distance">getPathDistance</a>(<span class="p">x1</span>, <span class="p">y1</span>, <span class="p">x2</span>, <span class="p">y2</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_reputation_impact">getReputationImpact</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_room">getRoom</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_room_name_and_required_staff_name">getRoomNameAndRequiredStaffName</a>(<span class="p">room_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_wall_dir_from_block_id">getWallDirFromBlockId</a>(<span class="p">block_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_wall_id_from_block_id">getWallIdFromBlockId</a>(<span class="p">block_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1get_wall_set_from_block_id">getWallSetFromBlockId</a>(<span class="p">block_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1init_from_previous_level">initFromPreviousLevel</a>(<span class="p">carry</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1init_level">initLevel</a>(<span class="p">app</span>, <span class="p">avail_rooms</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_current_speed">isCurrentSpeed</a>(<span class="p">speed</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_footprint_tile_buildable_or_passable">isFootprintTileBuildableOrPassable</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">tile</span>, <span class="p">footprint</span>, <span class="p">requirement_flag</span>, <span class="p">player_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_on_map">isOnMap</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_paused">isPaused</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_tile_empty">isTileEmpty</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">not_in_room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_tile_exclusively_passable">isTileExclusivelyPassable</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1is_tile_part_of_nearby_object">isTilePartOfNearbyObject</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1lose_game">loseGame</a>(<span class="p">player_no</span>, <span class="p">reason</span>, <span class="p">limit</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1make_available_staff">makeAvailableStaff</a>(<span class="p">month</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1mark_room_as_built">markRoomAsBuilt</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1new_entity">newEntity</a>(<span class="p">class</span>, <span class="p">animation</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1new_floating_dollar_sign">newFloatingDollarSign</a>(<span class="p">patient</span>, <span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1new_object">newObject</a>(<span class="p">id</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">flags</span>, <span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1new_object_type">newObjectType</a>(<span class="p">new_object</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1new_room">newRoom</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">room_info</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1next_earthquake">nextEarthquake</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1next_emergency">nextEmergency</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1next_vip">nextVip</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1notify_object_of_occupants">notifyObjectOfOccupants</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1notify_room_removed">notifyRoomRemoved</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1object_placed">objectPlaced</a>(<span class="p">entity</span>, <span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1on_end_day">onEndDay</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1on_end_month">onEndMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1on_end_year">onEndYear</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1pause_or_unpause">pauseOrUnpause</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1play_loaded_entity_sounds">playLoadedEntitySounds</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1prepare_footprint_tiles_for_build">prepareFootprintTilesForBuild</a>(<span class="p">object_footprint</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1prepare_rectangle_tiles_for_build">prepareRectangleTilesForBuild</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1previous_speed">previousSpeed</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1register_room_remove_callback">registerRoomRemoveCallback</a>(<span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1remove_all_litter">removeAllLitter</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1remove_object_from_tile">removeObjectFromTile</a>(<span class="p">object</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1reset_animations">resetAnimations</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1reset_side_objects">resetSideObjects</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1set_end_month">setEndMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1set_end_year">setEndYear</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1set_plot_owner">setPlotOwner</a>(<span class="p">parcel</span>, <span class="p">owner</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1set_speed">setSpeed</a>(<span class="p">speed</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1set_u_i">setUI</a>(<span class="p">ui</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1spawn_patient">spawnPatient</a>(<span class="p">hospital</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1spawn_v_i_p">spawnVIP</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1speed_up">speedUp</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1tick_earthquake">tickEarthquake</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1toggle_information">toggleInformation</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1unregister_room_remove_callback">unregisterRoomRemoveCallback</a>(<span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1update_spawn_dates">updateSpawnDates</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1will_objects_footprint_tile_be_within_its_allowed_room_if_located_at">willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">allowed_rooms_id_parameter</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1win_game">winGame</a>(<span class="p">player_no</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_world.html#_0_1_world_1would_non_side_object_break_pathfinding_if_spawned_at">wouldNonSideObjectBreakPathfindingIfSpawnedAt</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">objects_orientation</span>, <span class="p">spawn_rooms_id</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">anim_length_cache</span>
+ </li>
+ <li><span class="p">animation_manager</span>
+ </li>
+ <li><span class="p">anims</span>
+ </li>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">autosave_next_tick</span>
+ </li>
+ <li><span class="p">available_diseases</span>
+ </li>
+ <li><span class="p">available_rooms</span>
+ </li>
+ <li><span class="p">available_staff</span>
+ </li>
+ <li><span class="p">campaign_info</span>
+ </li>
+ <li><span class="p">cheat_announcements</span>
+ </li>
+ <li><span class="p">currentX</span>
+ </li>
+ <li><span class="p">currentY</span>
+ </li>
+ <li><span class="p">current_map_earthquake</span>
+ </li>
+ <li><span class="p">current_tick_entity</span>
+ </li>
+ <li><span class="p">day</span>
+ </li>
+ <li><span class="p">debug_disable_salary_raise</span>
+ </li>
+ <li><span class="p">delayed_map_objects</span>
+ </li>
+ <li><span class="p">dispatcher</span>
+ </li>
+ <li><span class="p">earthquake_active</span>
+ </li>
+ <li><span class="p">earthquake_size</span>
+ </li>
+ <li><span class="p">earthquake_stop_day</span>
+ </li>
+ <li><span class="p">entities</span>
+ </li>
+ <li><span class="p">entity_map</span>
+ </li>
+ <li><span class="p">floating_dollars</span>
+ </li>
+ <li><span class="p">free_build_mode</span>
+ </li>
+ <li><span class="p">game_date</span>
+ </li>
+ <li><span class="p">game_log</span>
+ </li>
+ <li><span class="p">goals</span>
+ </li>
+ <li><span class="p">hospitals</span>
+ </li>
+ <li><span class="p">hour</span>
+ </li>
+ <li><span class="p">hours_per_day</span>
+ </li>
+ <li><span class="p">hours_per_tick</span>
+ </li>
+ <li><span class="p">idle_cache</span>
+ </li>
+ <li><span class="p">level_criteria</span>
+ </li>
+ <li><span class="p">map</span>
+ </li>
+ <li><span class="p">month</span>
+ </li>
+ <li><span class="p">monthly_spawn_increase</span>
+ </li>
+ <li><span class="p">next_earthquake</span>
+ </li>
+ <li><span class="p">next_earthquake_day</span>
+ </li>
+ <li><span class="p">next_earthquake_month</span>
+ </li>
+ <li><span class="p">next_emergency_day</span>
+ </li>
+ <li><span class="p">next_emergency_month</span>
+ </li>
+ <li><span class="p">next_emergency_no</span>
+ </li>
+ <li><span class="p">next_vip_date</span>
+ </li>
+ <li><span class="p">next_vip_day</span>
+ </li>
+ <li><span class="p">next_vip_month</span>
+ </li>
+ <li><span class="p">object_counts</span>
+ </li>
+ <li><span class="p">object_id_by_thob</span>
+ </li>
+ <li><span class="p">object_types</span>
+ </li>
+ <li><span class="p">objects</span>
+ </li>
+ <li><span class="p">objects_notify_occupants</span>
+ </li>
+ <li><span class="p">original_savegame_version</span>
+ </li>
+ <li><span class="p">pathfinder</span>
+ </li>
+ <li><span class="p">prev_speed</span>
+ </li>
+ <li><span class="p">randomX</span>
+ </li>
+ <li><span class="p">randomY</span>
+ </li>
+ <li><span class="p">room_build_callbacks</span>
+ </li>
+ <li><span class="p">room_built</span>
+ </li>
+ <li><span class="p">room_information_dialogs</span>
+ </li>
+ <li><span class="p">room_remove_callbacks</span>
+ </li>
+ <li><span class="p">rooms</span>
+ </li>
+ <li><span class="p">savegame_version</span>
+ </li>
+ <li><span class="p">spawn_dates</span>
+ </li>
+ <li><span class="p">spawn_hours</span>
+ </li>
+ <li><span class="p">spawn_points</span>
+ </li>
+ <li><span class="p">spawn_rate</span>
+ </li>
+ <li><span class="p">tick_rate</span>
+ </li>
+ <li><span class="p">tick_timer</span>
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">user_actions_allowed</span>
+ </li>
+ <li><span class="p">wall_dir_by_block_id</span>
+ </li>
+ <li><span class="p">wall_id_by_block_id</span>
+ </li>
+ <li><span class="p">wall_set_by_block_id</span>
+ </li>
+ <li><span class="p">wall_types</span>
+ </li>
+ <li><span class="p">winning_goal_count</span>
+ </li>
+ <li><span class="p">year</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_world_1_world">function World:World(<span class="p">app</span>)</a></h5>
+ <p>
+ length of early warning quake<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L66">line 66 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1__create_map_object">function World:_createMapObject(<span class="p">object</span>)</a></h5>
+ <p>
+ Internal function for placing an object from the map file.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">Object to place.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L740">line 740 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1__generate_next_vip_date">function World:_generateNextVipDate()</a></h5>
+ <p>
+ PRIVATE method to generate the next VIP date<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1325">line 1325 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1add_object_to_tile">function World:addObjectToTile(<span class="p">object</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Notify the world of a new object being placed somewhere in the world<br/><br/>
+ See also `World:removeObjectFromTile`<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">Object</td>
+ <td class="d"> The object being placed</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X-coordinate of the tile being placed upon</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y-coordinate of the tile being placed upon</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2133">line 2133 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1adjust_zoom">function World:adjustZoom(<span class="p">delta</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">delta</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L244">line 244 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1after_load">function World:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Let the world react to and old save game. First it gets the chance to
+do things for itself, and then it calls corresponding functions for
+the hospitals, entities and rooms in that order.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">The old version of the save game.</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">The current version of the save game format.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2330">line 2330 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1calculate_spawn_tiles">function World:calculateSpawnTiles()</a></h5>
+ <p>
+ Identify the tiles on the map suitable for spawning `Humanoid`s from.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L440">line 440 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1can_non_side_object_be_spawned_at">function World:canNonSideObjectBeSpawnedAt(<span class="p">x</span>, <span class="p">y</span>, <span class="p">objects_id</span>, <span class="p">orientation</span>, <span class="p">spawn_rooms_id</span>, <span class="p">player_id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">objects_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">orientation</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">spawn_rooms_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">player_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1915">line 1915 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1check_if_game_won">function World:checkIfGameWon()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1183">line 1183 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1check_winning_conditions">function World:checkWinningConditions(<span class="p">player_no</span>)</a></h5>
+ <p>
+ (reputation, balance, percentage_killed) and a number limit which<br/><br/>
+ corresponds to the limit the player passed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">player_no</td>
+ <td class="t">?</td>
+ <td class="d">The index of the player to check in the world's list of hospitals</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1378">line 1378 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1clear_caches">function World:clearCaches()</a></h5>
+ <p>
+ Clear all internal caches which are dependent upon map state / object position<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L838">line 838 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1create_earthquake">function World:createEarthquake()</a></h5>
+ <p>
+ Earthquake override from cheat menu<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1362">line 1362 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1create_map_objects">function World:createMapObjects(<span class="p">objects</span>)</a></h5>
+ <p>
+ Place objects from a map file onto the map.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">objects</td>
+ <td class="t">?</td>
+ <td class="d">Objects to place.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L729">line 729 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1date">function World:date()</a></h5>
+ <p>
+ Get todays date.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2714">line 2714 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1debug_disable_salary_raise">function World:debugDisableSalaryRaise(<span class="p">mode</span>)</a></h5>
+ <p>
+ Enable or disable salary raise events.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">boolean</td>
+ <td class="d"> If true, do not create salary raise events.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L674">line 674 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1destroy_entity">function World:destroyEntity(<span class="p">entity</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1873">line 1873 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1determine_winning_conditions">function World:determineWinningConditions()</a></h5>
+ <p>
+ Load goals to win and lose from the map, and store them in 'self.goals'.<br/><br/>
+ Also set 'self.winning_goal_count'.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L316">line 316 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1dump_game_log">function World:dumpGameLog()</a></h5>
+ <p>
+ Dump the contents of the game log into a file.
+This is automatically done on each error.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2299">line 2299 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1find_all_objects_near">function World:findAllObjectsNear(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>, <span class="p">object_type_name</span>)</a></h5>
+ <p>
+ Returns a set of all objects near the given position but if supplied only of the given object type.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">The x-coordinate at which to originate the search</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">The y-coordinate</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">?</td>
+ <td class="d">The number of tiles away from the origin to search</td>
+ </tr>
+ <tr>
+ <td class="n">object_type_name</td>
+ <td class="t">?</td>
+ <td class="d">The name of the objects that are being searched for</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1673">line 1673 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1find_free_object_near_to_use">function World:findFreeObjectNearToUse(<span class="p">humanoid</span>, <span class="p">object_type_name</span>, <span class="p">which</span>, <span class="p">current_object</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">object_type_name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">which</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">current_object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1766">line 1766 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1find_object_near">function World:findObjectNear(<span class="p">humanoid</span>, <span class="p">object_type_name</span>, <span class="p">distance</span>, <span class="p">callback</span>)</a></h5>
+ <p>
+ Find all objects of the given type near the humanoid.
+Note that regardless of distance, only the room which the humanoid is in
+is searched (or the corridor if the humanoid is not in a room).
+When no callback is specified then the first object found is returned,
+along with its usage tile position. This may return an object already being
+used - if you want to find an object not in use (in order to use it),
+then call findFreeObjectNearToUse instead.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">The humanoid to search around</td>
+ </tr>
+ <tr>
+ <td class="n">object_type_name</td>
+ <td class="t">?</td>
+ <td class="d">The objects to search for</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">?</td>
+ <td class="d">Maximum L1 distance to search from humanoid. If nil then
+ everywhere in range will be searched.</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">Function to call for each result. If it returns true then
+ the search will be ended.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1704">line 1704 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1find_room_near">function World:findRoomNear(<span class="p">humanoid</span>, <span class="p">room_type_id</span>, <span class="p">distance</span>, <span class="p">mode</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">room_type_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1806">line 1806 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1game_log">function World:gameLog(<span class="p">message</span>)</a></h5>
+ <p>
+ Append a message to the game log.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">message</td>
+ <td class="t">string</td>
+ <td class="d"> The message to add.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2289">line 2289 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_anim_length">function World:getAnimLength(<span class="p">anim</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L785">line 785 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_available_rooms">function World:getAvailableRooms()</a></h5>
+ <p>
+ Find the rooms available at the level.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L381">line 381 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_campaign_winning_text">function World:getCampaignWinningText(<span class="p">player_no</span>)</a></h5>
+ <p>
+ the "continue"-choice the player has, and whether it is the "return_to_main_menu"<br/><br/>
+ choice or the "accept_new_level" choice.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">player_no</td>
+ <td class="t">integer</td>
+ <td class="d"> Which player that will see the message.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1479">line 1479 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_current_speed">function World:getCurrentSpeed()</a></h5>
+ <p>
+ Return the name of the current speed, relating to a key in tick_rates.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L915">line 915 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_date">function World:getDate()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L882">line 882 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_free_bench">function World:getFreeBench(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1636">line 1636 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_hospital">function World:getHospital(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Get the hospital at a given tile location.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the queried tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the queried tile.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2249">line 2249 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_idle_tile">function World:getIdleTile(<span class="p">x</span>, <span class="p">y</span>, <span class="p">idx</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">idx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1596">line 1596 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_local_player_hospital">function World:getLocalPlayerHospital()</a></h5>
+ <p>
+ Get the hospital controlled by the (single) player.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L432">line 432 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_object">function World:getObject(<span class="p">x</span>, <span class="p">y</span>, <span class="p">id</span>)</a></h5>
+ <p>
+ Retrieve one object from a given position.<br/><br/>
+ that id, set of strings gets first object that matches an entry in the set.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the object to retrieve.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the object to retrieve.</td>
+ </tr>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">?</td>
+ <td class="d">Id to search, nil gets first object, string gets first object with</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2164">line 2164 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_object_to_notify_of_occupants">function World:getObjectToNotifyOfOccupants(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L724">line 724 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_objects">function World:getObjects(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Retrieve all objects from a given position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the object to retrieve.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the object to retrieve.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2156">line 2156 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_path">function World:getPath(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dest_x</span>, <span class="p">dest_y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dest_x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dest_y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1592">line 1592 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_path_distance">function World:getPathDistance(<span class="p">x1</span>, <span class="p">y1</span>, <span class="p">x2</span>, <span class="p">y2</span>)</a></h5>
+ <p>
+ Calculate the distance of the shortest path (along passable tiles) between
+the two given map tiles. This operation is commutative (swapping (x1, y1)
+with (x2, y2) has no effect on the result) if both tiles are passable.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x1</td>
+ <td class="t">integer</td>
+ <td class="d"> X-cordinate of first tile's Lua tile coordinates.</td>
+ </tr>
+ <tr>
+ <td class="n">y1</td>
+ <td class="t">integer</td>
+ <td class="d"> Y-cordinate of first tile's Lua tile coordinates.</td>
+ </tr>
+ <tr>
+ <td class="n">x2</td>
+ <td class="t">integer</td>
+ <td class="d"> X-cordinate of second tile's Lua tile coordinates.</td>
+ </tr>
+ <tr>
+ <td class="n">y2</td>
+ <td class="t">integer</td>
+ <td class="d"> Y-cordinate of second tile's Lua tile coordinates.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1579">line 1579 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_reputation_impact">function World:getReputationImpact(<span class="p">hospital</span>)</a></h5>
+ <p>
+ 300% if reputation == 1000<br/><br/>
+ reputation impact<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">hospital</td>
+ <td class="d">: the hospital used to compute the</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1246">line 1246 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_room">function World:getRoom(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Get the room at a given tile location.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the queried tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the queried tile.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2241">line 2241 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_room_name_and_required_staff_name">function World:getRoomNameAndRequiredStaffName(<span class="p">room_id</span>)</a></h5>
+ <p>
+ Returns localized name of the room, internal required staff name
+and localized name of staff required.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2261">line 2261 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_wall_dir_from_block_id">function World:getWallDirFromBlockId(<span class="p">block_id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">block_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L859">line 859 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_wall_id_from_block_id">function World:getWallIdFromBlockId(<span class="p">block_id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">block_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L843">line 843 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1get_wall_set_from_block_id">function World:getWallSetFromBlockId(<span class="p">block_id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">block_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L851">line 851 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1init_from_previous_level">function World:initFromPreviousLevel(<span class="p">carry</span>)</a></h5>
+ <p>
+ Initializes variables carried from previous levels<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">carry</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L417">line 417 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1init_level">function World:initLevel(<span class="p">app</span>, <span class="p">avail_rooms</span>)</a></h5>
+ <p>
+ Initialize the game level (available diseases, winning conditions).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">Game application.</td>
+ </tr>
+ <tr>
+ <td class="n">avail_rooms</td>
+ <td class="t">list</td>
+ <td class="d"> Available rooms in the level.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L264">line 264 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_current_speed">function World:isCurrentSpeed(<span class="p">speed</span>)</a></h5>
+ <p>
+ Return if the selected speed the same as the current speed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speed</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L909">line 909 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_footprint_tile_buildable_or_passable">function World:isFootprintTileBuildableOrPassable(<span class="p">x</span>, <span class="p">y</span>, <span class="p">tile</span>, <span class="p">footprint</span>, <span class="p">requirement_flag</span>, <span class="p">player_id</span>)</a></h5>
+ <p>
+ -
+A footprint tile will either need to be buildable or passable so this function
+checks if its buildable/passable using the tile's appropriate flag and then returns this
+flag's boolean value or false if the tile isn't valid.
+-<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">tile</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">footprint</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">requirement_flag</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">player_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1970">line 1970 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_on_map">function World:isOnMap(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Test whether the given coordinate is on the map.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the coordinate to test.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the coordinate to test.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1936">line 1936 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_paused">function World:isPaused()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L961">line 961 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_tile_empty">function World:isTileEmpty(<span class="p">x</span>, <span class="p">y</span>, <span class="p">not_in_room</span>)</a></h5>
+ <p>
+ This function checks if a tile has no entity on it and (optionally) if it is not
+in a room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> the queried tile's x coordinate.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> the queried tile's y coordinate.</td>
+ </tr>
+ <tr>
+ <td class="n">not_in_room</td>
+ <td class="t">boolean</td>
+ <td class="d"> If set, also check the tile is not in a room.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1617">line 1617 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_tile_exclusively_passable">function World:isTileExclusivelyPassable(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)</a></h5>
+ <p>
+ When placing doors and objects the passable tiles need to be checked for overlapping
+passable tiles. This presents problems with objects like Bench where the passable tile
+is not for exclusive use of the Bench (another object can share that same tile)
+the footprint.shareable differentiates shareable passable tiles, and exclusive use
+passable tiles (the norm for most objects)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> x map tile position</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> y map tile position</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">int</td>
+ <td class="d"> searchable distance for nearby objects</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2685">line 2685 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1is_tile_part_of_nearby_object">function World:isTilePartOfNearbyObject(<span class="p">x</span>, <span class="p">y</span>, <span class="p">distance</span>)</a></h5>
+ <p>
+ Checks whether the given tile is part of a nearby object (walkable tiles
+count as part of the object)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">X position of the given tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">Y position of the given tile.</td>
+ </tr>
+ <tr>
+ <td class="n">distance</td>
+ <td class="t">?</td>
+ <td class="d">The number of tiles away from the tile to search.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1656">line 1656 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1lose_game">function World:loseGame(<span class="p">player_no</span>, <span class="p">reason</span>, <span class="p">limit</span>)</a></h5>
+ <p>
+ Cause the player with the player number player_no to lose.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">player_no</td>
+ <td class="t">number</td>
+ <td class="d"> The number of the player which should lose.</td>
+ </tr>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d"> [optional] The name of the criterion the player lost to.</td>
+ </tr>
+ <tr>
+ <td class="n">limit</td>
+ <td class="t">number</td>
+ <td class="d"> [optional] The number the player went over/under which caused him to lose.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1543">line 1543 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1make_available_staff">function World:makeAvailableStaff(<span class="p">month</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">month</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L686">line 686 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1mark_room_as_built">function World:markRoomAsBuilt(<span class="p">room</span>)</a></h5>
+ <p>
+ Called when a room has been completely built and is ready to use.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">Room</td>
+ <td class="d"> The new room.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L815">line 815 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1new_entity">function World:newEntity(<span class="p">class</span>, <span class="p">animation</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">class</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">animation</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1864">line 1864 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1new_floating_dollar_sign">function World:newFloatingDollarSign(<span class="p">patient</span>, <span class="p">amount</span>)</a></h5>
+ <p>
+ Setup an animated floating money amount above a patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">Patient to float above.</td>
+ </tr>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">?</td>
+ <td class="d">Amount of money to display.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1837">line 1837 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1new_object">function World:newObject(<span class="p">id</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">flags</span>, <span class="p">name</span>)</a></h5>
+ <p>
+ Creates a new object by finding the object_type from the "id" variable and
+calls its class constructor.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">string</td>
+ <td class="d"> The unique id of the object to be created.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">X position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">Y position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">flags</td>
+ <td class="t">?</td>
+ <td class="d">Flags of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">Name of the new object.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1887">line 1887 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1new_object_type">function World:newObjectType(<span class="p">new_object</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">new_object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1883">line 1883 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1new_room">function World:newRoom(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">room_info</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">room_info</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L802">line 802 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1next_earthquake">function World:nextEarthquake()</a></h5>
+ <p>
+ Called when it is time to have another earthquake<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1335">line 1335 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1next_emergency">function World:nextEmergency()</a></h5>
+ <p>
+ Called when it is time to determine what the
+next emergency should look like.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1268">line 1268 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1next_vip">function World:nextVip()</a></h5>
+ <p>
+ Called when it is time to have another VIP<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1320">line 1320 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1notify_object_of_occupants">function World:notifyObjectOfOccupants(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>)</a></h5>
+ <p>
+ Register a callback for when `Humanoid`s enter or leave a given tile.<br/><br/>
+ Note that only one callback may be registered to each tile.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based X coordinate of the tile to monitor.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based Y coordinate of the tile to monitor.</td>
+ </tr>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">Object</td>
+ <td class="d"> Something with an `onOccupantChange` method, which will
+be called whenever a `Humanoid` enters or leaves the given tile. The method
+will receive one argument (after `self`), which will be `1` for an enter event
+and `-1` for a leave event.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L710">line 710 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1notify_room_removed">function World:notifyRoomRemoved(<span class="p">room</span>)</a></h5>
+ <p>
+ Called when a room has been deactivated (crashed or edited)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L830">line 830 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1object_placed">function World:objectPlaced(<span class="p">entity</span>, <span class="p">id</span>)</a></h5>
+ <p>
+ Notifies the world that an object has been placed, notifying
+interested entities in the vicinity of the new arrival.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">Entity</td>
+ <td class="d"> The entity that was just placed.</td>
+ </tr>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">optional&nbsp;or&nbsp;string</td>
+ <td class="d"> That entity's id.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2088">line 2088 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1on_end_day">function World:onEndDay()</a></h5>
+ <p>
+ Called immediately prior to the ingame day changing.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1100">line 1100 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1on_end_month">function World:onEndMonth()</a></h5>
+ <p>
+ Called immediately prior to the ingame month changing.
+returns true if the game was killed due to the player losing<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1192">line 1192 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1on_end_year">function World:onEndYear()</a></h5>
+ <p>
+ Called immediately prior to the ingame year changing.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1561">line 1561 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1on_tick">function World:onTick()</a></h5>
+ <p>
+ World ticks are translated to game ticks (or hours) depending on the
+current speed of the game. There are 50 hours in a TH day.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L991">line 991 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1pause_or_unpause">function World:pauseOrUnpause()</a></h5>
+ <p>
+ Dedicated function to allow unpausing by pressing 'p' again<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L965">line 965 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1play_loaded_entity_sounds">function World:playLoadedEntitySounds()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2665">line 2665 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1prepare_footprint_tiles_for_build">function World:prepareFootprintTilesForBuild(<span class="p">object_footprint</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Prepare all tiles of the footprint for build of an object.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object_footprint</td>
+ <td class="t">?</td>
+ <td class="d">Footprint of the object being build.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the object</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the object</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2208">line 2208 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1prepare_rectangle_tiles_for_build">function World:prepareRectangleTilesForBuild(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)</a></h5>
+ <p>
+ Prepare all tiles in the given rectangle for building a room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Start x position of the area.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Start y position of the area.</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">int</td>
+ <td class="d"> Number of tiles in x direction.</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">int</td>
+ <td class="d"> Number of tiles in y direction.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2223">line 2223 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1previous_speed">function World:previousSpeed()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L903">line 903 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1register_room_remove_callback">function World:registerRoomRemoveCallback(<span class="p">callback</span>)</a></h5>
+ <p>
+ Register a function to be called whenever a room has been deactivated (crashed or edited).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function</td>
+ <td class="d"> A function taking one argument: a `Room`.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L789">line 789 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1remove_all_litter">function World:removeAllLitter(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Remove all cleanable litter from a given tile.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X position of the tile to clean.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y position of the tile to clean.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2192">line 2192 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1remove_object_from_tile">function World:removeObjectFromTile(<span class="p">object</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Notify the world of an object being removed from a tile<br/><br/>
+ See also `World:addObjectToTile`<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">Object</td>
+ <td class="d"> The object being removed.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X-coordinate of the tile which the object was on</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y-coordinate of the tile which the object was on</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2108">line 2108 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1reset_animations">function World:resetAnimations()</a></h5>
+ <p>
+ Because the save file only saves one thob per tile if they are more that information
+will be lost. To solve this after a load we need to set again all the thobs on each tile.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2317">line 2317 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1reset_side_objects">function World:resetSideObjects()</a></h5>
+ <p>
+ There is a problem with room editing in that it resets all the partial passable flags
+(travelNorth, travelSouth etc.) in the corridor, a workaround is calling this function
+after the room was edited so that all edge only objects, that set partial passable flags set
+those flags again<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2671">line 2671 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1set_end_month">function World:setEndMonth()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1090">line 1090 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1set_end_year">function World:setEndYear()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1095">line 1095 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1set_plot_owner">function World:setPlotOwner(<span class="p">parcel</span>, <span class="p">owner</span>)</a></h5>
+ <p>
+ Change owner of a plot.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">parcel</td>
+ <td class="t">int</td>
+ <td class="d"> Plot to change.</td>
+ </tr>
+ <tr>
+ <td class="n">owner</td>
+ <td class="t">int</td>
+ <td class="d"> New owner (may be 0).</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L769">line 769 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1set_speed">function World:setSpeed(<span class="p">speed</span>)</a></h5>
+ <p>
+ Set the (approximate) number of seconds per tick.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speed</td>
+ <td class="t">string</td>
+ <td class="d"> One of: "Pause", "Slowest", "Slower", "Normal",
+"Max speed", or "And then some more".</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L924">line 924 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1set_u_i">function World:setUI(<span class="p">ui</span>)</a></h5>
+ <p>
+ Register key shortcuts for controlling the world (game speed, etc.)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L227">line 227 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1spawn_patient">function World:spawnPatient(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Spawn a patient from a spawn point for the given hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d"> Hospital that the new patient should visit.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L499">line 499 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1spawn_v_i_p">function World:spawnVIP(<span class="p">name</span>)</a></h5>
+ <p>
+ A VIP is invited (or he invited himself) to the player hospital.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">Name of the VIP</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L544">line 544 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1speed_up">function World:speedUp()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L899">line 899 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1tick_earthquake">function World:tickEarthquake()</a></h5>
+ <p>
+ Perform actions to simulate an active earthquake.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L571">line 571 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1toggle_information">function World:toggleInformation()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L312">line 312 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1unregister_room_remove_callback">function World:unregisterRoomRemoveCallback(<span class="p">callback</span>)</a></h5>
+ <p>
+ Unregister a function from being called whenever a room has been deactivated (crashed or edited).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function</td>
+ <td class="d"> A function previously passed to
+`registerRoomRemoveCallback`.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L795">line 795 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1update_spawn_dates">function World:updateSpawnDates()</a></h5>
+ <p>
+ Called when a month ends. Decides on which dates patients arrive
+during the coming month.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1226">line 1226 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1will_objects_footprint_tile_be_within_its_allowed_room_if_located_at">function World:willObjectsFootprintTileBeWithinItsAllowedRoomIfLocatedAt(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">allowed_rooms_id_parameter</span>)</a></h5>
+ <p>
+ -
+@param allowed_rooms_id_parameter Should be nil when the object is allowed to be placed in any room.
+@return {within_room, roomId}
+-<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">allowed_rooms_id_parameter</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1944">line 1944 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1win_game">function World:winGame(<span class="p">player_no</span>)</a></h5>
+ <p>
+ Process that the given player number won the game.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">player_no</td>
+ <td class="t">integer</td>
+ <td class="d"> Number of the player who just won.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L1431">line 1431 of Lua/world.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_world_1would_non_side_object_break_pathfinding_if_spawned_at">function World:wouldNonSideObjectBreakPathfindingIfSpawnedAt(<span class="p">x</span>, <span class="p">y</span>, <span class="p">object</span>, <span class="p">objects_orientation</span>, <span class="p">spawn_rooms_id</span>)</a></h5>
+ <p>
+ -
+Check that pathfinding still works, i.e. that placing the object
+wouldn't disconnect one part of the hospital from another. To do
+this, we provisionally mark the footprint as unpassable (as it will
+become when the object is placed), and then check that the cells
+surrounding the footprint have not had their connectedness changed.
+-<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">objects_orientation</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">spawn_rooms_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/world.lua#L2012">line 2012 of Lua/world.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

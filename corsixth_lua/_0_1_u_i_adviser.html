@@ -1,0 +1,499 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>UIAdviser Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">UIAdviser Class</h2>
+<h3 class="class">The (ideally) helpful advisor who pops up from the bottom dialog during a game.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L23">line 23 of Lua/dialogs/adviser.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_adviser.html">UIAdviser</a>
+ » <a href="_0_1_window.html">Window</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1hide">hide</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1idle">idle</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1say">say</a>(<span class="p">speech</span>, <span class="p">talk_until_next_announce</span>, <span class="p">override_current</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1show">show</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_adviser.html#_0_1_u_i_adviser_1talk">talk</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">balloon_width</span>
+ </li>
+ <li><span class="p">black_font</span>
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ (*)
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_x</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">enabled</span>
+ </li>
+ <li><span class="p">esc_closes</span>
+ </li>
+ <li><span class="p">frame</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">modal_class</span>
+ </li>
+ <li><span class="p">number_frames</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">phase</span>
+ </li>
+ <li><span class="p">queued_messages</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">speech</span>
+ </li>
+ <li><span class="p">stay_up</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">th</span>
+ </li>
+ <li><span class="p">tick_rate</span>
+ </li>
+ <li><span class="p">tick_timer</span>
+ </li>
+ <li><span class="p">timer</span>
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">up_again</span>
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">windows</span>
+ (*)
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1_u_i_adviser">function UIAdviser:UIAdviser(<span class="p">ui</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L29">line 29 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1after_load">function UIAdviser:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L260">line 260 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1draw">function UIAdviser:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L167">line 167 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1hide">function UIAdviser:hide()</a></h5>
+ <p>
+ Hides the adviser by running the appropriate animation.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L119">line 119 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1idle">function UIAdviser:idle()</a></h5>
+ <p>
+ Makes the adviser idle for a while before disappearing.
+This means that the text bubble is removed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L107">line 107 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1on_mouse_down">function UIAdviser:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L186">line 186 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1on_tick">function UIAdviser:onTick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L214">line 214 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1say">function UIAdviser:say(<span class="p">speech</span>, <span class="p">talk_until_next_announce</span>, <span class="p">override_current</span>)</a></h5>
+ <p>
+ Makes the adviser say something<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speech</td>
+ <td class="t">?</td>
+ <td class="d">The table containing the text he should say and the priority.</td>
+ </tr>
+ <tr>
+ <td class="n">talk_until_next_announce</td>
+ <td class="t">?</td>
+ <td class="d">Whether he should stay up
+until the next say() call is made. Useful for the tutorial.</td>
+ </tr>
+ <tr>
+ <td class="n">override_current</td>
+ <td class="t">?</td>
+ <td class="d">Cancels previous messages (if any) immediately
+and shows this new one instead.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L128">line 128 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1show">function UIAdviser:show()</a></h5>
+ <p>
+ Shows the adviser by running the "popup" animation.
+Then moves on to the next phase automatically.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L61">line 61 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_adviser_1talk">function UIAdviser:talk()</a></h5>
+ <p>
+ Displays the text bubble along with the next message
+from the queue.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/adviser.lua#L70">line 70 of Lua/dialogs/adviser.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

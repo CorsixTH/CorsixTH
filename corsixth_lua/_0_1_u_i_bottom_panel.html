@@ -1,0 +1,1090 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>UIBottomPanel Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">UIBottomPanel Class</h2>
+<h3 class="class">The multi-purpose panel for launching dialogs / screens and dynamic information.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L21">line 21 of Lua/dialogs/bottom_panel.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_bottom_panel.html">UIBottomPanel</a>
+ » <a href="_0_1_window.html">Window</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1add_dialog">addDialog</a>(<span class="p">dialog_class</span>, <span class="p">extra_function</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1can_queue_fax">canQueueFax</a>(<span class="p">fax</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1cancel_fax">cancelFax</a>(<span class="p">fax_type</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1create_message_window">createMessageWindow</a>(<span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_bank_common">dialogBankCommon</a>(<span class="p">enable</span>, <span class="p">stats</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_bank_manager">dialogBankManager</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_bank_stats">dialogBankStats</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_build_room">dialogBuildRoom</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_charts">dialogCharts</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_drug_casebook">dialogDrugCasebook</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_furnish_corridor">dialogFurnishCorridor</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_hire_staff">dialogHireStaff</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_policy">dialogPolicy</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_research">dialogResearch</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_staff_management">dialogStaffManagement</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_status">dialogStatus</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1dialog_town_map">dialogTownMap</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1draw_dynamic_info">drawDynamicInfo</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1draw_reputation_meter">drawReputationMeter</a>(<span class="p">canvas</span>, <span class="p">x_left</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1edit_room">editRoom</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1give_research_advice">giveResearchAdvice</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">x_offset</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1open_first_message">openFirstMessage</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1open_jukebox">openJukebox</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1open_last_message">openLastMessage</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1open_load">openLoad</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1open_save">openSave</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1queue_message">queueMessage</a>(<span class="p">type</span>, <span class="p">message</span>, <span class="p">owner</span>, <span class="p">timeout</span>, <span class="p">default_choice</span>, <span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1quick_load">quickLoad</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1quick_save">quickSave</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1quit">quit</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1register_key_handlers">registerKeyHandlers</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1remove_message">removeMessage</a>(<span class="p">owner</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1restart">restart</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1set_dynamic_info">setDynamicInfo</a>(<span class="p">info</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1set_position">Window:setPosition</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1show_additional_buttons">showAdditionalButtons</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1show_message">showMessage</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1toggle_information">toggleInformation</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_bottom_panel.html#_0_1_u_i_bottom_panel_1update_button_states">updateButtonStates</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">additional_buttons</span>
+ </li>
+ <li><span class="p">additional_panels</span>
+ </li>
+ <li><span class="p">bank_button</span>
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">buttons</span>
+ </li>
+ <li><span class="p">buttons_down</span>
+ (*)
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">countdown</span>
+ </li>
+ <li><span class="p">cursor_x</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">date_font</span>
+ </li>
+ <li><span class="p">default_button_sound</span>
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">dynamic_info</span>
+ </li>
+ <li><span class="p">factory_counter</span>
+ </li>
+ <li><span class="p">factory_direction</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">message_queue</span>
+ </li>
+ <li><span class="p">message_windows</span>
+ </li>
+ <li><span class="p">money_font</span>
+ </li>
+ <li><span class="p">on_top</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">pause_font</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">show_animation</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">white_font</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">windows</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1_u_i_bottom_panel">function UIBottomPanel:UIBottomPanel(<span class="p">ui</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L27">line 27 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1add_dialog">function UIBottomPanel:addDialog(<span class="p">dialog_class</span>, <span class="p">extra_function</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dialog_class</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">extra_function</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L796">line 796 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1after_load">function UIBottomPanel:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L843">line 843 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1can_queue_fax">function UIBottomPanel:canQueueFax(<span class="p">fax</span>)</a></h5>
+ <p>
+ A fax can be queued if the event the fax causes does not affect
+an event caused by any other fax that is queued. i.e both emergency
+and epidemics use the timer, so both faxes cannot appear at the same time.
+@param fax (table) the fax we want to determine if can be queued.
+@return true if fax can be queued, false otherwise (boolean)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">fax</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L356">line 356 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1cancel_fax">function UIBottomPanel:cancelFax(<span class="p">fax_type</span>)</a></h5>
+ <p>
+ Cancels a fax of a particular type currently only "emergency" and "epidemy"
+Handles the cancelling of the event which the fax pertains to.
+@param fax_type (string) type of fax event to be cancelled<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">fax_type</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L394">line 394 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1create_message_window">function UIBottomPanel:createMessageWindow(<span class="p">index</span>)</a></h5>
+ <p>
+ Pop the message with the given index from the message queue and turn it into an actual
+message window; if no index is provided the first message in the queue is popped.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L461">line 461 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_bank_common">function UIBottomPanel:dialogBankCommon(<span class="p">enable</span>, <span class="p">stats</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">stats</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L555">line 555 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_bank_manager">function UIBottomPanel:dialogBankManager(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L547">line 547 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_bank_stats">function UIBottomPanel:dialogBankStats(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L551">line 551 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_build_room">function UIBottomPanel:dialogBuildRoom()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L578">line 578 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_charts">function UIBottomPanel:dialogCharts(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L745">line 745 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_drug_casebook">function UIBottomPanel:dialogDrugCasebook(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L681">line 681 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_furnish_corridor">function UIBottomPanel:dialogFurnishCorridor()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L602">line 602 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_hire_staff">function UIBottomPanel:dialogHireStaff()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L626">line 626 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_policy">function UIBottomPanel:dialogPolicy(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L760">line 760 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_research">function UIBottomPanel:dialogResearch(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L696">line 696 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_staff_management">function UIBottomPanel:dialogStaffManagement(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L651">line 651 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_status">function UIBottomPanel:dialogStatus(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L730">line 730 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1dialog_town_map">function UIBottomPanel:dialogTownMap(<span class="p">enable</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L666">line 666 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1draw">function UIBottomPanel:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L172">line 172 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1draw_dynamic_info">function UIBottomPanel:drawDynamicInfo(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L218">line 218 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1draw_reputation_meter">function UIBottomPanel:drawReputationMeter(<span class="p">canvas</span>, <span class="p">x_left</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Draws the hospital reputation meter on canvas.
+x_left is the leftmost x-coordinate of the reputation meter
+y is the y-coordinate of the reputation meter<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x_left</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L209">line 209 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1edit_room">function UIBottomPanel:editRoom()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L828">line 828 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1give_research_advice">function UIBottomPanel:giveResearchAdvice()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L718">line 718 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1hit_test">function UIBottomPanel:hitTest(<span class="p">x</span>, <span class="p">y</span>, <span class="p">x_offset</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x_offset</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1hit_test">Window:hitTest</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L307">line 307 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1on_mouse_move">function UIBottomPanel:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L282">line 282 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1on_tick">function UIBottomPanel:onTick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L497">line 497 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1open_first_message">function UIBottomPanel:openFirstMessage()</a></h5>
+ <p>
+ Opens the first available message in the list of message_windows.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L434">line 434 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1open_jukebox">function UIBottomPanel:openJukebox()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L144">line 144 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1open_last_message">function UIBottomPanel:openLastMessage()</a></h5>
+ <p>
+ Opens the last available message. Currently used to open the level completed message.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L407">line 407 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1open_load">function UIBottomPanel:openLoad()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L152">line 152 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1open_save">function UIBottomPanel:openSave()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L148">line 148 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1queue_message">function UIBottomPanel:queueMessage(<span class="p">type</span>, <span class="p">message</span>, <span class="p">owner</span>, <span class="p">timeout</span>, <span class="p">default_choice</span>, <span class="p">callback</span>)</a></h5>
+ <p>
+ The arguments specify a message, which is added to a FIFO queue, and will
+appear on screen once there is space.<br/><br/>
+ Structure of message (except strike):
+message = {
+{ text = "first line of text", offset (integer, optional) }
+{ text = "second line of text", offset (integer, optional) }
+...
+choices = {
+{ text = "first choice", choice = "choice_type", enabled = true or false (optional, defaults to true) }
+...
+}
+}<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">type</td>
+ <td class="t">string</td>
+ <td class="d"> The type of message, can be: "emergency", "epidemy", "personality", "information", "disease", "report" or "strike"</td>
+ </tr>
+ <tr>
+ <td class="n">message</td>
+ <td class="t">table&nbsp;or&nbsp;or&nbsp;or&nbsp;number</td>
+ <td class="d"> If type == "strike", the amount of pay rise. Else a list of texts to display, including a "choices" table with choices. See below for structure.</td>
+ </tr>
+ <tr>
+ <td class="n">owner</td>
+ <td class="t">humanoid&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> Some messages are related to one staff or patient. Otherwise this is nil.</td>
+ </tr>
+ <tr>
+ <td class="n">timeout</td>
+ <td class="t">number&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> If given, the message will expire after that many world ticks and be removed.</td>
+ </tr>
+ <tr>
+ <td class="n">default_choice</td>
+ <td class="t">number&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> If given, the choice with this number will be executed on expiration of the message.</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> If given, it will be called when the message is closed.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L311">line 311 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1quick_load">function UIBottomPanel:quickLoad()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L160">line 160 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1quick_save">function UIBottomPanel:quickSave()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L156">line 156 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1quit">function UIBottomPanel:quit()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L168">line 168 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1register_key_handlers">function UIBottomPanel:registerKeyHandlers()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L102">line 102 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1remove_message">function UIBottomPanel:removeMessage(<span class="p">owner</span>)</a></h5>
+ <p>
+ Removes a message from the message queue (for example if a room is built before the player
+says what to do with the patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">owner</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L441">line 441 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1restart">function UIBottomPanel:restart()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L164">line 164 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1set_dynamic_info">function UIBottomPanel:setDynamicInfo(<span class="p">info</span>)</a></h5>
+ <p>
+ dividers: { 25, 50, 75 }<br/><br/>
+ }<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">info</td>
+ <td class="t">table</td>
+ <td class="d"> A table containing the information to display. The text</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L248">line 248 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1set_position">function UIBottomPanel:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1set_position">Window:setPosition</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L204">line 204 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1show_additional_buttons">function UIBottomPanel:showAdditionalButtons(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L290">line 290 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1show_message">function UIBottomPanel:showMessage()</a></h5>
+ <p>
+ Trigger a message to be moved from the queue into a actual window, after
+first performing the necessary animation.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L416">line 416 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1toggle_information">function UIBottomPanel:toggleInformation()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L775">line 775 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_bottom_panel_1update_button_states">function UIBottomPanel:updateButtonStates()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/bottom_panel.lua#L789">line 789 of Lua/dialogs/bottom_panel.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

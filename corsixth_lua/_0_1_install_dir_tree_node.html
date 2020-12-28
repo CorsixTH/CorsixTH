@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>InstallDirTreeNode Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">InstallDirTreeNode Class</h2>
+<h3 class="class">This tree only shows directories and highlights valid TH directories.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L60">line 60 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_install_dir_tree_node.html">InstallDirTreeNode</a>
+ » <a href="_0_1_dir_tree_node.html">DirTreeNode</a>
+ » <a href="_0_1_file_tree_node.html">FileTreeNode</a>
+ » <a href="_0_1_tree_node.html">TreeNode</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1check_for_children">checkForChildren</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1child_path">childPath</a>(<span class="p">item</span>)
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1contract">contract</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_install_dir_tree_node.html#_0_1_install_dir_tree_node_1create_new_node">createNewNode</a>(<span class="p">path</span>)
+ (overrides <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1create_new_node">FileTreeNode:createNewNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1expand">expand</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_child_by_index">getChildByIndex</a>(<span class="p">idx</span>)
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_child_count">getChildCount</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_control">getControl</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_install_dir_tree_node.html#_0_1_install_dir_tree_node_1get_highlight_colour">getHighlightColour</a>(<span class="p">canvas</span>)
+ (overrides <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_highlight_colour">FileTreeNode:getHighlightColour</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_index_of_child">getIndexOfChild</a>(<span class="p">child</span>)
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_label">getLabel</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_last_modification">getLastModification</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_level">getLevel</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_most_recently_modified_child_file">getMostRecentlyModifiedChildFile</a>(<span class="p">file_name_filter</span>)
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_next_visible">getNextVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_parent">getParent</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_prev_visible">getPrevVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_dir_tree_node.html#_0_1_dir_tree_node_1get_select_colour">getSelectColour</a>(<span class="p">canvas</span>)
+ (inherited from <a href="_0_1_dir_tree_node.html">DirTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1has_children">hasChildren</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1is_directory">isDirectory</a>()
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1is_expanded">isExpanded</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_install_dir_tree_node.html#_0_1_install_dir_tree_node_1is_valid_file">isValidFile</a>(<span class="p">name</span>)
+ (overrides <a href="_0_1_dir_tree_node.html#_0_1_dir_tree_node_1is_valid_file">DirTreeNode:isValidFile</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1num_visible_descendants">numVisibleDescendants</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1re_sort_children">reSortChildren</a>(<span class="p">sort_by</span>, <span class="p">order</span>)
+ (inherited from <a href="_0_1_file_tree_node.html">FileTreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_install_dir_tree_node.html#_0_1_install_dir_tree_node_1select">select</a>()
+ (overrides <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1select">FileTreeNode:select</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">children</span>
+ (*)
+ </li>
+ <li><span class="p">control</span>
+ (*)
+ </li>
+ <li><span class="p">filter_by</span>
+ (*)
+ </li>
+ <li><span class="p">has_children</span>
+ (*)
+ </li>
+ <li><span class="p">has_looked_for_children</span>
+ </li>
+ <li><span class="p">hidden</span>
+ (*)
+ </li>
+ <li><span class="p">highlight_colour</span>
+ </li>
+ <li><span class="p">is_expanded</span>
+ (*)
+ </li>
+ <li><span class="p">is_valid_directory</span>
+ </li>
+ <li><span class="p">is_valid_file</span>
+ (*)
+ </li>
+ <li><span class="p">label</span>
+ (*)
+ </li>
+ <li><span class="p">level</span>
+ (*)
+ </li>
+ <li><span class="p">num_visible_descendants</span>
+ (*)
+ </li>
+ <li><span class="p">order</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">path</span>
+ </li>
+ <li><span class="p">sort_by</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_install_dir_tree_node_1_install_dir_tree_node">function InstallDirTreeNode:InstallDirTreeNode(<span class="p">path</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L66">line 66 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_install_dir_tree_node_1create_new_node">function InstallDirTreeNode:createNewNode(<span class="p">path</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1create_new_node">FileTreeNode:createNewNode</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L70">line 70 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_install_dir_tree_node_1get_highlight_colour">function InstallDirTreeNode:getHighlightColour(<span class="p">canvas</span>)</a></h5>
+ <p>
+ Check whether this node is a valid install selection.
+Sets self.is_valid_directory to true if the selection is valid.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_highlight_colour">FileTreeNode:getHighlightColour</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L90">line 90 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_install_dir_tree_node_1is_valid_file">function InstallDirTreeNode:isValidFile(<span class="p">name</span>)</a></h5>
+ <p>
+ Test whether this file node is a directory or iso file.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_dir_tree_node.html#_0_1_dir_tree_node_1is_valid_file">DirTreeNode:isValidFile</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L74">line 74 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_install_dir_tree_node_1select">function InstallDirTreeNode:select()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1select">FileTreeNode:select</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/directory_browser.lua#L86">line 86 of Lua/dialogs/resizables/directory_browser.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

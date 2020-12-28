@@ -1,0 +1,638 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Entity Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Entity Class</h2>
+<h3 class="class">Abstraction for visible gameplay things which sit somewhere on the map.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L21">line 21 of Lua/entity.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_humanoid.html">Humanoid</a>, <a href="_0_1_litter.html">Litter</a>, <a href="_0_1_object.html">Object</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1erase_object">eraseObject</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">getDrawingLayer</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1get_room">getRoom</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1on_destroy">onDestroy</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1tick">tick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_entity.html#_0_1_entity_1tick_day">tickDay</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">animation_flags</span>
+ </li>
+ <li><span class="p">animation_idx</span>
+ </li>
+ <li><span class="p">dynamic_info</span>
+ </li>
+ <li><span class="p">layers</span>
+ </li>
+ <li><span class="p">mood_info</span>
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ </li>
+ <li><span class="p">permanent_flags</span>
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ </li>
+ <li><span class="p">slow_animation</span>
+ </li>
+ <li><span class="p">th</span>
+ </li>
+ <li><span class="p">ticks</span>
+ </li>
+ <li><span class="p">tile_x</span>
+ </li>
+ <li><span class="p">tile_y</span>
+ </li>
+ <li><span class="p">timer_function</span>
+ </li>
+ <li><span class="p">timer_time</span>
+ </li>
+ <li><span class="p">user_of</span>
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_entity_1_entity">function Entity:Entity(<span class="p">animation</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">animation</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L29">line 29 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1__tick">function Entity:_tick()</a></h5>
+ <p>
+ Inner tick function that will skip every other tick when
+slow_animation is set.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L177">line 177 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1after_load">function Entity:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Stub to be extended in subclasses, if needed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L336">line 336 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1clear_dynamic_info">function Entity:clearDynamicInfo()</a></h5>
+ <p>
+ Completely clears the dynamic info.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L331">line 331 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1erase_object">function Entity:eraseObject()</a></h5>
+ <p>
+ Stub to be extended in subclasses, if needed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L350">line 350 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1get_drawing_layer">function Entity:getDrawingLayer()</a></h5>
+ <p>
+ Returns the drawing layer for this particular entity. Should be overridden in derived classes. The drawing layer
+ specifies the order in which object are drawn in a tile (the object with the smallest layer is drawn first).
+ Litter should have layer 0, side objects to the north layer 1, side objects to the west layer 2,
+ normal objects should have layers between 3 and 7, east side object should have layer 8 and south side
+ objects layer 9.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L361">line 361 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1get_dynamic_info">function Entity:getDynamicInfo()</a></h5>
+ <p>
+ Returns a table of hover info about an object.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L313">line 313 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1get_room">function Entity:getRoom()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L136">line 136 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1notify_new_object">function Entity:notifyNewObject(<span class="p">id</span>)</a></h5>
+ <p>
+ Notify the entity of a new object.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">?</td>
+ <td class="d">Name of the new object.
+TODO Currently only used for benches placed nearby.
+TODO Maybe also pass the object tile coordinates?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L298">line 298 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1notify_new_room">function Entity:notifyNewRoom(<span class="p">room</span>)</a></h5>
+ <p>
+ Notify the entity that a new room was built.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">Room</td>
+ <td class="d"> The new room.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L305">line 305 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1on_destroy">function Entity:onDestroy()</a></h5>
+ <p>
+ Function which is called when the entity is to be permanently removed from
+the world.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L273">line 273 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1play_after_load_sound">function Entity:playAfterLoadSound()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L340">line 340 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1play_entity_sounds">function Entity:playEntitySounds(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)</a></h5>
+ <p>
+ Plays a sequence of related sounds at an entity while entity.playing_sounds_in_random_sequence = true.
+The silences between these sounds can either have randomly generated lengths between the min and max length parameters or
+they can all be a specified length by providing min and max tables with one value for the desired pause duration.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name_pattern</td>
+ <td class="t">String</td>
+ <td class="d"> example: LAVA00*.WAV</td>
+ </tr>
+ <tr>
+ <td class="n">min_silence_lengths</td>
+ <td class="t">table</td>
+ <td class="d"> the desired minimum silences length for the different tick rates, [3] = Normal</td>
+ </tr>
+ <tr>
+ <td class="n">max_silence_lengths</td>
+ <td class="t">table</td>
+ <td class="d"> the desired maximum silences length for the different tick rates, [3] = Normal</td>
+ </tr>
+ <tr>
+ <td class="n">num_silences</td>
+ <td class="t">integer</td>
+ <td class="d"> how many different silence lengths should be used, this can be a nil parameter.
+-</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L59">line 59 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1play_sound">function Entity:playSound(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ This plays a sound "at" the entity, meaning the sound will not be played
+if the entity is off-screen, and the volume will be quieter the further
+the entity is from the center of the screen. If this is not what you want
+then use UI:playSound instead.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string&nbsp;or&nbsp;integer</td>
+ <td class="d"> The filename or ordinal of the sound to play.</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">function</td>
+ <td class="d"> a optional parameter.</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">integer</td>
+ <td class="d"> a optional milliseconds parameter.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L40">line 40 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1reset_animation">function Entity:resetAnimation()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L355">line 355 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_animation">function Entity:setAnimation(<span class="p">animation</span>, <span class="p">flags</span>)</a></h5>
+ <p>
+ Set which animation is used to give the entity a visual appearance.<br/><br/>
+ Until an entity is given an animation, it is invisible to the player. Note
+that some "animations" consist of a single frame, and hence the term animation
+is used both to mean things which are animated and things which are static.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">animation</td>
+ <td class="t">integer</td>
+ <td class="d"> The ordinal into the main animation set</td>
+ </tr>
+ <tr>
+ <td class="n">flags</td>
+ <td class="t">integer</td>
+ <td class="d"> A combination of zero or more drawing flags to control
+the use of alternative palettes, transparency, and other similar settings. See
+`THDF_` values in `th_gfx.h` for the possible bit values.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L82">line 82 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_dynamic_info">function Entity:setDynamicInfo(<span class="p">type</span>, <span class="p">value</span>)</a></h5>
+ <p>
+ Sets a piece of Dynamic_info.
+type could be 'text', 'progress' or 'dividers'<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">type</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L318">line 318 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_layer">function Entity:setLayer(<span class="p">layer</span>, <span class="p">id</span>)</a></h5>
+ <p>
+ Set which parts of the animation to be displayed.<br/><br/>
+ Each animation is made up of 13 layers, and generally has several different
+options for each layer. In the animation viewer tool, multiple options can be
+toggled on for each layer, however here only one option may be selected per
+layer.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">layer</td>
+ <td class="t">integer</td>
+ <td class="d"> The layer to set (1 through 13).</td>
+ </tr>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">integer</td>
+ <td class="d"> The option to display for the given layer.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L223">line 223 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_mood">function Entity:setMood(<span class="p">mood_name</span>, <span class="p">activate</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mood_name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">activate</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L310">line 310 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_mood_info">function Entity:setMoodInfo(<span class="p">new_mood</span>)</a></h5>
+ <p>
+ Used to set a mood icon over the entity.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">new_mood</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L256">line 256 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_position">function Entity:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Set the pixel position of the entity within the current tile.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The 0-based X pixel offset from the default position.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The 0-based Y pixel offset from the default position.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L144">line 144 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_speed">function Entity:setSpeed(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Set the rate at which the entity pixel position changes<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X component of the speed in pixels per tick.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y component of the speed in pixels per tick.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L153">line 153 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_tile">function Entity:setTile(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Set the map tile which the entity is on.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based X coordinate of the tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based Y coordinate of the tile.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L105">line 105 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_tile_position_speed">function Entity:setTilePositionSpeed(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)</a></h5>
+ <p>
+ Combined form of `setTile`, `setPosition`, and `setSpeed`<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">tx</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based X coordinate of the tile.</td>
+ </tr>
+ <tr>
+ <td class="n">ty</td>
+ <td class="t">integer</td>
+ <td class="d"> The 1-based Y coordinate of the tile.</td>
+ </tr>
+ <tr>
+ <td class="n">px</td>
+ <td class="t">integer</td>
+ <td class="d"> The 0-based X pixel offset from the default position.</td>
+ </tr>
+ <tr>
+ <td class="n">py</td>
+ <td class="t">integer</td>
+ <td class="d"> The 0-based Y pixel offset from the default position.</td>
+ </tr>
+ <tr>
+ <td class="n">sx</td>
+ <td class="t">integer</td>
+ <td class="d"> The X component of the speed in pixels per tick.</td>
+ </tr>
+ <tr>
+ <td class="n">sy</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y component of the speed in pixels per tick.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L162">line 162 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_timer">function Entity:setTimer(<span class="p">tick_count</span>, <span class="p">f</span>)</a></h5>
+ <p>
+ Register a function (related to the entity) to be called at a later time.<br/><br/>
+ Each `Entity` can have a single timer associated with it, and due to this
+limit of one, it is almost always the case that the currently active humanoid
+action is the only thing which calls `setTimer`.
+If self.slow_animation is set then all timers will be doubled as animation
+length will be doubled.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">tick_count</td>
+ <td class="t">integer</td>
+ <td class="d"> If 0, then `f` will be called during the entity's
+next `tick`. If 1, then `f` will be called one tick after that, and so on.</td>
+ </tr>
+ <tr>
+ <td class="n">f</td>
+ <td class="t">function</td>
+ <td class="d"> Function which takes a single argument (the entity).</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L237">line 237 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">function Entity:setWaitingForSoundEffectsToBeTurnedOn(<span class="p">state</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">state</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L55">line 55 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1tick">function Entity:tick()</a></h5>
+ <p>
+ Function which is called once every tick, where a tick is the smallest unit
+of time in the game engine. Typically used to advance animations and similar
+recurring or long-duration tasks.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L190">line 190 of Lua/entity.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_entity_1tick_day">function Entity:tickDay()</a></h5>
+ <p>
+ Function which is called at the end of each ingame day. Should be used to
+implement behaviours which happen regularly, but not as frequently as to
+need them in `tick`.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entity.lua#L292">line 292 of Lua/entity.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

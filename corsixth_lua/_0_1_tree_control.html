@@ -1,0 +1,604 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>TreeControl Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">TreeControl Class</h2>
+<h3 class="class">A control (to be placed on a window) which allows the user to navigate a
+tree of items and select one item from it.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L482">line 482 of Lua/dialogs/tree_ctrl.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_tree_control.html">TreeControl</a>
+ » <a href="_0_1_window.html">Window</a>
+ <br/><strong>Subclasses:</strong> <a href="_0_1_filtered_tree_control.html">FilteredTreeControl</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1draw_extra_on_row">drawExtraOnRow</a>(<span class="p">canvas</span>, <span class="p">node</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1hit_test_tree">hitTestTree</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_num_visible_nodes_change">onNumVisibleNodesChange</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1on_scroll">onScroll</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_tick">onTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_control.html#_0_1_tree_control_1set_select_callback">setSelectCallback</a>(<span class="p">callback</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ (*)
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_x</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">first_visible_node</span>
+ </li>
+ <li><span class="p">first_visible_ordinal</span>
+ </li>
+ <li><span class="p">font</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">highlighted_node</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">mouse_down_in_self</span>
+ </li>
+ <li><span class="p">num_rows</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ (*)
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">row_height</span>
+ </li>
+ <li><span class="p">scrollbar</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">select_callback</span>
+ </li>
+ <li><span class="p">selected_node</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">tree_rect</span>
+ </li>
+ <li><span class="p">tree_root</span>
+ </li>
+ <li><span class="p">tree_sprites</span>
+ </li>
+ <li><span class="p">ui</span>
+ (*)
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">windows</span>
+ (*)
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_offset</span>
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1_tree_control">function TreeControl:TreeControl(<span class="p">root</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">col_bg</span>, <span class="p">col_fg</span>, <span class="p">y_offset</span>, <span class="p">has_font</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">root</td>
+ <td class="t">TreeNode</td>
+ <td class="d"> The single root node of the tree (use a `DummyRootNode`
+here if multiple root nodes are desired).</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X-position, in pixels, where the control should start
+within its parent.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y-position, in pixels, where the control should start
+within its parent.</td>
+ </tr>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">integer</td>
+ <td class="d"> The width, in pixels, of the control.</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">integer</td>
+ <td class="d"> The height, in pixels, of the control.</td>
+ </tr>
+ <tr>
+ <td class="n">col_bg</td>
+ <td class="t">table</td>
+ <td class="d"> The background colour of the control - this should be
+a table with `red`, `green`, and `blue` fields, each an integer between 0
+and 255.</td>
+ </tr>
+ <tr>
+ <td class="n">col_fg</td>
+ <td class="t">table</td>
+ <td class="d"> The colour used for the scrollbar and highlighted items.</td>
+ </tr>
+ <tr>
+ <td class="n">y_offset</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">has_font</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L489">line 489 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1draw">function TreeControl:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L660">line 660 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1draw_extra_on_row">function TreeControl:drawExtraOnRow(<span class="p">canvas</span>, <span class="p">node</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Override this function if a certain row should have certain text
+or additional flavour to it.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">node</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L655">line 655 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1hit_test_tree">function TreeControl:hitTestTree(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L550">line 550 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_mouse_down">function TreeControl:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L589">line 589 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_mouse_move">function TreeControl:onMouseMove(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L576">line 576 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_mouse_up">function TreeControl:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L607">line 607 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_mouse_wheel">function TreeControl:onMouseWheel(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L633">line 633 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_num_visible_nodes_change">function TreeControl:onNumVisibleNodesChange()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L637">line 637 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1on_scroll">function TreeControl:onScroll()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L642">line 642 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_control_1set_select_callback">function TreeControl:setSelectCallback(<span class="p">callback</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L602">line 602 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

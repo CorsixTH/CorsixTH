@@ -1,0 +1,251 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>MoviePlayer Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">MoviePlayer Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L26">line 26 of Lua/movie_player.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1allocate_picture_buffer">allocatePictureBuffer</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1deallocate_picture_buffer">deallocatePictureBuffer</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1init">init</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1on_movie_over">onMovieOver</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_advance_movie">playAdvanceMovie</a>(<span class="p">level</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_intro">playIntro</a>(<span class="p">callback_after_movie</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_lose_movie">playLoseMovie</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_movie">playMovie</a>(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">can_skip</span>, <span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1play_win_movie">playWinMovie</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1refresh">refresh</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1stop">stop</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_movie_player.html#_0_1_movie_player_1update_renderer">updateRenderer</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">advance_movies</span>
+ </li>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">audio</span>
+ </li>
+ <li><span class="p">callback_on_destroy_movie</span>
+ </li>
+ <li><span class="p">can_skip</span>
+ </li>
+ <li><span class="p">channel</span>
+ </li>
+ <li><span class="p">holding_bg_music</span>
+ </li>
+ <li><span class="p">intro_movie</span>
+ </li>
+ <li><span class="p">lose_movies</span>
+ </li>
+ <li><span class="p">moviePlayer</span>
+ </li>
+ <li><span class="p">opengl_mode_index</span>
+ </li>
+ <li><span class="p">playing</span>
+ </li>
+ <li><span class="p">video</span>
+ </li>
+ <li><span class="p">wait_for_over</span>
+ </li>
+ <li><span class="p">wait_for_stop</span>
+ </li>
+ <li><span class="p">win_movie</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1_movie_player">function MoviePlayer:MoviePlayer(<span class="p">app</span>, <span class="p">audio</span>, <span class="p">video</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">audio</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">video</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L89">line 89 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1allocate_picture_buffer">function MoviePlayer:allocatePictureBuffer()</a></h5>
+ <p>
+ NB: Call after any changes to TH.surface<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L245">line 245 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1deallocate_picture_buffer">function MoviePlayer:deallocatePictureBuffer()</a></h5>
+ <p>
+ NB: Call before any changes to TH.surface<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L252">line 252 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1init">function MoviePlayer:init()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L105">line 105 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1on_movie_over">function MoviePlayer:onMovieOver()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L259">line 259 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1play_advance_movie">function MoviePlayer:playAdvanceMovie(<span class="p">level</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">level</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L148">line 148 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1play_intro">function MoviePlayer:playIntro(<span class="p">callback_after_movie</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback_after_movie</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L140">line 140 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1play_lose_movie">function MoviePlayer:playLoseMovie()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L169">line 169 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1play_movie">function MoviePlayer:playMovie(<span class="p">filename</span>, <span class="p">wait_for_stop</span>, <span class="p">can_skip</span>, <span class="p">callback</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">filename</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">wait_for_stop</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">can_skip</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L176">line 176 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1play_win_movie">function MoviePlayer:playWinMovie()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L144">line 144 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1refresh">function MoviePlayer:refresh()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L280">line 280 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1stop">function MoviePlayer:stop()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L268">line 268 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_movie_player_1update_renderer">function MoviePlayer:updateRenderer()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/movie_player.lua#L287">line 287 of Lua/movie_player.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

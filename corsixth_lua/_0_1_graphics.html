@@ -1,0 +1,420 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Graphics Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Graphics Class</h2>
+<h3 class="class">Layer for loading (and subsequently caching) graphical resources.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L26">line 26 of Lua/graphics.lua</a>.
+ <br/><strong>Full description:</strong><br/> The Graphics class handles loading and caching of graphics resources.
+It can adapt as the API to C changes, and hide these changes from most of
+the other Lua code. 
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1has_language_font">hasLanguageFont</a>(<span class="p">font</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_animations">loadAnimations</a>(<span class="p">dir</span>, <span class="p">prefix</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_builtin_font">loadBuiltinFont</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_cursor">loadCursor</a>(<span class="p">sheet</span>, <span class="p">index</span>, <span class="p">hot_x</span>, <span class="p">hot_y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_font">loadFont</a>(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_font_file">loadFontFile</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_ghost">loadGhost</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_language_font">loadLanguageFont</a>(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_main_cursor">loadMainCursor</a>(<span class="p">id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_menu_font">loadMenuFont</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_palette">loadPalette</a>(<span class="p">dir</span>, <span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_raw">loadRaw</a>(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1load_sprite_table">loadSpriteTable</a>(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1on_change_language">onChangeLanguage</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_graphics.html#_0_1_graphics_1update_target">updateTarget</a>(<span class="p">target</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">builtin_font</span>
+ </li>
+ <li><span class="p">cache</span>
+ </li>
+ <li><span class="p">custom_graphics</span>
+ </li>
+ <li><span class="p">custom_graphics_folder</span>
+ </li>
+ <li><span class="p">language_font</span>
+ </li>
+ <li><span class="p">load_info</span>
+ </li>
+ <li><span class="p">reload_functions</span>
+ </li>
+ <li><span class="p">reload_functions_last</span>
+ </li>
+ <li><span class="p">target</span>
+ </li>
+ <li><span class="p">ttf_font_data</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_graphics_1_graphics">function Graphics:Graphics(<span class="p">app</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L64">line 64 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1has_language_font">function Graphics:hasLanguageFont(<span class="p">font</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">font</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L300">line 300 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_animations">function Graphics:loadAnimations(<span class="p">dir</span>, <span class="p">prefix</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">prefix</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L440">line 440 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_builtin_font">function Graphics:loadBuiltinFont()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L275">line 275 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_cursor">function Graphics:loadCursor(<span class="p">sheet</span>, <span class="p">index</span>, <span class="p">hot_x</span>, <span class="p">hot_y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sheet</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">hot_x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">hot_y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L154">line 154 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_font">function Graphics:loadFont(<span class="p">sprite_table</span>, <span class="p">x_sep</span>, <span class="p">y_sep</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sprite_table</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x_sep</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y_sep</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L393">line 393 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_font_file">function Graphics:loadFontFile()</a></h5>
+ <p>
+ Tries to load the font file given in the config file as unicode_font.<br/><br/>
+ If it is not found it tries to find one in the operating system.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L120">line 120 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_ghost">function Graphics:loadGhost(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">index</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L231">line 231 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_language_font">function Graphics:loadLanguageFont(<span class="p">name</span>, <span class="p">sprite_table</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">sprite_table</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L368">line 368 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_main_cursor">function Graphics:loadMainCursor(<span class="p">id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L141">line 141 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_menu_font">function Graphics:loadMenuFont()</a></h5>
+ <p>
+ Utility function to return preferred font for main menu ui<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L357">line 357 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_palette">function Graphics:loadPalette(<span class="p">dir</span>, <span class="p">name</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L215">line 215 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_raw">function Graphics:loadRaw(<span class="p">name</span>, <span class="p">width</span>, <span class="p">height</span>, <span class="p">dir</span>, <span class="p">paldir</span>, <span class="p">pal</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">paldir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">pal</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L241">line 241 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1load_sprite_table">function Graphics:loadSpriteTable(<span class="p">dir</span>, <span class="p">name</span>, <span class="p">complex</span>, <span class="p">palette</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">complex</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">palette</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L486">line 486 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1on_change_language">function Graphics:onChangeLanguage()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L335">line 335 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_graphics_1update_target">function Graphics:updateTarget(<span class="p">target</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">target</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L512">line 512 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

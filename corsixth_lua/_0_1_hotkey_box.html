@@ -1,0 +1,235 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>HotkeyBox Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">HotkeyBox Class</h2>
+<h3 class="class">A window element used to accept hotkey configurations.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1299">line 1299 of Lua/window.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1abort">abort</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1allowed_input">allowedInput</a>(<span class="p">types</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1clicked">clicked</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1confirm">confirm</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1key_input">keyInput</a>(<span class="p">char</span>, <span class="p">rawchar</span>, <span class="p">modifiers</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1set_active">setActive</a>(<span class="p">active</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hotkey_box.html#_0_1_hotkey_box_1set_text">setText</a>(<span class="p">text</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">abort_callback</span>
+ </li>
+ <li><span class="p">active</span>
+ </li>
+ <li><span class="p">allowed_input</span>
+ </li>
+ <li><span class="p">button</span>
+ </li>
+ <li><span class="p">char_limit</span>
+ </li>
+ <li><span class="p">confirm_callback</span>
+ </li>
+ <li><span class="p">enabled</span>
+ </li>
+ <li><span class="p">noted_keys</span>
+ </li>
+ <li><span class="p">panel</span>
+ </li>
+ <li><span class="p">text</span>
+ </li>
+ <li><span class="p">visible</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1_hotkey_box">function HotkeyBox:HotkeyBox()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1305">line 1305 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1abort">function HotkeyBox:abort()</a></h5>
+ <p>
+ Set the box to not active and run abort callback, if any<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1331">line 1331 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1allowed_input">function HotkeyBox:allowedInput(<span class="p">types</span>)</a></h5>
+ <p>
+ "misc": other characters, currently space and hyphen<br/><br/>
+ "all": experimental category that allows, theoretically, all input<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">types</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> One of, or an table of any number of input types</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1386">line 1386 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1clicked">function HotkeyBox:clicked()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1365">line 1365 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1confirm">function HotkeyBox:confirm()</a></h5>
+ <p>
+ Set the box to not active and run confirm callback, if any<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1322">line 1322 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1key_input">function HotkeyBox:keyInput(<span class="p">char</span>, <span class="p">rawchar</span>, <span class="p">modifiers</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">char</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">modifiers</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1378">line 1378 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1set_active">function HotkeyBox:setActive(<span class="p">active</span>)</a></h5>
+ <p>
+ Set the hotkeybox active status to true or false, taking care of any
+additional things that need to be done: deactivate any other hotkeyboxes,
+handle blinking cursor, keyboard repeat on/off, set button state accordingly<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">active</td>
+ <td class="t">boolean</td>
+ <td class="d"> whether to activate (true) or deactivate (false) the box</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1340">line 1340 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1set_position">function HotkeyBox:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1414">line 1414 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1set_size">function HotkeyBox:setSize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1418">line 1418 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hotkey_box_1set_text">function HotkeyBox:setText(<span class="p">text</span>)</a></h5>
+ <p>
+ Use empty string to make textbox a single line textbox (default).<br/><br/>
+ Use table with empty string {""} to make it a multiline textbox.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> The string or list of strings the textbox should contain.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1403">line 1403 of Lua/window.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

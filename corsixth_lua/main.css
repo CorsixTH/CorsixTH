@@ -1,0 +1,342 @@
+/* Global and common content */
+
+body {
+  background: #fff;
+  margin: 5px 8px;
+  font-family: arial, sans-serif;
+  font-size: 83%;
+}
+
+a {
+  color: #00f;
+}
+
+a:visited {
+  color: #22a;
+}
+
+div.content {
+  padding: 0;
+  margin: 0;
+  padding-top: 3px;
+}
+
+div.content a:hover {
+  text-decoration: none;
+}
+
+/* Header */
+
+h1 {
+  height: 48px;
+  background: url("logo.png") no-repeat left center;
+  padding-left: 52px;
+  font-size: 30px;
+  padding-top: 9px;
+  margin: 0;
+  margin-bottom: 2px;
+}
+
+/* Navigation */
+
+ul.tabs, ul.sections {
+  width: 100%;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  padding-bottom: 3px;
+  background-color: #fff;
+  display: block;
+}
+
+ul.tabs li {
+  display: inline;
+  margin: 0;
+  margin-right: 8px;
+  padding: 0;
+  font-weight: bold;
+}
+
+ul.tabs a {
+  background: #E5ECF9 url("corner_right.gif") no-repeat right top;
+  padding: 3px 12px;
+  color: #000;
+  text-decoration: none;
+}
+
+ul.tabs li.active a {
+  background-color: #C3D9FF;
+}
+
+ul.sections {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  background: #C3D9FF url("corner_right.gif") no-repeat right top; 
+}
+
+ul.sections li {
+  margin: 0;
+  padding: 0;
+  padding-left: 8px;
+  padding-right: 9px;
+  display: inline;
+  border-right: 1px #000 solid;
+}
+
+ul.sections a, ul.sections a:visited {
+  color: #00f;
+  text-decoration: underline;
+}
+
+ul.sections li.active a {
+  font-weight: bold;
+  color: #000;
+  text-decoration: none;
+}
+
+ul.sections li.last {
+  border-right: none;
+}
+
+/* Content - hierarchy lists */
+
+ul.class_hierarchy, ul.subclass_hierarchy, ul.file_hierarchy {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  margin-left: 1.6em;
+}
+
+ul.class_hierarchy, ul.file_hierarchy.toplevel {
+  margin-left: 2px;
+}
+
+ul.class_hierarchy li, ul.subclass_hierarchy li, ul.file_hierarchy li {
+  border-left: 1px #aaa solid;
+}
+
+ul.class_hierarchy li span, ul.subclass_hierarchy li span, ul.file_hierarchy li span {
+  border: 1px #aaa solid;
+  border-left: none;
+  background-color: #E5ECF9;
+  margin-bottom: 2px;
+  display: block;
+  padding: 2px;
+  padding-left: 8px;
+}
+
+ul.file_hierarchy li.dir span {
+  background-color: #C3D9FF;
+}
+
+ul.file_hierarchy li.file span {
+  background-color: #E5ECF9;
+}
+
+/* Content - linear lists */
+
+table.class_list {
+  width: 100%;
+}
+
+table.class_list td {
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 2px;
+  margin: 0;
+  padding-left: 8px;
+}
+
+/* Content - indices */
+
+ul.index_letters {
+  display: block;
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 2px;
+  margin: 3px 0;
+  list-style-type: none;
+}
+
+ul.index_letters li {
+  display: inline;
+  margin: 0;
+  padding: 0;
+}
+
+ul.index_letters li a {
+  text-decoration: none;
+  border-right: 1px #aaa solid;
+  margin: 0;
+  padding-left: 3px;
+  padding-right: 6px;
+}
+
+ul.index_letters li a:hover, ul.class_index a:hover {
+  text-decoration: underline;
+}
+
+ul.index_letters li.last a {
+  border-right: none;
+}
+
+ul.class_index, ul.class_index ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+ul.class_index {
+  float: left;
+  padding-right: 18px;
+}
+
+ul.class_index a:target {
+	background-color: #C3D9FF;
+  border: 1px #aaa solid;
+  display: block;
+  text-align: center;
+}
+
+ul.class_index a:target span {
+  display: inline;
+  border: none;
+  background-color: #C3D9FF;
+}
+
+ul.class_index a {
+  text-decoration: none;
+}
+
+ul.class_index span {
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  color: #000;
+  display: block;
+  width: 2em;
+  text-align: center;
+  font-weight: bold;
+}
+
+ul.class_index li {
+  padding: 2px 0;
+}
+
+/* Content - class pages */
+
+h2.class {
+  margin: 0;
+  padding: 0;
+  padding-top: 0.5em;
+}
+
+h3.class {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+}
+
+div.class_info {
+  margin: 0;
+  padding: 0.5em 0;
+}
+
+div.method_list, div.member_list {
+  float: left;
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
+}
+
+div.method_list a, div.member_list a {
+  text-decoration: none;
+}
+
+div.method_list a:hover, div.member_list a:hover {
+  text-decoration: underline;
+}
+
+div.method_list {
+  margin-right: 1em;
+}
+
+div.method_list h4, div.member_list h4 {
+  margin: 0;
+  padding: 3px;
+  display: block;
+  border-bottom: 1px #aaa solid;
+  background-color: #C3D9FF;
+}
+
+div.method_list ul, div.member_list ul {
+  margin: 0;
+  padding: 3px;
+  list-style-type: none;
+}
+
+div.method_list ul li.self {
+  font-weight: bold;
+}
+
+div.method_list span.p, div.member_list span.p, div.methods table.params td.n {
+  font-family: monospace;
+  font-weight: normal;
+}
+
+div.methods {
+  clear: both;
+}
+
+div.methods div.method {
+  border: 1px #aaa solid;
+  background-color: #E5ECF9;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 0.5em;
+}
+
+div.methods h5 {
+  background-color: #C3D9FF;
+  padding: 3px;
+  margin: 0;
+  border-bottom: 1px #aaa solid;
+}
+
+div.methods p {
+  padding: 3px;
+  margin: 0;
+}
+
+div.methods h5 a {
+  color: #000;
+  font-size: 120%;
+}
+
+div.methods h5 a:target {
+  color: #040;
+  font-size: 130%;
+}
+
+div.methods table.params th, div.methods table.params td {
+  text-align: left;
+  padding: 0;
+  margin: 0;
+  padding-left: 4px;
+}
+
+div.methods table.params .n {
+  padding-left: 20px;
+}
+
+/* Footer */
+
+span.footer {
+  text-align: center;
+  font-size: 80%;
+  margin: 1em 0;
+  display: block;
+  text-align: center;
+  clear: both;
+}

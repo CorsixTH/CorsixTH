@@ -1,0 +1,1041 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Patient Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Patient Class</h2>
+<h3 class="class">A `Humanoid` who is in the hospital for diagnosis and/or treatment.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L21">line 21 of Lua/entities/humanoids/patient.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_patient.html">Patient</a>
+ » <a href="_0_1_humanoid.html">Humanoid</a>
+ » <a href="_0_1_entity.html">Entity</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1add_to_treatment_history">addToTreatmentHistory</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">Humanoid:afterLoad</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1agrees_to_pay">agreesToPay</a>(<span class="p">disease_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1can_pee_or_puke">canPeeOrPuke</a>(<span class="p">current</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1change_attribute">changeAttribute</a>(<span class="p">attribute</span>, <span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1change_disease">changeDisease</a>(<span class="p">new_disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1check_watch">checkWatch</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1complete_diagnostic_step">completeDiagnosticStep</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1cure">cure</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1despawn">despawn</a>()
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1despawn">Humanoid:despawn</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1die">die</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1dump">dump</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1erase_object">eraseObject</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1falling">falling</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1falling_announce">fallingAnnounce</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1finish_action">finishAction</a>(<span class="p">action</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_current_action">getCurrentAction</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_current_mood">getCurrentMood</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_idle_animation">getIdleAnimation</a>(<span class="p">humanoid_class</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1get_price_distortion">getPriceDistortion</a>(<span class="p">casebook</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_room">getRoom</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1get_treatment_disease_id">getTreatmentDiseaseId</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1give_vaccination_candidate_status">giveVaccinationCandidateStatus</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1go_home">goHome</a>(<span class="p">reason</span>, <span class="p">disease_id</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1going_to_use_object">goingToUseObject</a>(<span class="p">object_type</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1handle_removed_object">handleRemovedObject</a>(<span class="p">object</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1has_leaving_action">hasLeavingAction</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1interrupt_and_requeue_action">interruptAndRequeueAction</a>(<span class="p">current_action</span>, <span class="p">queue_pos</span>, <span class="p">meander_before_resume</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_leaving">isLeaving</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1is_male_patient">isMalePatient</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_mood_active">isMoodActive</a>(<span class="p">mood</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1is_treatment_effective">isTreatmentEffective</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1modify_diagnosis_progress">modifyDiagnosisProgress</a>(<span class="p">incrementValue</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">Entity:notifyNewObject</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1notify_new_room">Humanoid:notifyNewRoom</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1notify_of_staff_change">notifyOfStaffChange</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1on_click">Humanoid:onClick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1on_destroy">onDestroy</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1pee">pee</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1queue_action">queueAction</a>(<span class="p">action</span>, <span class="p">pos</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_room_build_callback">registerRoomBuildCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_room_remove_callback">registerRoomRemoveCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_staff_change_callback">registerStaffChangeCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1remove_vaccination_candidate_status">removeVaccinationCandidateStatus</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_call_completed">setCallCompleted</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1set_diagnosed">setDiagnosed</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1set_disease">setDisease</a>(<span class="p">disease</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1set_hospital">setHospital</a>(<span class="p">hospital</span>)
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1set_hospital">Humanoid:setHospital</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_next_action">setNextAction</a>(<span class="p">action</span>, <span class="p">high_priority</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_type">setType</a>(<span class="p">humanoid_class</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1shake_fist">shakeFist</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1tap_foot">tapFoot</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick">tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1tick_day">tickDay</a>()
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1tick_day">Humanoid:tickDay</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1tire">tire</a>(<span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1tostring">tostring</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1treat_disease">treatDisease</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unexpect_from_room">unexpectFromRoom</a>(<span class="p">dest_room</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_callbacks">unregisterCallbacks</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_room_build_callback">unregisterRoomBuildCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_room_remove_callback">unregisterRoomRemoveCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_staff_change_callback">unregisterStaffChangeCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1update_dynamic_info">updateDynamicInfo</a>(<span class="p">action_string</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1update_message">updateMessage</a>(<span class="p">choice</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1update_speed">updateSpeed</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1vomit">vomit</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1wake">wake</a>(<span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1walk_to">walkTo</a>(<span class="p">tile_x</span>, <span class="p">tile_y</span>, <span class="p">must_happen</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_patient.html#_0_1_patient_1yawn">yawn</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">action_queue</span>
+ </li>
+ <li><span class="p">action_string</span>
+ </li>
+ <li><span class="p">active_moods</span>
+ (*)
+ </li>
+ <li><span class="p">animation_flags</span>
+ (*)
+ </li>
+ <li><span class="p">animation_idx</span>
+ (*)
+ </li>
+ <li><span class="p">associated_desk</span>
+ (*)
+ </li>
+ <li><span class="p">attempted_to_infect</span>
+ </li>
+ <li><span class="p">attributes</span>
+ </li>
+ <li><span class="p">available_diagnosis_rooms</span>
+ </li>
+ <li><span class="p">build_callback</span>
+ (*)
+ </li>
+ <li><span class="p">build_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">check_watch_anim</span>
+ </li>
+ <li><span class="p">cure_rooms_visited</span>
+ </li>
+ <li><span class="p">cured</span>
+ </li>
+ <li><span class="p">dead</span>
+ </li>
+ <li><span class="p">diagnosed</span>
+ </li>
+ <li><span class="p">diagnosis_progress</span>
+ </li>
+ <li><span class="p">die_anims</span>
+ </li>
+ <li><span class="p">disease</span>
+ </li>
+ <li><span class="p">door_anims</span>
+ (*)
+ </li>
+ <li><span class="p">dynamic_info</span>
+ (*)
+ </li>
+ <li><span class="p">falling_anim</span>
+ </li>
+ <li><span class="p">get_up_anim</span>
+ (*)
+ </li>
+ <li><span class="p">going_home</span>
+ </li>
+ <li><span class="p">going_to_toilet</span>
+ </li>
+ <li><span class="p">has_fallen</span>
+ </li>
+ <li><span class="p">has_passed_reception</span>
+ </li>
+ <li><span class="p">has_vomitted</span>
+ </li>
+ <li><span class="p">health_history</span>
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">hover_cursor</span>
+ </li>
+ <li><span class="p">humanoid_class</span>
+ </li>
+ <li><span class="p">in_room</span>
+ </li>
+ <li><span class="p">infected</span>
+ </li>
+ <li><span class="p">insurance_company</span>
+ </li>
+ <li><span class="p">is_debug</span>
+ </li>
+ <li><span class="p">is_emergency</span>
+ </li>
+ <li><span class="p">last_move_direction</span>
+ (*)
+ </li>
+ <li><span class="p">layers</span>
+ (*)
+ </li>
+ <li><span class="p">litter_countdown</span>
+ </li>
+ <li><span class="p">message</span>
+ </li>
+ <li><span class="p">message_callback</span>
+ </li>
+ <li><span class="p">mood_info</span>
+ (*)
+ </li>
+ <li><span class="p">needs_redirecting</span>
+ </li>
+ <li><span class="p">next_room_to_visit</span>
+ (*)
+ </li>
+ <li><span class="p">noqueue_ticks</span>
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ (*)
+ </li>
+ <li><span class="p">on_call</span>
+ (*)
+ </li>
+ <li><span class="p">on_ground</span>
+ </li>
+ <li><span class="p">on_ground_anim</span>
+ (*)
+ </li>
+ <li><span class="p">pee_anim</span>
+ </li>
+ <li><span class="p">permanent_flags</span>
+ (*)
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ (*)
+ </li>
+ <li><span class="p">previous_action</span>
+ (*)
+ </li>
+ <li><span class="p">profile</span>
+ (*)
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ (*)
+ </li>
+ <li><span class="p">remove_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">reserved_for</span>
+ </li>
+ <li><span class="p">shake_fist_anim</span>
+ </li>
+ <li><span class="p">should_knock_on_doors</span>
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ (*)
+ </li>
+ <li><span class="p">slow_animation</span>
+ (*)
+ </li>
+ <li><span class="p">speed</span>
+ (*)
+ </li>
+ <li><span class="p">staff_change_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">tap_foot_anim</span>
+ </li>
+ <li><span class="p">th</span>
+ (*)
+ </li>
+ <li><span class="p">ticks</span>
+ (*)
+ </li>
+ <li><span class="p">tile_x</span>
+ </li>
+ <li><span class="p">tile_y</span>
+ </li>
+ <li><span class="p">timeout</span>
+ </li>
+ <li><span class="p">timer_function</span>
+ (*)
+ </li>
+ <li><span class="p">timer_time</span>
+ (*)
+ </li>
+ <li><span class="p">toilet_callback</span>
+ (*)
+ </li>
+ <li><span class="p">treatment_history</span>
+ </li>
+ <li><span class="p">user_of</span>
+ </li>
+ <li><span class="p">vaccinated</span>
+ </li>
+ <li><span class="p">vaccination_candidate</span>
+ </li>
+ <li><span class="p">vomit_anim</span>
+ </li>
+ <li><span class="p">waiting</span>
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ (*)
+ </li>
+ <li><span class="p">walk_anims</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">yawn_anim</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_patient_1_patient">function Patient:Patient(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L27">line 27 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1add_to_treatment_history">function Patient:addToTreatmentHistory(<span class="p">room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L906">line 906 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1after_load">function Patient:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">Humanoid:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1055">line 1055 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1agrees_to_pay">function Patient:agreesToPay(<span class="p">disease_id</span>)</a></h5>
+ <p>
+ Returns true if patient agrees to pay for the given treatment.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease_id</td>
+ <td class="t">string</td>
+ <td class="d">: The id of the disease to test</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L288">line 288 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1can_pee_or_puke">function Patient:canPeeOrPuke(<span class="p">current</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">current</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L334">line 334 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1change_disease">function Patient:changeDisease(<span class="p">new_disease</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">new_disease</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L110">line 110 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1check_watch">function Patient:checkWatch()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L418">line 418 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1complete_diagnostic_step">function Patient:completeDiagnosticStep(<span class="p">room</span>)</a></h5>
+ <p>
+ Updates the patients diagnostic progress based on the doctors skill
+called when they are done using a diagnosis room<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L167">line 167 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1cure">function Patient:cure()</a></h5>
+ <p>
+ Change patient internal state to "cured".<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L308">line 308 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1despawn">function Patient:despawn()</a></h5>
+ <p>
+ Despawns the patient and removes them from the hospital<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1despawn">Humanoid:despawn</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L516">line 516 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1die">function Patient:die()</a></h5>
+ <p>
+ Patient died, process the event.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L315">line 315 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1falling">function Patient:falling()</a></h5>
+ <p>
+ Animations for when there is an earth quake<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L340">line 340 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1falling_announce">function Patient:fallingAnnounce()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L367">line 367 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1get_price_distortion">function Patient:getPriceDistortion(<span class="p">casebook</span>)</a></h5>
+ <p>
+ considers the bill to be under-priced. The bigger the value is, the more<br/><br/>
+ the patient patient considers the bill to be over-priced.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">casebook</td>
+ <td class="t">table</td>
+ <td class="d">: casebook entry for the treatment.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L233">line 233 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1get_treatment_disease_id">function Patient:getTreatmentDiseaseId()</a></h5>
+ <p>
+ Decide the ID of the disease or treatment that the patient is paying for.<br/><br/>
+ not be decided.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L215">line 215 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1give_vaccination_candidate_status">function Patient:giveVaccinationCandidateStatus()</a></h5>
+ <p>
+ If the patient is not a vaccination candidate then
+ give them the arrow icon and candidate status<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1038">line 1038 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1go_home">function Patient:goHome(<span class="p">reason</span>, <span class="p">disease_id</span>)</a></h5>
+ <p>
+ the last treatment is over-priced.
+param disease_id (string): When the reason is "over_priced" this is the<br/><br/>
+ id of the disease/diagnosis that the patient considered over_priced<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">reason</td>
+ <td class="t">string</td>
+ <td class="d">: the reason why the patient is sent home, which could be:</td>
+ </tr>
+ <tr>
+ <td class="n">disease_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L439">line 439 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1interrupt_and_requeue_action">function Patient:interruptAndRequeueAction(<span class="p">current_action</span>, <span class="p">queue_pos</span>, <span class="p">meander_before_resume</span>)</a></h5>
+ <p>
+ Interrupt a patients current action and resumes it after<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">current_action</td>
+ <td class="t">string</td>
+ <td class="d"> Action being interrupted</td>
+ </tr>
+ <tr>
+ <td class="n">queue_pos</td>
+ <td class="t">int</td>
+ <td class="d"> Position to insert resumed action in queue</td>
+ </tr>
+ <tr>
+ <td class="n">meander_before_resume</td>
+ <td class="t">bool</td>
+ <td class="d"> Indicator to insert an additional action before resuming.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1102">line 1102 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1is_male_patient">function Patient:isMalePatient()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1093">line 1093 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1is_treatment_effective">function Patient:isTreatmentEffective()</a></h5>
+ <p>
+ Either the patient is cured, or he/she dies.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L298">line 298 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1modify_diagnosis_progress">function Patient:modifyDiagnosisProgress(<span class="p">incrementValue</span>)</a></h5>
+ <p>
+ Modifies the diagnosis progress of a patient.
+incrementValue can be either positive or negative.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">incrementValue</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L154">line 154 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1notify_new_object">function Patient:notifyNewObject(<span class="p">id</span>)</a></h5>
+ <p>
+ As of now each time a bench is placed the world notifies all patients
+in the vicinity through this function.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">Entity:notifyNewObject</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L885">line 885 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1notify_new_room">function Patient:notifyNewRoom(<span class="p">room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1notify_new_room">Humanoid:notifyNewRoom</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L839">line 839 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1on_click">function Patient:onClick(<span class="p">ui</span>, <span class="p">button</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1on_click">Humanoid:onClick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L62">line 62 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1pee">function Patient:pee()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L401">line 401 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1remove_vaccination_candidate_status">function Patient:removeVaccinationCandidateStatus()</a></h5>
+ <p>
+ Remove the vaccination candidate icon and status from the patient<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L1046">line 1046 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1set_diagnosed">function Patient:setDiagnosed()</a></h5>
+ <p>
+ Mark patient as being diagnosed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L141">line 141 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1set_disease">function Patient:setDisease(<span class="p">disease</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L83">line 83 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1set_hospital">function Patient:setHospital(<span class="p">hospital</span>)</a></h5>
+ <p>
+ Sets the hospital for the patient - additionally removing them from a
+hospital if they already belong to one. For player hospitals, patients who
+are not debug or emergency patients are made to seek a reception desk.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">Hospital</td>
+ <td class="d">: hospital to assign to patient</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1set_hospital">Humanoid:setHospital</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L200">line 200 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1set_tile">function Patient:setTile(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Called each time the patient moves to a new tile.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L846">line 846 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1shake_fist">function Patient:shakeFist()</a></h5>
+ <p>
+ Perform 'shake fist' action.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L381">line 381 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1tap_foot">function Patient:tapFoot()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L432">line 432 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1tick_day">function Patient:tickDay()</a></h5>
+ <p>
+ This function handles changing of the different attributes of the patient.
+For example if thirst gets over a certain level (now: 0.7), the patient
+tries to find a drinks machine nearby.<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1tick_day">Humanoid:tickDay</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L522">line 522 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1treat_disease">function Patient:treatDisease()</a></h5>
+ <p>
+ will die. The patient may or may not agree to pay for the treatment<br/><br/>
+ depending on whether they consider the price reasonable.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L262">line 262 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1update_dynamic_info">function Patient:updateDynamicInfo(<span class="p">action_string</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action_string</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L920">line 920 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1update_message">function Patient:updateMessage(<span class="p">choice</span>)</a></h5>
+ <p>
+ Update availability of a choice in message owned by this patient, if any<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">choice</td>
+ <td class="t">string</td>
+ <td class="d"> The choice that needs updating (currently "research" or "guess_cure").</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L975">line 975 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1vomit">function Patient:vomit()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L388">line 388 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_patient_1yawn">function Patient:yawn()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/patient.lua#L425">line 425 of Lua/entities/humanoids/patient.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

@@ -1,0 +1,720 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Machine Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Machine Class</h2>
+<h3 class="class">An `Object` which needs occasional repair (to prevent explosion).</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L27">line 27 of Lua/entities/machine.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_machine.html">Machine</a>
+ » <a href="_0_1_object.html">Object</a>
+ » <a href="_0_1_entity.html">Entity</a>
+ <br/><strong>Subclasses:</strong> <a href="_0_1_operating_table.html">OperatingTable</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1add_reserved_user">addReservedUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1announce_repair">announceRepair</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1calculate_smoke">calculateSmoke</a>(<span class="p">room</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1create_handyman_actions">createHandymanActions</a>(<span class="p">handyman</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1erase_object">eraseObject</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1finalize">finalize</a>(<span class="p">room</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1get_remaining_uses">getRemainingUses</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_render_attach_tile">getRenderAttachTile</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1get_repair_tile">getRepairTile</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_room">getRoom</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_secondary_usage_tile">getSecondaryUsageTile</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1get_state">getState</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1get_state">Object:getState</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1get_walkable_tiles">getWalkableTiles</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1init_orientation">initOrientation</a>(<span class="p">direction</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1is_breaking">isBreaking</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1is_reserved_for">isReservedFor</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1machine_repaired">machineRepaired</a>(<span class="p">room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1machine_replaced">machineReplaced</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1machine_used">machineUsed</a>(<span class="p">room</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">Entity:notifyNewRoom</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1on_destroy">onDestroy</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1process_type_definition">processTypeDefinition</a>(<span class="p">object_type</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1remove_reserved_user">removeReservedUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1remove_user">removeUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1reset_animation">resetAnimation</a>()
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1set_crashed_animation">setCrashedAnimation</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1set_handyman_repair_position">setHandymanRepairPosition</a>(<span class="p">direction</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1set_repairing">setRepairing</a>(<span class="p">handyman</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1set_repairing_mode">setRepairingMode</a>(<span class="p">lock_room</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1set_state">setState</a>(<span class="p">state</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1set_state">Object:setState</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_object.html#_0_1_object_1set_user">setUser</a>(<span class="p">user</span>)
+ (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1slave_mixin_class">slaveMixinClass</a>(<span class="p">class_method_table</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1slave_mixin_class">Object.slaveMixinClass</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1tick">tick</a>()
+ (overrides <a href="_0_1_object.html#_0_1_object_1tick">Object:tick</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick_day">tickDay</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1update_dynamic_info">updateDynamicInfo</a>(<span class="p">only_update</span>)
+ (overrides <a href="_0_1_object.html#_0_1_object_1update_dynamic_info">Object:updateDynamicInfo</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">animation_flags</span>
+ (*)
+ </li>
+ <li><span class="p">animation_idx</span>
+ (*)
+ </li>
+ <li><span class="p">direction</span>
+ (*)
+ </li>
+ <li><span class="p">dynamic_info</span>
+ (*)
+ </li>
+ <li><span class="p">footprint</span>
+ (*)
+ </li>
+ <li><span class="p">handyman_position</span>
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">hover_cursor</span>
+ </li>
+ <li><span class="p">init_anim_flags</span>
+ (*)
+ </li>
+ <li><span class="p">layers</span>
+ (*)
+ </li>
+ <li><span class="p">mood_info</span>
+ (*)
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ (*)
+ </li>
+ <li><span class="p">object_type</span>
+ </li>
+ <li><span class="p">orientation_before</span>
+ (*)
+ </li>
+ <li><span class="p">permanent_flags</span>
+ (*)
+ </li>
+ <li><span class="p">picked_up</span>
+ (*)
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ (*)
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ (*)
+ </li>
+ <li><span class="p">repairing</span>
+ </li>
+ <li><span class="p">repairing_lock_room</span>
+ </li>
+ <li><span class="p">reserved_for</span>
+ (*)
+ </li>
+ <li><span class="p">reserved_for_list</span>
+ (*)
+ </li>
+ <li><span class="p">set_passable_flags</span>
+ (*)
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ (*)
+ </li>
+ <li><span class="p">slow_animation</span>
+ (*)
+ </li>
+ <li><span class="p">smokeInfo</span>
+ </li>
+ <li><span class="p">split_anim_positions</span>
+ (*)
+ </li>
+ <li><span class="p">split_anims</span>
+ (*)
+ </li>
+ <li><span class="p">strength</span>
+ </li>
+ <li><span class="p">th</span>
+ (*)
+ </li>
+ <li><span class="p">ticks</span>
+ </li>
+ <li><span class="p">tile_x</span>
+ </li>
+ <li><span class="p">tile_y</span>
+ </li>
+ <li><span class="p">timer_function</span>
+ (*)
+ </li>
+ <li><span class="p">timer_time</span>
+ (*)
+ </li>
+ <li><span class="p">times_used</span>
+ </li>
+ <li><span class="p">total_usage</span>
+ </li>
+ <li><span class="p">user</span>
+ </li>
+ <li><span class="p">user_list</span>
+ (*)
+ </li>
+ <li><span class="p">user_of</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_for_finalize</span>
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_machine_1_machine">function Machine:Machine(<span class="p">world</span>, <span class="p">object_type</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">direction</span>, <span class="p">etc</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">object_type</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">etc</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L33">line 33 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1after_load">function Machine:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L404">line 404 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1announce_repair">function Machine:announceRepair(<span class="p">room</span>)</a></h5>
+ <p>
+ Announces a machine needing repair<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">The room of the machine</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L73">line 73 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1calculate_smoke">function Machine:calculateSmoke(<span class="p">room</span>)</a></h5>
+ <p>
+ Calculates whether smoke gets displayed for this machine (and if so, how much)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L195">line 195 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1create_handyman_actions">function Machine:createHandymanActions(<span class="p">handyman</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L226">line 226 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1finalize">function Machine:finalize(<span class="p">room</span>)</a></h5>
+ <p>
+ Currently used to make the hover cursor of the machine be special
+only if the room is active at the moment (e.g. not being edited)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L352">line 352 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1get_remaining_uses">function Machine:getRemainingUses()</a></h5>
+ <p>
+ Calculates the number of times the machine can be used before crashing (unless repaired first)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L62">line 62 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1get_repair_tile">function Machine:getRepairTile()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L220">line 220 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1get_state">function Machine:getState()</a></h5>
+ <p>
+ Gets the state of a machine<br/><br/>
+ In addition to the object implementation this includes total_usage<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1get_state">Object:getState</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L432">line 432 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1is_breaking">function Machine:isBreaking()</a></h5>
+ <p>
+ Returns true if a machine is smoking/needs repair<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L67">line 67 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1machine_repaired">function Machine:machineRepaired(<span class="p">room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L299">line 299 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1machine_replaced">function Machine:machineReplaced()</a></h5>
+ <p>
+ Replace this machine (make it pretend it's brand new)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L278">line 278 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1machine_used">function Machine:machineUsed(<span class="p">room</span>)</a></h5>
+ <p>
+ Call on machine use. Handles crashing the machine & queueing repairs<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L112">line 112 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1notify_new_room">function Machine:notifyNewRoom(<span class="p">room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">Entity:notifyNewRoom</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L51">line 51 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1on_click">function Machine:onClick(<span class="p">ui</span>, <span class="p">button</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L378">line 378 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1on_destroy">function Machine:onDestroy()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L388">line 388 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1set_crashed_animation">function Machine:setCrashedAnimation()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L58">line 58 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1set_handyman_repair_position">function Machine:setHandymanRepairPosition(<span class="p">direction</span>)</a></h5>
+ <p>
+ Calculate handyman use position based on object orientation<br/><br/>
+ or the normal use position if one not available<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">string</td>
+ <td class="d"> orientation of object</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L457">line 457 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1set_repairing">function Machine:setRepairing(<span class="p">handyman</span>)</a></h5>
+ <p>
+ Tells the machine to start showing the icon that it needs repair.<br/><br/>
+ also lock the room from patient entering<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">handyman</td>
+ <td class="t">?</td>
+ <td class="d">The handyman heading to this machine. nil if repairing is finished</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L313">line 313 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1set_repairing_mode">function Machine:setRepairingMode(<span class="p">lock_room</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">lock_room</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L334">line 334 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1set_state">function Machine:setState(<span class="p">state</span>)</a></h5>
+ <p>
+ Sets the state of a machine<br/><br/>
+ Adds total_usage<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">state</td>
+ <td class="t">table</td>
+ <td class="d"> table holding the state</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1set_state">Object:setState</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L444">line 444 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1slave_mixin_class">function Machine.slaveMixinClass(<span class="p">class_method_table</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">class_method_table</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1slave_mixin_class">Object.slaveMixinClass</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L343">line 343 of Lua/entities/machine.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1tick">function Machine:tick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1tick">Object:tick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L423">line 423 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1update_dynamic_info">function Machine:updateDynamicInfo(<span class="p">only_update</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">only_update</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1update_dynamic_info">Object:updateDynamicInfo</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L364">line 364 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

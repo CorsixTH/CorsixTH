@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Litter Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Litter Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L51">line 51 of Lua/objects/litter.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_litter.html">Litter</a>
+ » <a href="_0_1_entity.html">Entity</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1any_litter">anyLitter</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1erase_object">eraseObject</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1get_drawing_layer">getDrawingLayer</a>()
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_room">getRoom</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1get_walkable_tiles">getWalkableTiles</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1is_cleanable">isCleanable</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1on_destroy">onDestroy</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1remove">remove</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1set_litter_type">setLitterType</a>(<span class="p">anim_type</span>, <span class="p">mirrorFlag</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick">tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick_day">tickDay</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_litter.html#_0_1_litter_1vomit_inducing">vomitInducing</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">animation_flags</span>
+ (*)
+ </li>
+ <li><span class="p">animation_idx</span>
+ </li>
+ <li><span class="p">dynamic_info</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">layers</span>
+ (*)
+ </li>
+ <li><span class="p">mood_info</span>
+ (*)
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ (*)
+ </li>
+ <li><span class="p">object_type</span>
+ </li>
+ <li><span class="p">permanent_flags</span>
+ (*)
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ (*)
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ (*)
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ (*)
+ </li>
+ <li><span class="p">slow_animation</span>
+ (*)
+ </li>
+ <li><span class="p">th</span>
+ (*)
+ </li>
+ <li><span class="p">ticks</span>
+ </li>
+ <li><span class="p">tile_x</span>
+ </li>
+ <li><span class="p">tile_y</span>
+ </li>
+ <li><span class="p">timer_function</span>
+ (*)
+ </li>
+ <li><span class="p">timer_time</span>
+ (*)
+ </li>
+ <li><span class="p">user_of</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_litter_1_litter">function Litter:Litter(<span class="p">hospital</span>, <span class="p">object_type</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">direction</span>, <span class="p">etc</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">object_type</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">etc</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L56">line 56 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1after_load">function Litter:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1after_load">Entity:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L139">line 139 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1any_litter">function Litter:anyLitter()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L128">line 128 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1get_drawing_layer">function Litter:getDrawingLayer()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1get_drawing_layer">Entity:getDrawingLayer</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L110">line 110 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1get_walkable_tiles">function Litter:getWalkableTiles()</a></h5>
+ <p>
+ Litter is an Entity and not an Object so it does not inherit this method
+This is an (effective) hack, see issue 918 --cgj<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L72">line 72 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1is_cleanable">function Litter:isCleanable()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L124">line 124 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1remove">function Litter:remove()</a></h5>
+ <p>
+ Remove the litter from the world.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L95">line 95 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1set_litter_type">function Litter:setLitterType(<span class="p">anim_type</span>, <span class="p">mirrorFlag</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim_type</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">mirrorFlag</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L81">line 81 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1set_tile">function Litter:setTile(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1set_tile">Entity:setTile</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L66">line 66 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_litter_1vomit_inducing">function Litter:vomitInducing()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/objects/litter.lua#L114">line 114 of Lua/objects/litter.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

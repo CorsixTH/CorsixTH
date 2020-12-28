@@ -1,0 +1,1293 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>UI Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">UI Class</h2>
+<h3 class="class">Top-level container for all other user-interface components.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L23">line 23 of Lua/ui.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i.html">UI</a>
+ » <a href="_0_1_window.html">Window</a>
+ <br/><strong>Subclasses:</strong> <a href="_0_1_game_u_i.html">GameUI</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1able_to_click_entity">ableToClickEntity</a>(<span class="p">entity</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_key_handler">addKeyHandler</a>(<span class="p">keys</span>, <span class="p">window</span>, <span class="p">callback</span>, <span class="p">...</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1add_key_handler">Window:addKeyHandler</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_or_remove_debug_mode_key_handlers">addOrRemoveDebugModeKeyHandlers</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_window">addWindow</a>(<span class="p">window</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1add_window">Window:addWindow</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1change_resolution">changeResolution</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1close_window">closeWindow</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1connect_debugger">connectDebugger</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1draw">draw</a>(<span class="p">canvas</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1draw_tooltip">drawTooltip</a>(<span class="p">canvas</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1exit_application">exitApplication</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1get_cursor_position">getCursorPosition</a>(<span class="p">window</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1get_screen_offset">getScreenOffset</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1init_key_and_button_codes">initKeyAndButtonCodes</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1make_screenshot">makeScreenshot</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_change_resolution">onChangeResolution</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_editing_text">onEditingText</a>(<span class="p">text</span>, <span class="p">start</span>, <span class="p">length</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_key_down">onKeyDown</a>(<span class="p">rawchar</span>, <span class="p">modifiers</span>, <span class="p">is_repeat</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_key_up">onKeyUp</a>(<span class="p">rawchar</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_down">onMouseDown</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_up">onMouseUp</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_multi_gesture">onMultiGesture</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_text_input">onTextInput</a>(<span class="p">text</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_window_active">onWindowActive</a>(<span class="p">gain</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_window_resize">onWindowResize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1play_announcement">playAnnouncement</a>(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1quit">quit</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1register_hotkey_box">registerHotkeyBox</a>(<span class="p">box</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1register_text_box">registerTextBox</a>(<span class="p">box</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1release_mouse">releaseMouse</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>, <span class="p">window</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1remove_key_handler">Window:removeKeyHandler</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1remove_window">removeWindow</a>(<span class="p">closing_window</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1remove_window">Window:removeWindow</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1reset_app">resetApp</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1run_debug_script">runDebugScript</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_cursor">setCursor</a>(<span class="p">cursor</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_default_cursor">setDefaultCursor</a>(<span class="p">cursor</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_menu_background">setMenuBackground</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_mouse_released">setMouseReleased</a>(<span class="p">released</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1setup_global_key_handlers">setupGlobalKeyHandlers</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1show_lua_console">showLuaConsole</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1stop_movie">stopMovie</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1stop_video">stopVideo</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_adviser">toggleAdviser</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_capture_mouse">toggleCaptureMouse</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_fullscreen">toggleFullscreen</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_announcements">togglePlayAnnouncements</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_music">togglePlayMusic</a>(<span class="p">item</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_sounds">togglePlaySounds</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1tutorial_step">tutorialStep</a>(<span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1unregister_hotkey_box">unregisterHotkeyBox</a>(<span class="p">box</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1unregister_text_box">unregisterTextBox</a>(<span class="p">box</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i.html#_0_1_u_i_1update_tooltip">updateTooltip</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">background</span>
+ </li>
+ <li><span class="p">background_height</span>
+ </li>
+ <li><span class="p">background_width</span>
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">button_codes</span>
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">cursor</span>
+ </li>
+ <li><span class="p">cursor_entity</span>
+ </li>
+ <li><span class="p">cursor_x</span>
+ </li>
+ <li><span class="p">cursor_y</span>
+ </li>
+ <li><span class="p">debug_cursor_entity</span>
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">default_cursor</span>
+ </li>
+ <li><span class="p">down_count</span>
+ </li>
+ <li><span class="p">down_cursor</span>
+ </li>
+ <li><span class="p">drag_mouse_move</span>
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">edit_room_cursor</span>
+ </li>
+ <li><span class="p">editing_allowed</span>
+ </li>
+ <li><span class="p">grab_cursor</span>
+ </li>
+ <li><span class="p">height</span>
+ (*)
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ </li>
+ <li><span class="p">key_handlers</span>
+ </li>
+ <li><span class="p">key_noted</span>
+ </li>
+ <li><span class="p">key_press_handled</span>
+ </li>
+ <li><span class="p">key_remaps</span>
+ </li>
+ <li><span class="p">key_to_button_remaps</span>
+ </li>
+ <li><span class="p">modal_windows</span>
+ </li>
+ <li><span class="p">modifiers_down</span>
+ </li>
+ <li><span class="p">mouse_released</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ (*)
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">screen_offset_x</span>
+ </li>
+ <li><span class="p">screen_offset_y</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">simulated_cursor</span>
+ </li>
+ <li><span class="p">temp_button_down</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ </li>
+ <li><span class="p">tick_scroll_amount</span>
+ </li>
+ <li><span class="p">tick_scroll_amount_mouse</span>
+ </li>
+ <li><span class="p">tick_scroll_mult</span>
+ </li>
+ <li><span class="p">tooltip</span>
+ </li>
+ <li><span class="p">tooltip_counter</span>
+ </li>
+ <li><span class="p">tooltip_font</span>
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">ui</span>
+ (*)
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_cursor</span>
+ </li>
+ <li><span class="p">width</span>
+ (*)
+ </li>
+ <li><span class="p">windows</span>
+ </li>
+ <li><span class="p">x</span>
+ (*)
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ (*)
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_u_i_1_u_i">function UI:UI(<span class="p">app</span>, <span class="p">minimal</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">minimal</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L138">line 138 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1able_to_click_entity">function UI:ableToClickEntity(<span class="p">entity</span>)</a></h5>
+ <p>
+ Determines if a cursor entity can be clicked
+@param entity (Entity,nil) cursor entity clicked on if any
+@return true if can be clicked on, false otherwise (boolean)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L919">line 919 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1add_key_handler">function UI:addKeyHandler(<span class="p">keys</span>, <span class="p">window</span>, <span class="p">callback</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Register a key handler / hotkey for a window.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">keys</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> The keyboard key which should trigger the callback (for
+example, "left" or "z" or "F9"), or a list with modifier(s) and the key (e.g. {"ctrl", "s"}).</td>
+ </tr>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">Window</td>
+ <td class="d"> The UI window which should receive the callback.</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function</td>
+ <td class="d"> The method to be called on `window` when `key` is
+pressed.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">Additional arguments to `callback`.</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_key_handler">Window:addKeyHandler</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L355">line 355 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1add_or_remove_debug_mode_key_handlers">function UI:addOrRemoveDebugModeKeyHandlers()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1081">line 1081 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1add_window">function UI:addWindow(<span class="p">window</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1add_window">Window:addWindow</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1021">line 1021 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1after_load">function UI:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1092">line 1092 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1change_resolution">function UI:changeResolution(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L621">line 621 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1close_window">function UI:closeWindow()</a></h5>
+ <p>
+ Closes one window (the topmost / active window, if possible)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1124">line 1124 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1connect_debugger">function UI:connectDebugger()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L266">line 266 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1draw">function UI:draw(<span class="p">canvas</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L334">line 334 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1draw_tooltip">function UI:drawTooltip(<span class="p">canvas</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L318">line 318 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1exit_application">function UI:exitApplication()</a></h5>
+ <p>
+ Added this function as quit does not exit the application, it only exits the game to the menu screen<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1156">line 1156 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1get_cursor_position">function UI:getCursorPosition(<span class="p">window</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1069">line 1069 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1get_screen_offset">function UI:getScreenOffset()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L934">line 934 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1init_key_and_button_codes">function UI:initKeyAndButtonCodes()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L48">line 48 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1make_screenshot">function UI:makeScreenshot()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1107">line 1107 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_change_resolution">function UI:onChangeResolution()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_change_resolution">Window:onChangeResolution</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L581">line 581 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_editing_text">function UI:onEditingText(<span class="p">text</span>, <span class="p">start</span>, <span class="p">length</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">start</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">length</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L834">line 834 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_key_down">function UI:onKeyDown(<span class="p">rawchar</span>, <span class="p">modifiers</span>, <span class="p">is_repeat</span>)</a></h5>
+ <p>
+ Called when the user presses a key on the keyboard<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the key the user pressed.</td>
+ </tr>
+ <tr>
+ <td class="n">modifiers</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">is_repeat</td>
+ <td class="t">boolean</td>
+ <td class="d"> True if this is a key repeat event</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L725">line 725 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_key_up">function UI:onKeyUp(<span class="p">rawchar</span>)</a></h5>
+ <p>
+ Called when the user releases a key on the keyboard<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">string</td>
+ <td class="d"> The name of the key the user pressed.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L782">line 782 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_mouse_down">function UI:onMouseDown(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">code</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_down">Window:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L865">line 865 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_mouse_move">function UI:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L975">line 975 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_mouse_up">function UI:onMouseUp(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">code</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L889">line 889 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_mouse_wheel">function UI:onMouseWheel(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">Window:onMouseWheel</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L915">line 915 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_multi_gesture">function UI:onMultiGesture()</a></h5>
+ <p>
+ Process SDL_MULTIGESTURE events.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L999">line 999 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_text_input">function UI:onTextInput(<span class="p">text</span>)</a></h5>
+ <p>
+ string containing the input localized according to the keyboard layout<br/><br/>
+ the user uses.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L838">line 838 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_tick">function UI:onTick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_tick">Window:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1006">line 1006 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_window_active">function UI:onWindowActive(<span class="p">gain</span>)</a></h5>
+ <p>
+ Called when the mouse enters or leaves the game window.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">gain</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L962">line 962 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1on_window_resize">function UI:onWindowResize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ Window has been resized by the user<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">integer</td>
+ <td class="d"> New window width</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">integer</td>
+ <td class="d"> New window height</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L966">line 966 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1play_announcement">function UI:playAnnouncement(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ Used for announcements only<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L280">line 280 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1play_sound">function UI:playSound(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ Used for everything except music and announcements<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L273">line 273 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1quit">function UI:quit()</a></h5>
+ <p>
+ Triggers quitting the application<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1161">line 1161 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1register_hotkey_box">function UI:registerHotkeyBox(<span class="p">box</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">box</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L608">line 608 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1register_text_box">function UI:registerTextBox(<span class="p">box</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">box</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L595">line 595 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1release_mouse">function UI:releaseMouse()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L669">line 669 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1remove_key_handler">function UI:removeKeyHandler(<span class="p">keys</span>, <span class="p">window</span>)</a></h5>
+ <p>
+ Unregister a key handler previously registered by `addKeyHandler`.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">keys</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> The key or list of modifiers+key of a key / window
+pair previously passed to `addKeyHandler`.</td>
+ </tr>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">Window</td>
+ <td class="d"> The window of a key / window pair previously passed
+to `addKeyHandler`.</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_key_handler">Window:removeKeyHandler</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L459">line 459 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1remove_window">function UI:removeWindow(<span class="p">closing_window</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">closing_window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1remove_window">Window:removeWindow</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1042">line 1042 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1reset_app">function UI:resetApp()</a></h5>
+ <p>
+ Triggers reset of the application (reloads .lua files)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1151">line 1151 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1run_debug_script">function UI:runDebugScript()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L243">line 243 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1set_cursor">function UI:setCursor(<span class="p">cursor</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">cursor</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L300">line 300 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1set_default_cursor">function UI:setDefaultCursor(<span class="p">cursor</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">cursor</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L287">line 287 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1set_menu_background">function UI:setMenuBackground()</a></h5>
+ <p>
+ set game window is selected. If no image fits that criteria the smallest<br/><br/>
+ available image is used.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L551">line 551 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1set_mouse_released">function UI:setMouseReleased(<span class="p">released</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">released</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L653">line 653 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1setup_global_key_handlers">function UI:setupGlobalKeyHandlers()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L252">line 252 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1show_lua_console">function UI:showLuaConsole()</a></h5>
+ <p>
+ Shows the Lua console<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1146">line 1146 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1stop_movie">function UI:stopMovie()</a></h5>
+ <p>
+ Tries to stop a video, if one is currently playing<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1166">line 1166 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1stop_video">function UI:stopVideo()</a></h5>
+ <p>
+ Stub for compatibility with savegames r1896-1921<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1173">line 1173 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_adviser">function UI:toggleAdviser()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L934">line 934 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_capture_mouse">function UI:toggleCaptureMouse()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L648">line 648 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_fullscreen">function UI:toggleFullscreen()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L673">line 673 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_play_announcements">function UI:togglePlayAnnouncements()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L945">line 945 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_play_music">function UI:togglePlayMusic(<span class="p">item</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">item</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L950">line 950 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1toggle_play_sounds">function UI:togglePlaySounds()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L939">line 939 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1tutorial_step">function UI:tutorialStep(<span class="p">...</span>)</a></h5>
+ <p>
+ Stub to allow the function to be called in e.g. the information
+dialog without having to worry about a GameUI being present<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L1102">line 1102 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1unregister_hotkey_box">function UI:unregisterHotkeyBox(<span class="p">box</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">box</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L612">line 612 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1unregister_text_box">function UI:unregisterTextBox(<span class="p">box</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">box</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L599">line 599 of Lua/ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_1update_tooltip">function UI:updateTooltip()</a></h5>
+ <p>
+ Amount of ticks until a tooltip is displayed<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/ui.lua#L938">line 938 of Lua/ui.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

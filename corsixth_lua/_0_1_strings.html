@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Strings Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Strings Class</h2>
+<h3 class="class">Layer which handles the loading of localised text.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L24">line 24 of Lua/strings.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1__load_private">_loadPrivate</a>(<span class="p">language</span>, <span class="p">env</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1get_font">getFont</a>(<span class="p">language</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1get_language_names">getLanguageNames</a>(<span class="p">language</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1init">init</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1load">load</a>(<span class="p">language</span>, <span class="p">no_restriction</span>, <span class="p">no_inheritance</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_strings.html#_0_1_strings_1setup_adviser_message">setupAdviserMessage</a>(<span class="p">messages</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">chunk_to_font</span>
+ </li>
+ <li><span class="p">chunk_to_names</span>
+ </li>
+ <li><span class="p">language_chunks</span>
+ </li>
+ <li><span class="p">language_to_chunk</span>
+ </li>
+ <li><span class="p">languages</span>
+ </li>
+ <li><span class="p">languages_english</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_strings_1_strings">function Strings:Strings(<span class="p">app</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L30">line 30 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1__load_private">function Strings:_loadPrivate(<span class="p">language</span>, <span class="p">env</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">env</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L294">line 294 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1get_font">function Strings:getFont(<span class="p">language</span>)</a></h5>
+ <p>
+ Get the Font() declaration of a language, if there was one.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L283">line 283 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1get_language_names">function Strings:getLanguageNames(<span class="p">language</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L289">line 289 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1init">function Strings:init()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L38">line 38 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1load">function Strings:load(<span class="p">language</span>, <span class="p">no_restriction</span>, <span class="p">no_inheritance</span>)</a></h5>
+ <p>
+ no_restriction disables errors on access to non-existent strings (for debug purposes)
+no_inheritance disables inheritance except original_strings (for debug purposes)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">language</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">no_restriction</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">no_inheritance</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L162">line 162 of Lua/strings.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_strings_1setup_adviser_message">function Strings:setupAdviserMessage(<span class="p">messages</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">messages</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/strings.lua#L310">line 310 of Lua/strings.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

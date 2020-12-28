@@ -1,0 +1,299 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>StaffProfile Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">StaffProfile Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L21">line 21 of Lua/staff_profile.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1draw_face">drawFace</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">parts_bitmap</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1get_fair_wage">getFairWage</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1init">init</a>(<span class="p">skill</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1init_doctor">initDoctor</a>(<span class="p">psychiatrist</span>, <span class="p">surgeon</span>, <span class="p">researcher</span>, <span class="p">junior</span>, <span class="p">consultant</span>, <span class="p">skill</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1parse_skill_level">parseSkillLevel</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1randomise">randomise</a>(<span class="p">month</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1randomise_organical">randomiseOrganical</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1set_doctor_abilities">setDoctorAbilities</a>(<span class="p">psychiatrist</span>, <span class="p">surgeon</span>, <span class="p">researcher</span>, <span class="p">junior</span>, <span class="p">consultant</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_staff_profile.html#_0_1_staff_profile_1set_skill">setSkill</a>(<span class="p">skill</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">attention_to_detail</span>
+ </li>
+ <li><span class="p">chin_index</span>
+ </li>
+ <li><span class="p">desc</span>
+ </li>
+ <li><span class="p">face_index</span>
+ </li>
+ <li><span class="p">hair_index</span>
+ </li>
+ <li><span class="p">humanoid_class</span>
+ </li>
+ <li><span class="p">is_black</span>
+ </li>
+ <li><span class="p">is_consultant</span>
+ </li>
+ <li><span class="p">is_junior</span>
+ </li>
+ <li><span class="p">is_psychiatrist</span>
+ </li>
+ <li><span class="p">is_researcher</span>
+ </li>
+ <li><span class="p">is_surgeon</span>
+ </li>
+ <li><span class="p">layer5</span>
+ </li>
+ <li><span class="p">name</span>
+ </li>
+ <li><span class="p">profession</span>
+ </li>
+ <li><span class="p">skill</span>
+ </li>
+ <li><span class="p">wage</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1_staff_profile">function StaffProfile:StaffProfile(<span class="p">world</span>, <span class="p">humanoid_class</span>, <span class="p">local_string</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">world</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">humanoid_class</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">local_string</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L26">line 26 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1draw_face">function StaffProfile:drawFace(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">parts_bitmap</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">parts_bitmap</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L193">line 193 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1get_fair_wage">function StaffProfile:getFairWage()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L226">line 226 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1init">function StaffProfile:init(<span class="p">skill</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">skill</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L50">line 50 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1init_doctor">function StaffProfile:initDoctor(<span class="p">psychiatrist</span>, <span class="p">surgeon</span>, <span class="p">researcher</span>, <span class="p">junior</span>, <span class="p">consultant</span>, <span class="p">skill</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">psychiatrist</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">surgeon</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">researcher</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">junior</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">consultant</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">skill</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L45">line 45 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1parse_skill_level">function StaffProfile:parseSkillLevel()</a></h5>
+ <p>
+ Update junior and consultant status<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L199">line 199 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1randomise">function StaffProfile:randomise(<span class="p">month</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">month</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L86">line 86 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1randomise_organical">function StaffProfile:randomiseOrganical()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L145">line 145 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1set_doctor_abilities">function StaffProfile:setDoctorAbilities(<span class="p">psychiatrist</span>, <span class="p">surgeon</span>, <span class="p">researcher</span>, <span class="p">junior</span>, <span class="p">consultant</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">psychiatrist</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">surgeon</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">researcher</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">junior</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">consultant</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L37">line 37 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_staff_profile_1set_skill">function StaffProfile:setSkill(<span class="p">skill</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">skill</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/staff_profile.lua#L56">line 56 of Lua/staff_profile.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

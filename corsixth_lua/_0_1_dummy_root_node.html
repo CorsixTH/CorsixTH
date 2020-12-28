@@ -1,0 +1,184 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>DummyRootNode Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">DummyRootNode Class</h2>
+<h3 class="class">A tree node which can be used as a root node to give the effect of having
+multiple root nodes.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L449">line 449 of Lua/dialogs/tree_ctrl.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_dummy_root_node.html">DummyRootNode</a>
+ » <a href="_0_1_tree_node.html">TreeNode</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1contract">contract</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1expand">expand</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_dummy_root_node.html#_0_1_dummy_root_node_1get_child_by_index">getChildByIndex</a>(<span class="p">idx</span>)
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_by_index">TreeNode:getChildByIndex</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_dummy_root_node.html#_0_1_dummy_root_node_1get_child_count">getChildCount</a>()
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_count">TreeNode:getChildCount</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_control">getControl</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_highlight_colour">getHighlightColour</a>(<span class="p">canvas</span>)
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_dummy_root_node.html#_0_1_dummy_root_node_1get_index_of_child">getIndexOfChild</a>(<span class="p">child</span>)
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_index_of_child">TreeNode:getIndexOfChild</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_label">getLabel</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_level">getLevel</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_next_visible">getNextVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_parent">getParent</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_prev_visible">getPrevVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_select_colour">getSelectColour</a>(<span class="p">canvas</span>)
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1has_children">hasChildren</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1is_expanded">isExpanded</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1num_visible_descendants">numVisibleDescendants</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">children</span>
+ </li>
+ <li><span class="p">control</span>
+ (*)
+ </li>
+ <li><span class="p">hidden</span>
+ </li>
+ <li><span class="p">is_expanded</span>
+ (*)
+ </li>
+ <li><span class="p">level</span>
+ </li>
+ <li><span class="p">num_visible_descendants</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_dummy_root_node_1_dummy_root_node">function DummyRootNode:DummyRootNode(<span class="p">roots</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">roots</td>
+ <td class="t">array</td>
+ <td class="d"> An array of `TreeNode`s which should be displayed as
+root nodes.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L456">line 456 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_dummy_root_node_1get_child_by_index">function DummyRootNode:getChildByIndex(<span class="p">idx</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">idx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_by_index">TreeNode:getChildByIndex</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L474">line 474 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_dummy_root_node_1get_child_count">function DummyRootNode:getChildCount()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_count">TreeNode:getChildCount</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L470">line 470 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_dummy_root_node_1get_index_of_child">function DummyRootNode:getIndexOfChild(<span class="p">child</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">child</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_index_of_child">TreeNode:getIndexOfChild</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L478">line 478 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

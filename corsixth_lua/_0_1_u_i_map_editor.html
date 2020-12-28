@@ -1,0 +1,873 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>UIMapEditor Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">UIMapEditor Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L22">line 22 of Lua/dialogs/resizables/map_editor.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_map_editor.html">UIMapEditor</a>
+ » <a href="_0_1_u_i_resizable.html">UIResizable</a>
+ » <a href="_0_1_window.html">Window</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1area_on_world">areaOnWorld</a>(<span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">xsize</span>, <span class="p">ysize</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1begin_resize">beginResize</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">mode</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1block_clicked">blockClicked</a>(<span class="p">num</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1build_sprite_buttons">buildSpriteButtons</a>(<span class="p">buttons</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1check_object_space">checkObjectSpace</a>(<span class="p">obj_type</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">direction</span>, <span class="p">remove</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1copy_area">copyArea</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1delete_walls_at_area">deleteWallsAtArea</a>(<span class="p">coords</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">...</span>)
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1draw_cursor_sprite_at_area">drawCursorSpriteAtArea</a>(<span class="p">coords</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1draw_object">drawObject</a>(<span class="p">obj_type</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">direction</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1fill_cursor_area">fillCursorArea</a>(<span class="p">canvas</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">xsize</span>, <span class="p">ysize</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1find_objects">findObjects</a>(<span class="p">minx</span>, <span class="p">miny</span>, <span class="p">thobdir_positions</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1get_cursor_drag_capabilities">getCursorDragCapabilities</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1get_draw_points">getDrawPoints</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test_corners">hitTestCorners</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1mouse_to_world">mouseToWorld</a>(<span class="p">mx</span>, <span class="p">my</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">xpos</span>, <span class="p">ypos</span>)
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_tick">onTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1page_clicked">pageClicked</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1paste_area">pasteArea</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1remove_door">removeDoor</a>(<span class="p">door</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_colour">setColour</a>(<span class="p">colour</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1set_parcel_at_area">setParcelAtArea</a>(<span class="p">coords</span>, <span class="p">parcel_num</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_u_i_map_editor.html#_0_1_u_i_map_editor_1set_player_count">setPlayerCount</a>(<span class="p">count</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">background_panel</span>
+ (*)
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">block_buttons</span>
+ </li>
+ <li><span class="p">border_pos</span>
+ (*)
+ </li>
+ <li><span class="p">border_sprites</span>
+ (*)
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ (*)
+ </li>
+ <li><span class="p">cell_outline</span>
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">colour</span>
+ (*)
+ </li>
+ <li><span class="p">cursor</span>
+ </li>
+ <li><span class="p">cursor_x</span>
+ (*)
+ </li>
+ <li><span class="p">cursor_y</span>
+ (*)
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">height</span>
+ (*)
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">is_drag</span>
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">min_height</span>
+ (*)
+ </li>
+ <li><span class="p">min_width</span>
+ (*)
+ </li>
+ <li><span class="p">page_selectbuttons</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">resizable</span>
+ </li>
+ <li><span class="p">sample_i</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">selected_block</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">width</span>
+ (*)
+ </li>
+ <li><span class="p">windows</span>
+ (*)
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1_u_i_map_editor">function UIMapEditor:UIMapEditor(<span class="p">ui</span>)</a></h5>
+ <p>
+ Height of a sprite button in pixels<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L410">line 410 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1area_on_world">function UIMapEditor:areaOnWorld(<span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">xsize</span>, <span class="p">ysize</span>)</a></h5>
+ <p>
+ Stay on world with the entire area, by moving the base position (if needed).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal base position.</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical base position.</td>
+ </tr>
+ <tr>
+ <td class="n">xsize</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal size.</td>
+ </tr>
+ <tr>
+ <td class="n">ysize</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical size.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L962">line 962 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1block_clicked">function UIMapEditor:blockClicked(<span class="p">num</span>)</a></h5>
+ <p>
+ {{{ several useful functions<br/><br/>
+ User clicked at a block (a button with a sprite).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">num</td>
+ <td class="t">?</td>
+ <td class="d">Index block number.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L926">line 926 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1build_sprite_buttons">function UIMapEditor:buildSpriteButtons(<span class="p">buttons</span>)</a></h5>
+ <p>
+ Do layout of the sprite buttons of the page.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">buttons</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L654">line 654 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1check_object_space">function UIMapEditor:checkObjectSpace(<span class="p">obj_type</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">direction</span>, <span class="p">remove</span>)</a></h5>
+ <p>
+ Collect other objects that use the space needed for the specified new object.
+If they exist, return them or delete them.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">obj_type</td>
+ <td class="t">str</td>
+ <td class="d"> Type of object ("entrance_door")</td>
+ </tr>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">int</td>
+ <td class="d"> Desired x position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">int</td>
+ <td class="d"> Desired y position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">str</td>
+ <td class="d"> Direction of the new object ("north" or "west").</td>
+ </tr>
+ <tr>
+ <td class="n">remove</td>
+ <td class="t">bool</td>
+ <td class="d"> If set, remove the found objects.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1166">line 1166 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1copy_area">function UIMapEditor:copyArea()</a></h5>
+ <p>
+ Copy area from the game.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1300">line 1300 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1delete_walls_at_area">function UIMapEditor:deleteWallsAtArea(<span class="p">coords</span>)</a></h5>
+ <p>
+ Delete the walls at the given coordinates.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">coords</td>
+ <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
+ <td class="d"> Coordinates to remove the walls.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1404">line 1404 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1draw">function UIMapEditor:draw(<span class="p">canvas</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Draw the display (map editor window, and main world display)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">draw&nbsp;or&nbsp;object</td>
+ <td class="d"> Canvas to draw on.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">UIResizable:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L892">line 892 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1draw_cursor_sprite_at_area">function UIMapEditor:drawCursorSpriteAtArea(<span class="p">coords</span>)</a></h5>
+ <p>
+ Draw the selected sprite at the given coordinates.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">coords</td>
+ <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
+ <td class="d"> Coordinates to draw the selected sprite.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1260">line 1260 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1draw_object">function UIMapEditor:drawObject(<span class="p">obj_type</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">direction</span>)</a></h5>
+ <p>
+ Add an object to the map. Currently, only "entrance_door" is supported.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">obj_type</td>
+ <td class="t">str</td>
+ <td class="d"> Type of object ("entrance_door")</td>
+ </tr>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">int</td>
+ <td class="d"> Desired x position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">int</td>
+ <td class="d"> Desired y position of the new object.</td>
+ </tr>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">str</td>
+ <td class="d"> Direction of the new object ("north" or "west").</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1133">line 1133 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1fill_cursor_area">function UIMapEditor:fillCursorArea(<span class="p">canvas</span>, <span class="p">xpos</span>, <span class="p">ypos</span>, <span class="p">xsize</span>, <span class="p">ysize</span>)</a></h5>
+ <p>
+ Fill an area of tiles with red cursor rectangles. Caller must make sure that
+the area is completely inside the world boundaries.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">Canvas to draw at.</td>
+ </tr>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal base tile position (of the top corner).</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical base tile position (of the top corner).</td>
+ </tr>
+ <tr>
+ <td class="n">xsize</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal size in tiles.</td>
+ </tr>
+ <tr>
+ <td class="n">ysize</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical size in tiles.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L873">line 873 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1find_objects">function UIMapEditor:findObjects(<span class="p">minx</span>, <span class="p">miny</span>, <span class="p">thobdir_positions</span>)</a></h5>
+ <p>
+ Recognize objects in the collection of thob+tallWest entries<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">minx</td>
+ <td class="t">int</td>
+ <td class="d"> Base horizontal position (objects should be put relative to it).</td>
+ </tr>
+ <tr>
+ <td class="n">miny</td>
+ <td class="t">int</td>
+ <td class="d"> Base vertical position (objects should be put relative to it).</td>
+ </tr>
+ <tr>
+ <td class="n">thobdir_positions</td>
+ <td class="t">table&nbsp;or&nbsp;xy&nbsp;or&nbsp;to&nbsp;or&nbsp;thob&nbsp;or&nbsp;tallWest</td>
+ <td class="d"> Found thobs.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1228">line 1228 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1get_cursor_drag_capabilities">function UIMapEditor:getCursorDragCapabilities()</a></h5>
+ <p>
+ }}}<br/><br/>
+ Retrieve what drag capabilities are allowed by the currently selected world cursor sprite.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L975">line 975 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1get_draw_points">function UIMapEditor:getDrawPoints()</a></h5>
+ <p>
+ Compute the positions to draw the selected sprite in the world.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L810">line 810 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1mouse_to_world">function UIMapEditor:mouseToWorld(<span class="p">mx</span>, <span class="p">my</span>)</a></h5>
+ <p>
+ Convert mouse coordinates to tile coordinates in the world.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mx</td>
+ <td class="t">int</td>
+ <td class="d"> Mouse X screen coordinate.</td>
+ </tr>
+ <tr>
+ <td class="n">my</td>
+ <td class="t">int</td>
+ <td class="d"> Mouse y screen coordinate.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L949">line 949 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1on_mouse_down">function UIMapEditor:onMouseDown(<span class="p">button</span>, <span class="p">xpos</span>, <span class="p">ypos</span>)</a></h5>
+ <p>
+ Mouse button got pressed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">string</td>
+ <td class="d"> Mouse button being pressed.</td>
+ </tr>
+ <tr>
+ <td class="n">xpos</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal position of the mouse at the time of the mouse button press.</td>
+ </tr>
+ <tr>
+ <td class="n">ypos</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the mouse at the time of the mouse button press.</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1045">line 1045 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1on_mouse_move">function UIMapEditor:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ The user moved the mouse<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> New horizontal position of the mouse at the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> New vertical position of the mouse at the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal shift in position of the mouse at the screen.</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical shift in position of the mouse at the screen.</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_move">Window:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1001">line 1001 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1on_mouse_up">function UIMapEditor:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Mouse button was released.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">string</td>
+ <td class="d"> Mouse button being released.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> Horizontal position of the mouse at the time of the mouse button release.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Vertical position of the mouse at the time of the mouse button release.</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_mouse_up">Window:onMouseUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1445">line 1445 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1page_clicked">function UIMapEditor:pageClicked(<span class="p">name</span>)</a></h5>
+ <p>
+ Callback function of the page select buttons.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">string</td>
+ <td class="d"> Name of the clicked page.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L589">line 589 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1paste_area">function UIMapEditor:pasteArea()</a></h5>
+ <p>
+ Paste copied area into the destination area (one or more times).<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1349">line 1349 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1remove_door">function UIMapEditor:removeDoor(<span class="p">door</span>)</a></h5>
+ <p>
+ Remove an entrance door from the world.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">door</td>
+ <td class="t">?</td>
+ <td class="d">Entrance door to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1155">line 1155 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1set_parcel_at_area">function UIMapEditor:setParcelAtArea(<span class="p">coords</span>, <span class="p">parcel_num</span>)</a></h5>
+ <p>
+ Set parcel number at the given coordinates.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">coords</td>
+ <td class="t">array&nbsp;or&nbsp;or&nbsp;or&nbsp;xpos&nbsp;or&nbsp;ypos&nbsp;or&nbsp;tables</td>
+ <td class="d"> Coordinates to set parcel.</td>
+ </tr>
+ <tr>
+ <td class="n">parcel_num</td>
+ <td class="t">int</td>
+ <td class="d"> Parcel number to set.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L1433">line 1433 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_map_editor_1set_player_count">function UIMapEditor:setPlayerCount(<span class="p">count</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">count</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/map_editor.lua#L551">line 551 of Lua/dialogs/resizables/map_editor.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

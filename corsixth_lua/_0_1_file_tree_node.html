@@ -1,0 +1,381 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>FileTreeNode Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">FileTreeNode Class</h2>
+<h3 class="class">A tree node representing a file (or directory) in the physical file-system.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L184">line 184 of Lua/dialogs/tree_ctrl.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_file_tree_node.html">FileTreeNode</a>
+ » <a href="_0_1_tree_node.html">TreeNode</a>
+ <br/><strong>Subclasses:</strong> <a href="_0_1_dir_tree_node.html">DirTreeNode</a>, <a href="_0_1_filtered_file_tree_node.html">FilteredFileTreeNode</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1check_for_children">checkForChildren</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1child_path">childPath</a>(<span class="p">item</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1contract">contract</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1create_new_node">createNewNode</a>(<span class="p">path</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1expand">expand</a>()
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1expand">TreeNode:expand</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_child_by_index">getChildByIndex</a>(<span class="p">idx</span>)
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_by_index">TreeNode:getChildByIndex</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_child_count">getChildCount</a>()
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_count">TreeNode:getChildCount</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_control">getControl</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_highlight_colour">getHighlightColour</a>(<span class="p">canvas</span>)
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_highlight_colour">TreeNode:getHighlightColour</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_index_of_child">getIndexOfChild</a>(<span class="p">child</span>)
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_index_of_child">TreeNode:getIndexOfChild</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_label">getLabel</a>()
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1get_label">TreeNode:getLabel</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_last_modification">getLastModification</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_level">getLevel</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1get_most_recently_modified_child_file">getMostRecentlyModifiedChildFile</a>(<span class="p">file_name_filter</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_next_visible">getNextVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_parent">getParent</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_prev_visible">getPrevVisible</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_select_colour">getSelectColour</a>(<span class="p">canvas</span>)
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1has_children">hasChildren</a>()
+ (overrides <a href="_0_1_tree_node.html#_0_1_tree_node_1has_children">TreeNode:hasChildren</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1is_directory">isDirectory</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1is_expanded">isExpanded</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1is_valid_file">isValidFile</a>(<span class="p">name</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1num_visible_descendants">numVisibleDescendants</a>()
+ (inherited from <a href="_0_1_tree_node.html">TreeNode</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1re_sort_children">reSortChildren</a>(<span class="p">sort_by</span>, <span class="p">order</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_tree_node.html#_0_1_file_tree_node_1select">select</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">children</span>
+ </li>
+ <li><span class="p">control</span>
+ (*)
+ </li>
+ <li><span class="p">filter_by</span>
+ </li>
+ <li><span class="p">has_children</span>
+ </li>
+ <li><span class="p">has_looked_for_children</span>
+ </li>
+ <li><span class="p">hidden</span>
+ (*)
+ </li>
+ <li><span class="p">highlight_colour</span>
+ </li>
+ <li><span class="p">is_expanded</span>
+ (*)
+ </li>
+ <li><span class="p">is_valid_directory</span>
+ </li>
+ <li><span class="p">is_valid_file</span>
+ </li>
+ <li><span class="p">label</span>
+ </li>
+ <li><span class="p">level</span>
+ (*)
+ </li>
+ <li><span class="p">num_visible_descendants</span>
+ (*)
+ </li>
+ <li><span class="p">order</span>
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">path</span>
+ </li>
+ <li><span class="p">sort_by</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1_file_tree_node">function FileTreeNode:FileTreeNode(<span class="p">path</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L192">line 192 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1check_for_children">function FileTreeNode:checkForChildren()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L363">line 363 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1child_path">function FileTreeNode:childPath(<span class="p">item</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">item</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L261">line 261 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1create_new_node">function FileTreeNode:createNewNode(<span class="p">path</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L304">line 304 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1expand">function FileTreeNode:expand()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1expand">TreeNode:expand</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L308">line 308 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_child_by_index">function FileTreeNode:getChildByIndex(<span class="p">idx</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">idx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_by_index">TreeNode:getChildByIndex</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L412">line 412 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_child_count">function FileTreeNode:getChildCount()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_count">TreeNode:getChildCount</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L407">line 407 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_highlight_colour">function FileTreeNode:getHighlightColour(<span class="p">canvas</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_highlight_colour">TreeNode:getHighlightColour</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L387">line 387 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_index_of_child">function FileTreeNode:getIndexOfChild(<span class="p">child</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">child</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_index_of_child">TreeNode:getIndexOfChild</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L417">line 417 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_label">function FileTreeNode:getLabel()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1get_label">TreeNode:getLabel</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L421">line 421 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_last_modification">function FileTreeNode:getLastModification()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L439">line 439 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1get_most_recently_modified_child_file">function FileTreeNode:getMostRecentlyModifiedChildFile(<span class="p">file_name_filter</span>)</a></h5>
+ <p>
+ -
+@param <file_name_filter> (optional) return the most recently modified child file which has this string in its name.
+@return nil if no child file is found otherwise return the FileTreedNode for mostly recently modified child file.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">file_name_filter</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L209">line 209 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1has_children">function FileTreeNode:hasChildren()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_tree_node.html#_0_1_tree_node_1has_children">TreeNode:hasChildren</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L269">line 269 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1is_directory">function FileTreeNode:isDirectory()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L205">line 205 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1is_valid_file">function FileTreeNode:isValidFile(<span class="p">name</span>)</a></h5>
+ <p>
+ Returns whether the given file name is valid
+in this tree. Override for desired behaviour.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L298">line 298 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1re_sort_children">function FileTreeNode:reSortChildren(<span class="p">sort_by</span>, <span class="p">order</span>)</a></h5>
+ <p>
+ Sorts the node and its children either by date or by name.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sort_by</td>
+ <td class="t">?</td>
+ <td class="d">What to sort by. Either "name" or "date".</td>
+ </tr>
+ <tr>
+ <td class="n">order</td>
+ <td class="t">?</td>
+ <td class="d">If the ordering should be "ascending" or "descending".</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L338">line 338 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_tree_node_1select">function FileTreeNode:select()</a></h5>
+ <p>
+ Selects an item. By default everything selected is valid. Can be overridden
+by inheriting classes.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L443">line 443 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

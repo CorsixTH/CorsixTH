@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>FileSystem Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">FileSystem Class</h2>
+<h3 class="class">Layer for abstracting away differences in file systems.
+In the traditional case, the FileSystem is associated with a path on the
+actual filesystem, from which all other operations are considered relative.
+The FileSystem is also able to delegate operations to the ISO_FS library
+in the engine for reading / listing files off an ISO image instead of a
+file system.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L26">line 26 of Lua/filesystem.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1__enumerate">_enumerate</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1__get_file_path">_getFilePath</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1file_exists">fileExists</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1file_size">fileSize</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1is_iso">isIso</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1list_files">listFiles</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1read_contents">readContents</a>(<span class="p">virtual_path</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_file_system.html#_0_1_file_system_1set_root">setRoot</a>(<span class="p">physical_path</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">files</span>
+ </li>
+ <li><span class="p">physical_path</span>
+ </li>
+ <li><span class="p">provider</span>
+ </li>
+ <li><span class="p">sub_dirs</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_file_system_1_file_system">function FileSystem:FileSystem()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L39">line 39 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1__enumerate">function FileSystem:_enumerate()</a></h5>
+ <p>
+ Populate the files and sub_dirs values for the current FileSystem path.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L63">line 63 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1__get_file_path">function FileSystem:_getFilePath(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ If the file exists and we are not using a provider then return a FileSystem
+rooted in the directory that the directory the file is contained in.
+Otherwise return nil and an error message.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L222">line 222 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1file_exists">function FileSystem:fileExists(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Determines if the given path points to a real file.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path relative to the FileSystem root.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">string</td>
+ <td class="d"> the virtual_path may be split into separate arguments
+for each level in the filesystem.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L182">line 182 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1file_size">function FileSystem:fileSize(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Get the size of the file at the given path.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path relative to the FileSystem root.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">string</td>
+ <td class="d"> the virtual_path may be split into separate arguments
+for each level in the filesystem.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L202">line 202 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1is_iso">function FileSystem:isIso(<span class="p">name</span>)</a></h5>
+ <p>
+ Test if file name has an .iso or .dmg extension<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L77">line 77 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1list_files">function FileSystem:listFiles(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ list the files in the given path.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path relative to the FileSystem root.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">string</td>
+ <td class="d"> the virtual_path may be split into separate arguments
+for each level in the filesystem.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L116">line 116 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1read_contents">function FileSystem:readContents(<span class="p">virtual_path</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Return the contents of the file at the given path.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">virtual_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path relative to the FileSystem root.</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">string</td>
+ <td class="d"> the virtual_path may be split into separate arguments
+for each level in the filesystem.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L158">line 158 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_file_system_1set_root">function FileSystem:setRoot(<span class="p">physical_path</span>)</a></h5>
+ <p>
+ Set the root physical path for this FileSystem.
+If the path is an ISO then set the provider. If the path is a directory
+then set the physical_path and populate the files and sub_dirs.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">physical_path</td>
+ <td class="t">string</td>
+ <td class="d"> a path on the filesystem to either a directory
+or theme hospital ISO file.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/filesystem.lua#L87">line 87 of Lua/filesystem.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

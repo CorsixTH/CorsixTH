@@ -1,0 +1,351 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>ResearchDepartment Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">ResearchDepartment Class</h2>
+<h3 class="class">Notes about research speed.
+Original game times at 20 % in all categories with a medium doctor at level 3:
+Slicer discovered in about 120 days. (10000 points)
+Pump improved in about 60 days. (30000 points * 20 % as first improvement)
+Invisibility improved in about 90 days. (10000 points)
+Note that the original requires a nurse and a pharmacy before drugs
+get improved. On the other hand it appears that the research is
+stored for future use anyway.
+--</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L21">line 21 of Lua/research_department.lua</a>.
+ <br/><strong>Full description:</strong><br/> Manages all things related to research for one hospital. 
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1add_research_points">addResearchPoints</a>(<span class="p">points</span>, <span class="p">autopsy_room</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1check_automatic_discovery">checkAutomaticDiscovery</a>(<span class="p">month</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1concentrate_research">concentrateResearch</a>(<span class="p">disease_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1discover_disease">discoverDisease</a>(<span class="p">disease</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1discover_object">discoverObject</a>(<span class="p">object</span>, <span class="p">automatic</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1get_research_required">getResearchRequired</a>(<span class="p">thing</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1improve_drug">improveDrug</a>(<span class="p">drug</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1improve_machine">improveMachine</a>(<span class="p">machine</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1init_research">initResearch</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1next_research">nextResearch</a>(<span class="p">category</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1redistribute_research_points">redistributeResearchPoints</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1research_cost">researchCost</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1set_research_concentration">setResearchConcentration</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">drain</span>
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">level_config</span>
+ </li>
+ <li><span class="p">research_policy</span>
+ </li>
+ <li><span class="p">research_progress</span>
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_research_department_1_research_department">function ResearchDepartment:ResearchDepartment(<span class="p">hospital</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hospital</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L37">line 37 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1add_research_points">function ResearchDepartment:addResearchPoints(<span class="p">points</span>, <span class="p">autopsy_room</span>)</a></h5>
+ <p>
+ Add some more research points to research progress. If
+autopsy_room is specified points are not used. Instead research
+progresses according to the level config for autopsies.
+Otherwise they will be divided according to the research policy
+into the different research areas.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">points</td>
+ <td class="t">integer</td>
+ <td class="d"> The total amount of points (before applying
+any level specific divisors to add to research.</td>
+ </tr>
+ <tr>
+ <td class="n">autopsy_room</td>
+ <td class="t">string</td>
+ <td class="d"> If a specific room should get points following
+an autopsy, then this is the id of that room.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L329">line 329 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1after_load">function ResearchDepartment:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L681">line 681 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1check_automatic_discovery">function ResearchDepartment:checkAutomaticDiscovery(<span class="p">month</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">month</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L133">line 133 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1concentrate_research">function ResearchDepartment:concentrateResearch(<span class="p">disease_id</span>)</a></h5>
+ <p>
+ Concentrates research on a given disease.
+Concentrating on a machine will improve it if it's been discovered
+and help researching it otherwise.
+Concentrating on a drug will improve the drug provided the pharmacy
+is discovered. Otherwise it will research the cabinet.
+TODO: Make it possible to concentrate on psychological diseases
+if the psychiatry hasn't been discovered.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease_id</td>
+ <td class="t">?</td>
+ <td class="d">The id of the disease to focus on.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L616">line 616 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1discover_disease">function ResearchDepartment:discoverDisease(<span class="p">disease</span>)</a></h5>
+ <p>
+ Called when it is time to discover a disease (i.e. after diagnosis in the GP)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">disease</td>
+ <td class="t">?</td>
+ <td class="d">The disease to discover, a table from world.available_diseases
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L552">line 552 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1discover_object">function ResearchDepartment:discoverObject(<span class="p">object</span>, <span class="p">automatic</span>)</a></h5>
+ <p>
+ Called when it is time to discoer an object. This may currently only
+happen from research.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">object</td>
+ <td class="t">?</td>
+ <td class="d">The object to discover, a table from TheApp.objects</td>
+ </tr>
+ <tr>
+ <td class="n">automatic</td>
+ <td class="t">?</td>
+ <td class="d">If true the discovery was not made by
+the player's research department.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L498">line 498 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1get_research_required">function ResearchDepartment:getResearchRequired(<span class="p">thing</span>)</a></h5>
+ <p>
+ Returns how many points are required to discover something
+about the given thing.
+It may be an object or a drug, being improved or researched.
+If this thing cannot be processed nil is returned.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">thing</td>
+ <td class="t">?</td>
+ <td class="d">The thing to check, either a drug or an object.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L290">line 290 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1improve_drug">function ResearchDepartment:improveDrug(<span class="p">drug</span>)</a></h5>
+ <p>
+ Called when it is time to improve a drug's strength or cost.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">drug</td>
+ <td class="t">?</td>
+ <td class="d">The drug to improve, table taken from world.available_diseases
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L409">line 409 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1improve_machine">function ResearchDepartment:improveMachine(<span class="p">machine</span>)</a></h5>
+ <p>
+ Called when it is time to improve a machine's strength or cost.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">machine</td>
+ <td class="t">?</td>
+ <td class="d">The machine to improve, table taken from TheApp.objects
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L448">line 448 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1init_research">function ResearchDepartment:initResearch()</a></h5>
+ <p>
+ Initialize research for the level.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L48">line 48 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1next_research">function ResearchDepartment:nextResearch(<span class="p">category</span>)</a></h5>
+ <p>
+ Finds out what to research next in the given research area.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">category</td>
+ <td class="t">?</td>
+ <td class="d">The research area. One of cure, diagnosis, drugs,
+improvements and specialisation
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L216">line 216 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1redistribute_research_points">function ResearchDepartment:redistributeResearchPoints()</a></h5>
+ <p>
+ Function that redistributes research points from a finished category to<br/><br/>
+ all the other categories.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L159">line 159 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1research_cost">function ResearchDepartment:researchCost()</a></h5>
+ <p>
+ It also costs to research.
+TODO: This is now just $3 per day and doctor (if at 100%),
+what should it be?
+--<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L588">line 588 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1set_research_concentration">function ResearchDepartment:setResearchConcentration()</a></h5>
+ <p>
+ Find a disease (if it exists) on which research can be concentrated and concentrate on it.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L145">line 145 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

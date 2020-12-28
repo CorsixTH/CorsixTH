@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>HairRestorationRoom Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">HairRestorationRoom Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/hair_restoration.lua#L45">line 45 of Lua/rooms/hair_restoration.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_hair_restoration_room.html">HairRestorationRoom</a>
+ » <a href="_0_1_room.html">Room</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1calculate_removal_cost">calculateRemovalCost</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1can_humanoid_enter">canHumanoidEnter</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_hair_restoration_room.html#_0_1_hair_restoration_room_1command_entering_patient">commandEnteringPatient</a>(<span class="p">patient</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1command_entering_staff">commandEnteringStaff</a>(<span class="p">humanoid</span>, <span class="p">already_initialized</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1count_windows">countWindows</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1crash_room">crashRoom</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_dealt_with_patient_callback">createDealtWithPatientCallback</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_enter_action">createEnterAction</a>(<span class="p">humanoid_entering</span>, <span class="p">callback</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1create_leave_action">createLeaveAction</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1deactivate">deactivate</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1dealt_with_patient">dealtWithPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1find_work_for_staff">findWorkForStaff</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_entrance_x_y">getEntranceXY</a>(<span class="p">inside</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_maximum_staff_criteria">getMaximumStaffCriteria</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_missing_staff">getMissingStaff</a>(<span class="p">criteria</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_patient">getPatient</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_patient_count">getPatientCount</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_required_staff_criteria">getRequiredStaffCriteria</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_staff_member">getStaffMember</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_staff_service_quality">getStaffServiceQuality</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1get_usage_score">getUsageScore</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1has_queue_dialog">hasQueueDialog</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1init_room">initRoom</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">door</span>, <span class="p">door2</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1is_diagnosis_room_for_patient">isDiagnosisRoomForPatient</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_dress_if_necessary_and_then_leave">makeHumanoidDressIfNecessaryAndThenLeave</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1make_humanoid_leave">makeHumanoidLeave</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">onHumanoidEnter</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">onHumanoidLeave</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1room_finished">roomFinished</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1set_staff_member">setStaffMember</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">setStaffMembersAttribute</a>(<span class="p">attribute</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1should_have_patient_reenter">shouldHavePatientReenter</a>(<span class="p">patient</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1staff_fits_in_room">staffFitsInRoom</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1staff_meets_room_requirements">staffMeetsRoomRequirements</a>(<span class="p">humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1test_staff_criteria">testStaffCriteria</a>(<span class="p">criteria</span>, <span class="p">extra_humanoid</span>)
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_advance_queue">tryAdvanceQueue</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_to_edit">tryToEdit</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_room.html#_0_1_room_1try_to_find_nearby_patients">tryToFindNearbyPatients</a>()
+ (inherited from <a href="_0_1_room.html">Room</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active</span>
+ (*)
+ </li>
+ <li><span class="p">built</span>
+ (*)
+ </li>
+ <li><span class="p">crashed</span>
+ (*)
+ </li>
+ <li><span class="p">dealt_patient_callback</span>
+ (*)
+ </li>
+ <li><span class="p">door</span>
+ (*)
+ </li>
+ <li><span class="p">door2</span>
+ (*)
+ </li>
+ <li><span class="p">height</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ (*)
+ </li>
+ <li><span class="p">humanoids</span>
+ (*)
+ </li>
+ <li><span class="p">humanoids_enroute</span>
+ (*)
+ </li>
+ <li><span class="p">id</span>
+ (*)
+ </li>
+ <li><span class="p">is_active</span>
+ (*)
+ </li>
+ <li><span class="p">maximum_patients</span>
+ (*)
+ </li>
+ <li><span class="p">needs_repair</span>
+ (*)
+ </li>
+ <li><span class="p">objects</span>
+ (*)
+ </li>
+ <li><span class="p">room_info</span>
+ (*)
+ </li>
+ <li><span class="p">sound_played</span>
+ (*)
+ </li>
+ <li><span class="p">staff_member</span>
+ </li>
+ <li><span class="p">staff_member_set</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_staff_member</span>
+ (*)
+ </li>
+ <li><span class="p">width</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">x</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_hair_restoration_room_1_hair_restoration_room">function HairRestorationRoom:HairRestorationRoom(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/hair_restoration.lua#L50">line 50 of Lua/rooms/hair_restoration.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hair_restoration_room_1command_entering_patient">function HairRestorationRoom:commandEnteringPatient(<span class="p">patient</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">patient</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/hair_restoration.lua#L54">line 54 of Lua/rooms/hair_restoration.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

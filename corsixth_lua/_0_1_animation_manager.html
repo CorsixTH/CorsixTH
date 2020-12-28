@@ -1,0 +1,182 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>AnimationManager Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">AnimationManager Class</h2>
+<h3 class="class">Utility class for setting animation markers and querying animation length.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L521">line 521 of Lua/graphics.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1get_anim_length">getAnimLength</a>(<span class="p">anim</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_anim_length">setAnimLength</a>(<span class="p">anim</span>, <span class="p">length</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_marker">setMarker</a>(<span class="p">anim</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_animation_manager.html#_0_1_animation_manager_1set_marker_raw">setMarkerRaw</a>(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">arg1</span>, <span class="p">arg2</span>, <span class="p">...</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">anim_length_cache</span>
+ </li>
+ <li><span class="p">anims</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1_animation_manager">function AnimationManager:AnimationManager(<span class="p">anims</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anims</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L527">line 527 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1get_anim_length">function AnimationManager:getAnimLength(<span class="p">anim</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L537">line 537 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1set_anim_length">function AnimationManager:setAnimLength(<span class="p">anim</span>, <span class="p">length</span>)</a></h5>
+ <p>
+ For overriding animations which have builtin repeats or excess frames<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">length</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L532">line 532 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1set_marker">function AnimationManager:setMarker(<span class="p">anim</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Markers can be set using a variety of different arguments:
+ setMarker(anim_number, position)
+ setMarker(anim_number, start_position, end_position)
+ setMarker(anim_number, keyframe_1, keyframe_1_position, keyframe_2, ...)
+ position should be a table; {x, y} for a tile position, {x, y, "px"} for a
+ pixel position, with (0, 0) being the origin in both cases.
+ The first variant of setMarker sets the same marker for each frame.
+ The second variant does linear interpolation of the two positions between
+ the first frame and the last frame.
+ The third variant does linear interpolation between keyframes, and then the
+ final position for frames after the last keyframe. The keyframe arguments
+ should be 0-based integers, as in the animation viewer.
+ To set the markers for multiple animations at once, the anim_number argument
+ can be a table, in which case the marker is set for all values in the table.
+ Alternatively, the values function (defined in utility.lua) can be used in
+ conjection with a for loop to set markers for multiple things.
+--<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L553">line 553 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_animation_manager_1set_marker_raw">function AnimationManager:setMarkerRaw(<span class="p">anim</span>, <span class="p">fn</span>, <span class="p">arg1</span>, <span class="p">arg2</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">anim</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">fn</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">arg1</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">arg2</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/graphics.lua#L587">line 587 of Lua/graphics.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

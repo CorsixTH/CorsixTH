@@ -1,0 +1,1202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Window Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Window Class</h2>
+<h3 class="class">Base class for user-interface dialogs.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L23">line 23 of Lua/window.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_tree_control.html">TreeControl</a>, <a href="_0_1_u_i.html">UI</a>, <a href="_0_1_u_i_adviser.html">UIAdviser</a>, <a href="_0_1_u_i_bottom_panel.html">UIBottomPanel</a>, <a href="_0_1_u_i_build_room.html">UIBuildRoom</a>, <a href="_0_1_u_i_confirm_dialog.html">UIConfirmDialog</a>, <a href="_0_1_u_i_fullscreen.html">UIFullscreen</a>, <a href="_0_1_u_i_furnish_corridor.html">UIFurnishCorridor</a>, <a href="_0_1_u_i_hire_staff.html">UIHireStaff</a>, <a href="_0_1_u_i_information.html">UIInformation</a>, <a href="_0_1_u_i_jukebox.html">UIJukebox</a>, <a href="_0_1_u_i_machine.html">UIMachine</a>, <a href="_0_1_u_i_menu_bar.html">UIMenuBar</a>, <a href="_0_1_u_i_message.html">UIMessage</a>, <a href="_0_1_u_i_patient.html">UIPatient</a>, <a href="_0_1_u_i_place_objects.html">UIPlaceObjects</a>, <a href="_0_1_u_i_place_staff.html">UIPlaceStaff</a>, <a href="_0_1_u_i_queue.html">UIQueue</a>, <a href="_0_1_u_i_queue_popup.html">UIQueuePopup</a>, <a href="_0_1_u_i_resizable.html">UIResizable</a>, <a href="_0_1_u_i_staff.html">UIStaff</a>, <a href="_0_1_u_i_staff_rise.html">UIStaffRise</a>, <a href="_0_1_u_i_watch.html">UIWatch</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1add_key_handler">addKeyHandler</a>(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1add_window">addWindow</a>(<span class="p">window</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_change_resolution">onChangeResolution</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_up">onMouseUp</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_tick">onTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ </li>
+ <li><span class="p">blink_counter</span>
+ </li>
+ <li><span class="p">blinking_button</span>
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ </li>
+ <li><span class="p">buttons</span>
+ </li>
+ <li><span class="p">buttons_down</span>
+ </li>
+ <li><span class="p">closed</span>
+ </li>
+ <li><span class="p">cursor_x</span>
+ </li>
+ <li><span class="p">cursor_y</span>
+ </li>
+ <li><span class="p">default_button_sound</span>
+ </li>
+ <li><span class="p">draggable</span>
+ </li>
+ <li><span class="p">dragging</span>
+ </li>
+ <li><span class="p">height</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ </li>
+ <li><span class="p">key_handlers</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ </li>
+ <li><span class="p">panels</span>
+ </li>
+ <li><span class="p">parent</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ </li>
+ <li><span class="p">textboxes</span>
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">visible</span>
+ </li>
+ <li><span class="p">width</span>
+ </li>
+ <li><span class="p">windows</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">x_original</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ <li><span class="p">y_original</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_window_1_window">function Window:Window()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L33">line 33 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1add_bevel_panel">function Window:addBevelPanel(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)</a></h5>
+ <p>
+ Add a beveled `Panel` to the window.<br/><br/>
+ A bevel panel is similar to a solid colour panel, except that it
+features a highlight and a shadow that makes it appear either lowered or raised.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X pixel position to start the panel at.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y pixel position to start the panel at.</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">integer</td>
+ <td class="d"> The width of the panel, in pixels.</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">integer</td>
+ <td class="d"> The height of the panel, in pixels.</td>
+ </tr>
+ <tr>
+ <td class="n">colour</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue</td>
+ <td class="d"> The colour for the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">highlight_colour</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> [optional] The colour for the highlight.</td>
+ </tr>
+ <tr>
+ <td class="n">shadow_colour</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> [optional] The colour for the shadow.</td>
+ </tr>
+ <tr>
+ <td class="n">disabled_colour</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> [optional] The colour for the disabled panel.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L438">line 438 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1add_colour_panel">function Window:addColourPanel(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)</a></h5>
+ <p>
+ Add a solid-colour `Panel` to the window.<br/><br/>
+ A solid-colour panel is like a normal panel, expect it displays a solid
+colour rather than a bitmap.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X pixel position to start the panel at.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y pixel position to start the panel at.</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">integer</td>
+ <td class="d"> The width of the panel, in pixels.</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">integer</td>
+ <td class="d"> The height of the panel, in pixels.</td>
+ </tr>
+ <tr>
+ <td class="n">r</td>
+ <td class="t">integer</td>
+ <td class="d"> Value in [0, 255] giving the red component of the colour.</td>
+ </tr>
+ <tr>
+ <td class="n">g</td>
+ <td class="t">integer</td>
+ <td class="d"> Value in [0, 255] giving the green component of the colour.</td>
+ </tr>
+ <tr>
+ <td class="n">b</td>
+ <td class="t">integer</td>
+ <td class="d"> Value in [0, 255] giving the blue component of the colour.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L397">line 397 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1add_key_handler">function Window:addKeyHandler(<span class="p">key</span>, <span class="p">handler</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">key</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">handler</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L139">line 139 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1add_panel">function Window:addPanel(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)</a></h5>
+ <p>
+ Add a `Panel` to the window.<br/><br/>
+ Panels form the basic building blocks of most windows. A panel is a small
+bitmap coupled with a position, and by combining several panels, a window can
+be made. By using panels to construct windows, all of the common tasks like
+drawing and hit-testing are provided for you by the base class methods, thus
+reducing the amount of code required elsewhere.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sprite_index</td>
+ <td class="t">integer</td>
+ <td class="d"> Index into the window's sprite table of the
+bitmap to be displayed.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X pixel position to display the bitmap at.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y pixel position to display the bitmap at.</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">integer&nbsp;or&nbsp;nil</td>
+ <td class="d"> If the panel is totally opaque, and the width of the
+panel (in pixels) is known, it should be specified here to speed up hit-tests.</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">integer&nbsp;or&nbsp;nil</td>
+ <td class="d"> If the panel is totally opaque, and the height of the
+panel (in pixels) is known, it should be specified here to speed up hit-tests.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L356">line 356 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1add_window">function Window:addWindow(<span class="p">window</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L485">line 485 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1after_load">function Window:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ Stub to be extended in subclasses, if needed.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L2020">line 2020 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1begin_drag">function Window:beginDrag(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Initiate dragging of the window.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">The X position of the cursor in window co-ordinatees.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">The Y position of the cursor in window co-ordinatees.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1710">line 1710 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1bring_to_top">function Window:bringToTop()</a></h5>
+ <p>
+ Bring the window to the top of its parent<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1860">line 1860 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1close">function Window:close()</a></h5>
+ <p>
+ Called before the window is closed<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L118">line 118 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1draw">function Window:draw(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1460">line 1460 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_saved_window_position_name">function Window:getSavedWindowPositionName()</a></h5>
+ <p>
+ Get the name of the saved window position group.<br/><br/>
+ When the user drags a window, the new position of the window is saved, and
+then when any windows in the same group are opened in the future, the position
+of the new window is set to the saved position. By default, each window class
+is its own group, but by overriding this method, that can be changed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1608">line 1608 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_tooltip_at">function Window:getTooltipAt(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Tooltips are either associated with buttons, panels, or a region.
+(see Button:setTooltip, Panel:setTooltip, Window:make[Dynamic]Tooltip)<br/><br/>
+ Button tooltips take precedence over region tooltips, which again take precedence over panels.
+Returns tooltip in form of { text = .. , x = .. , y = .. } or nil for no tooltip.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y coordinate relative to the top-left corner.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1984">line 1984 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_tooltip_for_element">function Window:getTooltipForElement(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ An 'element' can either be a panel, a button, or a tooltip region.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">elem</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1968">line 1968 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_window">function Window:getWindow(<span class="p">window_class</span>)</a></h5>
+ <p>
+ Searches (direct) child windows for window of the given class, and returns
+one (or nil if there weren't any at all).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window_class</td>
+ <td class="t">class</td>
+ <td class="d"> The class of window to search for.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L526">line 526 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1get_windows">function Window:getWindows(<span class="p">window_class</span>)</a></h5>
+ <p>
+ Searches (direct) child windows for window of the given class, and returns
+a (potentially empty) list of matching windows.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window_class</td>
+ <td class="t">class</td>
+ <td class="d"> The class of window to search for.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L539">line 539 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1hit_test">function Window:hitTest(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Used to test if the window has a (non-transparent) pixel at the given position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X coordinate of the pixel to test, relative to the
+top-left corner of the window.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y coordinate of the pixel to test, relative to the
+top-left corner of the window.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1531">line 1531 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1hit_test_panel">function Window:hitTestPanel(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">panel</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1515">line 1515 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_button_on_panel">function Window:makeButtonOnPanel(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)</a></h5>
+ <p>
+ Convert a static panel into a clickable button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">panel</td>
+ <td class="t">Panel</td>
+ <td class="d"> The panel to convert into a button.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X coordinate of the clickable rectangle on the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y coordinate of the clickable rectangle on the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">w</td>
+ <td class="t">integer</td>
+ <td class="d"> The width of the clickable rectangle on the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">h</td>
+ <td class="t">integer</td>
+ <td class="d"> The height of the clickable rectangle on the panel.</td>
+ </tr>
+ <tr>
+ <td class="n">sprite</td>
+ <td class="t">integer</td>
+ <td class="d"> An index into the window's sprite sheet. The panel will
+display this sprite when the button is being pressed.</td>
+ </tr>
+ <tr>
+ <td class="n">on_click</td>
+ <td class="t">function</td>
+ <td class="d"> The function to be run when the user left-clicks the
+button. Takes three arguments: `on_click_self`, the toggle state (nil for
+normal buttons, true/false for toggle buttons), the button itself.</td>
+ </tr>
+ <tr>
+ <td class="n">on_click_self</td>
+ <td class="t">function&nbsp;or&nbsp;nil</td>
+ <td class="d"> The first value to pass to `on_click`. If
+nil or not given, then the window is passed as the first argument.</td>
+ </tr>
+ <tr>
+ <td class="n">on_rightclick</td>
+ <td class="t">function&nbsp;or&nbsp;nil</td>
+ <td class="d"> The function to be called when the user
+right-clicks the button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L746">line 746 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_dynamic_tooltip">function Window:makeDynamicTooltip(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)</a></h5>
+ <p>
+ Create a dynamic tooltip to be displayed in a certain region.<br/><br/>
+ tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function</td>
+ <td class="d"> A function that returns the string to display or nil for no tooltip.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">r</td>
+ <td class="t">integer</td>
+ <td class="d"> The right (X + width) coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">b</td>
+ <td class="t">integer</td>
+ <td class="d"> The bottom (Y + height) coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">tooltip_x</td>
+ <td class="t">integer</td>
+ <td class="d"> [optional] The X coordinate to display the tooltip at.</td>
+ </tr>
+ <tr>
+ <td class="n">tooltip_y</td>
+ <td class="t">integer</td>
+ <td class="d"> [optional] The Y coordinate to display the tooltip at.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1949">line 1949 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_hotkey_box_on_panel">function Window:makeHotkeyBoxOnPanel(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)</a></h5>
+ <p>
+ Convert a static panel into a hotkeybox.<br/><br/>
+ hotkeyboxes consist of the panel given as a parameter, which is made into a
+ToggleButton automatically, and handle keyboard input while active.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">panel</td>
+ <td class="t">panel</td>
+ <td class="d"> The panel that will serve as the hotkeybox base.</td>
+ </tr>
+ <tr>
+ <td class="n">confirm_callback</td>
+ <td class="t">function</td>
+ <td class="d"> The function to call when text is confirmed.</td>
+ </tr>
+ <tr>
+ <td class="n">abort_callback</td>
+ <td class="t">function</td>
+ <td class="d"> The function to call when entering is aborted.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1422">line 1422 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_scrollbar_on_panel">function Window:makeScrollbarOnPanel(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)</a></h5>
+ <p>
+ Convert a static panel into a scrollbar.<br/><br/>
+ Scrollbars consist of a base panel (the panel given as a parameter)
+and an additional slider panel (automatically created BevelPanel).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">panel</td>
+ <td class="t">panel</td>
+ <td class="d"> The panel that will serve as the scrollbar base.</td>
+ </tr>
+ <tr>
+ <td class="n">slider_colour</td>
+ <td class="t">colour&nbsp;or&nbsp;in&nbsp;or&nbsp;form&nbsp;or&nbsp;red&nbsp;or&nbsp;green&nbsp;or&nbsp;and&nbsp;or&nbsp;blue</td>
+ <td class="d"> The colour for the slider.</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">function</td>
+ <td class="d"> Function that is called whenever the slider position changes.</td>
+ </tr>
+ <tr>
+ <td class="n">min_value</td>
+ <td class="t">integer</td>
+ <td class="d"> The minimum value the scrollbar can represent.</td>
+ </tr>
+ <tr>
+ <td class="n">max_value</td>
+ <td class="t">integer</td>
+ <td class="d"> The maximum value the scrollbar can represent.</td>
+ </tr>
+ <tr>
+ <td class="n">page_size</td>
+ <td class="t">integer</td>
+ <td class="d"> The amount of objects represented on one page.</td>
+ </tr>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">integer&nbsp;or&nbsp;nil</td>
+ <td class="d"> The current value, or min_value if not specified.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L871">line 871 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_textbox_on_panel">function Window:makeTextboxOnPanel(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)</a></h5>
+ <p>
+ Convert a static panel into a textbox.<br/><br/>
+ Textboxes consist of the panel given as a parameter, which is made into a
+ToggleButton automatically, and handle keyboard input while active.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">panel</td>
+ <td class="t">panel</td>
+ <td class="d"> The panel that will serve as the textbox base.</td>
+ </tr>
+ <tr>
+ <td class="n">confirm_callback</td>
+ <td class="t">function</td>
+ <td class="d"> The function to call when text is confirmed.</td>
+ </tr>
+ <tr>
+ <td class="n">abort_callback</td>
+ <td class="t">function</td>
+ <td class="d"> The function to call when entering is aborted.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1263">line 1263 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1make_tooltip">function Window:makeTooltip(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)</a></h5>
+ <p>
+ Create a static (non-changeable) tooltip to be displayed in a certain region.<br/><br/>
+ tooltip_x and tooltip_y are optional; if not specified, it will default to top center of region.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">text</td>
+ <td class="t">string</td>
+ <td class="d"> The string to display.</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The X coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The Y coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">r</td>
+ <td class="t">integer</td>
+ <td class="d"> The right (X + width) coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">b</td>
+ <td class="t">integer</td>
+ <td class="d"> The bottom (Y + height) coordinate relative to the top-left corner.</td>
+ </tr>
+ <tr>
+ <td class="n">tooltip_x</td>
+ <td class="t">integer</td>
+ <td class="d"> [optional] The X coordinate to display the tooltip at.</td>
+ </tr>
+ <tr>
+ <td class="n">tooltip_y</td>
+ <td class="t">integer</td>
+ <td class="d"> [optional] The Y coordinate to display the tooltip at.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1930">line 1930 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1must_pause">function Window:mustPause()</a></h5>
+ <p>
+ Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L62">line 62 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_change_language">function Window:onChangeLanguage()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1495">line 1495 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_change_resolution">function Window:onChangeResolution()</a></h5>
+ <p>
+ Called after the resolution of the game window changes<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L111">line 111 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_cursor_world_position_change">function Window:onCursorWorldPositionChange(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1503">line 1503 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_mouse_down">function Window:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1558">line 1558 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_mouse_move">function Window:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ Called when the user moves the mouse.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">integer</td>
+ <td class="d"> The new X coordinate of the cursor, relative to the top-left
+corner of the window.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">integer</td>
+ <td class="d"> The new Y coordinate of the cursor, relative to the top-left
+corner of the window.</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">integer</td>
+ <td class="d"> The number of pixels which the cursor moved horizontally.</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">integer</td>
+ <td class="d"> The number of pixels which the cursor moved vertically.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1751">line 1751 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_mouse_up">function Window:onMouseUp(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1618">line 1618 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_mouse_wheel">function Window:onMouseWheel(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1673">line 1673 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_tick">function Window:onTick()</a></h5>
+ <p>
+ Called regularly at a rate independent of the game speed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1812">line 1812 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1on_world_tick">function Window:onWorldTick()</a></h5>
+ <p>
+ Called regularly at the same rate that entities are ticked.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1851">line 1851 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1remove_all_panels">function Window:removeAllPanels()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L385">line 385 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1remove_key_handler">function Window:removeKeyHandler(<span class="p">keys</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">keys</td>
+ <td class="t">string&nbsp;or&nbsp;or&nbsp;or&nbsp;table</td>
+ <td class="d"> The key or a list containing the key & its modifiers,
+previously passed to Window:addKeyHandler(keys).</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L144">line 144 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1remove_window">function Window:removeWindow(<span class="p">window</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L510">line 510 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1send_to_bottom">function Window:sendToBottom(<span class="p">window</span>)</a></h5>
+ <p>
+ Tell the window to bring the specified sub-window to its bottom<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1898">line 1898 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1send_to_top">function Window:sendToTop(<span class="p">window</span>)</a></h5>
+ <p>
+ Tell the window to bring the specified sub-window to its top<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">window</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1867">line 1867 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1set_default_position">function Window:setDefaultPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Sets the window's default onscreen position and onscreen position.
+The given x and y are interpreted as for setPosition(x, y), and are the
+default position for the window. If the user has previously repositioned a
+window of the same type, then setDefaultPosition() will set the window to
+that previous position, otherwise it sets it to the default position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L93">line 93 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1set_position">function Window:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Sets the window's onscreen position. Each of x and y can be:
+Integers >= 0 - Absolute pixel positions of top/left edge of window relative
+to top/left edge of screen
+Integers < 0 - Absolute pixel positions of right/bottom edge of window
+relative to right/bottom edge of screen. Use -0.1 to mean -0.
+Reals in [0, 1) -<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L67">line 67 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1start_button_blinking">function Window:startButtonBlinking(<span class="p">button_index</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button_index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1911">line 1911 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_window_1stop_button_blinking">function Window:stopButtonBlinking()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L1919">line 1919 of Lua/window.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

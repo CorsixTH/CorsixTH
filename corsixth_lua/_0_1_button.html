@@ -1,0 +1,376 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Button Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Button Class</h2>
+<h3 class="class">A region of a `Panel` which causes some action when clicked.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L554">line 554 of Lua/window.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1enable">enable</a>(<span class="p">enable</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1handle_click">handleClick</a>(<span class="p">mouse_button</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1make_repeat">makeRepeat</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1make_toggle">makeToggle</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1preserve_panel">preservePanel</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_disabled_sprite">setDisabledSprite</a>(<span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_dynamic_tooltip">setDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_label">setLabel</a>(<span class="p">label</span>, <span class="p">font</span>, <span class="p">align</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_sound">setSound</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_toggle_state">setToggleState</a>(<span class="p">state</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_tooltip">setTooltip</a>(<span class="p">tooltip</span>, <span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1set_visible">setVisible</a>(<span class="p">visibility</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_button.html#_0_1_button_1toggle">toggle</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">b</span>
+ </li>
+ <li><span class="p">enabled</span>
+ </li>
+ <li><span class="p">is_repeat</span>
+ </li>
+ <li><span class="p">is_toggle</span>
+ </li>
+ <li><span class="p">on_click</span>
+ </li>
+ <li><span class="p">on_click_self</span>
+ </li>
+ <li><span class="p">on_rightclick</span>
+ </li>
+ <li><span class="p">panel_for_sprite</span>
+ </li>
+ <li><span class="p">panel_lowered_active</span>
+ </li>
+ <li><span class="p">panel_lowered_normal</span>
+ </li>
+ <li><span class="p">r</span>
+ </li>
+ <li><span class="p">sound</span>
+ </li>
+ <li><span class="p">sprite_index_active</span>
+ </li>
+ <li><span class="p">sprite_index_disabled</span>
+ </li>
+ <li><span class="p">sprite_index_normal</span>
+ </li>
+ <li><span class="p">toggled</span>
+ </li>
+ <li><span class="p">tooltip</span>
+ </li>
+ <li><span class="p">ui</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_button_1_button">function Button:Button()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L560">line 560 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1enable">function Button:enable(<span class="p">enable</span>)</a></h5>
+ <p>
+ Enable or disable a button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enable</td>
+ <td class="t">boolean</td>
+ <td class="d"> Whether to enable (true) or disable (false) the button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L588">line 588 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1handle_click">function Button:handleClick(<span class="p">mouse_button</span>)</a></h5>
+ <p>
+ this or another button). However for repeat buttons, it is called once on MouseDown and, after<br/><br/>
+ a short delay, repeatedly.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mouse_button</td>
+ <td class="t">string</td>
+ <td class="d"> either "left" or "right"</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L681">line 681 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1make_repeat">function Button:makeRepeat()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L616">line 616 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1make_toggle">function Button:makeToggle()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L609">line 609 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1preserve_panel">function Button:preservePanel()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L644">line 644 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_disabled_sprite">function Button:setDisabledSprite(<span class="p">index</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L583">line 583 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_dynamic_tooltip">function Button:setDynamicTooltip(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L672">line 672 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_label">function Button:setLabel(<span class="p">label</span>, <span class="p">font</span>, <span class="p">align</span>)</a></h5>
+ <p>
+ Convenience function to allow setLabel to be called on a button, not only its panel.<br/><br/>
+ see Panel:setLabel<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">label</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">font</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">align</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L739">line 739 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_position">function Button:setPosition(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Set the position of a button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> New horizontal position of the button.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> New vertical position of the button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L705">line 705 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_size">function Button:setSize(<span class="p">width</span>, <span class="p">height</span>)</a></h5>
+ <p>
+ Set the size of a button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">width</td>
+ <td class="t">int</td>
+ <td class="d"> New width of the button.</td>
+ </tr>
+ <tr>
+ <td class="n">height</td>
+ <td class="t">int</td>
+ <td class="d"> New height of the button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L720">line 720 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_sound">function Button:setSound(<span class="p">name</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L651">line 651 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_toggle_state">function Button:setToggleState(<span class="p">state</span>)</a></h5>
+ <p>
+ Set the toggle state of the button to the provided state.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">state</td>
+ <td class="t">boolean</td>
+ <td class="d"> Desired state of the toggle button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L635">line 635 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_tooltip">function Button:setTooltip(<span class="p">tooltip</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Specify a tooltip to be displayed when hovering this button.
+x and y are optional position of bottom left of the tooltip.
+If not specified, will default to top center of button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">tooltip</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L660">line 660 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1set_visible">function Button:setVisible(<span class="p">visibility</span>)</a></h5>
+ <p>
+ Set the visibility of the button.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">visibility</td>
+ <td class="t">bool</td>
+ <td class="d"> New visibility of the button.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L733">line 733 of Lua/window.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_button_1toggle">function Button:toggle()</a></h5>
+ <p>
+ Flip the toggle state of the button (on -> off, or off -> on).<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/window.lua#L623">line 623 of Lua/window.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

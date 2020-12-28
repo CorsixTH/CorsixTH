@@ -1,0 +1,669 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Class Hierarchy - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li class="active"><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ The following inheritance tree gives all classes present in the source code, in alphabetical order at each level, along with short descriptions.
+<ul class="class_hierarchy">
+ <li>
+ <span><a href="_0_1_animation_manager.html" class="class">AnimationManager</a> - Utility class for setting animation markers and querying animation length.</span>
+</li>
+ <li>
+ <span><a href="_0_1_announcement_entry.html" class="class">AnnouncementEntry</a> - An announcement.</span>
+</li>
+ <li>
+ <span><a href="_0_1_announcement_queue.html" class="class">AnnouncementQueue</a> - An announcement queue based on priority</span>
+</li>
+ <li>
+ <span><a href="_0_1_announcer.html" class="class">Announcer</a> - Announces audible messages to the player.</span>
+</li>
+ <li>
+ <span><a href="_0_1_app.html" class="class">App</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_audio.html" class="class">Audio</a> - Layer which handles the Lua-facing side of loading and playing audio.</span>
+</li>
+ <li>
+ <span><a href="_0_1_button.html" class="class">Button</a> - A region of a `Panel` which causes some action when clicked.</span>
+</li>
+ <li>
+ <span><a href="_0_1_calls_dispatcher.html" class="class">CallsDispatcher</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_cheats.html" class="class">Cheats</a> - A holder for all cheats in the game</span>
+</li>
+ <li>
+ <span><a href="_0_1_date.html" class="class">Date</a> - Date class is meant to encapsulate logic around months, years, days, hours.
+ It should be able to do adjustments with regards to days in given month and so on.
+ Date objects should be immutable and that is why date adjustments return new objects
+ instead of modifying the current one.</span>
+</li>
+ <li>
+ <span><a href="_0_1_entity.html" class="class">Entity</a> - Abstraction for visible gameplay things which sit somewhere on the map.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_humanoid.html" class="class">Humanoid</a> - An `Entity` which occupies a single tile and is capable of moving around the map.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_grim_reaper.html" class="class">GrimReaper</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_inspector.html" class="class">Inspector</a> - An `Inspector` is called to the hospital after an epidemic to issue a report</span>
+</li>
+ <li>
+ <span><a href="_0_1_patient.html" class="class">Patient</a> - A `Humanoid` who is in the hospital for diagnosis and/or treatment.</span>
+</li>
+ <li>
+ <span><a href="_0_1_staff.html" class="class">Staff</a> - A Doctor, Nurse, Receptionist, Handyman, or Surgeon</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_doctor.html" class="class">Doctor</a> - A Doctor (Researcher,Surgan,Psychologist)</span>
+</li>
+ <li>
+ <span><a href="_0_1_handyman.html" class="class">Handyman</a> - A Doctor, Nurse, Receptionist, Handyman, or Surgeon</span>
+</li>
+ <li>
+ <span><a href="_0_1_nurse.html" class="class">Nurse</a> - A Doctor, Nurse, Receptionist, Handyman, or Surgeon</span>
+</li>
+ <li>
+ <span><a href="_0_1_receptionist.html" class="class">Receptionist</a> - A Doctor, Nurse, Receptionist, Handyman, or Surgeon</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_vip.html" class="class">Vip</a> - A `Vip` who is in the hospital to evaluate the hospital and produce a report</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_litter.html" class="class">Litter</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_object.html" class="class">Object</a> - An `Entity` which occupies at least a single map tile and does not move.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_atom_analyser.html" class="class">AtomAnalyser</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_bench.html" class="class">Bench</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_chair.html" class="class">Chair</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_door.html" class="class">Door</a></span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_swing_door.html" class="class">SwingDoor</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_entrance_door.html" class="class">EntranceDoor</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_helicopter.html" class="class">Helicopter</a> - An `Object` which drops off emergency patients.</span>
+</li>
+ <li>
+ <span><a href="_0_1_machine.html" class="class">Machine</a> - An `Object` which needs occasional repair (to prevent explosion).</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_operating_table.html" class="class">OperatingTable</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_operating_sink.html" class="class">OperatingSink</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_plant.html" class="class">Plant</a> - An `Object` which needs watering now and then.</span>
+</li>
+ <li>
+ <span><a href="_0_1_radiation_shield.html" class="class">RadiationShield</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_rathole.html" class="class">Rathole</a> - For ratholes:
+1904: hole in north wall
+1908: rat moving north
+1910: rat moving north-east
+1912: rat moving east
+1914: rat moving south-east
+1916: rat moving south
+1918: rat moving south-west
+1920: rat moving west
+1922: rat moving north-west
+1924: rat entering hole north wall
+1926: rat entering hole west wall
+1928: rat leaving hole north wall</span>
+</li>
+ <li>
+ <span><a href="_0_1_reception_desk.html" class="class">ReceptionDesk</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_side_object.html" class="class">SideObject</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_surgeon_screen.html" class="class">SurgeonScreen</a></span>
+</li>
+ </ul>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_entity_map.html" class="class">EntityMap</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_epidemic.html" class="class">Epidemic</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_file_system.html" class="class">FileSystem</a> - Layer for abstracting away differences in file systems.
+In the traditional case, the FileSystem is associated with a path on the
+actual filesystem, from which all other operations are considered relative.
+The FileSystem is also able to delegate operations to the ISO_FS library
+in the engine for reading / listing files off an ISO image instead of a
+file system.</span>
+</li>
+ <li>
+ <span><a href="_0_1_graphics.html" class="class">Graphics</a> - Layer for loading (and subsequently caching) graphical resources.</span>
+</li>
+ <li>
+ <span><a href="_0_1_hospital.html" class="class">Hospital</a></span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_a_i_hospital.html" class="class">AIHospital</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_player_hospital.html" class="class">PlayerHospital</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_hotkey_box.html" class="class">HotkeyBox</a> - A window element used to accept hotkey configurations.</span>
+</li>
+ <li>
+ <span><a href="_0_1_humanoid_action.html" class="class">HumanoidAction</a> - Humanoid action base class.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_answer_call_action.html" class="class">AnswerCallAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_call_check_point_action.html" class="class">CallCheckPointAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_check_watch_action.html" class="class">CheckWatchAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_die_action.html" class="class">DieAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_falling_action.html" class="class">FallingAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_get_up_action.html" class="class">GetUpAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_idle_action.html" class="class">IdleAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_idle_spawn_action.html" class="class">IdleSpawnAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_knock_door_action.html" class="class">KnockDoorAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_meander_action.html" class="class">MeanderAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_multi_use_object_action.html" class="class">MultiUseObjectAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_on_ground_action.html" class="class">OnGroundAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_pee_action.html" class="class">PeeAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_pickup_action.html" class="class">PickupAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_queue_action.html" class="class">QueueAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_seek_reception_action.html" class="class">SeekReceptionAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_seek_room_action.html" class="class">SeekRoomAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_seek_staff_room_action.html" class="class">SeekStaffRoomAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_seek_toilets_action.html" class="class">SeekToiletsAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_shake_fist_action.html" class="class">ShakeFistAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_spawn_action.html" class="class">SpawnAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_staff_reception_action.html" class="class">StaffReceptionAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_sweep_floor_action.html" class="class">SweepFloorAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_tap_foot_action.html" class="class">TapFootAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_use_object_action.html" class="class">UseObjectAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_use_screen_action.html" class="class">UseScreenAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_use_staff_room_action.html" class="class">UseStaffRoomAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_vaccinate_action.html" class="class">VaccinateAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_vip_go_to_next_room_action.html" class="class">VipGoToNextRoomAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_vomit_action.html" class="class">VomitAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_walk_action.html" class="class">WalkAction</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_yawn_action.html" class="class">YawnAction</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_map.html" class="class">Map</a> - Lua extensions to the C++ THMap class</span>
+</li>
+ <li>
+ <span><a href="_0_1_movie_player.html" class="class">MoviePlayer</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_panel.html" class="class">Panel</a> - The basic component which makes up most `Window`s.</span>
+</li>
+ <li>
+ <span><a href="_0_1_queue.html" class="class">Queue</a> - Manages a list of `Humanoid`s which are waiting to use an `Object`.</span>
+</li>
+ <li>
+ <span><a href="_0_1_research_department.html" class="class">ResearchDepartment</a> - Notes about research speed.
+Original game times at 20 % in all categories with a medium doctor at level 3:
+Slicer discovered in about 120 days. (10000 points)
+Pump improved in about 60 days. (30000 points * 20 % as first improvement)
+Invisibility improved in about 90 days. (10000 points)
+Note that the original requires a nurse and a pharmacy before drugs
+get improved. On the other hand it appears that the research is
+stored for future use anyway.
+--</span>
+</li>
+ <li>
+ <span><a href="_0_1_room.html" class="class">Room</a></span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_blood_machine_room.html" class="class">BloodMachineRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_cardiogram_room.html" class="class">CardiogramRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_d_n_a_fixer_room.html" class="class">DNAFixerRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_decontamination_room.html" class="class">DecontaminationRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_electrolysis_room.html" class="class">ElectrolysisRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_fracture_room.html" class="class">FractureRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_g_p_room.html" class="class">GPRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_general_diag_room.html" class="class">GeneralDiagRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_hair_restoration_room.html" class="class">HairRestorationRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_inflation_room.html" class="class">InflationRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_jelly_vat_room.html" class="class">JellyVatRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_operating_theatre_room.html" class="class">OperatingTheatreRoom</a> - TODO: There is also an unused sound
+"Another surgeon needed [...]", reqd011.wav
+room.handyman_call_sound = "maint007.wav" TODO: No sound for this room?</span>
+</li>
+ <li>
+ <span><a href="_0_1_pharmacy_room.html" class="class">PharmacyRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_psych_room.html" class="class">PsychRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_research_room.html" class="class">ResearchRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_scanner_room.html" class="class">ScannerRoom</a> - Handyman is called to "diagnosis machine", all other diagnosis rooms have
+their own, more specific handyman call though
+room.handyman_call_sound = "maint011.wav"</span>
+</li>
+ <li>
+ <span><a href="_0_1_slack_tongue_room.html" class="class">SlackTongueRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_staff_room.html" class="class">StaffRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_toilet_room.html" class="class">ToiletRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_training_room.html" class="class">TrainingRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_ultrascan_room.html" class="class">UltrascanRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_ward_room.html" class="class">WardRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_x_ray_room.html" class="class">XRayRoom</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_scrollbar.html" class="class">Scrollbar</a> - A window element used to scroll in lists</span>
+</li>
+ <li>
+ <span><a href="_0_1_staff_profile.html" class="class">StaffProfile</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_strings.html" class="class">Strings</a> - Layer which handles the loading of localised text.</span>
+</li>
+ <li>
+ <span><a href="_0_1_textbox.html" class="class">Textbox</a> - A window element used to enter text</span>
+</li>
+ <li>
+ <span><a href="_0_1_tree_node.html" class="class">TreeNode</a> - Interface for items within a UI tree control</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_dummy_root_node.html" class="class">DummyRootNode</a> - A tree node which can be used as a root node to give the effect of having
+multiple root nodes.</span>
+</li>
+ <li>
+ <span><a href="_0_1_file_tree_node.html" class="class">FileTreeNode</a> - A tree node representing a file (or directory) in the physical file-system.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_dir_tree_node.html" class="class">DirTreeNode</a> - A tree node representing a directory in the physical file-system.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_install_dir_tree_node.html" class="class">InstallDirTreeNode</a> - This tree only shows directories and highlights valid TH directories.</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_filtered_file_tree_node.html" class="class">FilteredFileTreeNode</a> - A tree node representing a file (or directory) in the physical file-system
+that meets a given file extension criterion.</span>
+</li>
+ </ul>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_menu.html" class="class">UIMenu</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_window.html" class="class">Window</a> - Base class for user-interface dialogs.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_tree_control.html" class="class">TreeControl</a> - A control (to be placed on a window) which allows the user to navigate a
+tree of items and select one item from it.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_filtered_tree_control.html" class="class">FilteredTreeControl</a> - A sortable tree control that accommodates a certain file type and also possibly shows
+their last modification dates.</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i.html" class="class">UI</a> - Top-level container for all other user-interface components.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_game_u_i.html" class="class">GameUI</a> - Variant of UI for running games</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_adviser.html" class="class">UIAdviser</a> - The (ideally) helpful advisor who pops up from the bottom dialog during a game.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_bottom_panel.html" class="class">UIBottomPanel</a> - The multi-purpose panel for launching dialogs / screens and dynamic information.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_build_room.html" class="class">UIBuildRoom</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_confirm_dialog.html" class="class">UIConfirmDialog</a> - Dialog for "Are you sure you want to quit?" and similar yes/no questions.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_fullscreen.html" class="class">UIFullscreen</a> - Base class for 640x480px dialogs (fullscreen in original game resolution).</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_u_i_annual_report.html" class="class">UIAnnualReport</a> - Annual Report fullscreen window shown at the start of each year.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_bank_manager.html" class="class">UIBankManager</a> - Bank manager (for loans / insurance companies) and bank statement fullscreen windows.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_casebook.html" class="class">UICasebook</a> - Drug Casebook fullscreen window (view disease statistics and set prices).</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_fax.html" class="class">UIFax</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_graphs.html" class="class">UIGraphs</a> - Charts fullscreen window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_policy.html" class="class">UIPolicy</a> - Hospital policy fullscreen window (set staff tiredness and patient cure thresholds, etc.).</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_progress_report.html" class="class">UIProgressReport</a> - Progress Report fullscreen window (check level goals, competitors and alerts).</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_research.html" class="class">UIResearch</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_staff_management.html" class="class">UIStaffManagement</a> - Staff management screen</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_town_map.html" class="class">UITownMap</a> - Town map fullscreen window (purchase land, set radiator levels, map overview).</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_furnish_corridor.html" class="class">UIFurnishCorridor</a> - Dialog for purchasing `Object`s (for the corridor or for rooms).</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_hire_staff.html" class="class">UIHireStaff</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_information.html" class="class">UIInformation</a> - Dialog that informs the player of for example what the goals for the level are.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_jukebox.html" class="class">UIJukebox</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_machine.html" class="class">UIMachine</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_menu_bar.html" class="class">UIMenuBar</a> - The ingame menu bar which sits (nominally hidden) at the top of the screen.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_message.html" class="class">UIMessage</a> - Small fax notification window which sits on the bottom bar.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_patient.html" class="class">UIPatient</a> - Individual patient information dialog</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_place_objects.html" class="class">UIPlaceObjects</a> - The dialog shown when placing objects.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_u_i_edit_room.html" class="class">UIEditRoom</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_place_staff.html" class="class">UIPlaceStaff</a> - Invisible window which handles placing a `Staff` member in the world.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_queue.html" class="class">UIQueue</a> - Room / door / reception desk queue visualisation dialog.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_queue_popup.html" class="class">UIQueuePopup</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_resizable.html" class="class">UIResizable</a> - Class for resizable windows.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_u_i_calls_dispatcher.html" class="class">UICallsDispatcher</a> - Calls Dispatcher Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_cheats.html" class="class">UICheats</a> - A dialog for activating cheats</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_customise.html" class="class">UICustomise</a> - Customise window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_directory_browser.html" class="class">UIDirectoryBrowser</a> - Prompter for Theme Hospital install directory</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_dropdown.html" class="class">UIDropdown</a> - Dropdown "window" used for selection of one item from a list.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_file_browser.html" class="class">UIFileBrowser</a> - A file browser with a scrollbar. Used by load_game and save_game.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_u_i_choose_font.html" class="class">UIChooseFont</a> - Window where the user can choose a font file.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_load_game.html" class="class">UILoadGame</a> - Load Game Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_load_map.html" class="class">UILoadMap</a> - Load Map Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_save_game.html" class="class">UISaveGame</a> - Save Game Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_save_map.html" class="class">UISaveMap</a> - Save Map Window</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_folder.html" class="class">UIFolder</a> - Customise window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_hotkey_assign.html" class="class">UIHotkeyAssign</a> - Customise window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_hotkey_assign___panels.html" class="class">UIHotkeyAssign_Panels</a> - Assign panel keys window.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_hotkey_assign__store_recall_pos.html" class="class">UIHotkeyAssign_storeRecallPos</a> - Customise window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_lua_console.html" class="class">UILuaConsole</a> - Interactive Lua Console for ingame debugging.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_main_menu.html" class="class">UIMainMenu</a> - Class for main menu window.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_map_editor.html" class="class">UIMapEditor</a></span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_menu_list.html" class="class">UIMenuList</a> - A menu list with a scrollbar. Used by load_game, save_game and custom_game.</span>
+ <ul class="subclass_hierarchy">
+ <li>
+ <span><a href="_0_1_u_i_custom_campaign.html" class="class">UICustomCampaign</a> - Custom Campaign Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_custom_game.html" class="class">UICustomGame</a> - Custom Game Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_make_debug_patient.html" class="class">UIMakeDebugPatient</a></span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_new_game.html" class="class">UINewGame</a> - Class for the difficulty choice window.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_options.html" class="class">UIOptions</a> - Options window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_resolution.html" class="class">UIResolution</a> - A custom resolution selection window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_scroll_speed.html" class="class">UIScrollSpeed</a> - A window for setting the scroll speed of the camera.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_shift_scroll_speed.html" class="class">UIShiftScrollSpeed</a> - A window for setting the scroll speed of the camera while pressing the SHIFT key..</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_tip_of_the_day.html" class="class">UITipOfTheDay</a> - Tip of the Day Window</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_update.html" class="class">UIUpdate</a> - Options window used in the main menu and ingame.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_zoom_speed.html" class="class">UIZoomSpeed</a> - Window to set the zoom speed of the scroll wheel while in-game.</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_staff.html" class="class">UIStaff</a> - Individual staff information dialog</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_staff_rise.html" class="class">UIStaffRise</a> - Dialog for staff member requesting a salaray raise.</span>
+</li>
+ <li>
+ <span><a href="_0_1_u_i_watch.html" class="class">UIWatch</a> - Timer / clock / watch / countdown dialog for emergencies / level start</span>
+</li>
+ </ul>
+</li>
+ <li>
+ <span><a href="_0_1_world.html" class="class">World</a> - Manages entities, rooms, and the date.</span>
+</li>
+</ul>
+ </div>
+ </body>
+</html>

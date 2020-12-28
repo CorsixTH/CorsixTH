@@ -1,0 +1,261 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>TreeNode Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">TreeNode Class</h2>
+<h3 class="class">Interface for items within a UI tree control</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L21">line 21 of Lua/dialogs/tree_ctrl.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_dummy_root_node.html">DummyRootNode</a>, <a href="_0_1_file_tree_node.html">FileTreeNode</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1contract">contract</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1expand">expand</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_by_index">getChildByIndex</a>(<span class="p">idx</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_child_count">getChildCount</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_control">getControl</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_highlight_colour">getHighlightColour</a>(<span class="p">canvas</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_index_of_child">getIndexOfChild</a>(<span class="p">child</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_label">getLabel</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_level">getLevel</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_next_visible">getNextVisible</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_parent">getParent</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_prev_visible">getPrevVisible</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1get_select_colour">getSelectColour</a>(<span class="p">canvas</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1has_children">hasChildren</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1is_expanded">isExpanded</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_tree_node.html#_0_1_tree_node_1num_visible_descendants">numVisibleDescendants</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">control</span>
+ </li>
+ <li><span class="p">hidden</span>
+ </li>
+ <li><span class="p">is_expanded</span>
+ </li>
+ <li><span class="p">level</span>
+ </li>
+ <li><span class="p">num_visible_descendants</span>
+ </li>
+ <li><span class="p">parent</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1_tree_node">function TreeNode:TreeNode()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L27">line 27 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1contract">function TreeNode:contract()</a></h5>
+ <p>
+ Make the children of the item invisible<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L104">line 104 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1expand">function TreeNode:expand()</a></h5>
+ <p>
+ Make the children of the item visible<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L86">line 86 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_child_by_index">function TreeNode:getChildByIndex(<span class="p">idx</span>)</a></h5>
+ <p>
+ Get a child of the item.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">idx</td>
+ <td class="t">integer</td>
+ <td class="d"> An integer between 1 and getChildCount() (inclusive).</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L44">line 44 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_child_count">function TreeNode:getChildCount()</a></h5>
+ <p>
+ Get the number of childrem which the item has<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L32">line 32 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_control">function TreeNode:getControl()</a></h5>
+ <p>
+ Get the tree control within which the item is displayed<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L66">line 66 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_highlight_colour">function TreeNode:getHighlightColour(<span class="p">canvas</span>)</a></h5>
+ <p>
+ Get the background colour for when the item is highlighted<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L76">line 76 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_index_of_child">function TreeNode:getIndexOfChild(<span class="p">child</span>)</a></h5>
+ <p>
+ Given a child of the item, determine which index it is<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">child</td>
+ <td class="t">TreeNode</td>
+ <td class="d"> A value returned from getChildByIndex()</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L50">line 50 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_label">function TreeNode:getLabel()</a></h5>
+ <p>
+ Get the text to be displayed for the item<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L56">line 56 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_level">function TreeNode:getLevel()</a></h5>
+ <p>
+ Get the depth from the root item to this item.<br/><br/>
+ The root item has level 0, its direct children have level 1, etc.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L127">line 127 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_next_visible">function TreeNode:getNextVisible()</a></h5>
+ <p>
+ Get the next item in the on-screen display order<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L165">line 165 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_parent">function TreeNode:getParent()</a></h5>
+ <p>
+ Get the item's parent, if it has one<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L61">line 61 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_prev_visible">function TreeNode:getPrevVisible()</a></h5>
+ <p>
+ Get the previous item in the on-screen display order<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L143">line 143 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1get_select_colour">function TreeNode:getSelectColour(<span class="p">canvas</span>)</a></h5>
+ <p>
+ Get the background colour for when the item is selected<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L81">line 81 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1has_children">function TreeNode:hasChildren()</a></h5>
+ <p>
+ Query if the item has any children at all.<br/><br/>
+ The simple way of doing this is checking if getChildCount() is non-zero,
+but often this can be implemented in a more efficient manner.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L37">line 37 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1is_expanded">function TreeNode:isExpanded()</a></h5>
+ <p>
+ Query whether the item's children are visible<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L71">line 71 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_tree_node_1num_visible_descendants">function TreeNode:numVisibleDescendants()</a></h5>
+ <p>
+ The number of visible items in the set of this item and all its descendants<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/tree_ctrl.lua#L118">line 118 of Lua/dialogs/tree_ctrl.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

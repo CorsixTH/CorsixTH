@@ -1,0 +1,360 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Date Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Date Class</h2>
+<h3 class="class">Date class is meant to encapsulate logic around months, years, days, hours.
+ It should be able to do adjustments with regards to days in given month and so on.
+ Date objects should be immutable and that is why date adjustments return new objects
+ instead of modifying the current one.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L21">line 21 of Lua/date.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1__adjust_day_overflow">_adjustDayOverflow</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1__adjust_hours_overflow">_adjustHoursOverflow</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1__adjust_month_overflow">_adjustMonthOverflow</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1__adjust_overflow">_adjustOverflow</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1clone">clone</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1day_of_month">dayOfMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1hour_of_day">hourOfDay</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1hours_per_day">hoursPerDay</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1is_last_day_of_month">isLastDayOfMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1is_last_day_of_year">isLastDayOfYear</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1is_same_day">isSameDay</a>(<span class="p">other</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1last_day_of_month">lastDayOfMonth</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1month_of_game">monthOfGame</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1month_of_year">monthOfYear</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1plus_days">plusDays</a>(<span class="p">increment</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1plus_hours">plusHours</a>(<span class="p">increment</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1plus_months">plusMonths</a>(<span class="p">increment</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1plus_years">plusYears</a>(<span class="p">increment</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1tostring">tostring</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_date.html#_0_1_date_1year">year</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">_day</span>
+ </li>
+ <li><span class="p">_hour</span>
+ </li>
+ <li><span class="p">_month</span>
+ </li>
+ <li><span class="p">_year</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_date_1_date">function Date:Date(<span class="p">year</span>, <span class="p">month</span>, <span class="p">day</span>, <span class="p">hour</span>)</a></h5>
+ <p>
+ Date constructor<br/><br/>
+ Date is initialized by setting year, month day and hour in this order
+the default day is 1-01-01T00 - if any of the components isn't set the
+default value is used.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">year</td>
+ <td class="t">number</td>
+ <td class="d"> year of the new date</td>
+ </tr>
+ <tr>
+ <td class="n">month</td>
+ <td class="t">number</td>
+ <td class="d"> month of the new date</td>
+ </tr>
+ <tr>
+ <td class="n">day</td>
+ <td class="t">number</td>
+ <td class="d"> day of the new date</td>
+ </tr>
+ <tr>
+ <td class="n">hour</td>
+ <td class="t">number</td>
+ <td class="d"> hour of the new date</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L63">line 63 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1__adjust_day_overflow">function Date:_adjustDayOverflow()</a></h5>
+ <p>
+ PRIVATE Adjusts the days overflows<br/><br/>
+ Method to deal with day being more or less than valid value<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L295">line 295 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1__adjust_hours_overflow">function Date:_adjustHoursOverflow()</a></h5>
+ <p>
+ PRIVATE Adjusts the hours overflows<br/><br/>
+ Method to deal with hour being more or less than valid value<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L277">line 277 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1__adjust_month_overflow">function Date:_adjustMonthOverflow()</a></h5>
+ <p>
+ PRIVATE Adjusts the months overflows<br/><br/>
+ Method to deal with month being more or less than valid value<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L312">line 312 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1__adjust_overflow">function Date:_adjustOverflow()</a></h5>
+ <p>
+ PRIVATE Adjusts all the overflows<br/><br/>
+ Normalize date to fix all the overflows of hours, days and months. This
+method is a key to date adjustments.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L322">line 322 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1clone">function Date:clone()</a></h5>
+ <p>
+ Clone the date<br/><br/>
+ Creates another instance of date with a same value<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L233">line 233 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1day_of_month">function Date:dayOfMonth()</a></h5>
+ <p>
+ Returns the day of month<br/><br/>
+ Finds out what is a current day in a date (1-31)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L159">line 159 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1hour_of_day">function Date:hourOfDay()</a></h5>
+ <p>
+ Returns the hour of the day<br/><br/>
+ Finds out what is an hour of this date starting on 0<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L179">line 179 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1hours_per_day">function Date.hoursPerDay()</a></h5>
+ <p>
+ Method returns the number of game hours in one day<br/><br/>
+ This should be use everywhere we query this information<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L51">line 51 of Lua/date.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1is_last_day_of_month">function Date:isLastDayOfMonth()</a></h5>
+ <p>
+ Checks if date is a last day of a month<br/><br/>
+ Finds out if the current day is a last day in current month with respect to
+different month lengths.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L199">line 199 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1is_last_day_of_year">function Date:isLastDayOfYear()</a></h5>
+ <p>
+ Checks if date is a last day of a year<br/><br/>
+ Finds out if the current day is a last day in current month and current month
+is a last month in a year.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L210">line 210 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1is_same_day">function Date:isSameDay(<span class="p">other</span>)</a></h5>
+ <p>
+ Checks the date<br/><br/>
+ Checks the date with another passed as a parameter, but ignores time<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">other</td>
+ <td class="t">Date</td>
+ <td class="d"> The other day to be compared</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L243">line 243 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1last_day_of_month">function Date:lastDayOfMonth()</a></h5>
+ <p>
+ Returns the last day of the current month<br/><br/>
+ This method finds the correct last day for current month of self. This number
+is also the number of days within a month. Ignores leap years.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L86">line 86 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1month_of_game">function Date:monthOfGame()</a></h5>
+ <p>
+ Returns the month of the game<br/><br/>
+ Returns the number of months started since the start of the game. This
+converts all the years to months and add them together with the started
+months.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L221">line 221 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1month_of_year">function Date:monthOfYear()</a></h5>
+ <p>
+ Returns the month of year<br/><br/>
+ Finds out what is a month of this year (1-12)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L149">line 149 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1plus_days">function Date:plusDays(<span class="p">increment</span>)</a></h5>
+ <p>
+ Adds days<br/><br/>
+ Creates a copy of self with adjusted days.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">increment</td>
+ <td class="t">number</td>
+ <td class="d"> number to adjust, can be negative</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L110">line 110 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1plus_hours">function Date:plusHours(<span class="p">increment</span>)</a></h5>
+ <p>
+ Adds hours<br/><br/>
+ Creates a copy of self with adjusted hours.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">increment</td>
+ <td class="t">number</td>
+ <td class="d"> number to adjust, can be negative</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L136">line 136 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1plus_months">function Date:plusMonths(<span class="p">increment</span>)</a></h5>
+ <p>
+ Adds months<br/><br/>
+ Creates a copy of self with adjusted months.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">increment</td>
+ <td class="t">number</td>
+ <td class="d"> number to adjust, can be negative</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L97">line 97 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1plus_years">function Date:plusYears(<span class="p">increment</span>)</a></h5>
+ <p>
+ Adds years<br/><br/>
+ Creates a copy of self with adjusted years.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">increment</td>
+ <td class="t">number</td>
+ <td class="d"> number to adjust, can be negative</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L123">line 123 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1tostring">function Date:tostring()</a></h5>
+ <p>
+ Return string representation<br/><br/>
+ Returns string representation of the date in format y-mm-ddThh<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L189">line 189 of Lua/date.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_date_1year">function Date:year()</a></h5>
+ <p>
+ Returns the year<br/><br/>
+ Finds out what is a current year of this date (1-X)<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/date.lua#L169">line 169 of Lua/date.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

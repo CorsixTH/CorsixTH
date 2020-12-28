@@ -1,0 +1,169 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>WalkAction Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">WalkAction Class</h2>
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L21">line 21 of Lua/humanoid_actions/walk.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_walk_action.html">WalkAction</a>
+ » <a href="_0_1_humanoid_action.html">HumanoidAction</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1disable_truncate">disableTruncate</a>()
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_walk_action.html#_0_1_walk_action_1enable_walking_to_vaccinate">enableWalkingToVaccinate</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_after_use">setAfterUse</a>(<span class="p">after_use</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_count">setCount</a>(<span class="p">count</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_walk_action.html#_0_1_walk_action_1set_is_entering">setIsEntering</a>(<span class="p">entering</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_is_leaving">setIsLeaving</a>(<span class="p">is_leaving</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_loop_callback">setLoopCallback</a>(<span class="p">loop_callback</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_must_happen">setMustHappen</a>(<span class="p">must_happen</span>)
+ (inherited from <a href="_0_1_humanoid_action.html">HumanoidAction</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_walk_action.html#_0_1_walk_action_1truncate_on_high_priority">truncateOnHighPriority</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">after_use</span>
+ (*)
+ </li>
+ <li><span class="p">count</span>
+ (*)
+ </li>
+ <li><span class="p">idle_must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">is_entering</span>
+ </li>
+ <li><span class="p">is_leaving</span>
+ (*)
+ </li>
+ <li><span class="p">loop_callback</span>
+ (*)
+ </li>
+ <li><span class="p">must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">name</span>
+ (*)
+ </li>
+ <li><span class="p">no_truncate</span>
+ (*)
+ </li>
+ <li><span class="p">saved_must_happen</span>
+ (*)
+ </li>
+ <li><span class="p">truncate_only_on_high_priority</span>
+ </li>
+ <li><span class="p">walking_to_vaccinate</span>
+ </li>
+ <li><span class="p">x</span>
+ </li>
+ <li><span class="p">y</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_walk_action_1_walk_action">function WalkAction:WalkAction(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Action to walk to a given position.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">int</td>
+ <td class="d"> X coordinate of the destination tile.</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">int</td>
+ <td class="d"> Y coordinate of the destination tile.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L26">line 26 of Lua/humanoid_actions/walk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_walk_action_1enable_walking_to_vaccinate">function WalkAction:enableWalkingToVaccinate()</a></h5>
+ <p>
+ Nurse is walking with the intention to vaccinate.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L46">line 46 of Lua/humanoid_actions/walk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_walk_action_1set_is_entering">function WalkAction:setIsEntering(<span class="p">entering</span>)</a></h5>
+ <p>
+ Set a flag whether the walk enters a room.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entering</td>
+ <td class="t">bool</td>
+ <td class="d"> If set or nil, set the flag of entering the room.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L53">line 53 of Lua/humanoid_actions/walk.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_walk_action_1truncate_on_high_priority">function WalkAction:truncateOnHighPriority()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_actions/walk.lua#L41">line 41 of Lua/humanoid_actions/walk.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

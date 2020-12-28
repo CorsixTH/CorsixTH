@@ -1,0 +1,568 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Audio Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Audio Class</h2>
+<h3 class="class">Layer which handles the Lua-facing side of loading and playing audio.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L29">line 29 of Lua/audio.lua</a>.
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1cache_sound_filenames_associated_with_name">cacheSoundFilenamesAssociatedWithName</a>(<span class="p">name</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1clear_callbacks">clearCallbacks</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1dump_sound_archive">dumpSoundArchive</a>(<span class="p">out_dir</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1entity_no_longer_waiting_for_sounds_to_be_turned_on">entityNoLongerWaitingForSoundsToBeTurnedOn</a>(<span class="p">entity</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1entity_sounds_handler">entitySoundsHandler</a>(<span class="p">sounds</span>, <span class="p">entity</span>, <span class="p">silences</span>, <span class="p">silences_pointer</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1find_index_of_current_track">findIndexOfCurrentTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1init">init</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1init_speech">initSpeech</a>(<span class="p">speech_file</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1notify_jukebox">notifyJukebox</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1on_end_pause">onEndPause</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1on_music_over">onMusicOver</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1on_sound_played">onSoundPlayed</a>(<span class="p">played_callbacks_id</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1pause_background_track">pauseBackgroundTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_background_track">playBackgroundTrack</a>(<span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_entity_sounds">playEntitySounds</a>(<span class="p">names</span>, <span class="p">entity</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_next_background_track">playNextBackgroundTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_next_or_previous_background_track">playNextOrPreviousBackgroundTrack</a>(<span class="p">direction</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_previous_background_track">playPreviousBackgroundTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_random_background_track">playRandomBackgroundTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">where</span>, <span class="p">is_announcement</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1play_sound_effects">playSoundEffects</a>(<span class="p">play_effects</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1release_channel">releaseChannel</a>(<span class="p">channel</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1reserve_channel">reserveChannel</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1set_announcement_volume">setAnnouncementVolume</a>(<span class="p">volume</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1set_background_volume">setBackgroundVolume</a>(<span class="p">volume</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1set_sound_volume">setSoundVolume</a>(<span class="p">volume</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1sound_exists">soundExists</a>(<span class="p">sound</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1stop_background_track">stopBackgroundTrack</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_audio.html#_0_1_audio_1tell_interested_entities_they_can_now_play_sounds">tellInterestedEntitiesTheyCanNowPlaySounds</a>()
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">background_music</span>
+ </li>
+ <li><span class="p">background_paused</span>
+ </li>
+ <li><span class="p">background_playlist</span>
+ </li>
+ <li><span class="p">entities_waiting_for_sound_to_be_enabled</span>
+ </li>
+ <li><span class="p">has_bg_music</span>
+ </li>
+ <li><span class="p">load_music</span>
+ </li>
+ <li><span class="p">not_loaded</span>
+ </li>
+ <li><span class="p">old_bg_music_volume</span>
+ </li>
+ <li><span class="p">played_sound_callbacks</span>
+ </li>
+ <li><span class="p">sound_archive</span>
+ </li>
+ <li><span class="p">sound_fx</span>
+ </li>
+ <li><span class="p">speech_file_name</span>
+ </li>
+ <li><span class="p">unused_played_callback_id</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_audio_1_audio">function Audio:Audio(<span class="p">app</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L35">line 35 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1cache_sound_filenames_associated_with_name">function Audio:cacheSoundFilenamesAssociatedWithName(<span class="p">name</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L292">line 292 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1clear_callbacks">function Audio:clearCallbacks()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L45">line 45 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1dump_sound_archive">function Audio:dumpSoundArchive(<span class="p">out_dir</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">out_dir</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L236">line 236 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1entity_no_longer_waiting_for_sounds_to_be_turned_on">function Audio:entityNoLongerWaitingForSoundsToBeTurnedOn(<span class="p">entity</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L643">line 643 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1entity_sounds_handler">function Audio:entitySoundsHandler(<span class="p">sounds</span>, <span class="p">entity</span>, <span class="p">silences</span>, <span class="p">silences_pointer</span>)</a></h5>
+ <p>
+ Called by the above function.
+This function's integer array parameters for the min and max silence lengths should provide lengths
+for this game's different speeds, indexed as follows:
+[1] Slowest [2] Slow [3] Normal [4] Fast [5] Maximum Speed<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sounds</td>
+ <td class="t">string</td>
+ <td class="d"> A name pattern for the sequence of related sounds to be played for example: LAVA00*.wav</td>
+ </tr>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">: Where the sounds will be played at, the player won't hear the sounds being played at the entity
+when it isn't in their view.</td>
+ </tr>
+ <tr>
+ <td class="n">silences</td>
+ <td class="t">integer&nbsp;or&nbsp;array</td>
+ <td class="d"> the different pause durations to be used between the played sounds.</td>
+ </tr>
+ <tr>
+ <td class="n">silences_pointer</td>
+ <td class="t">integer</td>
+ <td class="d"> the index for the pause duration which should be used after this call's sound has been played.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L361">line 361 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1find_index_of_current_track">function Audio:findIndexOfCurrentTrack()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L450">line 450 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1init">function Audio:init()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L61">line 61 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1init_speech">function Audio:initSpeech(<span class="p">speech_file</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">speech_file</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L181">line 181 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1notify_jukebox">function Audio:notifyJukebox()</a></h5>
+ <p>
+ search for jukebox and notify it to update its play button<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L651">line 651 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1on_end_pause">function Audio:onEndPause()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L406">line 406 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1on_music_over">function Audio:onMusicOver()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L597">line 597 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1on_sound_played">function Audio:onSoundPlayed(<span class="p">played_callbacks_id</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">played_callbacks_id</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L412">line 412 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1pause_background_track">function Audio:pauseBackgroundTrack()</a></h5>
+ <p>
+ Returns whether music is currently paused or not after the call.<br/><br/>
+ If nil is returned music might either be playing or completely stopped.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L490">line 490 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_background_track">function Audio:playBackgroundTrack(<span class="p">index</span>)</a></h5>
+ <p>
+ Plays a given background track.<br/><br/>
+ Playback will only start if the configuration says it's ok. (play_music = true)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">Index of the track to play in the playlist.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L548">line 548 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_entity_sounds">function Audio:playEntitySounds(<span class="p">names</span>, <span class="p">entity</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)</a></h5>
+ <p>
+ Plays related sounds at an entity in a random sequence, with random length silences between the sounds.
+This function's integer array parameters for the min and max silence lengths should provide lengths
+for this game's different speeds, indexed as follows:
+[1] Slowest [2] Slow [3] Normal [4] Fast [5] Maximum Speed<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">names</td>
+ <td class="t">string</td>
+ <td class="d"> A name pattern for the sequence of related sounds to be played for example: LAVA00*.wav</td>
+ </tr>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">: Where the sounds will be played at, the player won't hear the sounds being played at the entity
+when it isn't in their view.</td>
+ </tr>
+ <tr>
+ <td class="n">min_silence_lengths</td>
+ <td class="t">integer&nbsp;or&nbsp;array</td>
+ <td class="d"> The desired minimum silence lengths for this game's different speeds.</td>
+ </tr>
+ <tr>
+ <td class="n">max_silence_lengths</td>
+ <td class="t">integer&nbsp;or&nbsp;array</td>
+ <td class="d"> The desired maximum silence lengths for this game's different speeds.</td>
+ </tr>
+ <tr>
+ <td class="n">num_silences</td>
+ <td class="t">integer</td>
+ <td class="d"> How many different silence lengths should be used, this can be a nil parameter.
+--</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L335">line 335 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_next_background_track">function Audio:playNextBackgroundTrack()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L482">line 482 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_next_or_previous_background_track">function Audio:playNextOrPreviousBackgroundTrack(<span class="p">direction</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">direction</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L460">line 460 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_previous_background_track">function Audio:playPreviousBackgroundTrack()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L486">line 486 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_random_background_track">function Audio:playRandomBackgroundTrack()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L433">line 433 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_sound">function Audio:playSound(<span class="p">name</span>, <span class="p">where</span>, <span class="p">is_announcement</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">where</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">is_announcement</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L259">line 259 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1play_sound_effects">function Audio:playSoundEffects(<span class="p">play_effects</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">play_effects</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L622">line 622 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1release_channel">function Audio:releaseChannel(<span class="p">channel</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">channel</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L667">line 667 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1reserve_channel">function Audio:reserveChannel()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L659">line 659 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1set_announcement_volume">function Audio:setAnnouncementVolume(<span class="p">volume</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">volume</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L647">line 647 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1set_background_volume">function Audio:setBackgroundVolume(<span class="p">volume</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">volume</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L604">line 604 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1set_sound_volume">function Audio:setSoundVolume(<span class="p">volume</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">volume</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L613">line 613 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1sound_exists">function Audio:soundExists(<span class="p">sound</span>)</a></h5>
+ <p>
+ Returns whether the given sound (either a string or a number)<br/><br/>
+ exists in the sound archive<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">sound</td>
+ <td class="t">?</td>
+ <td class="d">The sound to look for, either a string (name) or a
+number (position in the list of sounds)</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L421">line 421 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1stop_background_track">function Audio:stopBackgroundTrack()</a></h5>
+ <p>
+ Stops playing background music for the time being.<br/><br/>
+ Does not affect the configuration setting play_music.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L535">line 535 of Lua/audio.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_audio_1tell_interested_entities_they_can_now_play_sounds">function Audio:tellInterestedEntitiesTheyCanNowPlaySounds()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/audio.lua#L634">line 634 of Lua/audio.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

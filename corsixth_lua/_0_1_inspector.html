@@ -1,0 +1,512 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Inspector Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Inspector Class</h2>
+<h3 class="class">An `Inspector` is called to the hospital after an epidemic to issue a report</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L25">line 25 of Lua/entities/humanoids/inspector.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_inspector.html">Inspector</a>
+ » <a href="_0_1_humanoid.html">Humanoid</a>
+ » <a href="_0_1_entity.html">Entity</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1__tick">_tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1announce">announce</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1change_attribute">changeAttribute</a>(<span class="p">attribute</span>, <span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1clear_dynamic_info">clearDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1despawn">despawn</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1dump">dump</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1erase_object">eraseObject</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1finish_action">finishAction</a>(<span class="p">action</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_current_action">getCurrentAction</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_current_mood">getCurrentMood</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_drawing_layer">getDrawingLayer</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1get_dynamic_info">getDynamicInfo</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_idle_animation">getIdleAnimation</a>(<span class="p">humanoid_class</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1get_room">getRoom</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1go_home">goHome</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1going_to_use_object">goingToUseObject</a>(<span class="p">object_type</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1handle_removed_object">handleRemovedObject</a>(<span class="p">object</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1has_leaving_action">hasLeavingAction</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_leaving">isLeaving</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1is_mood_active">isMoodActive</a>(<span class="p">mood</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1notify_new_room">notifyNewRoom</a>(<span class="p">room</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1notify_of_staff_change">notifyOfStaffChange</a>(<span class="p">staff</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1on_click">onClick</a>(<span class="p">ui</span>, <span class="p">button</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1on_destroy">onDestroy</a>()
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1on_destroy">Humanoid:onDestroy</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_after_load_sound">playAfterLoadSound</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_entity_sounds">playEntitySounds</a>(<span class="p">name_pattern</span>, <span class="p">min_silence_lengths</span>, <span class="p">max_silence_lengths</span>, <span class="p">num_silences</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1queue_action">queueAction</a>(<span class="p">action</span>, <span class="p">pos</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_room_build_callback">registerRoomBuildCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_room_remove_callback">registerRoomRemoveCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1register_staff_change_callback">registerStaffChangeCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1reset_animation">resetAnimation</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_animation">setAnimation</a>(<span class="p">animation</span>, <span class="p">flags</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_call_completed">setCallCompleted</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_dynamic_info">setDynamicInfo</a>(<span class="p">type</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_hospital">setHospital</a>(<span class="p">hospital</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_layer">setLayer</a>(<span class="p">layer</span>, <span class="p">id</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_mood">setMood</a>(<span class="p">mood_name</span>, <span class="p">activate</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_mood_info">setMoodInfo</a>(<span class="p">new_mood</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_next_action">setNextAction</a>(<span class="p">action</span>, <span class="p">high_priority</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_speed">setSpeed</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile">setTile</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_tile_position_speed">setTilePositionSpeed</a>(<span class="p">tx</span>, <span class="p">ty</span>, <span class="p">px</span>, <span class="p">py</span>, <span class="p">sx</span>, <span class="p">sy</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_timer">setTimer</a>(<span class="p">tick_count</span>, <span class="p">f</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1set_type">setType</a>(<span class="p">humanoid_class</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1set_waiting_for_sound_effects_to_be_turned_on">setWaitingForSoundEffectsToBeTurnedOn</a>(<span class="p">state</span>)
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_entity.html#_0_1_entity_1tick">tick</a>()
+ (inherited from <a href="_0_1_entity.html">Entity</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1tick_day">tickDay</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1tire">tire</a>(<span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1tostring">tostring</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unexpect_from_room">unexpectFromRoom</a>(<span class="p">dest_room</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_callbacks">unregisterCallbacks</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_room_build_callback">unregisterRoomBuildCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_room_remove_callback">unregisterRoomRemoveCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1unregister_staff_change_callback">unregisterStaffChangeCallback</a>(<span class="p">callback</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_inspector.html#_0_1_inspector_1update_dynamic_info">updateDynamicInfo</a>(<span class="p">action_string</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1update_speed">updateSpeed</a>()
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1wake">wake</a>(<span class="p">amount</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_humanoid.html#_0_1_humanoid_1walk_to">walkTo</a>(<span class="p">tile_x</span>, <span class="p">tile_y</span>, <span class="p">must_happen</span>)
+ (inherited from <a href="_0_1_humanoid.html">Humanoid</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">action_queue</span>
+ (*)
+ </li>
+ <li><span class="p">active_moods</span>
+ (*)
+ </li>
+ <li><span class="p">animation_flags</span>
+ (*)
+ </li>
+ <li><span class="p">animation_idx</span>
+ (*)
+ </li>
+ <li><span class="p">associated_desk</span>
+ (*)
+ </li>
+ <li><span class="p">attributes</span>
+ (*)
+ </li>
+ <li><span class="p">build_callback</span>
+ (*)
+ </li>
+ <li><span class="p">build_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">check_watch_anim</span>
+ (*)
+ </li>
+ <li><span class="p">die_anims</span>
+ (*)
+ </li>
+ <li><span class="p">door_anims</span>
+ (*)
+ </li>
+ <li><span class="p">dynamic_info</span>
+ (*)
+ </li>
+ <li><span class="p">falling_anim</span>
+ (*)
+ </li>
+ <li><span class="p">get_up_anim</span>
+ (*)
+ </li>
+ <li><span class="p">going_home</span>
+ </li>
+ <li><span class="p">has_been_announced</span>
+ </li>
+ <li><span class="p">has_fallen</span>
+ (*)
+ </li>
+ <li><span class="p">has_vomitted</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">hover_cursor</span>
+ </li>
+ <li><span class="p">humanoid_class</span>
+ (*)
+ </li>
+ <li><span class="p">in_room</span>
+ (*)
+ </li>
+ <li><span class="p">last_hospital</span>
+ </li>
+ <li><span class="p">last_move_direction</span>
+ (*)
+ </li>
+ <li><span class="p">layers</span>
+ (*)
+ </li>
+ <li><span class="p">message_callback</span>
+ (*)
+ </li>
+ <li><span class="p">mood_info</span>
+ (*)
+ </li>
+ <li><span class="p">next_room_to_visit</span>
+ (*)
+ </li>
+ <li><span class="p">num_animation_ticks</span>
+ (*)
+ </li>
+ <li><span class="p">on_call</span>
+ (*)
+ </li>
+ <li><span class="p">on_ground_anim</span>
+ (*)
+ </li>
+ <li><span class="p">pee_anim</span>
+ (*)
+ </li>
+ <li><span class="p">permanent_flags</span>
+ (*)
+ </li>
+ <li><span class="p">playing_sounds_in_random_sequence</span>
+ (*)
+ </li>
+ <li><span class="p">previous_action</span>
+ (*)
+ </li>
+ <li><span class="p">profile</span>
+ (*)
+ </li>
+ <li><span class="p">random_sound_sequence_parameters</span>
+ (*)
+ </li>
+ <li><span class="p">remove_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">shake_fist_anim</span>
+ (*)
+ </li>
+ <li><span class="p">should_knock_on_doors</span>
+ (*)
+ </li>
+ <li><span class="p">skip_next_tick</span>
+ (*)
+ </li>
+ <li><span class="p">slow_animation</span>
+ (*)
+ </li>
+ <li><span class="p">speed</span>
+ (*)
+ </li>
+ <li><span class="p">staff_change_callbacks</span>
+ (*)
+ </li>
+ <li><span class="p">tap_foot_anim</span>
+ (*)
+ </li>
+ <li><span class="p">th</span>
+ (*)
+ </li>
+ <li><span class="p">ticks</span>
+ (*)
+ </li>
+ <li><span class="p">tile_x</span>
+ (*)
+ </li>
+ <li><span class="p">tile_y</span>
+ (*)
+ </li>
+ <li><span class="p">timer_function</span>
+ (*)
+ </li>
+ <li><span class="p">timer_time</span>
+ (*)
+ </li>
+ <li><span class="p">toilet_callback</span>
+ (*)
+ </li>
+ <li><span class="p">user_of</span>
+ (*)
+ </li>
+ <li><span class="p">vomit_anim</span>
+ (*)
+ </li>
+ <li><span class="p">waiting_for_sound_effects_to_be_turned_on</span>
+ (*)
+ </li>
+ <li><span class="p">walk_anims</span>
+ (*)
+ </li>
+ <li><span class="p">world</span>
+ </li>
+ <li><span class="p">yawn_anim</span>
+ (*)
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_inspector_1_inspector">function Inspector:Inspector(<span class="p">...</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L31">line 31 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1announce">function Inspector:announce()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L60">line 60 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1go_home">function Inspector:goHome()</a></h5>
+ <p>
+ Sends the inspector home<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L42">line 42 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1on_destroy">function Inspector:onDestroy()</a></h5>
+ <p>
+ Called when the inspector has left the map<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1on_destroy">Humanoid:onDestroy</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L55">line 55 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_inspector_1update_dynamic_info">function Inspector:updateDynamicInfo(<span class="p">action_string</span>)</a></h5>
+ <p>
+ Labels the inspector as the "Health Inspector"<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action_string</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/inspector.lua#L37">line 37 of Lua/entities/humanoids/inspector.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>Queue Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">Queue Class</h2>
+<h3 class="class">Manages a list of `Humanoid`s which are waiting to use an `Object`.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L21">line 21 of Lua/queue.lua</a>.
+ <br/><strong>Full description:</strong><br/> A queue stores a list of humanoids waiting to use an object.
+For a reception desk, this is as expected.
+For a room, the queue is for the door, not the room. Hence the queue stores
+the list of patients waiting to enter (the traditional queue for the room),
+the list of staff waiting to enter (because of the door being in use for
+example), the list of staff and patients waiting to leave (again due to door
+being in use).
+Queues are currently implemented as normal Lua arrays, but you should access
+a queue via its methods rather than directly. 
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1back">back</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1decrease_max_size">decreaseMaxSize</a>(<span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1expect">expect</a>(<span class="p">humanoid</span>, <span class="p">callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1expected_size">expectedSize</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1front">front</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1has_emergency_patient">hasEmergencyPatient</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1increase_max_size">increaseMaxSize</a>(<span class="p">amount</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1is_full">isFull</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1move">move</a>(<span class="p">index</span>, <span class="p">new_index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1move_patient">movePatient</a>(<span class="p">index</span>, <span class="p">new_index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1patient_size">patientSize</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1pop">pop</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1push">push</a>(<span class="p">humanoid</span>, <span class="p">callbacks_on</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1remove">remove</a>(<span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1remove_value">removeValue</a>(<span class="p">value</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1reported_humanoid">reportedHumanoid</a>(<span class="p">index</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1reported_size">reportedSize</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1reroute_all_patients">rerouteAllPatients</a>(<span class="p">action</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1set_bench_threshold">setBenchThreshold</a>(<span class="p">standing_count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1set_max_queue">setMaxQueue</a>(<span class="p">queue_count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1set_priority_for_same_room">setPriorityForSameRoom</a>(<span class="p">entity</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1size">size</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_queue.html#_0_1_queue_1unexpect">unexpect</a>(<span class="p">humanoid</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">bench_threshold</span>
+ </li>
+ <li><span class="p">callbacks</span>
+ </li>
+ <li><span class="p">expected</span>
+ </li>
+ <li><span class="p">expected_count</span>
+ </li>
+ <li><span class="p">max_size</span>
+ </li>
+ <li><span class="p">reported_size</span>
+ </li>
+ <li><span class="p">same_room_priority</span>
+ </li>
+ <li><span class="p">visitor_count</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_queue_1_queue">function Queue:Queue()</a></h5>
+ <p>
+ Constructor of a queue.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L36">line 36 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1back">function Queue:back()</a></h5>
+ <p>
+ Get the last person in the queue (queue is not changed).<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L213">line 213 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1decrease_max_size">function Queue:decreaseMaxSize(<span class="p">amount</span>)</a></h5>
+ <p>
+ Lower the max queue length.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">int</td>
+ <td class="d"> Decrement length value of the queue.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L72">line 72 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1expect">function Queue:expect(<span class="p">humanoid</span>, <span class="p">callback</span>)</a></h5>
+ <p>
+ A humanoid is expected in a queue.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">- any humanoid expected for the room</td>
+ </tr>
+ <tr>
+ <td class="n">callback</td>
+ <td class="t">?</td>
+ <td class="d">- register a callback for when queue is 'destroyed'</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L47">line 47 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1expected_size">function Queue:expectedSize()</a></h5>
+ <p>
+ Get the number of expected patients.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L118">line 118 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1front">function Queue:front()</a></h5>
+ <p>
+ Get the first person in the queue (queue is not changed).<br/><br/>
+ Note that first person may not be a patient, use Queue:reportedHumanoid to get patients<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L206">line 206 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1has_emergency_patient">function Queue:hasEmergencyPatient()</a></h5>
+ <p>
+ Check if the queue has an emergency patient.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L124">line 124 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1increase_max_size">function Queue:increaseMaxSize(<span class="p">amount</span>)</a></h5>
+ <p>
+ Increase max queue length.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">amount</td>
+ <td class="t">int</td>
+ <td class="d"> Increment length value of the queue.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L78">line 78 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1is_full">function Queue:isFull()</a></h5>
+ <p>
+ Retrieve whether the queue is full.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L106">line 106 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1move">function Queue:move(<span class="p">index</span>, <span class="p">new_index</span>)</a></h5>
+ <p>
+ Move the person at position 'index' to position 'new_index'.<br/><br/>
+ Persons between 'index' and 'new_index' move one place to 'index'.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">int</td>
+ <td class="d"> Index number of the person to move.</td>
+ </tr>
+ <tr>
+ <td class="n">new_index</td>
+ <td class="t">int</td>
+ <td class="d"> Destination of the person being moved.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L280">line 280 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1move_patient">function Queue:movePatient(<span class="p">index</span>, <span class="p">new_index</span>)</a></h5>
+ <p>
+ Persons between 'index' and 'new_index' move one place to 'index'.<br/><br/>
+ Values are relative to the reported humanoids in the queue<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">int</td>
+ <td class="d"> Index number of the person to move.</td>
+ </tr>
+ <tr>
+ <td class="n">new_index</td>
+ <td class="t">string</td>
+ <td class="d"> 'front' or 'back' as relative markers</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L304">line 304 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1patient_size">function Queue:patientSize()</a></h5>
+ <p>
+ Retrieve the total number of queued and expected patients.
+return (int) Number of patients.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L135">line 135 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1pop">function Queue:pop()</a></h5>
+ <p>
+ Pop first person from the queue.<br/><br/>
+ Note that first person may not be a patient, use Queue:reportedHumanoid to get patients<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L219">line 219 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1push">function Queue:push(<span class="p">humanoid</span>, <span class="p">callbacks_on</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">callbacks_on</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L152">line 152 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1remove">function Queue:remove(<span class="p">index</span>)</a></h5>
+ <p>
+ Remove person from the queue by index number.<br/><br/>
+ Note that the person may not be a patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">jnt</td>
+ <td class="d"> Index in the queue of the person to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L243">line 243 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1remove_value">function Queue:removeValue(<span class="p">value</span>)</a></h5>
+ <p>
+ Remove a person by value from the queue.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">value</td>
+ <td class="t">?</td>
+ <td class="d">Person to remove.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L267">line 267 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1reported_humanoid">function Queue:reportedHumanoid(<span class="p">index</span>)</a></h5>
+ <p>
+ Get the 'index' real patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">int</td>
+ <td class="d"> Index of the patient to retrieve (runs up to Queue:reportedSize).</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L141">line 141 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1reported_size">function Queue:reportedSize()</a></h5>
+ <p>
+ Get the number of real patients in the queue.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L112">line 112 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1reroute_all_patients">function Queue:rerouteAllPatients(<span class="p">action</span>)</a></h5>
+ <p>
+ Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">action</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L324">line 324 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1set_bench_threshold">function Queue:setBenchThreshold(<span class="p">standing_count</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">standing_count</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L84">line 84 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1set_max_queue">function Queue:setMaxQueue(<span class="p">queue_count</span>)</a></h5>
+ <p>
+ Set max queue length.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">queue_count</td>
+ <td class="t">int</td>
+ <td class="d"> New max queue length to set.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L88">line 88 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1set_priority_for_same_room">function Queue:setPriorityForSameRoom(<span class="p">entity</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">entity</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L148">line 148 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1size">function Queue:size()</a></h5>
+ <p>
+ Total size of the queue, which are various people wanting in or out of the room.<br/><br/>
+ For a true patient queue count, use Queue:reportedSize.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L94">line 94 of Lua/queue.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_queue_1unexpect">function Queue:unexpect(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ A humanoid is canceled as expected in a queue.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">- Humanoid that is not coming to this queue.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L60">line 60 of Lua/queue.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

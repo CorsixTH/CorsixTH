@@ -1,0 +1,1393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>GameUI Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">GameUI Class</h2>
+<h3 class="class">Variant of UI for running games</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L24">line 24 of Lua/game_ui.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_game_u_i.html">GameUI</a>
+ » <a href="_0_1_u_i.html">UI</a>
+ » <a href="_0_1_window.html">Window</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1_screen_to_world">ScreenToWorld</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1_world_to_screen">WorldToScreen</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1able_to_click_entity">ableToClickEntity</a>(<span class="p">entity</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_colour_panel">addColourPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">r</span>, <span class="p">g</span>, <span class="p">b</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_key_handler">addKeyHandler</a>(<span class="p">keys</span>, <span class="p">window</span>, <span class="p">callback</span>, <span class="p">...</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_or_remove_debug_mode_key_handlers">addOrRemoveDebugModeKeyHandlers</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1add_panel">addPanel</a>(<span class="p">sprite_index</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1add_window">addWindow</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1after_load">UI:afterLoad</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1apply_transparency">applyTransparency</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1begin_shake_screen">beginShakeScreen</a>(<span class="p">intensity</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1calculate_minimum_zoom">calculateMinimumZoom</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1change_resolution">changeResolution</a>(<span class="p">width</span>, <span class="p">height</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1close_window">closeWindow</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1connect_debugger">connectDebugger</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1draw">draw</a>(<span class="p">canvas</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1draw">UI:draw</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1draw_tooltip">drawTooltip</a>(<span class="p">canvas</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1end_shake_screen">endShakeScreen</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1exit_application">exitApplication</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1get_cursor_position">getCursorPosition</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1get_screen_offset">getScreenOffset</a>()
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1get_screen_offset">UI:getScreenOffset</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_at">getTooltipAt</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_tooltip_for_element">getTooltipForElement</a>(<span class="p">elem</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_window">getWindow</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1get_windows">getWindows</a>(<span class="p">window_class</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1init_key_and_button_codes">initKeyAndButtonCodes</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1key_speed_up">keySpeedUp</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1key_transparent">keyTransparent</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1limit_camera">limitCamera</a>(<span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1limit_point_to_diamond">limitPointToDiamond</a>(<span class="p">dx</span>, <span class="p">dy</span>, <span class="p">visible_diamond</span>, <span class="p">do_limit</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_button_on_panel">makeButtonOnPanel</a>(<span class="p">panel</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">sprite</span>, <span class="p">on_click</span>, <span class="p">on_click_self</span>, <span class="p">on_rightclick</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1make_debug_fax">makeDebugFax</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_dynamic_tooltip">makeDynamicTooltip</a>(<span class="p">callback</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_hotkey_box_on_panel">makeHotkeyBoxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1make_screenshot">makeScreenshot</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_scrollbar_on_panel">makeScrollbarOnPanel</a>(<span class="p">panel</span>, <span class="p">slider_colour</span>, <span class="p">callback</span>, <span class="p">min_value</span>, <span class="p">max_value</span>, <span class="p">page_size</span>, <span class="p">value</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_textbox_on_panel">makeTextboxOnPanel</a>(<span class="p">panel</span>, <span class="p">confirm_callback</span>, <span class="p">abort_callback</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1make_tooltip">makeTooltip</a>(<span class="p">text</span>, <span class="p">x</span>, <span class="p">y</span>, <span class="p">r</span>, <span class="p">b</span>, <span class="p">tooltip_x</span>, <span class="p">tooltip_y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1make_visible_diamond">makeVisibleDiamond</a>(<span class="p">scr_w</span>, <span class="p">scr_h</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1must_pause">mustPause</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_change_language">onChangeLanguage</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_change_resolution">onChangeResolution</a>()
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_change_resolution">UI:onChangeResolution</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_cursor_world_position_change">onCursorWorldPositionChange</a>()
+ (overrides <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">Window:onCursorWorldPositionChange</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_editing_text">onEditingText</a>(<span class="p">text</span>, <span class="p">start</span>, <span class="p">length</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_key_down">onKeyDown</a>(<span class="p">rawchar</span>, <span class="p">modifiers</span>, <span class="p">is_repeat</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_key_down">UI:onKeyDown</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_key_up">onKeyUp</a>(<span class="p">rawchar</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_key_up">UI:onKeyUp</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_down">onMouseDown</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_move">UI:onMouseMove</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_mouse_up">onMouseUp</a>(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_up">UI:onMouseUp</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_mouse_wheel">onMouseWheel</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_wheel">UI:onMouseWheel</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_multi_gesture">onMultiGesture</a>(<span class="p">numfingers</span>, <span class="p">dTheta</span>, <span class="p">dDist</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_multi_gesture">UI:onMultiGesture</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_text_input">onTextInput</a>(<span class="p">text</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_tick">onTick</a>()
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_tick">UI:onTick</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1on_window_active">onWindowActive</a>(<span class="p">gain</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1on_window_active">UI:onWindowActive</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1on_window_resize">onWindowResize</a>(<span class="p">width</span>, <span class="p">height</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1on_world_tick">onWorldTick</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1play_announcement">playAnnouncement</a>(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1play_announcement">UI:playAnnouncement</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1play_sound">playSound</a>(<span class="p">name</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1quit">quit</a>()
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1quit">UI:quit</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1recall_map_position">recallMapPosition</a>(<span class="p">index</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1register_hotkey_box">registerHotkeyBox</a>(<span class="p">box</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1register_text_box">registerTextBox</a>(<span class="p">box</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1release_mouse">releaseMouse</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1remove_all_panels">removeAllPanels</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1remove_key_handler">removeKeyHandler</a>(<span class="p">keys</span>, <span class="p">window</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1remove_window">removeWindow</a>(<span class="p">closing_window</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1reset_app">resetApp</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1resync">resync</a>(<span class="p">ui</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1run_debug_script">runDebugScript</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1scroll_map">scrollMap</a>(<span class="p">dx</span>, <span class="p">dy</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1scroll_map_to">scrollMapTo</a>(<span class="p">x</span>, <span class="p">y</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1send_to_top">sendToTop</a>(<span class="p">window</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_cursor">setCursor</a>(<span class="p">cursor</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_default_cursor">setDefaultCursor</a>(<span class="p">cursor</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1set_edit_room">setEditRoom</a>(<span class="p">enabled</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1set_map_recall_position">setMapRecallPosition</a>(<span class="p">index</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_menu_background">setMenuBackground</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1set_mouse_released">setMouseReleased</a>(<span class="p">released</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1set_walls_transparent">setWallsTransparent</a>(<span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1set_world_hit_test">setWorldHitTest</a>(<span class="p">mode</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1set_zoom">setZoom</a>(<span class="p">factor</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1setup_global_key_handlers">setupGlobalKeyHandlers</a>()
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1setup_global_key_handlers">UI:setupGlobalKeyHandlers</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1show_briefing">showBriefing</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1show_cheats_window">showCheatsWindow</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1show_lua_console">showLuaConsole</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1show_menu_bar">showMenuBar</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1start_tutorial">startTutorial</a>(<span class="p">chapter</span>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1stop_movie">stopMovie</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1stop_video">stopVideo</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_adviser">toggleAdviser</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_capture_mouse">toggleCaptureMouse</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_fullscreen">toggleFullscreen</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_announcements">togglePlayAnnouncements</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_music">togglePlayMusic</a>(<span class="p">item</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1toggle_play_sounds">togglePlaySounds</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1tutorial_step">tutorialStep</a>(<span class="p">chapter</span>, <span class="p">phase_from</span>, <span class="p">phase_to</span>, <span class="p">...</span>)
+ (overrides <a href="_0_1_u_i.html#_0_1_u_i_1tutorial_step">UI:tutorialStep</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1unregister_hotkey_box">unregisterHotkeyBox</a>(<span class="p">box</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1unregister_text_box">unregisterTextBox</a>(<span class="p">box</span>)
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_game_u_i.html#_0_1_game_u_i_1update_key_scroll">updateKeyScroll</a>()
+ </li>
+ <li class="inherited">
+ <a href="_0_1_u_i.html#_0_1_u_i_1update_tooltip">updateTooltip</a>()
+ (inherited from <a href="_0_1_u_i.html">UI</a>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">active_button</span>
+ (*)
+ </li>
+ <li><span class="p">active_scrollbar</span>
+ (*)
+ </li>
+ <li><span class="p">adviser</span>
+ </li>
+ <li><span class="p">announcer</span>
+ </li>
+ <li><span class="p">app</span>
+ </li>
+ <li><span class="p">background</span>
+ (*)
+ </li>
+ <li><span class="p">background_height</span>
+ (*)
+ </li>
+ <li><span class="p">background_width</span>
+ (*)
+ </li>
+ <li><span class="p">blink_counter</span>
+ (*)
+ </li>
+ <li><span class="p">blinking_button</span>
+ (*)
+ </li>
+ <li><span class="p">bottom_panel</span>
+ </li>
+ <li><span class="p">btn_repeat_delay</span>
+ (*)
+ </li>
+ <li><span class="p">button_codes</span>
+ </li>
+ <li><span class="p">buttons</span>
+ (*)
+ </li>
+ <li><span class="p">buttons_down</span>
+ </li>
+ <li><span class="p">closed</span>
+ (*)
+ </li>
+ <li><span class="p">current_momentum</span>
+ </li>
+ <li><span class="p">cursor</span>
+ </li>
+ <li><span class="p">cursor_entity</span>
+ </li>
+ <li><span class="p">cursor_room</span>
+ </li>
+ <li><span class="p">cursor_x</span>
+ </li>
+ <li><span class="p">cursor_y</span>
+ </li>
+ <li><span class="p">debug_cursor_entity</span>
+ </li>
+ <li><span class="p">default_button_sound</span>
+ (*)
+ </li>
+ <li><span class="p">default_cursor</span>
+ </li>
+ <li><span class="p">do_world_hit_test</span>
+ </li>
+ <li><span class="p">down_count</span>
+ </li>
+ <li><span class="p">down_cursor</span>
+ </li>
+ <li><span class="p">drag_mouse_move</span>
+ </li>
+ <li><span class="p">draggable</span>
+ (*)
+ </li>
+ <li><span class="p">dragging</span>
+ (*)
+ </li>
+ <li><span class="p">edit_room</span>
+ </li>
+ <li><span class="p">edit_room_cursor</span>
+ </li>
+ <li><span class="p">editing_allowed</span>
+ (*)
+ </li>
+ <li><span class="p">grab_cursor</span>
+ (*)
+ </li>
+ <li><span class="p">height</span>
+ (*)
+ </li>
+ <li><span class="p">hospital</span>
+ </li>
+ <li><span class="p">hotkeyboxes</span>
+ (*)
+ </li>
+ <li><span class="p">in_visible_diamond</span>
+ </li>
+ <li><span class="p">key_handlers</span>
+ (*)
+ </li>
+ <li><span class="p">key_noted</span>
+ (*)
+ </li>
+ <li><span class="p">key_press_handled</span>
+ (*)
+ </li>
+ <li><span class="p">key_remaps</span>
+ </li>
+ <li><span class="p">key_to_button_remaps</span>
+ </li>
+ <li><span class="p">limit_to_visible_diamond</span>
+ </li>
+ <li><span class="p">map_editor</span>
+ </li>
+ <li><span class="p">menu_bar</span>
+ </li>
+ <li><span class="p">modal_windows</span>
+ (*)
+ </li>
+ <li><span class="p">modifiers_down</span>
+ (*)
+ </li>
+ <li><span class="p">momentum</span>
+ </li>
+ <li><span class="p">mouse_released</span>
+ </li>
+ <li><span class="p">multigesturemove</span>
+ </li>
+ <li><span class="p">panel_sprites</span>
+ (*)
+ </li>
+ <li><span class="p">panels</span>
+ (*)
+ </li>
+ <li><span class="p">parent</span>
+ (*)
+ </li>
+ <li><span class="p">recallpositions</span>
+ </li>
+ <li><span class="p">screen_offset_x</span>
+ </li>
+ <li><span class="p">screen_offset_y</span>
+ </li>
+ <li><span class="p">scroll_keys</span>
+ </li>
+ <li><span class="p">scrollbars</span>
+ (*)
+ </li>
+ <li><span class="p">shake_screen_intensity</span>
+ </li>
+ <li><span class="p">shift_scroll_key_long</span>
+ </li>
+ <li><span class="p">shift_scroll_speed_pressed</span>
+ </li>
+ <li><span class="p">simulated_cursor</span>
+ </li>
+ <li><span class="p">speed_up_key_pressed</span>
+ </li>
+ <li><span class="p">temp_button_down</span>
+ (*)
+ </li>
+ <li><span class="p">textboxes</span>
+ (*)
+ </li>
+ <li><span class="p">tick_scroll_amount</span>
+ </li>
+ <li><span class="p">tick_scroll_amount_mouse</span>
+ </li>
+ <li><span class="p">tick_scroll_mult</span>
+ </li>
+ <li><span class="p">ticks_since_last_announcement</span>
+ </li>
+ <li><span class="p">tooltip</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_counter</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_font</span>
+ (*)
+ </li>
+ <li><span class="p">tooltip_regions</span>
+ (*)
+ </li>
+ <li><span class="p">transparent_walls</span>
+ </li>
+ <li><span class="p">tutorial</span>
+ </li>
+ <li><span class="p">ui</span>
+ (*)
+ </li>
+ <li><span class="p">visible</span>
+ (*)
+ </li>
+ <li><span class="p">visible_diamond</span>
+ </li>
+ <li><span class="p">waiting_cursor</span>
+ </li>
+ <li><span class="p">width</span>
+ (*)
+ </li>
+ <li><span class="p">windows</span>
+ </li>
+ <li><span class="p">x</span>
+ (*)
+ </li>
+ <li><span class="p">x_original</span>
+ (*)
+ </li>
+ <li><span class="p">y</span>
+ (*)
+ </li>
+ <li><span class="p">y_original</span>
+ (*)
+ </li>
+ <li><span class="p">zoom_factor</span>
+ </li>
+ </ul>
+ (*) only used in superclass methods
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1_game_u_i">function GameUI:GameUI(<span class="p">app</span>, <span class="p">local_hospital</span>, <span class="p">map_editor</span>)</a></h5>
+ <p>
+ Game UI constructor.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">app</td>
+ <td class="t">Application</td>
+ <td class="d"> Application object.</td>
+ </tr>
+ <tr>
+ <td class="n">local_hospital</td>
+ <td class="t">?</td>
+ <td class="d">Hospital to display</td>
+ </tr>
+ <tr>
+ <td class="n">map_editor</td>
+ <td class="t">bool</td>
+ <td class="d"> Whether the map is editable.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L44">line 44 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1_screen_to_world">function GameUI:ScreenToWorld(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L393">line 393 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1_world_to_screen">function GameUI:WorldToScreen(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L398">line 398 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1after_load">function GameUI:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1after_load">UI:afterLoad</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1197">line 1197 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1apply_transparency">function GameUI:applyTransparency()</a></h5>
+ <p>
+ Applies the current setting for wall transparency to the map<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L920">line 920 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1begin_shake_screen">function GameUI:beginShakeScreen(<span class="p">intensity</span>)</a></h5>
+ <p>
+ Start shaking the screen, e.g. an earthquake effect<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">intensity</td>
+ <td class="t">number</td>
+ <td class="d"> The magnitude of the effect, between 0 for no
+movement to 1 for significant shaking.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L903">line 903 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1calculate_minimum_zoom">function GameUI:calculateMinimumZoom()</a></h5>
+ <p>
+ makeVisibleDiamond. This function calculates the minimum zoom_factor that<br/><br/>
+ would be allowed.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L187">line 187 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1draw">function GameUI:draw(<span class="p">canvas</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">canvas</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1draw">UI:draw</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L235">line 235 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1end_shake_screen">function GameUI:endShakeScreen()</a></h5>
+ <p>
+ Stop the screen from shaking after beginShakeScreen is called.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L910">line 910 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1get_screen_offset">function GameUI:getScreenOffset()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1get_screen_offset">UI:getScreenOffset</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L406">line 406 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1key_speed_up">function GameUI:keySpeedUp()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L330">line 330 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1key_transparent">function GameUI:keyTransparent()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L335">line 335 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1limit_camera">function GameUI:limitCamera(<span class="p">mode</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L915">line 915 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1limit_point_to_diamond">function GameUI.limitPointToDiamond(<span class="p">dx</span>, <span class="p">dy</span>, <span class="p">visible_diamond</span>, <span class="p">do_limit</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">visible_diamond</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">do_limit</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L841">line 841 of Lua/game_ui.lua</a>.
+ <br/><strong>Note:</strong> Is a function rather than a method. 
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1make_debug_fax">function GameUI:makeDebugFax()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L383">line 383 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1make_visible_diamond">function GameUI:makeVisibleDiamond(<span class="p">scr_w</span>, <span class="p">scr_h</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">scr_w</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">scr_h</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L171">line 171 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_change_resolution">function GameUI:onChangeResolution()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_change_resolution">UI:onChangeResolution</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L260">line 260 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_cursor_world_position_change">function GameUI:onCursorWorldPositionChange()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">Window:onCursorWorldPositionChange</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L417">line 417 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_key_down">function GameUI:onKeyDown(<span class="p">rawchar</span>, <span class="p">modifiers</span>, <span class="p">is_repeat</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">modifiers</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">is_repeat</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_key_down">UI:onKeyDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L339">line 339 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_key_up">function GameUI:onKeyUp(<span class="p">rawchar</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">rawchar</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_key_up">UI:onKeyUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L357">line 357 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_mouse_move">function GameUI:onMouseMove(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ TODO: try to remove duplication with UI:onMouseMove<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_move">UI:onMouseMove</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L529">line 529 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_mouse_up">function GameUI:onMouseUp(<span class="p">code</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">code</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_up">UI:onMouseUp</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L623">line 623 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_mouse_wheel">function GameUI:onMouseWheel(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_mouse_wheel">UI:onMouseWheel</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L734">line 734 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_multi_gesture">function GameUI:onMultiGesture(<span class="p">numfingers</span>, <span class="p">dTheta</span>, <span class="p">dDist</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Process SDL_MULTIGESTURE events for zoom and map move functionality<br/><br/>
+ This is still more info about param x.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">numfingers</td>
+ <td class="t">integer</td>
+ <td class="d"> number of touch points, received from the SDL event</td>
+ </tr>
+ <tr>
+ <td class="n">dTheta</td>
+ <td class="t">float</td>
+ <td class="d"> rotation in radians of the gesture from the SDL event</td>
+ </tr>
+ <tr>
+ <td class="n">dDist</td>
+ <td class="t">float</td>
+ <td class="d"> magnitude of pinch from the SDL event</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">float</td>
+ <td class="d"> normalised x value of the gesture</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">float</td>
+ <td class="d"> normalised y value of the gesture</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_multi_gesture">UI:onMultiGesture</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L695">line 695 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_tick">function GameUI:onTick()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_tick">UI:onTick</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L757">line 757 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1on_window_active">function GameUI:onWindowActive(<span class="p">gain</span>)</a></h5>
+ <p>
+ Called when the mouse enters or leaves the game window.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">gain</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1on_window_active">UI:onWindowActive</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L522">line 522 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1play_announcement">function GameUI:playAnnouncement(<span class="p">name</span>, <span class="p">priority</span>, <span class="p">played_callback</span>, <span class="p">played_callback_delay</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">priority</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">played_callback_delay</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1play_announcement">UI:playAnnouncement</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L753">line 753 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1quit">function GameUI:quit()</a></h5>
+ <p>
+ Offers a confirmation window to quit the game and return to main menu
+NB: overrides UI.quit, do NOT call it from here<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1quit">UI:quit</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1248">line 1248 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1recall_map_position">function GameUI:recallMapPosition(<span class="p">index</span>)</a></h5>
+ <p>
+ Retrieves stored recall position and attempts to scroll to that position - will be limited to the bounds of the camera when zoomed out
+param index (integer) Position in recallpositions table<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1159">line 1159 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1resync">function GameUI:resync(<span class="p">ui</span>)</a></h5>
+ <p>
+ Update UI state after the UI has been depersisted<br/><br/>
+ When an UI object is depersisted, its state will reflect how the UI was at
+the moment of persistence, which may be different to the keyboard / mouse
+state at the moment of depersistence.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">ui</td>
+ <td class="t">UI</td>
+ <td class="d"> The previously existing UI object, from which values should be
+taken.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L275">line 275 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1scroll_map">function GameUI:scrollMap(<span class="p">dx</span>, <span class="p">dy</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">dx</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">dy</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L892">line 892 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1scroll_map_to">function GameUI:scrollMapTo(<span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L834">line 834 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1set_edit_room">function GameUI:setEditRoom(<span class="p">enabled</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">enabled</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1170">line 1170 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1set_map_recall_position">function GameUI:setMapRecallPosition(<span class="p">index</span>)</a></h5>
+ <p>
+ Converts centre of screen coordinates to world tile positions and stores the values for later recall
+param index (integer) Position in recallpositions table<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">index</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1152">line 1152 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1set_walls_transparent">function GameUI:setWallsTransparent(<span class="p">mode</span>)</a></h5>
+ <p>
+ Sets wall transparency to the specified parameter<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">boolean</td>
+ <td class="d"> whether to enable or disable wall transparency</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L925">line 925 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1set_world_hit_test">function GameUI:setWorldHitTest(<span class="p">mode</span>)</a></h5>
+ <p>
+ Change if the World should be tested for entities under the cursor<br/><br/>
+ to disable, room to enable only for non-door objects in given room<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">mode</td>
+ <td class="t">boolean&nbsp;or&nbsp;or&nbsp;or&nbsp;room</td>
+ <td class="d"> true to enable hit test (normal), false</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L410">line 410 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1set_zoom">function GameUI:setZoom(<span class="p">factor</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">factor</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L208">line 208 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1setup_global_key_handlers">function GameUI:setupGlobalKeyHandlers()</a></h5>
+ <p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1setup_global_key_handlers">UI:setupGlobalKeyHandlers</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L102">line 102 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1show_briefing">function GameUI:showBriefing()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1237">line 1237 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1show_cheats_window">function GameUI:showCheatsWindow()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1256">line 1256 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1show_menu_bar">function GameUI:showMenuBar()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1260">line 1260 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1start_tutorial">function GameUI:startTutorial(<span class="p">chapter</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">chapter</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1144">line 1144 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1tutorial_step">function GameUI:tutorialStep(<span class="p">chapter</span>, <span class="p">phase_from</span>, <span class="p">phase_to</span>, <span class="p">...</span>)</a></h5>
+ <p>
+ Called to trigger step to another part of the tutorial.
+chapter: Individual parts of the tutorial. Step will only happen if it's the current chapter.
+phase_from: Phase we need to be in for this step to happen. Multiple phases can be given here in an array.
+phase_to: Phase we want to step to or "next" to go to next chapter or "end" to end tutorial.
+returns true if we changed phase, false if we didn't<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">chapter</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">phase_from</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">phase_to</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">...</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i.html#_0_1_u_i_1tutorial_step">UI:tutorialStep</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L1086">line 1086 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_game_u_i_1update_key_scroll">function GameUI:updateKeyScroll()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/game_ui.lua#L306">line 306 of Lua/game_ui.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>

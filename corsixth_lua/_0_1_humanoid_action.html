@@ -1,0 +1,209 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+ <head>
+ <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <meta http-equiv="Content-Language" content="en-gb" />
+ <title>HumanoidAction Class - CorsixTH Lua Documentation</title>
+ <link rel="stylesheet" href="main.css" type="text/css" media="all" />
+ </head>
+ <body>
+ <h1>CorsixTH Lua Documentation</h1>
+ <ul class="tabs">
+ <li><a href="#">Documentation Home</a></li>
+ <li class="active"><a href="class_list.html">Classes</a></li>
+ <li><a href="file_hierarchy.html">Files</a></li>
+ <li><a href="#">Miscellaneous</a></li>
+ </ul>
+ <ul class="sections">
+ <li><a href="class_list.html">List</a></li>
+ <li><a href="class_hierarchy.html">Hierarchy</a></li>
+ <li class="last"><a href="class_index.html">Index</a></li>
+ </ul>
+ <div class="content">
+ <h2 class="class">HumanoidAction Class</h2>
+<h3 class="class">Humanoid action base class.</h3> 
+<div class="class_info">
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L21">line 21 of Lua/humanoid_action.lua</a>.
+ <br/><strong>Subclasses:</strong> <a href="_0_1_answer_call_action.html">AnswerCallAction</a>, <a href="_0_1_call_check_point_action.html">CallCheckPointAction</a>, <a href="_0_1_check_watch_action.html">CheckWatchAction</a>, <a href="_0_1_die_action.html">DieAction</a>, <a href="_0_1_falling_action.html">FallingAction</a>, <a href="_0_1_get_up_action.html">GetUpAction</a>, <a href="_0_1_idle_action.html">IdleAction</a>, <a href="_0_1_idle_spawn_action.html">IdleSpawnAction</a>, <a href="_0_1_knock_door_action.html">KnockDoorAction</a>, <a href="_0_1_meander_action.html">MeanderAction</a>, <a href="_0_1_multi_use_object_action.html">MultiUseObjectAction</a>, <a href="_0_1_on_ground_action.html">OnGroundAction</a>, <a href="_0_1_pee_action.html">PeeAction</a>, <a href="_0_1_pickup_action.html">PickupAction</a>, <a href="_0_1_queue_action.html">QueueAction</a>, <a href="_0_1_seek_reception_action.html">SeekReceptionAction</a>, <a href="_0_1_seek_room_action.html">SeekRoomAction</a>, <a href="_0_1_seek_staff_room_action.html">SeekStaffRoomAction</a>, <a href="_0_1_seek_toilets_action.html">SeekToiletsAction</a>, <a href="_0_1_shake_fist_action.html">ShakeFistAction</a>, <a href="_0_1_spawn_action.html">SpawnAction</a>, <a href="_0_1_staff_reception_action.html">StaffReceptionAction</a>, <a href="_0_1_sweep_floor_action.html">SweepFloorAction</a>, <a href="_0_1_tap_foot_action.html">TapFootAction</a>, <a href="_0_1_use_object_action.html">UseObjectAction</a>, <a href="_0_1_use_screen_action.html">UseScreenAction</a>, <a href="_0_1_use_staff_room_action.html">UseStaffRoomAction</a>, <a href="_0_1_vaccinate_action.html">VaccinateAction</a>, <a href="_0_1_vip_go_to_next_room_action.html">VipGoToNextRoomAction</a>, <a href="_0_1_vomit_action.html">VomitAction</a>, <a href="_0_1_walk_action.html">WalkAction</a>, <a href="_0_1_yawn_action.html">YawnAction</a>
+</div>
+<div class="method_list">
+ <h4>Method Index</h4>
+ <ul>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1disable_truncate">disableTruncate</a>()
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_after_use">setAfterUse</a>(<span class="p">after_use</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_count">setCount</a>(<span class="p">count</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_is_leaving">setIsLeaving</a>(<span class="p">is_leaving</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_loop_callback">setLoopCallback</a>(<span class="p">loop_callback</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_humanoid_action.html#_0_1_humanoid_action_1set_must_happen">setMustHappen</a>(<span class="p">must_happen</span>)
+ </li>
+ </ul>
+</div>
+<div class="member_list">
+ <h4>Member Index</h4>
+ <ul>
+ <li><span class="p">after_use</span>
+ </li>
+ <li><span class="p">count</span>
+ </li>
+ <li><span class="p">idle_must_happen</span>
+ </li>
+ <li><span class="p">is_entering</span>
+ </li>
+ <li><span class="p">is_leaving</span>
+ </li>
+ <li><span class="p">loop_callback</span>
+ </li>
+ <li><span class="p">must_happen</span>
+ </li>
+ <li><span class="p">name</span>
+ </li>
+ <li><span class="p">no_truncate</span>
+ </li>
+ <li><span class="p">saved_must_happen</span>
+ </li>
+ </ul>
+</div>
+<div class="methods">
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1_humanoid_action">function HumanoidAction:HumanoidAction(<span class="p">name</span>)</a></h5>
+ <p>
+ Construct a humanoid action (base class constructor).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">name</td>
+ <td class="t">str</td>
+ <td class="d"> Name of the action.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L27">line 27 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1after_load">function HumanoidAction:afterLoad(<span class="p">old</span>, <span class="p">new</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">old</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">new</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L101">line 101 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1disable_truncate">function HumanoidAction:disableTruncate()</a></h5>
+ <p>
+ Do not allow truncating the action.<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L94">line 94 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_after_use">function HumanoidAction:setAfterUse(<span class="p">after_use</span>)</a></h5>
+ <p>
+ Set the callback for performing updates afterwards.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">after_use</td>
+ <td class="t">func</td>
+ <td class="d"> Callback function that is called after the action ends.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L73">line 73 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_count">function HumanoidAction:setCount(<span class="p">count</span>)</a></h5>
+ <p>
+ Set the number of times the action should happen.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">count</td>
+ <td class="t">int&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
+ <td class="d"> Set to 'nil' if 'forever', else integer count.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L41">line 41 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_is_leaving">function HumanoidAction:setIsLeaving(<span class="p">is_leaving</span>)</a></h5>
+ <p>
+ Set whether the humanoid is leaving.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">is_leaving</td>
+ <td class="t">bool</td>
+ <td class="d"> Whether or not the humanoid is leaving. If not specified, value is true.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L84">line 84 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_loop_callback">function HumanoidAction:setLoopCallback(<span class="p">loop_callback</span>)</a></h5>
+ <p>
+ Set the callback for checking termination conditions.<br/><br/>
+ termination conditions.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">loop_callback</td>
+ <td class="t">func</td>
+ <td class="d"> Callback function that is called each iteration to check for</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L61">line 61 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_humanoid_action_1set_must_happen">function HumanoidAction:setMustHappen(<span class="p">must_happen</span>)</a></h5>
+ <p>
+ Set the 'must happen' flag (that is, action cannot be skipped).<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">must_happen</td>
+ <td class="t">bool</td>
+ <td class="d"> Whether or not the action must happen.</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/humanoid_action.lua#L51">line 51 of Lua/humanoid_action.lua</a>.
+ </p>
+ </div>
+</div>
+ </div>
+ </body>
+</html>
