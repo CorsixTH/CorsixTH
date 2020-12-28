@@ -35,14 +35,14 @@ class "SwingDoor" (Door)
 ---@type SwingDoor
 local SwingDoor = _G["SwingDoor"]
 
-function SwingDoor:SwingDoor(world, object_type, x, y, direction, etc)
+function SwingDoor:SwingDoor(hospital, object_type, x, y, direction, etc)
   self.is_master = object_type == object
-  self:Door(world, object_type, x, y, direction, etc)
+  self:Door(hospital, object_type, x, y, direction, etc)
   if self.is_master then
     -- Wait one tick before finding the slave so that we're sure it has been created.
     local --[[persistable:swing_door_creation]] function callback()
       local slave_type = "swing_door_left"
-      self.slave = world:getObject(x - 1, y, slave_type) or world:getObject(x, y - 1, slave_type) or nil
+      self.slave = self.world:getObject(x - 1, y, slave_type) or self.world:getObject(x, y - 1, slave_type) or nil
       self.slave:setAsSlave(self)
       self.ticks = false
     end
