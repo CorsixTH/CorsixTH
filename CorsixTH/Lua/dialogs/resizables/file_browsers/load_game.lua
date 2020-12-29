@@ -45,6 +45,8 @@ function UILoadGame:choiceMade(name)
   end
 end
 
+--! Output the error experience when trying to load a game
+--!param error The error given
 function UILoadGame:loadError(err)
   print(err)
   TheApp:loadMainMenu()

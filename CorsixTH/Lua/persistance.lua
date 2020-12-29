@@ -260,13 +260,14 @@ function SaveGameFile(filename)
   f:close()
 end
 
---! Loads the game's save into the game
+--! Puts loaded file into the game
+--!param data The file
 function LoadGame(data)
   --local status, res = xpcall(function()
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
-  -- Here we want to check the game we're loading is same or older than the current version
-  if not TheApp:checkCompatibility(state.world.savegame_version, state.world.release_version) then return end
+  -- Check the game we're loading is same or older than the current version
+  if not TheApp:checkCompatibility(state.world.savegame_version) then return end
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world

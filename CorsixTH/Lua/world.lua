@@ -129,8 +129,8 @@ function World:World(app)
   self.hospitals = {}
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
-  self.savegame_version = app.savegame_version
-  self.release_version = app:getVersion(self.savegame_version)
+  self.savegame_version = app.savegame_version -- Savegame version number
+  self.release_version = app:getVersion(self.savegame_version) -- Savegame release version (e.g. 0.60), or Trunk
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
