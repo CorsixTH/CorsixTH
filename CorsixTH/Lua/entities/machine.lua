@@ -30,13 +30,13 @@ class "Machine" (Object)
 ---@type Machine
 local Machine = _G["Machine"]
 
-function Machine:Machine(world, object_type, x, y, direction, etc)
+function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self.total_usage = -1 -- Incremented in the constructor of Object.
-  self:Object(world, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 
   if object_type.default_strength then
     -- Only for the main object. The slave doesn't need any strength
-    local progress = world.ui.hospital.research.research_progress[object_type]
+    local progress = self.world.ui.hospital.research.research_progress[object_type]
     self.strength = progress.start_strength
   end
 
