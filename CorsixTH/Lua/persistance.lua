@@ -266,7 +266,7 @@ function LoadGame(data)
   --local status, res = xpcall(function()
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
-  -- Check the game we're loading is same or older than the current version
+  -- Check the game we're loading is compatible with program
   if not TheApp:checkCompatibility(state.world.savegame_version) then return end
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui

@@ -1517,7 +1517,7 @@ function App:quickLoad()
   end
 end
 
---! Function to check the savegame version matches or is older than the installation of CorsixTH
+--! Function to check the loaded game is compatible with the program
 --!param save_version (num)
 --!return true if compatible, otherwise false
 function App:checkCompatibility(save_version)
@@ -1525,8 +1525,7 @@ function App:checkCompatibility(save_version)
   if app_version >= save_version or self.config.debug then
     return true
   else
-    local err = _S.errors.compatibility_error
-    UILoadGame:loadError(err)
+    UILoadGame:loadError(_S.errors.compatibility_error)
     return false
   end
 end
@@ -1591,7 +1590,7 @@ function App:afterLoad()
   end
   local first = self.world.original_savegame_version
 
-  -- Generate the human-readable version number (old [loaded save], new [game], first [original])
+  -- Generate the human-readable version number (old [loaded save], new [program], first [original])
   local first_version = first .. " (" .. self:getVersion(first) .. ")"
   local old_version = old .. " (" .. self:getVersion(old) .. ")"
   local new_version = new .. " (" .. self:getVersion() .. ")"
