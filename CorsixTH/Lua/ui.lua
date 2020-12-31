@@ -254,6 +254,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel", self, self.closeWindow)
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
+  self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -1125,6 +1126,11 @@ end
 --!return true if a window was closed
 function UI:closeWindow()
   if not self.windows then
+    return false
+  end
+
+  -- Stop the lose message being closed prematurely because we pressed "Escape" on the lose movie
+  if self.app.moviePlayer.playing then
     return false
   end
 
