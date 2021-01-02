@@ -10,7 +10,7 @@ public:
 
     THSingleton() {}
 
-private:    
+private:
     THSingleton( const THSingleton& );
 };
 
