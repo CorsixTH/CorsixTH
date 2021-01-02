@@ -29,14 +29,6 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "th_lua.h"
 
-GlobalTickCounter::GlobalTickCounter() { counter = 0; }
-
-void GlobalTickCounter::increment() { this->counter++; }
-
-void GlobalTickCounter::reset() { this->counter = 0; }
-
-uint32_t GlobalTickCounter::currentTick() { return this->counter; }
-
 namespace {
 
 int l_init(lua_State* L) {
