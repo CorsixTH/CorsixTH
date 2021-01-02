@@ -246,7 +246,6 @@ int l_mainloop(lua_State* L) {
           break;
         case SDL_USEREVENT_TICK:
           do_timer = true;
-          gTickCount.increment();
           nargs = 0;
           break;
         case SDL_USEREVENT_MOVIE_OVER:
