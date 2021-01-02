@@ -30,7 +30,6 @@ SOFTWARE.
 #include <vector>
 
 #include "lua.hpp"
-#include "singleton.h"
 
 int luaopen_th(lua_State* L);
 
