@@ -436,9 +436,8 @@ void luaT_printstack(lua_State* L);
 
 void luaT_printrawtable(lua_State* L, int idx);
 
-class GlobalTickCounter: public THSingleton<GlobalTickCounter>
-{
-  public:
+class GlobalTickCounter : public THSingleton<GlobalTickCounter> {
+ public:
   GlobalTickCounter();
 
   uint32_t currentTick();
@@ -447,8 +446,8 @@ class GlobalTickCounter: public THSingleton<GlobalTickCounter>
 
   void reset();
 
-  private:
-    volatile uint32_t counter;
+ private:
+  volatile uint32_t counter;
 };
 
 #define gTickCount GlobalTickCounter::get()

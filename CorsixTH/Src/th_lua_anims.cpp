@@ -710,7 +710,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
     lcb.add_function(l_anim_set_glowing, "setOverlay");
-    // TODO: Add Jellyatis condition overlay
+    // TODO: Add Jellyitis condition overlay
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

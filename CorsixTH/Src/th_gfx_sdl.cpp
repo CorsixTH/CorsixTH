@@ -121,31 +121,32 @@ double hueToRGB(double p, double q, double hue) {
 }
 
 // Hue is 0-360, saturation and lightness are percentage-based
-argb_colour fromHSLtoRGB(const int hue, const float saturation, const float lightness) {
-    uint8_t r, g, b = 0;
-    double q, p;
+argb_colour fromHSLtoRGB(const int hue, const float saturation,
+                         const float lightness) {
+  uint8_t r, g, b = 0;
+  double q, p;
 
-    // Convert everything to percentage
-    double h = hue / 360.0;
-    double s = saturation / 100.0;
-    double l = lightness / 100.0;
+  // Convert everything to percentage
+  double h = hue / 360.0;
+  double s = saturation / 100.0;
+  double l = lightness / 100.0;
 
-    if (s == 0) {
-      r = g = b = (int)(roundf(l) * 255);
-    } else {
-      q = l < 0.5f ? l * (1 + s) : l + s - l * s;
-      p = 2 * l - q;
+  if (s == 0) {
+    r = g = b = (int)(round(l) * 255);
+  } else {
+    q = l < 0.5f ? l * (1 + s) : l + s - l * s;
+    p = 2 * l - q;
 
-      double iR, iG, iB;
-      iR = std::min(255.0, 255 * hueToRGB(p, q, h + 1.0/3.0));
-      iG = std::min(255.0, 255 * hueToRGB(p, q, h));
-      iB = std::min(255.0, 255 * hueToRGB(p, q, h - 1.0/3.0));
-      r = static_cast<uint8_t>(iR);
-      g = static_cast<uint8_t>(iG);
-      b = static_cast<uint8_t>(iB);
-    }
+    double iR, iG, iB;
+    iR = std::min(255.0, 255 * hueToRGB(p, q, h + 1.0 / 3.0));
+    iG = std::min(255.0, 255 * hueToRGB(p, q, h));
+    iB = std::min(255.0, 255 * hueToRGB(p, q, h - 1.0 / 3.0));
+    r = static_cast<uint8_t>(iR);
+    g = static_cast<uint8_t>(iG);
+    b = static_cast<uint8_t>(iB);
+  }
 
-    return palette::pack_argb(0xFF, r, g, b);
+  return palette::pack_argb(0xFF, r, g, b);
 }
 
 }  // namespace
@@ -1108,7 +1109,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We're using increments of 10 degrees within the Sin function and converting them to rad
     // float currentVariation = sin(tickNumber*10*PI/180) * 20;
     uint32_t tick = gTickCount.currentTick();
-    float currentVariation = sin(tick*10*PI/180) * 50;
+    float currentVariation = sin(tick * 10 * PI / 180d) * 50;
 
     // Vary from 40 to 80, so we set 60 + Variation
     argb_colour newRGB = fromHSLtoRGB(125, 100, 60 + currentVariation);
