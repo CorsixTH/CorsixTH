@@ -40,6 +40,8 @@ SOFTWARE.
 // SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
 #define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
 
+#define TICKS_MS_TO_USERTICKS_CONVERSION 30
+
 int luaopen_sdl(lua_State* L);
 
 int l_load_music_async_callback(lua_State* L);
