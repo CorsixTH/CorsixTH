@@ -1113,8 +1113,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
     uint32_t tick = gTickCount.currentTick();
-    double currentVariation = 
-        sin(tick * 10 * M_PI / 180) * 50;
+    double currentVariation = sin(tick * 10 * M_PI / 180) * 50;
 
     // Vary from 40 to 80, so we set 60 + Variation
     err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
