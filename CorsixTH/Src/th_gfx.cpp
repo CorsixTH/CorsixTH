@@ -24,11 +24,11 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <iostream>
 #include <algorithm>
 #include <cassert>
 #include <climits>
 #include <cstring>
+#include <iostream>
 #include <new>
 
 #include "persist_lua.h"
