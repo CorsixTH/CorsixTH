@@ -593,7 +593,8 @@ int l_anim_draw(lua_State* L) {
 
 int l_anim_set_glowing(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
-  animation_overlay_flags flags = static_cast<animation_overlay_flags>(luaL_checkinteger(L, 2));
+  animation_overlay_flags flags =
+      static_cast<animation_overlay_flags>(luaL_checkinteger(L, 2));
   pAnimation->set_overlay(flags);
   lua_settop(L, 1);
   return 1;

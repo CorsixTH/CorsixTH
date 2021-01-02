@@ -526,7 +526,8 @@ class sprite_sheet {
       @param iFlags Flags to apply for drawing.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
-                   uint32_t iFlags, animation_overlay_flags overlayFlags = thaof_none);
+                   uint32_t iFlags,
+                   animation_overlay_flags overlayFlags = thaof_none);
 
   //! Test whether a sprite was hit.
   /*!

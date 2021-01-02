@@ -896,7 +896,8 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
-                                   uint32_t iFlags, animation_overlay_flags overlayFlags) const {
+                                   uint32_t iFlags,
+                                   animation_overlay_flags overlayFlags) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -1146,10 +1147,12 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.w = 64;
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->current_overlay_flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->current_overlay_flags);
       pCanvas->set_clip_rect(&rcOld);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->current_overlay_flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->current_overlay_flags);
   }
 }
 
@@ -1464,8 +1467,12 @@ void animation::depersist(lua_persist_reader* pReader) {
     }
 
     if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
-      if (!pReader->read_byte_stream(layers.layer_contents, MAX_NUMBER_OF_LAYERS)) break;
-      if (!pReader->read_byte_stream(nullptr, iNumLayers - MAX_NUMBER_OF_LAYERS)) break;
+      if (!pReader->read_byte_stream(layers.layer_contents,
+                                     MAX_NUMBER_OF_LAYERS))
+        break;
+      if (!pReader->read_byte_stream(nullptr,
+                                     iNumLayers - MAX_NUMBER_OF_LAYERS))
+        break;
     } else {
       if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
     }
@@ -1846,11 +1853,13 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
   }
 
   if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
-    if (!pReader->read_byte_stream(layers.layer_contents, MAX_NUMBER_OF_LAYERS)) {
+    if (!pReader->read_byte_stream(layers.layer_contents,
+                                   MAX_NUMBER_OF_LAYERS)) {
       return;
     }
 
-    if (!pReader->read_byte_stream(nullptr, iNumLayers - MAX_NUMBER_OF_LAYERS)) {
+    if (!pReader->read_byte_stream(nullptr,
+                                   iNumLayers - MAX_NUMBER_OF_LAYERS)) {
       return;
     }
   } else {

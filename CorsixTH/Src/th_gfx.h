@@ -29,8 +29,8 @@ SOFTWARE.
 #include <string>
 #include <vector>
 
-#include "th_gfx_common.h"
 #include "th.h"
+#include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
 
 class lua_persist_reader;
@@ -334,8 +334,8 @@ class animation_manager {
       @param iFlags Zero or more THDrawFlags flags.
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
-                  const ::layers& oLayers, int iX, int iY,
-                  uint32_t iFlags, animation_overlay_flags overlayFlags = thaof_none) const;
+                  const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
+                  animation_overlay_flags overlayFlags = thaof_none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,

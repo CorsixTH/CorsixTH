@@ -8,8 +8,6 @@ class THSingleton {
   static T& get();
 
   THSingleton() = default;
-
- private:
   THSingleton(const THSingleton&) = delete;
 };
 

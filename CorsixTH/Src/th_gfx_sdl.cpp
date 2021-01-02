@@ -114,7 +114,7 @@ double hueToRGB(double p, double q, double hue) {
   }
 
   if ((3 * hue) < 2) {
-    return p + (q - p) * (2.0/3.0 - hue) * 6;
+    return p + (q - p) * (2.0 / 3.0 - hue) * 6;
   }
 
   return p;
@@ -339,7 +339,9 @@ bool render_target::create(const render_target_creation_params* pParams) {
   }
 
   Uint32 iRendererFlags =
-      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+      (pParams->present_immediate
+           ? 0
+           : SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
 
   SDL_RendererInfo info;
@@ -1079,7 +1081,8 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags, animation_overlay_flags overlayFlags) {
+                               int iY, uint32_t iFlags,
+                               animation_overlay_flags overlayFlags) {
   int err = 0;
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1106,10 +1109,10 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 
   if ((overlayFlags & thaof_glowing) != 0) {
     // We want this to vary between 155 -> 205 -> 255.
-    // We're using increments of 10 degrees within the Sin function and converting them to rad
-    // float currentVariation = sin(tickNumber*10*PI/180) * 20;
+    // We're using increments of 10 degrees within the Sin function and
+    // converting them to rad
     uint32_t tick = gTickCount.currentTick();
-    float currentVariation = sin(tick * 10 * PI / 180d) * 50;
+    double currentVariation = sin(static_cast<double>(tick * 10 * PI / 180)) * 50;
 
     // Vary from 40 to 80, so we set 60 + Variation
     err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
