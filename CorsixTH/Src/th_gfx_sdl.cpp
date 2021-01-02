@@ -1112,7 +1112,6 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     float currentVariation = sin(tick * 10 * PI / 180d) * 50;
 
     // Vary from 40 to 80, so we set 60 + Variation
-    argb_colour newRGB = fromHSLtoRGB(125, 100, 60 + currentVariation);
     err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
