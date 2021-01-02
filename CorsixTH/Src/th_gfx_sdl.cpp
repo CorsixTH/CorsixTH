@@ -26,6 +26,9 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
+
+#define _USE_MATH_DEFINES
+
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -36,8 +39,6 @@ SOFTWARE.
 #include <stdexcept>
 
 #include "th_map.h"
-
-#define PI 3.14159265
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
     : width(iWidth), height(iHeight) {
@@ -1112,7 +1113,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
     uint32_t tick = gTickCount.currentTick();
-    double currentVariation = sin(static_cast<double>(tick * 10 * PI / 180)) * 50;
+    double currentVariation = 
+        sin(static_cast<double>(tick * 10 * M_PI / 180)) * 50;
 
     // Vary from 40 to 80, so we set 60 + Variation
     err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
