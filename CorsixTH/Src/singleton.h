@@ -7,7 +7,7 @@ class THSingleton {
  public:
   static T& get();
 
-  THSingleton() = default
+  THSingleton() = default;
 
  private:
   THSingleton(const THSingleton&) = delete;
