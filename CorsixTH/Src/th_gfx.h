@@ -26,6 +26,7 @@ SOFTWARE.
 #include <string>
 #include <vector>
 
+#include "th_gfx_common.h"
 #include "th.h"
 #include "th_gfx_sdl.h"
 
@@ -78,16 +79,6 @@ enum draw_flags : uint32_t {
   thdf_bound_box_hit_test = 1 << 12,
   //! Apply a cropping operation prior to drawing
   thdf_crop = 1 << 13,
-};
-
-//! Animation Overlay Flags for drawing an overlay on top of all the frame
-enum animation_overlay_flags : uint32_t {
-  //! No Overlay
-  thaof_none = 0,
-  //! Serious Radiation Overlay
-  thaof_glowing = 1 << 0,
-  //! Jellyitis animation
-  thaof_jelly = 1 << 1,
 };
 
 /** Helper structure with parameters to create a #render_target. */
@@ -341,7 +332,7 @@ class animation_manager {
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY,
-                  uint32_t iFlags, transformation_function tFn = nullptr, uint32_t tickNumber = 0) const;
+                  uint32_t iFlags, animation_overlay_flags overlayFlags = thaof_none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -596,10 +587,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
-  bool tick_aware_overlay;
-  uint32_t tick_count;
-
-  void reset_tick_count();
+  animation_overlay_flags current_overlay_flags;
 };
 
 class sprite_render_list : public animation_base {

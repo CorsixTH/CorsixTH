@@ -29,6 +29,23 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "th_lua.h"
 
+
+GlobalTickCounter::GlobalTickCounter() {
+  counter = 0;
+}
+
+void GlobalTickCounter::increment() {
+  this->counter++;
+}
+
+void GlobalTickCounter::reset() {
+  this->counter = 0;
+}
+
+uint32_t GlobalTickCounter::currentTick() {
+  return this->counter;
+}
+
 namespace {
 
 int l_init(lua_State* L) {
@@ -246,6 +263,7 @@ int l_mainloop(lua_State* L) {
           break;
         case SDL_USEREVENT_TICK:
           do_timer = true;
+          gTickCount.increment();
           nargs = 0;
           break;
         case SDL_USEREVENT_MOVIE_OVER:

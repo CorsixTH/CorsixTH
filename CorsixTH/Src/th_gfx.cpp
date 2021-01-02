@@ -35,15 +35,6 @@ SOFTWARE.
 #include "th_map.h"
 #include "th_sound.h"
 
-uint32_t makeGreenGlow(uint8_t iOpacity, uint8_t iR, uint8_t iG,
-                              uint8_t iB, uint32_t tick) {
-  uint8_t iNewGreen = static_cast<uint8_t>(230 + (tick % 25));
-
-  std::cout << "Applying Green Glow\n";
-
-  return palette::pack_argb(iOpacity, iR, iNewGreen, iB);
-}
-
 /** Data retrieval class, simulating sequential access to the data, keeping
  * track of available length. */
 class memory_reader {
@@ -905,7 +896,7 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
-                                   uint32_t iFlags, transformation_function tFn, uint32_t tickNumber) const {
+                                   uint32_t iFlags, animation_overlay_flags overlayFlags) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -948,11 +939,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), tFn, tickNumber);
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), overlayFlags);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags, tFn, tickNumber);
+          iPassOnFlags | oElement.flags, overlayFlags);
     }
   }
 }
@@ -1155,10 +1146,10 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.w = 64;
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->tick_aware_overlay ? &makeGreenGlow : nullptr, this->tick_count);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->current_overlay_flags);
       pCanvas->set_clip_rect(&rcOld);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->tick_aware_overlay ? &makeGreenGlow : nullptr, this->tick_count);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags, this->current_overlay_flags);
   }
 }
 
@@ -1326,6 +1317,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
+  current_overlay_flags = thaof_none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1389,7 +1381,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the layers
-  int iNumLayers = 13;
+  int iNumLayers = MAX_NUMBER_OF_LAYERS;
   for (; iNumLayers >= 1; --iNumLayers) {
     if (layers.layer_contents[iNumLayers - 1] != 0) break;
   }
@@ -1490,19 +1482,12 @@ void animation::depersist(lua_persist_reader* pReader) {
 }
 
 void animation::set_overlay(animation_overlay_flags flags) {
-  if ((flags & thaof_none) != 0) {
-    this->tick_aware_overlay = false;
+  // Sanity Check
+  if (((flags & thaof_glowing) == 0) && ((flags & thaof_jelly) == 0)) {
+    this->current_overlay_flags = thaof_none;
+  } else {
+    this->current_overlay_flags = flags;
   }
-
-  if ((flags & thaof_glowing) != 0) {
-    this->tick_aware_overlay = true;
-  }
-
-  this->reset_tick_count();
-}
-
-void animation::reset_tick_count() {
-  this->tick_count = 0;
 }
 
 void animation::tick() {
@@ -1524,10 +1509,6 @@ void animation::tick() {
     sound_to_play = 123;
   } else {
     sound_to_play = manager->get_frame_sound(frame_index);
-  }
-
-  if (this->tick_aware_overlay) {
-    this->tick_count++;
   }
 }
 

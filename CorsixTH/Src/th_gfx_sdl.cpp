@@ -97,6 +97,57 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
+double hueToRGB(double p, double q, double hue) {
+  if (hue < 0) {
+    hue += 1;
+  }
+  if (hue > 1) {
+    hue -= 1;
+  }
+
+  if ((6 * hue) < 1) {
+    return p + (q - p) * 6 * hue;
+  }
+
+  if ((2 * hue) < 1) {
+    return q;
+  }
+
+  if ((3 * hue) < 2) {
+    return p + (q - p) * (2.0/3.0 - hue) * 6;
+  }
+
+  return p;
+}
+
+// Hue is 0-360, saturation and lightness are percentage-based
+argb_colour fromHSLtoRGB(const int hue, const float saturation, const float lightness) {
+    uint8_t r, g, b = 0;
+    double q, p;
+
+    // Convert everything to percentage
+    double h = hue / 360.0;
+    double s = saturation / 100.0;
+    double l = lightness / 100.0;
+
+    if (s == 0) {
+      r = g = b = (int)(roundf(l) * 255);
+    } else {
+      q = l < 0.5f ? l * (1 + s) : l + s - l * s;
+      p = 2 * l - q;
+
+      double iR, iG, iB;
+      iR = std::min(255.0, 255 * hueToRGB(p, q, h + 1.0/3.0));
+      iG = std::min(255.0, 255 * hueToRGB(p, q, h));
+      iB = std::min(255.0, 255 * hueToRGB(p, q, h - 1.0/3.0));
+      r = static_cast<uint8_t>(iR);
+      g = static_cast<uint8_t>(iG);
+      b = static_cast<uint8_t>(iB);
+    }
+
+    return palette::pack_argb(0xFF, r, g, b);
+}
+
 }  // namespace
 
 palette::palette() { colour_count = 0; }
@@ -137,7 +188,7 @@ const uint32_t* palette::get_argb_data() const {
 
 void full_colour_renderer::decode_image(const uint8_t* pImg,
                                         const palette* pPalette,
-                                        uint32_t iSpriteFlags, transformation_function tFn, uint32_t ticks) {
+                                        uint32_t iSpriteFlags) {
   if (width <= 0) {
     throw std::logic_error("width cannot be <= 0 when decoding an image");
   }
@@ -161,12 +212,6 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
             iColour = makeGreyScale(0xFF, pImg[0], pImg[1], pImg[2]);
           else
             iColour = palette::pack_argb(0xFF, pImg[0], pImg[1], pImg[2]);
-
-          if (tFn != nullptr) {
-            std::cout << "Applying Transformation\n";
-            iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
-          }
-
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -185,11 +230,6 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
           else
             iColour = palette::pack_argb(iOpacity, pImg[0], pImg[1], pImg[2]);
 
-          if (tFn != nullptr) {
-            std::cout << "Fixed partially transparent 32bpp pixels\n";
-            iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
-          }
-
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -200,6 +240,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 2:  // Fixed fully transparent pixels
       {
         static const uint32_t iTransparent = palette::pack_argb(0, 0, 0, 0);
+        
         while (iLength > 0) {
           push_pixel(iTransparent);
           iLength--;
@@ -217,10 +258,6 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
           // layer. Note that the iOpacity is ignored here.
           while (iLength > 0) {
             iColour = pColours[*pImg++];
-
-            if (tFn != nullptr) {
-              iColour = tFn(palette::get_alpha(iColour), palette::get_red(iColour), palette::get_green(iColour), palette::get_blue(iColour), ticks);
-            }
             
             push_pixel(iColour);
             iLength--;
@@ -301,7 +338,7 @@ bool render_target::create(const render_target_creation_params* pParams) {
   }
 
   Uint32 iRendererFlags =
-      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
 
   SDL_RendererInfo info;
@@ -631,12 +668,11 @@ uint8_t* convertLegacySprite(const uint8_t* pPixelData,
 
 SDL_Texture* render_target::create_palettized_texture(
     int iWidth, int iHeight, const uint8_t* pPixels, const palette* pPalette,
-    uint32_t iSpriteFlags, transformation_function tFn, uint32_t tickNumber) const {
+    uint32_t iSpriteFlags) const {
   uint32_t* pARGBPixels = new uint32_t[iWidth * iHeight];
 
-  std::cout << "Creating palettized texture\n";
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
-  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags, nullptr, 0);
+  oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
 
   SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
   delete[] pARGBPixels;
@@ -1042,7 +1078,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags, transformation_function tFn, uint32_t tickNumber) {
+                               int iY, uint32_t iFlags, animation_overlay_flags overlayFlags) {
   int err = 0;
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1067,10 +1103,16 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
-  if (tFn != nullptr) {
+  if ((overlayFlags & thaof_glowing) != 0) {
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and converting them to rad
-    err = SDL_SetTextureColorMod(pTexture, 0x0F, 0xCD + sin(tickNumber*10*PI/180) * 50, 0x0F);
+    // float currentVariation = sin(tickNumber*10*PI/180) * 20;
+    uint32_t tick = gTickCount.currentTick();
+    float currentVariation = sin(tick*10*PI/180) * 50;
+
+    // Vary from 40 to 80, so we set 60 + Variation
+    argb_colour newRGB = fromHSLtoRGB(125, 100, 60 + currentVariation);
+    err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
     }
@@ -1081,7 +1123,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 
   pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 
-  if (tFn != nullptr) {
+  if ((overlayFlags & thaof_glowing) != 0) {
     // Reset back to original values
     err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
     if (err < 0) {
