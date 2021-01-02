@@ -1299,7 +1299,7 @@ bool THAnimation_is_multiple_frame_animation(drawable* pSelf) {
 animation_base::animation_base() : drawable() {
   x_relative_to_tile = 0;
   y_relative_to_tile = 0;
-  for (int i = 0; i < 13; ++i) {
+  for (int i = 0; i < MAX_NUMBER_OF_LAYERS; ++i) {
     layers.layer_contents[i] = 0;
   }
   flags = 0;
@@ -1463,9 +1463,9 @@ void animation::depersist(lua_persist_reader* pReader) {
       break;
     }
 
-    if (iNumLayers > 13) {
-      if (!pReader->read_byte_stream(layers.layer_contents, 13)) break;
-      if (!pReader->read_byte_stream(nullptr, iNumLayers - 13)) break;
+    if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
+      if (!pReader->read_byte_stream(layers.layer_contents, MAX_NUMBER_OF_LAYERS)) break;
+      if (!pReader->read_byte_stream(nullptr, iNumLayers - MAX_NUMBER_OF_LAYERS)) break;
     } else {
       if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
     }
@@ -1845,12 +1845,12 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  if (iNumLayers > 13) {
-    if (!pReader->read_byte_stream(layers.layer_contents, 13)) {
+  if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
+    if (!pReader->read_byte_stream(layers.layer_contents, MAX_NUMBER_OF_LAYERS)) {
       return;
     }
 
-    if (!pReader->read_byte_stream(nullptr, iNumLayers - 13)) {
+    if (!pReader->read_byte_stream(nullptr, iNumLayers - MAX_NUMBER_OF_LAYERS)) {
       return;
     }
   } else {
