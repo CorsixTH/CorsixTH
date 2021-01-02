@@ -99,58 +99,6 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
-double hueToRGB(double p, double q, double hue) {
-  if (hue < 0) {
-    hue += 1;
-  }
-  if (hue > 1) {
-    hue -= 1;
-  }
-
-  if ((6 * hue) < 1) {
-    return p + (q - p) * 6 * hue;
-  }
-
-  if ((2 * hue) < 1) {
-    return q;
-  }
-
-  if ((3 * hue) < 2) {
-    return p + (q - p) * (2.0 / 3.0 - hue) * 6;
-  }
-
-  return p;
-}
-
-// Hue is 0-360, saturation and lightness are percentage-based
-argb_colour fromHSLtoRGB(const int hue, const float saturation,
-                         const float lightness) {
-  uint8_t r, g, b = 0;
-  double q, p;
-
-  // Convert everything to percentage
-  double h = hue / 360.0;
-  double s = saturation / 100.0;
-  double l = lightness / 100.0;
-
-  if (s == 0) {
-    r = g = b = (int)(round(l) * 255);
-  } else {
-    q = l < 0.5f ? l * (1 + s) : l + s - l * s;
-    p = 2 * l - q;
-
-    double iR, iG, iB;
-    iR = std::min(255.0, 255 * hueToRGB(p, q, h + 1.0 / 3.0));
-    iG = std::min(255.0, 255 * hueToRGB(p, q, h));
-    iB = std::min(255.0, 255 * hueToRGB(p, q, h - 1.0 / 3.0));
-    r = static_cast<uint8_t>(iR);
-    g = static_cast<uint8_t>(iG);
-    b = static_cast<uint8_t>(iB);
-  }
-
-  return palette::pack_argb(0xFF, r, g, b);
-}
-
 }  // namespace
 
 palette::palette() { colour_count = 0; }
