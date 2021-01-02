@@ -240,7 +240,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 2:  // Fixed fully transparent pixels
       {
         static const uint32_t iTransparent = palette::pack_argb(0, 0, 0, 0);
-        
+
         while (iLength > 0) {
           push_pixel(iTransparent);
           iLength--;
@@ -258,7 +258,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
           // layer. Note that the iOpacity is ignored here.
           while (iLength > 0) {
             iColour = pColours[*pImg++];
-            
+
             push_pixel(iColour);
             iLength--;
           }

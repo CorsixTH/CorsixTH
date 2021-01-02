@@ -2,10 +2,9 @@
 #define CORSIX_TH_TH_SINGLETON_H_
 
 // Inspired by Commander Genius GsSingleton, full credits to Commander Genius
-
 template <class T>
 class THSingleton
-{	
+{
 public:
     static T& get();
 
