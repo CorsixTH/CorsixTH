@@ -22,6 +22,9 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
+
+#define MAX_NUMBER_OF_LAYERS 13
+
 #include <map>
 #include <string>
 #include <vector>
