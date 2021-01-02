@@ -1059,7 +1059,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 
   if ((overlayFlags & thaof_glowing) != 0) {
     // Let's convert SDL Ticks to Game Ticks
-    uint32_t tick = SDL_GetTicks() / TICKS_MS_TO_USERTICKS_CONVERSION;
+    uint32_t tick = SDL_GetTicks() / usertick_period_ms;
 
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and
