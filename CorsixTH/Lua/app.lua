@@ -671,9 +671,17 @@ function App:getAbsolutePathToLevelFile(level)
   return nil, "Level not found: " .. level
 end
 
--- Loads the specified level. If a string is passed it looks for the file with the same name
+--! Loads the specified level. If a string is passed it looks for the file with the same name
 -- in the "Levels" folder of CorsixTH, if it is a number it tries to load that level from
 -- the original game.
+--!param level  (string or int) The name (or number) of the level to load. If this
+--    is a number the game assumes the original game levels are considered.
+--!param difficulty (string) Difficulty of the level, "easy",  "full", or "hard".
+--!param level_name (string) The name of the actual map/area/hospital as written in the config file.
+--!param level_file (string) The path to the map file as supplied by the config file.
+--!param level_intro (string) If loading a custom level this message will be shown
+--    as soon as the level has been loaded.
+--!param map_editor (boolean) Whether the file is loaded for the map editor.
 function App:loadLevel(level, difficulty, level_name, level_file, level_intro, map_editor)
   if self.world then
     self:worldExited()
