@@ -662,10 +662,6 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   self.ui = GameUI(self, self.world:getLocalPlayerHospital(), map_editor)
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 
-  if tonumber(level) then
-    self.moviePlayer:playAdvanceMovie(level)
-  end
-
   -- Now restore progress from previous levels.
   if carry_to_next_level then
     self.world:initFromPreviousLevel(carry_to_next_level)

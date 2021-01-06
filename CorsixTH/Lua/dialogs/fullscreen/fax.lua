@@ -209,7 +209,9 @@ function UIFax:choice(choice_number)
     -- Set the new salary.
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer
     if tonumber(self.ui.app.world.map.level_number) then
-      self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
+      local next_level = self.ui.app.world.map.level_number + 1
+      self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty)
+      self.ui.app.moviePlayer:playAdvanceMovie(next_level)
     else
       for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
         if self.ui.app.world.map.level_number == level then

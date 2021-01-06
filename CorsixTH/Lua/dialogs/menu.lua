@@ -773,7 +773,9 @@ function UIMenuBar:makeGameMenu(app)
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
       local status, err = pcall(app.loadLevel, app, L)
-      if not status then
+      if status then
+        self.ui.app.moviePlayer:playAdvanceMovie(L)
+      else
         err = _S.errors.load_prefix .. err
         print(err)
         self.ui:addWindow(UIInformation(self.ui, {err}))
