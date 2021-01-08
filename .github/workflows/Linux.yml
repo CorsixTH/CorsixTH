@@ -42,6 +42,7 @@ jobs:
           cmake-version: ${{ matrix.cmake }}
       - name: Install ${{ matrix.lua }}
         run: |
+          sudo apt-get update
           sudo apt-get install ${{ matrix.packages }} luarocks
           # Required for LDocGen
           sudo luarocks install lpeg
