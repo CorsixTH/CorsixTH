@@ -1706,6 +1706,10 @@ function App:finishVideoUpdate()
   self.video:startFrame()
 end
 
+function App:isAudioEnabled()
+  return TH.GetCompileOptions().audio
+end
+
 -- Do not remove, for savegame compatibility < r1891
 local app_confirm_quit_stub = --[[persistable:app_confirm_quit]] function()
 end
