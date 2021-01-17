@@ -213,6 +213,10 @@ int l_get_compile_options(lua_State* L) {
   }
   lua_setfield(L, -2, "jit");
 
+  // Report operating system
+  lua_pushliteral(L, CORSIX_TH_OS);
+  lua_setfield(L, -2, "os");
+
   lua_pushinteger(L, get_api_version());
   lua_setfield(L, -2, "api_version");
 
