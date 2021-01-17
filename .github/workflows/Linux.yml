@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2  # Keeps the git OAuth token after checkout
       - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v1.5
+        uses: jwlawson/actions-setup-cmake@v1.6
         with:
           cmake-version: ${{ matrix.cmake }}
       - name: Install ${{ matrix.lua }}
