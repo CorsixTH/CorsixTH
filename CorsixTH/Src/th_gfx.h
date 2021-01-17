@@ -23,8 +23,6 @@ SOFTWARE.
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
 
-#define MAX_NUMBER_OF_LAYERS 13
-
 #include <map>
 #include <string>
 #include <vector>
@@ -32,6 +30,8 @@ SOFTWARE.
 #include "th.h"
 #include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
+
+constexpr int max_number_of_layers = 13;
 
 class lua_persist_reader;
 class lua_persist_writer;

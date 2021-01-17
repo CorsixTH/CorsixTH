@@ -1302,7 +1302,7 @@ bool THAnimation_is_multiple_frame_animation(drawable* pSelf) {
 animation_base::animation_base() : drawable() {
   x_relative_to_tile = 0;
   y_relative_to_tile = 0;
-  for (int i = 0; i < MAX_NUMBER_OF_LAYERS; ++i) {
+  for (int i = 0; i < max_number_of_layers; ++i) {
     layers.layer_contents[i] = 0;
   }
   flags = 0;
@@ -1384,7 +1384,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the layers
-  int iNumLayers = MAX_NUMBER_OF_LAYERS;
+  int iNumLayers = max_number_of_layers;
   for (; iNumLayers >= 1; --iNumLayers) {
     if (layers.layer_contents[iNumLayers - 1] != 0) break;
   }
@@ -1466,12 +1466,12 @@ void animation::depersist(lua_persist_reader* pReader) {
       break;
     }
 
-    if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
+    if (iNumLayers > max_number_of_layers) {
       if (!pReader->read_byte_stream(layers.layer_contents,
-                                     MAX_NUMBER_OF_LAYERS))
+                                     max_number_of_layers))
         break;
       if (!pReader->read_byte_stream(nullptr,
-                                     iNumLayers - MAX_NUMBER_OF_LAYERS))
+                                     iNumLayers - max_number_of_layers))
         break;
     } else {
       if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
@@ -1852,14 +1852,14 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  if (iNumLayers > MAX_NUMBER_OF_LAYERS) {
+  if (iNumLayers > max_number_of_layers) {
     if (!pReader->read_byte_stream(layers.layer_contents,
-                                   MAX_NUMBER_OF_LAYERS)) {
+                                   max_number_of_layers)) {
       return;
     }
 
     if (!pReader->read_byte_stream(nullptr,
-                                   iNumLayers - MAX_NUMBER_OF_LAYERS)) {
+                                   iNumLayers - max_number_of_layers)) {
       return;
     }
   } else {
