@@ -683,6 +683,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  compatibility_error = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
   no_games_to_contine = "There are no saved games.",
   load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
@@ -697,6 +698,7 @@ errors = {
 warnings = {
   levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
                                      "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
+  newersave = "Warning, you have loaded a save from a newer version of CorsixTH. It is not recommended to continue as crashes may occur. Play at your own risk."
 }
 
 confirmation = {

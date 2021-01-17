@@ -1513,6 +1513,19 @@ function App:quickLoad()
   end
 end
 
+--! Function to check the loaded game is compatible with the program
+--!param save_version (num)
+--!return true if compatible, otherwise false
+function App:checkCompatibility(save_version)
+  local app_version = self.savegame_version
+  if app_version >= save_version or self.config.debug then
+    return true
+  else
+    UILoadGame:loadError(_S.errors.compatibility_error)
+    return false
+  end
+end
+
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
@@ -1572,20 +1585,27 @@ function App:afterLoad()
     self.world.original_savegame_version = old
   end
   local first = self.world.original_savegame_version
+
+  -- Generate the human-readable version number (old [loaded save], new [program], first [original])
+  local first_version = first .. " (" .. self:getVersion(first) .. ")"
+  local old_version = old .. " (" .. self:getVersion(old) .. ")"
+  local new_version = new .. " (" .. self:getVersion() .. ")"
+
   if new == old then
-    self.world:gameLog("Savegame version is " .. new .. " (" .. self:getVersion() ..
-        "), originally it was " .. first .. " (" .. self:getVersion(first) .. ")")
+    local msg_same = "Savegame version is %s, originally it was %s."
+    self.world:gameLog(msg_same:format(new_version, first_version))
     self.world:playLoadedEntitySounds()
   elseif new > old then
-    self.world:gameLog("Savegame version changed from " .. old .. " (" .. self:getVersion(old) ..
-                       ") to " .. new .. " (" .. self:getVersion() ..
-                       "). The save was created using " .. first ..
-                       " (" .. self:getVersion(first) .. ")")
-  else
-    -- TODO: This should maybe be forbidden completely.
-    self.world:gameLog("Warning: loaded savegame version " .. old .. " (" .. self:getVersion(old) ..
-                       ")" .. " in older version " .. new .. " (" .. self:getVersion() .. ").")
+    local msg_older = "Savegame changed from %s to %s. The save was created using %s."
+    self.world:gameLog(msg_older:format(old_version, new_version, first_version))
+  else -- Save is newer than the game and can only proceed in debug mode
+    local get_old_release_version = self.world.release_version or "Trunk" -- For compatibility
+    old_version = old .. " (" .. get_old_release_version .. ")"
+    local msg_newer = "Warning: loaded savegame version %s in older version %s."
+    self.world:gameLog(msg_newer:format(old_version, new_version))
+    self.ui:addWindow(UIInformation(self.ui, {_S.warnings.newersave}))
   end
+  self.world.release_version = self:getVersion()
   self.world.savegame_version = new
 
   if old < 87 then
