@@ -604,7 +604,6 @@ function Hospital:afterLoad(old, new)
     -- make the disease discovered to prevent crashing (see #1754, #1799)
     local em = self.emergency
     if em and not self.disease_casebook[em.disease.id].discovered then
-      self.disease_casebook[em.disease.id].discovered = true
       self.research:discoverDisease(em.disease)
     end
   end
