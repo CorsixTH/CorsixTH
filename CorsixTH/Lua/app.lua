@@ -140,6 +140,11 @@ function App:init()
     end
   end
 
+  -- Report operating system
+  if compile_opts.os then
+    self.os = compile_opts.os
+  end
+
   local modes = {}
   if compile_opts.renderer == "OpenGL" then
     modes[#modes + 1] = "opengl"
