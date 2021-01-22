@@ -599,6 +599,14 @@ function Hospital:afterLoad(old, new)
   if old < 148 then
     self.msg_counter = nil
   end
+  if old < 152 then
+    -- If old save has an emergency fax, or emergency active, of an undiscovered disease
+    -- make the disease discovered to prevent crashing (see #1754, #1799)
+    local em = self.emergency
+    if em and not self.disease_casebook[em.disease.id].discovered then
+      self.research:discoverDisease(em.disease)
+    end
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
