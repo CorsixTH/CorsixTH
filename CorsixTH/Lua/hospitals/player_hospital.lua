@@ -196,6 +196,12 @@ function PlayerHospital:monthlyAdviceChecks()
   local current_month = today:monthOfYear()
   local current_year = today:year()
 
+  if not self:hasStaffedDesk() then
+    self:checkReceptionAdvice(current_month, current_year)
+    -- No other checks should happen in this month
+    return
+  end
+
   -- Check for advice on money.
   if not self.world.free_build_mode then
     if self.balance < 2000 and self.balance >= -500 then
@@ -213,8 +219,6 @@ function PlayerHospital:monthlyAdviceChecks()
       self:giveAdvice({_A.warnings.pay_back_loan})
     end
   end
-
-  self:checkReceptionAdvice(current_month, current_year)
 end
 
 --! Make players aware of the need for a receptionist and desk.
@@ -222,7 +226,6 @@ end
 --!param current_year (int) Current game year.
 function PlayerHospital:checkReceptionAdvice(current_month, current_year)
   if current_year > 1 then return end -- Playing too long.
-  if self:hasStaffedDesk() then return end -- Staffed desk available, all done.
 
   local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
   if num_receptionists ~= 0 and current_month > 2 and not self.adviser_data.reception_advice then
@@ -379,10 +382,9 @@ end
 
 -- Called at the end of each day.
 function PlayerHospital:onEndMonth()
-  -- Advise the player on cash flow.
-  if self:hasStaffedDesk() then
-    self:monthlyAdviceChecks()
-  end
+  -- Advise the player on the need for a staffed reception desk and cash flow.
+  self:monthlyAdviceChecks()
+
   self.adviser_data.cured_died_message = nil -- Enable the message again.
 
   -- Check if a player has won the level at months 3, 6 and 9. The annual report
