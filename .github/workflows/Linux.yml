@@ -16,31 +16,27 @@ jobs:
         include:
           - static_analysis: 0
             docs: 0
-            cmake:
+            cmake: 1
             lua: LuaJIT
             luac: luac5.1
-            packages: libluajit-5.1-dev luajit
-            cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so'
+            animview: and AnimView
+            packages: libluajit-5.1-dev luajit libwxgtk3.0-gtk3-dev
+            cmakejit: '-DBUILD_ANIMVIEWER=ON -DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so'
           - static_analysis: 0
             docs: 0
-            cmake:
             lua: Lua 5.1
             luac: luac5.1
             packages: liblua5.1-dev lua5.1
           - static_analysis: 1
             docs: 1
-            cmake: 3.5
             lua: Lua 5.3
             luac: luac5.3
             packages: liblua5.3-dev lua5.3
+            catch2: -DENABLE_UNIT_TESTS=ON
     name: Linux and Tests on ${{ matrix.lua }}
     steps:
       - uses: actions/checkout@v2  # Keeps the git OAuth token after checkout
-      - name: Setup CMake
-        uses: jwlawson/actions-setup-cmake@v1.6
-        with:
-          cmake-version: ${{ matrix.cmake }}
-      - name: Install ${{ matrix.lua }}
+      - name: Install ${{ matrix.lua }} ${{ matrix.animview }}
         run: |
           sudo apt-get update
           sudo apt-get install ${{ matrix.packages }} luarocks
@@ -50,11 +46,14 @@ jobs:
           sudo luarocks install luacheck
           # Required for lua unit tests
           sudo luarocks install busted
-      - name: Install requirements
+      - name: Install CorsixTH requirements
         run: |
-          sudo apt-get install doxygen yamllint clang-tidy-9 libsdl2-dev \
-           libsdl2-mixer-dev libwxgtk3.0-gtk3-dev libavcodec-dev \
-           libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+          sudo apt-get install libsdl2-dev libsdl2-mixer-dev \
+           libavcodec-dev libavformat-dev libavutil-dev libswresample-dev libswscale-dev
+      - name: Install static analysis requirements
+        if: matrix.static_analysis
+        run: |
+          sudo apt-get install doxygen yamllint clang-tidy-9
 
           sudo pip3 install -I codespell==2.0 cmakelint==1.4
 
@@ -67,13 +66,20 @@ jobs:
           sudo make install
           cd ../../
           rm -rf Catch2
-      - name: Create CorsixTH and AnimView makefiles with ${{ matrix.lua }}
+
+      - name: Install CMake 3.5
+        if: matrix.cmake
+        run: |
+          # Install CMake version 3.5, the oldest CorsixTH-supported version, which does not support Lua 5.4
+          curl -L https://github.com/Kitware/CMake/releases/download/v3.5.0/cmake-3.5.0-Linux-i386.sh -o cmake.sh
+          sudo bash cmake.sh --prefix=/usr/local/ --exclude-subdir --skip-license
+          cmake --version
+      - name: Create CorsixTH ${{ matrix.animview }} makefiles with ${{ matrix.lua }}
         run: |
           cmake . -G"Unix Makefiles" -Bbuild --debug-output \
-           -DWITH_AUDIO=ON -DWITH_MOVIES=ON -DBUILD_ANIMVIEWER=ON \
-           -DENABLE_UNIT_TESTS=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-           ${{ matrix.cmakejit }}
-      - name: Build CorsixTH with ${{ matrix.lua }} and AnimView
+           -DWITH_AUDIO=ON -DWITH_MOVIES=ON ${{ matrix.catch2 }} \
+           -DCMAKE_EXPORT_COMPILE_COMMANDS=ON ${{ matrix.cmakejit }}
+      - name: Build CorsixTH ${{ matrix.animview }} with ${{ matrix.lua }}
         run: |
           cmake --build build/ -- VERBOSE=1
           sudo cmake --build build/ -- install
@@ -94,6 +100,8 @@ jobs:
           python3 scripts/check_language_files_not_BOM.py
           # Check if there are lua classes with invalid/improper declarations.
           python3 scripts/check_lua_classes.py
+          # Check for tabs (should be spaces)
+          grep -Ire '\t' CorsixTH/Lua --exclude-dir=languages
           # Run CPP Tests
           cd build/CorsixTH
           ctest --extra-verbose --build-config Release --output-on-failure
