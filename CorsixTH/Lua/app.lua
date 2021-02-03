@@ -927,6 +927,21 @@ function App:saveConfig()
   fi:close()
 end
 
+--! Tries to open the given file or a file in OS's temp dir.
+-- Returns the file handler
+--!param file The full path of the intended file
+function App:writeToFileOrTmp(file)
+  local f, err = io.open(file, "w")
+  if err then
+    local tmp_file = os.tmpname()
+    f = io.open(tmp_file, "w")
+    self.ui:addWindow(UIInformation(self.ui,
+        {_S.errors.save_to_tmp:format(file, tmp_file, err)}))
+  end
+  assert(f, "Error: cannot write to filesystem")
+  return f
+end
+
 function App:fixHotkeys()
   -- Fill in default values for things which don't exist
   local hotkeys_defaults = select(4, corsixth.require("config_finder"))
