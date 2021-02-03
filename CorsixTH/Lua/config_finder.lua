@@ -518,11 +518,9 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -------------------------------------------------------------------------------------------------------------------------
 
 ]=]
-  fi = io.open(config_filename, "w")
-  if fi then
-    fi:write(string_01 .. string_02)
+  fi = TheApp:writeToFileOrTmp(config_filename)
+  fi:write(string_01 .. string_02)
   fi:close()
-  end
 end
 
 -- Hotkey filename.

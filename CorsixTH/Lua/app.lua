@@ -869,7 +869,8 @@ end
 
 function App:saveConfig()
   -- Load lines from config file
-  local fi = io.open(self.command_line["config-file"] or "config.txt", "r")
+  local config_file = self.command_line["config-file"] or "config.txt"
+  local fi = io.open(config_file, "r")
   local lines = {}
   local handled_ids = {}
   if fi then
@@ -920,7 +921,7 @@ function App:saveConfig()
     lines[#lines] = nil
   end
 
-  fi = io.open(self.command_line["config-file"] or "config.txt", "w")
+  fi = self:writeToFileOrTmp(config_file)
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
