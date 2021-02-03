@@ -966,7 +966,8 @@ end
 
 function App:saveHotkeys()
   -- Load lines from config file
-  local fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "r")
+  local hotkeys_filename = self.command_line["hotkeys-file"] or "hotkeys.txt"
+  local fi = io.open(hotkeys_filename, "r")
   local lines = {}
   local handled_ids = {}
 
@@ -1020,7 +1021,7 @@ function App:saveHotkeys()
     lines[#lines] = nil
   end
 
-  fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "w")
+  fi = self:writeToFileOrTmp(hotkeys_filename)
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
