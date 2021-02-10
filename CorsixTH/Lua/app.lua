@@ -1273,7 +1273,7 @@ function App:checkInstallFolder()
       -- been changed at all from the default, and we looked unsuccessfully in
       -- some likely folders for the game data, so we continue to initialise the
       -- app, and give the user a dialog asking for the correct directory.
-	  return false
+      return false
     end
   end
 
