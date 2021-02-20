@@ -71,11 +71,11 @@ frmSprites::frmSprites()
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
   pFiles->Add(pFilesGrid, 0, wxEXPAND | wxALL, 1);
+  pFiles->Add(new wxButton(this, ID_LOAD, L"Load Simple"), 0,
+              wxALIGN_CENTER | wxALL, 1);
+  pFiles->Add(new wxButton(this, ID_LOAD_COMPLEX, L"Load Complex"), 0,
+              wxALIGN_CENTER | wxALL, 1);
   wxButton* pTmp;
-  pFiles->Add(pTmp = new wxButton(this, ID_LOAD, L"Load Simple"), 0,
-              wxALIGN_CENTER | wxALL, 1);
-  pFiles->Add(pTmp = new wxButton(this, ID_LOAD_COMPLEX, L"Load Complex"), 0,
-              wxALIGN_CENTER | wxALL, 1);
   pFiles->Add(pTmp = new wxButton(this, ID_NEXT, L"Next"), 0,
               wxALIGN_CENTER | wxALL, 1);
   SetBackgroundColour(pTmp->GetBackgroundColour());
