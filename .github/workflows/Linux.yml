@@ -16,14 +16,14 @@ jobs:
         include:
           - static_analysis: 0
             docs: 0
-            cmake:
+            cmake: 3.5
             lua: LuaJIT
             luac: luac5.1
             packages: libluajit-5.1-dev luajit
             cmakejit: '-DWITH_LUAJIT=ON -DLUA_LIBRARY=/usr/lib/x86_64-linux-gnu/libluajit-5.1.so'
           - static_analysis: 0
             docs: 0
-            cmake:
+            cmake: 3.5
             lua: Lua 5.1
             luac: luac5.1
             packages: liblua5.1-dev lua5.1
