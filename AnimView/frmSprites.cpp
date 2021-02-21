@@ -50,24 +50,25 @@ frmSprites::frmSprites()
   pFilesGrid->AddGrowableCol(1, 1);
   pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Table:"), 0,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-  pFilesGrid->Add(
-      m_txtTable = new wxTextCtrl(
-          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\QData\\Font00V.tab"),
-      1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+  m_txtTable = new wxTextCtrl(
+      this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\QData\\Font00V.tab");
+
+  pFilesGrid->Add(m_txtTable, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_TABLE, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
   pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Data:"), 0,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-  pFilesGrid->Add(m_txtData = new wxTextCtrl(this, wxID_ANY, L""), 1,
-                  wxALIGN_CENTER_VERTICAL | wxEXPAND);
+  m_txtData = new wxTextCtrl(this, wxID_ANY, L"");
+  pFilesGrid->Add(m_txtData, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_DATA, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
   pFilesGrid->Add(new wxStaticText(this, wxID_ANY, L"Palette:"), 0,
                   wxALIGN_CENTER_VERTICAL | wxALIGN_RIGHT);
-  pFilesGrid->Add(
-      m_txtPalette = new wxTextCtrl(
-          this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\Data\\MPalette.dat"),
-      1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
+
+  m_txtPalette = new wxTextCtrl(
+      this, wxID_ANY, L"X:\\ThemeHospital\\hospital\\Data\\MPalette.dat");
+
+  pFilesGrid->Add(m_txtPalette, 1, wxALIGN_CENTER_VERTICAL | wxEXPAND);
   pFilesGrid->Add(new wxButton(this, ID_BROWSE_PALETTE, L"Browse..."), 0,
                   wxALIGN_CENTER_VERTICAL);
   pFiles->Add(pFilesGrid, 0, wxEXPAND | wxALL, 1);
@@ -75,15 +76,14 @@ frmSprites::frmSprites()
               wxALIGN_CENTER | wxALL, 1);
   pFiles->Add(new wxButton(this, ID_LOAD_COMPLEX, L"Load Complex"), 0,
               wxALIGN_CENTER | wxALL, 1);
-  wxButton* pTmp;
-  pFiles->Add(pTmp = new wxButton(this, ID_NEXT, L"Next"), 0,
-              wxALIGN_CENTER | wxALL, 1);
-  SetBackgroundColour(pTmp->GetBackgroundColour());
+  pFiles->Add(new wxButton(this, ID_NEXT, L"Next"), 0, wxALIGN_CENTER | wxALL,
+              1);
   pMainSizer->Add(pFiles, 0, wxEXPAND | wxALL, 2);
 
   wxStaticBoxSizer* pSprites =
       new wxStaticBoxSizer(wxVERTICAL, this, L"Sprites");
-  pSprites->Add(m_panFrame = new MyVScrolled(this), 1, wxEXPAND);
+  m_panFrame = new MyVScrolled(this);
+  pSprites->Add(m_panFrame, 1, wxEXPAND);
   pMainSizer->Add(pSprites, 1, wxEXPAND | wxALL, 2);
   m_panFrame->Connect(wxEVT_PAINT,
                       (wxObjectEventFunction)&frmSprites::_onPanelPaint,
