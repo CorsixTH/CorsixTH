@@ -442,7 +442,7 @@ void frmMain::load() {
   m_oAnims.markDuplicates();
 
   m_txtAnimCount->SetValue(
-      wxString::Format(L"%u", (int)m_oAnims.getAnimationCount()));
+      wxString::Format(L"%zu", m_oAnims.getAnimationCount()));
 
   m_imgBackground.Create(400, 400);
   {
@@ -542,7 +542,7 @@ void frmMain::_onGhostIndexChange(wxSpinEvent& evt) {
 
 void frmMain::_onAnimChange(size_t iIndex) {
   m_iCurrentAnim = iIndex;
-  m_txtAnimIndex->ChangeValue(wxString::Format(L"%u", (int)iIndex));
+  m_txtAnimIndex->ChangeValue(wxString::Format(L"%zu", iIndex));
   m_iCurrentFrame = 0;
 
   THLayerMask oMask;
@@ -560,7 +560,7 @@ void frmMain::_onAnimChange(size_t iIndex) {
   m_panFrame->Refresh(false);
   m_txtFrameIndex->SetValue(wxString::Format(L"0"));
   m_txtFrameCount->SetValue(
-      wxString::Format(L"%u", (int)m_oAnims.getFrameCount(iIndex)));
+      wxString::Format(L"%zu", m_oAnims.getFrameCount(iIndex)));
 }
 
 void frmMain::_onPlayPause(wxCommandEvent& evt) {
@@ -579,7 +579,7 @@ void frmMain::_onPrevFrame(wxCommandEvent& evt) {
   else
     m_iCurrentFrame =
         (m_iCurrentFrame - 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-  m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
+  m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
   m_panFrame->Refresh(false);
 }
 
@@ -588,7 +588,7 @@ void frmMain::_onNextFrame(wxCommandEvent& evt) {
 
   m_iCurrentFrame =
       (m_iCurrentFrame + 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-  m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
+  m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
   m_panFrame->Refresh(false);
 }
 
@@ -598,7 +598,7 @@ void frmMain::_onTimer(wxTimerEvent& evt) {
 
     m_iCurrentFrame =
         (m_iCurrentFrame + 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-    m_txtFrameIndex->SetValue(wxString::Format(L"%u", (int)m_iCurrentFrame));
+    m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
     m_panFrame->Refresh(false);
   }
 }
@@ -702,7 +702,7 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
     THLayerMask mskAnim;
     m_oAnims.getAnimationMask(i, mskAnim);
     if (mskAnim.isSet(static_cast<int>(iLayer), static_cast<int>(iID))) {
-      m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+      m_lstSearchResults->Append(wxString::Format(L"%zu", i));
     }
   }
 }
@@ -718,7 +718,7 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
   for (size_t i = 0; i < m_oAnims.getAnimationCount(); ++i) {
     if (m_oAnims.isAnimationDuplicate(i)) continue;
     if (m_oAnims.doesAnimationIncludeFrame(i, iFrame)) {
-      m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+      m_lstSearchResults->Append(wxString::Format(L"%zu", i));
     }
   }
 }
@@ -736,7 +736,7 @@ void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
     size_t iCount = m_oAnims.getFrameCount(i);
     for (size_t j = 0; j < iCount; ++j) {
       if ((m_oAnims.getFrameStruct(i, j)->flags & 0xFF) == iFrame) {
-        m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+        m_lstSearchResults->Append(wxString::Format(L"%zu", i));
         break;
       }
     }
