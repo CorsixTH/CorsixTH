@@ -111,8 +111,7 @@ class THLayerMask {
   inline bool isSet(int iLayer) const {
     if (0 <= iLayer && iLayer < 13)
       for (int iId = 0; iId < 32; ++iId) {
-        if ((m_iMask[iLayer] & (1ul << iId)) != 0)
-          return true;
+        if ((m_iMask[iLayer] & (1ul << iId)) != 0) return true;
       }
     return false;
   }
