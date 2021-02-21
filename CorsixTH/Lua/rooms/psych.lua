@@ -114,7 +114,7 @@ function PsychRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
       return
-	else
+    else
       if patient:getRoom() ~= self and self:getStaffMember() then
         self:getStaffMember():setNextAction(MeanderAction())
         return

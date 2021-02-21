@@ -1218,7 +1218,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
       if self.blueprint_door.anim[1] then
         -- retrieve the old door position details to reset the blue print
         local oldx, oldy
-		local _, _, oldx_mod, oldy_mod, _ = doorWallOffsetCalculations(self.blueprint_door.floor_x,
+        local _, _, oldx_mod, oldy_mod, _ = doorWallOffsetCalculations(self.blueprint_door.floor_x,
           self.blueprint_door.floor_y, self.blueprint_door.wall)
         -- If we're dealing with swing doors the anim variable is actually a table with three
         -- identical "doors".
