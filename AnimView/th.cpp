@@ -117,8 +117,8 @@ class ChunkRenderer {
   bool m_skip_eol;
 };
 
-void decode_chunks(ChunkRenderer& renderer, const uint8_t* data,
-                   size_t datalen, uint8_t transparent) {
+void decode_chunks(ChunkRenderer& renderer, const uint8_t* data, size_t datalen,
+                   uint8_t transparent) {
   while (!renderer.isDone() && datalen > 0) {
     uint8_t b = *data;
     --datalen;
@@ -180,7 +180,7 @@ void decode_chunks_complex(ChunkRenderer& renderer, const uint8_t* data,
 }
 
 inline uint8_t average_colour(unsigned int channel_a, unsigned int channel_b) {
-    return (channel_a + channel_b) / 2;
+  return (channel_a + channel_b) / 2;
 }
 
 void merge_colour(th_colour_t& dst, const th_colour_t& src) {
@@ -472,8 +472,8 @@ void Bitmap::blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags) const {
 }
 
 void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
-                  const uint8_t* pColourTranslate,
-                  const th_colour_t* pPalette, int iFlags) const {
+                  const uint8_t* pColourTranslate, const th_colour_t* pPalette,
+                  int iFlags) const {
   if (m_iHeight == 0 || m_iWidth == 0) return;
 
   th_colour_t* pCanvas = (th_colour_t*)imgCanvas.GetData();
