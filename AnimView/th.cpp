@@ -38,7 +38,7 @@ SOFTWARE.
 
 namespace {
 
-constexpr unsigned char palette_upscale_map[0x40] = {
+constexpr uint8_t palette_upscale_map[0x40] = {
     0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C, 0x20, 0x24, 0x28,
     0x2D, 0x31, 0x35, 0x39, 0x3D, 0x41, 0x45, 0x49, 0x4D, 0x51, 0x55,
     0x59, 0x5D, 0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D, 0x82,
@@ -51,7 +51,7 @@ class ChunkRenderer {
  public:
   ChunkRenderer(int width, int height)
       : m_x(0), m_y(0), m_width(width), m_height(height), m_skip_eol(false) {
-    m_data = new unsigned char[width * height];
+    m_data = new uint8_t[width * height];
     m_ptr = m_data;
     m_end = m_data + width * height;
   }
@@ -60,26 +60,26 @@ class ChunkRenderer {
 
   bool isDone() const { return m_ptr == m_end; }
 
-  unsigned char* takeData() {
-    unsigned char* buffer = m_data;
+  uint8_t* takeData() {
+    uint8_t* buffer = m_data;
     m_data = nullptr;
     return buffer;
   }
 
-  const unsigned char* getData() const { return m_data; }
+  const uint8_t* getData() const { return m_data; }
 
-  void chunkFillToEndOfLine(unsigned char value) {
+  void chunkFillToEndOfLine(uint8_t value) {
     if (m_x != 0 || !m_skip_eol) {
       chunkFill(m_width - m_x, value);
     }
     m_skip_eol = false;
   }
 
-  void chunkFinish(unsigned char value) {
+  void chunkFinish(uint8_t value) {
     chunkFill(static_cast<int>(m_end - m_ptr), value);
   }
 
-  void chunkFill(int npixels, unsigned char value) {
+  void chunkFill(int npixels, uint8_t value) {
     _fixNpixels(npixels);
     if (npixels > 0) {
       memset(m_ptr, value, npixels);
@@ -87,7 +87,7 @@ class ChunkRenderer {
     }
   }
 
-  void chunkCopy(int npixels, const unsigned char* data) {
+  void chunkCopy(int npixels, const uint8_t* data) {
     _fixNpixels(npixels);
     if (npixels > 0) {
       memcpy(m_ptr, data, npixels);
@@ -110,17 +110,17 @@ class ChunkRenderer {
     m_skip_eol = true;
   }
 
-  unsigned char* m_data;
-  unsigned char* m_ptr;
-  unsigned char* m_end;
+  uint8_t* m_data;
+  uint8_t* m_ptr;
+  uint8_t* m_end;
   int m_x, m_y, m_width, m_height;
   bool m_skip_eol;
 };
 
-void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
-                   size_t datalen, unsigned char transparent) {
+void decode_chunks(ChunkRenderer& renderer, const uint8_t* data,
+                   size_t datalen, uint8_t transparent) {
   while (!renderer.isDone() && datalen > 0) {
-    unsigned char b = *data;
+    uint8_t b = *data;
     --datalen;
     ++data;
     if (b == 0) {
@@ -138,10 +138,10 @@ void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
   renderer.chunkFinish(transparent);
 }
 
-void decode_chunks_complex(ChunkRenderer& renderer, const unsigned char* data,
-                           size_t datalen, unsigned char transparent) {
+void decode_chunks_complex(ChunkRenderer& renderer, const uint8_t* data,
+                           size_t datalen, uint8_t transparent) {
   while (!renderer.isDone() && datalen > 0) {
-    unsigned char b = *data;
+    uint8_t b = *data;
     --datalen;
     ++data;
     if (b == 0) {
@@ -156,7 +156,7 @@ void decode_chunks_complex(ChunkRenderer& renderer, const unsigned char* data,
       renderer.chunkFill(b - 0x80, transparent);
     } else {
       int amt;
-      unsigned char colour = 0;
+      uint8_t colour = 0;
       if (b == 0xFF) {
         if (datalen < 2) {
           break;
@@ -202,7 +202,7 @@ THAnimations::THAnimations() {
   spriteBitmaps = std::vector<Bitmap>();
   chunks = std::vector<uint8_t>();
   colours = std::vector<th_colour_t>();
-  ghostMaps = std::array<unsigned char, 256 * 256 * 4>();
+  ghostMaps = std::array<uint8_t, 256 * 256 * 4>();
   for (int iMap = 0; iMap < 256 * 4; ++iMap) {
     for (int iCol = 0; iCol < 256; ++iCol) {
       ghostMaps[iMap * 256 + iCol] = iCol;
@@ -274,7 +274,7 @@ bool THAnimations::loadPaletteFile(const wxString& sFilename) {
 bool THAnimations::loadGhostFile(const wxString& sFilename, int iIndex) {
   if (iIndex < 0 || iIndex >= 4) return false;
 
-  std::vector<unsigned char> data;
+  std::vector<uint8_t> data;
 
   if (!loadVector(data, sFilename)) return false;
 
@@ -354,7 +354,7 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex) {
 
     ChunkRenderer oRenderer(pSprite->width, pSprite->height);
     (bComplex ? decode_chunks_complex : decode_chunks)(
-        oRenderer, (const unsigned char*)chunks.data() + pSprite->offset,
+        oRenderer, (const uint8_t*)chunks.data() + pSprite->offset,
         chunks.size() - pSprite->offset, 0xFF);
     spriteBitmaps[iSprite].create(pSprite->width, pSprite->height,
                                   oRenderer.getData());
@@ -413,13 +413,13 @@ th_element_t* THAnimations::_getElement(uint32_t iListIndex) {
   return &(elements.at(iElementIndex));
 }
 
-unsigned char* THAnimations::Decompress(unsigned char* pData, size_t& iLength) {
+uint8_t* THAnimations::Decompress(uint8_t* pData, size_t& iLength) {
   if (rnc_input_size(pData) != iLength) {
     throw std::length_error("rnc data does not match the expected length");
   }
 
   unsigned long outlen = rnc_output_size(pData);
-  unsigned char* outbuf = new unsigned char[outlen];
+  uint8_t* outbuf = new uint8_t[outlen];
 
   if (rnc_unpack(pData, outbuf) == rnc_status::ok) {
     delete[] pData;
@@ -468,7 +468,7 @@ void Bitmap::blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags) const {
 }
 
 void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
-                  const unsigned char* pColourTranslate,
+                  const uint8_t* pColourTranslate,
                   const th_colour_t* pPalette, int iFlags) const {
   if (m_iHeight == 0 || m_iWidth == 0) return;
 
@@ -504,7 +504,7 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
       pCanvas[iDstY * iCanvasWidth + iDstX] = srcc;
       if (imgCanvas.HasAlpha()) {
         // set completely opaque
-        imgCanvas.SetAlpha(iDstX, iDstY, (unsigned char)255);
+        imgCanvas.SetAlpha(iDstX, iDstY, (uint8_t)255);
       }
     }
   }
