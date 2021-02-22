@@ -161,7 +161,7 @@ void decode_chunks_complex(ChunkRenderer& renderer, const uint8_t* data,
         if (datalen < 2) {
           break;
         }
-        amt = (int)data[0];
+        amt = data[0];
         colour = data[1];
         data += 2;
         datalen -= 2;
@@ -349,12 +349,12 @@ Bitmap* THAnimations::getSpriteBitmap(size_t iSprite, bool bComplex) {
 
   if (!spriteBitmaps.at(iSprite).IsOk()) {
     wxString spriteFile =
-        m_sSpritePath + wxString::Format(L"a%04ue.png", (int)iSprite);
+        m_sSpritePath + wxString::Format(L"a%04zue.png", iSprite);
     th_sprite_t* pSprite = &(sprites.at(iSprite));
 
     ChunkRenderer oRenderer(pSprite->width, pSprite->height);
     (bComplex ? decode_chunks_complex : decode_chunks)(
-        oRenderer, (const uint8_t*)chunks.data() + pSprite->offset,
+        oRenderer, static_cast<const uint8_t*>(chunks.data()) + pSprite->offset,
         chunks.size() - pSprite->offset, 0xFF);
     spriteBitmaps[iSprite].create(pSprite->width, pSprite->height,
                                   oRenderer.getData());
@@ -418,7 +418,7 @@ uint8_t* THAnimations::Decompress(uint8_t* pData, size_t& iLength) {
     throw std::length_error("rnc data does not match the expected length");
   }
 
-  unsigned long outlen = rnc_output_size(pData);
+  size_t outlen = rnc_output_size(pData);
   uint8_t* outbuf = new uint8_t[outlen];
 
   if (rnc_unpack(pData, outbuf) == rnc_status::ok) {
@@ -504,7 +504,7 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
       pCanvas[iDstY * iCanvasWidth + iDstX] = srcc;
       if (imgCanvas.HasAlpha()) {
         // set completely opaque
-        imgCanvas.SetAlpha(iDstX, iDstY, (uint8_t)255);
+        imgCanvas.SetAlpha(iDstX, iDstY, static_cast<uint8_t>(255));
       }
     }
   }
