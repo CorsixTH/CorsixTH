@@ -126,7 +126,7 @@ void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
     if (b == 0) {
       renderer.chunkFillToEndOfLine(transparent);
     } else if (b < 0x80) {
-      int amt = b;
+      size_t amt = b;
       if (datalen < amt) amt = datalen;
       renderer.chunkCopy(amt, data);
       data += amt;
@@ -147,7 +147,7 @@ void decode_chunks_complex(ChunkRenderer& renderer, const unsigned char* data,
     if (b == 0) {
       renderer.chunkFillToEndOfLine(transparent);
     } else if (b < 0x40) {
-      int amt = b;
+      size_t amt = b;
       if (datalen < amt) amt = datalen;
       renderer.chunkCopy(amt, data);
       data += amt;
