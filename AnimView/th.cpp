@@ -179,10 +179,14 @@ void decode_chunks_complex(ChunkRenderer& renderer, const uint8_t* data,
   renderer.chunkFinish(transparent);
 }
 
+inline uint8_t average_colour(unsigned int channel_a, unsigned int channel_b) {
+    return (channel_a + channel_b) / 2;
+}
+
 void merge_colour(th_colour_t& dst, const th_colour_t& src) {
-  dst.r = (uint8_t)(((unsigned int)dst.r + (unsigned int)src.r) / 2);
-  dst.g = (uint8_t)(((unsigned int)dst.g + (unsigned int)src.g) / 2);
-  dst.b = (uint8_t)(((unsigned int)dst.b + (unsigned int)src.b) / 2);
+  dst.r = average_colour(dst.r, src.r);
+  dst.g = average_colour(dst.g, src.g);
+  dst.b = average_colour(dst.b, src.b);
 }
 
 }  // namespace
