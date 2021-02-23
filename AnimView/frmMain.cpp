@@ -107,14 +107,13 @@ frmMain::frmMain()
                   0, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pAnimation->Add(new wxButton(this, ID_PREV_ANIM, L"<", def, wxBU_EXACTFIT), 0,
                   wxALIGN_CENTER_VERTICAL | wxALL, 1);
-  pAnimation->Add(m_txtAnimIndex = new wxTextCtrl(this, ID_ANIM_INDEX, L"0",
-                                                  def, wxTE_CENTRE),
-                  1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
+  m_txtAnimIndex = new wxTextCtrl(this, ID_ANIM_INDEX, L"0", def, wxTE_CENTRE);
+  pAnimation->Add(m_txtAnimIndex, 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pAnimation->Add(new wxStaticText(this, wxID_ANY, L"of"), 0,
                   wxALIGN_CENTER_VERTICAL | wxALL, 1);
-  pAnimation->Add(m_txtAnimCount = new wxTextCtrl(this, wxID_ANY, L"?", def,
-                                                  wxTE_CENTRE | wxTE_READONLY),
-                  1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
+  m_txtAnimCount =
+      new wxTextCtrl(this, wxID_ANY, L"?", def, wxTE_CENTRE | wxTE_READONLY);
+  pAnimation->Add(m_txtAnimCount, 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pAnimation->Add(new wxButton(this, ID_NEXT_ANIM, L">", def, wxBU_EXACTFIT), 0,
                   wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pAnimation->Add(new wxButton(this, ID_LAST_ANIM, L">>", def, wxBU_EXACTFIT),
@@ -129,13 +128,13 @@ frmMain::frmMain()
       1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pFrame->Add(new wxStaticText(this, wxID_ANY, L"of", def, wxALIGN_CENTRE), 0,
               wxALIGN_CENTER_VERTICAL | wxALL, 1);
-  pFrame->Add(m_txtFrameCount = new wxTextCtrl(this, wxID_ANY, L"?", def,
-                                               wxTE_CENTRE | wxTE_READONLY),
-              1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
+  m_txtFrameCount =
+      new wxTextCtrl(this, wxID_ANY, L"?", def, wxTE_CENTRE | wxTE_READONLY);
+  pFrame->Add(m_txtFrameCount, 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   pFrame->Add(new wxButton(this, ID_NEXT_FRAME, L">", def, wxBU_EXACTFIT), 0,
               wxALIGN_CENTER_VERTICAL | wxALL, 1);
-  pFrame->Add(m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause"), 1,
-              wxALIGN_CENTER_VERTICAL | wxALL, 1);
+  m_btnPlayPause = new wxButton(this, ID_PLAY_PAUSE, L"Pause");
+  pFrame->Add(m_btnPlayPause, 1, wxALIGN_CENTER_VERTICAL | wxALL, 1);
   m_bPlayingAnimation = true;
   // m_bPlayingAnimation = false;
   pSidebarSizer->Add(pFrame, 0, wxEXPAND | wxALL, 0);
@@ -314,51 +313,52 @@ frmMain::frmMain()
   pSearchButtons->Add(new wxButton(this, ID_SEARCH_SOUND, L"Sound"), 0, wxALL,
                       1);
   pSearch->Add(pSearchButtons, 0);
-  pSearch->Add(m_lstSearchResults = new wxListBox(this, ID_SEARCH_RESULTS), 1,
-               wxEXPAND | wxALL, 1);
+  m_lstSearchResults = new wxListBox(this, ID_SEARCH_RESULTS);
+  pSearch->Add(m_lstSearchResults, 1, wxEXPAND | wxALL, 1);
 
   wxStaticBoxSizer* pFrameFlags =
       new wxStaticBoxSizer(wxHORIZONTAL, this, L"Frame Flags");
   wxBoxSizer* pFlags1 = new wxBoxSizer(wxVERTICAL);
-  pFlags1->Add(m_txtFrameFlags[0] = new wxTextCtrl(this, wxID_ANY), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[0] = new wxCheckBox(this, wxID_ANY, L"2^0"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[1] = new wxCheckBox(this, wxID_ANY, L"2^1"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[2] = new wxCheckBox(this, wxID_ANY, L"2^2"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[3] = new wxCheckBox(this, wxID_ANY, L"2^3"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[4] = new wxCheckBox(this, wxID_ANY, L"2^4"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[5] = new wxCheckBox(this, wxID_ANY, L"2^5"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[6] = new wxCheckBox(this, wxID_ANY, L"2^6"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags1->Add(m_chkFrameFlags[7] = new wxCheckBox(this, wxID_ANY, L"2^7"), 0,
-               wxEXPAND | wxALL, 2);
+  m_txtFrameFlags[0] = new wxTextCtrl(this, wxID_ANY);
+  pFlags1->Add(m_txtFrameFlags[0], 0, wxEXPAND | wxALL, 2);
+  m_chkFrameFlags[0] = new wxCheckBox(this, wxID_ANY, L"2^0");
+  m_chkFrameFlags[1] = new wxCheckBox(this, wxID_ANY, L"2^1");
+  m_chkFrameFlags[2] = new wxCheckBox(this, wxID_ANY, L"2^2");
+  m_chkFrameFlags[3] = new wxCheckBox(this, wxID_ANY, L"2^3");
+  m_chkFrameFlags[4] = new wxCheckBox(this, wxID_ANY, L"2^4");
+  m_chkFrameFlags[5] = new wxCheckBox(this, wxID_ANY, L"2^5");
+  m_chkFrameFlags[6] = new wxCheckBox(this, wxID_ANY, L"2^6");
+  m_chkFrameFlags[7] = new wxCheckBox(this, wxID_ANY, L"2^7");
+  pFlags1->Add(m_chkFrameFlags[0], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[1], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[2], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[3], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[4], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[5], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[6], 0, wxEXPAND | wxALL, 2);
+  pFlags1->Add(m_chkFrameFlags[7], 0, wxEXPAND | wxALL, 2);
   pFrameFlags->Add(pFlags1, 1, wxEXPAND);
   wxBoxSizer* pFlags2 = new wxBoxSizer(wxVERTICAL);
-  pFlags2->Add(m_txtFrameFlags[1] = new wxTextCtrl(this, wxID_ANY), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[8] =
-                   new wxCheckBox(this, wxID_ANY, L"2^8 (Animation Start)"),
-               0, wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[9] = new wxCheckBox(this, wxID_ANY, L"2^9"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[10] = new wxCheckBox(this, wxID_ANY, L"2^10"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[11] = new wxCheckBox(this, wxID_ANY, L"2^11"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[12] = new wxCheckBox(this, wxID_ANY, L"2^12"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[13] = new wxCheckBox(this, wxID_ANY, L"2^13"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[14] = new wxCheckBox(this, wxID_ANY, L"2^14"), 0,
-               wxEXPAND | wxALL, 2);
-  pFlags2->Add(m_chkFrameFlags[15] = new wxCheckBox(this, wxID_ANY, L"2^15"), 0,
-               wxEXPAND | wxALL, 2);
+
+  m_txtFrameFlags[1] = new wxTextCtrl(this, wxID_ANY);
+
+  pFlags2->Add(m_txtFrameFlags[1], 0, wxEXPAND | wxALL, 2);
+  m_chkFrameFlags[8] = new wxCheckBox(this, wxID_ANY, L"2^8 (Animation Start)");
+  m_chkFrameFlags[9] = new wxCheckBox(this, wxID_ANY, L"2^9");
+  m_chkFrameFlags[10] = new wxCheckBox(this, wxID_ANY, L"2^10");
+  m_chkFrameFlags[11] = new wxCheckBox(this, wxID_ANY, L"2^11");
+  m_chkFrameFlags[12] = new wxCheckBox(this, wxID_ANY, L"2^12");
+  m_chkFrameFlags[13] = new wxCheckBox(this, wxID_ANY, L"2^13");
+  m_chkFrameFlags[14] = new wxCheckBox(this, wxID_ANY, L"2^14");
+  m_chkFrameFlags[15] = new wxCheckBox(this, wxID_ANY, L"2^15");
+  pFlags2->Add(m_chkFrameFlags[8], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[9], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[10], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[11], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[12], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[13], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[14], 0, wxEXPAND | wxALL, 2);
+  pFlags2->Add(m_chkFrameFlags[15], 0, wxEXPAND | wxALL, 2);
   pFrameFlags->Add(pFlags2, 1, wxEXPAND);
 
   pMainSizer->Add(pSidebarSizer, 0, wxEXPAND | wxALL, 2);
@@ -366,9 +366,8 @@ frmMain::frmMain()
   wxSizer* pRightHandSizer = new wxBoxSizer(wxVERTICAL);
   pRightHandSizer->AddSpacer(1);
 
-  pRightHandSizer->Add(
-      m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE), 0,
-      wxEXPAND | wxALL, 2);
+  m_panFrame = new wxPanel(this, wxID_ANY, def, wxBORDER_SIMPLE);
+  pRightHandSizer->Add(m_panFrame, 0, wxEXPAND | wxALL, 2);
   m_panFrame->Connect(wxEVT_PAINT,
                       (wxObjectEventFunction)&frmMain::_onPanelPaint, nullptr,
                       this);
@@ -382,7 +381,6 @@ frmMain::frmMain()
   pRightHandSizer->Add(pFrameFlags, 0, wxEXPAND | wxALL, 0);
   pMainSizer->Add(pRightHandSizer, 1, wxEXPAND | wxALL, 0);
 
-  SetBackgroundColour(m_btnPlayPause->GetBackgroundColour());
   SetSizer(pMainSizer);
 
   SetMinSize(ClientToWindowSize(pMainSizer->CalcMin()));
@@ -444,7 +442,7 @@ void frmMain::load() {
   m_oAnims.markDuplicates();
 
   m_txtAnimCount->SetValue(
-      wxString::Format(L"%u", (int)m_oAnims.getAnimationCount()));
+      wxString::Format(L"%zu", m_oAnims.getAnimationCount()));
 
   m_imgBackground.Create(400, 400);
   {
@@ -544,7 +542,7 @@ void frmMain::_onGhostIndexChange(wxSpinEvent& evt) {
 
 void frmMain::_onAnimChange(size_t iIndex) {
   m_iCurrentAnim = iIndex;
-  m_txtAnimIndex->ChangeValue(wxString::Format(L"%u", (int)iIndex));
+  m_txtAnimIndex->ChangeValue(wxString::Format(L"%zu", iIndex));
   m_iCurrentFrame = 0;
 
   THLayerMask oMask;
@@ -562,7 +560,7 @@ void frmMain::_onAnimChange(size_t iIndex) {
   m_panFrame->Refresh(false);
   m_txtFrameIndex->SetValue(wxString::Format(L"0"));
   m_txtFrameCount->SetValue(
-      wxString::Format(L"%u", (int)m_oAnims.getFrameCount(iIndex)));
+      wxString::Format(L"%zu", m_oAnims.getFrameCount(iIndex)));
 }
 
 void frmMain::_onPlayPause(wxCommandEvent& evt) {
@@ -581,7 +579,7 @@ void frmMain::_onPrevFrame(wxCommandEvent& evt) {
   else
     m_iCurrentFrame =
         (m_iCurrentFrame - 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-  m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
+  m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
   m_panFrame->Refresh(false);
 }
 
@@ -590,7 +588,7 @@ void frmMain::_onNextFrame(wxCommandEvent& evt) {
 
   m_iCurrentFrame =
       (m_iCurrentFrame + 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-  m_txtFrameIndex->SetValue(wxString::Format(L"%u", m_iCurrentFrame));
+  m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
   m_panFrame->Refresh(false);
 }
 
@@ -600,7 +598,7 @@ void frmMain::_onTimer(wxTimerEvent& evt) {
 
     m_iCurrentFrame =
         (m_iCurrentFrame + 1) % m_oAnims.getFrameCount(m_iCurrentAnim);
-    m_txtFrameIndex->SetValue(wxString::Format(L"%u", (int)m_iCurrentFrame));
+    m_txtFrameIndex->SetValue(wxString::Format(L"%zu", m_iCurrentFrame));
     m_panFrame->Refresh(false);
   }
 }
@@ -704,7 +702,7 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
     THLayerMask mskAnim;
     m_oAnims.getAnimationMask(i, mskAnim);
     if (mskAnim.isSet(static_cast<int>(iLayer), static_cast<int>(iID))) {
-      m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+      m_lstSearchResults->Append(wxString::Format(L"%zu", i));
     }
   }
 }
@@ -720,7 +718,7 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
   for (size_t i = 0; i < m_oAnims.getAnimationCount(); ++i) {
     if (m_oAnims.isAnimationDuplicate(i)) continue;
     if (m_oAnims.doesAnimationIncludeFrame(i, iFrame)) {
-      m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+      m_lstSearchResults->Append(wxString::Format(L"%zu", i));
     }
   }
 }
@@ -738,7 +736,7 @@ void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
     size_t iCount = m_oAnims.getFrameCount(i);
     for (size_t j = 0; j < iCount; ++j) {
       if ((m_oAnims.getFrameStruct(i, j)->flags & 0xFF) == iFrame) {
-        m_lstSearchResults->Append(wxString::Format(L"%i", (int)i));
+        m_lstSearchResults->Append(wxString::Format(L"%zu", i));
         break;
       }
     }

@@ -36,7 +36,9 @@ SOFTWARE.
 
 #include "../libs/rnc/rnc.h"
 
-static const unsigned char palette_upscale_map[0x40] = {
+namespace {
+
+constexpr unsigned char palette_upscale_map[0x40] = {
     0x00, 0x04, 0x08, 0x0C, 0x10, 0x14, 0x18, 0x1C, 0x20, 0x24, 0x28,
     0x2D, 0x31, 0x35, 0x39, 0x3D, 0x41, 0x45, 0x49, 0x4D, 0x51, 0x55,
     0x59, 0x5D, 0x61, 0x65, 0x69, 0x6D, 0x71, 0x75, 0x79, 0x7D, 0x82,
@@ -115,8 +117,8 @@ class ChunkRenderer {
   bool m_skip_eol;
 };
 
-static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
-                          size_t datalen, unsigned char transparent) {
+void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
+                   size_t datalen, unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
     --datalen;
@@ -136,9 +138,8 @@ static void decode_chunks(ChunkRenderer& renderer, const unsigned char* data,
   renderer.chunkFinish(transparent);
 }
 
-static void decode_chunks_complex(ChunkRenderer& renderer,
-                                  const unsigned char* data, size_t datalen,
-                                  unsigned char transparent) {
+void decode_chunks_complex(ChunkRenderer& renderer, const unsigned char* data,
+                           size_t datalen, unsigned char transparent) {
   while (!renderer.isDone() && datalen > 0) {
     unsigned char b = *data;
     --datalen;
@@ -177,6 +178,14 @@ static void decode_chunks_complex(ChunkRenderer& renderer,
   }
   renderer.chunkFinish(transparent);
 }
+
+void merge_colour(th_colour_t& dst, const th_colour_t& src) {
+  dst.r = (uint8_t)(((unsigned int)dst.r + (unsigned int)src.r) / 2);
+  dst.g = (uint8_t)(((unsigned int)dst.g + (unsigned int)src.g) / 2);
+  dst.b = (uint8_t)(((unsigned int)dst.b + (unsigned int)src.b) / 2);
+}
+
+}  // namespace
 
 THLayerMask::THLayerMask() { clear(); }
 
@@ -458,12 +467,6 @@ void Bitmap::blit(Bitmap& bmpCanvas, int iX, int iY, int iFlags) const {
   }
 }
 
-static inline void _merge(th_colour_t& dst, const th_colour_t& src) {
-  dst.r = (uint8_t)(((unsigned int)dst.r + (unsigned int)src.r) / 2);
-  dst.g = (uint8_t)(((unsigned int)dst.g + (unsigned int)src.g) / 2);
-  dst.b = (uint8_t)(((unsigned int)dst.b + (unsigned int)src.b) / 2);
-}
-
 void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
                   const unsigned char* pColourTranslate,
                   const th_colour_t* pPalette, int iFlags) const {
@@ -491,10 +494,10 @@ void Bitmap::blit(wxImage& imgCanvas, int iX, int iY,
         th_colour_t dstc = pCanvas[iDstY * iCanvasWidth + iDstX];
         switch (iFlags & 0xC) {
           case 0x8:
-            _merge(srcc, dstc);
+            merge_colour(srcc, dstc);
             // fall-through
           case 0x4:
-            _merge(srcc, dstc);
+            merge_colour(srcc, dstc);
             break;
         }
       }
