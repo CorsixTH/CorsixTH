@@ -777,7 +777,7 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart,
 
     wxString realName;
     bool cont =
-        dir.GetFirst(& realName, wxEmptyString,
+       dir.GetFirst(&realName, wxEmptyString,
                      wxDIR_DIRS | wxDIR_FILES | wxDIR_HIDDEN | wxDIR_DOTDOT);
 
     bool found = false;
