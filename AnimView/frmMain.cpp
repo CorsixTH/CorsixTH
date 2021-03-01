@@ -776,8 +776,9 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart,
     wxString pathPart = pathTokenizer.GetNextToken();
 
     wxString realName;
-    bool cont = dir.GetFirst(&realName, wxEmptyString,
-                        wxDIR_DIRS | wxDIR_FILES | wxDIR_HIDDEN | wxDIR_DOTDOT);
+    bool cont =
+        dir.GetFirst (& realName, wxEmptyString,
+                     wxDIR_DIRS | wxDIR_FILES | wxDIR_HIDDEN | wxDIR_DOTDOT);
     bool found = false;
     while (cont) {
       if (realName.Upper() == pathPart.Upper()) {
