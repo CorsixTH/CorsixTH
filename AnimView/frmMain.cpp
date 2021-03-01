@@ -759,9 +759,6 @@ void frmMain::_drawCoordinates(wxPaintDC& DC, int i, int j) {
 
 wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart,
                                         const wxString& sPath) {
-  bool found;
-  bool cont;
-
   if (!wxFileName::IsCaseSensitive()) {
     return sPath + sInsensitivePathPart;
   }
@@ -779,9 +776,9 @@ wxString frmMain::_getCaseSensitivePath(const wxString& sInsensitivePathPart,
     wxString pathPart = pathTokenizer.GetNextToken();
 
     wxString realName;
-    cont = dir.GetFirst(&realName, wxEmptyString,
+    bool cont = dir.GetFirst(&realName, wxEmptyString,
                         wxDIR_DIRS | wxDIR_FILES | wxDIR_HIDDEN | wxDIR_DOTDOT);
-    found = false;
+    bool found = false;
     while (cont) {
       if (realName.Upper() == pathPart.Upper()) {
         if (retStr.Last() != wxFileName::GetPathSeparator()) {
