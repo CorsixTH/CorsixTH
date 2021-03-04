@@ -612,7 +612,7 @@ function Hospital:afterLoad(old, new)
       self.research:discoverDisease(em.disease)
     end
   end
-  
+
   if old < 153 then
     -- We now use one array for our room discovery
     -- Get the level start available rooms

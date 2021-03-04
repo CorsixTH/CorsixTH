@@ -149,7 +149,6 @@ end
 function UICasebook:updateIcons()
   local disease = self.selected_disease
   local hosp = self.hospital
-  local world = hosp.world
 
   local known = true
   -- Curable / not curable icons and their tooltip
