@@ -215,7 +215,7 @@ class THAnimations {
     wxFile oFile(sFilename);
     if (!oFile.IsOpened()) return false;
 
-    size_t iLen = oFile.Length();
+    size_t iLen = static_cast<size_t>(oFile.Length());
     unsigned char* pBuffer = new unsigned char[iLen];
     oFile.Read(pBuffer, iLen);
     if (memcmp(pBuffer, "RNC\001", 4) == 0) {

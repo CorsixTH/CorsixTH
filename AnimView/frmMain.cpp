@@ -55,7 +55,7 @@ BEGIN_EVENT_TABLE(frmMain, wxFrame)
   EVT_BUTTON(ID_SEARCH_LAYER_ID, frmMain::_onSearchLayerId)
   EVT_BUTTON(ID_SEARCH_FRAME, frmMain::_onSearchFrame)
   EVT_BUTTON(ID_SEARCH_SOUND, frmMain::_onSearchSoundIndex)
-  EVT_LISTBOX(ID_SEARCH_RESULTS, frmMain::_onGotoSearchResult)
+  EVT_LISTBOX(ID_SEARCH_RESULTS, frmMain::_onAnimChar)
   EVT_RADIOBUTTON(ID_GHOST_0, frmMain::_onGhostFileChange)
   EVT_RADIOBUTTON(ID_GHOST_1, frmMain::_onGhostFileChange)
   EVT_RADIOBUTTON(ID_GHOST_2, frmMain::_onGhostFileChange)
@@ -83,7 +83,7 @@ frmMain::frmMain()
   fillSizerFlags.Expand().Border(wxALL, 0);
 
   wxSizerFlags fillBorderSizerFlags(0);
-  fillSizerFlags.Expand().Border(wxALL, 1);
+  fillBorderSizerFlags.Expand().Border(wxALL, 1);
 
   wxSizerFlags buttonSizerFlags(0);
   buttonSizerFlags.Align(wxALIGN_CENTER_VERTICAL).Border(wxALL, 1);
@@ -531,11 +531,13 @@ void frmMain::_onLastAnim(wxCommandEvent& evt) {
 }
 
 void frmMain::_onAnimChar(wxCommandEvent& evt) {
-  long iAnim;
-  if (evt.GetString().ToLong(&iAnim)) {
-    if (iAnim >= 0 && iAnim < (long)m_oAnims.getAnimationCount()) {
-      _onAnimChange((size_t)iAnim);
+  long conv;
+  if (evt.GetString().ToLong(&conv)) {
+    if (conv < 0 || conv >= m_oAnims.getAnimationCount()) {
+      return;
     }
+    size_t iAnim = static_cast<size_t>(conv);
+    _onAnimChange((size_t)iAnim);
   }
 }
 
@@ -696,14 +698,17 @@ void frmMain::_onPanelClick(wxMouseEvent& evt) {
 }
 
 void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
-  long iLayer = ::wxGetNumberFromUser(
+  long input = ::wxGetNumberFromUser(
       L"Enter the layer number to search in (0 - 12)", L"Layer:",
       L"Search for Layer / ID Combo", 0, 0, 13, this);
-  if (iLayer < 0 || iLayer > 12) return;
-  long iID = ::wxGetNumberFromUser(
-      L"Enter the ID number to search for (0 - 24)", L"ID:",
-      L"Search for Layer / ID Combo", 0, 0, 24, this);
-  if (iID < 0 || iID > 24) return;
+  if (input < 0 || input > 12) return;
+  int iLayer = static_cast<int>(input);
+
+  input = ::wxGetNumberFromUser(L"Enter the ID number to search for (0 - 24)",
+                                L"ID:", L"Search for Layer / ID Combo", 0, 0,
+                                24, this);
+  if (input < 0 || input > 24) return;
+  int iID = static_cast<int>(input);
 
   m_lstSearchResults->Clear();
   wxBusyCursor oBusy;
@@ -712,17 +717,18 @@ void frmMain::_onSearchLayerId(wxCommandEvent& evt) {
 
     THLayerMask mskAnim;
     m_oAnims.getAnimationMask(i, mskAnim);
-    if (mskAnim.isSet(static_cast<int>(iLayer), static_cast<int>(iID))) {
+    if (mskAnim.isSet(iLayer, iID)) {
       m_lstSearchResults->Append(wxString::Format(L"%zu", i));
     }
   }
 }
 
 void frmMain::_onSearchFrame(wxCommandEvent& evt) {
-  long iFrame =
+  long input =
       ::wxGetNumberFromUser(L"Enter the frame number to search for.", L"Frame:",
                             L"Search for frame", 0, 0, 20000, this);
-  if (iFrame == -1) return;
+  if (input == -1) return;
+  size_t iFrame = static_cast<size_t>(input);
 
   m_lstSearchResults->Clear();
   wxBusyCursor oBusy;
@@ -735,10 +741,11 @@ void frmMain::_onSearchFrame(wxCommandEvent& evt) {
 }
 
 void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
-  long iFrame = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
-                                      L"Sound index:", L"Search for sound", 0,
-                                      0, 256, this);
-  if (iFrame == -1) return;
+  long input = ::wxGetNumberFromUser(L"Enter the sound index to search for.",
+                                     L"Sound index:", L"Search for sound", 0, 0,
+                                     256, this);
+  if (input == -1) return;
+  size_t iFrame = static_cast<size_t>(input);
 
   m_lstSearchResults->Clear();
   wxBusyCursor oBusy;
@@ -752,12 +759,6 @@ void frmMain::_onSearchSoundIndex(wxCommandEvent& evt) {
       }
     }
   }
-}
-
-void frmMain::_onGotoSearchResult(wxCommandEvent& evt) {
-  long iAnim;
-  evt.GetString().ToLong(&iAnim);
-  _onAnimChange(iAnim);
 }
 
 void frmMain::_drawCoordinates(wxPaintDC& DC, int i, int j) {
