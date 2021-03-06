@@ -173,7 +173,7 @@ function UICasebook:updateIcons()
       if #req.rooms > 0 then
         for _, room_id in ipairs(req.rooms) do
           -- Not researched yet?
-          if not hosp.discovered_rooms[world.available_rooms[room_id]] then
+          if not hosp:isRoomDiscovered(room_id) then
             known = false
             research = (research and (research .. ", ") or " (") .. TheApp.rooms[room_id].name
           end

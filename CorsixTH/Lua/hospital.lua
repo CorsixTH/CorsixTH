@@ -167,14 +167,12 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.policies = {}
   self.discovered_diseases = {} -- a list
 
-  self.discovered_rooms = {} -- a set; keys are the entries of TheApp.rooms, values are true or nil
-  self.undiscovered_rooms = {} -- NB: These two together must form the list world.available_rooms
+  self.room_discovery = {}
   for _, avail_room in ipairs(avail_rooms) do
-    if avail_room.is_discovered then
-      self.discovered_rooms[avail_room.room] = true
-    else
-      self.undiscovered_rooms[avail_room.room] = true
-    end
+    self.room_discovery[avail_room.room.id] = {
+      room = avail_room.room,
+      is_discovered = avail_room.is_discovered or false
+    }
   end
 
   self.policies["staff_allowed_to_move"] = true
@@ -254,6 +252,13 @@ function Hospital:Hospital(world, avail_rooms, name)
         build_cost = not self.free_build_mode and avail_room.build_cost or 0,
       }
   end
+end
+
+--! Checks if a room has been discovered
+--!param room_id (string) The name of the room
+--!return (boolean) true if found
+function Hospital:isRoomDiscovered(room_id)
+  return room_id and self.room_discovery[room_id].is_discovered
 end
 
 --! Give the user possibly a message about a cured patient.
@@ -607,6 +612,28 @@ function Hospital:afterLoad(old, new)
       self.research:discoverDisease(em.disease)
     end
   end
+
+  if old < 153 then
+    -- We now use one table for our room discovery
+    self.room_discovery = {}
+    -- Get the level start available rooms
+    local avail_rooms = self.world:getAvailableRooms()
+    for _, avail_room in ipairs(avail_rooms) do
+      self.room_discovery[avail_room.room.id] = {
+        room = avail_room.room,
+        is_discovered = avail_room.is_discovered or false
+      }
+    end
+    -- Has the player discovered rooms since?
+    for room_new_id, room_new in pairs(self.room_discovery) do
+      for room_old, _ in pairs(self.discovered_rooms) do
+        if room_new_id == room_old.id then
+          room_new.is_discovered = true
+          break
+        end
+      end
+    end
+  end 
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
@@ -2274,14 +2301,12 @@ end
 
 --! Function that returns true if the room for the given disease
 --! has not been researched yet.
---! param disease (string): the disease to be checked.
+--!param disease (string): the disease to be checked.
 function Hospital:roomNotYetResearched(disease)
   local req = self:checkDiseaseRequirements(disease)
   if type(req) == "table" and #req.rooms > 0 then
     for _, room_id in ipairs(req.rooms) do
-      if not self.discovered_rooms[self.world.available_rooms[room_id]] then
-        return true
-      end
+      if not self:isRoomDiscovered(room_id) then return true end
     end
   end
   return false

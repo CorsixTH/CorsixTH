@@ -275,7 +275,7 @@ function ResearchDepartment:nextResearch(category)
     cat.frac = 0
     self:redistributeResearchPoints()
 
-    if self.hospital == self.world.ui.hospital then
+    if self.hospital:isPlayerHospital() then
       self.world.ui.adviser:say(_A.research.drug_fully_researched
       :format(_S.research.categories[category]))
     end
@@ -343,8 +343,8 @@ function ResearchDepartment:addResearchPoints(points, autopsy_room)
   ---------------------- An autopsy has been done ---------------------------
   if autopsy_room then
     -- Do something only if the room is among those not yet discovered.
-    for room, _ in pairs(self.hospital.undiscovered_rooms) do
-      if room.id == autopsy_room then
+    for room_id, room in pairs(self.hospital.room_discovery) do
+      if room_id == autopsy_room and not room.is_discovered then
         -- Find an object within this room that needs research points.
         for object, _ in pairs(room.objects_needed) do
           local research = self.research_progress[TheApp.objects[object]]
@@ -434,7 +434,7 @@ function ResearchDepartment:improveDrug(drug)
     disease.cure_effectiveness = math.min(100, disease.cure_effectiveness + improve_rate)
     research_info.effect_imp = research_info.effect_imp + 1
   end
-  if self.hospital == self.world.ui.hospital then
+  if self.hospital:isPlayerHospital() then
     if drug.disease.id == "the_squits" then
       self.world.ui.adviser:say(_A.research.drug_improved_1
       :format(drug.disease.name))
@@ -489,13 +489,13 @@ function ResearchDepartment:improveMachine(machine)
     research_info.strength_imp = research_info.strength_imp + 1
   end
   -- Tell the player that something has been improved
-  if self.hospital == self.world.ui.hospital then
+  if self.hospital:isPlayerHospital() then
     self.world.ui.adviser:say(_A.research.machine_improved
     :format(machine.name))
   end
 end
 
---[[ Called when it is time to discoer an object. This may currently only
+--[[ Called when it is time to discover an object. This may currently only
 happen from research.
 !param object The object to discover, a table from TheApp.objects
 !param automatic If true the discovery was not made by
@@ -505,39 +505,42 @@ function ResearchDepartment:discoverObject(object, automatic)
   self.research_progress[object].discovered = true
 
   -- Go through all rooms to see if another one can be made available.
-  for room, _ in pairs(self.hospital.undiscovered_rooms) do
-    local discovery = true
-    for needed, _ in pairs(room.objects_needed) do
-      local obj = self.research_progress[TheApp.objects[needed]]
-      if obj and not obj.discovered then
-        discovery = false
-        break
-      end
-    end
-    if discovery then
-      self.hospital.discovered_rooms[room] = true
-      self.hospital.undiscovered_rooms[room] = nil
-      if self.hospital == self.world.ui.hospital then
-        if automatic then
-          self.world.ui.adviser:say(_A.research.new_available:format(object.name))
-        else
-          self.world.ui.adviser:say(_A.research.new_machine_researched:format(object.name))
+  local room_discovery = self.hospital.room_discovery
+  for room_id, _ in pairs(room_discovery) do
+    if not room_discovery[room_id].is_discovered then
+      local room = room_discovery[room_id].room
+      local discovery = true
+      for needed, _ in pairs(room.objects_needed) do
+        local obj = self.research_progress[TheApp.objects[needed]]
+        if obj and not obj.discovered then
+          discovery = false
+          break
         end
       end
-      -- It may now be possible to continue researching machine improvements
-      local current_improvement_research = self.research_policy.improvements.current
-      local max_strength = self.world.map.level_config.gbv.MaxObjectStrength
-      local min_strength = max_strength
-      -- If we're not researching any improvement right now, and the newest discovery was
-      -- a machine that requires an improvement, switch the current policy.
-      if (not current_improvement_research or current_improvement_research.dummy) then
-        for research_object, progress in pairs(self.research_progress) do
-          if research_object.default_strength then
-            -- Don't improve those that already have the max strength
-            if progress.start_strength < max_strength then
-              if progress.discovered and progress.start_strength < min_strength then
-                self.research_policy["improvements"].current = research_object
-                min_strength = progress.start_strength
+      if discovery then
+        room_discovery[room_id].is_discovered = true
+        if self.hospital:isPlayerHospital() then
+          if automatic then
+            self.world.ui.adviser:say(_A.research.new_available:format(object.name))
+          else
+            self.world.ui.adviser:say(_A.research.new_machine_researched:format(object.name))
+          end
+        end
+        -- It may now be possible to continue researching machine improvements
+        local current_improvement_research = self.research_policy.improvements.current
+        local max_strength = self.world.map.level_config.gbv.MaxObjectStrength
+        local min_strength = max_strength
+        -- If we're not researching any improvement right now, and the newest discovery was
+        -- a machine that requires an improvement, switch the current policy.
+        if (not current_improvement_research or current_improvement_research.dummy) then
+          for research_object, progress in pairs(self.research_progress) do
+            if research_object.default_strength then
+              -- Don't improve those that already have the max strength
+              if progress.start_strength < max_strength then
+                if progress.discovered and progress.start_strength < min_strength then
+                  self.research_policy["improvements"].current = research_object
+                  min_strength = progress.start_strength
+                end
               end
             end
           end
