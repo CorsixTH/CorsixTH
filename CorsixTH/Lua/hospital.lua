@@ -635,7 +635,7 @@ function Hospital:afterLoad(old, new)
         end
       end
     end
-  end 
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
