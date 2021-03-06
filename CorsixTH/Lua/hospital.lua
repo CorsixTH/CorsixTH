@@ -167,6 +167,8 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.policies = {}
   self.discovered_diseases = {} -- a list
 
+  -- Make a table containing available rooms for the level, and its discovery status (room, discovery_status)
+  -- Index is the room's id e.g. gp
   self.room_discovery = {}
   for _, avail_room in ipairs(avail_rooms) do
     self.room_discovery[avail_room.room.id] = {
