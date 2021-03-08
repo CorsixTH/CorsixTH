@@ -635,6 +635,9 @@ function Hospital:afterLoad(old, new)
         end
       end
     end
+    -- Clear old variables
+    self.discovered_rooms = nil
+    self.undiscovered_rooms = nil
   end
 
   -- Update other objects in the hospital (added in version 106).
