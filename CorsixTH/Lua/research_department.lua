@@ -326,28 +326,29 @@ function ResearchDepartment:getResearchRequired(thing)
   return required
 end
 
---! This function will add progress to discovering a room/object to treat a diagnosed patient after an autopsy.
---! Research points are added as according to the level config.
+--! This function will give research points to the treatment of the illness of an autopsied patient.
 --!param target_room_id (string) The name of the room
 function ResearchDepartment:addResearchPointsForAutopsy(target_room_id)
   local level_config = self.world.map.level_config
   local room_discovery = self.hospital.room_discoveries[target_room_id]
   -- Do something only if the room is among those not yet discovered.
-  if not room_discovery.is_discovered then
-    -- Find an object within this room that needs research points.
-    for object, _ in pairs(room_discovery.room.objects_needed) do
-      local research = self.research_progress[TheApp.objects[object]]
-      if research and not research.discovered then
-        local required = self:getResearchRequired(TheApp.objects[object])
-        local advance = required * level_config.gbv.AutopsyRschPercent / 100
-        research.points = research.points + advance
+  if room_discovery.is_discovered then
+    return
+  end
+  -- Find an object within this room that needs research points.
+  for object, _ in pairs(room_discovery.room.objects_needed) do
+    local research = self.research_progress[TheApp.objects[object]]
+    if research and not research.discovered then
+      local required = self:getResearchRequired(TheApp.objects[object])
+      -- Research points are added as according to the level config.
+      local advance = required * level_config.gbv.AutopsyRschPercent / 100
+      research.points = research.points + advance
 
-        -- Maybe we now have enough to discover the object?
-        if research.points > required then
-          self:discoverObject(TheApp.objects[object])
-        end
-        break
+      -- Maybe we now have enough to discover the object?
+      if research.points > required then
+        self:discoverObject(TheApp.objects[object])
       end
+      break
     end
   end
 end
