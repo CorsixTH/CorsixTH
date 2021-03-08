@@ -169,16 +169,14 @@ function UICasebook:updateIcons()
       local build = false
       local staff = false
       -- Room requirements
-      if #req.rooms > 0 then
-        for _, room_id in ipairs(req.rooms) do
-          -- Not researched yet?
-          if not hosp:isRoomDiscovered(room_id) then
-            known = false
-            research = (research and (research .. ", ") or " (") .. TheApp.rooms[room_id].name
-          end
-          -- Researched, but not built. TODO: maybe make this an else clause to not oversize the tooltip that much
-          build = (build and (build .. ", ") or " (") .. TheApp.rooms[room_id].name
+      for _, room_id in ipairs(req.rooms) do
+        -- Not researched yet?
+        if not hosp:isRoomDiscovered(room_id) then
+          known = false
+          research = (research and (research .. ", ") or " (") .. TheApp.rooms[room_id].name
         end
+        -- Researched, but not built. TODO: maybe make this an else clause to not oversize the tooltip that much
+        build = (build and (build .. ", ") or " (") .. TheApp.rooms[room_id].name
       end
       research = research and (_S.tooltip.casebook.cure_requirement.research_machine .. research .. "). ") or ""
       build    = build    and (_S.tooltip.casebook.cure_requirement.build_room .. build .. "). ") or ""
