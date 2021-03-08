@@ -497,10 +497,9 @@ function ResearchDepartment:discoverObject(object, automatic)
   self.research_progress[object].discovered = true
 
   -- Go through all rooms to see if another one can be made available.
-  local room_discoveries = self.hospital.room_discoveries
-  for room_id, _ in pairs(room_discoveries) do
-    if not room_discoveries[room_id].is_discovered then
-      local room = room_discoveries[room_id].room
+  for _, room_disc in pairs(self.hospital.room_discoveries) do
+    if not room_disc.is_discovered then
+      local room = room_disc.room
       local unveil_room = true
       for needed, _ in pairs(room.objects_needed) do
         local obj = self.research_progress[TheApp.objects[needed]]
@@ -510,7 +509,7 @@ function ResearchDepartment:discoverObject(object, automatic)
         end
       end
       if unveil_room then
-        room_discoveries[room_id].is_discovered = true
+        room_disc.is_discovered = true
         if self.hospital:isPlayerHospital() then
           if automatic then
             self.world.ui.adviser:say(_A.research.new_available:format(object.name))

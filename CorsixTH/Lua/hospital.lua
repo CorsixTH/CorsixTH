@@ -627,12 +627,9 @@ function Hospital:afterLoad(old, new)
       }
     end
     -- Has the player discovered rooms since?
-    for room_new_id, room_new in pairs(self.room_discoveries) do
-      for room_old, _ in pairs(self.discovered_rooms) do
-        if room_new_id == room_old.id then
-          room_new.is_discovered = true
-          break
-        end
+    for _, room_new in pairs(self.room_discoveries) do
+      if self.discovered_rooms[room_new.room] then -- old system used rooms as keys
+        room_new.is_discovered = true
       end
     end
     -- Clear old variables
