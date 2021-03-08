@@ -352,7 +352,7 @@ function ResearchDepartment:addResearchPointsForAutopsy(target_room_id)
   end
 end
 
---! Add some more research points to research progress. 
+--! Add some more research points to research progress.
 --! It will be divided according to the research policy into the different research areas.
 --!param points (integer) The total amount of points before applying any level specific divisors to add to research.
 function ResearchDepartment:addResearchPoints(points)
