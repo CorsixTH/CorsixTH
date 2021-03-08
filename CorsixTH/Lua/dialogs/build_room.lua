@@ -109,12 +109,12 @@ function UIBuildRoom:updateBuildableRooms()
   for i, category in ipairs({"diagnosis", "treatment", "clinics", "facilities"}) do
     local rooms = {}
     self.category_rooms[i] = rooms
-    local room_discovery = self.ui.hospital.room_discovery
-    for room_id, _ in pairs(room_discovery) do
-      local room = room_discovery[room_id].room
+    local room_discoveries = self.ui.hospital.room_discoveries
+    for room_id, _ in pairs(room_discoveries) do
+      local room = room_discoveries[room_id].room
       -- NB: Unimplemented rooms are hidden unless in debug mode
       if (app.config.debug or room.class) and room.categories[category] and
-          room_discovery[room_id].is_discovered then
+          room_discoveries[room_id].is_discovered then
         rooms[#rooms + 1] = room
       end
     end

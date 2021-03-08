@@ -326,79 +326,71 @@ function ResearchDepartment:getResearchRequired(thing)
   return required
 end
 
---[[ Add some more research points to research progress. If
-autopsy_room is specified points are not used. Instead research
-progresses according to the level config for autopsies.
-Otherwise they will be divided according to the research policy
-into the different research areas.
-!param points (integer) The total amount of points (before applying
-any level specific divisors to add to research.
-!param autopsy_room (string) If a specific room should get points following
-an autopsy, then this is the id of that room.
-]]
-function ResearchDepartment:addResearchPoints(points, autopsy_room)
-
+--! This function will add progress to discovering a room/object to treat a diagnosed patient after an autopsy.
+--! Research points are added as according to the level config.
+--!param target_room_id (string) The name of the room
+function ResearchDepartment:addResearchPointsForAutopsy(target_room_id)
   local level_config = self.world.map.level_config
+  local room_discovery = self.hospital.room_discoveries[target_room_id]
+  -- Do something only if the room is among those not yet discovered.
+  if not room_discovery.is_discovered then
+    -- Find an object within this room that needs research points.
+    for object, _ in pairs(room_discovery.room.objects_needed) do
+      local research = self.research_progress[TheApp.objects[object]]
+      if research and not research.discovered then
+        local required = self:getResearchRequired(TheApp.objects[object])
+        local advance = required * level_config.gbv.AutopsyRschPercent / 100
+        research.points = research.points + advance
 
-  ---------------------- An autopsy has been done ---------------------------
-  if autopsy_room then
-    -- Do something only if the room is among those not yet discovered.
-    for room_id, room in pairs(self.hospital.room_discovery) do
-      if room_id == autopsy_room and not room.is_discovered then
-        -- Find an object within this room that needs research points.
-        for object, _ in pairs(room.objects_needed) do
-          local research = self.research_progress[TheApp.objects[object]]
-          if research and not research.discovered then
-            local required = self:getResearchRequired(TheApp.objects[object])
-            local advance = required * level_config.gbv.AutopsyRschPercent / 100
-            research.points = research.points + advance
-
-            -- Maybe we now have enough to discover the object?
-            if research.points > required then
-              self:discoverObject(TheApp.objects[object])
-            end
-            break
-          end
+        -- Maybe we now have enough to discover the object?
+        if research.points > required then
+          self:discoverObject(TheApp.objects[object])
         end
+        break
       end
     end
-  else
-    --------------------------- General research ------------------------------
-    -- Divide the points into the different areas. If global is not at 100 %
-    -- the total amount is lowered, but then cost is also reduced.
+  end
+end
 
-    -- Fetch the level research divisor.
-    local divisor = level_config.gbv.ResearchPointsDivisor or 5
+--! Add some more research points to research progress. 
+--! It will be divided according to the research policy into the different research areas.
+--!param points (integer) The total amount of points before applying any level specific divisors to add to research.
+function ResearchDepartment:addResearchPoints(points)
+  local level_config = self.world.map.level_config
+  -- Divide the points into the different areas. If global is not at 100 %
+  -- the total amount is lowered, but then cost is also reduced.
 
-    points = math.ceil(points * self.research_policy.global / (100 * divisor))
+  -- Fetch the level research divisor.
+  local divisor = level_config.gbv.ResearchPointsDivisor or 5
 
-    -- Divide the points into the different categories and check if
-    -- it is time to discover something
-    local areas = self.research_policy
-    for _, info in pairs(areas) do
-      -- Don't touch the value "global".
-      if type(info) == "table" then
-        -- Some categories may be finished
-        if info.current then
-          -- Add new points to this category's current focus.
-          local research_info = self.research_progress[info.current]
-          local stored = research_info.points
-          -- Add just a little randomness
-          research_info.points = stored + math.n_random(1, 0.2) * points * info.frac / 100
-          local required = self:getResearchRequired(info.current)
-          if required and required < research_info.points then
-            research_info.points = 0
-            -- On the specialisation pass any of these categories are eligible.
-            ---------------- Discovering objects ----------------------
-            if info.current.thob and not research_info.discovered then
-              self:discoverObject(info.current)
-            ----------------- Improving drugs -------------------------
-            elseif info.current.drug then
-              self:improveDrug(info.current)
-            --------------- Improving machines ------------------------
-            elseif info.current.thob then
-              self:improveMachine(info.current)
-            end
+  points = math.ceil(points * self.research_policy.global / (100 * divisor))
+
+  -- Divide the points into the different categories and check if
+  -- it is time to discover something
+  local areas = self.research_policy
+  for _, info in pairs(areas) do
+    -- Don't touch the value "global".
+    if type(info) == "table" then
+      -- Some categories may be finished
+      if info.current then
+        -- Add new points to this category's current focus.
+        local research_info = self.research_progress[info.current]
+        local stored = research_info.points
+        -- Add just a little randomness
+        research_info.points = stored + math.n_random(1, 0.2) * points * info.frac / 100
+        local required = self:getResearchRequired(info.current)
+        if required and required < research_info.points then
+          research_info.points = 0
+          -- On the specialisation pass any of these categories are eligible.
+          ---------------- Discovering objects ----------------------
+          if info.current.thob and not research_info.discovered then
+            self:discoverObject(info.current)
+          ----------------- Improving drugs -------------------------
+          elseif info.current.drug then
+            self:improveDrug(info.current)
+          --------------- Improving machines ------------------------
+          elseif info.current.thob then
+            self:improveMachine(info.current)
           end
         end
       end
@@ -505,20 +497,20 @@ function ResearchDepartment:discoverObject(object, automatic)
   self.research_progress[object].discovered = true
 
   -- Go through all rooms to see if another one can be made available.
-  local room_discovery = self.hospital.room_discovery
-  for room_id, _ in pairs(room_discovery) do
-    if not room_discovery[room_id].is_discovered then
-      local room = room_discovery[room_id].room
-      local discovery = true
+  local room_discoveries = self.hospital.room_discoveries
+  for room_id, _ in pairs(room_discoveries) do
+    if not room_discoveries[room_id].is_discovered then
+      local room = room_discoveries[room_id].room
+      local unveil_room = true
       for needed, _ in pairs(room.objects_needed) do
         local obj = self.research_progress[TheApp.objects[needed]]
         if obj and not obj.discovered then
-          discovery = false
+          unveil_room = false
           break
         end
       end
-      if discovery then
-        room_discovery[room_id].is_discovered = true
+      if unveil_room then
+        room_discoveries[room_id].is_discovered = true
         if self.hospital:isPlayerHospital() then
           if automatic then
             self.world.ui.adviser:say(_A.research.new_available:format(object.name))

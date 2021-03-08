@@ -166,7 +166,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     -- Some research is done. :) Might trigger a loss of reputation though.
     local hosp = self.hospital
     local patient_room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
-    hosp.research:addResearchPoints("dummy", patient_room)
+    hosp.research:addResearchPointsForAutopsy(patient_room)
     -- average morale of all staff affects chances
     local avg_happiness = hosp:getAverageStaffAttribute("happiness", nil)
     local autopsy_discovered

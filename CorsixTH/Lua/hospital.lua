@@ -169,9 +169,9 @@ function Hospital:Hospital(world, avail_rooms, name)
 
   -- Make a table containing available rooms for the level, and its discovery status (room, discovery_status)
   -- Index is the room's id e.g. gp
-  self.room_discovery = {}
+  self.room_discoveries = {}
   for _, avail_room in ipairs(avail_rooms) do
-    self.room_discovery[avail_room.room.id] = {
+    self.room_discoveries[avail_room.room.id] = {
       room = avail_room.room,
       is_discovered = avail_room.is_discovered or false
     }
@@ -258,9 +258,9 @@ end
 
 --! Checks if a room has been discovered
 --!param room_id (string) The name of the room
---!return (boolean) true if found
+--!return (boolean) true if discovered, otherwise false
 function Hospital:isRoomDiscovered(room_id)
-  return room_id and self.room_discovery[room_id].is_discovered
+  return self.room_discoveries[room_id].is_discovered
 end
 
 --! Give the user possibly a message about a cured patient.
@@ -617,17 +617,17 @@ function Hospital:afterLoad(old, new)
 
   if old < 153 then
     -- We now use one table for our room discovery
-    self.room_discovery = {}
+    self.room_discoveries = {}
     -- Get the level start available rooms
     local avail_rooms = self.world:getAvailableRooms()
     for _, avail_room in ipairs(avail_rooms) do
-      self.room_discovery[avail_room.room.id] = {
+      self.room_discoveries[avail_room.room.id] = {
         room = avail_room.room,
         is_discovered = avail_room.is_discovered or false
       }
     end
     -- Has the player discovered rooms since?
-    for room_new_id, room_new in pairs(self.room_discovery) do
+    for room_new_id, room_new in pairs(self.room_discoveries) do
       for room_old, _ in pairs(self.discovered_rooms) do
         if room_new_id == room_old.id then
           room_new.is_discovered = true
