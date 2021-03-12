@@ -75,8 +75,9 @@ staff_descriptions.bad[14] = "Sly, cunning, and subversive. "
 staff_descriptions.misc[11] = "Distils whisky. "
 
 -- Some fun, in honor of the IRC :)
-staff_descriptions.misc[38] = "Drinks tea."
-staff_descriptions.misc[39] = "Secret coffee drinker."
+-- Special strings coded at >100 to not overwrite any existing ones
+staff_descriptions.misc[101] = "Drinks tea."
+staff_descriptions.misc[102] = "Secret coffee drinker."
 
 -- Correction to a pay rise prompt with typos
 pay_rise.regular[1] = "I'm totally frazzled. I need a good rest, plus a rise of %d if you don't want to see me jack in this poxy job."
