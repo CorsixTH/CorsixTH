@@ -247,6 +247,8 @@ function UI:runDebugScript()
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
   local script = assert(loadfile(lua_dir .. path_sep .. "debug_script.lua"))
   script()
+  -- Clear _ after the script to prevent save corruption
+  _ = nil
 end
 
 function UI:setupGlobalKeyHandlers()
