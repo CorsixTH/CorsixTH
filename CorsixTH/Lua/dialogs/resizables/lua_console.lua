@@ -125,6 +125,7 @@ function UILuaConsole:buttonExecute()
 end
 
 function UILuaConsole:buttonClose()
+  _ = nil
   self:close()
 end
 
