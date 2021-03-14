@@ -698,7 +698,8 @@ errors = {
 warnings = {
   levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
                                      "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
-  newersave = "Warning, you have loaded a save from a newer version of CorsixTH. It is not recommended to continue as crashes may occur. Play at your own risk."
+  newersave = "Warning, you have loaded a save from a newer version of CorsixTH. It is not recommended to continue as crashes may occur. Play at your own risk.",
+  lua_console_open = "You can't save the game with the Lua Console open!",
 }
 
 confirmation = {

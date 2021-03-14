@@ -81,6 +81,10 @@ end
 
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
+  -- Saving without closing the Lua Console will break the save
+  if self.ui:getWindow(UILuaConsole) then
+    return self.ui:addWindow(UIInformation(self.ui, {_S.warnings.lua_console_open}))
+  end
   if lfs.attributes(filename, "size") ~= nil then
     self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
