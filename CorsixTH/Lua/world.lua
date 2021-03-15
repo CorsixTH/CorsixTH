@@ -998,7 +998,7 @@ function World:onTick()
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
       if self.ui:isLuaConsoleOpen() then
-        self:gameLog("Warning: Autosave not created because the Lua Console is open.")
+        self.app:gameLog("Warning: Autosave not created because the Lua Console is open.")
       else
         local pathsep = package.config:sub(1, 1)
         local dir = TheApp.savegame_dir
