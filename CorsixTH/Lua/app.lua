@@ -1497,6 +1497,9 @@ end
 
 -- Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten
 function App:quickSave()
+  if self.ui:isLuaConsoleOpen() then
+    return self.ui:addWindow(UIInformation(self.ui, {_S.warnings.lua_console_open}))
+  end
   local filename = "quicksave"
   return SaveGameFile(self.savegame_dir .. filename)
 end

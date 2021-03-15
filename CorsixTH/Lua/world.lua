@@ -997,17 +997,21 @@ function World:onTick()
   if self.tick_timer == 0 then
     if self.autosave_next_tick then
       self.autosave_next_tick = nil
-      local pathsep = package.config:sub(1, 1)
-      local dir = TheApp.savegame_dir
-      if not dir:sub(-1, -1) == pathsep then
-        dir = dir .. pathsep
-      end
-      if not lfs.attributes(dir .. "Autosaves", "modification") then
-        lfs.mkdir(dir .. "Autosaves")
-      end
-      local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.game_date:monthOfYear() .. ".sav")
-      if not status then
-        print("Error while autosaving game: " .. err)
+      if self.ui:isLuaConsoleOpen() then
+        self:gameLog("Warning: Autosave not created because the Lua Console is open.")
+      else
+        local pathsep = package.config:sub(1, 1)
+        local dir = TheApp.savegame_dir
+        if not dir:sub(-1, -1) == pathsep then
+          dir = dir .. pathsep
+        end
+        if not lfs.attributes(dir .. "Autosaves", "modification") then
+          lfs.mkdir(dir .. "Autosaves")
+        end
+        local status, err = pcall(TheApp.save, TheApp, dir .. "Autosaves" .. pathsep .. "Autosave" .. self.game_date:monthOfYear() .. ".sav")
+        if not status then
+          print("Error while autosaving game: " .. err)
+        end
       end
     end
     if self.game_date == Date() and not self.ui.start_tutorial then

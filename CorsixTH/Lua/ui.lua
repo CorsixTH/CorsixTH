@@ -1111,6 +1111,11 @@ end
 function UI:tutorialStep(...)
 end
 
+-- The lua console doesn't play nice with saves, so this function checks if it's open.
+function UI:isLuaConsoleOpen()
+  return self:getWindow(UILuaConsole)
+end
+
 function UI:makeScreenshot()
    -- Find an index for screenshot which is not already used
   local i = 0
