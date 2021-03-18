@@ -154,7 +154,8 @@ function World:World(app)
   local level_config = self.map.level_config
   for key, value in pairs(level_config.computer) do
     if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1,
+          self, avail_rooms, value.Name)
     end
   end
 
