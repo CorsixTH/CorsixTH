@@ -1903,7 +1903,7 @@ function World:newObject(id, x, y, flags, name)
   elseif object_type.default_strength then
     entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
-    if self.hospitals[1]:countStaffOfCategory("Handyman") == 0 then
+    if hospital:countStaffOfCategory("Handyman", 1) == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else

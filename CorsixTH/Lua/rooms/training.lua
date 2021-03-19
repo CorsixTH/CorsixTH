@@ -68,7 +68,7 @@ function TrainingRoom:roomFinished()
   self.training_factor = self:calculateTrainingFactor(skeletons, bookcases) / 10.0
 
   -- Also tell the player if he/she doesn't have a consultant yet.
-  if self.hospital:countStaffOfCategory("Consultant") == 0 then
+  if self.hospital:countStaffOfCategory("Consultant", 1) == 0 then
     local text = _A.room_requirements.training_room_need_consultant
     self.world.ui.adviser:say(text)
   end

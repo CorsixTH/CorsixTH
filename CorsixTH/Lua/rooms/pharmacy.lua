@@ -51,7 +51,7 @@ function PharmacyRoom:PharmacyRoom(...)
 end
 
 function PharmacyRoom:roomFinished()
-  if self.hospital:countStaffOfCategory("Nurse") == 0 then
+  if self.hospital:countStaffOfCategory("Nurse", 1) == 0 then
     self.world.ui.adviser:say(_A.room_requirements.pharmacy_need_nurse)
   end
   return Room.roomFinished(self)
