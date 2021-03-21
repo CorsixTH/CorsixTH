@@ -2680,7 +2680,6 @@ function World:afterLoad(old, new)
   if old < 153 then
     -- Complementary afterLoad to see if emergencies got stuck in the level.
     -- There's no guarantee we can unstick the level, however.
-    local hosp = self:getLocalPlayerHospital()
     local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
     --[[ UIWatch's emergency timer is 52 days but this is local.
     The emergency fax also is held for 16 days.
