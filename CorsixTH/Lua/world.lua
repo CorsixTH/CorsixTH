@@ -201,7 +201,12 @@ function World:World(app)
   self:calculateSpawnTiles()
 
   -- Next Events dates
+  -- emergencies
+  -- The emergency control level data starts with an array of 0
+  self.next_emergency_no = -1 -- Properly adjusted in nextEmergency()
   self:nextEmergency()
+
+  -- vip
   self.next_vip_date = self:_generateNextVipDate()
 
   -- earthquakes
@@ -1267,56 +1272,67 @@ function World:getReputationImpact(hospital)
   end
 end
 
--- Called when it is time to determine what the
--- next emergency should look like.
+-- Called when it is time to determine when the next emergency should happen
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
   -- Does this level use random emergencies?
-  if control and (control[0].Random or control[0].Mean) then
-    -- Support standard values for mean and variance
-    local mean = control[0].Mean or 180
-    local variance = control[0].Variance or 30
-    -- How many days until next emergency?
-    local days = math.round(math.n_random(mean, variance))
-    local emergency_date = self.game_date:plusDays(days)
-
-    -- Make it the same format as for "controlled" emergencies
-    self.next_emergency_month = emergency_date:monthOfGame()
-    self.next_emergency_day = emergency_date:dayOfMonth()
-  else
-    if not self.next_emergency_no then
-      self.next_emergency_no = 0
-    else
-      repeat
-        self.next_emergency_no = self.next_emergency_no + 1
-        -- Level three is missing [5].
-        if not control[self.next_emergency_no] and
-            control[self.next_emergency_no + 1] then
-          self.next_emergency_no = self.next_emergency_no + 1
-        end
-      until not control[self.next_emergency_no] or
-            control[self.next_emergency_no].EndMonth >= self.game_date:monthOfGame()
-    end
-
-    local emergency = control[self.next_emergency_no]
-
-    -- No more emergencies?
-    if not emergency or emergency.EndMonth == 0 then
-      self.next_emergency_month = 0
-    else
-      -- Generate the next month and day the emergency should occur at.
-      -- Make sure it doesn't happen in the past.
-      local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
-      local next_month = math.random(start, emergency.EndMonth)
-      self.next_emergency_month = next_month
-      local day_start = 1
-      if start == emergency.EndMonth then
-        day_start = self.game_date:dayOfMonth()
-      end
-      local day_end = Date(1, next_month):lastDayOfMonth()
-      self.next_emergency_day = math.random(day_start, day_end)
-    end
+  if control[0].Random or control[0].Mean then
+    self:scheduleRandomEmergency(control)
+    return
   end
+  repeat
+    self.next_emergency_no = self.next_emergency_no + 1
+    local emer_num = self.next_emergency_no
+    -- Account for missing Level 3 emergency[5]
+    if not control[emer_num] and control[emer_num + 1] then
+      self.next_emergency_no = emer_num + 1
+    end
+    local emergency = control[emer_num]
+    -- No more emergencies?
+    if not emergency then
+      self.next_emergency_month = 0
+      self.next_emergency_date = nil
+      return
+    end
+  until self:computeNextEmergencyDates(emergency)
+end
+
+--! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
+--!param control (table) Contains emergency information from level file
+function World:scheduleRandomEmergency(control)
+  -- Support standard values for mean and variance
+  local mean = control[0].Mean or 180
+  local variance = control[0].Variance or 30
+  -- How many days until next emergency?
+  local days = math.round(math.n_random(mean, variance))
+  local emergency_date = self.game_date:plusDays(days)
+
+  -- Make it the same format as for "controlled" emergencies
+  self.next_emergency_month = emergency_date:monthOfGame()
+  self.next_emergency_day = emergency_date:dayOfMonth()
+  self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day) -- TODO: Make more use of this
+end
+
+--! Generate the dates for the next emergency
+--!param emergency The next scheduled emergency to take place
+--!return (boolean) true if emergency sucessfully scheduled
+function World:computeNextEmergencyDates(emergency)
+  -- Generate the next month and day the emergency should occur at.
+  -- Make sure it doesn't happen in the past.
+  local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
+  if (emergency.EndMonth < start) then
+    return false
+  end
+  local next_month = math.random(start, emergency.EndMonth)
+  self.next_emergency_month = next_month
+  local day_start = 1
+  if start == emergency.EndMonth then
+    day_start = self.game_date:dayOfMonth()
+  end
+  local day_end = Date(1, next_month):lastDayOfMonth()
+  self.next_emergency_day = math.random(day_start, day_end)
+  self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day) -- TODO: Make more use of this
+  return self.game_date <= self.next_emergency_date
 end
 
 -- Called when it is time to have another VIP
@@ -2659,6 +2675,25 @@ function World:afterLoad(old, new)
   if old < 120 then
     -- Issue #1105 updates to fix any broken saves with travel<dir> flags for side objects
     self:resetSideObjects()
+  end
+
+  if old < 153 then
+    -- Complementary afterLoad to see if emergencies got stuck in the level.
+    -- There's no guarantee we can unstick the level, however.
+    local hosp = self:getLocalPlayerHospital()
+    local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+    --[[ UIWatch's emergency timer is 52 days but this is local.
+    The emergency fax also is held for 16 days.
+    Add one extra day to this for compensation = 69. (Unavoidable magic number)]]--
+    if self.game_date > next_emer_date:plusDays(69) then
+      -- The date the emergency should've finished by has passed.
+      -- Next check if the emergency could still be happening.
+      local watch = self.ui:getWindow(UIWatch)
+      if not watch or watch.count_type ~= "emergency" then
+        -- The emergency is likely stuck
+        self:nextEmergency()
+      end
+    end
   end
 
   self.savegame_version = new
