@@ -1315,7 +1315,7 @@ end
 
 --! Generate the dates for the next emergency
 --!param emergency The next scheduled emergency to take place
---!return (boolean) true if emergency sucessfully scheduled
+--!return (boolean) true if emergency successfully scheduled
 function World:computeNextEmergencyDates(emergency)
   -- Generate the next month and day the emergency should occur at.
   -- Make sure it doesn't happen in the past.
