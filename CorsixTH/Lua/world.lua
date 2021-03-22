@@ -1285,7 +1285,8 @@ function World:nextEmergency()
     local emer_num = self.next_emergency_no
     -- Account for missing Level 3 emergency[5]
     if not control[emer_num] and control[emer_num + 1] then
-      self.next_emergency_no = emer_num + 1
+      emer_num = emer_num + 1
+      self.next_emergency_no = emer_num
     end
     local emergency = control[emer_num]
     -- No more emergencies?
