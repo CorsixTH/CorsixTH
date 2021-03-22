@@ -54,7 +54,7 @@ function PlayerHospital:dailyAdviceChecks()
   end
 
   -- Warn about lack of a staff room.
-  if day == 3 and self:countRoomOfType("staff_room") == 0 then
+  if day == 3 and self:countRoomOfType("staff_room", 1) == 0 then
     local staffroom_advice = {
       _A.warnings.build_staffroom, _A.warnings.need_staffroom,
       _A.warnings.staff_overworked, _A.warnings.staff_tired,
@@ -63,7 +63,7 @@ function PlayerHospital:dailyAdviceChecks()
   end
 
   -- Warn about lack of toilets.
-  if day == 8 and self:countRoomOfType("toilets") == 0 then
+  if day == 8 and self:countRoomOfType("toilets", 1) == 0 then
     local toilet_advice = {
       _A.warnings.need_toilets, _A.warnings.build_toilets,
       _A.warnings.build_toilet_now,
@@ -220,7 +220,7 @@ function PlayerHospital:checkReceptionAdvice(current_month, current_year)
   if current_year > 1 then return end -- Playing too long.
   if self:hasStaffedDesk() then return end -- Staffed desk available, all done.
 
-  local num_receptionists = self:countStaffOfCategory("Receptionist")
+  local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
   if num_receptionists ~= 0 and current_month > 2 and not self.adviser_data.reception_advice then
     self:giveAdvice({_A.warnings.no_desk_6})
     self.adviser_data.reception_advice = true
@@ -245,7 +245,7 @@ end
 
 --! Give advice to the user about having bought a reception desk.
 function PlayerHospital:msgReceptionDesk()
-  local num_receptionists = self:countStaffOfCategory("Receptionist")
+  local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
 
   if not self.world.ui.start_tutorial and num_receptionists == 0 then
     self:giveAdvice({_A.room_requirements.reception_need_receptionist})
@@ -258,7 +258,7 @@ end
 
 --! Give advice to the user about maintenance of plants.
 function PlayerHospital:msgPlant()
-  local num_handyman = self:countStaffOfCategory("Handyman")
+  local num_handyman = self:countStaffOfCategory("Handyman", 1)
 
   if num_handyman == 0 then
     self:giveAdvice({_A.staff_advice.need_handyman_plants})

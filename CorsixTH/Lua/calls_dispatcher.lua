@@ -115,7 +115,7 @@ function CallsDispatcher:callForRepair(object, urgent, manual, lock_room)
   object:setRepairingMode(lock_room and true or false)
   local message
   local ui = object.world.ui
-  if object.world:getLocalPlayerHospital():countStaffOfCategory("Handyman") == 0 then
+  if object.world:getLocalPlayerHospital():countStaffOfCategory("Handyman", 1) == 0 then
     -- Advise about hiring Handyman
     message = _A.warnings.machinery_damaged2
   end
