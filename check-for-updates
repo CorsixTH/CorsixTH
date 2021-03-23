@@ -1,0 +1,7 @@
+return {
+  major = 0,
+  minor = 6,
+  revision = 4,
+  changelog_en = 'Lots of fixes and experimental ISO support awaits in the latest version.',
+  download_url = 'http://github.com/CorsixTH/CorsixTH/releases',
+}
