@@ -1090,13 +1090,25 @@ function World:onTick()
 end
 
 function World:setEndMonth()
+  local current_date = self.game_date
+  local emer_date = self.next_emergency_date
   local first_day_of_next_month = Date(self.game_date:year(), self.game_date:monthOfYear() + 1)
   self.game_date = first_day_of_next_month:plusHours(-1)
+  -- Has the date jump caused an emergency to be missed?
+  if emer_date and emer_date < self.game_date and current_date < emer_date then
+    self:nextEmergency()
+  end
 end
 
 function World:setEndYear()
+  local current_date = self.game_date
+  local emer_date = self.next_emergency_date
   local first_day_of_next_year = Date(self.game_date:year() + 1)
   self.game_date = first_day_of_next_year:plusHours(-1)
+  -- Has the date jump caused an emergency to be missed?
+  if emer_date and emer_date < self.game_date and current_date < emer_date then
+    self:nextEmergency()
+  end
 end
 
 -- Called immediately prior to the ingame day changing.
