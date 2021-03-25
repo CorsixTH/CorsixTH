@@ -2678,20 +2678,26 @@ function World:afterLoad(old, new)
     self:resetSideObjects()
   end
 
-  if old < 153 then
-    -- Complementary afterLoad to see if emergencies got stuck in the level.
-    -- There's no guarantee we can unstick the level, however.
-    local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
-    --[[ UIWatch's emergency timer is 52 days but this is local.
-    The emergency fax also is held for 16 days.
-    Add one extra day to this for compensation = 69. (Unavoidable magic number)]]--
-    if self.game_date > next_emer_date:plusDays(69) then
-      -- The date the emergency should've finished by has passed.
-      -- Next check if the emergency could still be happening.
-      local watch = self.ui:getWindow(UIWatch)
-      if not watch or watch.count_type ~= "emergency" then
-        -- The emergency is likely stuck
-        self:nextEmergency()
+if old < 153 then
+    -- Set the new variable next_emergency_date
+    -- In previous code month == 0 meant emergencies were over
+    if self.next_emergency_month ~= 0 then
+      self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+      -- Complementary afterLoad to see if emergencies got stuck in the level.
+      -- There's no guarantee we can unstick the level, however.
+      local hosp = self:getLocalPlayerHospital()
+      local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+      --[[ UIWatch's emergency timer is 52 days but this is local. 
+      The emergency fax also is held for 16 days. 
+      Add one extra day to this for compensation = 69. ]]--
+      if self.game_date > next_emer_date:plusDays(69) then
+        -- The date the emergency should've finished by has passed.
+        -- Next check if the emergency could still be happening.
+        local watch = self.ui:getWindow(UIWatch)
+        if not watch or watch.count_type ~= "emergency" then
+          -- The emergency is likely stuck
+          self:nextEmergency()
+        end
       end
     end
   end
