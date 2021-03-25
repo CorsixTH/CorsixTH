@@ -1117,7 +1117,7 @@ function World:wasEmergencySkipped(prev_date, new_date)
   local emer_date = self.next_emergency_date
   return emer_date and emer_date < new_date and prev_date < emer_date
 end
-  
+
 
 -- Called immediately prior to the ingame day changing.
 function World:onEndDay()
