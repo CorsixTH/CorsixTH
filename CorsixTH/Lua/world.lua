@@ -2687,9 +2687,9 @@ if old < 153 then
       -- There's no guarantee we can unstick the level, however.
       local hosp = self:getLocalPlayerHospital()
       local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
-      --[[ UIWatch's emergency timer is 52 days but this is local. 
-      The emergency fax also is held for 16 days. 
-      Add one extra day to this for compensation = 69. ]]--
+      --[[ UIWatch's emergency timer is 52 days but this is local.
+      The emergency fax also is held for 16 days.
+      Add one extra day to this for compensation = 69. (Unavoidable magic number)]]--
       if self.game_date > next_emer_date:plusDays(69) then
         -- The date the emergency should've finished by has passed.
         -- Next check if the emergency could still be happening.
