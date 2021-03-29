@@ -1306,6 +1306,7 @@ function World:scheduleRandomEmergency(control)
   local variance = control[0].Variance or 30
   -- How many days until next emergency?
   local days = math.round(math.n_random(mean, variance))
+  days = days > 1 and days or 1  -- Don't schedule in the past
   local emergency_date = self.game_date:plusDays(days)
 
   -- Make it the same format as for "controlled" emergencies
