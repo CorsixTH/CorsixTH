@@ -1295,6 +1295,7 @@ function World:nextEmergency()
       self.next_emergency = nil
       return
     end
+    self.next_emergency = emergency
     self.next_emergency_no = self.next_emergency_no + 1
   until self:computeNextEmergencyDates(emergency)
 end
@@ -1322,7 +1323,6 @@ end
 function World:computeNextEmergencyDates(emergency)
   -- Generate the next month and day the emergency should occur at.
   -- Make sure it doesn't happen in the past.
-  self.next_emergency = emergency
   local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
   if (emergency.EndMonth < start) then
     return false
