@@ -203,7 +203,7 @@ function World:World(app)
   -- Next Events dates
   -- emergencies
   -- The emergency control level data starts with an array of 0
-  self.next_emergency_no = -1 -- Properly adjusted in nextEmergency()
+  self.next_emergency_no = 0
   self:nextEmergency()
 
   -- vip
@@ -1148,7 +1148,7 @@ function World:onEndDay()
         -- The level uses random emergencies, so just create one.
         local_hospital:createEmergency()
       else
-        control = control[self.next_emergency_no]
+        control = self.next_emergency
         -- Find out which disease the emergency patients have.
         local disease
         for _, dis in ipairs(self.available_diseases) do
@@ -1281,7 +1281,6 @@ function World:nextEmergency()
     return
   end
   repeat
-    self.next_emergency_no = self.next_emergency_no + 1
     local emer_num = self.next_emergency_no
     -- Account for missing Level 3 emergency[5]
     if not control[emer_num] and control[emer_num + 1] then
@@ -1293,8 +1292,10 @@ function World:nextEmergency()
     if not emergency then
       self.next_emergency_month = 0
       self.next_emergency_date = nil
+      self.next_emergency = nil
       return
     end
+    self.next_emergency_no = self.next_emergency_no + 1
   until self:computeNextEmergencyDates(emergency)
 end
 
@@ -1321,6 +1322,7 @@ end
 function World:computeNextEmergencyDates(emergency)
   -- Generate the next month and day the emergency should occur at.
   -- Make sure it doesn't happen in the past.
+  self.next_emergency = emergency
   local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
   if (emergency.EndMonth < start) then
     return false
@@ -2681,9 +2683,12 @@ function World:afterLoad(old, new)
 
 if old < 153 then
     -- Set the new variable next_emergency_date
+    -- Also set the new variable next_emergency
     -- In previous code month == 0 meant emergencies were over
     if self.next_emergency_month ~= 0 then
       self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+      local control = self.map.level_config.emergency_control
+      self.next_emergency = control[self.next_emergency_no]
       -- Complementary afterLoad to see if emergencies got stuck in the level.
       -- There's no guarantee we can unstick the level, however.
       local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
