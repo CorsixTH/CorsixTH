@@ -1148,11 +1148,11 @@ function World:onEndDay()
         -- The level uses random emergencies, so just create one.
         local_hospital:createEmergency()
       else
-        control = self.next_emergency
+        local next_em = self.next_emergency
         -- Find out which disease the emergency patients have.
         local disease
         for _, dis in ipairs(self.available_diseases) do
-          if dis.expertise_id == control.Illness then
+          if dis.expertise_id == next_em.Illness then
             disease = dis
             break
           end
@@ -1163,9 +1163,9 @@ function World:onEndDay()
         else
           local emergency = {
             disease = disease,
-            victims = math.random(control.Min, control.Max),
-            bonus = control.Bonus,
-            percentage = control.PercWin/100,
+            victims = math.random(next_em.Min, next_em.Max),
+            bonus = next_em.Bonus,
+            percentage = next_em.PercWin/100,
             killed_emergency_patients = 0,
             cured_emergency_patients = 0,
           }
