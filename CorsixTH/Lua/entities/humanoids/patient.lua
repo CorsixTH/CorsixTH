@@ -361,20 +361,14 @@ function Patient:falling()
   local current = self:getCurrentAction()
   current.keep_reserved = true
   if self.falling_anim and self:canPeeOrPuke(current) and self.has_fallen == 1 then
-    self:setNextAction(FallingAction(), 0)
     self.has_fallen = 2
-    if self.has_fallen == 2 then
-      self:setNextAction(OnGroundAction())
-      self.on_ground = true
-    end
-    if self.on_ground then
-      self:setNextAction(GetUpAction())
-    end
-    -- TODO: falls are broken, the will change once implemented
-    self:interruptAndRequeueAction(current, 2)
-    self.on_ground = false
-    if math.random(1, 5) == 3 then
-      self:shakeFist()
+    self:queueAction(FallingAction(), 1)
+    self:queueAction(OnGroundAction(), 2)
+    self:queueAction(GetUpAction(), 3)
+    if math.random(1, 5) == 3 and self:shakeFist() then
+      self:interruptAndRequeueAction(current, 5)
+    else
+      self:interruptAndRequeueAction(current, 4)
     end
     self:fallingAnnounce()
     self:changeAttribute("happiness", -0.05) -- falling makes you very unhappy
@@ -398,7 +392,8 @@ end
 --! Perform 'shake fist' action.
 function Patient:shakeFist()
   if self.shake_fist_anim then
-    self:queueAction(ShakeFistAction(), 1)
+    self:queueAction(ShakeFistAction(), 4)
+    return true
   end
 end
 
@@ -1124,6 +1119,11 @@ function Patient:afterLoad(old, new)
           action.must_happen = false
         end
       end
+    end
+  end
+  if old < 190 then
+    if self.humanoid_class == "Standard Female Patient" then
+      self.on_ground_anim = 1764
     end
   end
   self:updateDynamicInfo()
