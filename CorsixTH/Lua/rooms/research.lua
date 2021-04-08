@@ -190,23 +190,6 @@ function ResearchRoom:commandEnteringPatient(patient)
   return Room.commandEnteringPatient(self, patient)
 end
 
--- Returns the staff member with the minimum amount of skill.
-function ResearchRoom:getStaffMember()
-  local staff
-  for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
-      if staff.profile.skill > staff_member.profile.skill then
-        staff = staff_member
-      end
-    else
-      if not staff_member.fired and not staff_member:hasLeavingAction() then
-        staff = staff_member
-      end
-    end
-  end
-  return staff
-end
-
 function ResearchRoom:setStaffMember(staff)
   self.staff_member_set[staff] = true
 end
