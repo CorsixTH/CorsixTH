@@ -84,12 +84,9 @@ function Handyman:onPlaceInCorridor()
 end
 
 -- Helper function to decide if Handyman fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
 function Handyman:fulfillsCriterion(criterion)
-  if criterion == "Handyman" then
-    return true
-  end
-  return false
+  return criterion == "Handyman"
 end
 
 function Handyman:afterLoad(old, new)

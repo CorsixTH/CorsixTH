@@ -452,7 +452,7 @@ function Staff:setHospital(hospital)
 end
 
 -- Helper function to decide if Staff fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
 function Staff:fulfillsCriterion(criterion)
   return false
 end
