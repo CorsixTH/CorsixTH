@@ -25,6 +25,7 @@ local GetUpAction = _G["GetUpAction"]
 
 function GetUpAction:GetUpAction()
   self:HumanoidAction("get_up")
+  self:setMustHappen(true)
 end
 
 local action_get_up_end = permanent"action_get_up_end"( function(humanoid)
@@ -33,14 +34,8 @@ end)
 
 
 local function action_get_up_start(action, humanoid)
-  if math.random(0, 1) == 1 then
-    humanoid.last_move_direction = "east"
-  else
-    humanoid.last_move_direction = "south"
-  end
-
   assert(humanoid.get_up_anim, "Error: no getting up animation for humanoid " .. humanoid.humanoid_class)
-  action.must_happen = true
+
   humanoid:setAnimation(humanoid.get_up_anim, humanoid.last_move_direction == "east" and 0 or 1)
   humanoid:setTimer(humanoid.world:getAnimLength(humanoid.get_up_anim), action_get_up_end)
 end
