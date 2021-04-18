@@ -25,10 +25,13 @@ local configuration = {
   -----------------------------------------------------------
   --      New configuration values added in CorsixTH       --
   -----------------------------------------------------------
+  -- Interest rate and overdraft interest rate differential values will
+  --  be divided by 10,000
   town = {
-    InterestRate = 0.01,
+    InterestRate = 100,
     StartCash = 40000,
     StartRep = 500,
+    OverdraftDiff = 200,
   },
 
   -- New value, but should only be defined if starting staff is included.
@@ -134,19 +137,19 @@ local configuration = {
   },
 
   towns = {
-    {StartCash = 40000, InterestRate = 100, StartRep = 500}, -- Level 1
-    {StartCash = 40000, InterestRate = 200, StartRep = 500}, --  Level 2
-    {StartCash = 50000, InterestRate = 300, StartRep = 500}, --  Level 3
-    {StartCash = 50000, InterestRate = 400, StartRep = 500}, --  Level 4
-    {StartCash = 50000, InterestRate = 500, StartRep = 500}, --  Level 5
-    {StartCash = 50000, InterestRate = 600, StartRep = 500}, --  Level 6
-    {StartCash = 50000, InterestRate = 700, StartRep = 500}, --  Level 7
-    {StartCash = 60000, InterestRate = 700, StartRep = 500}, --  Level 8
-    {StartCash = 60000, InterestRate = 800, StartRep = 500}, --  Level 9
-    {StartCash = 60000, InterestRate = 800, StartRep = 500}, --  Level 10
-    {StartCash = 70000, InterestRate = 900, StartRep = 500}, --  Level 11
-    {StartCash = 70000, InterestRate = 900, StartRep = 500}, --  Level 12
-    {StartCash = 70000, InterestRate = 900, StartRep = 500}, --  Level 12
+    {StartCash = 40000, InterestRate = 100, StartRep = 500, OverdraftDiff = 200}, --  Level 1
+    {StartCash = 40000, InterestRate = 200, StartRep = 500, OverdraftDiff = 200}, --  Level 2
+    {StartCash = 50000, InterestRate = 300, StartRep = 500, OverdraftDiff = 200}, --  Level 3
+    {StartCash = 50000, InterestRate = 400, StartRep = 500, OverdraftDiff = 200}, --  Level 4
+    {StartCash = 50000, InterestRate = 500, StartRep = 500, OverdraftDiff = 200}, --  Level 5
+    {StartCash = 50000, InterestRate = 600, StartRep = 500, OverdraftDiff = 200}, --  Level 6
+    {StartCash = 50000, InterestRate = 700, StartRep = 500, OverdraftDiff = 200}, --  Level 7
+    {StartCash = 60000, InterestRate = 700, StartRep = 500, OverdraftDiff = 200}, --  Level 8
+    {StartCash = 60000, InterestRate = 800, StartRep = 500, OverdraftDiff = 200}, --  Level 9
+    {StartCash = 60000, InterestRate = 800, StartRep = 500, OverdraftDiff = 200}, --  Level 10
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 11
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 12
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 12
   },
   popn = {
     [0] = {Month = 0, Change = 4}, -- Standard: 4 patients the first month.
