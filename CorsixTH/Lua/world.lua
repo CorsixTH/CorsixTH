@@ -2345,15 +2345,11 @@ function World:dumpGameLog()
   local pathsep = package.config:sub(1, 1)
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
-  local fi, err = io.open(gamelog_path, "w")
-  if fi then
-    for _, str in ipairs(self.game_log) do
-      fi:write(str .. "\n")
-    end
-    fi:close()
-  else
-    print("Warning: Cannot dump game log: " .. tostring(err))
+  local fi = self.app:writeToFileOrTmp(gamelog_path)
+  for _, str in ipairs(self.game_log) do
+    fi:write(str .. "\n")
   end
+  fi:close()
 end
 
 --! Because the save file only saves one thob per tile if they are more that information

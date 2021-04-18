@@ -518,11 +518,9 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -------------------------------------------------------------------------------------------------------------------------
 
 ]=]
-  fi = io.open(config_filename, "w")
-  if fi then
-    fi:write(string_01 .. string_02)
+  fi = TheApp:writeToFileOrTmp(config_filename)
+  fi:write(string_01 .. string_02)
   fi:close()
-  end
 end
 
 -- Hotkey filename.
@@ -820,11 +818,9 @@ local string_03 = [=[
 -- ]=] .. '\n' ..
 'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[
 ]=]
-  fi = io.open(hotkeys_filename, "w")
-  if fi then
-    fi:write(string_01 .. string_02 .. string_03)
+  fi = TheApp:writeToFileOrTmp(hotkeys_filename)
+  fi:write(string_01 .. string_02 .. string_03)
   fi:close()
-  end
 end
 
 for k, str_val in pairs(hotkeys_values) do
