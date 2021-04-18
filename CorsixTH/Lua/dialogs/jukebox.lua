@@ -176,3 +176,10 @@ function UIJukebox:draw(canvas, x, y)
     end
   end
 end
+
+function UIJukebox:afterLoad(old, new)
+  if not (self.app.config.audio and self.app:isAudioEnabled()) then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
+end

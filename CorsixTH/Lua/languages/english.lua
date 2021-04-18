@@ -693,6 +693,7 @@ errors = {
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
+  save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
 }
 
 warnings = {

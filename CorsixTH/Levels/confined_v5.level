@@ -206,10 +206,10 @@ Divides research input to get the amount of research points. must be > 0
 
 --------------------- Competitor Information -----------------------
 
-| Index in the away "computer" | Is that opponent playing? | 1 is yes, 0 no | Comment |
-#computer[12].Playing 1 CORSIX
-#computer[13].Playing 1 ROUJIN
-#computer[14].Playing 1 EDVIN
+| Index in the away "computer" | Is that opponent playing? 1 is yes, 0 no | Name |
+#computer[12].Playing.Name 1 CORSIX
+#computer[13].Playing.Name 1 ROUJIN
+#computer[14].Playing.Name 1 EDVIN
 
 ----------------------- Emergency Control --------------------------
 

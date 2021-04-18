@@ -183,18 +183,22 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.policies["stop_procedure"] = 1 -- Note that this is between 1 and 2 ( = 100% - 200%)
   self.policies["goto_staffroom"] = 0.6
   self.policies["grant_wage_increase"] = TheApp.config.grant_wage_increase
-  -- Randomly select three insurance companies to use, only different by name right now.
-  -- The first ones are more likely to come
+
+  -- Semi-randomly select three insurance companies to use, only different by name right now.
+  -- The companies in the first quarter of the list are more likely to be selected
   self.insurance = {}
+  -- Make a local writeable copy table of the translated company names.
+  local companies = {}
   for no, local_name in ipairs(_S.insurance_companies) do
-    -- NOTE: Will not work if more companies are added
-    if math.random(1, 11) < 4 or 11 - no < #self.insurance + 3 then
-      self.insurance[#self.insurance + 1] = local_name
-    end
-    if #self.insurance > 2 then
-      break
-    end
+    companies[no] = local_name
   end
+  while #self.insurance < 3 and #companies > 0 do
+    local num = math.random(1, 2) == 1 and math.random(1, math.ceil(#companies / 4)) or
+        math.random(1, #companies)
+    self.insurance[#self.insurance + 1] = companies[num]
+    table.remove(companies, num)
+  end
+
   -- A list of how much each insurance company owes you. The first entry for
   -- each company is the current month's dept, the second the previous
   -- month and the third the month before that.
@@ -688,7 +692,7 @@ function Hospital:tick()
     -- Wait until there are some patients in the hospital and a room, otherwise you
     -- will wonder who is coughing or who is the receptionist telephoning!
     -- Opted for gp as you can't run the hospital without one.
-    if self:countRoomOfType("gp") > 0 and self:countPatients(3) > 2 then
+    if self:countRoomOfType("gp", 1) > 0 and self:countPatients(3) > 2 then
       local sounds = {
         "ispot001.wav", "ispot002.wav", "ispot003.wav", "ispot004.wav",
         "ispot005.wav", "ispot006.wav", "ispot007.wav", "ispot008.wav",
@@ -1113,7 +1117,7 @@ function Hospital:createEmergency(emergency)
 
     local staff_available = self:countStaffOfCategory(required_staff) > 0
     -- Check so that all rooms in the list are available
-    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms]) > 0 then
+    if self:countRoomOfType(emergency.disease.treatment_rooms[no_rooms], 1) > 0 then
       room_name = nil
     end
 
@@ -1634,8 +1638,9 @@ end
 --!param category (string) A humanoid_class or one of the specialists, i.e.
 --! "Doctor", "Nurse", "Handyman", "Receptionist", "Psychiatrist",
 --! "Surgeon", "Researcher", "Junior" or "Consultant"
---! returns Number of that type employed
-function Hospital:countStaffOfCategory(category)
+--!param max_count (optional integer) If provided, non-negative maximum count to return.
+--! returns Number of that type employed, at most max_count is returned if provided.
+function Hospital:countStaffOfCategory(category, max_count)
   local result = 0
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == category then
@@ -1649,19 +1654,22 @@ function Hospital:countStaffOfCategory(category)
         result = result + 1
       end
     end
+    if max_count ~= nil and result >= max_count then break end
   end
   return result
 end
 
 --! Checks if the hospital has a room of a given type.
 --!param type (string) A room_info.id, e.g. "ward".
---! Returns Number of that type found
-function Hospital:countRoomOfType(type)
+--!param max_count (optional integer) If provided, non-negative maximum count to return.
+--! Returns Number of that type found, at most max_count is returned if provided.
+function Hospital:countRoomOfType(type, max_count)
   -- Check how many rooms there are.
   local result = 0
   for _, room in pairs(self.world.rooms) do
     if room.hospital == self and room.room_info.id == type and room.is_active then
       result = result + 1
+      if max_count ~= nil and result >= max_count then break end
     end
   end
   return result
@@ -1984,7 +1992,7 @@ function Hospital:checkDiseaseRequirements(disease)
   local staff = {}
   local any = false
   for _, room_id in ipairs(self.world.available_diseases[disease].treatment_rooms) do
-    local found = self:countRoomOfType(room_id) > 0
+    local found = self:countRoomOfType(room_id, 1) > 0
     if not found then
       rooms[#rooms + 1] = room_id
       any = true

@@ -869,7 +869,8 @@ end
 
 function App:saveConfig()
   -- Load lines from config file
-  local fi = io.open(self.command_line["config-file"] or "config.txt", "r")
+  local config_file = self.command_line["config-file"] or "config.txt"
+  local fi = io.open(config_file, "r")
   local lines = {}
   local handled_ids = {}
   if fi then
@@ -920,11 +921,26 @@ function App:saveConfig()
     lines[#lines] = nil
   end
 
-  fi = io.open(self.command_line["config-file"] or "config.txt", "w")
+  fi = self:writeToFileOrTmp(config_file)
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
   fi:close()
+end
+
+--! Tries to open the given file or a file in OS's temp dir.
+-- Returns the file handler
+--!param file The full path of the intended file
+function App:writeToFileOrTmp(file)
+  local f, err = io.open(file, "w")
+  if err then
+    local tmp_file = os.tmpname()
+    f = io.open(tmp_file, "w")
+    self.ui:addWindow(UIInformation(self.ui,
+        {_S.errors.save_to_tmp:format(file, tmp_file, err)}))
+  end
+  assert(f, "Error: cannot write to filesystem")
+  return f
 end
 
 function App:fixHotkeys()
@@ -950,7 +966,8 @@ end
 
 function App:saveHotkeys()
   -- Load lines from config file
-  local fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "r")
+  local hotkeys_filename = self.command_line["hotkeys-file"] or "hotkeys.txt"
+  local fi = io.open(hotkeys_filename, "r")
   local lines = {}
   local handled_ids = {}
 
@@ -1004,7 +1021,7 @@ function App:saveHotkeys()
     lines[#lines] = nil
   end
 
-  fi = io.open(self.command_line["hotkeys-file"] or "hotkeys.txt", "w")
+  fi = self:writeToFileOrTmp(hotkeys_filename)
   for _, line in ipairs(lines) do
     fi:write(line .. "\n")
   end
@@ -1639,11 +1656,11 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local update_url = 'www.corsixth.com/check-for-updates'
+  local update_url = 'https://corsixth.github.io/CorsixTH/check-for-updates'
   local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
-  local trusted_domains = { 'corsixth.com', 'code.google.com' }
+  local trusted_domains = { 'corsixth.com', 'github.com', 'corsixth.github.io' }
 
   -- Only check for updates against released versions
   if current_version == "Trunk" then
@@ -1651,25 +1668,14 @@ function App:checkForUpdates()
     return
   end
 
-  local success, _ = pcall(require, "socket")
-
-  if not success then
-    -- LuaSocket is not available, just return
-    print("Cannot check for updates since LuaSocket is not available.")
+  local luasocket, _ = pcall(require, "socket")
+  local luasec, _ = pcall(require, "ssl.https")
+  if not (luasocket and luasec) then
+    print("Cannot check for updates since LuaSocket and/or LuaSec are not available.")
     return
-  else
-    self.lua_socket_available = true
   end
   local http = require("socket.http")
   local url = require("socket.url")
-
-  -- Safely attempt to use luasec
-  local hassec, _ = pcall(require, "ssl.https")
-  if hassec then
-    update_url = "https://" .. update_url
-  else
-    update_url = "http://" .. update_url
-  end
 
   print("Checking for CorsixTH updates...")
   local update_body, status, _ = http.request(update_url)

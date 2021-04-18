@@ -54,7 +54,7 @@ function PlayerHospital:dailyAdviceChecks()
   end
 
   -- Warn about lack of a staff room.
-  if day == 3 and self:countRoomOfType("staff_room") == 0 then
+  if day == 3 and self:countRoomOfType("staff_room", 1) == 0 then
     local staffroom_advice = {
       _A.warnings.build_staffroom, _A.warnings.need_staffroom,
       _A.warnings.staff_overworked, _A.warnings.staff_tired,
@@ -63,7 +63,7 @@ function PlayerHospital:dailyAdviceChecks()
   end
 
   -- Warn about lack of toilets.
-  if day == 8 and self:countRoomOfType("toilets") == 0 then
+  if day == 8 and self:countRoomOfType("toilets", 1) == 0 then
     local toilet_advice = {
       _A.warnings.need_toilets, _A.warnings.build_toilets,
       _A.warnings.build_toilet_now,
@@ -180,6 +180,10 @@ function PlayerHospital:dailyAdviceChecks()
     end
   end
 
+  if day == 10 then
+    self:warnForLongQueues()
+  end
+
   -- Reset advise flags at the end of the month.
   if day == 28 then
     self.adviser_data.temperature_advice = false
@@ -220,7 +224,7 @@ function PlayerHospital:checkReceptionAdvice(current_month, current_year)
   if current_year > 1 then return end -- Playing too long.
   if self:hasStaffedDesk() then return end -- Staffed desk available, all done.
 
-  local num_receptionists = self:countStaffOfCategory("Receptionist")
+  local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
   if num_receptionists ~= 0 and current_month > 2 and not self.adviser_data.reception_advice then
     self:giveAdvice({_A.warnings.no_desk_6})
     self.adviser_data.reception_advice = true
@@ -245,7 +249,7 @@ end
 
 --! Give advice to the user about having bought a reception desk.
 function PlayerHospital:msgReceptionDesk()
-  local num_receptionists = self:countStaffOfCategory("Receptionist")
+  local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
 
   if not self.world.ui.start_tutorial and num_receptionists == 0 then
     self:giveAdvice({_A.room_requirements.reception_need_receptionist})
@@ -258,7 +262,7 @@ end
 
 --! Give advice to the user about maintenance of plants.
 function PlayerHospital:msgPlant()
-  local num_handyman = self:countStaffOfCategory("Handyman")
+  local num_handyman = self:countStaffOfCategory("Handyman", 1)
 
   if num_handyman == 0 then
     self:giveAdvice({_A.staff_advice.need_handyman_plants})
@@ -329,6 +333,37 @@ function PlayerHospital:msgKilled()
       _A.level_progress.another_patient_killed:format(self.num_deaths)
     }
     self.adviser_data.cured_died_message = self:giveAdvice(died_msgs, 6/10)
+  end
+end
+
+--! Once a month the advisor may warn about long queues.
+--! Rooms requiring a doctor occasionally trigger the generic message
+function PlayerHospital:warnForLongQueues()
+  local queue_rooms, total_queue = {}, 0
+  for _, room in pairs(self.world.rooms) do
+    if #room.door.queue then
+      total_queue = total_queue + #room.door.queue
+    end
+    if #room.door.queue > 7 then
+      queue_rooms[#queue_rooms + 1] = room
+    end
+  end
+  if #queue_rooms == 0 or total_queue == 0 then return end
+
+  local busy_threshold = 1.5 * total_queue / #self.world.rooms
+  local chosen_room = queue_rooms[math.random(1, #queue_rooms)]
+  if busy_threshold > #chosen_room.door.queue then return end
+  chosen_room = chosen_room.room_info
+  -- Required staff that is not nurse is doctor, researcher, surgeon or psych
+  if chosen_room.required_staff and not chosen_room.required_staff["Nurse"]
+      and math.random(1, 3) > 1 then
+    local warn_msgs = {
+      _A.warnings.queue_too_long_send_doctor:format(chosen_room.name),
+      _A.staff_advice.need_doctors
+    }
+    self:giveAdvice(warn_msgs)
+  else
+    self.world.ui.adviser:say(_A.warnings.queues_too_long)
   end
 end
 

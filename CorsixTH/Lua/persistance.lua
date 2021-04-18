@@ -255,7 +255,7 @@ end
 --!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
-  local f = assert(io.open(filename, "wb"))
+  local f = TheApp:writeToFileOrTmp(filename)
   f:write(data)
   f:close()
 end

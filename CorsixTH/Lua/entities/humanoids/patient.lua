@@ -868,7 +868,7 @@ function Patient:setTile(x, y)
           self.hospital.hospital_littered = true
 
           -- A callout is only needed if there are no handymen employed
-          if self.hospital:countStaffOfCategory("Handyman") == 0 then
+          if self.hospital:countStaffOfCategory("Handyman", 1) == 0 then
             self.world.ui.adviser:say(_A.staff_advice.need_handyman_litter)
           end
         end
@@ -990,8 +990,8 @@ function Patient:updateMessage(choice)
       -- enable only if research department is built and a room in the treatment chain is undiscovered
       local req = self.hospital:checkDiseaseRequirements(self.disease.id)
       if req then
-        enabled = (self.hospital:countRoomOfType("research") > 0 and
-                   self.hospital:countStaffOfCategory("Researcher") > 0)
+        enabled = (self.hospital:countRoomOfType("research", 1) > 0 and
+                   self.hospital:countStaffOfCategory("Researcher", 1) > 0)
 
         local strings = _S.fax.disease_discovered_patient_choice
         local output_text = strings.can_not_cure

@@ -122,6 +122,7 @@ function UILuaConsole:buttonExecute()
     print("Error while executing UserFunction:")
     print(err)
   end
+  _ = nil -- Clean up the global after use or it'll corrupt saves
 end
 
 function UILuaConsole:buttonClose()
