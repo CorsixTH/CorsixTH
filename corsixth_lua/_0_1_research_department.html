@@ -39,7 +39,10 @@ stored for future use anyway.
  <h4>Method Index</h4>
  <ul>
  <li class="self">
- <a href="_0_1_research_department.html#_0_1_research_department_1add_research_points">addResearchPoints</a>(<span class="p">points</span>, <span class="p">autopsy_room</span>)
+ <a href="_0_1_research_department.html#_0_1_research_department_1add_research_points">addResearchPoints</a>(<span class="p">points</span>)
+ </li>
+ <li class="self">
+ <a href="_0_1_research_department.html#_0_1_research_department_1add_research_points_for_autopsy">addResearchPointsForAutopsy</a>(<span class="p">target_room_id</span>)
  </li>
  <li class="self">
  <a href="_0_1_research_department.html#_0_1_research_department_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
@@ -116,27 +119,33 @@ stored for future use anyway.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_research_department_1add_research_points">function ResearchDepartment:addResearchPoints(<span class="p">points</span>, <span class="p">autopsy_room</span>)</a></h5>
+ <h5><a name="_0_1_research_department_1add_research_points">function ResearchDepartment:addResearchPoints(<span class="p">points</span>)</a></h5>
  <p>
- Add some more research points to research progress. If
-autopsy_room is specified points are not used. Instead research
-progresses according to the level config for autopsies.
-Otherwise they will be divided according to the research policy
-into the different research areas.<br/><br/>
+ Add some more research points to research progress.<br/><br/>
+ It will be divided according to the research policy into the different research areas.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">points</td>
  <td class="t">integer</td>
- <td class="d"> The total amount of points (before applying
-any level specific divisors to add to research.</td>
+ <td class="d"> The total amount of points before applying any level specific divisors to add to research.</td>
  </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L356">line 356 of Lua/research_department.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_research_department_1add_research_points_for_autopsy">function ResearchDepartment:addResearchPointsForAutopsy(<span class="p">target_room_id</span>)</a></h5>
+ <p>
+ This function will give research points to the treatment of the illness of an autopsied patient.<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">autopsy_room</td>
+ <td class="n">target_room_id</td>
  <td class="t">string</td>
- <td class="d"> If a specific room should get points following
-an autopsy, then this is the id of that room.</td>
+ <td class="d"> The name of the room</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L329">line 329 of Lua/research_department.lua</a>.
@@ -159,7 +168,7 @@ an autopsy, then this is the id of that room.</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L681">line 681 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L676">line 676 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -197,7 +206,7 @@ if the psychiatry hasn't been discovered.<br/><br/>
 --</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L616">line 616 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L611">line 611 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -214,13 +223,13 @@ if the psychiatry hasn't been discovered.<br/><br/>
 --</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L552">line 552 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L547">line 547 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_research_department_1discover_object">function ResearchDepartment:discoverObject(<span class="p">object</span>, <span class="p">automatic</span>)</a></h5>
  <p>
- Called when it is time to discoer an object. This may currently only
+ Called when it is time to discover an object. This may currently only
 happen from research.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
@@ -238,7 +247,7 @@ the player's research department.
 --</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L498">line 498 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L491">line 491 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -275,7 +284,7 @@ If this thing cannot be processed nil is returned.<br/><br/>
 --</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L409">line 409 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L402">line 402 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -292,7 +301,7 @@ If this thing cannot be processed nil is returned.<br/><br/>
 --</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L448">line 448 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L441">line 441 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -335,7 +344,7 @@ improvements and specialisation
 TODO: This is now just $3 per day and doctor (if at 100%),
 what should it be?
 --<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L588">line 588 of Lua/research_department.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/research_department.lua#L583">line 583 of Lua/research_department.lua</a>.
  </p>
  </div>
  <div class="method">
