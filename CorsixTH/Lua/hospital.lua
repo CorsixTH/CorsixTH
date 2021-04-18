@@ -619,7 +619,7 @@ function Hospital:afterLoad(old, new)
     end
   end
 
-  if old < 153 then
+  if old < 154 then
     -- We now use one table for our room discovery
     self.room_discoveries = {}
     -- Get the level start available rooms
