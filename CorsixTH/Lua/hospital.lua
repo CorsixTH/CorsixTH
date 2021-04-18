@@ -33,17 +33,17 @@ function Hospital:Hospital(world, avail_rooms, name)
   local level = world.map.level_number
   local balance = 40000
   local interest_rate = 0.01
-  if level_config then
-    if level_config.towns and level_config.towns[level] then
-      balance = level_config.towns[level].StartCash
-      interest_rate = level_config.towns[level].InterestRate / 10000
-    elseif level_config.town then
-      balance = level_config.town.StartCash
-      interest_rate = level_config.town.InterestRate / 10000
-    end
+  local reputation
+  if level_config.towns and level_config.towns[level] then
+    balance = level_config.towns[level].StartCash
+    interest_rate = level_config.towns[level].InterestRate / 10000
+    reputation = level_config.towns[level].StartRep
+  elseif level_config.town then
+    balance = level_config.town.StartCash
+    interest_rate = level_config.town.InterestRate / 10000
+    reputation = level_config.town.StartRep
   end
   self.name = name or "PLAYER"
-  -- TODO: Variate initial reputation etc based on level
   -- When playing in free build mode you don't care about money.
   self.balance = not world.free_build_mode and balance or 0
   self.loan = 0
@@ -82,9 +82,9 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.inflation_rate = 0.045
   self.salary_incr = level_config.gbv.ScoreMaxInc or 300
   self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
-  self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.reputation = math.min(math.max(reputation, self.reputation_min), self.reputation_max)
 
   local difficulty = self.world.map:getDifficulty()
   -- Price distortion level under which the patients might consider the
@@ -138,7 +138,7 @@ function Hospital:Hospital(world, avail_rooms, name)
       visitors = 0,
       cures = 0,
       deaths = 0,
-      reputation = 500, -- TODO: Always 500 from the beginning?
+      reputation = self.reputation
     }
   }
   self.money_in = 0
