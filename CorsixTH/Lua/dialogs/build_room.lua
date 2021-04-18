@@ -102,16 +102,18 @@ function UIBuildRoom:UIBuildRoom(ui)
   self:makeTooltip(_S.tooltip.build_room_window.cost, 160, 228, 282, 242)
 end
 
+--! Checks what rooms are now available to build
 function UIBuildRoom:updateBuildableRooms()
   local app = self.ui.app
   self.category_rooms = {}
   for i, category in ipairs({"diagnosis", "treatment", "clinics", "facilities"}) do
     local rooms = {}
     self.category_rooms[i] = rooms
-    for _, room in ipairs(app.world.available_rooms) do
+    for _, room_disc in pairs(self.ui.hospital.room_discoveries) do
+      local room = room_disc.room
       -- NB: Unimplemented rooms are hidden unless in debug mode
       if (app.config.debug or room.class) and room.categories[category] and
-          self.ui.hospital.discovered_rooms[room] then
+          room_disc.is_discovered then
         rooms[#rooms + 1] = room
       end
     end
