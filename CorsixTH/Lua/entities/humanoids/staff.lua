@@ -670,19 +670,20 @@ function Staff:getDrawingLayer()
   return 4
 end
 
---! Estimate staff service quality based on skills, fatigue and happiness.
+--! Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.
 --!return (float) between [0-1] indicating quality of the service.
 function Staff:getServiceQuality()
   -- weights
   local skill_weight = 0.7
-  local fatigue_weight = 0.2
+  local restfulness_weight = 0.2
   local happiness_weight = 0.1
 
   local weighted_skill = skill_weight * self.profile.skill
-  local weighted_fatigue = fatigue_weight * self.attributes["fatigue"]
+  -- Less fatigue is better
+  local weighted_restfulness = restfulness_weight * (1 - self.attributes["fatigue"])
   local weighted_happiness = happiness_weight * self.attributes["happiness"]
 
-  return weighted_skill + weighted_fatigue + weighted_happiness
+  return weighted_skill + weighted_restfulness + weighted_happiness
 end
 
 --[[ Return string representation
