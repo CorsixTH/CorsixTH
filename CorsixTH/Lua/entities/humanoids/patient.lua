@@ -303,9 +303,11 @@ function Patient:isTreatmentEffective()
 
   -- Service quality has a factor on cure chance
   local room = self:getRoom()
-  local min, base, divisor = 20, -0.1, 5
-  local service_base = math.max(100 - cure_chance, min)
-  local service_factor = base + (room:getStaffServiceQuality() / divisor)
+  local min_impact = 20
+  local service_base = math.max(100 - cure_chance, min_impact)
+
+  local scale = 0.2 -- Quality scaled to +-10%
+  local service_factor = (room:getStaffServiceQuality() - 0.5) * scale
   cure_chance = cure_chance + (service_base * service_factor)
 
   return (cure_chance >= math.random(1,100))
