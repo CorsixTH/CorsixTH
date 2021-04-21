@@ -301,11 +301,12 @@ function Patient:isTreatmentEffective()
   local cure_chance = self.hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
 
-  -- Service quality has a factor on cure chance +/- 10%
+  -- Service quality has a factor on cure chance
   local room = self:getRoom()
-  local base, divisor = 0.9, 5
+  local min, base, divisor = 20, -0.1, 5
+  local service_base = math.max(100 - cure_chance, min)
   local service_factor = base + (room:getStaffServiceQuality() / divisor)
-  cure_chance = cure_chance * service_factor
+  cure_chance = cure_chance + (service_base * service_factor)
 
   return (cure_chance >= math.random(1,100))
 end
