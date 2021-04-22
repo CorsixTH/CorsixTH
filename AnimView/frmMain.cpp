@@ -537,7 +537,7 @@ void frmMain::_onAnimChar(wxCommandEvent& evt) {
       return;
     }
     size_t iAnim = static_cast<size_t>(conv);
-    _onAnimChange((size_t)iAnim);
+    _onAnimChange(iAnim);
   }
 }
 
