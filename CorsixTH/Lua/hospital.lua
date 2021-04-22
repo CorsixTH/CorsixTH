@@ -31,19 +31,21 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.world = world
   local level_config = world.map.level_config
   local level = world.map.level_number
-  local balance = 40000
-  local interest_rate = 0.01
-  if level_config then
-    if level_config.towns and level_config.towns[level] then
-      balance = level_config.towns[level].StartCash
-      interest_rate = level_config.towns[level].InterestRate / 10000
-    elseif level_config.town then
-      balance = level_config.town.StartCash
-      interest_rate = level_config.town.InterestRate / 10000
-    end
+  local balance, interest_rate_numerator, reputation, overdraft_differential_numerator
+
+  if level_config.towns and level_config.towns[level] then
+    balance = level_config.towns[level].StartCash
+    interest_rate_numerator = level_config.towns[level].InterestRate
+    reputation = level_config.towns[level].StartRep
+    overdraft_differential_numerator = level_config.towns[level].OverdraftDiff
+  elseif level_config.town then
+    balance = level_config.town.StartCash
+    interest_rate_numerator = level_config.town.InterestRate
+    reputation = level_config.town.StartRep
+    overdraft_differential_numerator = level_config.town.OverdraftDiff
   end
+
   self.name = name or "PLAYER"
-  -- TODO: Variate initial reputation etc based on level
   -- When playing in free build mode you don't care about money.
   self.balance = not world.free_build_mode and balance or 0
   self.loan = 0
@@ -78,13 +80,14 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.concurrent_epidemic_limit = level_config.gbv.EpidemicConcurrentLimit or 1
 
   -- Initial values
-  self.interest_rate = interest_rate
+  self.interest_rate = interest_rate_numerator / 10000
   self.inflation_rate = 0.045
+  self.overdraft_interest_rate = self.interest_rate + overdraft_differential_numerator / 10000
   self.salary_incr = level_config.gbv.ScoreMaxInc or 300
   self.sal_min = level_config.gbv.ScoreMaxInc / 6 or 50
-  self.reputation = 500
   self.reputation_min = 0
   self.reputation_max = 1000
+  self.reputation = math.min(math.max(reputation, self.reputation_min), self.reputation_max)
 
   local difficulty = self.world.map:getDifficulty()
   -- Price distortion level under which the patients might consider the
@@ -138,7 +141,7 @@ function Hospital:Hospital(world, avail_rooms, name)
       visitors = 0,
       cures = 0,
       deaths = 0,
-      reputation = 500, -- TODO: Always 500 from the beginning?
+      reputation = self.reputation
     }
   }
   self.money_in = 0
@@ -641,6 +644,10 @@ function Hospital:afterLoad(old, new)
     self.undiscovered_rooms = nil
   end
 
+  if old < 155 then
+    self.overdraft_interest_rate = self.interest_rate + 0.02
+  end
+
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
   for _, future_epidemic in ipairs(self.future_epidemics_pool) do
@@ -902,8 +909,7 @@ function Hospital:onEndDay()
 
   self.show_progress_screen_warnings = math.random(1, 3) -- used in progress report to limit warnings
   if self.balance < 0 then
-    -- TODO: Add the extra interest rate to level configuration.
-    local overdraft_interest = self.interest_rate + 0.02
+    local overdraft_interest = self.overdraft_interest_rate
     local overdraft = math.abs(self.balance)
     local overdraft_payment = (overdraft*overdraft_interest)/365
     self.acc_overdraft = self.acc_overdraft + overdraft_payment
