@@ -287,7 +287,7 @@ $(function() {
 <div class="line"><a name="l00215"></a><span class="lineno">  215</span>&#160;    wxFile oFile(sFilename);</div>
 <div class="line"><a name="l00216"></a><span class="lineno">  216</span>&#160;    <span class="keywordflow">if</span> (!oFile.IsOpened()) <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
 <div class="line"><a name="l00217"></a><span class="lineno">  217</span>&#160; </div>
-<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordtype">size_t</span> iLen = oFile.Length();</div>
+<div class="line"><a name="l00218"></a><span class="lineno">  218</span>&#160;    <span class="keywordtype">size_t</span> iLen = <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(oFile.Length());</div>
 <div class="line"><a name="l00219"></a><span class="lineno">  219</span>&#160;    <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>* pBuffer = <span class="keyword">new</span> <span class="keywordtype">unsigned</span> <span class="keywordtype">char</span>[iLen];</div>
 <div class="line"><a name="l00220"></a><span class="lineno">  220</span>&#160;    oFile.Read(pBuffer, iLen);</div>
 <div class="line"><a name="l00221"></a><span class="lineno">  221</span>&#160;    <span class="keywordflow">if</span> (memcmp(pBuffer, <span class="stringliteral">&quot;RNC\001&quot;</span>, 4) == 0) {</div>
