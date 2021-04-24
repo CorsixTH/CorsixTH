@@ -956,7 +956,7 @@ end
 
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
-function World:preventActionsWhenPaused()
+function World:isUserActionProhibited()
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
