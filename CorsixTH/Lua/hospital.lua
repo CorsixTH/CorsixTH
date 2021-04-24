@@ -1649,16 +1649,8 @@ end
 function Hospital:countStaffOfCategory(category, max_count)
   local result = 0
   for _, staff in ipairs(self.staff) do
-    if staff.humanoid_class == category then
+    if staff:fulfillsCriterion(category) then
       result = result + 1
-    elseif staff.humanoid_class == "Doctor" then
-      if (category == "Psychiatrist" and staff.profile.is_psychiatrist >= 1.0) or
-          (category == "Surgeon" and staff.profile.is_surgeon >= 1.0) or
-          (category == "Researcher" and staff.profile.is_researcher >= 1.0) or
-          (category == "Consultant" and staff.profile.is_consultant) or
-          (category == "Junior" and staff.profile.is_junior) then
-        result = result + 1
-      end
     end
     if max_count ~= nil and result >= max_count then break end
   end

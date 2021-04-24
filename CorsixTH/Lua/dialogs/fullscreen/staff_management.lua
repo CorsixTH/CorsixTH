@@ -174,9 +174,8 @@ function UIStaffManagement:updateStaffList(staff_member_removed)
     Handyman = {},
     Receptionist = {},
   }
-  staff_members.Surgeon = staff_members.Doctor
   for _, staff in ipairs(hosp.staff) do
-    local list = staff_members[staff.humanoid_class]
+    local list = staff_members[staff.profile.humanoid_class]
     list[#list + 1] = staff
     -- The selected staff might have been moved because someone else was removed from the list.
     if selected_staff == staff then
@@ -225,7 +224,7 @@ end
 -- Function to select a given staff member.
 -- Includes switching to correct category and page.
 function UIStaffManagement:selectStaff(staff)
-  self:setCategory(staff.humanoid_class == "Surgeon" and "Doctor" or staff.humanoid_class)
+  self:setCategory(staff.profile.humanoid_class)
   for i, s in ipairs(self.staff_members[self.category]) do
     if s == staff then
       self:selectIndex(i)

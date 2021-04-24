@@ -249,17 +249,18 @@ local profile_attributes = {
   Psychiatrist = "is_psychiatrist",
   Surgeon = "is_surgeon",
   Researcher = "is_researcher",
+  Junior = "is_junior",
+  Consultant = "is_consultant",
 }
 
 -- Helper function to decide if Staff fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
 function Doctor:fulfillsCriterion(criterion)
   if criterion == "Doctor" then
     return true
-  elseif criterion == "Psychiatrist" or criterion == "Surgeon" or criterion == "Researcher" then
-    if self.profile and self.profile[profile_attributes[criterion]] == 1.0 then
-      return true
-    end
+  end
+  if self.profile and self.profile[profile_attributes[criterion]] == 1.0 then
+    return true
   end
   return false
 end

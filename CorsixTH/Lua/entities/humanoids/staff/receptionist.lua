@@ -83,9 +83,9 @@ end
 
 
 -- Helper function to decide if Staff fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
-function Receptionist:fulfillsCriterion(criterion) -- luacheck: no unused args
-  return false
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
+function Receptionist:fulfillsCriterion(criterion)
+  return criterion == "Receptionist"
 end
 
 function Receptionist:getDrawingLayer()
