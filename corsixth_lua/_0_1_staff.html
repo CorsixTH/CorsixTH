@@ -109,6 +109,7 @@
  </li>
  <li class="self">
  <a href="_0_1_staff.html#_0_1_staff_1get_service_quality">getServiceQuality</a>()
+ (overrides <a href="_0_1_humanoid.html#_0_1_humanoid_1get_service_quality">Humanoid:getServiceQuality</a>)
  </li>
  <li class="self">
  <a href="_0_1_staff.html#_0_1_staff_1go_to_staff_room">goToStaffRoom</a>()
@@ -622,7 +623,8 @@ and go to the StaffRoom if it is.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_staff_1get_service_quality">function Staff:getServiceQuality()</a></h5>
  <p>
- Estimate staff service quality based on skills, fatigue and happiness.<br/><br/>
+ Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.<br/><br/>
+ <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1get_service_quality">Humanoid:getServiceQuality</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L673">line 673 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
@@ -819,7 +821,7 @@ so amounts here should be appropriately small comma values.<br/><br/>
  <p>
  Return string representation<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1tostring">Humanoid:tostring</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L688">line 688 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L689">line 689 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">

@@ -281,14 +281,14 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L966">line 966 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L976">line 976 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1calculate_removal_cost">function Room:calculateRemovalCost()</a></h5>
  <p>
  Get the removal cost<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1055">line 1055 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1065">line 1065 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -303,7 +303,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L632">line 632 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L642">line 642 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -318,7 +318,7 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L486">line 486 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L496">line 496 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -341,21 +341,21 @@ Can be extended in derived classes.<br/><br/>
 what to do.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L467">line 467 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L477">line 477 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1count_windows">function Room:countWindows()</a></h5>
  <p>
  Count the number of windows in the room<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1039">line 1039 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1049">line 1049 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1crash_room">function Room:crashRoom()</a></h5>
  <p>
  Explode the room.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L767">line 767 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L777">line 777 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -404,7 +404,7 @@ what to do.</td>
  <h5><a name="_0_1_room_1deactivate">function Room:deactivate()</a></h5>
  <p>
  Deactivate the room from the world.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L921">line 921 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L931">line 931 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -495,7 +495,7 @@ sends them away if they're needed somewhere else.<br/><br/>
  <h5><a name="_0_1_room_1get_staff_member">function Room:getStaffMember()</a></h5>
  <p>
  Get the current staff member.
-Can be overridden in rooms with multiple staff members to return the desired one.<br/><br/>
+In multi-occupancy rooms this returns the staff member with the minimum service quality<br/><br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L431">line 431 of Lua/room.lua</a>.
  </p>
  </div>
@@ -503,7 +503,7 @@ Can be overridden in rooms with multiple staff members to return the desired one
  <h5><a name="_0_1_room_1get_staff_service_quality">function Room:getStaffServiceQuality()</a></h5>
  <p>
  Get the average service quality of the staff members in the room.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1016">line 1016 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1026">line 1026 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -511,13 +511,13 @@ Can be overridden in rooms with multiple staff members to return the desired one
  <p>
  how many tiles further are we willing to walk if the room has all the required staff<br/><br/>
  Score function to decide how desirable a room is for a patient.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L614">line 614 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L624">line 624 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1has_queue_dialog">function Room:hasQueueDialog()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L962">line 962 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L972">line 972 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -577,7 +577,7 @@ Can be overridden in rooms with multiple staff members to return the desired one
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L998">line 998 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L1008">line 1008 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -592,7 +592,7 @@ Can be overridden in rooms with multiple staff members to return the desired one
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L884">line 884 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L894">line 894 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -609,7 +609,7 @@ handling, e.g. if the humanoid needs to change before leaving the room.<br/><br/
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L877">line 877 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L887">line 887 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -639,7 +639,7 @@ handling, e.g. if the humanoid needs to change before leaving the room.<br/><br/
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L527">line 527 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L537">line 537 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -647,7 +647,7 @@ handling, e.g. if the humanoid needs to change before leaving the room.<br/><br/
  <p>
  Function stub for rooms to implement. Called when the final confirm
 button has been pressed when building/editing a room.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L650">line 650 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L660">line 660 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -663,7 +663,7 @@ button has been pressed when building/editing a room.<br/><br/>
  <td class="d"> Staff member to denote as current staff.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L438">line 438 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L448">line 448 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -700,7 +700,7 @@ Should be overridden for rooms that have more than one staff member.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L609">line 609 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L619">line 619 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -718,7 +718,7 @@ Otherwise returns true.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L444">line 444 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L454">line 454 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -734,7 +734,7 @@ Otherwise returns true.<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L456">line 456 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L466">line 466 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -760,20 +760,20 @@ Otherwise returns true.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_room_1try_advance_queue">function Room:tryAdvanceQueue()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L501">line 501 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L511">line 511 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1try_to_edit">function Room:tryToEdit()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L934">line 934 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L944">line 944 of Lua/room.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_room_1try_to_find_nearby_patients">function Room:tryToFindNearbyPatients()</a></h5>
  <p>
  Try to find new patients for this room by 'stealing' them from other rooms nearby.<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L744">line 744 of Lua/room.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/room.lua#L754">line 754 of Lua/room.lua</a>.
  </p>
  </div>
 </div>
