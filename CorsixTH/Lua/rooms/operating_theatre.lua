@@ -174,24 +174,6 @@ function OperatingTheatreRoom:setStaffMembersAttribute(attribute, value)
   end
 end
 
--- Returns the current staff member. if there are currently two surgeons it returns
--- the one with higher tiredness.
-function OperatingTheatreRoom:getStaffMember()
-  local staff
-  for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
-      if staff.attributes["fatigue"] < staff_member.attributes["fatigue"] then
-        staff = staff_member
-      end
-    else
-      if not staff_member.fired and not staff_member:hasLeavingAction() then
-        staff = staff_member
-      end
-    end
-  end
-  return staff
-end
-
 --! Builds the first operation action (i.e. with the surgeon whose we see the front).
 --!param surgeon1 (Staff): the surgeon who does this operation action. He must
 --! be the same as the surgeon who gets the action on his queue.

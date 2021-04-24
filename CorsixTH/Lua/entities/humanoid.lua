@@ -929,13 +929,14 @@ function Humanoid:tostring()
 
   local result = string.format("%s - class: %s", full_name, class)
 
-  result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f",
+  result = result .. string.format("\nWarmth: %.3f   Happiness: %.3f   Fatigue: %.3f  Thirst: %.3f  Toilet_Need: %.3f   Health: %.3f   Service Quality: %.3f",
     self.attributes["warmth"] or 0,
     self.attributes["happiness"] or 0,
     self.attributes["fatigue"] or 0,
     self.attributes["thirst"] or 0,
     self.attributes["toilet_need"] or 0,
-    self.attributes["health"] or 0)
+    self.attributes["health"] or 0,
+    self.attributes["fatigue"] and self:getServiceQuality() or 0)
 
   result = result .. "\nActions: ["
   for i = 1, #self.action_queue do

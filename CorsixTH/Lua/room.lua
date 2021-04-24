@@ -429,10 +429,20 @@ function Room:createDealtWithPatientCallback(humanoid)
 end
 
 --! Get the current staff member.
--- Can be overridden in rooms with multiple staff members to return the desired one.
+-- In multi-occupancy rooms this returns the staff member with the minimum service quality
 --!return (staff) The current staff member.
 function Room:getStaffMember()
-  return self.staff_member
+  if not self.staff_member_set then return self.staff_member end
+
+  local staff
+  for staff_member, _ in pairs(self.staff_member_set) do
+    if not staff_member.fired and not staff_member:hasLeavingAction() then
+      if not staff or staff:getServiceQuality() > staff_member:getServiceQuality() then
+        staff = staff_member
+      end
+    end
+  end
+  return staff
 end
 
 --! Set the current staff member.
