@@ -301,8 +301,16 @@ function Patient:isTreatmentEffective()
   local cure_chance = self.hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
 
-  local die = self.die_anims and math.random(1, 100) > cure_chance
-  return not die
+  -- Service quality has a factor on cure chance
+  local room = self:getRoom()
+  local min_impact = 20
+  local service_base = math.max(100 - cure_chance, min_impact)
+
+  local scale = 0.2 -- Quality scaled to +-10%
+  local service_factor = (room:getStaffServiceQuality() - 0.5) * scale
+  cure_chance = cure_chance + (service_base * service_factor)
+
+  return (cure_chance >= math.random(1,100))
 end
 
 --! Change patient internal state to "cured".
