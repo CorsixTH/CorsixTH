@@ -978,6 +978,12 @@ function World:pauseOrUnpause()
   end
 end
 
+--! Function to check if player can perform actions when paused
+--!return (bool) Returns true if player hasn't allowed editing while paused
+function World:isUserActionProhibited()
+  return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
+end
+
 -- Outside (air) temperatures based on climate data for Oxford, taken from
 -- Wikipedia. For scaling, 0 degrees C becomes 0 and 50 degrees C becomes 1
 local outside_temperatures = {
