@@ -1263,13 +1263,18 @@ function App:checkInstallFolder()
       " as said files are required for graphics and sounds."
   if not status then
     -- Table of predictable places. First three are platform independent,
-    -- then macOS GOG bundle, then linux Filesystem Hierarchy Standard, then Windows
-    local possible_locations = { os.getenv( "HOME" ), os.getenv( "HOME" ) .. pathsep ..  "Documents",
+    -- then macOS app and its parent folder, GOG bundle,
+    -- then linux Filesystem Hierarchy Standard, then Windows Program Files
+    -- mac_app_dir is the macOS app base directory named CorsixTH.app
+    local mac_app_dir = debug.getinfo(1).short_src:match("(.*)/Contents/.")
+    local user_dir = os.getenv("HOME") or os.getenv("HOMEPATH") or ""
+    local possible_locations = { user_dir, user_dir .. pathsep ..  "Documents",
       select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
+      mac_app_dir, mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
       "/Applications/Theme Hospital.app/Contents/Resources/game/Theme Hospital.app/" ..
         "Contents/Resources/Theme Hospital.boxer/C.harddisk",
       "/usr/share/games/corsix-th", "/usr/local/share/games/corsix-th",
-      os.getenv("%ProgramFiles%"), os.getenv("%ProgramFiles(x86)%") }
+      os.getenv("ProgramFiles"), os.getenv("ProgramFiles(x86)") }
     local possible_folders = { "ThemeHospital", "Theme Hospital", "HOSP", "TH97",
       [[GOG.com\Theme Hospital]], [[Origin Games\Theme Hospital\data\Game]] }
     for _, dir in ipairs(possible_locations) do
