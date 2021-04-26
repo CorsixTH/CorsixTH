@@ -731,7 +731,7 @@ function UIBottomPanel:giveResearchAdvice()
   end
   local msg = can_build_research and _A.warnings.research_screen_open_1 or _A.warnings.research_screen_open_2
   if not TheApp.using_demo_files then
-    self.ui.adviser:say(msg) 
+    self.ui.adviser:say(msg)
   end
 end
 
