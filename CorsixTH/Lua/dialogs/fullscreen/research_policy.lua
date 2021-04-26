@@ -40,18 +40,12 @@ local col_bg = {
 function UIResearch:UIResearch(ui)
   self:UIFullscreen(ui)
   local gfx = ui.app.gfx
-  if not pcall(function()
-    self.background = gfx:loadRaw("Res01V", 640, 480)
-    local palette = gfx:loadPalette("QData", "Res01V.pal")
-    palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
-    self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
-    self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
-    self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
-  end) then
-    ui:addWindow(UIInformation(ui, {_S.errors.dialog_missing_graphics}))
-    self:close()
-    return
-  end
+  self.background = gfx:loadRaw("Res01V", 640, 480)
+  local palette = gfx:loadPalette("QData", "Res01V.pal")
+  palette:setEntry(255, 0xFF, 0x00, 0xFF) -- Make index 255 transparent
+  self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
+  self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
+  self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
 
   self.hospital = ui.hospital
   self.research = ui.hospital.research
@@ -103,28 +97,14 @@ function UIResearch:updateCategories()
     end
   end
 
-  --[[ Retrieves a translated string dynamically
-  !param string_name (string) The key name (e.g., "tooltip.research.cure_dec")
-  !return (string) The actual translation (e.g., "Decrease cure percentage")
-  ]]
-  local function get_localized_string(string_name)
-    local var_table = _G["_S"]
-    for token in string.gmatch(string_name, "[%w_]+") do
-        var_table = var_table[token]
-    end
-    return var_table
-  end
-
   for i, area in ipairs(research_categories) do
     local current = self.hospital.research.research_policy[area].current
     if current then
       self.adjust_buttons[area] = {
         less = self:addPanel(0, c1, topy + i * spacing)
-            :makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less"))
-            :setTooltip(get_localized_string("tooltip.research." .. area .. "_dec")),
+            :makeRepeatButton(0, 0, size, size, 1, handler_factory(area, "less")),
         more = self:addPanel(0, c2, topy + i * spacing)
-            :makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more"))
-            :setTooltip(get_localized_string("tooltip.research." .. area .. "_inc")),
+            :makeRepeatButton(0, 0, size, size, 2, handler_factory(area, "more")),
       }
     else
       if self.adjust_buttons[area] then
