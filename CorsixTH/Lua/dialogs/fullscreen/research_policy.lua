@@ -46,7 +46,6 @@ function UIResearch:UIResearch(ui)
   self.panel_sprites = gfx:loadSpriteTable("QData", "Res02V", true, palette)
   self.label_font = gfx:loadFont("QData", "Font43V", false, palette)
   self.number_font  = gfx:loadFont("QData", "Font43V", false, palette)
-  
   self.hospital = ui.hospital
   self.research = ui.hospital.research
 
