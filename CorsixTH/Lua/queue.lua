@@ -149,49 +149,40 @@ function Queue:setPriorityForSameRoom(entity)
   self.same_room_priority = entity
 end
 
+local function _isLeaving(queue, humanoid)
+  return queue.same_room_priority and queue.same_room_priority:getRoom() == humanoid:getRoom()
+end
+
+
+local function _humanoidQueuePriority(queue, humanoid)
+  if _isLeaving(queue, humanoid) then
+    return 1
+  elseif class.is(humanoid, Staff) then
+    return 2
+  elseif humanoid.is_emergency or class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
+    return 3
+  else
+    return 4
+  end
+end
+
+local reported_priority_threshold = 2
+
 function Queue:push(humanoid, callbacks_on)
   local index = #self + 1
-  local increment_reported_size = true
-  if self.same_room_priority then
-    -- If humanoid in the priority room, then position them in the queue before
-    -- humanoids not in the room (because if they are in the room and in the
-    -- queue, then they are trying to leave the room).
-    local room = self.same_room_priority:getRoom()
-    if humanoid:getRoom() == room then
-      while index > 1 do
-        local before = self[index - 1]
-        if before:getRoom() == room then
-          break
-        end
-        index = index - 1
-      end
-      increment_reported_size = false
+  local priority = _humanoidQueuePriority(self, humanoid)
+
+  while index > 1 do
+    if _humanoidQueuePriority(self, self[index - 1]) <= priority then
+      break
     end
+    index = index - 1
   end
-  if increment_reported_size and class.is(humanoid, Staff) then
-    -- Give staff priority over patients
-    while index > 1 do
-      local before = self[index - 1]
-      if class.is(before, Staff) or (self.same_room_priority and self.same_room_priority:getRoom() == before:getRoom()) then
-        break
-      end
-      index = index - 1
-    end
-    increment_reported_size = false
-  end
-  -- Emergencies and any VIP's get put before all the other patients, but AFTER currently queued emergencies.
-  if increment_reported_size and humanoid.is_emergency or class.is(humanoid, Vip) or class.is(humanoid, Inspector) then
-    while index > 1 do
-      local before = self[index - 1]
-      if before.is_emergency or class.is(before, Staff) or (self.same_room_priority and self.same_room_priority:getRoom() == before:getRoom()) then
-        break
-      end
-      index = index - 1
-    end
-  end
-  if increment_reported_size then
+
+  if priority > reported_priority_threshold then
     self.reported_size = self.reported_size + 1
   end
+
   self.callbacks[humanoid] = callbacks_on
   table.insert(self, index, humanoid)
   for i = index + 1, #self do
