@@ -171,7 +171,7 @@ function UIStaff:draw(canvas, x_, y_)
   local profile = self.staff.profile
   local font = self.white_font
 
-  font:draw(canvas, profile.name, x + 42, y + 28) -- Name
+  font:draw(canvas, profile:getFullName(), x + 42, y + 28) -- Name
   if profile.humanoid_class == "Handyman" then
     font:draw(canvas, "$" .. profile.wage, x + 135, y + 226) -- Wage
     font:draw(canvas, self:getParcelText(), x + 35, y + 215, 50, 0)

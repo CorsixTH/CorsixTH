@@ -1606,7 +1606,8 @@ end
 function Hospital:addStaff(staff)
   self.staff[#self.staff + 1] = staff
   -- Cost of hiring staff:
-  self:spendMoney(staff.profile.wage, _S.transactions.hire_staff .. ": " .. staff.profile.name)
+  self:spendMoney(staff.profile.wage, _S.transactions.hire_staff .. ": "
+    .. staff.profile:getFullName())
   self:notifyOfStaffChange(staff)
 end
 

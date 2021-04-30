@@ -277,7 +277,8 @@ function UIStaffManagement:draw(canvas, x, y)
       local row_no = i - (self.page-1)*10
       self.row_blankers[row_no].visible = false
       titles:draw(canvas, row_no + 10*(self.page-1), x + 58, y + 63 + row_no*27)
-      titles:draw(canvas, staff.profile.name,        x + 88, y + 63 + row_no*27)
+      titles:draw(canvas, staff.profile:getFullName(),
+          x + 88, y + 63 + row_no*27)
       titles:draw(canvas, "$" .. staff.profile.wage, x + 230, y + 63 + row_no*27, 80, 0)
 
       -- Draw the morale, tiredness and skill for this staff member

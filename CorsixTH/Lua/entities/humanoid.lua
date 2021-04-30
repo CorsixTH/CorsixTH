@@ -920,7 +920,7 @@ end
 !return (string)
 ]]
 function Humanoid:tostring()
-  local name = self.profile and self.profile.name or nil
+  local name = self.profile and self.profile:getFullName() or nil
   local class = self.humanoid_class and self.humanoid_class or "N/A"
   local full_name = "humanoid"
   if (name) then

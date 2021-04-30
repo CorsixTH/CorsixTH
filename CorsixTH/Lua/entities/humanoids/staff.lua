@@ -240,7 +240,8 @@ function Staff:fire()
   if staff_window and staff_window.staff == self then
       staff_window:close()
   end
-  self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": " .. self.profile.name)
+  self.hospital:spendMoney(self.profile.wage, _S.transactions.severance .. ": "
+      .. self.profile:getFullName())
   self.world.ui:playSound("sack.wav")
   self:setMood("exit", "activate")
   self:setDynamicInfoText(_S.dynamic_info.staff.actions.fired)
