@@ -130,6 +130,8 @@ tooltip.casebook.cure_type.unknown = "You do not yet know how to treat this dise
 tooltip.research_policy.no_research = "No research is being carried out in this category at the moment"
 tooltip.research_policy.research_progress = "Progress towards the next discovery in this category: %1%/%2%"
 
+tooltip.watch.tutorial = "Quit tutorial"
+
 menu["player_count"] = "PLAYER COUNT"
 
 menu_file = {

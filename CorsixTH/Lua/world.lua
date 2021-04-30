@@ -1031,9 +1031,13 @@ function World:onTick()
         print("Error while autosaving game: " .. err)
       end
     end
-    if self.game_date == Date() and not self.ui.start_tutorial then
-      self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
-      self.ui:showBriefing()
+    if self.game_date == Date() then
+      if self.ui.start_tutorial then
+        self.ui:addWindow(UIWatch(self.ui, "tutorial"))
+      else
+        self.ui:addWindow(UIWatch(self.ui, "initial_opening"))
+        self.ui:showBriefing()
+      end
     end
     self.tick_timer = self.tick_rate
 

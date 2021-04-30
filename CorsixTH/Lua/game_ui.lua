@@ -1078,6 +1078,9 @@ tutorial_phases = {
   },
 }
 end
+
+local TUTORIAL_LENGTH = 32 -- Does not count phase 5
+
 tutorial_phases = setmetatable({}, {__index = function(t, k)
   make_tutorial_phases()
   return tutorial_phases[k]
@@ -1089,6 +1092,16 @@ end})
 -- phase_to:   Phase we want to step to or "next" to go to next chapter or "end" to end tutorial.
 -- returns true if we changed phase, false if we didn't
 function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
+  if chapter == "end" then
+    local phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
+    if phase and phase.end_callback and type(phase.end_callback) == "function" then
+      phase.end_callback(...)
+    end
+    self.tutorial.chapter = 0
+    self.tutorial.phase = 0
+    self:addWindow(UIWatch(self, "initial_opening"))
+    return true
+  end
   if self.tutorial.chapter ~= chapter then
     return false
   end
@@ -1120,6 +1133,11 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   else
     self.tutorial.phase = phase_to
   end
+  local timer = self:getWindow(UIWatch)
+  if timer and timer.count_type == "tutorial" then
+    self.tutorial_progress = self.tutorial_progress + 1
+    timer:setWatch(self.tutorial_progress, TUTORIAL_LENGTH)
+  end
 
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
   local new_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
@@ -1145,6 +1163,7 @@ function GameUI:startTutorial(chapter)
   chapter = chapter or 1
   self.tutorial.chapter = chapter
   self.tutorial.phase = 0
+  self.tutorial_progress = 1
 
   self:tutorialStep(chapter, 0, 1)
 end
