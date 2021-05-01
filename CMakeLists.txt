@@ -14,7 +14,7 @@
 #   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
-#   - BUILD_ANIMVIEWER : Generate AnimViewer build files (no)
+#   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
 
 cmake_minimum_required(VERSION 3.5)
 
@@ -59,7 +59,7 @@ if(APPLE)
 endif()
 
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
-option(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
+option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
 
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
@@ -129,7 +129,7 @@ add_subdirectory("libs")
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
 
-if(BUILD_ANIMVIEWER)
+if(BUILD_ANIMVIEW)
   message("Building AnimView")
   add_subdirectory(AnimView)
 endif()
