@@ -421,21 +421,6 @@ function World:getAvailableRooms()
   return avail_rooms
 end
 
---! Initializes variables carried from previous levels
-function World:initFromPreviousLevel(carry)
-  for object, tab in pairs(carry) do
-    if object == "world" then
-      for key, value in pairs(tab) do
-        self[key] = value
-      end
-    elseif object == "hospital" then
-      for key, value in pairs(tab) do
-        self.hospitals[1][key] = value
-      end
-    end
-  end
-end
-
 --! Get the hospital controlled by the (single) player.
 --!return (Hospital) The hospital controlled by the (single) player.
 function World:getLocalPlayerHospital()
@@ -2786,4 +2771,24 @@ end
 --!return (Date) Current game date.
 function World:date()
   return self.game_date:clone()
+end
+
+--! Collect the settings that should be reused in the next world
+--!return (table) world and hospital campaign data
+function World:getCampaignData()
+  local world = {
+    room_built = self.room_built,
+    campaign_info = self.campaign_info,
+    debug_disable_salary_raise = self.debug_disable_salary_raise,
+  }
+  return { world = world, hospital = self:getLocalPlayerHospital():getCampaignData() }
+end
+
+--! Restore the settings from the previous world
+--!param campaign_data (table) world and hospital campaign data
+function World:setCampaignData(campaign_data)
+  for key, value in pairs(campaign_data.world) do
+    self[key] = value
+  end
+  self:getLocalPlayerHospital():setCampaignData(campaign_data.hospital)
 end

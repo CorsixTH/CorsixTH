@@ -626,22 +626,7 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
     return
   end
   -- If going from another level, save progress.
-  local carry_to_next_level
-  if self.world and self.world.campaign_info then
-    carry_to_next_level = {
-      world = {
-        room_built = self.world.room_built,
-        campaign_info = self.world.campaign_info,
-        },
-      hospital = {
-        player_salary = self.ui.hospital.player_salary,
-        message_popup = self.ui.hospital.message_popup,
-        handyman_popup = self.ui.hospital.handyman_popup,
-        hospital_littered = self.ui.hospital.hospital_littered,
-        has_seen_pay_rise = self.ui.hospital.has_seen_pay_rise,
-      },
-    }
-  end
+  local campaign_data = self.world and self.world:getCampaignData()
 
   -- Make sure there is no blue filter active.
   self.video:setBlueFilterActive(false)
@@ -668,8 +653,8 @@ function App:loadLevel(level, difficulty, level_name, level_file, level_intro, m
   self.world:setUI(self.ui) -- Function call allows world to set up its keyHandlers
 
   -- Now restore progress from previous levels.
-  if carry_to_next_level then
-    self.world:initFromPreviousLevel(carry_to_next_level)
+  if campaign_data then
+    self.world:setCampaignData(campaign_data)
   end
 end
 
