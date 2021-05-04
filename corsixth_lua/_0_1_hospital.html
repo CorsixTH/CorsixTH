@@ -135,6 +135,9 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1get_average_staff_attribute">getAverageStaffAttribute</a>(<span class="p">attribute</span>, <span class="p">default_value</span>)
  </li>
  <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1get_campaign_data">getCampaignData</a>()
+ </li>
+ <li class="self">
  <a href="_0_1_hospital.html#_0_1_hospital_1get_debug_patient">getDebugPatient</a>()
  </li>
  <li class="self">
@@ -279,6 +282,9 @@
  <a href="_0_1_hospital.html#_0_1_hospital_1sell_soda_to_patient">sellSodaToPatient</a>(<span class="p">patient</span>)
  </li>
  <li class="self">
+ <a href="_0_1_hospital.html#_0_1_hospital_1set_campaign_data">setCampaignData</a>(<span class="p">campaign_data</span>)
+ </li>
+ <li class="self">
  <a href="_0_1_hospital.html#_0_1_hospital_1show_gates_to_hell">showGatesToHell</a>(<span class="p">_entity</span>)
  </li>
  <li class="self">
@@ -362,11 +368,17 @@
  </li>
  <li><span class="p">handymanTasks</span>
  </li>
+ <li><span class="p">handyman_popup</span>
+ </li>
  <li><span class="p">has_impressive_reputation</span>
+ </li>
+ <li><span class="p">has_seen_pay_rise</span>
  </li>
  <li><span class="p">heating</span>
  </li>
  <li><span class="p">heating_broke</span>
+ </li>
+ <li><span class="p">hospital_littered</span>
  </li>
  <li><span class="p">inflation_rate</span>
  </li>
@@ -381,6 +393,8 @@
  <li><span class="p">is_in_world</span>
  </li>
  <li><span class="p">loan</span>
+ </li>
+ <li><span class="p">message_popup</span>
  </li>
  <li><span class="p">money_in</span>
  </li>
@@ -1073,6 +1087,13 @@ to cure them and the fax.<br/><br/>
  </p>
  </div>
  <div class="method">
+ <h5><a name="_0_1_hospital_1get_campaign_data">function Hospital:getCampaignData()</a></h5>
+ <p>
+ Collect the hospital level settings relevant for the next hospital<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2396">line 2396 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
  <h5><a name="_0_1_hospital_1get_debug_patient">function Hospital:getDebugPatient()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1379">line 1379 of Lua/hospital.lua</a>.
@@ -1754,6 +1775,22 @@ in _S.transactions.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L1476">line 1476 of Lua/hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_hospital_1set_campaign_data">function Hospital:setCampaignData(<span class="p">campaign_data</span>)</a></h5>
+ <p>
+ Restore the hospital settings from the previous hospital<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">campaign_data</td>
+ <td class="t">table</td>
+ <td class="d"> Hospital campaign data</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospital.lua#L2410">line 2410 of Lua/hospital.lua</a>.
  </p>
  </div>
  <div class="method">
