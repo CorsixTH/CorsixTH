@@ -2392,3 +2392,25 @@ end
 function Hospital:changeValue(changeValue)
   self.value = self.value + changeValue
 end
+
+--! Collect the hospital level settings relevant for the next hospital
+--!return campaign_data (table) Hospital campaign data
+function Hospital:getCampaignData()
+  local campaign_data = {
+    player_salary = self.player_salary,
+    message_popup = self.message_popup,
+    handyman_popup = self.handyman_popup,
+    hospital_littered = self.hospital_littered,
+    has_seen_pay_rise = self.has_seen_pay_rise,
+    policies = self.policies,
+  }
+  return campaign_data
+end
+
+--! Restore the hospital settings from the previous hospital
+--!param campaign_data (table) Hospital campaign data
+function Hospital:setCampaignData(campaign_data)
+  for key, value in pairs(campaign_data) do
+    self[key] = value
+  end
+end
