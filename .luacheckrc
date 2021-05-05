@@ -49,7 +49,7 @@ globals = { -- Globals
             "UIBottomPanel", "UIBuildRoom", "UICallsDispatcher", "UICasebook",
             "UICheats", "UIChooseFont", "UIConfirmDialog", "UICustomCampaign",
             "UICustomGame", "UICustomise", "UIDirectoryBrowser", "UIDropdown",
-            "UIEditRoom", "UIFax", "UIFileBrowser", "UIFolder", "UIFullscreen",
+            "UIEditRoom", "UIErrConfirm", "UIFax", "UIFileBrowser", "UIFolder", "UIFullscreen",
             "UIFurnishCorridor", "UIGraphs", "UIHireStaff" ,"UIInformation",
             "UIJukebox", "UILoadGame", "UILoadMap", "UILuaConsole", "UIMachine",
             "UIMakeDebugPatient", "UIMainMenu", "UIMapEditor", "UIMenuBar",
