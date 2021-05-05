@@ -980,7 +980,7 @@ function World:pauseOrUnpause()
 end
 
 --! Sets whether the game should be forcefully paused
---!param state (bool) 
+--!param state (bool)
 function World:systemPause(state)
   self.system_pause = state
 end

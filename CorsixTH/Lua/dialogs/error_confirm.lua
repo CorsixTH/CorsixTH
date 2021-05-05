@@ -76,7 +76,7 @@ function UIErrConfirm:mustPause()
 end
 
 -- Errors force pausing
-function UIErrConfirm:forcedPause()  
+function UIErrConfirm:forcedPause()
   TheApp.world:systemPause(true)
 end
 
