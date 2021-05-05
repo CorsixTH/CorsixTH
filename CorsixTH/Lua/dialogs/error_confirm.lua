@@ -18,11 +18,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
-class "UIConfirmDialog" (Window)
+--! Clone of UIConfirmDialog. Handles errors requiring a confirmation with a forced pause.
+class "UIErrConfirm" (Window)
 
----@type UIConfirmDialog
-local UIConfirmDialog = _G["UIConfirmDialog"]
+---@type UIErrConfirm
+local UIErrConfirm = _G["UIErrConfirm"]
 
 local top_frame = 357
 local top_frame_height = 22
@@ -31,7 +31,7 @@ local middle_frame_height = 11
 local bottom_frame = 359
 local text_width = 153
 
-function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
+function UIErrConfirm:UIErrConfirm(ui, text, callback_ok, callback_cancel)
   self:Window()
 
   local app = ui.app
@@ -67,25 +67,37 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:registerKeyHandlers()
+  self:forcedPause()
 end
 
-function UIConfirmDialog:registerKeyHandlers()
+-- Errors confirmations are used for errors and require the game to pause
+function UIErrConfirm:mustPause()
+  return true
+end
+
+-- Errors force pausing
+function UIErrConfirm:forcedPause()  
+  TheApp.world:systemPause(true)
+end
+
+function UIErrConfirm:registerKeyHandlers()
   self:addKeyHandler("global_confirm", self.ok)
   self:addKeyHandler("global_confirm_alt", self.ok)
 end
 
-function UIConfirmDialog:cancel()
+function UIErrConfirm:cancel()
   self:close(false)
 end
 
-function UIConfirmDialog:ok()
+function UIErrConfirm:ok()
   self:close(true)
 end
 
 --! Closes the confirm dialog
 --!param ok (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
-function UIConfirmDialog:close(ok)
+function UIErrConfirm:close(ok)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
+  TheApp.world:systemPause(false) -- Error dealt with
   Window.close(self)
   if ok then
     if self.callback_ok then
@@ -98,14 +110,14 @@ function UIConfirmDialog:close(ok)
   end
 end
 
-function UIConfirmDialog:draw(canvas, x, y)
+function UIErrConfirm:draw(canvas, x, y)
   Window.draw(self, canvas, x, y)
 
   x, y = x + self.x, y + self.y
   self.white_font:drawWrapped(canvas, self.text, x + 17, y + 17, text_width)
 end
 
-function UIConfirmDialog:afterLoad(old, new)
+function UIErrConfirm:afterLoad(old, new)
   Window.afterLoad(self, old, new)
   self:registerKeyHandlers()
 end

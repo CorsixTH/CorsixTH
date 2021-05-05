@@ -499,7 +499,7 @@ local function Humanoid_startAction(self)
     self.world:gameLog("Last action: " .. self.previous_action.name)
     self.world:gameLog(debug.traceback())
 
-    ui:addWindow(UIConfirmDialog(ui,
+    ui:addWindow(UIErrConfirm(ui,
       "Sorry, a humanoid just had an empty action queue,"..
       " which means that he or she didn't know what to do next."..
       " Please consult the command window for more detailed information. "..
@@ -515,14 +515,6 @@ local function Humanoid_startAction(self)
           self.going_home = false
           self.hospital = self.world:getLocalPlayerHospital()
           self:goHome("kicked")
-        end
-        if TheApp.world:isCurrentSpeed("Pause") then
-          TheApp.world:setSpeed(TheApp.world.prev_speed)
-        end
-      end,
-      --[[persistable:humanoid_stay_in_hospital]] function()
-        if TheApp.world:isCurrentSpeed("Pause") then
-          TheApp.world:setSpeed(TheApp.world.prev_speed)
         end
       end
     ))

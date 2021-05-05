@@ -1101,7 +1101,7 @@ function App:run()
       elseif class.is(entity, Staff) then
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
-      self.ui:addWindow(UIConfirmDialog(self.ui,
+      self.ui:addWindow(UIErrConfirm(self.ui,
           "Sorry, but an error has occurred. There can be many reasons - see the " ..
           "log window for details. Would you like to attempt a recovery?",
           --[[persistable:app_attempt_recovery]] function()
