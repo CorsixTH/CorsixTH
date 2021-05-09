@@ -111,6 +111,9 @@ function World:World(app)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
+  -- Flag for forcing to deal with recoverable errors
+  self.system_pause = false
+
   -- In Free Build mode?
   if tonumber(self.map.level_number) then
     self.free_build_mode = false
@@ -920,7 +923,7 @@ function World:setSpeed(speed)
   if self:isCurrentSpeed(speed) then
     return
   end
-  if speed == "Pause" then
+  if speed == "Pause" or self.system_pause then
     -- stop screen shaking if there was an earthquake in progress
     if self.next_earthquake.active then
       self.ui:endShakeScreen()
@@ -956,6 +959,7 @@ end
 
 --! Dedicated function to allow unpausing by pressing 'p' again
 function World:pauseOrUnpause()
+  if self:isSystemPauseActive() then return end -- System pause takes precedence
   if not self:isCurrentSpeed("Pause") then
     self:setSpeed("Pause")
   elseif self.prev_speed then
@@ -963,9 +967,23 @@ function World:pauseOrUnpause()
   end
 end
 
+--! Sets whether the game should be forcefully paused
+--!param state (bool)
+function World:setSystemPause(state)
+  print("System pause is", state)
+  self.system_pause = state
+end
+
+--! Reports the system pause status
+--!return (bool) true is system pause is active, else false
+function World:isSystemPauseActive()
+  return self.system_pause or false
+end
+
 --! Function to check if player can perform actions when paused
 --!return (bool) Returns true if player hasn't allowed editing while paused
 function World:isUserActionProhibited()
+  if self:isSystemPauseActive() then return true end
   return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
 end
 
@@ -2716,6 +2734,7 @@ if old < 153 then
 
   self.savegame_version = new
   self.release_version = TheApp:getVersion(new)
+  self.system_pause = false -- Reset flag on load
 end
 
 function World:playLoadedEntitySounds()

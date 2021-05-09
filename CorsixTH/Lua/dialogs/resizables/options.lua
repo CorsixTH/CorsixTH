@@ -444,7 +444,7 @@ function UIResolution:ok()
     local err = {_S.errors.minimum_screen_size}
     self.ui:addWindow(UIInformation(self.ui, err))
   elseif width > 3000 or height > 2000 then
-    self.ui:addWindow(UIConfirmDialog(self.ui,
+    self.ui:addWindow(UIConfirmDialog(self.ui, false,
       _S.confirmation.maximum_screen_size,
       --[[persistable:maximum_screen_size_confirm_dialog]]function()
       self:close(true)

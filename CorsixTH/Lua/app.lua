@@ -1086,7 +1086,7 @@ function App:run()
       elseif class.is(entity, Staff) then
         self.ui:addWindow(UIStaff(self.ui, entity))
       end
-      self.ui:addWindow(UIConfirmDialog(self.ui,
+      self.ui:addWindow(UIConfirmDialog(self.ui, true,
           "Sorry, but an error has occurred. There can be many reasons - see the " ..
           "log window for details. Would you like to attempt a recovery?",
           --[[persistable:app_attempt_recovery]] function()
@@ -1541,7 +1541,7 @@ end
 --! Restarts the current level (offers confirmation window first)
 function App:restart()
   assert(self.map, "Trying to restart while no map is loaded.")
-  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.restart_level,
+  self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.restart_level,
   --[[persistable:app_confirm_restart]] function()
     self:worldExited()
     local level = self.map.level_number
