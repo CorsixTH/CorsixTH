@@ -54,9 +54,8 @@ static void cleanup(lua_State* L) {
     Mix_CloseAudio();
   }
 #endif
-  SDL_Quit();
-
   lua_close(L);
+  SDL_Quit();
 }
 
 //! Program entry point
