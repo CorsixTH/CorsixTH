@@ -970,7 +970,6 @@ end
 --! Sets whether the game should be forcefully paused
 --!param state (bool)
 function World:setSystemPause(state)
-  print("System pause is", state)
   self.system_pause = state
 end
 
