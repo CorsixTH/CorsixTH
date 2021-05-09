@@ -32,7 +32,7 @@ local middle_frame_height = 11
 local bottom_frame = 359
 local text_width = 153
 
---!Initialise the Confirmation Dialog
+--! Initialise the Confirmation Dialog
 --!param ui The UI
 --!param is_error (boolean) set whether this dialog is a result of an error (true) or not (false)
 --!param text (string) message to show
@@ -102,7 +102,7 @@ function UIConfirmDialog:ok()
 end
 
 --! Closes the confirm dialog
---!param cofirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
+--!param confirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
 function UIConfirmDialog:close(confirmed)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
   TheApp.world:setSystemPause(false) -- Error dealt with
