@@ -105,7 +105,7 @@ end
 --!param confirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
 function UIConfirmDialog:close(confirmed)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
-  TheApp.world:setSystemPause(false) -- Error dealt with
+  if self.is_error then TheApp.world:setSystemPause(false) end -- Error dealt with
   Window.close(self)
   if confirmed then
     if self.callback_ok then
