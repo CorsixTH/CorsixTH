@@ -15,6 +15,7 @@ You will need the following:
 - Grab the latest installer for your system:
    - Windows and macOS builds can be downloaded directly from [releases](https://github.com/CorsixTH/CorsixTH/releases).
    - Linux and BSD repositories use either corsixth or corsix-th names [packaged versions](https://repology.org/metapackage/corsixth).
+   - A Flatpak for Linux users is available on [Flathub](https://flathub.org/apps/details/com.corsixth.corsixth).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf:smile:
    - A download from [GOG.com](http://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
