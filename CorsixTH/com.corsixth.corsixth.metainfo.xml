@@ -22,6 +22,7 @@
   </description>
   <provides>
     <binary>corsix-th</binary>
+    <id>com.corsixth.CorsixTH</id>
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
