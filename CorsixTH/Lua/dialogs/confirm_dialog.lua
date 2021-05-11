@@ -83,7 +83,7 @@ function UIConfirmDialog:mustPause()
   return self.is_error
 end
 
--- Errors force pausing
+--! Function to tell the game a system pause is needed
 function UIConfirmDialog:forcePause()
   TheApp.world:setSystemPause(true)
 end

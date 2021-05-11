@@ -111,7 +111,7 @@ function World:World(app)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
-  -- Flag for forcing to deal with recoverable errors
+  -- Flag to force pausing to deal with recoverable errors
   self.system_pause = false
 
   -- In Free Build mode?
@@ -976,7 +976,7 @@ end
 --! Reports the system pause status
 --!return (bool) true is system pause is active, else false
 function World:isSystemPauseActive()
-  return self.system_pause or false
+  return self.system_pause
 end
 
 --! Function to check if player can perform actions when paused
