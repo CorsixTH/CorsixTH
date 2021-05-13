@@ -1176,7 +1176,7 @@ function GameUI:setEditRoom(enabled)
     -- If the actual editing hasn't started yet but is on its way,
     -- activate the room again.
     if class.is(self.edit_room, Room) and self.cursor == self.waiting_cursor then
-      self.edit_room.is_active = true
+      self.app.world:markRoomAsBuilt(self.edit_room)
     else
       -- If we are currently editing a room it may happen that we need to abort it.
       -- Also remove any dialog where the user is buying items.

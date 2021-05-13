@@ -274,10 +274,10 @@ local function action_seek_room_start(action, humanoid)
 
   -- check we can treat the patient - and just shortcut the processing
   local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
-  if humanoid.diagnosed and not req then
+  if humanoid.diagnosed then
     local room = action_seek_room_find_room(action, humanoid)
     -- if we have the room but not the staff we shouldn't seek out the room either
-    if room then
+    if room and (not req or not action.treatment_room) then
       if humanoid.message then
         TheApp.ui.bottom_panel:removeMessage(humanoid)
       end
@@ -358,7 +358,7 @@ local function action_seek_room_start(action, humanoid)
         -- don't need this as we unregistered all previous callbacks if we went to research
         local room_req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
         -- get required staff
-        if not humanoid.diagnosed or not room_req then
+        if not humanoid.diagnosed or (not room_req or not action.treatment_room) then
           action_seek_room_goto_room(rm, humanoid, action.diagnosis_room)
           TheApp.ui.bottom_panel:removeMessage(humanoid)
           humanoid:unregisterRoomBuildCallback(build_callback)
