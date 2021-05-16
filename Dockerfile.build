@@ -3,6 +3,23 @@ FROM ubuntu:latest
 
 WORKDIR /sourcecode
 
-RUN apt-get update && apt-get install -y build-essential cmake git liblua5.2-0 liblua5.2-dev libsdl2-dev libsdl2-mixer-dev timidity libfreetype6-dev lua-filesystem lua-lpeg doxygen liblua5.3-0 liblua5.3-0-dbg liblua5.3-dev ffmpeg libavcodec-dev libavformat-dev libavresample-dev libavdevice-dev libavutil-dev libavfilter-dev libswscale-dev libpostproc-dev libswresample-dev
+ENV DEBIAN_FRONTEND=noninteractive
 
-CMD mkdir build && cd build && cmake -DUSE_SOURCE_DATADIRS=ON .. && make
+RUN apt-get -y update 
+
+RUN apt-get install -y \
+    # Base Tools
+    build-essential cmake git doxygen \
+    # LUA
+    liblua5.2-0 liblua5.2-dev liblua5.3-0 liblua5.3-0-dbg liblua5.3-dev \
+    lua-filesystem lua-lpeg \
+    # SDL2
+    libsdl2-dev libsdl2-mixer-dev \
+    # AV
+    ffmpeg timidity \
+    libavformat-dev libavresample-dev libavdevice-dev libavutil-dev libavfilter-dev libavcodec-dev \
+    libpostproc-dev libswscale-dev libswresample-dev \
+    # Font
+    libfreetype6-dev
+
+CMD mkdir -p build && cd build && cmake -DUSE_SOURCE_DATADIRS=ON .. && make
