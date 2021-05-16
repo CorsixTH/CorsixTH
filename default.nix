@@ -28,7 +28,10 @@ let
     };
 
     SDL2_mixer = pkgs.SDL2_mixer.overrideAttrs(old: rec { 
-        configureFlags = old.configureFlags ++ [ "--enable-music-native-midi-gpl" ]; 
+        configureFlags = old.configureFlags ++ [ 
+            " --enable-music-midi-fluidsynth-shared"
+            " --disable-music-midi-timidity"
+        ]; 
     });
 
 in pkgs.stdenv.mkDerivation {
@@ -46,7 +49,7 @@ in pkgs.stdenv.mkDerivation {
         pkgs.SDL2
     ]
         ++ optional audioSupport SDL2_mixer
-        ++ optionals (audioSupport && pkgs.stdenv.isLinux) [ pkgs.timidity pkgs.freepats ]
+        ++ optionals (audioSupport && pkgs.stdenv.isLinux) [ pkgs.soundfont-fluid pkgs.fluidsynth ]
         ++ optional freetypeSupport pkgs.freetype
         ++ optional movieSupport pkgs.ffmpeg
         ++ optional buildDocs pkgs.doxygen
@@ -61,7 +64,7 @@ in pkgs.stdenv.mkDerivation {
     FFMPEG_DIR = optional movieSupport pkgs.ffmpeg.outPath;
     FREETYPE_DIR = optional freetypeSupport pkgs.freetype.outPath;
     SDL_MIXER_DIR = optional audioSupport SDL2_mixer.outPath;
-    TIMIDITY_CFG = "${pkgs.freepats.outPath}/freepats.cfg";
+    SDL_SOUNDFONTS = "${pkgs.soundfont-fluid.outPath}/share/soundfonts/FluidR3_GM2-2.sf2";
     # wxWidgets_ROOT_DIR = pkgs.wxGTK.outPath;
     
     cmakeFlags = [ ]
