@@ -1,16 +1,13 @@
 version: '{build}'
-image: Visual Studio 2017
+image: Visual Studio 2019
 pull_requests:
   do_not_increment_build_number: true
 init:
-environment:
-  matrix:
-  - GENERATOR: Visual Studio 15 2017 Win64
 cache:
   - vcpkg -> CMake/VcpkgDeps.cmake, scripts/build_vcpkg_deps.ps1
 configuration: Release
 before_build:
-  - cmd: cmake -G "%GENERATOR%" -DUSE_VCPKG_DEPS=ON -DENABLE_UNIT_TESTS=ON .
+  - cmd: cmake -G "Visual Studio 16 2019" -DUSE_VCPKG_DEPS=ON -DENABLE_UNIT_TESTS=ON .
 build:
   project: CorsixTH_Top_Level.sln
   verbosity: minimal
