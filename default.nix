@@ -27,6 +27,10 @@ let
         packageDir = "${lua.env.outPath}/lib/lua/5.3";
     };
 
+    SDL2_mixer = pkgs.SDL2_mixer.overrideAttrs(old: rec { 
+        configureFlags = old.configureFlags ++ [ "--enable-music-native-midi-gpl" ]; 
+    });
+
 in pkgs.stdenv.mkDerivation {
     name = "corsixth";
     version = "0.64";
@@ -41,7 +45,7 @@ in pkgs.stdenv.mkDerivation {
         lua.env
         pkgs.SDL2
     ]
-        ++ optional audioSupport pkgs.SDL2_mixer
+        ++ optional audioSupport SDL2_mixer
         ++ optionals (audioSupport && pkgs.stdenv.isLinux) [ pkgs.timidity pkgs.freepats ]
         ++ optional freetypeSupport pkgs.freetype
         ++ optional movieSupport pkgs.ffmpeg
@@ -56,7 +60,8 @@ in pkgs.stdenv.mkDerivation {
     
     FFMPEG_DIR = optional movieSupport pkgs.ffmpeg.outPath;
     FREETYPE_DIR = optional freetypeSupport pkgs.freetype.outPath;
-    SDL_MIXER_DIR = optional audioSupport pkgs.SDL2_mixer.outPath;
+    SDL_MIXER_DIR = optional audioSupport SDL2_mixer.outPath;
+    TIMIDITY_CFG = "${pkgs.freepats.outPath}/freepats.cfg";
     # wxWidgets_ROOT_DIR = pkgs.wxGTK.outPath;
     
     cmakeFlags = [ ]
