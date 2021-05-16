@@ -16,7 +16,7 @@
     freetypeSupport ? true,
     buildDocs ? false,
     enableUnitTests ? false,
-    # buildAnimView ? false,
+    buildAnimView ? false,
 }:
 
 with pkgs.lib;
@@ -33,7 +33,6 @@ let
             " --disable-music-midi-timidity"
         ]; 
     });
-
 in pkgs.stdenv.mkDerivation {
     name = "corsixth";
     version = "0.64";
@@ -54,10 +53,11 @@ in pkgs.stdenv.mkDerivation {
         ++ optional movieSupport pkgs.ffmpeg
         ++ optional buildDocs pkgs.doxygen
         ++ optional enableUnitTests pkgs.catch2
-        #++ optional buildAnimView pkgs.wxGTK
+        ++ optional buildAnimView pkgs.wxGTK30
     ;
 
     LUA_DIR = lua.env.outPath;
+    LUA_PACKAGES_DIR = lua.packageDir;
     SDL_LIBRARY = "${pkgs.SDL2.outPath}/lib/libSDL2.so";
     SDL_INCLUDE_DIR = "${pkgs.SDL2.dev.outPath}/include/SDL2";
     
@@ -65,23 +65,19 @@ in pkgs.stdenv.mkDerivation {
     FREETYPE_DIR = optional freetypeSupport pkgs.freetype.outPath;
     SDL_MIXER_DIR = optional audioSupport SDL2_mixer.outPath;
     SDL_SOUNDFONTS = "${pkgs.soundfont-fluid.outPath}/share/soundfonts/FluidR3_GM2-2.sf2";
-    # wxWidgets_ROOT_DIR = pkgs.wxGTK.outPath;
+    WXRC_CMD = "${pkgs.wxGTK30.outPath}/bin/wxrc";
+    WX_CONFIG = "${pkgs.wxGTK30.outPath}/bin/wx-config";
     
     cmakeFlags = [ ]
         ++ optional (!audioSupport) "-DWITH_AUDIO=OFF"
         ++ optional (!freetypeSupport) "-DWITH_FREETYPE2=OFF"
         ++ optional (!movieSupport) "-DWITH_MOVIES=OFF"
         ++ optional enableUnitTests "-DENABLE_UNIT_TESTS=ON"
-        # ++ optional (buildAnimView) "-DBUILD_ANIMVIEW=ON"
+        ++ optional buildAnimView "-DBUILD_ANIMVIEW=ON"
     ;
 
     preFixup = ''
         cp -a "${lua.packageDir}"/. $out/share/corsix-th/
-    '';
-
-    shellHook = ''
-        mkdir -p build
-        cp -a "${lua.packageDir}"/. build/
     '';
 
     meta = with pkgs.lib; {
