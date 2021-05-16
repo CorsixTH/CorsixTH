@@ -101,3 +101,7 @@ CorsixTH/CorsixTH.sln
 # Default build path
 CorsixTH/CorsixTH
 CorsixTH/corsix-th
+
+# Nix
+*.so
+/result
