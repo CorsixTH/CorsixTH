@@ -79,9 +79,17 @@ set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD_REQUIRED ON)
 
+if(EMSCRIPTEN)
+  set_property(TARGET CorsixTH_lib PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
+
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD 14)
 set_property(TARGET CorsixTH PROPERTY CXX_EXTENSIONS OFF)
 set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
+
+if(EMSCRIPTEN)
+  set_property(TARGET CorsixTH PROPERTY POSITION_INDEPENDENT_CODE ON)
+endif()
 
 # Add an extra step to copy built DLLs on MSVC
 if(USE_VCPKG_DEPS)
@@ -96,6 +104,8 @@ if(MSVC AND USE_VCPKG_DEPS)
   find_package(SDL2 CONFIG REQUIRED)
   target_link_libraries(CorsixTH_lib SDL2::SDL2)
   target_link_libraries(CorsixTH SDL2::SDL2main)
+elseif(EMSCRIPTEN)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL=2")
 else()
   find_package(SDL2 REQUIRED)
   if(SDL_FOUND)
@@ -115,6 +125,10 @@ endif()
 # Find Lua
 find_package(Lua REQUIRED)
 if(Lua_FOUND)
+  if(NOT LUA_LIBRARY AND LUA_LIBRARIES)
+    set(LUA_LIBRARY ${LUA_LIBRARIES})
+  endif()
+  
   target_link_libraries(CorsixTH ${LUA_LIBRARY})
   include_directories(${LUA_INCLUDE_DIR})
   # Special link flags needed on macOS 64bit, according to: http://luajit.org/install.html
@@ -137,14 +151,20 @@ else()
 endif()
 
 # Add threading library
-find_package(Threads)
-target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+if(EMSCRIPTEN)
+  # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_PTHREADS=1")
+else()
+  find_package(Threads)
+  target_link_libraries(CorsixTH ${CMAKE_THREAD_LIBS_INIT})
+endif()
 
 # Find SDL_mixer
 if(CORSIX_TH_USE_SDL_MIXER)
   if(MSVC AND USE_VCPKG_DEPS)
     find_package(sdl2-mixer CONFIG REQUIRED)
     target_link_libraries(CorsixTH SDL2::SDL2_mixer)
+  elseif(EMSCRIPTEN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_SDL_MIXER=2")
   else()
     find_package(SDL2_mixer REQUIRED)
     if(SDLMIXER_FOUND)
@@ -193,6 +213,8 @@ if(CORSIX_TH_USE_FREETYPE2)
   if(MSVC AND USE_VCPKG_DEPS)
     find_package(Freetype REQUIRED)
     target_link_libraries(CorsixTH Freetype::Freetype)
+  elseif(EMSCRIPTEN)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s USE_FREETYPE=2")
   else()
     find_package(Freetype REQUIRED)
     if(FREETYPE_FOUND)
@@ -295,4 +317,37 @@ if(NOT USE_SOURCE_DATADIRS)
       ")
     endif()
   endif()
+endif()
+
+if(EMSCRIPTEN)
+  set(CMAKE_EXECUTABLE_SUFFIX ".html")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -s MAIN_MODULE=1 -s ALLOW_MEMORY_GROWTH=1 -s RELOCATABLE=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=[\"js_load_lua_modules\"]'")
+
+  file(GLOB_RECURSE files
+    "CorsixTH.lua"
+    "Lua/*.lua"
+    "Bitmap/*"
+    "Campaigns/*"
+    "Levels/*"
+  )
+
+  foreach(file ${files})
+    file(RELATIVE_PATH relative_file ${CMAKE_CURRENT_SOURCE_DIR} ${file})
+    string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@/var/empty/local/share/corsix-th/${relative_file}\"")
+    message(STATUS "Asset ${relative_file}")
+  endforeach()
+
+  set(LUA_PACKAGE_DIR ${LUA_DIR}/lib/lua/${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR})
+
+  file(GLOB libraries
+    "${LUA_PACKAGE_DIR}/*.so"
+    "${LUA_PACKAGE_DIR}/*.wasm"
+  )
+
+  foreach(file ${libraries})
+    file(RELATIVE_PATH relative_file ${LUA_PACKAGE_DIR} ${file})
+    string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@${relative_file}\"")
+    string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@/var/empty/local/share/corsix-th/${relative_file}\"")
+    message(STATUS "Library ${relative_file}")
+  endforeach()
 endif()
