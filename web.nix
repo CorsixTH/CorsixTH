@@ -108,8 +108,8 @@ let
                 installPhase = ''
                     mkdir -p $out/lib
                     
-                    cp lpeg.wasm $out/lib/lpeg.wasm
                     cp lpeg.wasm $out/lib/lpeg.so
+                    cp lpeg.wasm $out/lib/lpeg.wasm
                 '';
 
                 autoreconfPhase = "";
@@ -142,8 +142,8 @@ let
                 installPhase = ''
                     mkdir -p $out/lib
 
-                    cp lfs.wasm $out/lib/lfs.wasm
                     cp lfs.wasm $out/lib/lfs.so
+                    cp lfs.wasm $out/lib/lfs.wasm
                 '';
 
                 autoreconfPhase = "";
