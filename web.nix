@@ -102,7 +102,7 @@ let
                 outputs = [ "out" ];
 
                 buildPhase = ''
-                    emcc -fpic -O3 -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o lpeg.wasm
+                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o lpeg.wasm
                 '';
 
                 installPhase = ''
@@ -136,7 +136,7 @@ let
                 outputs = [ "out" ];
 
                 buildPhase = ''
-                    emcc -fpic -O3 -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o lfs.wasm
+                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o lfs.wasm
                 '';
 
                 installPhase = ''
@@ -167,7 +167,7 @@ let
 
         buildPhase = ''
             rm -rf src/lua*.c
-            emcc -fpic -O3 -shared -DLUA_USE_DLOPEN src/*.c -o liblua.so
+            emcc -fpic -shared -DLUA_USE_DLOPEN src/*.c -o liblua.so
         '';
 
         luaExtLibs = (concatStrings (intersperse " " luaExternalLibraries));
