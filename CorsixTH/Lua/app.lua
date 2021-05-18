@@ -916,11 +916,12 @@ end
 --! Tries to open the given file or a file in OS's temp dir.
 -- Returns the file handler
 --!param file The full path of the intended file
-function App:writeToFileOrTmp(file)
-  local f, err = io.open(file, "w")
+--!param mode The mode in which the file is opened, defaults to write
+function App:writeToFileOrTmp(file, mode)
+  local f, err = io.open(file, mode or "w")
   if err then
     local tmp_file = os.tmpname()
-    f = io.open(tmp_file, "w")
+    f = io.open(tmp_file, mode or "w")
     self.ui:addWindow(UIInformation(self.ui,
         {_S.errors.save_to_tmp:format(file, tmp_file, err)}))
   end

@@ -255,7 +255,7 @@ end
 --!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
-  local f = TheApp:writeToFileOrTmp(filename)
+  local f = TheApp:writeToFileOrTmp(filename, "wb")
   f:write(data)
   f:close()
 end
