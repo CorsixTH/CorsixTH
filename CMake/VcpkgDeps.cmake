@@ -18,7 +18,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-set(VCPKG_COMMIT_SHA "10ca4c5ba5218c14c4bf91570afe8bd5d63da387")
+set(VCPKG_COMMIT_SHA "c2691026a5e5aad05d7e7d89d605ccb595cbbcb6")
 
 # Setup the various paths we are using
 set(_VCPKG_SCRIPT_NAME "build_vcpkg_deps.ps1")
@@ -63,4 +63,4 @@ if(err_val)
 endif()
 
 set(VCPKG_INSTALLED_PATH ${VCPKG_PARENT_DIR}/vcpkg/installed/${_VCPKG_TARGET_TRIPLET})
-set(CMAKE_TOOLCHAIN_FILE ${VCPKG_PARENT_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake)
+set(CMAKE_TOOLCHAIN_FILE ${VCPKG_PARENT_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake CACHE STRING "Vcpkg toolchain file")
