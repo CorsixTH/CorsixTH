@@ -225,7 +225,7 @@ public class TabEmergencies extends JScrollPane {
 
         // this code seems weird. I was trying to give each disease in the
         // combobox
-        // some sort of ID number which is independant of the position and name,
+        // some sort of ID number which is independent of the position and name,
         // but haven't figured it out yet.
         for (int i = 2; i < TabDiseases.arDiseases.length; i++) {
             switch (i) {

@@ -50,7 +50,7 @@ local function action_vip_go_to_next_room_start(action, humanoid)
       humanoid.next_room.humanoids_enroute[humanoid] = nil
       --humanoid.next_room.door.reserved_for = humanoid
       humanoid:evaluateRoom()
-      humanoid.waiting = 3
+      humanoid.waiting = nil
     end
     -- Find direction to look at
     local ix, iy = humanoid.next_room:getEntranceXY(true)
@@ -64,7 +64,7 @@ local function action_vip_go_to_next_room_start(action, humanoid)
         dir = "east"
       end
     end
-    humanoid:queueAction(IdleAction():setLoopCallback(evaluate):setDirection(dir))
+    humanoid:queueAction(IdleAction():setCount(50):setAfterUse(evaluate):setDirection(dir))
 
     -- Finish this action and start the above sequence.
     humanoid:finishAction()

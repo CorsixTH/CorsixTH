@@ -54,7 +54,7 @@ class iso_filesystem {
         is not automatically closed by the IsoFilesystem instance.
       \return true on success, false on failure - call getError() for reason
   */
-  bool initialise(std::FILE* fRawFile);
+  bool initialise(const char* path);
 
   //! Get the reason for the most recent failure
   /*!

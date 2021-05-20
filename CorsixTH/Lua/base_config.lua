@@ -25,9 +25,13 @@ local configuration = {
   -----------------------------------------------------------
   --      New configuration values added in CorsixTH       --
   -----------------------------------------------------------
+  -- Interest rate and overdraft interest rate differential values will
+  --  be divided by 10,000
   town = {
-    InterestRate = 0.01,
+    InterestRate = 100,
     StartCash = 40000,
+    StartRep = 500,
+    OverdraftDiff = 200,
   },
 
   -- New value, but should only be defined if starting staff is included.
@@ -133,19 +137,19 @@ local configuration = {
   },
 
   towns = {
-    {StartCash = 40000, InterestRate = 100}, -- Level 1
-    {StartCash = 40000, InterestRate = 200}, --  Level 2
-    {StartCash = 50000, InterestRate = 300}, --  Level 3
-    {StartCash = 50000, InterestRate = 400}, --  Level 4
-    {StartCash = 50000, InterestRate = 500}, --  Level 5
-    {StartCash = 50000, InterestRate = 600}, --  Level 6
-    {StartCash = 50000, InterestRate = 700}, --  Level 7
-    {StartCash = 60000, InterestRate = 700}, --  Level 8
-    {StartCash = 60000, InterestRate = 800}, --  Level 9
-    {StartCash = 60000, InterestRate = 800}, --  Level 10
-    {StartCash = 70000, InterestRate = 900}, --  Level 11
-    {StartCash = 70000, InterestRate = 900}, --  Level 12
-    {StartCash = 70000, InterestRate = 900}, --  Level 12
+    {StartCash = 40000, InterestRate = 100, StartRep = 500, OverdraftDiff = 200}, --  Level 1
+    {StartCash = 40000, InterestRate = 200, StartRep = 500, OverdraftDiff = 200}, --  Level 2
+    {StartCash = 50000, InterestRate = 300, StartRep = 500, OverdraftDiff = 200}, --  Level 3
+    {StartCash = 50000, InterestRate = 400, StartRep = 500, OverdraftDiff = 200}, --  Level 4
+    {StartCash = 50000, InterestRate = 500, StartRep = 500, OverdraftDiff = 200}, --  Level 5
+    {StartCash = 50000, InterestRate = 600, StartRep = 500, OverdraftDiff = 200}, --  Level 6
+    {StartCash = 50000, InterestRate = 700, StartRep = 500, OverdraftDiff = 200}, --  Level 7
+    {StartCash = 60000, InterestRate = 700, StartRep = 500, OverdraftDiff = 200}, --  Level 8
+    {StartCash = 60000, InterestRate = 800, StartRep = 500, OverdraftDiff = 200}, --  Level 9
+    {StartCash = 60000, InterestRate = 800, StartRep = 500, OverdraftDiff = 200}, --  Level 10
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 11
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 12
+    {StartCash = 70000, InterestRate = 900, StartRep = 500, OverdraftDiff = 200}, --  Level 12
   },
   popn = {
     [0] = {Month = 0, Change = 4}, -- Standard: 4 patients the first month.
@@ -372,21 +376,21 @@ local configuration = {
     [0] = {StartMonth = 0, EndMonth = 0, Min = 0, Max = 0, Illness = 0, PercWin = 0, Bonus = 0},
   },
   computer = {
-    [0] = {Playing = 0}, -- ORAC
-    {Playing = 0}, -- COLOSSUS
-    {Playing = 0}, -- HAL
-    {Playing = 0}, -- MULTIVAC
-    {Playing = 0}, -- HOLLY
-    {Playing = 0}, -- DEEP THOUGHT
-    {Playing = 0}, -- ZEN
-    {Playing = 0}, -- SKYNET
-    {Playing = 0}, -- MARVIN
-    {Playing = 0}, -- CEREBRO
-    {Playing = 0}, -- MOTHER
-    {Playing = 0}, -- JAYNE
-    {Playing = 0}, -- CORSIX
-    {Playing = 0}, -- ROUJIN
-    {Playing = 0}, -- EDVIN
+    [0] = {Playing = 0, Name = "ORAC"},
+    {Playing = 0, Name = "COLOSSUS"},
+    {Playing = 0, Name = "HAL"},
+    {Playing = 0, Name = "MULTIVAC"},
+    {Playing = 0, Name = "HOLLY"},
+    {Playing = 0, Name = "DEEP THOUGHT"},
+    {Playing = 0, Name = "ZEN"},
+    {Playing = 0, Name = "SKYNET"},
+    {Playing = 0, Name = "MARVIN"},
+    {Playing = 0, Name = "CEREBRO"},
+    {Playing = 0, Name = "MOTHER"},
+    {Playing = 0, Name = "JAYNE"},
+    {Playing = 0, Name = "CORSIX"},
+    {Playing = 0, Name = "ROUJIN"},
+    {Playing = 0, Name = "EDVIN"},
   },
   awards_trophies = {
 
@@ -427,9 +431,11 @@ local configuration = {
     PlantBonus = 5,
     -- Bonus - MIN 0 MAX 255 (REP BONUS)
     TrophyStaffHappinessBonus = 5,
+    -- Bonus to money for curing every patient, no deaths or send-homes (MONEY BONUS)
+    TrophyAllCuredBonus = 20000,
     -- Bonus to money for NO DEATHS in the year (MONEY BONUS)
     TrophyDeathBonus = 10000,
-    -- Bonus to money for approximately 100% Cure Rate in the year (MONEY BONUS)
+    -- Bonus to money for over 90% Cure Rate in the year (MONEY BONUS)
     TrophyCuresBonus = 6000,
     -- Bonus to reputation for pleasing VIPs in the year (REPUTATION BONUS)
     TrophyMayorBonus = 5,
@@ -494,6 +500,8 @@ local configuration = {
     CuresBonus = 2000,
     -- MIN -32000 MAX +32000 - MONEY
     CuresPenalty = -3000,
+    -- MIN -32000 MAX +32000 - MONEY
+    AllCuresBonus = 5000,
     -- MIN -32000 MAX +32000 - MONEY
     DeathsBonus = 3000,
     -- MIN -32000 MAX +32000 - MONEY

@@ -32,6 +32,9 @@ corsixth.require("entities.humanoids.grim_reaper")
 corsixth.require("entities.humanoids.inspector")
 corsixth.require("staff_profile")
 corsixth.require("hospital")
+corsixth.require("hospitals.player_hospital")
+corsixth.require("hospitals.ai_hospital")
+corsixth.require("cheats")
 corsixth.require("epidemic")
 corsixth.require("calls_dispatcher")
 corsixth.require("research_department")
@@ -102,9 +105,9 @@ function World:World(app)
   self.hours_per_tick = 1
   self.tick_rate = 3
   self.tick_timer = 0
-  self.game_date = Date()
+  self.game_date = Date() -- Current date in the game.
 
-  self.room_information_dialogs_off = app.config.debug
+  self.room_information_dialogs = app.config.room_information_dialogs
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
@@ -113,19 +116,21 @@ function World:World(app)
     self.free_build_mode = false
   else
     self.free_build_mode = app.config.free_build_mode
-    self.debug_disable_salary_raise = self.free_build_mode
   end
 
-  self.debug_disable_salary_raise = false
+  -- If set, do not create salary raise requests.
+  self.debug_disable_salary_raise = self.free_build_mode
   self.idle_cache = {}
   -- List of which goal criterion means what, and what number the corresponding icon has.
   self.level_criteria = local_criteria_variable
+  self.delayed_map_objects = {} -- Initial objects in the map for parcels without owner.
   self.room_remove_callbacks = {--[[a set rather than a list]]}
   self.room_built = {} -- List of room types that have been built
   self.hospitals = {}
   self.floating_dollars = {}
   self.game_log = {} -- saves list of useful debugging information
-  self.savegame_version = app.savegame_version
+  self.savegame_version = app.savegame_version -- Savegame version number
+  self.release_version = app:getVersion(self.savegame_version) -- Savegame release version (e.g. 0.60), or Trunk
   -- Also preserve this throughout future updates.
   self.original_savegame_version = app.savegame_version
 
@@ -141,8 +146,20 @@ function World:World(app)
   -- Initialize available diseases and winning conditions.
   self:initLevel(app, avail_rooms)
 
-  self.hospitals[1] = Hospital(self, avail_rooms, app.config.player_name) -- Player's hospital
-  self:initCompetitors(avail_rooms)
+  -- Construct hospitals.
+  self.hospitals[1] = PlayerHospital(self, avail_rooms, app.config.player_name)
+
+  -- Add computer players
+  -- TODO: Right now they're only names
+  local level_config = self.map.level_config
+  for key, value in pairs(level_config.computer) do
+    if value.Playing == 1 then
+      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1,
+          self, avail_rooms, value.Name)
+    end
+  end
+
+  -- Setup research.
   for _, hospital in ipairs(self.hospitals) do
     hospital.research:setResearchConcentration()
   end
@@ -184,7 +201,12 @@ function World:World(app)
   self:calculateSpawnTiles()
 
   -- Next Events dates
+  -- emergencies
+  -- The emergency control level data starts with an array of 0
+  self.next_emergency_no = 0
   self:nextEmergency()
+
+  -- vip
   self.next_vip_date = self:_generateNextVipDate()
 
   -- earthquakes
@@ -295,7 +317,7 @@ function World:initLevel(app, avail_rooms)
 end
 
 function World:toggleInformation()
-  self.room_information_dialogs_off = not self.room_information_dialogs_off
+  self.room_information_dialogs = not self.room_information_dialogs
 end
 
 --! Load goals to win and lose from the map, and store them in 'self.goals'.
@@ -397,34 +419,6 @@ function World:getAvailableRooms()
     end
   end
   return avail_rooms
-end
-
---! Initialize competing hospitals
---!param avail_rooms (list) Available rooms in the level.
-function World:initCompetitors(avail_rooms)
-  -- Add computer players
-  -- TODO: Right now they're only names
-  local level_config = self.map.level_config
-  for key, value in pairs(level_config.computer) do
-    if value.Playing == 1 then
-      self.hospitals[#self.hospitals + 1] = AIHospital(tonumber(key) + 1, self, avail_rooms)
-    end
-  end
-end
-
---! Initializes variables carried from previous levels
-function World:initFromPreviousLevel(carry)
-  for object, tab in pairs(carry) do
-    if object == "world" then
-      for key, value in pairs(tab) do
-        self[key] = value
-      end
-    elseif object == "hospital" then
-      for key, value in pairs(tab) do
-        self.hospitals[1][key] = value
-      end
-    end
-  end
 end
 
 --! Get the hospital controlled by the (single) player.
@@ -550,8 +544,13 @@ function World:spawnVIP(name)
   vip.enter_deaths = hospital.num_deaths
   vip.enter_visitors = hospital.num_visitors
   vip.enter_cures = hospital.num_cured
-
-  vip.enter_explosions = hospital.num_explosions
+  vip.enter_patients = #hospital.patients
+  -- VIP's room visit chance is 50% if total rooms in hospital is less than 80 (makes a math.random with 0 and 1 possibilities).
+  -- Else decided by total rooms / 40 (0, 1, 2 [33%]; 0, 1, 2, 3 [25%] etc)
+  local rooms_threshold = 79
+  if #self.rooms > rooms_threshold then
+    vip.room_visit_chance = math.floor(#self.rooms / 40)
+  end
 
   local spawn_point = self.spawn_points[math.random(1, #self.spawn_points)]
   vip:setNextAction(SpawnAction("spawn", spawn_point))
@@ -664,6 +663,8 @@ function World:tickEarthquake()
   end
 end
 
+--! Enable or disable salary raise events.
+--!param mode (boolean) If true, do not create salary raise events.
 function World:debugDisableSalaryRaise(mode)
   self.debug_disable_salary_raise = mode
 end
@@ -700,8 +701,8 @@ end
 
 --[[ Register a callback for when `Humanoid`s enter or leave a given tile.
 ! Note that only one callback may be registered to each tile.
-!param x (integer) The 1-based X co-ordinate of the tile to monitor.
-!param y (integer) The 1-based Y co-ordinate of the tile to monitor.
+!param x (integer) The 1-based X coordinate of the tile to monitor.
+!param y (integer) The 1-based Y coordinate of the tile to monitor.
 !param object (Object) Something with an `onOccupantChange` method, which will
 be called whenever a `Humanoid` enters or leaves the given tile. The method
 will receive one argument (after `self`), which will be `1` for an enter event
@@ -717,30 +718,44 @@ function World:getObjectToNotifyOfOccupants(x, y)
   return self.objects_notify_occupants[idx]
 end
 
-local flag_cache = {}
+--! Place objects from a map file onto the map.
+--!param objects Objects to place.
 function World:createMapObjects(objects)
   self.delayed_map_objects = {}
+
+  for _, object in ipairs(objects) do
+    self:_createMapObject(object)
+  end
+end
+
+local flag_cache = {}
+--! Internal function for placing an object from the map file.
+--!param object Object to place.
+function World:_createMapObject(object)
+  local x, y, thob, flags = unpack(object)
+  local object_id = self.object_id_by_thob[thob]
+  if not object_id then
+    print("Warning: Map contained object with unrecognised THOB (" .. thob
+        .. ") at " .. x .. "," .. y)
+    return
+  end
+
+  local object_type = self.object_types[object_id]
+  if not object_type or not object_type.supports_creation_for_map then
+    print("Warning: Unable to create map object " .. object_id .. " at "
+        .. x .. "," .. y)
+    return
+  end
+
   local map = self.map.th
-  for _, object in ipairs(objects) do repeat
-    local x, y, thob, flags = unpack(object)
-    local object_id = self.object_id_by_thob[thob]
-    if not object_id then
-      print("Warning: Map contained object with unrecognised THOB (" .. thob .. ") at " .. x .. "," .. y)
-      break -- continue
-    end
-    local object_type = self.object_types[object_id]
-    if not object_type or not object_type.supports_creation_for_map then
-      print("Warning: Unable to create map object " .. object_id .. " at " .. x .. "," .. y)
-      break -- continue
-    end
+  local parcel = map:getCellFlags(x, y, flag_cache).parcelId
+  if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
     -- Delay making objects which are on plots which haven't been purchased yet
-    local parcel = map:getCellFlags(x, y, flag_cache).parcelId
-    if parcel ~= 0 and map:getPlotOwner(parcel) == 0 then
-      self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
-    else
-      self:newObject(object_id, x, y, flags, "map object")
-    end
-  until true end
+    self.delayed_map_objects[{object_id, x, y, flags, "map object"}] = parcel
+
+  else
+    self:newObject(object_id, x, y, flags, "map object")
+  end
 end
 
 --! Change owner of a plot.
@@ -948,6 +963,12 @@ function World:pauseOrUnpause()
   end
 end
 
+--! Function to check if player can perform actions when paused
+--!return (bool) Returns true if player hasn't allowed editing while paused
+function World:isUserActionProhibited()
+  return self:isCurrentSpeed("Pause") and not self.user_actions_allowed
+end
+
 -- Outside (air) temperatures based on climate data for Oxford, taken from
 -- Wikipedia. For scaling, 0 degrees C becomes 0 and 50 degrees C becomes 1
 local outside_temperatures = {
@@ -1045,7 +1066,7 @@ function World:onTick()
       self.current_tick_entity = nil
       self.map:onTick()
       self.map.th:updateTemperatures(outside_temperatures[self.game_date:monthOfYear()],
-          0.25 + self.hospitals[1].radiator_heat * 0.3)
+          0.25 + self.hospitals[1].heating.radiator_heat * 0.3)
       if self.ui then
         self.ui:onWorldTick()
       end
@@ -1065,17 +1086,38 @@ function World:onTick()
 end
 
 function World:setEndMonth()
+  local previous_date = self.game_date
   local first_day_of_next_month = Date(self.game_date:year(), self.game_date:monthOfYear() + 1)
   self.game_date = first_day_of_next_month:plusHours(-1)
+  -- Has the date jump caused an emergency to be missed?
+  if self:wasEmergencySkipped(previous_date, self.game_date) then
+    self:nextEmergency()
+  end
 end
 
 function World:setEndYear()
+  local previous_date = self.game_date
   local first_day_of_next_year = Date(self.game_date:year() + 1)
   self.game_date = first_day_of_next_year:plusHours(-1)
+  -- Has the date jump caused an emergency to be missed?
+  if self:wasEmergencySkipped(previous_date, self.game_date) then
+    self:nextEmergency()
+  end
 end
+
+--! Checks if a time jump caused an emergency to be missed
+--!param prev_date (Date) Original game date before jump
+--!param new_date (Date) Game date after time jump
+--!return (boolean) true if emergency has been skipped
+function World:wasEmergencySkipped(prev_date, new_date)
+  local emer_date = self.next_emergency_date
+  return emer_date and emer_date < new_date and prev_date < emer_date
+end
+
 
 -- Called immediately prior to the ingame day changing.
 function World:onEndDay()
+  local local_hospital = self:getLocalPlayerHospital()
   for _, entity in ipairs(self.entities) do
     if entity.ticks and class.is(entity, Humanoid) then
       self.current_tick_entity = entity
@@ -1088,8 +1130,8 @@ function World:onEndDay()
 
   --check if it's time for a VIP visit
   if self.game_date:isSameDay(self.next_vip_date) then
-    if #self.rooms > 0 and self.ui.hospital:hasStaffedDesk() then
-      self.hospitals[1]:createVip()
+    if #self.rooms > 0 and local_hospital:hasStaffedDesk() then
+      local_hospital:createVip()
     else
       self.next_vip_date = self:_generateNextVipDate()
     end
@@ -1115,30 +1157,30 @@ function World:onEndDay()
       local control = self.map.level_config.emergency_control
       if control[0].Mean or control[0].Random then
         -- The level uses random emergencies, so just create one.
-        self.hospitals[1]:createEmergency()
+        local_hospital:createEmergency()
       else
-        control = control[self.next_emergency_no]
+        local next_em = self.next_emergency
         -- Find out which disease the emergency patients have.
         local disease
         for _, dis in ipairs(self.available_diseases) do
-          if dis.expertise_id == control.Illness then
+          if dis.expertise_id == next_em.Illness then
             disease = dis
             break
           end
         end
         if not disease then
           -- Unknown disease! Create a random one instead.
-          self.hospitals[1]:createEmergency()
+          local_hospital:createEmergency()
         else
           local emergency = {
             disease = disease,
-            victims = math.random(control.Min, control.Max),
-            bonus = control.Bonus,
-            percentage = control.PercWin/100,
+            victims = math.random(next_em.Min, next_em.Max),
+            bonus = next_em.Bonus,
+            percentage = next_em.PercWin/100,
             killed_emergency_patients = 0,
             cured_emergency_patients = 0,
           }
-          self.hospitals[1]:createEmergency(emergency)
+          local_hospital:createEmergency(emergency)
         end
       end
     end
@@ -1168,16 +1210,6 @@ end
 -- Called immediately prior to the ingame month changing.
 -- returns true if the game was killed due to the player losing
 function World:onEndMonth()
-  -- Check if a player has won the level if the year hasn't ended, if it has the
-  -- annual report window will perform this check when it has been closed.
-
-  -- TODO.... this is a step closer to the way TH would check.
-  -- What is missing is that if offer is declined then the next check should be
-  -- either 6 months later or at the end of month 12 and then every 6 months
-  if self.game_date:monthOfYear() % 3 == 0 and self.game_date:monthOfYear() < 12 then
-    self:checkIfGameWon()
-  end
-
   local local_hospital = self:getLocalPlayerHospital()
   local_hospital.population = 0.25
   if self.game_date:monthOfGame() >= self.map.level_config.gbv.AllocDelay then
@@ -1212,8 +1244,13 @@ end
 -- Called when a month ends. Decides on which dates patients arrive
 -- during the coming month.
 function World:updateSpawnDates()
+  local local_hospital = self:getLocalPlayerHospital()
   -- Set dates when people arrive
   local no_of_spawns = math.n_random(self.spawn_rate, 2)
+  -- If Roujin's Challenge is on, override spawn rate
+  if local_hospital.spawn_rate_cheat then
+    no_of_spawns = 40
+  end
   -- Use ceil so that at least one patient arrives (unless population = 0)
   no_of_spawns = math.ceil(no_of_spawns*self:getLocalPlayerHospital().population)
   self.spawn_dates = {}
@@ -1246,56 +1283,71 @@ function World:getReputationImpact(hospital)
   end
 end
 
--- Called when it is time to determine what the
--- next emergency should look like.
+-- Called when it is time to determine when the next emergency should happen
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
   -- Does this level use random emergencies?
-  if control and (control[0].Random or control[0].Mean) then
-    -- Support standard values for mean and variance
-    local mean = control[0].Mean or 180
-    local variance = control[0].Variance or 30
-    -- How many days until next emergency?
-    local days = math.round(math.n_random(mean, variance))
-    local emergency_date = self.game_date:plusDays(days)
-
-    -- Make it the same format as for "controlled" emergencies
-    self.next_emergency_month = emergency_date:monthOfGame()
-    self.next_emergency_day = emergency_date:dayOfMonth()
-  else
-    if not self.next_emergency_no then
-      self.next_emergency_no = 0
-    else
-      repeat
-        self.next_emergency_no = self.next_emergency_no + 1
-        -- Level three is missing [5].
-        if not control[self.next_emergency_no] and
-            control[self.next_emergency_no + 1] then
-          self.next_emergency_no = self.next_emergency_no + 1
-        end
-      until not control[self.next_emergency_no] or
-            control[self.next_emergency_no].EndMonth >= self.game_date:monthOfGame()
-    end
-
-    local emergency = control[self.next_emergency_no]
-
-    -- No more emergencies?
-    if not emergency or emergency.EndMonth == 0 then
-      self.next_emergency_month = 0
-    else
-      -- Generate the next month and day the emergency should occur at.
-      -- Make sure it doesn't happen in the past.
-      local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
-      local next_month = math.random(start, emergency.EndMonth)
-      self.next_emergency_month = next_month
-      local day_start = 1
-      if start == emergency.EndMonth then
-        day_start = self.game_date:dayOfMonth()
-      end
-      local day_end = Date(1, next_month):lastDayOfMonth()
-      self.next_emergency_day = math.random(day_start, day_end)
-    end
+  if control[0].Random or control[0].Mean then
+    self:scheduleRandomEmergency(control)
+    return
   end
+  repeat
+    local emer_num = self.next_emergency_no
+    -- Account for missing Level 3 emergency[5]
+    if not control[emer_num] and control[emer_num + 1] then
+      emer_num = emer_num + 1
+      self.next_emergency_no = emer_num
+    end
+    local emergency = control[emer_num]
+    -- No more emergencies?
+    if not emergency then
+      self.next_emergency_month = 0
+      self.next_emergency_date = nil
+      self.next_emergency = nil
+      return
+    end
+    self.next_emergency = emergency
+    self.next_emergency_no = self.next_emergency_no + 1
+  until self:computeNextEmergencyDates(emergency)
+end
+
+--! If a level file specifies random emergencies we make the next one as defined by the mean/variance given
+--!param control (table) Contains emergency information from level file
+function World:scheduleRandomEmergency(control)
+  -- Support standard values for mean and variance
+  local mean = control[0].Mean or 180
+  local variance = control[0].Variance or 30
+  -- How many days until next emergency?
+  local days = math.round(math.n_random(mean, variance))
+  days = days > 1 and days or 1  -- Don't schedule in the past
+  local emergency_date = self.game_date:plusDays(days)
+
+  -- Make it the same format as for "controlled" emergencies
+  self.next_emergency_month = emergency_date:monthOfGame()
+  self.next_emergency_day = emergency_date:dayOfMonth()
+  self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day) -- TODO: Make more use of this
+end
+
+--! Generate the dates for the next emergency
+--!param emergency The next scheduled emergency to take place
+--!return (boolean) true if emergency successfully scheduled
+function World:computeNextEmergencyDates(emergency)
+  -- Generate the next month and day the emergency should occur at.
+  -- Make sure it doesn't happen in the past.
+  local start = math.max(emergency.StartMonth, self.game_date:monthOfGame())
+  if (emergency.EndMonth < start) then
+    return false
+  end
+  local next_month = math.random(start, emergency.EndMonth)
+  self.next_emergency_month = next_month
+  local day_start = 1
+  if start == emergency.EndMonth then
+    day_start = self.game_date:dayOfMonth()
+  end
+  local day_end = Date(1, next_month):lastDayOfMonth()
+  self.next_emergency_day = math.random(day_start, day_end)
+  self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day) -- TODO: Make more use of this
+  return self.game_date <= self.next_emergency_date
 end
 
 -- Called when it is time to have another VIP
@@ -1340,6 +1392,21 @@ function World:nextEarthquake()
   end
 end
 
+-- Earthquake override from cheat menu
+function World:createEarthquake()
+  --make sure an earthquake isn't already happening
+  if not self.next_earthquake.active then
+    self.next_earthquake.start_day = self.game_date:dayOfMonth()
+    self.next_earthquake.start_month = self.game_date:monthOfGame()
+    if self.next_earthquake.size == nil then
+      --forcefully make an earthquake if none left in level file
+      self.next_earthquake.size = math.random(1,6) -- above 6 seems disastrous
+      self.next_earthquake.remaining_damage = self.next_earthquake.size
+      self.next_earthquake.damage_timer = earthquake_damage_time
+      self.next_earthquake.warning_timer = earthquake_warning_period
+    end
+  end
+end
 
 --! Checks if all goals have been achieved or if the player has lost.
 --! Returns a table that always contains a state string ("win", "lose" or "nothing").
@@ -1450,7 +1517,8 @@ end
 function World:getCampaignWinningText(player_no)
   local text = {}
   local choice_text, choice
-  local repeated_offer = false -- TODO whether player was asked previously to advance and declined
+  local hosp = self:getLocalPlayerHospital()
+  local repeated_offer = hosp.win_declined
   local has_next = false
   if type(self.map.level_number) == "number" then
     local no = tonumber(self.map.level_number)
@@ -1544,10 +1612,10 @@ end
 -- Calculate the distance of the shortest path (along passable tiles) between
 -- the two given map tiles. This operation is commutative (swapping (x1, y1)
 -- with (x2, y2) has no effect on the result) if both tiles are passable.
---!param x1 (integer) X-cordinate of first tile's Lua tile co-ordinates.
---!param y1 (integer) Y-cordinate of first tile's Lua tile co-ordinates.
---!param x2 (integer) X-cordinate of second tile's Lua tile co-ordinates.
---!param y2 (integer) Y-cordinate of second tile's Lua tile co-ordinates.
+--!param x1 (integer) X-cordinate of first tile's Lua tile coordinates.
+--!param y1 (integer) Y-cordinate of first tile's Lua tile coordinates.
+--!param x2 (integer) X-cordinate of second tile's Lua tile coordinates.
+--!param y2 (integer) Y-cordinate of second tile's Lua tile coordinates.
 --!return (integer, boolean) The distance of the shortest path, or false if
 -- there is no path.
 function World:getPathDistance(x1, y1, x2, y2)
@@ -1852,20 +1920,26 @@ end
 --! Creates a new object by finding the object_type from the "id" variable and
 --  calls its class constructor.
 --!param id (string) The unique id of the object to be created.
+--!param x X position of the new object.
+--!param y Y position of the new object.
+--!param flags Flags of the new object.
+--!param name Name of the new object.
 --!return The created object.
-function World:newObject(id, ...)
+function World:newObject(id, x, y, flags, name)
   local object_type = self.object_types[id]
+  local hospital = self:getLocalPlayerHospital()
+
   local entity
   if object_type.class then
-    entity = _G[object_type.class](self, object_type, ...)
+    entity = _G[object_type.class](hospital, object_type, x, y, flags, name)
   elseif object_type.default_strength then
-    entity = Machine(self, object_type, ...)
+    entity = Machine(hospital, object_type, x, y, flags, name)
     -- Tell the player if there is no handyman to take care of the new machinery.
-    if not self.hospitals[1]:hasStaffOfCategory("Handyman") then
+    if hospital:countStaffOfCategory("Handyman", 1) == 0 then
       self.ui.adviser:say(_A.staff_advice.need_handyman_machines)
     end
   else
-    entity = Object(self, object_type, ...)
+    entity = Object(hospital, object_type, x, y, flags, name)
   end
   self:objectPlaced(entity, id)
   return entity
@@ -2047,7 +2121,7 @@ end
 --! Notifies the world that an object has been placed, notifying
 --  interested entities in the vicinity of the new arrival.
 --!param entity (Entity) The entity that was just placed.
---!param id (string) That entity's id.
+--!param id (optional string) That entity's id.
 function World:objectPlaced(entity, id)
   -- If id is not supplied, we can use the entities internal id if it exists
   -- This is so the bench check below works
@@ -2057,46 +2131,11 @@ function World:objectPlaced(entity, id)
   end
 
   self.entities[#self.entities + 1] = entity
-  -- If it is a bench we're placing, notify queueing patients in the vicinity
-  if id == "bench" and entity.tile_x and entity.tile_y then
-    local notify_distance = 6
-    local w, h = self.map.th:size()
-    for tx = math.max(1, entity.tile_x - notify_distance), math.min(w, entity.tile_x + notify_distance) do
-      for ty = math.max(1, entity.tile_y - notify_distance), math.min(h, entity.tile_y + notify_distance) do
-        for _, patient in ipairs(self.entity_map:getHumanoidsAtCoordinate(tx, ty)) do
-          if class.is(patient, Patient) then
-            patient:notifyNewObject(id)
-          end
-        end
-      end
-    end
-  end
-  if id == "reception_desk" then
-    if not self.ui.start_tutorial and
-        not self.hospitals[1]:hasStaffOfCategory("Receptionist") then
-      -- TODO: Will not work correctly for multiplayer
-      self.ui.adviser:say(_A.room_requirements.reception_need_receptionist)
-    elseif self.hospitals[1]:hasStaffOfCategory("Receptionist") and
-        self.object_counts["reception_desk"] == 1 and
-        not self.hospitals[1].receptionist_msg and self.game_date:monthOfGame() > 3 then
-      self.ui.adviser:say(_A.warnings.no_desk_5)
-      self.hospitals[1].receptionist_msg = true
-    end
-  end
-  -- If it is a plant it might be advisable to hire a handyman
-  if id == "plant" and not self.hospitals[1]:hasStaffOfCategory("Handyman") then
-    self.ui.adviser:say(_A.staff_advice.need_handyman_plants)
-  end
-  if id == "gates_to_hell" then
-    entity:playEntitySounds("LAVA00*.WAV", {0,1350,1150,950,750,350},
-        {0,1450,1250,1050,850,450}, 40)
-    entity:setTimer(entity.world:getAnimLength(2550),
-                    --[[persistable:lava_hole_spawn_animation_end]]
-                    function(anim_entity)
-                      anim_entity:setAnimation(1602)
-                    end)
-    entity:setAnimation(2550)
-  end
+
+  -- Warn a hospital if that is possible.
+  if not entity.tile_x or not entity.tile_y then return end
+  local hosp = self:getHospital(entity.tile_x, entity.tile_y)
+  if hosp then hosp:objectPlaced(entity, id) end
 end
 
 --! Notify the world of an object being removed from a tile
@@ -2297,15 +2336,11 @@ function World:dumpGameLog()
   local pathsep = package.config:sub(1, 1)
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
-  local fi, err = io.open(gamelog_path, "w")
-  if fi then
-    for _, str in ipairs(self.game_log) do
-      fi:write(str .. "\n")
-    end
-    fi:close()
-  else
-    print("Warning: Cannot dump game log: " .. tostring(err))
+  local fi = self.app:writeToFileOrTmp(gamelog_path)
+  for _, str in ipairs(self.game_log) do
+    fi:write(str .. "\n")
   end
+  fi:close()
 end
 
 --! Because the save file only saves one thob per tile if they are more that information
@@ -2653,7 +2688,34 @@ function World:afterLoad(old, new)
     self:resetSideObjects()
   end
 
+if old < 153 then
+    -- Set the new variable next_emergency_date
+    -- Also set the new variable next_emergency
+    -- In previous code month == 0 meant emergencies were over
+    if self.next_emergency_month ~= 0 then
+      self.next_emergency_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+      local control = self.map.level_config.emergency_control
+      self.next_emergency = control[self.next_emergency_no]
+      -- Complementary afterLoad to see if emergencies got stuck in the level.
+      -- There's no guarantee we can unstick the level, however.
+      local next_emer_date = Date(1, self.next_emergency_month, self.next_emergency_day)
+      --[[ UIWatch's emergency timer is 52 days but this is local.
+      The emergency fax also is held for 16 days.
+      Add one extra day to this for compensation = 69. (Unavoidable magic number)]]--
+      if self.game_date > next_emer_date:plusDays(69) then
+        -- The date the emergency should've finished by has passed.
+        -- Next check if the emergency could still be happening.
+        local watch = self.ui:getWindow(UIWatch)
+        if not watch or watch.count_type ~= "emergency" then
+          -- The emergency is likely stuck
+          self:nextEmergency()
+        end
+      end
+    end
+  end
+
   self.savegame_version = new
+  self.release_version = TheApp:getVersion(new)
 end
 
 function World:playLoadedEntitySounds()
@@ -2705,6 +2767,28 @@ function World:isTileExclusivelyPassable(x, y, distance)
   return true
 end
 
+--! Get todays date.
+--!return (Date) Current game date.
 function World:date()
   return self.game_date:clone()
+end
+
+--! Collect the settings that should be reused in the next world
+--!return (table) world and hospital campaign data
+function World:getCampaignData()
+  local world = {
+    room_built = self.room_built,
+    campaign_info = self.campaign_info,
+    debug_disable_salary_raise = self.debug_disable_salary_raise,
+  }
+  return { world = world, hospital = self:getLocalPlayerHospital():getCampaignData() }
+end
+
+--! Restore the settings from the previous world
+--!param campaign_data (table) world and hospital campaign data
+function World:setCampaignData(campaign_data)
+  for key, value in pairs(campaign_data.world) do
+    self[key] = value
+  end
+  self:getLocalPlayerHospital():setCampaignData(campaign_data.hospital)
 end

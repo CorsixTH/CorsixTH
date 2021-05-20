@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component type="desktop">
-  <id>com.corsixth.CorsixTH</id>
+<component type="desktop-application">
+  <id>com.corsixth.corsixth</id>
   <!-- Copyright 2019 Artem Polishchuk <ego.cordatus@gmail.com> -->
   <metadata_license>CC0</metadata_license>
   <project_license>BSD-3-Clause AND MIT</project_license>
@@ -22,16 +22,18 @@
   </description>
   <provides>
     <binary>corsix-th</binary>
+    <id>com.corsixth.CorsixTH</id>
   </provides>
+  <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
-    <release version="0.63" date="2019-05-24"></release>
+    <release version="0.64" date="2020-06-16"></release>
   </releases>
   <screenshots>
     <screenshot type="default">
-      <image>http://corsixth.com/wp-content/uploads/2016/04/screenshot9-1024x640.jpg</image>
+      <image>https://corsixth.com/wp-content/uploads/2016/04/screenshot9-1024x640.jpg</image>
     </screenshot>
     <screenshot>
-      <image>http://corsixth.com/wp-content/uploads/2016/04/screenshot0-1024x640.jpg</image>
+      <image>https://corsixth.com/wp-content/uploads/2016/04/screenshot0-1024x640.jpg</image>
     </screenshot>
     <screenshot>
       <image>https://camo.githubusercontent.com/1b82352e0f0eac03a6927af7e9d7bbad8c380f93/687474703a2f2f692e696d6775722e636f6d2f714856363055692e706e67</image>
@@ -67,8 +69,9 @@
     <content_attribute id="money-gambling">none</content_attribute>
   </content_rating>
   <developer_name>CorsixTH developers</developer_name>
-  <url type="homepage">http://corsixth.com</url>
+  <url type="homepage">https://corsixth.com</url>
   <url type="bugtracker">https://github.com/CorsixTH/CorsixTH/issues</url>
-  <url type="translate">http://forums.corsixth.com/index.php/board,11.0.html</url>
+  <url type="contact">https://webchat.freenode.net/?channels=corsix-th</url>
+  <url type="contact">https://discord.gg/Mxeztvh</url>
   <url type="help">https://github.com/CorsixTH/CorsixTH/wiki</url>
 </component>

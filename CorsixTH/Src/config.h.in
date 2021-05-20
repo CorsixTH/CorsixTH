@@ -90,4 +90,7 @@ using std::uint64_t;
 // In Visual Studio, Visual Leak Detector can be used to find memory leaks.
 #cmakedefine CORSIX_TH_USE_VLD
 
+/** Report operating system **/
+#cmakedefine CORSIX_TH_OS "@CORSIX_TH_OS@"
+
 #endif  // CORSIX_TH_CONFIG_H_

@@ -697,7 +697,13 @@ function UIPlaceObjects:setBlueprintCell(x, y)
     end
     if self.object_anim and object.class ~= "SideObject" then
       if allgood then
-        allgood = not world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId)
+        if world:wouldNonSideObjectBreakPathfindingIfSpawnedAt(x, y, object, self.object_orientation, roomId) then
+          if self.ui.app.config.allow_blocking_off_areas then
+            print("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+          else
+            allgood = false
+          end
+        end
       end
       if ATTACH_BLUEPRINT_TO_TILE then
         self.object_anim:setTile(map, x, y)
@@ -721,7 +727,11 @@ function UIPlaceObjects:setBlueprintCell(x, y)
         if not world.pathfinder:findDistance(x, y, checked_x, checked_y) then
           --we need to check if the failure to get the distance is due to the presence of an object in the adjacent tile
           if map:getCellFlags(checked_x, checked_y)["passable"] then
-            allgood = false
+            if self.ui.app.config.allow_blocking_off_areas then
+              print("Blocking off areas is allowed at " .. x .. ", " .. y .. ".")
+            else
+              allgood = false
+            end
           end
         end
         flags[passable_flag] = true

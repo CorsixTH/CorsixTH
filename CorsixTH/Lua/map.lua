@@ -39,6 +39,10 @@ function Map:Map(app)
   self.debug_font = false
   self.debug_tick_timer = 1
   self:setTemperatureDisplayMethod(app.config.warmth_colors_display_default)
+
+  -- Difficulty of the level (string) "easy", "full", "hard".
+  -- Use map:getDifficulty() to query the value.
+  self.difficulty = nil
 end
 
 local flag_cache = {}
@@ -275,6 +279,14 @@ function Map:load(level, difficulty, level_name, map_file, level_intro, map_edit
   end
 
   return objects
+end
+
+--! Get the difficulty of the level. Custom levels and campaign always have medium difficulty.
+--!return (int) difficulty of the level, 1=easy, 2=medium, 3=hard.
+function Map:getDifficulty()
+  if self.difficulty == "easy" then return 1 end
+  if self.difficulty == "hard" then return 3 end
+  return 2
 end
 
 --[[! Sets the plot owner of the given plot number to the given new owner. Makes sure

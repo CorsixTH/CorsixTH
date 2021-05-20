@@ -301,8 +301,16 @@ function Patient:isTreatmentEffective()
   local cure_chance = self.hospital.disease_casebook[self.disease.id].cure_effectiveness
   cure_chance = cure_chance * self.diagnosis_progress
 
-  local die = self.die_anims and math.random(1, 100) > cure_chance
-  return not die
+  -- Service quality has a factor on cure chance
+  local room = self:getRoom()
+  local min_impact = 20
+  local service_base = math.max(100 - cure_chance, min_impact)
+
+  local scale = 0.2 -- Quality scaled to +-10%
+  local service_factor = (room:getStaffServiceQuality() - 0.5) * scale
+  cure_chance = cure_chance + (service_base * service_factor)
+
+  return (cure_chance >= math.random(1,100))
 end
 
 --! Change patient internal state to "cured".
@@ -312,21 +320,11 @@ function Patient:cure()
   self.attributes["health"] = 1
 end
 
+--! Patient died, process the event.
 function Patient:die()
   -- It may happen that this patient was just cured and then the room blew up.
-  local hospital = self.hospital
-
-  if hospital.num_deaths < 1 then
-    self.world.ui.adviser:say(_A.information.first_death)
-  end
-  hospital:humanoidDeath(self)
-  if not self.is_debug then
-    local casebook = hospital.disease_casebook[self.disease.id]
-    casebook.fatalities = casebook.fatalities + 1
-  end
-  hospital:msgKilled()
+  self.hospital:humanoidDeath(self)
   self:setMood("dead", "activate")
-  self.world.ui:playSound("boo.wav") -- this sound is always heard
 
   -- Remove any messages and/or callbacks related to the patient.
   self:unregisterCallbacks()
@@ -336,9 +334,6 @@ function Patient:die()
     self:queueAction(MeanderAction():setCount(1))
   else
     self:setNextAction(MeanderAction():setCount(1))
-  end
-  if self.is_emergency then
-    hospital.emergency.killed_emergency_patients = hospital.emergency.killed_emergency_patients + 1
   end
   self:queueAction(DieAction())
   self:updateDynamicInfo(_S.dynamic_info.patient.actions.dying)
@@ -472,14 +467,12 @@ function Patient:goHome(reason, disease_id)
   if reason == "cured" then
     self:setMood("cured", "activate")
     self:changeAttribute("happiness", 0.8)
-    self.world.ui:playSound("cheer.wav") -- This sound is always heard
-    self.hospital:updateCuredCounts(self)
+    hosp:updateCuredCounts(self)
     self:updateDynamicInfo(_S.dynamic_info.patient.actions.cured)
-    self.hospital:msgCured()
 
   elseif reason == "kicked" then
     self:setMood("exit", "activate")
-    self.hospital:updateNotCuredCounts(self, reason)
+    hosp:updateNotCuredCounts(self, reason)
 
   elseif reason == "over_priced" then
     self:setMood("sad_money", "activate")
@@ -487,13 +480,13 @@ function Patient:goHome(reason, disease_id)
 
     local treatment_name = self.hospital.disease_casebook[disease_id].disease.name
     self.world.ui.adviser:say(_A.warnings.patient_not_paying:format(treatment_name))
-    self.hospital:updateNotCuredCounts(self, reason)
+    hosp:updateNotCuredCounts(self, reason)
     self:clearDynamicInfo()
-    self:updateDynamicInfo(_S.dynamic_info.patient.actions.prices_too_high)
+    self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.prices_too_high})
 
   elseif reason == "evacuated" then
     self:clearDynamicInfo()
-    self:setDynamicInfo('text', {_S.dynamic_info.patient.actions.epidemic_sent_home})
+    self:setDynamicInfo('text', {"", _S.dynamic_info.patient.actions.epidemic_sent_home})
     self:setMood("exit","activate")
 
   else
@@ -514,6 +507,11 @@ function Patient:goHome(reason, disease_id)
   -- Remove any vaccination calls from patient
   if not self.vaccinated then
     self.world.dispatcher:dropFromQueue(self)
+  end
+
+  -- allow timer to end early and after going_home is set
+  if self.is_emergency then
+    hosp:checkEmergencyOver()
   end
 
   local room = self:getRoom()
@@ -691,13 +689,8 @@ function Patient:tickDay()
   -- It is nice to see plants, but dead plants make you unhappy
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
-  if not plant then
-    return
-  end
-    if plant:isPleasing() then
-      self:changeAttribute("happiness", 0.0002)
-    else
-      self:changeAttribute("happiness", -0.0002)
+    if plant then
+      self:changeAttribute("happiness", -0.0003 + (plant:isPleasingFactor() * 0.0001))
     end
   end)
   -- It always makes you happy to see you are in safe place
@@ -883,7 +876,7 @@ function Patient:setTile(x, y)
           self.hospital.hospital_littered = true
 
           -- A callout is only needed if there are no handymen employed
-          if not self.hospital:hasStaffOfCategory("Handyman") then
+          if self.hospital:countStaffOfCategory("Handyman", 1) == 0 then
             self.world.ui.adviser:say(_A.staff_advice.need_handyman_litter)
           end
         end
@@ -951,7 +944,11 @@ function Patient:updateDynamicInfo(action_string)
       -- The cure was guessed
       info = _S.dynamic_info.patient.guessed_diagnosis:format(self.disease.name)
     else
-      info = _S.dynamic_info.patient.diagnosed:format(self.disease.name)
+      if self.is_emergency then
+        info = _S.dynamic_info.patient.emergency:format(self.disease.name)
+      else
+        info = _S.dynamic_info.patient.diagnosed:format(self.disease.name)
+      end
     end
     self:setDynamicInfo('progress', nil)
   else
@@ -975,6 +972,8 @@ function Patient:updateDynamicInfo(action_string)
     elseif self.vaccinated then
       self:setDynamicInfo('text',
         {action_string, _S.dynamic_info.patient.actions.epidemic_vaccinated, info})
+    else
+      self:setDynamicInfo('text', {action_string, "", info})
     end
   else
     self:setDynamicInfo('text', {action_string, "", info})
@@ -999,8 +998,10 @@ function Patient:updateMessage(choice)
       -- enable only if research department is built and a room in the treatment chain is undiscovered
       local req = self.hospital:checkDiseaseRequirements(self.disease.id)
       if req then
+        enabled = (self.hospital:countRoomOfType("research", 1) > 0 and
+                   self.hospital:countStaffOfCategory("Researcher", 1) > 0)
+
         local strings = _S.fax.disease_discovered_patient_choice
-        enabled = self.hospital:hasRoomOfType("research") and self.hospital:hasStaffOfCategory("Researcher")
         local output_text = strings.can_not_cure
         if #req.rooms == 1 then
           local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])

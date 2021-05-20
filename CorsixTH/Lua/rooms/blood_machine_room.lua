@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "blood_machine"
+room.vip_must_visit = false
 room.level_config_id = 15
 room.class = "BloodMachineRoom"
 room.name = _S.rooms_short.blood_machine

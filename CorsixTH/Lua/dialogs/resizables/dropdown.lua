@@ -29,7 +29,7 @@ local UIDropdown = _G["UIDropdown"]
 --!param parent_window (Window) The window that this dropdown will be attached to
 --!param parent_button (Button) The button in the parent_window that this dropdown will be positioned under
 --!param items (table) A list of items for the list to display, where each item is a table with at least
---       the field text, and optionally fields font and/or tooltip
+--       the field text, and optionally fields font and/or tooltip, which is a table containing text, x and y positions.
 --!param callback (function) A function to be called when an item is selected. It is called with two parameters:
 --       The parent window and the index of the selected item
 --!param colour (table) A colour in the form of {red = ..., green = ..., blue = ...}. Optional if parent_window is a UIResizable
@@ -57,10 +57,16 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
 
   local y = 0
   for i, item in ipairs(items) do
+  if item.tooltip and item.tooltip[1] then
+    self:addBevelPanel(1, y + 1, width - 2, height - 2, parent_window.colour):setLabel(item.text, item.font)
+      :makeButton(-1, -1, width, height, nil, --[[persistable:dropdown_tooltip_callback]] function() self:selectItem(i) end)
+      :setTooltip(item.tooltip[1], item.tooltip[2] or math.floor(self.ui.app.config.width / 2 - 25),
+        math.floor(self.ui.app.config.height / 4 - 130 + item.tooltip[3]) or 0)
+        -- Magic numbers used to find a static position across different screen resolutions.
+  else
     self:addBevelPanel(1, y + 1, width - 2, height - 2, parent_window.colour):setLabel(item.text, item.font)
       :makeButton(-1, -1, width, height, nil, --[[persistable:dropdown_callback]] function() self:selectItem(i) end)
-      -- TODO: tooltips for dropdown items currently deactivated because alignment and conditions for displaying are off for tooltips on sub-windows
-      --:setTooltip(item.tooltip)
+  end
     y = y + height
   end
 

@@ -28,6 +28,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,9 +38,9 @@ import javax.swing.JOptionPane;
 
 /**
  * Create menu and tabBar, set window size, location and on-exit-behaviour.
- * 
+ *
  * @author Koanxd
- * 
+ *
  */
 public class Gui extends JFrame {
 
@@ -54,22 +55,24 @@ public class Gui extends JFrame {
     FileChooser fileChooser = new FileChooser(this);
 
     public Gui() {
-        List<Image> icons = new ArrayList<>();
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon256.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon128.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon64.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon48.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon32.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon24.png")));
-        icons.add(Toolkit.getDefaultToolkit().getImage(
-                ClassLoader.getSystemResource("icon16.png")));
-        setIconImages(icons);
+        String[] iconNames = {"icon256.png", "icon128.png", "icon64.png",
+                "icon48.png", "icon32.png", "icon24.png", "icon16.png"};
+
+        // Load icon files, and set them as application image.
+        List<Image> icons = new ArrayList<>(iconNames.length);
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        for (String fname: iconNames) {
+            URL iconUrl = ClassLoader.getSystemResource(fname);
+            Image img = (iconUrl == null) ? null : tk.getImage(iconUrl);
+            if (img == null) {
+                System.out.printf("Warning: Could not load resource \"%s\".\n", fname);
+            } else {
+                icons.add(img);
+            }
+        }
+        if (!icons.isEmpty()) {
+            setIconImages(icons);
+        }
 
         setTitle("CorsixTH Level Editor");
 

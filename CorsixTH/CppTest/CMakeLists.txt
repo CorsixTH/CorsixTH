@@ -1,17 +1,17 @@
 # MIT License
-# 
+#
 # Copyright (c) 2019 David Fairbrother
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
 # to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 # copies of the Software, and to permit persons to whom the Software is
 # furnished to do so, subject to the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,8 +28,11 @@ add_custom_target(AllTests)
 include_directories(${CMAKE_SOURCE_DIR}/CorsixTH/Src/)
 
 add_executable(UnitTests "")
-target_link_libraries(UnitTests Catch2::Catch2)
-target_link_libraries(UnitTests CorsixTH_lib)
+target_link_libraries(UnitTests
+  Catch2::Catch2
+  CorsixTH_lib
+  ${LUA_LIBRARY}
+  ${CMAKE_DL_LIBS})
 
 set_property(TARGET UnitTests PROPERTY CXX_STANDARD 14)
 set_property(TARGET UnitTests PROPERTY CXX_EXTENSIONS OFF)
@@ -46,5 +49,9 @@ add_dependencies(AllTests UnitTests)
 target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/example.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
 )
+
+include(CTest)
+include(Catch)
+catch_discover_tests(UnitTests)

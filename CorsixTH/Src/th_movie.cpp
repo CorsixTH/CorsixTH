@@ -307,7 +307,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
     (defined(CORSIX_TH_USE_FFMPEG) &&                      \
      LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
   if (av_dup_packet(pPacket) < 0) {
-    throw - 1;
+    throw std::runtime_error("Failed to duplicate AV packet");
   }
 #endif
 

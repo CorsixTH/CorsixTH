@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "research"
+room.vip_must_visit = true
 room.level_config_id = 28
 room.class = "ResearchRoom"
 room.name = _S.rooms_short.research_room
@@ -134,7 +135,7 @@ function ResearchRoom:roomFinished()
     .research_now_available)
   end
   -- Also check if it would be good to hire a researcher.
-  if not self.hospital:hasStaffOfCategory("Researcher") then
+  if self.hospital:countStaffOfCategory("Researcher", 1) == 0 then
     self.world.ui.adviser:say(_A.room_requirements.research_room_need_researcher)
   end
   return Room.roomFinished(self)
@@ -165,7 +166,7 @@ function ResearchRoom:commandEnteringPatient(patient)
     -- Some research is done. :) Might trigger a loss of reputation though.
     local hosp = self.hospital
     local patient_room = patient.disease.treatment_rooms[#patient.disease.treatment_rooms]
-    hosp.research:addResearchPoints("dummy", patient_room)
+    hosp.research:addResearchPointsForAutopsy(patient_room)
     -- average morale of all staff affects chances
     local avg_happiness = hosp:getAverageStaffAttribute("happiness", nil)
     local autopsy_discovered
@@ -187,23 +188,6 @@ function ResearchRoom:commandEnteringPatient(patient)
 
   staff:queueAction(MultiUseObjectAction(autopsy, patient):setAfterUse(after_use_autopsy))
   return Room.commandEnteringPatient(self, patient)
-end
-
--- Returns the staff member with the minimum amount of skill.
-function ResearchRoom:getStaffMember()
-  local staff
-  for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
-      if staff.profile.skill > staff_member.profile.skill then
-        staff = staff_member
-      end
-    else
-      if not staff_member.fired and not staff_member:hasLeavingAction() then
-        staff = staff_member
-      end
-    end
-  end
-  return staff
 end
 
 function ResearchRoom:setStaffMember(staff)

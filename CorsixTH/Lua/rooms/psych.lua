@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "psych"
+room.vip_must_visit = false
 room.level_config_id = 8
 room.class = "PsychRoom"
 room.name = _S.rooms_short.psychiatric
@@ -51,9 +52,8 @@ function PsychRoom:PsychRoom(...)
 end
 
 function PsychRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Psychiatrist") then
-    self.world.ui.adviser
-    :say(_A.room_requirements.psychiatry_need_psychiatrist)
+  if self.hospital:countStaffOfCategory("Psychiatrist", 1) == 0 then
+    self.world.ui.adviser:say(_A.room_requirements.psychiatry_need_psychiatrist)
   end
   return Room.roomFinished(self)
 end
@@ -114,7 +114,7 @@ function PsychRoom:commandEnteringPatient(patient)
         self:dealtWithPatient(patient)
       end
       return
-	else
+    else
       if patient:getRoom() ~= self and self:getStaffMember() then
         self:getStaffMember():setNextAction(MeanderAction())
         return

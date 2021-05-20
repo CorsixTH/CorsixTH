@@ -97,6 +97,8 @@ struct render_target_creation_params {
 */
 // TODO: Replace this struct with something cleaner
 struct drawable : public link_list {
+  drawable() : link_list() { drawing_layer = 0; }
+
   //! Draw the object at a specific point on a render target
   /*!
       Can also "draw" the object to the speakers, i.e. play sounds.
@@ -119,6 +121,12 @@ struct drawable : public link_list {
       Should be overloaded in derived class.
   */
   bool (*is_multiple_frame_animation_fn)(drawable* pSelf);
+
+  int get_drawing_layer() { return drawing_layer; }
+  void set_drawing_layer(int layer) { drawing_layer = layer; }
+
+ private:
+  int drawing_layer;
 };
 
 /*!

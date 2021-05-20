@@ -55,8 +55,8 @@ class "Rathole" (Object)
 ---@type Rathole
 local Rathole = _G["Rathole"]
 
-function Rathole:Rathole(world, oject_type, x, y, direction, etc)
-  self:Object(world, oject_type, x, y, direction, etc)
+function Rathole:Rathole(hospital, oject_type, x, y, direction, etc)
+  self:Object(hospital, oject_type, x, y, direction, etc)
 end
 
 return object

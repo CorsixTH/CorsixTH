@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "operating_theatre"
+room.vip_must_visit = true
 room.level_config_id = 10
 room.class = "OperatingTheatreRoom"
 room.name = _S.rooms_short.operating_theatre
@@ -68,12 +69,13 @@ function OperatingTheatreRoom:roomFinished()
     end
   end
   -- Tell the player what is missing, if anything.
-  if not self.hospital:hasRoomOfType("ward") then
+  if self.hospital:countRoomOfType("ward", 1) == 0 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_ward)
   end
-  if not self.hospital:hasStaffOfCategory("Surgeon") then
+  local numSurgeons = self.hospital:countStaffOfCategory("Surgeon", 2)
+  if numSurgeons == 0 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_two_surgeons)
-  elseif self.hospital:hasStaffOfCategory("Surgeon") == 1 then
+  elseif numSurgeons == 1 then
     self.world.ui.adviser:say(_A.room_requirements.op_need_another_surgeon)
   end
   return Room.roomFinished(self)
@@ -170,24 +172,6 @@ function OperatingTheatreRoom:setStaffMembersAttribute(attribute, value)
   for staff_member, _ in pairs(self.staff_member_set) do
     staff_member[attribute] = value
   end
-end
-
--- Returns the current staff member. if there are currently two surgeons it returns
--- the one with higher tiredness.
-function OperatingTheatreRoom:getStaffMember()
-  local staff
-  for staff_member, _ in pairs(self.staff_member_set) do
-    if staff and not staff_member.fired and not staff_member:hasLeavingAction() then
-      if staff.attributes["fatigue"] < staff_member.attributes["fatigue"] then
-        staff = staff_member
-      end
-    else
-      if not staff_member.fired and not staff_member:hasLeavingAction() then
-        staff = staff_member
-      end
-    end
-  end
-  return staff
 end
 
 --! Builds the first operation action (i.e. with the surgeon whose we see the front).

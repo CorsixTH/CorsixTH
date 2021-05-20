@@ -107,7 +107,7 @@ function GameUI:setupGlobalKeyHandlers()
      [tostring(self.app.hotkeys["ingame_scroll_up"])] = {x = 0, y = -10},
      [tostring(self.app.hotkeys["ingame_scroll_down"])] = {x = 0, y = 10},
      [tostring(self.app.hotkeys["ingame_scroll_left"])] = {x = -10, y = 0},
-     [tostring(self.app.hotkeys["ingame_scroll_right"])]	= {x = 10, y = 0},
+     [tostring(self.app.hotkeys["ingame_scroll_right"])] = {x = 10, y = 0},
   }
 
   -- This is the long version of the shift speed key.
@@ -608,7 +608,8 @@ function GameUI:onMouseMove(x, y, dx, dy)
     --map.th:setCell(highlight_x, highlight_y, 4, 0)
     highlight_x = nil
   end
-  if 1 <= wx and wx <= 128 and 1 <= wy and wy <= 128 then
+  local map_width, map_height = map.th:size()
+  if 1 <= wx and wx <= map_width and 1 <= wy and wy <= map_height then
     if map.th:getCellFlags(wx, wy).passable then
       --map.th:setCell(wx, wy, 4, 24 + 8 * 256)
       highlight_x = wx
@@ -643,10 +644,27 @@ function GameUI:onMouseUp(code, x, y)
     else -- No room chosen yet, but about to edit one.
       if button == "left" then -- Take the clicked one.
         local room = self.app.world:getRoom(self:ScreenToWorld(x, y))
-        if room and not room.crashed then
-          self:setCursor(self.waiting_cursor)
-          self.edit_room = room
-          room:tryToEdit()
+        if room then
+          if not room.crashed then
+            self:setCursor(self.waiting_cursor)
+            self.edit_room = room
+            room:tryToEdit()
+          else
+            if self.app.config.remove_destroyed_rooms then
+              local room_cost = room:calculateRemovalCost()
+              self:setEditRoom(false)
+              -- show confirmation dialog for removing the room
+              self:addWindow(UIConfirmDialog(self,_S.confirmation.remove_destroyed_room:format(room_cost),
+              --[[persistable:remove_destroyed_room_confirm_dialog]]function()
+                local world = room.world
+                UIEditRoom:removeRoom(false, room, world)
+                world:resetSideObjects()
+                world.rooms[room.id] = nil
+                self.hospital:spendMoney(room_cost, _S.transactions.remove_room)
+                end
+              ))
+            end
+          end
         end
       else -- right click, we don't want to edit a room after all.
         self:setEditRoom(false)
@@ -1158,7 +1176,7 @@ function GameUI:setEditRoom(enabled)
     -- If the actual editing hasn't started yet but is on its way,
     -- activate the room again.
     if class.is(self.edit_room, Room) and self.cursor == self.waiting_cursor then
-      self.edit_room.is_active = true
+      self.app.world:markRoomAsBuilt(self.edit_room)
     else
       -- If we are currently editing a room it may happen that we need to abort it.
       -- Also remove any dialog where the user is buying items.

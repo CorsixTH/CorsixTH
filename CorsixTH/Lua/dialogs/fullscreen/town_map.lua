@@ -112,8 +112,9 @@ function UITownMap:onMouseMove(x, y)
   local tx = math.floor((x - 227) / 3)
   local ty = math.floor((y - 25) / 3)
   self.hover_plot = nil
-  if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
-    local map = self.ui.hospital.world.map.th
+  local map = self.ui.hospital.world.map.th
+  local width, height = map:size()
+  if 0 <= tx and tx < width and 0 <= ty and ty < height then
     self.hover_plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
   end
   return UIFullscreen.onMouseMove(self, x, y)
@@ -124,8 +125,9 @@ function UITownMap:onMouseUp(button, x, y)
   if button == "left" then
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
-    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
-      local map = self.ui.hospital.world.map.th
+    local map = self.ui.hospital.world.map.th
+    local width, height = map:size()
+    if 0 <= tx and tx < width and 0 <= ty and ty < height then
       local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
       if plot ~= 0 then
         if self.ui.hospital:purchasePlot(plot) then
@@ -140,7 +142,8 @@ function UITownMap:onMouseUp(button, x, y)
     local tx = math.floor((x - 227) / 3)
     local ty = math.floor((y - 25) / 3)
     local map = self.ui.hospital.world.map.th
-    if 0 <= tx and tx < 128 and 0 <= ty and ty < 128 then
+    local width, height = map:size()
+    if 0 <= tx and tx < width and 0 <= ty and ty < height then
       local plot = map:getCellFlags(tx + 1, ty + 1, flag_cache).parcelId
       if plot ~= 0 then
         local sx, sy = self.ui.app.map:WorldToScreen(tx, ty)
@@ -169,15 +172,15 @@ function UITownMap:draw(canvas, x, y)
     config = self:initRuntimeConfig()
   end
 
-  -- We need to draw number of people, plants, fire extinguisers, other objects
+  -- We need to draw number of people, plants, fire extinguishers, other objects
   -- and radiators.
   -- NB: original TH's patient count was always 1 too big (started counting at 1)
   -- This is likely a bug and we do not copy this behavior.
-  local patientcount = hospital.patientcount
-  local plants = world.object_counts.plant
-  local fireext = world.object_counts.extinguisher
-  local objs = world.object_counts.general
-  local radiators = world.object_counts.radiator
+  local patientcount = hospital:countPatients()
+  local plants = hospital:countPlants()
+  local fireext = hospital:countFireExtinguishers()
+  local objs = hospital:countGeneralObjects()
+  local radiators = hospital:countRadiators()
 
   self.info_font:draw(canvas, patientcount, x +  95, y +  57)
   self.info_font:draw(canvas, plants,       x +  95, y + 110)
@@ -186,7 +189,7 @@ function UITownMap:draw(canvas, x, y)
   self.info_font:draw(canvas, radiators,    x +  95, y + 265)
 
   -- Heating costs
-  local heating_costs = math.floor(((hospital.radiator_heat *10)* radiators)* 7.5)
+  local heating_costs = math.floor(((hospital.heating.radiator_heat *10)* radiators)* 7.5)
   self.info_font:draw(canvas, ("%8i"):format(heating_costs),  x + 100, y + 355)
 
   -- draw money balance
@@ -194,7 +197,7 @@ function UITownMap:draw(canvas, x, y)
 
   -- radiator heat
   local rad_max_width = 60 -- Radiator indicator width
-  local rad_width = rad_max_width * hospital.radiator_heat
+  local rad_width = rad_max_width * hospital.heating.radiator_heat
   for dx = 0, rad_width do
     self.panel_sprites:draw(canvas, 9, x + 101 + dx, y + 319)
   end
@@ -314,25 +317,19 @@ end
 
 function UITownMap:decreaseHeat()
   local h = self.ui.hospital
-  local heat = math.floor(h.radiator_heat * 10 + 0.5)
+  local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
-    heat = heat - 1
-    if heat < 1 then
-      heat = 1
-    end
-    h.radiator_heat = heat / 10
+    heat = math.max(heat - 1, 1)
+    h.heating.radiator_heat = heat / 10
   end
 end
 
 function UITownMap:increaseHeat()
   local h = self.ui.hospital
-  local heat = math.floor(h.radiator_heat * 10 + 0.5)
+  local heat = math.floor(h.heating.radiator_heat * 10 + 0.5)
   if not h.heating_broke then
-    heat = heat + 1
-    if heat > 10 then
-      heat = 10
-    end
-    h.radiator_heat = heat / 10
+    heat = math.min(heat + 1, 10)
+    h.heating.radiator_heat = heat / 10
   end
 end
 

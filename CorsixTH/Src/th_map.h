@@ -171,13 +171,12 @@ enum class temperature_theme {
   yellow_red     //!< Gradients of yellow, orange, and red
 };
 
-struct map_tile : public link_list {
+struct map_tile {
   map_tile();
   ~map_tile() = default;
 
   // Linked list for entities rendered at this tile
-  // THLinkList::pPrev (will always be nullptr)
-  // THLinkList::pNext
+  link_list entities;
 
   //! Linked list for entities rendered in an early (right-to-left) pass
   link_list oEarlyEntities;

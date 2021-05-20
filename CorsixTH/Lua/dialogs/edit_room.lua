@@ -186,7 +186,7 @@ function UIEditRoom:cancel()
         end
       ))
     else
-      self:close()
+      self:abortRoom()
     end
     self.ui:setCursor(self.ui.default_cursor)
   elseif self.phase == "objects" then
@@ -595,9 +595,96 @@ function UIEditRoom:returnToWallPhase(early)
   end
 end
 
+-- Remove walls
+local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y, world)
+  local map = world.map.th
+  for _ = 1, n_steps do
+    local existing = map:getCell(x, y, layer)
+    -- Possibly add transparency.
+    local flag = 0
+    if world.ui.transparent_walls then
+      flag = 1024
+    end
+    if world:getWallIdFromBlockId(existing) ~= "external" then
+      local neighbour = world:getRoom(x + neigh_x, y + neigh_y)
+      if neighbour then
+        if neigh_x ~= 0 or neigh_y ~= 0 then
+          local set = world:getWallSetFromBlockId(existing)
+          local dir = world:getWallDirFromBlockId(existing)
+          if set == "inside_tiles" then
+            set = "outside_tiles"
+          end
+          map:setCell(x, y, layer, flag + world.wall_types[neighbour.room_info.wall_type][set][dir])
+        end
+      else
+        map:setCell(x, y, layer, flag)
+      end
+    end
+    x = x + step_x
+    y = y + step_y
+  end
+end
+
+function UIEditRoom:removeRoom(save_objects, room, world)
+  -- Remove any placed objects (add them to list again) when save_objects is true
+  for x = room.x, room.x + room.width - 1 do
+    for y = room.y, room.y + room.height - 1 do
+      while true do
+        -- get litter then any other object
+        local obj = world:getObject(x, y, 'litter') or world:getObject(x, y)
+        -- but we need to ignore doors
+        if not obj or obj == room.door or class.is(obj, SwingDoor) then
+          break
+        end
+        if obj.object_type.id == "litter" then -- Silently remove litter from the world.
+          obj:remove()
+        else
+          if save_objects then
+            local obj_state = obj:getState()
+            world:destroyEntity(obj)
+            if not obj.master then
+              self:addObjects({{
+                object = TheApp.objects[obj.object_type.id],
+                state = obj_state,
+                qty = 1
+              }})
+            end
+          else
+            -- just destroy it
+            world:destroyEntity(obj)
+          end
+        end
+      end
+    end
+  end
+
+  -- now doors
+  world:destroyEntity(room.door)
+  if room.door2 then
+    world:destroyEntity(room.door2)
+  end
+
+  if save_objects then
+    -- backup list of objects
+    self.objects_backup = {}
+    for k, o in pairs(self.objects) do
+      self.objects_backup[k] = { object = o.object, qty = o.qty, state = o.state }
+    end
+
+    UIPlaceObjects.removeAllObjects(self, true)
+  end
+
+  remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0, world)
+  remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1, world)
+  remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0, world)
+  remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0, world)
+
+  -- Reset floor tiles and flags
+  world.map.th:unmarkRoom(room.x, room.y, room.width, room.height)
+end
+
 function UIEditRoom:returnToDoorPhase()
   self.ui:tutorialStep(3, {13, 14, 15}, 9)
-  local map = self.ui.app.map.th
   local room = self.room
   room.built = false
   if room.door and room.door.queue then
@@ -607,78 +694,7 @@ function UIEditRoom:returnToDoorPhase()
   self.purchase_button:enable(false)
   self.pickup_button:enable(false)
 
-  -- Remove any placed objects (add them to list again)
-  for x = room.x, room.x + room.width - 1 do
-    for y = room.y, room.y + room.height - 1 do
-      while true do
-        local obj = self.world:getObject(x, y)
-        if not obj or obj == room.door or class.is(obj, SwingDoor) then
-          break
-        end
-        if obj.object_type.id == "litter" then -- Silently remove litter from the world.
-          obj:remove()
-          break
-        end
-        local obj_state = obj:getState()
-        self.world:destroyEntity(obj)
-        if not obj.master then
-          self:addObjects({{
-            object = TheApp.objects[obj.object_type.id],
-            state = obj_state,
-            qty = 1
-          }})
-        end
-      end
-    end
-  end
-  self.world:destroyEntity(self.room.door)
-  if self.room.door2 then
-    self.world:destroyEntity(self.room.door2)
-  end
-
-  -- backup list of objects
-  self.objects_backup = {}
-  for k, o in pairs(self.objects) do
-    self.objects_backup[k] = { object = o.object, qty = o.qty, state = o.state }
-  end
-
-  UIPlaceObjects.removeAllObjects(self, true)
-
-  -- Remove walls
-  local function remove_wall_line(x, y, step_x, step_y, n_steps, layer, neigh_x, neigh_y)
-    for _ = 1, n_steps do
-      local existing = map:getCell(x, y, layer)
-      -- Possibly add transparency.
-      local flag = 0
-      if self.ui.transparent_walls then
-        flag = 1024
-      end
-      if self.world:getWallIdFromBlockId(existing) ~= "external" then
-        local neighbour = self.world:getRoom(x + neigh_x, y + neigh_y)
-        if neighbour then
-          if neigh_x ~= 0 or neigh_y ~= 0 then
-            local set = self.world:getWallSetFromBlockId(existing)
-            local dir = self.world:getWallDirFromBlockId(existing)
-            if set == "inside_tiles" then
-              set = "outside_tiles"
-            end
-            map:setCell(x, y, layer, flag + self.world.wall_types[neighbour.room_info.wall_type][set][dir])
-          end
-        else
-          map:setCell(x, y, layer, flag)
-        end
-      end
-      x = x + step_x
-      y = y + step_y
-    end
-  end
-  remove_wall_line(room.x, room.y, 0, 1, room.height, 3, -1,  0)
-  remove_wall_line(room.x, room.y, 1, 0, room.width , 2,  0, -1)
-  remove_wall_line(room.x + room.width, room.y , 0, 1, room.height, 3, 0, 0)
-  remove_wall_line(room.x, room.y + room.height, 1, 0, room.width , 2, 0, 0)
-
-  -- Reset floor tiles and flags
-  self.world.map.th:unmarkRoom(room.x, room.y, room.width, room.height)
+  self:removeRoom(true, room, self.world)
 
   -- Re-create blueprint
   local rect = self.blueprint_rect
@@ -864,12 +880,16 @@ function UIEditRoom:enterDoorPhase()
 
   -- check if all adjacent tiles of the rooms are still connected
   if not self:checkReachability() then
-    -- undo passable flags and go back to walls phase
-    self.phase = "walls"
-    self:returnToWallPhase(true)
-    self.ui:playSound("wrong2.wav")
-    self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
-    return
+    if self.ui.app.config.allow_blocking_off_areas then
+      print("Blocking off areas is allowed with room " .. self.blueprint_rect.x .. ", " .. self.blueprint_rect.y .. ".")
+    else
+      -- undo passable flags and go back to walls phase
+      self.phase = "walls"
+      self:returnToWallPhase(true)
+      self.ui:playSound("wrong2.wav")
+      self.ui.adviser:say(_A.room_forbidden_non_reachable_parts)
+      return
+    end
   end
 
   self.desc_text = _S.place_objects_window.place_door
@@ -1198,7 +1218,7 @@ function UIEditRoom:setDoorBlueprint(orig_x, orig_y, orig_wall)
       if self.blueprint_door.anim[1] then
         -- retrieve the old door position details to reset the blue print
         local oldx, oldy
-		local _, _, oldx_mod, oldy_mod, _ = doorWallOffsetCalculations(self.blueprint_door.floor_x,
+        local _, _, oldx_mod, oldy_mod, _ = doorWallOffsetCalculations(self.blueprint_door.floor_x,
           self.blueprint_door.floor_y, self.blueprint_door.wall)
         -- If we're dealing with swing doors the anim variable is actually a table with three
         -- identical "doors".

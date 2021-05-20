@@ -88,6 +88,11 @@ function UIFax:UIFax(ui, icon)
   self:addPanel(0, 326, 382):makeButton(0, 0, 44, 11, 13, button("#"))
 end
 
+-- Faxes pause the game
+function UIFax:mustPause()
+  return true
+end
+
 function UIFax:updateChoices()
   local choices = self.message.choices
   for i, button in ipairs(self.choice_buttons) do
@@ -173,7 +178,7 @@ function UIFax:choice(choice_number)
   end
   local vip_ignores_refusal = math.random(1, 2)
   if choice == "accept_emergency" then
-    self.ui.app.world:newObject("helicopter", self.ui.hospital, "north")
+    self.ui.app.world:newObject("helicopter", "north")
     self.ui:addWindow(UIWatch(self.ui, "emergency"))
     self.ui:playAnnouncement(self.ui.hospital.emergency.disease.emergency_sound, AnnouncementPriority.Critical)
     self.ui.adviser:say(_A.information.emergency)
@@ -204,7 +209,9 @@ function UIFax:choice(choice_number)
     -- Set the new salary.
     self.ui.hospital.player_salary = self.ui.hospital.salary_offer
     if tonumber(self.ui.app.world.map.level_number) then
-      self.ui.app:loadLevel(self.ui.app.world.map.level_number + 1, self.ui.app.map.difficulty)
+      local next_level = self.ui.app.world.map.level_number + 1
+      self.ui.app:loadLevel(next_level, self.ui.app.map.difficulty)
+      self.ui.app.moviePlayer:playAdvanceMovie(next_level)
     else
       for i, level in ipairs(self.ui.app.world.campaign_info.levels) do
         if self.ui.app.world.map.level_number == level then
@@ -221,6 +228,8 @@ function UIFax:choice(choice_number)
   elseif choice == "return_to_main_menu" then
     self.ui.app.moviePlayer:playWinMovie()
     self.ui.app:loadMainMenu()
+  elseif choice == "stay_on_level" then
+    self.ui.hospital.win_declined = true
   end
   self.icon:removeMessage()
   self:close()
@@ -259,8 +268,11 @@ function UIFax:validate()
     if not hosp.spawn_rate_cheat then
       self.ui.adviser:say(_A.cheats.roujin_on_cheat)
       hosp.spawn_rate_cheat = true
+      self:cheatByFax()
     else
       self.ui.adviser:say(_A.cheats.roujin_off_cheat)
+      -- Clear the current month's spawns to give the player a break
+      self.ui.app.world.spawn_dates = {}
       hosp.spawn_rate_cheat = nil
     end
   else
@@ -273,18 +285,24 @@ function UIFax:validate()
   -- TODO: Other cheats (preferably with slight obfuscation, as above)
 end
 
+function UIFax:cheatByFax()
+  local cheatWindow = self.ui:getWindow(UICheats)
+  local cheat = self.ui.hospital.hosp_cheats
+  cheat:announceCheat()
+  -- If a cheats window is open, make sure the UI is updated
+  if cheatWindow then
+    cheatWindow:updateCheatedStatus()
+  end
+end
+
 function UIFax:appendNumber(number)
   self.code = self.code .. number
 end
 
 function UIFax:close()
-  local world = self.ui.app.world
   self.icon.fax = nil
   self.icon:adjustToggle()
   UIFullscreen.close(self)
-  if world and world:isCurrentSpeed("Pause") then
-    world:setSpeed(world.prev_speed)
-  end
 end
 
 function UIFax:afterLoad(old, new)

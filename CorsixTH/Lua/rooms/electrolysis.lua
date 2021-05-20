@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "electrolysis"
+room.vip_must_visit = false
 room.level_config_id = 23
 room.class = "ElectrolysisRoom"
 room.name = _S.rooms_short.electrolysis

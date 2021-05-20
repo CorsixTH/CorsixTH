@@ -208,7 +208,7 @@ local action_queue_on_change_position = permanent"action_queue_on_change_positio
   local queue = action.queue
   if not must_stand then
     for i = 1, queue.bench_threshold do
-      if queue[i] == humanoid then
+      if queue:reportedHumanoid(i) == humanoid then
         must_stand = true
         break
       end

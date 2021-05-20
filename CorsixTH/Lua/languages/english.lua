@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-Language("English", "en", "eng")
+Language("English", "English", "en", "eng")
 Inherit("original_strings", 0)
 
 --Note: All strings should use a single space after full-stops. Only exception is level descriptions.
@@ -59,16 +59,16 @@ vip_names = {
 adviser.research.drug_improved_1 = "%s drug has been improved by your Research Department."
 
 -- Disease overrides where there are typos
-golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
-ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
-slack_tongue.cause = "Cause - Chronic over-discussion of soap operas."
-slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
-the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
-bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
+diseases.golf_stones.cure = "Cure - These must be removed by an operation requiring two Surgeons."
+diseases.ruptured_nodules.cure = "Cure - Two qualified Surgeons must remove the nodules using steady hands."
+diseases.slack_tongue.cause = "Cause - Chronic over-discussion of soap operas."
+diseases.slack_tongue.cure = "Cure - The tongue is placed in the Slicer Machine and removed quickly, efficiently, and painfully."
+diseases.the_squits.cure = "Cure - A glutinous mix of stringy pharmaceutical chemicals solidify the patient's innards."
+diseases.bloaty_head.cure = "Cure - The swollen head is popped, then re-inflated to the correct PSI using a clever machine."
 
 -- Rooms overrides where there are typos
-inflation[2] = "Patients with the painful-yet-humorous condition of Bloaty Head must come to the Inflation Clinic, where the overlarge cranium will be popped and instantly re-inflated to the correct pressure.//"
-staff_room[2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money, and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. "
+room_descriptions.inflation[2] = "Patients with the painful-yet-humorous condition of Bloaty Head must come to the Inflation Clinic, where the overlarge cranium will be popped and instantly re-inflated to the correct pressure.//"
+room_descriptions.staff_room[2] = "Your staff get tired as they carry out their jobs. They require this room to relax and refresh themselves. Tired staff slow down, demand more money, and will eventually quit. They also make more mistakes. Building a staff room with plenty for them to do is very worthwhile. Make sure there is room for several staff members at one time. "
 
 -- Staff description overrides where there are typos
 staff_descriptions.bad[14] = "Sly, cunning, and subversive. "
@@ -104,8 +104,13 @@ multiplayer.everyone_failed = "Everyone failed to satisfy that last objective. S
 -- Override for a disease patient choice typo
 disease_discovered_patient_choice.need_to_employ = "Employ a %s to be able to handle this situation."
 
---Win message override typo
-letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. However, such has been your impact on the cosy world of medicine, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. The whole world is clamouring for you, and it would be great PR for us all!//"
+-- Override for shorter messages and a typo in 12.2
+letter[9][2] = "You have proved yourself to be the best hospital administrator in medicine's long and chequered history. Such a momentous achievement cannot go unrewarded, so we would like to offer you the honorary post of Supreme Chief of All Hospitals. This comes with a salary of $%d. You will be given a tickertape parade, and people will show their appreciation wherever you go.//"
+letter[10][2] = "Congratulations on successfully running every hospital we assigned you to. Such a superb performance qualifies you for the freedom of all the world's cities. You are to be given a pension of $%d, and all we ask is that you travel, for free, around the nation, promoting the work of all hospitals to your adoring public.//"
+letter[11][2] = "Your career has been exemplary, and you are an inspiration to all of us. Thank you for running so many hospitals so well. We would like to grant you a lifetime salary of $%d, and would ask simply that you travel by official open-topped car from city to city, giving lectures about how you achieved so much so fast.//"
+letter[11][3] = "You are an example to every wise person, and without exception, everybody in the world regards you as a supreme asset.//"
+letter[12][2] = "Your successful career as the best hospital administrator since Moses is nearing an end. Befitting your impact on the nation, the Ministry would like to offer you a salary of $%d simply to appear on our behalf, opening fetes, launching ships, and doing chat shows. It would be great PR for us all!//"
+
 -------------------------------  NEW STRINGS  -------------------------------
 date_format = {
   daymonth = "%1% %2:months%",
@@ -187,6 +192,7 @@ menu_debug = {
   transparent_walls           = "  (%1%) TRANSPARENT WALLS  ",
   limit_camera                = "  LIMIT CAMERA  ",
   disable_salary_raise        = "  DISABLE SALARY RAISE  ",
+  allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
   cheats                      = "  (%1%) CHEATS  ",
@@ -229,6 +235,7 @@ adviser = {
     no_desk_5 = "Well it's about time, you should start to see some patients arriving soon!",
     no_desk_6 = "You have a receptionist, so how about building a reception desk for her to work from?",
     no_desk_7 = "You've built the reception desk, so how about hiring a receptionist? You won't see any patients until you get this sorted out you know!",
+    another_desk = "You'll need to build another desk for that new receptionist.",
     cannot_afford = "You don't have enough money in the bank to hire that person!", -- I can't see anything like this in the original strings
     cannot_afford_2 = "You don't have enough money in the bank to make that purchase!",
     falling_1 = "Hey! That is not funny, watch where you click that mouse; someone could get hurt!",
@@ -251,8 +258,8 @@ adviser = {
   },
   cheats = {
     th_cheat = "Congratulations, you have unlocked cheats!",
-    roujin_on_cheat = "Roujin's challenge activated! Good luck...",
-    roujin_off_cheat = "Roujin's challenge deactivated.",
+    roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
+    roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
   },
 }
 
@@ -304,6 +311,7 @@ install = {
 
 misc.not_yet_implemented = "(not yet implemented)"
 misc.no_heliport = "Either no diseases have been discovered yet, or there is no heliport on this map. It might be that you need to build a reception desk and hire a receptionist"
+misc.cant_treat_emergency = "Your hospital cannot treat this emergency because its disease has not been discovered. Feel free to try again."
 
 main_menu = {
   new_game = "Campaign",
@@ -459,6 +467,7 @@ customise_window = {
   aliens = "Alien Patients",
   fractured_bones = "Fractured Bones",
   average_contents = "Average Contents",
+  remove_destroyed_rooms = "Remove destroyed rooms",
 }
 
 tooltip.customise_window = {
@@ -469,6 +478,7 @@ tooltip.customise_window = {
   aliens = "Because of the lack of proper animations we have by default made patients with Alien DNA only come from an emergency. To allow patients with Alien DNA to visit your hospital, other than by an emergency, turn this off",
   fractured_bones = "Because of a poor animation we have by default made it so there are no female patients with Fractured Bones. To allow female patients with Fractured Bones to visit your hospital, turn this off",
   average_contents = "If you would like the game to remember what extra objects you usually add when you build rooms, then turn this option on",
+  remove_destroyed_rooms = "If you would like to be able to remove destroyed rooms, for a fee, turn this option on",
   back = "Close this menu and go back to the Settings Menu",
 }
 
@@ -678,6 +688,7 @@ errors = {
   dialog_missing_graphics = "Sorry, the demo data files don't contain this dialog.",
   save_prefix = "Error while saving game: ",
   load_prefix = "Error while loading game: ",
+  compatibility_error = "Sorry, this save was created with a newer version of CorsixTH and is not compatible. Please update to a more recent version.",
   no_games_to_contine = "There are no saved games.",
   load_quick_save = "Error, cannot load the quicksave as it does not exist, not to worry as we have now created one for you!",
   map_file_missing = "Could not find the map file %s for this level!",
@@ -687,17 +698,20 @@ errors = {
   fractured_bones = "NOTE: The animation for female patients with Fractured Bones is not perfect",
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
+  save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
 }
 
 warnings = {
   levelfile_variable_is_deprecated = "Notice: The level '%s' contains a deprecated variable definition in the level file." ..
                                      "'%LevelFile' has been renamed to '%MapFile'. Please advise the map creator to update the level.",
+  newersave = "Warning, you have loaded a save from a newer version of CorsixTH. It is not recommended to continue as crashes may occur. Play at your own risk."
 }
 
 confirmation = {
   needs_restart = "Changing this setting requires CorsixTH to restart. Any unsaved progress will be lost. Are you sure you want to do this?",
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
   maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
+  remove_destroyed_room = "Would you like to remove the room for $%d?",
 }
 
 information = {
@@ -874,6 +888,28 @@ map_editor_window = {
   }
 }
 
+fax = {
+vip_visit_result = {
+  ordered_remarks = {
+    [1] = "What a storming hospital. When I'm next seriously ill, take me there.",
+    [2] = "Now that's what I call a hospital.",
+    [3] = "That's a super hospital. And I should know; I've been in a few.",
+    [4] = "What a well-run hospital. Thanks for inviting me to it.",
+    [5] = "Hmm. Not a bad medical establishment, certainly.",
+    [6] = "I did enjoy your charming hospital. Now, anyone fancy a curry at the Taj?",
+    [7] = "Well, I've seen worse. But you should make some improvements.",
+    [8] = "Oh dear. Not a nice place to go if you're feeling peaky.",
+    [9] = "It's a standard hospital, to be honest. Frankly, I expected more.",
+    [10] = "Why did I bother? It was worse than going to see a four-hour opera!",
+    [11] = "I'm disgusted by what I saw. Call that a hospital? Pig-sty, more like!",
+    [12] = "I'm fed up of being in the public spotlight and visiting smelly holes like this! I resign.",
+    [13] = "What a dump. I'm going to try and get it closed down.",
+    [14] = "I have never seen such a dreadful hospital. What a disgrace!",
+    [15] = "I'm shocked. You can't call that a hospital! I'm off for a pint.",
+    }
+  }
+}
+
 hotkeys_file_err = {
   file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
         "has permission to read/write ",
@@ -881,6 +917,7 @@ hotkeys_file_err = {
         "For reference, the error loading the hotkeys file was: ",
 }
 
+transactions.remove_room = "Build: Remove destroyed room"
 --------------------------------  UNUSED  -----------------------------------
 ------------------- (kept for backwards compatibility) ----------------------
 

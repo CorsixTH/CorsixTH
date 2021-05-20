@@ -71,6 +71,7 @@ function UIMenuBar:onTick()
       self.menu_disappear_counter = nil
     else
       if self.menu_disappear_counter == 0 then
+        self.ui.app:saveConfig()
         self.menu_disappear_counter = nil
         local close_to = self.active_menu and self.active_menu.level or 0
         for i = #self.open_menus, close_to + 1, -1 do
@@ -577,21 +578,18 @@ function UIMenuBar:makeGameMenu(app)
         return level == app.config.music_volume,
           function()
             app.audio:setBackgroundVolume(level)
-            app:saveConfig()
           end,
           ""
       elseif setting == "sound" then
         return level == app.config.sound_volume,
           function()
             app.audio:setSoundVolume(level)
-            app:saveConfig()
           end,
           ""
       else
         return level == app.config.announcement_volume,
           function()
             app.audio:setAnnouncementVolume(level)
-            app:saveConfig()
           end,
           ""
       end
@@ -609,7 +607,6 @@ function UIMenuBar:makeGameMenu(app)
     app.config.play_sounds,
     function(item)
       app.audio:playSoundEffects(item.checked)
-      app:saveConfig()
     end,
     nil,
     function()
@@ -621,7 +618,6 @@ function UIMenuBar:makeGameMenu(app)
     app.config.play_announcements,
     function(item)
       app.config.play_announcements = item.checked
-      app:saveConfig()
     end,
     nil,
     function()
@@ -633,7 +629,6 @@ function UIMenuBar:makeGameMenu(app)
     function(item)
       app.config.play_music = item.checked
       self.ui:togglePlayMusic(item)
-      app:saveConfig()
     end,
     nil,
     function(musicStatus)
@@ -665,7 +660,6 @@ function UIMenuBar:makeGameMenu(app)
   options:appendCheckItem(_S.menu_options.capture_mouse,
     app.config.capture_mouse,
     function(item) app.config.capture_mouse = item.checked
-      app:saveConfig()
       app:setCaptureMouse()
     end)
 
@@ -673,7 +667,6 @@ function UIMenuBar:makeGameMenu(app)
     not app.config.adviser_disabled,
     function(item)
       app.config.adviser_disabled = not item.checked
-      app:saveConfig()
     end,
     nil,
     function()
@@ -684,7 +677,6 @@ function UIMenuBar:makeGameMenu(app)
     app.config.twentyfour_hour_clock,
     function(item)
       app.config.twentyfour_hour_clock = item.checked
-      app:saveConfig()
     end)
 
   local function temperatureDisplay(method)
@@ -756,6 +748,9 @@ function UIMenuBar:makeGameMenu(app)
   local function disable_salary_raise(item)
     app.world:debugDisableSalaryRaise(item.checked)
   end
+  local function allowBlockingAreas(item)
+    app.config.allow_blocking_off_areas = item.checked
+  end
   local function overlay(...)
     local args = {n = select('#', ...), ...}
     return function(item, m)
@@ -770,7 +765,9 @@ function UIMenuBar:makeGameMenu(app)
   for L = 1, 12 do
     levels_menu:appendItem(("  L%i  "):format(L), function()
       local status, err = pcall(app.loadLevel, app, L)
-      if not status then
+      if status then
+        self.ui.app.moviePlayer:playAdvanceMovie(L)
+      else
         err = _S.errors.load_prefix .. err
         print(err)
         self.ui:addWindow(UIInformation(self.ui, {err}))
@@ -783,6 +780,7 @@ function UIMenuBar:makeGameMenu(app)
       :appendItem(_S.menu_debug.connect_debugger:format(hotkey_value_label("global_connectDebugger", hotkeys)), function() self.ui:connectDebugger() end)
       :appendCheckItem(_S.menu_debug.limit_camera,         true, limit_camera, nil, function() return self.ui.limit_to_visible_diamond end)
       :appendCheckItem(_S.menu_debug.disable_salary_raise, false, disable_salary_raise, nil, function() return self.ui.app.world.debug_disable_salary_raise end)
+      :appendCheckItem(_S.menu_debug.allow_blocking_off_areas, false, allowBlockingAreas, nil, function() return self.ui.app.config.allow_blocking_off_areas end)
       :appendItem(_S.menu_debug.make_debug_fax,     function() self.ui:makeDebugFax() end)
       :appendItem(_S.menu_debug.make_debug_patient, function() self.ui:addWindow(UIMakeDebugPatient(self.ui)) end)
       :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)

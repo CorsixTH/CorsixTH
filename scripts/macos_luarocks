@@ -1,0 +1,74 @@
+#!/bin/bash
+: ' Copyright (c) 2016- Toby "tobylane"
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.'
+
+set -ae
+if [ "$CTH_VERBOSE" ] || [ "$CI" ]; then
+  set -x
+fi
+
+if [ -d "$1" ]; then
+  cd "$1"
+  shift
+elif [ -d /Applications/CorsixTH.app ]; then
+  cd /Applications/
+fi
+
+if [ -d CorsixTH.app ]; then
+  cd CorsixTH.app/Contents/Resources/
+else
+  echo "No CorsixTH.app found"
+  exit 1
+fi
+
+if otool -L ../MacOS/CorsixTH | grep -q 'lua'; then
+  lua="$(otool -L ../MacOS/CorsixTH | grep 'lua' | cut -d. -f4-5)"
+elif lua -v >/dev/null; then
+  lua="$(lua -v | cut -d" " -f2 | cut -d. -f1-2)"
+else
+  lua=5.3
+  echo "No Lua library or executable found, using version 5.3"
+fi
+
+# Assumes that all luarocks are installed in the same place, ie all globally or all locally
+dir="$(luarocks show --rock-tree luafilesystem)"
+
+if [ -e lfs.so ] && [ -e lpeg.so ] && [ -z "$1" ]
+  then echo "Luarocks for $lua in place."
+  exit
+elif [ -e "$dir/lib/lua/$lua/lfs.so" ] && [ -e "$dir/lib/lua/$lua/lpeg.so" ] &&
+ [ "$1" != "fresh" ] && [ -d "$dir/share/lua/" ]
+  then mkdir -p lib/lua/"$lua/" share/lua/"$lua/"
+  cp -RL "$dir/lib/lua" lib/
+  cp -RL "$dir/share/lua" share/
+  echo "Copied luarocks from global installation for $lua."
+else
+  luarocks install --lua-version "$lua" --tree . luafilesystem
+  luarocks install --lua-version "$lua" --tree . lpeg
+  luarocks install --lua-version "$lua" --tree . luasocket --from=http://luarocks.org/dev
+  luarocks install --lua-version "$lua" --tree . luasec OPENSSL_DIR=/usr/local/opt/openssl || true
+  echo "Installed local luarocks $lua."
+fi
+
+rsync -r "lib/lua/$lua/"lpeg.so "lib/lua/$lua/"lfs.so .
+rsync -r "share/lua/$lua/"re.lua .
+set +e # Luasocket and Luasec are optional
+rsync -r "lib/lua/$lua/"ssl.so "lib/lua/$lua/"mime . 2>/dev/null
+rsync -r "lib/lua/$lua/socket/core.so" socket/ 2>/dev/null
+rsync -r "share/lua/$lua/"ltn12.lua "share/lua/$lua/"mime.lua "share/lua/$lua/"socket "share/lua/$lua/"ssl \
+  "share/lua/$lua/"ssl.lua . 2>/dev/null
+rm -rf lib/ share/

@@ -92,27 +92,26 @@ class THLayerMask {
 
   inline void set(int iLayer, int iID) {
     if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
-      m_iMask[iLayer] |= (1 << iID);
+      m_iMask[iLayer] |= (1ul << iID);
   }
 
   void clear();
 
   inline void clear(int iLayer, int iID) {
     if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
-      m_iMask[iLayer] &= ~(1 << iID);
+      m_iMask[iLayer] &= ~(1ul << iID);
   }
 
   inline bool isSet(int iLayer, int iID) const {
     if (0 <= iLayer && iLayer < 13 && 0 <= iID && iID < 32)
-      return (m_iMask[iLayer] & (1 << iID)) != 0;
+      return (m_iMask[iLayer] & (1ul << iID)) != 0;
     else
       return false;
   }
   inline bool isSet(int iLayer) const {
     if (0 <= iLayer && iLayer < 13)
       for (int iId = 0; iId < 32; ++iId) {
-        if ((m_iMask[iLayer] & (static_cast<std::uint32_t>(1) << iId)) != 0)
-          return true;
+        if ((m_iMask[iLayer] & (1ul << iId)) != 0) return true;
       }
     return false;
   }
@@ -216,7 +215,7 @@ class THAnimations {
     wxFile oFile(sFilename);
     if (!oFile.IsOpened()) return false;
 
-    size_t iLen = oFile.Length();
+    size_t iLen = static_cast<size_t>(oFile.Length());
     unsigned char* pBuffer = new unsigned char[iLen];
     oFile.Read(pBuffer, iLen);
     if (memcmp(pBuffer, "RNC\001", 4) == 0) {

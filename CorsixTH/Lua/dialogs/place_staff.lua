@@ -77,15 +77,34 @@ end
 
 local flag_cache = {}
 local flag_altpal = 16
+--! Private function. Is the staff member (self) permitted
+-- to be placed where the user is hovering or clicking?
+function UIPlaceStaff:_isValidStaffPlacement()
+  local world, x, y = self.world, self.tile_x, self.tile_y
+  world.map.th:getCellFlags(x, y, flag_cache)
+  -- Is the tile inside the player's hospital building?
+  if not (self.ui.hospital:getPlayerIndex() == flag_cache.owner and
+      flag_cache.hospital) then
+    return false
+  end
+  local room = world:getRoom(x, y)
+  -- On a tile humanoids can walk on?
+  local walkable = flag_cache.passable and (not room and true or not room.crashed)
+  -- and in an area the regular staff (doctors, nurses and handymen) can go?
+  local staffable = (self.allow_in_rooms or flag_cache.roomId == 0)
+  -- Or is it a receptionist placed on an unstaffed reception desk?
+  local reception = false
+  if self.profile.humanoid_class == "Receptionist" then
+    local desk = world:getObject(x, y, "reception_desk") or
+        world:findObjectNear(self, "reception_desk", 0)
+    reception = desk and not desk.receptionist
+  end
+  return (walkable and staffable) or reception
+end
+
 function UIPlaceStaff:draw(canvas)
   if self.world.user_actions_allowed then
-    self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-    local room = self.world:getRoom(self.tile_x, self.tile_y)
-    local player_id = self.ui.hospital:getPlayerIndex()
-    local valid = flag_cache.hospital and flag_cache.passable and
-        (self.allow_in_rooms or flag_cache.roomId == 0) and
-        (not room and true or not room.crashed) and
-        flag_cache.owner == player_id
+    local valid = self:_isValidStaffPlacement()
     self.anim:setFlag(valid and 0 or flag_altpal)
     local zoom = self.ui.zoom_factor
     if canvas:scale(zoom) then
@@ -107,13 +126,7 @@ function UIPlaceStaff:onMouseUp(button, x, y)
       return true
     elseif button == "left" then
       self:onMouseMove(x, y)
-      self.world.map.th:getCellFlags(self.tile_x, self.tile_y, flag_cache)
-      local room = self.world:getRoom(self.tile_x, self.tile_y)
-      local player_id = self.ui.hospital:getPlayerIndex()
-      if flag_cache.hospital and flag_cache.passable and
-          (self.allow_in_rooms or flag_cache.roomId == 0) and
-          (not room or not room.crashed) and
-          flag_cache.owner == player_id then
+      if self:_isValidStaffPlacement() then
         if self.staff then
           self.staff:setTile(self.tile_x, self.tile_y)
         else

@@ -41,7 +41,7 @@ public class StartStaff {
 
     JPanel startStaffPanel = new JPanel();
 
-    JComboBox staffMemberCombo = new JComboBox(staffChoice);
+    JComboBox<String> staffMemberCombo = new JComboBox<>(staffChoice);
     JCheckBox shrinkCB = new JCheckBox();
     JCheckBox surgeonCB = new JCheckBox();
     JCheckBox researcherCB = new JCheckBox();

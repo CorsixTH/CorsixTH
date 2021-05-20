@@ -20,19 +20,23 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
 ---@type Machine
 local Machine = _G["Machine"]
 
-function Machine:Machine(world, object_type, x, y, direction, etc)
+function Machine:Machine(hospital, object_type, x, y, direction, etc)
   self.total_usage = -1 -- Incremented in the constructor of Object.
-  self:Object(world, object_type, x, y, direction, etc)
+  self:Object(hospital, object_type, x, y, direction, etc)
 
   if object_type.default_strength then
     -- Only for the main object. The slave doesn't need any strength
-    local progress = world.ui.hospital.research.research_progress[object_type]
+    local progress = self.world.ui.hospital.research.research_progress[object_type]
     self.strength = progress.start_strength
   end
 
@@ -58,6 +62,24 @@ end
 --! Calculates the number of times the machine can be used before crashing (unless repaired first)
 function Machine:getRemainingUses()
   return self.strength - self.times_used
+end
+
+--! Returns true if a machine is smoking/needs repair
+function Machine:isBreaking()
+  local threshold = self:getRemainingUses()
+  return threshold < 4
+end
+
+--! Announces a machine needing repair
+--!param room The room of the machine
+function Machine:announceRepair(room)
+  local sound = room.room_info.handyman_call_sound
+  local earthquake = self.world.next_earthquake
+  self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+  -- If an earthquake is happening don't play the call sound to prevent spamming
+  if earthquake.active and earthquake.warning_timer == 0 then return end
+  -- TODO: Don't announce handyman call sound if there are no handymen
+  if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
 end
 
 --! Set whether the smoke animation should be showing
@@ -99,9 +121,31 @@ function Machine:machineUsed(room)
   local threshold = self:getRemainingUses()
   -- Find a queued task for a handyman coming to repair this machine
   local taskIndex = self.hospital:getIndexOfTask(self.tile_x, self.tile_y, "repairing")
-
-  -- Too late it is about to explode
+  local num_extinguishers = 0
+  local explosion_chance
+  local explode = false
+  -- Room is set to explode
   if threshold < 1 then
+    -- If a fire extinguisher in the room, room has chance not to explode
+    for object, _ in pairs(room.objects) do
+      if object.object_type.id == "extinguisher" and num_extinguishers < 4 then
+        num_extinguishers = num_extinguishers + 1
+      end
+    end
+    if num_extinguishers == 0 or threshold < -3 then
+      -- If no extinguisher in room, or machine used 5 times over its strength always explode
+      explode = true
+    else
+      -- Explosion chance increases 20% with every use over strength, and reduced by 5% for every additional extinguisher (up to 3 extra) in the room bar the first one
+      explosion_chance = (2 / self.strength) + (threshold * -0.2) - (num_extinguishers * 0.05) + 0.05
+      -- Cap it until guaranteed explosion
+      explosion_chance = explosion_chance > 0.95 and 0.95 or explosion_chance
+      explosion_chance = explosion_chance < 0.05 and 0.05 or explosion_chance
+      explode = math.random() < explosion_chance
+    end
+  end
+  -- Room failed to be saved, or no extinguishers were present
+  if explode then
     -- Clean up any task of handyman coming to repair the machine
     self.hospital:removeHandymanTask(taskIndex, "repairing")
     -- Blow up the room
@@ -121,14 +165,19 @@ function Machine:machineUsed(room)
     -- Clear the icon showing a handyman is coming to repair the machine
     self:setRepairing(nil)
     return true
-  -- Else if urgent repair needed
+  -- Else if urgent repair needed or room didn't explode
   elseif threshold < 4 then
     -- If the job of repairing the machine isn't queued, queue it now (higher priority)
     if taskIndex == -1 then
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
+      self:announceRepair(room)
     else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
-      self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
+       -- Upgrades task from low (1) priority to high (2) priority
+      if self.hospital:getHandymanTaskPriority(taskIndex, "repairing") == 1 then
+        self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
+        self:announceRepair(room)
+      end
     end
   -- Else if repair is needed, but not urgently
   elseif threshold < 6 then
@@ -153,11 +202,8 @@ function Machine:calculateSmoke(room)
   -- How many uses this machine has left until it explodes
   local threshold = self:getRemainingUses()
 
-  -- If now exploding, clear any smoke
-  if threshold < 1 then
-    setSmoke(self, false)
-  -- Else if urgent repair needed
-  elseif threshold < 4 then
+  -- Machines needing urgent repair show smoke
+  if threshold < 4 then
     -- Display smoke, up to three animations per machine
     -- i.e. < 4 one plume, < 3 two plumes or < 2 three plumes of smoke
     setSmoke(self, true)

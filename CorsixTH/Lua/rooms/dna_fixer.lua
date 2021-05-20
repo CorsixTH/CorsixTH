@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "dna_fixer"
+room.vip_must_visit = true
 room.level_config_id = 23
 room.class = "DNAFixerRoom"
 room.name = _S.rooms_short.dna_fixer

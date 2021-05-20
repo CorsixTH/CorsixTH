@@ -74,7 +74,7 @@ LangString successful_removal ${LANG_FRENCH} "$(^Name) a été supprimé de votr
 LangString confirm_removal    ${LANG_FRENCH} "Êtes-vous sûr de vouloir complètement supprimer $(^Name) et tous ses composants ?"
 LangString files_left         ${LANG_FRENCH} "Certains fichiers n'ont pas pu être supprimés."
 LangString options_title      ${LANG_FRENCH} "Options additionnelles"
-LangString save_in_appdata    ${LANG_FRENCH} "Enregistrer les données de jeu et les paramètres dabs %APPDATA% (recommandé)"
+LangString save_in_appdata    ${LANG_FRENCH} "Enregistrer les données de jeu et les paramètres dans %APPDATA% (recommandé)"
 LangString remove_saves       ${LANG_FRENCH} "Voulez-vous conserver vos parties sauvegardées ?"
 LangString overwrite_install  ${LANG_FRENCH} "Il semble que vous installez par dessus une installation existante de CorsixTH. Tous les changements faits aux fichiers pourraient être perdus. Voulez-vous continuer ?"
 

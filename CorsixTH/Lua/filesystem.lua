@@ -74,21 +74,27 @@ function FileSystem:_enumerate()
   end
 end
 
+--! Test if file name has an .iso or .dmg extension
+function FileSystem:isIso(name)
+  if name == nil then
+    return false
+  end
+
+  local ext = name:lower():match("%.(.+)$")
+  return ext == 'iso' or ext == 'iso9660$' or ext == 'dmg'
+end
+
 --! Set the root physical path for this FileSystem.
 -- If the path is an ISO then set the provider. If the path is a directory
--- then set the pysical_path and populate the files and sub_dirs.
+-- then set the physical_path and populate the files and sub_dirs.
 --
 --!param physical_path (string) a path on the filesystem to either a directory
 -- or theme hospital ISO file.
 function FileSystem:setRoot(physical_path)
-  if physical_path:match"%.[iI][sS][oO]$" or physical_path:match"%.[iI][sS][oO]9660$" then
+  if self:isIso(physical_path) then
     self.provider = ISO_FS()
     self.provider:setPathSeparator(pathsep)
-    local file, err = io.open(physical_path, "rb")
-    if not file then
-      return nil, err
-    end
-    return self.provider:setRoot(file)
+    return self.provider:setRoot(physical_path)
   end
 
   if physical_path:sub(-1) == pathsep then

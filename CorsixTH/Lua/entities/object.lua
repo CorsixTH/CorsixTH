@@ -37,7 +37,9 @@ function Object:getDrawingLayer()
   return 4
 end
 
-function Object:Object(world, object_type, x, y, direction, etc)
+function Object:Object(hospital, object_type, x, y, direction, etc)
+  assert(class.is(hospital, Hospital), "First argument is not a Hospital instance.")
+
   local th = TH.animation()
   self:Entity(th)
 
@@ -51,8 +53,8 @@ function Object:Object(world, object_type, x, y, direction, etc)
 
   self.ticks = object_type.ticks
   self.object_type = object_type
-  self.world = world
-  self.hospital = world:getLocalPlayerHospital()
+  self.hospital = hospital
+  self.world = hospital.world
   self.user = false
   self.times_used = -1 -- Incremented in the call on the next line
   self:updateDynamicInfo()
@@ -118,8 +120,8 @@ function Object.slaveMixinClass(class_method_table)
   local super_constructor = super[class.name(super)]
 
   -- Constructor
-  class_method_table[name] = function(self, world, object_type, x, y, direction, ...)
-    super_constructor(self, world, object_type, x, y, direction, ...)
+  class_method_table[name] = function(self, hospital, object_type, x, y, direction, ...)
+    super_constructor(self, hospital, object_type, x, y, direction, ...)
     if object_type.slave_id then
       local orientation = object_type.orientations
       orientation = orientation and orientation[direction]
@@ -127,7 +129,7 @@ function Object.slaveMixinClass(class_method_table)
         x = x + orientation.slave_position[1]
         y = y + orientation.slave_position[2]
       end
-      self.slave = world:newObject(object_type.slave_id, x, y, direction, ...)
+      self.slave = hospital.world:newObject(object_type.slave_id, x, y, direction, ...)
       self.slave.master = self
     end
   end

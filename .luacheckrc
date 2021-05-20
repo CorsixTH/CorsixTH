@@ -38,10 +38,11 @@ globals = { -- Globals
             "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
             "Inspector", "LoadGame", "LoadGameFile", "Litter", "Machine",
             "Map", "MoviePlayer", "NoRealClass", "Object", "ParentClass",
-            "Patient", "Plant", "Queue", "ResearchDepartment", "Room",
+            "Patient", "Plant", "PlayerHospital", "Queue", "ResearchDepartment", "Room",
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
             "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
+            "Cheats",
 
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
@@ -109,7 +110,7 @@ end
 -- W113: accessing undefined variable XYZ
 -- W314: value assigned to field XYZ is unused
 for _, lng in ipairs({"brazilian_portuguese", "czech", "danish", "developer",
-    "dutch", "english", "finnish", "french", "german", "hungarian",
+    "dutch", "english", "finnish", "french", "german", "greek", "hungarian",
     "iberic_portuguese", "italian", "korean", "norwegian", "original_strings",
     "polish", "russian", "simplified_chinese", "spanish", "swedish",
     "traditional_chinese"}) do
@@ -238,3 +239,5 @@ add_ignore("CorsixTH/Lua/window.lua", "542")
 add_ignore("CorsixTH/Lua/world.lua", "212")
 add_ignore("CorsixTH/Lua/world.lua", "542")
 add_ignore("CorsixTH/Luatest/non_strict.lua", "212")
+add_ignore("CorsixTH/Luatest/spec/utility_spec.lua", "121")
+add_ignore("CorsixTH/CorsixTH.lua", "143") -- luacheck is missing 5.4 debug functions

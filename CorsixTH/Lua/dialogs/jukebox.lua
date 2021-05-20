@@ -66,10 +66,10 @@ function UIJukebox:UIJukebox(app)
     end
     self.track_buttons[i] = self:addPanel(404, self.width - 61, y):makeToggleButton(19, 4, 24, 24, 405):setSound("selectx.wav")
     if not info.enabled then
-      self.track_buttons[i]:toggle()
+      self.track_buttons[i]:setToggleState(true)
     end
-    self.track_buttons[i].on_click = --[[persistable:jukebox_toggle_track]] function(window, off)
-      window:toggleTrack(i, info, not off)
+    self.track_buttons[i].on_click = --[[persistable:jukebox_toggle_track]] function(window)
+      window:toggleTrack(i)
     end
   end
 
@@ -116,9 +116,11 @@ function UIJukebox:stopBackgroundTrack()
   self.audio:stopBackgroundTrack()
 end
 
-function UIJukebox:toggleTrack(index, info, on)
-  info.enabled = on
-  if not on and self.audio.background_music == info.music then
+function UIJukebox:toggleTrack(index)
+  local info = self.audio.background_playlist[index]
+  self.track_buttons[index]:setToggleState(info.enabled)
+  info.enabled = not info.enabled
+  if not info.enabled and self.audio.background_music == info.music then
     self.audio:stopBackgroundTrack()
     self.audio:playRandomBackgroundTrack()
   end
@@ -127,6 +129,7 @@ end
 function UIJukebox:loopTrack()
   local index = self.audio:findIndexOfCurrentTrack()
   local playlist = self.audio.background_playlist
+  if not playlist[index] then return end
 
   if playlist[index].loop then
     playlist[index].loop = false
@@ -134,8 +137,7 @@ function UIJukebox:loopTrack()
     for i, list_entry in ipairs(playlist) do
       if list_entry.enabled_before_loop and index ~= i then
         list_entry.enabled_before_loop = nil
-        self:toggleTrack(i, list_entry, true)
-        self.track_buttons[i]:toggle()
+        self:toggleTrack(i)
       end
     end
   else
@@ -144,14 +146,16 @@ function UIJukebox:loopTrack()
     for i, list_entry in ipairs(playlist) do
       if list_entry.enabled and index ~= i then
         list_entry.enabled_before_loop = true
-        self:toggleTrack(i, list_entry, false)
-        self.track_buttons[i]:toggle()
+        self:toggleTrack(i)
       end
     end
   end
 end
 
 function UIJukebox:draw(canvas, x, y)
+  for i, info in ipairs(TheApp.audio.background_playlist) do
+    self.track_buttons[i]:setToggleState(not info.enabled)
+  end
   Window.draw(self, canvas, x, y)
   x, y = self.x + x, self.y + y
 
@@ -171,4 +175,11 @@ function UIJukebox:draw(canvas, x, y)
       font:draw(canvas, str, x + 24, self.y + 27)
     end
   end
+end
+
+function UIJukebox:afterLoad(old, new)
+  if not (self.app.config.audio and self.app:isAudioEnabled()) then
+    self:close()
+  end
+  Window.afterLoad(self, old, new)
 end

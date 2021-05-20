@@ -71,23 +71,13 @@ function InstallDirTreeNode:createNewNode(path)
   return InstallDirTreeNode(path)
 end
 
---! Test if file name has an .iso extension
-local function isIso(name)
-  if name == nil then
-    return false
-  end
-
-  local ext = 'iso'
-  return string.sub(name:lower(), -string.len(ext)) == ext
-end
-
 --! Test whether this file node is a directory or iso file.
 --
 --!return (bool) true if directory or iso, false otherwise
 function InstallDirTreeNode:isValidFile(name)
   -- Check parent criteria and that it's a directory.
   if FileTreeNode.isValidFile(self, name) then
-    return DirTreeNode.isValidFile(self, name) or isIso(name)
+    return DirTreeNode.isValidFile(self, name) or FileSystem:isIso(name)
   end
   return false
 end
@@ -112,28 +102,12 @@ function InstallDirTreeNode:getHighlightColour(canvas)
       -- Assume root-level things are not TH directories, unless we've already
       -- got a list of their children.
       highlight_colour = nil
-    elseif self:getChildCount() >= 3 then
-      local ngot = 0
-      local things_to_check = {"data", "levels", "qdata"}
-      for _, thing in ipairs(things_to_check) do
-        if not self.children[thing:lower()] then
-          break
-        else
-          ngot = ngot + 1
-        end
-      end
-      if ngot == 3 then
-        highlight_colour = canvas:mapRGB(0, 255, 0)
-        self.is_valid_directory = true
-      end
-    elseif isIso(self.path) then
-      local file = io.open(self.path, "rb")
-      if not file then return nil end
-      if iso_fs:setRoot(file) then
-        highlight_colour = canvas:mapRGB(0, 255, 0)
-        self.is_valid_directory = true
-      end
-      io.close(file)
+    elseif self:getChildCount() >= 3 and TheApp:isThemeHospitalPath(self.path) then
+      highlight_colour = canvas:mapRGB(0, 255, 0)
+      self.is_valid_directory = true
+    elseif FileSystem:isIso(self.path) and iso_fs:setRoot(self.path) then
+      highlight_colour = canvas:mapRGB(0, 255, 0)
+      self.is_valid_directory = true
     end
     self.highlight_colour = highlight_colour
   end

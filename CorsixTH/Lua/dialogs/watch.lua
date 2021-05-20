@@ -25,6 +25,10 @@ class "UIWatch" (Window)
 ---@type UIWatch
 local UIWatch = _G["UIWatch"]
 
+local TICK_DAYS = 100
+local TICK_DAYS_EMERGENCY = 52
+local TIMER_SEGMENTS = 13
+
 --!param count_type (string) One of: "open_countdown" or "emergency" or "epidemic"
 function UIWatch:UIWatch(ui, count_type)
   self:Window()
@@ -33,8 +37,13 @@ function UIWatch:UIWatch(ui, count_type)
 
   self.esc_closes = false
   self.modal_class = "open_countdown"
-  self.tick_rate = math.floor((100 * Date.hoursPerDay()) / 13)
-  self.tick_timer = self.tick_rate  -- Initialize tick timer
+  if count_type == "emergency" then
+    self.tick_rate = math.floor((TICK_DAYS_EMERGENCY * Date.hoursPerDay()) / TIMER_SEGMENTS)
+    self.tick_timer = self.tick_rate
+  else
+    self.tick_rate = math.floor((TICK_DAYS * Date.hoursPerDay()) / TIMER_SEGMENTS)
+    self.tick_timer = self.tick_rate  -- Initialize tick timer
+  end
   self.open_timer = 12
   self.ui = ui
   self.hospital = ui.hospital
@@ -93,7 +102,6 @@ function UIWatch:onCountdownEnd()
     end
   elseif self.count_type == "initial_opening" then
     self.ui.hospital.opened = true
-    self.ui.hospital.boiler_can_break = true -- boiler can't break whilst build timer is open
     self.ui:playSound("fanfare.wav")
   end
 end

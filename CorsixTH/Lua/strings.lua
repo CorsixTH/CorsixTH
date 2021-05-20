@@ -89,8 +89,8 @@ function Strings:init()
         -- Use the first name for display purposes (case-dependent!).
         if names[1] ~= "original_strings" then
           self.languages[#self.languages + 1] = names[1]
-          -- Also save the second name for internal purposes.
-          self.languages_english[#self.languages_english + 1] = names[2]
+          -- Also save the second name for tooltips and internal purposes.
+          self.languages_english[names[1]] = names[2]
         end
         -- Associate every passed name with this file, case-independently
         for _, name in pairs(names) do

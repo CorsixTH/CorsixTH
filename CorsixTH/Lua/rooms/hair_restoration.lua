@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "hair_restoration"
+room.vip_must_visit = false
 room.level_config_id = 19
 room.class = "HairRestorationRoom"
 room.name = _S.rooms_short.hair_restoration

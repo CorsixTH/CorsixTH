@@ -247,6 +247,8 @@ function UI:runDebugScript()
   _ = TheApp.ui and TheApp.ui.debug_cursor_entity
   local script = assert(loadfile(lua_dir .. path_sep .. "debug_script.lua"))
   script()
+  -- Clear _ after the script to prevent save corruption
+  _ = nil
 end
 
 function UI:setupGlobalKeyHandlers()
@@ -254,6 +256,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_cancel", self, self.closeWindow)
   self:addKeyHandler("global_cancel_alt", self, self.closeWindow)
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
+  self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
   self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
@@ -1029,25 +1032,44 @@ function UI:addWindow(window)
     end
     self.modal_windows[window.modal_class] = window
   end
+  if self.app.world and window:mustPause() then
+    self.app.world:setSpeed("Pause")
+    self.app.video:setBlueFilterActive(false) -- mustPause windows shouldn't cause tainting
+  end
   if window.modal_class == "main" or window.modal_class == "fullscreen" then
     self.editing_allowed = false -- do not allow editing rooms if main windows (build, furnish, hire) are open
   end
   Window.addWindow(self, window)
 end
 
-function UI:removeWindow(window)
-  if Window.removeWindow(self, window) then
-    local class = window.modal_class
-    if class and self.modal_windows[class] == window then
+function UI:removeWindow(closing_window)
+  if Window.removeWindow(self, closing_window) then
+    local class = closing_window.modal_class
+    if class and self.modal_windows[class] == closing_window then
       self.modal_windows[class] = nil
     end
-    if window.modal_class == "main" or window.modal_class == "fullscreen" then
+    if self.app.world and self.app.world:isCurrentSpeed("Pause") then
+      local pauseGame = self:checkForMustPauseWindows()
+      if not pauseGame and closing_window:mustPause() then
+        self.app.world:setSpeed(self.app.world.prev_speed)
+      end
+    end
+    if closing_window.modal_class == "main" or closing_window.modal_class == "fullscreen" then
       self.editing_allowed = true -- allow editing rooms again when main window is closed
     end
     return true
   else
     return false
   end
+end
+
+--! Function to check if we have any must pause windows open
+--!return (bool) Returns true if a must pause window is found
+function UI:checkForMustPauseWindows()
+  for _, window in pairs(self.windows) do
+    if window:mustPause() then return true end
+  end
+  return false
 end
 
 function UI:getCursorPosition(window)
@@ -1080,6 +1102,10 @@ function UI:afterLoad(old, new)
     self.editing_allowed = true
   end
   self:setupGlobalKeyHandlers()
+
+  -- Cancel any saved screen movement from edge scrolling
+  self.tick_scroll_amount_mouse = nil
+
   Window.afterLoad(self, old, new)
 end
 
@@ -1109,6 +1135,11 @@ end
 --!return true if a window was closed
 function UI:closeWindow()
   if not self.windows then
+    return false
+  end
+
+  -- Stop the lose message being closed prematurely because we pressed "Escape" on the lose movie
+  if self.app.moviePlayer.playing then
     return false
   end
 

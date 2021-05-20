@@ -24,6 +24,10 @@ class "UIOptions" (UIResizable)
 ---@type UIOptions
 local UIOptions = _G["UIOptions"]
 
+-- Constants for most button's width and height
+local BTN_WIDTH = 135
+local BTN_HEIGHT = 20
+
 local col_bg = {
   red = 154,
   green = 146,
@@ -88,10 +92,6 @@ function UIOptions:UIOptions(ui, mode)
 
   -- Tracks the current position of the object
   self._current_option_index = 1
-
-  -- Constants for most button's width and height
-  local BTN_WIDTH = 135
-  local BTN_HEIGHT = 20
 
   self:checkForAvailableLanguages()
 
@@ -166,13 +166,15 @@ function UIOptions:UIOptions(ui, mode)
   self.language_button = self.language_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.dropdownLanguage):setTooltip(_S.tooltip.options_window.select_language)
 
   -- add the Audio global switch.
+  local audio_status = app:isAudioEnabled()
   local audio_y_pos = self:_getOptionYPos()
   self:addBevelPanel(20, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_shadow, col_bg, col_bg)
     :setLabel(_S.options_window.audio):setTooltip(_S.tooltip.options_window.audio_button).lowered = true
   self.volume_panel =
-    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and _S.customise_window.option_on or _S.customise_window.option_off)
+    self:addBevelPanel(165, audio_y_pos, BTN_WIDTH, BTN_HEIGHT, col_bg):setLabel(app.config.audio and audio_status and _S.customise_window.option_on or _S.customise_window.option_off)
   self.volume_button = self.volume_panel:makeToggleButton(0, 0, BTN_WIDTH, BTN_HEIGHT, nil, self.buttonAudioGlobal)
-    :setToggleState(app.config.audio):setTooltip(_S.tooltip.options_window.audio_toggle)
+    :setToggleState(app.config.audio and audio_status):setTooltip(_S.tooltip.options_window.audio_toggle)
+  self.volume_button.enabled = audio_status
 
   -- Set scroll speed.
   local scroll_y_pos = self:_getOptionYPos()
@@ -221,12 +223,15 @@ local --[[persistable:options_height_textbox_reset]] function height_textbox_res
 function UIOptions:checkForAvailableLanguages()
   local app = self.app
   -- Set up list of available languages
-  local langs = {}
-  for _, lang in ipairs(app.strings.languages) do
+  local langs, c = {}, 1
+  for _, lang in pairs(app.strings.languages) do
     local font = app.strings:getFont(lang)
-    if app.gfx:hasLanguageFont(font) then
+    if app.gfx:hasLanguageFont(font) and app.strings.languages_english[lang] then
+      local eng_name = app.strings.languages_english[lang]
+      c = c + 1
       font = font and app.gfx:loadLanguageFont(font, app.gfx:loadSpriteTable("QData", "Font01V"))
-      langs[#langs + 1] = {text = lang, font = font, tooltip = _S.tooltip.options_window.language_dropdown_item:format(lang)}
+      langs[#langs + 1] = { text = lang, font = font,
+      tooltip = { _S.tooltip.options_window.language_dropdown_item:format(eng_name), nil, BTN_HEIGHT * c } }
     end
   end
   self.available_languages = langs
@@ -247,8 +252,9 @@ function UIOptions:dropdownLanguage(activate)
 end
 
 function UIOptions:selectLanguage(number)
+  local lang = self.app.strings.languages_english[self.available_languages[number]["text"]]
   local app = self.ui.app
-  app.config.language = (self.available_languages[number].text)
+  app.config.language = (lang)
   app:initLanguage()
   app:saveConfig()
 end

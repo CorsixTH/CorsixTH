@@ -6,13 +6,34 @@ add_custom_command(TARGET CorsixTH POST_BUILD
 )
 
 add_custom_command(TARGET CorsixTH POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy_directory
+  "${VCPKG_INSTALLED_PATH}/share/lua/ssl"
+  $<TARGET_FILE_DIR:CorsixTH>/ssl
+)
+
+add_custom_command(TARGET CorsixTH POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy
   "${VCPKG_INSTALLED_PATH}/share/lua/ltn12.lua"
   "${VCPKG_INSTALLED_PATH}/share/lua/mime.lua"
   "${VCPKG_INSTALLED_PATH}/share/lua/re.lua"
   "${VCPKG_INSTALLED_PATH}/share/lua/socket.lua"
+  "${VCPKG_INSTALLED_PATH}/share/lua/ssl.lua"
   "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/lfs.dll"
   "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/lpeg.dll"
+  "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/ssl.dll"
+  $<TARGET_FILE_DIR:CorsixTH>
+)
+
+if(${_VCPKG_TARGET_TRIPLET} STREQUAL "x64-windows")
+  set(_OPENSSL_SUFFIX "-x64")
+else()
+  set(_OPENSSL_SUFFIX "")
+endif()
+
+add_custom_command(TARGET CorsixTH POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy
+  "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/libcrypto-1_1${_OPENSSL_SUFFIX}.dll"
+  "${VCPKG_INSTALLED_PATH}/$<$<CONFIG:Debug>:debug/>bin/libssl-1_1${_OPENSSL_SUFFIX}.dll"
   $<TARGET_FILE_DIR:CorsixTH>
 )
 

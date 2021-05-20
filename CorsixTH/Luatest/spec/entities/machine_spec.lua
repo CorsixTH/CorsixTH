@@ -17,19 +17,23 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
+require("corsixth")
 
 require("class_test_base")
 
+require("announcer")
 require("entity")
 require("entities/object")
 require("entities/machine")
 
 describe("object.lua: ", function()
   local stub_world = {map = {}}
+  local stub_hospital = {world = stub_world}
+  _G["Hospital"] = stub_hospital
+
   local tile_x, tile_y, direction = 10, 10, "west"
 
   local function createMachineWithFakeInput()
-    stub(stub_world, "getLocalPlayerHospital")
     stub(stub_world, "addObjectToTile")
     stub(stub_world, "clearCaches")
     local offset = {0, 0}
@@ -42,7 +46,7 @@ describe("object.lua: ", function()
       idle_animations = {west = true},
       orientations = {west = orientation}
       }
-    return Machine(stub_world, fake_object_type, tile_x, tile_y, direction)
+    return Machine(stub_hospital, fake_object_type, tile_x, tile_y, direction)
   end
 
   it("can update dynamic Info", function()

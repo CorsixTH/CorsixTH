@@ -20,6 +20,7 @@ SOFTWARE. --]]
 
 local room = {}
 room.id = "pharmacy"
+room.vip_must_visit = false
 room.level_config_id = 11
 room.class = "PharmacyRoom"
 room.name = _S.rooms_short.pharmacy
@@ -50,7 +51,7 @@ function PharmacyRoom:PharmacyRoom(...)
 end
 
 function PharmacyRoom:roomFinished()
-  if not self.hospital:hasStaffOfCategory("Nurse") then
+  if self.hospital:countStaffOfCategory("Nurse", 1) == 0 then
     self.world.ui.adviser:say(_A.room_requirements.pharmacy_need_nurse)
   end
   return Room.roomFinished(self)

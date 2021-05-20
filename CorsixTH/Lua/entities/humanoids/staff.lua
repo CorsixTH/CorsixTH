@@ -62,11 +62,7 @@ function Staff:tickDay()
   self.world:findObjectNear(self, "plant", 2, function(x, y)
     local plant = self.world:getObject(x, y, "plant")
     if plant then
-      if plant:isPleasing() then
-        self:changeAttribute("happiness", 0.002)
-      else
-        self:changeAttribute("happiness", -0.003)
-      end
+      self:changeAttribute("happiness", -0.003 + (plant:isPleasingFactor() * 0.001))
     end
   end)
   -- It always makes you happy to see you are in safe place
@@ -97,8 +93,23 @@ function Staff:tickDay()
    self:changeAttribute("happiness", 0.05)
   end
 
-  --TODO windows in your work space and a large space to work in add to happiness
-  -- working in a small space makes you unhappy
+  local room = self:getRoom()
+  if room then
+    -- It always makes you happy to see the outdoors (or windows to anywhere)
+    local count = room:countWindows()
+    if room.room_info.id == "staff_room" then -- Pleased another bit
+      count = count * 2
+    end
+    if count > 0 then
+      -- More windows help but in smaller increments
+      self:changeAttribute("happiness", math.round(math.log(count)) / 1000)
+    end
+
+    -- Extra space in the room you are in adds to your happiness
+    local extraspace = (room.width * room.height) / (room.room_info.minimum_size * room.room_info.minimum_size)
+    -- Greater space helps but in smaller increments
+    self:changeAttribute("happiness", math.round(math.log(extraspace)) / 1000)
+  end
 end
 
 function Staff:tick()
@@ -441,7 +452,7 @@ function Staff:setHospital(hospital)
 end
 
 -- Helper function to decide if Staff fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
 function Staff:fulfillsCriterion(criterion)
   return false
 end
@@ -659,19 +670,20 @@ function Staff:getDrawingLayer()
   return 4
 end
 
---! Estimate staff service quality based on skills, fatigue and happiness.
+--! Estimate staff service quality based on skills, restfulness (inverse of fatigue) and happiness.
 --!return (float) between [0-1] indicating quality of the service.
 function Staff:getServiceQuality()
   -- weights
   local skill_weight = 0.7
-  local fatigue_weight = 0.2
+  local restfulness_weight = 0.2
   local happiness_weight = 0.1
 
   local weighted_skill = skill_weight * self.profile.skill
-  local weighted_fatigue = fatigue_weight * self.attributes["fatigue"]
+  -- Less fatigue is better
+  local weighted_restfulness = restfulness_weight * (1 - self.attributes["fatigue"])
   local weighted_happiness = happiness_weight * self.attributes["happiness"]
 
-  return weighted_skill + weighted_fatigue + weighted_happiness
+  return weighted_skill + weighted_restfulness + weighted_happiness
 end
 
 --[[ Return string representation

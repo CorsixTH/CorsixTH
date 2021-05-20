@@ -255,11 +255,6 @@ function UIStaff:onMouseDown(button, x, y)
   return Window.onMouseDown(self, button, x, y)
 end
 
--- Helper function to facilitate humanoid_class comparison wrt. Surgeons
-local function surg_compat(class)
-  return class == "Surgeon" and "Doctor" or class
-end
-
 function UIStaff:onMouseUp(button, x, y)
   local ui = self.ui
   if button == "left" then
@@ -271,7 +266,7 @@ function UIStaff:onMouseUp(button, x, y)
     -- Right click goes to the next staff member of the same category (NB: Surgeon in same Category as Doctor)
     local staff_index = nil
     for i, staff in ipairs(ui.hospital.staff) do
-      if staff_index and surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+      if staff_index and staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
         return false
       end
@@ -282,7 +277,7 @@ function UIStaff:onMouseUp(button, x, y)
     -- Try again from beginning of list until staff_index
     for i = 1, staff_index - 1 do
       local staff = ui.hospital.staff[i]
-      if surg_compat(staff.humanoid_class) == surg_compat(self.staff.humanoid_class) then
+      if staff.profile.humanoid_class == self.staff.profile.humanoid_class then
         ui:addWindow(UIStaff(ui, staff))
         return false
       end
@@ -325,6 +320,12 @@ end
 function UIStaff:changeHandymanAttributes(increased)
   if not self.staff.attributes[increased] then
     return
+  end
+
+  -- Show a helpful message if this dialog hasn't been opened yet
+  if not self.ui.hospital.handyman_popup then
+    self.ui.adviser:say(_A.information.handyman_adjust)
+    self.ui.hospital.handyman_popup = true
   end
 
   local incr_value = 0.1  -- Increase of 'increased'

@@ -40,10 +40,8 @@ function Receptionist:tickDay()
 end
 
 function Receptionist:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-
   local receptionist_leave_sounds = {"sack007.wav", "sack008.wav",}
-  self.world.ui:playAnnouncement(receptionist_leave_sounds[math.random(1, #receptionist_leave_sounds)], announcement_priority)
+  self.world.ui:playAnnouncement(receptionist_leave_sounds[math.random(1, #receptionist_leave_sounds)], AnnouncementPriority.Critical) -- must always be played even without receptionist
 end
 
 function Receptionist:isTiring()
@@ -61,7 +59,7 @@ end
 
 function Receptionist:needsWorkStation()
   if self.hospital and not self.hospital.receptionist_msg then
-    if self.world.object_counts["reception_desk"] == 0 then
+    if self.hospital:countReceptionDesks() == 0 then
       self.world.ui.adviser:say(_A.warnings.no_desk_4)
       self.hospital.receptionist_msg = true
     end
@@ -85,9 +83,9 @@ end
 
 
 -- Helper function to decide if Staff fulfills a criterion
--- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman")
-function Receptionist:fulfillsCriterion(criterion) -- luacheck: no unused args
-  return false
+-- (one of "Doctor", "Nurse", "Psychiatrist", "Surgeon", "Researcher" and "Handyman", "Receptionist", "Junior", "Consultant")
+function Receptionist:fulfillsCriterion(criterion)
+  return criterion == "Receptionist"
 end
 
 function Receptionist:getDrawingLayer()

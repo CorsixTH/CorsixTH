@@ -1,7 +1,7 @@
 # Sanity check
 if(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
 else()
-  message(FATAL_ERROR "Please run cmake on the top-level directory, not this one.")
+  message(FATAL_ERROR "Please run CMake from the top-level directory instead of here.")
 endif()
 
 # Project Declaration
@@ -26,8 +26,6 @@ else()
   set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
 endif()
 
-add_library(CorsixTH_lib STATIC)
-
 # Declaration of the executable
 if(APPLE)
   set(corsixth_icon_file ${CMAKE_SOURCE_DIR}/CorsixTH/Icon.icns)
@@ -45,8 +43,24 @@ if(APPLE)
 elseif(MSVC)
   add_executable(CorsixTH CorsixTH.rc)
 else()
-  add_executable(CorsixTH)
+  add_executable(CorsixTH "")
 endif()
+
+# Report operating system in compile_opts.os
+if(WIN32)
+  set(CORSIX_TH_OS "windows")
+elseif(APPLE)
+  set(CORSIX_TH_OS "macos")
+else()
+  set(CORSIX_TH_OS "unix")
+endif()
+
+# Ensure config.h is picked up by cmake - moving this into subdir cmake files will
+# prevent it applying to the CorsixTH project
+set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
+add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
+
+target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
 target_link_libraries(CorsixTH_lib RncLib)
 target_link_libraries(CorsixTH CorsixTH_lib)
@@ -59,10 +73,6 @@ endif()
 # Note: Done after generating targets
 add_subdirectory(${PROJECT_SOURCE_DIR}/Src)
 add_subdirectory(${PROJECT_SOURCE_DIR}/SrcUnshared)
-
-# Ensure config.h is picked up by cmake - moving this into subdir cmake files will
-# prevent it applying to the CorsixTH project
-target_include_directories(CorsixTH_lib PUBLIC ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
 
 # Set language standard
 set_property(TARGET CorsixTH_lib PROPERTY CXX_STANDARD 14)
@@ -77,7 +87,7 @@ set_property(TARGET CorsixTH PROPERTY CXX_STANDARD_REQUIRED ON)
 if(USE_VCPKG_DEPS)
   include(CopyVcpkgLua)
   include(CopyVcpkgSdlMixerBackends)
-ENDIF()
+endif()
 
 ## Finding libraries
 
@@ -267,8 +277,8 @@ if(NOT USE_SOURCE_DATADIRS)
 
   if(UNIX AND NOT APPLE)
     install(FILES corsix-th.6 DESTINATION ${CMAKE_INSTALL_MANDIR}/man6)
-    install(FILES com.corsixth.CorsixTH.appdata.xml DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo)
-    install(FILES com.corsixth.CorsixTH.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
+    install(FILES com.corsixth.corsixth.metainfo.xml DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/metainfo)
+    install(FILES com.corsixth.corsixth.desktop DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/applications)
     install(FILES Original_Logo.svg DESTINATION ${CMAKE_INSTALL_DATAROOTDIR}/icons/hicolor/scalable/apps RENAME corsix-th.svg)
   endif()
 
@@ -277,7 +287,12 @@ if(NOT USE_SOURCE_DATADIRS)
     install(CODE "
       INCLUDE(BundleUtilities)
       SET(BU_CHMOD_BUNDLE_ITEMS ON)
-      FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/CorsixTH.app \"\" \"\")
+      FIXUP_BUNDLE(\"${CMAKE_INSTALL_PREFIX}/CorsixTH.app\" \"\" \"\")
       ")
+    if(WITH_LUAROCKS)
+      install(CODE "execute_process(
+        COMMAND bash \"${CMAKE_SOURCE_DIR}/scripts/macos_luarocks\" \"${CMAKE_INSTALL_PREFIX}\")
+      ")
+    endif()
   endif()
 endif()

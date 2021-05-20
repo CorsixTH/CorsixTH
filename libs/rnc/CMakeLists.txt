@@ -1,8 +1,6 @@
 project(RncLib)
 
-add_library(RncLib STATIC)
-
-target_sources(RncLib PRIVATE
+add_library(RncLib STATIC
   ${CMAKE_CURRENT_SOURCE_DIR}/rnc.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/rnc.h
 )

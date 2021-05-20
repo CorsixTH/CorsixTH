@@ -23,6 +23,8 @@ class "Room"
 ---@type Room
 local Room = _G["Room"]
 
+local COST_RECOVERY = 0.40 -- Percentage cost recovery of destroyed room items
+
 function Room:Room(x, y, w, h, id, room_info, world, hospital, door, door2)
   self.id = id
   self.world = world
@@ -427,10 +429,20 @@ function Room:createDealtWithPatientCallback(humanoid)
 end
 
 --! Get the current staff member.
--- Can be overridden in rooms with multiple staff members to return the desired one.
+-- In multi-occupancy rooms this returns the staff member with the minimum service quality
 --!return (staff) The current staff member.
 function Room:getStaffMember()
-  return self.staff_member
+  if not self.staff_member_set then return self.staff_member end
+
+  local staff
+  for staff_member, _ in pairs(self.staff_member_set) do
+    if not staff_member.fired and not staff_member:hasLeavingAction() then
+      if not staff or staff:getServiceQuality() > staff_member:getServiceQuality() then
+        staff = staff_member
+      end
+    end
+  end
+  return staff
 end
 
 --! Set the current staff member.
@@ -659,7 +671,7 @@ function Room:roomFinished()
   end
   -- Show information about the room if not already shown.
   -- Also only show them if the player is playing the original campaign.
-  if tonumber(self.world.map.level_number) and not self.world.room_information_dialogs_off then
+  if tonumber(self.world.map.level_number) and self.world.room_information_dialogs then
     if not self.world.room_built[self.room_info.id] then
       self.world.ui:addWindow(UIInformation(self.world.ui, _S.room_descriptions[self.room_info.id]))
       self.world.room_built[self.room_info.id] = true
@@ -865,6 +877,9 @@ function Room:crashRoom()
 
   self.hospital.num_explosions = self.hospital.num_explosions + 1
 
+  local value_change = self.hospital.research.research_progress[self.room_info].build_cost
+  self.hospital:changeValue(value_change * -1)
+  self.hospital:changeReputation("room_crash")
   self.crashed = true
   self:deactivate()
 end
@@ -1029,4 +1044,37 @@ function Room:getStaffServiceQuality()
   end
 
   return quality
+end
+
+--! Count the number of windows in the room
+--!return (int) Number of windows
+function Room:countWindows()
+  local window_tile = {[116]=true, [117]=true, [118]=true, [119]=true,
+   [124]=true, [125]=true, [126]=true, [127]=true}
+  local map, count = self.world.ui.app.map.th, 0
+  for x = self.x, self.x + self.width do
+    for y = self.y, self.y + self.height do
+      if window_tile[map:getCell(x, y, 2)] or window_tile[map:getCell(x, y, 3)] then
+        count = count + 1
+      end
+    end
+  end
+  return count
+end
+
+--! Get the removal cost
+--!return (int) cost of the room
+function Room:calculateRemovalCost()
+  -- Charge double to clean it up
+  local progress = self.hospital.research.research_progress
+  local cost = math.floor(progress[self.room_info].build_cost * 2)
+
+  -- Recover some cost as scrap
+  for obj, _ in pairs(self.room_info.objects_needed) do
+    -- Get how much this item costs.
+    local obj_cost = self.hospital:getObjectBuildCost(obj)
+    -- recover a percentage of cost as scrap value
+    cost = cost - math.floor(obj_cost * COST_RECOVERY)
+  end
+  return cost
 end

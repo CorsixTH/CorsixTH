@@ -26,7 +26,7 @@ strict_declare_global "unpermanent"
 
 local th_getfenv
 local th_getupvalue
-if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" then
+if _G._VERSION == "Lua 5.2" or _G._VERSION == "Lua 5.3" or _G._VERSION == "Lua 5.4" then
   th_getfenv = function(f)
     local _, val = nil, nil
     if type(f) == "function" then
@@ -255,15 +255,19 @@ end
 --!param filename (string) Path of the file to write.
 function SaveGameFile(filename)
   local data = SaveGame()
-  local f = assert(io.open(filename, "wb"))
+  local f = TheApp:writeToFileOrTmp(filename, "wb")
   f:write(data)
   f:close()
 end
 
+--! Puts loaded file into the game
+--!param data The file
 function LoadGame(data)
   --local status, res = xpcall(function()
   local objtable = MakePermanentObjectsTable(true)
   local state = assert(persist.load(data, objtable))
+  -- Check the game we're loading is compatible with program
+  if not TheApp:checkCompatibility(state.world.savegame_version) then return end
   state.ui:resync(TheApp.ui)
   TheApp.ui = state.ui
   TheApp.world = state.world

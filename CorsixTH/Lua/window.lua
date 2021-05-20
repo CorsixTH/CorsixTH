@@ -59,6 +59,11 @@ function Window:Window()
   self.draggable = true
 end
 
+-- Most windows don't pause the game. Specific windows: fax, annual report, staff rise, and errors do pause and are set in the specific files
+function Window:mustPause()
+  return false
+end
+
 -- Sets the window's onscreen position. Each of x and y can be:
 -- Integers >= 0 - Absolute pixel positions of top/left edge of window relative
 --                 to top/left edge of screen

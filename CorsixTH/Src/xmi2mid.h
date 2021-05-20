@@ -32,7 +32,7 @@ uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data, size_t xmi_length,
 
 inline uint8_t* transcode_xmi_to_midi(const unsigned char* xmi_data,
                                       size_t xmi_length, size_t* midi_length) {
-  // When SDL_mixer isn't being used, there is no need to transocde XMI to
+  // When SDL_mixer isn't being used, there is no need to transcode XMI to
   // MIDI, so the function always fails.
   return nullptr;
 }

@@ -1,19 +1,20 @@
 # Cmake File for CorsixTH
 # OPTIONS AVAILABLE:
 # Any of the following: (default)
-#   - WITH_AUDIO   	: Activate sound (yes)
-#   - WITH_FREETYPE2	: Active support for non-Latin script alphabets (yes)
-#   - WITH_MOVIES  	: Activate movies (requires with_audio, FFmpeg) (yes)
-#   - WITH_LUAJIT 	: Use LuaJIT instead of Lua (must specify library path) (no)
-#   - WITH_LIBAV  	: Use Libav instead of FFmpeg when building movies (no)
+#   - WITH_AUDIO      : Activate sound (yes)
+#   - WITH_FREETYPE2  : Active support for non-Latin script alphabets (yes)
+#   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
+#   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
+#   - WITH_LIBAV      : Use Libav instead of FFmpeg when building movies (no)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
 
-#   - WITH_VLD    	: Build with Visual Leak Detector (requires Visual Studio) (no)
+#   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
 #   - USE_VCPKG_DEPS : Build vcpkg dependencies locally (requires Visual Studio) (no)
+#   - WITH_LUAROCKS : Install required luarocks in the macOS app (requires luarocks)
 
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
-#   - BUILD_ANIMVIEWER : Generate AnimViewer build files (no)
+#   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
 
 cmake_minimum_required(VERSION 3.5)
 
@@ -53,8 +54,12 @@ if(UNIX AND CMAKE_COMPILER_IS_GNU)
   option(USE_PRECOMPILED_DEPS "Use Precompiled Dependencies" OFF) # Make *nix systems opt in
 endif()
 
+if(APPLE)
+  option(WITH_LUAROCKS "Install required luarocks in the app" OFF)
+endif()
+
 option(ENABLE_UNIT_TESTS "Enables Unit Testing Targets" OFF)
-option(BUILD_ANIMVIEWER "Build the animation viewer as part of the build process" OFF)
+option(BUILD_ANIMVIEW "Build the animation viewer as part of the build process" OFF)
 
 if(WITH_AUDIO)
   set(CORSIX_TH_USE_SDL_MIXER ON)
@@ -124,7 +129,7 @@ add_subdirectory("libs")
 message("Building CorsixTH")
 add_subdirectory(CorsixTH)
 
-if(BUILD_ANIMVIEWER)
+if(BUILD_ANIMVIEW)
   message("Building AnimView")
   add_subdirectory(AnimView)
 endif()

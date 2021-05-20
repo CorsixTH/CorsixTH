@@ -120,6 +120,7 @@ local config_defaults = {
   alien_dna_can_knock_on_doors = false,
   disable_fractured_bones_females = true,
   enable_avg_contents = false,
+  remove_destroyed_rooms = false,
   audio_frequency = 22050,
   audio_channels = 2,
   audio_buffer_size = 2048,
@@ -138,6 +139,7 @@ local config_defaults = {
   new_graphics_folder = nil,
   use_new_graphics = false,
   check_for_updates = true,
+  room_information_dialogs = true
 }
 
 fi = io.open(config_filename, "r")
@@ -172,9 +174,7 @@ else
 end
 
 if needs_rewrite then
-  fi = io.open(config_filename, "w")
-  if fi then
-    fi:write([=[
+  local string_01 = [=[
 ----------------------------------------- CorsixTH configuration file -------------------------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -360,6 +360,13 @@ if needs_rewrite then
 -- If you would like the game to remember what you usually add, then change this option to true.
 -- ]=] .. '\n' ..
 'enable_avg_contents = ' .. tostring(config_values.enable_avg_contents) .. '\n' .. [=[
+-------------------------------------------------------------------------------------------------------------------------
+-- By default destroyed rooms can't be removed.
+-- If you would like the game to give you the option of removing a destroyed room change this option to true.
+-- ]=] .. '\n' ..
+'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
+
+  local string_02 = [=[
 
 ----------------------------------------------- FOLDER SETTINGS ----------------------------------------------
 -- These settings can also be changed from the Folders Menu
@@ -482,6 +489,19 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 'scroll_speed = ' .. tostring(config_values.scroll_speed) .. '\n' ..
 'shift_scroll_speed = ' .. tostring(config_values.shift_scroll_speed) .. '\n' .. [=[
 
+-------------------------------------------------------------------------------------------------------------------------
+-- Room information dialogs: Information about new rooms, important for
+-- additional rooms in later levels. Affects campaign only.
+-- ]=] .. '\n' ..
+'room_information_dialogs = ' .. tostring(config_values.room_information_dialogs)  .. '\n' .. [=[
+
+-------------------------------------------------------------------------------------------------------------------------
+-- If true, parts of the hospital can be made inaccessible by blocking the path
+-- with rooms or objects. If false, all parts of the hospital must be kept
+-- accessible, the game will disallow any attempt to blocking the path.
+-- ]=] .. '\n' ..
+'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
+
 
 -------------------------------------------------------------------------------------------------------------------------
 
@@ -497,9 +517,10 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- you play the game.
 -------------------------------------------------------------------------------------------------------------------------
 
-]=])
-    fi:close()
-  end
+]=]
+  fi = TheApp:writeToFileOrTmp(config_filename)
+  fi:write(string_01 .. string_02)
+  fi:close()
 end
 
 -- Hotkey filename.
@@ -523,8 +544,8 @@ local hotkeys_defaults = {
   global_runDebugScript = {"shift", "d"},
   global_screenshot = {"ctrl", "s"},
   global_stop_movie = "escape",
-  global_window_close = "escape",
   global_stop_movie_alt = "q",
+  global_window_close = "escape",
   global_window_close_alt = "q",
   ingame_showmenubar = "escape",
   ingame_showCheatWindow = "f11",
@@ -797,11 +818,9 @@ local string_03 = [=[
 -- ]=] .. '\n' ..
 'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[
 ]=]
-  fi = io.open(hotkeys_filename, "w")
-  if fi then
-    fi:write(string_01 .. string_02 .. string_03)
+  fi = TheApp:writeToFileOrTmp(hotkeys_filename)
+  fi:write(string_01 .. string_02 .. string_03)
   fi:close()
-  end
 end
 
 for k, str_val in pairs(hotkeys_values) do

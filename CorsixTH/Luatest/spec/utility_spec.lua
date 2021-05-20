@@ -1,4 +1,7 @@
 require("utility")
+if _VERSION ~= "Lua 5.1" then
+  loadstring = load
+end
 
 describe("serialize", function()
   it("serializes a basic string", function()
@@ -38,14 +41,14 @@ describe("serialize", function()
   it("serializes a nested table", function()
     local test_tbl = {foo='bar', bar={hello='world'}}
     local res = serialize(test_tbl)
-    local res_tbl = loadstring("return " .. res)()
+    local res_tbl = loadstring_envcall("return " .. res)({})
     assert.same(test_tbl, res_tbl)
   end)
 
   it("serializes a table with nested keys", function()
     local test_tbl = {[{hello='world'}] = true, [1] = 'tree'}
     local res = serialize(test_tbl)
-    local res_tbl = loadstring("return " .. res)()
+    local res_tbl = loadstring_envcall("return " .. res)({})
 
     local found_tbl = false
     for k, _ in pairs(res_tbl) do

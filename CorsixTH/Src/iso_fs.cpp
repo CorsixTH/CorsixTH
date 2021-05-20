@@ -359,15 +359,24 @@ void iso_filesystem::clear() {
   delete[] error;
   error = nullptr;
   files.clear();
+  if (raw_file) {
+    std::fclose(raw_file);
+    raw_file = nullptr;
+  }
 }
 
 void iso_filesystem::set_path_separator(char cSeparator) {
   path_seperator = cSeparator;
 }
 
-bool iso_filesystem::initialise(std::FILE* fRawFile) {
-  raw_file = fRawFile;
+bool iso_filesystem::initialise(const char* path) {
   clear();
+  FILE* f = std::fopen(path, "rb");
+  if (!f) {
+    set_error("Failed to open ISO file");
+    return false;
+  }
+  raw_file = f;
 
   // Until we know better, assume that sectors are 2048 bytes.
   sector_size = min_sector_size;
@@ -615,6 +624,9 @@ void iso_filesystem::set_error(const char* sFormat, ...) {
   }
   va_list a;
   va_start(a, sFormat);
+  // The valist test is buggy in this environment
+  // (https://bugs.llvm.org/show_bug.cgi?id=41311)
+  // NOLINTNEXTLINE(clang-analyzer-valist.Uninitialized)
   std::vsnprintf(error, 1024, sFormat, a);
   va_end(a);
 }

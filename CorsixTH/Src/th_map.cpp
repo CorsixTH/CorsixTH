@@ -40,6 +40,8 @@ SOFTWARE.
 #include "th_map_overlays.h"
 
 constexpr int max_player_count = 4;
+constexpr int default_width = 128;
+constexpr int default_height = 128;
 
 map_tile_flags& map_tile_flags::operator=(uint32_t raw) {
   using flags = map_tile_flags::key;
@@ -362,7 +364,7 @@ void level_map::write_tile_index(uint8_t* pData, int iX, int iY) const {
 }
 
 bool level_map::load_blank() {
-  if (!set_size(128, 128)) {
+  if (!set_size(default_width, default_height)) {
     return false;
   }
 
@@ -402,7 +404,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
   const size_t heliport_offset = 163884;
   const size_t parcel_offset = 131106;
 
-  if (iDataLength < 163948 || !set_size(128, 128)) {
+  if (iDataLength < 163948 || !set_size(default_width, default_height)) {
     return false;
   }
 
@@ -451,7 +453,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         // and replace the floor with something similar (pond base).
         if (71 <= iBaseTile && iBaseTile <= 73) {
           pNode->iBlock[1] = iBaseTile;
-          pNode->iBlock[0] = iBaseTile = 69;
+          pNode->iBlock[0] = 69;
         } else {
           pNode->iBlock[1] = 0;
         }
@@ -459,7 +461,7 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
         pNode->iBlock[1] = gs_iTHMapBlockLUT[pData[3]];
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
-          pNode[-128].flags.can_travel_s = false;
+          pNode[-this->width].flags.can_travel_s = false;
         }
       }
       if (pData[4] == 0 || is_divider_wall(pData[4])) {
@@ -509,8 +511,8 @@ bool level_map::load_from_th_file(const uint8_t* pData, size_t iDataLength,
       }
 
       if (pData[1] != 0 && fnObjectCallback != nullptr) {
-        fnObjectCallback(pCallbackToken, iX, iY, (object_type)pData[1],
-                         pData[0]);
+        fnObjectCallback(pCallbackToken, iX, iY,
+                         static_cast<object_type>(pData[1]), pData[0]);
       }
 
       ++pNode;
@@ -674,8 +676,8 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
   map_tile* pNode = cells;
   const map_tile* pOriginalNode = original_cells;
 
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode, ++pOriginalNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode, ++pOriginalNode) {
       if (pNode->iParcelId == iParcelId) {
         if (iOwner != 0) {
           pNode->iBlock[0] = pOriginalNode->iBlock[0];
@@ -701,7 +703,7 @@ std::vector<std::pair<int, int>> level_map::set_parcel_owner(int iParcelId,
                                 iParcelId)) {
         vSplitTiles.push_back(std::make_pair(iX, iY));
       }
-      if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, 128, 1,
+      if (addRemoveDividerWalls(this, pNode, pOriginalNode, iY, this->width, 1,
                                 iParcelId)) {
         vSplitTiles.push_back(std::make_pair(iX, iY));
       }
@@ -743,11 +745,12 @@ void level_map::make_adjacency_matrix() {
   }
 
   const map_tile* pOriginalNode = original_cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX) {
       ++pOriginalNode;
       test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iX, 1);
-      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY, 128);
+      test_adj(parcel_adjacency_matrix, parcel_count, pOriginalNode, iY,
+               this->width);
     }
   }
 }
@@ -997,9 +1000,9 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   }
   pCanvas->finish_nonoverlapping_draws();
 
+  // 2nd pass
   bool bFirst = true;
   map_scanline_iterator formerIterator;
-  // 2nd pass
   for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode2; ++itrNode2) {
     if (itrNode2->flags.shadow_full) {
@@ -1041,10 +1044,10 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           pCanvas->set_clip_rect(&rcOldClip);
         }
       }
-      drawable* pItem = (drawable*)(itrNode->oEarlyEntities.next);
+      drawable* pItem = static_cast<drawable*>(itrNode->oEarlyEntities.next);
       while (pItem) {
         pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
-        pItem = (drawable*)(pItem->next);
+        pItem = static_cast<drawable*>(pItem->next);
       }
     }
 
@@ -1088,7 +1091,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
       bool bRedrawAnimations = false;
 
-      drawable* pItem = (drawable*)(itrNode->next);
+      drawable* pItem = static_cast<drawable*>(itrNode->entities.next);
       while (pItem) {
         pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
         if (pItem->is_multiple_frame_animation_fn(pItem)) {
@@ -1097,7 +1100,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         if (pItem->get_drawing_layer() == 1) {
           bNeedsRedraw = true;
         }
-        pItem = (drawable*)(pItem->next);
+        pItem = static_cast<drawable*>(pItem->next);
       }
 
       // if the current tile contained a multiple frame animation (e.g. a
@@ -1110,25 +1113,28 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
         // check if an object in the adjacent tile to the left of the
         // current tile needs to be redrawn and if necessary draw it
-        pItem = (drawable*)(formerIterator.get_previous_tile()->next);
+        pItem = static_cast<drawable*>(
+            formerIterator.get_previous_tile()->entities.next);
         while (pItem) {
           if (pItem->get_drawing_layer() == 9) {
             pItem->draw_fn(pItem, pCanvas, formerIterator.x() - 64,
                            formerIterator.y());
             bTileNeedsRedraw = true;
           }
-          pItem = (drawable*)(pItem->next);
+          pItem = static_cast<drawable*>(pItem->next);
         }
 
         // check if an object in the adjacent tile above the current
         // tile needs to be redrawn and if necessary draw it
-        pItem = formerIterator ? (drawable*)(formerIterator->next) : nullptr;
+        pItem = formerIterator
+                    ? static_cast<drawable*>(formerIterator->entities.next)
+                    : nullptr;
         while (pItem) {
           if (pItem->get_drawing_layer() == 8) {
             pItem->draw_fn(pItem, pCanvas, formerIterator.x(),
                            formerIterator.y());
           }
-          pItem = (drawable*)(pItem->next);
+          pItem = static_cast<drawable*>(pItem->next);
         }
 
         // if an object was redrawn in the tile to the left of the
@@ -1156,14 +1162,16 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
               pCanvas->set_clip_rect(&rcOldClip);
             }
           }
-          pItem = (drawable*)(itrNode.get_previous_tile()->oEarlyEntities.next);
-          while (pItem) {
+
+          pItem = static_cast<drawable*>(
+              itrNode.get_previous_tile()->oEarlyEntities.next);
+          for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
-            pItem = (drawable*)(pItem->next);
           }
 
-          pItem = (drawable*)(itrNode.get_previous_tile())->next;
-          for (; pItem; pItem = (drawable*)(pItem->next)) {
+          pItem = static_cast<drawable*>(
+              itrNode.get_previous_tile()->entities.next);
+          for (; pItem; pItem = static_cast<drawable*>(pItem->next)) {
             pItem->draw_fn(pItem, pCanvas, itrNode.x() - 64, itrNode.y());
           }
         }
@@ -1209,9 +1217,9 @@ drawable* level_map::hit_test(int iTestX, int iTestY) const {
     for (map_scanline_iterator itrNode(
              itrNode2, map_scanline_iterator_direction::backward);
          itrNode; ++itrNode) {
-      if (itrNode->next != nullptr) {
-        drawable* pResult =
-            hit_test_drawables(itrNode->next, itrNode.x(), itrNode.y(), 0, 0);
+      if (itrNode->entities.next != nullptr) {
+        drawable* pResult = hit_test_drawables(itrNode->entities.next,
+                                               itrNode.x(), itrNode.y(), 0, 0);
         if (pResult) {
           return pResult;
         }
@@ -1239,7 +1247,7 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
   while (pListEnd->next) {
     pListEnd = pListEnd->next;
   }
-  drawable* pList = (drawable*)pListEnd;
+  drawable* pList = static_cast<drawable*>(pListEnd);
 
   while (true) {
     if (pList->hit_test_fn(pList, iXs, iYs, iTestX, iTestY)) return pList;
@@ -1247,7 +1255,7 @@ drawable* level_map::hit_test_drawables(link_list* pListStart, int iXs, int iYs,
     if (pList == pListStart) {
       return nullptr;
     } else {
-      pList = (drawable*)pList->prev;
+      pList = static_cast<drawable*>(pList->prev);
     }
   }
 }
@@ -1311,10 +1319,18 @@ uint32_t level_map::thermal_neighbour(uint32_t& iNeighbourSum, bool canTravel,
 
 namespace {
 
-void merge_temperatures(map_tile& node, size_t new_temp_idx,
-                        uint32_t other_temp, double ratio) {
-  const uint32_t node_temp = node.aiTemperature[new_temp_idx];
-  node.aiTemperature[new_temp_idx] =
+//! Merge temperature at a tile with the external merge temperature.
+/*!
+    \param node Tile node to update.
+    \param temp_idx Index of the temperature to update at the tile.
+    \param other_temp External temperature to merge.
+    \param ratio Weight of the old node temperature, \c N-1 parts of
+        the node temperature and \c 1 part of the external temperature.
+*/
+void merge_temperatures(map_tile& node, size_t temp_idx, uint32_t other_temp,
+                        double ratio) {
+  const uint32_t node_temp = node.aiTemperature[temp_idx];
+  node.aiTemperature[temp_idx] =
       static_cast<uint16_t>(((node_temp * (ratio - 1)) + other_temp) / ratio);
 }
 
@@ -1344,44 +1360,42 @@ void level_map::update_temperatures(uint16_t iAirTemperature,
     iNeighbourCount += thermal_neighbour(
         iNeighbourSum, pNode->flags.can_travel_w, -1, pNode, iPrevTemp);
 
-    uint32_t iRadiatorNumber = 0;
-    // Merge 1% against air temperature
-    // or 50% against radiator temperature
-    // or generally dissipate 0.1% of temperature.
     uint32_t iMergeTemp = 0;
-    double iMergeRatio = 100;
+    double mergeRatio = 100;
     if (pNode->flags.hospital) {
+      bool hasRadiator = false;
       for (auto thob : pNode->objects) {
         if (thob == object_type::radiator) {
-          iRadiatorNumber++;
+          hasRadiator = true;
+          break;
         }
       }
-      if (iRadiatorNumber > 0) {
+      if (hasRadiator) {
         iMergeTemp = iRadiatorTemperature;
-        iMergeRatio = 2 - (iRadiatorNumber - 1) * 0.5;
+        mergeRatio = 2;  // Merge 50% against radiator temperature.
       } else {
-        iMergeRatio = 1000;
+        iMergeTemp = 0;
+        mergeRatio = 1000;  // Generally dissipate 0.1% of temperature.
       }
     } else {
       iMergeTemp = iAirTemperature;
+      mergeRatio = 100;  // Merge 1% against air temperature.
     }
 
     // Diffuse 25% with neighbours
     pNode->aiTemperature[iNewTemp] = pNode->aiTemperature[iPrevTemp];
     if (iNeighbourCount != 0) {
-      merge_temperatures(
-          *pNode, iNewTemp, iNeighbourSum / iNeighbourCount,
-          4 - (iRadiatorNumber > 0 ? (iRadiatorNumber - 1) * 1.5 : 0));
+      merge_temperatures(*pNode, iNewTemp, iNeighbourSum / iNeighbourCount, 4);
     }
 
-    merge_temperatures(*pNode, iNewTemp, iMergeTemp, iMergeRatio);
+    merge_temperatures(*pNode, iNewTemp, iMergeTemp, mergeRatio);
   }
 }
 
 void level_map::update_pathfinding() {
   map_tile* pNode = cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode) {
       pNode->flags.can_travel_n = true;
       pNode->flags.can_travel_e = true;
       pNode->flags.can_travel_s = true;
@@ -1402,7 +1416,7 @@ void level_map::update_pathfinding() {
       if (pNode->iBlock[1] & 0xFF) {
         pNode->flags.can_travel_n = false;
         if (iY != 0) {
-          pNode[-128].flags.can_travel_s = false;
+          pNode[-this->width].flags.can_travel_s = false;
         }
       }
       if (pNode->iBlock[2] & 0xFF) {
@@ -1429,8 +1443,8 @@ bool is_wall(map_tile* tile, size_t block, bool flag) {
 
 void level_map::update_shadows() {
   map_tile* pNode = cells;
-  for (int iY = 0; iY < 128; ++iY) {
-    for (int iX = 0; iX < 128; ++iX, ++pNode) {
+  for (int iY = 0; iY < this->height; ++iY) {
+    for (int iX = 0; iX < this->width; ++iX, ++pNode) {
       pNode->flags.shadow_full = false;
       pNode->flags.shadow_half = false;
       pNode->flags.shadow_wall = false;
@@ -1439,7 +1453,7 @@ void level_map::update_shadows() {
         if (is_wall(pNode, 1, pNode->flags.tall_north)) {
           pNode->flags.shadow_wall = true;
         } else if (iY != 0) {
-          map_tile* pNeighbour = pNode - 128;
+          map_tile* pNeighbour = pNode - this->width;
           pNeighbour->flags.shadow_full = true;
           if (iX != 0 && !is_wall(pNeighbour, 2, pNode->flags.tall_west)) {
             // Wrap the shadow around a corner (no need to continue
@@ -1495,7 +1509,7 @@ void level_map::persist(lua_persist_writer* pWriter) const {
     pWriter->write_uint(pNode->aiTemperature[1]);
 
     lua_rawgeti(L, luaT_upvalueindex(1), 2);
-    lua_pushlightuserdata(L, pNode->next);
+    lua_pushlightuserdata(L, pNode->entities.next);
     lua_rawget(L, -2);
     pWriter->write_stack_object(-1);
     lua_pop(L, 1);
@@ -1580,10 +1594,12 @@ void level_map::depersist(lua_persist_reader* pReader) {
       return;
     }
   }
+
   for (map_tile *pNode = cells, *pLimitNode = cells + width * height;
        pNode != pLimitNode; ++pNode) {
     uint32_t f;
     if (!pReader->read_uint(f)) return;
+
     pNode->flags = f;
     if (iVersion >= 4) {
       if (!pReader->read_uint(pNode->aiTemperature[0]) ||
@@ -1591,19 +1607,19 @@ void level_map::depersist(lua_persist_reader* pReader) {
         return;
       }
     }
-    if (!pReader->read_stack_object()) {
-      return;
-    }
-    pNode->next = (link_list*)lua_touserdata(L, -1);
-    if (pNode->next) {
-      if (pNode->next->prev != nullptr) {
+
+    if (!pReader->read_stack_object()) return;
+    pNode->entities.next = static_cast<link_list*>(lua_touserdata(L, -1));
+    if (pNode->entities.next) {
+      if (pNode->entities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");
       }
-      pNode->next->prev = pNode;
+      pNode->entities.next->prev = &pNode->entities;
     }
     lua_pop(L, 1);
+
     if (!pReader->read_stack_object()) return;
-    pNode->oEarlyEntities.next = (link_list*)lua_touserdata(L, -1);
+    pNode->oEarlyEntities.next = static_cast<link_list*>(lua_touserdata(L, -1));
     if (pNode->oEarlyEntities.next) {
       if (pNode->oEarlyEntities.next->prev != nullptr) {
         std::fprintf(stderr, "Warning: THMap linked-lists are corrupted.\n");

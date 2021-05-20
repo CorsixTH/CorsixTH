@@ -33,6 +33,23 @@ SOFTWARE.
 
 int luaopen_th(lua_State* L);
 
+inline void luaT_rotate(lua_State* L, int idx, int n) {
+#if LUA_VERSION_NUM >= 503
+  lua_rotate(L, idx, n);
+#else
+  if (n < 0) {
+    if (idx < 0) {
+      idx = lua_gettop(L) + idx + 1;
+    }
+    n = lua_gettop(L) - idx + 1 + n;
+  }
+
+  for (int i = 0; i < n; i++) {
+    lua_insert(L, idx);
+  }
+#endif
+}
+
 // Compatibility layer for removal of environments in 5.2
 #if LUA_VERSION_NUM >= 502
 const int luaT_environindex = lua_upvalueindex(1);
@@ -106,12 +123,18 @@ inline int luaT_load(lua_State* L, lua_Reader r, void* d, const char* s,
 #endif
 }
 
-// Compatibility for missing from argument on lua_resume in 5.1
-inline int luaT_resume(lua_State* L, lua_State* f, int n) {
-#if LUA_VERSION_NUM >= 502
-  return lua_resume(L, f, n);
+// Compatibility for older versions of lua_resume
+inline int luaT_resume(lua_State* L, lua_State* f, int n, int* nresults) {
+#if LUA_VERSION_NUM >= 504
+  return lua_resume(L, f, n, nresults);
+#elif LUA_VERSION_NUM >= 502
+  int res = lua_resume(L, f, n);
+  *nresults = lua_gettop(L);
+  return res;
 #else
-  return lua_resume(L, n);
+  int res = lua_resume(L, n);
+  *nresults = lua_gettop(L);
+  return res;
 #endif
 }
 
@@ -311,16 +334,12 @@ struct luaT_classinfo<iso_filesystem> {
   static inline const char* name() { return "ISO Filesystem"; }
 };
 
-template <>
-struct luaT_classinfo<std::FILE*> {
-  static inline const char* name() { return "file"; }
-};
-
 template <class T>
 T* luaT_testuserdata(lua_State* L, int idx, int mt_idx, bool required = true) {
   // Turn mt_idx into an absolute index, as the stack size changes.
-  if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0)
+  if (mt_idx > LUA_REGISTRYINDEX && mt_idx < 0) {
     mt_idx = lua_gettop(L) + mt_idx + 1;
+  }
 
   void* ud = lua_touserdata(L, idx);
   if (ud != nullptr && lua_getmetatable(L, idx) != 0) {
@@ -407,6 +426,10 @@ void luaT_execute(lua_State* L, const char* sLuaString, T1 arg1, T2 arg2,
 }
 
 void luaT_pushtablebool(lua_State* L, const char* k, bool v);
+
+// Print debugging helper functions
+
+void luaT_printvalue(lua_State* L, int idx);
 
 void luaT_printstack(lua_State* L);
 

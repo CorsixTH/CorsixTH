@@ -1,3 +1,9 @@
+# Sanity check
+if(CORSIX_TH_DONE_TOP_LEVEL_CMAKE)
+else()
+  message(FATAL_ERROR "Please run CMake from the top-level directory instead of here.")
+endif()
+
 # Project Declaration
 project(AnimView)
 
@@ -34,7 +40,7 @@ if(APPLE)
   )
   set(MACOSX_BUNDLE_ICON_FILE Icon.icns)
 
-  add_executable( 
+  add_executable(
     AnimView
     MACOSX_BUNDLE
     ${animview_source_files}
@@ -44,8 +50,8 @@ if(APPLE)
   set_target_properties(AnimView PROPERTIES LINK_FLAGS_MINSIZEREL "-dead_strip")
   set_target_properties(AnimView PROPERTIES XCODE_ATTRIBUTE_LD_RUNPATH_SEARCH_PATHS "@executable_path/../Frameworks")
 else()
-  add_executable( 
-    AnimView 
+  add_executable(
+    AnimView
     WIN32 # This prevents the dos console showing up
     ${animview_source_files}
   )
@@ -70,7 +76,7 @@ if(wxWidgets_FOUND)
   target_link_libraries(AnimView ${wxWidgets_LIBRARIES})
   message("  wxWidgets found")
 else()
-  message(FATAL_ERROR "error: wxWdigets library not found, it is required to build")
+  message(FATAL_ERROR "error: wxWidgets library not found, it is required to build")
   message("Make sure the path is correctly defined or set the environment variable WXWIN to the correct location")
 endif()
 
@@ -81,14 +87,14 @@ endif()
 
 if(APPLE)
   install(TARGETS AnimView BUNDLE DESTINATION .)
-  
-  # Fix the OS X bundle to include required libraries (create a redistributable app)
+
+  # Fix the macOS bundle to include required libraries (create a redistributable app)
   install(CODE "
     INCLUDE(BundleUtilities)
     SET(BU_CHMOD_BUNDLE_ITEMS ON)
-    FIXUP_BUNDLE(${CMAKE_INSTALL_PREFIX}/AnimView.app \"\" \"\")
+    FIXUP_BUNDLE(\"${CMAKE_INSTALL_PREFIX}/AnimView.app\" \"\" \"\")
     ")
 else()
   install(TARGETS AnimView RUNTIME DESTINATION AnimView)
-  install(FILES LICENSE.txt DESTINATION AnimView )
+  install(FILES ../LICENSE.txt DESTINATION AnimView)
 endif()

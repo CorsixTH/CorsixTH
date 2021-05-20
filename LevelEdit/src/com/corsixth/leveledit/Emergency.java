@@ -53,7 +53,7 @@ public class Emergency {
 
     JPanel emergencyPanel = new JPanel();
 
-    JComboBox illnessCombo = new JComboBox(diseases);
+    JComboBox<String> illnessCombo = new JComboBox<>(diseases);
     JLabel minPatientsLabel = new JLabel("Patients min:");
     JLabel maxPatientsLabel = new JLabel("Patients max:");
     JLabel startMonthLabel = new JLabel("Start month:");
@@ -66,5 +66,4 @@ public class Emergency {
     JTextField endMonthTF = new JTextField(Integer.toString(endMonth), 2);
     JTextField percWinTF = new JTextField(Integer.toString(percWin), 2);
     JTextField bonusTF = new JTextField(Integer.toString(bonus), 5);
-
 }

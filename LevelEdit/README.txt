@@ -14,7 +14,8 @@ to compile. An alternative is to issue the following commands while in this
 folder:
 
 Compile:
-javac -d bin -sourcepath src src/com/corsixth/leveledit/Main.java
+1. javac -d bin -sourcepath src src/com/corsixth/leveledit/Main.java
+2. Copy icon images (src/icon*.png) to bin directory (getting bin/icon*png files).
 
 Run:
 java -cp bin com.corsixth.leveledit.Main
@@ -22,7 +23,6 @@ java -cp bin com.corsixth.leveledit.Main
 ------------------------------------------------------------------------------
 -- Contact Details
 ------------------------------------------------------------------------------
-Homepage: http://th.corsix.org/
-Forum: http://forums.corsixth.com/
+Homepage: https://github.com/CorsixTH/CorsixTH
 Mailing list: http://groups.google.com/group/corsix-th-dev
 IRC: #corsix-th on FreeNode

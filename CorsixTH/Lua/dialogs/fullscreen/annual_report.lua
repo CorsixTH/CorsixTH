@@ -160,11 +160,12 @@ function UIAnnualReport:UIAnnualReport(ui, world)
     table.sort(self.value_sort, desc_order)
     table.sort(self.salary_sort, desc_order)
 
-  -- Pause the game to allow the player plenty of time to check all statistics and trophies won
-  if world and not world:isCurrentSpeed("Pause") then
-    world:setSpeed("Pause")
-  end
   TheApp.video:setBlueFilterActive(false)
+end
+
+-- Make sure this window pauses the game, we want to let the player browse their awards
+function UIAnnualReport:mustPause()
+  return true
 end
 
 --! Finds out which awards and/or trophies the player has been awarded this year.
@@ -200,12 +201,15 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
       self.rep_amount = self.rep_amount + win_value
     end
     -- Impressive Reputation in the year (above a threshold throughout the year)
-    if hosp.reputation_above_threshold then
+    if hosp.has_impressive_reputation then
       self:addTrophy(_S.trophy_room.consistant_rep.trophies[math.random(1, 2)], "money", prices.TrophyReputationBonus)
       self.won_amount = self.won_amount + prices.TrophyReputationBonus
     end
-    -- No deaths or around a 100% Cure rate in the year
-    if hosp.num_deaths_this_year == 0 then
+    -- Everyone treated successfully, no deaths, or around a 100% Cure rate in the year
+    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      self:addTrophy(_S.trophy_room.all_cured.trophies[math.random(1, 2)], "money", prices.TrophyAllCuredBonus)
+      self.won_amount = self.won_amount + prices.TrophyAllCuredBonus
+    elseif hosp.num_deaths_this_year == 0 then
       self:addTrophy(_S.trophy_room.no_deaths.trophies[math.random(1, 3)], "money", prices.TrophyDeathBonus)
       self.won_amount = self.won_amount + prices.TrophyDeathBonus
     elseif hosp.num_cured_ty > (hosp.not_cured_ty * 0.9)  then
@@ -251,7 +255,10 @@ function UIAnnualReport:checkTrophiesAndAwards(world)
     end
 
     -- Deaths
-    if hosp.num_deaths_this_year < prices.DeathsAward then
+    if hosp.num_cured_ty > 1 and hosp.num_deaths_this_year == 0 and hosp.not_cured_ty == 0 then
+      self:addAward(_S.trophy_room.no_deaths.awards[1], "money", prices.AllCuresBonus)
+      self.award_won_amount = self.award_won_amount + prices.AllCuresBonus
+    elseif hosp.num_deaths_this_year < prices.DeathsAward then
       self:addAward(_S.trophy_room.no_deaths.awards[math.random(1, 2)], "money", prices.DeathsBonus)
       self.award_won_amount = self.award_won_amount + prices.DeathsBonus
     elseif hosp.num_deaths_this_year > prices.DeathsPoor then
@@ -445,17 +452,8 @@ end
 --! Overridden close function. The game should be unpaused again when closing the dialog.
 function UIAnnualReport:close()
   if TheApp.world:getLocalPlayerHospital().game_won then
-    if not TheApp.world:isCurrentSpeed("Pause") then
-      TheApp.world:setSpeed("Pause")
-      TheApp.video:setBlueFilterActive(false)
-    end
+    TheApp.video:setBlueFilterActive(false)
     TheApp.world.ui.bottom_panel:openLastMessage()
-  elseif TheApp.world:isCurrentSpeed("Pause") then
-    if TheApp.ui.speed_up_key_pressed then
-      TheApp.world:setSpeed("Speed Up")
-    else
-      TheApp.world:setSpeed(TheApp.world.prev_speed)
-    end
   end
   self:updateAwards()
   Window.close(self)
