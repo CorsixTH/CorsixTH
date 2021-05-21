@@ -62,9 +62,6 @@ SOFTWARE.
 #endif
 
 /** Standard includes **/
-#ifndef __STDC_CONSTANT_MACROS
-#define __STDC_CONSTANT_MACROS
-#endif
 #include <cstddef>
 #include <cstdint>
 
