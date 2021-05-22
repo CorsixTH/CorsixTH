@@ -15,6 +15,7 @@
     movieSupport ? false,
     freetypeSupport ? false,
     buildAnimView ? false,
+    debug ? true
 }:
 
 with pkgs.lib;
@@ -101,7 +102,13 @@ let
                 
                 outputs = [ "out" ];
 
-                buildPhase = ''
+                buildPhase = if debug then ''
+                    mkdir -p $out/share/src
+                    cp -r . $out/share/src
+                    cd $out/share/src
+
+                    emcc -g -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o ${name}.wasm
+                '' else ''
                     emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o ${name}.wasm
                 '';
 
@@ -135,7 +142,13 @@ let
                 
                 outputs = [ "out" ];
 
-                buildPhase = ''
+                buildPhase = if debug then ''
+                    mkdir -p $out/share/src
+                    cp -r . $out/share/src
+                    cd $out/share/src
+
+                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o ${name}.wasm
+                '' else ''
                     emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o ${name}.wasm
                 '';
 
@@ -165,7 +178,14 @@ let
 
         dontStrip = true;
 
-        buildPhase = ''
+        buildPhase = if debug then ''
+            mkdir -p $out/share/src
+            cp -r . $out/share/src
+            cd $out/share/src
+
+            rm -rf src/lua*.c
+            emcc -g -fpic -shared -DLUA_USE_APICHECK -DLUA_USE_DLOPEN src/*.c -o liblua.so
+        '' else ''
             rm -rf src/lua*.c
             emcc -fpic -shared -DLUA_USE_DLOPEN src/*.c -o liblua.so
         '';
@@ -173,8 +193,7 @@ let
         luaExtLibs = (concatStrings (intersperse " " luaExternalLibraries));
 
         installPhase = ''
-            mkdir -p $out/lib/lua/${old.luaversion}
-            mkdir -p $out/include
+            mkdir -p $out/lib/lua/${old.luaversion} $out/include
 
             cp liblua.* $out/lib/.
             cp ${luaExtLibs} $out/lib/lua/${old.luaversion}/.
@@ -217,25 +236,37 @@ in pkgs.stdenv.mkDerivation rec {
         ++ optional (!freetypeSupport) "-DWITH_FREETYPE2=OFF"
         ++ optional (!movieSupport) "-DWITH_MOVIES=OFF"
         ++ optional buildAnimView "-DBUILD_ANIMVIEW=ON"
+        ++ optional debug "-DCORSIX_TH_DEBUG=ON"
     ;
 
     cmakeFlagsStr = concatStrings (intersperse " " cmakeFlags);
 
-    # export EMCC_DEBUG=1
+    configurePhase = if debug then ''
+        export EMCC_DEBUG=1
 
-    configurePhase = ''
+        mkdir -p $out/share/src
+        cp -r . $out/share/src
+        cd $out/share/src
+
+        rm -rf result* build*
+
+        emcmake cmake ${cmakeFlagsStr}
+    '' else ''
         emcmake cmake ${cmakeFlagsStr}
     '';
 
-    buildPhase = ''
+    buildPhase = if debug then ''
+        export EMCC_DEBUG=1
+
+        emmake make
+    '' else ''
         emmake make
     '';
 
     installPhase = ''
         mkdir -p $out/pkg
 
-        cp CorsixTH/*.data CorsixTH/*.js CorsixTH/*.html CorsixTH/*.wasm $out/pkg/.
-        cp ${luaPackageDir}/*.wasm $out/pkg/.
+        cp CorsixTH/*.data CorsixTH/*.js CorsixTH/*.html CorsixTH/*.wasm ${luaPackageDir}/*.wasm $out/pkg/.
     '';
 
     autoreconfPhase = "";
