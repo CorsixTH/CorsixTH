@@ -104,4 +104,4 @@ CorsixTH/corsix-th
 
 # Nix
 *.so
-/result
+/result*
