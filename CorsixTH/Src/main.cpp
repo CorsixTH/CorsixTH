@@ -58,6 +58,25 @@ inline void preload_lua_package(lua_State* L, const char* name,
 
 }  // namespace
 
+#ifdef __EMSCRIPTEN__
+EM_JS(void, js_load_lua_modules, (), {
+  Asyncify.handleAsync(async () => {
+    try {
+      await loadDynamicLibrary('/var/empty/local/share/corsix-th/lfs.so', { loadAsync: true, global: true, nodelete: true, fs: FS });
+      await loadDynamicLibrary('/var/empty/local/share/corsix-th/lpeg.so', { loadAsync: true, global: true, nodelete: true, fs: FS });
+    }
+    catch (error) {
+      console.log(`CorsixTH ${error}`);
+    }
+  });
+});
+
+EMSCRIPTEN_KEEPALIVE
+void lua_load_modules() {
+  js_load_lua_modules();
+}
+#endif
+
 int lua_main_no_eval(lua_State* L) {
   // assert(_VERSION == LUA_VERSION)
   size_t iLength;
@@ -83,6 +102,10 @@ int lua_main_no_eval(lua_State* L) {
   preload_lua_package(L, "TH", luaopen_th);
   preload_lua_package(L, "persist", luaopen_persist);
   preload_lua_package(L, "sdl", luaopen_sdl);
+
+  #ifdef __EMSCRIPTEN__
+  lua_load_modules();
+  #endif
 
   // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatibility)
   luaT_execute(L, "require \"debug\"");
@@ -116,30 +139,7 @@ int lua_main_no_eval(lua_State* L) {
   return lua_gettop(L);
 }
 
-#ifdef __EMSCRIPTEN__
-EM_JS(void, js_load_lua_modules, (), {
-  Asyncify.handleAsync(async () => {
-    try {
-      await loadDynamicLibrary('/var/empty/local/share/corsix-th/lfs.so', { loadAsync: true, global: true, nodelete: true, fs: FS });
-      await loadDynamicLibrary('/var/empty/local/share/corsix-th/lpeg.so', { loadAsync: true, global: true, nodelete: true, fs: FS });
-    }
-    catch (error) {
-      console.log(`CorsixTH ${error}`);
-    }
-  });
-});
-
-EMSCRIPTEN_KEEPALIVE
-void lua_load_modules() {
-  js_load_lua_modules();
-}
-#endif
-
 int lua_main(lua_State* L) {
-  #ifdef __EMSCRIPTEN__
-  lua_load_modules();
-  #endif
-
   lua_call(L, lua_main_no_eval(L) - 1, LUA_MULTRET);
   return lua_gettop(L);
 }

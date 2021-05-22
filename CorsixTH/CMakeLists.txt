@@ -321,7 +321,7 @@ endif()
 
 if(EMSCRIPTEN)
   set(CMAKE_EXECUTABLE_SUFFIX ".html")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s MAIN_MODULE=1 -s ALLOW_MEMORY_GROWTH=1 -s RELOCATABLE=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=[\"js_load_lua_modules\"]' -s EXPORT_ALL=1")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -s MAIN_MODULE=1 -s ALLOW_MEMORY_GROWTH=1 -s RELOCATABLE=1 -s USE_WEBGL2=1 -s FULL_ES3=1 -s ASYNCIFY -s 'ASYNCIFY_IMPORTS=[\"js_load_lua_modules\"]' -s EXPORT_ALL=1")# -s TOTAL_MEMORY=1024MB
 
   file(GLOB_RECURSE files
     "CorsixTH.lua"
@@ -334,7 +334,7 @@ if(EMSCRIPTEN)
   foreach(file ${files})
     file(RELATIVE_PATH relative_file ${CMAKE_CURRENT_SOURCE_DIR} ${file})
     string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@/var/empty/local/share/corsix-th/${relative_file}\"")
-    message(STATUS "Asset ${relative_file}")
+    message(STATUS "Asset ${file} => /var/empty/local/share/corsix-th/${relative_file}")
   endforeach()
 
   set(LUA_PACKAGE_DIR ${LUA_DIR}/lib/lua/${LUA_VERSION_MAJOR}.${LUA_VERSION_MINOR})
@@ -346,8 +346,8 @@ if(EMSCRIPTEN)
 
   foreach(file ${libraries})
     file(RELATIVE_PATH relative_file ${LUA_PACKAGE_DIR} ${file})
-    string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@${relative_file}\"")
+    # string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@${relative_file}\"")
     string(APPEND CMAKE_CXX_FLAGS " --preload-file \"${file}@/var/empty/local/share/corsix-th/${relative_file}\"")
-    message(STATUS "Library ${relative_file}")
+    message(STATUS "Library ${file} => /var/empty/local/share/corsix-th/${relative_file}")
   endforeach()
 endif()

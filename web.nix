@@ -102,14 +102,14 @@ let
                 outputs = [ "out" ];
 
                 buildPhase = ''
-                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o lpeg.wasm
+                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include *.c -o ${name}.wasm
                 '';
 
                 installPhase = ''
                     mkdir -p $out/lib
                     
-                    cp lpeg.wasm $out/lib/lpeg.so
-                    cp lpeg.wasm $out/lib/lpeg.wasm
+                    cp ${name}.wasm $out/lib/${name}.so
+                    cp ${name}.wasm $out/lib/${name}.wasm
                 '';
 
                 autoreconfPhase = "";
@@ -121,7 +121,7 @@ let
         {
             name = "lfs";
             pkg = pkgs.buildEmscriptenPackage rec {
-                name = "lpeg";
+                name = "lfs";
                 version = "1.8.0";
 
                 src = pkgs.fetchFromGitHub {
@@ -136,14 +136,14 @@ let
                 outputs = [ "out" ];
 
                 buildPhase = ''
-                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o lfs.wasm
+                    emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I${pkgs.lua5_3.outPath}/include src/lfs.c -o ${name}.wasm
                 '';
 
                 installPhase = ''
                     mkdir -p $out/lib
 
-                    cp lfs.wasm $out/lib/lfs.so
-                    cp lfs.wasm $out/lib/lfs.wasm
+                    cp ${name}.wasm $out/lib/${name}.so
+                    cp ${name}.wasm $out/lib/${name}.wasm
                 '';
 
                 autoreconfPhase = "";
