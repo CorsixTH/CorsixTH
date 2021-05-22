@@ -68,6 +68,14 @@ extern "C" {
 #define CORSIX_TH_MOVIE_USE_SEND_PACKET_API
 #endif
 
+//! \brief Drop in replacement for AVPacketList
+//!
+//! AVPacketList which was deprecated with FFMpeg 4.4.
+struct th_packet_list {
+  AVPacket pkt;
+  th_packet_list* next;
+};
+
 //! \brief A picture in movie_picture_buffer
 //!
 //! Stores the picture from a frame in the movie from the time that it is
@@ -213,9 +221,9 @@ class av_packet_queue {
   void release();
 
  private:
-  AVPacketList* first_packet;  ///< The packet at the front of the queue
-  AVPacketList* last_packet;   ///< The packet at the end of the queue
-  int count;                   ///< The number of packets in the queue
+  th_packet_list* first_packet;  ///< The packet at the front of the queue
+  th_packet_list* last_packet;   ///< The packet at the end of the queue
+  int count;                     ///< The number of packets in the queue
   std::mutex mutex;  ///< A mutex restricting access to the packet queue to a
                      ///< single thread
   std::condition_variable

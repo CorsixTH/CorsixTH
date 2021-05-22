@@ -311,7 +311,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
   }
 #endif
 
-  AVPacketList* pNode = (AVPacketList*)av_malloc(sizeof(AVPacketList));
+  th_packet_list* pNode = (th_packet_list*)av_malloc(sizeof(th_packet_list));
   pNode->pkt = *pPacket;
   pNode->next = nullptr;
 
@@ -331,7 +331,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
 AVPacket* av_packet_queue::pull(bool fBlock) {
   std::unique_lock<std::mutex> lock(mutex);
 
-  AVPacketList* pNode = first_packet;
+  th_packet_list* pNode = first_packet;
   if (pNode == nullptr && fBlock) {
     cond.wait(lock);
     pNode = first_packet;
