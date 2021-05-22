@@ -418,8 +418,10 @@ class movie_player {
                         ///< stereo)
   int mixer_frequency;  ///< The frequency of audio expected by SDL_Mixer
 
+#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   AVPacket* flush_packet;  ///< A representative packet indicating a flush is
                            ///< required.
+#endif
 
   std::thread stream_thread;  ///< The thread responsible for reading the
                               ///< movie streams

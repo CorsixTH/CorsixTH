@@ -384,10 +384,12 @@ movie_player::movie_player()
   av_register_all();
 #endif
 
+#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   flush_packet = (AVPacket*)av_malloc(sizeof(AVPacket));
   av_init_packet(flush_packet);
   flush_packet->data = (uint8_t*)"FLUSH";
   flush_packet->size = 5;
+#endif
 
   audio_chunk_buffer =
       (uint8_t*)std::calloc(audio_chunk_buffer_capacity, sizeof(uint8_t));
@@ -396,8 +398,10 @@ movie_player::movie_player()
 movie_player::~movie_player() {
   unload();
 
+#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   av_packet_unref(flush_packet);
   av_free(flush_packet);
+#endif
   free(audio_chunk_buffer);
   delete movie_picture_buffer;
 }
