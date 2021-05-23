@@ -126,7 +126,7 @@ message("")
 message("Building common libraries")
 add_subdirectory("libs")
 
-# We always build CorsixTH otherwise we would miss the generated header
+# We build CorsixTH if BUILD_CORSIXTH is set. This is set by default and should generally be set.
 if(BUILD_CORSIXTH)
   message("Building CorsixTH")
   add_subdirectory(CorsixTH)

@@ -1,8 +1,8 @@
 version: '3'
 
 services:
-  corsixth:
-    container_name: corsixth
+  corsix-th:
+    container_name: corsix-th
     build:
       context: .
       dockerfile: Dockerfile.build

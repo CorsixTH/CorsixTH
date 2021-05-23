@@ -15,7 +15,7 @@ let
     version = "0.64";
 
     lua = {
-        env = lua5_3.withPackages(ps: with ps; [ lpeg luafilesystem luasocket ]);
+        env = lua5_3.withPackages(ps: with ps; [ lpeg luafilesystem ]);
         packageDir = "${lua.env.outPath}/lib/lua/5.3";
     };
 
