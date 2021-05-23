@@ -19,19 +19,12 @@ stdenv.mkDerivation rec {
     buildInputs = [ wxGTK30 ];
     
     cmakeFlags = [
-        "-DCORSIX_TH_DONE_TOP_LEVEL_CMAKE=ON"
+        "-DBUILD_CORSIXTH=OFF"
+        "-DBUILD_ANIMVIEW=ON"
     ];
 
-    patchPhase = ''
-        cd libs/rnc
-        mkdir -p build
-        cd build
-        cmake ..
-        make
-        cp libRncLib.a ../../../AnimView
-        cd ../../../AnimView
-        mkdir -p lib
-        mv libRncLib.a ./lib
+    buildPhase = ''
+        make AnimView
     '';
 
     postInstall = ''

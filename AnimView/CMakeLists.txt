@@ -57,12 +57,7 @@ else()
   )
 endif()
 
-if(NOT RncLib)
-  find_library(RncLib NAMES libRncLib.a libRncLib.dll PATHS ./lib)
-  target_link_libraries(AnimView ${RncLib})
-else()
-  target_link_libraries(AnimView RncLib)
-endif()
+target_link_libraries(AnimView RncLib)
 
 # Set language standard
 set_property(TARGET AnimView PROPERTY CXX_STANDARD 14)
