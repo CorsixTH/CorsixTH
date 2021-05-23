@@ -1,4 +1,4 @@
-{ baseName ? "corsix-th", stdenv, cmake, lib, SDL2, lua5_3, makeWrapper
+{ baseName ? "corsix-th", version ? "trunk", stdenv, cmake, lib, SDL2, lua5_3, makeWrapper
 , SDL2_mixer ? null, soundfont-fluid ? null, fluidsynth ? null, ffmpeg ? null, freetype ? null, doxygen ? null, catch2 ? null
 , audioSupport ? true, movieSupport ? true, freetypeSupport ? true, buildDocs ? false, enableUnitTests ? false
 }:
@@ -12,8 +12,6 @@ assert enableUnitTests -> catch2 != null;
 with lib;
 
 let
-    version = "0.64";
-
     lua = {
         env = lua5_3.withPackages(ps: with ps; [ lpeg luafilesystem ]);
         packageDir = "${lua.env.outPath}/lib/lua/5.3";

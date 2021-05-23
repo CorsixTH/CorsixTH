@@ -1,10 +1,7 @@
-{ baseName ? "corsixth", stdenv, lib, openjdk11, makeWrapper, ant }:
+{ baseName ? "corsixth", version ? "trunk", stdenv, lib, openjdk11, makeWrapper, ant }:
 
 with lib;
 
-let
-    version = "0.64";
-in 
 stdenv.mkDerivation rec {
     inherit version;
 

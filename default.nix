@@ -9,11 +9,15 @@
             };
         in
         import pinnedPkgs {})
-, baseName ? "corsix-th" ,audioSupport ? true, movieSupport ? true, freetypeSupport ? true, buildDocs ? false, enableUnitTests ? false, buildAnimView ? true, buildLevelEdit ? true 
+, audioSupport ? true, movieSupport ? true, freetypeSupport ? true, buildDocs ? false, enableUnitTests ? false, buildAnimView ? true, buildLevelEdit ? true 
 }:
 
+let
+    baseName = "corsix-th";
+    version = "trunk";
+in
 pkgs.lib.makeScope pkgs.newScope (self: with self; {
-    corsixth = callPackage ./nix/corsixth.nix { inherit baseName; inherit audioSupport; inherit movieSupport; inherit freetypeSupport; inherit buildDocs; inherit enableUnitTests; };
-    animView = if buildAnimView then callPackage ./nix/animView.nix { inherit baseName; } else null;
-    levelEdit = if buildLevelEdit then callPackage ./nix/levelEdit.nix { inherit baseName; } else null;
+    corsixth = callPackage ./nix/corsixth.nix { inherit baseName; inherit version; inherit audioSupport; inherit movieSupport; inherit freetypeSupport; inherit buildDocs; inherit enableUnitTests; };
+    animView = if buildAnimView then callPackage ./nix/animView.nix { inherit baseName; inherit version; } else null;
+    levelEdit = if buildLevelEdit then callPackage ./nix/levelEdit.nix { inherit baseName; inherit version; } else null;
 })

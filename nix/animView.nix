@@ -1,10 +1,7 @@
-{ baseName ? "corsix-th", stdenv, lib, cmake, wxGTK30 }:
+{ baseName ? "corsix-th", version ? "trunk", stdenv, lib, cmake, wxGTK30 }:
 
 with lib;
 
-let
-    version = "0.64";
-in 
 stdenv.mkDerivation rec {
     inherit version;
 
