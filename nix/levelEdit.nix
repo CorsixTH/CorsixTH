@@ -29,8 +29,6 @@ stdenv.mkDerivation rec {
             --prefix PATH : "$wrappedPath"
     ''; 
 
-    enableParallelBuilding = true;
-
     meta = with lib; {
         description = "Open source clone of Theme Hospital";
         longDescription = "A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.";

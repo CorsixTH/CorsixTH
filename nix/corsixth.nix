@@ -3,12 +3,6 @@
 , audioSupport ? true, movieSupport ? true, freetypeSupport ? true, buildDocs ? false, enableUnitTests ? false
 }:
 
-assert audioSupport -> SDL2_mixer != null && soundfont-fluid != null && fluidsynth != null;
-assert movieSupport -> ffmpeg != null;
-assert freetypeSupport -> freetype != null;
-assert buildDocs -> doxygen != null;
-assert enableUnitTests -> catch2 != null;
-
 with lib;
 
 let
@@ -17,7 +11,7 @@ let
         packageDir = "${lua.env.outPath}/lib/lua/5.3";
     };
 
-    SDL2_mixer_fix = if SDL2_mixer != null then SDL2_mixer.overrideAttrs(old: rec { 
+    SDL2_mixer_fluid = if audioSupport then SDL2_mixer.overrideAttrs(old: rec { 
         configureFlags = old.configureFlags ++ [ 
             " --enable-music-midi-fluidsynth-shared"
             " --disable-music-midi-timidity"
@@ -40,24 +34,24 @@ stdenv.mkDerivation rec {
         lua.env
         SDL2
     ]
-        ++ optional audioSupport SDL2_mixer_fix
+        ++ optional audioSupport SDL2_mixer_fluid
         ++ optionals (audioSupport && stdenv.isLinux) [ soundfont-fluid fluidsynth ]
         ++ optional freetypeSupport freetype
         ++ optional movieSupport ffmpeg
         ++ optional buildDocs doxygen
         ++ optional enableUnitTests catch2
     ;
+    
+    cmakeFlags = [ 
+        "-DLUA_DIR=${lua.env.outPath}"
+        "-DLUA_PACKAGES_DIR=${lua.packageDir}"
+        "-DSDL_LIBRARY=${SDL2.outPath}/lib/libSDL2.so"
+        "-DSDL_INCLUDE_DIR=${SDL2.dev.outPath}/include/SDL2"
 
-    LUA_DIR = lua.env.outPath;
-    LUA_PACKAGES_DIR = lua.packageDir;
-    SDL_LIBRARY = "${SDL2.outPath}/lib/libSDL2.so";
-    SDL_INCLUDE_DIR = "${SDL2.dev.outPath}/include/SDL2";
-    
-    FFMPEG_DIR = optional movieSupport ffmpeg.outPath;
-    FREETYPE_DIR = optional freetypeSupport freetype.outPath;
-    SDL_MIXER_DIR = optional audioSupport SDL2_mixer.outPath;
-    
-    cmakeFlags = [ ]
+        "-DFFMPEG_DIR=${optionalString movieSupport ffmpeg.outPath}"
+        "-DFREETYPE_DIR=${optionalString freetypeSupport freetype.outPath}"
+        "-DSDL_MIXER_DIR=${optionalString audioSupport SDL2_mixer.outPath}"
+    ]
         ++ optional (!audioSupport) "-DWITH_AUDIO=OFF"
         ++ optional (!freetypeSupport) "-DWITH_FREETYPE2=OFF"
         ++ optional (!movieSupport) "-DWITH_MOVIES=OFF"
@@ -74,8 +68,6 @@ stdenv.mkDerivation rec {
         makeWrapper $out/share/bin/${baseName} $out/bin/${baseName} \
             --set SDL_SOUNDFONTS ${soundfont-fluid.outPath}/share/soundfonts/FluidR3_GM2-2.sf2
     '';
-
-    enableParallelBuilding = true;
 
     meta = with lib; {
         description = "Open source clone of Theme Hospital";

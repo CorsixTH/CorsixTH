@@ -20,9 +20,9 @@ stdenv.mkDerivation rec {
         "-DBUILD_ANIMVIEW=ON"
     ];
 
-    buildPhase = ''
-        make AnimView
-    '';
+    makeFlags = [
+        "AnimView"
+    ];
 
     postInstall = ''
         mkdir -p $out/bin
@@ -31,8 +31,6 @@ stdenv.mkDerivation rec {
 
         rm -rf $out/AnimView
     '';
-
-    enableParallelBuilding = true;
 
     meta = with lib; {
         description = "Open source clone of Theme Hospital";
