@@ -116,6 +116,9 @@ function UICheats:updateCheatedStatus()
 end
 
 function UICheats:buttonClicked(num)
+  if self.ui.hospital.world:isUserActionProhibited() then
+    return self.ui:playSound("wrong2.wav")
+  end
   if self.cheats:performCheat(num) then
     self.cheats.announceCheat(self.ui)
     self:updateCheatedStatus()
