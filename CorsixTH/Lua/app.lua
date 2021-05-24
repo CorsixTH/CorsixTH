@@ -334,8 +334,7 @@ function App:init()
       debug.getregistry()._RESTART = true
       TheApp.running = false
     end
-
-    self.ui:addWindow(UIDirectoryBrowser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback))
+    self:showFileChooser(self.ui, nil, _S.install.th_directory, "InstallDirTreeNode", callback)
     return true
   end
 
@@ -1317,6 +1316,48 @@ end
 
 function App:onMultiGesture(...)
   return self.ui:onMultiGesture(...)
+end
+
+function App:showFileChooser(ui, mode, instruction, treenode_class, callback)
+  -- If we are in a Flatpak sandbox, use a portal through Zenity to access the host filesystem
+  -- TODO: Check that Zenity is installed
+  if io.open("/.flatpak-info") then
+    local function getPathFromZenity()
+      -- FIXME: Have the properly translated string
+      local f = io.popen("zenity --file-selection --directory --title='"..tostring(instruction).."'")
+      return f:read('*l')
+    end
+    local path
+
+    if treenode_class == "InstallDirTreeNode" then
+      local is_valid_directory = false
+      -- Loop until the user selects a valid directory or closes the dialog
+      while not is_valid_directory do
+        path = getPathFromZenity()
+        if path ~= nil then
+          is_valid_directory = self:isThemeHospitalPath(path)
+          -- TODO: Show a warning if the directory is invalid?
+        else
+          break
+        end
+      end
+    else
+      path = getPathFromZenity()
+    end
+
+    if path ~= nil then
+      callback(path)
+      -- FIXME: The game doesn't start
+    else
+      -- Exit the game if there is no mode
+      if mode == nil then
+        -- FIXME: The game doesn't actually exit
+        self:exit()
+      end
+    end
+  else
+    ui:addWindow(UIDirectoryBrowser(ui, mode, instruction, treenode_class, callback))
+  end
 end
 
 function App:isThemeHospitalPath(path)

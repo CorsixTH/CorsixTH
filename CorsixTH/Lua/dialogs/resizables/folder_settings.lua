@@ -140,6 +140,7 @@ function UIFolder:resetmusicDir()
 end
 
 function UIFolder:buttonBrowseForFont()
+  -- TODO: Use Zenity in a Flatpak sandbox
   local browser = UIChooseFont(self.ui, self.mode)
   self.ui:addWindow(browser)
 end
@@ -155,20 +156,18 @@ function UIFolder:buttonBrowseForSavegames()
       self.saves_panel:setLabel(app.config.savegames, self.built_in_font)
     end
   end
-  local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
-  self.ui:addWindow(browser)
+  app:showFileChooser(self.ui, self.mode, _S.folders_window.savegames_location, "DirTreeNode", callback)
 end
 
 function UIFolder:buttonBrowseForTHInstall()
+  local app = TheApp
   local function callback(path)
-    local app = TheApp
     app.config.theme_hospital_install = path
     app:saveConfig()
     debug.getregistry()._RESTART = true
     app.running = false
   end
-  local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.new_th_location, "InstallDirTreeNode", callback)
-  self.ui:addWindow(browser)
+  app:showFileChooser(self.ui, self.mode, _S.folders_window.new_th_location, "InstallDirTreeNode", callback)
 end
 
 function UIFolder:buttonBrowseForScreenshots()
@@ -182,20 +181,18 @@ function UIFolder:buttonBrowseForScreenshots()
       self.screenshots_panel:setLabel(app.config.screenshots, self.built_in_font)
     end
   end
-  local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
-  self.ui:addWindow(browser)
+  app:showFileChooser(self.ui, self.mode, _S.folders_window.screenshots_location, "DirTreeNode", callback)
 end
 
 function UIFolder:buttonBrowseForAudio_music()
-  local function callback(path)
   local app = TheApp
+  local function callback(path)
     app.config.audio_music = path
     app:saveConfig()
     app.audio:init()
     self.music_panel:setLabel(app.config.audio_music, self.built_in_font)
   end
-  local browser = UIDirectoryBrowser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
-  self.ui:addWindow(browser)
+  app:showFileChooser(self.ui, self.mode, _S.folders_window.music_location, "DirTreeNode", callback)
 end
 
 function UIFolder:buttonBack()
