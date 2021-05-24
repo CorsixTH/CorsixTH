@@ -2,41 +2,39 @@
 Version 0.65 - released xxxx 2021
 -------------------------------------------------------------------------------
 # New Features/Enhancements
-* Support for Lua 5.4.2+! (NB: 5.4.0 and 5.4.1 are not recommended)
-* CMake: Support for version 3.5+
 * CorsixTH is now available as a Flatpak! (thanks to @rmnvgr !)
-* DMG files are now supported as disk images for Theme Hospital data
+* On MacOS DMG files are now supported as disk images for Theme Hospital data
 * Hospital policies will now carry over to your next level in the campaign
-* You can now remove destroyed rooms for a fee (custom option)
-* Room information dialogs (first built) can be turned off in the configuration file
+* You can now remove destroyed rooms for a fee (config option)
+* The information dialogs that appear when a room is first built can be
+  disabled in the configuration file
 * Fire extinguishers in rooms now have a chance to save a smoking machine
 * More adviser messages added
 * New trophy added
 * Windows and room size now impact staff happiness
-* Roujin's challenge is back
+* Roujin's challenge cheat is back
 
 # Changes
-* Emergencies of unknown diseases will no longer occur
+* Emergencies with unknown diseases will no longer occur
 * The VIP system has been overhauled to provide more balanced ratings
 * Overpriced/Underpriced treatments now scale with difficulty
-* Receptionists can now be placed on desks
+* Placing a receptionist on a desk will now call her to the desk
 * Boiler breakdowns now depend on handymen
-* Faxes can no longer be opened on pause (unless editing while paused is allowed)
+* Faxes can no longer be opened while paused (unless editing while paused is
+  enabled)
 * Improvements to receptionist announcement frequency and behaviour
-* The game will now check common locations for Theme Hospital data if it is missing
-* New installs on Windows will no longer ask for Theme Hospital data during the
-  executable
+* The game will now check common locations for Theme Hospital on startup if it
+  has not been configured
 * Games compiled without movie/audio can no longer access these settings
-* CMake: BUILD_ANIMVIEWER is now known as BUILD_ANIMVIEW
 
 # Translations
-* Greek language added! (thanks to @dimitrios-iliadis !)
+* Greek language added! (thanks to dimitrios-iliadis!)
 * Updates to Brazilian-Portuguese language
 * Updates to English language
 * Fixes to Chinese unicode encoding
 
 # Bug Fixes
-* The potential scenario of emergencies not occurring when expected has been resolved
+* Issues scheduling emergencies have been resolved
 * Games will no longer crash on load if the jukebox was open
 * Games will no longer crash because of an empty music folder
 * Fixed a chance of Doctors getting stuck in a queue after editing a room
@@ -44,9 +42,13 @@ Version 0.65 - released xxxx 2021
 * Psychiatrists in the Operating Theatre are now properly counted when checking for
   Psychiatrists
 * Losing a game now gives the reason if the movie is skipped
-* Exiting the game will no longer hang when using the Wayland video driver (SDL2)
+* Exiting the game will no longer hang when using the Wayland backend
 * The mouse will now be freed on game crash
-* And more!
+
+# Packager Notes
+* Support added for Lua 5.4.x. (5.4.0 and 5.4.1 are not supported)
+* CMake minimum version has been increased to 3.5
+* The CMake option to enable AnimView is now BUILD_ANIMVIEW=ON
 
 -------------------------------------------------------------------------------
 Version 0.64 - released June 2020
@@ -1223,7 +1225,7 @@ Version Beta 2 - released 2010-03-24
 * Additional functional diagnosis rooms: General Diagnosis, Ultrascan, X-Ray
 * Room queues should now re-balance themselves when new rooms are built.
 
-* Translation: Norwegian (bokmål).
+* Translation: Norwegian (bokmÃ¥l).
 
 A lot of other small improvements.
 Also, a great number of bugs have been squashed. Most remaining bugs are no
