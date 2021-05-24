@@ -143,7 +143,6 @@ function Cheats:cheatLose()
 end
 
 function Cheats:cheatWin()
-  local world = self.hospital.world
   self.hospital.world:winGame(1) -- TODO adjust for multiplayer
 end
 
