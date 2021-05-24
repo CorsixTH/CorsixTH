@@ -117,6 +117,7 @@ end
 
 function UICheats:buttonClicked(num)
   if self.ui.hospital.world:isUserActionProhibited() then
+    --TODO: Prevent selectx.wav playing with this
     return self.ui:playSound("wrong2.wav")
   end
   if self.cheats:performCheat(num) then
