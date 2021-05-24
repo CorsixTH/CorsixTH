@@ -27,6 +27,7 @@
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
     <release version="0.64" date="2020-06-16"></release>
+    <release version="0.65-beta1" date="2021-05-23"></release>
   </releases>
   <screenshots>
     <screenshot type="default">
