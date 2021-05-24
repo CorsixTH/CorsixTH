@@ -33,7 +33,7 @@ local Cheats = _G["Cheats"]
 function Cheats:Cheats(hospital)
   self.hospital = hospital
   -- Cheats to appear specifically in the cheats window
-  -- New cheats require a persistable and a wrapped function in func
+  -- New cheats require an afterLoad when added
   self.cheat_list = {
     {name = "money",          func = self.cheatMoney},
     {name = "all_research",   func = self.cheatResearch},
