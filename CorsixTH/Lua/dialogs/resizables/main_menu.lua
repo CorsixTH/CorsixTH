@@ -154,7 +154,7 @@ function UIMainMenu:buttonMapEdit()
 end
 
 function UIMainMenu:buttonExit()
-  self.ui:addWindow(UIConfirmDialog(self.ui,
+  self.ui:addWindow(UIConfirmDialog(self.ui, false,
   _S.tooltip.main_menu.quit,
   --[[persistable:quit_confirm_dialog]]function()
   self.ui.app:exit()

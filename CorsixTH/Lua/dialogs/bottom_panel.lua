@@ -800,7 +800,7 @@ function UIBottomPanel:addDialog(dialog_class, extra_function)
   local edit_window = self.ui:getWindow(UIEditRoom)
   -- If we are currently editing a room, ask for abortion before adding any dialog.
   if edit_window then
-    self.ui:addWindow(UIConfirmDialog(self.ui,
+    self.ui:addWindow(UIConfirmDialog(self.ui, false,
       _S.confirmation.abort_edit_room,
       --[[persistable:abort_edit_room_confirm_dialog]]function()
         self.ui:setEditRoom(false)
