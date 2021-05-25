@@ -311,7 +311,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
   }
 #endif
 
-  AVPacketList* pNode = (AVPacketList*)av_malloc(sizeof(AVPacketList));
+  th_packet_list* pNode = (th_packet_list*)av_malloc(sizeof(th_packet_list));
   pNode->pkt = *pPacket;
   pNode->next = nullptr;
 
@@ -331,7 +331,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
 AVPacket* av_packet_queue::pull(bool fBlock) {
   std::unique_lock<std::mutex> lock(mutex);
 
-  AVPacketList* pNode = first_packet;
+  th_packet_list* pNode = first_packet;
   if (pNode == nullptr && fBlock) {
     cond.wait(lock);
     pNode = first_packet;
@@ -384,10 +384,12 @@ movie_player::movie_player()
   av_register_all();
 #endif
 
+#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   flush_packet = (AVPacket*)av_malloc(sizeof(AVPacket));
   av_init_packet(flush_packet);
   flush_packet->data = (uint8_t*)"FLUSH";
   flush_packet->size = 5;
+#endif
 
   audio_chunk_buffer =
       (uint8_t*)std::calloc(audio_chunk_buffer_capacity, sizeof(uint8_t));
@@ -396,8 +398,10 @@ movie_player::movie_player()
 movie_player::~movie_player() {
   unload();
 
+#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   av_packet_unref(flush_packet);
   av_free(flush_packet);
+#endif
   free(audio_chunk_buffer);
   delete movie_picture_buffer;
 }

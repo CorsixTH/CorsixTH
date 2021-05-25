@@ -1502,8 +1502,6 @@ function World:winGame(player_no)
     if self:isCurrentSpeed("Speed Up") then
       self:previousSpeed()
     end
-    self:setSpeed("Pause")
-    self.ui.app.video:setBlueFilterActive(false)
     self.ui.bottom_panel:queueMessage("information", message, nil, 0, 2, callback)
     self.ui.bottom_panel:openLastMessage()
   end
