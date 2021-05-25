@@ -111,7 +111,8 @@ function World:World(app)
   -- This is false when the game is paused.
   self.user_actions_allowed = true
 
-  -- Flag to force pausing to deal with recoverable errors
+  -- The system pause method is used as an additional layer to pause the game, where the user
+  -- needs to deal with a recoverable error
   self.system_pause = false
 
   -- In Free Build mode?
@@ -967,7 +968,7 @@ function World:pauseOrUnpause()
   end
 end
 
---! Sets whether the game should be forcefully paused
+--! Sets the system_pause parameter
 --!param state (bool)
 function World:setSystemPause(state)
   self.system_pause = state

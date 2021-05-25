@@ -75,7 +75,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, is_error, text, callback_ok, callba
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:registerKeyHandlers()
-  if self.is_error then self:forcePause() end
+  if self.is_error then self:systemPause() end
 end
 
 -- Confirm dialogs are used for errors, if it is an error then pause the game
@@ -84,7 +84,7 @@ function UIConfirmDialog:mustPause()
 end
 
 --! Function to tell the game a system pause is needed
-function UIConfirmDialog:forcePause()
+function UIConfirmDialog:systemPause()
   TheApp.world:setSystemPause(true)
 end
 
