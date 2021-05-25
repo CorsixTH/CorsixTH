@@ -34,11 +34,11 @@ local text_width = 153
 
 --! Initialise the Confirmation Dialog
 --!param ui The UI
---!param is_error (boolean) set whether this dialog is a result of an error (true) or not (false)
+--!param must_pause (boolean) set whether this dialog should pause the game
 --!param text (string) message to show
 --!param callback_ok (function) what to do on yes/ok
 --!param callback_cancel (function) what to do on no/cancel/close
-function UIConfirmDialog:UIConfirmDialog(ui, is_error, text, callback_ok, callback_cancel)
+function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, callback_cancel)
   self:Window()
 
   local app = ui.app
@@ -54,7 +54,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, is_error, text, callback_ok, callba
   self.text = text
   self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
-  self.is_error = is_error
+  self.must_pause = must_pause
 
   -- Check how "high" the dialog must be
   local _, text_height = self.white_font:sizeOf(text, text_width)
@@ -75,12 +75,12 @@ function UIConfirmDialog:UIConfirmDialog(ui, is_error, text, callback_ok, callba
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:registerKeyHandlers()
-  if self.is_error then self:systemPause() end
+  if self.must_pause then self:systemPause() end
 end
 
 -- Confirm dialogs are used for errors, if it is an error then pause the game
 function UIConfirmDialog:mustPause()
-  return self.is_error
+  return self.must_pause
 end
 
 --! Function to tell the game a system pause is needed
@@ -105,7 +105,7 @@ end
 --!param confirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
 function UIConfirmDialog:close(confirmed)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
-  if self.is_error then TheApp.world:setSystemPause(false) end -- Error dealt with
+  if self.must_pause then TheApp.world:setSystemPause(false) end -- Error dealt with
   Window.close(self)
   if confirmed then
     if self.callback_ok then
