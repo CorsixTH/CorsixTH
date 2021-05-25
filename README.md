@@ -24,16 +24,21 @@ You will need the following:
 
 ### What's Working? ###
 Most features of the game are available -- and we're at a state where you can complete the full campaign without issue.
+##### Original Features #####
 - Single player modes (Campaigns, custom levels, custom campaigns)
 - All diseases, objects, rooms are available (see below section for outstanding anomalies)
 - All events (emergencies, earthquakes, epidemics, VIP visits)
 - Micromanagement
+- Music/Jukebox and gameplay videos (see below section for oustanding anomalies)
+- Cheats (naughty!)
+##### New Features #####
 - Full HD resolution and beyond!
 - Make your own maps and levels
-- Music/Jukebox and gameplay videos (see below section for oustanding anomalies)
-   - You can also play your own music!
+- Unlimited saves and 12 autosave slots
+- Play your own music!
+- Option to remove destroyed rooms for a fee
+- Improved game logic
 - Full control over all hotkeys
-- Cheats (naughty!)
 
 ### What's missing/needs improvement? ###
 There are some areas of the game still missing, and while we work to get them integrated any additional help from the community is always appreciated!
