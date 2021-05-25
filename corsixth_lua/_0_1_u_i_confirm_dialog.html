@@ -27,6 +27,7 @@
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L21">line 21 of Lua/dialogs/confirm_dialog.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_confirm_dialog.html">UIConfirmDialog</a>
  » <a href="_0_1_window.html">Window</a>
+ <br/><strong>Full description:</strong><br/> This dialog is also used for errors and requires some special handling 
 </div>
 <div class="method_list">
  <h4>Method Index</h4>
@@ -67,7 +68,7 @@
  <a href="_0_1_u_i_confirm_dialog.html#_0_1_u_i_confirm_dialog_1cancel">cancel</a>()
  </li>
  <li class="self">
- <a href="_0_1_u_i_confirm_dialog.html#_0_1_u_i_confirm_dialog_1close">close</a>(<span class="p">ok</span>)
+ <a href="_0_1_u_i_confirm_dialog.html#_0_1_u_i_confirm_dialog_1close">close</a>(<span class="p">confirmed</span>)
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
  </li>
  <li class="self">
@@ -208,6 +209,9 @@
  <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_confirm_dialog.html#_0_1_u_i_confirm_dialog_1system_pause">systemPause</a>()
+ </li>
  </ul>
 </div>
 <div class="member_list">
@@ -268,6 +272,8 @@
  </li>
  <li><span class="p">modal_class</span>
  </li>
+ <li><span class="p">must_pause</span>
+ </li>
  <li><span class="p">on_top</span>
  </li>
  <li><span class="p">panel_sprites</span>
@@ -316,33 +322,39 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_u_i_confirm_dialog_1_u_i_confirm_dialog">function UIConfirmDialog:UIConfirmDialog(<span class="p">ui</span>, <span class="p">text</span>, <span class="p">callback_ok</span>, <span class="p">callback_cancel</span>)</a></h5>
+ <h5><a name="_0_1_u_i_confirm_dialog_1_u_i_confirm_dialog">function UIConfirmDialog:UIConfirmDialog(<span class="p">ui</span>, <span class="p">must_pause</span>, <span class="p">text</span>, <span class="p">callback_ok</span>, <span class="p">callback_cancel</span>)</a></h5>
  <p>
+ Initialise the Confirmation Dialog<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
- <td class="d">?</td>
+ <td class="d">The UI</td>
+ </tr>
+ <tr>
+ <td class="n">must_pause</td>
+ <td class="t">boolean</td>
+ <td class="d"> set whether this dialog should pause the game</td>
  </tr>
  <tr>
  <td class="n">text</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">string</td>
+ <td class="d"> message to show</td>
  </tr>
  <tr>
  <td class="n">callback_ok</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">function</td>
+ <td class="d"> what to do on yes/ok</td>
  </tr>
  <tr>
  <td class="n">callback_cancel</td>
- <td class="t">?</td>
- <td class="d">?</td>
+ <td class="t">function</td>
+ <td class="d"> what to do on no/cancel/close</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L34">line 34 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L35">line 35 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -363,30 +375,30 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1after_load">Window:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L113">line 113 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L128">line 128 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_confirm_dialog_1cancel">function UIConfirmDialog:cancel()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L82">line 82 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L96">line 96 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_confirm_dialog_1close">function UIConfirmDialog:close(<span class="p">ok</span>)</a></h5>
+ <h5><a name="_0_1_u_i_confirm_dialog_1close">function UIConfirmDialog:close(<span class="p">confirmed</span>)</a></h5>
  <p>
  Closes the confirm dialog<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">ok</td>
+ <td class="n">confirmed</td>
  <td class="t">boolean&nbsp;or&nbsp;or&nbsp;or&nbsp;nil</td>
  <td class="d"> whether to call the confirm callback (true) or cancel callback (false/nil)</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L90">line 90 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L104">line 104 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -412,27 +424,34 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1draw">Window:draw</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L106">line 106 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L121">line 121 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_confirm_dialog_1must_pause">function UIConfirmDialog:mustPause()</a></h5>
  <p>
- Confirm dialogs are used for errors and require the game to pause<br/><br/>
+ Confirm dialogs are used for errors, if it is an error then pause the game<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1must_pause">Window:mustPause</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L72">line 72 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L81">line 81 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_confirm_dialog_1ok">function UIConfirmDialog:ok()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L86">line 86 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L100">line 100 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_confirm_dialog_1register_key_handlers">function UIConfirmDialog:registerKeyHandlers()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L77">line 77 of Lua/dialogs/confirm_dialog.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L91">line 91 of Lua/dialogs/confirm_dialog.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_confirm_dialog_1system_pause">function UIConfirmDialog:systemPause()</a></h5>
+ <p>
+ Function to tell the game a system pause is needed<br/><br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/confirm_dialog.lua#L86">line 86 of Lua/dialogs/confirm_dialog.lua</a>.
  </p>
  </div>
 </div>
