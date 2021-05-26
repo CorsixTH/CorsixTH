@@ -38,10 +38,9 @@ Version 0.65 - released xxxx 2021
 * Issues scheduling emergencies have been resolved
 * Games will no longer crash on load if the jukebox was open
 * Games will no longer crash because of an empty music folder
-* Fixed a case of Doctors getting stuck in a queue after editing a room
+* Fixed a scenario where editing a room caused staff to get stuck
 * Games that scrolled while saving stop scrolling on load
-* Psychiatrists in the Operating Theatre are now properly counted when checking
-  for Psychiatrists
+* Psychiatrists in the Operating Theatre are now properly counted
 * Losing a game now gives the reason if the movie is skipped
 * Exiting the game will no longer hang when using the Wayland backend
 * The mouse will now be freed on game crash
