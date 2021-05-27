@@ -1148,7 +1148,7 @@ end
 function Hospital:spawnContagiousPatient()
   --[[ Gets the available non-visual disease in the current world
     @return non_visuals (table) table of available non-visual diseases]]
-  local function get_avaliable_contagious_diseases()
+  local function get_available_contagious_diseases()
     local contagious = {}
     for _, disease in ipairs(self.world.available_diseases) do
       if disease.contagious then
@@ -1160,7 +1160,7 @@ function Hospital:spawnContagiousPatient()
 
   if self:hasStaffedDesk() then
     local patient = self.world:newEntity("Patient", 2)
-    local contagious_diseases = get_avaliable_contagious_diseases()
+    local contagious_diseases = get_available_contagious_diseases()
     if #contagious_diseases > 0 then
       local disease = contagious_diseases[math.random(1,#contagious_diseases)]
       patient:setDisease(disease)

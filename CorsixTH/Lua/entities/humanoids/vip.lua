@@ -90,7 +90,7 @@ function Vip:Vip(...)
 
 end
 
---[[--VIP while on premesis--]]
+--[[--VIP while on premises--]]
 function Vip:tickDay()
   -- for the vip
   if self.waiting then
