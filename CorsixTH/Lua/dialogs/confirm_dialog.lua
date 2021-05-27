@@ -19,6 +19,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
 --! Dialog for "Are you sure you want to quit?" and similar yes/no questions.
+--! This dialog is also used for errors and requires some special handling
 class "UIConfirmDialog" (Window)
 
 ---@type UIConfirmDialog
@@ -31,7 +32,13 @@ local middle_frame_height = 11
 local bottom_frame = 359
 local text_width = 153
 
-function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
+--! Initialise the Confirmation Dialog
+--!param ui The UI
+--!param must_pause (boolean) set whether this dialog should pause the game
+--!param text (string) message to show
+--!param callback_ok (function) what to do on yes/ok
+--!param callback_cancel (function) what to do on no/cancel/close
+function UIConfirmDialog:UIConfirmDialog(ui, must_pause, text, callback_ok, callback_cancel)
   self:Window()
 
   local app = ui.app
@@ -47,6 +54,7 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
   self.text = text
   self.callback_ok = callback_ok  -- Callback function to launch if user chooses ok
   self.callback_cancel = callback_cancel -- Callback function to launch if user chooses cancel
+  self.must_pause = must_pause
 
   -- Check how "high" the dialog must be
   local _, text_height = self.white_font:sizeOf(text, text_width)
@@ -67,11 +75,17 @@ function UIConfirmDialog:UIConfirmDialog(ui, text, callback_ok, callback_cancel)
     :setTooltip(_S.tooltip.window_general.confirm):setSound"YesX.wav"
 
   self:registerKeyHandlers()
+  if self.must_pause then self:systemPause() end
 end
 
--- Confirm dialogs are used for errors and require the game to pause
+-- Confirm dialogs are used for errors, if it is an error then pause the game
 function UIConfirmDialog:mustPause()
-  return true
+  return self.must_pause
+end
+
+--! Function to tell the game a system pause is needed
+function UIConfirmDialog:systemPause()
+  TheApp.world:setSystemPause(true)
 end
 
 function UIConfirmDialog:registerKeyHandlers()
@@ -88,11 +102,12 @@ function UIConfirmDialog:ok()
 end
 
 --! Closes the confirm dialog
---!param ok (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
-function UIConfirmDialog:close(ok)
+--!param confirmed (boolean or nil) whether to call the confirm callback (true) or cancel callback (false/nil)
+function UIConfirmDialog:close(confirmed)
   -- NB: Window is closed before executing the callback in order to not save the confirmation dialog in a savegame
+  if self.must_pause then TheApp.world:setSystemPause(false) end -- Error dealt with
   Window.close(self)
-  if ok then
+  if confirmed then
     if self.callback_ok then
       self.callback_ok()
     end

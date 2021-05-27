@@ -308,7 +308,7 @@ function UIStaff:placeStaff()
 end
 
 function UIStaff:fireStaff()
-  self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.sack_staff, --[[persistable:staff_dialog_confirm_sack]] function()
+  self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.sack_staff, --[[persistable:staff_dialog_confirm_sack]] function()
     self.staff:fire()
   end))
 end

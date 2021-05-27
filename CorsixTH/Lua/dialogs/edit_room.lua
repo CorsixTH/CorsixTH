@@ -175,7 +175,7 @@ function UIEditRoom:cancel()
       self.confirm_button:enable(false)
       self.confirm_dialog_open = true
       -- Ask if the user really wish to sell this room
-      self.ui:addWindow(UIConfirmDialog(self.ui,
+      self.ui:addWindow(UIConfirmDialog(self.ui, false,
         _S.confirmation.delete_room,
         --[[persistable:delete_room_confirm_dialog]]function()
           self:abortRoom()

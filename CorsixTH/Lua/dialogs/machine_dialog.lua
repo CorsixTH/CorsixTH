@@ -109,7 +109,7 @@ function UIMachine:replaceMachine()
     self.ui:playSound("wrong2.wav")
     return
   end
-  self.ui:addWindow(UIConfirmDialog(self.ui,
+  self.ui:addWindow(UIConfirmDialog(self.ui, false,
     _S.confirmation.replace_machine:format(machine.object_type.name, cost),
     --[[persistable:replace_machine_confirm_dialog]]function()
       -- Charge for new machine

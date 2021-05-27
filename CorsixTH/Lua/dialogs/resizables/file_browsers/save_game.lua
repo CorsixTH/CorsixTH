@@ -82,7 +82,7 @@ end
 --! Try to save the game with given filename; if already exists, create confirmation window first.
 function UISaveGame:trySave(filename)
   if lfs.attributes(filename, "size") ~= nil then
-    self.ui:addWindow(UIConfirmDialog(self.ui, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
+    self.ui:addWindow(UIConfirmDialog(self.ui, false, _S.confirmation.overwrite_save, --[[persistable:save_game_confirmation]] function() self:doSave(filename) end))
   else
     self:doSave(filename)
   end
