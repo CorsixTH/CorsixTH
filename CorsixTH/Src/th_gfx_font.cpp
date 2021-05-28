@@ -32,6 +32,7 @@ SOFTWARE.
 #include <cstdio>
 #include <cstring>
 #include <cwctype>
+#include <stdexcept>
 
 namespace {
 
@@ -47,7 +48,11 @@ size_t discard_leading_set_bits(uint8_t& byte) {
   return count;
 }
 
-unsigned int next_utf8_codepoint(const char*& sString) {
+unsigned int next_utf8_codepoint(const char*& sString, const char* end) {
+  if (sString >= end) {
+    throw std::out_of_range("pointer is outside of string");
+  }
+
   uint8_t cur_byte = *reinterpret_cast<const uint8_t*>(sString++);
   size_t leading_bit_count = discard_leading_set_bits(cur_byte);
 
@@ -59,6 +64,10 @@ unsigned int next_utf8_codepoint(const char*& sString) {
 
   unsigned int codepoint = cur_byte;
   for (size_t i = 1; i < leading_bit_count; ++i) {
+    if (sString == end) {
+      return invalid_char_codepoint;
+    }
+
     cur_byte = *reinterpret_cast<const uint8_t*>(sString++);
     size_t continue_leading_bits = discard_leading_set_bits(cur_byte);
 
@@ -150,8 +159,8 @@ unsigned int unicode_to_codepage_437(unsigned int iCodePoint) {
 // Since these functions are only used when we use freetype2, this silences
 // warnings about defined and not used.
 
-unsigned int decode_utf8(const char* sString) {
-  return next_utf8_codepoint(sString);
+unsigned int decode_utf8(const char* sString, const char* end) {
+  return next_utf8_codepoint(sString, end);
 }
 
 const char* previous_utf8_codepoint(const char* sString) {
@@ -197,7 +206,7 @@ void bitmap_font::draw_text(render_target* pCanvas, const char* sMessage,
 
     while (sMessage != sMessageEnd) {
       unsigned int iChar =
-          unicode_to_codepage_437(next_utf8_codepoint(sMessage));
+          unicode_to_codepage_437(next_utf8_codepoint(sMessage, sMessageEnd));
       if (iFirstASCII <= iChar && iChar <= iLastASCII) {
         iChar -= iFirstASCII;
         int iWidth;
@@ -237,7 +246,8 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
 
       for (s = sMessage; s != sMessageEnd;) {
         const char* sOld = s;
-        unsigned int iChar = unicode_to_codepage_437(next_utf8_codepoint(s));
+        unsigned int iChar =
+            unicode_to_codepage_437(next_utf8_codepoint(s, sMessageEnd));
         iNextChar = unicode_to_codepage_437(static_cast<unsigned char>(*s));
         if ((iChar == '\n' && iNextChar == '\n') ||
             (iChar == '/' && iNextChar == '/')) {
@@ -295,9 +305,9 @@ text_layout bitmap_font::draw_text_wrapped(render_target* pCanvas,
       }
       sMessage = sBreakPosition;
       if (sMessage != sMessageEnd) {
-        next_utf8_codepoint(sMessage);
+        next_utf8_codepoint(sMessage, sMessageEnd);
         if (foundNewLine) {
-          next_utf8_codepoint(sMessage);
+          next_utf8_codepoint(sMessage, sMessageEnd);
         }
       }
     }
@@ -569,7 +579,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
 
     while (sMessage != sMessageEnd) {
       const char* sOldMessage = sMessage;
-      unsigned int iCode = next_utf8_codepoint(sMessage);
+      unsigned int iCode = next_utf8_codepoint(sMessage, sMessageEnd);
       unsigned int iNextCode =
           *reinterpret_cast<const unsigned char*>(sMessage);
       bool bIsNewLine = (iCode == '\n' && iNextCode == '\n') ||
@@ -623,14 +633,14 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
               vLines.push_back(
                   std::make_pair(sLineBreakPosition, sLineBreakPosition));
             }
-            next_utf8_codepoint(sLineBreakPosition);
+            next_utf8_codepoint(sLineBreakPosition, sMessageEnd);
             iHandledRows++;
           }
           sMessage = sLineBreakPosition;
           // Skip one char only when it's .. (maybe a CJK character)
           if (std::iswspace(iCode) ||  // Whitespace characters
               iCode == 0x3000) {       // Ideographic space
-            next_utf8_codepoint(sMessage);
+            next_utf8_codepoint(sMessage, sMessageEnd);
           }
           sLineStart = sMessage;
         } else {
@@ -638,7 +648,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             vLines.push_back(std::make_pair(sLineStart, sOldMessage));
           }
           if (bIsNewLine) {
-            next_utf8_codepoint(sMessage);
+            next_utf8_codepoint(sMessage, sMessageEnd);
             sLineStart = sLineBreakPosition = sMessage;
           } else {
             sMessage = sLineStart = sLineBreakPosition = sOldMessage;
@@ -699,7 +709,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
          ++itr) {
       // Calculate the X change resulting from alignment.
       const char* sLastChar = previous_utf8_codepoint(itr->second);
-      codepoint_glyph& oLastGlyph = mapGlyphs[decode_utf8(sLastChar)];
+      codepoint_glyph& oLastGlyph =
+          mapGlyphs[decode_utf8(sLastChar, sMessageEnd)];
       iLineWidth = vCharPositions[sLastChar - sMessage].x +
                    oLastGlyph.metrics.horiBearingX + oLastGlyph.metrics.width;
       if ((iLineWidth >> 6) < iWidth) {
@@ -712,7 +723,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       FT_Pos iLineHeight = 0;
       FT_Pos iBaselinePos = 0;
       for (const char* s = itr->first; s < itr->second;) {
-        codepoint_glyph& oGlyph = mapGlyphs[next_utf8_codepoint(s)];
+        codepoint_glyph& oGlyph =
+            mapGlyphs[next_utf8_codepoint(s, sMessageEnd)];
         FT_Pos iBearingY = oGlyph.metrics.horiBearingY;
         FT_Pos iCoBearingY = oGlyph.metrics.height - iBearingY;
         if (iBearingY > iBaselinePos) iBaselinePos = iBearingY;
@@ -728,7 +740,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
 
       // Apply the character position changes.
       for (const char* s = itr->first; s < itr->second;
-           next_utf8_codepoint(s)) {
+           next_utf8_codepoint(s, sMessageEnd)) {
         FT_Vector& ftvPos = vCharPositions[s - sMessage];
         ftvPos.x += iAlignDelta;
         ftvPos.y += iBaselinePos + iPriorLinesHeight;
@@ -768,7 +780,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
       iDrawnLines++;
       for (const char* s = itr->first; s < itr->second;) {
         FT_Vector& ftvPos = vCharPositions[s - sMessage];
-        unsigned int iCode = next_utf8_codepoint(s);
+        unsigned int iCode = next_utf8_codepoint(s, sMessageEnd);
         if (iCode == '\n') {
           iCode = ' ';
         }

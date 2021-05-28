@@ -1373,7 +1373,7 @@ void line::depersist(lua_persist_reader* pReader) {
 }
 
 #ifdef CORSIX_TH_USE_FREETYPE2
-bool freetype_font::is_monochrome() const { return true; }
+bool freetype_font::is_monochrome() const { return false; }
 
 void freetype_font::free_texture(cached_text* pCacheEntry) const {
   if (pCacheEntry->texture != nullptr) {
