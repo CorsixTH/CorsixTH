@@ -53,21 +53,6 @@ extern "C" {
 #endif
 }
 
-#if (defined(CORSIX_TH_USE_FFMEPG) &&                        \
-     LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 74, 100)) || \
-    (defined(CORSIX_TH_USE_LIBAV) &&                         \
-     LIBAVUTIL_VERSION_INT < AV_VERSION_INT(51, 42, 0))
-#define AVPixelFormat PixelFormat
-#define AV_PIX_FMT_RBG24 PIX_FMT_RGB24
-#endif
-
-#if (defined(CORSIX_TH_USE_LIBAV) &&                         \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 16, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                        \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 37, 100))
-#define CORSIX_TH_MOVIE_USE_SEND_PACKET_API
-#endif
-
 //! \brief Drop in replacement for AVPacketList
 //!
 //! AVPacketList which was deprecated with FFMpeg 4.4.
@@ -344,7 +329,6 @@ class movie_player {
   //! Decode audio from the movie into a format suitable for playback
   int decode_audio_frame(bool fFirst);
 
-#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   //! Convert packet data into frames
   //!
   //! \param stream The index of the stream to get the frame for
@@ -352,14 +336,6 @@ class movie_player {
   //! packet queue.
   //! \returns FFMPEG result of avcodec_recieve_frame
   int get_frame(int stream, AVFrame* pFrame);
-#else
-  //! Convert video packet data into a frame.
-  //!
-  //! \param pFrame An empty frame which gets populated by the data in the
-  //! video packet queue.
-  //! \returns 1 if the frame was received, 0 if it was not, and < 0 on error
-  int get_video_frame(AVFrame* pFrame);
-#endif
 
   SDL_Renderer* renderer;  ///< The renderer to draw to
 
@@ -425,11 +401,6 @@ class movie_player {
   int mixer_channels;   ///< How many channels to play on (1 - mono, 2 -
                         ///< stereo)
   int mixer_frequency;  ///< The frequency of audio expected by SDL_Mixer
-
-#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
-  AVPacket* flush_packet;  ///< A representative packet indicating a flush is
-                           ///< required.
-#endif
 
   std::thread stream_thread;  ///< The thread responsible for reading the
                               ///< movie streams

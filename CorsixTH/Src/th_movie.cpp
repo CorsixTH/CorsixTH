@@ -32,47 +32,16 @@ SOFTWARE.
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>
+#include <libavutil/imgutils.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/opt.h>
 #include <libswscale/swscale.h>
-#if (defined(CORSIX_TH_USE_LIBAV) &&                       \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                      \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
-#include <libavutil/imgutils.h>
-#endif
 }
 #include <SDL_mixer.h>
 
 #include <chrono>
 #include <cstring>
 #include <iostream>
-
-#if (defined(CORSIX_TH_USE_LIBAV) &&                       \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 7, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                      \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
-#define av_packet_unref av_free_packet
-#endif
-
-#if (defined(CORSIX_TH_USE_LIBAV) &&                        \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 28, 1)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                       \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 45, 101))
-#define av_frame_alloc avcodec_alloc_frame
-#define av_frame_unref avcodec_get_frame_defaults
-#define av_frame_free avcodec_free_frame
-#endif
-
-#if (defined(CORSIX_TH_USE_LIBAV) &&                        \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 52, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                       \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(55, 63, 100))
-void avcodec_free_context(AVCodecContext** ctx) {
-  avcodec_close(*ctx);
-  av_free(*ctx);
-}
-#endif
 
 namespace {
 
@@ -93,14 +62,7 @@ void movie_picture::allocate(int iWidth, int iHeight) {
   width = iWidth;
   height = iHeight;
   av_freep(&buffer);
-#if (defined(CORSIX_TH_USE_LIBAV) &&                       \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                      \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
   int numBytes = av_image_get_buffer_size(pixel_format, width, height, 1);
-#else
-  int numBytes = avpicture_get_size(pixel_format, width, height);
-#endif
   buffer = static_cast<uint8_t*>(av_mallocz(numBytes));
 }
 
@@ -262,18 +224,9 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
 
     /* Allocate a new frame and buffer for the destination RGB24 data. */
     AVFrame* pFrameRGB = av_frame_alloc();
-#if (defined(CORSIX_TH_USE_LIBAV) &&                       \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(54, 6, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                      \
-     LIBAVUTIL_VERSION_INT >= AV_VERSION_INT(51, 63, 100))
     av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize,
                          pMoviePicture->buffer, pMoviePicture->pixel_format,
                          pMoviePicture->width, pMoviePicture->height, 1);
-#else
-    avpicture_fill((AVPicture*)pFrameRGB, pMoviePicture->buffer,
-                   pMoviePicture->pixel_format, pMoviePicture->width,
-                   pMoviePicture->height);
-#endif
 
     /* Rescale the frame data and convert it to RGB24. */
     sws_scale(sws_context, pFrame->data, pFrame->linesize, 0, pFrame->height,
@@ -302,15 +255,6 @@ av_packet_queue::av_packet_queue()
 int av_packet_queue::get_count() const { return count; }
 
 void av_packet_queue::push(AVPacket* pPacket) {
-#if (defined(CORSIX_TH_USE_LIBAV) &&                       \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 8, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                      \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(57, 12, 100))
-  if (av_dup_packet(pPacket) < 0) {
-    throw std::runtime_error("Failed to duplicate AV packet");
-  }
-#endif
-
   th_packet_list* pNode = (th_packet_list*)av_malloc(sizeof(th_packet_list));
   pNode->pkt = *pPacket;
   pNode->next = nullptr;
@@ -384,13 +328,6 @@ movie_player::movie_player()
   av_register_all();
 #endif
 
-#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
-  flush_packet = (AVPacket*)av_malloc(sizeof(AVPacket));
-  av_init_packet(flush_packet);
-  flush_packet->data = (uint8_t*)"FLUSH";
-  flush_packet->size = 5;
-#endif
-
   audio_chunk_buffer =
       (uint8_t*)std::calloc(audio_chunk_buffer_capacity, sizeof(uint8_t));
 }
@@ -398,10 +335,6 @@ movie_player::movie_player()
 movie_player::~movie_player() {
   unload();
 
-#ifndef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
-  av_packet_unref(flush_packet);
-  av_free(flush_packet);
-#endif
   free(audio_chunk_buffer);
   delete movie_picture_buffer;
 }
@@ -458,16 +391,9 @@ bool movie_player::load(const char* szFilepath) {
 
 AVCodecContext* movie_player::get_codec_context_for_stream(
     AVCodec* codec, AVStream* stream) const {
-#if (defined(CORSIX_TH_USE_LIBAV) &&                         \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                        \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
   AVCodecContext* ctx = avcodec_alloc_context3(codec);
   avcodec_parameters_to_context(ctx, stream->codecpar);
   return ctx;
-#else
-  return stream->codec;
-#endif
 }
 
 void movie_player::unload() {
@@ -509,15 +435,11 @@ void movie_player::unload() {
     video_queue = nullptr;
   }
   movie_picture_buffer->deallocate();
-#if (defined(CORSIX_TH_USE_LIBAV) &&                         \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                        \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
+
   if (video_codec_context) {
     avcodec_free_context(&video_codec_context);
     video_codec_context = nullptr;
   }
-#endif
 
   if (audio_channel >= 0) {
     Mix_UnregisterAllEffects(audio_channel);
@@ -532,15 +454,12 @@ void movie_player::unload() {
     av_free(audio_buffer);
     audio_buffer_max_size = 0;
   }
-#if (defined(CORSIX_TH_USE_LIBAV) &&                         \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 14, 0)) || \
-    (defined(CORSIX_TH_USE_FFMPEG) &&                        \
-     LIBAVCODEC_VERSION_INT >= AV_VERSION_INT(57, 33, 100))
+
   if (audio_codec_context) {
     avcodec_free_context(&audio_codec_context);
     audio_codec_context = nullptr;
   }
-#endif
+
   av_frame_free(&audio_frame);
 
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -736,7 +655,6 @@ void movie_player::run_video() {
   while (!aborting) {
     av_frame_unref(pFrame);
 
-#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
     iError = get_frame(video_stream_index, pFrame);
 
     if (iError == AVERROR_EOF) {
@@ -746,14 +664,6 @@ void movie_player::run_video() {
                 << " while decoding video packet" << std::endl;
       break;
     }
-#else
-    iError = get_video_frame(pFrame);
-    if (iError < 0) {
-      break;
-    } else if (iError == 0) {
-      continue;
-    }
-#endif
 
     dClockPts = get_presentation_time_for_frame(pFrame, video_stream_index);
     iError = movie_picture_buffer->write(pFrame, dClockPts);
@@ -776,10 +686,7 @@ double movie_player::get_presentation_time_for_frame(AVFrame* frame,
     pts = frame->pkt_dts;
   }
 #else
-#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(54, 18, 100)
-  pts = *(int64_t*)av_opt_ptr(avcodec_get_frame_class(), frame,
-                              "best_effort_timestamp");
-#elif LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 18, 100)
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 18, 100)
   pts = av_frame_get_best_effort_timestamp(frame);
 #else
   pts = frame->best_effort_timestamp;
@@ -793,7 +700,6 @@ double movie_player::get_presentation_time_for_frame(AVFrame* frame,
   return pts * av_q2d(format_context->streams[streamIndex]->time_base);
 }
 
-#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
 int movie_player::get_frame(int stream, AVFrame* pFrame) {
   int iError = AVERROR(EAGAIN);
   AVCodecContext* ctx;
@@ -831,40 +737,6 @@ int movie_player::get_frame(int stream, AVFrame* pFrame) {
   return iError;
 }
 
-#else
-int movie_player::get_video_frame(AVFrame* pFrame) {
-  int iGotPicture = 0;
-  int iError;
-
-  AVPacket* pPacket = video_queue->pull(true);
-  if (pPacket == nullptr) {
-    return -1;
-  }
-
-  if (pPacket->data == flush_packet->data) {
-    // TODO: Flush
-
-    return 0;
-  }
-
-  iError =
-      avcodec_decode_video2(video_codec_context, pFrame, &iGotPicture, pPacket);
-  av_packet_unref(pPacket);
-  av_free(pPacket);
-
-  if (iError < 0) {
-    return 0;
-  }
-
-  if (iGotPicture) {
-    iError = 1;
-    return iError;
-  }
-
-  return 0;
-}
-#endif
-
 void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
   std::lock_guard<std::mutex> audioLock(decoding_audio_mutex);
 
@@ -895,7 +767,6 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
 }
 
 int movie_player::decode_audio_frame(bool fFirst) {
-#ifdef CORSIX_TH_MOVIE_USE_SEND_PACKET_API
   if (!audio_frame) {
     audio_frame = av_frame_alloc();
   } else {
@@ -916,85 +787,6 @@ int movie_player::decode_audio_frame(bool fFirst) {
       get_presentation_time_for_frame(audio_frame, audio_stream_index);
   current_sync_pts = dClockPts;
   current_sync_pts_system_time = SDL_GetTicks();
-#else
-  int iGotFrame = 0;
-  bool fNewPacket = false;
-  bool fFlushComplete = false;
-
-  while (!iGotFrame && !aborting) {
-    if (!audio_packet || audio_packet->size == 0) {
-      if (audio_packet) {
-        audio_packet->data = audio_packet_data;
-        audio_packet->size = audio_packet_size;
-        av_packet_unref(audio_packet);
-        av_free(audio_packet);
-        audio_packet = nullptr;
-      }
-      audio_packet = audio_queue->pull(true);
-      if (aborting) {
-        break;
-      }
-
-      audio_packet_data = audio_packet->data;
-      audio_packet_size = audio_packet->size;
-
-      if (audio_packet == nullptr) {
-        return -1;
-      }
-      fNewPacket = true;
-
-      if (audio_packet->data == flush_packet->data) {
-        avcodec_flush_buffers(audio_codec_context);
-        fFlushComplete = false;
-      }
-    }
-
-    if (fFirst) {
-      int64_t iStreamPts = audio_packet->pts;
-      if (iStreamPts != AV_NOPTS_VALUE) {
-        // There is a time_base in audio_codec_context too, but that one
-        // is wrong.
-        double dClockPts =
-            iStreamPts *
-            av_q2d(format_context->streams[audio_stream_index]->time_base);
-        current_sync_pts = dClockPts;
-        current_sync_pts_system_time = SDL_GetTicks();
-      }
-      fFirst = false;
-    }
-
-    while (audio_packet->size > 0 || (!audio_packet->data && fNewPacket)) {
-      if (!audio_frame) {
-        audio_frame = av_frame_alloc();
-      } else {
-        av_frame_unref(audio_frame);
-      }
-
-      if (fFlushComplete) {
-        break;
-      }
-
-      fNewPacket = false;
-
-      int iBytesConsumed = avcodec_decode_audio4(
-          audio_codec_context, audio_frame, &iGotFrame, audio_packet);
-
-      if (iBytesConsumed < 0) {
-        audio_packet->size = 0;
-        break;
-      }
-      audio_packet->data += iBytesConsumed;
-      audio_packet->size -= iBytesConsumed;
-
-      if (!iGotFrame) {
-        if (audio_packet->data &&
-            (audio_codec_context->codec->capabilities & CODEC_CAP_DELAY)) {
-          fFlushComplete = true;
-        }
-      }
-    }
-  }
-#endif
   // over-estimate output samples
   int iOutSamples =
       (int)av_rescale_rnd(audio_frame->nb_samples, mixer_frequency,
