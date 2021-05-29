@@ -303,6 +303,14 @@ void av_packet_queue::release() {
   cond.notify_all();
 }
 
+void av_packet_queue::clear() {
+  while (get_count() > 0) {
+    AVPacket* p = pull(false);
+    av_packet_unref(p);
+    av_free(p);
+  }
+}
+
 movie_player::movie_player()
     : renderer(nullptr),
       last_error(),
@@ -310,8 +318,8 @@ movie_player::movie_player()
       format_context(nullptr),
       video_codec_context(nullptr),
       audio_codec_context(nullptr),
-      video_queue(nullptr),
-      audio_queue(nullptr),
+      video_queue(),
+      audio_queue(),
       movie_picture_buffer(new ::movie_picture_buffer()),
       audio_resample_context(nullptr),
       audio_buffer_size(0),
@@ -398,12 +406,8 @@ AVCodecContext* movie_player::get_codec_context_for_stream(
 void movie_player::unload() {
   aborting = true;
 
-  if (audio_queue) {
-    audio_queue->release();
-  }
-  if (video_queue) {
-    video_queue->release();
-  }
+  audio_queue.release();
+  video_queue.release();
   movie_picture_buffer->abort();
 
   if (stream_thread.joinable()) {
@@ -415,24 +419,8 @@ void movie_player::unload() {
 
   // wait until after other threads are closed to clear the packet queues
   // so we don't free something being used.
-  if (audio_queue) {
-    while (audio_queue->get_count() > 0) {
-      AVPacket* p = audio_queue->pull(false);
-      av_packet_unref(p);
-      av_free(p);
-    }
-    delete audio_queue;
-    audio_queue = nullptr;
-  }
-  if (video_queue) {
-    while (video_queue->get_count() > 0) {
-      AVPacket* p = video_queue->pull(false);
-      av_packet_unref(p);
-      av_free(p);
-    }
-    delete video_queue;
-    video_queue = nullptr;
-  }
+  audio_queue.clear();
+  video_queue.clear();
   movie_picture_buffer->deallocate();
 
   if (video_codec_context) {
@@ -482,7 +470,8 @@ void movie_player::play(int iChannel) {
     return;
   }
 
-  video_queue = new av_packet_queue();
+  audio_queue.clear();
+  video_queue.clear();
   movie_picture_buffer->reset();
   movie_picture_buffer->allocate(renderer, video_codec_context->width,
                                  video_codec_context->height);
@@ -491,7 +480,6 @@ void movie_player::play(int iChannel) {
   audio_buffer_index = 0;
   audio_buffer_max_size = 0;
 
-  audio_queue = new av_packet_queue();
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
 
@@ -609,9 +597,9 @@ void movie_player::read_streams() {
       }
     } else {
       if (packet.stream_index == video_stream_index) {
-        video_queue->push(&packet);
+        video_queue.push(&packet);
       } else if (packet.stream_index == audio_stream_index) {
-        audio_queue->push(&packet);
+        audio_queue.push(&packet);
       } else {
         av_packet_unref(&packet);
       }
@@ -619,7 +607,7 @@ void movie_player::read_streams() {
   }
 
   while (!aborting) {
-    if (video_queue->get_count() == 0 && audio_queue->get_count() == 0 &&
+    if (video_queue.get_count() == 0 && audio_queue.get_count() == 0 &&
         movie_picture_buffer->get_next_pts() == 0) {
       break;
     }
@@ -692,10 +680,10 @@ int movie_player::get_frame(int stream, AVFrame* pFrame) {
 
   if (stream == video_stream_index) {
     ctx = video_codec_context;
-    pq = video_queue;
+    pq = &video_queue;
   } else if (stream == audio_stream_index) {
     ctx = audio_codec_context;
-    pq = audio_queue;
+    pq = &audio_queue;
   } else {
     throw std::invalid_argument("Invalid value provided for stream");
   }

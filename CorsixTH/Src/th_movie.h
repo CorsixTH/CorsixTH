@@ -205,6 +205,9 @@ class av_packet_queue {
   //! Release a blocking pull without writing a new packet to the queue.
   void release();
 
+  //! Release and free the entire contents of the queue
+  void clear();
+
  private:
   th_packet_list* first_packet;  ///< The packet at the front of the queue
   th_packet_list* last_packet;   ///< The packet at the end of the queue
@@ -360,8 +363,8 @@ class movie_player {
                                         ///< related to audio
 
   // queues for transferring data between threads
-  av_packet_queue* video_queue;  ///< Packets from the video stream
-  av_packet_queue* audio_queue;  ///< Packets from the audio stream
+  av_packet_queue video_queue;  ///< Packets from the video stream
+  av_packet_queue audio_queue;  ///< Packets from the audio stream
   ::movie_picture_buffer* movie_picture_buffer;  ///< Buffer of processed video
 
   // clock sync parameters
