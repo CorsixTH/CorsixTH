@@ -27,6 +27,10 @@ Version 0.65 - released xxxx 2021
 * The game will now check common locations for Theme Hospital on startup if it
   has not been configured
 * Games compiled without movie/audio can no longer access these settings
+* Update check now occurs over TLS for better security
+* English names are now shown in a tooltip when hovering over a language
+  option
+* Improved TTF font rendering
 
 # Translations
 * Greek language added! (thanks to dimitrios-iliadis!)
