@@ -386,13 +386,7 @@ class movie_player {
                               ///< size)
   uint8_t* audio_buffer;      ///< An audio buffer for playback
 
-  AVPacket* audio_packet;  ///< The current audio packet being decoded (audio
-                           ///< frames don't necessarily line up with packets)
-  int audio_packet_size;   ///< The size of #m_pbAudioPacketData
-  uint8_t* audio_packet_data;  ///< Original data for #m_pAudioPacket, kept so
-                               ///< that it can be freed after the packet is
-                               ///< processed
-  AVFrame* audio_frame;        ///< The frame we are decoding audio into
+  AVFrame* audio_frame;  ///< The frame we are decoding audio into
 
   Mix_Chunk* empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
   uint8_t* audio_chunk_buffer;   ///< 0'd out buffer for the SDL_Mixer chunk

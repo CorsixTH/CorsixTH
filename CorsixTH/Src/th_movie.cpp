@@ -316,7 +316,6 @@ movie_player::movie_player()
       audio_resample_context(nullptr),
       audio_buffer_size(0),
       audio_buffer_max_size(0),
-      audio_packet(nullptr),
       audio_frame(nullptr),
       empty_audio_chunk(nullptr),
       audio_channel(-1),
@@ -472,16 +471,6 @@ void movie_player::unload() {
   }
 #endif
 
-  if (audio_packet) {
-    audio_packet->data = audio_packet_data;
-    audio_packet->size = audio_packet_size;
-    av_packet_unref(audio_packet);
-    av_free(audio_packet);
-    audio_packet = nullptr;
-    audio_packet_data = nullptr;
-    audio_packet_size = 0;
-  }
-
   if (format_context) {
     avformat_close_input(&format_context);
   }
@@ -497,10 +486,6 @@ void movie_player::play(int iChannel) {
   movie_picture_buffer->reset();
   movie_picture_buffer->allocate(renderer, video_codec_context->width,
                                  video_codec_context->height);
-
-  audio_packet = nullptr;
-  audio_packet_size = 0;
-  audio_packet_data = nullptr;
 
   audio_buffer_size = 0;
   audio_buffer_index = 0;
