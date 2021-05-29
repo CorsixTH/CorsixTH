@@ -249,47 +249,28 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
   return 0;
 }
 
-av_packet_queue::av_packet_queue()
-    : first_packet(nullptr), last_packet(nullptr), count(0), mutex{}, cond{} {}
+av_packet_queue::av_packet_queue() : data{}, mutex{}, cond{} {}
 
-int av_packet_queue::get_count() const { return count; }
+std::size_t av_packet_queue::get_count() const { return data.size(); }
 
 void av_packet_queue::push(av_packet_unique_ptr pPacket) {
-  th_packet_list* pNode = new th_packet_list();
-  pNode->pkt.swap(pPacket);
-  pNode->next = nullptr;
-
   std::lock_guard<std::mutex> lock(mutex);
-
-  if (last_packet == nullptr) {
-    first_packet = pNode;
-  } else {
-    last_packet->next = pNode;
-  }
-  last_packet = pNode;
-  count++;
+  data.push(std::move(pPacket));
 
   cond.notify_one();
 }
 
-av_packet_unique_ptr av_packet_queue::pull(bool fBlock) {
+av_packet_unique_ptr av_packet_queue::pull(bool block) {
   std::unique_lock<std::mutex> lock(mutex);
 
-  th_packet_list* pNode = first_packet;
-  if (pNode == nullptr && fBlock) {
+  if (data.empty() && block) {
     cond.wait(lock);
-    pNode = first_packet;
   }
 
   av_packet_unique_ptr pPacket(nullptr);
-  if (pNode != nullptr) {
-    first_packet = pNode->next;
-    if (first_packet == nullptr) {
-      last_packet = nullptr;
-    }
-    count--;
-    pPacket.swap(pNode->pkt);
-    delete pNode;
+  if (!data.empty()) {
+    pPacket.swap(data.front());
+    data.pop();
   }
 
   return pPacket;
@@ -303,7 +284,6 @@ void av_packet_queue::release() {
 void av_packet_queue::clear() {
   while (get_count() > 0) {
     av_packet_unique_ptr p = pull(false);
-    p.reset();
   }
 }
 
@@ -582,7 +562,8 @@ void movie_player::deallocate_picture_buffer() {
 
 void movie_player::read_streams() {
   while (!aborting) {
-    av_packet_unique_ptr packet(static_cast<AVPacket*>(av_malloc(sizeof(AVPacket))));
+    av_packet_unique_ptr packet(
+        static_cast<AVPacket*>(av_malloc(sizeof(AVPacket))));
     int iError = av_read_frame(format_context, packet.get());
     if (iError < 0) {
       if (iError == AVERROR_EOF || format_context->pb->error ||

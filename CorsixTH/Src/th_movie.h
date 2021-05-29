@@ -53,23 +53,19 @@ extern "C" {
 #endif
 }
 
-class av_packet_deleter {
-  public:
-    void operator()(AVPacket* p) {
-      av_packet_unref(p);
-      av_free(p);
-    }
-};
-
-using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
-
-//! \brief Drop in replacement for AVPacketList
+//! \brief Functor for deleting AVPackets
 //!
-//! AVPacketList which was deprecated with FFMpeg 4.4.
-struct th_packet_list {
-  av_packet_unique_ptr pkt;
-  th_packet_list* next;
+//! Deletes AVPacket pointers that are allocated with av_malloc
+class av_packet_deleter {
+ public:
+  void operator()(AVPacket* p) {
+    av_packet_unref(p);
+    av_free(p);
+  }
 };
+
+//! \brief unique_ptr for AVPackets
+using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
 
 //! \brief A picture in movie_picture_buffer
 //!
@@ -210,7 +206,7 @@ class av_packet_queue {
   av_packet_unique_ptr pull(bool block);
 
   //! Return the number of packets in the queue
-  int get_count() const;
+  std::size_t get_count() const;
 
   //! Release a blocking pull without writing a new packet to the queue.
   void release();
@@ -219,9 +215,7 @@ class av_packet_queue {
   void clear();
 
  private:
-  th_packet_list* first_packet;  ///< The packet at the front of the queue
-  th_packet_list* last_packet;   ///< The packet at the end of the queue
-  int count;                     ///< The number of packets in the queue
+  std::queue<av_packet_unique_ptr> data;  ///< The packets in the queue
   std::mutex mutex;  ///< A mutex restricting access to the packet queue to a
                      ///< single thread
   std::condition_variable
