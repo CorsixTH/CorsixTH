@@ -288,8 +288,10 @@ function LoadGame(data)
   TheApp:afterLoad()
   TheApp.world:resetAnimations()
   TheApp.ui:onChangeResolution()
-    -- Possibly add the blueish tone if the game is currently paused.
-  if not TheApp.world.user_actions_allowed then
+  -- Check if the blueish tone should be applied.
+  -- Note: Blue filter control should be handled from world or ui, however when
+  -- loading a game we should let persistance do it.
+  if not TheApp.ui:checkForMustPauseWindows() and TheApp.world:isUserActionProhibited() then
     TheApp.video:setBlueFilterActive(true)
   end
 end
