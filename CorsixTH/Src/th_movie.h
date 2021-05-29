@@ -67,6 +67,13 @@ class av_packet_deleter {
 //! \brief unique_ptr for AVPackets
 using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
 
+class av_frame_deleter {
+ public:
+  void operator()(AVFrame* f) { av_frame_free(&f); }
+};
+
+using av_frame_unique_ptr = std::unique_ptr<AVFrame, av_frame_deleter>;
+
 //! \brief A picture in movie_picture_buffer
 //!
 //! Stores the picture from a frame in the movie from the time that it is
@@ -237,7 +244,11 @@ class movie_player {
   //! Destroy the movie_player
   ~movie_player();
 
-  //! Assign the renderer on which to draw the movie
+  //! Assign the renderer on which to draw the movie.
+  //!
+  //! movie_player does not take ownership of the render, it is up to the
+  //! caller to delete it, after deleting movie_player or setting a different
+  //! renderer.
   void set_renderer(SDL_Renderer* pRenderer);
 
   //! Return whether movies were compiled into CorsixTH
@@ -393,7 +404,7 @@ class movie_player {
                               ///< size)
   uint8_t* audio_buffer;      ///< An audio buffer for playback
 
-  AVFrame* audio_frame;  ///< The frame we are decoding audio into
+  av_frame_unique_ptr audio_frame;  ///< The frame we are decoding audio into
 
   Mix_Chunk* empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
   uint8_t* audio_chunk_buffer;   ///< 0'd out buffer for the SDL_Mixer chunk

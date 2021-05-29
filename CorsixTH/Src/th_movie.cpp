@@ -223,7 +223,7 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
     }
 
     /* Allocate a new frame and buffer for the destination RGB24 data. */
-    AVFrame* pFrameRGB = av_frame_alloc();
+    av_frame_unique_ptr pFrameRGB(av_frame_alloc());
     av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize,
                          pMoviePicture->buffer, pMoviePicture->pixel_format,
                          pMoviePicture->width, pMoviePicture->height, 1);
@@ -231,8 +231,6 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
     /* Rescale the frame data and convert it to RGB24. */
     sws_scale(sws_context, pFrame->data, pFrame->linesize, 0, pFrame->height,
               pFrameRGB->data, pFrameRGB->linesize);
-
-    av_frame_free(&pFrameRGB);
 
     pMoviePicture->pts = dPts;
 
@@ -423,7 +421,7 @@ void movie_player::unload() {
     audio_codec_context = nullptr;
   }
 
-  av_frame_free(&audio_frame);
+  audio_frame.reset();
 
 #ifdef CORSIX_TH_USE_FFMPEG
   swr_free(&audio_resample_context);
@@ -594,14 +592,14 @@ void movie_player::read_streams() {
 }
 
 void movie_player::run_video() {
-  AVFrame* pFrame = av_frame_alloc();
+  av_frame_unique_ptr pFrame(av_frame_alloc());
   double dClockPts;
   int iError;
 
   while (!aborting) {
-    av_frame_unref(pFrame);
+    av_frame_unref(pFrame.get());
 
-    iError = get_frame(video_stream_index, pFrame);
+    iError = get_frame(video_stream_index, pFrame.get());
 
     if (iError == AVERROR_EOF) {
       break;
@@ -611,8 +609,9 @@ void movie_player::run_video() {
       break;
     }
 
-    dClockPts = get_presentation_time_for_frame(pFrame, video_stream_index);
-    iError = movie_picture_buffer->write(pFrame, dClockPts);
+    dClockPts =
+        get_presentation_time_for_frame(pFrame.get(), video_stream_index);
+    iError = movie_picture_buffer->write(pFrame.get(), dClockPts);
 
     if (iError < 0) {
       break;
@@ -620,7 +619,6 @@ void movie_player::run_video() {
   }
 
   avcodec_flush_buffers(video_codec_context);
-  av_frame_free(&pFrame);
 }
 
 double movie_player::get_presentation_time_for_frame(AVFrame* frame,
@@ -710,12 +708,12 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
 
 int movie_player::decode_audio_frame(bool fFirst) {
   if (!audio_frame) {
-    audio_frame = av_frame_alloc();
+    audio_frame.reset(av_frame_alloc());
   } else {
-    av_frame_unref(audio_frame);
+    av_frame_unref(audio_frame.get());
   }
 
-  int iError = get_frame(audio_stream_index, audio_frame);
+  int iError = get_frame(audio_stream_index, audio_frame.get());
 
   if (iError == AVERROR_EOF) {
     return 0;
@@ -726,7 +724,7 @@ int movie_player::decode_audio_frame(bool fFirst) {
   }
 
   double dClockPts =
-      get_presentation_time_for_frame(audio_frame, audio_stream_index);
+      get_presentation_time_for_frame(audio_frame.get(), audio_stream_index);
   current_sync_pts = dClockPts;
   current_sync_pts_system_time = SDL_GetTicks();
   // over-estimate output samples
