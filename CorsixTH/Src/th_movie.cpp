@@ -177,7 +177,7 @@ double movie_picture_buffer::get_next_pts() {
   if (!allocated || picture_count < 2) {
     nextPts = 0;
   } else {
-    nextPts = picture_queue[(read_index + 1) % picture_buffer_size].pts;
+    nextPts = picture_queue[(read_index + 1UL) % picture_buffer_size].pts;
   }
   return nextPts;
 }
@@ -254,9 +254,9 @@ av_packet_queue::av_packet_queue()
 
 int av_packet_queue::get_count() const { return count; }
 
-void av_packet_queue::push(AVPacket* pPacket) {
-  th_packet_list* pNode = (th_packet_list*)av_malloc(sizeof(th_packet_list));
-  pNode->pkt = *pPacket;
+void av_packet_queue::push(av_packet_unique_ptr pPacket) {
+  th_packet_list* pNode = new th_packet_list();
+  pNode->pkt.swap(pPacket);
   pNode->next = nullptr;
 
   std::lock_guard<std::mutex> lock(mutex);
@@ -272,7 +272,7 @@ void av_packet_queue::push(AVPacket* pPacket) {
   cond.notify_one();
 }
 
-AVPacket* av_packet_queue::pull(bool fBlock) {
+av_packet_unique_ptr av_packet_queue::pull(bool fBlock) {
   std::unique_lock<std::mutex> lock(mutex);
 
   th_packet_list* pNode = first_packet;
@@ -281,18 +281,15 @@ AVPacket* av_packet_queue::pull(bool fBlock) {
     pNode = first_packet;
   }
 
-  AVPacket* pPacket;
-  if (pNode == nullptr) {
-    pPacket = nullptr;
-  } else {
+  av_packet_unique_ptr pPacket(nullptr);
+  if (pNode != nullptr) {
     first_packet = pNode->next;
     if (first_packet == nullptr) {
       last_packet = nullptr;
     }
     count--;
-    pPacket = (AVPacket*)av_malloc(sizeof(AVPacket));
-    *pPacket = pNode->pkt;
-    av_free(pNode);
+    pPacket.swap(pNode->pkt);
+    delete pNode;
   }
 
   return pPacket;
@@ -305,9 +302,8 @@ void av_packet_queue::release() {
 
 void av_packet_queue::clear() {
   while (get_count() > 0) {
-    AVPacket* p = pull(false);
-    av_packet_unref(p);
-    av_free(p);
+    av_packet_unique_ptr p = pull(false);
+    p.reset();
   }
 }
 
@@ -585,23 +581,19 @@ void movie_player::deallocate_picture_buffer() {
 }
 
 void movie_player::read_streams() {
-  AVPacket packet;
-  int iError;
-
   while (!aborting) {
-    iError = av_read_frame(format_context, &packet);
+    av_packet_unique_ptr packet(static_cast<AVPacket*>(av_malloc(sizeof(AVPacket))));
+    int iError = av_read_frame(format_context, packet.get());
     if (iError < 0) {
       if (iError == AVERROR_EOF || format_context->pb->error ||
           format_context->pb->eof_reached) {
         break;
       }
     } else {
-      if (packet.stream_index == video_stream_index) {
-        video_queue.push(&packet);
-      } else if (packet.stream_index == audio_stream_index) {
-        audio_queue.push(&packet);
-      } else {
-        av_packet_unref(&packet);
+      if (packet->stream_index == video_stream_index) {
+        video_queue.push(std::move(packet));
+      } else if (packet->stream_index == audio_stream_index) {
+        audio_queue.push(std::move(packet));
       }
     }
   }
@@ -692,12 +684,8 @@ int movie_player::get_frame(int stream, AVFrame* pFrame) {
     iError = avcodec_receive_frame(ctx, pFrame);
 
     if (iError == AVERROR(EAGAIN)) {
-      AVPacket* pkt = pq->pull(true);
-      int res = avcodec_send_packet(ctx, pkt);
-      if (pkt != nullptr) {
-        av_packet_unref(pkt);
-        av_free(pkt);
-      }
+      av_packet_unique_ptr pkt = pq->pull(true);
+      int res = avcodec_send_packet(ctx, pkt.get());
 
       if (res == AVERROR(EAGAIN)) {
         throw std::runtime_error(

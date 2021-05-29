@@ -53,11 +53,21 @@ extern "C" {
 #endif
 }
 
+class av_packet_deleter {
+  public:
+    void operator()(AVPacket* p) {
+      av_packet_unref(p);
+      av_free(p);
+    }
+};
+
+using av_packet_unique_ptr = std::unique_ptr<AVPacket, av_packet_deleter>;
+
 //! \brief Drop in replacement for AVPacketList
 //!
 //! AVPacketList which was deprecated with FFMpeg 4.4.
 struct th_packet_list {
-  AVPacket pkt;
+  av_packet_unique_ptr pkt;
   th_packet_list* next;
 };
 
@@ -191,13 +201,13 @@ class av_packet_queue {
   ~av_packet_queue() = default;
 
   //! Push a new packet on the back of the queue
-  void push(AVPacket* packet);
+  void push(av_packet_unique_ptr packet);
 
   //! Pull the packet from the front of the queue
   //!
   //! \param block Whether to block if the queue is empty or immediately
   //! return a nullptr
-  AVPacket* pull(bool block);
+  av_packet_unique_ptr pull(bool block);
 
   //! Return the number of packets in the queue
   int get_count() const;
