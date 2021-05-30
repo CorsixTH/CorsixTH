@@ -25,6 +25,7 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <array>
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -167,28 +168,40 @@ class movie_picture_buffer {
   //! \remark Requires external locking
   bool unsafe_full();
 
-  static constexpr size_t picture_buffer_size =
-      4;  ///< The number of elements to allocate in the picture queue
-  std::atomic<bool> aborting;  ///< Whether we are in the process of aborting
-  bool allocated;     ///< Whether the picture buffer has been allocated (and
-                      ///< hasn't since been deallocated)
-  int picture_count;  ///< The number of elements currently written to the
-                      ///< picture queue
-  int read_index;     ///< The position in the picture queue to be read next
-  int write_index;    ///< The position in the picture queue to be written to
-                      ///< next
-  SwsContext* sws_context;  ///< The context for software scaling and pixel
-                            ///< conversion when writing to the picture queue
-  SDL_Texture* texture;     ///< The (potentially hardware) texture to draw the
-                            ///< picture to. In OpenGL this should only be
-                            ///< accessed on the main thread
-  std::mutex mutex;  ///< A mutex for restricting access to the picture buffer
-                     ///< to a single thread
-  std::condition_variable
-      cond;  ///< A condition for indicating access to the picture buffer
-  movie_picture picture_queue[picture_buffer_size];  ///< The picture queue, a
-                                                     ///< looping FIFO queue
-                                                     ///< of movie_pictures
+  //! The number of elements to allocate in the picture queue
+  static constexpr std::size_t picture_buffer_size = 4;
+
+  //! Whether we are in the process of aborting
+  std::atomic<bool> aborting;
+
+  //! Whether the picture buffer is currently allocated
+  bool allocated;
+
+  //! The number of elements currently written to the picture queue
+  int picture_count;
+
+  //! The position in the picture queue to be read next
+  std::size_t read_index;
+
+  //! The position in the picture queue to be written to next
+  std::size_t write_index;
+
+  //! The context for software scaling and pixel conversion when writing to the
+  //! picture queue
+  SwsContext* sws_context;
+
+  //! The (potentially hardware) texture to draw the picture to. In OpenGL this
+  //! should only be accessed on the main thread
+  SDL_Texture* texture;
+
+  //! A mutex for restricting access to the picture buffer to a single thread
+  std::mutex mutex;
+
+  //! A condition for indicating access to the picture buffer
+  std::condition_variable cond;
+
+  //! The picture queue, aloo ping FIFO queue of movie_pictures
+  std::array<movie_picture, picture_buffer_size> picture_queue;
 };
 
 //! The AVPacketQueue is a thread safe queue of movie packets

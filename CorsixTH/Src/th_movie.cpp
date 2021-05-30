@@ -108,8 +108,8 @@ void movie_picture_buffer::allocate(SDL_Renderer* pRenderer, int iWidth,
     std::cerr << "Problem creating overlay: " << SDL_GetError() << "\n";
     return;
   }
-  for (int i = 0; i < picture_buffer_size; i++) {
-    picture_queue[i].allocate(iWidth, iHeight);
+  for (movie_picture& picture : picture_queue) {
+    picture.allocate(iWidth, iHeight);
   }
   // Do not change write_index, it's used by the other thread.
   // read_index is only used in this thread.
@@ -127,9 +127,9 @@ void movie_picture_buffer::deallocate() {
     allocated = false;
   }
 
-  for (int i = 0; i < picture_buffer_size; i++) {
-    std::lock_guard<std::mutex> pictureLock(picture_queue[i].mutex);
-    picture_queue[i].deallocate();
+  for (movie_picture& picture : picture_queue) {
+    std::lock_guard<std::mutex> pictureLock(picture.mutex);
+    picture.deallocate();
   }
 
   if (texture) {
