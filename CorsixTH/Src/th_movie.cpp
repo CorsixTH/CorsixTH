@@ -599,7 +599,7 @@ void movie_player::run_video() {
   while (!aborting) {
     av_frame_unref(pFrame.get());
 
-    iError = get_frame(video_stream_index, pFrame.get());
+    iError = populate_frame(video_stream_index, *pFrame);
 
     if (iError == AVERROR_EOF) {
       break;
@@ -609,8 +609,7 @@ void movie_player::run_video() {
       break;
     }
 
-    dClockPts =
-        get_presentation_time_for_frame(pFrame.get(), video_stream_index);
+    dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
     iError = movie_picture_buffer->write(pFrame.get(), dClockPts);
 
     if (iError < 0) {
@@ -621,19 +620,19 @@ void movie_player::run_video() {
   avcodec_flush_buffers(video_codec_context);
 }
 
-double movie_player::get_presentation_time_for_frame(AVFrame* frame,
+double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
                                                      int streamIndex) const {
   int64_t pts;
 #ifdef CORSIX_TH_USE_LIBAV
-  pts = frame->pts;
+  pts = frame.pts;
   if (pts == AV_NOPTS_VALUE) {
-    pts = frame->pkt_dts;
+    pts = frame.pkt_dts;
   }
 #else
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 18, 100)
-  pts = av_frame_get_best_effort_timestamp(frame);
+  pts = av_frame_get_best_effort_timestamp(&frame);
 #else
-  pts = frame->best_effort_timestamp;
+  pts = frame.best_effort_timestamp;
 #endif  // LIBAVCODEC_VERSION_INT
 #endif  // CORSIX_T_USE_LIBAV
 
@@ -644,7 +643,7 @@ double movie_player::get_presentation_time_for_frame(AVFrame* frame,
   return pts * av_q2d(format_context->streams[streamIndex]->time_base);
 }
 
-int movie_player::get_frame(int stream, AVFrame* pFrame) {
+int movie_player::populate_frame(int stream, AVFrame& frame) {
   int iError = AVERROR(EAGAIN);
   AVCodecContext* ctx;
   av_packet_queue* pq;
@@ -660,7 +659,7 @@ int movie_player::get_frame(int stream, AVFrame* pFrame) {
   }
 
   while (iError == AVERROR(EAGAIN)) {
-    iError = avcodec_receive_frame(ctx, pFrame);
+    iError = avcodec_receive_frame(ctx, &frame);
 
     if (iError == AVERROR(EAGAIN)) {
       av_packet_unique_ptr pkt = pq->pull(true);
@@ -713,7 +712,7 @@ int movie_player::decode_audio_frame(bool fFirst) {
     av_frame_unref(audio_frame.get());
   }
 
-  int iError = get_frame(audio_stream_index, audio_frame.get());
+  int iError = populate_frame(audio_stream_index, *audio_frame);
 
   if (iError == AVERROR_EOF) {
     return 0;
@@ -724,7 +723,7 @@ int movie_player::decode_audio_frame(bool fFirst) {
   }
 
   double dClockPts =
-      get_presentation_time_for_frame(audio_frame.get(), audio_stream_index);
+      get_presentation_time_for_frame(*audio_frame, audio_stream_index);
   current_sync_pts = dClockPts;
   current_sync_pts_system_time = SDL_GetTicks();
   // over-estimate output samples

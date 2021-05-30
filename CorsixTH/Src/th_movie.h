@@ -355,7 +355,8 @@ class movie_player {
   //! \param frame The video or audio frame
   //! \param streamIndex The position of the stream in m_pFormatContexts
   //! streams array
-  double get_presentation_time_for_frame(AVFrame* frame, int streamIndex) const;
+  double get_presentation_time_for_frame(const AVFrame& frame,
+                                         int streamIndex) const;
 
   //! Decode audio from the movie into a format suitable for playback
   int decode_audio_frame(bool fFirst);
@@ -363,10 +364,10 @@ class movie_player {
   //! Convert packet data into frames
   //!
   //! \param stream The index of the stream to get the frame for
-  //! \param pFrame An empty frame which gets populated by the data in the
+  //! \param frame An empty frame which gets populated by the data in the
   //! packet queue.
-  //! \returns FFMPEG result of avcodec_recieve_frame
-  int get_frame(int stream, AVFrame* pFrame);
+  //! \returns FFMPEG result of avcodec_receive_frame
+  int populate_frame(int stream, AVFrame& frame);
 
   SDL_Renderer* renderer;  ///< The renderer to draw to
 
