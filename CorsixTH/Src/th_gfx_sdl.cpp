@@ -677,14 +677,14 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   }
 }
 
-void render_target::draw_line(line* pLine, int iX, int iY) {
+void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
-  double lastX = pLine->line_operations[0].x;
-  double lastY = pLine->line_operations[0].y;
-  for (const line::line_operation &op : pLine->line_operations) {
-    if (op.type == line::line_operation_type::line) {
+  double lastX = pLine->line_elements[0].x;
+  double lastY = pLine->line_elements[0].y;
+  for (const line_sequence::line_element& op : pLine->line_elements) {
+    if (op.type == line_sequence::line_command::line) {
       SDL_RenderDrawLine(
           renderer, static_cast<int>(lastX + iX), static_cast<int>(lastY + iY),
           static_cast<int>(op.x + iX), static_cast<int>(op.y + iY));
@@ -1260,59 +1260,59 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 #endif
 }
 
-line::line() { initialize(); }
+line_sequence::line_sequence() { initialize(); }
 
-void line::initialize() {
+void line_sequence::initialize() {
   width = 1;
   red = 0;
   green = 0;
   blue = 0;
   alpha = 255;
-  line_operations.clear();
+  line_elements.clear();
 
   // We start at 0,0
   move_to(0.0, 0.0);
 }
 
-void line::move_to(double fX, double fY) {
-  line_operations.emplace_back(line_operation_type::move, fX, fY);
+void line_sequence::move_to(double fX, double fY) {
+  line_elements.emplace_back(line_command::move, fX, fY);
 }
 
-void line::line_to(double fX, double fY) {
-  line_operations.emplace_back(line_operation_type::line, fX, fY);
+void line_sequence::line_to(double fX, double fY) {
+  line_elements.emplace_back(line_command::line, fX, fY);
 }
 
-void line::set_width(double pLineWidth) { width = pLineWidth; }
+void line_sequence::set_width(double pLineWidth) { width = pLineWidth; }
 
-void line::set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA) {
+void line_sequence::set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA) {
   red = iR;
   green = iG;
   blue = iB;
   alpha = iA;
 }
 
-void line::draw(render_target* pCanvas, int iX, int iY) {
+void line_sequence::draw(render_target* pCanvas, int iX, int iY) {
   pCanvas->draw_line(this, iX, iY);
 }
 
-void line::persist(lua_persist_writer* pWriter) const {
+void line_sequence::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(static_cast<uint32_t>(red));
   pWriter->write_uint(static_cast<uint32_t>(green));
   pWriter->write_uint(static_cast<uint32_t>(blue));
   pWriter->write_uint(static_cast<uint32_t>(alpha));
   pWriter->write_float(width);
 
-  uint32_t numOps = static_cast<uint32_t>(line_operations.size());
+  uint32_t numOps = static_cast<uint32_t>(line_elements.size());
   pWriter->write_uint(numOps);
 
-  for (const line_operation& op : line_operations) {
+  for (const line_element& op : line_elements) {
     pWriter->write_uint(static_cast<uint32_t>(op.type));
     pWriter->write_float<double>(op.x);
     pWriter->write_float(op.y);
   }
 }
 
-void line::depersist(lua_persist_reader* pReader) {
+void line_sequence::depersist(lua_persist_reader* pReader) {
   initialize();
 
   pReader->read_uint(red);
@@ -1337,9 +1337,9 @@ void line::depersist(lua_persist_reader* pReader) {
       return;
     }
 
-    if (type_val == static_cast<uint32_t>(line_operation_type::move)) {
+    if (type_val == static_cast<uint32_t>(line_command::move)) {
       move_to(fX, fY);
-    } else if (type_val == static_cast<uint32_t>(line_operation_type::line)) {
+    } else if (type_val == static_cast<uint32_t>(line_command::line)) {
       line_to(fX, fY);
     }
   }

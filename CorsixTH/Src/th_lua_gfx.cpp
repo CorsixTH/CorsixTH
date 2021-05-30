@@ -745,12 +745,12 @@ int l_surface_set_capture_mouse(lua_State* L) {
 }
 
 int l_line_new(lua_State* L) {
-  luaT_stdnew<line>(L);
+  luaT_stdnew<line_sequence>(L);
   return 1;
 }
 
 int l_move_to(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->move_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
 
   lua_settop(L, 1);
@@ -758,7 +758,7 @@ int l_move_to(lua_State* L) {
 }
 
 int l_line_to(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->line_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
 
   lua_settop(L, 1);
@@ -766,7 +766,7 @@ int l_line_to(lua_State* L) {
 }
 
 int l_set_width(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->set_width(luaL_optnumber(L, 2, 1));
 
   lua_settop(L, 1);
@@ -774,7 +774,7 @@ int l_set_width(lua_State* L) {
 }
 
 int l_set_colour(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->set_colour(static_cast<uint8_t>(luaL_optinteger(L, 2, 0)),
                     static_cast<uint8_t>(luaL_optinteger(L, 3, 0)),
                     static_cast<uint8_t>(luaL_optinteger(L, 4, 0)),
@@ -785,7 +785,7 @@ int l_set_colour(lua_State* L) {
 }
 
 int l_line_draw(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   pLine->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
               static_cast<int>(luaL_optinteger(L, 4, 0)));
@@ -795,14 +795,14 @@ int l_line_draw(lua_State* L) {
 }
 
 int l_line_persist(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 2);
   pLine->persist(pWriter);
   return 0;
 }
 
 int l_line_depersist(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
@@ -928,7 +928,7 @@ void lua_register_gfx(const lua_register_state* pState) {
 
   // Line
   {
-    lua_class_binding<line> lcb(pState, "line", l_line_new,
+    lua_class_binding<line_sequence> lcb(pState, "line", l_line_new,
                                 lua_metatable::line);
     lcb.add_function(l_move_to, "moveTo");
     lcb.add_function(l_line_to, "lineTo");
