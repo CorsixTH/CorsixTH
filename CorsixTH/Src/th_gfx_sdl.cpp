@@ -1300,7 +1300,7 @@ void line_sequence::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(static_cast<uint32_t>(green));
   pWriter->write_uint(static_cast<uint32_t>(blue));
   pWriter->write_uint(static_cast<uint32_t>(alpha));
-  pWriter->write_float(width);
+  pWriter->write_float<double>(width);
 
   uint32_t numOps = static_cast<uint32_t>(line_elements.size());
   pWriter->write_uint(numOps);
@@ -1308,7 +1308,7 @@ void line_sequence::persist(lua_persist_writer* pWriter) const {
   for (const line_element& op : line_elements) {
     pWriter->write_uint(static_cast<uint32_t>(op.type));
     pWriter->write_float<double>(op.x);
-    pWriter->write_float(op.y);
+    pWriter->write_float<double>(op.y);
   }
 }
 
