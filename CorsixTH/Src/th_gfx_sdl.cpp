@@ -681,23 +681,17 @@ void render_target::draw_line(line* pLine, int iX, int iY) {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
-  double lastX, lastY;
-  lastX = pLine->first_operation->x;
-  lastY = pLine->first_operation->y;
-
-  line::line_operation* op =
-      (line::line_operation*)(pLine->first_operation->next);
-  while (op) {
-    if (op->type == line::line_operation_type::line) {
+  double lastX = pLine->line_operations[0].x;
+  double lastY = pLine->line_operations[0].y;
+  for (const line::line_operation &op : pLine->line_operations) {
+    if (op.type == line::line_operation_type::line) {
       SDL_RenderDrawLine(
           renderer, static_cast<int>(lastX + iX), static_cast<int>(lastY + iY),
-          static_cast<int>(op->x + iX), static_cast<int>(op->y + iY));
+          static_cast<int>(op.x + iX), static_cast<int>(op.y + iY));
     }
 
-    lastX = op->x;
-    lastY = op->y;
-
-    op = (line::line_operation*)(op->next);
+    lastX = op.x;
+    lastY = op.y;
   }
 }
 
@@ -1268,37 +1262,24 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 
 line::line() { initialize(); }
 
-line::~line() {
-  line_operation* op = first_operation;
-  while (op) {
-    line_operation* next = (line_operation*)(op->next);
-    delete (op);
-    op = next;
-  }
-}
-
 void line::initialize() {
   width = 1;
   red = 0;
   green = 0;
   blue = 0;
   alpha = 255;
+  line_operations.clear();
 
   // We start at 0,0
-  first_operation = new line_operation(line_operation_type::move, 0, 0);
-  current_operation = first_operation;
+  move_to(0.0, 0.0);
 }
 
 void line::move_to(double fX, double fY) {
-  line_operation* previous = current_operation;
-  current_operation = new line_operation(line_operation_type::move, fX, fY);
-  previous->next = current_operation;
+  line_operations.emplace_back(line_operation_type::move, fX, fY);
 }
 
 void line::line_to(double fX, double fY) {
-  line_operation* previous = current_operation;
-  current_operation = new line_operation(line_operation_type::line, fX, fY);
-  previous->next = current_operation;
+  line_operations.emplace_back(line_operation_type::line, fX, fY);
 }
 
 void line::set_width(double pLineWidth) { width = pLineWidth; }
@@ -1321,21 +1302,13 @@ void line::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(static_cast<uint32_t>(alpha));
   pWriter->write_float(width);
 
-  line_operation* op = (line_operation*)(first_operation->next);
-  uint32_t numOps = 0;
-  for (; op; numOps++) {
-    op = (line_operation*)(op->next);
-  }
-
+  uint32_t numOps = static_cast<uint32_t>(line_operations.size());
   pWriter->write_uint(numOps);
 
-  op = (line_operation*)(first_operation->next);
-  while (op) {
-    pWriter->write_uint(static_cast<uint32_t>(op->type));
-    pWriter->write_float<double>(op->x);
-    pWriter->write_float(op->y);
-
-    op = (line_operation*)(op->next);
+  for (const line_operation& op : line_operations) {
+    pWriter->write_uint(static_cast<uint32_t>(op.type));
+    pWriter->write_float<double>(op.x);
+    pWriter->write_float(op.y);
   }
 }
 

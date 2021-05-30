@@ -643,7 +643,6 @@ class cursor {
 class line {
  public:
   line();
-  ~line();
 
   void move_to(double fX, double fY);
 
@@ -664,18 +663,15 @@ class line {
 
   enum class line_operation_type : uint32_t { move = 0, line = 1 };
 
-  class line_operation : public link_list {
+  class line_operation {
    public:
     line_operation_type type;
     double x, y;
     line_operation(line_operation_type type, double x, double y)
-        : type(type), x(x), y(y) {
-      next = nullptr;
-    }
+        : type(type), x(x), y(y) { }
   };
 
-  line_operation* first_operation;
-  line_operation* current_operation;
+  std::vector<line_operation> line_operations;
   double width;
   uint8_t red, green, blue, alpha;
 };
