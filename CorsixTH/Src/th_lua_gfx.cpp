@@ -465,7 +465,9 @@ int l_layers_set(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
   lua_Integer iLayer = luaL_checkinteger(L, 2);
   uint8_t iValue = static_cast<uint8_t>(luaL_checkinteger(L, 3));
-  if (0 <= iLayer && iLayer < max_number_of_layers) pLayers->layer_contents[iLayer] = iValue;
+  if (0 <= iLayer && iLayer < max_number_of_layers) {
+    pLayers->layer_contents[iLayer] = iValue;
+  }
   return 0;
 }
 
@@ -493,8 +495,14 @@ int l_layers_depersist(lua_State* L) {
   int iNumLayers;
   if (!pReader->read_uint(iNumLayers)) return 0;
   if (iNumLayers > max_number_of_layers) {
-    if (!pReader->read_byte_stream(pLayers->layer_contents, max_number_of_layers)) return 0;
-    if (!pReader->read_byte_stream(nullptr, iNumLayers - max_number_of_layers)) return 0;
+    if (!pReader->read_byte_stream(pLayers->layer_contents,
+                                   max_number_of_layers)) {
+      return 0;
+    }
+    if (!pReader->read_byte_stream(nullptr,
+                                   iNumLayers - max_number_of_layers)) {
+      return 0;
+    }
   } else {
     if (!pReader->read_byte_stream(pLayers->layer_contents, iNumLayers))
       return 0;
@@ -929,7 +937,7 @@ void lua_register_gfx(const lua_register_state* pState) {
   // Line
   {
     lua_class_binding<line_sequence> lcb(pState, "line", l_line_new,
-                                lua_metatable::line);
+                                         lua_metatable::line);
     lcb.add_function(l_move_to, "moveTo");
     lcb.add_function(l_line_to, "lineTo");
     lcb.add_function(l_set_width, "setWidth");

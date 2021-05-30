@@ -668,7 +668,7 @@ class line_sequence {
     line_command type;
     double x, y;
     line_element(line_command type, double x, double y)
-        : type(type), x(x), y(y) { }
+        : type(type), x(x), y(y) {}
   };
 
   std::vector<line_element> line_elements;
