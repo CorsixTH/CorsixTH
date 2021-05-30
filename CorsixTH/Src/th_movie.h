@@ -376,8 +376,8 @@ class movie_player {
   //! A buffer for passing to ffmpeg to get error details
   char error_buffer[movie_error_buffer_capacity];
 
-  // TODO: Should be atomic
-  bool aborting;  ///< Indicate that we are in process of aborting playback
+  //! Indicate that we are in the process of aborting playback
+  std::atomic<bool> aborting;
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 
