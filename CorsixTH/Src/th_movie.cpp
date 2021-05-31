@@ -300,6 +300,7 @@ movie_player::movie_player()
       audio_buffer_max_size(0),
       audio_frame(nullptr),
       empty_audio_chunk(nullptr),
+      audio_chunk_buffer{},
       audio_channel(-1),
       stream_thread{},
       video_thread{} {
@@ -308,15 +309,11 @@ movie_player::movie_player()
      LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100))
   av_register_all();
 #endif
-
-  audio_chunk_buffer =
-      (uint8_t*)std::calloc(audio_chunk_buffer_capacity, sizeof(uint8_t));
 }
 
 movie_player::~movie_player() {
   unload();
 
-  free(audio_chunk_buffer);
   delete movie_picture_buffer;
 }
 
@@ -484,8 +481,8 @@ void movie_player::play(int iChannel) {
                    0);
     avresample_open(audio_resample_context);
 #endif
-    empty_audio_chunk.reset(
-        Mix_QuickLoad_RAW(audio_chunk_buffer, audio_chunk_buffer_capacity));
+    empty_audio_chunk.reset(Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
+                                              audio_chunk_buffer.size()));
 
     audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk.get(), -1);
     if (audio_channel < 0) {

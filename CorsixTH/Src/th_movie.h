@@ -353,8 +353,6 @@ class movie_player {
     defined(CORSIX_TH_USE_SDL_MIXER)
   static constexpr size_t movie_error_buffer_capacity =
       128;  ///< Buffer to hold last error description
-  static constexpr size_t audio_chunk_buffer_capacity =
-      1024;  ///< Buffer for audio playback
 
   //! Get the AVCodecContext associated with a given stream
   AVCodecContext* get_codec_context_for_stream(AVCodec* codec,
@@ -433,7 +431,8 @@ class movie_player {
   av_frame_unique_ptr audio_frame;  ///< The frame we are decoding audio into
 
   mix_chunk_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
-  uint8_t* audio_chunk_buffer;  ///< 0'd out buffer for the SDL_mixer chunk
+  std::array<std::uint8_t, 1024>
+      audio_chunk_buffer;  ///< 0'd out buffer for the SDL_mixer chunk
 
   int audio_channel;    ///< The channel to play audio on, -1 for none
   int mixer_channels;   ///< How many channels to play on (1 - mono, 2 -
