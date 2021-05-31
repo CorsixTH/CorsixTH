@@ -405,7 +405,7 @@ void movie_player::unload() {
   if (audio_channel >= 0) {
     Mix_UnregisterAllEffects(audio_channel);
     Mix_HaltChannel(audio_channel);
-    Mix_FreeChunk(empty_audio_chunk);
+    empty_audio_chunk.reset();
     audio_channel = -1;
   }
 
@@ -484,14 +484,14 @@ void movie_player::play(int iChannel) {
                    0);
     avresample_open(audio_resample_context);
 #endif
-    empty_audio_chunk =
-        Mix_QuickLoad_RAW(audio_chunk_buffer, audio_chunk_buffer_capacity);
+    empty_audio_chunk.reset(
+        Mix_QuickLoad_RAW(audio_chunk_buffer, audio_chunk_buffer_capacity));
 
-    audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk, -1);
+    audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk.get(), -1);
     if (audio_channel < 0) {
       audio_channel = -1;
       last_error = std::string(Mix_GetError());
-      Mix_FreeChunk(empty_audio_chunk);
+      empty_audio_chunk.reset();
     } else {
       Mix_RegisterEffect(audio_channel, th_movie_audio_callback, nullptr, this);
     }

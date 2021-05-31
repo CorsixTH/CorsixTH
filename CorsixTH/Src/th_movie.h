@@ -25,6 +25,8 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <SDL.h>
+
 #include <array>
 #include <atomic>
 #include <condition_variable>
@@ -33,11 +35,9 @@ SOFTWARE.
 #include <string>
 #include <thread>
 
-#include "SDL.h"
-
 #if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
     defined(CORSIX_TH_USE_SDL_MIXER)
-#include "SDL_mixer.h"
+#include <SDL_mixer.h>
 
 extern "C" {
 #ifndef INT64_C
@@ -74,6 +74,17 @@ class av_frame_deleter {
 };
 
 using av_frame_unique_ptr = std::unique_ptr<AVFrame, av_frame_deleter>;
+
+//! \brief Functor for deleting Mix_Chunks
+//!
+//! Should be moved to a common mixer header when uses of Mix_Chunk outside of
+//! movies are converted to unique_ptr.
+class mix_chunk_deleter {
+ public:
+  void operator()(Mix_Chunk* c) { Mix_FreeChunk(c); }
+};
+
+using mix_chunk_unique_ptr = std::unique_ptr<Mix_Chunk, mix_chunk_deleter>;
 
 //! \brief A picture in movie_picture_buffer
 //!
@@ -397,7 +408,8 @@ class movie_player {
   ::movie_picture_buffer* movie_picture_buffer;  ///< Buffer of processed video
 
   // clock sync parameters
-  int current_sync_pts_system_time;  ///< System time matching #m_iCurSyncPts
+  int current_sync_pts_system_time;  ///< System time matching
+                                     ///< #current_sync_pts
   double current_sync_pts;  ///< The current presentation time stamp (from the
                             ///< audio stream)
 
@@ -411,22 +423,22 @@ class movie_player {
 #endif
 
   int audio_buffer_size;      ///< The current size of audio data in
-                              ///< #m_pbAudioBuffer
+                              ///< #audio_buffer
   int audio_buffer_index;     ///< The current position for writing in
-                              ///< #m_pbAudioBuffer
-  int audio_buffer_max_size;  ///< The capacity of #m_pbAudioBuffer (allocated
+                              ///< #audio_buffer
+  int audio_buffer_max_size;  ///< The capacity of #audio_buffer (allocated
                               ///< size)
   uint8_t* audio_buffer;      ///< An audio buffer for playback
 
   av_frame_unique_ptr audio_frame;  ///< The frame we are decoding audio into
 
-  Mix_Chunk* empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
-  uint8_t* audio_chunk_buffer;   ///< 0'd out buffer for the SDL_Mixer chunk
+  mix_chunk_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
+  uint8_t* audio_chunk_buffer;  ///< 0'd out buffer for the SDL_mixer chunk
 
   int audio_channel;    ///< The channel to play audio on, -1 for none
   int mixer_channels;   ///< How many channels to play on (1 - mono, 2 -
                         ///< stereo)
-  int mixer_frequency;  ///< The frequency of audio expected by SDL_Mixer
+  int mixer_frequency;  ///< The frequency of audio expected by SDL_mixer
 
   std::thread stream_thread;  ///< The thread responsible for reading the
                               ///< movie streams
