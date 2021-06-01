@@ -328,8 +328,6 @@ bool movie_player::movies_enabled() const { return true; }
 
 bool movie_player::load(const char* szFilepath) {
   int iError = 0;
-  AVCodec* m_pVideoCodec;
-  AVCodec* m_pAudioCodec;
 
   unload();  // Unload any currently loaded video to free memory
   aborting = false;
@@ -348,23 +346,25 @@ bool movie_player::load(const char* szFilepath) {
     return false;
   }
 
+  AVCodec* video_decoder;  // unowned, do not free
   video_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_VIDEO,
-                                           -1, -1, &m_pVideoCodec, 0);
+                                           -1, -1, &video_decoder, 0);
   if (video_stream_index < 0) {
     av_strerror(video_stream_index, error_buffer, movie_error_buffer_capacity);
     last_error = std::string(error_buffer);
     return false;
   }
   video_codec_context = get_codec_context_for_stream(
-      m_pVideoCodec, format_context->streams[video_stream_index]);
-  avcodec_open2(video_codec_context, m_pVideoCodec, nullptr);
+      video_decoder, format_context->streams[video_stream_index]);
+  avcodec_open2(video_codec_context, video_decoder, nullptr);
 
+  AVCodec* audio_decoder;  // unowned, do not free
   audio_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_AUDIO,
-                                           -1, -1, &m_pAudioCodec, 0);
+                                           -1, -1, &audio_decoder, 0);
   if (audio_stream_index >= 0) {
     audio_codec_context = get_codec_context_for_stream(
-        m_pAudioCodec, format_context->streams[audio_stream_index]);
-    avcodec_open2(audio_codec_context, m_pAudioCodec, nullptr);
+        audio_decoder, format_context->streams[audio_stream_index]);
+    avcodec_open2(audio_codec_context, audio_decoder, nullptr);
   }
 
   return true;
