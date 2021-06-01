@@ -197,20 +197,36 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   -- Initialize the tree control
   self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
-      if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
-        self:choiceMade(node.path)
-      end
+      self:openFile(node)
     end)
   self:addWindow(self.control)
 
   -- Create the back button.
-  self:addBevelPanel((h_size - 160) / 2, 340, 160, 30, self.col_bg):setLabel(_S.menu_list_window.back)
-    :makeButton(0, 0, 160, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
+  local button_size = 135
+  local indent = math.floor((h_size - (2*button_size))/3)
+  self:addBevelPanel(indent, 340, button_size, 30, self.col_bg):setLabel(_S.menu_list_window.back)
+    :makeButton(0, 0, button_size, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
+  
+  self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30, 
+  self.col_bg):setLabel(_S.menu_list_window.ok)
+    :makeButton(0, 0, button_size, 40, nil, (--[[persistable:filebrowser_ok_callback]] function()
+      if self.control.selected_node then
+        self:openFile(self.control.selected_node)
+      end
+      elseif self.new_savegame_textbox and self.new_savegame_textbox.text then
+        self:
+    end)):setTooltip(_S.tooltip.menu_list_window.ok)
 end
 
 -- Function stub for dialogs to override. This function is called each time a file is chosen.
 --!param name (string) Name of the file chosen.
 function UIFileBrowser:choiceMade(name)
+end
+
+function UIFileBrowser:openFile(node)
+  if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
+    self:choiceMade(node.path)
+  end
 end
 
 function UIFileBrowser:buttonBack()
