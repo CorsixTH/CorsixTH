@@ -213,8 +213,6 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
       if self.control.selected_node then
         self:openFile(self.control.selected_node)
       end
-      elseif self.new_savegame_textbox and self.new_savegame_textbox.text then
-        self:
     end)):setTooltip(_S.tooltip.menu_list_window.ok)
 end
 
