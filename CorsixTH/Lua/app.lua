@@ -1253,10 +1253,16 @@ function App:checkInstallFolder()
     -- then linux Filesystem Hierarchy Standard, then Windows Program Files
     -- mac_app_dir is the macOS app base directory named CorsixTH.app
     local mac_app_dir = debug.getinfo(1).short_src:match("(.*)/Contents/.")
-    local user_dir = os.getenv("HOME") or os.getenv("HOMEPATH")
+    local user_dir = os.getenv("HOME") or os.getenv("USERPROFILE")
+    local win_home_dir = nil;
+    if os.getenv("HOMEDRIVE") and os.getenv("HOMEPATH") then
+      win_home_dir = os.getenv("HOMEDRIVE") .. os.getenv("HOMEPATH")
+      if win_home_dir == user_dir then win_home_dir = nil; end
+    end
     local possible_locations = {
       user_dir,
       user_dir and (user_dir .. pathsep ..  "Documents"),
+      win_home_dir,
       select(1, corsixth.require("config_finder")):match("(.*[/\\])"):sub(1, -2),
       mac_app_dir,
       mac_app_dir and mac_app_dir:match("(.*)/.*%.app"),
