@@ -207,8 +207,8 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   local indent = math.floor((h_size - (2*button_size))/3)
   self:addBevelPanel(indent, 340, button_size, 30, self.col_bg):setLabel(_S.menu_list_window.back)
     :makeButton(0, 0, button_size, 40, nil, self.buttonBack):setTooltip(_S.tooltip.menu_list_window.back)
-  
-  self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30, 
+
+  self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30,
   self.col_bg):setLabel(_S.menu_list_window.ok)
     :makeButton(0, 0, button_size, 40, nil, (--[[persistable:filebrowser_ok_callback]] function()
       if (self.origin.new_savegame_textbox and self.origin.new_savegame_textbox.text ~= "") or (self.origin.new_map_textbox and self.origin.new_map_textbox.text ~= "") then
