@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  corsix-th:
+    container_name: corsix-th
+    build:
+      context: .
+      dockerfile: Dockerfile.build
+    volumes:
+      - .:/sourcecode
