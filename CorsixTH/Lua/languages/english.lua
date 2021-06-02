@@ -394,12 +394,14 @@ menu_list_window = {
   name = "Name",
   save_date = "Modified",
   back = "Back",
+  ok = "OK",
 }
 
 tooltip.menu_list_window = {
   name = "Click here to sort the list by name",
   save_date = "Click here to sort the list by last modification date",
   back = "Close this window",
+  ok = "Open the selected file",
 }
 
 options_window = {
