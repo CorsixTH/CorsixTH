@@ -83,8 +83,8 @@ class "FilteredTreeControl" (TreeControl)
 ---@type FilteredTreeControl
 local FilteredTreeControl = _G["FilteredTreeControl"]
 
-function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates)
-  self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font)
+function FilteredTreeControl:FilteredTreeControl(root, x, y, width, height, col_bg, col_fg, has_font, show_dates, origin)
+  self:TreeControl(root, x, y, width, height, col_bg, col_fg, 14, has_font, origin)
 
   self.num_rows = (self.tree_rect.h - self.y_offset) / self.row_height
 
@@ -168,7 +168,7 @@ local col_caption = {
 !param mode (string) Either "menu" or "game" depending on which mode the game is in right now.
 !param title (string) The desired title of the dialog.
 ]]
-function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates)
+function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_dates, origin)
   self.col_bg = {
     red = 154,
     green = 146,
@@ -189,15 +189,16 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   self.on_top = mode == "menu"
   self.esc_closes = true
   self.resizable = false
+  self.origin = origin
   self:setDefaultPosition(0.5, 0.25)
 
   self:addBevelPanel((h_size - 190) / 2, 10, 190, 20, col_caption):setLabel(title)
     .lowered = true
 
   -- Initialize the tree control
-  self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates)
+  self.control = FilteredTreeControl(root, 5, 35, h_size - 10, vertical_size, self.col_bg, self.col_scrollbar, true, show_dates, origin)
     :setSelectCallback(--[[persistable:file_browser_select_callback]] function(node)
-      self:openFile(node)
+      self:checkChoice(node)
     end)
   self:addWindow(self.control)
 
@@ -210,8 +211,10 @@ function UIFileBrowser:UIFileBrowser(ui, mode, title, vertical_size, root, show_
   self:addBevelPanel(h_size - button_size - indent, 340, button_size, 30, 
   self.col_bg):setLabel(_S.menu_list_window.ok)
     :makeButton(0, 0, button_size, 40, nil, (--[[persistable:filebrowser_ok_callback]] function()
-      if self.control.selected_node then
-        self:openFile(self.control.selected_node)
+      if (self.origin.new_savegame_textbox and self.origin.new_savegame_textbox.text ~= "") or (self.origin.new_map_textbox and self.origin.new_map_textbox.text ~= "") then
+        self.origin:confirmName()
+      elseif self.control.selected_node then
+        self:checkChoice(self.control.selected_node)
       end
     end)):setTooltip(_S.tooltip.menu_list_window.ok)
 end
@@ -221,7 +224,7 @@ end
 function UIFileBrowser:choiceMade(name)
 end
 
-function UIFileBrowser:openFile(node)
+function UIFileBrowser:checkChoice(node)
   if node.is_valid_file and (lfs.attributes(node.path, "mode") ~= "directory") then
     self:choiceMade(node.path)
   end
@@ -230,4 +233,3 @@ end
 function UIFileBrowser:buttonBack()
   self:close()
 end
-

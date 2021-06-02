@@ -498,7 +498,7 @@ local TreeControl = _G["TreeControl"]
 -- a table with `red`, `green`, and `blue` fields, each an integer between 0
 -- and 255.
 --!param col_fg (table) The colour used for the scrollbar and highlighted items.
-function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_offset, has_font)
+function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_offset, has_font, origin)
   -- Setup the base window
   self:Window()
   self.x = x
@@ -517,6 +517,7 @@ function TreeControl:TreeControl(root, x, y, width, height, col_bg, col_fg, y_of
   self.tree_sprites = gfx:loadSpriteTable("Bitmap", "tree_ctrl", true,
     gfx:loadPalette("Bitmap", "tree_ctrl.pal"))
 
+  self.origin = origin
   -- Calculate sizes and counts
   local scrollbar_width = 20
   self.row_height = 14
@@ -622,6 +623,11 @@ function TreeControl:onMouseUp(button, x, y)
       redraw = true
     else
       self.selected_node = node
+      if self.origin and self.origin.new_savegame_textbox then
+        self.origin:updateTextbox(string.gsub(node:getLabel(),".sav",""))
+      elseif self.origin and self.origin.new_map_textbox then
+        self.origin:updateTextbox(string.gsub(node:getLabel(),".map",""))
+      end
       node:select()
       redraw = true
     end
