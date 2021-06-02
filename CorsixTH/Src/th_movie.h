@@ -44,6 +44,7 @@ extern "C" {
 #define INT64_C(c) (c##LL)
 #define UINT64_C(c) (c##ULL)
 #endif
+#include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 #include <libswscale/swscale.h>
@@ -74,6 +75,14 @@ class av_frame_deleter {
 };
 
 using av_frame_unique_ptr = std::unique_ptr<AVFrame, av_frame_deleter>;
+
+class av_codec_context_deleter {
+ public:
+  void operator()(AVCodecContext* c) { avcodec_free_context(&c); }
+};
+
+using av_codec_context_unique_ptr =
+    std::unique_ptr<AVCodecContext, av_codec_context_deleter>;
 
 //! \brief Functor for deleting Mix_Chunks
 //!
@@ -355,8 +364,8 @@ class movie_player {
       128;  ///< Buffer to hold last error description
 
   //! Get the AVCodecContext associated with a given stream
-  AVCodecContext* get_codec_context_for_stream(AVCodec* codec,
-                                               AVStream* stream) const;
+  av_codec_context_unique_ptr get_codec_context_for_stream(
+      AVCodec* codec, AVStream* stream) const;
 
   //! Get the time the given frame should be played (from the start of the
   //! stream)
@@ -378,6 +387,15 @@ class movie_player {
   //! \returns FFMPEG result of avcodec_receive_frame
   int populate_frame(int stream, AVFrame& frame);
 
+  //! Convert packet data into frames
+  //!
+  //! \param ctx The AVCodecContext of the stream to populate
+  //! \param pq The packet queue to pull packets from
+  //! \param frame An empty frame which gets populated by the data in the
+  //! packet queue.
+  //! \returns FFMPEG result of avcodec_receive_frame
+  int populate_frame(AVCodecContext& ctx, av_packet_queue& pq, AVFrame& frame);
+
   SDL_Renderer* renderer;  ///< The renderer to draw to
 
   //! A description of the last error
@@ -391,14 +409,16 @@ class movie_player {
 
   std::mutex decoding_audio_mutex;  ///< Synchronize access to #m_pAudioBuffer
 
-  AVFormatContext* format_context;      ///< Information related to the loaded
-                                        ///< movie and all of its streams
-  int video_stream_index;               ///< The index of the video stream
-  int audio_stream_index;               ///< The index of the audio stream
-  AVCodecContext* video_codec_context;  ///< The video codec and information
-                                        ///< related to video
-  AVCodecContext* audio_codec_context;  ///< The audio codec and information
-                                        ///< related to audio
+  AVFormatContext* format_context;  ///< Information related to the loaded
+                                    ///< movie and all of its streams
+  int video_stream_index;           ///< The index of the video stream
+  int audio_stream_index;           ///< The index of the audio stream
+  av_codec_context_unique_ptr
+      video_codec_context;  ///< The video codec and information
+                            ///< related to video
+  av_codec_context_unique_ptr
+      audio_codec_context;  ///< The audio codec and information
+                            ///< related to audio
 
   // queues for transferring data between threads
   av_packet_queue video_queue;  ///< Packets from the video stream

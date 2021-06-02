@@ -353,7 +353,7 @@ bool movie_player::load(const char* szFilepath) {
   }
   video_codec_context = get_codec_context_for_stream(
       video_decoder, format_context->streams[video_stream_index]);
-  avcodec_open2(video_codec_context, video_decoder, nullptr);
+  avcodec_open2(video_codec_context.get(), video_decoder, nullptr);
 
   AVCodec* audio_decoder;  // unowned, do not free
   audio_stream_index = av_find_best_stream(format_context, AVMEDIA_TYPE_AUDIO,
@@ -361,16 +361,16 @@ bool movie_player::load(const char* szFilepath) {
   if (audio_stream_index >= 0) {
     audio_codec_context = get_codec_context_for_stream(
         audio_decoder, format_context->streams[audio_stream_index]);
-    avcodec_open2(audio_codec_context, audio_decoder, nullptr);
+    avcodec_open2(audio_codec_context.get(), audio_decoder, nullptr);
   }
 
   return true;
 }
 
-AVCodecContext* movie_player::get_codec_context_for_stream(
+av_codec_context_unique_ptr movie_player::get_codec_context_for_stream(
     AVCodec* codec, AVStream* stream) const {
-  AVCodecContext* ctx = avcodec_alloc_context3(codec);
-  avcodec_parameters_to_context(ctx, stream->codecpar);
+  av_codec_context_unique_ptr ctx(avcodec_alloc_context3(codec));
+  avcodec_parameters_to_context(ctx.get(), stream->codecpar);
   return ctx;
 }
 
@@ -394,10 +394,7 @@ void movie_player::unload() {
   video_queue.clear();
   movie_picture_buffer->deallocate();
 
-  if (video_codec_context) {
-    avcodec_free_context(&video_codec_context);
-    video_codec_context = nullptr;
-  }
+  video_codec_context.reset();
 
   if (audio_channel >= 0) {
     Mix_UnregisterAllEffects(audio_channel);
@@ -413,11 +410,7 @@ void movie_player::unload() {
     audio_buffer_max_size = 0;
   }
 
-  if (audio_codec_context) {
-    avcodec_free_context(&audio_codec_context);
-    audio_codec_context = nullptr;
-  }
-
+  audio_codec_context.reset();
   audio_frame.reset();
 
 #ifdef CORSIX_TH_USE_FFMPEG
@@ -614,7 +607,7 @@ void movie_player::run_video() {
     }
   }
 
-  avcodec_flush_buffers(video_codec_context);
+  avcodec_flush_buffers(video_codec_context.get());
 }
 
 double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
@@ -641,26 +634,24 @@ double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
 }
 
 int movie_player::populate_frame(int stream, AVFrame& frame) {
-  int iError = AVERROR(EAGAIN);
-  AVCodecContext* ctx;
-  av_packet_queue* pq;
-
   if (stream == video_stream_index) {
-    ctx = video_codec_context;
-    pq = &video_queue;
+    return populate_frame(*video_codec_context, video_queue, frame);
   } else if (stream == audio_stream_index) {
-    ctx = audio_codec_context;
-    pq = &audio_queue;
+    return populate_frame(*audio_codec_context, audio_queue, frame);
   } else {
     throw std::invalid_argument("Invalid value provided for stream");
   }
+}
 
+int movie_player::populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
+                                 AVFrame& frame) {
+  int iError = AVERROR(EAGAIN);
   while (iError == AVERROR(EAGAIN)) {
-    iError = avcodec_receive_frame(ctx, &frame);
+    iError = avcodec_receive_frame(&ctx, &frame);
 
     if (iError == AVERROR(EAGAIN)) {
-      av_packet_unique_ptr pkt = pq->pull(true);
-      int res = avcodec_send_packet(ctx, pkt.get());
+      av_packet_unique_ptr pkt = pq.pull(true);
+      int res = avcodec_send_packet(&ctx, pkt.get());
 
       if (res == AVERROR(EAGAIN)) {
         throw std::runtime_error(
