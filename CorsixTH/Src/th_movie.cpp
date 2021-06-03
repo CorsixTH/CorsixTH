@@ -25,8 +25,7 @@ SOFTWARE.
 #include "config.h"
 
 #include "lua_sdl.h"
-#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
-    defined(CORSIX_TH_USE_SDL_MIXER)
+#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
 
 #include "th_gfx.h"
 extern "C" {
@@ -304,9 +303,7 @@ movie_player::movie_player()
       audio_channel(-1),
       stream_thread{},
       video_thread{} {
-#if defined(CORSIX_TH_USE_LIBAV) ||   \
-    (defined(CORSIX_TH_USE_FFMPEG) && \
-     LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100))
+#if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 9, 100)
   av_register_all();
 #endif
 }
@@ -413,15 +410,7 @@ void movie_player::unload() {
   audio_codec_context.reset();
   audio_frame.reset();
 
-#ifdef CORSIX_TH_USE_FFMPEG
   swr_free(&audio_resample_context);
-#elif defined(CORSIX_TH_USE_LIBAV)
-  // avresample_free doesn't skip nullptr on it's own.
-  if (audio_resample_context != nullptr) {
-    avresample_free(&audio_resample_context);
-    audio_resample_context = nullptr;
-  }
-#endif
 
   if (format_context) {
     avformat_close_input(&format_context);
@@ -449,7 +438,6 @@ void movie_player::play(int iChannel) {
 
   if (audio_stream_index >= 0) {
     Mix_QuerySpec(&mixer_frequency, nullptr, &mixer_channels);
-#ifdef CORSIX_TH_USE_FFMPEG
     audio_resample_context = swr_alloc_set_opts(
         audio_resample_context,
         mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO,
@@ -457,23 +445,6 @@ void movie_player::play(int iChannel) {
         audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
         nullptr);
     swr_init(audio_resample_context);
-#elif defined(CORSIX_TH_USE_LIBAV)
-    audio_resample_context = avresample_alloc_context();
-    av_opt_set_int(audio_resample_context, "in_channel_layout",
-                   audio_codec_context->channel_layout, 0);
-    av_opt_set_int(
-        audio_resample_context, "out_channel_layout",
-        mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO, 0);
-    av_opt_set_int(audio_resample_context, "in_sample_rate",
-                   audio_codec_context->sample_rate, 0);
-    av_opt_set_int(audio_resample_context, "out_sample_rate", mixer_frequency,
-                   0);
-    av_opt_set_int(audio_resample_context, "in_sample_fmt",
-                   audio_codec_context->sample_fmt, 0);
-    av_opt_set_int(audio_resample_context, "out_sample_fmt", AV_SAMPLE_FMT_S16,
-                   0);
-    avresample_open(audio_resample_context);
-#endif
     empty_audio_chunk.reset(Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
                                               audio_chunk_buffer.size()));
 
@@ -613,18 +584,11 @@ void movie_player::run_video() {
 double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
                                                      int streamIndex) const {
   int64_t pts;
-#ifdef CORSIX_TH_USE_LIBAV
-  pts = frame.pts;
-  if (pts == AV_NOPTS_VALUE) {
-    pts = frame.pkt_dts;
-  }
-#else
 #if LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58, 18, 100)
   pts = av_frame_get_best_effort_timestamp(&frame);
 #else
   pts = frame.best_effort_timestamp;
 #endif  // LIBAVCODEC_VERSION_INT
-#endif  // CORSIX_T_USE_LIBAV
 
   if (pts == AV_NOPTS_VALUE) {
     pts = 0;
@@ -729,17 +693,11 @@ int movie_player::decode_audio_frame(bool fFirst) {
     audio_buffer_max_size = iSampleSize;
   }
 
-#ifdef CORSIX_TH_USE_FFMPEG
   swr_convert(audio_resample_context, &audio_buffer, iOutSamples,
               (const uint8_t**)&audio_frame->data[0], audio_frame->nb_samples);
-#elif defined(CORSIX_TH_USE_LIBAV)
-  avresample_convert(audio_resample_context, &audio_buffer, 0, iOutSamples,
-                     (uint8_t**)&audio_frame->data[0], 0,
-                     audio_frame->nb_samples);
-#endif
   return iSampleSize;
 }
-#else   // CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
+#else   // CORSIX_TH_USE_FFMPEG
 movie_player::movie_player() {}
 movie_player::~movie_player() {}
 void movie_player::set_renderer(SDL_Renderer* renderer) {}

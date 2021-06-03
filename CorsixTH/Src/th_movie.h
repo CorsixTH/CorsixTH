@@ -35,8 +35,7 @@ SOFTWARE.
 #include <string>
 #include <thread>
 
-#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
-    defined(CORSIX_TH_USE_SDL_MIXER)
+#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
 #include <SDL_mixer.h>
 
 extern "C" {
@@ -48,11 +47,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
 #include <libswscale/swscale.h>
-#ifdef CORSIX_TH_USE_FFMPEG
 #include <libswresample/swresample.h>
-#elif defined(CORSIX_TH_USE_LIBAV)
-#include <libavresample/avresample.h>
-#endif
 }
 
 //! \brief Functor for deleting AVPackets
@@ -261,7 +256,7 @@ class av_packet_queue {
   std::condition_variable
       cond;  ///< A condition to wait on for signaling the packet queue
 };
-#endif  // CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
+#endif  // CORSIX_TH_USE_FFMPEG
 
 //! Movie player for CorsixTH
 //!
@@ -358,8 +353,7 @@ class movie_player {
   void copy_audio_to_stream(uint8_t* pbStream, int iStreamSize);
 
  private:
-#if (defined(CORSIX_TH_USE_FFMPEG) || defined(CORSIX_TH_USE_LIBAV)) && \
-    defined(CORSIX_TH_USE_SDL_MIXER)
+#if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
   static constexpr size_t movie_error_buffer_capacity =
       128;  ///< Buffer to hold last error description
 
@@ -431,14 +425,8 @@ class movie_player {
   double current_sync_pts;  ///< The current presentation time stamp (from the
                             ///< audio stream)
 
-#ifdef CORSIX_TH_USE_FFMPEG
   SwrContext* audio_resample_context;  ///< Context for resampling audio for
                                        ///< playback with ffmpeg
-#elif defined(CORSIX_TH_USE_LIBAV)
-  AVAudioResampleContext*
-      audio_resample_context;  ///< Context for resampling audio for
-                               ///< playback with libav
-#endif
 
   int audio_buffer_size;      ///< The current size of audio data in
                               ///< #audio_buffer
@@ -463,7 +451,7 @@ class movie_player {
                               ///< movie streams
   std::thread video_thread;   ///< The thread responsible for decoding the
                               ///< video stream
-#endif                        // CORSIX_TH_USE_FFMPEG || CORSIX_TH_USE_LIBAV
+#endif                        // CORSIX_TH_USE_FFMPEG
 };
 
 #endif  // TH_VIDEO_H
