@@ -292,7 +292,7 @@ movie_player::movie_player()
       audio_codec_context(nullptr),
       video_queue(),
       audio_queue(),
-      movie_picture_buffer(new ::movie_picture_buffer()),
+      movie_picture_buffer(),
       audio_resample_context(nullptr),
       empty_audio_chunk(nullptr),
       audio_chunk_buffer{},
@@ -304,11 +304,7 @@ movie_player::movie_player()
 #endif
 }
 
-movie_player::~movie_player() {
-  unload();
-
-  delete movie_picture_buffer;
-}
+movie_player::~movie_player() { unload(); }
 
 void movie_player::set_renderer(SDL_Renderer* pRenderer) {
   renderer = pRenderer;
@@ -372,7 +368,7 @@ void movie_player::unload() {
 
   audio_queue.release();
   video_queue.release();
-  movie_picture_buffer->abort();
+  movie_picture_buffer.abort();
 
   if (stream_thread.joinable()) {
     stream_thread.join();
@@ -385,7 +381,7 @@ void movie_player::unload() {
   // so we don't free something being used.
   audio_queue.clear();
   video_queue.clear();
-  movie_picture_buffer->deallocate();
+  movie_picture_buffer.deallocate();
 
   video_codec_context.reset();
 
@@ -415,9 +411,9 @@ void movie_player::play(int iChannel) {
 
   audio_queue.clear();
   video_queue.clear();
-  movie_picture_buffer->reset();
-  movie_picture_buffer->allocate(renderer, video_codec_context->width,
-                                 video_codec_context->height);
+  movie_picture_buffer.reset();
+  movie_picture_buffer.allocate(renderer, video_codec_context->width,
+                                video_codec_context->height);
 
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
@@ -480,16 +476,16 @@ void movie_player::refresh(const SDL_Rect& destination_rect) {
   dest_rect = SDL_Rect{destination_rect.x, destination_rect.y,
                        destination_rect.w, destination_rect.h};
 
-  if (!movie_picture_buffer->empty()) {
+  if (!movie_picture_buffer.empty()) {
     double dCurTime = SDL_GetTicks() - current_sync_pts_system_time +
                       current_sync_pts * 1000.0;
-    double dNextPts = movie_picture_buffer->get_next_pts();
+    double dNextPts = movie_picture_buffer.get_next_pts();
 
     if (dNextPts > 0 && dNextPts * 1000.0 <= dCurTime) {
-      movie_picture_buffer->advance();
+      movie_picture_buffer.advance();
     }
 
-    movie_picture_buffer->draw(renderer, dest_rect);
+    movie_picture_buffer.draw(renderer, dest_rect);
   }
 }
 
@@ -497,12 +493,12 @@ void movie_player::allocate_picture_buffer() {
   if (!video_codec_context) {
     return;
   }
-  movie_picture_buffer->allocate(renderer, get_native_width(),
-                                 get_native_height());
+  movie_picture_buffer.allocate(renderer, get_native_width(),
+                                get_native_height());
 }
 
 void movie_player::deallocate_picture_buffer() {
-  movie_picture_buffer->deallocate();
+  movie_picture_buffer.deallocate();
 }
 
 void movie_player::read_streams() {
@@ -526,7 +522,7 @@ void movie_player::read_streams() {
 
   while (!aborting) {
     if (video_queue.get_count() == 0 && audio_queue.get_count() == 0 &&
-        movie_picture_buffer->get_next_pts() == 0) {
+        movie_picture_buffer.get_next_pts() == 0) {
       break;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -557,7 +553,7 @@ void movie_player::run_video() {
     }
 
     dClockPts = get_presentation_time_for_frame(*pFrame, video_stream_index);
-    iError = movie_picture_buffer->write(pFrame.get(), dClockPts);
+    iError = movie_picture_buffer.write(pFrame.get(), dClockPts);
 
     if (iError < 0) {
       break;

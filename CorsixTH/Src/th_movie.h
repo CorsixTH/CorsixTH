@@ -417,7 +417,7 @@ class movie_player {
   // queues for transferring data between threads
   av_packet_queue video_queue;  ///< Packets from the video stream
   av_packet_queue audio_queue;  ///< Packets from the audio stream
-  ::movie_picture_buffer* movie_picture_buffer;  ///< Buffer of processed video
+  ::movie_picture_buffer movie_picture_buffer;  ///< Buffer of processed video
 
   // clock sync parameters
   int current_sync_pts_system_time;  ///< System time matching
