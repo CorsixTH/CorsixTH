@@ -46,8 +46,8 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/avutil.h>
-#include <libswscale/swscale.h>
 #include <libswresample/swresample.h>
+#include <libswscale/swscale.h>
 }
 
 //! \brief Functor for deleting AVPackets
@@ -371,7 +371,7 @@ class movie_player {
                                          int streamIndex) const;
 
   //! Decode audio from the movie into a format suitable for playback
-  int decode_audio_frame(bool fFirst);
+  int decode_audio_frame(uint8_t* stream, int stream_size);
 
   //! Convert packet data into frames
   //!
@@ -427,16 +427,6 @@ class movie_player {
 
   SwrContext* audio_resample_context;  ///< Context for resampling audio for
                                        ///< playback with ffmpeg
-
-  int audio_buffer_size;      ///< The current size of audio data in
-                              ///< #audio_buffer
-  int audio_buffer_index;     ///< The current position for writing in
-                              ///< #audio_buffer
-  int audio_buffer_max_size;  ///< The capacity of #audio_buffer (allocated
-                              ///< size)
-  uint8_t* audio_buffer;      ///< An audio buffer for playback
-
-  av_frame_unique_ptr audio_frame;  ///< The frame we are decoding audio into
 
   mix_chunk_unique_ptr empty_audio_chunk;  ///< Empty chunk needed for SDL_mixer
   std::array<std::uint8_t, 1024>

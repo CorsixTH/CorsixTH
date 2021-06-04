@@ -46,8 +46,8 @@ namespace {
 
 void th_movie_audio_callback(int iChannel, void* pStream, int iStreamSize,
                              void* pUserData) {
-  movie_player* pMovie = (movie_player*)pUserData;
-  pMovie->copy_audio_to_stream((uint8_t*)pStream, iStreamSize);
+  movie_player* pMovie = static_cast<movie_player*>(pUserData);
+  pMovie->copy_audio_to_stream(static_cast<uint8_t*>(pStream), iStreamSize);
 }
 
 }  // namespace
@@ -295,9 +295,6 @@ movie_player::movie_player()
       audio_queue(),
       movie_picture_buffer(new ::movie_picture_buffer()),
       audio_resample_context(nullptr),
-      audio_buffer_size(0),
-      audio_buffer_max_size(0),
-      audio_frame(nullptr),
       empty_audio_chunk(nullptr),
       audio_chunk_buffer{},
       audio_channel(-1),
@@ -402,13 +399,7 @@ void movie_player::unload() {
 
   std::lock_guard<std::mutex> audioLock(decoding_audio_mutex);
 
-  if (audio_buffer_max_size > 0) {
-    av_free(audio_buffer);
-    audio_buffer_max_size = 0;
-  }
-
   audio_codec_context.reset();
-  audio_frame.reset();
 
   swr_free(&audio_resample_context);
 
@@ -428,10 +419,6 @@ void movie_player::play(int iChannel) {
   movie_picture_buffer->reset();
   movie_picture_buffer->allocate(renderer, video_codec_context->width,
                                  video_codec_context->height);
-
-  audio_buffer_size = 0;
-  audio_buffer_index = 0;
-  audio_buffer_max_size = 0;
 
   current_sync_pts = 0;
   current_sync_pts_system_time = SDL_GetTicks();
@@ -631,46 +618,42 @@ int movie_player::populate_frame(AVCodecContext& ctx, av_packet_queue& pq,
 void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
   std::lock_guard<std::mutex> audioLock(decoding_audio_mutex);
 
-  bool fFirst = true;
   while (iStreamSize > 0 && !aborting) {
-    if (audio_buffer_index >= audio_buffer_size) {
-      int iAudioSize = decode_audio_frame(fFirst);
-      fFirst = false;
+    int iAudioSize = decode_audio_frame(pbStream, iStreamSize);
 
-      if (iAudioSize <= 0) {
-        std::memset(audio_buffer, 0, audio_buffer_size);
-      } else {
-        audio_buffer_size = iAudioSize;
-      }
-      audio_buffer_index = 0;
+    if (iAudioSize <= 0) {
+      std::memset(pbStream, 0, iStreamSize);
+      return;
+    } else {
+      iStreamSize -= iAudioSize;
+      pbStream += iAudioSize;
     }
-
-    int iCopyLength = audio_buffer_size - audio_buffer_index;
-    if (iCopyLength > iStreamSize) {
-      iCopyLength = iStreamSize;
-    }
-    std::memcpy(pbStream, (uint8_t*)audio_buffer + audio_buffer_index,
-                iCopyLength);
-    iStreamSize -= iCopyLength;
-    pbStream += iCopyLength;
-    audio_buffer_index += iCopyLength;
   }
 }
 
-int movie_player::decode_audio_frame(bool fFirst) {
-  if (!audio_frame) {
-    audio_frame.reset(av_frame_alloc());
-  } else {
-    av_frame_unref(audio_frame.get());
+int movie_player::decode_audio_frame(uint8_t* stream, int stream_size) {
+  int iOutSamples = stream_size / (av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
+                                   mixer_channels);
+
+  int actual_samples =
+      swr_convert(audio_resample_context, &stream, iOutSamples, nullptr, 0);
+  if (actual_samples < 0) {
+    std::cerr << "WARN: Unexpected error " << actual_samples
+              << " while converting audio" << std::endl;
+    return 0;
+  } else if (actual_samples > 0) {
+    return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
+           mixer_channels;
   }
 
+  av_frame_unique_ptr audio_frame(av_frame_alloc());
   int iError = populate_frame(audio_stream_index, *audio_frame);
 
   if (iError == AVERROR_EOF) {
     return 0;
   } else if (iError < 0) {
-    std::cerr << "Unexpected error " << iError << " while decoding audio packet"
-              << std::endl;
+    std::cerr << "WARN: Unexpected error " << iError
+              << " while decoding audio packet" << std::endl;
     return 0;
   }
 
@@ -678,24 +661,18 @@ int movie_player::decode_audio_frame(bool fFirst) {
       get_presentation_time_for_frame(*audio_frame, audio_stream_index);
   current_sync_pts = dClockPts;
   current_sync_pts_system_time = SDL_GetTicks();
-  // over-estimate output samples
-  int iOutSamples =
-      (int)av_rescale_rnd(audio_frame->nb_samples, mixer_frequency,
-                          audio_codec_context->sample_rate, AV_ROUND_UP);
-  int iSampleSize =
-      av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) * iOutSamples * mixer_channels;
 
-  if (iSampleSize > audio_buffer_max_size) {
-    if (audio_buffer_max_size > 0) {
-      av_free(audio_buffer);
-    }
-    audio_buffer = (uint8_t*)av_malloc(iSampleSize);
-    audio_buffer_max_size = iSampleSize;
+  actual_samples =
+      swr_convert(audio_resample_context, &stream, iOutSamples,
+                  const_cast<const uint8_t**>(&audio_frame->data[0]),
+                  audio_frame->nb_samples);
+  if (actual_samples < 0) {
+    std::cerr << "WARN: Unexpected error " << actual_samples
+              << " while converting audio" << std::endl;
+    return 0;
   }
-
-  swr_convert(audio_resample_context, &audio_buffer, iOutSamples,
-              (const uint8_t**)&audio_frame->data[0], audio_frame->nb_samples);
-  return iSampleSize;
+  return actual_samples * av_get_bytes_per_sample(AV_SAMPLE_FMT_S16) *
+         mixer_channels;
 }
 #else   // CORSIX_TH_USE_FFMPEG
 movie_player::movie_player() {}
