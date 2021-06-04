@@ -157,11 +157,11 @@ bool movie_picture_buffer::advance() {
 void movie_picture_buffer::draw(SDL_Renderer* pRenderer,
                                 const SDL_Rect& dstrect) {
   if (!empty()) {
-    auto cur_pic = &(picture_queue[read_index]);
+    auto& cur_pic = picture_queue[read_index];
 
-    std::lock_guard<std::mutex> pictureLock(cur_pic->mutex);
-    if (cur_pic->buffer) {
-      SDL_UpdateTexture(texture, nullptr, cur_pic->buffer, cur_pic->width * 3);
+    std::lock_guard<std::mutex> pictureLock(cur_pic.mutex);
+    if (cur_pic.buffer) {
+      SDL_UpdateTexture(texture, nullptr, cur_pic.buffer, cur_pic.width * 3);
       int iError = SDL_RenderCopy(pRenderer, texture, nullptr, &dstrect);
       if (iError < 0) {
         std::cerr << "Error displaying movie frame: " << SDL_GetError() << "\n";
@@ -196,7 +196,6 @@ bool movie_picture_buffer::unsafe_full() {
 }
 
 int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
-  movie_picture* pMoviePicture = nullptr;
   std::unique_lock<std::mutex> picBufLock(mutex);
   while (unsafe_full() && !aborting) {
     cond.wait(picBufLock);
@@ -207,15 +206,15 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
     return -1;
   }
 
-  pMoviePicture = &picture_queue[write_index];
-  std::unique_lock<std::mutex> pictureLock(pMoviePicture->mutex);
+  auto& picture = picture_queue[write_index];
+  std::unique_lock<std::mutex> pictureLock(picture.mutex);
 
-  if (pMoviePicture->buffer) {
+  if (picture.buffer) {
     sws_context = sws_getCachedContext(
         sws_context, pFrame->width, pFrame->height,
-        (AVPixelFormat)pFrame->format, pMoviePicture->width,
-        pMoviePicture->height, pMoviePicture->pixel_format, SWS_BICUBIC,
-        nullptr, nullptr, nullptr);
+        static_cast<AVPixelFormat>(pFrame->format), picture.width,
+        picture.height, picture.pixel_format, SWS_BICUBIC, nullptr, nullptr,
+        nullptr);
     if (sws_context == nullptr) {
       std::cerr << "Failed to initialize SwsContext\n";
       return 1;
@@ -223,15 +222,15 @@ int movie_picture_buffer::write(AVFrame* pFrame, double dPts) {
 
     /* Allocate a new frame and buffer for the destination RGB24 data. */
     av_frame_unique_ptr pFrameRGB(av_frame_alloc());
-    av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize,
-                         pMoviePicture->buffer, pMoviePicture->pixel_format,
-                         pMoviePicture->width, pMoviePicture->height, 1);
+    av_image_fill_arrays(pFrameRGB->data, pFrameRGB->linesize, picture.buffer,
+                         picture.pixel_format, picture.width, picture.height,
+                         1);
 
     /* Rescale the frame data and convert it to RGB24. */
     sws_scale(sws_context, pFrame->data, pFrame->linesize, 0, pFrame->height,
               pFrameRGB->data, pFrameRGB->linesize);
 
-    pMoviePicture->pts = dPts;
+    picture.pts = dPts;
 
     pictureLock.unlock();
     write_index++;
