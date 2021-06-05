@@ -340,11 +340,11 @@ class render_target {
  private:
   SDL_Window* window;
   SDL_Renderer* renderer;
-  SDL_Texture* zoom_texture;
   SDL_PixelFormat* pixel_format;
   bool blue_filter_active;
   cursor* game_cursor;
   double bitmap_scale_factor;  ///< Bitmap scale factor.
+  double global_scale_factor;  ///< Global scale factor.
   int width;
   int height;
   int cursor_x;
@@ -356,8 +356,6 @@ class render_target {
   // ClipRects in opengl and opengles.
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
   bool apply_opengl_clip_fix;
-
-  void flush_zoom_buffer();
 };
 
 //! Stored image.

@@ -95,6 +95,30 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
+//! Get the enclosing rect of an SDL_Rect scaled by the given scale factor.
+//  Scaling the rect is location dependent, as non-integer scale factors
+//  require that same size rects be +/-1 pixel different in size depending
+//  on location.
+/*!
+    @param rect Pointer to the SDL_Rect to be scaled.
+    @param scale_factor Scale to be applied to the rectangle.
+    @return Enclosing SDL_Rect of the input rect scaled by scale_factor.
+ */
+void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
+                           SDL_Rect* dst_rect) {
+  // When scaling a rect, we use the scaled position of the bottom-right corner
+  // to determine the size depending on where on the screen the rect is. Compute
+  // width and height first so that we can support when rect == dst_rect.
+  int dst_x = static_cast<int>(scale_factor * rect->x);
+  int dst_y = static_cast<int>(scale_factor * rect->y);
+  dst_rect->w =
+      static_cast<int>(ceil(scale_factor * (rect->x + rect->w))) - dst_x;
+  dst_rect->h =
+      static_cast<int>(ceil(scale_factor * (rect->y + rect->h))) - dst_y;
+  dst_rect->x = dst_x;
+  dst_rect->y = dst_y;
+}
+
 }  // namespace
 
 palette::palette() { colour_count = 0; }
@@ -256,10 +280,10 @@ render_target::render_target() {
   renderer = nullptr;
   pixel_format = nullptr;
   game_cursor = nullptr;
-  zoom_texture = nullptr;
   scale_bitmaps = false;
   blue_filter_active = false;
   apply_opengl_clip_fix = false;
+  global_scale_factor = 1.0;
   width = -1;
   height = -1;
 }
@@ -269,7 +293,10 @@ render_target::~render_target() { destroy(); }
 bool render_target::create(const render_target_creation_params* pParams) {
   if (renderer != nullptr) return false;
 
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  // When scaling rendering, linear introduces semi-transparent gaps at
+  // transparent edges within tiles. Using nearest ensures that we can scale
+  // angled transparent tile edges without seams.
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -330,11 +357,6 @@ void render_target::destroy() {
     pixel_format = nullptr;
   }
 
-  if (zoom_texture) {
-    SDL_DestroyTexture(zoom_texture);
-    zoom_texture = nullptr;
-  }
-
   if (renderer) {
     SDL_DestroyRenderer(renderer);
     renderer = nullptr;
@@ -347,37 +369,12 @@ void render_target::destroy() {
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
-  flush_zoom_buffer();
   scale_bitmaps = false;
 
   if (fScale <= 0.000) {
     return false;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
-    // Draw everything from now until the next scale to zoom_texture
-    // with the appropriate virtual size, which will be copied scaled to
-    // fit the window.
-    int virtWidth = static_cast<int>(width / fScale);
-    int virtHeight = static_cast<int>(height / fScale);
-
-    zoom_texture =
-        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                          SDL_TEXTUREACCESS_TARGET, virtWidth, virtHeight);
-
-    SDL_RenderSetLogicalSize(renderer, virtWidth, virtHeight);
-    if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
-      std::cout << "Warning: Could not render to zoom texture - "
-                << SDL_GetError() << std::endl;
-
-      SDL_RenderSetLogicalSize(renderer, width, height);
-      SDL_DestroyTexture(zoom_texture);
-      zoom_texture = nullptr;
-      return false;
-    }
-
-    // Clear the new texture to transparent/black.
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderClear(renderer);
-
+    global_scale_factor = fScale;
     return true;
   } else if (0.999 <= fScale && fScale <= 1.001) {
     return true;
@@ -408,8 +405,6 @@ bool render_target::start_frame() {
 }
 
 bool render_target::end_frame() {
-  flush_zoom_buffer();
-
   // End the frame by adding the cursor and possibly a filter.
   if (game_cursor) {
     game_cursor->draw(this, cursor_x, cursor_y);
@@ -444,6 +439,7 @@ void render_target::set_window_grab(bool bActivate) {
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
                               int iH) {
   SDL_Rect rcDest = {iX, iY, iW, iH};
+  getEnclosingScaleRect(&rcDest, global_scale_factor, &rcDest);
 
   Uint8 r, g, b, a;
   SDL_GetRGBA(iColour, pixel_format, &r, &g, &b, &a);
@@ -470,6 +466,8 @@ void render_target::get_clip_rect(clip_rect* pRect) const {
     SDL_RenderGetLogicalSize(renderer, &renderWidth, &renderHeight);
     pRect->y = renderHeight - pRect->y - pRect->h;
   }
+
+  getEnclosingScaleRect(pRect, 1.0 / global_scale_factor, pRect);
 }
 
 void render_target::set_clip_rect(const clip_rect* pRect) {
@@ -479,7 +477,8 @@ void render_target::set_clip_rect(const clip_rect* pRect) {
     return;
   }
 
-  SDL_Rect SDLRect = {pRect->x, pRect->y, pRect->w, pRect->h};
+  SDL_Rect SDLRect;
+  getEnclosingScaleRect(pRect, global_scale_factor, &SDLRect);
 
   // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
   // off clipping, so we replace it with a rect that's outside our viewport.
@@ -554,19 +553,6 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
   if (!scale_bitmaps) return false;
   if (pFactor) *pFactor = bitmap_scale_factor;
   return true;
-}
-
-void render_target::flush_zoom_buffer() {
-  if (zoom_texture == nullptr) {
-    return;
-  }
-
-  SDL_SetRenderTarget(renderer, nullptr);
-  SDL_RenderSetLogicalSize(renderer, width, height);
-  SDL_SetTextureBlendMode(zoom_texture, SDL_BLENDMODE_BLEND);
-  SDL_RenderCopy(renderer, zoom_texture, nullptr, nullptr);
-  SDL_DestroyTexture(zoom_texture);
-  zoom_texture = nullptr;
 }
 
 namespace {
@@ -669,11 +655,13 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
+  SDL_Rect scaledDstRect;
+  getEnclosingScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
   if (iSDLFlip != 0) {
-    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, prcDstRect, 0, nullptr,
+    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
                      (SDL_RendererFlip)iSDLFlip);
   } else {
-    SDL_RenderCopy(renderer, pTexture, prcSrcRect, prcDstRect);
+    SDL_RenderCopy(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
 }
 
