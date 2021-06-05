@@ -58,11 +58,16 @@ movie_picture::movie_picture()
 movie_picture::~movie_picture() { av_freep(&buffer); }
 
 void movie_picture::allocate(int iWidth, int iHeight) {
+  int numBytes = av_image_get_buffer_size(pixel_format, iWidth, iHeight, 1);
+  if (numBytes < 0) {
+    throw std::runtime_error(
+        "problem calculating size of buffer for movie_picture");
+  }
   width = iWidth;
   height = iHeight;
   av_freep(&buffer);
-  int numBytes = av_image_get_buffer_size(pixel_format, width, height, 1);
-  buffer = static_cast<uint8_t*>(av_mallocz(numBytes));
+  buffer =
+      static_cast<uint8_t*>(av_mallocz(static_cast<std::size_t>(numBytes)));
 }
 
 void movie_picture::deallocate() { av_freep(&buffer); }
@@ -423,12 +428,14 @@ void movie_player::play(int iChannel) {
     audio_resample_context = swr_alloc_set_opts(
         audio_resample_context,
         mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO,
-        AV_SAMPLE_FMT_S16, mixer_frequency, audio_codec_context->channel_layout,
+        AV_SAMPLE_FMT_S16, mixer_frequency,
+        static_cast<std::int64_t>(audio_codec_context->channel_layout),
         audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
         nullptr);
     swr_init(audio_resample_context);
-    empty_audio_chunk.reset(Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
-                                              audio_chunk_buffer.size()));
+    empty_audio_chunk.reset(
+        Mix_QuickLoad_RAW(audio_chunk_buffer.data(),
+                          static_cast<uint32_t>(audio_chunk_buffer.size())));
 
     audio_channel = Mix_PlayChannel(iChannel, empty_audio_chunk.get(), -1);
     if (audio_channel < 0) {
@@ -576,7 +583,8 @@ double movie_player::get_presentation_time_for_frame(const AVFrame& frame,
     pts = 0;
   }
 
-  return pts * av_q2d(format_context->streams[streamIndex]->time_base);
+  return static_cast<double>(pts) *
+         av_q2d(format_context->streams[streamIndex]->time_base);
 }
 
 int movie_player::populate_frame(int stream, AVFrame& frame) {
@@ -617,7 +625,7 @@ void movie_player::copy_audio_to_stream(uint8_t* pbStream, int iStreamSize) {
     int iAudioSize = decode_audio_frame(pbStream, iStreamSize);
 
     if (iAudioSize <= 0) {
-      std::memset(pbStream, 0, iStreamSize);
+      std::memset(pbStream, 0, static_cast<std::size_t>(iStreamSize));
       return;
     } else {
       iStreamSize -= iAudioSize;
