@@ -356,6 +356,7 @@ class render_target {
   // ClipRects in opengl and opengles.
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
   bool apply_opengl_clip_fix;
+  bool direct_zoom;
 };
 
 //! Stored image.

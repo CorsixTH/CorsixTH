@@ -275,18 +275,18 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
-render_target::render_target() {
-  window = nullptr;
-  renderer = nullptr;
-  pixel_format = nullptr;
-  game_cursor = nullptr;
-  scale_bitmaps = false;
-  blue_filter_active = false;
-  apply_opengl_clip_fix = false;
-  global_scale_factor = 1.0;
-  width = -1;
-  height = -1;
-}
+render_target::render_target()
+    : window(nullptr),
+      renderer(nullptr),
+      pixel_format(nullptr),
+      blue_filter_active(false),
+      game_cursor(nullptr),
+      global_scale_factor(1.0),
+      width(-1),
+      height(-1),
+      scale_bitmaps(false),
+      apply_opengl_clip_fix(false),
+      direct_zoom(false) {}
 
 render_target::~render_target() { destroy(); }
 
@@ -347,6 +347,8 @@ bool render_target::update(const render_target_creation_params* pParams) {
   if (bUpdateSize) {
     SDL_RenderSetLogicalSize(renderer, width, height);
   }
+
+  direct_zoom = pParams->direct_zoom;
 
   return true;
 }

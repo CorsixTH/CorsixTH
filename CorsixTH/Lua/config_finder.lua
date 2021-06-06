@@ -139,7 +139,9 @@ local config_defaults = {
   new_graphics_folder = nil,
   use_new_graphics = false,
   check_for_updates = true,
-  room_information_dialogs = true
+  room_information_dialogs = true,
+  allow_blocking_off_areas = false,
+  direct_zoom = false
 }
 
 fi = io.open(config_filename, "r")
@@ -502,6 +504,12 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- ]=] .. '\n' ..
 'allow_blocking_off_areas = ' .. tostring(config_values.allow_blocking_off_areas) .. '\n' .. [=[
 
+-------------------------------------------------------------------------------------------------------------------------
+-- Direct Zoom: An experimental enhancement to avoid rendering to an
+-- intermediate texture when zooming. Improves performance and reliability on
+-- some hardware.
+-- ]=] .. '\n' ..
+'direct_zoom = ' .. tostring(config_values.direct_zoom) .. '\n' .. [=[
 
 -------------------------------------------------------------------------------------------------------------------------
 
