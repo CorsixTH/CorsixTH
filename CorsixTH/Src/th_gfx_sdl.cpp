@@ -278,6 +278,7 @@ void wx_storing::store_argb(uint32_t pixel) {
 render_target::render_target()
     : window(nullptr),
       renderer(nullptr),
+      zoom_texture(nullptr),
       pixel_format(nullptr),
       blue_filter_active(false),
       game_cursor(nullptr),
@@ -293,10 +294,7 @@ render_target::~render_target() { destroy(); }
 bool render_target::create(const render_target_creation_params* pParams) {
   if (renderer != nullptr) return false;
 
-  // When scaling rendering, linear introduces semi-transparent gaps at
-  // transparent edges within tiles. Using nearest ensures that we can scale
-  // angled transparent tile edges without seams.
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -350,6 +348,13 @@ bool render_target::update(const render_target_creation_params* pParams) {
 
   direct_zoom = pParams->direct_zoom;
 
+  if (direct_zoom) {
+    // When scaling rendering, linear introduces semi-transparent gaps at
+    // transparent edges within tiles. Using nearest ensures that we can scale
+    // angled transparent tile edges without seams.
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+  }
+
   return true;
 }
 
@@ -357,6 +362,11 @@ void render_target::destroy() {
   if (pixel_format) {
     SDL_FreeFormat(pixel_format);
     pixel_format = nullptr;
+  }
+
+  if (zoom_texture) {
+    SDL_DestroyTexture(zoom_texture);
+    zoom_texture = nullptr;
   }
 
   if (renderer) {
@@ -371,12 +381,40 @@ void render_target::destroy() {
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
+  flush_zoom_buffer();
   scale_bitmaps = false;
 
   if (fScale <= 0.000) {
     return false;
-  } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
+  } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
+    return true;
+  } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
+    // Draw everything from now until the next scale to zoom_texture
+    // with the appropriate virtual size, which will be copied scaled to
+    // fit the window.
+    int virtWidth = static_cast<int>(width / fScale);
+    int virtHeight = static_cast<int>(height / fScale);
+
+    zoom_texture =
+        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                          SDL_TEXTUREACCESS_TARGET, virtWidth, virtHeight);
+
+    SDL_RenderSetLogicalSize(renderer, virtWidth, virtHeight);
+    if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+      std::cout << "Warning: Could not render to zoom texture - "
+                << SDL_GetError() << std::endl;
+
+      SDL_RenderSetLogicalSize(renderer, width, height);
+      SDL_DestroyTexture(zoom_texture);
+      zoom_texture = nullptr;
+      return false;
+    }
+
+    // Clear the new texture to transparent/black.
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderClear(renderer);
+
     return true;
   } else if (0.999 <= fScale && fScale <= 1.001) {
     return true;
@@ -407,6 +445,8 @@ bool render_target::start_frame() {
 }
 
 bool render_target::end_frame() {
+  flush_zoom_buffer();
+
   // End the frame by adding the cursor and possibly a filter.
   if (game_cursor) {
     game_cursor->draw(this, cursor_x, cursor_y);
@@ -555,6 +595,19 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
   if (!scale_bitmaps) return false;
   if (pFactor) *pFactor = bitmap_scale_factor;
   return true;
+}
+
+void render_target::flush_zoom_buffer() {
+  if (zoom_texture == nullptr) {
+    return;
+  }
+
+  SDL_SetRenderTarget(renderer, nullptr);
+  SDL_RenderSetLogicalSize(renderer, width, height);
+  SDL_SetTextureBlendMode(zoom_texture, SDL_BLENDMODE_BLEND);
+  SDL_RenderCopy(renderer, zoom_texture, nullptr, nullptr);
+  SDL_DestroyTexture(zoom_texture);
+  zoom_texture = nullptr;
 }
 
 namespace {

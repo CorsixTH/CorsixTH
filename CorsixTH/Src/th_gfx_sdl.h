@@ -340,6 +340,7 @@ class render_target {
  private:
   SDL_Window* window;
   SDL_Renderer* renderer;
+  SDL_Texture* zoom_texture;
   SDL_PixelFormat* pixel_format;
   bool blue_filter_active;
   cursor* game_cursor;
@@ -357,6 +358,8 @@ class render_target {
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
   bool apply_opengl_clip_fix;
   bool direct_zoom;
+
+  void flush_zoom_buffer();
 };
 
 //! Stored image.
