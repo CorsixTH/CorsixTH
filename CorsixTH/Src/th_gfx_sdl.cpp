@@ -102,7 +102,7 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
 /*!
     @param rect Pointer to the SDL_Rect to be scaled.
     @param scale_factor Scale to be applied to the rectangle.
-    @return Enclosing SDL_Rect of the input rect scaled by scale_factor.
+    @param[out] dst_rect Enclosing SDL_Rect of rect scaled by scale_factor.
  */
 void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
                            SDL_Rect* dst_rect) {
@@ -294,7 +294,17 @@ render_target::~render_target() { destroy(); }
 bool render_target::create(const render_target_creation_params* pParams) {
   if (renderer != nullptr) return false;
 
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  direct_zoom = pParams->direct_zoom;
+
+  if (direct_zoom) {
+    // When scaling rendering, linear introduces semi-transparent gaps at
+    // transparent edges within tiles. Using nearest ensures that we can scale
+    // angled transparent tile edges without seams.
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  }
+
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -344,15 +354,6 @@ bool render_target::update(const render_target_creation_params* pParams) {
 
   if (bUpdateSize) {
     SDL_RenderSetLogicalSize(renderer, width, height);
-  }
-
-  direct_zoom = pParams->direct_zoom;
-
-  if (direct_zoom) {
-    // When scaling rendering, linear introduces semi-transparent gaps at
-    // transparent edges within tiles. Using nearest ensures that we can scale
-    // angled transparent tile edges without seams.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
   }
 
   return true;
