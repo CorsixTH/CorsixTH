@@ -39,6 +39,7 @@ include(CheckIncludeFiles)
 set(CORSIX_TH_DONE_TOP_LEVEL_CMAKE ON)
 
 # Define our options
+option(BUILD_CORSIXTH "Builds the main game" ON)
 option(WITH_AUDIO "Activate sound" ON)
 option(WITH_FREETYPE2 "Enhanced font support" ON)
 option(WITH_MOVIES "Activate in game movies" ON)
@@ -125,9 +126,11 @@ message("")
 message("Building common libraries")
 add_subdirectory("libs")
 
-# We always build CorsixTH otherwise we would miss the generated header
-message("Building CorsixTH")
-add_subdirectory(CorsixTH)
+# We build CorsixTH if BUILD_CORSIXTH is set. This is set by default and should generally be set.
+if(BUILD_CORSIXTH)
+  message("Building CorsixTH")
+  add_subdirectory(CorsixTH)
+endif()
 
 if(BUILD_ANIMVIEW)
   message("Building AnimView")

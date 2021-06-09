@@ -133,7 +133,7 @@ jobs:
       - name: Generate documentation
         if: matrix.docs
         run: |
-          cmake --build build/ --target -- doc
+          cmake --build build/ --target doc
       - name: Upload documentation
         if: github.ref == 'refs/heads/master' && github.repository == 'CorsixTH/CorsixTH' && matrix.docs
         run: |
