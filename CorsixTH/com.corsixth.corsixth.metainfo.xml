@@ -26,6 +26,70 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.65" date="2021-06-13" type="stable">
+      <description>
+        <p>New Features:</p>
+        <ul>
+          <li>On MacOS DMG files are now supported as disk images for Theme
+            Hospital data</li>
+          <li>Hospital policies will now carry over to your next level in the
+            campaign</li>
+          <li>You can now remove destroyed rooms for a fee (config option)</li>
+          <li>The information dialogs that appear when a room is first built
+            can be disabled in the configuration file</li>
+          <li>Fire extinguishers in rooms now have a chance to save a smoking
+            machine from exploding</li>
+          <li>Advisor has more advice</li>
+          <li>Additional trophy of the original game is implemented</li>
+          <li>Windows and room size now impact staff happiness</li>
+          <li>Roujin's challenge cheat is back</li>
+        </ul>
+        <p>Changes:</p>
+        <ul>
+          <li>Emergencies with unknown diseases will no longer occur</li>
+          <li>The VIP system has been overhauled to provide more balanced
+            ratings</li>
+          <li>Overpriced/Underpriced treatments now scale with difficulty</li>
+          <li>Placing a receptionist on a desk will now call her to the
+            desk</li>
+          <li>Boiler breakdowns now depend on handymen</li>
+          <li>Faxes can no longer be opened while paused (unless editing while
+            paused is enabled)</li>
+          <li>Improvements to receptionist announcement frequency and
+            behaviour</li>
+          <li>The game will now check common locations for Theme Hospital on
+            startup if it has not been configured</li>
+          <li>Games compiled without movie/audio can no longer access these
+            settings</li>
+          <li>Update check now occurs over TLS for better security</li>
+          <li>English names are now shown in a tooltip when hovering over a
+            language option</li>
+          <li>Improved TTF font rendering</li>
+        </ul>
+        <p>Translations:</p>
+        <ul>
+          <li>Greek language added! (thanks to dimitrios-iliadis!)</li>
+          <li>Updates to Brazilian-Portuguese language</li>
+          <li>Updates to English language</li>
+          <li>Fixes to Chinese unicode encoding</li>
+        </ul>
+        <p>Bug Fixes:</p>
+        <ul>
+          <li>Issues scheduling emergencies have been resolved</li>
+          <li>Games will no longer crash on load if the jukebox was open</li>
+          <li>Games will no longer crash because of an empty music folder</li>
+          <li>Fixed a scenario where editing a room caused staff to get
+            stuck</li>
+          <li>Games that scrolled while saving stop scrolling on load</li>
+          <li>Psychiatrists in the Operating Theatre are now properly
+            counted</li>
+          <li>Losing a game now gives the reason if the movie is skipped</li>
+          <li>Exiting the game will no longer hang when using the Wayland
+            backend</li>
+          <li>The mouse will now be freed on game crash</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.65~beta2" date="2021-05-29" type="development"></release>
     <release version="0.65~beta1" date="2021-05-23" type="development"></release>
     <release version="0.64" date="2020-06-16" type="stable"></release>

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
-Version 0.65 - released xxxx 2021
+Version 0.65 - released June 2021
 -------------------------------------------------------------------------------
 # New Features/Enhancements
 * CorsixTH is now available as a Flatpak! (thanks to @rmnvgr !)
