@@ -753,8 +753,8 @@ end
 -- Check if it is cold or hot around the humanoid and increase/decrease the
 -- feeling of warmth accordingly. Returns whether the calling function should proceed.
 function Humanoid:tickDay()
-  -- No use doing anything if we're going home
-  if self.going_home then
+  -- No use doing anything if we're going home/fired (or dead)
+  if self.going_home or self.dead then
     return false
   end
 
