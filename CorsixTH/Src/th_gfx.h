@@ -88,6 +88,8 @@ struct render_target_creation_params {
   bool fullscreen;         ///< Run full-screen.
   bool present_immediate;  ///< Whether to present immediately to the user
                            ///< (else wait for Vsync).
+  bool direct_zoom;  ///< Scale each texture when copying if true, otherwise
+                     ///< render to intermediate texture and scale.
 };
 
 /*!

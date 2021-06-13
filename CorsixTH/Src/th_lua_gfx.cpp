@@ -549,6 +549,7 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
 
   oParams.fullscreen = false;
   oParams.present_immediate = false;
+  oParams.direct_zoom = false;
 
   // Parse string arguments, looking for matching parameter names.
   for (int iArg = iArgStart + 2, iArgCount = lua_gettop(L); iArg <= iArgCount;
@@ -556,9 +557,15 @@ render_target_creation_params l_surface_creation_params(lua_State* L,
     const char* sOption = luaL_checkstring(L, iArg);
     if (sOption[0] == 0) continue;
 
-    if (std::strcmp(sOption, "fullscreen") == 0) oParams.fullscreen = true;
-    if (std::strcmp(sOption, "present immediate") == 0)
+    if (std::strcmp(sOption, "fullscreen") == 0) {
+      oParams.fullscreen = true;
+    }
+    if (std::strcmp(sOption, "present immediate") == 0) {
       oParams.present_immediate = true;
+    }
+    if (std::strcmp(sOption, "direct zoom") == 0) {
+      oParams.direct_zoom = true;
+    }
   }
 
   return oParams;

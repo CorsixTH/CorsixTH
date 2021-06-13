@@ -345,6 +345,7 @@ class render_target {
   bool blue_filter_active;
   cursor* game_cursor;
   double bitmap_scale_factor;  ///< Bitmap scale factor.
+  double global_scale_factor;  ///< Global scale factor.
   int width;
   int height;
   int cursor_x;
@@ -356,6 +357,7 @@ class render_target {
   // ClipRects in opengl and opengles.
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
   bool apply_opengl_clip_fix;
+  bool direct_zoom;
 
   void flush_zoom_buffer();
 };

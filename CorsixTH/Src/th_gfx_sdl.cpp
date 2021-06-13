@@ -95,6 +95,30 @@ uint8_t convert_6bit_to_8bit_colour_component(uint8_t colour_component) {
       (colour_component & mask_6bit) * static_cast<double>(0xFF) / mask_6bit));
 }
 
+//! Get the enclosing rect of an SDL_Rect scaled by the given scale factor.
+//  Scaling the rect is location dependent, as non-integer scale factors
+//  require that same size rects be +/-1 pixel different in size depending
+//  on location.
+/*!
+    @param rect Pointer to the SDL_Rect to be scaled.
+    @param scale_factor Scale to be applied to the rectangle.
+    @param[out] dst_rect Enclosing SDL_Rect of rect scaled by scale_factor.
+ */
+void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
+                           SDL_Rect* dst_rect) {
+  // When scaling a rect, we use the scaled position of the bottom-right corner
+  // to determine the size depending on where on the screen the rect is. Compute
+  // width and height first so that we can support when rect == dst_rect.
+  int dst_x = static_cast<int>(scale_factor * rect->x);
+  int dst_y = static_cast<int>(scale_factor * rect->y);
+  dst_rect->w =
+      static_cast<int>(ceil(scale_factor * (rect->x + rect->w))) - dst_x;
+  dst_rect->h =
+      static_cast<int>(ceil(scale_factor * (rect->y + rect->h))) - dst_y;
+  dst_rect->x = dst_x;
+  dst_rect->y = dst_y;
+}
+
 }  // namespace
 
 palette::palette() { colour_count = 0; }
@@ -251,25 +275,36 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
-render_target::render_target() {
-  window = nullptr;
-  renderer = nullptr;
-  pixel_format = nullptr;
-  game_cursor = nullptr;
-  zoom_texture = nullptr;
-  scale_bitmaps = false;
-  blue_filter_active = false;
-  apply_opengl_clip_fix = false;
-  width = -1;
-  height = -1;
-}
+render_target::render_target()
+    : window(nullptr),
+      renderer(nullptr),
+      zoom_texture(nullptr),
+      pixel_format(nullptr),
+      blue_filter_active(false),
+      game_cursor(nullptr),
+      global_scale_factor(1.0),
+      width(-1),
+      height(-1),
+      scale_bitmaps(false),
+      apply_opengl_clip_fix(false),
+      direct_zoom(false) {}
 
 render_target::~render_target() { destroy(); }
 
 bool render_target::create(const render_target_creation_params* pParams) {
   if (renderer != nullptr) return false;
 
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  direct_zoom = pParams->direct_zoom;
+
+  if (direct_zoom) {
+    // When scaling rendering, linear introduces semi-transparent gaps at
+    // transparent edges within tiles. Using nearest ensures that we can scale
+    // angled transparent tile edges without seams.
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
+  } else {
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+  }
+
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -352,6 +387,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
 
   if (fScale <= 0.000) {
     return false;
+  } else if (eWhatToScale == scaled_items::all && direct_zoom) {
+    global_scale_factor = fScale;
+    return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
     // Draw everything from now until the next scale to zoom_texture
     // with the appropriate virtual size, which will be copied scaled to
@@ -444,6 +482,7 @@ void render_target::set_window_grab(bool bActivate) {
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
                               int iH) {
   SDL_Rect rcDest = {iX, iY, iW, iH};
+  getEnclosingScaleRect(&rcDest, global_scale_factor, &rcDest);
 
   Uint8 r, g, b, a;
   SDL_GetRGBA(iColour, pixel_format, &r, &g, &b, &a);
@@ -470,6 +509,8 @@ void render_target::get_clip_rect(clip_rect* pRect) const {
     SDL_RenderGetLogicalSize(renderer, &renderWidth, &renderHeight);
     pRect->y = renderHeight - pRect->y - pRect->h;
   }
+
+  getEnclosingScaleRect(pRect, 1.0 / global_scale_factor, pRect);
 }
 
 void render_target::set_clip_rect(const clip_rect* pRect) {
@@ -479,7 +520,8 @@ void render_target::set_clip_rect(const clip_rect* pRect) {
     return;
   }
 
-  SDL_Rect SDLRect = {pRect->x, pRect->y, pRect->w, pRect->h};
+  SDL_Rect SDLRect;
+  getEnclosingScaleRect(pRect, global_scale_factor, &SDLRect);
 
   // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
   // off clipping, so we replace it with a rect that's outside our viewport.
@@ -669,11 +711,13 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
+  SDL_Rect scaledDstRect;
+  getEnclosingScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
   if (iSDLFlip != 0) {
-    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, prcDstRect, 0, nullptr,
+    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
                      (SDL_RendererFlip)iSDLFlip);
   } else {
-    SDL_RenderCopy(renderer, pTexture, prcSrcRect, prcDstRect);
+    SDL_RenderCopy(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
 }
 

@@ -157,6 +157,9 @@ function App:init()
   if self.config.track_fps then
     modes[#modes + 1] = "present immediate"
   end
+  if self.config.direct_zoom then
+    modes[#modes + 1] = "direct zoom"
+  end
   self.modes = modes
   self.video = assert(TH.surface(self.config.width, self.config.height, unpack(modes)))
   self.video:setBlueFilterActive(false)
