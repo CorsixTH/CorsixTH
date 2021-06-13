@@ -987,7 +987,6 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   pCanvas->set_clip_rect(&rcClip);
 
   // 1st pass
-  pCanvas->start_nonoverlapping_draws();
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
     int iH = 32;
@@ -997,23 +996,25 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         pCanvas, iBlock & 0xFF,
         itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
         itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32, iBlock >> 8);
+
+    // Draw floor shadows on first pass. This ensures that shadows are drawn
+    // onto freshly drawn opaque floor tile pixels.
+    if (itrNode1->flags.shadow_full) {
+      blocks->draw_sprite(
+          pCanvas, 74, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
+          itrNode1.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
+    } else if (itrNode1->flags.shadow_half) {
+      blocks->draw_sprite(
+          pCanvas, 75, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
+          itrNode1.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
+    }
   }
-  pCanvas->finish_nonoverlapping_draws();
 
   // 2nd pass
   bool bFirst = true;
   map_scanline_iterator formerIterator;
   for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode2; ++itrNode2) {
-    if (itrNode2->flags.shadow_full) {
-      blocks->draw_sprite(
-          pCanvas, 74, itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode2.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
-    } else if (itrNode2->flags.shadow_half) {
-      blocks->draw_sprite(
-          pCanvas, 75, itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode2.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
-    }
 
     if (!itrNode2.is_last_on_scanline()) {
       continue;
