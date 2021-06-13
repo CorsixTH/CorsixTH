@@ -35,7 +35,9 @@ function Receptionist:Receptionist(...)
 end
 
 function Receptionist:tickDay()
-  Staff.tickDay(self)
+  if not Staff.tickDay(self) then
+    return false
+  end
   self:needsWorkStation()
 end
 
