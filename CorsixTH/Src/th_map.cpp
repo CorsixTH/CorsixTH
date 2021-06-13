@@ -1015,7 +1015,6 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   map_scanline_iterator formerIterator;
   for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode2; ++itrNode2) {
-
     if (!itrNode2.is_last_on_scanline()) {
       continue;
     }
