@@ -79,6 +79,7 @@ Copyright (C) 2020 Maxim Krivchikov
 Copyright (C) 2020 Dimitrios Iliadis
 Copyright (C) 2021 Zany XDev
 Copyright (C) 2021 Roman Vigier
+Copyright (C) 2021 Robert "flackr" Flack
 
 et al.
 

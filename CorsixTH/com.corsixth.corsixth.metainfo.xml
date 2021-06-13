@@ -43,6 +43,8 @@
           <li>Additional trophy of the original game is implemented</li>
           <li>Windows and room size now impact staff happiness</li>
           <li>Roujin's challenge cheat is back</li>
+          <li>Experimental direct_zoom config option, for more efficient zoom.
+            Fixes zoom on some hardware. Defaults off.</li>
         </ul>
         <p>Changes:</p>
         <ul>
