@@ -390,9 +390,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
     if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
-         SDL_WINDOW_FULLSCREEN_DESKTOP) {
-      // Drawing to an intermediate screen sized buffer when fullscreen results in
-      // noticeably better text rendering quality.
+        SDL_WINDOW_FULLSCREEN_DESKTOP) {
+      // Drawing to an intermediate screen sized buffer when fullscreen results
+      // in noticeably better text rendering quality.
       init_zoom_buffer(width, height);
     }
     return true;
@@ -593,11 +593,9 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
 }
 
 bool render_target::init_zoom_buffer(int iWidth, int iHeight) {
-  if (!supports_target_textures)
-    return false;
-  zoom_texture =
-      SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                        SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  if (!supports_target_textures) return false;
+  zoom_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                                   SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
   SDL_RenderSetLogicalSize(renderer, iWidth, iHeight);
   if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
     SDL_RenderSetLogicalSize(renderer, width, height);
