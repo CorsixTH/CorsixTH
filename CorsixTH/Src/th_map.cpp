@@ -1007,13 +1007,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode2; ++itrNode2) {
     if (itrNode2->flags.shadow_full) {
-      blocks->draw_sprite(
-          pCanvas, 74, itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
+      blocks->draw_sprite(pCanvas, 74,
+                          itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
                           itrNode2.tile_y_position_on_screen() + iCanvasY,
                           thdf_alpha_75 | thdf_nearest);
     } else if (itrNode2->flags.shadow_half) {
-      blocks->draw_sprite(
-          pCanvas, 75, itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
+      blocks->draw_sprite(pCanvas, 75,
+                          itrNode2.tile_x_position_on_screen() + iCanvasX - 32,
                           itrNode2.tile_y_position_on_screen() + iCanvasY,
                           thdf_alpha_75 | thdf_nearest);
     }

@@ -1070,8 +1070,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
   if (!pTexture) {
     if (sprite.data == nullptr) return;
 
-    uint32_t iSprFlags =
-        (sprite.sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain | (iFlags & thdf_nearest);
+    uint32_t iSprFlags = (sprite.sprite_flags & ~thdf_alt32_mask) |
+                         thdf_alt32_plain | (iFlags & thdf_nearest);
     pTexture = target->create_palettized_texture(
         sprite.width, sprite.height, sprite.data, palette, iSprFlags);
     sprite.texture = pTexture;
