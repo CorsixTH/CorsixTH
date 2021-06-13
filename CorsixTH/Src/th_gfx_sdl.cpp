@@ -389,6 +389,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     return false;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
+    // Drawing to an intermediate buffer seems to support better blending than
+    // drawing directly to the screen resulting in noticeably better fullscreen
+    // text rendering.
     init_zoom_buffer(width, height);
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
