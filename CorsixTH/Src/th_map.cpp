@@ -997,7 +997,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         pCanvas, iBlock & 0xFF,
         itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
         itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32,
-        iBlock >> 8 | thdf_nearest);
+        (iBlock >> 8) | thdf_nearest);
   }
   pCanvas->finish_nonoverlapping_draws();
 
@@ -1031,7 +1031,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8 | thdf_nearest);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
         if (itrNode->flags.shadow_wall) {
           clip_rect rcOldClip, rcNewClip;
           pCanvas->get_clip_rect(&rcOldClip);
@@ -1075,13 +1076,15 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8 | thdf_nearest);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
       }
       iBlock = itrNode->iBlock[3];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8 | thdf_nearest);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
       }
       iBlock = itrNode->iBlock[1];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
@@ -1150,7 +1153,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
               blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
             blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
                                 itrNode.y() - iH + 32,
-                                iBlock >> 8 | thdf_nearest);
+                                (iBlock >> 8) | thdf_nearest);
             if (itrNode.get_previous_tile()->flags.shadow_wall) {
               clip_rect rcOldClip, rcNewClip;
               pCanvas->get_clip_rect(&rcOldClip);
