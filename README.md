@@ -80,6 +80,6 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 ## Contact
 
 - Follow us on [Reddit](https://www.reddit.com/r/corsixth), Twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)), and on [Facebook](https://facebook.com/CorsixTH)
-- Hit up our [Matrix Room (Discord Bridge)](https://matrix.to/#/#corsixth-general:matrix.org) (web acccess available via [Element.io](https://element.io/get-started))
+- Hit up our Matrix Room (Discord Bridge) [#corsixth-general:matrix.org](https://matrix.to/#/#corsixth-general:matrix.org)
 - Join the server on [Discord](https://discord.gg/Mxeztvh)
 - Subscribe to our [Google Developer group](http://groups.google.com/group/corsix-th-dev)
