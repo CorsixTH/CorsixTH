@@ -959,20 +959,19 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
                      int iWidth, int iHeight, int iCanvasX,
                      int iCanvasY) const {
   /*
-     The map is drawn in two passes, with each pass done one scanline at a
-     time (a scanline is a list of tiles with the same screen Y coordinate).
-     The first pass does floor tiles, as the entire floor needs to be painted
+     The map is drawn in a single pass, done one scanline at a time
+     (a scanline is a list of tiles with the same screen Y coordinate).
+     First the floor tile is drawn, as the entire floor needs to be painted
      below anything else (for example, see the walking north through a door
      animation, which needs to paint over the floor of the scanline below the
-     animation). On the second pass, walls and entities are drawn, with the
+     animation). Then the floor shadows, walls and entities are drawn, with the
      order controlled such that entities appear in the right order relative to
      the walls around them. For each scanline, the following is done:
 
-     1st pass:
       1) For each tile, left to right, the floor tile (layer 0)
-     2nd pass:
-      1) For each tile, right to left, the north wall, then the early entities
-      2) For each tile, left to right, the west wall, then the late entities
+      2) The floor shadow
+      3) For each tile, right to left, the north wall, then the early entities
+      4) For each tile, left to right, the west wall, then the late entities
   */
 
   if (blocks == nullptr || cells == nullptr) {
@@ -986,9 +985,11 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
   rcClip.h = static_cast<clip_rect::w_h_type>(iHeight);
   pCanvas->set_clip_rect(&rcClip);
 
-  // 1st pass
+  bool bFirst = true;
+  map_scanline_iterator formerIterator;
   for (map_tile_iterator itrNode1(this, iScreenX, iScreenY, iWidth, iHeight);
        itrNode1; ++itrNode1) {
+    // First, draw the floor tile as it should be below everything else.
     int iH = 32;
     unsigned int iBlock = itrNode1->iBlock[0];
     blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH);
@@ -997,8 +998,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
         itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32, iBlock >> 8);
 
-    // Draw floor shadows on first pass. This ensures that shadows are drawn
-    // onto freshly drawn opaque floor tile pixels.
+    // Draw floor shadows immediately after floor tiles ensuring that all
+    // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
     if (itrNode1->flags.shadow_full) {
       blocks->draw_sprite(
           pCanvas, 74, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
@@ -1008,19 +1009,13 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           pCanvas, 75, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
           itrNode1.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
     }
-  }
 
-  // 2nd pass
-  bool bFirst = true;
-  map_scanline_iterator formerIterator;
-  for (map_tile_iterator itrNode2(this, iScreenX, iScreenY, iWidth, iHeight);
-       itrNode2; ++itrNode2) {
-    if (!itrNode2.is_last_on_scanline()) {
+    if (!itrNode1.is_last_on_scanline()) {
       continue;
     }
 
     for (map_scanline_iterator itrNode(
-             itrNode2, map_scanline_iterator_direction::backward, iCanvasX,
+             itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
              iCanvasY);
          itrNode; ++itrNode) {
       int iH;
@@ -1052,7 +1047,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     }
 
     map_scanline_iterator itrNode(
-        itrNode2, map_scanline_iterator_direction::forward, iCanvasX, iCanvasY);
+        itrNode1, map_scanline_iterator_direction::forward, iCanvasX, iCanvasY);
     if (!bFirst) {
       // since the scanline count from one THMapScanlineIterator to
       // another can differ synchronization between the current iterator
