@@ -226,15 +226,12 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 3:  // Recolour layer
       {
         uint8_t iTable = *pImg++;
-        uint32_t iColour;
         pImg++;  // Skip reading the opacity for now.
         if (iTable == 0xFF) {
           // Legacy sprite data. Use the palette to recolour the
           // layer. Note that the iOpacity is ignored here.
           while (iLength > 0) {
-            iColour = pColours[*pImg++];
-
-            push_pixel(iColour);
+            push_pixel(pColours[*pImg++]);
             iLength--;
           }
         } else {
