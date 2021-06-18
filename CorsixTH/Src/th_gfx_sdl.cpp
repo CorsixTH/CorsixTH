@@ -27,8 +27,6 @@ SOFTWARE.
 #include "th_gfx_font.h"
 #endif
 
-#define _USE_MATH_DEFINES
-
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
