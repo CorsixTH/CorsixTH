@@ -355,6 +355,26 @@ function PlayerHospital:warnForLongQueues()
   end
 end
 
+function PlayerHospital:adviseDiscoverDisease(disease)
+ -- Generate a message about the discovery
+  local message = {
+    {text = _S.fax.disease_discovered.discovered_name:format(disease.name)},
+    {text = disease.cause, offset = 12},
+    {text = disease.symptoms, offset = 12},
+    {text = disease.cure, offset = 12},
+    choices = {
+      {text = _S.fax.disease_discovered.close_text, choice = "close"},
+    },
+  }
+  self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
+
+  -- If the drug casebook is open, update it.
+  local window = self.world.ui:getWindow(UICasebook)
+  if window then
+    window:updateDiseaseList()
+  end
+end
+
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
   -- Advise the player.
