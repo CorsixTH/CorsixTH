@@ -578,6 +578,11 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self.hotkey_buttons["ingame_zoom_out_more"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
     :makeHotkeyBox(function() self:confirm_func("ingame_zoom_out_more") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_zoom_out_more"], "+")) )
   get_next_pos_y()
+  -- ingame_reset_zoom
+  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_reset_zoom)
+  self.hotkey_buttons["ingame_reset_zoom"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_reset_zoom") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_reset_zoom"], "+")) )
+  get_next_pos_y()
 
   -- Game Speed Keys
   self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(_S.hotkey_window.panel_gameSpeedKeys)

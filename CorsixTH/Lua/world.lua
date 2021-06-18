@@ -250,6 +250,7 @@ function World:setUI(ui)
   self.ui:addKeyHandler("ingame_zoom_in_more", self, self.adjustZoom, 5)
   self.ui:addKeyHandler("ingame_zoom_out", self, self.adjustZoom, -1)
   self.ui:addKeyHandler("ingame_zoom_out_more", self, self.adjustZoom, -5)
+  self.ui:addKeyHandler("ingame_reset_zoom", self, self.resetZoom)
 end
 
 function World:adjustZoom(delta)
@@ -270,6 +271,10 @@ function World:adjustZoom(delta)
   end
 
   return self.ui:setZoom(scr_w / virtual_width)
+end
+
+function World:resetZoom()
+  return self.ui:setZoom(1)
 end
 
 --! Initialize the game level (available diseases, winning conditions).

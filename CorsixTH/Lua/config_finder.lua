@@ -573,6 +573,7 @@ local hotkeys_defaults = {
   ingame_zoom_in_more = {"shift", "="},
   ingame_zoom_out = "-",
   ingame_zoom_out_more = {"shift", "-"},
+  ingame_reset_zoom = "0",
   ingame_setTransparent = "x",
   ingame_toggleAdvisor = {"shift", "a"},
   ingame_poopLog = {"ctrl", "d"},
@@ -712,7 +713,8 @@ if hotkeys_needs_rewrite then
 'ingame_zoom_in = '.. hotkeys_values.ingame_zoom_in .. '\n' ..
 'ingame_zoom_in_more = ' .. hotkeys_values.ingame_zoom_in_more .. '\n' ..
 'ingame_zoom_out = ' .. hotkeys_values.ingame_zoom_out .. '\n' ..
-'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' .. [=[
+'ingame_zoom_out_more = ' .. hotkeys_values.ingame_zoom_out_more .. '\n' ..
+'ingame_reset_zoom = ' .. hotkeys_values.ingame_reset_zoom .. '\n' .. [=[
 
 ----------------------------------In-Game Menus---------------------------------
 -- These are quick keys to show the in-game menu bar and some other windows.
