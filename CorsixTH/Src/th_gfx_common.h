@@ -28,11 +28,11 @@ SOFTWARE.
 
 //! Animation Effect for drawing a sprite with a special effect applied.
 enum class animation_effect {
-  //! No Overlay
+  //! No special effect
   none,
-  //! Serious Radiation Overlay
+  //! Serious Radiation effect
   glowing,
-  //! Jellyitis animation
+  //! Jellyitis animation effect
   jelly,
 };
 

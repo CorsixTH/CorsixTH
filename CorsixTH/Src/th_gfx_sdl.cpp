@@ -1072,7 +1072,6 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
                                int iY, uint32_t iFlags,
                                animation_effect effect) {
-  int err = 0;
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1103,10 +1102,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
-    double currentVariation = sin(tick * 10 * M_PI / 180) * 50;
-
-    // Vary from 40 to 80, so we set 60 + Variation
-    err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
+    int currentVariation = static_cast<int>(sin(tick * 10 * M_PI / 180) * 50);
+    int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
     }
@@ -1119,7 +1116,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 
   if (effect == animation_effect::glowing) {
     // Reset back to original values
-    err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    int err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
     }

@@ -334,10 +334,11 @@ class animation_manager {
       @param iX The screen position to use as the animation X origin.
       @param iY The screen position to use as the animation Y origin.
       @param iFlags Zero or more THDrawFlags flags.
+      @param effect The animation effect to apply.
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
-                  animation_effect overlayFlags = animation_effect::none) const;
+                  animation_effect effect = animation_effect::none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,

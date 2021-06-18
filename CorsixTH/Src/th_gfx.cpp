@@ -897,7 +897,7 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
                                    uint32_t iFlags,
-                                   animation_effect overlayFlags) const {
+                                   animation_effect effect) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -940,11 +940,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), overlayFlags);
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), effect);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags, overlayFlags);
+          iPassOnFlags | oElement.flags, effect);
     }
   }
 }
