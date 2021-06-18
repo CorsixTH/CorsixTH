@@ -529,8 +529,7 @@ class sprite_sheet {
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
                    uint32_t iFlags,
-                   animation_effect effect =
-                       animation_effect::none);
+                   animation_effect effect = animation_effect::none);
 
   //! Test whether a sprite was hit.
   /*!
