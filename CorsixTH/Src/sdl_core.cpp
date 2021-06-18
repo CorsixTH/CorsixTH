@@ -136,7 +136,8 @@ int l_mainloop(lua_State* L) {
   int resume_stack_size = 0;
 
   fps_ctrl* fps_control = (fps_ctrl*)lua_touserdata(L, luaT_upvalueindex(1));
-  SDL_TimerID timer = SDL_AddTimer(30, timer_frame_callback, nullptr);
+  SDL_TimerID timer =
+      SDL_AddTimer(usertick_period_ms, timer_frame_callback, nullptr);
   SDL_Event e;
 
   while (SDL_WaitEvent(&e) != 0) {

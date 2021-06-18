@@ -22,12 +22,16 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
+
 #include <map>
 #include <string>
 #include <vector>
 
 #include "th.h"
+#include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
+
+constexpr int max_number_of_layers = 13;
 
 class lua_persist_reader;
 class lua_persist_writer;
@@ -332,8 +336,8 @@ class animation_manager {
       @param iFlags Zero or more THDrawFlags flags.
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
-                  const ::layers& oLayers, int iX, int iY,
-                  uint32_t iFlags) const;
+                  const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
+                  animation_overlay_flags overlayFlags = thaof_none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -570,6 +574,8 @@ class animation : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
+  void set_overlay(animation_overlay_flags flags);
+
   animation_manager* get_animation_manager() { return manager; }
 
  private:
@@ -586,6 +592,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
+  animation_overlay_flags current_overlay_flags;
 };
 
 class sprite_render_list : public animation_base {

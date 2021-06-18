@@ -28,6 +28,7 @@ SOFTWARE.
 #include <cassert>
 #include <climits>
 #include <cstring>
+#include <iostream>
 #include <new>
 
 #include "persist_lua.h"
@@ -895,7 +896,8 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
-                                   uint32_t iFlags) const {
+                                   uint32_t iFlags,
+                                   animation_overlay_flags overlayFlags) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -938,11 +940,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal));
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), overlayFlags);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags);
+          iPassOnFlags | oElement.flags, overlayFlags);
     }
   }
 }
@@ -1145,10 +1147,12 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.w = 64;
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->current_overlay_flags);
       pCanvas->set_clip_rect(&rcOld);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->current_overlay_flags);
   }
 }
 
@@ -1298,7 +1302,7 @@ bool THAnimation_is_multiple_frame_animation(drawable* pSelf) {
 animation_base::animation_base() : drawable() {
   x_relative_to_tile = 0;
   y_relative_to_tile = 0;
-  for (int i = 0; i < 13; ++i) {
+  for (int i = 0; i < max_number_of_layers; ++i) {
     layers.layer_contents[i] = 0;
   }
   flags = 0;
@@ -1316,6 +1320,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
+  current_overlay_flags = thaof_none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1379,7 +1384,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the layers
-  int iNumLayers = 13;
+  int iNumLayers = max_number_of_layers;
   for (; iNumLayers >= 1; --iNumLayers) {
     if (layers.layer_contents[iNumLayers - 1] != 0) break;
   }
@@ -1461,9 +1466,13 @@ void animation::depersist(lua_persist_reader* pReader) {
       break;
     }
 
-    if (iNumLayers > 13) {
-      if (!pReader->read_byte_stream(layers.layer_contents, 13)) break;
-      if (!pReader->read_byte_stream(nullptr, iNumLayers - 13)) break;
+    if (iNumLayers > max_number_of_layers) {
+      if (!pReader->read_byte_stream(layers.layer_contents,
+                                     max_number_of_layers))
+        break;
+      if (!pReader->read_byte_stream(nullptr,
+                                     iNumLayers - max_number_of_layers))
+        break;
     } else {
       if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
     }
@@ -1477,6 +1486,15 @@ void animation::depersist(lua_persist_reader* pReader) {
   } while (false);
 
   pReader->set_error("Cannot depersist animation instance");
+}
+
+void animation::set_overlay(animation_overlay_flags flags) {
+  // Sanity Check
+  if (((flags & thaof_glowing) == 0) && ((flags & thaof_jelly) == 0)) {
+    this->current_overlay_flags = thaof_none;
+  } else {
+    this->current_overlay_flags = flags;
+  }
 }
 
 void animation::tick() {
@@ -1834,12 +1852,14 @@ void sprite_render_list::depersist(lua_persist_reader* pReader) {
     return;
   }
 
-  if (iNumLayers > 13) {
-    if (!pReader->read_byte_stream(layers.layer_contents, 13)) {
+  if (iNumLayers > max_number_of_layers) {
+    if (!pReader->read_byte_stream(layers.layer_contents,
+                                   max_number_of_layers)) {
       return;
     }
 
-    if (!pReader->read_byte_stream(nullptr, iNumLayers - 13)) {
+    if (!pReader->read_byte_stream(nullptr,
+                                   iNumLayers - max_number_of_layers)) {
       return;
     }
   } else {

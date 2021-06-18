@@ -26,6 +26,9 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
+
+#define _USE_MATH_DEFINES
+
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -35,6 +38,7 @@ SOFTWARE.
 #include <new>
 #include <stdexcept>
 
+#include "lua_sdl.h"
 #include "th_map.h"
 
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
@@ -200,6 +204,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
             iColour = makeGreyScale(iOpacity, pImg[0], pImg[1], pImg[2]);
           else
             iColour = palette::pack_argb(iOpacity, pImg[0], pImg[1], pImg[2]);
+
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -210,6 +215,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 2:  // Fixed fully transparent pixels
       {
         static const uint32_t iTransparent = palette::pack_argb(0, 0, 0, 0);
+
         while (iLength > 0) {
           push_pixel(iTransparent);
           iLength--;
@@ -220,12 +226,15 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 3:  // Recolour layer
       {
         uint8_t iTable = *pImg++;
+        uint32_t iColour;
         pImg++;  // Skip reading the opacity for now.
         if (iTable == 0xFF) {
           // Legacy sprite data. Use the palette to recolour the
           // layer. Note that the iOpacity is ignored here.
           while (iLength > 0) {
-            push_pixel(pColours[*pImg++]);
+            iColour = pColours[*pImg++];
+
+            push_pixel(iColour);
             iLength--;
           }
         } else {
@@ -315,7 +324,9 @@ bool render_target::create(const render_target_creation_params* pParams) {
   }
 
   Uint32 iRendererFlags =
-      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
+      (pParams->present_immediate
+           ? 0
+           : SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
 
   SDL_RendererInfo info;
@@ -1064,7 +1075,9 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags) {
+                               int iY, uint32_t iFlags,
+                               animation_overlay_flags overlayFlags) {
+  int err = 0;
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1088,10 +1101,34 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
+  if ((overlayFlags & thaof_glowing) != 0) {
+    // Let's convert SDL Ticks to Game Ticks
+    uint32_t tick = SDL_GetTicks() / usertick_period_ms;
+
+    // We want this to vary between 155 -> 205 -> 255.
+    // We're using increments of 10 degrees within the Sin function and
+    // converting them to rad
+    double currentVariation = sin(tick * 10 * M_PI / 180) * 50;
+
+    // Vary from 40 to 80, so we set 60 + Variation
+    err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
   SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
   SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
 
   pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+
+  if ((overlayFlags & thaof_glowing) != 0) {
+    // Reset back to original values
+    err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
 }
 
 void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,

@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2009 Peter "Corsix" Cawley
+Copyright (c) 2009-2013 Peter "Corsix" Cawley and Edvin "Lego3" Linge
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -19,31 +19,21 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+#ifndef CORSIX_TH_TH_GFX_COMMON_H_
+#define CORSIX_TH_TH_GFX_COMMON_H_
 
-#ifndef CORSIX_TH_LUA_SDL_H_
-#define CORSIX_TH_LUA_SDL_H_
+#include "config.h"
 
-#include <SDL.h>
+// This header is meant to be shared with GFX and GFX_SDL
 
-#include "lua.hpp"
+//! Animation Overlay Flags for drawing an overlay on top of all the frame
+enum animation_overlay_flags : uint32_t {
+  //! No Overlay
+  thaof_none = 0,
+  //! Serious Radiation Overlay
+  thaof_glowing = 1 << 0,
+  //! Jellyitis animation
+  thaof_jelly = 1 << 1,
+};
 
-// SDL event codes used for delivering custom events to l_mainloop in
-// sdl_core.cpp
-// SDL_USEREVENT_TICK - informs script of a timer tick
-#define SDL_USEREVENT_TICK (SDL_USEREVENT + 0)
-// SDL_USEREVENT_MUSIC_OVER - informs script of SDL_Mixer music finishing
-#define SDL_USEREVENT_MUSIC_OVER (SDL_USEREVENT + 1)
-// SDL_USEREVENT_MUSIC_LOADED - informs script that async music is loaded
-#define SDL_USEREVENT_MUSIC_LOADED (SDL_USEREVENT + 2)
-// SDL USEREVENT_MOVIE_OVER - informs script of THMovie movie finishing
-#define SDL_USEREVENT_MOVIE_OVER (SDL_USEREVENT + 3)
-// SDL_USEREVENT_SOUND_OVER - informs script of a played sound finishing.
-#define SDL_USEREVENT_SOUND_OVER (SDL_USEREVENT + 4)
-
-constexpr int usertick_period_ms = 30;
-
-int luaopen_sdl(lua_State* L);
-
-int l_load_music_async_callback(lua_State* L);
-
-#endif  // CORSIX_TH_LUA_SDL_H_
+#endif

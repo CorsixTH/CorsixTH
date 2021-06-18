@@ -591,6 +591,15 @@ int l_anim_draw(lua_State* L) {
   return 1;
 }
 
+int l_anim_set_glowing(lua_State* L) {
+  animation* pAnimation = luaT_testuserdata<animation>(L);
+  animation_overlay_flags flags =
+      static_cast<animation_overlay_flags>(luaL_checkinteger(L, 2));
+  pAnimation->set_overlay(flags);
+  lua_settop(L, 1);
+  return 1;
+}
+
 int l_srl_set_sheet(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -701,6 +710,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
+    lcb.add_function(l_anim_set_glowing, "setOverlay");
+    // TODO: Add Jellyitis condition overlay
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]
