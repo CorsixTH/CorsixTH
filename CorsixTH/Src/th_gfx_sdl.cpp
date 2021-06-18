@@ -47,6 +47,8 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
 
 namespace {
 
+const double pi = 3.14159265358979323846;
+
 //! Convert a colour to an equivalent grey scale level.
 /*!
     @param iOpacity Opacity of the pixel.
@@ -1102,7 +1104,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
-    int currentVariation = static_cast<int>(sin(tick * 10 * M_PI / 180) * 50);
+    int currentVariation = static_cast<int>(sin(tick * 10 * pi / 180) * 50);
     int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
