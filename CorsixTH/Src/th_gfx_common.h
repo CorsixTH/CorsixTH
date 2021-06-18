@@ -27,13 +27,13 @@ SOFTWARE.
 // This header is meant to be shared with GFX and GFX_SDL
 
 //! Animation Overlay Flags for drawing an overlay on top of all the frame
-enum animation_overlay_flags : uint32_t {
+enum class animation_overlay_flags {
   //! No Overlay
-  thaof_none = 0,
+  thaof_none,
   //! Serious Radiation Overlay
-  thaof_glowing = 1 << 0,
+  thaof_glowing,
   //! Jellyitis animation
-  thaof_jelly = 1 << 1,
+  thaof_jelly,
 };
 
 #endif

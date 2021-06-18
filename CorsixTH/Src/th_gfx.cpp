@@ -1320,7 +1320,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
-  current_overlay_flags = thaof_none;
+  current_overlay_flags = animation_overlay_flags::thaof_none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1489,12 +1489,7 @@ void animation::depersist(lua_persist_reader* pReader) {
 }
 
 void animation::set_overlay(animation_overlay_flags flags) {
-  // Sanity Check
-  if (((flags & thaof_glowing) == 0) && ((flags & thaof_jelly) == 0)) {
-    this->current_overlay_flags = thaof_none;
-  } else {
-    this->current_overlay_flags = flags;
-  }
+  this->current_overlay_flags = flags;
 }
 
 void animation::tick() {

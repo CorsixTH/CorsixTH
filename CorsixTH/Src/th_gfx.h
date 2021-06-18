@@ -337,7 +337,8 @@ class animation_manager {
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
-                  animation_overlay_flags overlayFlags = thaof_none) const;
+                  animation_overlay_flags overlayFlags =
+                      animation_overlay_flags::thaof_none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,

@@ -1101,7 +1101,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
-  if ((overlayFlags & thaof_glowing) != 0) {
+  if (overlayFlags == animation_overlay_flags::thaof_glowing) {
     // Let's convert SDL Ticks to Game Ticks
     uint32_t tick = SDL_GetTicks() / usertick_period_ms;
 
@@ -1122,7 +1122,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
 
   pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
 
-  if ((overlayFlags & thaof_glowing) != 0) {
+  if (overlayFlags == animation_overlay_flags::thaof_glowing) {
     // Reset back to original values
     err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
     if (err < 0) {

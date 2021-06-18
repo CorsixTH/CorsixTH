@@ -31,8 +31,8 @@ globals = { -- Globals
             "serialize","array_join","shallow_clone",
 
             -- Game classes
-            "AIHospital", "AnimationManager", "App", "Audio",
-            "CallsDispatcher", "ChildClass", "Command", "Door", "DrawFlags",
+            "AIHospital", "AnimationManager", "AnimationOverlayFlags", "App", "Audio",
+            "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door", "DrawFlags",
             "DummyRootNode", "Entity", "EntityMap", "Epidemic", "FileSystem",
             "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",
             "GrimReaper", "Hospital", "Humanoid", "HumanoidRawWalk",
@@ -42,7 +42,6 @@ globals = { -- Globals
             "SaveGame", "SaveGameFile", "Staff", "StaffProfile", "StaffRoom",
             "Strings", "SwingDoor", "TheApp", "TreeControl", "Vip", "Window",
             "World", "Date", "Doctor", "Handyman", "Nurse", "Receptionist",
-            "Cheats", "AnimationOverlayFlags",
 
             -- UI
             "UI", "UIAdviser", "UIAnnualReport", "UIAudio", "UIBankManager",
