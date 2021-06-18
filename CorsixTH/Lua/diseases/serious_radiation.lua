@@ -43,7 +43,7 @@ disease.initPatient = function(patient)
   patient:setLayer(1, math.random(0, 3) * 2)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
-  patient.th:setOverlay(AnimationOverlayFlags.Glowing)
+  patient.th:setEffect(AnimationEffect.Glowing)
 end
 -- TODO: visual radiation effect
 

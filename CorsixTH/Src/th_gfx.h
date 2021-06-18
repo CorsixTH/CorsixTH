@@ -337,8 +337,8 @@ class animation_manager {
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
-                  animation_overlay_flags overlayFlags =
-                      animation_overlay_flags::thaof_none) const;
+                  animation_effect overlayFlags =
+                      animation_effect::none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -575,7 +575,7 @@ class animation : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  void set_overlay(animation_overlay_flags flags);
+  void set_effect(animation_effect flags);
 
   animation_manager* get_animation_manager() { return manager; }
 
@@ -593,7 +593,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
-  animation_overlay_flags current_overlay_flags;
+  animation_effect current_effect;
 };
 
 class sprite_render_list : public animation_base {

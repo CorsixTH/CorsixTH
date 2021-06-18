@@ -897,7 +897,7 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
                                    uint32_t iFlags,
-                                   animation_overlay_flags overlayFlags) const {
+                                   animation_effect overlayFlags) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -1148,11 +1148,11 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          this->current_overlay_flags);
+                          this->current_effect);
       pCanvas->set_clip_rect(&rcOld);
     } else
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          this->current_overlay_flags);
+                          this->current_effect);
   }
 }
 
@@ -1320,7 +1320,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
-  current_overlay_flags = animation_overlay_flags::thaof_none;
+  current_effect = animation_effect::none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1488,8 +1488,8 @@ void animation::depersist(lua_persist_reader* pReader) {
   pReader->set_error("Cannot depersist animation instance");
 }
 
-void animation::set_overlay(animation_overlay_flags flags) {
-  this->current_overlay_flags = flags;
+void animation::set_effect(animation_effect effect) {
+  this->current_effect = effect;
 }
 
 void animation::tick() {

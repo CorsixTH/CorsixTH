@@ -31,7 +31,7 @@ globals = { -- Globals
             "serialize","array_join","shallow_clone",
 
             -- Game classes
-            "AIHospital", "AnimationManager", "AnimationOverlayFlags", "App", "Audio",
+            "AIHospital", "AnimationManager", "AnimationEffect", "App", "Audio",
             "CallsDispatcher", "Cheats", "ChildClass", "Command", "Door", "DrawFlags",
             "DummyRootNode", "Entity", "EntityMap", "Epidemic", "FileSystem",
             "FileTreeNode", "FilteredFileTreeNode", "GameUI", "Graphics",

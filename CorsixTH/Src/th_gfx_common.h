@@ -26,14 +26,14 @@ SOFTWARE.
 
 // This header is meant to be shared with GFX and GFX_SDL
 
-//! Animation Overlay Flags for drawing an overlay on top of all the frame
-enum class animation_overlay_flags {
+//! Animation Effect for drawing a sprite with a special effect applied.
+enum class animation_effect {
   //! No Overlay
-  thaof_none,
+  none,
   //! Serious Radiation Overlay
-  thaof_glowing,
+  glowing,
   //! Jellyitis animation
-  thaof_jelly,
+  jelly,
 };
 
 #endif

@@ -216,11 +216,11 @@ DrawFlags.ListBottom      = 2^11
 DrawFlags.BoundBoxHitTest = 2^12
 DrawFlags.Crop            = 2^13
 
--- Keep in sync with animation_overlay_flags in th_gfx_common.h
-AnimationOverlayFlags = {}
-AnimationOverlayFlags.None = 0
-AnimationOverlayFlags.Glowing = 1
-AnimationOverlayFlags.Jelly = 2
+-- Keep in sync with animation_effect in th_gfx_common.h
+AnimationEffect = {}
+AnimationEffect.None = 0
+AnimationEffect.Glowing = 1
+AnimationEffect.Jelly = 2
 
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
