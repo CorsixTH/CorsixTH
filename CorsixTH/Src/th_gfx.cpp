@@ -937,8 +937,9 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
     // represents non-patient sprites such as doors, benches, etc.
     // TODO: Some animations such as leaving radiation chamber have part of
     // patient in layer 0, 0, so this condition is not quite correct.
-    animation_effect render_effect = (oElement.layer > 0 || oElement.layer_id > 0) ?
-        patient_effect : animation_effect::none;
+    animation_effect render_effect =
+        (oElement.layer > 0 || oElement.layer_id > 0) ? patient_effect
+                                                      : animation_effect::none;
     if (iFlags & thdf_flip_horizontal) {
       int iWidth;
       int iHeight;
@@ -947,7 +948,8 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), render_effect);
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal),
+          render_effect);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
