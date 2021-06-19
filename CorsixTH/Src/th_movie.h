@@ -215,7 +215,7 @@ class movie_picture_buffer {
   //! A condition for indicating access to the picture buffer
   std::condition_variable cond;
 
-  //! The picture queue, aloo ping FIFO queue of movie_pictures
+  //! The picture queue, FIFO ring buffer of movie_pictures
   std::array<movie_picture, picture_buffer_size> picture_queue;
 };
 
