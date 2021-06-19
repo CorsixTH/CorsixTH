@@ -45,8 +45,12 @@ disease.initPatient = function(patient)
   patient:setLayer(4, 0)
   patient.th:setEffect(AnimationEffect.Glowing)
 end
-disease.afterLoad = function(patient)
-  patient.th:setEffect(AnimationEffect.Glowing)
+disease.updatePatient = function(patient)
+  if patient.cured then
+    patient.th:setEffect(AnimationEffect.None)
+  else
+    patient.th:setEffect(AnimationEffect.Glowing)
+  end
 end
 
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited

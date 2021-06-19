@@ -318,6 +318,9 @@ function Patient:cure()
   self.cured = true
   self.infected = false
   self.attributes["health"] = 1
+  if self.disease.updatePatient then
+    self.disease.updatePatient(self)
+  end
 end
 
 --! Patient died, process the event.
@@ -1095,8 +1098,8 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
-  if self.disease and self.disease.afterLoad then
-    self.disease.afterLoad(self)
+  if self.disease and self.disease.updatePatient then
+    self.disease.updatePatient(self)
   end
   Humanoid.afterLoad(self, old, new)
 end
