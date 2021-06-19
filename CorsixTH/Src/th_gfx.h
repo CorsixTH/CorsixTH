@@ -79,6 +79,8 @@ enum draw_flags : uint32_t {
   thdf_bound_box_hit_test = 1 << 12,
   //! Apply a cropping operation prior to drawing
   thdf_crop = 1 << 13,
+  //! Draw using nearest pixel hinting
+  thdf_nearest = 1 << 14,
 };
 
 /** Helper structure with parameters to create a #render_target. */

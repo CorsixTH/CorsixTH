@@ -296,15 +296,7 @@ bool render_target::create(const render_target_creation_params* pParams) {
 
   direct_zoom = pParams->direct_zoom;
 
-  if (direct_zoom) {
-    // When scaling rendering, linear introduces semi-transparent gaps at
-    // transparent edges within tiles. Using nearest ensures that we can scale
-    // angled transparent tile edges without seams.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-  }
-
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -658,7 +650,11 @@ SDL_Texture* render_target::create_palettized_texture(
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
   oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
 
+  if (iSpriteFlags & thdf_nearest)
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
   SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
+  if (iSpriteFlags & thdf_nearest)
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   delete[] pARGBPixels;
   return pTexture;
 }
@@ -1068,8 +1064,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
   if (!pTexture) {
     if (sprite.data == nullptr) return;
 
-    uint32_t iSprFlags =
-        (sprite.sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
+    uint32_t iSprFlags = (sprite.sprite_flags & ~thdf_alt32_mask) |
+                         thdf_alt32_plain | (iFlags & thdf_nearest);
     pTexture = target->create_palettized_texture(
         sprite.width, sprite.height, sprite.data, palette, iSprFlags);
     sprite.texture = pTexture;
