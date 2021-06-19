@@ -81,7 +81,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa4e74e478dfa2ec1f20e1e646b2ec411"><td class="mdescLeft">&#160;</td><td class="mdescRight">Destroy the <a class="el" href="classmovie__player.html">movie_player</a>.  <a href="classmovie__player.html#aa4e74e478dfa2ec1f20e1e646b2ec411">More...</a><br /></td></tr>
 <tr class="separator:aa4e74e478dfa2ec1f20e1e646b2ec411"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acaeae14a649f7f3300f7ce30189c4d6d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">set_renderer</a> (SDL_Renderer *pRenderer)</td></tr>
-<tr class="memdesc:acaeae14a649f7f3300f7ce30189c4d6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Assign the renderer on which to draw the movie.  <a href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">More...</a><br /></td></tr>
 <tr class="separator:acaeae14a649f7f3300f7ce30189c4d6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a516bc1ad23dc496fd0aca2776ed89f48"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classmovie__player.html#a516bc1ad23dc496fd0aca2776ed89f48">movies_enabled</a> () const</td></tr>
 <tr class="memdesc:a516bc1ad23dc496fd0aca2776ed89f48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return whether movies were compiled into CorsixTH.  <a href="classmovie__player.html#a516bc1ad23dc496fd0aca2776ed89f48">More...</a><br /></td></tr>
@@ -126,7 +125,7 @@ Public Member Functions</h2></td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Movie player for CorsixTH</p>
-<p>The movie player is designed to be preinitialized and used for multiple movies. After initializing the movie player, call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d" title="Assign the renderer on which to draw the movie.">movie_player::set_renderer</a> to assign the current SDL renderer to the movie player. Then <a class="el" href="classmovie__player.html#a9c700ceb8f60ebd8facbbfc8f429bfe9" title="Load the movie with the given file name.">movie_player::load</a> the desired movie and finally <a class="el" href="classmovie__player.html#a93be11ba66aba6b054234bc7efef45e0">movie_player::play</a> it. </p>
+<p>The movie player is designed to be preinitialized and used for multiple movies. After initializing the movie player, call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">movie_player::set_renderer</a> to assign the current SDL renderer to the movie player. Then <a class="el" href="classmovie__player.html#a9c700ceb8f60ebd8facbbfc8f429bfe9" title="Load the movie with the given file name.">movie_player::load</a> the desired movie and finally <a class="el" href="classmovie__player.html#a93be11ba66aba6b054234bc7efef45e0">movie_player::play</a> it. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="af71e2f81a4bf7a851b06fb9aed330b0d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af71e2f81a4bf7a851b06fb9aed330b0d">&#9670;&nbsp;</a></span>movie_player()</h2>
@@ -248,7 +247,7 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Deallocate the picture buffer and free any resources associated with it.</p>
-<dl class="section remark"><dt>Remarks</dt><dd>This destroys the textures and other resources that may lock the renderer from being deleted. If the target changes you would call this, then free and switch renderers in the outside program, then call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d" title="Assign the renderer on which to draw the movie.">movie_player::set_renderer</a> and finally <a class="el" href="classmovie__player.html#ae79634faafbdc511729354d054c6cdd7" title="Allocate the picture buffer for the current renderer.">movie_player::allocate_picture_buffer</a>. </dd>
+<dl class="section remark"><dt>Remarks</dt><dd>This destroys the textures and other resources that may lock the renderer from being deleted. If the target changes you would call this, then free and switch renderers in the outside program, then call <a class="el" href="classmovie__player.html#acaeae14a649f7f3300f7ce30189c4d6d">movie_player::set_renderer</a> and finally <a class="el" href="classmovie__player.html#ae79634faafbdc511729354d054c6cdd7" title="Allocate the picture buffer for the current renderer.">movie_player::allocate_picture_buffer</a>. </dd>
 <dd>
 Up to the size of the picture buffer frames may be lost during this process. </dd></dl>
 
@@ -472,8 +471,8 @@ Up to the size of the picture buffer frames may be lost during this process. </d
         </tr>
       </table>
 </div><div class="memdoc">
-
-<p>Assign the renderer on which to draw the movie. </p>
+<p>Assign the renderer on which to draw the movie.</p>
+<p><a class="el" href="classmovie__player.html">movie_player</a> does not take ownership of the render, it is up to the caller to delete it, after deleting <a class="el" href="classmovie__player.html">movie_player</a> or setting a different renderer. </p>
 
 </div>
 </div>
