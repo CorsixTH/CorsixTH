@@ -179,8 +179,6 @@ function Audio:init()
 end
 
 function Audio:initSpeech(speech_file)
-  self.sound_archive = nil
-  self.sound_fx = nil
   if self.not_loaded then
     return
   end
@@ -205,6 +203,10 @@ function Audio:initSpeech(speech_file)
     speech_file = "Sound-0.dat"
     archive_data = load_sound_file(speech_file)
   end
+
+  self.sound_archive = nil
+  self.sound_fx = nil
+  self.speech_file_name = nil
 
   if not archive_data then
     if self.app.good_install_folder then

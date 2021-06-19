@@ -351,7 +351,7 @@ function Staff:updateSpeed()
     level = 3
   end
   local room = self:getRoom()
-  if room and room.room_info.id == "training" then
+  if room and room.room_info.id == "training" and self:fulfillsCriterion("Doctor") then
     level = 1
   elseif self.attributes["fatigue"] then
     if self.attributes["fatigue"] >= 0.8 then

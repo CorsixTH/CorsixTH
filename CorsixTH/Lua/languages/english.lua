@@ -560,6 +560,7 @@ hotkey_window = {
   ingame_zoom_in_more = "Zoom In More",
   ingame_zoom_out = "Zoom Out",
   ingame_zoom_out_more = "Zoom Out More",
+  ingame_reset_zoom = "Reset Zoom",
   ingame_showmenubar = "Show Menu Bar",
   ingame_showCheatWindow = "Cheat Menu",
   ingame_loadMenu = "Load Game",

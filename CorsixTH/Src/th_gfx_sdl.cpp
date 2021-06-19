@@ -296,15 +296,7 @@ bool render_target::create(const render_target_creation_params* pParams) {
 
   direct_zoom = pParams->direct_zoom;
 
-  if (direct_zoom) {
-    // When scaling rendering, linear introduces semi-transparent gaps at
-    // transparent edges within tiles. Using nearest ensures that we can scale
-    // angled transparent tile edges without seams.
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
-  } else {
-    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-  }
-
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   pixel_format = SDL_AllocFormat(SDL_PIXELFORMAT_ABGR8888);
   window =
       SDL_CreateWindow("CorsixTH", SDL_WINDOWPOS_UNDEFINED,
@@ -389,6 +381,12 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     return false;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
+    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
+        SDL_WINDOW_FULLSCREEN_DESKTOP) {
+      // Drawing to an intermediate screen sized buffer when fullscreen results
+      // in noticeably better text rendering quality.
+      init_zoom_buffer(width, height);
+    }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
     // Draw everything from now until the next scale to zoom_texture
@@ -397,24 +395,12 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    zoom_texture =
-        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                          SDL_TEXTUREACCESS_TARGET, virtWidth, virtHeight);
-
-    SDL_RenderSetLogicalSize(renderer, virtWidth, virtHeight);
-    if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+    if (!init_zoom_buffer(virtWidth, virtHeight)) {
       std::cout << "Warning: Could not render to zoom texture - "
                 << SDL_GetError() << std::endl;
 
-      SDL_RenderSetLogicalSize(renderer, width, height);
-      SDL_DestroyTexture(zoom_texture);
-      zoom_texture = nullptr;
       return false;
     }
-
-    // Clear the new texture to transparent/black.
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderClear(renderer);
 
     return true;
   } else if (0.999 <= fScale && fScale <= 1.001) {
@@ -598,6 +584,24 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
   return true;
 }
 
+bool render_target::init_zoom_buffer(int iWidth, int iHeight) {
+  if (!supports_target_textures) return false;
+  zoom_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                                   SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  SDL_RenderSetLogicalSize(renderer, iWidth, iHeight);
+  if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+    SDL_RenderSetLogicalSize(renderer, width, height);
+    SDL_DestroyTexture(zoom_texture);
+    zoom_texture = nullptr;
+    return false;
+  }
+
+  // Clear the new texture to transparent/black.
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderClear(renderer);
+  return true;
+}
+
 void render_target::flush_zoom_buffer() {
   if (zoom_texture == nullptr) {
     return;
@@ -658,7 +662,11 @@ SDL_Texture* render_target::create_palettized_texture(
   full_colour_storing oRenderer(pARGBPixels, iWidth, iHeight);
   oRenderer.decode_image(pPixels, pPalette, iSpriteFlags);
 
+  if (iSpriteFlags & thdf_nearest)
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
   SDL_Texture* pTexture = create_texture(iWidth, iHeight, pARGBPixels);
+  if (iSpriteFlags & thdf_nearest)
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
   delete[] pARGBPixels;
   return pTexture;
 }
@@ -721,27 +729,21 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   }
 }
 
-void render_target::draw_line(line* pLine, int iX, int iY) {
+void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
-  double lastX, lastY;
-  lastX = pLine->first_operation->x;
-  lastY = pLine->first_operation->y;
-
-  line::line_operation* op =
-      (line::line_operation*)(pLine->first_operation->next);
-  while (op) {
-    if (op->type == line::line_operation_type::line) {
+  double lastX = pLine->line_elements[0].x;
+  double lastY = pLine->line_elements[0].y;
+  for (const line_sequence::line_element& op : pLine->line_elements) {
+    if (op.type == line_sequence::line_command::line) {
       SDL_RenderDrawLine(
           renderer, static_cast<int>(lastX + iX), static_cast<int>(lastY + iY),
-          static_cast<int>(op->x + iX), static_cast<int>(op->y + iY));
+          static_cast<int>(op.x + iX), static_cast<int>(op.y + iY));
     }
 
-    lastX = op->x;
-    lastY = op->y;
-
-    op = (line::line_operation*)(op->next);
+    lastX = op.x;
+    lastY = op.y;
   }
 }
 
@@ -1074,8 +1076,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
   if (!pTexture) {
     if (sprite.data == nullptr) return;
 
-    uint32_t iSprFlags =
-        (sprite.sprite_flags & ~thdf_alt32_mask) | thdf_alt32_plain;
+    uint32_t iSprFlags = (sprite.sprite_flags & ~thdf_alt32_mask) |
+                         thdf_alt32_plain | (iFlags & thdf_nearest);
     pTexture = target->create_palettized_texture(
         sprite.width, sprite.height, sprite.data, palette, iSprFlags);
     sprite.texture = pTexture;
@@ -1310,80 +1312,59 @@ void cursor::draw(render_target* pCanvas, int iX, int iY) {
 #endif
 }
 
-line::line() { initialize(); }
+line_sequence::line_sequence() { initialize(); }
 
-line::~line() {
-  line_operation* op = first_operation;
-  while (op) {
-    line_operation* next = (line_operation*)(op->next);
-    delete (op);
-    op = next;
-  }
-}
-
-void line::initialize() {
+void line_sequence::initialize() {
   width = 1;
   red = 0;
   green = 0;
   blue = 0;
   alpha = 255;
+  line_elements.clear();
 
   // We start at 0,0
-  first_operation = new line_operation(line_operation_type::move, 0, 0);
-  current_operation = first_operation;
+  move_to(0.0, 0.0);
 }
 
-void line::move_to(double fX, double fY) {
-  line_operation* previous = current_operation;
-  current_operation = new line_operation(line_operation_type::move, fX, fY);
-  previous->next = current_operation;
+void line_sequence::move_to(double fX, double fY) {
+  line_elements.emplace_back(line_command::move, fX, fY);
 }
 
-void line::line_to(double fX, double fY) {
-  line_operation* previous = current_operation;
-  current_operation = new line_operation(line_operation_type::line, fX, fY);
-  previous->next = current_operation;
+void line_sequence::line_to(double fX, double fY) {
+  line_elements.emplace_back(line_command::line, fX, fY);
 }
 
-void line::set_width(double pLineWidth) { width = pLineWidth; }
+void line_sequence::set_width(double pLineWidth) { width = pLineWidth; }
 
-void line::set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA) {
+void line_sequence::set_colour(uint8_t iR, uint8_t iG, uint8_t iB, uint8_t iA) {
   red = iR;
   green = iG;
   blue = iB;
   alpha = iA;
 }
 
-void line::draw(render_target* pCanvas, int iX, int iY) {
+void line_sequence::draw(render_target* pCanvas, int iX, int iY) {
   pCanvas->draw_line(this, iX, iY);
 }
 
-void line::persist(lua_persist_writer* pWriter) const {
+void line_sequence::persist(lua_persist_writer* pWriter) const {
   pWriter->write_uint(static_cast<uint32_t>(red));
   pWriter->write_uint(static_cast<uint32_t>(green));
   pWriter->write_uint(static_cast<uint32_t>(blue));
   pWriter->write_uint(static_cast<uint32_t>(alpha));
-  pWriter->write_float(width);
+  pWriter->write_float<double>(width);
 
-  line_operation* op = (line_operation*)(first_operation->next);
-  uint32_t numOps = 0;
-  for (; op; numOps++) {
-    op = (line_operation*)(op->next);
-  }
-
+  uint32_t numOps = static_cast<uint32_t>(line_elements.size());
   pWriter->write_uint(numOps);
 
-  op = (line_operation*)(first_operation->next);
-  while (op) {
-    pWriter->write_uint(static_cast<uint32_t>(op->type));
-    pWriter->write_float<double>(op->x);
-    pWriter->write_float(op->y);
-
-    op = (line_operation*)(op->next);
+  for (const line_element& op : line_elements) {
+    pWriter->write_uint(static_cast<uint32_t>(op.type));
+    pWriter->write_float<double>(op.x);
+    pWriter->write_float<double>(op.y);
   }
 }
 
-void line::depersist(lua_persist_reader* pReader) {
+void line_sequence::depersist(lua_persist_reader* pReader) {
   initialize();
 
   pReader->read_uint(red);
@@ -1408,9 +1389,9 @@ void line::depersist(lua_persist_reader* pReader) {
       return;
     }
 
-    if (type_val == static_cast<uint32_t>(line_operation_type::move)) {
+    if (type_val == static_cast<uint32_t>(line_command::move)) {
       move_to(fX, fY);
-    } else if (type_val == static_cast<uint32_t>(line_operation_type::line)) {
+    } else if (type_val == static_cast<uint32_t>(line_command::line)) {
       line_to(fX, fY);
     }
   }

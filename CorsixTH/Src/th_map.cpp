@@ -996,18 +996,21 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
     blocks->draw_sprite(
         pCanvas, iBlock & 0xFF,
         itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-        itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32, iBlock >> 8);
+        itrNode1.tile_y_position_on_screen() + iCanvasY - iH + 32,
+        (iBlock >> 8) | thdf_nearest);
 
     // Draw floor shadows immediately after floor tiles ensuring that all
     // shadow pixels are drawn onto freshly drawn opaque floor tile pixels.
     if (itrNode1->flags.shadow_full) {
-      blocks->draw_sprite(
-          pCanvas, 74, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode1.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
+      blocks->draw_sprite(pCanvas, 74,
+                          itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
+                          itrNode1.tile_y_position_on_screen() + iCanvasY,
+                          thdf_alpha_75 | thdf_nearest);
     } else if (itrNode1->flags.shadow_half) {
-      blocks->draw_sprite(
-          pCanvas, 75, itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
-          itrNode1.tile_y_position_on_screen() + iCanvasY, thdf_alpha_75);
+      blocks->draw_sprite(pCanvas, 75,
+                          itrNode1.tile_x_position_on_screen() + iCanvasX - 32,
+                          itrNode1.tile_y_position_on_screen() + iCanvasY,
+                          thdf_alpha_75 | thdf_nearest);
     }
 
     if (!itrNode1.is_last_on_scanline()) {
@@ -1023,7 +1026,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
         if (itrNode->flags.shadow_wall) {
           clip_rect rcOldClip, rcNewClip;
           pCanvas->get_clip_rect(&rcOldClip);
@@ -1035,7 +1039,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           clip_rect_intersection(rcNewClip, rcOldClip);
           pCanvas->set_clip_rect(&rcNewClip);
           blocks->draw_sprite(pCanvas, 156, itrNode.x() - 32, itrNode.y() - 56,
-                              thdf_alpha_75);
+                              thdf_alpha_75 | thdf_nearest);
           pCanvas->set_clip_rect(&rcOldClip);
         }
       }
@@ -1067,13 +1071,15 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
       }
       iBlock = itrNode->iBlock[3];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32, iBlock >> 8);
+                            itrNode.y() - iH + 32,
+                            (iBlock >> 8) | thdf_nearest);
       }
       iBlock = itrNode->iBlock[1];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
@@ -1141,7 +1147,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
           if (iBlock != 0 &&
               blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
             blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 96,
-                                itrNode.y() - iH + 32, iBlock >> 8);
+                                itrNode.y() - iH + 32,
+                                (iBlock >> 8) | thdf_nearest);
             if (itrNode.get_previous_tile()->flags.shadow_wall) {
               clip_rect rcOldClip, rcNewClip;
               pCanvas->get_clip_rect(&rcOldClip);
@@ -1153,7 +1160,8 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
               clip_rect_intersection(rcNewClip, rcOldClip);
               pCanvas->set_clip_rect(&rcNewClip);
               blocks->draw_sprite(pCanvas, 156, itrNode.x() - 96,
-                                  itrNode.y() - 56, thdf_alpha_75);
+                                  itrNode.y() - 56,
+                                  thdf_alpha_75 | thdf_nearest);
               pCanvas->set_clip_rect(&rcOldClip);
             }
           }
