@@ -525,6 +525,7 @@ hotkey_window = {
   button_cancel = "Cancel",
   button_back = "Back",
   button_toggleKeys = "Toggle Keys",
+  button_gameSpeed = "Game Speed Keys",
   button_recallPosKeys = "Recall Position Keys",
   panel_globalKeys = "Global Keys",
   panel_generalInGameKeys = "General In-Game Keys",
@@ -632,6 +633,7 @@ tooltip.hotkey_window = {
   button_defaults = "Reset all hotkeys to the program's defaults",
   button_cancel = "Cancel the assignment and go back to the options menu",
   caption_panels = "Open window to assign panel keys",
+  button_gameSpeed = "Open window to set keys to control game speed",
   button_recallPosKeys = "Open window to set keys to store and recall camera positions",
   button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
 }

@@ -386,7 +386,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   local current_pos_x = 1
   local current_pos_y = 1
   local max_x_pos_step = 3
-  local max_y_pos_step = 19
+  local max_y_pos_step = 17
 
   -- Panel x position table.
   self.panel_pos_table_x = {}
@@ -395,7 +395,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self.panel_pos_table_x[3] = 430
   -- Panel y position table.
   self.panel_pos_table_y = {}
-  for i=1, 19, 1 do
+  for i=1, 17, 1 do
     self.panel_pos_table_y[i] = (i*20)+20
   end
 
@@ -525,8 +525,6 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   get_next_pos_y()
 
   -- Scroll keys.
-  get_next_pos_y()
-  get_next_pos_y()
   self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(_S.hotkey_window.panel_scrollKeys)
   get_next_pos_y()
   -- ingame_scroll_up
@@ -584,45 +582,6 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
     :makeHotkeyBox(function() self:confirm_func("ingame_reset_zoom") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_reset_zoom"], "+")) )
   get_next_pos_y()
 
-  -- Game Speed Keys
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(_S.hotkey_window.panel_gameSpeedKeys)
-  get_next_pos_y()
-  -- ingame_pause
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_pause)
-  self.hotkey_buttons["ingame_pause"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_pause") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_pause"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_slowest
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_slowest)
-  self.hotkey_buttons["ingame_gamespeed_slowest"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_slowest") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_slowest"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_slower
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_slower)
-  self.hotkey_buttons["ingame_gamespeed_slower"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_slower") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_slower"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_normal
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_normal)
-  self.hotkey_buttons["ingame_gamespeed_normal"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_normal") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_normal"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_max
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_max)
-  self.hotkey_buttons["ingame_gamespeed_max"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_max") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_max"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_thensome
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_thensome)
-  self.hotkey_buttons["ingame_gamespeed_thensome"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_thensome") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_thensome"], "+")) )
-  get_next_pos_y()
-  -- ingame_gamespeed_speedup
-  self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_speedup)
-  self.hotkey_buttons["ingame_gamespeed_speedup"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_speedup") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_speedup"], "+")) )
-  get_next_pos_y()
-
   -- Misc. In-Game Keys
   self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(_S.hotkey_window.panel_miscInGameKeys)
   get_next_pos_y()
@@ -640,6 +599,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_setTransparent)
   self.hotkey_buttons["ingame_setTransparent"] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
     :makeHotkeyBox(function() self:confirm_func("ingame_setTransparent") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_setTransparent"], "+")) )
+  get_next_pos_y()
   get_next_pos_y()
 
   -- Toggle Keys
@@ -710,18 +670,21 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   -- Toggle keys assignment window.
   self:addBevelPanel(self.panel_pos_table_x[1], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.caption_panels)
     :makeButton(0, 0, 200, 40, nil, self.toggleButton):setTooltip(_S.tooltip.hotkey_window.caption_panels)
+  -- Toggle game speed assignment window.
+  self:addBevelPanel(self.panel_pos_table_x[2], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.button_gameSpeed)
+    :makeButton(0, 0, 200, 40, nil, self.gameSpeedButton):setTooltip(_S.tooltip.hotkey_window.button_gameSpeed)
   -- Store and recall position assignment window.
   self:addBevelPanel(self.panel_pos_table_x[3], 385, 200, 40, col_bg):setLabel(_S.hotkey_window.button_recallPosKeys)
     :makeButton(0, 0, 200, 40, nil, self.storeRecallPosButton):setTooltip(_S.tooltip.hotkey_window.button_recallPosKeys)
 
   -- "Accept" button
-  self:addBevelPanel(10, 430, 180, 40, col_bg):setLabel(_S.hotkey_window.button_accept)
+  self:addBevelPanel(self.panel_pos_table_x[1], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_accept)
     :makeButton(0, 0, 180, 40, nil, self.buttonAccept):setTooltip(_S.tooltip.hotkey_window.button_accept)
   -- Reset to defaults button.
-  self:addBevelPanel(230, 430, 180, 40, col_bg):setLabel(_S.hotkey_window.button_defaults)
+  self:addBevelPanel(self.panel_pos_table_x[2], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_defaults)
     :makeButton(0, 0, 180, 40, nil, self.buttonDefaults):setTooltip(_S.tooltip.hotkey_window.button_defaults)
   -- "Cancel" button
-  self:addBevelPanel(450, 430, 180, 40, col_bg):setLabel(_S.hotkey_window.button_cancel)
+  self:addBevelPanel(self.panel_pos_table_x[3], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_cancel)
     :makeButton(0, 0, 180, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.hotkey_window.button_cancel)
 
 
@@ -767,6 +730,12 @@ end
 function UIHotkeyAssign:toggleButton()
   self:close()
   local window = UIHotkeyAssign_Panels(self.ui, "menu")
+  self.ui:addWindow(window)
+end
+
+function UIHotkeyAssign:gameSpeedButton()
+  self:close()
+  local window = UIHotkeyAssign_GameSpeed(self.ui, "menu")
   self.ui:addWindow(window)
 end
 
@@ -922,6 +891,100 @@ function UIHotkeyAssign_Panels:buttonBack()
 end
 
 function UIHotkeyAssign_Panels:confirm_func(hotkey)
+  hotkey_input(hotkey, self.hotkey_buttons, self.app)
+end
+
+--! Assign panel keys window.
+class "UIHotkeyAssign_GameSpeed" (UIResizable)
+
+---@type UIHotkeyAssign_GameSpeed
+local UIHotkeyAssign_GameSpeed = _G["UIHotkeyAssign_GameSpeed"]
+
+function UIHotkeyAssign_GameSpeed:UIHotkeyAssign_GameSpeed(ui, mode)
+  self:UIResizable(ui, 240, 260, col_bg)
+
+  local panel_width = 110
+  local panel_height = 20
+  local panel_x_pos = 10
+  local current_pos_y = 1
+
+  self.ui = ui
+  self.mode = mode
+  self.modal_class = mode == "menu" and "main menu" or "options" or "folders"
+  self.on_top = mode == "menu"
+  self.esc_closes = true
+  self.resizable = false
+  self:setDefaultPosition(0.5, 0.25)
+  self.default_button_sound = "selectx.wav"
+  self.app = ui.app
+  self.hotkey_buttons = {}
+
+  -- Panel y position table.
+  self.panel_pos_table_y = {}
+  for i=1, 9, 1 do
+    self.panel_pos_table_y[i] = (i*20)+20
+  end
+
+  -- Title
+  self:addBevelPanel(10, 10, 220, 20, col_caption):setLabel(_S.hotkey_window.panel_gameSpeedKeys)
+
+  -- "Back" button
+  self:addBevelPanel(10, 210, 220, 40, col_bg):setLabel(_S.hotkey_window.button_back)
+    :makeButton(0, 0, 220, 40, nil, self.buttonBack):setTooltip(_S.tooltip.hotkey_window.button_back_02)
+
+    -- Game Speed Keys
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(_S.hotkey_window.panel_gameSpeedKeys)
+  current_pos_y = current_pos_y + 1
+  -- ingame_pause
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_pause)
+  self.hotkey_buttons["ingame_pause"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_pause") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_pause"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_slowest
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_slowest)
+  self.hotkey_buttons["ingame_gamespeed_slowest"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_slowest") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_slowest"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_slower
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_slower)
+  self.hotkey_buttons["ingame_gamespeed_slower"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_slower") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_slower"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_normal
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_normal)
+  self.hotkey_buttons["ingame_gamespeed_normal"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_normal") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_normal"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_max
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_max)
+  self.hotkey_buttons["ingame_gamespeed_max"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_max") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_max"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_thensome
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_thensome)
+  self.hotkey_buttons["ingame_gamespeed_thensome"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_thensome") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_thensome"], "+")) )
+  current_pos_y = current_pos_y + 1
+  -- ingame_gamespeed_speedup
+  self:addBevelPanel(panel_x_pos, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window.ingame_gamespeed_speedup)
+  self.hotkey_buttons["ingame_gamespeed_speedup"] = self:addBevelPanel(panel_x_pos+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
+    :makeHotkeyBox(function() self:confirm_func("ingame_gamespeed_speedup") end, nil):setText( string.upper(array_join(ui.app.hotkeys["ingame_gamespeed_speedup"], "+")) )
+end
+
+function UIHotkeyAssign_GameSpeed:close()
+  UIResizable.close(self)
+  if self.mode == "menu"  then
+    self.ui:addWindow(UIHotkeyAssign(self.ui, "menu"))
+  end
+end
+
+function UIHotkeyAssign_GameSpeed:buttonBack()
+  self:close()
+  local window = UIHotkeyAssign(self.ui, "menu")
+  self.ui:addWindow(window)
+end
+
+function UIHotkeyAssign_GameSpeed:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, self.app)
 end
 
