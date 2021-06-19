@@ -43,13 +43,16 @@ disease.initPatient = function(patient)
   patient:setLayer(1, math.random(0, 3) * 2)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
-  patient.th:setEffect(AnimationEffect.Glowing)
+  patient.th:setPatientEffect(AnimationEffect.Glowing)
 end
-disease.updatePatient = function(patient)
+disease.treatPatient = function(patient)
+  patient.th:setPatientEffect(AnimationEffect.None)
+end
+disease.afterLoad = function(patient)
   if patient.cured then
-    patient.th:setEffect(AnimationEffect.None)
+    patient.th:setPatientEffect(AnimationEffect.None)
   else
-    patient.th:setEffect(AnimationEffect.Glowing)
+    patient.th:setPatientEffect(AnimationEffect.Glowing)
   end
 end
 

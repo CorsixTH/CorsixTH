@@ -898,7 +898,7 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
                                    uint32_t iFlags,
-                                   animation_effect effect) const {
+                                   animation_effect patient_effect) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -933,6 +933,12 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
       }
     }
 
+    // Only apply patient animation effect to patient sprites. Layer 0, 0
+    // represents non-patient sprites such as doors, benches, etc.
+    // TODO: Some animations such as leaving radiation chamber have part of
+    // patient in layer 0, 0, so this condition is not quite correct.
+    animation_effect render_effect = (oElement.layer > 0 || oElement.layer_id > 0) ?
+        patient_effect : animation_effect::none;
     if (iFlags & thdf_flip_horizontal) {
       int iWidth;
       int iHeight;
@@ -941,11 +947,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), effect);
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), render_effect);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags, effect);
+          iPassOnFlags | oElement.flags, render_effect);
     }
   }
 }
@@ -1149,11 +1155,11 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          this->current_effect);
+                          this->patient_effect);
       pCanvas->set_clip_rect(&rcOld);
     } else
       manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
-                          this->current_effect);
+                          this->patient_effect);
   }
 }
 
@@ -1321,7 +1327,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
-  current_effect = animation_effect::none;
+  patient_effect = animation_effect::none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1491,8 +1497,8 @@ void animation::depersist(lua_persist_reader* pReader) {
   pReader->set_error("Cannot depersist animation instance");
 }
 
-void animation::set_effect(animation_effect effect) {
-  this->current_effect = effect;
+void animation::set_patient_effect(animation_effect patient_effect) {
+  this->patient_effect = patient_effect;
 }
 
 void animation::tick() {

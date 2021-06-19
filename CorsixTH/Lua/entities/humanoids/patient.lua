@@ -269,6 +269,11 @@ function Patient:treatDisease()
 
   hospital:receiveMoneyForTreatment(self)
 
+  -- Invoke disease code for treating patient to remove effects.
+  if self.disease.treatPatient then
+    self.disease.treatPatient(self)
+  end
+
   -- Either the patient is no longer sick, or he/she dies.
   if self:isTreatmentEffective() then
     self:cure()
@@ -318,9 +323,6 @@ function Patient:cure()
   self.cured = true
   self.infected = false
   self.attributes["health"] = 1
-  if self.disease.updatePatient then
-    self.disease.updatePatient(self)
-  end
 end
 
 --! Patient died, process the event.
@@ -1098,8 +1100,8 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
-  if self.disease and self.disease.updatePatient then
-    self.disease.updatePatient(self)
+  if self.disease and self.disease.afterLoad then
+    self.disease.afterLoad(self)
   end
   Humanoid.afterLoad(self, old, new)
 end

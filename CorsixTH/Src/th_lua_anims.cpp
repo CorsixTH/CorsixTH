@@ -591,11 +591,11 @@ int l_anim_draw(lua_State* L) {
   return 1;
 }
 
-int l_anim_set_effect(lua_State* L) {
+int l_anim_set_patient_effect(lua_State* L) {
   animation* pAnimation = luaT_testuserdata<animation>(L);
   animation_effect flags =
       static_cast<animation_effect>(luaL_checkinteger(L, 2));
-  pAnimation->set_effect(flags);
+  pAnimation->set_patient_effect(flags);
   lua_settop(L, 1);
   return 1;
 }
@@ -710,7 +710,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
-    lcb.add_function(l_anim_set_effect, "setEffect");
+    lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

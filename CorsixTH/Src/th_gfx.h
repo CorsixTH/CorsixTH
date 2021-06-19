@@ -580,7 +580,7 @@ class animation : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
-  void set_effect(animation_effect flags);
+  void set_patient_effect(animation_effect patient_effect);
 
   animation_manager* get_animation_manager() { return manager; }
 
@@ -598,7 +598,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
-  animation_effect current_effect;
+  animation_effect patient_effect;
 };
 
 class sprite_render_list : public animation_base {
