@@ -447,14 +447,14 @@ int l_font_draw_tooltip(lua_State* L) {
 
 int l_layers_new(lua_State* L) {
   layers* pLayers = luaT_stdnew<layers>(L, luaT_environindex, false);
-  for (int i = 0; i < 13; ++i) pLayers->layer_contents[i] = 0;
+  for (int i = 0; i < max_number_of_layers; ++i) pLayers->layer_contents[i] = 0;
   return 1;
 }
 
 int l_layers_get(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
   lua_Integer iLayer = luaL_checkinteger(L, 2);
-  if (0 <= iLayer && iLayer < 13)
+  if (0 <= iLayer && iLayer < max_number_of_layers)
     lua_pushinteger(L, pLayers->layer_contents[iLayer]);
   else
     lua_pushnil(L);
@@ -465,7 +465,9 @@ int l_layers_set(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
   lua_Integer iLayer = luaL_checkinteger(L, 2);
   uint8_t iValue = static_cast<uint8_t>(luaL_checkinteger(L, 3));
-  if (0 <= iLayer && iLayer < 13) pLayers->layer_contents[iLayer] = iValue;
+  if (0 <= iLayer && iLayer < max_number_of_layers) {
+    pLayers->layer_contents[iLayer] = iValue;
+  }
   return 0;
 }
 
@@ -473,7 +475,7 @@ int l_layers_persist(lua_State* L) {
   layers* pLayers = luaT_testuserdata<layers>(L);
   lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 2);
 
-  int iNumLayers = 13;
+  int iNumLayers = max_number_of_layers;
   for (; iNumLayers >= 1; --iNumLayers) {
     if (pLayers->layer_contents[iNumLayers - 1] != 0) break;
   }
@@ -492,9 +494,15 @@ int l_layers_depersist(lua_State* L) {
   std::memset(pLayers->layer_contents, 0, sizeof(pLayers->layer_contents));
   int iNumLayers;
   if (!pReader->read_uint(iNumLayers)) return 0;
-  if (iNumLayers > 13) {
-    if (!pReader->read_byte_stream(pLayers->layer_contents, 13)) return 0;
-    if (!pReader->read_byte_stream(nullptr, iNumLayers - 13)) return 0;
+  if (iNumLayers > max_number_of_layers) {
+    if (!pReader->read_byte_stream(pLayers->layer_contents,
+                                   max_number_of_layers)) {
+      return 0;
+    }
+    if (!pReader->read_byte_stream(nullptr,
+                                   iNumLayers - max_number_of_layers)) {
+      return 0;
+    }
   } else {
     if (!pReader->read_byte_stream(pLayers->layer_contents, iNumLayers))
       return 0;
@@ -752,12 +760,12 @@ int l_surface_set_capture_mouse(lua_State* L) {
 }
 
 int l_line_new(lua_State* L) {
-  luaT_stdnew<line>(L);
+  luaT_stdnew<line_sequence>(L);
   return 1;
 }
 
 int l_move_to(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->move_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
 
   lua_settop(L, 1);
@@ -765,7 +773,7 @@ int l_move_to(lua_State* L) {
 }
 
 int l_line_to(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->line_to(luaL_optnumber(L, 2, 0), luaL_optnumber(L, 3, 0));
 
   lua_settop(L, 1);
@@ -773,7 +781,7 @@ int l_line_to(lua_State* L) {
 }
 
 int l_set_width(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->set_width(luaL_optnumber(L, 2, 1));
 
   lua_settop(L, 1);
@@ -781,7 +789,7 @@ int l_set_width(lua_State* L) {
 }
 
 int l_set_colour(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   pLine->set_colour(static_cast<uint8_t>(luaL_optinteger(L, 2, 0)),
                     static_cast<uint8_t>(luaL_optinteger(L, 3, 0)),
                     static_cast<uint8_t>(luaL_optinteger(L, 4, 0)),
@@ -792,7 +800,7 @@ int l_set_colour(lua_State* L) {
 }
 
 int l_line_draw(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   render_target* pCanvas = luaT_testuserdata<render_target>(L, 2);
   pLine->draw(pCanvas, static_cast<int>(luaL_optinteger(L, 3, 0)),
               static_cast<int>(luaL_optinteger(L, 4, 0)));
@@ -802,14 +810,14 @@ int l_line_draw(lua_State* L) {
 }
 
 int l_line_persist(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   lua_persist_writer* pWriter = (lua_persist_writer*)lua_touserdata(L, 2);
   pLine->persist(pWriter);
   return 0;
 }
 
 int l_line_depersist(lua_State* L) {
-  line* pLine = luaT_testuserdata<line>(L);
+  line_sequence* pLine = luaT_testuserdata<line_sequence>(L);
   lua_settop(L, 2);
   lua_insert(L, 1);
   lua_persist_reader* pReader =
@@ -935,8 +943,8 @@ void lua_register_gfx(const lua_register_state* pState) {
 
   // Line
   {
-    lua_class_binding<line> lcb(pState, "line", l_line_new,
-                                lua_metatable::line);
+    lua_class_binding<line_sequence> lcb(pState, "line", l_line_new,
+                                         lua_metatable::line);
     lcb.add_function(l_move_to, "moveTo");
     lcb.add_function(l_line_to, "lineTo");
     lcb.add_function(l_set_width, "setWidth");

@@ -1,7 +1,12 @@
 ![](http://i.imgur.com/fYp148T.jpg)
+
+#### Important! ####
+On 2021-06-15 freenode removed the corsix-th channel on IRC causing migration off the network. We have added a matrix space bridged to the existing discord server. If you would like us to register on another IRC server, **please open a new issue**.
+
 ### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
-##### [IRC Chat](http://webchat.freenode.net/?channels=corsix-th) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](http://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
+##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](http://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
+
 
 A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
 
@@ -75,6 +80,6 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 ## Contact
 
 - Follow us on [Reddit](https://www.reddit.com/r/corsixth), Twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)), and on [Facebook](https://facebook.com/CorsixTH)
-- IRC [#Corsix-TH](https://webchat.freenode.net/#corsix-th) on irc.freenode.net
+- Hit up our Matrix Room (Discord Bridge) [#corsixth-general:matrix.org](https://matrix.to/#/#corsixth-general:matrix.org)
 - Join the server on [Discord](https://discord.gg/Mxeztvh)
 - Subscribe to our [Google Developer group](http://groups.google.com/group/corsix-th-dev)

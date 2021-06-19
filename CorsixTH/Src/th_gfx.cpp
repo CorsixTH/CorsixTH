@@ -261,7 +261,8 @@ bool animation_manager::load_from_th_file(
     oElement.y = static_cast<int>(pTHElement->offy) - 186;
     oElement.layer = static_cast<uint8_t>(
         pTHElement->flags >> 4);  // High nibble, layer of the element.
-    if (oElement.layer > 12) {
+
+    if (oElement.layer >= max_number_of_layers) {
       // Nothing lives on layer 6
       oElement.layer = 6;
     }
@@ -388,7 +389,7 @@ size_t animation_manager::load_elements(
     uint8_t iLayerId = input.read_uint8();
     uint32_t iFlags = input.read_uint16();
 
-    if (iLayerClass > 12) {
+    if (iLayerClass >= max_number_of_layers) {
       // Nothing lives on layer 6
       iLayerClass = 6;
     }
@@ -1468,11 +1469,13 @@ void animation::depersist(lua_persist_reader* pReader) {
 
     if (iNumLayers > max_number_of_layers) {
       if (!pReader->read_byte_stream(layers.layer_contents,
-                                     max_number_of_layers))
+                                     max_number_of_layers)) {
         break;
+      }
       if (!pReader->read_byte_stream(nullptr,
-                                     iNumLayers - max_number_of_layers))
+                                     iNumLayers - max_number_of_layers)) {
         break;
+      }
     } else {
       if (!pReader->read_byte_stream(layers.layer_contents, iNumLayers)) break;
     }
@@ -1683,7 +1686,7 @@ void animation::set_morph_target(animation* pMorphTarget, int iDurationFactor) {
 void animation::set_frame(size_t iFrame) { frame_index = iFrame; }
 
 void animation_base::set_layer(int iLayer, int iId) {
-  if (0 <= iLayer && iLayer <= 12) {
+  if (0 <= iLayer && iLayer < max_number_of_layers) {
     layers.layer_contents[iLayer] = static_cast<uint8_t>(iId);
   }
 }
@@ -1802,7 +1805,7 @@ void sprite_render_list::persist(lua_persist_writer* pWriter) const {
   }
 
   // Write the layers
-  int iNumLayers = 13;
+  int iNumLayers = max_number_of_layers;
   for (; iNumLayers >= 1; --iNumLayers) {
     if (layers.layer_contents[iNumLayers - 1] != 0) {
       break;
