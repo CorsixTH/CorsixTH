@@ -83,6 +83,7 @@ end
 function Patient:setDisease(disease)
   self.disease = disease
   disease.initPatient(self)
+  self.th:setPatientEffect(disease.effect or AnimationEffect.None)
   self.diagnosed = false
   self.diagnosis_progress = 0
   self.cure_rooms_visited = 0
@@ -269,10 +270,8 @@ function Patient:treatDisease()
 
   hospital:receiveMoneyForTreatment(self)
 
-  -- Invoke disease code for treating patient to remove effects.
-  if self.disease.treatPatient then
-    self.disease.treatPatient(self)
-  end
+  -- Remove visual effects of disease.
+  self.th:setPatientEffect(AnimationEffect.None)
 
   -- Either the patient is no longer sick, or he/she dies.
   if self:isTreatmentEffective() then
@@ -1100,8 +1099,8 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
-  if self.disease and self.disease.afterLoad then
-    self.disease.afterLoad(self)
+  if self.disease and not self.cured then
+    self.th:setPatientEffect(self.disease.effect or AnimationEffect.None)
   end
   Humanoid.afterLoad(self, old, new)
 end

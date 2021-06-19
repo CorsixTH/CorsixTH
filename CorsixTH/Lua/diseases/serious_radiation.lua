@@ -30,6 +30,7 @@ disease.cure_price = 1800
 disease.emergency_sound = "emerg010.wav"
 disease.emergency_number = 18
 disease.contagious = true
+disease.effect = AnimationEffect.Glowing
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")
@@ -43,17 +44,6 @@ disease.initPatient = function(patient)
   patient:setLayer(1, math.random(0, 3) * 2)
   patient:setLayer(3, 0)
   patient:setLayer(4, 0)
-  patient.th:setPatientEffect(AnimationEffect.Glowing)
-end
-disease.treatPatient = function(patient)
-  patient.th:setPatientEffect(AnimationEffect.None)
-end
-disease.afterLoad = function(patient)
-  if patient.cured then
-    patient.th:setPatientEffect(AnimationEffect.None)
-  else
-    patient.th:setPatientEffect(AnimationEffect.Glowing)
-  end
 end
 
 -- Diagnosis rooms are the rooms other than the GPs office which can be visited
