@@ -359,6 +359,7 @@ class render_target {
   bool apply_opengl_clip_fix;
   bool direct_zoom;
 
+  bool init_zoom_buffer(int iWidth, int iHeight);
   void flush_zoom_buffer();
 };
 

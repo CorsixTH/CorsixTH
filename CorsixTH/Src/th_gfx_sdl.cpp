@@ -381,6 +381,12 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     return false;
   } else if (eWhatToScale == scaled_items::all && direct_zoom) {
     global_scale_factor = fScale;
+    if ((SDL_GetWindowFlags(window) & SDL_WINDOW_FULLSCREEN_DESKTOP) ==
+        SDL_WINDOW_FULLSCREEN_DESKTOP) {
+      // Drawing to an intermediate screen sized buffer when fullscreen results
+      // in noticeably better text rendering quality.
+      init_zoom_buffer(width, height);
+    }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
     // Draw everything from now until the next scale to zoom_texture
@@ -389,24 +395,12 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    zoom_texture =
-        SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                          SDL_TEXTUREACCESS_TARGET, virtWidth, virtHeight);
-
-    SDL_RenderSetLogicalSize(renderer, virtWidth, virtHeight);
-    if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+    if (!init_zoom_buffer(virtWidth, virtHeight)) {
       std::cout << "Warning: Could not render to zoom texture - "
                 << SDL_GetError() << std::endl;
 
-      SDL_RenderSetLogicalSize(renderer, width, height);
-      SDL_DestroyTexture(zoom_texture);
-      zoom_texture = nullptr;
       return false;
     }
-
-    // Clear the new texture to transparent/black.
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-    SDL_RenderClear(renderer);
 
     return true;
   } else if (0.999 <= fScale && fScale <= 1.001) {
@@ -587,6 +581,24 @@ bool render_target::take_screenshot(const char* sFile) {
 bool render_target::should_scale_bitmaps(double* pFactor) {
   if (!scale_bitmaps) return false;
   if (pFactor) *pFactor = bitmap_scale_factor;
+  return true;
+}
+
+bool render_target::init_zoom_buffer(int iWidth, int iHeight) {
+  if (!supports_target_textures) return false;
+  zoom_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                                   SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  SDL_RenderSetLogicalSize(renderer, iWidth, iHeight);
+  if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+    SDL_RenderSetLogicalSize(renderer, width, height);
+    SDL_DestroyTexture(zoom_texture);
+    zoom_texture = nullptr;
+    return false;
+  }
+
+  // Clear the new texture to transparent/black.
+  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+  SDL_RenderClear(renderer);
   return true;
 }
 
