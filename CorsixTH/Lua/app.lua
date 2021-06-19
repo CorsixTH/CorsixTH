@@ -157,7 +157,7 @@ function App:init()
   if self.config.track_fps then
     modes[#modes + 1] = "present immediate"
   end
-  if self.config.direct_zoom then
+  if self.config.direct_zoom == nil or self.config.direct_zoom then
     modes[#modes + 1] = "direct zoom"
   end
   self.modes = modes
