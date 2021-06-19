@@ -220,7 +220,7 @@ DrawFlags.Crop            = 2^13
 AnimationEffect = {}
 AnimationEffect.None = 0
 AnimationEffect.Glowing = 1
-AnimationEffect.Jelly = 2
+AnimationEffect.Jelly = 2 -- Not yet fully implemented
 
 -- Compare values of two simple (non-nested) tables
 function compare_tables(t1, t2)
