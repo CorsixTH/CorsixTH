@@ -274,9 +274,9 @@ struct luaT_classinfo<cursor> {
   static inline const char* name() { return "Cursor"; }
 };
 
-class line;
+class line_sequence;
 template <>
-struct luaT_classinfo<line> {
+struct luaT_classinfo<line_sequence> {
   static inline const char* name() { return "Line"; }
 };
 

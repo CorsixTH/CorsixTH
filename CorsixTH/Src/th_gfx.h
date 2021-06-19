@@ -22,6 +22,7 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_GFX_H_
 #define CORSIX_TH_TH_GFX_H_
+
 #include <map>
 #include <string>
 #include <vector>
@@ -196,9 +197,13 @@ class chunk_renderer {
   bool skip_eol;
 };
 
+//! Number of available layers, must be less or equal to 16 as it is stored in
+//  a nibble.
+const int max_number_of_layers = 13;
+
 //! Layer information (see animation_manager::draw_frame)
 struct layers {
-  uint8_t layer_contents[13];
+  uint8_t layer_contents[max_number_of_layers];
 };
 
 class memory_reader;
@@ -389,7 +394,8 @@ class animation_manager {
     uint16_t table_position;
     uint8_t offx;
     uint8_t offy;
-    // High nibble: The layer which the element belongs to [0, 12]
+    // High nibble: The layer which the element belongs to
+    //              [0, max_number_of_layers)
     // Low  nibble: Zero or more draw_flags
     uint8_t flags;
     // The layer option / layer id
@@ -435,7 +441,7 @@ class animation_manager {
                        ///< bit 2=draw 50% alpha, bit 3=draw 75% alpha.
     int x;             ///< X offset of the sprite.
     int y;             ///< Y offset of the sprite.
-    uint8_t layer;     ///< Layer class (0..12).
+    uint8_t layer;     ///< Layer class [0..max_number_of_layers).
     uint8_t layer_id;  ///< Value of the layer class to match.
 
     sprite_sheet* element_sprite_sheet;  ///< Sprite sheet to use for this
