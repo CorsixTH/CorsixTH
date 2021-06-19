@@ -1095,6 +1095,9 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
+  if self.disease and self.disease.afterLoad then
+    self.disease.afterLoad(self)
+  end
   Humanoid.afterLoad(self, old, new)
 end
 
