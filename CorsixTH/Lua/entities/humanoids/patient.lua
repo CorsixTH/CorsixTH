@@ -1099,7 +1099,7 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
-  if old < 157 then
+  if old < 158 then
     -- Always overwrite patient effect from old saves since it is
     -- loaded from a dummy field which used to have another meaning.
     if self.disease and not self.cured then
