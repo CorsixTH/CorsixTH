@@ -185,7 +185,7 @@ int l_anims_set_marker(lua_State* L) {
 int l_anims_tick(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   pAnims->tick();
-  return 1;
+  return 0;
 }
 
 int l_anims_set_secondary_marker(lua_State* L) {
