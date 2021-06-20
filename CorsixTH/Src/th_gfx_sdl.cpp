@@ -313,9 +313,7 @@ bool render_target::create(const render_target_creation_params* pParams) {
   }
 
   Uint32 iRendererFlags =
-      (pParams->present_immediate
-           ? 0
-           : SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+      (pParams->present_immediate ? 0 : SDL_RENDERER_PRESENTVSYNC);
   renderer = SDL_CreateRenderer(window, -1, iRendererFlags);
 
   SDL_RendererInfo info;
