@@ -1100,8 +1100,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
-    int currentVariation =
-        static_cast<int>(sin(game_ticks * 25 * pi / 180) * 50);
+    int currentVariation = static_cast<int>(
+        sin(static_cast<double>(game_ticks) * 25 * pi / 180) * 50);
     int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
