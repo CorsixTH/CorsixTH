@@ -338,6 +338,11 @@ tooltip.main_menu = {
   quit = "You are about to quit from CorsixTH. Are you sure this is what you want to do?",
 }
 
+tooltip.jukebox = {
+  volume_up = "Volume up 10%",
+  volume_down = "Volume down 10%"
+}
+
 load_game_window = {
   caption = "Load Game (%1%)",
 }

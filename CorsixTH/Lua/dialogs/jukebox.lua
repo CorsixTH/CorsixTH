@@ -51,10 +51,12 @@ function UIJukebox:UIJukebox(app)
   self.play_btn =
   self:addPanel(392,   0, 49):makeToggleButton(19, 2, 50, 24, 393, self.togglePlayPause):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.play)
   self:updatePlayButton()
-  self:addPanel(394,  87, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.rewind)
-  self:addPanel(396, 115, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.fast_forward)
-  self:addPanel(398, 157, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.stop)
-  self:addPanel(400, 185, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.loop)
+  self:addPanel(394,  77, 49):makeButton(0, 2, 24, 24, 395, self.audio.playPreviousBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.rewind)
+  self:addPanel(396, 105, 49):makeButton(0, 2, 24, 24, 397, self.audio.playNextBackgroundTrack, self.audio):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.fast_forward)
+  self:addPanel(398, 137, 49):makeButton(0, 2, 24, 24, 399, self.stopBackgroundTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.stop)
+  self:addPanel(400, 165, 49):makeButton(0, 2, 24, 24, 401, self.loopTrack):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.loop)
+  self:addPanel(394, 197, 49):makeButton(0, 2, 24, 24, 395, self.volumeUp):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.volume_up)
+  self:addPanel(396, 225, 49):makeButton(0, 2, 24, 24, 397, self.volumeDown):setSound("selectx.wav"):setTooltip(_S.tooltip.jukebox.volume_down)
 
   -- Track list
   self.track_buttons = {}
@@ -149,6 +151,17 @@ function UIJukebox:loopTrack()
         self:toggleTrack(i)
       end
     end
+  end
+end
+
+function UIJukebox:volumeUp() self:volumeChange(0.1) end
+function UIJukebox:volumeDown() self:volumeChange(-0.1) end
+
+--! Adjust the user's setting of music volume, typically increments of 0.1
+function UIJukebox:volumeChange(change)
+  local new_vol = TheApp.config.music_volume + change
+  if new_vol >= 0 and new_vol <= 1 then
+    self.audio:setBackgroundVolume(new_vol)
   end
 end
 
