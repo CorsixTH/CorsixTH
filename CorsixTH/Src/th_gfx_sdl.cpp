@@ -1108,10 +1108,42 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
-  SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
-  SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
+  if (effect == animation_effect::jelly) {
+    // Draw the sprite a few lines at a time following a sine wave x offset.
+    // To cut down on the number of draw calls, we will draw all of the lines
+    // that have the same x offset in a single draw call. This results in about
+    // a third of the draw calls as drawing each line individually.
+    // TODO: We could move this effect into render_target which is aware of the
+    // screen scale and could optimize this further when zooming out.
+    int y1 = 0;
+    int x_offset = 0;
+    for (int y2 = 0; y2 <= sprite.height; y2++) {
+      // TODO: Ideally this should use the offset of the current line from
+      // the map location so that multiple layers have the same jelly offset
+      // at the same vertical line. We can't just use iY because it varies as
+      // the user scrolls or zooms or the character walks.
+      int offset = static_cast<int>(
+          sin((y2 / 14.0 + static_cast<double>(game_ticks % 30) / 30) * 2 *
+              pi) *
+          2);
+      if (x_offset != offset || y2 == sprite.height) {
+        if (y2 > y1) {
+          // If the current offset rounds to a different value, render the
+          // previous offset and start a new offset.
+          SDL_Rect rcSrc = {0, y1, sprite.width, y2 - y1};
+          SDL_Rect rcDest = {iX + x_offset, iY + y1, sprite.width, y2 - y1};
+          pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+        }
+        y1 = y2;
+        x_offset = offset;
+      }
+    }
+  } else {
+    SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
+    SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
 
-  pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+    pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+  }
 
   if (effect == animation_effect::glowing) {
     // Reset back to original values
