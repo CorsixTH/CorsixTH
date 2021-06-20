@@ -1071,8 +1071,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags,
-                               size_t game_ticks,
+                               int iY, uint32_t iFlags, size_t game_ticks,
                                animation_effect effect) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1101,7 +1100,8 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // We want this to vary between 155 -> 205 -> 255.
     // We're using increments of 10 degrees within the Sin function and
     // converting them to rad
-    int currentVariation = static_cast<int>(sin(game_ticks * 25 * pi / 180) * 50);
+    int currentVariation =
+        static_cast<int>(sin(game_ticks * 25 * pi / 180) * 50);
     int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());

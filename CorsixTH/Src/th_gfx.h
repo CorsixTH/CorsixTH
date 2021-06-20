@@ -471,7 +471,8 @@ class animation_manager {
   size_t element_list_count;  ///< Number of list elements.
   size_t element_count;       ///< Number of sprite elements.
 
-  size_t game_ticks;          ///< Number of game ticks, used for global animation timing.
+  size_t
+      game_ticks;  ///< Number of game ticks, used for global animation timing.
 
   //! Compute the bounding box of the frame.
   /*!
