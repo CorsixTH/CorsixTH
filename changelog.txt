@@ -14,6 +14,8 @@ Version 0.65 - released June 2021
 * Additional trophy of the original game is implemented
 * Windows and room size now impact staff happiness
 * Roujin's challenge cheat is back
+* Experimental direct_zoom config option, for more efficient zoom. Fixes
+  zoom on some hardware. Defaults off.
 
 # Changes
 * Emergencies with unknown diseases will no longer occur

@@ -2414,3 +2414,23 @@ function Hospital:setCampaignData(campaign_data)
     self[key] = value
   end
 end
+
+--! Finds a random room with significantly long queues
+--!return room or nil The chosen room in the hospital or nil for no room busy enough
+function Hospital:getRandomBusyRoom()
+  local long_queue_rooms, active_rooms, total_queue = {}, 0, 0
+  for _, room in pairs(self.world.rooms) do
+    if room.is_active and room.door.queue then
+      total_queue = total_queue + #room.door.queue
+      active_rooms = active_rooms + 1
+      if #room.door.queue > 7 then
+        long_queue_rooms[#long_queue_rooms + 1] = room
+      end
+    end
+  end
+  if #long_queue_rooms == 0 then return end
+
+  local busy_threshold = 1.5 * total_queue / active_rooms
+  local chosen_room = long_queue_rooms[math.random(1, #long_queue_rooms)]
+  if #chosen_room.door.queue >= busy_threshold then return chosen_room end
+end
