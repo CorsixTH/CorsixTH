@@ -1100,8 +1100,12 @@ function Patient:afterLoad(old, new)
     end
   end
   if old < 157 then
+    -- Always overwrite patient effect from old saves since it is
+    -- loaded from a dummy field which used to have another meaning.
     if self.disease and not self.cured then
       self.th:setPatientEffect(self.disease.effect or AnimationEffect.None)
+    else
+      self.th:setPatientEffect(AnimationEffect.None)
     end
   end
   Humanoid.afterLoad(self, old, new)
