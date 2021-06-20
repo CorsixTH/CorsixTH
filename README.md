@@ -1,16 +1,16 @@
-![](http://i.imgur.com/fYp148T.jpg)
+![](https://i.imgur.com/fYp148T.jpg)
 
 #### Important! ####
 On 2021-06-15 freenode removed the corsix-th channel on IRC causing migration off the network. We have added a matrix space bridged to the existing discord server. If you would like us to register on another IRC server, **please open a new issue**.
 
 ### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
-##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](http://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
+##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
 
 
 A reimplementation of the 1997 Bullfrog business sim Theme Hospital. As well as faithfully recreating the original, CorsixTH adds support for modern operating systems (Windows, macOS, Linux and BSD), high resolutions and much more.
 
-![](http://i.imgur.com/qHV60Ui.png)
+![](https://i.imgur.com/qHV60Ui.png)
 
 
 ## Getting Started ##
@@ -23,7 +23,7 @@ You will need the following:
    - A Flatpak for Linux users is available on [Flathub](https://flathub.org/apps/details/com.corsixth.corsixth).
 - We use graphics, sound and other data from the original game so one of the following is required:
    - Original game CD from eBay etc. or your dusty bookshelf:smile:
-   - A download from [GOG.com](http://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
+   - A download from [GOG.com](https://www.gog.com/game/theme_hospital) or [Origin](https://www.origin.com/en-gb/store/buy/theme-hospital-origin/pc-download/base-game/standard-edition)
 
  Head over to our [getting started](https://github.com/CorsixTH/CorsixTH/wiki/Getting-Started) page for more detail.
 
@@ -82,4 +82,4 @@ Our [wiki](https://github.com/CorsixTH/CorsixTH/wiki) is a good place to start, 
 - Follow us on [Reddit](https://www.reddit.com/r/corsixth), Twitter ([**@CorsixTH**](https://twitter.com/CorsixTH)), and on [Facebook](https://facebook.com/CorsixTH)
 - Hit up our Matrix Room (Discord Bridge) [#corsixth-general:matrix.org](https://matrix.to/#/#corsixth-general:matrix.org)
 - Join the server on [Discord](https://discord.gg/Mxeztvh)
-- Subscribe to our [Google Developer group](http://groups.google.com/group/corsix-th-dev)
+- Subscribe to our [Google Developer group](https://groups.google.com/g/corsix-th-dev)
