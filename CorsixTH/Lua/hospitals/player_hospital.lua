@@ -339,20 +339,8 @@ end
 --! Once a month the advisor may warn about long queues.
 --! Rooms requiring a doctor occasionally trigger the generic message
 function PlayerHospital:warnForLongQueues()
-  local queue_rooms, total_queue = {}, 0
-  for _, room in pairs(self.world.rooms) do
-    if #room.door.queue then
-      total_queue = total_queue + #room.door.queue
-    end
-    if #room.door.queue > 7 then
-      queue_rooms[#queue_rooms + 1] = room
-    end
-  end
-  if #queue_rooms == 0 or total_queue == 0 then return end
-
-  local busy_threshold = 1.5 * total_queue / #self.world.rooms
-  local chosen_room = queue_rooms[math.random(1, #queue_rooms)]
-  if busy_threshold > #chosen_room.door.queue then return end
+  local chosen_room = self:getRandomBusyRoom()
+  if not chosen_room then return end
   chosen_room = chosen_room.room_info
   -- Required staff that is not nurse is doctor, researcher, surgeon or psych
   if chosen_room.required_staff and not chosen_room.required_staff["Nurse"]
