@@ -149,6 +149,7 @@ animation_manager::animation_manager() {
   frame_count = 0;
   element_list_count = 0;
   element_count = 0;
+  game_ticks = 0;
 }
 
 animation_manager::~animation_manager() {
@@ -825,6 +826,10 @@ bool animation_manager::get_frame_secondary_marker(size_t iFrame, int* pX,
   return true;
 }
 
+void animation_manager::tick() {
+  ++game_ticks;
+}
+
 bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
                                  int iY, uint32_t iFlags, int iTestX,
                                  int iTestY) const {
@@ -948,11 +953,11 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
           iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal),
-          render_effect);
+          game_ticks, render_effect);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags, render_effect);
+          iPassOnFlags | oElement.flags, game_ticks, render_effect);
     }
   }
 }

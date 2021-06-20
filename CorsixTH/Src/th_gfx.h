@@ -366,6 +366,9 @@ class animation_manager {
   const animation_start_frames& get_named_animations(const std::string& sName,
                                                      int iTilesize) const;
 
+  //! Notified every world tick to allow tracking rate of game time passage.
+  void tick();
+
  private:
 #if CORSIX_TH_USE_PACK_PRAGMAS
 #pragma pack(push)
@@ -467,6 +470,8 @@ class animation_manager {
   size_t frame_count;         ///< Number of frames.
   size_t element_list_count;  ///< Number of list elements.
   size_t element_count;       ///< Number of sprite elements.
+
+  size_t game_ticks;          ///< Number of game ticks, used for global animation timing.
 
   //! Compute the bounding box of the frame.
   /*!

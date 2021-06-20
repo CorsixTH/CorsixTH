@@ -1069,6 +1069,7 @@ function World:onTick()
     self.game_date = new_game_date
 
     for i = 1, self.hours_per_tick do
+      self.anims:tick()
       for _, hospital in ipairs(self.hospitals) do
         hospital:tick()
       end

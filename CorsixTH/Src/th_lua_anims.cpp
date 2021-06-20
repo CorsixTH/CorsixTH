@@ -182,6 +182,12 @@ int l_anims_set_marker(lua_State* L) {
   return 1;
 }
 
+int l_anims_tick(lua_State* L) {
+  animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
+  pAnims->tick();
+  return 1;
+}
+
 int l_anims_set_secondary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
@@ -651,6 +657,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     lcb.add_function(l_anims_draw, "draw", lua_metatable::surface,
                      lua_metatable::layers);
+    lcb.add_function(l_anims_tick, "tick");
     lcb.add_constant("Alt32_GreyScale", thdf_alt32_grey_scale);
     lcb.add_constant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
   }
