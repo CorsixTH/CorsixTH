@@ -1099,8 +1099,10 @@ function Patient:afterLoad(old, new)
       self.going_to_toilet = "no"
     end
   end
-  if self.disease and not self.cured then
-    self.th:setPatientEffect(self.disease.effect or AnimationEffect.None)
+  if old < 157 then
+    if self.disease and not self.cured then
+      self.th:setPatientEffect(self.disease.effect or AnimationEffect.None)
+    end
   end
   Humanoid.afterLoad(self, old, new)
 end

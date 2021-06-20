@@ -1373,8 +1373,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Not a uint, for compatibility
   pWriter->write_int((int)sound_to_play);
 
-  // For compatibility
-  pWriter->write_int(0);
+  pWriter->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
     pWriter->write_int(crop_column);
@@ -1450,6 +1449,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     if (!pReader->read_int(iDummy)) break;
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
     if (!pReader->read_int(iDummy)) break;
+    patient_effect = static_cast<animation_effect>(iDummy);
     if (flags & thdf_crop) {
       if (!pReader->read_int(crop_column)) {
         break;
