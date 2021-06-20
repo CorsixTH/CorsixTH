@@ -1,7 +1,7 @@
 return {
   major = 0,
   minor = 6,
-  revision = 4,
-  changelog_en = 'Lots of fixes and experimental ISO support awaits in the latest version.',
+  revision = 5,
+  changelog_en = 'Fire extinguishers reduce explosions, bigger rooms make staff happier, and plenty more.',
   download_url = 'http://github.com/CorsixTH/CorsixTH/releases',
 }
