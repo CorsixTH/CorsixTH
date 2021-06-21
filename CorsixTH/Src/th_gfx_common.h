@@ -1,5 +1,5 @@
 /*
-Copyright (C) 2012-2013 Luis "Driver" Duarte and Robert "flackr" Flack
+Copyright (C) 2021 Luis "Driver" Duarte and Robert "flackr" Flack
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
