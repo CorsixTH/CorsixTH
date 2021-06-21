@@ -141,7 +141,7 @@ local config_defaults = {
   check_for_updates = true,
   room_information_dialogs = true,
   allow_blocking_off_areas = false,
-  direct_zoom = false
+  direct_zoom = nil
 }
 
 fi = io.open(config_filename, "r")
