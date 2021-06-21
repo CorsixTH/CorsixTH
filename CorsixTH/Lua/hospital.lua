@@ -722,7 +722,7 @@ end
 
 function Hospital:purchasePlot(plot_number)
   local map = self.world.map
-  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) and not self.world.ui.transparent_walls then
+  if map.th:isParcelPurchasable(plot_number, self:getPlayerIndex()) then
     local cost = not self.world.free_build_mode and map:getParcelPrice(plot_number) or 0
     if cost <= self.balance then
       self.world:setPlotOwner(plot_number, self:getPlayerIndex())
@@ -732,12 +732,15 @@ function Hospital:purchasePlot(plot_number)
       self:spendMoney(cost, _S.transactions.buy_land, cost)
       return true
     else
-    -- Give visual warning that player doesn't have enough $ to build
-    -- Let the message remain unitl cancelled by the player as it is being displayed behind the town map
-      self.world.ui.adviser:say(_A.warnings.cannot_afford_2, true, true)
+      -- Give visual warning that player doesn't have enough $ to build
+      self:adviseCannotAffordPlot()
     end
   end
   return false
+end
+
+function Hospital:adviseCannotAffordPlot()
+  -- Nothing to do, override in a derived class.
 end
 
 function Hospital:getPlayerIndex()

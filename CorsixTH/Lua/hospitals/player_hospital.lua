@@ -386,6 +386,12 @@ function PlayerHospital:onEndMonth()
   Hospital.onEndMonth(self)
 end
 
+--! Give visual warning that player doesn't have enough $ to build
+-- Let the message remain until cancelled by the player as it is being displayed behind the town map
+function PlayerHospital:adviseCannotAffordPlot()
+  self.world.ui.adviser:say(_A.warnings.cannot_afford_2, true, true)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
