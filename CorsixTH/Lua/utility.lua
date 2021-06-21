@@ -319,7 +319,7 @@ end
 local function serialize_table(obj, options, depth, pt_reflist)
   -- Used to prevent infinite loops
   pt_reflist = pt_reflist or {}
-  options = options or {}
+  options = options or {detect_cycles = true} -- By default, don't crash on cycles.
   depth = depth or 1
 
   if options.max_depth and depth > options.max_depth then
@@ -379,6 +379,15 @@ local function serialize_table(obj, options, depth, pt_reflist)
   return result
 end
 
+--! Serialize a value. Call it with the value to serialize and print the output.
+--  By default it will end recursion when a cycle is detected.
+--!param val Value to serialize.
+--!param options Option settings, table, 'detect_cycles' field boolean that
+--  ends recursion on a cycle, and 'max_depth' integer that ends recursion at the
+--  specified depth. By default initialized with "{detect_cycles = True}"
+--!param depth Recursion depth, should be omitted.
+--!param pt_reflist Seen nodes, should be omitted.
+--!return The seralized output.
 function serialize(val, options, depth, pt_reflist)
   if type(val) == "string" then
     return serialize_string(val)
