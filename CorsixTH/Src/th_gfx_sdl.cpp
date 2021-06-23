@@ -749,8 +749,8 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   SDL_FRect scaledDstRect;
   getScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
   if (iSDLFlip != 0) {
-    SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
-                     (SDL_RendererFlip)iSDLFlip);
+    SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
+                      nullptr, (SDL_RendererFlip)iSDLFlip);
   } else {
     SDL_RenderCopyF(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
