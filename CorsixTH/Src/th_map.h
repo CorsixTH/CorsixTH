@@ -564,6 +564,7 @@ class map_scanline_iterator {
   inline int y() const { return y_relative_to_screen; }
   inline const map_tile* get_next_tile() { return tile + tile_step; }
   inline const map_tile* get_previous_tile() { return tile - tile_step; }
+  inline const map_tile* get_adjacent_tile() { return tile + 1; }
   map_scanline_iterator operator=(const map_scanline_iterator& iterator);
   inline const map_tile* get_tile() { return tile; }
 

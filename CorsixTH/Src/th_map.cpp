@@ -1017,12 +1017,50 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       continue;
     }
 
-    for (map_scanline_iterator itrNode(
-             itrNode1, map_scanline_iterator_direction::backward, iCanvasX,
-             iCanvasY);
-         itrNode; ++itrNode) {
+    map_scanline_iterator itrNext(
+        itrNode1, map_scanline_iterator_direction::forward, iCanvasX, iCanvasY);
+
+    if (!bFirst) {
+      // since the scanline count from one THMapScanlineIterator to
+      // another can differ synchronization between the current iterator
+      // and the former one is needed
+      if (itrNext.x() < -64) {
+        ++itrNext;
+      }
+      while (formerIterator.x() < itrNext.x()) {
+        ++formerIterator;
+      }
+    }
+    bool bPreviousTileNeedsRedraw = false;
+    bool predrawNextWestWall = false;
+    for (; itrNext;) {
+      map_scanline_iterator itrNode = itrNext;
+      ++itrNext;
+      bool bNeedsRedraw = false;
       int iH;
-      unsigned int iBlock = itrNode->iBlock[1];
+      // If we drew the next west wall in the previous iteration, skip it in
+      // this iteration.
+      bool skipWestWall = predrawNextWestWall;
+      // If we have a next tile, we are not at the maximum x value so it is safe
+      // to get the adjacent tile.
+      const map_tile* adjacent =
+          itrNext ? itrNode.get_adjacent_tile() : nullptr;
+
+      // If the north wall continues in the next tile, we must draw it on top of
+      // the next west wall to ensure it is seamless so we draw the next west
+      // wall first.
+      predrawNextWestWall = adjacent && adjacent->iBlock[1];
+      unsigned int iBlock;
+      if (predrawNextWestWall) {
+        iBlock = itrNext->iBlock[2];
+        if (iBlock != 0 &&
+            blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
+          blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNext.x() - 32,
+                              itrNext.y() - iH + 32,
+                              (iBlock >> 8) | thdf_nearest);
+        }
+      }
+      iBlock = itrNode->iBlock[1];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
           iH > 0) {
         blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
@@ -1048,31 +1086,14 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
         pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
         pItem = static_cast<drawable*>(pItem->next);
       }
-    }
-
-    map_scanline_iterator itrNode(
-        itrNode1, map_scanline_iterator_direction::forward, iCanvasX, iCanvasY);
-    if (!bFirst) {
-      // since the scanline count from one THMapScanlineIterator to
-      // another can differ synchronization between the current iterator
-      // and the former one is needed
-      if (itrNode.x() < -64) {
-        ++itrNode;
-      }
-      while (formerIterator.x() < itrNode.x()) {
-        ++formerIterator;
-      }
-    }
-    bool bPreviousTileNeedsRedraw = false;
-    for (; itrNode; ++itrNode) {
-      bool bNeedsRedraw = false;
-      int iH;
-      unsigned int iBlock = itrNode->iBlock[2];
-      if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
-          iH > 0) {
-        blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
-                            itrNode.y() - iH + 32,
-                            (iBlock >> 8) | thdf_nearest);
+      if (!skipWestWall) {
+        iBlock = itrNode->iBlock[2];
+        if (iBlock != 0 &&
+            blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) && iH > 0) {
+          blocks->draw_sprite(pCanvas, iBlock & 0xFF, itrNode.x() - 32,
+                              itrNode.y() - iH + 32,
+                              (iBlock >> 8) | thdf_nearest);
+        }
       }
       iBlock = itrNode->iBlock[3];
       if (iBlock != 0 && blocks->get_sprite_size(iBlock & 0xFF, nullptr, &iH) &&
@@ -1092,7 +1113,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
 
       bool bRedrawAnimations = false;
 
-      drawable* pItem = static_cast<drawable*>(itrNode->entities.next);
+      pItem = static_cast<drawable*>(itrNode->entities.next);
       while (pItem) {
         pItem->draw_fn(pItem, pCanvas, itrNode.x(), itrNode.y());
         if (pItem->is_multiple_frame_animation_fn(pItem)) {
@@ -1185,7 +1206,7 @@ void level_map::draw(render_target* pCanvas, int iScreenX, int iScreenY,
       }
     }
 
-    formerIterator = itrNode;
+    formerIterator = itrNext;
     bFirst = false;
   }
 
