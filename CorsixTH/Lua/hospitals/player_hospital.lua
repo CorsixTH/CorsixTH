@@ -392,6 +392,23 @@ function PlayerHospital:adviseCannotAffordPlot()
   self.world.ui.adviser:say(_A.warnings.cannot_afford_2, true, true)
 end
 
+--! Tell the player, through the advisor, about the impact of casebook prices
+--!param judgment (string - under, over, fair) The judgment of the price,
+-- from Hospital:computePriceLevelImpact
+--!param name (string) The name of the casebook entry of the diagnosis or disease
+function PlayerHospital:advisePriceLevelImpact(judgment, name)
+  local message
+  if judgment == "under" then
+    message = _A.warnings.low_prices:format(name)
+  elseif judgment == "over" then
+    message = _A.warnings.high_prices:format(name)
+  else
+    assert(judgment == "fair", "Price level impact judgements must be under, over or fair")
+    message = _A.warnings.fair_prices:format(name)
+  end
+  self.world.ui.adviser:say(message)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

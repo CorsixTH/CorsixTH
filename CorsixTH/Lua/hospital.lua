@@ -2368,18 +2368,22 @@ function Hospital:computePriceLevelImpact(patient, casebook)
 
   if price_distortion < self.under_priced_threshold then
     if math.random(1, 100) == 1 then
-      self.world.ui.adviser:say(_A.warnings.low_prices:format(casebook.disease.name))
+      self:advisePriceLevelImpact("under", casebook.disease.name)
       self:changeReputation("under_priced")
     end
   elseif price_distortion > self.over_priced_threshold then
     if math.random(1, 100) == 1 then
-      self.world.ui.adviser:say(_A.warnings.high_prices:format(casebook.disease.name))
+      self:advisePriceLevelImpact("over", casebook.disease.name)
       self:changeReputation("over_priced")
     end
   elseif math.abs(price_distortion) <= 0.15 and math.random(1, 200) == 1 then
     -- When prices are well adjusted (i.e. abs(price distortion) <= 0.15)
-    self.world.ui.adviser:say(_A.warnings.fair_prices:format(casebook.disease.name))
+    self:advisePriceLevelImpact("fair", casebook.disease.name)
   end
+end
+
+function Hospital:advisePriceLevelImpact()
+  -- Nothing to do, override in a derived class.
 end
 
 --! Notify patients of a change to hospital staff members
