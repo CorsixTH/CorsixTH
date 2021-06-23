@@ -119,6 +119,33 @@ void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
   dst_rect->y = dst_y;
 }
 
+#if SDL_VERSION_ATLEAST(2, 0, 10)
+
+// If using SDL 2.0.10 or newer, use SDL_FRect to get better precision on scaled
+// rendering.
+void getScaleRect(const SDL_Rect* rect, double scale_factor,
+                  SDL_FRect* dst_rect) {
+  dst_rect->x = static_cast<float>(rect->x * scale_factor);
+  dst_rect->y = static_cast<float>(rect->y * scale_factor);
+  dst_rect->w = static_cast<float>(rect->w * scale_factor);
+  dst_rect->h = static_cast<float>(rect->h * scale_factor);
+}
+
+#else
+
+// Prior to SDL 2.0.10, fallback to using the enclosing integer SDL_Rect for
+// scaled rendering.
+#define SDL_FRect SDL_Rect
+#define SDL_RenderCopyF SDL_RenderCopy
+#define SDL_RenderCopyExF SDL_RenderCopyEx
+
+void getScaleRect(const SDL_Rect* rect, double scale_factor,
+                  SDL_Rect* dst_rect) {
+  getEnclosingScaleRect(rect, scale_factor, dst_rect);
+}
+
+#endif
+
 }  // namespace
 
 palette::palette() { colour_count = 0; }
@@ -719,13 +746,13 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
-  SDL_Rect scaledDstRect;
-  getEnclosingScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
+  SDL_FRect scaledDstRect;
+  getScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
   if (iSDLFlip != 0) {
-    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
+    SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
                      (SDL_RendererFlip)iSDLFlip);
   } else {
-    SDL_RenderCopy(renderer, pTexture, prcSrcRect, &scaledDstRect);
+    SDL_RenderCopyF(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
 }
 
