@@ -750,6 +750,27 @@ function GameUI:onMouseWheel(x, y)
   return UI.onMouseWheel(self, x, y)
 end
 
+--! Announcements to the player.
+--!param msgs (array of string) Messages to select from.
+--!param priority (optional valid AnnouncementPriority selection) Priority of announcement
+--!param chance_to_play (optional float in range (0, 1]) Fraction of times that the
+--    call actually says something.
+--!return (boolean) Whether a message was given to the user.
+function GameUI:playRandomAnnouncement(msgs, priority, chance_to_play, played_callback, played_callback_delay)
+  local max_rnd = #msgs
+  if chance_to_play and chance_to_play > 0 and chance_to_play < 1 then
+    -- Scale by the fraction.
+    max_rnd = math.floor(max_rnd / chance_to_play)
+  end
+
+  local index = (max_rnd == 1) and 1 or math.random(1, max_rnd)
+  if index <= #msgs then
+    self:playAnnouncement(msgs[index], priority, played_callback, played_callback_delay)
+    return true
+  end
+  return false
+end
+
 function GameUI:playAnnouncement(name, priority, played_callback, played_callback_delay)
   self.announcer:playAnnouncement(name, priority, played_callback, played_callback_delay)
 end
