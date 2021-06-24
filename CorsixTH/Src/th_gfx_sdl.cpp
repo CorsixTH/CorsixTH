@@ -1071,7 +1071,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags, size_t game_ticks,
+                               int iY, uint32_t iFlags, size_t effect_ticks,
                                animation_effect effect) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1101,14 +1101,15 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // Use the target cycle length (15 cycles) to calculate the angle from 0 to
     // 2*pi.
     int currentVariation = static_cast<int>(
-        sin(static_cast<double>(game_ticks % 15) / 15.0 * 2 * pi) * 50);
+        sin(static_cast<double>(effect_ticks % 15) / 15.0 * 2 * pi) * 50);
     int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
     }
   }
 
-  if (effect == animation_effect::jelly) {
+  // TODO: Adjust jelly frequency and duration.
+  if (effect == animation_effect::jelly && effect_ticks % 200 < 30) {
     // Draw the sprite a few lines at a time following a sine wave x offset.
     // To cut down on the number of draw calls, we will draw all of the lines
     // that have the same x offset in a single draw call. This results in about
@@ -1123,7 +1124,7 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
       // at the same vertical line. We can't just use iY because it varies as
       // the user scrolls or zooms or the character walks.
       int offset = static_cast<int>(
-          sin((y2 / 14.0 + static_cast<double>(game_ticks % 30) / 30) * 2 *
+          sin((y2 / 14.0 + static_cast<double>(effect_ticks % 30) / 30) * 2 *
               pi) *
           2);
       if (x_offset != offset || y2 == sprite.height) {
