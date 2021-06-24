@@ -28,6 +28,7 @@ SOFTWARE.
 #include <vector>
 
 #include "th.h"
+#include "th_gfx_common.h"
 #include "th_gfx_sdl.h"
 
 class lua_persist_reader;
@@ -337,10 +338,11 @@ class animation_manager {
       @param iX The screen position to use as the animation X origin.
       @param iY The screen position to use as the animation Y origin.
       @param iFlags Zero or more THDrawFlags flags.
+      @param effect The animation effect to apply.
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
-                  const ::layers& oLayers, int iX, int iY,
-                  uint32_t iFlags) const;
+                  const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
+                  animation_effect effect = animation_effect::none) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -363,6 +365,9 @@ class animation_manager {
    */
   const animation_start_frames& get_named_animations(const std::string& sName,
                                                      int iTilesize) const;
+
+  //! Notified every world tick to allow tracking rate of game time passage.
+  void tick();
 
  private:
 #if CORSIX_TH_USE_PACK_PRAGMAS
@@ -465,6 +470,9 @@ class animation_manager {
   size_t frame_count;         ///< Number of frames.
   size_t element_list_count;  ///< Number of list elements.
   size_t element_count;       ///< Number of sprite elements.
+
+  size_t
+      game_ticks;  ///< Number of game ticks, used for global animation timing.
 
   //! Compute the bounding box of the frame.
   /*!
@@ -578,6 +586,8 @@ class animation : public animation_base {
   void persist(lua_persist_writer* pWriter) const;
   void depersist(lua_persist_reader* pReader);
 
+  void set_patient_effect(animation_effect patient_effect);
+
   animation_manager* get_animation_manager() { return manager; }
 
  private:
@@ -594,6 +604,7 @@ class animation : public animation_base {
 
   size_t sound_to_play;
   int crop_column;
+  animation_effect patient_effect;
 };
 
 class sprite_render_list : public animation_base {

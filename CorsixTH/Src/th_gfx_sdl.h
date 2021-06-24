@@ -22,6 +22,7 @@ SOFTWARE.
 
 #ifndef CORSIX_TH_TH_GFX_SDL_H_
 #define CORSIX_TH_TH_GFX_SDL_H_
+
 #include "config.h"
 
 #include <SDL.h>
@@ -30,6 +31,7 @@ SOFTWARE.
 
 #include "persist_lua.h"
 #include "th.h"
+#include "th_gfx_common.h"
 
 class cursor;
 
@@ -527,7 +529,8 @@ class sprite_sheet {
       @param iFlags Flags to apply for drawing.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
-                   uint32_t iFlags);
+                   uint32_t iFlags, size_t game_ticks = 0u,
+                   animation_effect effect = animation_effect::none);
 
   //! Test whether a sprite was hit.
   /*!

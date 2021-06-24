@@ -83,6 +83,7 @@ end
 function Patient:setDisease(disease)
   self.disease = disease
   disease.initPatient(self)
+  self.th:setPatientEffect(disease.effect or AnimationEffect.None)
   self.diagnosed = false
   self.diagnosis_progress = 0
   self.cure_rooms_visited = 0
@@ -268,6 +269,9 @@ function Patient:treatDisease()
   local hospital = self.hospital
 
   hospital:receiveMoneyForTreatment(self)
+
+  -- Remove visual effects of disease.
+  self.th:setPatientEffect(AnimationEffect.None)
 
   -- Either the patient is no longer sick, or he/she dies.
   if self:isTreatmentEffective() then
@@ -1093,6 +1097,15 @@ function Patient:afterLoad(old, new)
       end
     else
       self.going_to_toilet = "no"
+    end
+  end
+  if old < 158 then
+    -- Always overwrite patient effect from old saves since it is
+    -- loaded from a dummy field which used to have another meaning.
+    if self.disease and not self.cured then
+      self.th:setPatientEffect(self.disease.effect or AnimationEffect.None)
+    else
+      self.th:setPatientEffect(AnimationEffect.None)
     end
   end
   Humanoid.afterLoad(self, old, new)

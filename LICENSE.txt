@@ -37,7 +37,7 @@ Copyright (C) 2011 Alexey Pinyagin
 Copyright (C) 2011-2019 Giordano "Viandante" Celeghin
 Copyright (C) 2012-2021 Stephen "TheCycoONE" Baker
 Copyright (C) 2012 Alex Ghiran
-Copyright (C) 2012-2013 Luis "Driver" Duarte
+Copyright (C) 2012-2013,2021 Luis "driverpt" Duarte
 Copyright (C) 2012-2013 Ryan Hugh Dean
 Copyright (C) 2012-2020 Henrique Poyatos
 Copyright (C) 2012 lwglwsss

@@ -182,6 +182,12 @@ int l_anims_set_marker(lua_State* L) {
   return 1;
 }
 
+int l_anims_tick(lua_State* L) {
+  animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
+  pAnims->tick();
+  return 0;
+}
+
 int l_anims_set_secondary_marker(lua_State* L) {
   animation_manager* pAnims = luaT_testuserdata<animation_manager>(L);
   lua_pushboolean(
@@ -591,6 +597,15 @@ int l_anim_draw(lua_State* L) {
   return 1;
 }
 
+int l_anim_set_patient_effect(lua_State* L) {
+  animation* pAnimation = luaT_testuserdata<animation>(L);
+  animation_effect flags =
+      static_cast<animation_effect>(luaL_checkinteger(L, 2));
+  pAnimation->set_patient_effect(flags);
+  lua_settop(L, 1);
+  return 1;
+}
+
 int l_srl_set_sheet(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   sprite_sheet* pSheet = luaT_testuserdata<sprite_sheet>(L, 2);
@@ -642,6 +657,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anims_set_secondary_marker, "setFrameSecondaryMarker");
     lcb.add_function(l_anims_draw, "draw", lua_metatable::surface,
                      lua_metatable::layers);
+    lcb.add_function(l_anims_tick, "tick");
     lcb.add_constant("Alt32_GreyScale", thdf_alt32_grey_scale);
     lcb.add_constant("Alt32_BlueRedSwap", thdf_alt32_blue_red_swap);
   }
@@ -701,6 +717,7 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_anim_tick<animation>, "tick");
     lcb.add_function(l_anim_draw<animation>, "draw", lua_metatable::surface);
     lcb.add_function(l_anim_set_drawable_layer, "setDrawingLayer");
+    lcb.add_function(l_anim_set_patient_effect, "setPatientEffect");
   }
 
   // Duplicate AnimMetatable[1,2] to SpriteListMetatable[1,2]

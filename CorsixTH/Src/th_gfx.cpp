@@ -149,6 +149,7 @@ animation_manager::animation_manager() {
   frame_count = 0;
   element_list_count = 0;
   element_count = 0;
+  game_ticks = 0;
 }
 
 animation_manager::~animation_manager() {
@@ -825,6 +826,8 @@ bool animation_manager::get_frame_secondary_marker(size_t iFrame, int* pX,
   return true;
 }
 
+void animation_manager::tick() { ++game_ticks; }
+
 bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
                                  int iY, uint32_t iFlags, int iTestX,
                                  int iTestY) const {
@@ -896,7 +899,8 @@ bool animation_manager::hit_test(size_t iFrame, const ::layers& oLayers, int iX,
 
 void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
                                    const ::layers& oLayers, int iX, int iY,
-                                   uint32_t iFlags) const {
+                                   uint32_t iFlags,
+                                   animation_effect patient_effect) const {
   if (iFrame >= frame_count) {
     return;
   }
@@ -931,6 +935,13 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
       }
     }
 
+    // Only apply patient animation effect to patient sprites. Layer 0, 0
+    // represents non-patient sprites such as doors, benches, etc.
+    // TODO: Some animations such as leaving radiation chamber have part of
+    // patient in layer 0, 0, so this condition is not quite correct.
+    animation_effect render_effect =
+        (oElement.layer > 0 || oElement.layer_id > 0) ? patient_effect
+                                                      : animation_effect::none;
     if (iFlags & thdf_flip_horizontal) {
       int iWidth;
       int iHeight;
@@ -939,11 +950,12 @@ void animation_manager::draw_frame(render_target* pCanvas, size_t iFrame,
 
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX - oElement.x - iWidth, iY + oElement.y,
-          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal));
+          iPassOnFlags | (oElement.flags ^ thdf_flip_horizontal), game_ticks,
+          render_effect);
     } else {
       oElement.element_sprite_sheet->draw_sprite(
           pCanvas, oElement.sprite, iX + oElement.x, iY + oElement.y,
-          iPassOnFlags | oElement.flags);
+          iPassOnFlags | oElement.flags, game_ticks, render_effect);
     }
   }
 }
@@ -1146,10 +1158,12 @@ void animation::draw(render_target* pCanvas, int iDestX, int iDestY) {
       rcNew.w = 64;
       clip_rect_intersection(rcNew, rcOld);
       pCanvas->set_clip_rect(&rcNew);
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->patient_effect);
       pCanvas->set_clip_rect(&rcOld);
     } else
-      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags);
+      manager->draw_frame(pCanvas, frame_index, layers, iDestX, iDestY, flags,
+                          this->patient_effect);
   }
 }
 
@@ -1317,6 +1331,7 @@ animation::animation()
   draw_fn = THAnimation_draw;
   hit_test_fn = THAnimation_hit_test;
   is_multiple_frame_animation_fn = THAnimation_is_multiple_frame_animation;
+  patient_effect = animation_effect::none;
 }
 
 void animation::persist(lua_persist_writer* pWriter) const {
@@ -1360,8 +1375,7 @@ void animation::persist(lua_persist_writer* pWriter) const {
   // Not a uint, for compatibility
   pWriter->write_int((int)sound_to_play);
 
-  // For compatibility
-  pWriter->write_int(0);
+  pWriter->write_int(static_cast<int>(patient_effect));
 
   if (flags & thdf_crop) {
     pWriter->write_int(crop_column);
@@ -1437,6 +1451,7 @@ void animation::depersist(lua_persist_reader* pReader) {
     if (!pReader->read_int(iDummy)) break;
     if (iDummy >= 0) sound_to_play = (unsigned int)iDummy;
     if (!pReader->read_int(iDummy)) break;
+    patient_effect = static_cast<animation_effect>(iDummy);
     if (flags & thdf_crop) {
       if (!pReader->read_int(crop_column)) {
         break;
@@ -1484,6 +1499,10 @@ void animation::depersist(lua_persist_reader* pReader) {
   } while (false);
 
   pReader->set_error("Cannot depersist animation instance");
+}
+
+void animation::set_patient_effect(animation_effect patient_effect) {
+  this->patient_effect = patient_effect;
 }
 
 void animation::tick() {

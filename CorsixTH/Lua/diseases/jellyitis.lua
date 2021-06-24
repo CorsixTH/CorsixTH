@@ -30,6 +30,7 @@ disease.cure_price = 1000
 disease.emergency_sound = "emerg014.wav"
 disease.emergency_number = 12
 disease.contagious = false
+disease.effect = AnimationEffect.Jelly
 disease.initPatient = function(patient)
   if math.random(0, 1) == 0 then
     patient:setType("Standard Male Patient")

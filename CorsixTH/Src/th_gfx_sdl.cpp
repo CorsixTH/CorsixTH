@@ -26,6 +26,7 @@ SOFTWARE.
 #ifdef CORSIX_TH_USE_FREETYPE2
 #include "th_gfx_font.h"
 #endif
+
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
@@ -44,6 +45,8 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
 }
 
 namespace {
+
+const double pi = 3.14159265358979323846;
 
 //! Convert a colour to an equivalent grey scale level.
 /*!
@@ -200,6 +203,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
             iColour = makeGreyScale(iOpacity, pImg[0], pImg[1], pImg[2]);
           else
             iColour = palette::pack_argb(iOpacity, pImg[0], pImg[1], pImg[2]);
+
           push_pixel(iColour);
           pImg += 3;
           iLength--;
@@ -210,6 +214,7 @@ void full_colour_renderer::decode_image(const uint8_t* pImg,
       case 2:  // Fixed fully transparent pixels
       {
         static const uint32_t iTransparent = palette::pack_argb(0, 0, 0, 0);
+
         while (iLength > 0) {
           push_pixel(iTransparent);
           iLength--;
@@ -1066,7 +1071,8 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags) {
+                               int iY, uint32_t iFlags, size_t game_ticks,
+                               animation_effect effect) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
   sprite& sprite = sprites[iSprite];
@@ -1090,10 +1096,30 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
+  if (effect == animation_effect::glowing) {
+    // We want this to vary between 155 -> 205 -> 255.
+    // Use the target cycle length (15 cycles) to calculate the angle from 0 to
+    // 2*pi.
+    int currentVariation = static_cast<int>(
+        sin(static_cast<double>(game_ticks % 15) / 15.0 * 2 * pi) * 50);
+    int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
   SDL_Rect rcSrc = {0, 0, sprite.width, sprite.height};
   SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
 
   pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
+
+  if (effect == animation_effect::glowing) {
+    // Reset back to original values
+    int err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
 }
 
 void sprite_sheet::wx_draw_sprite(size_t iSprite, uint8_t* pRGBData,
