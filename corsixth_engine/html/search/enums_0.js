@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['draw_5fflags_1419',['draw_flags',['../th__gfx_8h.html#a43e9cb66d61948afed4b803a77a88bac',1,'th_gfx.h']]]
+  ['animation_5feffect_1428',['animation_effect',['../th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870',1,'th_gfx_common.h']]]
 ];

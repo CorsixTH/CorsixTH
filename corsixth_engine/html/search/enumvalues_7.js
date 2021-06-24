@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['inflator_1484',['inflator',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abadfcc9fda6fe6dcec5b475068872fec9c',1,'th_map.h']]],
-  ['iso_5ffs_1485',['iso_fs',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a69ee82389230df0b417022523e293bf7',1,'th_lua_internal.h']]]
+  ['hair_5frestorer_1491',['hair_restorer',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abab3c2a6995713d91d58329324b94f9853',1,'th_map.h']]],
+  ['helicopter_1492',['helicopter',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abae29e13ac702a77bcd28a4463a211eba4',1,'th_map.h']]],
+  ['hell_1493',['hell',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba4229d691b07b13341da53f17ab9f2416',1,'th_map.h']]],
+  ['hospital_5fmask_1494',['hospital_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa1e848c8cd790c478b6bf92ac946494bf',1,'map_tile_flags']]]
 ];

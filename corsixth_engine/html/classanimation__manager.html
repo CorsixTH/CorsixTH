@@ -108,9 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a4f6ef0a21fa85e36cff6af1e172eab27">set_animation_alt_palette_map</a> (size_t iAnimation, const uint8_t *pMap, uint32_t iAlt32)</td></tr>
 <tr class="memdesc:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the palette remap data for an animation.  <a href="classanimation__manager.html#a4f6ef0a21fa85e36cff6af1e172eab27">More...</a><br /></td></tr>
 <tr class="separator:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acb1ad2ff4f04ea30ebc60af78810dfff"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#acb1ad2ff4f04ea30ebc60af78810dfff">draw_frame</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int iX, int iY, uint32_t iFlags) const</td></tr>
-<tr class="memdesc:acb1ad2ff4f04ea30ebc60af78810dfff"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an animation frame.  <a href="classanimation__manager.html#acb1ad2ff4f04ea30ebc60af78810dfff">More...</a><br /></td></tr>
-<tr class="separator:acb1ad2ff4f04ea30ebc60af78810dfff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2a874e571a0a562f605b67a151c4f49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#ad2a874e571a0a562f605b67a151c4f49">draw_frame</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int iX, int iY, uint32_t iFlags, <a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a> effect=<a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a>) const</td></tr>
+<tr class="memdesc:ad2a874e571a0a562f605b67a151c4f49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an animation frame.  <a href="classanimation__manager.html#ad2a874e571a0a562f605b67a151c4f49">More...</a><br /></td></tr>
+<tr class="separator:ad2a874e571a0a562f605b67a151c4f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d2c9ac9a24f76228fa8acd37c44c13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a55d2c9ac9a24f76228fa8acd37c44c13">get_frame_extent</a> (size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int *pMinX, int *pMaxX, int *pMinY, int *pMaxY, uint32_t iFlags) const</td></tr>
 <tr class="separator:a55d2c9ac9a24f76228fa8acd37c44c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16f8e572a2b0e6ec8472f09707b83262"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a16f8e572a2b0e6ec8472f09707b83262">get_frame_sound</a> (size_t iFrame)</td></tr>
@@ -128,6 +128,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4725611ff3343d350f8cc8ec60307d97"><td class="memItemLeft" align="right" valign="top">const <a class="el" href="structanimation__start__frames.html">animation_start_frames</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a4725611ff3343d350f8cc8ec60307d97">get_named_animations</a> (const std::string &amp;sName, int iTilesize) const</td></tr>
 <tr class="memdesc:a4725611ff3343d350f8cc8ec60307d97"><td class="mdescLeft">&#160;</td><td class="mdescRight">Retrieve a custom animation by name and tile size.  <a href="classanimation__manager.html#a4725611ff3343d350f8cc8ec60307d97">More...</a><br /></td></tr>
 <tr class="separator:a4725611ff3343d350f8cc8ec60307d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8abe0e00f7fa5d61b757d4dd77e57123"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a8abe0e00f7fa5d61b757d4dd77e57123">tick</a> ()</td></tr>
+<tr class="memdesc:a8abe0e00f7fa5d61b757d4dd77e57123"><td class="mdescLeft">&#160;</td><td class="mdescRight">Notified every world tick to allow tracking rate of game time passage.  <a href="classanimation__manager.html#a8abe0e00f7fa5d61b757d4dd77e57123">More...</a><br /></td></tr>
+<tr class="separator:a8abe0e00f7fa5d61b757d4dd77e57123"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Theme Hospital sprite animation manager. </p>
@@ -168,8 +171,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="acb1ad2ff4f04ea30ebc60af78810dfff"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acb1ad2ff4f04ea30ebc60af78810dfff">&#9670;&nbsp;</a></span>draw_frame()</h2>
+<a id="ad2a874e571a0a562f605b67a151c4f49"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2a874e571a0a562f605b67a151c4f49">&#9670;&nbsp;</a></span>draw_frame()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -208,7 +211,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>iFlags</em>&#160;</td>
+          <td class="paramname"><em>iFlags</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a>&#160;</td>
+          <td class="paramname"><em>effect</em> = <code><a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -227,6 +236,7 @@ Public Member Functions</h2></td></tr>
     <tr><td class="paramname">iX</td><td>The screen position to use as the animation X origin. </td></tr>
     <tr><td class="paramname">iY</td><td>The screen position to use as the animation Y origin. </td></tr>
     <tr><td class="paramname">iFlags</td><td>Zero or more THDrawFlags flags. </td></tr>
+    <tr><td class="paramname">effect</td><td>The animation effect to apply. </td></tr>
   </table>
   </dd>
 </dl>
@@ -816,6 +826,25 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8abe0e00f7fa5d61b757d4dd77e57123"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8abe0e00f7fa5d61b757d4dd77e57123">&#9670;&nbsp;</a></span>tick()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void animation_manager::tick </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Notified every world tick to allow tracking rate of game time passage. </p>
 
 </div>
 </div>

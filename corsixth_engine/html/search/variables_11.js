@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['visit_5ffunction_5findex_1403',['visit_function_index',['../classobject__visitor.html#a9338ef156278fec60aca97a99e2816e4',1,'object_visitor']]],
-  ['visited_1404',['visited',['../structpath__node.html#a98e6300a8e9e8a4d734f670b615704c2',1,'path_node']]]
+  ['usertick_5fperiod_5fms_1411',['usertick_period_ms',['../lua__sdl_8h.html#acf2538f1124018e5528e6974d413d951',1,'lua_sdl.h']]]
 ];

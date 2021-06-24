@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['radiation_5fshield_1513',['radiation_shield',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82abace9699f8fb88eb2d93485bc6207479fb',1,'th_map.h']]],
-  ['radiator_1514',['radiator',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba2b28935047a458d930b0b936f7766ed5',1,'th_map.h']]],
-  ['rathole_1515',['rathole',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba029e58cc0c8d673afb058daaf3486a0d',1,'th_map.h']]],
-  ['reception_5fdesk_1516',['reception_desk',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba372e4b1cc85e1e8ede197732ab22278b',1,'th_map.h']]],
-  ['red_1517',['red',['../th__map_8h.html#a19d4dd8be9950be8b2bb1d2e62ab269cabda9643ac6601722a28f238714274da4',1,'th_map.h']]],
-  ['right_1518',['right',['../th__gfx__font_8h.html#a414e32cd1b4e18d9fdad6ef657794871a7c4f29407893c334a6cb7a87bf045c0d',1,'th_gfx_font.h']]],
-  ['room_5fmask_1519',['room_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa677e20625cb04d1cb0babb96f14754c0',1,'map_tile_flags']]]
+  ['palette_1517',['palette',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a5ca5a8d02077b7f6a0da48bda450f755',1,'th_lua_internal.h']]],
+  ['passable_5fif_5fnot_5ffor_5fblueprint_5fmask_1518',['passable_if_not_for_blueprint_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fa888d978f1a5eb0881f450568343957a5',1,'map_tile_flags']]],
+  ['passable_5fmask_1519',['passable_mask',['../structmap__tile__flags.html#a37d390c893d636fe62bc1e22bb13782fadbef0b71c6330b9f3ef96cfaf1b4a385',1,'map_tile_flags']]],
+  ['pathfinder_1520',['pathfinder',['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4ad2f92a85cc02426fd3fc6cc8d9342936',1,'th_lua_internal.h']]],
+  ['pharmacy_1521',['pharmacy',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82ababf4e28785ab0560951dd0766f8059c4a',1,'th_map.h']]],
+  ['plant_1522',['plant',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba9ea0a36b3a20901fafe834eb519a595c',1,'th_map.h']]],
+  ['pool_5ftable_1523',['pool_table',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba9640c9711128d3a52214d5c9aed3c23b',1,'th_map.h']]],
+  ['projector_1524',['projector',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba6d361b76b20af1a3ebbf75a00b501766',1,'th_map.h']]]
 ];
