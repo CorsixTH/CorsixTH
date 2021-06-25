@@ -70,7 +70,7 @@ function UICheats:UICheats(ui)
   self.modal_class = "cheats"
   self.esc_closes = true
   self.resizable = false
-  self:setDefaultPosition(0.2, 0.4)
+  --self:setDefaultPosition(0.2, 0.4)
 
   local y = 10
   self:addBevelPanel(20, y, 260, 20, col_caption):setLabel(_S.cheats_window.caption)
@@ -106,6 +106,8 @@ function UICheats:UICheats(ui)
 
   y = y + 60
   self:setSize(300, y)
+  -- Position should be set after all panels/buttons are made
+  self:setDefaultPosition(0.2, 0.4)
   self:updateCheatedStatus()
 end
 
