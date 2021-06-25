@@ -47,13 +47,13 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
 
 namespace {
 
-const double pi = 3.14159265358979323846;
+constexpr double pi = 3.14159265358979323846;
 
 //! The number of game ticks between jelly the jelly effect activating.
-const int jelly_effect_period = 540;
+constexpr int jelly_effect_period = 540;
 
 //! The number of game ticks the jelly effect is active for when it runs.
-const int jelly_effect_duration = 90;
+constexpr int jelly_effect_duration = 90;
 
 //! Convert a colour to an equivalent grey scale level.
 /*!
