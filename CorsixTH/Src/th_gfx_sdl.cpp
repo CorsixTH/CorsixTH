@@ -50,10 +50,10 @@ namespace {
 const double pi = 3.14159265358979323846;
 
 //! The number of game ticks between jelly the jelly effect activating.
-const int jelly_effect_period = 360;
+const int jelly_effect_period = 540;
 
 //! The number of game ticks the jelly effect is active for when it runs.
-const int jelly_effect_duration = 60;
+const int jelly_effect_duration = 90;
 
 //! Convert a colour to an equivalent grey scale level.
 /*!
