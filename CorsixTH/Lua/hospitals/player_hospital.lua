@@ -409,14 +409,18 @@ function PlayerHospital:advisePriceLevelImpact(judgment, name)
   self.world.ui.adviser:say(message)
 end
 
---! Show advice if it is the first time the player has experienced
---! a staff member requesting a raise.
---! Only show the help if the player is playing the campaign.
-function PlayerHospital:adviseRaiseRequest()
+--! Makes the raise request for a staff member
+--!param amount (num) the requested raise increase
+--!param staff (table) the staff member
+function PlayerHospital:makeRaiseRequest(amount, staff)
+  -- Show advice if it is the first time the player has experienced
+  -- a staff member requesting a raise.
+  -- Only show the help if the player is playing the campaign.
   if self.has_seen_pay_rise and tonumber(self.world.map.level_number) then
     self.world.ui.adviser:say(_A.information.pay_rise)
     self.has_seen_pay_rise = true
   end
+  self.world.ui.bottom_panel:queueMessage("strike", amount, staff)
 end
 
 function PlayerHospital:afterLoad(old, new)

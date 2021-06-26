@@ -557,10 +557,9 @@ function Staff:requestRaise()
       return -- too timid
     end
     -- The staff member can now successfully ask for a raise
-    self.hospital:adviseRaiseRequest()
+    self.hospital:makeRaiseRequest(amount, self)
     self.quitting_in = 25*30 -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
-    self.world.ui.bottom_panel:queueMessage("strike", amount, self)
   end
 end
 
