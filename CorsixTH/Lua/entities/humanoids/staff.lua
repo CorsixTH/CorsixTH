@@ -547,6 +547,7 @@ end
 
 -- Makes the staff member request a raise of 10%, or a wage exactly in the middle of their current and a fair one, whichever is more.
 function Staff:requestRaise()
+  assert(self.hospital, "A staff member asked for a pay rise who doesn't belong to a hospital!")
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
     local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
@@ -555,13 +556,8 @@ function Staff:requestRaise()
       self.timer_until_raise = nil
       return -- too timid
     end
-  -- They fought their timidness, time to put the raise in motion!
-  -- Is this the first time a member of staff is requesting a raise?
-  -- Only show the help if the player is playing the campaign though
-  if self.hospital and not self.hospital.has_seen_pay_rise and tonumber(self.world.map.level_number) then
-    self.world.ui.adviser:say(_A.information.pay_rise)
-    self.hospital.has_seen_pay_rise = true
-  end
+    -- The staff member can now successfully ask for a raise
+    self.hospital:adviseRaiseRequest()
     self.quitting_in = 25*30 -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
     self.world.ui.bottom_panel:queueMessage("strike", amount, self)
