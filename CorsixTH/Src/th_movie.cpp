@@ -24,6 +24,8 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <libavutil/channel_layout.h>
+
 #include "lua_sdl.h"
 #if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
 
@@ -425,10 +427,33 @@ void movie_player::play(int iChannel) {
 
   if (audio_stream_index >= 0) {
     Mix_QuerySpec(&mixer_frequency, nullptr, &mixer_channels);
+    std::int64_t target_channel_layout;
+    switch (mixer_channels) {
+      case 1:
+        target_channel_layout = AV_CH_LAYOUT_MONO;
+        break;
+      case 2:
+        target_channel_layout = AV_CH_LAYOUT_STEREO;
+        break;
+      case 4:
+        target_channel_layout = AV_CH_LAYOUT_QUAD;
+        break;
+      case 6:
+        target_channel_layout = AV_CH_LAYOUT_5POINT1;
+        break;
+      case 8:
+        target_channel_layout = AV_CH_LAYOUT_7POINT1;
+        break;
+      default:
+        std::cerr << "WARN: unsupported channel layout " << mixer_channels
+                  << ". Please report issue.";
+        target_channel_layout = av_get_default_channel_layout(mixer_channels);
+    }
+
     audio_resample_context = swr_alloc_set_opts(
         audio_resample_context,
-        mixer_channels == 1 ? AV_CH_LAYOUT_MONO : AV_CH_LAYOUT_STEREO,
-        AV_SAMPLE_FMT_S16, mixer_frequency,
+        static_cast<std::int64_t>(target_channel_layout), AV_SAMPLE_FMT_S16,
+        mixer_frequency,
         static_cast<std::int64_t>(audio_codec_context->channel_layout),
         audio_codec_context->sample_fmt, audio_codec_context->sample_rate, 0,
         nullptr);
