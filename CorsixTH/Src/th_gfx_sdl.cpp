@@ -30,6 +30,7 @@ SOFTWARE.
 #include <algorithm>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <limits>
@@ -46,7 +47,13 @@ full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
 
 namespace {
 
-const double pi = 3.14159265358979323846;
+constexpr double pi = 3.14159265358979323846;
+
+//! The number of game ticks between jelly the jelly effect activating.
+constexpr int jelly_effect_period = 540;
+
+//! The number of game ticks the jelly effect is active for when it runs.
+constexpr int jelly_effect_duration = 90;
 
 //! Convert a colour to an equivalent grey scale level.
 /*!
@@ -1071,7 +1078,7 @@ bool sprite_sheet::get_sprite_average_colour(size_t iSprite,
 }
 
 void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
-                               int iY, uint32_t iFlags, size_t game_ticks,
+                               int iY, uint32_t iFlags, size_t effect_ticks,
                                animation_effect effect) {
   if (iSprite >= sprite_count || pCanvas == nullptr || pCanvas != target)
     return;
@@ -1101,14 +1108,16 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // Use the target cycle length (15 cycles) to calculate the angle from 0 to
     // 2*pi.
     int currentVariation = static_cast<int>(
-        sin(static_cast<double>(game_ticks % 15) / 15.0 * 2 * pi) * 50);
+        sin(static_cast<double>(effect_ticks % 15) / 15.0 * 2 * pi) * 50);
     int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
     if (err < 0) {
       throw std::runtime_error(SDL_GetError());
     }
   }
 
-  if (effect == animation_effect::jelly) {
+  if (effect == animation_effect::jelly &&
+      effect_ticks % jelly_effect_period < jelly_effect_duration) {
+    int jelly_tick = static_cast<int>(effect_ticks % jelly_effect_period);
     // Draw the sprite a few lines at a time following a sine wave x offset.
     // To cut down on the number of draw calls, we will draw all of the lines
     // that have the same x offset in a single draw call. This results in about
@@ -1117,15 +1126,18 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     // screen scale and could optimize this further when zooming out.
     int y1 = 0;
     int x_offset = 0;
+    // Scale the effect up as it ramps in and down as it finishes.
+    int scale =
+        std::min(jelly_tick, std::min(jelly_effect_duration - jelly_tick, 2));
     for (int y2 = 0; y2 <= sprite.height; y2++) {
       // TODO: Ideally this should use the offset of the current line from
       // the map location so that multiple layers have the same jelly offset
       // at the same vertical line. We can't just use iY because it varies as
       // the user scrolls or zooms or the character walks.
       int offset = static_cast<int>(
-          sin((y2 / 14.0 + static_cast<double>(game_ticks % 30) / 30) * 2 *
+          sin((y2 / 16.0 + static_cast<double>(effect_ticks % 50) / 50) * 2 *
               pi) *
-          2);
+          scale);
       if (x_offset != offset || y2 == sprite.height) {
         if (y2 > y1) {
           // If the current offset rounds to a different value, render the

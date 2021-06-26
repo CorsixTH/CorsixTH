@@ -342,7 +342,8 @@ class animation_manager {
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,
-                  animation_effect effect = animation_effect::none) const;
+                  animation_effect patient_effect = animation_effect::none,
+                  size_t patient_effect_offset = 0) const;
 
   void get_frame_extent(size_t iFrame, const ::layers& oLayers, int* pMinX,
                         int* pMaxX, int* pMinY, int* pMaxY,
@@ -605,6 +606,9 @@ class animation : public animation_base {
   size_t sound_to_play;
   int crop_column;
   animation_effect patient_effect;
+  //! Number of game_ticks to offset animation by so they aren't all
+  //! running in sync.
+  size_t patient_effect_offset;
 };
 
 class sprite_render_list : public animation_base {
