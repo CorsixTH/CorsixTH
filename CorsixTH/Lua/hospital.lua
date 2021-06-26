@@ -2442,6 +2442,6 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
-function:Hospital:makeRaiseRequest()
+function Hospital:makeRaiseRequest()
   -- Nothing to do, override in a derived class.
 end
