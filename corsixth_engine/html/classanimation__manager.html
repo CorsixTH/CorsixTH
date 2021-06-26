@@ -108,9 +108,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a4f6ef0a21fa85e36cff6af1e172eab27">set_animation_alt_palette_map</a> (size_t iAnimation, const uint8_t *pMap, uint32_t iAlt32)</td></tr>
 <tr class="memdesc:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the palette remap data for an animation.  <a href="classanimation__manager.html#a4f6ef0a21fa85e36cff6af1e172eab27">More...</a><br /></td></tr>
 <tr class="separator:a4f6ef0a21fa85e36cff6af1e172eab27"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad2a874e571a0a562f605b67a151c4f49"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#ad2a874e571a0a562f605b67a151c4f49">draw_frame</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int iX, int iY, uint32_t iFlags, <a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a> effect=<a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a>) const</td></tr>
-<tr class="memdesc:ad2a874e571a0a562f605b67a151c4f49"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an animation frame.  <a href="classanimation__manager.html#ad2a874e571a0a562f605b67a151c4f49">More...</a><br /></td></tr>
-<tr class="separator:ad2a874e571a0a562f605b67a151c4f49"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8030310eeb3a3ff13696c07285e9b541"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a8030310eeb3a3ff13696c07285e9b541">draw_frame</a> (<a class="el" href="classrender__target.html">render_target</a> *pCanvas, size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int iX, int iY, uint32_t iFlags, <a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a> patient_effect=<a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a>, size_t patient_effect_offset=0) const</td></tr>
+<tr class="memdesc:a8030310eeb3a3ff13696c07285e9b541"><td class="mdescLeft">&#160;</td><td class="mdescRight">Draw an animation frame.  <a href="classanimation__manager.html#a8030310eeb3a3ff13696c07285e9b541">More...</a><br /></td></tr>
+<tr class="separator:a8030310eeb3a3ff13696c07285e9b541"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a55d2c9ac9a24f76228fa8acd37c44c13"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a55d2c9ac9a24f76228fa8acd37c44c13">get_frame_extent</a> (size_t iFrame, const ::<a class="el" href="structlayers.html">layers</a> &amp;oLayers, int *pMinX, int *pMaxX, int *pMinY, int *pMaxY, uint32_t iFlags) const</td></tr>
 <tr class="separator:a55d2c9ac9a24f76228fa8acd37c44c13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a16f8e572a2b0e6ec8472f09707b83262"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classanimation__manager.html#a16f8e572a2b0e6ec8472f09707b83262">get_frame_sound</a> (size_t iFrame)</td></tr>
@@ -171,8 +171,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad2a874e571a0a562f605b67a151c4f49"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad2a874e571a0a562f605b67a151c4f49">&#9670;&nbsp;</a></span>draw_frame()</h2>
+<a id="a8030310eeb3a3ff13696c07285e9b541"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8030310eeb3a3ff13696c07285e9b541">&#9670;&nbsp;</a></span>draw_frame()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -217,7 +217,13 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype"><a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870">animation_effect</a>&#160;</td>
-          <td class="paramname"><em>effect</em> = <code><a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a></code>&#160;</td>
+          <td class="paramname"><em>patient_effect</em> = <code><a class="el" href="th__gfx__common_8h.html#a8e846920e67994e9d8e8906098446870a334c4a4c42fdb79d7ebc3e73b517e6f8">animation_effect::none</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>patient_effect_offset</em> = <code>0</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
