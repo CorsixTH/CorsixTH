@@ -166,18 +166,7 @@ function App:init()
   SDL.wm.setIconWin32()
 
   self:setCaptureMouse()
-
-  local caption_descs = {self.video:getRendererDetails()}
-  if compile_opts.jit then
-    caption_descs[#caption_descs + 1] = compile_opts.jit
-  else
-    caption_descs[#caption_descs + 1] = _VERSION
-  end
-  if compile_opts.arch_64 then
-    caption_descs[#caption_descs + 1] = "64 bit"
-  end
-  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
-  self.video:setCaption(self.caption)
+  self.caption = "CorsixTH"
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
@@ -1748,6 +1737,21 @@ end
 
 function App:isAudioEnabled()
   return TH.GetCompileOptions().audio
+end
+
+function App:getSystemInfo()
+  local compile_opts = TH.GetCompileOptions()
+  local comp_details = {}
+  for key, value in pairs(compile_opts) do
+    table.insert(comp_details, key .. ": " .. tostring(value))
+  end
+  table.sort(comp_details)
+  local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
+      table.concat(comp_details, ", "), self.video:getRendererDetails())
+  local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
+      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      self:getVersion(), tostring(SAVEGAME_VERSION))
+  return(compiled .. running)
 end
 
 -- Do not remove, for savegame compatibility < r1891
