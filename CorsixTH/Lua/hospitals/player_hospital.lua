@@ -438,7 +438,7 @@ function PlayerHospital:makeRaiseRequest(amount, staff)
   -- Show advice if it is the first time the player has experienced
   -- a staff member requesting a raise.
   -- Only show the help if the player is playing the campaign.
-  if self.has_seen_pay_rise and tonumber(self.world.map.level_number) then
+  if not self.has_seen_pay_rise and tonumber(self.world.map.level_number) then
     self.world.ui.adviser:say(_A.information.pay_rise)
     self.has_seen_pay_rise = true
   end
