@@ -817,8 +817,7 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
 void render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
                                                int iHeight) {
   // We only need an intermediate drawing if there is active scaling.
-  if (global_scale_factor == 1.0)
-    return;
+  if (global_scale_factor == 1.0) return;
   intermediate_texture_location = {iX, iY, iWidth, iHeight};
   init_buffer(&intermediate_texture, iWidth, iHeight);
 }
