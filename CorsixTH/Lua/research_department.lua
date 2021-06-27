@@ -548,25 +548,10 @@ end
 !param disease The disease to discover, a table from world.available_diseases
 --]]
 function ResearchDepartment:discoverDisease(disease)
-  -- Generate a message about the discovery
-  local message = {
-    {text = _S.fax.disease_discovered.discovered_name:format(disease.name)},
-    {text = disease.cause, offset = 12},
-    {text = disease.symptoms, offset = 12},
-    {text = disease.cure, offset = 12},
-    choices = {
-      {text = _S.fax.disease_discovered.close_text, choice = "close"},
-    },
-  }
-  self.world.ui.bottom_panel:queueMessage("disease", message, nil, 25*24, 1)
   self.hospital.disease_casebook[disease.id].discovered = true
   local index = #self.hospital.discovered_diseases + 1
   self.hospital.discovered_diseases[index] = disease.id
-  -- If the drug casebook is open, update it.
-  local window = self.world.ui:getWindow(UICasebook)
-  if window then
-    window:updateDiseaseList()
-  end
+  self.hospital:adviseDiscoverDisease(disease)
 
   -- It may now be possible to continue researching drug improvements
   local casebook_disease = self.hospital.disease_casebook[disease.id]

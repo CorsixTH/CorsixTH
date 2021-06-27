@@ -2441,3 +2441,7 @@ function Hospital:getRandomBusyRoom()
   local chosen_room = long_queue_rooms[math.random(1, #long_queue_rooms)]
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
+
+function Hospital:adviseDiscoverDisease()
+  -- Nothing to do, override in a derived class.
+end
