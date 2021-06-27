@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
---! Customise window used in the main menu and ingame.
+--! Custom key bindings
 class "UIHotkeyAssign" (UIResizable)
 
 ---@type UIHotkeyAssign
@@ -59,130 +59,21 @@ local hotkeys_backedUp = false
 local hotkey_buttons = {}
 
 local key_hierarchy = {
-  "ctrl",
-  "alt",
-  "shift",
-  "gui",
-  "menu",
-  "return",
-  "enter",
-  "escape",
-  "backspace",
-  "tab",
-  "space",
-  "!",
-  "\"",
-  "#",
-  "%",
-  "$",
-  "&",
-  "\'",
-  "(",
-  ")",
-  "*",
-  "+",
-  ",",
-  "-",
-  ".",
-  "/",
-  "0",
-  "1",
-  "2",
-  "3",
-  "4",
-  "5",
-  "6",
-  "7",
-  "8",
-  "9",
-  ":",
-  ";",
-  "<",
-  "=",
-  ">",
-  "?",
-  "@",
-  "[",
-  "\\",
-  "]",
-  "^",
-  "_",
-  "`",
-  "a",
-  "b",
-  "c",
-  "d",
-  "e",
-  "f",
-  "g",
-  "h",
-  "i",
-  "j",
-  "k",
-  "l",
-  "m",
-  "n",
-  "o",
-  "p",
-  "q",
-  "r",
-  "s",
-  "t",
-  "u",
-  "v",
-  "w",
-  "x",
-  "y",
-  "z",
+  "ctrl", "alt", "shift",
+  "gui", "menu", "return", "enter", "escape", "backspace", "tab", "space",
+  "!", "\"", "#", "%", "$", "&", "\'", "(", ")", "*", "+", ",", "-", ".", "/",
+  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
+  ":", ";", "<", "=", ">", "?", "@", "[", "\\", "]", "^", "_", "`",
+  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
+  "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z",
   "capslock",
-  "f1",
-  "f2",
-  "f3",
-  "f4",
-  "f5",
-  "f6",
-  "f7",
-  "f8",
-  "f9",
-  "f10",
-  "f11",
-  "f12",
-  "printscreen",
-  "scrolllock",
-  "pause",
-  "insert",
-  "home",
-  "pageup",
-  "delete",
-  "end",
-  "pagedown",
-  "right",
-  "left",
-  "down",
-  "up",
-  "numlock",
-  "f13",
-  "f14",
-  "f15",
-  "f16",
-  "f17",
-  "f18",
-  "f19",
-  "f20",
-  "f21",
-  "f22",
-  "f23",
+  "f1", "f2", "f3", "f4", "f5", "f6", "f7", "f8", "f9", "f10", "f11", "f12",
+  "printscreen", "scrolllock", "pause", "insert", "home", "pageup", "delete",
+  "end", "pagedown", "right", "left", "down", "up", "numlock",
+  "f13", "f14", "f15", "f16", "f17", "f18", "f19", "f20", "f21", "f22", "f23",
   "f24",
-  "keypad 0",
-  "keypad 1",
-  "keypad 2",
-  "keypad 3",
-  "keypad 4",
-  "keypad 6",
-  "keypad 7",
-  "keypad 8",
-  "keypad 9",
-  "keypad .",
+  "keypad 0", "keypad 1", "keypad 2", "keypad 3", "keypad 4", "keypad 6",
+  "keypad 7", "keypad 8", "keypad 9", "keypad .",
 }
 
 --! Removes qualifiers like left and right from modifier keys
@@ -411,8 +302,7 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   end
 
   self.key_pane = nil
-  self.key_options = {
-    {
+  self.key_options = {{
       id = "global",
       title = _S.hotkey_window.panel_globalKeys,
       tooltip = _S.hotkey_window.panel_globalKeys,
@@ -542,23 +432,22 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_recallPosition_7",
             "ingame_recallPosition_8",
             "ingame_recallPosition_9",
-            "ingame_recallPosition_0" }}}},
-  }
+            "ingame_recallPosition_0" }}}}}
 
   if self.ui.app.config.debug then
     table.insert(self.key_options, {
-      id = "debug",
-      title = _S.hotkey_window.panel_debugKeys,
-      tooltip = _S.hotkey_window.panel_debugKeys,
-      sections = {{
+        id = "debug",
         title = _S.hotkey_window.panel_debugKeys,
-        keys = {
-          "global_connectDebugger",
-          "global_showLuaConsole",
-          "global_runDebugScript",
-          "ingame_showCheatWindow",
-          "ingame_poopLog",
-          "ingame_poopStrings" }}}})
+        tooltip = _S.hotkey_window.panel_debugKeys,
+        sections = {{
+            title = _S.hotkey_window.panel_debugKeys,
+            keys = {
+              "global_connectDebugger",
+              "global_showLuaConsole",
+              "global_runDebugScript",
+              "ingame_showCheatWindow",
+              "ingame_poopLog",
+              "ingame_poopStrings" }}}})
   end
 
   -- Title
@@ -568,28 +457,38 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
   local built_in = self.app.gfx:loadMenuFont()
 
   self.key_windows = {}
-  for _, o in ipairs(self.key_options) do
-    local win = UIHotkeyAssignKeyPane(220, 0, ui, o, self.app.hotkeys)
+  for _, key_opt_set in ipairs(self.key_options) do
+    local win = UIHotkeyAssignKeyPane(220, 0, ui, key_opt_set, self.app.hotkeys)
     self:addWindow(win)
 
-    local btn = self:addBevelPanel(self.panel_pos_table_x[1], self.panel_pos_table_y[current_pos_y], 200, 30, col_bg):setLabel(o.title)
-      :makeButton(0, 0, 200, 30, nil, function(s) s:showKeyPane(o.id) end):makeToggle():setTooltip(o.tooltip)
+    local btn_x = self.panel_pos_table_x[1]
+    local btn_y = self.panel_pos_table_y[current_pos_y]
+    local btn = self:addBevelPanel(btn_x, btn_y, 200, 30, col_bg):setLabel(key_opt_set.title)
+        :makeButton(0, 0, 200, 30, nil, function(s) s:showKeyPane(key_opt_set.id) end)
+        :makeToggle()
+        :setTooltip(key_opt_set.tooltip)
 
-    self.key_windows[o.id] = { window = win, button = btn }
+    self.key_windows[key_opt_set.id] = { window = win, button = btn }
     current_pos_y = current_pos_y + 1
   end
 
   self:showKeyPane("global")
 
   -- "Accept" button
-  self:addBevelPanel(self.panel_pos_table_x[1], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_accept)
-    :makeButton(0, 0, 180, 40, nil, self.buttonAccept):setTooltip(_S.tooltip.hotkey_window.button_accept)
+  self:addBevelPanel(self.panel_pos_table_x[1], 430, 200, 40, col_bg)
+      :setLabel(_S.hotkey_window.button_accept)
+      :makeButton(0, 0, 180, 40, nil, self.buttonAccept)
+      :setTooltip(_S.tooltip.hotkey_window.button_accept)
   -- Reset to defaults button.
-  self:addBevelPanel(self.panel_pos_table_x[2], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_defaults)
-    :makeButton(0, 0, 180, 40, nil, self.buttonDefaults):setTooltip(_S.tooltip.hotkey_window.button_defaults)
+  self:addBevelPanel(self.panel_pos_table_x[2], 430, 200, 40, col_bg)
+      :setLabel(_S.hotkey_window.button_defaults)
+      :makeButton(0, 0, 180, 40, nil, self.buttonDefaults)
+      :setTooltip(_S.tooltip.hotkey_window.button_defaults)
   -- "Cancel" button
-  self:addBevelPanel(self.panel_pos_table_x[3], 430, 200, 40, col_bg):setLabel(_S.hotkey_window.button_cancel)
-    :makeButton(0, 0, 180, 40, nil, self.buttonCancel):setTooltip(_S.tooltip.hotkey_window.button_cancel)
+  self:addBevelPanel(self.panel_pos_table_x[3], 430, 200, 40, col_bg)
+      :setLabel(_S.hotkey_window.button_cancel)
+      :makeButton(0, 0, 180, 40, nil, self.buttonCancel)
+      :setTooltip(_S.tooltip.hotkey_window.button_cancel)
 
   self.built_in_font = built_in
 end
@@ -642,7 +541,10 @@ function UIHotkeyAssign:confirm_func(hotkey)
   hotkey_input(hotkey, self.hotkey_buttons, self.app)
 end
 
+--! Child window for setting key bindings
 class "UIHotkeyAssignKeyPane" (Window)
+
+---@type UIHotkeyAssignKeyPane
 local UIHotkeyAssignKeyPane = _G["UIHotkeyAssignKeyPane"]
 
 function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_hotkeys)
@@ -675,12 +577,19 @@ function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_
   local current_pos_x = 1
   for _, section in ipairs(key_options.sections) do
     local current_pos_y = 1
-    self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width*2, panel_height, col_caption):setLabel(section.title)
+    local pos_x = self.panel_pos_table_x[current_pos_x]
+    local pos_y = self.panel_pos_table_y[current_pos_y]
+    self:addBevelPanel(pos_x, pos_y, panel_width*2, panel_height, col_caption):setLabel(section.title)
     current_pos_y = current_pos_y + 1
     for _, key in ipairs(section.keys) do
-      self:addBevelPanel(self.panel_pos_table_x[current_pos_x], self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_shadow, col_bg, col_bg) : setLabel(_S.hotkey_window[key])
-    self.hotkey_buttons[key] = self:addBevelPanel(self.panel_pos_table_x[current_pos_x]+panel_width, self.panel_pos_table_y[current_pos_y], panel_width, panel_height, col_hotkeybox, col_highlight, col_shadow)
-      :makeHotkeyBox(function() self:confirm_func(key) end, nil):setText( string.upper(array_join(app_hotkeys[key], "+")) )
+      pos_x = self.panel_pos_table_x[current_pos_x]
+      pos_y = self.panel_pos_table_y[current_pos_y]
+      self:addBevelPanel(pos_x, pos_y, panel_width, panel_height, col_shadow, col_bg, col_bg):setLabel(_S.hotkey_window[key])
+      self.hotkey_buttons[key] = self:addBevelPanel(
+          pos_x + panel_width, pos_y, panel_width, panel_height, col_hotkeybox,
+          col_highlight, col_shadow)
+          :makeHotkeyBox(function() self:confirm_func(key) end, nil)
+          :setText(string.upper(array_join(app_hotkeys[key], "+")))
       current_pos_y = current_pos_y + 1
     end
     current_pos_x = current_pos_x + 1
