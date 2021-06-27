@@ -292,12 +292,17 @@ function UIOptions:selectResolution(number)
   end
 end
 
-function UIOptions:buttonFullscreen(checked)
-  if not self.ui:toggleFullscreen() then
+function UIOptions:buttonFullscreen()
+  if not self.ui:toggleFullscreen(true) then
       local err = {_S.errors.unavailable_screen_size}
       self.ui:addWindow(UIInformation(self.ui, err))
       self.fullscreen_button:toggle()
   end
+  self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+end
+
+function UIOptions:updateFSButtonOnHotkey()
+  self.fullscreen_button:toggle()
   self.fullscreen_panel:setLabel(self.ui.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
 end
 
