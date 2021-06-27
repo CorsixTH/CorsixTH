@@ -39,6 +39,14 @@ SOFTWARE.
 
 #include "th_map.h"
 
+#if !SDL_VERSION_ATLEAST(2, 0, 10)
+// On older SDL versions, floating point rendering was not available so we fall
+// back to integer methods / types.
+#define SDL_FRect SDL_Rect
+#define SDL_RenderCopyF SDL_RenderCopy
+#define SDL_RenderCopyExF SDL_RenderCopyEx
+#endif
+
 full_colour_renderer::full_colour_renderer(int iWidth, int iHeight)
     : width(iWidth), height(iHeight) {
   x = 0;
@@ -127,6 +135,29 @@ void getEnclosingScaleRect(const SDL_Rect* rect, double scale_factor,
       static_cast<int>(ceil(scale_factor * (rect->y + rect->h))) - dst_y;
   dst_rect->x = dst_x;
   dst_rect->y = dst_y;
+}
+
+//! Get the scaled rect of an SDL_Rect scaled by the given scale factor.
+//  On SDL < 2.0.10 this falls back to using getEnclosingScaleRect.
+/*!
+    @param rect Pointer to the SDL_Rect to be scaled.
+    @param scale_factor Scale to be applied to the rectangle.
+    @param[out] dst_rect Enclosing SDL_FRect of rect scaled by scale_factor.
+ */
+void getScaleRect(const SDL_Rect* rect, double scale_factor,
+                  SDL_FRect* dst_rect) {
+#if SDL_VERSION_ATLEAST(2, 0, 10)
+  // If using SDL 2.0.10 or newer, we can use floats to get better precision
+  // on scaled rendering.
+  dst_rect->x = static_cast<float>(rect->x * scale_factor);
+  dst_rect->y = static_cast<float>(rect->y * scale_factor);
+  dst_rect->w = static_cast<float>(rect->w * scale_factor);
+  dst_rect->h = static_cast<float>(rect->h * scale_factor);
+#else
+  // Prior to SDL 2.0.10, fallback to using the enclosing integer SDL_Rect for
+  // scaled rendering.
+  getEnclosingScaleRect(rect, scale_factor, dst_rect);
+#endif
 }
 
 }  // namespace
@@ -731,13 +762,13 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
-  SDL_Rect scaledDstRect;
-  getEnclosingScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
+  SDL_FRect scaledDstRect;
+  getScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
   if (iSDLFlip != 0) {
-    SDL_RenderCopyEx(renderer, pTexture, prcSrcRect, &scaledDstRect, 0, nullptr,
-                     (SDL_RendererFlip)iSDLFlip);
+    SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
+                      nullptr, (SDL_RendererFlip)iSDLFlip);
   } else {
-    SDL_RenderCopy(renderer, pTexture, prcSrcRect, &scaledDstRect);
+    SDL_RenderCopyF(renderer, pTexture, prcSrcRect, &scaledDstRect);
   }
 }
 

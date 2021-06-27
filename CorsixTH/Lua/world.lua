@@ -1893,11 +1893,11 @@ end
 --!param patient Patient to float above.
 --!param amount Amount of money to display.
 function World:newFloatingDollarSign(patient, amount)
+  if self.free_build_mode or patient.hospital ~= self:getLocalPlayerHospital() then
+    return
+  end
   if not self.floating_dollars then
     self.floating_dollars = {}
-  end
-  if self.free_build_mode then
-    return
   end
   local spritelist = TH.spriteList()
   spritelist:setPosition(-17, -60)
