@@ -12,10 +12,12 @@ to work on please check that there isn't a closed discussion for it because
 a previous developer of it didn't finish their work which you could finish.
 
 And if there is no existing issue discussion for what you want to work on
-please open a new issue for it and tell other devs here that your going to/
-have started working on it.
+please open a new issue for it and tell other devs here that your going to/have started working on it.
+
+**If you have an idea for an enhancement that does not have a discussion, please make a *Feature Request* first to discuss its desirability.  This helps make sure your development time is a worthy endeavour.**
 
 ## Enhancement/Suggestions ##
+
 If you want to make a suggestion, please use the *Feature Request* option when making a new issue. It will provide all the information needed to evaluate the suggestion or enhancement.\
 ![image](https://user-images.githubusercontent.com/20030128/123638352-fc609400-d816-11eb-88ad-11030e041fc4.png)
 
@@ -28,7 +30,7 @@ issues, include those issues in the description. The pull request provides a def
 
 #### Pull Request Statuses ####
 
-CorsixTH uses the following labels inside your Pull Request's title to denote its current progress.
+CorsixTH uses the following labels inside your Pull Request's title to denote its current progress. Unlabelled pull request will be considered *Ready for Review* and may be merged without warning.
 | Label | Description |
 | ----- | ----------- |
 | **[WIP]** | Work in Progress |
@@ -39,7 +41,8 @@ Please make sure you label and update your Pull Request accordingly. Alternative
 
 
 #### CONTRIBUTING CODE: ####
-*NB: If you're using GitHub Desktop ignore the git steps and follow guidance from [GitHub Docs](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/getting-started-with-github-desktop)*\
+
+*NB: If you're using GitHub Desktop ignore the git specific commands and follow guidance from [GitHub Docs](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/getting-started-with-github-desktop)*\
 **First Time**
 1. Ensure you have a GitHub account (https://github.com/signup/free)
 2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
@@ -58,26 +61,24 @@ Please make sure you label and update your Pull Request accordingly. Alternative
 by posting a comment in its existing issue discussion or if there's no existing
 discussion for it then please open a new issue discussion for it and tell other
 devs here that your working on it.
-4. Create feature branch
-	- ``git branch myfeature upstream/master``
-5. Checkout your feature branch
-	- ``git checkout myfeature``
-6. Make your changes
-7. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
-8. Review your changes
+4. Create and checkout your feature branch
+	- ``git checkout -b myfeature master``
+5. Make your changes
+6. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
+7. Review your changes
 	- ``git diff``
 	- ``git add`` | for each file
 	- ``git diff --check`` | Check there's no white spaces.
 	- ``git commit`` | Write an informative commit message and save
-9. Push your changes to your fork
+8. Push your changes to your fork
 	- ``git push origin myfeature``
-10. Create a Pull Request -- GitHub will pick up your latest branch committed to automatically when accessing CorsixTH/CorsixTH.
+9. Create a Pull Request -- GitHub will pick up your latest branch committed to automatically when accessing CorsixTH/CorsixTH.
 
 The developers will review and report any changes needed to your Pull Request so it could be accepted.
 
 #### Notes ####
 ##### Multiple commits: #####
-If your feature is very big, break it into subprojects and do a separate commit
+If your feature is very big, break it into smaller steps and do a separate commit
 for every independent operation.  This means doing step 10 several times as you
 go. You still only need to do one pull request at the end.
 
