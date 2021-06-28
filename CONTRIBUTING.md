@@ -47,30 +47,34 @@ Please make sure you label and update your Pull Request accordingly. Alternative
 1. Ensure you have a GitHub account (https://github.com/signup/free)
 2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
 3. Ensure you have a git client.  ([GitHub Desktop](http://desktop.github.com) [Interactive] | [Git](https://git-scm.com/downloads) [Shell])
-4. Clone your fork to your computer
+4. Fork the CorsixTH/CorsixtTH project to your account, the CorsixtTH/CorsixtTH project page has a button for this.
+5. Clone your fork to your computer
 	- ``git clone https://github.com/mygithubuser/CorsixTH.git``
-5. Add upstream remote
+6. Add upstream remote
 	- ``git remote add upstream https://github.com/CorsixTH/CorsixTH.git``
 
 **Every Time**
 1. Sync your master branch with the CorisxTH repository's master branch
+	- ``git checkout master``
 	- ``git fetch upstream``
-	- ``git rebase upstream/master``
+	- ``git merge --ff-only upstream/master``
 2. Make sure no one is already working on the issue you want to work on.
 3. Tell other developers that you've started/will start working on this issue
 by posting a comment in its existing issue discussion or if there's no existing
 discussion for it then please open a new issue discussion for it and tell other
 devs here that your working on it.
-4. Create and checkout your feature branch
-	- ``git checkout -b myfeature master``
-5. Make your changes
-6. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
-7. Review your changes
-	- ``git diff``
-	- ``git add`` | for each file
-	- ``git diff --check`` | Check there's no white spaces.
-	- ``git commit`` | Write an informative commit message and save
-8. Push your changes to your fork
+4. Create feature branch from your master
+	- ``git branch myfeature master``
+5. Checkout your feature branch
+	- ``git checkout myfeature``
+6. Make your changes
+7. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
+8. Review, add, and commit your changes
+	- ``git diff`` | See your changes.
+	- ``git diff --check`` | Check there's no white space.
+	- ``git add`` | do this for each file
+	- ``git commit`` | Write an informative commit message and save.
+9. Push your changes to your fork
 	- ``git push origin myfeature``
 9. Create a Pull Request -- GitHub will pick up your latest branch committed to automatically when accessing CorsixTH/CorsixTH.
 
@@ -87,11 +91,14 @@ If it takes a long time between when you start your feature and when you finish
 there might be other important changes other people are making to CorsixTH.  It
 is a good idea to make sure your code will still operate correctly with the
 latest changes.  To do this:
+- Commit your work to the feature branch
+- ``git checkout master``
 - ``git fetch upstream``
-- ``git rebase upstream/master``
+- ``git merge --ff-only master``
+- ``git checkout myfeature`` | switch back to your feature branch to continue working on it
 
 *NB: GitHub Desktop users need to conduct fetch upstream from your branch on github.com and rebase from GitHub Desktop after*\
-What this does is downloads all the changes from CorsixTH\CorsixTH since you
+What this does is downloads all the changes from CorsixTH/CorsixTH since you
 started, and pretends that all your changes were made after them.  If there are
 conflicts, for example if someone else changed the same line in the same file
 that you did you will be asked to resolve those conflicts.
