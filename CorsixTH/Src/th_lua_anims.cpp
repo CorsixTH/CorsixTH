@@ -632,6 +632,12 @@ int l_srl_set_lifetime(lua_State* L) {
   return 1;
 }
 
+int l_srl_set_use_intermediate_buffer(lua_State* L) {
+  sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
+  pSrl->set_use_intermediate_buffer();
+  return 0;
+}
+
 int l_srl_is_dead(lua_State* L) {
   sprite_render_list* pSrl = luaT_testuserdata<sprite_render_list>(L);
   lua_pushboolean(L, pSrl->is_dead() ? 1 : 0);
@@ -744,6 +750,8 @@ void lua_register_anims(const lua_register_state* pState) {
     lcb.add_function(l_srl_set_sheet, "setSheet", lua_metatable::sheet);
     lcb.add_function(l_srl_append, "append");
     lcb.add_function(l_srl_set_lifetime, "setLifetime");
+    lcb.add_function(l_srl_set_use_intermediate_buffer,
+                     "setUseIntermediateBuffer");
     lcb.add_function(l_srl_is_dead, "isDead");
     lcb.add_function(l_anim_set_tile<sprite_render_list>, "setTile",
                      lua_metatable::map);

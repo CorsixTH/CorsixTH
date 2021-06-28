@@ -1728,13 +1728,6 @@ sprite_render_list::sprite_render_list() : animation_base() {
   hit_test_fn = THSpriteRenderList_hit_test;
   is_multiple_frame_animation_fn =
       THSpriteRenderList_is_multiple_frame_animation;
-  buffer_size = 0;
-  sprite_count = 0;
-  sheet = nullptr;
-  sprites = nullptr;
-  dx_per_tick = 0;
-  dy_per_tick = 0;
-  lifetime = -1;
 }
 
 sprite_render_list::~sprite_render_list() { delete[] sprites; }
@@ -1748,18 +1741,35 @@ void sprite_render_list::tick() {
 }
 
 void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
-  if (!sheet) {
+  if (!sheet || sprite_count == 0) {
     return;
   }
 
   iDestX += x_relative_to_tile;
   iDestY += y_relative_to_tile;
-
   sprite* pLast = sprites + sprite_count;
+
+  if (use_intermediate_buffer) {
+    int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
+    for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
+      int spriteX = iDestX + pSprite->x;
+      int spriteY = iDestY + pSprite->y;
+      int spriteWidth, spriteHeight;
+      sheet->get_sprite_size_unchecked(pSprite->index, &spriteWidth,
+                                       &spriteHeight);
+      minX = std::min(minX, spriteX);
+      minY = std::min(minY, spriteY);
+      maxX = std::max(maxX, spriteX + spriteWidth);
+      maxY = std::max(maxY, spriteY + spriteHeight);
+    }
+    pCanvas->begin_intermediate_drawing(minX, minY, maxX - minX, maxY - minY);
+  }
+
   for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
     sheet->draw_sprite(pCanvas, pSprite->index, iDestX + pSprite->x,
                        iDestY + pSprite->y, flags);
   }
+  pCanvas->finish_intermediate_drawing();
 }
 
 bool sprite_render_list::hit_test(int iDestX, int iDestY, int iTestX,
@@ -1773,6 +1783,10 @@ void sprite_render_list::set_lifetime(int iLifetime) {
     iLifetime = -1;
   }
   lifetime = iLifetime;
+}
+
+void sprite_render_list::set_use_intermediate_buffer() {
+  use_intermediate_buffer = true;
 }
 
 void sprite_render_list::append_sprite(size_t iSprite, int iX, int iY) {

@@ -39,9 +39,12 @@ SOFTWARE.
 
 #include "th_map.h"
 
-#if !SDL_VERSION_ATLEAST(2, 0, 10)
+#if SDL_VERSION_ATLEAST(2, 0, 10)
+#define SDL_FRECT_UNIT float
+#else
 // On older SDL versions, floating point rendering was not available so we fall
 // back to integer methods / types.
+#define SDL_FRECT_UNIT int
 #define SDL_FRect SDL_Rect
 #define SDL_RenderCopyF SDL_RenderCopy
 #define SDL_RenderCopyExF SDL_RenderCopyEx
@@ -322,6 +325,7 @@ render_target::render_target()
     : window(nullptr),
       renderer(nullptr),
       zoom_texture(nullptr),
+      intermediate_texture(nullptr),
       pixel_format(nullptr),
       blue_filter_active(false),
       game_cursor(nullptr),
@@ -417,7 +421,7 @@ void render_target::destroy() {
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
-  flush_zoom_buffer();
+  flush_buffer(&zoom_texture);
   scale_bitmaps = false;
 
   if (fScale <= 0.000) {
@@ -428,7 +432,7 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN_DESKTOP) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      init_zoom_buffer(width, height);
+      init_buffer(&zoom_texture, width, height);
     }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
@@ -438,7 +442,7 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    if (!init_zoom_buffer(virtWidth, virtHeight)) {
+    if (!init_buffer(&zoom_texture, virtWidth, virtHeight)) {
       std::cout << "Warning: Could not render to zoom texture - "
                 << SDL_GetError() << std::endl;
 
@@ -475,7 +479,7 @@ bool render_target::start_frame() {
 }
 
 bool render_target::end_frame() {
-  flush_zoom_buffer();
+  flush_buffer(&zoom_texture);
 
   // End the frame by adding the cursor and possibly a filter.
   if (game_cursor) {
@@ -627,15 +631,16 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
   return true;
 }
 
-bool render_target::init_zoom_buffer(int iWidth, int iHeight) {
+bool render_target::init_buffer(SDL_Texture** texture, int iWidth,
+                                int iHeight) {
   if (!supports_target_textures) return false;
-  zoom_texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                                   SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+  *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
+                               SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
   SDL_RenderSetLogicalSize(renderer, iWidth, iHeight);
-  if (SDL_SetRenderTarget(renderer, zoom_texture) != 0) {
+  if (SDL_SetRenderTarget(renderer, *texture) != 0) {
     SDL_RenderSetLogicalSize(renderer, width, height);
-    SDL_DestroyTexture(zoom_texture);
-    zoom_texture = nullptr;
+    SDL_DestroyTexture(*texture);
+    *texture = nullptr;
     return false;
   }
 
@@ -645,17 +650,26 @@ bool render_target::init_zoom_buffer(int iWidth, int iHeight) {
   return true;
 }
 
-void render_target::flush_zoom_buffer() {
-  if (zoom_texture == nullptr) {
+void render_target::flush_buffer(SDL_Texture** texture_ptr, SDL_Texture* target,
+                                 const SDL_Rect* dstRect) {
+  SDL_Texture* texture = *texture_ptr;
+  bool is_zoom_texture = texture == zoom_texture;
+  if (texture == nullptr) {
     return;
   }
 
-  SDL_SetRenderTarget(renderer, nullptr);
+  // Clear texture before calling draw to ensure drawing includes scale.
+  *texture_ptr = nullptr;
+  SDL_SetRenderTarget(renderer, target);
   SDL_RenderSetLogicalSize(renderer, width, height);
-  SDL_SetTextureBlendMode(zoom_texture, SDL_BLENDMODE_BLEND);
-  SDL_RenderCopy(renderer, zoom_texture, nullptr, nullptr);
-  SDL_DestroyTexture(zoom_texture);
-  zoom_texture = nullptr;
+  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+  if (is_zoom_texture) {
+    // The zoom texture must be drawn without scaling.
+    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
+  } else {
+    draw(texture, nullptr, dstRect, 0);
+  }
+  SDL_DestroyTexture(texture);
 }
 
 namespace {
@@ -762,8 +776,18 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
+  double current_scale_factor =
+      intermediate_texture ? 1.0 : global_scale_factor;
   SDL_FRect scaledDstRect;
-  getScaleRect(prcDstRect, global_scale_factor, &scaledDstRect);
+  getScaleRect(prcDstRect, current_scale_factor, &scaledDstRect);
+  if (intermediate_texture) {
+    // If we're drawing to an intermediate texture, subtract the offset to the
+    // intermediate texture's resulting screen location.
+    scaledDstRect.x -=
+        static_cast<SDL_FRECT_UNIT>(intermediate_texture_location.x);
+    scaledDstRect.y -=
+        static_cast<SDL_FRECT_UNIT>(intermediate_texture_location.y);
+  }
   if (iSDLFlip != 0) {
     SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
                       nullptr, (SDL_RendererFlip)iSDLFlip);
@@ -788,6 +812,19 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
     lastX = op.x;
     lastY = op.y;
   }
+}
+
+void render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
+                                               int iHeight) {
+  // We only need an intermediate drawing if there is active scaling.
+  if (global_scale_factor == 1.0) return;
+  intermediate_texture_location = {iX, iY, iWidth, iHeight};
+  init_buffer(&intermediate_texture, iWidth, iHeight);
+}
+
+void render_target::finish_intermediate_drawing() {
+  flush_buffer(&intermediate_texture, zoom_texture,
+               &intermediate_texture_location);
 }
 
 raw_bitmap::raw_bitmap() {

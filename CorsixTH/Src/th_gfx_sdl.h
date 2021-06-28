@@ -339,10 +339,27 @@ class render_target {
             const SDL_Rect* prcDstRect, int iFlags);
   void draw_line(line_sequence* pLine, int iX, int iY);
 
+  //! Begin drawing to an intermediate unscaled texture targeting the given
+  //! location and size. Any drawing outside of this rectangle may be cropped.
+  //! Call finish_intermediate_drawing once all draw calls are complete.
+  /*!
+      @param iX X-coordinate of left side of drawing rectangle.
+      @param iY Y-coordinate of top side of drawing rectangle.
+      @param iWidth Width of drawing rectangle.
+      @param iHeight Height of drawing rectangle.
+   */
+  void begin_intermediate_drawing(int iX, int iY, int iWidth, int iHeight);
+
+  //! Copies the intermediate drawing which was started with a call to
+  //! begin_intermediate_drawing to the screen at the current scale factor.
+  void finish_intermediate_drawing();
+
  private:
   SDL_Window* window;
   SDL_Renderer* renderer;
   SDL_Texture* zoom_texture;
+  SDL_Texture* intermediate_texture;
+  SDL_Rect intermediate_texture_location;
   SDL_PixelFormat* pixel_format;
   bool blue_filter_active;
   cursor* game_cursor;
@@ -361,8 +378,9 @@ class render_target {
   bool apply_opengl_clip_fix;
   bool direct_zoom;
 
-  bool init_zoom_buffer(int iWidth, int iHeight);
-  void flush_zoom_buffer();
+  bool init_buffer(SDL_Texture** texture, int iWidth, int iHeight);
+  void flush_buffer(SDL_Texture** texture, SDL_Texture* target = nullptr,
+                    const SDL_Rect* dstRect = nullptr);
 };
 
 //! Stored image.

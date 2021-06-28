@@ -623,6 +623,7 @@ class sprite_render_list : public animation_base {
   void set_sheet(sprite_sheet* pSheet) { sheet = pSheet; }
   void set_speed(int iX, int iY) { dx_per_tick = iX, dy_per_tick = iY; }
   void set_lifetime(int iLifetime);
+  void set_use_intermediate_buffer();
   void append_sprite(size_t iSprite, int iX, int iY);
   bool is_dead() const { return lifetime == 0; }
 
@@ -636,17 +637,20 @@ class sprite_render_list : public animation_base {
     int y;
   };
 
-  sprite_sheet* sheet;
-  sprite* sprites;
-  int sprite_count;
-  int buffer_size;
+  sprite_sheet* sheet = nullptr;
+  sprite* sprites = nullptr;
+  int sprite_count = 0;
+  int buffer_size = 0;
 
   //! Amount to change x per tick
-  int dx_per_tick;
+  int dx_per_tick = 0;
   //! Amount to change y per tick
-  int dy_per_tick;
+  int dy_per_tick = 0;
   //! Number of ticks until reports as dead (-1 = never dies)
-  int lifetime;
+  int lifetime = -1;
+  //! Whether to draw to an intermediate buffer. This is used to preserve text
+  //! rendering quality when scaling.
+  bool use_intermediate_buffer = false;
 };
 
 #endif  // CORSIX_TH_TH_GFX_H_
