@@ -158,6 +158,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2e3f1d8bc309b46eb751fa42f680aa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb03e7bd95ba6439618d0d06cc271f68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#acb03e7bd95ba6439618d0d06cc271f68">draw_line</a> (<a class="el" href="classline__sequence.html">line_sequence</a> *pLine, int iX, int iY)</td></tr>
 <tr class="separator:acb03e7bd95ba6439618d0d06cc271f68"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac185575937e9e17b546662303f293aa0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ac185575937e9e17b546662303f293aa0">begin_intermediate_drawing</a> (int iX, int iY, int iWidth, int iHeight)</td></tr>
+<tr class="separator:ac185575937e9e17b546662303f293aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20469613e45d15e406c2721633b3f71a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a20469613e45d15e406c2721633b3f71a">finish_intermediate_drawing</a> ()</td></tr>
+<tr class="separator:a20469613e45d15e406c2721633b3f71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
@@ -201,6 +205,56 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="ac185575937e9e17b546662303f293aa0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac185575937e9e17b546662303f293aa0">&#9670;&nbsp;</a></span>begin_intermediate_drawing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void render_target::begin_intermediate_drawing </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>iX</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>iY</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>iWidth</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>iHeight</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Begin drawing to an intermediate unscaled texture targeting the given location and size. Any drawing outside of this rectangle may be cropped. Call finish_intermediate_drawing once all draw calls are complete.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">iX</td><td>X-coordinate of left side of drawing rectangle. </td></tr>
+    <tr><td class="paramname">iY</td><td>Y-coordinate of top side of drawing rectangle. </td></tr>
+    <tr><td class="paramname">iWidth</td><td>Width of drawing rectangle. </td></tr>
+    <tr><td class="paramname">iHeight</td><td>Height of drawing rectangle. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="ad55d460a8b002fd3c0c8ff96c106ba88"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad55d460a8b002fd3c0c8ff96c106ba88">&#9670;&nbsp;</a></span>create()</h2>
 
@@ -477,6 +531,24 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Fill a rectangle of the render target with a solid colour. </p>
+
+</div>
+</div>
+<a id="a20469613e45d15e406c2721633b3f71a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a20469613e45d15e406c2721633b3f71a">&#9670;&nbsp;</a></span>finish_intermediate_drawing()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void render_target::finish_intermediate_drawing </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Copies the intermediate drawing which was started with a call to begin_intermediate_drawing to the screen at the current scale factor. </p>
 
 </div>
 </div>
