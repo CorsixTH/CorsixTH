@@ -169,7 +169,7 @@ function UIHireStaff:draw(canvas, x, y)
     if not profile then
       return
     end
-    font:draw(canvas, profile.name, x + 79, y + 21)
+    font:draw(canvas, profile:getFullName(), x + 79, y + 21)
     profile:drawFace(canvas, x + 158, y + 48, self.face_parts)
     font:draw(canvas, "$" .. profile.wage, x + 116, y + 179)
     font:drawWrapped(canvas, profile.desc, x + 74, y + 205, 149)

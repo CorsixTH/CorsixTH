@@ -26,7 +26,12 @@ local StaffProfile = _G["StaffProfile"]
 function StaffProfile:StaffProfile(world, humanoid_class, local_string)
   self.world = world
   self.humanoid_class = humanoid_class
-  self.name = "U. N. Initialised"
+  self.name = "Initialised"
+  self.initial = "UN"
+  -- 1009 is a prime number which avoids a modulo of 0 when we need
+  -- a positive number to randomly pick the initial letter
+  self.name_seed = math.random(1, 1009)
+  self.name_lang = self.world.app.config.language
   self.wage = 0
   self.skill = 0 -- [0.0, 1.0]
   self.layer5 = 2
@@ -142,12 +147,16 @@ function StaffProfile:randomise(month)
   self:randomiseOrganical()
 end
 
+--! Give the staff member some personal properties.
 function StaffProfile:randomiseOrganical()
-  -- TODO: Randomise a letter from the current language's alphabet.
-  self.name = "" -- string.char(string.byte"A" + math.random(0, 25)) .. ". "
+  local initials = staff_initials_cache.initials
+  local num = self.name_seed % #initials
+  self.initial = initials[num]
+  self.name = ""
   for _, part_table in ipairs(name_parts) do
     self.name = self.name .. part_table.__random
   end
+
   local desc_table1, desc_table2
   if self.skill < 0.55 then
     desc_table1 = _S.staff_descriptions.bad
@@ -242,4 +251,8 @@ function StaffProfile:getFairWage()
     end
   end
   return math.max(math.floor(wage), level_config.staff[conf_id[self.humanoid_class]].MinSalary)
+end
+
+function StaffProfile:getFullName()
+  return self.initial .. ". " .. self.name
 end

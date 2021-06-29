@@ -124,7 +124,7 @@ function UIStaffRise:draw(canvas, x, y)
   profile:drawFace(canvas, x + 99, y + 47, self.face_parts) -- Portrait
   self.ui.app.map:draw(canvas, px, py, 71, 81, x + 16, y + 44) -- Viewport
 
-  font:draw(canvas, profile.name, x + 20, y + 20) -- Name
+  font:draw(canvas, profile:getFullName(), x + 20, y + 20) -- Name
   font:draw(canvas, "$" .. profile.wage, x + 60, y + 178) -- Wage
 
   -- Ability

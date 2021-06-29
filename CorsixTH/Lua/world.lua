@@ -168,6 +168,7 @@ function World:World(app)
     hospital.research:setResearchConcentration()
   end
 
+  self:updateInitialsCache()
   -- TODO: Add (working) AI and/or multiplayer hospitals
   -- TODO: Needs to be changed for multiplayer support
   self.hospitals[1]:initStaff()
@@ -2379,6 +2380,45 @@ function World:resetAnimations()
   end
 end
 
+strict_declare_global "staff_initials_cache"
+staff_initials_cache = {}
+
+local function our_concat(t)
+  -- The standard table.concat function doesn't like our userdata strings :(
+  local result = ""
+  for _, s in ipairs(t) do
+    result = result .. s
+  end
+  return result
+end
+
+--! Refresh cache of letters in current language to be used for staff member's initials
+function World:updateInitialsCache()
+  local parts = tostring(our_concat(_S.humanoid_name_starts)
+      .. our_concat(_S.humanoid_name_ends)):sub(33)
+  local initials = {}
+  for uchar in parts:gmatch("([%z\1-\127\194-\244][\128-\191]*)") do
+    initials[#initials + 1] = uchar
+  end
+  staff_initials_cache.initials = initials
+end
+
+--! Change the staff name first letter to one from the current language
+-- from the seed (generated here or in staff_profile.lua)
+--!param profile (table) The profile of the staff member
+function World:localiseInitial(profile)
+  if not profile.name_seed then
+    -- 1009 is a prime number which avoids a modulo of 0 when we need
+    -- a positive number to randomly pick the initial letter
+    profile.name_seed = math.random(1, 1009)
+  end
+  if profile.name_lang == TheApp.config.language then return end
+  -- Staff member doesn't have an initial in the current language
+  local num = profile.name_seed % #staff_initials_cache.initials
+  profile.initial = staff_initials_cache.initials[num]
+  profile.name_lang = TheApp.config.language
+end
+
 --! Let the world react to and old save game. First it gets the chance to
 -- do things for itself, and then it calls corresponding functions for
 -- the hospitals, entities and rooms in that order.
@@ -2711,7 +2751,7 @@ function World:afterLoad(old, new)
     self:resetSideObjects()
   end
 
-if old < 153 then
+  if old < 153 then
     -- Set the new variable next_emergency_date
     -- Also set the new variable next_emergency
     -- In previous code month == 0 meant emergencies were over
@@ -2735,6 +2775,17 @@ if old < 153 then
         end
       end
     end
+  end
+
+  -- Fix the initial of staff names
+  self:updateInitialsCache()
+  for _, staff_category in pairs(self.available_staff) do
+    for _, staff in pairs(staff_category) do
+      self:localiseInitial(staff)
+    end
+  end
+  for _, staff in ipairs(self:getLocalPlayerHospital().staff) do
+    self:localiseInitial(staff.profile)
   end
 
   self.savegame_version = new

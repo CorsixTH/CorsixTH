@@ -33,13 +33,19 @@ describe("Doctor:", function()
 
   it("Can represent doctor as a string", function()
     local doctor = getDoctor()
+
     doctor.humanoid_class = "Doctor"
     local name = "WHITMAN"
-    doctor.profile = {skill = 0.5, is_psychiatrist = 0.5, name = name}
+    local initial = "A"
+    doctor.profile = {skill = 0.5, is_psychiatrist = 0.5, name = name, initial = initial}
+
+    doctor.profile.getFullName = function()
+      return doctor.profile.initial .. ". " .. doctor.profile.name
+    end
 
     local result = doctor:tostring()
 
-    assert.matches(result, "humanoid.*" .. name .. ".*class.*Doctor")
+    assert.matches(result, "humanoid.*" .. initial .. ". " .. name .. ".*class.*Doctor")
     assert.matches(result, "Skills.*0%.5.*Psych.*0%.5")
   end)
 end)
