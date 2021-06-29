@@ -20,8 +20,6 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
-
 class "Hospital"
 
 ---@type Hospital
@@ -777,22 +775,6 @@ function Hospital:isInHospital(x, y)
   local flags = self.world.map.th:getCellFlags(x, y)
   return flags.hospital and flags.owner == self:getPlayerIndex()
 end
-function Hospital:coldWarning()
-  local announcements = {
-    "sorry002.wav", "sorry004.wav",
-  }
-  if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Normal)
-  end
-end
-function Hospital:hotWarning()
-  local announcements = {
-    "sorry003.wav", "sorry004.wav",
-  }
-  if announcements and self:isPlayerHospital() then
-    self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.Normal)
-  end
-end
 
 --! Decide how many days the hospital functions within specification.
 --!return (int) Number of disaster-free days in the hospital.
@@ -821,16 +803,13 @@ function Hospital:boilerBreakdown(broken_heat)
   heat_vars.boiler_repair_count = math.random(10, 30)
   heat_vars.heating_broke = true
 
-  -- Only show the message when relevant to the local player's hospital.
-  if self:isPlayerHospital() then
-    if heat_vars.radiator_heat == 0 then
-      self.world.ui.adviser:say(_A.boiler_issue.minimum_heat)
-      self:coldWarning()
-    else
-      self.world.ui.adviser:say(_A.boiler_issue.maximum_heat)
-      self:hotWarning()
-    end
-  end
+  -- Warn the player of the boiler's breakdown
+  self:adviseBoilerBreakdown(broken_heat)
+end
+
+--! Select a relevant message to be displayed to the user
+function Hospital:adviseBoilerBreakdown()
+  -- Nothing to do, override in a sub-class.
 end
 
 --! Boiler broke down and work is done to get it fixed.

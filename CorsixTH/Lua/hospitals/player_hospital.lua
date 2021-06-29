@@ -378,6 +378,19 @@ function PlayerHospital:adviseDiscoverDisease(disease)
   end
 end
 
+--! Select a relevant message to be displayed to the user
+--!param broken_heat (0 or 1) Boiler output due to being broken.
+function PlayerHospital:adviseBoilerBreakdown(broken_heat)
+  local ui = self.world.ui
+  if broken_heat == 0 then
+    ui.adviser:say(_A.boiler_issue.minimum_heat)
+    ui:playRandomAnnouncement({ "sorry002.wav", "sorry004.wav" })
+  else
+    ui.adviser:say(_A.boiler_issue.maximum_heat)
+    ui:playRandomAnnouncement({ "sorry003.wav", "sorry004.wav" })
+  end
+end
+
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
   -- Advise the player.
