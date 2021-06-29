@@ -1,0 +1,96 @@
+# Building Image
+# sudo docker build -t corsixth-web -f Dockerfile.web .
+# sudo docker run -p 8000:8000 corsixth-web:latest # For running
+# sudo docker run -it corsixth-web:latest /bin/bash # For "SSH"
+
+FROM emscripten/emsdk AS lua
+
+RUN apt-get update
+RUN apt-get install curl tar
+
+WORKDIR /out/include
+WORKDIR /out/lib
+WORKDIR /src
+
+ENV luaVersion=5.3.6
+
+RUN curl https://www.lua.org/ftp/lua-$luaVersion.tar.gz > lua-$luaVersion.tar.gz
+RUN tar -xf lua-$luaVersion.tar.gz
+
+WORKDIR /src/lua-$luaVersion
+
+RUN rm -rf src/lua*.c
+RUN emcc -fpic -shared -DLUA_USE_DLOPEN src/*.c -o /out/liblua.so 
+
+RUN cp src/*.h /out/include/
+
+
+FROM emscripten/emsdk AS lpeg
+
+WORKDIR /out/include
+WORKDIR /src
+
+COPY --from=lua /out/include/ /src/lua/include/
+
+RUN apt-get update
+RUN apt-get install curl tar
+
+ENV lpegVersion=1.0.2
+
+RUN curl http://www.inf.puc-rio.br/~roberto/lpeg/lpeg-$lpegVersion.tar.gz > lpeg-$lpegVersion.tar.gz
+RUN tar -xf lpeg-$lpegVersion.tar.gz
+
+WORKDIR /src/lpeg-$lpegVersion
+
+RUN emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I/src/lua/include *.c -o /out/lpeg.wasm
+
+
+FROM emscripten/emsdk AS lfs
+
+WORKDIR /out/include
+WORKDIR /src
+
+COPY --from=lua /out/include/ /src/lua/include/
+
+RUN apt-get update
+RUN apt-get install curl tar
+
+ENV lfsVersion=1_8_0
+
+RUN curl -L https://github.com/keplerproject/luafilesystem/archive/refs/tags/v$lfsVersion.tar.gz > luafilesystem-$lfsVersion.tar.gz
+RUN tar -xf luafilesystem-$lfsVersion.tar.gz
+
+WORKDIR /src/luafilesystem-$lfsVersion
+
+RUN emcc -fpic -s SIDE_MODULE=1 -s EXPORT_ALL=1 -I/src/lua/include src/lfs.c -o /out/lfs.wasm
+
+
+FROM emscripten/emsdk AS corsix-th
+
+COPY . /src
+COPY --from=lua /out/ /src/lua/
+
+WORKDIR /out
+WORKDIR /src/build
+
+RUN emcmake cmake -DLUA_DIR=/src/lua/ -DLUA_LIBRARIES=/src/lua/liblua.so -DLUA_INCLUDE_DIR=/src/lua/include \ 
+    -DWITH_AUDIO=OFF -DWITH_FREETYPE2=OFF -DWITH_MOVIES=OFF ..
+RUN emmake make
+
+RUN cp /src/build/CorsixTH/corsix-th.* /out/
+
+
+FROM ubuntu:latest AS pkg
+
+RUN apt-get update
+RUN apt-get install -y python
+
+WORKDIR /pkg
+
+COPY --from=lpeg /out/lpeg.wasm /pkg/
+COPY --from=lfs /out/lfs.wasm /pkg/
+COPY --from=corsix-th /out/corsix-th.* /pkg/
+
+EXPOSE 8000
+
+ENTRYPOINT ["python", "-m", "SimpleHTTPServer"]
