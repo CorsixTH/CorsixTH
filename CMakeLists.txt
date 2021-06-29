@@ -45,6 +45,7 @@ option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 option(WITH_LIBAV "Use LibAV instead of FFmpeg" OFF)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
+option(CORSIX_TH_DEBUG "Turns on debugging for Web" OFF)
 
 if(MSVC)
   option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)
