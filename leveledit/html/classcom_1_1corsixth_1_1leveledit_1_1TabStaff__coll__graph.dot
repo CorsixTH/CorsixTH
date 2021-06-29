@@ -1,0 +1,28 @@
+digraph "com.corsixth.leveledit.TabStaff"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="com.corsixth.leveledit.Tab\lStaff",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="JScrollPane",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" removeLevelsButt\nremoveStartButt\naddLevelsButt\naddStartButt" ,fontname="Helvetica"];
+  Node3 [label="JButton",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node4 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" staff\nsalary\nstart" ,fontname="Helvetica"];
+  Node4 [label="com.corsixth.leveledit.Grid\lPanel",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcom_1_1corsixth_1_1leveledit_1_1GridPanel.html",tooltip=" "];
+  Node5 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="JPanel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node6 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" variableManipulator" ,fontname="Helvetica"];
+  Node6 [label="com.corsixth.leveledit.Var\lManipulator",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcom_1_1corsixth_1_1leveledit_1_1VarManipulator.html",tooltip=" "];
+  Node7 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" staffSalaryTF\nsalaryAddTF" ,fontname="Helvetica"];
+  Node7 [label="JTextField",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node8 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" staffLevelsList" ,fontname="Helvetica"];
+  Node8 [label="ArrayList\< com.corsixth.leveledit.\lStaffLevels \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node9 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" startStaffList" ,fontname="Helvetica"];
+  Node9 [label="ArrayList\< com.corsixth.leveledit.\lStartStaff \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node10 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" salaryAddLabel\nsalaryLabel" ,fontname="Helvetica"];
+  Node10 [label="JLabel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node5 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" levels\nstartButtons\nlevelsButtons" ,fontname="Helvetica"];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" scrollPane" ,fontname="Helvetica"];
+}

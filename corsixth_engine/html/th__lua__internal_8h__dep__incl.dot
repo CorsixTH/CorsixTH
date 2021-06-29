@@ -1,0 +1,27 @@
+digraph "/home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/th_lua_internal.h"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_internal.h",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua_8cpp.html",tooltip=" "];
+  Node1 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_anims.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__anims_8cpp.html",tooltip=" "];
+  Node1 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_gfx.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__gfx_8cpp.html",tooltip=" "];
+  Node1 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_iso.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__iso_8cpp.html",tooltip=" "];
+  Node1 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_lfs_ext.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__lfs__ext_8cpp.html",tooltip=" "];
+  Node1 -> Node7 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_map.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__map_8cpp.html",tooltip=" "];
+  Node1 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_movie.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__movie_8cpp.html",tooltip=" "];
+  Node1 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_sound.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__sound_8cpp.html",tooltip=" "];
+  Node1 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_strings.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__strings_8cpp.html",tooltip=" "];
+  Node1 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="/home/runner/work/Corsix\lTH/CorsixTH/CorsixTH/Src\l/th_lua_ui.cpp",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__lua__ui_8cpp.html",tooltip=" "];
+}

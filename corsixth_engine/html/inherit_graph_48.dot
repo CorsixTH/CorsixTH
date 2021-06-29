@@ -1,0 +1,20 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="map_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__overlay.html",tooltip=" "];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="map_overlay_pair",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__overlay__pair.html",tooltip=" "];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="map_typical_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__typical__overlay.html",tooltip=" "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="map_flags_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__flags__overlay.html",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="map_parcels_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__parcels__overlay.html",tooltip=" "];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="map_text_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__text__overlay.html",tooltip=" "];
+  Node5 -> Node6 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="map_positions_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__positions__overlay.html",tooltip=" "];
+}

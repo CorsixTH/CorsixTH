@@ -1,0 +1,11 @@
+digraph "integer_run_length_decoder"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="integer_run_length\l_decoder",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" input_end" ,fontname="Helvetica"];
+  Node2 [label="uint32_t",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" reads_remaining" ,fontname="Helvetica"];
+  Node3 [label="size_t",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

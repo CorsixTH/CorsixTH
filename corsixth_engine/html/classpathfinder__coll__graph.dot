@@ -1,0 +1,14 @@
+digraph "pathfinder"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="pathfinder",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Finds paths through maps."];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" destination\ndirty_node_list" ,fontname="Helvetica"];
+  Node2 [label="path_node",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structpath__node.html",tooltip=" "];
+  Node2 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" prev" ,fontname="Helvetica"];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" open_idx" ,fontname="Helvetica"];
+  Node3 [label="size_t",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node4 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" default_map" ,fontname="Helvetica"];
+  Node4 [label="level_map",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classlevel__map.html",tooltip=" "];
+}

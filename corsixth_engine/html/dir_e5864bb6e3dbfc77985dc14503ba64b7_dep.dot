@@ -1,0 +1,11 @@
+digraph "/home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src" {
+  compound=true
+  node [ fontsize="10", fontname="Helvetica"];
+  edge [ labelfontsize="10", labelfontname="Helvetica"];
+  subgraph clusterdir_3d35694993993d52c89462d0a116fbed {
+    graph [ bgcolor="#ddddee", pencolor="black", label="CorsixTH" fontname="Helvetica", fontsize="10", URL="dir_3d35694993993d52c89462d0a116fbed.html"]
+  dir_e5864bb6e3dbfc77985dc14503ba64b7 [shape=box, label="Src", style="filled", fillcolor="#eeeeff", pencolor="black", URL="dir_e5864bb6e3dbfc77985dc14503ba64b7.html"];
+  }
+  dir_a12c20986f369e0dbef1d176f43369da [shape=box label="CorsixTH" fillcolor="white" style="filled" color="red" URL="dir_a12c20986f369e0dbef1d176f43369da.html"];
+  dir_e5864bb6e3dbfc77985dc14503ba64b7->dir_a12c20986f369e0dbef1d176f43369da [headlabel="26", labeldistance=1.5 headhref="dir_000003_000000.html"];
+}

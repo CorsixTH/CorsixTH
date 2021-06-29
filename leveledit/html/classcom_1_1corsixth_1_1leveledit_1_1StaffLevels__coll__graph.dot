@@ -1,0 +1,15 @@
+digraph "com.corsixth.leveledit.StaffLevels"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="com.corsixth.leveledit.Staff\lLevels",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" staffLevelsPanel" ,fontname="Helvetica"];
+  Node2 [label="com.corsixth.leveledit.Grid\lPanel",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classcom_1_1corsixth_1_1leveledit_1_1GridPanel.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="JPanel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node4 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" doctorsTF\nconsultantRateTF\nreceptionistsTF\nnursesTF\nresearcherRateTF\nshrinkRateTF\nmonthTF\njuniorRateTF\nsurgeonRateTF\nhandymenTF\n..." ,fontname="Helvetica"];
+  Node4 [label="JTextField",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node5 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" juniorRateLabel\nsurgeonRateLabel\nnursesLabel\nresearcherRateLabel\nreceptionistsLabel\nshrinkRateLabel\nmonthLabel\nhandymenLabel\nconsultantRateLabel\ndoctorsLabel\n..." ,fontname="Helvetica"];
+  Node5 [label="JLabel",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}

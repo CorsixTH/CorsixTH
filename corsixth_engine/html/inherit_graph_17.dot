@@ -1,0 +1,16 @@
+digraph "Graphical Class Hierarchy"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="link_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classlink__list.html",tooltip="Generic linked list class (for inheriting from)"];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="drawable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structdrawable.html",tooltip=" "];
+  Node1 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="animation_base",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classanimation__base.html",tooltip=" "];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="animation",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classanimation.html",tooltip=" "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="sprite_render_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsprite__render__list.html",tooltip=" "];
+}

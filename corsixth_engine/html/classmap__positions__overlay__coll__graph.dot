@@ -1,0 +1,17 @@
+digraph "map_positions_overlay"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="map_positions_overlay",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="map_text_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__text__overlay.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="map_typical_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__typical__overlay.html",tooltip=" "];
+  Node4 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="map_overlay",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmap__overlay.html",tooltip=" "];
+  Node5 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" sprites" ,fontname="Helvetica"];
+  Node5 [label="sprite_sheet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsprite__sheet.html",tooltip="Sheet of sprites."];
+  Node6 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" font" ,fontname="Helvetica"];
+  Node6 [label="font",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfont.html",tooltip=" "];
+}

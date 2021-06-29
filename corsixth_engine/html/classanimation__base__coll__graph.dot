@@ -1,0 +1,18 @@
+digraph "animation_base"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="animation_base",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="drawable",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structdrawable.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="link_list",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classlink__list.html",tooltip="Generic linked list class (for inheriting from)"];
+  Node3 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" prev\nnext" ,fontname="Helvetica"];
+  Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" flags" ,fontname="Helvetica"];
+  Node4 [label="uint32_t",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node5 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" layers" ,fontname="Helvetica"];
+  Node5 [label="layers",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structlayers.html",tooltip="Layer information (see animation_manager::draw_frame)"];
+  Node6 -> Node5 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" layer_contents" ,fontname="Helvetica"];
+  Node6 [label="uint8_t",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+}
