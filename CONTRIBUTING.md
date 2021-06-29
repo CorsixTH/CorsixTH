@@ -29,13 +29,12 @@ changes from the request. If your pull request relates to any existing
 issues, include those issues in the description. The pull request provides a default layout to help you fill out this information.
 
 #### Pull Request Statuses ####
-
-CorsixTH uses the following labels inside your Pull Request's title to denote its current progress. Unlabelled pull request will be considered *Ready for Review* and may be merged without warning.
+CorsixTH encourages using the following labels inside your Pull Request's title to denote its current progress. Unlabelled pull request will be considered *Ready* and may be merged without warning.
 | Label | Description |
 | ----- | ----------- |
 | **[WIP]** | Work in Progress |
 | **[RFC]** | Request for Comments (aka Ready for Review) |
-| **[RDY]** | Ready |
+| ***\<blank>*** | Ready |
 
 Please make sure you label and update your Pull Request accordingly. Alternatively, you can submit a **Draft Pull Request** as an alternative to the **[WIP]** label.
 
