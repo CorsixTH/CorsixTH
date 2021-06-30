@@ -32,13 +32,7 @@ local Nurse = _G["Nurse"]
 --!param ... Arguments to base class constructor.
 function Nurse:Nurse(...)
   self:Staff(...)
-end
-
-function Nurse:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-
-  local nurse_leave_sounds = {"sack004.wav", "sack005.wav",}
-  self.world.ui:playAnnouncement(nurse_leave_sounds[math.random(1, #nurse_leave_sounds)], announcement_priority)
+  self.leave_sounds = {"sack004.wav", "sack005.wav"}
 end
 
 -- Helper function to decide if Staff fulfills a criterion
@@ -54,5 +48,9 @@ function Nurse:adviseWrongPersonForThisRoom()
 end
 
 function Nurse:afterLoad(old, new)
+  if old < 163 then
+    self.leave_priority = AnnouncementPriority.High
+    self.leave_sounds = {"sack004.wav", "sack005.wav"}
+  end
   Staff.afterLoad(self, old, new)
 end

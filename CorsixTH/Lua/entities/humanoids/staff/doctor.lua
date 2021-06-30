@@ -32,6 +32,7 @@ local Doctor = _G["Doctor"]
 --!param ... Arguments to base class constructor.
 function Doctor:Doctor(...)
   self:Staff(...)
+  self.leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav"}
 end
 
 function Doctor:tickDay()
@@ -104,12 +105,6 @@ function Doctor:tick()
   if self:isLearningOnTheJob() then
     self:updateSkill(self.humanoid_class, "skill", 0.000003)
   end
-end
-
-function Doctor:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-  local dr_leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav",}
-  self.world.ui:playAnnouncement(dr_leave_sounds[math.random(1, #dr_leave_sounds)], announcement_priority)
 end
 
 -- Determine if the staff member should contribute to research
@@ -281,6 +276,10 @@ function Doctor:adviseWrongPersonForThisRoom()
 end
 
 function Doctor:afterLoad(old, new)
+  if old < 163 then
+    self.leave_priority = AnnouncementPriority.High
+    self.leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav"}
+  end
   Staff.afterLoad(self, old, new)
 end
 

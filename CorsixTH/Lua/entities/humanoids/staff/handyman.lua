@@ -32,11 +32,7 @@ local Handyman = _G["Handyman"]
 --!param ... Arguments to base class constructor.
 function Handyman:Handyman(...)
   self:Staff(...)
-end
-
-function Handyman:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-  self.world.ui:playAnnouncement("sack006.wav", announcement_priority)
+  self.leave_sounds = {"sack006.wav"}
 end
 
 function Handyman:die()
@@ -90,6 +86,10 @@ function Handyman:fulfillsCriterion(criterion)
 end
 
 function Handyman:afterLoad(old, new)
+  if old < 163 then
+    self.leave_priority = AnnouncementPriority.High
+    self.leave_sounds = {"sack006.wav"}
+  end
   Staff.afterLoad(self, old, new)
 end
 

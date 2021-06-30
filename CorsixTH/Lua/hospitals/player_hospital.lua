@@ -536,6 +536,12 @@ function PlayerHospital:makeRaiseRequest(amount, staff)
   self.world.ui.bottom_panel:queueMessage("strike", amount, staff)
 end
 
+--! Announce to the player that a staff member is leaving the hospital
+--!param staff (table) The staff member
+function PlayerHospital:announceStaffLeave(staff)
+  self.world.ui:playRandomAnnouncement(staff.leave_sounds, staff.leave_priority)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

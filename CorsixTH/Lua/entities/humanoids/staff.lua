@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
 
@@ -31,6 +33,8 @@ function Staff:Staff(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
   self.parcelNr = 0
+  self.leave_sounds = {}
+  self.leave_priority = AnnouncementPriority.High
 end
 
 --! Handle daily adjustments to staff.
@@ -200,10 +204,6 @@ function Staff:checkIfWaitedTooLong()
   end
 end
 
-function Staff:leaveAnnounce()
-  return
-end
-
 function Staff:isTiring()
   local tiring = true
 
@@ -256,7 +256,7 @@ function Staff:fire()
   self.hospital:changeReputation("kicked")
   self:despawn()
   self.hover_cursor = nil
-  self:leaveAnnounce()
+  self.hospital:announceStaffLeave(self)
   -- Unregister any build callbacks or messages.
   self:unregisterCallbacks()
   -- Update the staff management window if it is open.
