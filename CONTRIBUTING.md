@@ -33,7 +33,7 @@ CorsixTH encourages using the following labels inside your Pull Request's title 
 | Label | Description |
 | ----- | ----------- |
 | **[WIP]** | Work in Progress |
-| **[RFC]** | Request for Comments (aka Ready for Review) |
+| **[RFC]** | (Optional stage) Request for Comments (aka Ready for Review) |
 | ***\<blank>*** | Ready |
 
 Please make sure you label and update your Pull Request accordingly. Alternatively, you can submit a **Draft Pull Request** as an alternative to the **[WIP]** label.
