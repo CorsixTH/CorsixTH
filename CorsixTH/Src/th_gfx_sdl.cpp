@@ -492,8 +492,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN_DESKTOP) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      zoom_buffer.reset(new scoped_target_texture(this, 0, 0, width, height,
-                                                  /* bScale = */ true));
+      zoom_buffer =
+          std::make_unique<scoped_target_texture>(this, 0, 0, width, height,
+                                                  /* bScale = */ true);
     }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
@@ -503,8 +504,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    zoom_buffer.reset(new scoped_target_texture(
-        this, 0, 0, virtWidth, virtHeight, /* bScale = */ false));
+    zoom_buffer = std::make_unique<scoped_target_texture>(
+        this, 0, 0, virtWidth, virtHeight, /* bScale = */ false);
     if (!zoom_buffer->is_target()) {
       global_scale_factor = 1.0;
       std::cout << "Warning: Could not render to zoom texture - "
