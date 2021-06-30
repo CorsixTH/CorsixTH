@@ -362,7 +362,7 @@ class render_target {
   class scoped_target_texture;
   friend class scoped_target_texture;
 
-  double draw_scale();
+  double draw_scale() const;
 
   SDL_Window* window;
   SDL_Renderer* renderer;

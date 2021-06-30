@@ -362,15 +362,16 @@ class render_target::scoped_target_texture
     // Restore previous context.
     SDL_SetRenderTarget(target->renderer,
                         previous_target ? previous_target->texture : nullptr);
-    SDL_RenderSetLogicalSize(target->renderer,
-                             previous_target ? previous_target->rect.w : target->width,
-                             previous_target ? previous_target->rect.h : target->height);
+    SDL_RenderSetLogicalSize(
+        target->renderer,
+        previous_target ? previous_target->rect.w : target->width,
+        previous_target ? previous_target->rect.h : target->height);
     SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
     target->current_target = previous_target;
     if (scale) {
       // If the target texture is already scaled, skip the global scale factor
       // by drawing directly.
-      SDL_RenderCopy(target->renderer, texture, nullptr, nullptr);
+      SDL_RenderCopy(target->renderer, texture, nullptr, &rect);
     } else {
       target->draw(texture, nullptr, &rect, 0);
     }
@@ -491,8 +492,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN_DESKTOP) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      zoom_buffer.reset(
-          new scoped_target_texture(this, 0, 0, width, height, true));
+      zoom_buffer.reset(new scoped_target_texture(this, 0, 0, width, height,
+                                                  /* bScale = */ true));
     }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
@@ -502,15 +503,19 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    zoom_buffer.reset(
-        new scoped_target_texture(this, 0, 0, virtWidth, virtHeight, true));
+    zoom_buffer.reset(new scoped_target_texture(
+        this, 0, 0, virtWidth, virtHeight, /* bScale = */ false));
     if (!zoom_buffer->is_target()) {
+      global_scale_factor = 1.0;
       std::cout << "Warning: Could not render to zoom texture - "
                 << SDL_GetError() << std::endl;
 
       return false;
     }
 
+    // When zoom_buffer is allocated with bScale = false, this is only used for
+    // the scale to commit the zoom buffer back to the screen at.
+    global_scale_factor = fScale;
     return true;
   } else if (0.999 <= fScale && fScale <= 1.001) {
     return true;
@@ -577,7 +582,7 @@ void render_target::set_window_grab(bool bActivate) {
 bool render_target::fill_rect(uint32_t iColour, int iX, int iY, int iW,
                               int iH) {
   SDL_Rect rcDest = {iX, iY, iW, iH};
-  getEnclosingScaleRect(&rcDest, global_scale_factor, &rcDest);
+  getEnclosingScaleRect(&rcDest, draw_scale(), &rcDest);
 
   Uint8 r, g, b, a;
   SDL_GetRGBA(iColour, pixel_format, &r, &g, &b, &a);
@@ -605,7 +610,7 @@ void render_target::get_clip_rect(clip_rect* pRect) const {
     pRect->y = renderHeight - pRect->y - pRect->h;
   }
 
-  getEnclosingScaleRect(pRect, 1.0 / global_scale_factor, pRect);
+  getEnclosingScaleRect(pRect, 1.0 / draw_scale(), pRect);
 }
 
 void render_target::set_clip_rect(const clip_rect* pRect) {
@@ -616,7 +621,7 @@ void render_target::set_clip_rect(const clip_rect* pRect) {
   }
 
   SDL_Rect SDLRect;
-  getEnclosingScaleRect(pRect, global_scale_factor, &SDLRect);
+  getEnclosingScaleRect(pRect, draw_scale(), &SDLRect);
 
   // For some reason, SDL treats an empty rect (h or w <= 0) as if you turned
   // off clipping, so we replace it with a rect that's outside our viewport.
@@ -832,13 +837,13 @@ std::unique_ptr<render_target::scoped_buffer>
 render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
                                           int iHeight) {
   // We only need an intermediate drawing if there is active scaling.
-  if (global_scale_factor == 1.0) return nullptr;
+  if (draw_scale() == 1.0) return nullptr;
 
   return std::make_unique<scoped_target_texture>(this, iX, iY, iWidth, iHeight,
-                                                 false);
+                                                 /* bScale = */ false);
 }
 
-double render_target::draw_scale() {
+double render_target::draw_scale() const {
   if (current_target) return current_target->scale_factor();
   return global_scale_factor;
 }
