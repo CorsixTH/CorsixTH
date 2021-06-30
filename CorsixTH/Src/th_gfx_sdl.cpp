@@ -321,11 +321,73 @@ void wx_storing::store_argb(uint32_t pixel) {
   *alpha_data++ = palette::get_alpha(pixel);
 }
 
+class render_target::scoped_target_texture
+    : public render_target::scoped_buffer {
+ public:
+  scoped_target_texture(render_target* pTarget, int iX, int iY, int iWidth,
+                        int iHeight, bool bScale)
+      : target(pTarget),
+        previous_target(target->current_target),
+        rect({iX, iY, iWidth, iHeight}),
+        scale(bScale) {
+    if (!target->supports_target_textures) return;
+
+    texture = SDL_CreateTexture(target->renderer, SDL_PIXELFORMAT_ABGR8888,
+                                SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
+    if (SDL_SetRenderTarget(target->renderer, texture) != 0) {
+      SDL_DestroyTexture(texture);
+      texture = nullptr;
+      return;
+    }
+
+    // Clear the new texture to transparent/black.
+    SDL_RenderSetLogicalSize(target->renderer, rect.w, rect.h);
+    SDL_SetRenderDrawColor(target->renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
+    SDL_RenderClear(target->renderer);
+    target->current_target = this;
+  }
+
+  void offset(SDL_FRect& targetRect) {
+    targetRect.x -= static_cast<SDL_FRECT_UNIT>(rect.x);
+    targetRect.y -= static_cast<SDL_FRECT_UNIT>(rect.y);
+  }
+
+  double scale_factor() { return scale ? target->global_scale_factor : 1.0; }
+
+  bool is_target() { return texture; }
+
+  ~scoped_target_texture() override {
+    if (!texture) return;
+
+    // Restore previous context.
+    SDL_SetRenderTarget(target->renderer,
+                        previous_target ? previous_target->texture : nullptr);
+    SDL_RenderSetLogicalSize(target->renderer,
+                             previous_target ? previous_target->rect.w : target->width,
+                             previous_target ? previous_target->rect.h : target->height);
+    SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
+    target->current_target = previous_target;
+    if (scale) {
+      // If the target texture is already scaled, skip the global scale factor
+      // by drawing directly.
+      SDL_RenderCopy(target->renderer, texture, nullptr, nullptr);
+    } else {
+      target->draw(texture, nullptr, &rect, 0);
+    }
+    SDL_DestroyTexture(texture);
+  }
+
+ private:
+  render_target* target;
+  scoped_target_texture* previous_target;
+  SDL_Rect rect;
+  bool scale;
+  SDL_Texture* texture = nullptr;
+};
+
 render_target::render_target()
     : window(nullptr),
       renderer(nullptr),
-      zoom_texture(nullptr),
-      intermediate_texture(nullptr),
       pixel_format(nullptr),
       blue_filter_active(false),
       game_cursor(nullptr),
@@ -399,14 +461,11 @@ bool render_target::update(const render_target_creation_params* pParams) {
 }
 
 void render_target::destroy() {
+  zoom_buffer.reset();
+
   if (pixel_format) {
     SDL_FreeFormat(pixel_format);
     pixel_format = nullptr;
-  }
-
-  if (zoom_texture) {
-    SDL_DestroyTexture(zoom_texture);
-    zoom_texture = nullptr;
   }
 
   if (renderer) {
@@ -421,7 +480,7 @@ void render_target::destroy() {
 }
 
 bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
-  flush_buffer(&zoom_texture);
+  zoom_buffer.reset();
   scale_bitmaps = false;
 
   if (fScale <= 0.000) {
@@ -432,7 +491,8 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
         SDL_WINDOW_FULLSCREEN_DESKTOP) {
       // Drawing to an intermediate screen sized buffer when fullscreen results
       // in noticeably better text rendering quality.
-      init_buffer(&zoom_texture, width, height);
+      zoom_buffer.reset(
+          new scoped_target_texture(this, 0, 0, width, height, true));
     }
     return true;
   } else if (eWhatToScale == scaled_items::all && supports_target_textures) {
@@ -442,7 +502,9 @@ bool render_target::set_scale_factor(double fScale, scaled_items eWhatToScale) {
     int virtWidth = static_cast<int>(width / fScale);
     int virtHeight = static_cast<int>(height / fScale);
 
-    if (!init_buffer(&zoom_texture, virtWidth, virtHeight)) {
+    zoom_buffer.reset(
+        new scoped_target_texture(this, 0, 0, virtWidth, virtHeight, true));
+    if (!zoom_buffer->is_target()) {
       std::cout << "Warning: Could not render to zoom texture - "
                 << SDL_GetError() << std::endl;
 
@@ -479,7 +541,7 @@ bool render_target::start_frame() {
 }
 
 bool render_target::end_frame() {
-  flush_buffer(&zoom_texture);
+  zoom_buffer.reset();
 
   // End the frame by adding the cursor and possibly a filter.
   if (game_cursor) {
@@ -631,47 +693,6 @@ bool render_target::should_scale_bitmaps(double* pFactor) {
   return true;
 }
 
-bool render_target::init_buffer(SDL_Texture** texture, int iWidth,
-                                int iHeight) {
-  if (!supports_target_textures) return false;
-  *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ABGR8888,
-                               SDL_TEXTUREACCESS_TARGET, iWidth, iHeight);
-  SDL_RenderSetLogicalSize(renderer, iWidth, iHeight);
-  if (SDL_SetRenderTarget(renderer, *texture) != 0) {
-    SDL_RenderSetLogicalSize(renderer, width, height);
-    SDL_DestroyTexture(*texture);
-    *texture = nullptr;
-    return false;
-  }
-
-  // Clear the new texture to transparent/black.
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_TRANSPARENT);
-  SDL_RenderClear(renderer);
-  return true;
-}
-
-void render_target::flush_buffer(SDL_Texture** texture_ptr, SDL_Texture* target,
-                                 const SDL_Rect* dstRect) {
-  SDL_Texture* texture = *texture_ptr;
-  bool is_zoom_texture = texture == zoom_texture;
-  if (texture == nullptr) {
-    return;
-  }
-
-  // Clear texture before calling draw to ensure drawing includes scale.
-  *texture_ptr = nullptr;
-  SDL_SetRenderTarget(renderer, target);
-  SDL_RenderSetLogicalSize(renderer, width, height);
-  SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
-  if (is_zoom_texture) {
-    // The zoom texture must be drawn without scaling.
-    SDL_RenderCopy(renderer, texture, nullptr, nullptr);
-  } else {
-    draw(texture, nullptr, dstRect, 0);
-  }
-  SDL_DestroyTexture(texture);
-}
-
 namespace {
 
 //! Convert legacy 8bpp sprite data to recoloured 32bpp data, using special
@@ -776,18 +797,9 @@ void render_target::draw(SDL_Texture* pTexture, const SDL_Rect* prcSrcRect,
   if (iFlags & thdf_flip_horizontal) iSDLFlip |= SDL_FLIP_HORIZONTAL;
   if (iFlags & thdf_flip_vertical) iSDLFlip |= SDL_FLIP_VERTICAL;
 
-  double current_scale_factor =
-      intermediate_texture ? 1.0 : global_scale_factor;
   SDL_FRect scaledDstRect;
-  getScaleRect(prcDstRect, current_scale_factor, &scaledDstRect);
-  if (intermediate_texture) {
-    // If we're drawing to an intermediate texture, subtract the offset to the
-    // intermediate texture's resulting screen location.
-    scaledDstRect.x -=
-        static_cast<SDL_FRECT_UNIT>(intermediate_texture_location.x);
-    scaledDstRect.y -=
-        static_cast<SDL_FRECT_UNIT>(intermediate_texture_location.y);
-  }
+  getScaleRect(prcDstRect, draw_scale(), &scaledDstRect);
+  if (current_target) current_target->offset(scaledDstRect);
   if (iSDLFlip != 0) {
     SDL_RenderCopyExF(renderer, pTexture, prcSrcRect, &scaledDstRect, 0,
                       nullptr, (SDL_RendererFlip)iSDLFlip);
@@ -800,13 +812,15 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   SDL_SetRenderDrawColor(renderer, pLine->red, pLine->green, pLine->blue,
                          pLine->alpha);
 
+  double scale = draw_scale();
   double lastX = pLine->line_elements[0].x;
   double lastY = pLine->line_elements[0].y;
   for (const line_sequence::line_element& op : pLine->line_elements) {
     if (op.type == line_sequence::line_command::line) {
-      SDL_RenderDrawLine(
-          renderer, static_cast<int>(lastX + iX), static_cast<int>(lastY + iY),
-          static_cast<int>(op.x + iX), static_cast<int>(op.y + iY));
+      SDL_RenderDrawLine(renderer, static_cast<int>((lastX + iX) * scale),
+                         static_cast<int>((lastY + iY) * scale),
+                         static_cast<int>((op.x + iX) * scale),
+                         static_cast<int>((op.y + iY) * scale));
     }
 
     lastX = op.x;
@@ -814,17 +828,19 @@ void render_target::draw_line(line_sequence* pLine, int iX, int iY) {
   }
 }
 
-void render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
-                                               int iHeight) {
+std::unique_ptr<render_target::scoped_buffer>
+render_target::begin_intermediate_drawing(int iX, int iY, int iWidth,
+                                          int iHeight) {
   // We only need an intermediate drawing if there is active scaling.
-  if (global_scale_factor == 1.0) return;
-  intermediate_texture_location = {iX, iY, iWidth, iHeight};
-  init_buffer(&intermediate_texture, iWidth, iHeight);
+  if (global_scale_factor == 1.0) return nullptr;
+
+  return std::make_unique<scoped_target_texture>(this, iX, iY, iWidth, iHeight,
+                                                 false);
 }
 
-void render_target::finish_intermediate_drawing() {
-  flush_buffer(&intermediate_texture, zoom_texture,
-               &intermediate_texture_location);
+double render_target::draw_scale() {
+  if (current_target) return current_target->scale_factor();
+  return global_scale_factor;
 }
 
 raw_bitmap::raw_bitmap() {

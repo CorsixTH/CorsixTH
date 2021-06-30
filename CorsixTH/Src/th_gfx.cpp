@@ -1749,6 +1749,7 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
   iDestY += y_relative_to_tile;
   sprite* pLast = sprites + sprite_count;
 
+  std::unique_ptr<render_target::scoped_buffer> intermediate_buffer;
   if (use_intermediate_buffer) {
     int minX = INT_MAX, minY = INT_MAX, maxX = INT_MIN, maxY = INT_MIN;
     for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
@@ -1762,14 +1763,14 @@ void sprite_render_list::draw(render_target* pCanvas, int iDestX, int iDestY) {
       maxX = std::max(maxX, spriteX + spriteWidth);
       maxY = std::max(maxY, spriteY + spriteHeight);
     }
-    pCanvas->begin_intermediate_drawing(minX, minY, maxX - minX, maxY - minY);
+    intermediate_buffer = pCanvas->begin_intermediate_drawing(
+        minX, minY, maxX - minX, maxY - minY);
   }
 
   for (sprite* pSprite = sprites; pSprite != pLast; ++pSprite) {
     sheet->draw_sprite(pCanvas, pSprite->index, iDestX + pSprite->x,
                        iDestY + pSprite->y, flags);
   }
-  pCanvas->finish_intermediate_drawing();
 }
 
 bool sprite_render_list::hit_test(int iDestX, int iDestY, int iTestX,
