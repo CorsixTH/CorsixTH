@@ -802,4 +802,30 @@ function Map:afterLoad(old, new)
       self:setCellFlags(58, 72, {passable = false})
     end
   end
+  if old < 159 then
+    -- New feature, by default non-visual illnesses were always available
+    -- at the start
+    self.level_config.non_visuals_available = {
+    [0] = {Value = 0}, -- I_UNCOMMON_COLD
+    {Value = 0}, -- I_BROKEN_WIND
+    {Value = 0}, -- I_SPARE_RIBS
+    {Value = 0}, -- I_KIDNEY_BEANS
+    {Value = 0}, -- I_BROKEN_HEART
+    {Value = 0}, -- I_RUPTURED_NODULES
+    {Value = 0}, -- I_MULTIPLE_TV_PERSONALITIES
+    {Value = 0}, -- I_INFECTIOUS_LAUGHTER
+    {Value = 0}, -- I_CORRUGATED_ANKLES
+    {Value = 0}, -- I_CHRONIC_NOSEHAIR
+    {Value = 0}, -- I_3RD_DEGREE_SIDEBURNS
+    {Value = 0}, -- I_FAKE_BLOOD
+    {Value = 0}, -- I_GASTRIC_EJECTIONS
+    {Value = 0}, -- I_THE_SQUITS
+    {Value = 0}, -- I_IRON_LUNGS
+    {Value = 0}, -- I_SWEATY_PALMS
+    {Value = 0}, -- I_HEAPED_PILES
+    {Value = 0}, -- I_GUT_ROT
+    {Value = 0}, -- I_GOLF_STONES
+    {Value = 0}, -- I_UNEXPECTED_SWELLING
+    }
+  end
 end
