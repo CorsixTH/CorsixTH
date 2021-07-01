@@ -963,19 +963,20 @@ local tutorial_phases
 local function make_tutorial_phases()
 tutorial_phases = {
   {
+    _A.tutorial.start,                                 -- 1
     -- 1) build reception
-    { text = _A.tutorial.build_reception,              -- 1
+    { text = _A.tutorial.build_reception,              -- 2
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _A.tutorial.order_one_reception,          -- 2
+    { text = _A.tutorial.order_one_reception,          -- 3
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(3) end, },
-    { text = _A.tutorial.accept_purchase,              -- 3
+    { text = _A.tutorial.accept_purchase,              -- 4
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(2) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(2) end, },
-    _A.tutorial.rotate_and_place_reception,            -- 4
-    _A.tutorial.reception_invalid_position,            -- 5
-                                                       -- 6: object other than reception selected. currently no text for this phase.
+    _A.tutorial.rotate_and_place_reception,            -- 5
+    _A.tutorial.reception_invalid_position,            -- 6
+                                                       -- 7: object other than reception selected. currently no text for this phase.
   },
 
   {

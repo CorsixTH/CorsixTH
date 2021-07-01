@@ -123,6 +123,7 @@ function UIAdviser:hide()
   self.th:setAnimation(self.ui.app.world.anims, 440)
   self.frame = 1
   self.number_frames = 4
+  self.ui:tutorialStep(1, 1, 2)
 end
 
 -- Makes the adviser say something

@@ -621,7 +621,7 @@ function UIBottomPanel:dialogFurnishCorridor()
       local dlg = UIFurnishCorridor(self.ui)
       self.ui:setEditRoom(false)
       self.ui:addWindow(dlg)
-      self.ui:tutorialStep(1, 1, 2)
+      self.ui:tutorialStep(1, 2, 3)
     end
   end
 end

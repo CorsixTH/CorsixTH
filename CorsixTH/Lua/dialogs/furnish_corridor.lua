@@ -146,9 +146,9 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
     self.total_price = self.total_price + quantity * hospital:getObjectBuildCost(o.object.id)
     if o.object.id == "reception_desk" then
       if o.qty > 0 then
-        self.ui:tutorialStep(1, 2, 3)
+        self.ui:tutorialStep(1, 3, 4)
       else
-        self.ui:tutorialStep(1, 3, 2)
+        self.ui:tutorialStep(1, 4, 3)
       end
     end
   else
@@ -158,7 +158,7 @@ function UIFurnishCorridor:purchaseItem(index, quantity)
 end
 
 function UIFurnishCorridor:confirm()
-  self.ui:tutorialStep(1, 3, 4)
+  self.ui:tutorialStep(1, 4, 5)
 
   local to_purchase = {}
   local to_sell = {}
@@ -189,7 +189,7 @@ function UIFurnishCorridor:confirm()
 end
 
 function UIFurnishCorridor:close()
-  self.ui:tutorialStep(1, {2, 3}, 1)
+  self.ui:tutorialStep(1, {3, 4}, 2)
   if self.edit_dialog then
     self.edit_dialog:addObjects() -- No objects added. Call the function anyway to handle visibility etc.
   end

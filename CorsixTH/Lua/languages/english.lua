@@ -263,6 +263,9 @@ adviser = {
     roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
     roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
   },
+  tutorial = {
+    start = "Welcome to the tutorial. Click me or my speech bubble to move to the next step. Click the button above the watch to leave the tutorial.",
+  },
 }
 
 dynamic_info.patient.actions.no_gp_available = "Waiting for you to build a GP's office"
