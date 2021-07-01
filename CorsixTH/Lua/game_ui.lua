@@ -1080,7 +1080,8 @@ tutorial_phases = {
 }
 end
 
-local TUTORIAL_LENGTH = 32 -- Does not count phase 5
+local TUTORIAL_LENGTH = 35 -- Does not count phase 5
+local TUTORIAL_CHAPTER_PROGRESS = { 0, 7, 14, 30 }
 
 tutorial_phases = setmetatable({}, {__index = function(t, k)
   make_tutorial_phases()
@@ -1136,7 +1137,7 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
   local timer = self:getWindow(UIWatch)
   if timer and timer.count_type == "tutorial" then
-    self.tutorial_progress = self.tutorial_progress + 1
+    self.tutorial_progress = math.max(self.tutorial_progress + 1, TUTORIAL_CHAPTER_PROGRESS[chapter])
     timer:setWatch(self.tutorial_progress, TUTORIAL_LENGTH)
   end
 
