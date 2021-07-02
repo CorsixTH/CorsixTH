@@ -201,20 +201,21 @@ void frmSprites::_onPanelPaint(wxPaintEvent& evt) {
   }
 }
 
+// File type selection is by wildcards limited to ? or *, separated by ;
+// https://docs.wxwidgets.org/trunk/classwx_file_dialog.html remarks section
 void frmSprites::_onBrowseTable(wxCommandEvent& WXUNUSED(evt)) {
   m_txtTable->SetValue(::wxFileSelector(
       L"Select location of Font00V.tab (DATA)", m_txtTable->GetValue(),
-      L"Font00V.tab", L"tab", L"Tab files (*.tab)|*.[tT][aA][bB]", 0, this));
+      L"Font00V.tab", L"tab", L"Tab files (*.tab)|*.TAB;*.tab", 0, this));
 }
 void frmSprites::_onBrowseData(wxCommandEvent& WXUNUSED(evt)) {
   m_txtData->SetValue(::wxFileSelector(
       L"Choose Theme Hospital data file", m_txtData->GetValue(), L"", L"dat",
-      L"Dat files (*.dat)|*.[dD][aA][tT]", 0, this));
+      L"DAT files (*.dat)|*.DAT;*.dat", 0, this));
 }
 void frmSprites::_onBrowsePalette(wxCommandEvent& WXUNUSED(evt)) {
   m_txtPalette->SetValue(::wxFileSelector(
       L"Select location of MPalette.dat (QDATA)", m_txtPalette->GetValue(),
       L"MPalette.dat", L"dat",
-      L"Dat or Pal files (*.dat, *.pal)|*.[dD][aA][tT];*.[pP][aA][lL]", 0,
-      this));
+      L"Dat or Pal files (*.dat, *.pal)|*.DAT;*.dat;*.PAL;*.pal", 0, this));
 }
