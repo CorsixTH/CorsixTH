@@ -70,12 +70,14 @@ digraph "/home/runner/work/CorsixTH/CorsixTH/CorsixTH/Src/th_gfx_sdl.cpp"
   Node27 [label="iostream",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node28 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node28 [label="limits",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node1 -> Node29 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node29 [label="memory",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
   Node1 -> Node19 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
   Node1 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node1 -> Node29 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node29 [label="th_map.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__map_8h.html",tooltip=" "];
-  Node29 -> Node30 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node30 [label="list",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
-  Node29 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node29 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 -> Node30 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node30 [label="th_map.h",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$th__map_8h.html",tooltip=" "];
+  Node30 -> Node31 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node31 [label="list",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node30 -> Node7 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node30 -> Node5 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
 }
