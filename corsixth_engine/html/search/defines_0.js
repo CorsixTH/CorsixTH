@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['corsix_5fth_5f64bit_1591',['CORSIX_TH_64BIT',['../config_8h.html#a042dee51555001905252324abc0117b9',1,'config.h']]],
+  ['corsix_5fth_5farch_1591',['CORSIX_TH_ARCH',['../config_8h.html#a094b5b0fe32f93a79d2aa5bbbc28b74f',1,'config.h']]],
   ['corsix_5fth_5finterpreter_5fpath_1592',['CORSIX_TH_INTERPRETER_PATH',['../config_8h.html#acd6543f6f4060943c097c6efe9e1668e',1,'config.h']]],
   ['corsix_5fth_5fos_1593',['CORSIX_TH_OS',['../config_8h.html#add6d618f2642f62ba6fbc496f3ec57fa',1,'config.h']]],
   ['corsix_5fth_5fpacked_5fflags_1594',['CORSIX_TH_PACKED_FLAGS',['../config_8h.html#a837382ba5774a99f8ea8c30e22426247',1,'config.h']]],

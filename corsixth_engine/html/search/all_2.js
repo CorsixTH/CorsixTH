@@ -29,7 +29,7 @@ var searchData=
   ['config_2eh_81',['config.h',['../config_8h.html',1,'']]],
   ['configure_5ffile_82',['configure_file',['../CMakeLists_8txt.html#ab4dd235c17c829260a9458739426bb8c',1,'CMakeLists.txt']]],
   ['copy_5faudio_5fto_5fstream_83',['copy_audio_to_stream',['../classmovie__player.html#af687b073738392080093240a9959ccfc',1,'movie_player']]],
-  ['corsix_5fth_5f64bit_84',['CORSIX_TH_64BIT',['../config_8h.html#a042dee51555001905252324abc0117b9',1,'config.h']]],
+  ['corsix_5fth_5farch_84',['CORSIX_TH_ARCH',['../config_8h.html#a094b5b0fe32f93a79d2aa5bbbc28b74f',1,'config.h']]],
   ['corsix_5fth_5finterpreter_5fpath_85',['CORSIX_TH_INTERPRETER_PATH',['../config_8h.html#acd6543f6f4060943c097c6efe9e1668e',1,'config.h']]],
   ['corsix_5fth_5fos_86',['CORSIX_TH_OS',['../config_8h.html#add6d618f2642f62ba6fbc496f3ec57fa',1,'config.h']]],
   ['corsix_5fth_5fpacked_5fflags_87',['CORSIX_TH_PACKED_FLAGS',['../config_8h.html#a837382ba5774a99f8ea8c30e22426247',1,'config.h']]],
