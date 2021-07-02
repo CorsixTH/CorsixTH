@@ -1269,28 +1269,6 @@ function World:updateSpawnDates()
   end
 end
 
---! Computes the impact of hospital reputation on the spawn rate.
---! The relation between reputation and its impact is linear.
---! Returns a percentage (as a float):
---!     1% if reputation < 253
---!    60% if reputation == 400
---!   100% if reputation == 500
---!   140% if reputation == 600
---!   180% if reputation == 700
---!   300% if reputation == 1000
---!param hospital (hospital): the hospital used to compute the
---! reputation impact
-function World:getReputationImpact(hospital)
-  local result = 1 + ((hospital.reputation - 500) / 250)
-
-  -- The result must be positive
-  if result <= 0 then
-    return 0.01
-  else
-    return result
-  end
-end
-
 -- Called when it is time to determine when the next emergency should happen
 function World:nextEmergency()
   local control = self.map.level_config.emergency_control
@@ -2875,7 +2853,7 @@ end
 
 --! Choose hospital for normal patient
 --!param disease (table) - the disease assigned to this patient
---!return hospital  (Hospital)
+--!return hospital (Hospital)
 function World:chooseHospitalForPatient(disease)
   -- round robin if less than gbvAllocDelay
   if self.map.level_config.gbv.AllocDelay and self.game_date:monthOfGame() <= self.map.level_config.gbv.AllocDelay then
@@ -2890,9 +2868,11 @@ function World:chooseHospitalForPatient(disease)
     return self.hospitals[math.random(1, 4)]
   end
 
-  -- Select a hospital based on the reputation and cost of treatment of the patients disease
+  -- From all hospitals randomly select a hospital based on the reputation
+  -- and cost of treatment of the patients disease
   local value_proposition = 0
   local hosp_patient_value = {}
+  -- calculate the threshold values for each hospital
   for s, hosp in ipairs(self.hospitals) do
     local rep_multiplier = self.map.level_config.gbv.AllocIndRep and self.map.level_config.gbv.AllocIndRep or 2
     local reputation = hosp:getDiseaseReputation(disease.id)
@@ -2904,6 +2884,7 @@ function World:chooseHospitalForPatient(disease)
     hosp_patient_value[s] = value_proposition
   end
 
+  -- Check random value, against individual hospital thresholds
   local threshold = math.random(0, math.floor(value_proposition - 1))
   for i, hosp_value in ipairs(hosp_patient_value) do
     if threshold < hosp_value then
