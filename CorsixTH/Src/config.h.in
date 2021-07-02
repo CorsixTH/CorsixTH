@@ -63,11 +63,6 @@ SOFTWARE.
 #include <cstddef>
 #include <cstdint>
 
-/** Environment detection **/
-#if UINTPTR_MAX == UINT64_MAX
-#define CORSIX_TH_64BIT
-#endif
-
 // We bring in the most common stddef and stdint types to avoid typing
 // clang-format off
 using std::int8_t;
@@ -87,5 +82,8 @@ using std::uint64_t;
 
 /** Report operating system **/
 #cmakedefine CORSIX_TH_OS "@CORSIX_TH_OS@"
+
+/** Report system architecture **/
+#cmakedefine CORSIX_TH_ARCH "@CORSIX_TH_ARCH@"
 
 #endif  // CORSIX_TH_CONFIG_H_

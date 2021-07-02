@@ -2361,6 +2361,8 @@ function World:dumpGameLog()
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi = self.app:writeToFileOrTmp(gamelog_path)
+  -- Start the gamelog file with the system information
+  fi:write(self.app:getSystemInfo())
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
   end

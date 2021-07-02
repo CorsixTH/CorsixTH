@@ -57,6 +57,13 @@ else()
   set(CORSIX_TH_OS "unix")
 endif()
 
+# Report system architecture in compile_opts.arch
+if(MSVC)
+  set(CORSIX_TH_ARCH ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID})
+else()
+  set(CORSIX_TH_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+endif()
+
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project
 set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
