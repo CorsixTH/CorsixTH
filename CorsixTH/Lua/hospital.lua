@@ -2441,3 +2441,7 @@ function Hospital:getDiseaseReputationPriceFactor(disease)
   local percentage = self.disease_casebook[disease].price
   return math.min(1.5, math.max(0.5, reputation / 500 / percentage))
 end
+
+function Hospital:makeRaiseRequest()
+  -- Nothing to do, override in a derived class.
+end

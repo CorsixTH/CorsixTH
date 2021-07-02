@@ -15,7 +15,7 @@
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
 #   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 

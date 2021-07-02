@@ -185,15 +185,9 @@ int l_get_compile_options(lua_State* L) {
   lua_settop(L, 0);
   lua_newtable(L);
 
-#ifdef CORSIX_TH_64BIT
-  lua_pushboolean(L, 1);
-#else
-  lua_pushboolean(L, 0);
-#endif
-  lua_setfield(L, -2, "arch_64");
-
-  lua_pushliteral(L, "SDL");
-  lua_setfield(L, -2, "renderer");
+  // Report architecture
+  lua_pushliteral(L, CORSIX_TH_ARCH);
+  lua_setfield(L, -2, "arch");
 
 #ifdef CORSIX_TH_USE_SDL_MIXER
   lua_pushboolean(L, 1);

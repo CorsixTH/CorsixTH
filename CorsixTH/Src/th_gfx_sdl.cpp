@@ -34,6 +34,7 @@ SOFTWARE.
 #include <cstring>
 #include <iostream>
 #include <limits>
+#include <memory>
 #include <new>
 #include <stdexcept>
 
@@ -162,6 +163,22 @@ void getScaleRect(const SDL_Rect* rect, double scale_factor,
   getEnclosingScaleRect(rect, scale_factor, dst_rect);
 #endif
 }
+
+class scoped_color_mod {
+ public:
+  scoped_color_mod(SDL_Texture* pTexture, int r, int g, int b)
+      : texture(pTexture) {
+    int err = SDL_SetTextureColorMod(texture, r, g, b);
+    if (err < 0) {
+      throw std::runtime_error(SDL_GetError());
+    }
+  }
+
+  ~scoped_color_mod() { SDL_SetTextureColorMod(texture, 0xFF, 0xFF, 0xFF); }
+
+ private:
+  SDL_Texture* texture;
+};
 
 }  // namespace
 
@@ -1171,16 +1188,15 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     }
   }
 
+  std::unique_ptr<scoped_color_mod> color_mod;
   if (effect == animation_effect::glowing) {
     // We want this to vary between 155 -> 205 -> 255.
     // Use the target cycle length (15 cycles) to calculate the angle from 0 to
     // 2*pi.
     int currentVariation = static_cast<int>(
         sin(static_cast<double>(effect_ticks % 15) / 15.0 * 2 * pi) * 50);
-    int err = SDL_SetTextureColorMod(pTexture, 0, 205 + currentVariation, 0);
-    if (err < 0) {
-      throw std::runtime_error(SDL_GetError());
-    }
+    color_mod = std::make_unique<scoped_color_mod>(pTexture, 0,
+                                                   205 + currentVariation, 0);
   }
 
   if (effect == animation_effect::jelly &&
@@ -1223,14 +1239,6 @@ void sprite_sheet::draw_sprite(render_target* pCanvas, size_t iSprite, int iX,
     SDL_Rect rcDest = {iX, iY, sprite.width, sprite.height};
 
     pCanvas->draw(pTexture, &rcSrc, &rcDest, iFlags);
-  }
-
-  if (effect == animation_effect::glowing) {
-    // Reset back to original values
-    int err = SDL_SetTextureColorMod(pTexture, 0xFF, 0xFF, 0xFF);
-    if (err < 0) {
-      throw std::runtime_error(SDL_GetError());
-    }
   }
 }
 
