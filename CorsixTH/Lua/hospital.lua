@@ -2425,3 +2425,7 @@ end
 function Hospital:adviseDiscoverDisease()
   -- Nothing to do, override in a derived class.
 end
+
+function Hospital:makeRaiseRequest()
+  -- Nothing to do, override in a derived class.
+end
