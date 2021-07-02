@@ -174,6 +174,7 @@ function Machine:machineUsed(room)
       self:announceRepair(room)
     else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
        -- Upgrades task from low (1) priority to high (2) priority
+       -- This does not lock the room, as happens when the task call starts at high priority
       if self.hospital:getHandymanTaskPriority(taskIndex, "repairing") == 1 then
         self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
         self:announceRepair(room)
