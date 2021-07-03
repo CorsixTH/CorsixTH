@@ -388,14 +388,19 @@ function Staff:checkIfNeedRest()
     if self.waiting_for_staffroom then
       self:changeAttribute("happiness", -0.001)
     end
+
     local room = self:getRoom()
-    if (self.staffroom_needed and ((room and not room:getPatient()) or not room)) or
+    -- Nurses can leave a ward with patients remaining in their beds,
+    -- nurses in other rooms and other staff must leave after all patients exit
+    local may_leave = room and (room.room_info.id == "ward" or not room:getPatient())
+    if (self.staffroom_needed and (may_leave or not room)) or
         (room and self.going_to_staffroom) then
       if self:getCurrentAction().name ~= "walk" and self:getCurrentAction().name ~= "queue" then
         self.staffroom_needed = nil
         self:goToStaffRoom()
       end
     end
+
     -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
     -- already going to staffroom or being picked up
     if self.waiting_for_staffroom or self.staffroom_needed or
