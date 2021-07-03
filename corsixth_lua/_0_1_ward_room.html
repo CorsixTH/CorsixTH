@@ -54,9 +54,6 @@
  <a href="_0_1_room.html#_0_1_room_1count_windows">countWindows</a>()
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
- <li class="self">
- <a href="_0_1_ward_room.html#_0_1_ward_room_1count_working_nurses">countWorkingNurses</a>()
- </li>
  <li class="inherited">
  <a href="_0_1_room.html#_0_1_room_1crash_room">crashRoom</a>()
  (inherited from <a href="_0_1_room.html">Room</a>)
@@ -144,9 +141,9 @@
  <a href="_0_1_room.html#_0_1_room_1make_humanoid_leave">makeHumanoidLeave</a>(<span class="p">patient</span>)
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">onHumanoidEnter</a>(<span class="p">humanoid</span>)
- (inherited from <a href="_0_1_room.html">Room</a>)
+ <li class="self">
+ <a href="_0_1_ward_room.html#_0_1_ward_room_1on_humanoid_enter">onHumanoidEnter</a>(<span class="p">humanoid</span>)
+ (overrides <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">Room:onHumanoidEnter</a>)
  </li>
  <li class="self">
  <a href="_0_1_ward_room.html#_0_1_ward_room_1on_humanoid_leave">onHumanoidLeave</a>(<span class="p">humanoid</span>)
@@ -192,6 +189,9 @@
  <a href="_0_1_room.html#_0_1_room_1try_to_find_nearby_patients">tryToFindNearbyPatients</a>()
  (inherited from <a href="_0_1_room.html">Room</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_ward_room.html#_0_1_ward_room_1update_healing_amount">updateHealingAmount</a>()
+ </li>
  </ul>
 </div>
 <div class="member_list">
@@ -214,13 +214,14 @@
  <li><span class="p">door2</span>
  (*)
  </li>
+ <li><span class="p">healing_amount</span>
+ </li>
  <li><span class="p">height</span>
  (*)
  </li>
  <li><span class="p">hospital</span>
  </li>
  <li><span class="p">humanoids</span>
- (*)
  </li>
  <li><span class="p">humanoids_enroute</span>
  (*)
@@ -304,14 +305,12 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1after_load">Room:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L185">line 185 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L208">line 208 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_ward_room_1command_entering_patient">function WardRoom:commandEnteringPatient(<span class="p">patient</span>)</a></h5>
  <p>
- TODO the nurse should not leave the ward if there are beds in use, therefore prevent her from being picked up
-and have a system that stops patients entering the ward if she is in need of taking a break or being called elsewhere.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
@@ -322,7 +321,7 @@ and have a system that stops patients entering the ward if she is in need of tak
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_patient">Room:commandEnteringPatient</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L127">line 127 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L149">line 149 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -338,13 +337,7 @@ and have a system that stops patients entering the ward if she is in need of tak
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1command_entering_staff">Room:commandEnteringStaff</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L89">line 89 of Lua/rooms/ward.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_ward_room_1count_working_nurses">function WardRoom:countWorkingNurses()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L163">line 163 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L90">line 90 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -359,14 +352,30 @@ and have a system that stops patients entering the ward if she is in need of tak
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L95">line 95 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L96">line 96 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_ward_room_1get_maximum_staff_criteria">function WardRoom:getMaximumStaffCriteria()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1get_maximum_staff_criteria">Room:getMaximumStaffCriteria</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L85">line 85 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L86">line 86 of Lua/rooms/ward.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_ward_room_1on_humanoid_enter">function WardRoom:onHumanoidEnter(<span class="p">humanoid</span>)</a></h5>
+ <p>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">humanoid</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_enter">Room:onHumanoidEnter</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L203">line 203 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -382,14 +391,14 @@ and have a system that stops patients entering the ward if she is in need of tak
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1on_humanoid_leave">Room:onHumanoidLeave</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L180">line 180 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L197">line 197 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_ward_room_1room_finished">function WardRoom:roomFinished()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1room_finished">Room:roomFinished</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L62">line 62 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L63">line 63 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -405,7 +414,7 @@ and have a system that stops patients entering the ward if she is in need of tak
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1set_staff_member">Room:setStaffMember</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L159">line 159 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L187">line 187 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -426,7 +435,13 @@ and have a system that stops patients entering the ward if she is in need of tak
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_room.html#_0_1_room_1set_staff_members_attribute">Room:setStaffMembersAttribute</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L174">line 174 of Lua/rooms/ward.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L191">line 191 of Lua/rooms/ward.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_ward_room_1update_healing_amount">function WardRoom:updateHealingAmount()</a></h5>
+ <p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/rooms/ward.lua#L127">line 127 of Lua/rooms/ward.lua</a>.
  </p>
  </div>
 </div>
