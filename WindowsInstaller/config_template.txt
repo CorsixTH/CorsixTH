@@ -1,64 +1,23 @@
----- CorsixTH configuration file ----------------------------------------------
+------------------------- CorsixTH configuration file -------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
 --  setting = [[value]]
--- Number settings should not have anything around their value, e.g.
---  setting = 42
-
+-- Number settings should not have anything around their value,
+-- e.g. setting = 42
+-- If you wish to go back to the default settings for everything, you can delete
+-- this text file and it will be re-created when you play the game.
+--
+-------------------------------- SETTINGS MENU --------------------------------
+-- These settings can also be changed from within the game in the settings menu
 -------------------------------------------------------------------------------
--- Theme hospital install folder: original game data files are loaded from this
--- folder. Between the square braces should be the folder which contains the
--- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
--- the Theme Hospital demo, though a full install of the original game is
--- preferred.
-theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
--------------------------------------------------------------------------------
+-- Screen size. Must be at least 640x480. Larger sizes will require better
+-- hardware in order to maintain a playable framerate. The fullscreen setting
+-- can be true or false, and the game will run windowed if not fullscreen.
+--
+fullscreen = SCREEN_FULLSCREEN
 
--------------------------------------------------------------------------------
--- Theme hospital option settings
---
--- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
-prevent_edge_scrolling = false 
---
--- Capture mouse: By default enabled (capture_mouse = true).
-capture_mouse = true
---
--- Background music: By default disabled at level 0.5
-play_music = true 
-music_volume = 0.5 
---
--- Announcements: By default enabled at level 0.5
-play_announcements = true 
-announcement_volume = 0.5 
---
--- Sounds: By default enabled at level 0.5
-play_sounds = true 
-sound_volume = 0.5 
---
--- Adviser on/off: If you set this setting to true the adviser will no longer
--- pop up.
-adviser_disabled = false 
---
--- Intro movie: By default enabled
-play_intro = true 
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
--- Free Build or Sandbox mode
--- You cannot win or lose custom made maps if this is set to true. 
--- You also don't have to worry about money.
--- This setting does not apply to any of the campaign maps.
-
-free_build_mode = false-------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
--- Allow user actions while game is paused
--- In Theme Hospital the player would only be allowed to use the top menu if
--- the game was paused. That is the default setting in CorsixTH too, but by
--- setting this to true everything is allowed while the game is paused.
-
-allow_user_actions_while_paused = false-------------------------------------------------------------------------------
-
+width = SCREEN_SIZE_WIDTH
+height = SCREEN_SIZE_HEIGHT
 
 -------------------------------------------------------------------------------
 -- Language to use for ingame text. Between the square braces should be one of:
@@ -81,108 +40,306 @@ allow_user_actions_while_paused = false-----------------------------------------
 --  Russian               / ru / rus
 --  Spanish               / es / spa
 --  Swedish               / sv / swe
-
+--
 language = [[LANGUAGE_CHOSEN]]
--------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
--- Screen size. Must be at least 640x480. Larger sizes will require better
--- hardware in order to maintain a playable framerate. The fullscreen setting
--- can be true or false, and the game will run windowed if not fullscreen.
+-- Audio global on/off switch.
+-- Note that audio will also be disabled if CorsixTH was compiled without
+-- the SDL_mixer library.
+--
+audio = true
 
-width = SCREEN_SIZE_WIDTH
-height = SCREEN_SIZE_HEIGHT
-fullscreen = SCREEN_FULLSCREEN
+------------------------------ CUSTOM GAME MENU -------------------------------
+-- These settings can also be changed from the opening menu screen
+-- in the custom games or new game menus
 -------------------------------------------------------------------------------
+-- Free Build or Sandbox mode
+-- You cannot win or lose custom made maps if this is set to true.
+-- You also don't have to worry about money.
+-- This setting does not apply to any of the campaign maps.
+--
+free_build_mode = false
+
+--------------------------------- OPTIONS MENU --------------------------------
+--These settings can also be changed from within the game from the options menu
+-------------------------------------------------------------------------------
+-- Sounds: By default enabled and set at level 0.5
+--
+play_sounds = true
+sound_volume = 0.5
+
+-------------------------------------------------------------------------------
+-- Announcements: By default set at level 0.5
+--
+play_announcements = true
+announcement_volume = 0.5
+
+-------------------------------------------------------------------------------
+-- Background music: By default enabled and set at level 0.5
+--
+play_music = true
+music_volume = 0.5
+
+-------------------------------------------------------------------------------
+-- Edge scrolling: By default enabled (prevent_edge_scrolling = false).
+--
+prevent_edge_scrolling = false
+
+-------------------------------------------------------------------------------
+-- Capture mouse: By default enabled (capture mouse = true).
+--
+capture_mouse = true
+
+-------------------------------------------------------------------------------
+-- Adviser on/off: If you set this to true the adviser will no longer
+-- pop up.
+--
+adviser_disabled = false
+
+-------------------------------------------------------------------------------
+-- Scrolling Momentum.
+-- Determines the amount of momentum when scrolling the map with the mouse.
+-- This should be a value between 0 and 1 where 0 is no momentum
+--
+scrolling_momentum = 0.8
+
+-------------------------------------------------------------------------------
+-- Top menu clock is by default is always on
+-- setting to true will give you a twentyfour hours display
+-- change to false if you want AM / PM time displayed.
+--
+twentyfour_hour_clock = true
+
+-------------------------------------------------------------------------------
+-- Automatically check for updates.
+-- If set to true, CorsixTH will automatically check for and alert you to newer
+-- versions on startup.
+--
+check_for_updates = true
+
+-------------------------------------------------------------------------------
+-- Warmth Colors display settings.
+-- This specifies which display method is set for warmth colours by default.
+-- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
+--
+warmth_colors_display_default = 1
+
+------------------------------ CUSTOMISE SETTINGS -----------------------------
+-- These settings can also be changed from the Customise Menu
+
+-------------------------------------------------------------------------------
+-- Wage increase request settings.
+-- If set to true when wage increase requests expire automatically grant them
+-- otherwise let the staff member quit.
+--
+grant_wage_increase = false
+
+-------------------------------------------------------------------------------
+-- Movie global on/off switch.
+-- Note that movies will also be disabled if CorsixTH was compiled without the
+-- FFMPEG library.
+--
+movies = true
+
+-- Intro movie: Enabled by default
+--
+play_intro = true
+
+-------------------------------------------------------------------------------
+-- Allow user actions while game is paused
+-- In Theme Hospital the player would only be allowed to use the top menu if
+-- the game was paused. That is the default setting in CorsixTH too, but by
+-- setting this to true everything is allowed while the game is paused.
+--
+allow_user_actions_while_paused = false
+
+-------------------------------------------------------------------------------
+-- VOLUME CONTROL IS OPENING THE DRUG CASEBOOK?
+
+-- If your keyboard volume control opens the Drug Casebook at the same time
+-- then change this to true. From then on you will have to use Shift + C to open
+-- the Casebook and volume down will not open it.
+-- For example for shift + C to open casebook change the setting below to = true
+--
+volume_opens_casebook = false
+
+-------------------------------------------------------------------------------
+-- To allow patients with Alien DNA to visit your hospital other than by an
+-- emergency change the settings below. Understand that there are no animations
+-- for sitting down, opening or knocking on doors etc.
+-- So, like with Theme Hospital to do these things they will appear to change
+-- to normal looking and then change back.
+--
+alien_dna_only_by_emergency = true
+alien_dna_must_stand = true
+alien_dna_can_knock_on_doors = false
+
+-- To allow female patients with fractured bones, which are by default
+-- disabled due to poor animation that skips and jumps a bit
+--
+disable_fractured_bones_females = true
+
+-------------------------------------------------------------------------------
+-- By default the player selects any extra objects they want for each room they
+-- build. If you would like the game to remember what you usually add, then
+-- change this option to true.
+--
+enable_avg_contents = false
+
+-------------------------------------------------------------------------------
+-- By default destroyed rooms can't be removed. If you would like the game to
+-- give you the option of removing a destroyed room change this option to true.
+--
+remove_destroyed_rooms = false
+
+------------------------------- FOLDER SETTINGS -------------------------------
+-- These settings can also be changed from the Folders Menu
+-------------------------------------------------------------------------------
+-- Theme hospital install folder: original game data files are loaded from this
+-- folder. Between the square braces should be the folder which contains the
+-- original HOSPITAL.EXE and/or HOSP95.EXE file. This can point to a copy of
+-- the Theme Hospital demo, though a full install of the original game is
+-- preferred.
+--
+theme_hospital_install = [[ORIGINAL_HOSPITAL_DIRECTORY]]
+
+-------------------------------------------------------------------------------
+-- Font file setting. Can be changed from main game menu
+-- Specify a font file here if you wish to play the game in a language not
+-- present in the original game. Examples include Russian, Chinese and Polish.
+--
+unicode_font = nil -- [[X:\ThemeHospital\font.ttc]]
 
 -------------------------------------------------------------------------------
 -- Savegames. By default, the "Saves" directory alongside this config file will
 -- be used for storing saved games in. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
--- savegames = [[C:\CorsixTH\Savegames]]
+--
+savegames = nil -- [[X:\ThemeHospital\Saves]]
+
 -------------------------------------------------------------------------------
+-- Levels. By default, the "Levels" directory alongside this config file will
+-- be used for storing new maps / levels in. Should this not be suitable, then
+-- uncomment the following line, and point it to a directory which exists and
+-- is more suitable.
+--
+levels = nil -- [[X:\ThemeHospital\Levels]]
+
+-------------------------------------------------------------------------------
+-- Use new graphics. Whether to use the original graphics from Theme Hospital
+-- or use new graphics created by the CorsixTH project.
+use_new_graphics = false
+
+-------------------------------------------------------------------------------
+-- Graphics folder. All graphics are initially taken from the original
+-- Theme Hospital, but the game can also try to find new graphics in the
+-- specified folder below. Some graphics are shipped with CorsixTH, and they
+-- will be used if you just switch on new graphics. If you however have
+-- acquired graphics from somewhere else, then uncomment the following line
+-- and point it to the directory which contains the new graphics.
+new_graphics_folder = nil -- [[X:\ThemeHospital\Graphics]]
 
 -------------------------------------------------------------------------------
 -- Screenshots. By default, the "Screenshots" directory alongside this config
 -- file will be used for saving screenshots. Should this not be suitable, then
 -- uncomment the following line, and point it to a directory which exists and
 -- is more suitable.
--- screenshots = [[C:\CorsixTH\Screenshots]]
--------------------------------------------------------------------------------
+--
+screenshots = nil -- [[X:\ThemeHospital\Screenshots]]
 
 -------------------------------------------------------------------------------
--- Audio global on/off switch.
--- Note that audio will also be disabled if CorsixTH was compiled without the
--- SDL_mixer library.
-audio = true 
--------------------------------------------------------------------------------
+-- If you want to listen to non-Theme-Hospital music, then follow these steps:
+--  1) Find updated versions of the original tracks (a link to ZR's Remixes can
+--     be found on the CorsixTH wiki) or any other music you want to listen to.
+--  2) Uncomment the next line and point it to where the music files are.
+--  3) If you want to change the names of songs ingame, make a file called
+--     "names.txt" and write the file name on one row, followed by the desired
+--     ingame name on the next row.
+--
+audio_music = nil -- [[X:\ThemeHospital\Music]]
 
+------------------------------- SPECIAL SETTINGS ------------------------------
+-- These settings can only be changed here
 -------------------------------------------------------------------------------
 -- Audio playback settings.
 -- These can be commented out to use the default values from the game binary.
 -- Note: On some platforms, these settings may not effect MIDI playback - only
 -- sound effects and music audio. If you are experiencing poor audio playback,
 -- then try doubling the buffer size.
-audio_frequency = 22050 
-audio_channels = 2 
-audio_buffer_size = 2048 
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
--- If you want to listen to non-Theme-Hospital music, then follow these steps:
---  1) Find updated versions of the original tracks (for example the remixes by ZR
---     from http://www.a-base.dds.nl/temp/ThemeHospital_ZRRemix.zip ) or any
---     other music you want to listen to.
---  2) Uncomment the next line and point it to where the music files are.
---  3) If you want to change the names of songs ingame, make a file called
---     "names.txt" and write the file name on one row, followed by the desired
---     ingame name on the next row.
--- audio_mp3 = [[X:\ThemeHospital\Music]]
--------------------------------------------------------------------------------
+--
+audio_frequency = 22050
+audio_channels = 2
+audio_buffer_size = 2048
 
 -------------------------------------------------------------------------------
 -- Debug settings.
 -- If set to true more detailed information will be printed in the terminal
 -- and a debug menu will be visible.
-debug = false 
+--
+debug = false
+
+--Optional settings for CorsixTH's Lua DBGp client. Default settings are
+-- nil values, platform & workingdir will be autodected if nil.
+--https://wiki.eclipse.org/LDT/User_Area/User_Guides/User_Guide_1.2#Attach_session
+--
+idehost = nil
+ideport = nil
+idekey = nil
+transport = nil
+platform = nil
+workingdir = nil
+
 -- If set to true, the FPS, Lua memory usage, and entity count will be shown
 -- in the dynamic information bar. Note that setting this to true also turns
 -- off the FPS limiter, causing much higher CPU utilisation, but resulting in
 -- more useful FPS values, as they are not artificially capped.
-track_fps = false 
--------------------------------------------------------------------------------
+--
+track_fps = false
 
 -------------------------------------------------------------------------------
--- Warmth Colors display settings.
--- This specifies which display method is set for warmth colours by default. 
--- Possible values: 1 (Red), 2 (Blue Green Red) and 3 (Yellow Orange Red).
-warmth_colors_display_default = 1 
--------------------------------------------------------------------------------
+-- Zoom Speed: By default this is set at 80
+-- Any number value between 10 and 1000, 10 is very slow and 1000 is very fast!
+--
+zoom_speed = 80
 
 -------------------------------------------------------------------------------
--- Font file setting.
--- Specify a font file here if you wish to play the game in a language not
--- present in the original game. Examples include Russian, Chinese and Polish.
--- unicode_font = [[X:\ThemeHospital\font.ttc]] 
--------------------------------------------------------------------------------
-
--------------------------------------------------------------------------------
--- Movie global on/off switch.
--- Note that movies will also be disabled if CorsixTH was compiled without the
--- FFMPEG library.
-movies = true 
--------------------------------------------------------------------------------
+-- Scroll Speeds: The speed of scrolling with and without shift being held.
+-- Any number value between 1 and 10, 1 is very slow and 10 is fast!
+--
+scroll_speed = 2
+shift_scroll_speed = 4
 
 -------------------------------------------------------------------------------
 -- Room information dialogs: Information about new rooms, important for
 -- additional rooms in later levels. Affects campaign only.
+--
 room_information_dialogs = true
--------------------------------------------------------------------------------
 
 -------------------------------------------------------------------------------
 -- If true, parts of the hospital can be made inaccessible by blocking the path
 -- with rooms or objects. If false, all parts of the hospital must be kept
 -- accessible, the game will disallow any attempt to blocking the path.
+--
 allow_blocking_off_areas = false
+
 -------------------------------------------------------------------------------
+-- Direct Zoom: Avoid rendering to an intermediate texture when zooming.
+-- Improves performance and reliability on some hardware.
+--
+direct_zoom = nil
+
+-------------------------------------------------------------------------------
+-- Replacing Machines: By default, you will see a new machines initial strength
+-- before purchasing it. If you don't want this change the value to false.
+--
+new_machine_extra_info = true
+
+-------------------------------------------------------------------------------
+-- By default your username will be your name in the game. You can change it in
+-- the New Game menu or between the brace brackets below like [[NAME]].
+-- Note: space is limited in the game, so don't enter a name that is too long!
+--
+player_name = [[]]
+
