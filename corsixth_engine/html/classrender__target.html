@@ -63,8 +63,10 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#friends">Friends</a> &#124;
 <a href="classrender__target-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">render_target Class Reference</div>  </div>
@@ -73,6 +75,13 @@ $(function() {
 
 <p><code>#include &lt;<a class="el" href="th__gfx__sdl_8h_source.html">th_gfx_sdl.h</a>&gt;</code></p>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target_1_1scoped__buffer.html">scoped_buffer</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target_1_1scoped__target__texture.html">scoped_target_texture</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a2d901b3c30f40e9d57f3b983ee8330e5"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a2d901b3c30f40e9d57f3b983ee8330e5">render_target</a> ()</td></tr>
@@ -158,16 +167,19 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a2e3f1d8bc309b46eb751fa42f680aa15"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acb03e7bd95ba6439618d0d06cc271f68"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#acb03e7bd95ba6439618d0d06cc271f68">draw_line</a> (<a class="el" href="classline__sequence.html">line_sequence</a> *pLine, int iX, int iY)</td></tr>
 <tr class="separator:acb03e7bd95ba6439618d0d06cc271f68"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac185575937e9e17b546662303f293aa0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ac185575937e9e17b546662303f293aa0">begin_intermediate_drawing</a> (int iX, int iY, int iWidth, int iHeight)</td></tr>
-<tr class="separator:ac185575937e9e17b546662303f293aa0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a20469613e45d15e406c2721633b3f71a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a20469613e45d15e406c2721633b3f71a">finish_intermediate_drawing</a> ()</td></tr>
-<tr class="separator:a20469613e45d15e406c2721633b3f71a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac9089bcb284f4f6b973144c1305a6b89"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classrender__target_1_1scoped__buffer.html">scoped_buffer</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ac9089bcb284f4f6b973144c1305a6b89">begin_intermediate_drawing</a> (int iX, int iY, int iWidth, int iHeight)</td></tr>
+<tr class="separator:ac9089bcb284f4f6b973144c1305a6b89"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a7731a5cb35fe9252408865c32faa186e"><td class="memItemLeft" align="right" valign="top">static constexpr uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#a7731a5cb35fe9252408865c32faa186e">map_colour</a> (uint8_t iR, uint8_t iG, uint8_t iB)</td></tr>
 <tr class="memdesc:a7731a5cb35fe9252408865c32faa186e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Encode an RGB triplet for fillRect()  <a href="classrender__target.html#a7731a5cb35fe9252408865c32faa186e">More...</a><br /></td></tr>
 <tr class="separator:a7731a5cb35fe9252408865c32faa186e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
+Friends</h2></td></tr>
+<tr class="memitem:ae1f92aa50d12526ba339149f919a338d"><td class="memItemLeft" align="right" valign="top">class&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrender__target.html#ae1f92aa50d12526ba339149f919a338d">scoped_target_texture</a></td></tr>
+<tr class="separator:ae1f92aa50d12526ba339149f919a338d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a2d901b3c30f40e9d57f3b983ee8330e5"></a>
@@ -205,14 +217,14 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ac185575937e9e17b546662303f293aa0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac185575937e9e17b546662303f293aa0">&#9670;&nbsp;</a></span>begin_intermediate_drawing()</h2>
+<a id="ac9089bcb284f4f6b973144c1305a6b89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac9089bcb284f4f6b973144c1305a6b89">&#9670;&nbsp;</a></span>begin_intermediate_drawing()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void render_target::begin_intermediate_drawing </td>
+          <td class="memname">std::unique_ptr&lt; <a class="el" href="classrender__target_1_1scoped__buffer.html">render_target::scoped_buffer</a> &gt; render_target::begin_intermediate_drawing </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>iX</em>, </td>
@@ -242,7 +254,7 @@ Static Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Begin drawing to an intermediate unscaled texture targeting the given location and size. Any drawing outside of this rectangle may be cropped. Call finish_intermediate_drawing once all draw calls are complete.</p>
+<p>Begin drawing to an intermediate unscaled texture targeting the given location and size. The intermediate drawing will be committed once the returned <a class="el" href="classrender__target_1_1scoped__buffer.html">scoped_buffer</a> is destroyed.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">iX</td><td>X-coordinate of left side of drawing rectangle. </td></tr>
@@ -531,24 +543,6 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Fill a rectangle of the render target with a solid colour. </p>
-
-</div>
-</div>
-<a id="a20469613e45d15e406c2721633b3f71a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a20469613e45d15e406c2721633b3f71a">&#9670;&nbsp;</a></span>finish_intermediate_drawing()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void render_target::finish_intermediate_drawing </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Copies the intermediate drawing which was started with a call to begin_intermediate_drawing to the screen at the current scale factor. </p>
 
 </div>
 </div>
@@ -1006,6 +1000,29 @@ Static Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Update the parameters for the render target. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="ae1f92aa50d12526ba339149f919a338d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1f92aa50d12526ba339149f919a338d">&#9670;&nbsp;</a></span>scoped_target_texture</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">friend class <a class="el" href="classrender__target_1_1scoped__target__texture.html">scoped_target_texture</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>

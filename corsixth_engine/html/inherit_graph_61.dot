@@ -4,5 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="sound_archive",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsound__archive.html",tooltip="Utility class for accessing Theme Hospital's SOUND-0.DAT."];
+  Node0 [label="render_target_creation\l_params",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structrender__target__creation__params.html",tooltip=" "];
 }

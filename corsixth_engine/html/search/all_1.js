@@ -4,7 +4,7 @@ var searchData=
   ['backward_25',['backward',['../th__map_8h.html#a4e429f38fce9a6053f296c4ce76c7733a195fe59b6f103787a914aead0f3db502',1,'th_map.h']]],
   ['basic_5fpathfinder_26',['basic_pathfinder',['../classbasic__pathfinder.html',1,'basic_pathfinder'],['../classbasic__pathfinder.html#abb7b577d7f9832b5612bc8f621c0a4a2',1,'basic_pathfinder::basic_pathfinder()']]],
   ['bed_27',['bed',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba001cbc059a402b3be7c99be558eaaf73',1,'th_map.h']]],
-  ['begin_5fintermediate_5fdrawing_28',['begin_intermediate_drawing',['../classrender__target.html#ac185575937e9e17b546662303f293aa0',1,'render_target']]],
+  ['begin_5fintermediate_5fdrawing_28',['begin_intermediate_drawing',['../classrender__target.html#ac9089bcb284f4f6b973144c1305a6b89',1,'render_target']]],
   ['bench_29',['bench',['../th__map_8h.html#a7551c65dbbbe1253742f3ee62a0e82aba1d28d258250876fb7dde22a17436ef9c',1,'th_map.h']]],
   ['best_5fdistance_30',['best_distance',['../classidle__tile__finder.html#a0276cc5ac1c37c35cf0ca9e8ebd63786',1,'idle_tile_finder']]],
   ['best_5fnext_5fnode_31',['best_next_node',['../classidle__tile__finder.html#ac854b1a55af163827bcd8cac7d146d86',1,'idle_tile_finder']]],

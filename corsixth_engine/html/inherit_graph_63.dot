@@ -4,5 +4,5 @@ digraph "Graphical Class Hierarchy"
   edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
   node [fontname="Helvetica",fontsize="10",shape=record];
   rankdir="LR";
-  Node0 [label="sprite_sheet",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsprite__sheet.html",tooltip="Sheet of sprites."];
+  Node0 [label="sound_player",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classsound__player.html",tooltip=" "];
 }

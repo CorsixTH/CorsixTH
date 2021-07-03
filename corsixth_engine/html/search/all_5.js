@@ -9,13 +9,12 @@ var searchData=
   ['find_5fpath_162',['find_path',['../classbasic__pathfinder.html#af269ce62fdf30fb679102df8252d4e07',1,'basic_pathfinder::find_path()'],['../classpathfinder.html#aac2c62ad69a164e48df78f61f7337af3',1,'pathfinder::find_path()']]],
   ['find_5fpath_5fto_5fhospital_163',['find_path_to_hospital',['../classhospital__finder.html#abfdc7b51c739285fb7e72434d2beab45',1,'hospital_finder::find_path_to_hospital()'],['../classpathfinder.html#aa225342cd8e628caa3be28e7bf37bb6d',1,'pathfinder::find_path_to_hospital()']]],
   ['finish_164',['finish',['../classlua__persist__basic__writer.html#a3091b7892fc8a56e5c41eb2ba0964a4d',1,'lua_persist_basic_writer::finish()'],['../classlua__persist__basic__reader.html#aecddbc9cabb0ed290482b86d83e3493c',1,'lua_persist_basic_reader::finish()'],['../classinteger__run__length__encoder.html#af655560834ad235646008c6c1e0a834d',1,'integer_run_length_encoder::finish()']]],
-  ['finish_5fintermediate_5fdrawing_165',['finish_intermediate_drawing',['../classrender__target.html#a20469613e45d15e406c2721633b3f71a',1,'render_target']]],
-  ['finish_5fnonoverlapping_5fdraws_166',['finish_nonoverlapping_draws',['../classrender__target.html#ad95575ec31c54386dc63332fb3b716a2',1,'render_target']]],
-  ['flags_167',['flags',['../structdrawable.html#ac7af9caaaa53321149a35ef56698a627',1,'drawable::flags()'],['../structmap__tile.html#afaf549f6725c0a839b52224cf7e444da',1,'map_tile::flags()']]],
-  ['font_168',['font',['../classfont.html',1,'font'],['../classmap__typical__overlay.html#a62f827b52706faad0e304c6c451251f5',1,'map_typical_overlay::font()'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a47a282dfe68a42d302e22c4920ed9b5e',1,'font():&#160;th_lua_internal.h']]],
-  ['forward_169',['forward',['../th__map_8h.html#a4e429f38fce9a6053f296c4ce76c7733a965dbaac085fc891bfbbd4f9d145bbc8',1,'th_map.h']]],
-  ['fourcc_170',['fourcc',['../th__sound_8cpp.html#a51a85b3fa13cf0e9b5047a83536f939c',1,'th_sound.cpp']]],
-  ['full_5fcolour_5frenderer_171',['full_colour_renderer',['../classfull__colour__renderer.html',1,'full_colour_renderer'],['../classfull__colour__renderer.html#a400036b7c2944f54de38ab0b4bc97de5',1,'full_colour_renderer::full_colour_renderer()']]],
-  ['full_5fcolour_5fstoring_172',['full_colour_storing',['../classfull__colour__storing.html',1,'full_colour_storing'],['../classfull__colour__storing.html#aacc35529f763a0342dd9199ec1cf035f',1,'full_colour_storing::full_colour_storing()']]],
-  ['fullscreen_173',['fullscreen',['../structrender__target__creation__params.html#a8f423f66296e62f779cf5b54af588b6c',1,'render_target_creation_params']]]
+  ['finish_5fnonoverlapping_5fdraws_165',['finish_nonoverlapping_draws',['../classrender__target.html#ad95575ec31c54386dc63332fb3b716a2',1,'render_target']]],
+  ['flags_166',['flags',['../structdrawable.html#ac7af9caaaa53321149a35ef56698a627',1,'drawable::flags()'],['../structmap__tile.html#afaf549f6725c0a839b52224cf7e444da',1,'map_tile::flags()']]],
+  ['font_167',['font',['../classfont.html',1,'font'],['../classmap__typical__overlay.html#a62f827b52706faad0e304c6c451251f5',1,'map_typical_overlay::font()'],['../th__lua__internal_8h.html#a66e31721c92137f9434eedde656e52a4a47a282dfe68a42d302e22c4920ed9b5e',1,'font():&#160;th_lua_internal.h']]],
+  ['forward_168',['forward',['../th__map_8h.html#a4e429f38fce9a6053f296c4ce76c7733a965dbaac085fc891bfbbd4f9d145bbc8',1,'th_map.h']]],
+  ['fourcc_169',['fourcc',['../th__sound_8cpp.html#a51a85b3fa13cf0e9b5047a83536f939c',1,'th_sound.cpp']]],
+  ['full_5fcolour_5frenderer_170',['full_colour_renderer',['../classfull__colour__renderer.html',1,'full_colour_renderer'],['../classfull__colour__renderer.html#a400036b7c2944f54de38ab0b4bc97de5',1,'full_colour_renderer::full_colour_renderer()']]],
+  ['full_5fcolour_5fstoring_171',['full_colour_storing',['../classfull__colour__storing.html',1,'full_colour_storing'],['../classfull__colour__storing.html#aacc35529f763a0342dd9199ec1cf035f',1,'full_colour_storing::full_colour_storing()']]],
+  ['fullscreen_172',['fullscreen',['../structrender__target__creation__params.html#a8f423f66296e62f779cf5b54af588b6c',1,'render_target_creation_params']]]
 ];
