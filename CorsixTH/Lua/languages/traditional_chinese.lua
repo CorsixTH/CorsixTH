@@ -3247,7 +3247,6 @@ hotkey_window = {
   panel_scrollKeys = "捲動鍵",
   panel_zoomKeys = "縮放鍵",
   panel_gameSpeedKeys = "遊戲速度鍵",
-  panel_miscInGameKeys = "其他遊戲內鍵",
   panel_toggleKeys = "切換鍵",
   panel_debugKeys = "除錯鍵",
   panel_storePosKey = "商店位置鑰匙",

@@ -532,7 +532,6 @@ hotkey_window = {
   panel_scrollKeys = "Scroll Keys",
   panel_zoomKeys = "Zoom Keys",
   panel_gameSpeedKeys = "Game Speed Keys",
-  panel_miscInGameKeys = "Misc. In-Game Keys",
   panel_toggleKeys = "Toggle Keys",
   panel_debugKeys = "Debug Keys",
   panel_storePosKeys = "Store Position Keys",

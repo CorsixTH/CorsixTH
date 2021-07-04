@@ -330,7 +330,10 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_quickSave",
             "ingame_quickLoad",
             "ingame_restartLevel",
-            "ingame_quitLevel" }}}},
+            "ingame_quitLevel",
+            "ingame_rotateobject",
+            "ingame_patient_gohome",
+            "ingame_setTransparent" }}}},
     {
       id = "speed",
       title = _S.hotkey_window.button_gameSpeedKeys,
@@ -357,16 +360,6 @@ function UIHotkeyAssign:UIHotkeyAssign(ui, mode)
             "ingame_zoom_out",
             "ingame_zoom_out_more",
             "ingame_reset_zoom" }}}},
-    {
-      id = "misc",
-      title = _S.hotkey_window.panel_miscInGameKeys,
-      tooltip = _S.hotkey_window.panel_miscInGameKeys,
-      sections = {{
-          title = _S.hotkey_window.panel_miscInGameKeys,
-          keys = {
-            "ingame_rotateobject",
-            "ingame_patient_gohome",
-            "ingame_setTransparent" }}}},
     {
       id = "toggle",
       title = _S.hotkey_window.panel_toggleKeys,
@@ -535,10 +528,6 @@ function UIHotkeyAssign:showKeyPane(pane)
     v.window:setVisible(k == pane)
     v.button:setToggleState(k == pane)
   end
-end
-
-function UIHotkeyAssign:confirm_func(hotkey)
-  hotkey_input(hotkey, self.hotkey_buttons, self.app)
 end
 
 --! Child window for setting key bindings

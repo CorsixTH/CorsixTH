@@ -3476,7 +3476,6 @@ hotkey_window = {
   panel_scrollKeys = "滚动键",
   panel_zoomKeys = "缩放键",
   panel_gameSpeedKeys = "游戏速度键",
-  panel_miscInGameKeys = "其他游戏内键",
   panel_toggleKeys = "切换键",
   panel_debugKeys = "调试键",
   panel_storePosKey = "商店位置钥匙",
