@@ -18,7 +18,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
-local config_path, config_name
+local config_path, config_name, config_data
 local pathsep = package.config:sub(1, 1)
 local ourpath = debug.getinfo(1, "S").source:sub(2, -22)
 local function pathconcat(a, b)
@@ -154,8 +154,9 @@ for key, value in pairs(config_defaults) do
   config_values[key] = value
 end
 
-if fi then
+if fi and TheApp then
   -- Read all the values from the config file and put them in config_values. If at least one value is missing rewrite the configuration file.
+  -- Don't do this if this file is run from outside CorsixTH, ie generate_windows_config.lua
   local file_contents = fi:read("*all")
   fi:close()
   for key, value in pairs(config_defaults) do
@@ -178,8 +179,7 @@ else
   needs_rewrite = true
 end
 
-if needs_rewrite then
-  local string_01 = [=[
+local string_01 = [=[
 ------------------------- CorsixTH configuration file -------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -375,7 +375,7 @@ if needs_rewrite then
 --]=] .. '\n' ..
 'remove_destroyed_rooms = ' .. tostring(config_values.remove_destroyed_rooms) .. '\n' .. [=[]=]
 
-  local string_02 = [=[
+local string_02 = [=[
 
 ------------------------------- FOLDER SETTINGS -------------------------------
 -- These settings can also be changed from the Folders Menu
@@ -521,9 +521,11 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 --]=] .. '\n' ..
 "player_name = [[" .. (config_values.player_name or '') .. ']]' .. '\n' .. '\n'
 
-]=]
+config_data = string_01 .. string_02
+
+if needs_rewrite and TheApp then
   fi = TheApp:writeToFileOrTmp(config_filename)
-  fi:write(string_01 .. string_02)
+  fi:write(config_data)
   fi:close()
 end
 
@@ -662,7 +664,7 @@ end
 if hotkeys_needs_rewrite then
   -- The config file that will be written is divided into separate strings, which are concatenated when they are written into the file.
   -- This is done to avoid a "Too many C levels" error.
-  local string_01 = [=[
+  local string_03 = [=[
 --------------------------CorsixTH Hotkey Mappings File------------------------
 -- Lines starting with two dashes (like this one) are ignored.
 -- Text settings should have their values between double square braces, e.g.
@@ -722,7 +724,7 @@ if hotkeys_needs_rewrite then
 'ingame_jukebox = ' .. hotkeys_values.ingame_jukebox .. '\n' ..
 'ingame_openFirstMessage = ' .. hotkeys_values.ingame_openFirstMessage .. '\n'
 
-  local string_02 = [=[
+  local string_04 = [=[
 
 -- These pause and control the speed of the game.
 --]=] .. '\n' ..
@@ -775,7 +777,7 @@ if hotkeys_needs_rewrite then
 'ingame_setTransparent = ' .. hotkeys_values.ingame_setTransparent .. '\n' .. [=[
 ]=]
 
-local string_03 = [=[
+local string_05 = [=[
 
 ----------------------------Store and Recall Position--------------------------
 -- These keys store and recall camera positions. If you press the key(s) that
@@ -826,7 +828,7 @@ local string_03 = [=[
 'ingame_patient_gohome = ' .. hotkeys_values.ingame_patient_gohome .. '\n' .. [=[
 ]=]
   fi = TheApp:writeToFileOrTmp(hotkeys_filename)
-  fi:write(string_01 .. string_02 .. string_03)
+  fi:write(string_03 .. string_04 .. string_05)
   fi:close()
 end
 
@@ -837,4 +839,4 @@ for k, str_val in pairs(hotkeys_values) do
   end
 end
 
-return config_filename, config_values, hotkeys_filename, hotkeys_values, hotkeys_defaults
+return config_filename, config_values, hotkeys_filename, hotkeys_values, hotkeys_defaults, config_data

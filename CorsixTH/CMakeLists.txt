@@ -291,3 +291,6 @@ if(NOT USE_SOURCE_DATADIRS)
     endif()
   endif()
 endif()
+
+add_custom_target(windowsconfig ${LUA_PROGRAM_PATH} ${CMAKE_SOURCE_DIR}/scripts/generate_windows_config.lua
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
