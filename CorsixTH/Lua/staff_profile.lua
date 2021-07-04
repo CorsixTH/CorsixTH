@@ -266,6 +266,7 @@ function StaffProfile.translateStaffClass(staff_class)
     Doctor       = _S.staff_title.doctor,
     Surgeon      = _S.staff_title.surgeon,
     Psychiatrist = _S.staff_title.psychiatrist,
+    Researcher   = _S.staff_title.researcher,
   }
   return staffclass_to_string[staff_class]
 end
