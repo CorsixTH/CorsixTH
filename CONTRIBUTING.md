@@ -23,7 +23,7 @@ your development time is a worthy endeavour.**
 
 To suggest an enhancement, open a new [issue](https://github.com/CorsixTH/CorsixTH/issues/new/choose) and click the *Feature Request*
 button. It will provide all the information needed to evaluate the
-suggestion or enhancement.\
+suggestion or enhancement.
 
 ![image](https://user-images.githubusercontent.com/20030128/123638352-fc609400-d816-11eb-88ad-11030e041fc4.png)
 
@@ -51,7 +51,7 @@ You can also submit a **Draft Pull Request** as an alternative to the
 
 
 #### CONTRIBUTING CODE: ####
-**Important!**
+**Important!**\
 Ensure you have read our [Coding Conventions](https://github.com/CorsixTH/CorsixTH/wiki/Coding-Conventions)
 before starting your work. CorsixTH may use styles different to your previous experience with ``Lua``
 and ``C++``. The [Wiki](https://github.com/CorsixTH/CorsixTH/wiki/) also contains other useful information
