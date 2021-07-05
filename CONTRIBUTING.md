@@ -21,8 +21,8 @@ your development time is a worthy endeavour.**
 
 ## Enhancement/Suggestions ##
 
-If you want to make a suggestion, please use the *Feature Request* option when
-making a new issue. It will provide all the information needed to evaluate the
+To suggest an enhancement, open a new [issue](https://github.com/CorsixTH/CorsixTH/issues/new/choose) and click the *Feature Request*
+button. It will provide all the information needed to evaluate the
 suggestion or enhancement.\
 
 ![image](https://user-images.githubusercontent.com/20030128/123638352-fc609400-d816-11eb-88ad-11030e041fc4.png)
@@ -32,8 +32,8 @@ suggestion or enhancement.\
 
 When providing a pull request ensure the description field describes the major
 changes from the request. If your pull request relates to any existing issues,
-include those issues in the description. The pull request provides a default
-layout to help you fill out this information.
+link those issues to the description by referencing them with a `#` followed by the issue number. 
+The pull request provides a default layout to help you fill out this information.
 
 #### Pull Request Statuses ####
 CorsixTH encourages using the following labels inside your Pull Request's title
@@ -46,11 +46,16 @@ to denote its current progress. Unlabelled pull request will be considered
 | ***\<none>*** | Ready |
 
 Please make sure you label and update your Pull Request accordingly.
-Alternatively, you can submit a **Draft Pull Request** as an alternative to the
+You can also submit a **Draft Pull Request** as an alternative to the
 **[WIP]** label.
 
 
 #### CONTRIBUTING CODE: ####
+**Important!**
+Ensure you have read our [Coding Conventions](https://github.com/CorsixTH/CorsixTH/wiki/Coding-Conventions)
+before starting your work. CorsixTH may use styles different to your previous experience with ``Lua``
+and ``C++``. The [Wiki](https://github.com/CorsixTH/CorsixTH/wiki/) also contains other useful information
+that could be beneficial before contributing code.
 
 *NB: If you're using GitHub Desktop ignore the git specific commands and follow
 guidance from [GitHub Docs](https://docs.github.com/en/desktop/installing-and-configuring-github-desktop/overview/getting-started-with-github-desktop)*\
@@ -97,15 +102,15 @@ so it could be accepted.
 
 #### Notes ####
 ##### Multiple commits: #####
-If your feature is very big, break it into smaller steps and do a separate
-commit for every independent operation.  This means doing step 10 several times
-as you go. You still only need to do one pull request at the end.
+If your pull request can not be summarised in a single sentence, break it into smaller steps
+and do a separate commit for every independent operation (e.g. one sentence per commit is a
+good measure). This means doing step 10 several times as you go. You still only need to do
+one pull request at the end.
 
 ##### Syncing with Upstream: #####
 If it takes a long time between when you start your feature and when you finish
-there might be other important changes other people are making to CorsixTH.  It
-is a good idea to make sure your code will still operate correctly with the
-latest changes.  To do this:
+there might be other important changes other people are making to CorsixTH.  To
+ensure your pull request operates correctly within the latest changes:
 - Commit your work to the feature branch
 - ``git checkout master``
 - ``git fetch upstream``
@@ -115,8 +120,8 @@ working on it
 
 *NB: GitHub Desktop users need to conduct fetch upstream from your branch on
 github.com and rebase from GitHub Desktop after*\
-What this does is downloads all the changes from CorsixTH/CorsixTH since you
-started, and pretends that all your changes were made after them.  If there are
+This downloads all the changes from CorsixTH/CorsixTH since you
+started, and moves your commits on top of them.  If there are
 conflicts, for example if someone else changed the same line in the same file
 that you did you will be asked to resolve those conflicts.
 
