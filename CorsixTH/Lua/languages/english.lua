@@ -24,8 +24,8 @@ Inherit("original_strings", 0)
 --Note: All strings should use a single space after full-stops. Only exception is level descriptions.
 -------------------------------  OVERRIDE  ----------------------------------
 adviser.warnings.money_low = "Your money is getting low!" -- Funny. Exists in German translation, but not existent in english?
--- TODO: tooltip.graphs.reputation -- this tooltip talks about hospital value. Actually it should say reputation.
--- TODO: tooltip.status.close -- it's called status window, not overview window.
+tooltip.graphs.reputation = "Toggle reputation" -- Incorrectly said "toggle hospital value"
+tooltip.status.close = "Close status window" -- Incorrectly said "close overview window"
 
 -- tooltip.staff_list.next_person, prev_person is rather next/prev page (also in german, maybe more languages?)
 tooltip.staff_list.next_person = "Show next page"
