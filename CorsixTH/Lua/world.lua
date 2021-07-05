@@ -500,7 +500,7 @@ local function isDiseaseUsableForNewPatient(self, disease, hospital)
     -- 0 means it can show up anytime.
     return level_config.non_visuals_available[disease.non_visuals_id].Value < self.game_date:monthOfGame()
   end
-  return false
+  error("disease has neither visuals_id or non_visuals_id")
 end
 
 --! Spawn a patient from a spawn point for the given hospital.
