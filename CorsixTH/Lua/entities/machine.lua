@@ -20,10 +20,6 @@ SOFTWARE. --]]
 
 local TH = require("TH")
 
-corsixth.require("announcer")
-
-local AnnouncementPriority = _G["AnnouncementPriority"]
-
 --! An `Object` which needs occasional repair (to prevent explosion).
 class "Machine" (Object)
 
@@ -68,18 +64,6 @@ end
 function Machine:isBreaking()
   local threshold = self:getRemainingUses()
   return threshold < 4
-end
-
---! Announces a machine needing repair
---!param room The room of the machine
-function Machine:announceRepair(room)
-  local sound = room.room_info.handyman_call_sound
-  local earthquake = self.world.next_earthquake
-  self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
-  -- If an earthquake is happening don't play the call sound to prevent spamming
-  if earthquake.active and earthquake.warning_timer == 0 then return end
-  -- TODO: Don't announce handyman call sound if there are no handymen
-  if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
 end
 
 --! Set whether the smoke animation should be showing
@@ -171,12 +155,12 @@ function Machine:machineUsed(room)
     if taskIndex == -1 then
       local call = self.world.dispatcher:callForRepair(self, true, false, true)
       self.hospital:addHandymanTask(self, "repairing", 2, self.tile_x, self.tile_y, call)
-      self:announceRepair(room)
+      self.hospital:announceRepair(room)
     else -- Otherwise the task is already queued. Increase the priority to above that of machines with at least 4 uses left
        -- Upgrades task from low (1) priority to high (2) priority
       if self.hospital:getHandymanTaskPriority(taskIndex, "repairing") == 1 then
         self.hospital:modifyHandymanTaskPriority(taskIndex, 2, "repairing")
-        self:announceRepair(room)
+        self.hospital:announceRepair(room)
       end
     end
   -- Else if repair is needed, but not urgently

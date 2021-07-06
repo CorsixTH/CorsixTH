@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "PlayerHospital" (Hospital)
 
 ---@type PlayerHospital
@@ -389,6 +393,18 @@ function PlayerHospital:adviseBoilerBreakdown(broken_heat)
     ui.adviser:say(_A.boiler_issue.maximum_heat)
     ui:playRandomAnnouncement({ "sorry003.wav", "sorry004.wav" })
   end
+end
+
+--! Announces a machine needing repair
+--!param room The room of the machine
+function PlayerHospital:announceRepair(room)
+  local sound = room.room_info.handyman_call_sound
+  local earthquake = self.world.next_earthquake
+  self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+  -- If an earthquake is happening don't play the call sound to prevent spamming
+  if earthquake.active and earthquake.warning_timer == 0 then return end
+  if self:countStaffOfCategory("Handyman", 1) == 0 then return end
+  if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
 end
 
 --! Called at the end of each day.
