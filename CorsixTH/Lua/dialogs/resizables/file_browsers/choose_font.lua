@@ -39,7 +39,7 @@ function UIChooseFont:UIChooseFont(ui, mode)
   else
     root = FilteredFileTreeNode(roots[1], {".ttc", ".otf", ".ttf"})
   end
-  self:UIFileBrowser(ui, mode, _S.font_location_window.caption:format(".ttc, .otf, .ttf"), 265, root)
+  self:UIFileBrowser(ui, mode, _S.font_location_window.caption:format(".ttc, .otf, .ttf"), 265, root, nil, self)
 end
 
 --! Function called by clicking button of existing save #num

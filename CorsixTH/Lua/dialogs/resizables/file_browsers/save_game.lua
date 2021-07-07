@@ -45,7 +45,7 @@ local col_shadow = {
 function UISaveGame:UISaveGame(ui)
   local treenode = FilteredFileTreeNode(ui.app.savegame_dir, ".sav")
   treenode.label = "Saves"
-  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265, treenode, true)
+  self:UIFileBrowser(ui, "game", _S.save_game_window.caption:format(".sav"), 265, treenode, true, self)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -61,6 +61,13 @@ end
 function UISaveGame:abortName()
   self.new_savegame_textbox.text = ""
   self.new_savegame_textbox.panel:setLabel(_S.save_game_window.new_save_game)
+end
+
+--! Updates the textbox to selected file
+--!param node (table) Selected file
+function UISaveGame:updateTextbox(node)
+  self.new_savegame_textbox.text = node
+  self.new_savegame_textbox.panel:setLabel(node)
 end
 
 --! Function called when textbox is confirmed (e.g. by pressing enter)

@@ -45,7 +45,7 @@ local col_shadow = {
 function UISaveMap:UISaveMap(ui)
   local treenode = FilteredFileTreeNode(ui.app.user_level_dir, ".map")
   treenode.label = "Maps"
-  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265, treenode, true)
+  self:UIFileBrowser(ui, "map", _S.save_map_window.caption:format(".map"), 265, treenode, true, self)
   -- The most probable preference of sorting is by date - what you played last
   -- is the thing you want to play soon again.
   self.control:sortByDate()
@@ -61,6 +61,13 @@ end
 function UISaveMap:abortName()
   self.new_map_textbox.text = ""
   self.new_map_textbox.panel:setLabel(_S.save_map_window.new_map)
+end
+
+--! Updates the textbox to selected file
+--!param node (table) Selected file
+function UISaveMap:updateTextbox(node)
+  self.new_map_textbox.text = node
+  self.new_map_textbox.panel:setLabel(node)
 end
 
 --! Function called when textbox is confirmed (e.g. by pressing enter)
