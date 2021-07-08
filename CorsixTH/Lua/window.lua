@@ -1557,6 +1557,7 @@ end
 
 function Window:onMouseDown(button, x, y)
   local repaint = false
+  if not self.visible then return false end
   if self.windows then
     for _, window in ipairs(self.windows) do
       if window:onMouseDown(button, x - window.x, y - window.y) then
