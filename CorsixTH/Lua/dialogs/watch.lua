@@ -40,6 +40,9 @@ function UIWatch:UIWatch(ui, count_type)
   if count_type == "emergency" then
     self.tick_rate = math.floor((TICK_DAYS_EMERGENCY * Date.hoursPerDay()) / TIMER_SEGMENTS)
     self.tick_timer = self.tick_rate
+  elseif count_type == "tutorial" then
+    self.tick_rate = 0
+    self.tick_timer = 0
   else
     self.tick_rate = math.floor((TICK_DAYS * Date.hoursPerDay()) / TIMER_SEGMENTS)
     self.tick_timer = self.tick_rate  -- Initialize tick timer
@@ -64,6 +67,7 @@ function UIWatch:UIWatch(ui, count_type)
     ["initial_opening"] = _S.tooltip.watch.hospital_opening,
     ["emergency"]       = _S.tooltip.watch.emergency,
     ["epidemic"]        = _S.tooltip.watch.epidemic,
+    ["tutorial"]        = _S.tooltip.watch.tutorial,
   }
 
   if count_type == "epidemic" then
@@ -88,6 +92,14 @@ function UIWatch:UIWatch(ui, count_type)
   self:addPanel(1, 2, 47)
 end
 
+--! Manually set the watch position
+--!param num (int) Numerator
+--!param den (int) Denominator of the fraction the watch is set to
+function UIWatch:setWatch(num, den)
+  local new_position = num / den * TIMER_SEGMENTS
+  self.panels[#self.panels].sprite_index = math.ceil(new_position)
+end
+
 function UIWatch:onCountdownEnd()
   self:close()
   if self.count_type == "emergency" then
@@ -103,10 +115,13 @@ function UIWatch:onCountdownEnd()
   elseif self.count_type == "initial_opening" then
     self.ui.hospital.opened = true
     self.ui:playSound("fanfare.wav")
+  elseif self.count_type == "tutorial" then
+    self.ui:tutorialStep("end")
   end
 end
 
 function UIWatch:onWorldTick()
+  if self.count_type == "tutorial" then return end
   if self.tick_timer == 0 and self.open_timer >= 0 then -- Used for making a smooth animation
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1

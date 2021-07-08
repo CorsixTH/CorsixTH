@@ -308,7 +308,7 @@ function UIPlaceObjects:removeObjects(object_list, refund)
 end
 
 function UIPlaceObjects:close()
-  self.ui:tutorialStep(1, {4, 5}, 1)
+  self.ui:tutorialStep(1, {5, 6}, 2)
   self:removeAllObjects(true)
   self:clearBlueprint()
   self.ui:setWorldHitTest(true)
@@ -327,9 +327,9 @@ function UIPlaceObjects:setActiveIndex(index)
 
   local object = self.objects[self.active_index].object
   if object.id == "reception_desk" then
-    self.ui:tutorialStep(1, 6, 4)
+    self.ui:tutorialStep(1, 7, 5)
   else
-    self.ui:tutorialStep(1, {4, 5}, 6)
+    self.ui:tutorialStep(1, {5, 6}, 7)
   end
   local anims = self.anims
   local grey_scale = anims.Alt32_GreyScale
@@ -483,7 +483,7 @@ function UIPlaceObjects:placeObject(dont_close_if_empty)
   end
 
   local object = self.objects[self.active_index]
-  if object.object.id == "reception_desk" then self.ui:tutorialStep(1, 4, "next") end
+  if object.object.id == "reception_desk" then self.ui:tutorialStep(1, {2, 5}, "next") end
 
   local real_obj
   -- There might be an existing object that has been picked up.

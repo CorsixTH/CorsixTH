@@ -984,19 +984,20 @@ local tutorial_phases
 local function make_tutorial_phases()
 tutorial_phases = {
   {
+    _A.tutorial.start,                                 -- 1
     -- 1) build reception
-    { text = _A.tutorial.build_reception,              -- 1
+    { text = _A.tutorial.build_reception,              -- 2
       begin_callback = function() TheApp.ui:getWindow(UIBottomPanel):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIBottomPanel):stopButtonBlinking() end, },
-    { text = _A.tutorial.order_one_reception,          -- 2
+    { text = _A.tutorial.order_one_reception,          -- 3
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(3) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(3) end, },
-    { text = _A.tutorial.accept_purchase,              -- 3
+    { text = _A.tutorial.accept_purchase,              -- 4
       begin_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):startButtonBlinking(2) end,
       end_callback = function() TheApp.ui:getWindow(UIFurnishCorridor):stopButtonBlinking(2) end, },
-    _A.tutorial.rotate_and_place_reception,            -- 4
-    _A.tutorial.reception_invalid_position,            -- 5
-                                                       -- 6: object other than reception selected. currently no text for this phase.
+    _A.tutorial.rotate_and_place_reception,            -- 5
+    _A.tutorial.reception_invalid_position,            -- 6
+                                                       -- 7: object other than reception selected. currently no text for this phase.
   },
 
   {
@@ -1099,6 +1100,10 @@ tutorial_phases = {
   },
 }
 end
+
+local TUTORIAL_LENGTH = 35 -- Does not count phase 5
+local TUTORIAL_CHAPTER_PROGRESS = { 0, 7, 14, 30 }
+
 tutorial_phases = setmetatable({}, {__index = function(t, k)
   make_tutorial_phases()
   return tutorial_phases[k]
@@ -1110,6 +1115,16 @@ end})
 -- phase_to:   Phase we want to step to or "next" to go to next chapter or "end" to end tutorial.
 -- returns true if we changed phase, false if we didn't
 function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
+  if chapter == "end" then
+    local phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
+    if phase and phase.end_callback and type(phase.end_callback) == "function" then
+      phase.end_callback(...)
+    end
+    self.tutorial.chapter = 0
+    self.tutorial.phase = 0
+    self:addWindow(UIWatch(self, "initial_opening"))
+    return true
+  end
   if self.tutorial.chapter ~= chapter then
     return false
   end
@@ -1141,6 +1156,11 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   else
     self.tutorial.phase = phase_to
   end
+  local timer = self:getWindow(UIWatch)
+  if timer and timer.count_type == "tutorial" then
+    self.tutorial_progress = math.max(self.tutorial_progress + 1, TUTORIAL_CHAPTER_PROGRESS[chapter])
+    timer:setWatch(self.tutorial_progress, TUTORIAL_LENGTH)
+  end
 
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end
   local new_phase = tutorial_phases[self.tutorial.chapter][self.tutorial.phase]
@@ -1166,6 +1186,7 @@ function GameUI:startTutorial(chapter)
   chapter = chapter or 1
   self.tutorial.chapter = chapter
   self.tutorial.phase = 0
+  self.tutorial_progress = 1
 
   self:tutorialStep(chapter, 0, 1)
 end
