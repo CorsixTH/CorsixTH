@@ -114,7 +114,6 @@ function App:init()
   corsixth.require("filesystem")
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
-  -- self:checkLanguageFile()
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
   self:initUserLevelDir()
   self:initSavegameDir()
@@ -146,9 +145,6 @@ function App:init()
   end
 
   local modes = {}
-  if compile_opts.renderer == "OpenGL" then
-    modes[#modes + 1] = "opengl"
-  end
   self.fullscreen = false
   if self.config.fullscreen then
     self.fullscreen = true

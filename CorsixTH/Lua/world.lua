@@ -1219,8 +1219,6 @@ function World:onEndDay()
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
-  -- TODO: Do other regular things? Such as checking if any room needs
-  -- staff at the moment and making plants need water.
 end
 
 function World:checkIfGameWon()
