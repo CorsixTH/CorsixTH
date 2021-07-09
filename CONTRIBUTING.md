@@ -1,4 +1,4 @@
-# CorisxTH Contributing Guidelines #
+# CorsixTH Contributing Guidelines #
 
 ## Tell other devs what you are working on! ##
 
