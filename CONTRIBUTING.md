@@ -16,7 +16,7 @@ open a new issue for it and tell other devs here that your going to/have
 started working on it.
 
 **If you have an idea for an enhancement that does not have a discussion, make
-a *Feature Request* first to discuss its desirability.  This helps make sure
+a *Feature Request* first to discuss its desirability. This helps make sure
 your development time is a worthy endeavour.**
 
 ## Enhancement/Suggestions ##
@@ -62,7 +62,7 @@ guidance from [GitHub Docs](https://docs.github.com/en/desktop/installing-and-co
 **First Time**
 1. Ensure you have a GitHub account (https://github.com/signup/free)
 2. Fork CorsixTH\CorsixTH (https://github.com/CorsixTH/CorsixTH/fork)
-3. Ensure you have a git client.  ([GitHub Desktop](http://desktop.github.com)
+3. Ensure you have a git client. ([GitHub Desktop](http://desktop.github.com)
 [Interactive] | [Git](https://git-scm.com/downloads) [Shell])
 4. Fork the CorsixTH/CorsixtTH project to your account, the CorsixtTH/CorsixtTH
 project page has a button for this.
@@ -87,7 +87,8 @@ devs here that your working on it.
 	- ``git checkout myfeature``
 6. Make your changes
 7. Unittest continuously, see README.txt in CorsixTH/Luatest for more info
-8. Review, add, and commit your changes
+8. Review, add, and commit your changes.\
+Note: ``C++`` code must be formatted using ``clang-format`` before it will be accepted
 	- ``git diff`` | See your changes.
 	- ``git diff --check`` | Check there's no white space.
 	- ``git add`` | do this for each file
@@ -109,7 +110,7 @@ one pull request at the end.
 
 ##### Syncing with Upstream: #####
 If it takes a long time between when you start your feature and when you finish
-there might be other important changes other people are making to CorsixTH.  To
+there might be other important changes other people are making to CorsixTH. To
 ensure your pull request operates correctly within the latest changes:
 - Commit your work to the feature branch
 - ``git checkout master``
@@ -121,7 +122,7 @@ working on it
 *NB: GitHub Desktop users need to conduct fetch upstream from your branch on
 github.com and rebase from GitHub Desktop after*\
 This downloads all the changes from CorsixTH/CorsixTH since you
-started, and moves your commits on top of them.  If there are
+started, and moves your commits on top of them. If there are
 conflicts, for example if someone else changed the same line in the same file
 that you did you will be asked to resolve those conflicts.
 
