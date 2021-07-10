@@ -549,6 +549,8 @@ class sprite_sheet {
       @param iX X position to draw the sprite.
       @param iY Y position to draw the sprite.
       @param iFlags Flags to apply for drawing.
+      @param effect_ticks The number of ticks into the effect animation.
+      @param effect The animation effect to apply to the sprite.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
                    uint32_t iFlags, size_t effect_ticks = 0u,
