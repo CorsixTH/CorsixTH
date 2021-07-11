@@ -52,7 +52,6 @@ function UIDropdown:UIDropdown(ui, parent_window, parent_button, items, callback
   local width = panel.w
   local height = panel.h
 
-  -- TODO: Somehow make the dropdown disappear if the user clicks outside it.
   self:setPosition(panel.x, panel.y + panel.h)
 
   local y = 0
@@ -87,4 +86,18 @@ function UIDropdown:beginDrag(x, y)
   --       offsets are wrongly calculated (results in jump when dragging)
   -- Disable dragging
   return false
+end
+
+--! Let dropdown close when clicked outside of
+--!param button (button) mouseclick
+--!param x (coord) x coordinate
+--!param y (coord) y coordinate
+--!return continue triggering parent function
+function UIDropdown:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self.parent_button:toggle()
+    self:close()
+    return false
+  end
+  return UIResizable.onMouseDown(self, button, x, y)
 end
