@@ -36,6 +36,12 @@ local col_hotkeybox = {
   blue = 150,
 }
 
+local col_hotkeybox_lowered = {
+  red = 41,
+  green = 36,
+  blue = 90,
+}
+
 local col_highlight = {
   red = 174,
   green = 166,
@@ -579,7 +585,7 @@ function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(x, y, ui, key_options, app_
       self:addBevelPanel(pos_x, pos_y, panel_width, panel_height, col_shadow, col_bg, col_bg):setLabel(_S.hotkey_window[key])
       self.hotkey_buttons[key] = self:addBevelPanel(
           pos_x + panel_width, pos_y, panel_width, panel_height, col_hotkeybox,
-          col_highlight, col_shadow)
+          col_highlight, col_shadow, nil, col_hotkeybox_lowered)
           :makeHotkeyBox(function() self:confirm_func(key) end, nil)
           :setText(string.upper(array_join(app_hotkeys[key], "+")))
       current_pos_y = current_pos_y + 1
