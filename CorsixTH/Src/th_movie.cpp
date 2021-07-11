@@ -24,8 +24,6 @@ SOFTWARE.
 
 #include "config.h"
 
-#include <libavutil/channel_layout.h>
-
 #include "lua_sdl.h"
 #if defined(CORSIX_TH_USE_FFMPEG) && defined(CORSIX_TH_USE_SDL_MIXER)
 
@@ -33,6 +31,7 @@ SOFTWARE.
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>
+#include <libavutil/channel_layout.h>
 #include <libavutil/imgutils.h>
 #include <libavutil/mathematics.h>
 #include <libavutil/opt.h>
