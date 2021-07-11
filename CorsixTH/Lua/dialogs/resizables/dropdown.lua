@@ -99,5 +99,5 @@ function UIDropdown:onMouseDown(button, x, y)
     self:close()
     return false
   end
-  return Window.onMouseDown(self, button, x, y)
+  return UIResizable.onMouseDown(self, button, x, y)
 end
