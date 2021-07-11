@@ -673,7 +673,10 @@ function UI:releaseMouse()
   self:setMouseReleased(true)
 end
 
-function UI:toggleFullscreen()
+--! Turns fullscreen on and off
+--!param from_uioptions (bool) indicate the call came from UIOptions, nil otherwise
+--!return success true if toggle succeeded
+function UI:toggleFullscreen(from_uioptions)
   local modes = self.app.modes
 
   local function toggleMode(index)
@@ -720,6 +723,11 @@ function UI:toggleFullscreen()
     -- Save new setting in config
     self.app.config.fullscreen = self.app.fullscreen
     self.app:saveConfig()
+    -- If options window is open, make sure the button updates on hotkey
+    if not from_uioptions and self:getWindow(UIOptions) then
+      local window = self:getWindow(UIOptions)
+      window:updateFSButtonOnHotkey()
+    end
   end
 
   return success
