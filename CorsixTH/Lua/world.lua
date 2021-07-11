@@ -479,23 +479,28 @@ end
 --!return (boolean) Whether the disease is usable for new spawned patients.
 local function isDiseaseUsableForNewPatient(self, disease, hospital)
   if disease.only_emergency then return false end
-  if not disease.visuals_id then return true end
-
-  -- level files can delay visuals to a given month
-  -- and / or until a given number of patients have arrived
   local level_config = self.map.level_config
-  local hold_visual_months = level_config.gbv.HoldVisualMonths
-  local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
+  if disease.visuals_id then
+    -- level files can delay visuals to a given month
+    -- and / or until a given number of patients have arrived
+    local hold_visual_months = level_config.gbv.HoldVisualMonths
+    local hold_visual_peep_count = level_config.gbv.HoldVisualPeepCount
 
-  -- if the month is greater than either of these values then visuals will not appear in the game
-  if (hold_visual_months and hold_visual_months > self.game_date:monthOfGame()) or
-      (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
-    return false
+    -- if the month is greater than either of these values then visuals will not appear in the game
+    if (hold_visual_months and hold_visual_months > self.game_date:monthOfGame()) or
+        (hold_visual_peep_count and hold_visual_peep_count > hospital.num_visitors) then
+      return false
+    end
+
+    -- The value against #visuals_available determines from which month a disease can appear.
+    -- 0 means it can show up anytime.
+    return level_config.visuals_available[disease.visuals_id].Value < self.game_date:monthOfGame()
+  elseif disease.non_visuals_id then
+    -- Non-visual disease. Simply check the month it can appear from has passed
+    -- 0 means it can show up anytime.
+    return level_config.non_visuals_available[disease.non_visuals_id].Value < self.game_date:monthOfGame()
   end
-
-  -- The value against #visuals_available determines from which month a disease can appear.
-  -- 0 means it can show up anytime.
-  return level_config.visuals_available[disease.visuals_id].Value < self.game_date:monthOfGame()
+  error("disease has neither visuals_id or non_visuals_id")
 end
 
 --! Spawn a patient from a spawn point for the given hospital.
