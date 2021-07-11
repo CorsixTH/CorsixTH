@@ -524,6 +524,9 @@ end
 
 function UIHotkeyAssign:showKeyPane(pane)
   self.key_pane = pane
+  for _, box in ipairs(self.ui.hotkeyboxes) do
+    box:abort()
+  end
   for k, v in pairs(self.key_windows) do
     v.window:setVisible(k == pane)
     v.button:setToggleState(k == pane)
