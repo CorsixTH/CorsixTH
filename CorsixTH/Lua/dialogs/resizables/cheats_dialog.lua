@@ -135,12 +135,7 @@ function UICheats:buttonBack()
 end
 
 function UICheats:afterLoad(old, new)
-  if old < 145 then
-    -- Window must be closed if open for compatibility
-    local cheatWindow = self.ui:getWindow(UICheats)
-    if cheatWindow then
-      cheatWindow:close()
-    end
-  end
+  -- Window must be closed for compatibility
+  self:close()
   UIResizable.afterLoad(self, old, new)
 end
