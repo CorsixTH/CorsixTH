@@ -23,6 +23,15 @@ SOFTWARE.
 #ifndef CORSIX_TH_CONFIG_H_
 #define CORSIX_TH_CONFIG_H_
 
+/** Interpreter script searching options **/
+// Whether to search in some possible local dirs according to a fixed list,
+// relative to current working dir or program dir
+#cmakedefine CORSIX_TH_SEARCH_LOCAL_DATADIRS
+
+// Name of the script, usually 'CorsixTH.lua'
+#cmakedefine CORSIX_TH_INTERPRETER_NAME "@CORSIX_TH_INTERPRETER_NAME@"
+
+// A final path (with file name) to search
 #cmakedefine CORSIX_TH_INTERPRETER_PATH "@CORSIX_TH_INTERPRETER_PATH@"
 
 /** Windows Platform SDK usage **/

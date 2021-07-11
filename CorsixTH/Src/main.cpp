@@ -22,8 +22,10 @@ SOFTWARE.
 
 #include "config.h"
 
+#include <array>
 #include <cstdio>
 #include <cstring>
+#include <fstream>
 #include <string>
 
 #include "iso_fs.h"
@@ -32,6 +34,10 @@ SOFTWARE.
 #include "lua_sdl.h"
 #include "persist_lua.h"
 #include "th_lua.h"
+
+#ifdef CORSIX_TH_SEARCH_LOCAL_DATADIRS
+#include "../../libs/whereami/whereami.h"
+#endif
 
 // Config file checking
 #ifndef CORSIX_TH_USE_PACK_PRAGMAS
@@ -50,6 +56,83 @@ inline void preload_lua_package(lua_State* L, const char* name,
   luaT_execute(
       L, std::string("package.preload.").append(name).append(" = ...").c_str(),
       fn);
+}
+
+// relace me with C++17 std::filesystem::exists
+inline bool file_exists(const char* f) {
+  std::ifstream file(f);
+  return file.is_open();
+}
+
+inline bool file_exists(const std::string& f) { return file_exists(f.c_str()); }
+
+std::string search_script_file(lua_State* L) {
+  // 1. Check for --interpreter
+  int iNArgs = lua_gettop(L);
+  for (int i = 1; i <= iNArgs; ++i) {
+    if (lua_type(L, i) == LUA_TSTRING) {
+      size_t iLen;
+      const char* sCmd = lua_tolstring(L, i, &iLen);
+      if (iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0)
+        return sCmd + 14;
+    }
+  }
+
+#ifdef CORSIX_TH_SEARCH_LOCAL_DATADIRS
+  // 2. Find CorsixTH.lua in working dir and program dir
+  static constexpr std::array<const char*, 4> asSearchDirs{
+      "./",
+      "CorsixTH/",
+      "Contents/Resources/",
+      "../Resources/",
+  };
+  std::string strProgramDir = "";
+  {
+    int iProgramPathLength = wai_getExecutablePath(nullptr, 0, nullptr);
+    if (iProgramPathLength != 0) {
+      char* sProgramDir = new char[iProgramPathLength + 1];
+      int iProgramDirLength;
+      int iProgramPathLengthReal = wai_getExecutablePath(
+          sProgramDir, iProgramPathLength, &iProgramDirLength);
+      if (iProgramPathLengthReal != iProgramPathLength ||
+          iProgramPathLength >= iProgramDirLength) {
+        if (iProgramPathLengthReal != iProgramPathLength)
+          std::fprintf(stderr,
+                       "Path length of CorsixTH binary changed?!?! "
+                       "Old: %d, new: %d.\n",
+                       iProgramPathLength, iProgramPathLengthReal);
+        else
+          std::fprintf(stderr,
+                       "Path to CorsixTH looks like a directory?!?! "
+                       "Path is: '%s'.\n",
+                       sProgramDir);
+        std::fprintf(stderr, "Please report this incident!\n");
+        std::fflush(stderr);
+        exit(255);
+      }
+      // relace me with C++17 std::filesystem::path::preferred_separator
+      sProgramDir[iProgramDirLength] = '/';
+      sProgramDir[iProgramDirLength + 1] = '\0';
+      strProgramDir = sProgramDir;
+      delete[] sProgramDir;
+    }
+  }
+  for (auto sSearchDir : asSearchDirs) {
+    std::string strPathInWorkingDir =
+        std::string(sSearchDir) + CORSIX_TH_INTERPRETER_NAME;
+    if (file_exists(strPathInWorkingDir)) return strPathInWorkingDir;
+    if (!strProgramDir.empty()) {
+      std::string strPathInProgramDir = strProgramDir + strPathInWorkingDir;
+      if (file_exists(strPathInProgramDir)) return strPathInProgramDir;
+    }
+  }
+#endif
+
+  // 3. Check CORSIX_TH_INTERPRETER_PATH
+  if (file_exists(CORSIX_TH_INTERPRETER_PATH))
+    return CORSIX_TH_INTERPRETER_PATH;
+
+  return "";
 }
 
 }  // namespace
@@ -83,28 +166,18 @@ int lua_main_no_eval(lua_State* L) {
   // require "debug" (Harmless in Lua 5.1, useful in 5.2 for compatibility)
   luaT_execute(L, "require \"debug\"");
 
-  // Check for --interpreter and run that instead of CorsixTH.lua
-  bool bGotScriptFile = false;
-  int iNArgs = lua_gettop(L);
-  for (int i = 1; i <= iNArgs; ++i) {
-    if (lua_type(L, i) == LUA_TSTRING) {
-      size_t iLen;
-      const char* sCmd = lua_tolstring(L, i, &iLen);
-      if (iLen > 14 && std::memcmp(sCmd, "--interpreter=", 14) == 0) {
-        lua_getglobal(L, "assert");
-        lua_getglobal(L, "loadfile");
-        lua_pushlstring(L, sCmd + 14, iLen - 14);
-        bGotScriptFile = true;
-        break;
-      }
-    }
+  auto scriptFilePath = search_script_file(L);
+  if (scriptFilePath.empty()) {
+    std::fprintf(stderr,
+                 "CorsixTH cannot find CorsixTH.lua. If you want use a custom "
+                 "location, specify it by --interpreter=FILE\n");
+    std::fflush(stderr);
+    exit(1);
   }
 
-  if (!bGotScriptFile) {
-    lua_getglobal(L, "assert");
-    lua_getglobal(L, "loadfile");
-    lua_pushstring(L, CORSIX_TH_INTERPRETER_PATH);
-  }
+  lua_getglobal(L, "assert");
+  lua_getglobal(L, "loadfile");
+  lua_pushstring(L, scriptFilePath.c_str());
 
   lua_call(L, 1, 2);
   lua_call(L, 2, 1);
