@@ -148,9 +148,9 @@
  <a href="_0_1_window.html#_0_1_window_1on_cursor_world_position_change">onCursorWorldPositionChange</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <li class="self">
+ <a href="_0_1_u_i_dropdown.html#_0_1_u_i_dropdown_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (overrides <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
@@ -409,7 +409,34 @@ The parent window and the index of the selected item</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1begin_drag">Window:beginDrag</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L85">line 85 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L84">line 84 of Lua/dialogs/resizables/dropdown.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_u_i_dropdown_1on_mouse_down">function UIDropdown:onMouseDown(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)</a></h5>
+ <p>
+ Let dropdown close when clicked outside of<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">button</td>
+ <td class="t">button</td>
+ <td class="d"> mouseclick</td>
+ </tr>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">coord</td>
+ <td class="d"> x coordinate</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">coord</td>
+ <td class="d"> y coordinate</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">UIResizable:onMouseDown</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L91">line 91 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -424,7 +451,7 @@ The parent window and the index of the selected item</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L77">line 77 of Lua/dialogs/resizables/dropdown.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/dropdown.lua#L76">line 76 of Lua/dialogs/resizables/dropdown.lua</a>.
  </p>
  </div>
 </div>
