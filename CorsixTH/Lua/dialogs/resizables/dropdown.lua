@@ -88,3 +88,17 @@ function UIDropdown:beginDrag(x, y)
   -- Disable dragging
   return false
 end
+
+--! Let dropdown close when clicked outside of
+--!param button (button) mouseclick
+--!param x (coord) x coordinate
+--!param y (coord) y coordinate
+--!return continue triggering parent function
+function UIDropdown:onMouseDown(button, x, y)
+  if not self:hitTest(x, y) then
+    self.parent_button:toggle()
+    self:close()
+    return false
+  end
+  return Window.onMouseDown(self, button, x, y)
+end
