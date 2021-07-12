@@ -1284,7 +1284,7 @@ end
  appropriate epidemic if so.
  @param patient (Patient) patient to determine if contagious]]
 function Hospital:determineIfContagious(patient)
-  if patient.is_emergency or not patient.disease.contagious then
+  if patient.is_emergency or not patient.disease.contagious or self.epidemics_off then
     return false
   end
   -- ContRate treated like a percentage with ContRate% of patients with
@@ -2430,4 +2430,11 @@ end
 
 function Hospital:announceRepair()
   -- Nothing to do, override in a derived class.
+end
+
+--! Reset the death counts (key losing conditions)
+function Hospital:resetDeathCount()
+  self.num_deaths = 0
+  self.num_deaths_this_year = 0
+  self.statistics.deaths = 0
 end

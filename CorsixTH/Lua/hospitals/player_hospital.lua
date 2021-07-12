@@ -475,9 +475,6 @@ function PlayerHospital:makeRaiseRequest(amount, staff)
 end
 
 function PlayerHospital:afterLoad(old, new)
-  if old < 145 then
-    self.hosp_cheats = Cheats(self)
-  end
   if old < 146 then
     self.adviser_data = {
       temperature_advise = nil,
@@ -495,6 +492,9 @@ function PlayerHospital:afterLoad(old, new)
   end
   if old < 149 then
     self.win_declined = false -- Has not yet declined the level win fax
+  end
+  if old < 159 then
+    self.hosp_cheats = Cheats(self)
   end
 
   Hospital.afterLoad(self, old, new)

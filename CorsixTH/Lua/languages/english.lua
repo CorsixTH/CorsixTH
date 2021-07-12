@@ -260,6 +260,10 @@ adviser = {
     th_cheat = "Congratulations, you have unlocked cheats!",
     roujin_on_cheat = "Roujin's challenge activated! Good luck in the coming months...",
     roujin_off_cheat = "Roujin's challenge deactivated. Everything will be back to normal soon.",
+    epidemics_off = "Epidemics are disabled",
+    epidemics_on = "Epidemics are re-enabled",
+    earthquakes_off = "Earthquakes are disabled",
+    earthquakes_on = "Earthquakes are re-enabled",
   },
 }
 
@@ -782,7 +786,9 @@ cheats_window = {
     all_research = "All Research Cheat",
     emergency = "Create Emergency",
     vip = "Create VIP",
+    toggle_earthquake = "Toggle earthquakes",
     earthquake = "Create Earthquake",
+    toggle_epidemic = "Toggle epidemics",
     epidemic = "Spawn contagious patient",
     toggle_infected = "Toggle infected icons",
     create_patient = "Create Patient",
@@ -792,6 +798,8 @@ cheats_window = {
     win_level = "Win Level",
     increase_prices = "Increase prices",
     decrease_prices = "Decrease prices",
+    reset_death_count = "Reset death count",
+    max_reputation = "Max reputation",
   },
   close = "Close",
 }
@@ -803,7 +811,9 @@ tooltip.cheats_window = {
     all_research = "Completes all research",
     emergency = "Creates an emergency",
     vip = "Creates a VIP",
+    toggle_earthquake = "Toggle earthquakes",
     earthquake = "Creates an earthquake",
+    toggle_epidemic = "Toggle whether epidemics can happen",
     epidemic = "Creates a contagious patient who may cause an epidemic to happen",
     toggle_infected = "Toggle the infected icons for the active, discovered epidemic",
     create_patient = "Creates a Patient at the map border",
@@ -813,6 +823,8 @@ tooltip.cheats_window = {
     win_level = "Win the current level",
     increase_prices = "Increase all prices by 50% (max. 200%)",
     decrease_prices = "Decrease all prices by 50% (min. 50%)",
+    reset_death_count = "Reset the hospital death count to zero",
+    max_reputation = "Set the hospital reputation to 1000",
   }
 }
 
