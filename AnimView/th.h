@@ -225,7 +225,7 @@ class THAnimations {
       }
     }
 
-    for (int offset = 0; offset < iLen; offset += sizeof(T)) {
+    for (size_t offset = 0; offset < iLen; offset += sizeof(T)) {
       vector.push_back(*(reinterpret_cast<T*>(pBuffer + offset)));
     }
 
