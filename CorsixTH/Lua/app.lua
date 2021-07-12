@@ -1485,7 +1485,7 @@ function App:getVersion(version)
   if ver > 156 then
     return "Trunk"
   elseif ver > 138 then
-    return "v0.65"
+    return "v0.65.1"
   elseif ver > 134 then
     return "v0.64"
   elseif ver > 127 then
