@@ -98,8 +98,8 @@ function UINewGame:UINewGame(ui)
   -- Title
   self:addBevelPanel(80, 10, 160, 20, col_caption):setLabel(_S.new_game_window.caption).lowered = true
 
-  -- Player Name
-  self.player_name = app.config.player_name or os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
+  local pname = app.config.player_name
+  self.player_name = (pname and pname:len() > 0) and pname or os.getenv("USER") or os.getenv("USERNAME") or "PLAYER"
   self:addBevelPanel(20, 45, 140, 30, col_shadow, col_bg, col_bg)
     :setLabel(_S.new_game_window.player_name).lowered = true
   self.name_textbox = self:addBevelPanel(165, 45, 140, 30, col_textbox, col_highlight, col_shadow)
