@@ -749,7 +749,7 @@ function Map:applyHotfix(num, issue)
     self.level_config.awards_trophies.TrophyAllCuredBonus = 20000
     self.level_config.awards_trophies.AllCuresBonus = 5000
     self.hotfix1 = true
-    local string = "Game succesfully patched with hotfix " .. num .. " (Issue #" .. issue .. ")"
+    local string = "Game successfully patched with hotfix " .. num .. " (Issue #" .. issue .. ")"
     self.app.world:gameLog(string)
   else
     local string = "Hotfix " .. num .. " not found. The game may result in unexpected behavior."
