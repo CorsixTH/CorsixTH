@@ -167,6 +167,7 @@ function Litter:afterLoad(old, new)
       self:remove()
     end
   end
+  Entity.afterLoad(self, old, new)
 end
 
 return object
