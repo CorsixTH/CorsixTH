@@ -212,6 +212,7 @@ add_ignore("CorsixTH/Lua/map.lua", "542")
 add_ignore("CorsixTH/Lua/movie_player.lua", "542")
 add_ignore("CorsixTH/Lua/objects/analyser.lua", "212")
 add_ignore("CorsixTH/Lua/objects/door.lua", "212")
+add_ignore("CorsixTH/Lua/objects/litter.lua", "212")
 add_ignore("CorsixTH/Lua/objects/machines/operating_table.lua", "542")
 add_ignore("CorsixTH/Lua/persistance.lua", "231") -- th_getupvalue assignments in lua5.2/5.3 code
 add_ignore("CorsixTH/Lua/research_department.lua", "212")
