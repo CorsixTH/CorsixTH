@@ -43,6 +43,7 @@ function Map:Map(app)
   -- Difficulty of the level (string) "easy", "full", "hard".
   -- Use map:getDifficulty() to query the value.
   self.difficulty = nil
+  self.hotfix1 = true
 end
 
 local flag_cache = {}
@@ -738,6 +739,24 @@ function Map:getParcelTileCount(parcel)
   return self.parcelTileCounts[parcel] or 0
 end
 
+--! Apply a hotfix to this save..
+--! Note this is only temporary as a backport for 0.65
+--!param num (int) the hotfix number
+--!param issue (num) the issue number
+function Map:applyHotfix(num, issue)
+  assert((num and issue), "Hotfix parameters given are undefined!")
+  if num == 1 then
+    self.level_config.awards_trophies.TrophyAllCuredBonus = 20000
+    self.level_config.awards_trophies.AllCuresBonus = 5000
+    self.hotfix1 = true
+    local string = "Game successfully patched with hotfix " .. num .. " (Issue #" .. issue .. ")"
+    self.app.world:gameLog(string)
+  else
+    local string = "Hotfix " .. num .. " not found. The game may result in unexpected behavior."
+    self.app.world:gameLog(string)
+  end
+end
+
 function Map:afterLoad(old, new)
   if old < 6 then
     self.parcelTileCounts = {}
@@ -801,5 +820,9 @@ function Map:afterLoad(old, new)
       self:setCellFlags(56, 71, {hospital = true, buildable = true, buildableNorth = true, buildableSouth = true, buildableEast = true, buildableWest = true})
       self:setCellFlags(58, 72, {passable = false})
     end
+  end
+  -- 0.65 has a hotfix, make sure we patch any affected games
+  if not self.hotfix1 then
+    self:applyHotfix(1, 2004)
   end
 end
