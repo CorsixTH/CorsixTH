@@ -1137,8 +1137,9 @@ function GameUI:tutorialStep(chapter, phase_from, phase_to, ...)
   end
   local timer = self:getWindow(UIWatch)
   if timer and timer.count_type == "tutorial" then
-    self.tutorial_progress = math.max(self.tutorial_progress + 1, TUTORIAL_CHAPTER_PROGRESS[chapter])
-    timer:setWatch(self.tutorial_progress, TUTORIAL_LENGTH)
+    local step = TUTORIAL_CHAPTER_PROGRESS[chapter] + self.tutorial.phase - 1
+    if step > self.tutorial_progress then self.tutorial_progress = step end
+    timer:setWatch(self.tutorial_progress / TUTORIAL_LENGTH)
   end
 
   if TheApp.config.debug then print("Tutorial: Now in " .. self.tutorial.chapter .. ", " .. self.tutorial.phase) end

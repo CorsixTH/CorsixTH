@@ -43,6 +43,7 @@ function UIWatch:UIWatch(ui, count_type)
   elseif count_type == "tutorial" then
     self.tick_rate = 0
     self.tick_timer = 0
+    self.progress = 0
   else
     self.tick_rate = math.floor((TICK_DAYS * Date.hoursPerDay()) / TIMER_SEGMENTS)
     self.tick_timer = self.tick_rate  -- Initialize tick timer
@@ -92,12 +93,12 @@ function UIWatch:UIWatch(ui, count_type)
   self:addPanel(1, 2, 47)
 end
 
---! Manually set the watch position
---!param num (int) Numerator
---!param den (int) Denominator of the fraction the watch is set to
-function UIWatch:setWatch(num, den)
-  local new_position = num / den * TIMER_SEGMENTS
-  self.panels[#self.panels].sprite_index = math.ceil(new_position)
+--! Update the progress of the tutorial used for watch position
+--!param position (float [0-1]) The state of progress around the clock
+function UIWatch:setWatch(position)
+  self.progress = math.max(position, 0.1) -- First sign of progress is early
+  self.open_timer = TIMER_SEGMENTS - math.ceil(self.progress * TIMER_SEGMENTS)
+  self:drawWatch()
 end
 
 function UIWatch:onCountdownEnd()
@@ -120,21 +121,28 @@ function UIWatch:onCountdownEnd()
   end
 end
 
+function UIWatch:drawWatch()
+  print(self.open_timer, #self.panels, self.progress or "-")
+  if self.open_timer == 11 then
+    self:addPanel(2, 2, 47)
+  elseif self.open_timer == 0 then
+    self.panels[#self.panels].sprite_index = 0
+  elseif self.open_timer < 11 and self.open_timer > 0 then
+    local k = #self.panels - 1 -- The panel change needed for second half of the clockface
+    self.panels[#self.panels].sprite_index = 13 - self.open_timer
+    if self.open_timer == 5 and not self.panel_removed then
+      table.remove(self.panels, k)
+      self.panel_removed = true
+    end
+  end
+end
+
 function UIWatch:onWorldTick()
-  if self.count_type == "tutorial" then return end
+  if self.count_type == "tutorial" then return end -- Not tick based
   if self.tick_timer == 0 and self.open_timer >= 0 then -- Used for making a smooth animation
     self.tick_timer = self.tick_rate
     self.open_timer = self.open_timer - 1
-    if self.open_timer == 11 then
-      self:addPanel(2, 2, 47)
-    elseif self.open_timer == 0 then
-      self.panels[#self.panels].sprite_index = 0
-    elseif self.open_timer < 11 and self.open_timer > 0 then
-      self.panels[#self.panels].sprite_index = 13 - self.open_timer
-      if self.open_timer == 5 then
-        table.remove(self.panels, #self.panels - 1)
-      end
-    end
+    self:drawWatch()
   elseif self.open_timer == -1 then -- the timer is at 0 when it is completely red.
     self:onCountdownEnd() -- Countdown terminated, so we open the hospital or ends the epidemic panic
   else
