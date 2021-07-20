@@ -802,7 +802,7 @@ function Map:afterLoad(old, new)
       self:setCellFlags(58, 72, {passable = false})
     end
   end
-  if old < 159 then
+  if old < 160 then
     -- Permanently fix the 0.65 trophy bug (#2004)
     -- make sure we erase the hofix variable too
     self.hotfix1 = nil
