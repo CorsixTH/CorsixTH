@@ -254,6 +254,16 @@ function PlayerHospital:checkReceptionAdvice(current_month, current_year)
   end
 end
 
+--! Give advice to the user about the need to buy the first reception desk.
+function PlayerHospital:msgNeedFirstReceptionDesk()
+  if self.adviser_data.reception_advice then return end
+
+  if self:countReceptionDesks() == 0 then
+    self.world.ui.adviser:say(_A.warnings.no_desk_4)
+    self.adviser_data.reception_advice = true
+  end
+end
+
 --! Give advice to the user about having bought a reception desk.
 function PlayerHospital:msgReceptionDesk()
   local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
@@ -264,6 +274,31 @@ function PlayerHospital:msgReceptionDesk()
       not self.adviser_data.reception_advice and self.world:date():monthOfGame() > 3 then
     self:giveAdvice({_A.warnings.no_desk_5})
     self.adviser_data.reception_advice = true
+  end
+end
+
+--! Give advice about having more desks.
+function Hospital:msgMultiReceptionDesks()
+  -- Compute total queue length at staffed receptions.
+  local num_desks = 0
+  local queue_total = 0
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    num_desks = num_desks + 1
+    if desk.receptionist or desk.reserved_for then
+      queue_total = queue_total + #desk.queue
+    end
+  end
+
+  local receptionists = self:countStaffOfCategory("Receptionist")
+  if (receptionists > 1 and num_desks > 0) or (receptionists > 0 and num_desks > 1) then
+    local queue_avg = math.floor(queue_total / num_desks)
+    if receptionists < num_desks and queue_avg > 5 then
+      self.world.ui.adviser:say(_A.warnings.reception_bottleneck)
+    elseif queue_avg > 4 then
+      self.world.ui.adviser:say(_A.warnings.queue_too_long_at_reception)
+    elseif receptionists > num_desks then
+      self.world.ui.adviser:say(_A.warnings.another_desk)
+    end
   end
 end
 
@@ -495,6 +530,9 @@ function PlayerHospital:afterLoad(old, new)
   end
   if old < 149 then
     self.win_declined = false -- Has not yet declined the level win fax
+  end
+  if old < 159 then
+    self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
 
   Hospital.afterLoad(self, old, new)
