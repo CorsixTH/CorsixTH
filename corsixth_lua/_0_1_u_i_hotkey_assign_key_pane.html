@@ -4,7 +4,7 @@
  <head>
  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
  <meta http-equiv="Content-Language" content="en-gb" />
- <title>UIFolder Class - CorsixTH Lua Documentation</title>
+ <title>UIHotkeyAssignKeyPane Class - CorsixTH Lua Documentation</title>
  <link rel="stylesheet" href="main.css" type="text/css" media="all" />
  </head>
  <body>
@@ -21,12 +21,11 @@
  <li class="last"><a href="class_index.html">Index</a></li>
  </ul>
  <div class="content">
- <h2 class="class">UIFolder Class</h2>
-<h3 class="class">Customise window used in the main menu and ingame.</h3> 
+ <h2 class="class">UIHotkeyAssignKeyPane Class</h2>
+<h3 class="class">Child window for setting key bindings</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L21">line 21 of Lua/dialogs/resizables/folder_settings.lua</a>.
- <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_folder.html">UIFolder</a>
- » <a href="_0_1_u_i_resizable.html">UIResizable</a>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L542">line 542 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_hotkey_assign_key_pane.html">UIHotkeyAssignKeyPane</a>
  » <a href="_0_1_window.html">Window</a>
 </div>
 <div class="method_list">
@@ -53,46 +52,27 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1after_load">afterLoad</a>(<span class="p">old</span>, <span class="p">new</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1begin_drag">beginDrag</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1begin_resize">beginResize</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">mode</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1bring_to_top">bringToTop</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_back">buttonBack</a>()
+ <li class="inherited">
+ <a href="_0_1_window.html#_0_1_window_1close">close</a>()
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_audio__music">buttonBrowseForAudio_music</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_font">buttonBrowseForFont</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_savegames">buttonBrowseForSavegames</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_screenshots">buttonBrowseForScreenshots</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1button_browse_for_t_h_install">buttonBrowseForTHInstall</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1close">close</a>()
- (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
+ <a href="_0_1_u_i_hotkey_assign_key_pane.html#_0_1_u_i_hotkey_assign_key_pane_1confirm__func">confirm_func</a>(<span class="p">hotkey</span>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1get_saved_window_position_name">getSavedWindowPositionName</a>()
@@ -115,12 +95,8 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1hit_test_corners">hitTestCorners</a>(<span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1hit_test">hitTest</a>(<span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1hit_test_panel">hitTestPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">panel</span>)
@@ -167,8 +143,8 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <a href="_0_1_window.html#_0_1_window_1on_mouse_down">onMouseDown</a>(<span class="p">button</span>, <span class="p">x</span>, <span class="p">y</span>)
+ (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1on_mouse_move">onMouseMove</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">dx</span>, <span class="p">dy</span>)
@@ -202,15 +178,6 @@
  <a href="_0_1_window.html#_0_1_window_1remove_window">removeWindow</a>(<span class="p">window</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1reset_savegame_dir">resetSavegameDir</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1reset_screenshot_dir">resetScreenshotDir</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_folder.html#_0_1_u_i_folder_1resetmusic_dir">resetmusicDir</a>()
- </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1send_to_bottom">sendToBottom</a>(<span class="p">window</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -220,10 +187,6 @@
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_colour">setColour</a>(<span class="p">colour</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
- </li>
- <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1set_default_position">setDefaultPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
@@ -231,9 +194,8 @@
  <a href="_0_1_window.html#_0_1_window_1set_position">setPosition</a>(<span class="p">x</span>, <span class="p">y</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
- <li class="inherited">
- <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
- (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
+ <li class="self">
+ <a href="_0_1_u_i_hotkey_assign_key_pane.html#_0_1_u_i_hotkey_assign_key_pane_1set_visible">setVisible</a>(<span class="p">visibility</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
@@ -254,27 +216,14 @@
  <li><span class="p">active_scrollbar</span>
  (*)
  </li>
- <li><span class="p">app</span>
- </li>
- <li><span class="p">background_panel</span>
- (*)
- </li>
  <li><span class="p">blink_counter</span>
  (*)
  </li>
  <li><span class="p">blinking_button</span>
  (*)
  </li>
- <li><span class="p">border_pos</span>
- (*)
- </li>
- <li><span class="p">border_sprites</span>
- (*)
- </li>
  <li><span class="p">btn_repeat_delay</span>
  (*)
- </li>
- <li><span class="p">built_in_font</span>
  </li>
  <li><span class="p">buttons</span>
  (*)
@@ -285,9 +234,6 @@
  <li><span class="p">closed</span>
  (*)
  </li>
- <li><span class="p">colour</span>
- (*)
- </li>
  <li><span class="p">cursor_x</span>
  (*)
  </li>
@@ -295,6 +241,7 @@
  (*)
  </li>
  <li><span class="p">default_button_sound</span>
+ (*)
  </li>
  <li><span class="p">draggable</span>
  (*)
@@ -302,10 +249,10 @@
  <li><span class="p">dragging</span>
  (*)
  </li>
- <li><span class="p">esc_closes</span>
- </li>
  <li><span class="p">height</span>
  (*)
+ </li>
+ <li><span class="p">hotkey_buttons</span>
  </li>
  <li><span class="p">hotkeyboxes</span>
  (*)
@@ -313,19 +260,9 @@
  <li><span class="p">key_handlers</span>
  (*)
  </li>
- <li><span class="p">min_height</span>
- (*)
+ <li><span class="p">panel_pos_table_x</span>
  </li>
- <li><span class="p">min_width</span>
- (*)
- </li>
- <li><span class="p">modal_class</span>
- </li>
- <li><span class="p">mode</span>
- </li>
- <li><span class="p">music_panel</span>
- </li>
- <li><span class="p">on_top</span>
+ <li><span class="p">panel_pos_table_y</span>
  </li>
  <li><span class="p">panel_sprites</span>
  (*)
@@ -335,12 +272,6 @@
  </li>
  <li><span class="p">parent</span>
  (*)
- </li>
- <li><span class="p">resizable</span>
- </li>
- <li><span class="p">saves_panel</span>
- </li>
- <li><span class="p">screenshots_panel</span>
  </li>
  <li><span class="p">scrollbars</span>
  (*)
@@ -354,7 +285,6 @@
  <li><span class="p">ui</span>
  </li>
  <li><span class="p">visible</span>
- (*)
  </li>
  <li><span class="p">width</span>
  (*)
@@ -363,13 +293,11 @@
  (*)
  </li>
  <li><span class="p">x</span>
- (*)
  </li>
  <li><span class="p">x_original</span>
  (*)
  </li>
  <li><span class="p">y</span>
- (*)
  </li>
  <li><span class="p">y_original</span>
  (*)
@@ -379,84 +307,68 @@
 </div>
 <div class="methods">
  <div class="method">
- <h5><a name="_0_1_u_i_folder_1_u_i_folder">function UIFolder:UIFolder(<span class="p">ui</span>, <span class="p">mode</span>)</a></h5>
+ <h5><a name="_0_1_u_i_hotkey_assign_key_pane_1_u_i_hotkey_assign_key_pane">function UIHotkeyAssignKeyPane:UIHotkeyAssignKeyPane(<span class="p">x</span>, <span class="p">y</span>, <span class="p">ui</span>, <span class="p">key_options</span>, <span class="p">app_hotkeys</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">x</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">y</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
  <tr>
  <td class="n">ui</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  <tr>
- <td class="n">mode</td>
+ <td class="n">key_options</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ <tr>
+ <td class="n">app_hotkeys</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L45">line 45 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L548">line 548 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_back">function UIFolder:buttonBack()</a></h5>
+ <h5><a name="_0_1_u_i_hotkey_assign_key_pane_1confirm__func">function UIHotkeyAssignKeyPane:confirm_func(<span class="p">hotkey</span>)</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L201">line 201 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">hotkey</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L601">line 601 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_browse_for_audio__music">function UIFolder:buttonBrowseForAudio_music()</a></h5>
+ <h5><a name="_0_1_u_i_hotkey_assign_key_pane_1set_visible">function UIHotkeyAssignKeyPane:setVisible(<span class="p">visibility</span>)</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L189">line 189 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_browse_for_font">function UIFolder:buttonBrowseForFont()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L142">line 142 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_browse_for_savegames">function UIFolder:buttonBrowseForSavegames()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L147">line 147 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_browse_for_screenshots">function UIFolder:buttonBrowseForScreenshots()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L174">line 174 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1button_browse_for_t_h_install">function UIFolder:buttonBrowseForTHInstall()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L162">line 162 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1close">function UIFolder:close()</a></h5>
- <p>
- <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L207">line 207 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1reset_savegame_dir">function UIFolder:resetSavegameDir()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L118">line 118 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1reset_screenshot_dir">function UIFolder:resetScreenshotDir()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L126">line 126 of Lua/dialogs/resizables/folder_settings.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_folder_1resetmusic_dir">function UIFolder:resetmusicDir()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/folder_settings.lua#L134">line 134 of Lua/dialogs/resizables/folder_settings.lua</a>.
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">visibility</td>
+ <td class="t">?</td>
+ <td class="d">?</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L597">line 597 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
 </div>

@@ -22,7 +22,7 @@
  </ul>
  <div class="content">
  <h2 class="class">UIHotkeyAssign Class</h2>
-<h3 class="class">Customise window used in the main menu and ingame.</h3> 
+<h3 class="class">Custom key bindings</h3> 
 <div class="class_info">
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L21">line 21 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_u_i_hotkey_assign.html">UIHotkeyAssign</a>
@@ -33,7 +33,7 @@
  <h4>Method Index</h4>
  <ul>
  <li class="inherited">
- <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>)
+ <a href="_0_1_window.html#_0_1_window_1add_bevel_panel">addBevelPanel</a>(<span class="p">x</span>, <span class="p">y</span>, <span class="p">w</span>, <span class="p">h</span>, <span class="p">colour</span>, <span class="p">highlight_colour</span>, <span class="p">shadow_colour</span>, <span class="p">disabled_colour</span>, <span class="p">lowered_colour</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
  </li>
  <li class="inherited">
@@ -80,9 +80,6 @@
  <li class="self">
  <a href="_0_1_u_i_hotkey_assign.html#_0_1_u_i_hotkey_assign_1close">close</a>()
  (overrides <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>)
- </li>
- <li class="self">
- <a href="_0_1_u_i_hotkey_assign.html#_0_1_u_i_hotkey_assign_1confirm__func">confirm_func</a>(<span class="p">hotkey</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1draw">draw</a>(<span class="p">canvas</span>, <span class="p">x</span>, <span class="p">y</span>)
@@ -220,6 +217,9 @@
  <a href="_0_1_u_i_resizable.html#_0_1_u_i_resizable_1set_size">setSize</a>(<span class="p">width</span>, <span class="p">height</span>)
  (inherited from <a href="_0_1_u_i_resizable.html">UIResizable</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_u_i_hotkey_assign.html#_0_1_u_i_hotkey_assign_1show_key_pane">showKeyPane</a>(<span class="p">pane</span>)
+ </li>
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1start_button_blinking">startButtonBlinking</a>(<span class="p">button_index</span>)
  (inherited from <a href="_0_1_window.html">Window</a>)
@@ -227,12 +227,6 @@
  <li class="inherited">
  <a href="_0_1_window.html#_0_1_window_1stop_button_blinking">stopButtonBlinking</a>()
  (inherited from <a href="_0_1_window.html">Window</a>)
- </li>
- <li class="self">
- <a href="_0_1_u_i_hotkey_assign.html#_0_1_u_i_hotkey_assign_1store_recall_pos_button">storeRecallPosButton</a>()
- </li>
- <li class="self">
- <a href="_0_1_u_i_hotkey_assign.html#_0_1_u_i_hotkey_assign_1toggle_button">toggleButton</a>()
  </li>
  </ul>
 </div>
@@ -305,6 +299,12 @@
  </li>
  <li><span class="p">key_handlers</span>
  (*)
+ </li>
+ <li><span class="p">key_options</span>
+ </li>
+ <li><span class="p">key_pane</span>
+ </li>
+ <li><span class="p">key_windows</span>
  </li>
  <li><span class="p">min_height</span>
  (*)
@@ -386,59 +386,47 @@
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L380">line 380 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L277">line 277 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_hotkey_assign_1button_accept">function UIHotkeyAssign:buttonAccept()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L731">line 731 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L495">line 495 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_hotkey_assign_1button_cancel">function UIHotkeyAssign:buttonCancel()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L750">line 750 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L514">line 514 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_hotkey_assign_1button_defaults">function UIHotkeyAssign:buttonDefaults()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L740">line 740 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L504">line 504 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_u_i_hotkey_assign_1close">function UIHotkeyAssign:close()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_window.html#_0_1_window_1close">Window:close</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L760">line 760 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L524">line 524 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_u_i_hotkey_assign_1confirm__func">function UIHotkeyAssign:confirm_func(<span class="p">hotkey</span>)</a></h5>
+ <h5><a name="_0_1_u_i_hotkey_assign_1show_key_pane">function UIHotkeyAssign:showKeyPane(<span class="p">pane</span>)</a></h5>
  <p>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">hotkey</td>
+ <td class="n">pane</td>
  <td class="t">?</td>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L779">line 779 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_hotkey_assign_1store_recall_pos_button">function UIHotkeyAssign:storeRecallPosButton()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L773">line 773 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_u_i_hotkey_assign_1toggle_button">function UIHotkeyAssign:toggleButton()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L767">line 767 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/dialogs/resizables/hotkey_assign.lua#L531">line 531 of Lua/dialogs/resizables/hotkey_assign.lua</a>.
  </p>
  </div>
 </div>
