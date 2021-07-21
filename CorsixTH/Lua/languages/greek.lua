@@ -1694,7 +1694,6 @@ hotkey_window = {
   panel_generalInGameKeys = "Γενικά In-Game Πλήκτρα",
   global_showLuaConsole = "Κονσόλα Lua",
   ingame_poopLog = "Dump Log",
-  panel_miscInGameKeys = "Διάφορα In-Game Πλήκτρα",
   global_confirm_alt = "Confirm Alt",
   ingame_poopStrings = "Dump Strings",
   ingame_gamespeed_speedup = "Επιτάχυνση",
