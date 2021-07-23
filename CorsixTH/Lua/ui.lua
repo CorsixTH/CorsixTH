@@ -258,7 +258,7 @@ function UI:setupGlobalKeyHandlers()
   self:addKeyHandler("global_stop_movie", self, self.stopMovie)
   self:addKeyHandler("global_stop_movie_alt", self, self.stopMovie)
   self:addKeyHandler("global_screenshot", self, self.makeScreenshot)
-  self:addKeyHandler("global_fullscreen_toggle", self, self.toggleFullscreen)
+  self:addKeyHandler("global_fullscreen_toggle", self, self.fullscreenHotkey)
   self:addKeyHandler("global_exitApp", self, self.exitApplication)
   self:addKeyHandler("global_resetApp", self, self.resetApp)
   self:addKeyHandler("global_releaseMouse", self, self.releaseMouse)
@@ -673,10 +673,24 @@ function UI:releaseMouse()
   self:setMouseReleased(true)
 end
 
+--! Dedicated hotkey function for toggling fullscreen
+function UI:fullscreenHotkey()
+  local toggle = self:toggleFullscreen()
+  if not toggle then
+    local err = {_S.errors.unavailable_screen_size}
+    self:addWindow(UIInformation(self, err))
+  end
+  -- Update the Options window, if open
+  local window = self:getWindow(UIOptions)
+  if window then
+    if toggle then window.fullscreen_button:toggle() end
+    window.fullscreen_panel:setLabel(self.app.fullscreen and _S.options_window.option_on or _S.options_window.option_off)
+  end
+end
+
 --! Turns fullscreen on and off
---!param from_uioptions (bool) indicate the call came from UIOptions, nil otherwise
 --!return success true if toggle succeeded
-function UI:toggleFullscreen(from_uioptions)
+function UI:toggleFullscreen()
   local modes = self.app.modes
 
   local function toggleMode(index)
@@ -723,11 +737,6 @@ function UI:toggleFullscreen(from_uioptions)
     -- Save new setting in config
     self.app.config.fullscreen = self.app.fullscreen
     self.app:saveConfig()
-    -- If options window is open, make sure the button updates on hotkey
-    if not from_uioptions and self:getWindow(UIOptions) then
-      local window = self:getWindow(UIOptions)
-      window:updateFSButtonOnHotkey()
-    end
   end
 
   return success
