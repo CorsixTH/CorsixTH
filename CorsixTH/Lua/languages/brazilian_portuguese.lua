@@ -524,7 +524,6 @@ hotkey_window = {
   panel_scrollKeys = "Teclas de rolagem",
   panel_zoomKeys = "Teclas de aproximaçäo",
   panel_gameSpeedKeys = "Teclas de velocidade do jogo",
-  panel_miscInGameKeys = "Teclas diversas no jogo",
   panel_toggleKeys = "Teclas de alternância",
   panel_debugKeys = "Teclas de depuraçäo",
   panel_storePosKey = "Armazenamento de posiçäo",
