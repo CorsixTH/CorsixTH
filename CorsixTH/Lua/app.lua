@@ -28,7 +28,7 @@ local runDebugger = corsixth.require("run_debugger")
 -- Increment each time a savegame break would occur
 -- and add compatibility code in afterLoad functions
 
-local SAVEGAME_VERSION = 160
+local SAVEGAME_VERSION = 161
 
 class "App"
 
@@ -1470,7 +1470,7 @@ function App:getVersion(version)
   if ver > 156 then
     return "Trunk"
   elseif ver > 138 then
-    return "v0.65.1"
+    return "v0.65"
   elseif ver > 134 then
     return "v0.64"
   elseif ver > 127 then
