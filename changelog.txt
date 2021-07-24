@@ -1,4 +1,11 @@
 -------------------------------------------------------------------------------
+Version 0.65.1 - released July 2021
+-------------------------------------------------------------------------------
+# This is a hotfix release of 0.65 and replaces the June 2021 release
+* Fixes a bug where the game would crash if you got the All Cured trophy at the
+  end of year awards, when loading a save from 0.64 or earlier
+
+-------------------------------------------------------------------------------
 Version 0.65 - released June 2021
 -------------------------------------------------------------------------------
 # New Features/Enhancements

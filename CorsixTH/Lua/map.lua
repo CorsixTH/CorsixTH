@@ -802,4 +802,11 @@ function Map:afterLoad(old, new)
       self:setCellFlags(58, 72, {passable = false})
     end
   end
+  if old < 161 then
+    -- Permanently fix the 0.65 trophy bug (#2004)
+    -- make sure we erase the hofix variable too
+    self.hotfix1 = nil
+    self.level_config.awards_trophies.TrophyAllCuredBonus = 20000
+    self.level_config.awards_trophies.AllCuresBonus = 5000
+  end
 end
