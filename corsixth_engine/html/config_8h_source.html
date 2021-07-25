@@ -95,62 +95,70 @@ $(function() {
 <div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;<span class="preprocessor">#ifndef CORSIX_TH_CONFIG_H_</span></div>
 <div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="preprocessor">#define CORSIX_TH_CONFIG_H_</span></div>
 <div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno"><a class="line" href="config_8h.html#acd6543f6f4060943c097c6efe9e1668e">   26</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_INTERPRETER_PATH &quot;/usr/local/share/corsix-th/CorsixTH.lua&quot;</span></div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
-<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">// When compiling on Windows, the platform SDK should be used. However, when</span></div>
-<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<span class="comment">// using the SDL rendering engine, the platform SDK is not used for anything</span></div>
-<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// critical, and so its use can be avoided if necessary.</span></div>
-<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_WIN32_SDK</span></div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160; </div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;<span class="comment">// SDL_mixer is used for ingame audio. If this library is not present on your</span></div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// system, then you can comment out the next line and the game will not have</span></div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// any music.</span></div>
-<div class="line"><a name="l00040"></a><span class="lineno"><a class="line" href="config_8h.html#ae7583164e0fa9207a0b064407866f266">   40</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_SDL_MIXER</span></div>
-<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
-<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="comment">// FFmpeg</span></div>
-<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160;<span class="comment">// If this library is not present on your system, then you can comment out the</span></div>
-<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<span class="comment">// next line and the game will not have movies.</span></div>
-<div class="line"><a name="l00046"></a><span class="lineno"><a class="line" href="config_8h.html#ad0e175092382455e29e2d42a842ddc78">   46</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_FFMPEG</span></div>
-<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;<span class="comment">// FreeType2 can be used for font support beyond the CP437 bitmap fonts which</span></div>
-<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;<span class="comment">// come with Theme Hospital. It must be used if translations like Russian or</span></div>
-<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;<span class="comment">// Chinese are desired.</span></div>
-<div class="line"><a name="l00052"></a><span class="lineno"><a class="line" href="config_8h.html#a5a71d8df0ce36bf2137f635e1d818445">   52</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_FREETYPE2</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160; </div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_PACK_PRAGMAS 1</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#define CORSIX_TH_PACKED_FLAGS</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno"><a class="line" href="config_8h.html#a2e880a6470c06e11ede0c462342f481b">   58</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_PACK_PRAGMAS 0</span></div>
-<div class="line"><a name="l00059"></a><span class="lineno"><a class="line" href="config_8h.html#a837382ba5774a99f8ea8c30e22426247">   59</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_PACKED_FLAGS __attribute__((__packed__))</span></div>
-<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#include &lt;cstddef&gt;</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160; </div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="comment">// We bring in the most common stddef and stdint types to avoid typing</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="comment">// clang-format off</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="keyword">using</span> std::int8_t;</div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="keyword">using</span> std::int16_t;</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="keyword">using</span> std::int32_t;</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="keyword">using</span> std::int64_t;</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="keyword">using</span> std::size_t;</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="keyword">using</span> std::uint8_t;</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;<span class="keyword">using</span> std::uint16_t;</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="keyword">using</span> std::uint32_t;</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="keyword">using</span> std::uint64_t;</div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="comment">// clang-format on</span></div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="comment">// In Visual Studio, Visual Leak Detector can be used to find memory leaks.</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">/* #undef CORSIX_TH_USE_VLD */</span></div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno"><a class="line" href="config_8h.html#add6d618f2642f62ba6fbc496f3ec57fa">   84</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_OS &quot;unix&quot;</span></div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
-<div class="line"><a name="l00087"></a><span class="lineno"><a class="line" href="config_8h.html#a094b5b0fe32f93a79d2aa5bbbc28b74f">   87</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_ARCH &quot;x86_64&quot;</span></div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160; </div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="preprocessor">#endif  // CORSIX_TH_CONFIG_H_</span></div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;<span class="comment">// Whether to search in some possible local dirs according to a fixed list,</span></div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;<span class="comment">// relative to current working dir or program dir</span></div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;<span class="comment">/* #undef CORSIX_TH_SEARCH_LOCAL_DATADIRS */</span></div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;<span class="comment">// Name of the script, usually &#39;CorsixTH.lua&#39;</span></div>
+<div class="line"><a name="l00032"></a><span class="lineno"><a class="line" href="config_8h.html#ae7d5477a7d71a3d591ea6265aae073de">   32</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_INTERPRETER_NAME &quot;CorsixTH.lua&quot;</span></div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160; </div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;<span class="comment">// A final path (with file name) to search</span></div>
+<div class="line"><a name="l00035"></a><span class="lineno"><a class="line" href="config_8h.html#acd6543f6f4060943c097c6efe9e1668e">   35</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_INTERPRETER_PATH &quot;/usr/local/share/corsix-th/CorsixTH.lua&quot;</span></div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;<span class="comment">// When compiling on Windows, the platform SDK should be used. However, when</span></div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;<span class="comment">// using the SDL rendering engine, the platform SDK is not used for anything</span></div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<span class="comment">// critical, and so its use can be avoided if necessary.</span></div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
+<div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_WIN32_SDK</span></div>
+<div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00044"></a><span class="lineno">   44</span>&#160; </div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">// SDL_mixer is used for ingame audio. If this library is not present on your</span></div>
+<div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;<span class="comment">// system, then you can comment out the next line and the game will not have</span></div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;<span class="comment">// any music.</span></div>
+<div class="line"><a name="l00049"></a><span class="lineno"><a class="line" href="config_8h.html#ae7583164e0fa9207a0b064407866f266">   49</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_SDL_MIXER</span></div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
+<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="comment">// FFmpeg</span></div>
+<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="comment">// If this library is not present on your system, then you can comment out the</span></div>
+<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="comment">// next line and the game will not have movies.</span></div>
+<div class="line"><a name="l00055"></a><span class="lineno"><a class="line" href="config_8h.html#ad0e175092382455e29e2d42a842ddc78">   55</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_FFMPEG</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="comment">// FreeType2 can be used for font support beyond the CP437 bitmap fonts which</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="comment">// come with Theme Hospital. It must be used if translations like Russian or</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;<span class="comment">// Chinese are desired.</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno"><a class="line" href="config_8h.html#a5a71d8df0ce36bf2137f635e1d818445">   61</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_FREETYPE2</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_PACK_PRAGMAS 1</span></div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">#define CORSIX_TH_PACKED_FLAGS</span></div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno"><a class="line" href="config_8h.html#a2e880a6470c06e11ede0c462342f481b">   67</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_USE_PACK_PRAGMAS 0</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno"><a class="line" href="config_8h.html#a837382ba5774a99f8ea8c30e22426247">   68</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_PACKED_FLAGS __attribute__((__packed__))</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">#include &lt;cstddef&gt;</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">#include &lt;cstdint&gt;</span></div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160; </div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;<span class="comment">// We bring in the most common stddef and stdint types to avoid typing</span></div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;<span class="comment">// clang-format off</span></div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;<span class="keyword">using</span> std::int8_t;</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;<span class="keyword">using</span> std::int16_t;</div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">using</span> std::int32_t;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;<span class="keyword">using</span> std::int64_t;</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="keyword">using</span> std::size_t;</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keyword">using</span> std::uint8_t;</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;<span class="keyword">using</span> std::uint16_t;</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">using</span> std::uint32_t;</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">using</span> std::uint64_t;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="comment">// clang-format on</span></div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160; </div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;<span class="comment">// In Visual Studio, Visual Leak Detector can be used to find memory leaks.</span></div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="comment">/* #undef CORSIX_TH_USE_VLD */</span></div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160; </div>
+<div class="line"><a name="l00093"></a><span class="lineno"><a class="line" href="config_8h.html#add6d618f2642f62ba6fbc496f3ec57fa">   93</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_OS &quot;unix&quot;</span></div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00096"></a><span class="lineno"><a class="line" href="config_8h.html#a094b5b0fe32f93a79d2aa5bbbc28b74f">   96</a></span>&#160;<span class="preprocessor">#define CORSIX_TH_ARCH &quot;x86_64&quot;</span></div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160; </div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;<span class="preprocessor">#endif  // CORSIX_TH_CONFIG_H_</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- HTML footer for doxygen 1.8.17-->
 <!-- start footer part -->
