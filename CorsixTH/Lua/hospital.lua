@@ -644,6 +644,9 @@ function Hospital:afterLoad(old, new)
   if old < 155 then
     self.overdraft_interest_rate = self.interest_rate + 0.02
   end
+  if old < 159 then
+    self.receptionist_msg = nil
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
@@ -1725,8 +1728,18 @@ function Hospital:objectPlaced(entity, id)
   end
 end
 
+--! Give advice to the user about the need to buy the first reception desk.
+function Hospital:msgNeedFirstReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
 --! Give advice to the user about having bought a reception desk.
 function Hospital:msgReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Give advice about having more desks.
+function Hospital:msgMultiReceptionDesks()
   -- Nothing to do, override in a sub-class.
 end
 

@@ -60,11 +60,8 @@ function Receptionist:setProfile(profile)
 end
 
 function Receptionist:needsWorkStation()
-  if self.hospital and not self.hospital.receptionist_msg then
-    if self.hospital:countReceptionDesks() == 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_4)
-      self.hospital.receptionist_msg = true
-    end
+  if self.hospital then
+    self.hospital:msgNeedFirstReceptionDesk()
   end
 end
 
