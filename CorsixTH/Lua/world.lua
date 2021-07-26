@@ -566,7 +566,7 @@ function World:spawnVIP(name)
   vip:setNextAction(SpawnAction("spawn", spawn_point))
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
-  hospital.announce_vip = hospital.announce_vip + 1
+  hospital:onSpawnVIP()
   vip:queueAction(SeekReceptionAction())
 end
 

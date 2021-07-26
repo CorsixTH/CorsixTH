@@ -45,6 +45,7 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   }
 
   self.win_declined = false -- Has not yet declined the level win fax
+  self.announce_vip = 0 -- Number of spawned VIPs who need to be announced
 end
 
 --! Give advice to the player at the end of a day.
@@ -442,11 +443,37 @@ function PlayerHospital:announceRepair(room)
   if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
 end
 
+function PlayerHospital:onSpawnVIP()
+  self.announce_vip = self.announce_vip + 1
+end
+
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
   -- Advise the player.
   if self:hasStaffedDesk() then
     self:dailyAdviceChecks()
+  end
+
+  -- check if we still have to announce VIP visit
+  if self.announce_vip > 0 then
+    -- check if the VIP is in the building yet
+    for _, e in ipairs(self.world.entities) do
+      if e.humanoid_class == "VIP" and e.announced == false and
+          self:isInHospital(e.tile_x, e.tile_y) then
+        -- play VIP arrival sound and show tooltips
+        local ui = self.world.ui
+        -- there is also vip008 which announces a man from the ministry
+        ui:playRandomAnnouncement({ "vip001.wav", "vip002.wav", "vip003.wav",
+            "vip004.wav", "vip005.wav" }, AnnouncementPriority.High)
+        if self.num_vips < 1 then
+          ui.adviser:say(_A.information.initial_general_advice.first_VIP)
+        else
+          ui.adviser:say(_A.information.vip_arrived:format(e.name))
+        end
+        e.announced = true
+        self.announce_vip = self.announce_vip - 1
+      end
+    end
   end
 
   Hospital.onEndDay(self)
