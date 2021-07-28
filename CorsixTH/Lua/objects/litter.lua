@@ -94,7 +94,7 @@ end
 
 --! Remove the litter from the world.
 function Litter:remove()
-  assert(self:isCleanable()or TheApp.config.remove_destroyed_rooms)
+  assert(self:isCleanable() or TheApp.config.remove_destroyed_rooms)
 
   if self.tile_x then
     self.world:removeObjectFromTile(self, self.tile_x, self.tile_y)
@@ -159,6 +159,15 @@ function Litter:afterLoad(old, new)
   if old < 151 then
     self.hospital = self.world:getHospital(self.tile_x, self.tile_y)
   end
+  if old < 162 then
+    -- Afterload 151 could cause nil hospital if the litter was outside it.
+    -- For ease, remove affected litter
+    if not self.hospital then
+      self.hospital = TheApp.world:getLocalPlayerHospital()
+      self:remove()
+    end
+  end
+  Entity.afterLoad(self, old, new)
 end
 
 return object
