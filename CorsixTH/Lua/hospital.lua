@@ -115,7 +115,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_cured = 0
   self.not_cured = 0
   self.num_explosions = 0
-  self.announce_vip = 0
   self.vip_declined = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
@@ -904,21 +903,6 @@ function Hospital:onEndDay()
   for _, staff in ipairs(self.staff) do
     if staff.humanoid_class == "Receptionist" then
       self.receptionist_count = self.receptionist_count + 1
-    end
-  end
-
-  -- check if we still have to announce VIP visit
-  if self.announce_vip > 0 then
-    -- check if the VIP is in the building yet
-    for _, e in ipairs(self.world.entities) do
-      if e.humanoid_class == "VIP" and e.announced == false then
-        if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
-          -- play VIP arrival sound and show tooltips
-          e:announce()
-          e.announced = true
-          self.announce_vip = self.announce_vip - 1
-        end
-      end
     end
   end
 
@@ -2442,5 +2426,9 @@ function Hospital:makeRaiseRequest()
 end
 
 function Hospital:announceRepair()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:onSpawnVIP()
   -- Nothing to do, override in a derived class.
 end
