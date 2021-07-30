@@ -267,9 +267,9 @@ function Doctor:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
   if room.room_info.id == "toilets" then
-    self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
   elseif room.room_info.id == "training" then
-    self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
   else
     Staff.adviseWrongPersonForThisRoom(self)
   end

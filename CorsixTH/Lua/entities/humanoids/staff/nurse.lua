@@ -44,7 +44,7 @@ end
 function Nurse:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
-  self.world.ui.adviser:say(_A.staff_place_advice.nurses_cannot_work_in_room:format(room_name))
+  self.hospital:giveAdvice({ _A.staff_place_advice.nurses_cannot_work_in_room:format(room_name) })
 end
 
 function Nurse:afterLoad(old, new)

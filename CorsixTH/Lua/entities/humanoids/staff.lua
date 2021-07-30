@@ -475,15 +475,15 @@ function Staff:adviseWrongPersonForThisRoom()
   local required = (room.room_info.maximum_staff or room.room_info.required_staff)
   if required then
     if required.Nurse then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_nurses_in_room:format(room_name))
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_nurses_in_room:format(room_name) })
     elseif required.Surgeon then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_surgeons)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_surgeons })
     elseif required.Researcher then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_researchers)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_researchers })
     elseif required.Psychiatrist then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_psychiatrists)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_psychiatrists })
     else
-      self.world.ui.adviser:say(_A.staff_place_advice.only_doctors_in_room:format(room_name))
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_doctors_in_room:format(room_name) })
     end
   end
 end
