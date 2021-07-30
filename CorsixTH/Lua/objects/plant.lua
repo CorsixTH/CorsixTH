@@ -179,7 +179,7 @@ function Plant:callForWatering()
 
     -- If very thirsty, make user aware of it.
     if self.current_state > 1 and not self.plant_announced then
-      self.world.ui.adviser:say(_A.warnings.plants_thirsty)
+      self.hospital:giveAdvice({ _A.warnings.plants_thirsty })
       self.plant_announced = true
     end
   end
