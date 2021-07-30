@@ -161,7 +161,7 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused ar
     self.profile[trait] = 1.0
     local is = trait:match"^is_(.*)"
     if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
-      self.world.ui.adviser:say(_A.information.promotion_to_specialist:format(_S.staff_title[is]))
+      self.hospital:giveAdvice({ _A.information.promotion_to_specialist:format(_S.staff_title[is]) })
       -- patients might we waiting for a doctor with this skill, notify them
       self.hospital:notifyOfStaffChange(self)
     end
@@ -172,10 +172,10 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused ar
     self.profile:parseSkillLevel()
 
     if old_profile.is_junior and not self.profile.is_junior then
-      self.world.ui.adviser:say(_A.information.promotion_to_doctor)
+      self.hospital:giveAdvice({ _A.information.promotion_to_doctor })
       self:updateStaffTitle()
     elseif not old_profile.is_consultant and self.profile.is_consultant then
-      self.world.ui.adviser:say(_A.information.promotion_to_consultant)
+      self.hospital:giveAdvice({ _A.information.promotion_to_consultant })
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
