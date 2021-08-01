@@ -857,7 +857,7 @@ function UIMenuBar:makeGameMenu(app)
         rat.is_debug = true
         local x, y = self.ui:ScreenToWorld(self.x + self.width / 2, self.y + self.height + 100)
         rat:setTile(math.floor(x), math.floor(y))
-        rat:setTilePositionSpeed(math.floor(x), math.floor(y), 0, 0, -8, 0)
+        rat:setTilePositionSpeed(math.floor(x), math.floor(y), 0, 0, 0, 0)
       end)
       :appendItem(_S.menu_debug.cheats:format(hotkey_value_label("ingame_showCheatWindow", hotkeys)),             function() self.ui:addWindow(UICheats(self.ui)) end)
       :appendItem(_S.menu_debug.lua_console:format(hotkey_value_label("global_showLuaConsole", hotkeys)),        function() self.ui:addWindow(UILuaConsole(self.ui)) end)

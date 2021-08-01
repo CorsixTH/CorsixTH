@@ -732,6 +732,18 @@ function GameUI:onMouseUp(code, x, y)
     end
   end
 
+  if self.cursor_entity and class.is(self.cursor_entity, Rat)
+      and button == "left" then
+    self:playSound("shotgun.wav")
+    self:playSound("deadrat2.wav")
+    local rat_tx, rat_ty = self.cursor_entity:getTile()
+    local rat_px, rat_py = self.cursor_entity:getPosition()
+
+    TheApp.world:destroyEntity(self.cursor_entity)
+    local splat = TheApp.world:newObject("litter", rat_tx, rat_ty)
+    splat:setLitterType("dead_rat")
+  end
+
   return UI.onMouseUp(self, code, x, y)
 end
 

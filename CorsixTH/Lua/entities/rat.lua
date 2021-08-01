@@ -90,6 +90,7 @@ local rat_dirs = {
 function Rat:Rat(animation)
   self:Entity(animation)
   self.last_move_direction = "east"
+  self.hover_cursor = TheApp.gfx:loadMainCursor("kill_rat_hover")
 end
 
 function Rat:tick()
@@ -118,6 +119,11 @@ function Rat:tick()
   end
 
   Entity.tick(self)
+end
+
+-- Called when the humanoid is about to be removed from the world.
+function Humanoid:onDestroy()
+  Entity.onDestroy(self)
 end
 
 -- Save game compatibility
