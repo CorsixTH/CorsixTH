@@ -156,6 +156,14 @@ function Entity:setPosition(x, y)
   return self
 end
 
+--[[ Get the current pixel position of the entity from its attached tile.
+!return (integer) The 0-based X pixel offset from the default position.
+!return (integer) The 0-based Y pixel offset from the default position.
+]]
+function Entity:getPosition()
+  return self.th:getPosition()
+end
+
 --[[ Set the rate at which the entity pixel position changes
 !param x (integer) The X component of the speed in pixels per tick.
 !param y (integer) The Y component of the speed in pixels per tick.

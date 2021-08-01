@@ -220,6 +220,7 @@ menu_debug = {
   allow_blocking_off_areas    = "  ALLOW BLOCKING OFF AREAS  ",
   make_debug_fax              = "  MAKE DEBUG FAX  ",
   make_debug_patient          = "  MAKE DEBUG PATIENT  ",
+  make_debug_rat              = "  MAKE DEBUG RAT  ",
   cheats                      = "  (%1%) CHEATS  ",
   lua_console                 = "  (%1%) LUA CONSOLE  ",
   debug_script                = "  (%1%) RUN DEBUG SCRIPT  ",
