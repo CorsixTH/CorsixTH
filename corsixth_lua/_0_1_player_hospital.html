@@ -82,6 +82,10 @@
  <a href="_0_1_player_hospital.html#_0_1_player_hospital_1announce_repair">announceRepair</a>(<span class="p">room</span>)
  (overrides <a href="_0_1_hospital.html#_0_1_hospital_1announce_repair">Hospital:announceRepair</a>)
  </li>
+ <li class="self">
+ <a href="_0_1_player_hospital.html#_0_1_player_hospital_1announce_staff_leave">announceStaffLeave</a>(<span class="p">staff</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1announce_staff_leave">Hospital:announceStaffLeave</a>)
+ </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1assign_handyman_to_task">assignHandymanToTask</a>(<span class="p">handyman</span>, <span class="p">taskIndex</span>, <span class="p">taskType</span>)
  (inherited from <a href="_0_1_hospital.html">Hospital</a>)
@@ -246,6 +250,7 @@
  </li>
  <li class="self">
  <a href="_0_1_player_hospital.html#_0_1_player_hospital_1give_advice">giveAdvice</a>(<span class="p">msgs</span>, <span class="p">rnd_frac</span>, <span class="p">stay_up</span>)
+ (overrides <a href="_0_1_hospital.html#_0_1_hospital_1give_advice">Hospital:giveAdvice</a>)
  </li>
  <li class="inherited">
  <a href="_0_1_hospital.html#_0_1_hospital_1has_staffed_desk">hasStaffedDesk</a>()
@@ -863,7 +868,7 @@ from Hospital:computePriceLevelImpact</td>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1after_load">Hospital:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L539">line 539 of Lua/hospitals/player_hospital.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L545">line 545 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -881,6 +886,23 @@ from Hospital:computePriceLevelImpact</td>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1announce_repair">Hospital:announceRepair</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L434">line 434 of Lua/hospitals/player_hospital.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_player_hospital_1announce_staff_leave">function PlayerHospital:announceStaffLeave(<span class="p">staff</span>)</a></h5>
+ <p>
+ Announce to the player that a staff member is leaving the hospital<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">staff</td>
+ <td class="t">table</td>
+ <td class="d"> The staff member</td>
+ </tr>
+ </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1announce_staff_leave">Hospital:announceStaffLeave</a>.<br/>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L539">line 539 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -935,6 +957,7 @@ call actually says something.</td>
  <td class="d"> If true, let the adviser remain visible afterwards.</td>
  </tr>
  </table></p><p>
+ <strong>Overrides:</strong> <a href="_0_1_hospital.html#_0_1_hospital_1give_advice">Hospital:giveAdvice</a>.<br/>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/hospitals/player_hospital.lua#L329">line 329 of Lua/hospitals/player_hospital.lua</a>.
  </p>
  </div>

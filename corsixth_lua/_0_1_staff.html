@@ -24,7 +24,7 @@
  <h2 class="class">Staff Class</h2>
 <h3 class="class">A Doctor, Nurse, Receptionist, Handyman, or Surgeon</h3> 
 <div class="class_info">
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L23">line 23 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L25">line 25 of Lua/entities/humanoids/staff.lua</a>.
  <br/><strong>Inheritance:</strong> <a href="_0_1_staff.html">Staff</a>
  » <a href="_0_1_humanoid.html">Humanoid</a>
  » <a href="_0_1_entity.html">Entity</a>
@@ -145,9 +145,6 @@
  </li>
  <li class="self">
  <a href="_0_1_staff.html#_0_1_staff_1is_tiring">isTiring</a>()
- </li>
- <li class="self">
- <a href="_0_1_staff.html#_0_1_staff_1leave_announce">leaveAnnounce</a>()
  </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
@@ -403,6 +400,10 @@
  <li><span class="p">layers</span>
  (*)
  </li>
+ <li><span class="p">leave_priority</span>
+ </li>
+ <li><span class="p">leave_sounds</span>
+ </li>
  <li><span class="p">message_callback</span>
  </li>
  <li><span class="p">mood_info</span>
@@ -523,7 +524,7 @@
  <td class="d">Arguments to base class constructor.</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L29">line 29 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L31">line 31 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -564,7 +565,7 @@ and go to the StaffRoom if it is.<br/><br/>
  <div class="method">
  <h5><a name="_0_1_staff_1check_if_waited_too_long">function Staff:checkIfWaitedTooLong()</a></h5>
  <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L167">line 167 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L171">line 171 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -668,12 +669,6 @@ the salary by.</td>
  <h5><a name="_0_1_staff_1is_tiring">function Staff:isTiring()</a></h5>
  <p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L207">line 207 of Lua/entities/humanoids/staff.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_staff_1leave_announce">function Staff:leaveAnnounce()</a></h5>
- <p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L203">line 203 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -787,7 +782,7 @@ up the staff member on right click.<br/><br/>
  <h5><a name="_0_1_staff_1tick">function Staff:tick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_entity.html#_0_1_entity_1tick">Entity:tick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L121">line 121 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L125">line 125 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -795,7 +790,7 @@ up the staff member on right click.<br/><br/>
  <p>
  Handle daily adjustments to staff.<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_humanoid.html#_0_1_humanoid_1tick_day">Humanoid:tickDay</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L36">line 36 of Lua/entities/humanoids/staff.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff.lua#L40">line 40 of Lua/entities/humanoids/staff.lua</a>.
  </p>
  </div>
  <div class="method">

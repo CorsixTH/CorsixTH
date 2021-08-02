@@ -163,10 +163,6 @@
  <a href="_0_1_staff.html#_0_1_staff_1is_tiring">isTiring</a>()
  (inherited from <a href="_0_1_staff.html">Staff</a>)
  </li>
- <li class="self">
- <a href="_0_1_handyman.html#_0_1_handyman_1leave_announce">leaveAnnounce</a>()
- (overrides <a href="_0_1_staff.html#_0_1_staff_1leave_announce">Staff:leaveAnnounce</a>)
- </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -437,6 +433,10 @@
  <li><span class="p">layers</span>
  (*)
  </li>
+ <li><span class="p">leave_priority</span>
+ </li>
+ <li><span class="p">leave_sounds</span>
+ </li>
  <li><span class="p">message_callback</span>
  (*)
  </li>
@@ -552,6 +552,7 @@
  (*)
  </li>
  <li><span class="p">world</span>
+ (*)
  </li>
  <li><span class="p">yawn_anim</span>
  (*)
@@ -593,7 +594,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1after_load">Staff:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L92">line 92 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L88">line 88 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -620,14 +621,14 @@
  <h5><a name="_0_1_handyman_1die">function Handyman:die()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1die">Staff:die</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L42">line 42 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L38">line 38 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1dump">function Handyman:dump()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1dump">Staff:dump</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L47">line 47 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L43">line 43 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -645,14 +646,14 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1fulfills_criterion">Staff:fulfillsCriterion</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L86">line 86 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L82">line 82 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_handyman_1go_to_staff_room">function Handyman:goToStaffRoom()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1go_to_staff_room">Staff:goToStaffRoom</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L76">line 76 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L72">line 72 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -662,17 +663,10 @@
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_handyman_1leave_announce">function Handyman:leaveAnnounce()</a></h5>
- <p>
- <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1leave_announce">Staff:leaveAnnounce</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L37">line 37 of Lua/entities/humanoids/staff/handyman.lua</a>.
- </p>
- </div>
- <div class="method">
  <h5><a name="_0_1_handyman_1on_place_in_corridor">function Handyman:onPlaceInCorridor()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1on_place_in_corridor">Staff:onPlaceInCorridor</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L81">line 81 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L77">line 77 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -694,7 +688,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1set_profile">Staff:setProfile</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L68">line 68 of Lua/entities/humanoids/staff/handyman.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/handyman.lua#L64">line 64 of Lua/entities/humanoids/staff/handyman.lua</a>.
  </p>
  </div>
  <div class="method">

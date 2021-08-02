@@ -157,10 +157,6 @@
  <a href="_0_1_staff.html#_0_1_staff_1is_tiring">isTiring</a>()
  (inherited from <a href="_0_1_staff.html">Staff</a>)
  </li>
- <li class="self">
- <a href="_0_1_nurse.html#_0_1_nurse_1leave_announce">leaveAnnounce</a>()
- (overrides <a href="_0_1_staff.html#_0_1_staff_1leave_announce">Staff:leaveAnnounce</a>)
- </li>
  <li class="inherited">
  <a href="_0_1_entity.html#_0_1_entity_1notify_new_object">notifyNewObject</a>(<span class="p">id</span>)
  (inherited from <a href="_0_1_entity.html">Entity</a>)
@@ -410,7 +406,6 @@
  (*)
  </li>
  <li><span class="p">hospital</span>
- (*)
  </li>
  <li><span class="p">hover_cursor</span>
  (*)
@@ -429,6 +424,10 @@
  </li>
  <li><span class="p">layers</span>
  (*)
+ </li>
+ <li><span class="p">leave_priority</span>
+ </li>
+ <li><span class="p">leave_sounds</span>
  </li>
  <li><span class="p">message_callback</span>
  (*)
@@ -545,6 +544,7 @@
  (*)
  </li>
  <li><span class="p">world</span>
+ (*)
  </li>
  <li><span class="p">yawn_anim</span>
  (*)
@@ -572,7 +572,7 @@
  <h5><a name="_0_1_nurse_1advise_wrong_person_for_this_room">function Nurse:adviseWrongPersonForThisRoom()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1advise_wrong_person_for_this_room">Staff:adviseWrongPersonForThisRoom</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L50">line 50 of Lua/entities/humanoids/staff/nurse.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L44">line 44 of Lua/entities/humanoids/staff/nurse.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -593,7 +593,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1after_load">Staff:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L56">line 56 of Lua/entities/humanoids/staff/nurse.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L50">line 50 of Lua/entities/humanoids/staff/nurse.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -611,14 +611,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1fulfills_criterion">Staff:fulfillsCriterion</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L44">line 44 of Lua/entities/humanoids/staff/nurse.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_nurse_1leave_announce">function Nurse:leaveAnnounce()</a></h5>
- <p>
- <strong>Overrides:</strong> <a href="_0_1_staff.html#_0_1_staff_1leave_announce">Staff:leaveAnnounce</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L37">line 37 of Lua/entities/humanoids/staff/nurse.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/humanoids/staff/nurse.lua#L38">line 38 of Lua/entities/humanoids/staff/nurse.lua</a>.
  </p>
  </div>
 </div>
