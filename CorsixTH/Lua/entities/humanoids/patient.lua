@@ -383,9 +383,7 @@ function Patient:fallingAnnounce()
   (_A.warnings.falling_5),
   (_A.warnings.falling_6),
   }
-  if msg then
-    self.world.ui.adviser:say(msg[math.random(1, #msg)])
-  end
+  self.hospital:giveAdvice(msg)
 end
 
 --! Perform 'shake fist' action.
