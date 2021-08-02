@@ -117,55 +117,6 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   end
 end)
 
-local function action_seek_room_no_treatment_room_found(room_type, humanoid)
-  -- Emergency patients also don't need to ask what to do, they'll just wait for the player
-  -- to build the necessary room.
-  if humanoid.is_emergency then
-    return
-  end
-  -- Wait two months before going home anyway.
-  humanoid.waiting = 60
-  local strings = _S.fax.disease_discovered_patient_choice
-  -- Can this room be built right now? What is then missing?
-
-  local output_text = strings.can_not_cure
-  -- TODO: can we really assert this? Or should we just make the patient go home?
-  --local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
-
-  local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
-  local research_enabled = false
-  if req then
-    research_enabled = (humanoid.hospital:countRoomOfType("research", 1) > 0 and
-                        humanoid.hospital:countStaffOfCategory("Researcher", 1) > 0)
-    if #req.rooms == 1 then
-      local room_name, required_staff, staff_name = humanoid.world:getRoomNameAndRequiredStaffName(req.rooms[1])
-      if req.staff[required_staff] or 0 > 0 then
-        output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
-      else
-        output_text = strings.need_to_build:format(room_name)
-      end
-    elseif #req.rooms == 0 and next(req.staff) then
-      output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
-    end
-  end
-
-  local message = {
-    {text = strings.disease_name:format(humanoid.disease.name)},
-    {text = " "},
-    {text = output_text},
-    {text = strings.what_to_do_question},
-    choices = {
-      {text = strings.choices.send_home, choice = "send_home"},
-      {text = strings.choices.wait,      choice = "wait"},
-      {text = strings.choices.research,  choice = "research", enabled = research_enabled},
-    },
-  }
-  -- Ok, send the message in all channels.
-  TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
-  humanoid:setMood("patient_wait", "activate")
-  humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
-end
-
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
    --If it's the VIP then there's been an explosion. Skip the exploded room
   if humanoid.humanoid_class == "VIP" then
@@ -375,10 +326,17 @@ local function action_seek_room_start(action, humanoid)
     if not action.message_sent then
       -- Make a message about that something needs to be done about this patient
       if humanoid.diagnosed then
-        -- The patient is diagnosed, a treatment room is missing.
-        -- It may happen that it is another room in a series which is missing.
-        local room_to_find = action.room_type_needed and action.room_type_needed or action.room_type
-        action_seek_room_no_treatment_room_found(room_to_find, humanoid)
+        -- Emergency patients also don't need to ask what to do, they'll just wait for the player
+        -- to build the necessary room.
+        if not humanoid.is_emergency then
+          -- The patient is diagnosed, a treatment room is missing.
+          -- It may happen that it is another room in a series which is missing.
+          humanoid.hospital:makeNoTreatmentRoomFax(humanoid)
+          -- Wait two months before going home anyway.
+          humanoid.waiting = 60
+          humanoid:setMood("patient_wait", "activate")
+          humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
+        end
       else
         -- No more diagnosis rooms can be found
         -- The GP's office is a special case. TODO: Make a custom message anyway?

@@ -547,6 +547,44 @@ function PlayerHospital:announceStaffLeave(staff)
   self.world.ui:playRandomAnnouncement(staff.leave_sounds, staff.leave_priority)
 end
 
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
+--!param patient (table)
+function PlayerHospital:makeNoTreatmentRoomFax(patient)
+  local strings = _S.fax.disease_discovered_patient_choice
+  -- Can this room be built right now? What is then missing?
+  local output_text = strings.can_not_cure
+  local req = self:checkDiseaseRequirements(patient.disease.id)
+  local research_enabled = false
+  if req then
+    research_enabled = (self:countRoomOfType("research", 1) > 0 and
+                        self:countStaffOfCategory("Researcher", 1) > 0)
+    if #req.rooms == 1 then
+      local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])
+      if req.staff[required_staff] or 0 > 0 then
+        output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+      else
+        output_text = strings.need_to_build:format(room_name)
+      end
+    elseif #req.rooms == 0 and next(req.staff) then
+      output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
+    end
+  end
+
+  local message = {
+    {text = strings.disease_name:format(patient.disease.name)},
+    {text = " "},
+    {text = output_text},
+    {text = strings.what_to_do_question},
+    choices = {
+      {text = strings.choices.send_home, choice = "send_home"},
+      {text = strings.choices.wait,      choice = "wait"},
+      {text = strings.choices.research,  choice = "research", enabled = research_enabled},
+    },
+  }
+  -- Ok, send the message in all channels.
+  self.world.ui.bottom_panel:queueMessage("information", message, patient)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
