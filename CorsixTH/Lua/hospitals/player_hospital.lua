@@ -662,6 +662,19 @@ function PlayerHospital:makeEmergencyStartFax()
   self.world.ui.bottom_panel:queueMessage("emergency", message, nil, Date.hoursPerDay() * 16, 2)
 end
 
+--! Makes the fax at the end of an emergency
+function PlayerHospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
+  local message = {
+    {text = _S.fax.emergency_result.saved_people:format(rescued_patients, total)},
+    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money
+      :format(max_bonus, earned)},
+    choices = {
+      {text = _S.fax.emergency_result.close_text, choice = "close"},
+    },
+  }
+  self.world.ui.bottom_panel:queueMessage("report", message, nil, Date.hoursPerDay() * 25, 1)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

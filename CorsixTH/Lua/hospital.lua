@@ -1103,15 +1103,7 @@ function Hospital:resolveEmergency()
   if emergency_success then
     earned = emer.bonus * rescued_patients
   end
-  local message = {
-    {text = _S.fax.emergency_result.saved_people
-      :format(rescued_patients, total)},
-    {text = self.world.free_build_mode and "" or _S.fax.emergency_result.earned_money:format(max_bonus, earned)},
-    choices = {
-      {text = _S.fax.emergency_result.close_text, choice = "close"},
-    },
-  }
-  self.world.ui.bottom_panel:queueMessage("report", message, nil, 24*25, 1)
+  self:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   if emergency_success then -- Reputation increased
     self:changeReputation("emergency_success", emer.disease)
     self:receiveMoney(earned, _S.transactions.emergency_bonus)
@@ -2406,5 +2398,9 @@ function Hospital:makeNoDiagnosisRoomFax(patient)
 end
 
 function Hospital:makeEmergencyStartFax()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeEmergencyEndFax(rescued_patients, total, max_bonus, earned)
   -- Nothing to do, override in a derived class.
 end
