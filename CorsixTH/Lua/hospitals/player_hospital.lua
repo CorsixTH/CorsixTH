@@ -585,6 +585,28 @@ function PlayerHospital:makeNoTreatmentRoomFax(patient)
   self.world.ui.bottom_panel:queueMessage("information", message, patient)
 end
 
+--! Makes the fax requesting player action for the patient who needs a diagnosis room
+--!param patient (table)
+function PlayerHospital:makeNoDiagnosisRoomFax(patient)
+  local guess_enabled = self.disease_casebook[patient.disease.id].discovered
+  local diag_failed = _S.fax.diagnosis_failed
+  local message = {
+    {text = diag_failed.situation},
+    {text = " "},
+    {text = diag_failed.what_to_do_question},
+    choices = {
+      {text = diag_failed.choices.send_home,   choice = "send_home"},
+      {text = diag_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
+      {text = diag_failed.choices.wait,        choice = "wait"},
+    },
+  }
+  if guess_enabled then
+    table.insert(message, 3, {text = diag_failed.partial_diagnosis_percentage_name
+      :format(math.round(patient.diagnosis_progress * 100), patient.disease.name)})
+  end
+  self.world.ui.bottom_panel:queueMessage("information", message, patient)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)

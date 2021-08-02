@@ -138,22 +138,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Wait two months before going home anyway.
     humanoid:setMood("patient_wait", "activate")
     humanoid.waiting = 60
-    local guess_enabled = humanoid.hospital.disease_casebook[humanoid.disease.id].discovered
-    local message = {
-      {text = _S.fax.diagnosis_failed.situation},
-      {text = " "},
-      {text = _S.fax.diagnosis_failed.what_to_do_question},
-      choices = {
-        {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home"},
-        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
-        {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait"},
-      },
-    }
-    if guess_enabled then
-      table.insert(message, 3, {text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
-        :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)})
-    end
-    TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
+    humanoid.hospital:makeNoDiagnosisRoomFax(humanoid)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
     -- This seek_room action will be reused, return that it's valid.
     return true

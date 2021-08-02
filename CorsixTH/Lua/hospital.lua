@@ -2444,3 +2444,7 @@ end
 function Hospital:makeNoTreatmentRoomFax(patient)
   -- Nothing to do, override in a derived class.
 end
+
+function Hospital:makeNoDiagnosisRoomFax(patient)
+  -- Nothing to do, override in a derived class.
+end
