@@ -87,10 +87,12 @@ local rat_dirs = {
   },
 }
 
+Rat.hover_cursor = TheApp.gfx:loadMainCursor("kill_rat_hover")
+Rat.proximity_cursor = TheApp.gfx:loadMainCursor("kill_rat")
+
 function Rat:Rat(animation)
   self:Entity(animation)
   self.last_move_direction = "east"
-  self.hover_cursor = TheApp.gfx:loadMainCursor("kill_rat_hover")
 end
 
 function Rat:tick()

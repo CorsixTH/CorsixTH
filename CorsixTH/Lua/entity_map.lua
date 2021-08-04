@@ -35,7 +35,7 @@ function EntityMap:EntityMap(map)
   for x = 1, self.width do
     self.entity_map[x] = {}
     for y = 1, self.height do
-      self.entity_map[x][y] = {humanoids = {}, objects = {}}
+      self.entity_map[x][y] = {humanoids = {}, rats = {}, objects = {}}
     end
   end
 end
@@ -54,6 +54,8 @@ function EntityMap:addEntity(x, y, entity)
   if x and y and entity then
     if class.is(entity, Humanoid) then
       add_entity_to_table(entity, self:getHumanoidsAtCoordinate(x, y))
+    elseif class.is(entity, Rat) then
+      add_entity_to_table(entity, self:getRatsAtCoordinate(x, y))
     elseif class.is(entity, Object) then
       add_entity_to_table(entity, self:getObjectsAtCoordinate(x, y))
     end
@@ -87,6 +89,8 @@ function EntityMap:removeEntity(x, y, entity)
   if x and y and entity then
     if class.is(entity, Humanoid) then
       remove_entity_from_table(entity, self:getHumanoidsAtCoordinate(x, y))
+    elseif class.is(entity, Rat) then
+      remove_entity_from_table(entity, self:getRatsAtCoordinate(x, y))
     elseif class.is(entity, Object) then
       remove_entity_from_table(entity, self:getObjectsAtCoordinate(x, y))
     end
@@ -102,6 +106,11 @@ function EntityMap:getEntitiesAtCoordinate(x, y)
   --Add all the humanoids
   local entity_table = {}
   for _, obj in ipairs(self:getHumanoidsAtCoordinate(x, y)) do
+    table.insert(entity_table, obj)
+  end
+
+  --Add all rats
+  for _, obj in ipairs(self:getRatsAtCoordinate(x, y)) do
     table.insert(entity_table, obj)
   end
 
@@ -128,6 +137,16 @@ function EntityMap:getHumanoidsAtCoordinate(x, y)
   assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
   "Coordinate requested is out of the entity map bounds")
   return self.entity_map[x][y]["humanoids"]
+end
+
+--[[Returns a table of all rats at a specified coordinate
+@param x (integer) the x coordinate to retrieve entities from
+@param y (integer) the y coordinate to retrieve entities from
+@return (table) containing the objects at the (x, y) coordinate ]]
+function EntityMap:getRatsAtCoordinate(x, y)
+  assert(x >= 1 and y >= 1 and x <= self.width and y <= self.height,
+  "Coordinate requested is out of the entity map bounds")
+  return self.entity_map[x][y]["rats"]
 end
 
 --[[Returns a table of all objects at a specified coordinate
@@ -216,3 +235,12 @@ function EntityMap:getAdjacentFreeTiles(x, y)
   return adjacent_free_tiles
 end
 
+function EntityMap:afterLoad(old, new)
+  if old < 164 then
+    for x = 1, self.width do
+      for y = 1, self.height do
+        self.entity_map[x][y]["rats"] = {}
+      end
+    end
+  end
+end
