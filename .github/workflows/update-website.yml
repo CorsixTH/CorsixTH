@@ -1,0 +1,16 @@
+name: Update website
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: CorsixTH/corsixth.github.io
+          token: ${{ secrets.WEBSITE_REPO_TOKEN }}
+          event-type: release
