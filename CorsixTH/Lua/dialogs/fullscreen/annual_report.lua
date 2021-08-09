@@ -40,11 +40,6 @@ local function setActive(button, active)
   end
 end
 
--- Helper function to make sure all values are whole numbers
-local function toInt(number)
-  return math.floor(number)
-end
-
 function UIAnnualReport:UIAnnualReport(ui, world)
 
   self:UIFullscreen(ui)
@@ -352,7 +347,7 @@ function UIAnnualReport:addTrophy(text, award_type, amount)
     trophy_parts.info = {
       text = text,
       award_type = award_type,
-      amount = toInt(amount)
+      amount = math.floor(amount)
     }
 
     local --[[persistable:annual_report_show_trophy_motivation]] function change() self:showTrophyMotivation(no) end
@@ -388,7 +383,7 @@ function UIAnnualReport:addAward(text, award_type, amount)
     award_parts.info = {
       text = text,
       award_type = award_type,
-      amount = toInt(amount)
+      amount = math.floor(amount)
     }
 
     -- The plaque
