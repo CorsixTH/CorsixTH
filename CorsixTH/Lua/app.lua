@@ -1650,7 +1650,7 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local update_url = 'https://corsixth.github.io/CorsixTH/check-for-updates'
+  local update_url = 'https://corsixth.com/CorsixTH/check-for-updates'
   local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
