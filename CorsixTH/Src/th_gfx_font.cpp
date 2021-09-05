@@ -42,7 +42,7 @@ size_t discard_leading_set_bits(uint8_t& byte) {
   size_t count = 0;
   while ((byte & 0x80) != 0) {
     count++;
-    byte = byte << 1;
+    byte = static_cast<uint8_t>(byte << 1);
   }
   byte = byte >> count;
   return count;
@@ -639,10 +639,11 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             iHandledRows++;
           }
           sMessage = sLineBreakPosition;
-          // Skip one char only when it's .. (maybe a CJK character)
-          if (std::iswspace(iCode) ||  // Whitespace characters
-              iCode == 0x3000) {       // Ideographic space
-            next_utf8_codepoint(sMessage, sMessageEnd);
+          // Skip leading white space on a line
+          iCode = decode_utf8(sMessage, sMessageEnd);
+          while (std::iswspace(iCode) ||  // Whitespace characters
+                 iCode == 0x3000) {       // Ideographic space
+            iCode = next_utf8_codepoint(sMessage, sMessageEnd);
           }
           sLineStart = sMessage;
         } else {
