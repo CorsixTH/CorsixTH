@@ -633,6 +633,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
               vLines.push_back(
                   std::make_pair(sLineBreakPosition, sLineBreakPosition));
             }
+            // skip // or \n\n
+            next_utf8_codepoint(sLineBreakPosition, sMessageEnd);
             next_utf8_codepoint(sLineBreakPosition, sMessageEnd);
             iHandledRows++;
           }
@@ -648,6 +650,8 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
             vLines.push_back(std::make_pair(sLineStart, sOldMessage));
           }
           if (bIsNewLine) {
+            // skip // or \n\n
+            next_utf8_codepoint(sMessage, sMessageEnd);
             next_utf8_codepoint(sMessage, sMessageEnd);
             sLineStart = sLineBreakPosition = sMessage;
           } else {
