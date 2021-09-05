@@ -35,7 +35,7 @@ high_score = {
     cures = "POČET VYLÉČENÍ",
     patient_happiness = "USPOKOJENÍ ZÁKAZNÍKŮ",
     deaths = "POČET ÚMRTÍ",
-    cure_death_ratio = "POMĚR VYLÉČENÍ/ÚMRTÍ",
+    cure_death_ratio = "POMĚR VYLÉČENÍ-ÚMRTÍ",
     staff_happiness = "SPOKOJENOST ZAMĚSTNANCŮ",
     visitors = "NEJVÍCE NÁVŠTĚVNÍKŮ",
     staff_number = "NEJVÍCE ZAMĚSTNANCŮ",
@@ -53,7 +53,7 @@ hotkeys_file_err = {
   file_err_02 = ", nebo použijte v příkazovém řádku spouštěcí možnost --hotkeys-file=filename se jménem souboru. Popis chyby: ",
 }
 rooms_long = {
-  dna_fixer = "Genex 2000",
+  dna_fixer = "Genex 2000", --[[Original translation of Theme Hospital named it the same way, both the room and the machine.--]]
   psychiatric = "Psychiatrie",
   corridors = "Chodby",
   gps_office = "Kancelář Praktického Lékaře",
@@ -290,7 +290,7 @@ town_map = {
   price = "Cena Pozemku",
 }
 confirmation = {
-  replace_machine = "Jste si jisti, že chcete nahradit %s za %d€?",
+  replace_machine = "Jste si jisti, že chcete nahradit %s za %d$?",
   music_warning = "Před zvolením hudby ve formátu mp3 se ujistěte, že máte dostupný soubor smpeg.dll, nebo podobné, pro váš operační systém, jinak ve hře nebudete mít žádnou hudbu. Chcete pokračovat?",
   abort_edit_room = "Právě stavíte nebo upravujete místnost. Pokud jsou všechny povinné objekty umístěny, bude dokončena, ale jinak bude smazána. Pokračovat?",
   quit = "Zvolili jste, že chcete Odejít. Opravdu chcete hru opustit?",
@@ -1382,6 +1382,7 @@ tooltip = {
     button_accept = "Potvrdit a uložit nastavení klávesových zkratek.",
     button_cancel = "Vrátit se do nastavení bez ukládání změn.",
     caption_panels = "Otevřít nabídku s klávesami panelu",
+	button_gameSpeedKeys = "Otevřít nabídku s klávesami nastavení rychlosti hry",
   },
   pay_rise_window = {
     accept = "Splnit platový požadavek",
@@ -1439,7 +1440,7 @@ tooltip = {
     close = "Zavřít obrazovku Přehledu",
     balance = "Vaše bankovní bilance musí být alespoň %d. Nyní je %d",
     win_progress_other = "Zobrazit postup směrem ke kritériu výhry pro %s",
-    value = "Vaše nemocnice musí mít cenu %d€. V současnosti má cenu %d€",
+    value = "Vaše nemocnice musí mít cenu %d$. V současnosti má cenu %d$",
     win_progress_own = "Zobrazit postup směrem ke kritériu výhry pro vaši vlastní nemocnici",
     warmth = "Celková úroveň tepla lidí ve vaší nemocnici",
     percentage_killed = "Vaším úkolem je zabít méně než %d%% vašich návštěvníků. Dosud jste zabili %d%% z nich",
@@ -1498,9 +1499,9 @@ tooltip = {
   },
   bank_manager = {
     interest_payment = "Měsíční splátka úroků",
-    borrow_5000 = "Půjčit si 5000€ od banky",
+    borrow_5000 = "Půjčit si 5000$ od banky",
     current_loan = "Současné nevyřízené půjčky",
-    repay_5000 = "Splatit 5000€ bance",
+    repay_5000 = "Splatit 5000$ bance",
     hospital_value = "Současná hodnota vaší nemocnice",
     show_graph = "Zobrazit graf očekáváných plateb od %s",
     insurance_owed = "Množství peněz, které vám dluží %s",
@@ -1598,7 +1599,7 @@ tooltip = {
     slicer = "26 OB_SLICER",
     bed3 = "nepoužito",
     x_ray = "27 OB_XRAY",
-    video_game = "Video hra: Nechte vaše zaměstnance odpočinout u Donkey Konga.",
+    video_game = "Video hra: Nechte vaše zaměstnance odpočinout u Petrisu.",
     atom_analyser = "Chemický mixér: umístěn ve výzkumné laboratoři, tento stroj zrychlí celý výzkumný proces.",
     inflator = "Nafukovač: léčí lidi s Nafouknutou Hlavou.",
     toilet = "Záchod: pacienti, eh, toto používají.",
@@ -2757,65 +2758,65 @@ main_menu = {
 letter = {
   [1] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Úžasné! Zvládli jste provoz této nemocnice na výbornou. My pohlaváři na Ministerstvu Zdravotnictví bychom chtěli, abyste měli zájem o přijmutí většího projektu. Existuje práce, o které si myslíme, že je pro Vás dokonalá. Plat by byl %d€. Promyslete si to.\n\n",
+    [2] = "Úžasné! Zvládli jste provoz této nemocnice na výbornou. My pohlaváři na Ministerstvu Zdravotnictví bychom chtěli, abyste měli zájem o přijmutí většího projektu. Existuje práce, o které si myslíme, že je pro Vás dokonalá. Plat by byl %d$. Promyslete si to.\n\n",
     [3] = "Máte zájem o práci v Nemocnici %s?",
   },
   [2] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Výborně! Ve Vaší nemocnici jste udělali znamenitý pokrok. Našli jsme pro Vás něco dalšího, co můžete spravovat, pokud máte chuť na změnu prostředí a novou řadu úkolů. Nemusíte přijímat, ale může to stát za to. Plat by byl %d€\n\n",
+    [2] = "Výborně! Ve Vaší nemocnici jste udělali znamenitý pokrok. Našli jsme pro Vás něco dalšího, co můžete spravovat, pokud máte chuť na změnu prostředí a novou řadu úkolů. Nemusíte přijímat, ale může to stát za to. Plat by byl %d$\n\n",
     [3] = "Chcete práci v Nemocnici %s?",
   },
   [3] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Byli jste nesmírně úspěšní během Vašeho období v této nemocnici. Díky tomu od vás očekáváme velké věci a chtěli bychom Vám nabídnout pozici jinde. Plat by byl %d€, a myslíme si, že si zamilujete nové výzvy, které by to přineslo.\n\n",
+    [2] = "Byli jste nesmírně úspěšní během Vašeho období v této nemocnici. Díky tomu od vás očekáváme velké věci a chtěli bychom Vám nabídnout pozici jinde. Plat by byl %d$, a myslíme si, že si zamilujete nové výzvy, které by to přineslo.\n\n",
     [3] = "Chtěli byste pozici v Nemocnici %s?",
   },
   [4] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Blahopřejeme! My na Ministerstvu jsme velmi ohromeni Vašimi schopnostmi provozovat nemocnici. Jste určitě zlatý chlapec v Oddělení Zdraví. Myslíme si ale, že byste upřednostňovali trošičku těžší práci. Byli byste placeni %d€, ale rozhodnutí je na Vás.\n\n",
+    [2] = "Blahopřejeme! My na Ministerstvu jsme velmi ohromeni Vašimi schopnostmi provozovat nemocnici. Jste určitě zlatý chlapec v Oddělení Zdraví. Myslíme si ale, že byste upřednostňovali trošičku těžší práci. Byli byste placeni %d$, ale rozhodnutí je na Vás.\n\n",
     [3] = "Máte zájem o práci v Nemocnici %s?",
   },
   [5] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Dobrý den, opět. Vážíme si Vašeho přání neodejít z této okouzlující nemocnice, ale naléháme, abyste si to rozmysleli. Nabídneme Vám skvělý plat %d€, pokud jste připraveni odejít do jiné nemocnice a zařídit, aby běžela stejně tak hladce.\n\n",
+    [2] = "Dobrý den, opět. Vážíme si Vašeho přání neodejít z této okouzlující nemocnice, ale naléháme, abyste si to rozmysleli. Nabídneme Vám skvělý plat %d$, pokud jste připraveni odejít do jiné nemocnice a zařídit, aby běžela stejně tak hladce.\n\n",
     [3] = "Chtěli byste se teď přesunout do Nemocnice %s?",
   },
   [6] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Zdravíme. Víme, že jste šťastní v této milé a dobře provozované instituci, ale myslíme si, že byste teď měli zvážit další kariérní postup. Samozřejmě Vám bude náležet plat %d€ pokud se rozhodnete přesunout. Stojí za to o tom popřemýšlet, ne?\n\n",
+    [2] = "Zdravíme. Víme, že jste šťastní v této milé a dobře provozované instituci, ale myslíme si, že byste teď měli zvážit další kariérní postup. Samozřejmě Vám bude náležet plat %d$ pokud se rozhodnete přesunout. Stojí za to o tom popřemýšlet, ne?\n\n",
     [3] = "Přejete si vzít místo v Nemocnici %s?",
   },
   [7] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Dobrý den! Ministerstvo Zdravotnictví by chtělo vědět, zda byste si nechtěli rozmyslet Vaše rozhodnutí zůstat v této nemocnici. Potvrzujeme, že máte milou nemocnici, ale také cítíme, že byste udělal dobře, když byste přijal místo s těžší výzvou, a platem %d€.\n\n",
+    [2] = "Dobrý den! Ministerstvo Zdravotnictví by chtělo vědět, zda byste si nechtěli rozmyslet Vaše rozhodnutí zůstat v této nemocnici. Potvrzujeme, že máte milou nemocnici, ale také cítíme, že byste udělal dobře, když byste přijal místo s těžší výzvou, a platem %d$.\n\n",
     [3] = "Chtěli byste přijmout pozici v Nemocnici %s?",
   },
   [8] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Dobrý den, ještě jednou. Na náš poslední dopis, nabízející Vám prvotřídní pozici v nové nemocnici, a zvýšený plat %d€, jste odpověděli negativně. Nicméně, stále máme pocit, že byste si toto rozhodnutí měli rozmyslet. Máme totiž pro Vás dokonalou práci.\n\n",
+    [2] = "Dobrý den, ještě jednou. Na náš poslední dopis, nabízející Vám prvotřídní pozici v nové nemocnici, a zvýšený plat %d$, jste odpověděli negativně. Nicméně, stále máme pocit, že byste si toto rozhodnutí měli rozmyslet. Máme totiž pro Vás dokonalou práci.\n\n",
     [3] = "Vezmete místo v Nemocnici %s? Prosím?",
   },
   [9] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Předvedli jste, že jste nejlepší správce nemocnice v dlouhé a pestré historii lékařství. Takový významný úspěch nemůže zůstat bez odměny, takže bychom Vám rádi nabídli místo Vrchního Šéfa Všech Nemocnic. Toto je čestná práce a přichází s platem %d€. Bude vám uspořádán oslavný průvod a lidé Vám budou ukazovat své uznání, kamkoliv půjdete.\n\n",
+    [2] = "Předvedli jste, že jste nejlepší správce nemocnice v dlouhé a pestré historii lékařství. Takový významný úspěch nemůže zůstat bez odměny, takže bychom Vám rádi nabídli místo Vrchního Šéfa Všech Nemocnic. Toto je čestná práce a přichází s platem %d$. Bude vám uspořádán oslavný průvod a lidé Vám budou ukazovat své uznání, kamkoliv půjdete.\n\n",
     [3] = "Díky za všechno, co jste udělali. Ať si pořádně užijete dlouhý napůl-důchod.\n\n",
     [4] = "",
   },
   [10] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Blahopřejeme k úspěšnému provozu všech nemocnic, ke kterým jsme Vás přidělili. Takový výtečný výkon Vás opravňuje ke svobodě všech světových měst. Je Vám dán důchod %d€, navíc limuzína a vše, co po Vás žádáme je cestovat od města k městu, setkávat se s Vaším zbožňujícím lidem a všude propagovat práci všech nemocnic.\n\n",
+    [2] = "Blahopřejeme k úspěšnému provozu všech nemocnic, ke kterým jsme Vás přidělili. Takový výtečný výkon Vás opravňuje ke svobodě všech světových měst. Je Vám dán důchod %d$, navíc limuzína a vše, co po Vás žádáme je cestovat od města k městu, setkávat se s Vaším zbožňujícím lidem a všude propagovat práci všech nemocnic.\n\n",
     [3] = "Všichni jsme na Vás pyšní. Není mezi námi nikdo, kdo by se necítil vděčný za Vaši tvrdou práci při zachraňování životů.\n\n",
     [4] = "",
   },
   [11] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Vaše kariéra byla ukázková, a Vy jste inspirací pro nás všechny. Děkujeme, že jste spravovali tolik nemocnic a v každé práci si moc dobře vedli. Chtěli bychom Vám darovat doživotní plat %d€, a chtěli bychom od Vás pouze to, abyste cestovali oficiálním autem s otevřenou střechou od města k městu a přednášeli o tom, jak jste dosáhli tolik tak rychle.\n\n",
+    [2] = "Vaše kariéra byla ukázková, a Vy jste inspirací pro nás všechny. Děkujeme, že jste spravovali tolik nemocnic a v každé práci si moc dobře vedli. Chtěli bychom Vám darovat doživotní plat %d$, a chtěli bychom od Vás pouze to, abyste cestovali oficiálním autem s otevřenou střechou od města k městu a přednášeli o tom, jak jste dosáhli tolik tak rychle.\n\n",
     [3] = "Jste příklad pro každého správně smýšlejícího člověka, a to bez výjimky, všichni na světě Vás považují za skvělý přínos.\n\n",
     [4] = "",
   },
   [12] = {
     [1] = "Vážený/á %s\n\n",
-    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýlí ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d€ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!\n\n",
+    [2] = "Vaše úspěšná kariéra nejlepšího správce nemocnice od dob Mojžíše se chýlí ke konci. Nicméně, Váš dopad na pohodlný svět lékařství byl tak výrazný, že by Vám Ministerstvo rádo nabídlo plat %d$ jen abyste se objevili jako náš zástupce, zahajovat slavnosti, spouštět lodě a pořádat televizní zábavný program. Celý svět po Vás volá a pro nás všechny by to byla dobrá reklama!\n\n",
     [3] = "Prosím, přijměte tuto pozici. Nebude to těžká práce a poskytneme Vám auto a policejní doprovod kamkoliv se hnete.\n\n",
     [4] = "",
   },
@@ -3107,7 +3108,7 @@ introduction_texts = {
     "Ohromeni vaším úspěchem, Ministerstvo má pro vás špičkovou práci; chtějí, aby někdo postavil tu nejlepší nemocnici, vydělal obrovské množství penízků a měl neuvěřitelnou reputaci. " ..
     "Očekává se, že také koupíte všechny pozemky, které můžete, všechno vyléčíte (a tím myslíme opravdu všechno) a vyhrajete všechna ocenění. " ..
     "Myslíte, že na to máte?" ..
-    "Vydělejte 650,000€, vylečte 750 lidí a mějte reputaci ve výši 800, abyste to tu vyhráli.",
+    "Vydělejte 650,000$, vylečte 750 lidí a mějte reputaci ve výši 800, abyste to tu vyhráli.",
   level17 =
     "Malé varování - opravdu si hlídejte Vaši reputaci - to je to, co pacienty přiláká z široka daleka do vašeho zařízení. " ..
     "Pokud nezabijete příliš mnoho lidí a udržíte je rozumně šťastné, neměli byste mít v této úrovni problémy!\n\n" ..
@@ -3128,7 +3129,7 @@ introduction_texts = {
     "Použijte všechny vaše znalosti k zřízení bezproblémové, dobře spravované nemocnice, která má zdravý příjem a může se vypořádat s čímkoliv, co na ni nemocná veřejnost může hodit. " ..
     "Musíte si uvědomit, že zdejší atmosféra je zvláště vhodná k přenášení bacilů a infekcí. " ..
     "Pokud nebudete vaše zařízení udržovat až puntičkářsky čisté, můžete čelit řadě epidemií mezi pacienty. " ..
-    "Ujistěte se, že si vyděláte 150,000€ a že vaše nemocnice má hodnotu přes 140,000€.",
+    "Ujistěte se, že si vyděláte 150,000$ a že vaše nemocnice má hodnotu přes 140,000$.",
   level5 =
     "Toto bude zaneprázdněná nemocnice, která bude řešit různé případy. " ..
     "Vaši Doktoři jsou všichni přímo z medicíny, takže bude zásadní vybudovat učebnu a vyučit si je. " ..
@@ -3136,36 +3137,36 @@ introduction_texts = {
     "Nezapomeňte také, že základy této nemocnice stojí na geologickém zlomu San Robot. " ..
     "Je tu vždy možné nebezpečí zemětřesení. " ..
     "To způsobí vážné poškození vašich přístrojů a naruší hladký chod vaší nemocnice. " ..
-    "Dostaňte vaši reputaci na značku 400 a uložte suprových 50,000€ abyste uspěli. Ještě vylečte 200 pacientů.",
+    "Dostaňte vaši reputaci na značku 400 a uložte suprových 50,000$ abyste uspěli. Ještě vylečte 200 pacientů.",
   level8 =
     "Je na vás zřídit tu nejúčinnější a nákladově co nejefektivnější nemocnici. " ..
     "lidé v tomto okolí se nemají vůbec špatně, takže z nich vymáčkněte tolik prašulí, kolik můžete. " ..
     "Nezapomeňte, léčení lidí je sice hezké, ale opravdu POTŘEBUJETE peníze, které to přináší. " ..
     "Nezapomeňte tyto lidi řádně vyprášit. " ..
-    "Nasyslete astronomických 300,000€ k dokončení této úrovně.",
+    "Nasyslete astronomických 300,000$ k dokončení této úrovně.",
   level7 =
     "Zde budete pod pečlivou kontrolou Ministerstva Zdravotnictví, takže se ujistěte, že vaše účty ukazují, že vyděláváte hodně peněz, a že vaše reputace je ve výšinách. " ..
     "Nemůžeme si dovolit zbytečná úmrtí - jsou špatná pro byznys. " ..
     "Ujistěte se, že vaši zaměstnanci jsou v nejlepší formě, a že máte veškeré vybavení, které potřebujete. " ..
-    "Dostaňte reputaci na výši 600, plus 200,000€ v bance.",
+    "Dostaňte reputaci na výši 600, plus 200,000$ v bance.",
   level2 =
     "V této oblasti je větší škála nemocí. " ..
     "Postavte vaši nemocnici, aby zvládla více pacientů, a nachystejte se na vybudování Výzkumné Laboratoře. " ..
     "Nezapomeňte udržovat vaše zařízení čisté a zkuste dostat vaši reputaci tak vysoko, jak to jen jde - budete čelit nemocem jako je Ochablý Jazyk, takže potřebujete ORL. " ..
     "Můžete také postavit Kardiogram, aby vám pomohl vyšetřit nové nemoci. " ..
     "Obě tyto místnosti musí být vyzkoumány předtím, než je budete moci postavit. Také si můžete zakoupit dodatečné parcely pozemků k rozšíření vaší nemocnice - pro toto použijte Mapu Města. " ..
-    "Miřte k reputaci 300, bankovní bilanci 10,000€ a 40 vyléčeným lidem.",
+    "Miřte k reputaci 300, bankovní bilanci 10,000$ a 40 vyléčeným lidem.",
   level9 =
     "Když jste naplnili bankovní účet Ministerstva a zaplatili novou limuzínu pro samotného Ministra, můžete se vrátit zpět k vytváření pečující, dobře zřízené nemocnice ve prospěch nemocných a potřebných. " ..
     "Můžete očekávat, že se zde objeví spousta různorodých problémů. " ..
     "Pokud ale máte dostatek dobře vyškolených zaměstnanců a místností, nemělo by se jednat o větší problém. " ..
-    "Vaše nemocnice musí mít hodnotu 200,000€ a budete potřebovat 400,000€ v bance. " ..
+    "Vaše nemocnice musí mít hodnotu 200,000$ a budete potřebovat 400,000$ v bance. " ..
     "Cokoliv méně a nebudete moct dokončit úroveň.",
   demo =
     "Vítejte v demo nemocnici!\n\n" ..
     "Bohužel, demo verze obsahuje pouze tuto úroveň. Nicméně je toho více než dost, abyste se na chvilku zabavili! " ..
     "Setkáte se s různými nemocemi, které potřebují různé místnosti k léčbě. Čas od času můžete narazit na pohotovosti. A budete potřebovat vyzkoumat dodatečné místnosti pomocí výzkumné laboratoře. " ..
-    "Vaším úkolem je vydělat 100,000€, mít hodnotu nemocnice na výši 70,000€ a reputaci 700, přičemž musíte vyléčit alespoň 75% vašich pacientů. " ..
+    "Vaším úkolem je vydělat 100,000$, mít hodnotu nemocnice na výši 70,000$ a reputaci 700, přičemž musíte vyléčit alespoň 75% vašich pacientů. " ..
     "Ujistěte se, že vaše reputace nespadne 300 a že nezabijete více než 40% vašich pacientů, jinak prohrajete.\n\n" ..
     "Zlomte vaz! (Ale ne doslova prosím.)",
   level10 =
@@ -3173,7 +3174,7 @@ introduction_texts = {
     "Z ČasNemoci, Hlídacího Psa Zdravotnictví, se ozývají jisté stížnosti. Tudíž, abyste vypadali dobře, musíte zajistit, že vaše léky jsou mimořádně účinné. " ..
     "Také zajistěte, aby vaše nemocnice nemusela být kárána. Ať ta úmrtnost není příliš vysoká. " ..
     "Malá nápověda: možná byste měli vyhradit prostor pro Kliniku Slizu. " ..
-    "Zdokonalte všechny svoje léky na účinnost alespoň 80 procent, mějte reputaci 650 a ukryjte 500,000€ v bance, abyste vyhráli. ",
+    "Zdokonalte všechny svoje léky na účinnost alespoň 80 procent, mějte reputaci 650 a ukryjte 500,000$ v bance, abyste vyhráli. ",
   level11 =
     "Byla vám dána šance vybudovat to nejlepší z nemocnic. " ..
     "Toto je mimořádně prestižní oblast a Ministerstvo by rádo vidělo tu nejlepší možnou nemocnici. " ..
@@ -3181,7 +3182,7 @@ introduction_texts = {
     "Toto je důležitá práce. " ..
     "Musíte se opravdu snažit, abyste toto zvládli. " ..
     "Nezapomeňte také, že v oblasti byla zpozorována UFO. Ujistěte se, že vaši zaměstnanci jsou připraveni na nečekané návštěvníky. " ..
-    "Vaše nemocnice potřebuje mít hodnotu 240,000€, v bance potřebujete 500,000€ a vaše reputace musí dosahovat alespoň 700.",
+    "Vaše nemocnice potřebuje mít hodnotu 240,000$, v bance potřebujete 500,000$ a vaše reputace musí dosahovat alespoň 700.",
   level3 =
     "Tentokrát budete zřizovat nemocnici v zámožné oblasti. " ..
     "Ministerstvo Zdravotnictví od vás očekává, že zde zajistíte zdravý příjem. " ..
@@ -3190,7 +3191,7 @@ introduction_texts = {
     "To znamená, že přijde najednou velký počet lidí a všichni mají stejnou nemoc. " ..
     "Vyléčení všech v časovém limitu vám vylepší reputaci a přidá velký bonus. " ..
     "Mohou se objevit nemoci jako Králův Komplex. Také byste měli zahrnout do rozpočtu výstavbu Operačního Sálu a poblíž i Lůžkové Oddělení. " ..
-    "Vydělejte 20,000€ abyste dosáhli další úrovně.",
+    "Vydělejte 20,000$ abyste dosáhli další úrovně.",
   level1 =
     "Vítejte ve vaší první nemocnici!\n\n" ..
     "Rozchoďte to tu umístěním Recepce, vybudováním Kanceláře Praktického Lékaře a najmutím Recepční a Doktora. " ..
@@ -3406,6 +3407,9 @@ hotkey_window = {
   caption_panels = "Kláv. panelu",
   ingame_storePosition_3 = "3",
   ingame_gamespeed_normal = "Normální",
+  button_gameSpeedKeys = "Klávesy rychlosti hry",
+  ingame_reset_zoom = "Obnovit přiblížení",
+  panel_storePosKeys = "Uložit klávesy poz. kamery",
 }
 update_window = {
   caption = "Dostupná aktualizace!",
