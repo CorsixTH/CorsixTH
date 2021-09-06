@@ -493,11 +493,12 @@ struct codepoint_glyph {
 };
 
 enum class CJK_breakable { nonbreakable = 0, break_after, break_before };
+constexpr unsigned int ideographic_space = 0x3000;
 
 // Determine if the character code is a suitable Chinese/Japanese/Korean
 // character for a line break.
 CJK_breakable isCjkBreakCharacter(unsigned int charcode) {
-  if (charcode == 0x3000 ||  // Ideographic space
+  if (charcode == ideographic_space ||
       charcode == 0x3001 ||  // Ideographic comma
       charcode == 0x3002 ||  // Ideographic full stop
       charcode == 0x301e ||  // Double prime quotation mark
@@ -641,9 +642,10 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
           sMessage = sLineBreakPosition;
           // Skip leading white space on a line
           iCode = decode_utf8(sMessage, sMessageEnd);
-          while (std::iswspace(iCode) ||  // Whitespace characters
-                 iCode == 0x3000) {       // Ideographic space
-            iCode = next_utf8_codepoint(sMessage, sMessageEnd);
+          while ((std::iswspace(iCode) || iCode == ideographic_space) &&
+                 sMessage < sMessageEnd - 1) {
+            next_utf8_codepoint(sMessage, sMessageEnd);
+            iCode = decode_utf8(sMessage, sMessageEnd);
           }
           sLineStart = sMessage;
         } else {
