@@ -495,6 +495,20 @@ struct codepoint_glyph {
 enum class CJK_breakable { nonbreakable = 0, break_after, break_before };
 constexpr unsigned int ideographic_space = 0x3000;
 
+void skip_utf8_whitespace(const char*& sString, const char* end) {
+  if (sString >= end) {
+    return;
+  }
+  unsigned int iCode = decode_utf8(sString, end);
+  while ((std::iswspace(iCode) || iCode == ideographic_space)) {
+    next_utf8_codepoint(sString, end);
+    if (sString == end) {
+      return;
+    }
+    iCode = decode_utf8(sString, end);
+  }
+}
+
 // Determine if the character code is a suitable Chinese/Japanese/Korean
 // character for a line break.
 CJK_breakable isCjkBreakCharacter(unsigned int charcode) {
@@ -641,12 +655,7 @@ text_layout freetype_font::draw_text_wrapped(render_target* pCanvas,
           }
           sMessage = sLineBreakPosition;
           // Skip leading white space on a line
-          iCode = decode_utf8(sMessage, sMessageEnd);
-          while ((std::iswspace(iCode) || iCode == ideographic_space) &&
-                 sMessage < sMessageEnd - 1) {
-            next_utf8_codepoint(sMessage, sMessageEnd);
-            iCode = decode_utf8(sMessage, sMessageEnd);
-          }
+          skip_utf8_whitespace(sMessage, sMessageEnd);
           sLineStart = sMessage;
         } else {
           if (iHandledRows >= iSkipRows) {
