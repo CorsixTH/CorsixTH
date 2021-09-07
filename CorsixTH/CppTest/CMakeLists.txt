@@ -50,6 +50,7 @@ target_sources(UnitTests
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_th_lua.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_th_strings.cpp
 )
 
 include(CTest)
