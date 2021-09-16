@@ -99,8 +99,8 @@ function UIMachine:callHandyman()
   end
 end
 
---!Function checks we can afford a new machine
---!Then offers player to purchase
+--! Function checks we can afford a new machine
+--! Then offers player to purchase
 function UIMachine:replaceMachine()
   -- Maybe TODO: Prevent purchase of a machine of same strength?
   local machine = self.machine
