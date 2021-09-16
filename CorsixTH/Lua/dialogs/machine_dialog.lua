@@ -120,7 +120,7 @@ function UIMachine:replaceMachine()
     prompt = (_S.confirmation.replace_machine_extra_info):format(new_strength, current_strength) .. "//" .. prompt
   end
 
-  self.ui:addWindow(UIConfirmDialog(self.ui, true, prompt, 
+  self.ui:addWindow(UIConfirmDialog(self.ui, true, prompt,
     --[[persistable:replace_machine_confirm_dialog]]function() machine:replaceMachine(cost)
     end
   ))

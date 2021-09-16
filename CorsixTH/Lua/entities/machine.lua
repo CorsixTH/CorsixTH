@@ -265,7 +265,7 @@ end
 function Machine:replaceMachine(cost)
   -- Pay for the new machine
   self.hospital:spendMoney(cost, _S.transactions.machine_replacement)
-  
+
   -- Reset usage stats
   self.total_usage = 0
   self.times_used = 0
