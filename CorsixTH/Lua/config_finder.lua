@@ -141,7 +141,8 @@ local config_defaults = {
   check_for_updates = true,
   room_information_dialogs = true,
   allow_blocking_off_areas = false,
-  direct_zoom = nil
+  direct_zoom = nil,
+  new_machine_extra_info = true,
 }
 
 fi = io.open(config_filename, "r")
@@ -511,6 +512,12 @@ audio_music = nil -- [[X:\ThemeHospital\Music]]
 -- ]=] .. '\n' ..
 'direct_zoom = ' .. tostring(config_values.direct_zoom) .. '\n' .. [=[
 
+-------------------------------------------------------------------------------------------------------------------------
+-- Replacing Machines: By default, you will see a new machines
+-- initial strength before purchasing it. If you don't want this
+-- change the value to false.
+-- ]=] .. '\n' ..
+'new_machine_extra_info = ' .. tostring(config_values.new_machine_extra_info)  .. '\n' .. [=[
 -------------------------------------------------------------------------------------------------------------------------
 
 ------------------------------------------------ CAMPAIGN MENU -----------------------------------------------
