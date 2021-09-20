@@ -111,9 +111,6 @@
  <a href="_0_1_machine.html#_0_1_machine_1machine_repaired">machineRepaired</a>(<span class="p">room</span>)
  </li>
  <li class="self">
- <a href="_0_1_machine.html#_0_1_machine_1machine_replaced">machineReplaced</a>()
- </li>
- <li class="self">
  <a href="_0_1_machine.html#_0_1_machine_1machine_used">machineUsed</a>(<span class="p">room</span>)
  </li>
  <li class="inherited">
@@ -155,6 +152,9 @@
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1remove_user">removeUser</a>(<span class="p">user</span>)
  (inherited from <a href="_0_1_object.html">Object</a>)
+ </li>
+ <li class="self">
+ <a href="_0_1_machine.html#_0_1_machine_1replace_machine">replaceMachine</a>(<span class="p">cost</span>)
  </li>
  <li class="inherited">
  <a href="_0_1_object.html#_0_1_object_1reset_animation">resetAnimation</a>()
@@ -420,7 +420,7 @@
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1after_load">Object:afterLoad</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L389">line 389 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L393">line 393 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -468,7 +468,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L337">line 337 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L341">line 341 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -490,7 +490,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  Gets the state of a machine<br/><br/>
  In addition to the object implementation this includes total_usage<br/><br/>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1get_state">Object:getState</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L417">line 417 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L421">line 421 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -512,14 +512,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L284">line 284 of Lua/entities/machine.lua</a>.
- </p>
- </div>
- <div class="method">
- <h5><a name="_0_1_machine_1machine_replaced">function Machine:machineReplaced()</a></h5>
- <p>
- Replace this machine (make it pretend it's brand new)<br/><br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L263">line 263 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L288">line 288 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -572,14 +565,30 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_click">Object:onClick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L363">line 363 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L367">line 367 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
  <h5><a name="_0_1_machine_1on_destroy">function Machine:onDestroy()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1on_destroy">Object:onDestroy</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L373">line 373 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L377">line 377 of Lua/entities/machine.lua</a>.
+ </p>
+ </div>
+ <div class="method">
+ <h5><a name="_0_1_machine_1replace_machine">function Machine:replaceMachine(<span class="p">cost</span>)</a></h5>
+ <p>
+ Replace this machine (make it pretend it's brand new)<br/><br/>
+ <strong>Parameters:</strong>
+ <table class="params">
+ <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
+ <tr>
+ <td class="n">cost</td>
+ <td class="t">int</td>
+ <td class="d"> Cost to replace the machine</td>
+ </tr>
+ </table></p><p>
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L263">line 263 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -602,7 +611,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <td class="d"> orientation of object</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L442">line 442 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L446">line 446 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -619,7 +628,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <td class="d">The handyman heading to this machine. nil if repairing is finished</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L298">line 298 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L302">line 302 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -634,7 +643,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <td class="d">?</td>
  </tr>
  </table></p><p>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L319">line 319 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L323">line 323 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -652,7 +661,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1set_state">Object:setState</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L429">line 429 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L433">line 433 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -668,7 +677,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1slave_mixin_class">Object.slaveMixinClass</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L328">line 328 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L332">line 332 of Lua/entities/machine.lua</a>.
  <br/><strong>Note:</strong> Is a function rather than a method. 
  </p>
  </div>
@@ -676,7 +685,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  <h5><a name="_0_1_machine_1tick">function Machine:tick()</a></h5>
  <p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1tick">Object:tick</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L408">line 408 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L412">line 412 of Lua/entities/machine.lua</a>.
  </p>
  </div>
  <div class="method">
@@ -692,7 +701,7 @@ only if the room is active at the moment (e.g. not being edited)<br/><br/>
  </tr>
  </table></p><p>
  <strong>Overrides:</strong> <a href="_0_1_object.html#_0_1_object_1update_dynamic_info">Object:updateDynamicInfo</a>.<br/>
- <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L349">line 349 of Lua/entities/machine.lua</a>.
+ <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/entities/machine.lua#L353">line 353 of Lua/entities/machine.lua</a>.
  </p>
  </div>
 </div>
