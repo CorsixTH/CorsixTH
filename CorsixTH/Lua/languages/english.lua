@@ -891,28 +891,6 @@ map_editor_window = {
   }
 }
 
-fax = {
-vip_visit_result = {
-  ordered_remarks = {
-    [1] = "What a storming hospital. When I'm next seriously ill, take me there.",
-    [2] = "Now that's what I call a hospital.",
-    [3] = "That's a super hospital. And I should know; I've been in a few.",
-    [4] = "What a well-run hospital. Thanks for inviting me to it.",
-    [5] = "Hmm. Not a bad medical establishment, certainly.",
-    [6] = "I did enjoy your charming hospital. Now, anyone fancy a curry at the Taj?",
-    [7] = "Well, I've seen worse. But you should make some improvements.",
-    [8] = "Oh dear. Not a nice place to go if you're feeling peaky.",
-    [9] = "It's a standard hospital, to be honest. Frankly, I expected more.",
-    [10] = "Why did I bother? It was worse than going to see a four-hour opera!",
-    [11] = "I'm disgusted by what I saw. Call that a hospital? Pig-sty, more like!",
-    [12] = "I'm fed up of being in the public spotlight and visiting smelly holes like this! I resign.",
-    [13] = "What a dump. I'm going to try and get it closed down.",
-    [14] = "I have never seen such a dreadful hospital. What a disgrace!",
-    [15] = "I'm shocked. You can't call that a hospital! I'm off for a pint.",
-    }
-  }
-}
-
 hotkeys_file_err = {
   file_err_01 = "Unable to load hotkeys.txt file. Please ensure that CorsixTH " ..
         "has permission to read/write ",
