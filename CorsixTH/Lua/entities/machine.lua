@@ -261,7 +261,11 @@ function Machine:createHandymanActions(handyman)
 end
 
 --! Replace this machine (make it pretend it's brand new)
-function Machine:machineReplaced()
+--!param cost (int) Cost to replace the machine
+function Machine:replaceMachine(cost)
+  -- Pay for the new machine
+  self.hospital:spendMoney(cost, _S.transactions.machine_replacement)
+
   -- Reset usage stats
   self.total_usage = 0
   self.times_used = 0
