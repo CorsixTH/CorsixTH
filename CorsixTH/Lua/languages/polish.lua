@@ -2628,6 +2628,7 @@ fax = {
         [1] = "Masz tu bardzo ładny szpital! Nie trudno się go prowadzi bez ograniczeń finansowych czyż nie?",
         [2] = "Nie jestem ekonomistą ale wydaje mi się, że też mógłbym poprowadzić ten szpital, jeżeli wiesz o czym mówię...",
         [3] = "Bardzo dobrze prowadzony szpital. Pamiętaj jednak o recesji! Racja... nie musisz się o to martwić.",
+      },
       [4] = "Doskonale zarządzany szpital. Dziękuję, że mnie tu zaprosiłeś.",
       [5] = "Hmm. Całkiem niezła placówka służby zdrowia.",
       [6] = "Podobał mi się twój czarujący szpital. No dobrze, idzie ktoś na tajskie curry?",

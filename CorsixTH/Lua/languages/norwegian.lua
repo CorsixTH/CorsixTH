@@ -3081,7 +3081,6 @@ fax = {
       [14] = "Jeg har aldri sett på maken. For en skandale!",
       [15] = "Jeg er sjokkert. Du kan ikke kalle dette et sykehus! Jeg går og tar meg en sterk drink.",
     },
-    },
   },
 
   -- Diagnosis failed
