@@ -2884,7 +2884,7 @@ fax = {
   vip_visit_result = {
     telegram = "Telegram!",
     vip_remarked_name = "Po návštěvě Vaší nemocnice, %s poznamenal:",
-	ordered_remarks = {
+	remarks = {
 	  [1] = "To je úžasný špitál! Až zase něco lapnu, hoďte mě semka.",
 	  [2] = "Tak tomuto říkám nemocnice!",
 	  [3] = "Máte skvělou nemocnici. A v tom se vyznám, pár jsem jich již navštívil.",
@@ -2902,38 +2902,6 @@ fax = {
 	  [15] = "To je děs! Tomuto jako říkáte nemocnice? To musím pořádně zapít.",
 	},
     close_text = "Děkuji za návštěvu nemocnice.",
-    remarks = {
-      mediocre = {
-        [1] = "No, viděl jsem horší. Ale měli byste provést nějaká zlepšení.",
-        [2] = "Jémináčku. To není pěkné místo, kam jít, když se cítíte neduživě.",
-        [3] = "Upřímně, je to průměrná nemocnice. Abych pravdu řekl, čekal jsem více.",
-      },
-      free_build = {
-        [1] = "Máte tady velmi hezkou nemocnici! Není to ale zas tak těžké ji postavit, když nejste omezeni penězi, co?",
-        [2] = "Sice nejsem ekonom, ale myslím si, že bych tuto nemocnici také mohl řídit, víte, co tím myslím…",
-        [3] = "Velmi dobře spravovaná nemocnice. Dávejte si ale pozor na recesi! Ah ano… Vy se jí nemusíte obávat.",
-        },
-      good = {
-        [1] = "Jaká to dobře provozovaná nemocnice. Děkuji, že jste mě do ní pozvali.",
-        [2] = "Hmm. Není to špatné zdravotnické zařízení, to zajisté.",
-        [3] = "Užil jsem si Vaší půvabnou nemocnici. Má teď někdo chuť na kari v Taj?",
-      },
-      very_bad = {
-        [1] = "To je díra. Pokusím se to tu zavřít.",
-        [2] = "Nikdy jsem neviděl tak hroznou nemocnici. Taková ostuda!",
-        [3] = "Jsem šokován. Tomuhle nemůžete říkat nemocnice! Jdu na pivo.",
-      },
-      super = {
-        [1] = "To je ale úderná nemocnice. Když budu příště vážně nemocný, tak mě tam vezměte.",
-        [2] = "Tak tomu říkám nemocnice.",
-        [3] = "To je výborná nemocnice. A já bych to měl vědět; v pár jsem již byl.",
-      },
-      bad = {
-        [1] = "Proč jsem se obtěžoval? Bylo to horší než jít na čtyř hodinovou operu!",
-        [2] = "Jsem znechucen tím, co jsem viděl. Tomu říkáte nemocnice? To je spíš chlívek!",
-        [3] = "Už mám dost toho, že jsem v centru pozornosti veřejnosti a navštěvuji smrduté díry jako je tahle! Rezignuji.",
-      },
-    },
 	cash_grant = "Byl Vám darován peněžní dar ve výši %d.",
     rep_loss = "Vaše reputace kvůli tomu utrpěla.",
     rep_boost = "Vaše reputace ve společnosti se zvýšila.",

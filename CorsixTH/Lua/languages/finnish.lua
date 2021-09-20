@@ -2693,31 +2693,21 @@ fax = {
     rep_loss            = "Sairaalasi maine on huonontunut.",
 
     remarks = {
-      super = {
-        "Mikä mahtava sairaala. Seuraavan kerran, kun olen sairas, haluan sinne hoitoon.",
-        "No tuota voi jo kutsua sairaalaksi.",
-        "Uskomaton sairaala. Ja minun pitäisi tietää; olen käynyt aika monessa.",
-      },
-      good = {
-        "Hyvin johdettu laitos. Kiitos, että kutsuit minut sinne.",
-        "Hmm. Ei totisesti yhtään hullumpi sairaala.",
-        "Nautin käynnistä mukavassa sairaalassasi. Tekeekö kenenkään mieli intialaista?",
-      },
-      mediocre = {
-        "No, olen nähnyt huonompiakin, mutta voisit kyllä tehdä hieman parannuksia.",
-        "Voi että. Ei mikään mukava paikka, jos tuntee olonsa kurjaksi.",
-        "Rehellisesti sanoen se oli ihan perussairaala. Odotin vähän enemmän.",
-      },
-      bad = {
-        "Miksi vaivauduin? Se oli kauheampaa kuin nelituntinen ooppera!",
-        "Inhottava paikka. Kutsutaanko tuota sairaalaksi? Sikolättihän tuo oli!",
-        "Olen kyllästynyt käymään tuollaisissa haisevissa koloissa julkisuuden henkilönä. Minä eroan!",
-      },
-      very_bad = {
-        "Mikä läävä! Yritän saada sen lakkautettua.",
-        "En ole koskaan nähnyt noin kamalaa sairaalaa. Mikä häpeätahra!",
-        "Olen järkyttynyt. Ei tuota voi kutsua sairaalaksi! Minä tarvitsen juotavaa.",
-      },
+      [1] = "Mikä mahtava sairaala. Seuraavan kerran, kun olen sairas, haluan sinne hoitoon.",
+      [2] = "No tuota voi jo kutsua sairaalaksi.",
+      [3] = "Uskomaton sairaala. Ja minun pitäisi tietää; olen käynyt aika monessa.",
+      [4] = "Hyvin johdettu laitos. Kiitos, että kutsuit minut sinne.",
+      [5] = "Hmm. Ei totisesti yhtään hullumpi sairaala.",
+      [6] = "Nautin käynnistä mukavassa sairaalassasi. Tekeekö kenenkään mieli intialaista?",
+      [7] = "No, olen nähnyt huonompiakin, mutta voisit kyllä tehdä hieman parannuksia.",
+      [8] = "Voi että. Ei mikään mukava paikka, jos tuntee olonsa kurjaksi.",
+      [9] = "Rehellisesti sanoen se oli ihan perussairaala. Odotin vähän enemmän.",
+      [10] = "Miksi vaivauduin? Se oli kauheampaa kuin nelituntinen ooppera!",
+      [11] = "Inhottava paikka. Kutsutaanko tuota sairaalaksi? Sikolättihän tuo oli!",
+      [12] = "Olen kyllästynyt käymään tuollaisissa haisevissa koloissa julkisuuden henkilönä. Minä eroan!",
+      [13] = "Mikä läävä! Yritän saada sen lakkautettua.",
+      [14] = "En ole koskaan nähnyt noin kamalaa sairaalaa. Mikä häpeätahra!",
+      [15] = "Olen järkyttynyt. Ei tuota voi kutsua sairaalaksi! Minä tarvitsen juotavaa.",
     },
   },
 

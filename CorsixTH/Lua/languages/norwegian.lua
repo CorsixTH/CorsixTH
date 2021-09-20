@@ -3060,36 +3060,27 @@ fax = {
     rep_loss   = "Ditt rykte har fått seg en smell.",
 
     remarks = {
-    free_build = {
+      free_build = {
         [1] = "Det er et veldig fint sykehus du har der! Men det er ikke veldig vanskelig å få det til å fungerer uten pengebegrensninger.",
         [2] = "Jeg er ingen ökonom, men jeg tror jeg kunne styrt dette sykehuset også, hvis du skjönner hva jeg mener.",
         [3] = "Et meget veldrevet sykehus. Men se opp for ökonomiske nedgangstider! Å, det er sant. Du trenger ikke å bekymre deg for det.",
       },
-      super = {
-        "For et flott sykehus. Neste gang jeg blir alvorlig syk vil jeg hit.",
-        "Dette er hva jeg kaller et sykehus.",
-        "Et supert sykehus. Og jeg vet hva jeg snakker om, for jeg har vært med på en del.",
-      },
-      good = {
-        "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
-        "Hmm. Ingen dårlig medisinsk institusjon dette, det skal være visst.",
-        "Jeg likte ditt sjarmerende sykehus. Forresten, noen som blir med å spise indisk?",
-      },
-      mediocre = {
-        "Vel, jeg har sett verre. Men du burde gjöre noen forbedringer.",
-        "Å kjære min tid. Dette er ikke stedet å gå om du föler deg dårlig.",
-        "Et helt alminnelig sykehus, for å være ærlig. Jeg hadde forventet meg noe mer.",
-      },
-      bad = {
-        "Hva gjör jeg her egentlig? Dette her var verre enn en firetimers opera!",
-        "Dette var ekkelt. Kaller du dette et sykehus? Ser mer ut som en svinesti!",
-        "Jeg er lei av å være en offentlig person og lei stinkende hull som dette! Jeg sier opp.",
-      },
-      very_bad = {
-        "For et syn. Dette sykehuset skal jeg pröve å få lagt ned.",
-        "Jeg har aldri sett på maken. For en skandale!",
-        "Jeg er sjokkert. Du kan ikke kalle dette et sykehus! Jeg går og tar meg en sterk drink.",
-      },
+      [1] = "For et flott sykehus. Neste gang jeg blir alvorlig syk vil jeg hit.",
+      [2] = "Dette er hva jeg kaller et sykehus.",
+      [3] = "Et supert sykehus. Og jeg vet hva jeg snakker om, for jeg har vært med på en del.",
+      [4] = "For et velorganisert sykehus. Takk for at jeg fikk komme hit.",
+      [5] = "Hmm. Ingen dårlig medisinsk institusjon dette, det skal være visst.",
+      [6] = "Jeg likte ditt sjarmerende sykehus. Forresten, noen som blir med å spise indisk?",
+      [7] = "Vel, jeg har sett verre. Men du burde gjöre noen forbedringer.",
+      [8] = "Å kjære min tid. Dette er ikke stedet å gå om du föler deg dårlig.",
+      [9] = "Et helt alminnelig sykehus, for å være ærlig. Jeg hadde forventet meg noe mer.",
+      [10] = "Hva gjör jeg her egentlig? Dette her var verre enn en firetimers opera!",
+      [11] = "Dette var ekkelt. Kaller du dette et sykehus? Ser mer ut som en svinesti!",
+      [12] = "Jeg er lei av å være en offentlig person og lei stinkende hull som dette! Jeg sier opp.",
+      [13] = "For et syn. Dette sykehuset skal jeg pröve å få lagt ned.",
+      [14] = "Jeg har aldri sett på maken. For en skandale!",
+      [15] = "Jeg er sjokkert. Du kan ikke kalle dette et sykehus! Jeg går og tar meg en sterk drink.",
+    },
     },
   },
 
