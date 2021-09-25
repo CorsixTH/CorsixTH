@@ -52,10 +52,33 @@ end
 function PlayerHospital:dailyAdviceChecks()
   local current_date = self.world:date()
   local day = current_date:dayOfMonth()
+  local current_month = current_date:monthOfYear()
 
   -- Hold any advice back until the game has somewhat started.
   if current_date < Date(1, 5) then
     return
+  end
+
+  -- Check for advice on money.
+  -- This must occur after monthly maintenance and salary costs
+  -- or it may give invalid advice
+  if day == 1 then
+    if not self.world.free_build_mode then
+      if self.balance < 2000 and self.balance >= -500 then
+        local cashlow_advice = {
+          _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
+          _A.warnings.cash_low_consider_loan,
+        }
+        self:giveAdvice(cashlow_advice)
+
+      elseif self.balance < -2000 and current_month > 8 then
+        -- TODO: Ideally this should be linked to the lose criteria for balance.
+        self:giveAdvice({_A.warnings.bankruptcy_imminent})
+
+      elseif self.balance > 6000 and self.loan > 0 then
+        self:giveAdvice({_A.warnings.pay_back_loan})
+      end
+    end
   end
 
   -- Warn about lack of a staff room.
@@ -206,24 +229,6 @@ function PlayerHospital:monthlyAdviceChecks()
     -- No other checks should happen in this month
     return
   end
-
-  -- Check for advice on money.
-  if not self.world.free_build_mode then
-    if self.balance < 2000 and self.balance >= -500 then
-      local cashlow_advice = {
-        _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
-        _A.warnings.cash_low_consider_loan,
-      }
-      self:giveAdvice(cashlow_advice)
-
-    elseif self.balance < -2000 and current_month > 8 then
-      -- TODO: Ideally this should be linked to the lose criteria for balance.
-      self:giveAdvice({_A.warnings.bankruptcy_imminent})
-
-    elseif self.balance > 6000 and self.loan > 0 then
-      self:giveAdvice({_A.warnings.pay_back_loan})
-    end
-  end
 end
 
 --! Make players aware of the need for a receptionist and desk.
@@ -279,7 +284,7 @@ function PlayerHospital:msgReceptionDesk()
 end
 
 --! Give advice about having more desks.
-function Hospital:msgMultiReceptionDesks()
+function PlayerHospital:msgMultiReceptionDesks()
   -- Compute total queue length at staffed receptions.
   local num_desks = 0
   local queue_total = 0
