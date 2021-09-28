@@ -1,4 +1,4 @@
- --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin
+ --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021 "Matvey1705" 
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -39,7 +39,9 @@ main_menu = {
   new_game = "Новая игра",
   continue = "продолжить игру",
   custom_level = "Дополнительные уровни",
+  custom_campaign = "Дополнительные кампании",
   load_game = "Загрузить игру",
+  map_edit = "Редактор карт",
   options = "Настройки",
   exit = "Выход",
   savegame_version = "Версия файлов сохранений: ",
@@ -67,7 +69,9 @@ date_format = {
   daymonth = "%1% %2:months%",
 }
 custom_game_window = {
+  free_build = "Свободное строительство",
   caption = "Дополнительные уровни",
+  load_selected_level = "Старт",
 }
 load_game_window = {
   caption = "Загрузить игру",
@@ -90,17 +94,18 @@ folders_window = {
   screenshots_location = "Выберите папку для размещения скриншотов.",
 }
 customise_window = {
-  average_contents = "Дополнительные объекты",
-  option_on = "Вкл.",
-  paused = "Строительство на Паузе",
-  option_off = "Выкл.",
-  intro = "Проигрывать вступительный ролик",
+  average_contents = "Среднее содержимое",
+  option_on = "Вкл",
+  paused = "Строить во время паузы",
+  option_off = "Выкл",
+  intro = "Проигрывать заставку",
   caption = "Пользовательские настройки",
   back = "Назад",
-  movies = "Общий контроль за видео",
-  volume = "Кнопка уменьшения громкости",
-  aliens = "Пациенты - пришельцы",
-  fractured_bones = "Сломаные кости",
+  movies = "Управление роликами",
+  volume = "Горячая клавиша убавления громкости",
+  aliens = "Инопланетные пациенты",
+  fractured_bones = "Сломанные кости",
+  remove_destroyed_rooms = "Удалять разрушенные комнаты",
 }
 options_window = {
   fullscreen = "Во весь экран",
@@ -121,9 +126,16 @@ options_window = {
   audio = "Общие звуки",
   resolution = "Разрешение",
   language = "Язык в игре",
+  zoom_speed = "Скорость размера",
+  capture_mouse = "Привязка мышки",
+  shift_scrollspeed = "Скорость прокрутки с Shift",
+  hotkey = "Горячие клавиши",
+  scrollspeed = "Скорость прокрутки",
 }
 menu_list_window = {
   back = "Назад",
+  save_date = "Изменено",
+  name = "Имя",
 }
 update_window = {
   caption = "Доступно обновление!",
@@ -131,6 +143,120 @@ update_window = {
   current_version = "Текущая Версия: ",
   download = "Перейти на страницу загрузки",
   ignore = "Пропустить и перейти в Главное меню",
+  caption = "Доступно новое обновление!",
+}
+save_map_window = {
+  caption = "Сохранение карты (%1%)",
+  new_map = "Новая карта",
+}
+hotkey_window = {
+  ingame_rotateobject = "Повернуть объект",
+  global_showLuaConsole = "Lua Консоль",
+  global_confirm = "Подтвердить",
+  panel_recallPosKeys = "Изменить клавиши положения",
+  global_runDebugScript = "Сценарий отладки",
+  ingame_zoom_in_more = "Быстрее увеличить размер",
+  global_fullscreen_toggle = "Полный экран",
+  panel_storePosKeys = "Клавиши покупки",
+  ingame_storePosition_8 = "8",
+  ingame_restartLevel = "Переиграть уровень",
+  ingame_panel_map_alt = "План 2",
+  caption_panels = "Панельные клавиши",
+  global_resetApp = "Перезагрузить приложение",
+  panel_debugKeys = "Клавиши отладки",
+  ingame_saveMenu = "Сохранить игру",
+  ingame_panel_casebook_alt = "Записная книжка 2",
+  ingame_scroll_down = "Прокрутить вниз",
+  ingame_panel_status = "Статус",
+  button_defaults = "Восстановить все по умолчанию",
+  global_stop_movie_alt = "Остановить видео",
+  ingame_panel_editRoom = "Редактировать комнату",
+  ingame_gamespeed_speedup = "Увеличить скорость",
+  panel_gameSpeedKeys = "Клавиши игровой скорости",
+  ingame_recallPosition_6 = "6",
+  ingame_storePosition_6 = "6",
+  ingame_storePosition_0 = "10",
+  global_confirm_alt = "Подтвердить альт",
+  ingame_showmenubar = "Показать меню",
+  panel_scrollKeys = "Клавиши прокрутки",
+  ingame_toggleAdvisor = "Помощник",
+  ingame_showCheatWindow = "Чит-меню",
+  ingame_recallPosition_7 = "7",
+  global_cancel = "Отмена",
+  panel_globalKeys = "Global Keys",
+  global_window_close_alt = "Закрыть окно",
+  ingame_recallPosition_8 = "8",
+  panel_zoomKeys = "Изменение размера",
+  button_accept = "Принять",
+  ingame_panel_policy = "Политика больницы",
+  ingame_storePosition_1 = "1",
+  global_exitApp = "Выйти",
+  ingame_quickLoad = "Быстрая загрузка",
+  global_screenshot = "Снимок экрана",
+  ingame_recallPosition_3 = "3",
+  ingame_scroll_right = "Прокрутить вправо",
+  ingame_storePosition_5 = "5",
+  panel_altPanelKeys = "Альтернативные Клавиши Панели",
+  button_recallPosKeys = "Вызов клавишей положения",
+  ingame_openFirstMessage = "Сообщение уровня",
+  global_cancel_alt = "Отменить альт",
+  ingame_panel_research_alt = "Исследования 2",
+  ingame_recallPosition_2 = "2",
+  ingame_scroll_left = "Прокрутить влево",
+  ingame_zoom_out = "Уменьшить размер",
+  ingame_poopLog = "Дамп-лог",
+  ingame_reset_zoom = "Размер по умолчанию",
+  caption_main = "Hotkey Assignment",
+  ingame_gamespeed_slower = " Медленная ",
+  global_releaseMouse = "Отпустите мышку",
+  ingame_gamespeed_slowest = " Черепашья ",
+  panel_toggleKeys = "Клавиши переключения",
+  ingame_gamespeed_normal = " Обычная ",
+  ingame_gamespeed_max = " Быстрая ",
+  ingame_panel_buildRoom = "Строить кабинеты",
+  ingame_gamespeed_thensome = " Еще быстрее ",
+  ingame_toggleInfo = "Информация",
+  ingame_panel_bankManager = "Банк-Менеджер",
+  ingame_jukebox = "Проигрыватель",
+  ingame_storePosition_3 = "3",
+  ingame_panel_bankStats = "Статус банка",
+  ingame_panel_staffManage = "Управлять персоналом",
+  ingame_zoom_in = "Увеличить размер",
+  ingame_panel_casebook = "Записная книжка",
+  ingame_quitLevel = "Выйти",
+  ingame_storePosition_4 = "4",
+  global_connectDebugger = "Отладчик",
+  ingame_zoom_out_more = "Быстрее уменьшить размер",
+  panel_generalInGameKeys = "Общие внутриигровые клавиши",
+  button_cancel = "Отмена",
+  ingame_quickSave = "Быстрое сохранение",
+  ingame_panel_furnishCorridor = "Обставлять коридор",
+  ingame_scroll_shift = "Shift-скорость",
+  ingame_panel_casebook_alt02 = "Записная книжка 3",
+  ingame_pause = " Пауза ",
+  ingame_panel_hireStaff = "Нанять персонал",
+  ingame_setTransparent = "Прозрачные стены",
+  ingame_panel_research = "Исследования",
+  ingame_toggleAnnouncements = "Объявления",
+  ingame_toggleSounds = "Звуки",
+  ingame_toggleMusic = "Музыка",
+  ingame_scroll_up = "Прокрутить вверх",
+  button_back = "Назад",
+  ingame_poopStrings = "Строки дампа",
+  ingame_patient_gohome = "Отправить домой",
+  ingame_recallPosition_0 = "10",
+  ingame_panel_charts = "Графики",
+  ingame_recallPosition_9 = "9",
+  ingame_storePosition_7 = "7",
+  button_gameSpeedKeys = "Клавиши изменения скорости",
+  ingame_recallPosition_5 = "5",
+  ingame_recallPosition_4 = "4",
+  ingame_panel_townMap = "Карта",
+  ingame_storePosition_9 = "9",
+  ingame_loadMenu = "Загрузить игру",
+  ingame_recallPosition_1 = "1",
+  button_toggleKeys = "Переключить клавиши",
+  ingame_storePosition_2 = "2",
 }
 tooltip = {
   main_menu = {
@@ -159,6 +285,10 @@ tooltip = {
     width = "Введите разрешение экрана по горизонтали",
     language = "Выбрать %s язык",
     back = "Закрыть окно настроек",
+    audio_button = "Включить/Выключить всё аудио в игре",
+    audio_toggle = "Включить/Выключить",
+    folder_button = "Свойства папки",
+    customise_button = "Больше настроек для улучшения игрового опыта",
   },
   save_game_window = {
     new_save_game = "Введите имя для сохраненной игры",
@@ -168,11 +298,25 @@ tooltip = {
     load_game = "Загрузить игру «%s»",
     load_autosave = "Загрузить автосохранение",
   },
+  hotkey_window = {
+    button_gameSpeedKeys = "Откройте окно, чтобы установить клавиши для управления скоростью игры",
+    caption_panels = "Открыть окно для назначения клавиш панели",
+    button_accept = "Принять и сохранить назначения горячих клавиш",
+    button_back_02 = "Вернуться к главному окну горячих клавиш. Горячие клавиши, измененные в этом окне, могут быть приняты там",
+    button_defaults = "Cбросить все горячие клавиши, и вернуть их на настройки по умолчанию",
+    button_cancel = "Отменить изменения и вернуться в меню настроек",
+    button_recallPosKeys = "Откройте окно для установки клавиш для сохранения и вызовов положений камеры",
+  },
+  custom_campaign_window = {
+    choose_campaign = "Выберите кампанию, чтобы узнать про нее больше.",
+    start_selected_campaign = "Начать играть в первый уровень этой кампании.",
+  },
 }
 
 -- 2.  Игровое меню и панель инструментов
 menu = {
   file =    "  Файл",
+  player_count = "Кол-во игроков",
   options = "  Опции",
   charts =  "  Отчеты",
   display = "  ОТОБРАЖЕНИЕ  ",
@@ -201,6 +345,7 @@ menu_options = {
   wage_increase = "    ЗАПРОСЫ О ЗАРПЛАТЕ ",
   warmth_colors = "    ЦВЕТА ОТОПЛЕНИЯ ",
   adviser_disabled = "    (%1%) ПОМОЩНИК  ",
+  capture_mouse = "  Привязка мышки  ",
 }
 menu_options_game_speed = {
   pause =              "    (%1%) Пауза",
@@ -265,6 +410,12 @@ menu_display = {
   mcga_lo_res = "  MCGA НИЗ.РАЗРЕШЕНИЕ  ",
   high_res = "  ВЫСОКОЕ РАЗРЕШЕНИЕ  ",
 }
+menu_player_count = {
+  players_1 = "  1 Игрок  ",
+  players_4 = "  4 Игрока  ",
+  players_2 = "  2 Игрока  ",
+  players_3 = "  3 Игрока  ",
+}
 
 install = {
   title = "--------------------------------- Установка CorsixTH ---------------------------------",
@@ -295,6 +446,7 @@ dynamic_info = {
       no_treatment_available = "Раз не можете вылечить, - я иду домой",
       on_my_way_to = "Идет в %s",
       queueing_for = "Стоит в очереди в %s",
+      epidemic_vaccinated = "Я больше не заразен",
     },
     diagnosed = "Поставлен диагноз: %s ",
   },
@@ -313,6 +465,7 @@ dynamic_info = {
       waiting_for_patient = "Ждет пациента",
       wandering = "Слоняется без дела",
       heading_for = "Идет в %s",
+      vaccine = "Вакцинация пациента",
     },
     tiredness = "Усталость",
     psychiatrist_abbrev = "Псих.",
@@ -367,16 +520,21 @@ tooltip = {
     cancel = "Вернуться без изменения разрешения",
     folder_button = "Свойства Папки",
     customise_button = "Выможете изменить больше настроек для индивидуализации игрового опыта",
+    zoom_speed = "Измените скорость размера камеры от 10 (Самая медленная) до 1000 (Самая быстрая). По умолчанию это 80.",
+    capture_mouse = "Включить привязку курсора в игровом окне.",
+    cancel_shift_scrollspeed = "Продолжить без изменения скорости прокрутки с нажатой клавишей shift.",
+    cancel_zoomspeed = "Продолжить без изменения скорости размера.",
+    cancel_scrollspeed = "Продолжить без изменения скорости прокрутки.",
+    apply_zoomspeed = "Применить введёную скорость изменения размера.",
+    apply_shift_scrollspeed = "Применить введёную скорость прокрутки с нажатой клавишей shift.",
+    scrollspeed = "Установите скорость прокрутки от 1 (Самая медленная) до 10 (Самая быстрая). По умолчанию это 2.",
+    hotkey = "Измените горячие клавиши на клавиатуре.",
+    shift_scrollspeed = "Установите скорость прокрутки при нажатой клавише shift. от 1 (самая медленная) до 10 (самая быстрая). Значение по умолчанию равно 4.",
+    apply_scrollspeed = "Применить введенную скорость прокрутки.",
   },
   menu_list_window = {
     save_date = "Нажмите тут для сортировки списка по дате последнего изменения",
     name = "Нажмите тут для сортировки списка по имени",
-  },
-  cheats_window = {
-    cheats = {
-      earthquake = "Вызвать землетрясение.",
-      vip = "Пригласить ВИП.",
-    },
   },
   custom_game_window = {
     free_build = "Отметьте тут если вы хотите играть без денег и условий для победы и поражения",
@@ -408,6 +566,8 @@ tooltip = {
     continue = "Продолжить предыдущую игру",
     network = "Начать сетевую игру",
     quit = "Вы собираетесь выйти из CorsixTH.  Вы уверены в том что хотите именно этого?",
+    custom_campaign = "Играть в кампанию, сделанную сообществом",
+    map_edit = "Создать собственную карту",
   },
   load_game_window = {
     load_game_number = "Загрузить игру %d",
@@ -415,6 +575,10 @@ tooltip = {
   update_window = {
     download = "Перейти на страницу загрузки самой последней версии CorsixTH",
     ignore = "Игнорировать это обновление. Вы будете снова оповещены когда снова запустите CorsixTH",
+  },
+  save_map_window = {
+    map = "Перезаписать карту %s",
+    new_map = "Введите название для сохранения карты",
   },
   folders_window = {
     browse_font = "Просмотреть другой файл шрифтаBrowse ( текущее местоположение: %1% )",
@@ -433,6 +597,22 @@ tooltip = {
     browse_saves = "Укажите другое местонахождение папки с сохраненными играми  ( текущее местоположение: %1% ) ",
     default = "Местоположение по-умолчанию",
     data_location = "Папка, куда установлена оригинальная Theme Hospital, она необходима для запуска CorsixTH",
+    browse_font = "Поиск другого файла со шрифтом ( текущее расположение: %1% )",
+    screenshots_location = "По умолчанию скриншоты сохраняются в папке рядом с файлом конфигурации. По желанию Вы можете выбрать свою папку, просто укажите нужный путь к ней.",
+    reset_to_default = "Вернуть папку в её изначальное расположение",
+    back = "Закрыть это меню и вернуться к настройкам",
+    music_location = "Выберите расположение ваших mp3 аудиофайлов. Вы должны были уже создать для них папку, теперь же укажите путь к ней.",
+    font_location = "Расположение файла со шрифтом, который может отображать символы Юникода, необходимые вашему языку. Если это не будет указано, вы не сможете выбрать языки, которым нужно больше символов, чем игра может предложить. Например, китайский и русский.",
+    savegames_location = "По умолчанию папка, куда помещаются сохранения, находится в папке рядом с файлом конфигурации. По желанию Вы можете выбрать свою папку, просто укажите нужный путь к ней.",
+    browse_data = "Обзор расположения установленной версии Theme Hospital (текущее расположение: %1%)",
+    browse = "Обзор расположения папки",
+    browse_screenshots = "Обзор расположения папки скриншотов ( Текущее расположение: %1% ) ",
+    browse_music = "Обзор расположения папки музыки ( Текущее расположение: %1% ) ",
+    no_font_specified = "Расположение шрифта ещё не указано!",
+    not_specified = "Расположение папки ещё не указано!",
+    browse_saves = "Обзор расположения папки сохранений ( Текущее расположение: %1% ) ",
+    default = "Расположение по умолчанию",
+    data_location = "Папка с установленной версией Theme Hospital, которая нужна CorsixTH для запуска",
   },
   customise_window = {
     aliens = "К сожалению, пациенты с инопланетной ДНК плохо анимированы поэтому в больницу они приходят только по экстренным случаям. Если вы хотите, чтобы они приходили так же как и обычные пациенты, выключите эту опцию.",
@@ -443,6 +623,7 @@ tooltip = {
     volume = "Если кнопка понижения громкости открывает журнал, включите эту опцию, чтобы изменить горячую клавишу журнала на Shift+C",
     intro = "Включить или выключить показ вступительного ролика. Общий контроль за видеороликами должен быть включен, если вы хотить видеть вступление каждый раз, когда запускаете CorsixTH",
     paused = "В оригинальном Theme Hospital использовать меню сверху экрана можно было только если поставить игру на паузу. Мы оставили это по-умолчанию и в CorsixTH. Если вы включите эту опцию, то на паузе можно будет делать все что угодно.",
+    remove_destroyed_rooms = "Если вы хотите иметь возможность удалять разрушенные комнаты за отдельную плату, включите эту опцию.",
   },
   handyman_window = {
     happiness = "Счастье",
@@ -499,6 +680,7 @@ tooltip = {
     blood_machine = "42 МАШИНА ДЛЯ ЗАБОРА КРОВИ",
     comfortable_chair = "61 КОМФОРТНЫЙ СТУЛ",
     swing_door1 = "52 РАСПАШНАЯ ДВУСТВОРЧАТАЯ ДВЕРЬ",
+    rathole = "Семья крыс нашла вашу больницу грязной, и поэтому будут они будут жить здесь.",
   },
 }
 misc = {
@@ -522,6 +704,7 @@ misc = {
   force = "Ускорение",
   pause = "Пауза",
   send_message_all = "Отправить сообщение всем игрокам",
+  cant_treat_emergency = "Ваша больница не может лечить эту чрезвычайную ситуацию, потому что ее заболевание не было обнаружено.",
 }
 errors = {
   unavailable_screen_size = "Установленный размер экрана не поддерживается в полноэкранном режиме.",
@@ -534,6 +717,15 @@ errors = {
   minimum_screen_size = "Размер экрана не должен быть менее, чем 640x480.",
   alien_dna = "Пояснение: не существует анимации как инопланетные пациенты сидят, открывают или стучатся в дверь и т.п. В оригинальной Theme Hospital они при этом превращались в обычного пациента и потом обратно. пациенты с инопланетной ДНК будут доступны только если они разрешены в файле с уровнем.",
   fractured_bones = "Пояснение: анимация пациентов со сломанными костями женского пола плохая",
+  load_quick_save = "Ошибка, не удалось загрузить быстрое сохранение, так как оно не существовало, но мы создали для Вас новое!",
+  could_not_find_first_campaign_level = "Не удалось найти первый уровень в этой кампании: %s",
+  save_to_tmp = "Файл в %s не может быть использован. Игра была сохранена в %s. Ошибка: %s",
+  could_not_load_campaign = "Сбой при загрузке кампании: %s",
+  compatibility_error = "Извините, это сохранение было создано в более новой версией CorsixTH и несовместимо. Пожалуйста, обновите до более поздней версии.",
+}
+hotkeys_file_err = {
+  file_err_01 = " Не удается загрузить файл hotkeys.txt. Пожалуйста, убедитесь, что у CorsixTH есть разрешение на чтение/запись. ",
+  file_err_02 = " , или используйте параметр командной строки --hotkeys-file=filename, чтобы указать файл, доступный для записи. Для справки, ошибка при загрузке файла горячих клавиш была: ",
 }
 
 -- 3.  Отчеты
@@ -597,6 +789,7 @@ transactions = {
   deposit = "Депозит на лечение",
   advance_colon = "Дополнительно: ",
   overdraft = "Проценты по кредиту",
+  remove_room = "Удалите разрушенную комнату",
 }
 town_map = {
   number = "Номер участка",
@@ -932,6 +1125,7 @@ object = {
   bed3 = "Кровать",
   entrance_right = "Правая входная дверь",
   table1 = "Стол",
+  rathole = "Норка крысы",
 }
 room_descriptions = {
   gp = {
@@ -1296,6 +1490,8 @@ confirmation = {
   restart_level = "Вы серьёзно хотите начать уровень заново?",
   maximum_screen_size = "Разрешение экрана, которое вы ввели, больше 3000 x 2000.  Большее разрешение возможно, но оно может потребовать более производительного оборудования, чтобы поддерживать играбельную частоту кадров.  Вы уверены, что хотите продолжить?",
   music_warning = "Перед тем, как выбрать mp3 в качестве игровой музыки, вам потребуется smpeg.dll или аналог для вашей операционной системы, иначе музыка не сможет быть проиграна. Вы уверены, что хотите продолжить?",
+  remove_destroyed_room = "Вы хотите удалить комнату за $%d?",
+  replace_machine_extra_info = "Новая машина будет иметь прочность %d (в настоящее время %d).",
 }
 pay_rise = {
   definite_quit = "Я увольняюсь, и точка. Я сыт по горло этим местом.",
@@ -1794,6 +1990,8 @@ adviser = {
     nearly_lost = "Еще чуть-чуть - и вы проиграете.",
     improve_reputation = "Вам надо поднять репутацию еще на %d, чтобы выиграть этот уровень.",
     three_quarters_won = "Вы прошли три четверти пути к победе.",
+    cured_enough_patients = "Вы вылечили достаточно пациентов, но вам нужно привести свою больницу в порядок, чтобы пройти уровень.",
+    hospital_value_enough = "Держите стоимость вашей больницы выше %d и решайте другие проблемы, чтобы выиграть уровень.",
   },
   staff_place_advice = {
     receptionists_only_at_desk = "Регистраторы могут работать только в регистратуре.",
@@ -1811,7 +2009,7 @@ adviser = {
     drug_fully_researched = "Вы исследовали %s на 100%.",
     new_machine_researched = "Изобретена новая %s.",
     drug_improved = "Исследовательский отдел улучшил ваше лекарство от %s.",
-    drug_improved_1 = "%s лекарство было улучшенно в вашем Департаменте Исследований.",
+    drug_improved_1 = "Лекарство %s было улучшено Вашим департаментом исследований.",
     new_available = "Новый %s стал доступен.",
     new_drug_researched = "Было исследовано новое лекарство для лечения  %s ",
     autopsy_discovered_rep_loss = "О вашей машине Автоматического Вскрытия стало известно. Ждите негативную реакцию общественности.",
@@ -1947,6 +2145,21 @@ adviser = {
     nurse_needs_desk_2 = "Ваша Медсестра очень благодарна, что вы разрешили ей отдохнуть. Если вам нужно чтобы в Палате работало больше 1 медсестры купите каждой отдельный стол.",
     receptionists_tired = "Ваши регистраторы очень устали. Немедленно отправте их отдыхать.",
     falling_4 = "Это больница, а не Парк Развлечений!",
+    another_desk = "Вам нужно будет построить еще один регистратурный стол для этой новой регистраторши.",
+    fair_prices = "Ваши сборы за %s кажутся справедливыми и сбалансированными.",
+    high_prices = "Ваши сборы за %s высоки. Это принесет большую прибыль в краткосрочной перспективе, но в конечном счете вы начнете отталкивать людей.",
+    low_prices = "Вы берете слишком мало за %s. Это приведет людей в вашу больницу, но вы не получите большой прибыли от каждого из них.",
+    patient_not_paying = "Пациент ушел, не заплатив за %s, потому что цена слишком большая!",
+    no_desk_7 = "Вы построили приёмную стойку, как насчёт нанятия регистратора? У Вас не будет пациентов, пока Вы с этим не разберётесь!",
+    researcher_needs_desk_1 = "Исследователю нужно рабочее место",
+    no_desk_6 = "Вы наняли регистратора, как насчёт приёмной стойки для него?",
+    nurse_needs_desk_1 = "Каждая медсестра нуждается в собственном рабочем месте.",
+    researcher_needs_desk_2 = "Ваш исследователь рад, что Вы разрешили ему отдохнуть. Если Вы хотели, чтобы у Вас работали несколько исследователей, Вы должны предоставить каждому из них собственное рабочее место.",
+    no_desk_5 = "Время пришло, скоро к Вам начнут приходить пациенты!",
+    no_desk_4 = "Регистратору нужна приёмная стойка, чтобы он мог приветствовать новых пациентов",
+    researcher_needs_desk_3 = "Каждый исследователь нуждается в собственном рабочем месте.",
+    cannot_afford_2 = "У вас недостаточно денег в банке, чтобы сделать эту покупку!",
+    nurse_needs_desk_2 = "Ваша медсестра рада, что Вы разрешили ей отдохнуть. Если Вы хотели, чтобы у Вас работали несколько медсестёр, Вы должны предоставить каждой из них собственное рабочее место.",
   },
   placement_info = {
     door_cannot_place = "Извините, тут дверь проделать нельзя.",
@@ -2025,6 +2238,8 @@ adviser = {
       already_poached_by_someone = "Невозможно! Кто-то уже пытается переманить этого человека.",
       in_progress = "Я дам вам знать когда этот человек захочет перейти работать на вас.",
     },
+    objective_failed = "Вы не смогли выполнить поставленную задачу.",
+    objective_completed = "Вы выполнили поставленную задачу. Поздравляю!",
     players_failed = "Нижеследующим игрокам не удалось достичь последней цели : ",
     everyone_failed = "Всем не удалось достичь последней цели. Поэтому каждый может поиграть на !",
   },
@@ -2222,6 +2437,9 @@ letter = {
   custom_level_completed = "Отличная работа! Вы выполнили все задачи на этой карте!",
   dear_player = "Уважаемый %s",
   return_to_main_menu = "Вернетесь в главное меню или продолжите игру?",
+  campaign_level_missing = "Извините, но следующий уровень этой кампании, похоже, отсутствует. (Имя: %s)",
+  campaign_level_completed = "Хорошая работа! Вы прошли уровень. Но это еще не конец! Вы хотели бы продолжить играть в больнице %s?",
+  campaign_completed = "Невероятно! Вам удалось пройти все уровни. Теперь вы можете расслабиться и насладиться заполнением форумов в Интернете своими достижениями. Удачи! :)"
 }
 
 -- 9.  Имена и названия
@@ -2342,6 +2560,10 @@ cheats_window = {
     end_year = "Закончить Год",
     earthquake = "Вызвать землетрясение",
     vip = "Вызвать ВИП",
+    toggle_infected = "Переключить значки инфекции",
+    decrease_prices = "Снизить цены",
+    epidemic = "Создать заразного пациента",
+    increase_prices = "Повысить цены",
   },
   close = "Закрыть",
   caption = "Читы",
@@ -2767,6 +2989,9 @@ tooltip = {
   custom_game_window = {
     start_game_with_name = "Загрузить уровень %s",
     free_build = "Свободное строительство",
+    load_selected_level = "Старт",
+    choose_game = "Нажмите на уровень, чтобы узнать про него больше.",
+    load_selected_level = "Загрузите и играйте в выбранный уровень",
   },
   cheats_window = {
     close = "Закрыть окно с читами",
@@ -2779,6 +3004,12 @@ tooltip = {
       lose_level = "Проиграть уровень.",
       all_research = "Завершает все исследования.",
       end_year = "Перепрыгивает в конец года.",
+      toggle_infected = "Переключите значки зараженных для активной, обнаруженной эпидемии",
+      decrease_prices = "Уменьшить все цены на 50% (мин. 50%)",
+      epidemic = "Создает заразного пациента, который может вызвать эпидемию",
+      increase_prices = "Увеличить все цены на 50% (макс. 200%)",
+      earthquake = "Вызвать землетрясение.",
+      vip = "Пригласить ВИП.",
     },
   },
   menu_list_window = {
@@ -3264,47 +3495,9 @@ debug_patient_window = {
   caption = "Debug Patient",
 }
 menu_debug = {
-  lua_console = "  (%1%) LUA CONSOLE  ",
-  porter_pagers = "  PORTER PAGERS        ",
-  object_cells = "  OBJECT CELLS         ",
-  display_pager = "  DISPLAY PAGER        ",
-  disable_salary_raise = "  DISABLE SALARY RAISE  ",
-  make_debug_fax = "  MAKE DEBUG FAX  ",
-  display_big_cells = "  DISPLAY BIG CELLS    ",
-  make_debug_patient = "  MAKE DEBUG PATIENT  ",
-  mapwho_checking = "  MAPWHO CHECKING      ",
-  sprite_viewer = "  SPRITE VIEWER  ",
-  keep_clear_cells = "  KEEP CLEAR CELLS     ",
-  dump_strings = "  (%1%) DUMP STRINGS  ",
-  machine_pagers = "  MACHINE PAGERS       ",
-  remove_walls = "  REMOVE WALLS         ",
-  enter_nav_debug = "  ENTER NAV DEBUG      ",
-  lose_game_anim = {
-    [1] = "  LOSE GAME 1 ANIM     ",
-    [2] = "  LOSE GAME 2 ANIM     ",
-    [3] = "  LOSE GAME 3 ANIM     ",
-    [4] = "  LOSE GAME 4 ANIM     ",
-    [5] = "  LOSE GAME 5 ANIM     ",
-    [6] = "  LOSE GAME 6 ANIM     ",
-    [7] = "  LOSE GAME 7 ANIM     ",
-  },
-  map_overlay = "  MAP OVERLAY  ",
-  calls_dispatcher = "  CALLS DISPATCHER  ",
-  show_nav_cells = "  SHOW NAV CELLS       ",
-  win_game_anim = "  WIN GAME ANIM        ",
-  display_room_status = "  DISPLAY ROOM STATUS  ",
-  cheats = "  (%1%) CHEATS  ",
-  remove_objects = "  REMOVE OBJECTS       ",
-  nav_bits = "  NAV BITS             ",
-  win_level_anim = "  WIN LEVEL ANIM       ",
-  dump_gamelog = "  (%1%) DUMP GAME LOG  ",
-  limit_camera = "  LIMIT CAMERA  ",
-  pixbuf_cells = "  PIXBUF CELLS         ",
-  transparent_walls = "  (%1%) TRANSPARENT WALLS  ",
-  show_help_hotspot = "  SHOW HELP HOTSPOTS   ",
-  jump_to_level = "  JUMP TO LEVEL  ",
-  entry_cells = "  ENTRY CELLS          ",
-  plant_pagers = "  PLANT PAGERS         ",
+  allow_blocking_off_areas = "  РАЗРЕШИТЬ БЛОКИРОВАНИЕ ОБЛАСТЕЙ  ",
+  connect_debugger = "  (%1%) СОЕДИНЕНИЕ С LUA DBGp СЕРВЕРОМ  ",
+  debug_script = "  (%1%) ЗАПУСК ОТЛАДКИ СКРИПТА  ",
 }
 lua_console = {
   execute_code = "Выполнить",
@@ -3324,6 +3517,7 @@ information = {
     reputation = "Ваша репутация упала ниже %d.",
     balance = "Ваш банковский баланс опустился ниже %d.",
     percentage_killed = "Более %d ваших пациентов отошли в мир иной.",
+    cheat = "Вы это выбрали или просто нажали не ту кнопку? Вы даже нормально обмануть не можете, не смешно, да?",
   },
   cannot_restart = "К сожалению, эта пользовательская игра была сохранена до реализации функции перезапуска.",
   custom_game = "Добро пожаловать в CorsixTH. Развлекайтесь по полной на пользовательской карте!",
@@ -3331,90 +3525,53 @@ information = {
   cheat_not_possible = "Не могу так жульничать на этом уровне. Вы даже обмануть не можете, не смешно, да?",
   no_custom_game_in_demo = "Извините, но в демонстрационной версии вы не можете играть в дополнительные карты.",
 }
-confirmation.maximum_screen_size = "Размер экрана, введённый Вами, превышает 3000 x 2000. Большие разрешения поддерживаются, но требуют хорошее аппаратное обеспечение для поддержания нормальной частоты кадров. Вы уверены, что хотите продолжить?"
-confirmation.music_warning = "Если Вы хотите использовать mp3 файлы в качестве вашей музыки в игре, Ваша операционная система должна иметь smpeg.dll или его эквивалент, иначе музыка не будет проигрываться. Продолжить?"
-menu_options_wage_increase.deny = "    ОТКАЗАТЬ "
-menu_options_wage_increase.grant = "    РАЗРЕШИТЬ "
-tooltip.options_window.audio_button = "Включить/Выключить всё аудио в игре"
-tooltip.options_window.audio_toggle = "Включить/Выключить"
-tooltip.options_window.folder_button = "Свойства папки"
-tooltip.options_window.customise_button = "Больше настроек для улучшения игрового опыта"
-tooltip.update_window.download = "Перейти к странице загрузки новейшей версии CorsixTH"
-tooltip.update_window.ignore = "Игнорировать это обновление сейчас. Вы снова будете уведомлены при следующем запуске CorsixTH"
-tooltip.folders_window.browse_font = "Поиск другого файла со шрифтом ( текущее расположение: %1% )"
-tooltip.folders_window.screenshots_location = "По умолчанию скриншоты сохраняются в папке рядом с файлом конфигурации. По желанию Вы можете выбрать свою папку, просто укажите нужный путь к ней."
-tooltip.folders_window.reset_to_default = "Вернуть папку в её изначальное расположение"
-tooltip.folders_window.back = "Закрыть это меню и вернуться к настройкам"
-tooltip.folders_window.music_location = "Выберите расположение ваших mp3 аудиофайлов. Вы должны были уже создать для них папку, теперь же укажите путь к ней."
-tooltip.folders_window.font_location = "Расположение файла со шрифтом, который может отображать символы Юникода, необходимые вашему языку. Если это не будет указано, вы не сможете выбрать языки, которым нужно больше символов, чем игра может предложить. Например, китайский и русский."
-tooltip.folders_window.savegames_location = "По умолчанию папка, куда помещаются сохранения, находится в папке рядом с файлом конфигурации. По желанию Вы можете выбрать свою папку, просто укажите нужный путь к ней."
-tooltip.folders_window.browse_data = "Обзор расположения установленной версии Theme Hospital (текущее расположение: %1%)"
-tooltip.folders_window.browse = "Обзор расположения папки"
-tooltip.folders_window.browse_screenshots = "Обзор расположения папки скриншотов ( Текущее расположение: %1% ) "
-tooltip.folders_window.browse_music = "Обзор расположения папки музыки ( Текущее расположение: %1% ) "
-tooltip.folders_window.no_font_specified = "Расположение шрифта ещё не указано!"
-tooltip.folders_window.not_specified = "Расположение папки ещё не указано!"
-tooltip.folders_window.browse_saves = "Обзор расположения папки сохранений ( Текущее расположение: %1% ) "
-tooltip.folders_window.default = "Расположение по умолчанию"
-tooltip.folders_window.data_location = "Папка с установленной версией Theme Hospital, которая нужна CorsixTH для запуска"
-tooltip.customise_window.aliens = "Из-за отсутствия подходящих анимаций, по умолчанию пациенты-инопланетяне могут приходить только в крайних случаях. Чтобы разрешить пациентам с инопланетной ДНК приходить в любое время, выключите эту опцию"
-tooltip.customise_window.average_contents = "Если Вы хотите, чтобы игра запоминала, какие объекты Вы обычно добавляете при создании комнат, включите эту опцию"
-tooltip.customise_window.back = "Закрыть это меню и вернуться к настройкам"
-tooltip.customise_window.movies = "Глобальное управление роликами поможет вам выключить все ролики"
-tooltip.customise_window.fractured_bones = "Из-за плохо сделанной анимации женские пациенты со сломанными костями изначально выключены. Чтобы разрешить женщинам со сломанными костями посещать вашу больницу, выключите это"
-tooltip.customise_window.volume = "Если кнопка уменьшения громкости также открывает больничный журнал, включите эту опцию, чтобы поменять горячую клавишу для журнала на Shift+C"
-tooltip.customise_window.intro = "Выключить/Включить заставку; ролики должны быть включены, если Вы хотите, чтобы заставка проигрывалась при запуске CorsixTH"
-tooltip.customise_window.paused = "Во время паузы игрок в Theme Hospital может использовать только верхнее меню. По умолчанию это верно и для CorsixTH, но, включив эту опцию, вы можете получит доступ ко всему даже во время паузы"
-update_window.caption = "Доступно новое обновление!"
-update_window.new_version = "Новая версия:"
-update_window.current_version = "Текущая версия:"
-update_window.download = "Перейти к странице загрузки"
-update_window.ignore = "Пропустить и перейти к главному меню"
-errors.fractured_bones = "ПРИМЕЧАНИЕ: Анимация женских персонажей с разрушенными костями не идеальна"
-errors.alien_dna = "ПРИМЕЧАНИЕ: Для пациентов-инопланетян нет анимации сидения, открывания и стучания в двери и т.д. Поэтому, как и в Theme Hospital, они будут на время превращаться в обычных пациентов и обратно. Пациенты с инопланетной ДНК будут появляться только если это указано уровнем."
-errors.load_quick_save = "Ошибка, не удалось загрузить быстрое сохранение, так как оно не существовало, но мы создали для Вас новое!"
-folders_window.data_label = "Данные TH"
-folders_window.music_location = "Выберите папку, которую Вы хотите использовать для музыки"
-folders_window.music_label = "MP3 файлы"
-folders_window.new_th_location = "Здесь вы можете указать папку с установленной Theme Hospital. Как только вы выберете новую папку, игра будет перезапущена."
-folders_window.caption = "Расположения папок"
-folders_window.screenshots_label = "Скриншоты"
-folders_window.font_label = "Шрифт"
-folders_window.savegames_label = "Сохранения"
-folders_window.back = "Назад"
-folders_window.savegames_location = "Выберите папку, которую Вы хотите использовать для сохранений"
-folders_window.screenshots_location = "Выберите папку, которую Вы хотите использовать для скриншотов"
-customise_window.average_contents = "Среднее содержимое"
-customise_window.option_on = "Вкл"
-customise_window.paused = "Строить во время паузы"
-customise_window.option_off = "Выкл"
-customise_window.intro = "Проигрывать заставку"
-customise_window.caption = "Пользовательские настройки"
-customise_window.back = "Назад"
-customise_window.movies = "Управление роликами"
-customise_window.volume = "Горячая клавиша убавления громкости"
-customise_window.aliens = "Инопланетные пациенты"
-customise_window.fractured_bones = "Сломанные кости"
-options_window.folder = "Папки"
-options_window.customise = "Настроить"
-options_window.audio = "Глобальное аудио"
-menu_options.twentyfour_hour_clock = "  24-ЧАСОВОЕ ВРЕМЯ  "
-menu_options.wage_increase = "  ЗАПРОСЫ ЗАРПЛАТЫ"
-install.ok = "ОК"
-install.cancel = "Отмена"
-adviser.research.drug_improved_1 = "Лекарство %s было улучшено Вашим департаментом исследований."
-adviser.warnings.no_desk_7 = "Вы построили приёмную стойку, как насчёт нанятия регистратора? У Вас не будет пациентов, пока Вы с этим не разберётесь!"
-adviser.warnings.researcher_needs_desk_1 = "Исследователю нужно рабочее место"
-adviser.warnings.no_desk_6 = "Вы наняли регистратора, как насчёт приёмной стойки для него?"
-adviser.warnings.nurse_needs_desk_1 = "Каждая медсестра нуждается в собственном рабочем месте."
-adviser.warnings.researcher_needs_desk_2 = "Ваш исследователь рад, что Вы разрешили ему отдохнуть. Если Вы хотели, чтобы у Вас работали несколько исследователей, Вы должны предоставить каждому из них собственное рабочее место."
-adviser.warnings.no_desk_5 = "Время пришло, скоро к Вам начнут приходить пациенты!"
-adviser.warnings.no_desk_4 = "Регистратору нужна приёмная стойка, чтобы он мог приветствовать новых пациентов"
-adviser.warnings.researcher_needs_desk_3 = "Каждый исследователь нуждается в собственном рабочем месте."
-adviser.warnings.cannot_afford_2 = "У вас недостаточно денег в банке, чтобы сделать эту покупку!"
-adviser.warnings.nurse_needs_desk_2 = "Ваша медсестра рада, что Вы разрешили ей отдохнуть. Если Вы хотели, чтобы у Вас работали несколько медсестёр, Вы должны предоставить каждой из них собственное рабочее место."
-custom_game_window.free_build = "Свободное строительство"
-menu_list_window.save_date = "Изменено"
-menu_list_window.name = "Имя"
-information.level_lost.cheat = "Вы это выбрали или просто нажали не ту кнопку? Вы даже нормально обмануть не можете, не смешно, да?"
-
+map_editor_window = {
+  pages = {
+    parcel_1 = "Участок 1",
+    heliport_2 = "Верт. Площадка 2",
+    parcel_8 = "Участок 8",
+    parcel_7 = "Участок 7",
+    pond = "Пруд",
+    foliage = "Растительность",
+    road = "Дорога",
+    parcel_3 = "Участок 3",
+    heliport_4 = "Верт. Площадка 4",
+    heliport_1 = "Верт. Площадка 1",
+    parcel_4 = "Участок 4",
+    delete_wall = "Удаление стен",
+    parcel_0 = "Участок 0",
+    parcel_2 = "Участок 2",
+    parcel_6 = "Участок 6",
+    west_wall = "Западные стены",
+    heliport_3 = "Верт. Площадка 3",
+    inside = "Пол",
+    helipad = "Helipad",
+    camera_2 = "Камера 2",
+    camera_1 = "Камера 1",
+    hedgerow = "Изгородь",
+    outside = "Тропы",
+    camera_3 = "Камера 3",
+    paste = "Размещать объекты",
+    camera_4 = "Камера 4",
+    parcel_5 = "Участок 5",
+    north_wall = "Северная стена",
+    parcel_9 = "Участок 9",
+  },
+}
+custom_campaign_window = {
+  caption = "Дополнительные кампании",
+  start_selected_campaign = "Начать кампанию",
+}
+level_progress = {
+  hospital_value_enough = "Не давайте стоимости больницы упасть ниже %d и разберитесь с остальными проблемами, чтобы победить.",
+  cured_enough_patients = "Вы вылечили достаточно пациентов, но ваша больница еще недостаточно хороша.",
+}
+disease_discovered_patient_choice.need_to_employ = "Используйте %s чтобы справиться с этой ситуацией." -- This random string is needed but not sure why
+multiplayer = {
+  players_failed = "Следующие игроки не смогли достичь последней цели:",
+  everyone_failed = "Все не смогли достичь последней цели. Так что все могут играть дальше!",
+}
+warnings = {
+  newersave = " Внимание, вы загрузили сохранение из более новой версии CorsixTH. Не рекомендуется продолжать, так как могут произойти сбои. Играйте на свой страх и риск. ",
+  levelfile_variable_is_deprecated = "Обратите внимание: Уровень '%s' содержит устаревшее определение переменной в файле уровня. '%LevelFile' был переименован в '%MapFile'. Пожалуйста, посоветуйте создателю карты обновить уровень.",
+}
