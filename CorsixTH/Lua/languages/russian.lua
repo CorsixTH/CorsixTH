@@ -1,4 +1,4 @@
- --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021 "Matvey1705" 
+ --[[ Copyright (c) 2011 Sergei Larionov, Alexey Pinyagin, 2021 "Matvey1705"
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
