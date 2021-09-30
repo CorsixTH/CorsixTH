@@ -758,6 +758,7 @@ totd_window = {
     "Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
     "You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
     "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
+    "Did you know you can assign Handymen to specific plots? Just click the All Plots text in their staff profile to cycle through them!",
   },
   previous = "Previous Tip",
   next = "Next Tip",
