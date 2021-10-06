@@ -1508,7 +1508,7 @@ end
 
 -- Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten
 function App:quickSave()
-  local filename = "quicksave"
+  local filename = "quicksave.qs"
   return SaveGameFile(self.savegame_dir .. filename)
 end
 
@@ -1520,9 +1520,9 @@ function App:load(filepath)
 end
 
 function App:quickLoad()
-  local filename = "quicksave"
+  local filename = "quicksave.qs"
   if lfs.attributes(self.savegame_dir .. filename) then
-    self:load(filename)
+    self:load(self.savegame_dir .. filename)
   else
     self:quickSave()
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.load_quick_save}))
