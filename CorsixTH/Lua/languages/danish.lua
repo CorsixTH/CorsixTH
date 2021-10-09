@@ -2348,31 +2348,21 @@ fax = {
     rep_loss   = "Dit ry i nærområdet har taget skade.",
 
     remarks = {
-      super = {
-        "Det er et meget flot hospital. Næste gang jeg bliver alvorligt syg, vil jeg indlægges der.",
-        "Se det er hvad jeg kalder for et hospital af topklasse!",
-        "Et super hospital, og det er noget jeg ved en del om, for jeg har været indlagt en hel del gange.",
-      },
-      good = {
-        "Det er et godt organiseret hospital. Tak fordi jeg måtte komme.",
-        "Hmm. Det er absolut ikke noget dårligt sted, jeg har set.",
-        "Jeg kan godt lide dit charmerende hospital. Forresten, er der nogen som vil med ud at spise indisk?",
-      },
-      mediocre = {
-        "Nå, jeg har set værre. Men du kunne göre en lang række forbedringer.",
-        "Åh, min kære tid. Det her er ikke det sted man går hen, hvis man föler sig dårlig.",
-        "Et helt normalt hospital, for at være ærlig. Jeg havde forventet noget mere.",
-      },
-      bad = {
-        "Hvad laver jeg egentlig her?! Det er jo værre end en fire timers opera!",
-        "Det var ækelt! Kalder du det her et hospital?! Det ligner mere en svinesti!",
-        "Jeg er træt af at være en offentlig person, og træt af at skulle besöge steder som dette stinkende hul! Jeg siger op!.",
-      },
-      very_bad = {
-        "Föj for et syn! Dette hospital skal jeg nok få lukket ned!",
-        "Jeg har aldrig set magen. Det er en skandale!",
-        "Jeg er chokeret! Du kan ikke kalde dette et hospital! Jeg går ud og tager mig en stærk drink!",
-      },
+      [1] = "Det er et meget flot hospital. Næste gang jeg bliver alvorligt syg, vil jeg indlægges der.",
+      [2] = "Se det er hvad jeg kalder for et hospital af topklasse!",
+      [3] = "Et super hospital, og det er noget jeg ved en del om, for jeg har været indlagt en hel del gange.",
+      [4] = "Det er et godt organiseret hospital. Tak fordi jeg måtte komme.",
+      [5] = "Hmm. Det er absolut ikke noget dårligt sted, jeg har set.",
+      [6] = "Jeg kan godt lide dit charmerende hospital. Forresten, er der nogen som vil med ud at spise indisk?",
+      [7] = "Nå, jeg har set værre. Men du kunne göre en lang række forbedringer.",
+      [8] = "Åh, min kære tid. Det her er ikke det sted man går hen, hvis man föler sig dårlig.",
+      [9] = "Et helt normalt hospital, for at være ærlig. Jeg havde forventet noget mere.",
+      [10] = "Hvad laver jeg egentlig her?! Det er jo værre end en fire timers opera!",
+      [11] = "Det var ækelt! Kalder du det her et hospital?! Det ligner mere en svinesti!",
+      [12] = "Jeg er træt af at være en offentlig person, og træt af at skulle besöge steder som dette stinkende hul! Jeg siger op!.",
+      [13] = "Föj for et syn! Dette hospital skal jeg nok få lukket ned!",
+      [14] = "Jeg har aldrig set magen. Det er en skandale!",
+      [15] = "Jeg er chokeret! Du kan ikke kalde dette et hospital! Jeg går ud og tager mig en stærk drink!",
     },
   },
 

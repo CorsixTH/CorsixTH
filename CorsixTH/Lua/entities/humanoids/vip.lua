@@ -238,7 +238,7 @@ function Vip:onDestroy()
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
@@ -248,14 +248,14 @@ function Vip:onDestroy()
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   else
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
