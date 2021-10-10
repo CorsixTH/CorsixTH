@@ -125,6 +125,17 @@ function UIAdviser:hide()
   self.number_frames = 4
 end
 
+--! Function checks if the adviser has been asked to say something already queued
+--!param speech (string) Text to check
+--!return true if duplicate found
+function UIAdviser:checkForDuplicates(speech)
+  local speech_to_check = speech.text -- Humanise for clarity
+  for _, text in ipairs(self.queued_messages) do
+    local speech_to_compare = text.speech -- Humanise for clarity
+    if speech_to_compare == speech_to_check then return true end
+  end
+end
+
 -- Makes the adviser say something
 --!param speech The table containing the text he should say and the priority.
 --!param talk_until_next_announce Whether he should stay up
@@ -134,6 +145,9 @@ end
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
   assert(type(speech) == "table")
   if not self.ui.app.config.adviser_disabled then
+    -- Check the same message isn't already queued
+    -- if so discard it (unless override is true)
+    if self:checkForDuplicates(speech) and not override_current then return end
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
       speech = speech.text,
@@ -170,7 +184,7 @@ function UIAdviser:draw(canvas, x, y)
   x, y = x + self.x, y + self.y
   self.th:draw(canvas, x + 200, y)
   if self.phase == 2 then
-    -- Draw ballon only in the "talk" phase.
+    -- Draw balloon only in the "talk" phase.
     local x_left_sprite
     for dx = 0, self.balloon_width, 16 do
       x_left_sprite = x + 139 - dx
