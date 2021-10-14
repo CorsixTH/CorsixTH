@@ -127,7 +127,7 @@ end
 
 --! Function checks if the adviser has been asked to say something already queued
 --!param speech (string) Text to check
---!return true if duplicate found
+--!return (boolean) true if duplicate found
 function UIAdviser:checkForDuplicates(speech)
   local speech_to_check = speech.text -- Humanise for clarity
   for _, text in ipairs(self.queued_messages) do
@@ -145,9 +145,8 @@ end
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
   assert(type(speech) == "table")
   if not self.ui.app.config.adviser_disabled then
-    -- Check the same message isn't already queued
-    -- if so discard it (unless override is true)
-    if self:checkForDuplicates(speech) and not override_current then return end
+    -- Drop duplicate messages unless overriden
+    if not override_current and self:checkForDuplicates(speech) then return end
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
       speech = speech.text,
