@@ -145,7 +145,7 @@ end
 function UIAdviser:say(speech, talk_until_next_announce, override_current)
   assert(type(speech) == "table")
   if not self.ui.app.config.adviser_disabled then
-    -- Drop duplicate messages unless overriden
+    -- Drop duplicate messages unless overridden
     if not override_current and self:checkForDuplicates(speech) then return end
     -- Queue the new message
     self.queued_messages[#self.queued_messages + 1] = {
