@@ -802,7 +802,7 @@ function Map:afterLoad(old, new)
       self:setCellFlags(58, 72, {passable = false})
     end
   end
-  if old < 159 then
+  if old < 164 then
     -- New feature, by default non-visual illnesses were always available
     -- at the start
     self.level_config.non_visuals_available = {
