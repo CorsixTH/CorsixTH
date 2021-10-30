@@ -26,6 +26,15 @@
   </provides>
   <launchable type="desktop-id">com.corsixth.corsixth.desktop</launchable>
   <releases>
+    <release version="0.65.1" date="2021-07-17" type="stable">
+      <description>
+        <p>This is a hotfix release of 0.65 and replaces the June 2021 release</p>
+        <ul>
+          <li>Fixes a bug where the game would crash if you got the All Cured trophy at the
+            end of year awards, when loading a save from 0.64 or earlier</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.65" date="2021-06-19" type="stable">
       <description>
         <p>New Features:</p>
@@ -98,10 +107,10 @@
   </releases>
   <screenshots>
     <screenshot type="default">
-      <image>https://corsixth.com/wp-content/uploads/2016/04/screenshot9-1024x640.jpg</image>
+      <image>https://corsixth.com/media/screenshots/1-medium.jpg</image>
     </screenshot>
     <screenshot>
-      <image>https://corsixth.com/wp-content/uploads/2016/04/screenshot0-1024x640.jpg</image>
+      <image>https://corsixth.com/media/screenshots/2-medium.jpg</image>
     </screenshot>
     <screenshot>
       <image>https://camo.githubusercontent.com/1b82352e0f0eac03a6927af7e9d7bbad8c380f93/687474703a2f2f692e696d6775722e636f6d2f714856363055692e706e67</image>

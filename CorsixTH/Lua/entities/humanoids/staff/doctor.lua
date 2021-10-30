@@ -32,6 +32,7 @@ local Doctor = _G["Doctor"]
 --!param ... Arguments to base class constructor.
 function Doctor:Doctor(...)
   self:Staff(...)
+  self.leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav"}
 end
 
 function Doctor:tickDay()
@@ -106,12 +107,6 @@ function Doctor:tick()
   end
 end
 
-function Doctor:leaveAnnounce()
-  local announcement_priority = AnnouncementPriority.High
-  local dr_leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav",}
-  self.world.ui:playAnnouncement(dr_leave_sounds[math.random(1, #dr_leave_sounds)], announcement_priority)
-end
-
 -- Determine if the staff member should contribute to research
 function Doctor:isResearching()
   local room = self:getRoom()
@@ -161,7 +156,7 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused ar
     self.profile[trait] = 1.0
     local is = trait:match"^is_(.*)"
     if is == "surgeon" or is == "psychiatrist" or is == "researcher" then
-      self.world.ui.adviser:say(_A.information.promotion_to_specialist:format(_S.staff_title[is]))
+      self.hospital:giveAdvice({ _A.information.promotion_to_specialist:format(_S.staff_title[is]) })
       -- patients might we waiting for a doctor with this skill, notify them
       self.hospital:notifyOfStaffChange(self)
     end
@@ -172,10 +167,10 @@ function Doctor:updateSkill(consultant, trait, amount) -- luacheck: no unused ar
     self.profile:parseSkillLevel()
 
     if old_profile.is_junior and not self.profile.is_junior then
-      self.world.ui.adviser:say(_A.information.promotion_to_doctor)
+      self.hospital:giveAdvice({ _A.information.promotion_to_doctor })
       self:updateStaffTitle()
     elseif not old_profile.is_consultant and self.profile.is_consultant then
-      self.world.ui.adviser:say(_A.information.promotion_to_consultant)
+      self.hospital:giveAdvice({ _A.information.promotion_to_consultant })
       if self:getRoom().room_info.id == "training" then
         self:setNextAction(self:getRoom():createLeaveAction())
         self:queueAction(MeanderAction())
@@ -272,15 +267,19 @@ function Doctor:adviseWrongPersonForThisRoom()
   local room = self:getRoom()
   local room_name = room.room_info.long_name
   if room.room_info.id == "toilets" then
-    self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
   elseif room.room_info.id == "training" then
-    self.world.ui.adviser:say(_A.staff_place_advice.doctors_cannot_work_in_room:format(room_name))
+    self.hospital:giveAdvice({ _A.staff_place_advice.doctors_cannot_work_in_room:format(room_name) })
   else
     Staff.adviseWrongPersonForThisRoom(self)
   end
 end
 
 function Doctor:afterLoad(old, new)
+  if old < 163 then
+    self.leave_priority = AnnouncementPriority.High
+    self.leave_sounds = {"sack001.wav", "sack002.wav", "sack003.wav"}
+  end
   Staff.afterLoad(self, old, new)
 end
 

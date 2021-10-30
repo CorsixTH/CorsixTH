@@ -424,7 +424,7 @@ local --[[persistable: window_panel_bevel_draw]] function panel_bevel_draw(panel
   if panel.lowered then
     canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w, panel.h)
     canvas:drawRect(panel.shadow_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
-    canvas:drawRect(panel.colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
+    canvas:drawRect(panel.lowered_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 2, panel.h - 2)
   else
     canvas:drawRect(panel.shadow_colour, x + panel.x + 1, y + panel.y + 1, panel.w - 1, panel.h - 1)
     canvas:drawRect(panel.highlight_colour, x + panel.x, y + panel.y, panel.w - 1, panel.h - 1)
@@ -446,8 +446,9 @@ features a highlight and a shadow that makes it appear either lowered or raised.
 !param highlight_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the highlight.
 !param shadow_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the shadow.
 !param disabled_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the disabled panel.
+!param lowered_colour (colour in form .red, .green and .blue or nil) [optional] The colour for the lowered (toggled) panel.
 ]]
-function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour)
+function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colour, disabled_colour, lowered_colour)
   highlight_colour = highlight_colour or {
     red = sanitize(colour.red + 40),
     green = sanitize(colour.green + 40),
@@ -463,6 +464,7 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
     green = sanitize(math.floor((colour.green + 100) / 2)),
     blue = sanitize(math.floor((colour.blue + 100) / 2)),
   }
+  lowered_colour = lowered_colour or colour
 
   local panel = setmetatable({
     window = self,
@@ -474,6 +476,7 @@ function Window:addBevelPanel(x, y, w, h, colour, highlight_colour, shadow_colou
     highlight_colour = TheApp.video:mapRGB(highlight_colour.red, highlight_colour.green, highlight_colour.blue),
     shadow_colour = TheApp.video:mapRGB(shadow_colour.red, shadow_colour.green, shadow_colour.blue),
     disabled_colour = TheApp.video:mapRGB(disabled_colour.red, disabled_colour.green, disabled_colour.blue),
+    lowered_colour = TheApp.video:mapRGB(lowered_colour.red, lowered_colour.green, lowered_colour.blue),
     custom_draw = panel_bevel_draw,
     visible = true,
     lowered = false,
@@ -948,7 +951,7 @@ function Textbox:drawCursor(canvas, x, y)
     cursor_y = cursor_y - 3
     -- Add x separation, but only if there was actually some text in this line.
     if self.text[self.cursor_pos[1]] ~= "" then
-      cursor_x = cursor_x + 1 -- TODO font:getSeparation?
+      cursor_x = cursor_x + 1
     end
     canvas:drawRect(col, cursor_x, cursor_y, w, 1)
   end
@@ -1557,6 +1560,7 @@ end
 
 function Window:onMouseDown(button, x, y)
   local repaint = false
+  if not self.visible then return false end
   if self.windows then
     for _, window in ipairs(self.windows) do
       if window:onMouseDown(button, x - window.x, y - window.y) then
@@ -2017,6 +2021,12 @@ function Window:getTooltipAt(x, y)
   end
 end
 
+function Panel:afterLoad(old, new)
+  if old < 160 then
+    self.lowered_colour = self.colour
+  end
+end
+
 --! Stub to be extended in subclasses, if needed.
 function Window:afterLoad(old, new)
   if old < 2 then
@@ -2044,6 +2054,11 @@ function Window:afterLoad(old, new)
   if self.windows then
     for _, w in pairs(self.windows) do
       w:afterLoad(old, new)
+    end
+  end
+  if self.panels then
+    for _, p in pairs(self.panels) do
+      p:afterLoad(old, new)
     end
   end
 end

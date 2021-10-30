@@ -32,6 +32,8 @@ local Receptionist = _G["Receptionist"]
 --!param ... Arguments to base class constructor.
 function Receptionist:Receptionist(...)
   self:Staff(...)
+  self.leave_sounds = {"sack007.wav", "sack008.wav"}
+  self.leave_priority = AnnouncementPriority.Critical -- must always be played even without receptionist
 end
 
 function Receptionist:tickDay()
@@ -39,11 +41,6 @@ function Receptionist:tickDay()
     return false
   end
   self:needsWorkStation()
-end
-
-function Receptionist:leaveAnnounce()
-  local receptionist_leave_sounds = {"sack007.wav", "sack008.wav",}
-  self.world.ui:playAnnouncement(receptionist_leave_sounds[math.random(1, #receptionist_leave_sounds)], AnnouncementPriority.Critical) -- must always be played even without receptionist
 end
 
 function Receptionist:isTiring()
@@ -60,11 +57,8 @@ function Receptionist:setProfile(profile)
 end
 
 function Receptionist:needsWorkStation()
-  if self.hospital and not self.hospital.receptionist_msg then
-    if self.hospital:countReceptionDesks() == 0 then
-      self.world.ui.adviser:say(_A.warnings.no_desk_4)
-      self.hospital.receptionist_msg = true
-    end
+  if self.hospital then
+    self.hospital:msgNeedFirstReceptionDesk()
   end
 end
 
@@ -99,6 +93,10 @@ function Receptionist:getDrawingLayer()
 end
 
 function Receptionist:afterLoad(old, new)
+  if old < 163 then
+    self.leave_sounds = {"sack007.wav", "sack008.wav"}
+    self.leave_priority = AnnouncementPriority.Critical -- must always be played even without receptionist
+  end
   Staff.afterLoad(self, old, new)
 end
 

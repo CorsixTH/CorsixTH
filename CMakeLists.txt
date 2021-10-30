@@ -6,6 +6,9 @@
 #   - WITH_MOVIES     : Activate movies (requires with_audio, FFmpeg) (yes)
 #   - WITH_LUAJIT     : Use LuaJIT instead of Lua (must specify library path) (no)
 #   - USE_SOURCE_DATADIRS : Use the source directory for loading resources. Incompatible with the install target (no)
+#   - SEARCH_LOCAL_DATADIRS : Search resources in the working directory and the
+#       program directory where the executable stores. Makes the executable
+#       portable (yes for Apple)
 
 #   - WITH_VLD        : Build with Visual Leak Detector (requires Visual Studio) (no)
 #   - USE_PRECOMPILED_DEPS : Use precompiled dependencies on *nix (no)
@@ -15,7 +18,7 @@
 #   - ENABLE_UNIT_TESTS : Enable Unit Testing Target (requires Catch2) (no)
 #   - BUILD_ANIMVIEW : Generate AnimViewer build files (no)
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
 
@@ -44,6 +47,16 @@ option(WITH_FREETYPE2 "Enhanced font support" ON)
 option(WITH_MOVIES "Activate in game movies" ON)
 option(WITH_LUAJIT "Use LuaJIT instead of Lua" OFF)
 option(USE_SOURCE_DATADIRS "Use the source directory for loading resources. Incompatible with the install target" OFF)
+
+if(APPLE)
+  set(SEARCH_LOCAL_DATADIRS_DEFAULT ON)
+else()
+  set(SEARCH_LOCAL_DATADIRS_DEFAULT OFF)
+endif()
+
+option(SEARCH_LOCAL_DATADIRS
+  "Search resources in the working directory and the program directory where the executable stores."
+  ${SEARCH_LOCAL_DATADIRS_DEFAULT})
 
 if(MSVC)
   option(WITH_VLD "Build with Visual Leak Detector for Visual Studio" OFF)

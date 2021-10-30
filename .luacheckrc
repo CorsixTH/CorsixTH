@@ -49,17 +49,16 @@ globals = { -- Globals
             "UICheats", "UIChooseFont", "UIConfirmDialog", "UICustomCampaign",
             "UICustomGame", "UICustomise", "UIDirectoryBrowser", "UIDropdown",
             "UIEditRoom", "UIFax", "UIFileBrowser", "UIFolder", "UIFullscreen",
-            "UIFurnishCorridor", "UIGraphs", "UIHireStaff" ,"UIInformation",
-            "UIJukebox", "UILoadGame", "UILoadMap", "UILuaConsole", "UIMachine",
-            "UIMakeDebugPatient", "UIMainMenu", "UIMapEditor", "UIMenuBar",
-            "UIMenuList", "UIMessage", "UINewGame", "UIOptions", "UIPatient",
+            "UIFurnishCorridor", "UIGraphs", "UIHireStaff", "UIHotkeyAssign",
+            "UIHotkeyAssignKeyPane", "UIInformation", "UIJukebox", "UILoadGame",
+            "UILoadMap", "UILuaConsole", "UIMachine", "UIMakeDebugPatient",
+            "UIMainMenu", "UIMapEditor", "UIMenuBar", "UIMenuList",
+            "UIMessage", "UINewGame", "UIOptions", "UIPatient",
             "UIPlaceObjects", "UIPlaceStaff", "UIPolicy", "UIProgressReport",
             "UIQueue", "UIQueuePopup", "UIResizable", "UIResearch",
-            "UIResolution", "UISaveGame", "UISaveMap", "UIStaff",
-            "UIStaffManagement", "UIStaffRise", "UITipOfTheDay", "UITownMap",
-            "UIUpdate", "UIWatch", "UIHotkeyAssign", "UIScrollSpeed",
-            "UIShiftScrollSpeed", "UIZoomSpeed", "UIHotkeyAssign_Panels",
-            "UIHotkeyAssign_storeRecallPos",
+            "UIResolution", "UISaveGame", "UISaveMap", "UIScrollSpeed",
+            "UIShiftScrollSpeed", "UIStaff", "UIStaffManagement", "UIStaffRise",
+            "UITipOfTheDay", "UITownMap", "UIUpdate", "UIWatch", "UIZoomSpeed",
 
             -- Actions
             "AnswerCallAction", "CallCheckPointAction", "CheckWatchAction",
@@ -224,6 +223,9 @@ add_ignore("CorsixTH/Lua/rooms/research.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/scanner_room.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/staff_room.lua", "212")
 add_ignore("CorsixTH/Lua/rooms/staff_room.lua", "542")
+add_ignore("CorsixTH/Lua/rooms/ward.lua", "111")
+add_ignore("CorsixTH/Lua/rooms/ward.lua", "113")
+add_ignore("CorsixTH/Lua/rooms/ward.lua", "211")
 add_ignore("CorsixTH/Lua/rooms/ward.lua", "212")
 add_ignore("CorsixTH/Lua/sprite_viewer.lua", "212")
 add_ignore("CorsixTH/Lua/staff_profile.lua", "113")

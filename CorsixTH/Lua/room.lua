@@ -328,12 +328,12 @@ function Room:onHumanoidEnter(humanoid)
     self:tryAdvanceQueue()
     return
   end
-  local msg = {
+  local researcher_desks = {
     (_A.warnings.researcher_needs_desk_1),
     (_A.warnings.researcher_needs_desk_2),
     (_A.warnings.researcher_needs_desk_3),
   }
-  local msg_nurse = {
+  local nurse_desks = {
     (_A.warnings.nurse_needs_desk_1),
     (_A.warnings.nurse_needs_desk_2),
   }
@@ -345,10 +345,10 @@ function Room:onHumanoidEnter(humanoid)
         local staff_member = self:getStaffMember()
         self.humanoids[humanoid] = true
           if staff_member.profile.is_researcher and self.room_info.id == "research" then
-            self.world.ui.adviser:say(msg[math.random(1, #msg)])
+            self.hospital:giveAdvice(researcher_desks)
           end
           if staff_member.humanoid_class == "Nurse" and self.room_info.id == "ward" then
-            self.world.ui.adviser:say(msg_nurse[math.random(1, #msg_nurse)])
+            self.hospital:giveAdvice(nurse_desks)
           end
         if not staff_member.dealing_with_patient then
           staff_member:setNextAction(self:createLeaveAction())
@@ -583,18 +583,20 @@ function Room:onHumanoidLeave(humanoid)
       humanoid.waiting_on_other_staff = nil
       self.dealt_patient_callback = nil
     end
-    -- Make patients leave the room if there are no longer enough staff
+    -- Make patients leave the room (except wards) if there are no longer enough staff
     if not self:testStaffCriteria(self:getRequiredStaffCriteria()) then
-      local patient_needs_to_reenter = false
+      local call_for_new_staff = self.door.queue:patientSize() > 0
       for room_humanoid in pairs(self.humanoids) do
         if class.is(room_humanoid, Patient) and self:shouldHavePatientReenter(room_humanoid) then
-          self:makeHumanoidLeave(room_humanoid)
-          room_humanoid:queueAction(self:createEnterAction(room_humanoid))
-          patient_needs_to_reenter = true
+          call_for_new_staff = true
+          if self.room_info.id ~= "ward" then
+            self:makeHumanoidLeave(room_humanoid)
+            room_humanoid:queueAction(self:createEnterAction(room_humanoid))
+          end
         end
       end
       -- Call for staff if needed
-      if self.is_active and (patient_needs_to_reenter or self.door.queue:patientSize() > 0) then
+      if self.is_active and call_for_new_staff then
         self.world.dispatcher:callForStaff(self)
       end
     end

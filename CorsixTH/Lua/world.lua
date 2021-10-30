@@ -571,7 +571,7 @@ function World:spawnVIP(name)
   vip:setNextAction(SpawnAction("spawn", spawn_point))
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
-  hospital.announce_vip = hospital.announce_vip + 1
+  hospital:onSpawnVIP()
   vip:queueAction(SeekReceptionAction())
 end
 
@@ -1224,8 +1224,6 @@ function World:onEndDay()
       self.spawn_hours[hour] = self.spawn_hours[hour] and self.spawn_hours[hour] + 1 or 1
     end
   end
-  -- TODO: Do other regular things? Such as checking if any room needs
-  -- staff at the moment and making plants need water.
 end
 
 function World:checkIfGameWon()
@@ -2366,6 +2364,8 @@ function World:dumpGameLog()
   config_path = config_path:match("^(.-)[^" .. pathsep .. "]*$")
   local gamelog_path = config_path .. "gamelog.txt"
   local fi = self.app:writeToFileOrTmp(gamelog_path)
+  -- Start the gamelog file with the system information
+  fi:write(self.app:getSystemInfo())
   for _, str in ipairs(self.game_log) do
     fi:write(str .. "\n")
   end

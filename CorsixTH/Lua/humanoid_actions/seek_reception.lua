@@ -23,14 +23,17 @@ class "SeekReceptionAction" (HumanoidAction)
 ---@type SeekReceptionAction
 local SeekReceptionAction = _G["SeekReceptionAction"]
 
+-- distance from queue that patient can join a reception desk queue
+local can_join_queue_distance = 6
+
 function SeekReceptionAction:SeekReceptionAction()
   self:HumanoidAction("seek_reception")
 end
 
-local function can_join_queue_at(humanoid, x, y)
+local function can_join_queue_at(humanoid, x, y, dist)
   local flag_cache = humanoid.world.map.th:getCellFlags(x, y)
   return flag_cache.hospital and not flag_cache.room and
-      humanoid.hospital and
+      dist <= can_join_queue_distance and
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
@@ -38,7 +41,6 @@ local function action_seek_reception_start(action, humanoid)
   local world = humanoid.world
   local best_desk
   local score
-  local queuetotal = 0
 
   assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
@@ -63,7 +65,6 @@ local function action_seek_reception_start(action, humanoid)
         score = this_score
         best_desk = desk
       end
-      queuetotal = queuetotal + #desk.queue
     end
   end
   if best_desk then
@@ -71,13 +72,14 @@ local function action_seek_reception_start(action, humanoid)
     local orientation = best_desk.object_type.orientations[best_desk.direction]
     local x = best_desk.tile_x + orientation.use_position[1]
     local y = best_desk.tile_y + orientation.use_position[2]
+    local dist = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(best_desk.object_type.name))
     humanoid.waiting = nil
 
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
-    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y) then
+    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, dist) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
       humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
           :setFaceDirection(face_x, face_y))
@@ -86,27 +88,19 @@ local function action_seek_reception_start(action, humanoid)
       humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
-      for i = #walk.path_x, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i]) then
+      local pathindex = #walk.path_x
+      for i = pathindex - 1, 2, -1 do
+        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], pathindex - i) then
           walk.path_x[i + 1] = nil
           walk.path_y[i + 1] = nil
+          walk.x = walk.path_x[i]
+          walk.y = walk.path_y[i]
         else
           break
         end
       end
     end
-  local desks = #humanoid.hospital:findReceptionDesks()
-  local receptionists = humanoid.hospital:countStaffOfCategory("Receptionist")
-  if (receptionists > 1 and desks > 0) or (receptionists > 0 and desks > 1) then
-    local queueavg = math.floor(queuetotal / desks)
-    if receptionists < desks and queueavg > 5 then
-      world.ui.adviser:say(_A.warnings.reception_bottleneck)
-    elseif queueavg > 4 then
-      world.ui.adviser:say(_A.warnings.queue_too_long_at_reception)
-    elseif receptionists > desks then
-      world.ui.adviser:say(_A.warnings.another_desk)
-    end
-  end
+    humanoid.hospital:msgMultiReceptionDesks()
 
   else
     -- No reception desk found. One will probably be built soon, somewhere in

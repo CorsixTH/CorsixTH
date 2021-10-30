@@ -59,7 +59,7 @@ local function action_sweep_floor_start(action, humanoid)
   humanoid.user_of = action.litter
   -- remove handyman task as soon as action starts - we should be committed to completing this task
   local litter = action.litter
-  local hospital = litter.world:getHospital(litter.tile_x, litter.tile_y)
+  local hospital = litter.hospital
   local taskIndex = hospital:getIndexOfTask(litter.tile_x, litter.tile_y, "cleaning", litter)
   hospital:removeHandymanTask(taskIndex, "cleaning")
   local anim = animation_numbers[1]

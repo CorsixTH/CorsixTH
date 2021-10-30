@@ -120,23 +120,37 @@ end
 --! Tries to load the font file given in the config file as unicode_font.
 --! If it is not found it tries to find one in the operating system.
 function Graphics:loadFontFile()
+  local lfs = require("lfs")
+  local function check(path) return path and lfs.attributes(path, "mode") == "file" end
   -- Load the Unicode font, if there is one specified.
-  local font_file = self.app.config.unicode_font
-  if not font_file then
-    -- Try a font which commonly comes with the operating system.
-    local windir = os.getenv("WINDIR")
-    if windir and windir ~= "" then
-      font_file = windir .. pathsep .. "Fonts" .. pathsep .. "ARIALUNI.TTF"
-    elseif self.app.os == "macos" then
-      font_file = "/Library/Fonts/Arial Unicode.ttf"
-    else
-      font_file = "/usr/share/fonts/truetype/arphic/uming.ttc"
-    end
+  local config_path = self.app.config.unicode_font
+  -- Try a font that commonly comes with the operating system.
+  local os_path, font_file
+  local windir = os.getenv("WINDIR")
+  if windir and windir ~= "" then
+    os_path = windir .. pathsep .. "Fonts" .. pathsep .. "ARIALUNI.TTF"
+  elseif self.app.os == "macos" then
+    os_path = "/Library/Fonts/Arial Unicode.ttf"
+  else
+    os_path = "/usr/share/fonts/truetype/arphic/uming.ttc"
   end
-  font_file = font_file and io.open(font_file, "rb")
-  if font_file then
-    self.ttf_font_data = font_file:read"*a"
-    font_file:close()
+  if check(config_path) then font_file = config_path
+  elseif check(os_path) then
+    font_file = os_path
+    print("Configured unicode font not found, using " .. font_file .. " instead.")
+    print("This will be written to the config file.")
+  elseif config_path ~= nil then
+    print("Configured unicode font not found, no fallback available.")
+    return
+  end
+  local font = font_file and io.open(font_file, "rb")
+  if font then
+    self.ttf_font_data = font:read"*a"
+    font:close()
+    if self.ttf_font_data and self.app.config.unicode_font ~= font_file then
+      self.app.config.unicode_font = font_file
+      self.app:saveConfig()
+    end
   end
 end
 

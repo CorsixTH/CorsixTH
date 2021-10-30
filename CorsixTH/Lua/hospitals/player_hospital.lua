@@ -18,6 +18,10 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE. --]]
 
+corsixth.require("announcer")
+
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 class "PlayerHospital" (Hospital)
 
 ---@type PlayerHospital
@@ -41,16 +45,40 @@ function PlayerHospital:PlayerHospital(world, avail_rooms, name)
   }
 
   self.win_declined = false -- Has not yet declined the level win fax
+  self.announce_vip = 0 -- Number of spawned VIPs who need to be announced
 end
 
 --! Give advice to the player at the end of a day.
 function PlayerHospital:dailyAdviceChecks()
   local current_date = self.world:date()
   local day = current_date:dayOfMonth()
+  local current_month = current_date:monthOfYear()
 
   -- Hold any advice back until the game has somewhat started.
   if current_date < Date(1, 5) then
     return
+  end
+
+  -- Check for advice on money.
+  -- This must occur after monthly maintenance and salary costs
+  -- or it may give invalid advice
+  if day == 1 then
+    if not self.world.free_build_mode then
+      if self.balance < 2000 and self.balance >= -500 then
+        local cashlow_advice = {
+          _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
+          _A.warnings.cash_low_consider_loan,
+        }
+        self:giveAdvice(cashlow_advice)
+
+      elseif self.balance < -2000 and current_month > 8 then
+        -- TODO: Ideally this should be linked to the lose criteria for balance.
+        self:giveAdvice({_A.warnings.bankruptcy_imminent})
+
+      elseif self.balance > 6000 and self.loan > 0 then
+        self:giveAdvice({_A.warnings.pay_back_loan})
+      end
+    end
   end
 
   -- Warn about lack of a staff room.
@@ -201,24 +229,6 @@ function PlayerHospital:monthlyAdviceChecks()
     -- No other checks should happen in this month
     return
   end
-
-  -- Check for advice on money.
-  if not self.world.free_build_mode then
-    if self.balance < 2000 and self.balance >= -500 then
-      local cashlow_advice = {
-        _A.warnings.money_low, _A.warnings.money_very_low_take_loan,
-        _A.warnings.cash_low_consider_loan,
-      }
-      self:giveAdvice(cashlow_advice)
-
-    elseif self.balance < -2000 and current_month > 8 then
-      -- TODO: Ideally this should be linked to the lose criteria for balance.
-      self:giveAdvice({_A.warnings.bankruptcy_imminent})
-
-    elseif self.balance > 6000 and self.loan > 0 then
-      self:giveAdvice({_A.warnings.pay_back_loan})
-    end
-  end
 end
 
 --! Make players aware of the need for a receptionist and desk.
@@ -250,6 +260,16 @@ function PlayerHospital:checkReceptionAdvice(current_month, current_year)
   end
 end
 
+--! Give advice to the user about the need to buy the first reception desk.
+function PlayerHospital:msgNeedFirstReceptionDesk()
+  if self.adviser_data.reception_advice then return end
+
+  if self:countReceptionDesks() == 0 then
+    self.world.ui.adviser:say(_A.warnings.no_desk_4)
+    self.adviser_data.reception_advice = true
+  end
+end
+
 --! Give advice to the user about having bought a reception desk.
 function PlayerHospital:msgReceptionDesk()
   local num_receptionists = self:countStaffOfCategory("Receptionist", 1)
@@ -260,6 +280,31 @@ function PlayerHospital:msgReceptionDesk()
       not self.adviser_data.reception_advice and self.world:date():monthOfGame() > 3 then
     self:giveAdvice({_A.warnings.no_desk_5})
     self.adviser_data.reception_advice = true
+  end
+end
+
+--! Give advice about having more desks.
+function PlayerHospital:msgMultiReceptionDesks()
+  -- Compute total queue length at staffed receptions.
+  local num_desks = 0
+  local queue_total = 0
+  for _, desk in ipairs(self:findReceptionDesks()) do
+    num_desks = num_desks + 1
+    if desk.receptionist or desk.reserved_for then
+      queue_total = queue_total + #desk.queue
+    end
+  end
+
+  local receptionists = self:countStaffOfCategory("Receptionist")
+  if (receptionists > 1 and num_desks > 0) or (receptionists > 0 and num_desks > 1) then
+    local queue_avg = math.floor(queue_total / num_desks)
+    if receptionists < num_desks and queue_avg > 5 then
+      self.world.ui.adviser:say(_A.warnings.reception_bottleneck)
+    elseif queue_avg > 4 then
+      self.world.ui.adviser:say(_A.warnings.queue_too_long_at_reception)
+    elseif receptionists > num_desks then
+      self.world.ui.adviser:say(_A.warnings.another_desk)
+    end
   end
 end
 
@@ -391,11 +436,49 @@ function PlayerHospital:adviseBoilerBreakdown(broken_heat)
   end
 end
 
+--! Announces a machine needing repair
+--!param room The room of the machine
+function PlayerHospital:announceRepair(room)
+  local sound = room.room_info.handyman_call_sound
+  local earthquake = self.world.next_earthquake
+  self.world.ui:playAnnouncement("machwarn.wav", AnnouncementPriority.Critical)
+  -- If an earthquake is happening don't play the call sound to prevent spamming
+  if earthquake.active and earthquake.warning_timer == 0 then return end
+  if self:countStaffOfCategory("Handyman", 1) == 0 then return end
+  if sound then self.world.ui:playAnnouncement(sound, AnnouncementPriority.Critical) end
+end
+
+function PlayerHospital:onSpawnVIP()
+  self.announce_vip = self.announce_vip + 1
+end
+
 --! Called at the end of each day.
 function PlayerHospital:onEndDay()
   -- Advise the player.
   if self:hasStaffedDesk() then
     self:dailyAdviceChecks()
+  end
+
+  -- check if we still have to announce VIP visit
+  if self.announce_vip > 0 then
+    -- check if the VIP is in the building yet
+    for _, e in ipairs(self.world.entities) do
+      if e.humanoid_class == "VIP" and e.announced == false and
+          self:isInHospital(e.tile_x, e.tile_y) then
+        -- play VIP arrival sound and show tooltips
+        local ui = self.world.ui
+        -- there is also vip008 which announces a man from the ministry
+        ui:playRandomAnnouncement({ "vip001.wav", "vip002.wav", "vip003.wav",
+            "vip004.wav", "vip005.wav" }, AnnouncementPriority.High)
+        if self.num_vips < 1 then
+          ui.adviser:say(_A.information.initial_general_advice.first_VIP)
+        else
+          ui.adviser:say(_A.information.vip_arrived:format(e.name))
+        end
+        e.announced = true
+        self.announce_vip = self.announce_vip - 1
+      end
+    end
   end
 
   Hospital.onEndDay(self)
@@ -444,6 +527,26 @@ function PlayerHospital:advisePriceLevelImpact(judgment, name)
   self.world.ui.adviser:say(message)
 end
 
+--! Makes the raise request for a staff member
+--!param amount (num) the requested raise increase
+--!param staff (table) the staff member
+function PlayerHospital:makeRaiseRequest(amount, staff)
+  -- Show advice if it is the first time the player has experienced
+  -- a staff member requesting a raise.
+  -- Only show the help if the player is playing the campaign.
+  if not self.has_seen_pay_rise and tonumber(self.world.map.level_number) then
+    self.world.ui.adviser:say(_A.information.pay_rise)
+    self.has_seen_pay_rise = true
+  end
+  self.world.ui.bottom_panel:queueMessage("strike", amount, staff)
+end
+
+--! Announce to the player that a staff member is leaving the hospital
+--!param staff (table) The staff member
+function PlayerHospital:announceStaffLeave(staff)
+  self.world.ui:playRandomAnnouncement(staff.leave_sounds, staff.leave_priority)
+end
+
 function PlayerHospital:afterLoad(old, new)
   if old < 145 then
     self.hosp_cheats = Cheats(self)
@@ -465,6 +568,9 @@ function PlayerHospital:afterLoad(old, new)
   end
   if old < 149 then
     self.win_declined = false -- Has not yet declined the level win fax
+  end
+  if old < 159 then
+    self.adviser_data.reception_advice = self.adviser_data.reception_advice or self.receptionist_msg
   end
 
   Hospital.afterLoad(self, old, new)

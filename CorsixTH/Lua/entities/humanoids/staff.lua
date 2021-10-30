@@ -20,6 +20,8 @@ SOFTWARE. --]]
 
 corsixth.require("announcer")
 
+local AnnouncementPriority = _G["AnnouncementPriority"]
+
 --! A Doctor, Nurse, Receptionist, Handyman, or Surgeon
 class "Staff" (Humanoid)
 
@@ -31,6 +33,8 @@ function Staff:Staff(...)
   self:Humanoid(...)
   self.hover_cursor = TheApp.gfx:loadMainCursor("staff")
   self.parcelNr = 0
+  self.leave_sounds = {}
+  self.leave_priority = AnnouncementPriority.High
 end
 
 --! Handle daily adjustments to staff.
@@ -200,10 +204,6 @@ function Staff:checkIfWaitedTooLong()
   end
 end
 
-function Staff:leaveAnnounce()
-  return
-end
-
 function Staff:isTiring()
   local tiring = true
 
@@ -256,7 +256,7 @@ function Staff:fire()
   self.hospital:changeReputation("kicked")
   self:despawn()
   self.hover_cursor = nil
-  self:leaveAnnounce()
+  self.hospital:announceStaffLeave(self)
   -- Unregister any build callbacks or messages.
   self:unregisterCallbacks()
   -- Update the staff management window if it is open.
@@ -388,14 +388,19 @@ function Staff:checkIfNeedRest()
     if self.waiting_for_staffroom then
       self:changeAttribute("happiness", -0.001)
     end
+
     local room = self:getRoom()
-    if (self.staffroom_needed and ((room and not room:getPatient()) or not room)) or
+    -- Nurses can leave a ward with patients remaining in their beds,
+    -- nurses in other rooms and other staff must leave after all patients exit
+    local may_leave = room and (room.room_info.id == "ward" or not room:getPatient())
+    if (self.staffroom_needed and (may_leave or not room)) or
         (room and self.going_to_staffroom) then
       if self:getCurrentAction().name ~= "walk" and self:getCurrentAction().name ~= "queue" then
         self.staffroom_needed = nil
         self:goToStaffRoom()
       end
     end
+
     -- Abort if waiting for a staffroom to be built, waiting for the patient to leave,
     -- already going to staffroom or being picked up
     if self.waiting_for_staffroom or self.staffroom_needed or
@@ -470,15 +475,15 @@ function Staff:adviseWrongPersonForThisRoom()
   local required = (room.room_info.maximum_staff or room.room_info.required_staff)
   if required then
     if required.Nurse then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_nurses_in_room:format(room_name))
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_nurses_in_room:format(room_name) })
     elseif required.Surgeon then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_surgeons)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_surgeons })
     elseif required.Researcher then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_researchers)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_researchers })
     elseif required.Psychiatrist then
-      self.world.ui.adviser:say(_A.staff_place_advice.only_psychiatrists)
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_psychiatrists })
     else
-      self.world.ui.adviser:say(_A.staff_place_advice.only_doctors_in_room:format(room_name))
+      self.hospital:giveAdvice({ _A.staff_place_advice.only_doctors_in_room:format(room_name) })
     end
   end
 end
@@ -548,23 +553,19 @@ end
 
 -- Makes the staff member request a raise of 10%, or a wage exactly in the middle of their current and a fair one, whichever is more.
 function Staff:requestRaise()
-  -- Is this the first time a member of staff is requesting a raise?
-  -- Only show the help if the player is playing the campaign though
-  if self.hospital and not self.hospital.has_seen_pay_rise and tonumber(self.world.map.level_number) then
-    self.world.ui.adviser:say(_A.information.pay_rise)
-    self.hospital.has_seen_pay_rise = true
-  end
+  assert(self.hospital, "A staff member asked for a pay rise who doesn't belong to a hospital!")
   -- Check whether there is already a request for raise.
   if not self:isMoodActive("pay_rise") then
     local amount = math.floor(math.max(self.profile.wage * 1.1, (self.profile:getFairWage() + self.profile.wage) / 2) - self.profile.wage)
     -- At least for now, staff are timid, and only ask for raises 1/5th of the time
     if math.random(1, 5) ~= 1 or amount <= 0 then
       self.timer_until_raise = nil
-      return
+      return -- too timid
     end
+    -- The staff member can now successfully ask for a raise
+    self.hospital:makeRaiseRequest(amount, self)
     self.quitting_in = 25*30 -- Time until the staff members quits anyway
     self:setMood("pay_rise", "activate")
-    self.world.ui.bottom_panel:queueMessage("strike", amount, self)
   end
 end
 

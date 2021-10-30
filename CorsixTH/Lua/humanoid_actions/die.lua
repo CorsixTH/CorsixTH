@@ -267,8 +267,6 @@ local function action_die_start(action, humanoid)
   local anims = humanoid.die_anims
   assert(anims, "Error: no death animation for humanoid ".. humanoid.humanoid_class)
   action.must_happen = true
-  -- TODO: Right now the angel version of death is the only possibility
-  -- The Grim Reaper should sometimes also have a go.
   local fall = anims.fall_east
 
   --If this isn't done their bald head will become bloated instead of suddenly having hair:

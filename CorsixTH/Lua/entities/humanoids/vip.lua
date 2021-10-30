@@ -53,10 +53,8 @@ If rating exceeds values, it will be capped as necessary
 --]]
 
 --[[ initialisation --]]
-corsixth.require("announcer")
 corsixth.require("utility")
 
-local AnnouncementPriority = _G["AnnouncementPriority"]
 
 --! A `Vip` who is in the hospital to evaluate the hospital and produce a report
 class "Vip" (Humanoid)
@@ -240,7 +238,7 @@ function Vip:onDestroy()
     self.last_hospital.pleased_vips_ty = self.last_hospital.pleased_vips_ty + 1
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       {text = _S.fax.vip_visit_result.rep_boost},
       {text = _S.fax.vip_visit_result.cash_grant:format(self.cash_reward)},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
@@ -250,14 +248,14 @@ function Vip:onDestroy()
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
   else
     self.last_hospital:unconditionalChangeReputation(self.rep_reward)
     message = {
       {text = _S.fax.vip_visit_result.vip_remarked_name:format(self.name)},
-      {text = _S.fax.vip_visit_result.ordered_remarks[self.vip_message]},
+      {text = _S.fax.vip_visit_result.remarks[self.vip_message]},
       {text = _S.fax.vip_visit_result.rep_loss},
       choices = {{text = _S.fax.vip_visit_result.close_text, choice = "close"}}
     }
@@ -267,18 +265,6 @@ function Vip:onDestroy()
   self.world:nextVip()
 
   return Humanoid.onDestroy(self)
-end
-
-function Vip:announce()
-  local announcements = {
-    "vip001.wav", "vip002.wav", "vip003.wav", "vip004.wav", "vip005.wav",
-  }   -- there is also vip008 which announces a man from the ministry
-  self.world.ui:playAnnouncement(announcements[math.random(1, #announcements)], AnnouncementPriority.High)
-  if self.hospital.num_vips < 1 then
-    self.world.ui.adviser:say(_A.information.initial_general_advice.first_VIP)
-  else
-    self.world.ui.adviser:say(_A.information.vip_arrived:format(self.name))
-  end
 end
 
 function Vip:setVIPRating()

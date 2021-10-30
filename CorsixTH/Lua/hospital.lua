@@ -56,7 +56,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   -- Initial value: hospital tile count * tile value + 20000
   self.value = world.map:getParcelPrice(self:getPlayerIndex()) + 20000
 
-  -- TODO: With the fame/shame screen and scoring comes salary.
   self.player_salary = 10000
   self.salary_offer = 0
 
@@ -116,7 +115,6 @@ function Hospital:Hospital(world, avail_rooms, name)
   self.num_cured = 0
   self.not_cured = 0
   self.num_explosions = 0
-  self.announce_vip = 0
   self.vip_declined = 0
   self.num_vips = 0 -- used to check if it's the user's first vip
   self.percentage_cured = 0
@@ -645,6 +643,9 @@ function Hospital:afterLoad(old, new)
   if old < 155 then
     self.overdraft_interest_rate = self.interest_rate + 0.02
   end
+  if old < 159 then
+    self.receptionist_msg = nil
+  end
 
   -- Update other objects in the hospital (added in version 106).
   if self.epidemic then self.epidemic.afterLoad(old, new) end
@@ -905,21 +906,6 @@ function Hospital:onEndDay()
     end
   end
 
-  -- check if we still have to announce VIP visit
-  if self.announce_vip > 0 then
-    -- check if the VIP is in the building yet
-    for _, e in ipairs(self.world.entities) do
-      if e.humanoid_class == "VIP" and e.announced == false then
-        if self:isInHospital(e.tile_x, e.tile_y) and self:isPlayerHospital() then
-          -- play VIP arrival sound and show tooltips
-          e:announce()
-          e.announced = true
-          self.announce_vip = self.announce_vip - 1
-        end
-      end
-    end
-  end
-
   self:_fixBoiler() -- Boiler always needs work (especially if broken).
 
   -- Do we have a disaster?
@@ -1060,9 +1046,8 @@ function Hospital:onEndYear()
   self:unconditionalChangeReputation(0) -- Reset self.has_impressive_reputation
 
   -- On third year of level 3 there is the large increase to salary
-  -- this will replicate that. I have still to check other levels above 5 to
+  -- this will replicate that. TODO: check other levels above 5 to
   -- see if there are other large increases.
-  -- TODO Hall of fame and shame
   if self.world:date():year() == 3 and self.world.map.level_number == 3 then
     -- adds the extra to salary in level 3 year 3
     self.player_salary = self.player_salary + math.random(8000,20000)
@@ -1727,8 +1712,18 @@ function Hospital:objectPlaced(entity, id)
   end
 end
 
+--! Give advice to the user about the need to buy the first reception desk.
+function Hospital:msgNeedFirstReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
 --! Give advice to the user about having bought a reception desk.
 function Hospital:msgReceptionDesk()
+  -- Nothing to do, override in a sub-class.
+end
+
+--! Give advice about having more desks.
+function Hospital:msgMultiReceptionDesks()
   -- Nothing to do, override in a sub-class.
 end
 
@@ -2422,6 +2417,26 @@ function Hospital:getRandomBusyRoom()
   if #chosen_room.door.queue >= busy_threshold then return chosen_room end
 end
 
+function Hospital:giveAdvice()
+  -- Nothing to do, override in a derived class.
+end
+
 function Hospital:adviseDiscoverDisease()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:makeRaiseRequest()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:announceRepair()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:onSpawnVIP()
+  -- Nothing to do, override in a derived class.
+end
+
+function Hospital:announceStaffLeave()
   -- Nothing to do, override in a derived class.
 end

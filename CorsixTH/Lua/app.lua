@@ -114,7 +114,6 @@ function App:init()
   corsixth.require("filesystem")
   local good_install_folder, error_message = self:checkInstallFolder()
   self.good_install_folder = good_install_folder
-  -- self:checkLanguageFile()
   self.level_dir = debug.getinfo(1, "S").source:sub(2, -12) .. "Levels" .. pathsep
   self:initUserLevelDir()
   self:initSavegameDir()
@@ -146,9 +145,6 @@ function App:init()
   end
 
   local modes = {}
-  if compile_opts.renderer == "OpenGL" then
-    modes[#modes + 1] = "opengl"
-  end
   self.fullscreen = false
   if self.config.fullscreen then
     self.fullscreen = true
@@ -166,18 +162,7 @@ function App:init()
   SDL.wm.setIconWin32()
 
   self:setCaptureMouse()
-
-  local caption_descs = {self.video:getRendererDetails()}
-  if compile_opts.jit then
-    caption_descs[#caption_descs + 1] = compile_opts.jit
-  else
-    caption_descs[#caption_descs + 1] = _VERSION
-  end
-  if compile_opts.arch_64 then
-    caption_descs[#caption_descs + 1] = "64 bit"
-  end
-  self.caption = "CorsixTH (" .. table.concat(caption_descs, ", ") .. ")"
-  self.video:setCaption(self.caption)
+  self.caption = "CorsixTH"
 
   -- Prereq 2: Load and initialise the graphics subsystem
   corsixth.require("persistance")
@@ -1523,7 +1508,7 @@ end
 
 -- Omit the usual file extension so this file cannot be seen from the normal load and save screen and cannot be overwritten
 function App:quickSave()
-  local filename = "quicksave"
+  local filename = "quicksave.qs"
   return SaveGameFile(self.savegame_dir .. filename)
 end
 
@@ -1535,9 +1520,9 @@ function App:load(filepath)
 end
 
 function App:quickLoad()
-  local filename = "quicksave"
+  local filename = "quicksave.qs"
   if lfs.attributes(self.savegame_dir .. filename) then
-    self:load(filename)
+    self:load(self.savegame_dir .. filename)
   else
     self:quickSave()
     self.ui:addWindow(UIInformation(self.ui, {_S.errors.load_quick_save}))
@@ -1665,7 +1650,7 @@ function App:checkForUpdates()
 
   -- Default language to use for the changelog if no localised version is available
   local default_language = "en"
-  local update_url = 'https://corsixth.github.io/CorsixTH/check-for-updates'
+  local update_url = 'https://corsixth.com/CorsixTH/check-for-updates'
   local current_version = self:getVersion()
 
   -- Only URLs that match this list of trusted domains will be accepted.
@@ -1748,6 +1733,21 @@ end
 
 function App:isAudioEnabled()
   return TH.GetCompileOptions().audio
+end
+
+function App:getSystemInfo()
+  local compile_opts = TH.GetCompileOptions()
+  local comp_details = {}
+  for key, value in pairs(compile_opts) do
+    table.insert(comp_details, key .. ": " .. tostring(value))
+  end
+  table.sort(comp_details)
+  local compiled = string.format("Compiled with %s\nSDL renderer: %s\n",
+      table.concat(comp_details, ", "), self.video:getRendererDetails())
+  local running = string.format("%s run with api version: %s, game version: %s, savegame version: %s\n",
+      compile_opts.jit or _VERSION, tostring(corsixth.require("api_version")),
+      self:getVersion(), tostring(SAVEGAME_VERSION))
+  return(compiled .. running)
 end
 
 -- Do not remove, for savegame compatibility < r1891

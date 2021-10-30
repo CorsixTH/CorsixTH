@@ -99,24 +99,29 @@ function UIMachine:callHandyman()
   end
 end
 
+--! Function checks we can afford a new machine
+--! Then offers player to purchase
 function UIMachine:replaceMachine()
+  -- Maybe TODO: Prevent purchase of a machine of same strength?
   local machine = self.machine
   local hosp = self.ui.hospital
   local cost = hosp.research.research_progress[machine.object_type].cost
-  if self.ui.hospital.balance < cost then
+  if hosp.balance < cost then
     -- give visual warning that player doesn't have enough $ to buy
     self.ui.adviser:say(_A.warnings.cannot_afford_2, false, true)
     self.ui:playSound("wrong2.wav")
     return
   end
-  self.ui:addWindow(UIConfirmDialog(self.ui, false,
-    _S.confirmation.replace_machine:format(machine.object_type.name, cost),
-    --[[persistable:replace_machine_confirm_dialog]]function()
-      -- Charge for new machine
-      hosp:spendMoney(cost, _S.transactions.machine_replacement)
 
-      -- Tell the machine to pretend it's a shiny new one
-      machine:machineReplaced()
+  local prompt = _S.confirmation.replace_machine:format(machine.object_type.name, cost)
+  if self.ui.app.config.new_machine_extra_info then
+    local new_strength = hosp.research.research_progress[machine.object_type].start_strength
+    local current_strength = machine.strength
+    prompt = (_S.confirmation.replace_machine_extra_info):format(new_strength, current_strength) .. "//" .. prompt
+  end
+
+  self.ui:addWindow(UIConfirmDialog(self.ui, true, prompt,
+    --[[persistable:replace_machine_confirm_dialog]]function() machine:replaceMachine(cost)
     end
   ))
 end

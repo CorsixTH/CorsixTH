@@ -27,6 +27,7 @@ SOFTWARE.
 
 #include <SDL.h>
 
+#include <memory>
 #include <stdexcept>
 
 #include "persist_lua.h"
@@ -319,6 +320,11 @@ class render_target {
   // to the other rendering engines.
 
  public:  // Internal (this rendering engine only) API
+  class scoped_buffer {
+   public:
+    virtual ~scoped_buffer() = default;
+  };
+
   SDL_Renderer* get_renderer() const { return renderer; }
 
   //! Should bitmaps be scaled?
@@ -340,26 +346,28 @@ class render_target {
   void draw_line(line_sequence* pLine, int iX, int iY);
 
   //! Begin drawing to an intermediate unscaled texture targeting the given
-  //! location and size. Any drawing outside of this rectangle may be cropped.
-  //! Call finish_intermediate_drawing once all draw calls are complete.
+  //! location and size. The intermediate drawing will be committed once
+  //! the returned scoped_buffer is destroyed.
   /*!
       @param iX X-coordinate of left side of drawing rectangle.
       @param iY Y-coordinate of top side of drawing rectangle.
       @param iWidth Width of drawing rectangle.
       @param iHeight Height of drawing rectangle.
    */
-  void begin_intermediate_drawing(int iX, int iY, int iWidth, int iHeight);
-
-  //! Copies the intermediate drawing which was started with a call to
-  //! begin_intermediate_drawing to the screen at the current scale factor.
-  void finish_intermediate_drawing();
+  std::unique_ptr<scoped_buffer> begin_intermediate_drawing(int iX, int iY,
+                                                            int iWidth,
+                                                            int iHeight);
 
  private:
+  class scoped_target_texture;
+  friend class scoped_target_texture;
+
+  double draw_scale() const;
+
   SDL_Window* window;
   SDL_Renderer* renderer;
-  SDL_Texture* zoom_texture;
-  SDL_Texture* intermediate_texture;
-  SDL_Rect intermediate_texture_location;
+  scoped_target_texture* current_target = nullptr;
+  std::unique_ptr<scoped_target_texture> zoom_buffer;
   SDL_PixelFormat* pixel_format;
   bool blue_filter_active;
   cursor* game_cursor;
@@ -377,10 +385,6 @@ class render_target {
   // see: https://bugzilla.libsdl.org/show_bug.cgi?id=2700
   bool apply_opengl_clip_fix;
   bool direct_zoom;
-
-  bool init_buffer(SDL_Texture** texture, int iWidth, int iHeight);
-  void flush_buffer(SDL_Texture** texture, SDL_Texture* target = nullptr,
-                    const SDL_Rect* dstRect = nullptr);
 };
 
 //! Stored image.
@@ -545,6 +549,8 @@ class sprite_sheet {
       @param iX X position to draw the sprite.
       @param iY Y position to draw the sprite.
       @param iFlags Flags to apply for drawing.
+      @param effect_ticks The number of ticks into the effect animation.
+      @param effect The animation effect to apply to the sprite.
   */
   void draw_sprite(render_target* pCanvas, size_t iSprite, int iX, int iY,
                    uint32_t iFlags, size_t effect_ticks = 0u,

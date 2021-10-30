@@ -525,16 +525,16 @@ hotkey_window = {
   button_cancel = "Cancel",
   button_back = "Back",
   button_toggleKeys = "Toggle Keys",
+  button_gameSpeedKeys = "Game Speed Keys",
   button_recallPosKeys = "Recall Position Keys",
   panel_globalKeys = "Global Keys",
   panel_generalInGameKeys = "General In-Game Keys",
   panel_scrollKeys = "Scroll Keys",
   panel_zoomKeys = "Zoom Keys",
   panel_gameSpeedKeys = "Game Speed Keys",
-  panel_miscInGameKeys = "Misc. In-Game Keys",
   panel_toggleKeys = "Toggle Keys",
   panel_debugKeys = "Debug Keys",
-  panel_storePosKey = "Store Position Keys",
+  panel_storePosKeys = "Store Position Keys",
   panel_recallPosKeys = "Recall Position Keys",
   panel_altPanelKeys = "Alternate Panel Keys",
   global_confirm = "Confirm",
@@ -632,6 +632,7 @@ tooltip.hotkey_window = {
   button_defaults = "Reset all hotkeys to the program's defaults",
   button_cancel = "Cancel the assignment and go back to the options menu",
   caption_panels = "Open window to assign panel keys",
+  button_gameSpeedKeys = "Open window to set keys to control game speed",
   button_recallPosKeys = "Open window to set keys to store and recall camera positions",
   button_back_02 = "Go back to the main hotkey window. Hotkeys changed in this window can be accepted there",
 }
@@ -713,6 +714,7 @@ confirmation = {
   abort_edit_room = "You are currently building or editing a room. If all required objects are placed it will be finished, but otherwise it will be deleted. Continue?",
   maximum_screen_size = "The screen size you have entered is greater than 3000 x 2000. Larger resolutions are possible but will require better hardware in order to maintain a playable frame rate. Are you sure you want to continue?",
   remove_destroyed_room = "Would you like to remove the room for $%d?",
+  replace_machine_extra_info = "The new machine will have %d strength (currently %d).",
 }
 
 information = {
@@ -756,6 +758,7 @@ totd_window = {
     "Patients will get thirsty while waiting in your hospital, even more so if you turn up the heating! Place vending machines in strategic positions for some extra income.",
     "You can abort the diagnosis progress for a patient prematurely and guess the cure, if you already encountered the disease. Beware that this may increase the risk of a wrong cure, resulting in death for the patient.",
     "Emergencies can be a good source for some extra cash, provided that you have enough capacities to handle the emergency patients in time.",
+    "Did you know you can assign Handymen to specific plots? Just click the All Plots text in their staff profile to cycle through them!",
   },
   previous = "Previous Tip",
   next = "Next Tip",
@@ -886,28 +889,6 @@ map_editor_window = {
     heliport_3 = "Heliport 3",
     heliport_4 = "Heliport 4",
     paste = "Paste area",
-  }
-}
-
-fax = {
-vip_visit_result = {
-  ordered_remarks = {
-    [1] = "What a storming hospital. When I'm next seriously ill, take me there.",
-    [2] = "Now that's what I call a hospital.",
-    [3] = "That's a super hospital. And I should know; I've been in a few.",
-    [4] = "What a well-run hospital. Thanks for inviting me to it.",
-    [5] = "Hmm. Not a bad medical establishment, certainly.",
-    [6] = "I did enjoy your charming hospital. Now, anyone fancy a curry at the Taj?",
-    [7] = "Well, I've seen worse. But you should make some improvements.",
-    [8] = "Oh dear. Not a nice place to go if you're feeling peaky.",
-    [9] = "It's a standard hospital, to be honest. Frankly, I expected more.",
-    [10] = "Why did I bother? It was worse than going to see a four-hour opera!",
-    [11] = "I'm disgusted by what I saw. Call that a hospital? Pig-sty, more like!",
-    [12] = "I'm fed up of being in the public spotlight and visiting smelly holes like this! I resign.",
-    [13] = "What a dump. I'm going to try and get it closed down.",
-    [14] = "I have never seen such a dreadful hospital. What a disgrace!",
-    [15] = "I'm shocked. You can't call that a hospital! I'm off for a pint.",
-    }
   }
 }
 

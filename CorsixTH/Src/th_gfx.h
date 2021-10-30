@@ -338,7 +338,9 @@ class animation_manager {
       @param iX The screen position to use as the animation X origin.
       @param iY The screen position to use as the animation Y origin.
       @param iFlags Zero or more THDrawFlags flags.
-      @param effect The animation effect to apply.
+      @param patient_effect The animation effect to apply to the patient.
+      @param patient_effect_offset The number of ticks to offset the effect
+          animation by.
   */
   void draw_frame(render_target* pCanvas, size_t iFrame,
                   const ::layers& oLayers, int iX, int iY, uint32_t iFlags,

@@ -14,18 +14,21 @@ if(MSVC)
   add_definitions(-D_CRT_SECURE_NO_WARNINGS)
 endif()
 
+set(CORSIX_TH_SEARCH_LOCAL_DATADIRS ${SEARCH_LOCAL_DATADIRS})
+
+set(CORSIX_TH_INTERPRETER_NAME CorsixTH.lua)
 if(USE_SOURCE_DATADIRS)
   set(CORSIX_TH_DATADIR ${CMAKE_CURRENT_SOURCE_DIR})
-  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/CorsixTH.lua)
+  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_DATADIR}/${CORSIX_TH_INTERPRETER_NAME})
 elseif(MSVC)
   set(CORSIX_TH_DATADIR CorsixTH)
-  set(CORSIX_TH_INTERPRETER_PATH CorsixTH.lua)
+  set(CORSIX_TH_INTERPRETER_PATH ${CORSIX_TH_INTERPRETER_NAME})
 elseif(APPLE)
   set(CORSIX_TH_DATADIR CorsixTH.app/Contents/Resources/)
-  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/CorsixTH.lua)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_PREFIX}/${CORSIX_TH_DATADIR}/${CORSIX_TH_INTERPRETER_NAME})
 else()
   set(CORSIX_TH_DATADIR ${CMAKE_INSTALL_DATADIR}/corsix-th)
-  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/CorsixTH.lua)
+  set(CORSIX_TH_INTERPRETER_PATH ${CMAKE_INSTALL_FULL_DATADIR}/corsix-th/${CORSIX_TH_INTERPRETER_NAME})
 endif()
 
 # Declaration of the executable
@@ -57,6 +60,13 @@ else()
   set(CORSIX_TH_OS "unix")
 endif()
 
+# Report system architecture in compile_opts.arch
+if(MSVC)
+  set(CORSIX_TH_ARCH ${CMAKE_CXX_COMPILER_ARCHITECTURE_ID})
+else()
+  set(CORSIX_TH_ARCH ${CMAKE_SYSTEM_PROCESSOR})
+endif()
+
 # Ensure config.h is picked up by cmake - moving this into subdir cmake files will
 # prevent it applying to the CorsixTH project
 set(CorsixTH_generated_src_dir ${CMAKE_BINARY_DIR}/CorsixTH/Src/)
@@ -65,6 +75,9 @@ add_library(CorsixTH_lib STATIC ${CorsixTH_generated_src_dir})
 target_include_directories(CorsixTH_lib PUBLIC ${CorsixTH_generated_src_dir})
 
 target_link_libraries(CorsixTH_lib RncLib)
+if(SEARCH_LOCAL_DATADIRS)
+  target_link_libraries(CorsixTH_lib WhereamiLib)
+endif()
 target_link_libraries(CorsixTH CorsixTH_lib)
 
 if(UNIX AND NOT APPLE)
@@ -284,3 +297,6 @@ if(NOT USE_SOURCE_DATADIRS)
     endif()
   endif()
 endif()
+
+add_custom_target(windowsconfig ${LUA_PROGRAM_PATH} ${CMAKE_SOURCE_DIR}/scripts/generate_windows_config.lua
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
