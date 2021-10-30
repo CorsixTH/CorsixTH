@@ -1,8 +1,5 @@
 ![](https://i.imgur.com/fYp148T.jpg)
 
-#### Important! ####
-On 2021-06-15 freenode removed the corsix-th channel on IRC causing migration off the network. We have added a matrix space bridged to the existing discord server. If you would like us to register on another IRC server, **please open a new issue**.
-
 ### Latest Release [![Release](https://img.shields.io/github/release/CorsixTH/CorsixTH.svg?colorB=green)](https://github.com/CorsixTH/CorsixTH/releases) [![Linux and Tests](https://github.com/CorsixTH/CorsixTH/workflows/Linux%20and%20Tests/badge.svg)](https://github.com/CorsixTH/CorsixTH/actions?query=workflow%3A%22Linux+%26+Tests%22) [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/CorsixTH/CorsixTH?branch=master&svg=true)](https://ci.appveyor.com/project/TheCycoONE/corsixth)
 
 ##### [Matrix Chat](https://matrix.to/#/#corsixth-general:matrix.org) | [Report Issue](https://github.com/CorsixTH/CorsixTH/issues/new) | [Reddit](https://www.reddit.com/r/corsixth) | [Discord](https://discord.gg/Mxeztvh)
