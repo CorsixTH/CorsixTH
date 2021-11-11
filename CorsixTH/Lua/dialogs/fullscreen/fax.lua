@@ -263,18 +263,11 @@ function UIFax:validate()
     -- not that critical, but we want to make to make sure it's played fairly soon
     self.ui:playAnnouncement("rand*.wav", AnnouncementPriority.Critical)
   elseif 27868.3 < x and x < 27868.4 then
-    -- Roujin's challenge cheat
-    local hosp = self.ui.hospital
-    if not hosp.spawn_rate_cheat then
-      self.ui.adviser:say(_A.cheats.roujin_on_cheat)
-      hosp.spawn_rate_cheat = true
-      self:cheatByFax()
-    else
-      self.ui.adviser:say(_A.cheats.roujin_off_cheat)
-      -- Clear the current month's spawns to give the player a break
-      self.ui.app.world.spawn_dates = {}
-      hosp.spawn_rate_cheat = nil
-    end
+    local cheat = self.ui.hospital.hosp_cheats
+    cheat:cheatRoujin()
+  elseif 185.5 < x and x < 185.6 then
+    local cheat = self.ui.hospital.hosp_cheats
+    cheat:cheatNoRest()
   else
     -- no valid cheat entered
     self.ui:playSound("fax_no.wav")
@@ -283,16 +276,6 @@ function UIFax:validate()
   self.ui:playSound("fax_yes.wav")
 
   -- TODO: Other cheats (preferably with slight obfuscation, as above)
-end
-
-function UIFax:cheatByFax()
-  local cheatWindow = self.ui:getWindow(UICheats)
-  local cheat = self.ui.hospital.hosp_cheats
-  cheat:announceCheat()
-  -- If a cheats window is open, make sure the UI is updated
-  if cheatWindow then
-    cheatWindow:updateCheatedStatus()
-  end
 end
 
 function UIFax:appendNumber(number)
