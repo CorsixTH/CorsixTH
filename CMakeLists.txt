@@ -132,6 +132,7 @@ add_subdirectory("libs")
 if(BUILD_CORSIXTH)
   message("Building CorsixTH")
   add_subdirectory(CorsixTH)
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CorsixTH)
 endif()
 
 if(BUILD_ANIMVIEW)

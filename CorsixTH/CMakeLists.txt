@@ -298,5 +298,7 @@ if(NOT USE_SOURCE_DATADIRS)
   endif()
 endif()
 
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT CorsixTH)
+
 add_custom_target(windowsconfig ${LUA_PROGRAM_PATH} ${CMAKE_SOURCE_DIR}/scripts/generate_windows_config.lua
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
