@@ -171,7 +171,7 @@ function Cheats:cheatDecreasePrices()
 end
 
 --! Cheat fax function
-function Cheats:cheatByFax()
+function Cheats:cheatUsingFaxMachine()
   local cheatWindow = self.hospital.world.ui:getWindow(UICheats)
   self:announceCheat()
   -- If a cheats window is open, make sure the UI is updated
@@ -184,17 +184,17 @@ end
 --! Cheat that disables/enables Roujin's challenge (spawn rate cheat)
 function Cheats:cheatRoujin()
   -- Roujin's challenge cheat
-  local hosp = self.hopsital
+  local hosp = self.hospital
   local ui = hosp.world.ui
-  if not hosp.spawn_rate_cheat then
+  if not hosp.active_cheats.spawn_rate_cheat then
     ui.adviser:say(_A.cheats.roujin_on_cheat)
-    hosp.spawn_rate_cheat = true
-    self:cheatByFax()
+    hosp.active_cheats.spawn_rate_cheat = true
+    self:cheatUsingFaxMachine()
   else
     ui.adviser:say(_A.cheats.roujin_off_cheat)
     -- Clear the current month's spawns to give the player a break
     hosp.world.spawn_dates = {}
-    hosp.spawn_rate_cheat = nil
+    hosp.active_cheats.spawn_rate_cheat = nil
   end
 end
 
@@ -202,17 +202,17 @@ end
 function Cheats:cheatNoRest()
   local hosp = self.hospital
   local ui = hosp.world.ui
-  if not hosp.no_rest_cheat then
+  if not hosp.active_cheats.no_rest_cheat then
     for _, staff in ipairs(self.hospital.staff) do
       if staff.attributes["fatigue"] then
         staff:wake(staff.attributes["fatigue"])
       end
     end
     ui.adviser:say(_A.cheats.norest_on_cheat)
-    hosp.no_rest_cheat = true
-    self:cheatByFax()
+    hosp.active_cheats.no_rest_cheat = true
+    self:cheatUsingFaxMachine()
   else
     ui.adviser:say(_A.cheats.norest_off_cheat)
-    hosp.no_rest_cheat = nil
+    hosp.active_cheats.no_rest_cheat = nil
   end
 end
