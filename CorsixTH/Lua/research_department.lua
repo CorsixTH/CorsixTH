@@ -478,6 +478,15 @@ function ResearchDepartment:improveMachine(machine)
     research_info.start_strength = research_info.start_strength
       + improve_rate
     research_info.strength_imp = research_info.strength_imp + 1
+    -- Update dynamic info for any machines that now have improved strength.
+    for _, room in ipairs(self.world.rooms) do
+      for obj, no in pairs(room.objects) do
+        if(obj.object_type.id == machine.id) then
+          obj:updateDynamicInfo(false)
+          break
+        end
+      end
+    end
   end
   -- Tell the player that something has been improved
   if self.hospital:isPlayerHospital() then
