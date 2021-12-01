@@ -480,7 +480,7 @@ function ResearchDepartment:improveMachine(machine)
     research_info.strength_imp = research_info.strength_imp + 1
   end
   
-  -- Update dyanic info for replacement machine strength.
+  -- Update dynamic info for replacement machine strength.
   for _, room in ipairs(self.world.rooms) do
     for obj, no in pairs(room.objects) do
       if(obj.object_type.id == machine.id) then
