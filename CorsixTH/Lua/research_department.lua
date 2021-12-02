@@ -478,7 +478,7 @@ function ResearchDepartment:improveMachine(machine)
     research_info.start_strength = research_info.start_strength
       + improve_rate
     research_info.strength_imp = research_info.strength_imp + 1
-    if self.ui.app.config.new_machine_extra_info then
+    if self.world.ui.app.config.new_machine_extra_info then
       -- Update dynamic info for any machines that now have improved strength.
       for _, room in ipairs(self.world.rooms) do
         for obj in pairs(room.objects) do
