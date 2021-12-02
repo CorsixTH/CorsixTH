@@ -482,7 +482,7 @@ function ResearchDepartment:improveMachine(machine)
       -- Update dynamic info for any machines that now have improved strength.
       for _, room in ipairs(self.world.rooms) do
         for obj in pairs(room.objects) do
-          if(obj.object_type.id == machine.id) then
+          if obj.object_type.id == machine.id then
             obj:updateDynamicInfo(true)
             break
           end
