@@ -482,7 +482,7 @@ function ResearchDepartment:improveMachine(machine)
     for _, room in ipairs(self.world.rooms) do
       for obj in pairs(room.objects) do
         if(obj.object_type.id == machine.id) then
-          obj:updateDynamicInfo(false)
+          obj:updateDynamicInfo(true)
           break
         end
       end
