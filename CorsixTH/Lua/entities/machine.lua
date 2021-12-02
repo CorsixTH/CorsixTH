@@ -359,7 +359,8 @@ function Machine:updateDynamicInfo(only_update)
     local strengthText
     if self.world.ui.app.config.new_machine_extra_info then
       local hosp = self.world:getLocalPlayerHospital()
-      strengthText = _S.dynamic_info.object.strength:format(self.strength, hosp.research.research_progress[self.object_type].start_strength)
+      strengthText = _S.dynamic_info.object.strength_extra_info:format(self.strength,
+                       hosp.research.research_progress[self.object_type].start_strength)
     else
       strengthText = _S.dynamic_info.object.strength:format(self.strength)
     end
