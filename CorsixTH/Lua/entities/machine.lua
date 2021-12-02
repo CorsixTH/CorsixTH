@@ -356,20 +356,20 @@ function Machine:updateDynamicInfo(only_update)
     self.total_usage = self.total_usage + 1
   end
   if self.strength then
-    local strengthText = ""
     if self.world.ui.app.config.new_machine_extra_info then
       local hosp = self.world:getLocalPlayerHospital()
-      strengthText = _S.dynamic_info.object.strength_extra_info:format(self.strength,
-                       hosp.research.research_progress[self.object_type].start_strength)
+      self:setDynamicInfo("text", {
+        self.object_type.name,
+        _S.dynamic_info.object.strength_extra_info:format(self.strength, hosp.research.research_progress[self.object_type].start_strength),
+        _S.dynamic_info.object.times_used:format(self.times_used),
+      })
     else
-      strengthText = _S.dynamic_info.object.strength:format(self.strength)
+      self:setDynamicInfo("text", {
+        self.object_type.name,
+        _S.dynamic_info.object.strength:format(self.strength),
+        _S.dynamic_info.object.times_used:format(self.times_used),
+      })
     end
-    self:setDynamicInfo("text", {
-      self.object_type.name,
-      _S.dynamic_info.object.strength:format(self.strength, hosp.research.research_progress[self.object_type].start_strength),
-      _S.dynamic_info.object.times_used:format(self.times_used),
-    })
-  end
 end
 
 function Machine:onClick(ui, button)
