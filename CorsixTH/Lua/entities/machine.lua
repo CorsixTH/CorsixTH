@@ -356,10 +356,10 @@ function Machine:updateDynamicInfo(only_update)
     self.total_usage = self.total_usage + 1
   end
   if self.strength then
+    local hosp = self.world:getLocalPlayerHospital()
     self:setDynamicInfo("text", {
       self.object_type.name,
-      -- _S.dynamic_info.object.strength:format(self.strength),
-      _S.dynamic_info.object.strength:format(self.strength, self.world.ui.hospital.research.research_progress[self.object_type].start_strength),
+      _S.dynamic_info.object.strength:format(self.strength, hosp.research.research_progress[self.object_type].start_strength),
       _S.dynamic_info.object.times_used:format(self.times_used),
     })
   end
