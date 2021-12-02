@@ -370,6 +370,7 @@ function Machine:updateDynamicInfo(only_update)
         _S.dynamic_info.object.times_used:format(self.times_used),
       })
     end
+  end
 end
 
 function Machine:onClick(ui, button)
