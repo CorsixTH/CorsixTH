@@ -181,17 +181,9 @@ function UICasebook:updateIcons()
       research = research and (_S.tooltip.casebook.cure_requirement.research_machine .. research .. "). ") or ""
       build    = build    and (_S.tooltip.casebook.cure_requirement.build_room .. build .. "). ") or ""
 
-      local staffclass_to_string = {
-        Nurse        = _S.staff_title.nurse,
-        Doctor       = _S.staff_title.doctor,
-        Surgeon      = _S.staff_title.surgeon,
-        Psychiatrist = _S.staff_title.psychiatrist,
-        Researcher   = _S.staff_title.researcher,
-      }
-
       -- Staff requirements
       for sclass, amount in pairs(req.staff) do
-        staff = (staff and (staff .. ", ") or " (") .. staffclass_to_string[sclass] .. ": " .. amount
+        staff = (staff and (staff .. ", ") or " (") .. StaffProfile.translateStaffClass(sclass) .. ": " .. amount
       end
       staff = staff and (_S.tooltip.casebook.cure_requirement.hire_staff .. staff .. "). ") or ""
 
