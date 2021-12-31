@@ -460,69 +460,18 @@ function Humanoid:getCurrentMood()
   end
 end
 
+--! Start the next (always first) action in the queue.
 function Humanoid:startAction()
   local action = self.action_queue[1]
 
   -- Handle an empty action queue in some way instead of crashing.
   if not action then
-    -- if this is a patient that is going home, an empty
-    -- action queue is not a problem
-    if class.is(self, Patient) and self.going_home then
-      return
-    end
+    self:handleEmptyActionQueue() -- Inserts an action into the action queue.
 
-    ---- Empty action queue! ----
-    -- First find out if this humanoid is in a room.
-    local room = self:getRoom()
-    if room then
-      room:makeHumanoidLeave(self)
-    end
-    -- Is it a member of staff, grim or a patient?
-    if class.is(self, Staff) then
-      self:queueAction(MeanderAction())
-    elseif class.is(self,GrimReaper) then
-      self:queueAction(IdleAction())
-    else
-      self:queueAction(SeekReceptionAction())
-    end
-    -- Open the dialog of the humanoid.
-    local ui = self.world.ui
-    if class.is(self, Patient) then
-      ui:addWindow(UIPatient(ui, self))
-    elseif class.is(self, Staff) then
-      ui:addWindow(UIStaff(ui, self))
-    end
-
-    -- Tell the player what just happened.
-    self.world:gameLog("")
-    self.world:gameLog("Empty action queue!")
-    self.world:gameLog("Last action: " .. self.previous_action.name)
-    self.world:gameLog(debug.traceback())
-
-    ui:addWindow(UIConfirmDialog(ui, true,
-      "Sorry, a humanoid just had an empty action queue,"..
-      " which means that he or she didn't know what to do next."..
-      " Please consult the command window for more detailed information. "..
-      "A dialog with "..
-      "the offending humanoid has been opened. "..
-      "Would you like him/her to leave the hospital?",
-      --[[persistable:humanoid_leave_hospital]] function()
-        self.world:gameLog("The humanoid was told to leave the hospital...")
-        if class.is(self, Staff) then
-          self:fire()
-        else
-          -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
-          self.going_home = false
-          self.hospital = self.world:getLocalPlayerHospital()
-          self:goHome("kicked")
-        end
-      end,
-      nil -- Do nothing on cancel
-    ))
     action = self.action_queue[1]
-
+    assert(action)
   end
-  ---- There is an action to start ----
+
   -- Call the action start handler
   TheApp.humanoid_actions[action.name](action, self)
 
@@ -574,7 +523,8 @@ function Humanoid:setNextAction(action, high_priority)
       if removed.is_entering then
         local dest_room = self.world:getRoom(removed.x, removed.y)
         self:unexpectFromRoom(dest_room)
-        if dest_room and removed.reserve_on_resume and removed.reserve_on_resume:isReservedFor(self) then
+        if dest_room and removed.reserve_on_resume and
+            removed.reserve_on_resume:isReservedFor(self) then
           removed.reserve_on_resume:removeReservedUser(self)
           dest_room:tryAdvanceQueue()
         end
@@ -640,6 +590,65 @@ function Humanoid:hasLeavingAction()
     end
   end
   return false
+end
+
+--! Handle an empty action queue in some way instead of crashing.
+function Humanoid:handleEmptyActionQueue()
+  -- if this is a patient that is going home, an empty
+  -- action queue is not a problem
+  if class.is(self, Patient) and self.going_home then
+    return
+  end
+
+  -- First find out if this humanoid is in a room.
+  local room = self:getRoom()
+  if room then
+    room:makeHumanoidLeave(self)
+  end
+
+  -- Give the humanoid an action to avoid crashing.
+  if class.is(self, Staff) then
+    self:queueAction(MeanderAction())
+  elseif class.is(self,GrimReaper) then
+    self:queueAction(IdleAction())
+  else
+    self:queueAction(SeekReceptionAction())
+  end
+
+  -- Open the dialog of the humanoid as feedback to the user.
+  local ui = self.world.ui
+  if class.is(self, Patient) then
+    ui:addWindow(UIPatient(ui, self))
+  elseif class.is(self, Staff) then
+    ui:addWindow(UIStaff(ui, self))
+  end
+
+  -- Tell the player what just happened.
+  self.world:gameLog("")
+  self.world:gameLog("Empty action queue!")
+  self.world:gameLog("Last action: " .. self.previous_action.name)
+  self.world:gameLog(debug.traceback())
+
+  ui:addWindow(UIConfirmDialog(ui, true,
+    "Sorry, a humanoid just had an empty action queue,"..
+    " which means that he or she didn't know what to do next."..
+    " Please consult the command window for more detailed information. "..
+    "A dialog with "..
+    "the offending humanoid has been opened. "..
+    "Would you like him/her to leave the hospital?",
+    --[[persistable:humanoid_leave_hospital]] function()
+      self.world:gameLog("The humanoid was told to leave the hospital...")
+      if class.is(self, Staff) then
+        self:fire()
+      else
+        -- Set these variables to increase the likelihood of the humanoid managing to get out of the hospital.
+        self.going_home = false
+        self.hospital = self.world:getLocalPlayerHospital()
+        self:goHome("kicked")
+      end
+    end,
+    nil -- Do nothing on cancel
+  ))
 end
 
 function Humanoid:setType(humanoid_class)
