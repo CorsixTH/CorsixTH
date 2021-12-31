@@ -460,7 +460,7 @@ function Humanoid:getCurrentMood()
   end
 end
 
-local function Humanoid_startAction(self)
+function Humanoid:startAction()
   local action = self.action_queue[1]
 
   -- Handle an empty action queue in some way instead of crashing.
@@ -599,7 +599,7 @@ function Humanoid:setNextAction(action, high_priority)
     end
   else
     -- Start the action if it has become the current action
-    Humanoid_startAction(self)
+    self:startAction()
   end
   return self
 end
@@ -608,7 +608,7 @@ function Humanoid:queueAction(action, pos)
   if pos then
     table.insert(self.action_queue, pos + 1, action)
     if pos == 0 then
-      Humanoid_startAction(self)
+      self:startAction()
     end
   else
     self.action_queue[#self.action_queue + 1] = action
@@ -624,7 +624,7 @@ function Humanoid:finishAction(action)
   -- Save the previous action just a while longer.
   self.previous_action = self.action_queue[1]
   table.remove(self.action_queue, 1)
-  Humanoid_startAction(self)
+  self:startAction()
 end
 
 -- Check if the humanoid is running actions intended to leave the room, as indicated by the flag
