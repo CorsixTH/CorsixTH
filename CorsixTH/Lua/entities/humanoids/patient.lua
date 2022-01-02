@@ -1123,14 +1123,18 @@ end
 ]]
 function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_before_resume)
   if current_action.name == "idle" or current_action.name == "walk" then
-    local requeue_action = {
-        name = current_action.name,
-        x = current_action.x,
-        y = current_action.y,
-        must_happen = current_action.must_happen,
-        is_entering = current_action.is_entering,
-    }
+    local requeue_action
+    if current_action.name == "idle" then
+      requeue_action = IdleAction():setMustHappen(current_action.must_happen)
+      requeue_action:setDirection(current_action.direction)
+    else
+      assert(current_action.name == "walk")
+      requeue_action = WalkAction(current_action.x, current_action.y)
+      requeue_action:setMustHappen(current_action.must_happen)
+      requeue_action:setIsentering(current_action.is_entering)
+    end
     self:queueAction(requeue_action, queue_pos)
+
     -- If we were idling, also go away a little before continuing with
     -- that important action.
     if current_action.name == "idle" and meander_before_resume then
@@ -1147,13 +1151,13 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
   else
     -- We were seeking a room, start that action from the beginning
     -- i.e. do not set the must_happen flag.
-    self:queueAction({
-      name = current_action.name,
-      room_type = current_action.room_type,
-      message_sent = true,
-      diagnosis_room = current_action.diagnosis_room,
-      treatment_room = current_action.treatment_room,
-    }, queue_pos)
+    local action = SeekRoomAction(current_action.room_type)
+    if current_action.treatment_room then action:enableTreatmentRoom() end
+    if current_action.diagnosis_room then
+      action:setDiagnosisRoom(current_action.diagnosis_room)
+    end
+    action.message_sent = true
+    self:queueAction(action, queue_pos)
   end
   -- now interrupt
   if current_action.on_interrupt then

@@ -185,6 +185,7 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Send home automatically
     humanoid:goHome("kicked")
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.no_diagnoses_available)
+
   elseif humanoid.diagnosis_progress < humanoid.hospital.policies["guess_cure"] or
       not humanoid.hospital.disease_casebook[humanoid.disease.id].discovered then
     -- If the disease hasn't been discovered yet it cannot be guessed, go here instead.
@@ -220,11 +221,9 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     humanoid:unregisterRoomRemoveCallback(action.remove_callback)
     humanoid:unregisterStaffChangeCallback(action.staff_change_callback)
     if humanoid:agreesToPay(humanoid.disease.id) then
-      humanoid:queueAction({
-        name = "seek_room",
-        room_type = humanoid.disease.treatment_rooms[1],
-        treatment_room = true,
-      }, 1)
+      local seek_action = SeekRoomAction(humanoid.disease.treatment_rooms[1])
+      seek_action:enableTreatmentRoom()
+      humanoid:queueAction(seek_action, 1)
     else
       humanoid:goHome("over_priced", humanoid.disease.id)
     end
