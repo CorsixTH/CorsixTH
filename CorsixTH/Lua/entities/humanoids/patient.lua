@@ -1139,7 +1139,7 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
     -- need to copy the reserve_on_resume, otherwise the new queued action will not
     -- unreserve on interrupt
     requeue_action.reserve_on_resume = current_action.reserve_on_resume
-    requeue_action:setIsentering(current_action.is_entering)
+    requeue_action:setIsEntering(current_action.is_entering)
   else
     -- We were seeking a room, start that action from the beginning
     -- i.e. do not set the must_happen flag.
