@@ -44,6 +44,7 @@ local Rat = _G["Rat"]
 -- rat hole north: 1904
 -- dead rat splat: 2242
 
+-- speed must be divider of 64 x and 32 y
 local rat_dirs = {
   north = {
     anim = 1908,
@@ -93,6 +94,54 @@ Rat.proximity_cursor = TheApp.gfx:loadMainCursor("kill_rat")
 function Rat:Rat(animation)
   self:Entity(animation)
   self.last_move_direction = "east"
+  self.target = { x = 64, y = 64 }
+end
+
+function Rat:init()
+  -- todo: target should be a rat hole (any?)
+  local pos_x, pos_y = self:getPosition()
+  self:_determinePath()
+  self:_tileMovement(self.tile_x, self.tile_y, pos_x, pos_y)
+end
+
+function Rat:_determinePath()
+  local path_x, path_y = self.world:getPath(self.tile_x, self.tile_y, self.target.x, self.target.y)
+  local path_index = 1
+
+  self.path = { xs = path_x, ys = path_y, index = path_index }
+end
+
+function Rat:_tileMovement(new_tile_x, new_tile_y, pos_x, pos_y)
+  local next_x, next_y = self:_nextPathTile()
+
+  if next_y < new_tile_y then
+    if next_x < new_tile_x then
+      self.last_move_direction = "north_west"
+    elseif next_x == new_tile_x then
+      self.last_move_direction = "north"
+    elseif next_x > new_tile_x then
+      self.last_move_direction = "north_east"
+    end
+  elseif next_y == new_tile_y then
+    if next_x < new_tile_x then
+      self.last_move_direction = "west"
+    elseif next_x > new_tile_x then
+      self.last_move_direction = "east"
+    end
+  else -- if next_y > new_tile_y
+    if next_x < new_tile_x then
+      self.last_move_direction = "south_west"
+    elseif next_x == new_tile_x then
+      self.last_move_direction = "south"
+    elseif next_x > new_tile_x then
+      self.last_move_direction = "south_east"
+    end
+  end
+
+  self:setTilePositionSpeed(
+      new_tile_x, new_tile_y, pos_x, pos_y,
+      rat_dirs[self.last_move_direction].dx,
+      rat_dirs[self.last_move_direction].dy)
 end
 
 function Rat:tick()
@@ -100,31 +149,44 @@ function Rat:tick()
 
   -- determine if the attached tile should change based on whether the relative
   -- screen position is more than a tile out in any direction.
-  local y = math.floor((pos_y + 16) / 32 + 1)
-  local x = math.floor((pos_x + 32) / 64)
-  local tile_dx, tile_dy = y + x - 1, y - x - 1
+  local x, y = pos_y + pos_x - 1, pos_y - pos_x - 1
+  local tile_dx = math.round(x / 64)
+  local tile_dy = math.round(y / 32)
 
   if tile_dy ~= 0 or tile_dx ~= 0 then
     -- determine how far to reset the positions for the change in tile
     local pdx = 32 * (tile_dx - tile_dy)
     local pdy = 16 * (tile_dx + tile_dy)
 
-    self.tile_x = self.tile_x + tile_dx
-    self.tile_y = self.tile_y + tile_dy
+    local new_tile_x = self.tile_x + tile_dx
+    local new_tile_y = self.tile_y + tile_dy
     pos_x = pos_x - pdx
     pos_y = pos_y - pdy
 
+    local next_x, next_y = self:_nextPathTile()
+
+    if new_tile_x == next_x and new_tile_y == next_y then
+      self.path.index = self.path.index + 1
+    end
+
     self:setTilePositionSpeed(
-        self.tile_x, self.tile_y, pos_x, pos_y,
+        new_tile_x, new_tile_y, pos_x, pos_y,
         rat_dirs[self.last_move_direction].dx,
         rat_dirs[self.last_move_direction].dy)
+  end
+  if pos_x == 0 and pos_y == 0 then
+    self:_tileMovement(self.tile_x, self.tile_y, pos_x, pos_y)
   end
 
   Entity.tick(self)
 end
 
--- Called when the humanoid is about to be removed from the world.
-function Humanoid:onDestroy()
+function Rat:_nextPathTile()
+  return self.path.xs[self.path.index], self.path.ys[self.path.index]
+end
+
+-- Called when the rat is about to be removed from the world.
+function Rat:onDestroy()
   Entity.onDestroy(self)
 end
 
