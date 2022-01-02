@@ -1127,27 +1127,23 @@ function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_be
     if current_action.name == "idle" then
       requeue_action = IdleAction():setMustHappen(current_action.must_happen)
       requeue_action:setDirection(current_action.direction)
+
+      -- Go away a little before continuing with that important action.
+      if meander_before_resume then
+        self:queueAction(MeanderAction():setCount(1), queue_pos)
+      end
     else
       assert(current_action.name == "walk")
       requeue_action = WalkAction(current_action.x, current_action.y)
       requeue_action:setMustHappen(current_action.must_happen)
+
+      -- need to copy the reserve_on_resume, otherwise the new queued action will not
+      -- unreserve on interrupt
+      requeue_action.reserve_on_resume = current_action.reserve_on_resume
       requeue_action:setIsentering(current_action.is_entering)
     end
     self:queueAction(requeue_action, queue_pos)
 
-    -- If we were idling, also go away a little before continuing with
-    -- that important action.
-    if current_action.name == "idle" and meander_before_resume then
-      self:queueAction(MeanderAction():setCount(1), queue_pos)
-    -- if walking, and action was already started, use the original must_happen
-    elseif current_action.name == "walk" then
-      if current_action.saved_must_happen ~= nil then
-        requeue_action.must_happen = current_action.saved_must_happen
-      end
-      -- need to copy the reserve_on_resume, otherwise the new queued action will not
-      -- unreserve on interrupt
-      requeue_action.reserve_on_resume = current_action.reserve_on_resume
-    end
   else
     -- We were seeking a room, start that action from the beginning
     -- i.e. do not set the must_happen flag.
