@@ -1122,39 +1122,36 @@ end
 !param meander_before_resume (bool) Indicator to insert an additional action before resuming.
 ]]
 function Patient:interruptAndRequeueAction(current_action, queue_pos, meander_before_resume)
-  if current_action.name == "idle" or current_action.name == "walk" then
-    local requeue_action = {
-        name = current_action.name,
-        x = current_action.x,
-        y = current_action.y,
-        must_happen = current_action.must_happen,
-        is_entering = current_action.is_entering,
-    }
-    self:queueAction(requeue_action, queue_pos)
-    -- If we were idling, also go away a little before continuing with
-    -- that important action.
-    if current_action.name == "idle" and meander_before_resume then
+  -- Rebuild the current action.
+  local requeue_action
+  if current_action.name == "idle" then
+    requeue_action = IdleAction():setMustHappen(current_action.must_happen)
+    requeue_action:setDirection(current_action.direction)
+
+    -- Go away a little before continuing with that important action.
+    if meander_before_resume then
       self:queueAction(MeanderAction():setCount(1), queue_pos)
-    -- if walking, and action was already started, use the original must_happen
-    elseif current_action.name == "walk" then
-      if current_action.saved_must_happen ~= nil then
-        requeue_action.must_happen = current_action.saved_must_happen
-      end
-      -- need to copy the reserve_on_resume, otherwise the new queued action will not
-      -- unreserve on interrupt
-      requeue_action.reserve_on_resume = current_action.reserve_on_resume
     end
+  elseif current_action.name == "walk" then
+    requeue_action = WalkAction(current_action.x, current_action.y)
+    requeue_action:setMustHappen(current_action.must_happen)
+
+    -- need to copy the reserve_on_resume, otherwise the new queued action will not
+    -- unreserve on interrupt
+    requeue_action.reserve_on_resume = current_action.reserve_on_resume
+    requeue_action:setIsEntering(current_action.is_entering)
   else
     -- We were seeking a room, start that action from the beginning
     -- i.e. do not set the must_happen flag.
-    self:queueAction({
-      name = current_action.name,
-      room_type = current_action.room_type,
-      message_sent = true,
-      diagnosis_room = current_action.diagnosis_room,
-      treatment_room = current_action.treatment_room,
-    }, queue_pos)
+    requeue_action = SeekRoomAction(current_action.room_type)
+    if current_action.treatment_room then requeue_action:enableTreatmentRoom() end
+    if current_action.diagnosis_room then
+      requeue_action:setDiagnosisRoom(current_action.diagnosis_room)
+    end
+    requeue_action.message_sent = true
   end
+  self:queueAction(requeue_action, queue_pos)
+
   -- now interrupt
   if current_action.on_interrupt then
     current_action.on_interrupt(current_action, self)

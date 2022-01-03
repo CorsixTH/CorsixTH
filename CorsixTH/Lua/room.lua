@@ -937,7 +937,7 @@ function Room:deactivate()
 
   -- crashRoom might have deactivated the door already
   if self.door.queue then
-    self.door.queue:rerouteAllPatients(SeekRoomAction(self.room_info.id))
+    self.door.queue:rerouteAllPatients(self.room_info.id)
   end
 
   self.hospital:removeRatholesAroundRoom(self)
