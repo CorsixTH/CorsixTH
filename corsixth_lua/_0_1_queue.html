@@ -90,7 +90,7 @@ a queue via its methods rather than directly.
  <a href="_0_1_queue.html#_0_1_queue_1reported_size">reportedSize</a>()
  </li>
  <li class="self">
- <a href="_0_1_queue.html#_0_1_queue_1reroute_all_patients">rerouteAllPatients</a>(<span class="p">action</span>)
+ <a href="_0_1_queue.html#_0_1_queue_1reroute_all_patients">rerouteAllPatients</a>(<span class="p">room_id</span>)
  </li>
  <li class="self">
  <a href="_0_1_queue.html#_0_1_queue_1set_bench_threshold">setBenchThreshold</a>(<span class="p">standing_count</span>)
@@ -364,16 +364,16 @@ return (int) Number of patients.<br/><br/>
  </p>
  </div>
  <div class="method">
- <h5><a name="_0_1_queue_1reroute_all_patients">function Queue:rerouteAllPatients(<span class="p">action</span>)</a></h5>
+ <h5><a name="_0_1_queue_1reroute_all_patients">function Queue:rerouteAllPatients(<span class="p">room_id</span>)</a></h5>
  <p>
  Called when reception desk is destroyed, or when a room is destroyed from a crashed machine.<br/><br/>
  <strong>Parameters:</strong>
  <table class="params">
  <tr><th class="n">Name</th><th class="t">Type</th><th>Description</th>
  <tr>
- <td class="n">action</td>
+ <td class="n">room_id</td>
  <td class="t">?</td>
- <td class="d">?</td>
+ <td class="d">Id of the room to reroute to, 'nil' for reception.</td>
  </tr>
  </table></p><p>
  <strong>Declared on:</strong> <a href="http://www.github.com/CorsixTH/CorsixTH/blob/master/CorsixTH/Lua/queue.lua#L315">line 315 of Lua/queue.lua</a>.
