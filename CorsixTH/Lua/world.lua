@@ -2321,29 +2321,19 @@ end
 --! Returns localized name of the room, internal required staff name
 -- and localized name of staff required.
 function World:getRoomNameAndRequiredStaffName(room_id)
-  local room_name, required_staff, staff_name
+  local room_name, required_staff
   for _, room in ipairs(TheApp.rooms) do
     if room.id == room_id then
       room_name = room.long_name
       required_staff = room.required_staff
     end
   end
+
+  local staff_name
   for key, _ in pairs(required_staff) do
-    staff_name = key
+    staff_name = key -- This is the "programmatic" name of the staff.
   end
-  required_staff = staff_name -- This is the "programmatic" name of the staff.
-  if staff_name == "Nurse" then
-    staff_name = _S.staff_title.nurse
-  elseif staff_name == "Psychiatrist" then
-    staff_name = _S.staff_title.psychiatrist
-  elseif staff_name == "Researcher" then
-    staff_name = _S.staff_title.researcher
-  elseif staff_name == "Surgeon" then
-    staff_name = _S.staff_title.surgeon
-  elseif staff_name == "Doctor" then
-    staff_name = _S.staff_title.doctor
-  end
-  return room_name, required_staff, staff_name
+  return room_name, staff_name, StaffProfile.translateStaffClass(staff_name)
 end
 
 --! Append a message to the game log.

@@ -145,13 +145,7 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
         output_text = strings.need_to_build:format(room_name)
       end
     elseif #req.rooms == 0 and next(req.staff) then
-      local staffclass_to_string = {
-          Nurse        = _S.staff_title.nurse,
-          Doctor       = _S.staff_title.doctor,
-          Surgeon      = _S.staff_title.surgeon,
-          Psychiatrist = _S.staff_title.psychiatrist,
-      }
-      output_text = strings.need_to_employ:format(staffclass_to_string[next(req.staff)])
+      output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
     end
   end
 

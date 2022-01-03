@@ -256,3 +256,16 @@ end
 function StaffProfile:getFullName()
   return self.initial .. ". " .. self.name
 end
+
+--! Translate the staff class to its translated text.
+--!param staff_class Class of the staff to translate.
+--!return The translated name.
+function StaffProfile.translateStaffClass(staff_class)
+  local staffclass_to_string = {
+    Nurse        = _S.staff_title.nurse,
+    Doctor       = _S.staff_title.doctor,
+    Surgeon      = _S.staff_title.surgeon,
+    Psychiatrist = _S.staff_title.psychiatrist,
+  }
+  return staffclass_to_string[staff_class]
+end
