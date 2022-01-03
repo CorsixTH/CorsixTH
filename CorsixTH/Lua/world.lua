@@ -2782,6 +2782,16 @@ function World:afterLoad(old, new)
     end
   end
 
+  if old < 165 and new >= 165 then -- Add 'KnockDoorAction.humanoid' field.
+    for _, entity in ipairs(self.entities) do
+      if entity.action_queue and class.is(entity, Humanoid) then
+        for _, action in ipairs(entity.action_queue) do
+          if class.is(action, KnockDoorAction) then action.humanoid = entity end
+        end
+      end
+    end
+  end
+
   -- Fix the initial of staff names
   self:updateInitialsCache()
   for _, staff_category in pairs(self.available_staff) do
