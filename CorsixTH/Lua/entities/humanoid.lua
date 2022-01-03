@@ -466,7 +466,7 @@ function Humanoid:startAction()
 
   -- Handle an empty action queue in some way instead of crashing.
   if not action then
-    self:handleEmptyActionQueue() -- Inserts an action into the action queue.
+    self:_handleEmptyActionQueue() -- Inserts an action into the action queue.
 
     action = self.action_queue[1]
     assert(action)
@@ -593,7 +593,7 @@ function Humanoid:hasLeavingAction()
 end
 
 --! Handle an empty action queue in some way instead of crashing.
-function Humanoid:handleEmptyActionQueue()
+function Humanoid:_handleEmptyActionQueue()
   -- if this is a patient that is going home, an empty
   -- action queue is not a problem
   if class.is(self, Patient) and self.going_home then
@@ -609,7 +609,7 @@ function Humanoid:handleEmptyActionQueue()
   -- Give the humanoid an action to avoid crashing.
   if class.is(self, Staff) then
     self:queueAction(MeanderAction())
-  elseif class.is(self,GrimReaper) then
+  elseif class.is(self, GrimReaper) then
     self:queueAction(IdleAction())
   else
     self:queueAction(SeekReceptionAction())
