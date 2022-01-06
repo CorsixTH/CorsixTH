@@ -629,13 +629,7 @@ function Humanoid:_handleEmptyActionQueue()
   self.world:gameLog("Last action: " .. self.previous_action.name)
   self.world:gameLog(debug.traceback())
 
-  ui:addWindow(UIConfirmDialog(ui, true,
-    "Sorry, a humanoid just had an empty action queue,"..
-    " which means that he or she didn't know what to do next."..
-    " Please consult the command window for more detailed information. "..
-    "A dialog with "..
-    "the offending humanoid has been opened. "..
-    "Would you like him/her to leave the hospital?",
+  ui:addWindow(UIConfirmDialog(ui, true, {_S.errors.dialog_empty_queue},
     --[[persistable:humanoid_leave_hospital]] function()
       self.world:gameLog("The humanoid was told to leave the hospital...")
       if class.is(self, Staff) then
