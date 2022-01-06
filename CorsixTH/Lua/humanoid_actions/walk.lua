@@ -297,7 +297,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
     if is_entering_room and queue:size() == 0 and not room:getPatient() and
         not door.user and not door.reserved_for and humanoid.should_knock_on_doors and
         room.room_info.required_staff and not swinging then
-      humanoid:queueAction(KnockDoorAction(door, dir), action_index)
+      humanoid:queueAction(KnockDoorAction(humanoid, door, dir), action_index)
       action_index = action_index + 1
     end
     -- a doctor/nurse answering a call but not yet left the room will not ever be leaving
@@ -315,7 +315,7 @@ navigateDoor = function(humanoid, x1, y1, dir)
   elseif is_entering_room and not action.done_knock and humanoid.should_knock_on_doors and
       room.room_info.required_staff and not swinging then
     humanoid:setTilePositionSpeed(x1, y1)
-    humanoid:queueAction(KnockDoorAction(door, dir), 0)
+    humanoid:queueAction(KnockDoorAction(humanoid, door, dir), 0)
     action.reserve_on_resume = door
     action.done_knock = true
     return
