@@ -701,6 +701,7 @@ errors = {
   could_not_load_campaign = "Failed to load the campaign: %s",
   could_not_find_first_campaign_level = "Could not find the first level of this campaign: %s",
   save_to_tmp = "The file at %s could not be used. The game has been saved to %s. Error: %s",
+  dialog_empty_queue = "Sorry, a humanoid just had an empty action queue, which means that they didn't know what to do next. Please consult the command window for more detailed information. A dialog with the offending humanoid has been opened. Would you like them to leave the hospital?",
 }
 
 warnings = {
