@@ -2772,14 +2772,11 @@ function World:afterLoad(old, new)
     end
   end
 
-  if old < 165 and new >= 165 then -- Add 'KnockDoorAction.humanoid' field.
-    for _, entity in ipairs(self.entities) do
-      if entity.action_queue and class.is(entity, Humanoid) then
-        for _, action in ipairs(entity.action_queue) do
-          if class.is(action, KnockDoorAction) then action.humanoid = entity end
-        end
-      end
-    end
+  if old < 165 and new >= 165 then
+    self:_setHumanoidForActions(KnockDoorAction)
+  end
+  if old < 166 and new >= 166 then
+    self:_setHumanoidForActions(SeekToiletsAction)
   end
 
   -- Fix the initial of staff names
@@ -2801,6 +2798,20 @@ end
 function World:playLoadedEntitySounds()
   for _, entity in pairs(self.entities) do
     entity:playAfterLoadSound()
+  end
+end
+
+--! Add 'action.humanoid' to actions of the given class.
+--!param action_class Class of action instances to change.
+function World:_setHumanoidForActions(action_class)
+  for _, entity in ipairs(self.entities) do
+    if entity.action_queue and class.is(entity, Humanoid) then
+      for _, action in ipairs(entity.action_queue) do
+        if class.is(action, action_class) then
+          action.humanoid = entity
+        end
+      end
+    end
   end
 end
 

@@ -24,20 +24,23 @@ class "SeekToiletsAction" (HumanoidAction)
 ---@type SeekToiletsAction
 local SeekToiletsAction = _G["SeekToiletsAction"]
 
-function SeekToiletsAction:SeekToiletsAction()
+function SeekToiletsAction:SeekToiletsAction(humanoid)
+  assert(class.is(humanoid, Humanoid), "Invalid value for parameter 'humanoid'")
+
   self:HumanoidAction("seek_toilets")
+  self.humanoid = humanoid
 end
 
-local function seek_toilets_action_start(action, humanoid)
+function SeekToiletsAction:start()
   -- Mechanism for clearing the going_to_toilets flag when this action is
   -- interrupted.
-
-  if action.todo_interrupt then
+  if self.todo_interrupt then
     humanoid.going_to_toilet = "no"
     humanoid:finishAction()
     return
   end
-  action.must_happen = true
+
+  self.must_happen = true
 
   -- Go to the nearest toilet, if any is found.
   local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
@@ -66,6 +69,11 @@ local function seek_toilets_action_start(action, humanoid)
     humanoid.going_to_toilet = "no"
     humanoid:finishAction()
   end
+end
+
+local function seek_toilets_action_start(action, humanoid)
+  assert(humanoid == action.humanoid)
+  action:start()
 end
 
 return seek_toilets_action_start

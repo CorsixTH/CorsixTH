@@ -248,7 +248,7 @@ local function action_seek_room_start(action, humanoid)
   end
   -- Seeking for toilets is a special case with its own action.
   if action.room_type == "toilets" then
-    humanoid:queueAction(SeekToiletsAction(), 1)
+    humanoid:queueAction(SeekToiletsAction(humanoid), 1)
     humanoid:finishAction()
     return
   end
