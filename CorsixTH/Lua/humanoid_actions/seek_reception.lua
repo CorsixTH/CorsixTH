@@ -68,7 +68,7 @@ function SeekReceptionAction:_findBestDesk()
       end
     end
   end
-  return desk
+  return best_desk
 end
 
 function SeekReceptionAction:start()
