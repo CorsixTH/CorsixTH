@@ -437,10 +437,8 @@ function Staff:goToStaffRoom()
   if room then
     room.staff_leaving = true
     self:setNextAction(room:createLeaveAction())
-    self:queueAction(SeekStaffRoomAction())
-  else
-    self:setNextAction(SeekStaffRoomAction())
   end
+  self:queueAction(SeekStaffRoomAction(self))
 end
 
 function Staff:onPlaceInCorridor()

@@ -2778,6 +2778,7 @@ function World:afterLoad(old, new)
   if old < 166 and new >= 166 then
     self:_setHumanoidForActions(SeekToiletsAction)
     self:_setHumanoidForActions(SeekReceptionAction)
+    self:_setHumanoidForActions(SeekStaffRoomAction)
   end
 
   -- Fix the initial of staff names

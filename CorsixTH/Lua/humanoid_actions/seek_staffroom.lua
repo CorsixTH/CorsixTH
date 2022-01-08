@@ -23,33 +23,42 @@ class "SeekStaffRoomAction" (HumanoidAction)
 ---@type SeekStaffRoomAction
 local SeekStaffRoomAction = _G["SeekStaffRoomAction"]
 
-function SeekStaffRoomAction:SeekStaffRoomAction()
+function SeekStaffRoomAction:SeekStaffRoomAction(humanoid)
+  assert(class.is(humanoid, Humanoid), "Invalid value for parameter 'humanoid'")
+
   self:HumanoidAction("seek_staffroom")
+  self.humanoid = humanoid
   self:setMustHappen(true)
 end
 
-local function seek_staffroom_action_start(action, humanoid)
+function SeekStaffRoomAction:start()
   -- Mechanism for clearing the going_to_staffroom flag when this action is
   -- interrupted (due to entering the staff room, being picked up, etc.)
-  if action.todo_interrupt then
-    humanoid.going_to_staffroom = nil
-    humanoid:finishAction()
+  if self.todo_interrupt then
+    self.humanoid.going_to_staffroom = nil
+    self.humanoid:finishAction()
     return
   end
-  action.must_happen = true
+
+  self.must_happen = true
   -- Go to the nearest staff room, if any is found.
-  local room = humanoid.world:findRoomNear(humanoid, "staff_room")
+  local room = self.humanoid.world:findRoomNear(self.humanoid, "staff_room")
   if room then
-    local task = room:createEnterAction(humanoid):setMustHappen(true):setIsLeaving(true)
-    humanoid:queueAction(task, 0)
-    humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
+    local task = room:createEnterAction(self.humanoid):setMustHappen(true):setIsLeaving(true)
+    self.humanoid:queueAction(task, 0)
+    self.humanoid:setDynamicInfoText(_S.dynamic_info.staff.actions.heading_for:format(room.room_info.name))
   else
     -- This should happen only in rare cases, e.g. if the target staff room was removed while heading there and none other exists
     print("No staff room found in seek_staffroom action")
-    humanoid.going_to_staffroom = nil
-    humanoid:queueAction(MeanderAction())
-    humanoid:finishAction()
+    self.humanoid.going_to_staffroom = nil
+    self.humanoid:queueAction(MeanderAction())
+    self.humanoid:finishAction()
   end
+end
+
+local function seek_staffroom_action_start(action, humanoid)
+  assert(humanoid == action.humanoid)
+  action:start()
 end
 
 return seek_staffroom_action_start
