@@ -40,12 +40,10 @@ local function can_join_queue_at(humanoid, x, y, dist)
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
-function SeekReceptionAction:start()
+function SeekReceptionAction:_findBestDesk()
   local world = self.humanoid.world
   local best_desk
   local score
-
-  assert(self.humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
   -- Go through all receptions desks.
   for _, desk in ipairs(self.humanoid.hospital:findReceptionDesks()) do
@@ -60,7 +58,7 @@ function SeekReceptionAction:start()
       local orientation = desk.object_type.orientations[desk.direction]
       local x = desk.tile_x + orientation.use_position[1]
       local y = desk.tile_y + orientation.use_position[2]
-      local this_score = self.humanoid.world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
+      local this_score = world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
 
       this_score = this_score + desk:getUsageScore()
       if not score or this_score < score then
@@ -70,12 +68,21 @@ function SeekReceptionAction:start()
       end
     end
   end
+  return desk
+end
+
+function SeekReceptionAction:start()
+  assert(self.humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
+
+  local world = self.humanoid.world
+
+  local best_desk = self:_findBestDesk()
   if best_desk then
     -- We found a desk to go to!
     local orientation = best_desk.object_type.orientations[best_desk.direction]
     local x = best_desk.tile_x + orientation.use_position[1]
     local y = best_desk.tile_y + orientation.use_position[2]
-    local dist = self.humanoid.world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
+    local dist = world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
     self.humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(best_desk.object_type.name))
     self.humanoid.waiting = nil
