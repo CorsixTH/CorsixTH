@@ -325,7 +325,7 @@ function Queue:rerouteAllPatients(room_id)
       if room_id then
         action = SeekRoomAction(room_id)
       else
-        action = SeekReceptionAction()
+        action = SeekReceptionAction(humanoid)
       end
       humanoid:queueAction(action)
 

@@ -206,7 +206,7 @@ function Patient:setHospital(hospital)
   end
   Humanoid.setHospital(self, hospital)
   if hospital.is_in_world and not self.is_debug and not self.is_emergency then
-    self:setNextAction(SeekReceptionAction())
+    self:setNextAction(SeekReceptionAction(self))
   end
   hospital:addPatient(self)
 end
@@ -834,7 +834,7 @@ function Patient:tickDay()
         self.noqueue_ticks = 1
       elseif self.noqueue_ticks > 2 then
         self.world:gameLog("A patient has a queue action, but is not in the corresponding queue")
-        self:setNextAction(SeekReceptionAction())
+        self:setNextAction(SeekReceptionAction(self))
       else
         self.noqueue_ticks = self.noqueue_ticks + 1
       end

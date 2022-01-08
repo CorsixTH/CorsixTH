@@ -612,7 +612,7 @@ function Humanoid:_handleEmptyActionQueue()
   elseif class.is(self, GrimReaper) then
     self:queueAction(IdleAction())
   else
-    self:queueAction(SeekReceptionAction())
+    self:queueAction(SeekReceptionAction(self))
   end
 
   -- Open the dialog of the humanoid as feedback to the user.

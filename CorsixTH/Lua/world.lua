@@ -572,7 +572,7 @@ function World:spawnVIP(name)
   vip:setHospital(hospital)
   vip:updateDynamicInfo()
   hospital:onSpawnVIP()
-  vip:queueAction(SeekReceptionAction())
+  vip:queueAction(SeekReceptionAction(vip))
 end
 
 --! Perform actions to simulate an active earthquake.
@@ -2777,6 +2777,7 @@ function World:afterLoad(old, new)
   end
   if old < 166 and new >= 166 then
     self:_setHumanoidForActions(SeekToiletsAction)
+    self:_setHumanoidForActions(SeekReceptionAction)
   end
 
   -- Fix the initial of staff names

@@ -64,7 +64,7 @@ function SeekToiletsAction:start()
     if humanoid.next_room_to_visit then
       humanoid:setNextAction(SeekRoomAction(humanoid.next_room_to_visit.room_info.id))
     else
-      humanoid:queueAction(SeekReceptionAction())
+      humanoid:queueAction(SeekReceptionAction(humanoid))
     end
     humanoid.going_to_toilet = "no"
     humanoid:finishAction()

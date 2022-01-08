@@ -539,7 +539,7 @@ function Epidemic:spawnInspector()
   local spawn_point = self.world.spawn_points[math.random(1, #self.world.spawn_points)]
   inspector:setNextAction(SpawnAction("spawn", spawn_point))
   inspector:setHospital(self.hospital)
-  inspector:queueAction(SeekReceptionAction())
+  inspector:queueAction(SeekReceptionAction(inspector))
 end
 
 --[[ Is the patient "still" either idle queuing or sitting on a bench

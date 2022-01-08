@@ -65,7 +65,7 @@ function ToiletRoom:dealtWithPatient(patient)
   if patient.next_room_to_visit then
     patient:queueAction(SeekRoomAction(patient.next_room_to_visit.room_info.id))
   else
-    patient:queueAction(SeekReceptionAction())
+    patient:queueAction(SeekReceptionAction(patient))
   end
 end
 

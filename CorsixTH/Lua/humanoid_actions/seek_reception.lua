@@ -26,8 +26,11 @@ local SeekReceptionAction = _G["SeekReceptionAction"]
 -- distance from queue that patient can join a reception desk queue
 local can_join_queue_distance = 6
 
-function SeekReceptionAction:SeekReceptionAction()
+function SeekReceptionAction:SeekReceptionAction(humanoid)
+  assert(class.is(humanoid, Humanoid), "Invalid value for parameter 'humanoid'")
+
   self:HumanoidAction("seek_reception")
+  self.humanoid = humanoid
 end
 
 local function can_join_queue_at(humanoid, x, y, dist)
@@ -37,15 +40,15 @@ local function can_join_queue_at(humanoid, x, y, dist)
       flag_cache.owner == humanoid.hospital:getPlayerIndex()
 end
 
-local function action_seek_reception_start(action, humanoid)
-  local world = humanoid.world
+function SeekReceptionAction:start()
+  local world = self.humanoid.world
   local best_desk
   local score
 
-  assert(humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
+  assert(self.humanoid.hospital, "humanoid must be associated with a hospital to seek reception")
 
   -- Go through all receptions desks.
-  for _, desk in ipairs(humanoid.hospital:findReceptionDesks()) do
+  for _, desk in ipairs(self.humanoid.hospital:findReceptionDesks()) do
     if (not desk.receptionist and not desk.reserved_for) then
       -- Not an allowed reception desk to go to.
     else
@@ -57,7 +60,7 @@ local function action_seek_reception_start(action, humanoid)
       local orientation = desk.object_type.orientations[desk.direction]
       local x = desk.tile_x + orientation.use_position[1]
       local y = desk.tile_y + orientation.use_position[2]
-      local this_score = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
+      local this_score = self.humanoid.world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
 
       this_score = this_score + desk:getUsageScore()
       if not score or this_score < score then
@@ -72,25 +75,25 @@ local function action_seek_reception_start(action, humanoid)
     local orientation = best_desk.object_type.orientations[best_desk.direction]
     local x = best_desk.tile_x + orientation.use_position[1]
     local y = best_desk.tile_y + orientation.use_position[2]
-    local dist = humanoid.world:getPathDistance(humanoid.tile_x, humanoid.tile_y, x, y)
-    humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
+    local dist = self.humanoid.world:getPathDistance(self.humanoid.tile_x, self.humanoid.tile_y, x, y)
+    self.humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.on_my_way_to
       :format(best_desk.object_type.name))
-    humanoid.waiting = nil
+    self.humanoid.waiting = nil
 
     -- We don't want patients which have just spawned to be joining the queue
     -- immediately, so walk them closer to the desk before joining the queue
-    if can_join_queue_at(humanoid, humanoid.tile_x, humanoid.tile_y, dist) then
+    if can_join_queue_at(self.humanoid, self.humanoid.tile_x, self.humanoid.tile_y, dist) then
       local face_x, face_y = best_desk:getSecondaryUsageTile()
-      humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(action.must_happen)
+      self.humanoid:setNextAction(QueueAction(x, y, best_desk.queue):setMustHappen(self.must_happen)
           :setFaceDirection(face_x, face_y))
     else
-      local walk = WalkAction(x, y):setMustHappen(action.must_happen)
-      humanoid:queueAction(walk, 0)
+      local walk = WalkAction(x, y):setMustHappen(self.must_happen)
+      self.humanoid:queueAction(walk, 0)
 
       -- Trim the walk to finish once it is possible to join the queue
       local pathindex = #walk.path_x
       for i = pathindex - 1, 2, -1 do
-        if can_join_queue_at(humanoid, walk.path_x[i], walk.path_y[i], pathindex - i) then
+        if can_join_queue_at(self.humanoid, walk.path_x[i], walk.path_y[i], pathindex - i) then
           walk.path_x[i + 1] = nil
           walk.path_y[i + 1] = nil
           walk.x = walk.path_x[i]
@@ -100,24 +103,29 @@ local function action_seek_reception_start(action, humanoid)
         end
       end
     end
-    humanoid.hospital:msgMultiReceptionDesks()
+    self.humanoid.hospital:msgMultiReceptionDesks()
 
   else
     -- No reception desk found. One will probably be built soon, somewhere in
     -- the hospital, so either walk to the hospital, or walk around the hospital.
     local procrastination
-    if humanoid.hospital:isInHospital(humanoid.tile_x, humanoid.tile_y) then
-      procrastination = MeanderAction():setCount(1):setMustHappen(action.must_happen)
-      if not humanoid.waiting then
+    if self.humanoid.hospital:isInHospital(self.humanoid.tile_x, self.humanoid.tile_y) then
+      procrastination = MeanderAction():setCount(1):setMustHappen(self.must_happen)
+      if not self.humanoid.waiting then
         -- Eventually people are going to get bored and leave.
-        humanoid.waiting = 5
+        self.humanoid.waiting = 5
       end
     else
-      local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(humanoid.tile_x, humanoid.tile_y)
-      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(action.must_happen)
+      local _, hosp_x, hosp_y = world.pathfinder:isReachableFromHospital(self.humanoid.tile_x, self.humanoid.tile_y)
+      procrastination = WalkAction(hosp_x, hosp_y):setMustHappen(self.must_happen)
     end
-    humanoid:queueAction(procrastination, 0)
+    self.humanoid:queueAction(procrastination, 0)
   end
+end
+
+local function action_seek_reception_start(action, humanoid)
+  assert(humanoid == action.humanoid)
+  action:start()
 end
 
 return action_seek_reception_start
