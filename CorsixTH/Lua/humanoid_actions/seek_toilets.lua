@@ -35,39 +35,39 @@ function SeekToiletsAction:start()
   -- Mechanism for clearing the going_to_toilets flag when this action is
   -- interrupted.
   if self.todo_interrupt then
-    humanoid.going_to_toilet = "no"
-    humanoid:finishAction()
+    self.humanoid.going_to_toilet = "no"
+    self.humanoid:finishAction()
     return
   end
 
   self.must_happen = true
 
   -- Go to the nearest toilet, if any is found.
-  local room = humanoid.world:findRoomNear(humanoid, "toilets", nil, "advanced")
+  local room = self.humanoid.world:findRoomNear(self.humanoid, "toilets", nil, "advanced")
   if room then
-    humanoid:setNextAction(room:createEnterAction(humanoid):setMustHappen(true))
+    self.humanoid:setNextAction(room:createEnterAction(self.humanoid):setMustHappen(true))
     -- Unexpect the patient from a possible destination room.
-    if humanoid.next_room_to_visit then
-      local queue = humanoid.next_room_to_visit.door.queue
+    if self.humanoid.next_room_to_visit then
+      local queue = self.humanoid.next_room_to_visit.door.queue
       if queue then
-        queue:unexpect(humanoid)
+        queue:unexpect(self.humanoid)
       end
-      humanoid:updateDynamicInfo("")
+      self.humanoid:updateDynamicInfo("")
     end
     -- toilet door should reflect the expected count
     room.door:updateDynamicInfo()
-    humanoid:finishAction()
+    self.humanoid:finishAction()
   else
     -- This should happen only in rare cases, e.g. if the target toilet room was
     -- removed while heading there and none other exists. In that case, go back
     -- to the previous room or go to the reception.
-    if humanoid.next_room_to_visit then
-      humanoid:setNextAction(SeekRoomAction(humanoid.next_room_to_visit.room_info.id))
+    if self.humanoid.next_room_to_visit then
+      self.humanoid:setNextAction(SeekRoomAction(self.humanoid.next_room_to_visit.room_info.id))
     else
-      humanoid:queueAction(SeekReceptionAction(humanoid))
+      self.humanoid:queueAction(SeekReceptionAction(self.humanoid))
     end
-    humanoid.going_to_toilet = "no"
-    humanoid:finishAction()
+    self.humanoid.going_to_toilet = "no"
+    self.humanoid:finishAction()
   end
 end
 
