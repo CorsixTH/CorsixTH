@@ -117,20 +117,13 @@ local action_seek_room_goto_room = permanent"action_seek_room_goto_room"( functi
   end
 end)
 
-local function action_seek_room_no_treatment_room_found(room_type, humanoid)
-  -- Emergency patients also don't need to ask what to do, they'll just wait for the player
-  -- to build the necessary room.
-  if humanoid.is_emergency then
-    return
-  end
-  -- Wait two months before going home anyway.
-  humanoid.waiting = 60
+--! Make the text of a 'no treatment room available fax'.
+--! See also Patient:updateMessage()
+--!param humanoid (Patient) that needs a decision.
+--!return The fax message.
+local function makeNoTreatmentRoomFax(humanoid)
   local strings = _S.fax.disease_discovered_patient_choice
-  -- Can this room be built right now? What is then missing?
-
   local output_text = strings.can_not_cure
-  -- TODO: can we really assert this? Or should we just make the patient go home?
-  --local room = assert(humanoid.world.available_rooms[room_type], "room " .. room_type .. " not available")
 
   local req = humanoid.hospital:checkDiseaseRequirements(humanoid.disease.id)
   local research_enabled = false
@@ -160,10 +153,46 @@ local function action_seek_room_no_treatment_room_found(room_type, humanoid)
       {text = strings.choices.research,  choice = "research", enabled = research_enabled},
     },
   }
+  return message
+end
+
+local function action_seek_room_no_treatment_room_found(room_type, humanoid)
+  -- Emergency patients also don't need to ask what to do, they'll just wait for the player
+  -- to build the necessary room.
+  if humanoid.is_emergency then
+    return
+  end
+  -- Wait two months before going home anyway.
+  humanoid.waiting = 60
+  local message = makeNoTreatmentRoomFax(humanoid)
+
   -- Ok, send the message in all channels.
   TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
   humanoid:setMood("patient_wait", "activate")
   humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
+end
+
+--! Make the text of a 'guess cure fax'.
+--! See also Patient:updateMessage()
+--!param humanoid (Patient) that needs a decision.
+--!return The fax message.
+local function makeGuessCureFax(humanoid)
+  local guess_enabled = humanoid.hospital.disease_casebook[humanoid.disease.id].discovered
+  local message = {
+    {text = _S.fax.diagnosis_failed.situation},
+    {text = " "},
+    {text = _S.fax.diagnosis_failed.what_to_do_question},
+    choices = {
+      {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home"},
+      {text = _S.fax.diagnosis_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
+      {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait"},
+    },
+  }
+  if guess_enabled then
+    table.insert(message, 3, {text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
+      :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)})
+  end
+  return message
 end
 
 local function action_seek_room_no_diagnosis_room_found(action, humanoid)
@@ -187,21 +216,8 @@ local function action_seek_room_no_diagnosis_room_found(action, humanoid)
     -- Wait two months before going home anyway.
     humanoid:setMood("patient_wait", "activate")
     humanoid.waiting = 60
-    local guess_enabled = humanoid.hospital.disease_casebook[humanoid.disease.id].discovered
-    local message = {
-      {text = _S.fax.diagnosis_failed.situation},
-      {text = " "},
-      {text = _S.fax.diagnosis_failed.what_to_do_question},
-      choices = {
-        {text = _S.fax.diagnosis_failed.choices.send_home,   choice = "send_home"},
-        {text = _S.fax.diagnosis_failed.choices.take_chance, choice = "guess_cure", enabled = guess_enabled},
-        {text = _S.fax.diagnosis_failed.choices.wait,        choice = "wait"},
-      },
-    }
-    if guess_enabled then
-      table.insert(message, 3, {text = _S.fax.diagnosis_failed.partial_diagnosis_percentage_name
-        :format(math.round(humanoid.diagnosis_progress*100), humanoid.disease.name)})
-    end
+
+    local message = makeGuessCureFax(humanoid)
     TheApp.ui.bottom_panel:queueMessage("information", message, humanoid)
     humanoid:updateDynamicInfo(_S.dynamic_info.patient.actions.awaiting_decision)
     -- This seek_room action will be reused, return that it's valid.
