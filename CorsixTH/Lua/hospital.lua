@@ -266,6 +266,15 @@ function Hospital:isRoomDiscovered(room_id)
   return self.room_discoveries[room_id].is_discovered
 end
 
+--! Update the 'guess the cure' faxes of waiting patients.
+--!param disease_id Disease to update.
+function Hospital:updateGuessCureFaxes(disease_id)
+  for _, patient in ipairs(self.hospital.patients) do
+    if patient.disease.id == disease_id then
+      patient:updateMessage("guess_cure")
+    end
+end
+
 --! Give the user possibly a message about a cured patient.
 function Hospital:msgCured()
   -- Nothing to do, override in a derived class.

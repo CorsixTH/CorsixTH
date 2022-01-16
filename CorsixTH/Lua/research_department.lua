@@ -550,6 +550,7 @@ function ResearchDepartment:discoverDisease(disease)
   local index = #self.hospital.discovered_diseases + 1
   self.hospital.discovered_diseases[index] = disease.id
   self.hospital:adviseDiscoverDisease(disease)
+  self.hospital:updateGuessCureFaxes(disease.id)
 
   -- It may now be possible to continue researching drug improvements
   local casebook_disease = self.hospital.disease_casebook[disease.id]

@@ -980,60 +980,62 @@ function Patient:updateDynamicInfo(action_string)
   end
 end
 
---[[ Update availability of a choice in message owned by this patient, if any
-!param choice (string) The choice that needs updating (currently "research" or "guess_cure").
-]]
+--! Update availability of a choice in message owned by this patient, if any.
+--!param choice (string) The choice that needs updating (currently "research" or "guess_cure").
 function Patient:updateMessage(choice)
-  if self.message and self.message.choices then
-    local message_choice
-    local enabled = false
+  -- Finish if the displayed message is not correct.
+  if not self.message or not self.message.choices then return end
 
-    for _, c in ipairs(self.message.choices) do
-      if c.choice == choice then
-        message_choice = choice
-      end
+  -- Check it is the expected fax.
+  local found_choice = false
+  for _, c in ipairs(self.message.choices) do
+    if c.choice == choice then
+      found_choice = true
+      break
     end
+  end
+  if not found_choice then return end
 
-    if choice == "research" and message_choice == choice then
-      -- enable only if research department is built and a room in the treatment chain is undiscovered
-      local req = self.hospital:checkDiseaseRequirements(self.disease.id)
-      if req then
-        enabled = (self.hospital:countRoomOfType("research", 1) > 0 and
-                   self.hospital:countStaffOfCategory("Researcher", 1) > 0)
+  local enabled = false
+  if choice == "research" then
+    -- enable only if research department is built and a room in the treatment chain is undiscovered
+    local req = self.hospital:checkDiseaseRequirements(self.disease.id)
+    if req then
+      enabled = (self.hospital:countRoomOfType("research", 1) > 0 and
+                 self.hospital:countStaffOfCategory("Researcher", 1) > 0)
 
-        local strings = _S.fax.disease_discovered_patient_choice
-        local output_text = strings.can_not_cure
-        if #req.rooms == 1 then
-          local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])
-          if req.staff[required_staff] or 0 > 0 then
-            output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
-          else
-            output_text = strings.need_to_build:format(room_name)
-          end
-        elseif #req.rooms == 0 and next(req.staff) then
-          output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
+      local strings = _S.fax.disease_discovered_patient_choice
+      local output_text = strings.can_not_cure
+      if #req.rooms == 1 then
+        local room_name, required_staff, staff_name = self.world:getRoomNameAndRequiredStaffName(req.rooms[1])
+        if req.staff[required_staff] or 0 > 0 then
+          output_text = strings.need_to_build_and_employ:format(room_name, staff_name)
+        else
+          output_text = strings.need_to_build:format(room_name)
         end
-        self.message[3].text = output_text
-      else
-        -- no requirements missing
-        enabled = false
+      elseif #req.rooms == 0 and next(req.staff) then
+        output_text = strings.need_to_employ:format(StaffProfile.translateStaffClass(next(req.staff)))
       end
-    else -- if choice == "guess_cure" then
-      -- TODO: implement
+      self.message[3].text = output_text
+    else
+      -- no requirements missing
+      enabled = false
     end
+  elseif choice == "guess_cure" then
+    enabled = self.hospital.disease_casebook[self.disease.id].discovered
+  end
 
-    for _, c in ipairs(self.message.choices) do
-      if c.choice == choice then
-        c.enabled = enabled
-      end
+  -- Update the displayed choices.
+  for _, c in ipairs(self.message.choices) do
+    if c.choice == choice then
+      c.enabled = enabled
     end
+  end
 
-    -- Update the fax window if it is open.
-    local window = self.world.ui:getWindow(UIFax)
-    if window then
-      window:updateChoices()
-    end
-
+  -- Update the fax window if it is open.
+  local window = self.world.ui:getWindow(UIFax)
+  if window then
+    window:updateChoices()
   end
 end
 
