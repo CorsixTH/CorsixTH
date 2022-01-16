@@ -269,7 +269,7 @@ end
 --! Update the 'guess the cure' faxes of waiting patients.
 --!param disease_id Disease to update.
 function Hospital:updateGuessCureFaxes(disease_id)
-  for _, patient in ipairs(self.hospital.patients) do
+  for _, patient in ipairs(self.patients) do
     if patient.disease.id == disease_id then
       patient:updateMessage("guess_cure")
     end
