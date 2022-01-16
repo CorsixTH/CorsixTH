@@ -273,6 +273,7 @@ function Hospital:updateGuessCureFaxes(disease_id)
     if patient.disease.id == disease_id then
       patient:updateMessage("guess_cure")
     end
+  end
 end
 
 --! Give the user possibly a message about a cured patient.
